@@ -1,11 +1,10 @@
-package net.pladema.questionnaires.general.create.repository.entity;
+package net.pladema.questionnaires.common.repository.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +23,7 @@ import javax.persistence.Table;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AnswerII {
+public class Answer {
 
 	@Id
 	@Column(name = "id")
@@ -33,7 +32,7 @@ public class AnswerII {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "questionnaire_response_id")
-	private QuestionnaireResponseII questionnaireResponse;
+	private QuestionnaireResponse questionnaireResponse;
 
 	@Column(name = "item_id", nullable = false)
 	private Integer itemId;

@@ -8,7 +8,7 @@ import com.lowagie.text.DocumentException;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.common.repository.QuestionnaireResponseRepository;
 import net.pladema.questionnaires.general.getpdf.domain.service.GetQuestionnairePdfService;
 
@@ -59,7 +59,7 @@ public class GetQuestionnairePdfController {
 			@PathVariable Integer institutionId) throws PDFDocumentException, DocumentException, IOException {
 		logger.debug("input parameter -> questionnaireResponseId: {}", questionnaireResponseId);
 
-		QuestionnaireResponseII response = questionnaireResponseRepository.findById(questionnaireResponseId)
+		QuestionnaireResponse response = questionnaireResponseRepository.findById(questionnaireResponseId)
 				.orElseThrow(() -> new NotFoundException("Questionnaire response not found with id %s"));
 
 		String outputFileName = getQuestionnairePdfService.createQuestionnaireFileName(response);

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
-import net.pladema.questionnaires.general.create.domain.dto.QuestionnaireResponseDTO;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
+import net.pladema.questionnaires.common.dto.QuestionnaireResponseDTO;
 import net.pladema.questionnaires.general.create.domain.service.CreateQuestionnaireService;
 
 @RestController
@@ -25,10 +25,10 @@ public class CreateQuestionnaireController {
 
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	@PostMapping("institution/{institutionId}/patient/{patientId}/questionnaire/create")
-	public ResponseEntity<QuestionnaireResponseII> createQuestionnaireResponse(
+	public ResponseEntity<QuestionnaireResponse> createQuestionnaireResponse(
 			@RequestBody QuestionnaireResponseDTO responseDTO, @PathVariable Integer institutionId, @PathVariable Integer patientId
 			) {
-		QuestionnaireResponseII createdResponse = questionnaireService.createQuestionnaireResponse(responseDTO, patientId);
+		QuestionnaireResponse createdResponse = questionnaireService.createQuestionnaireResponse(responseDTO, patientId);
 		return new ResponseEntity<>(createdResponse, HttpStatus.CREATED);
 	}
 }

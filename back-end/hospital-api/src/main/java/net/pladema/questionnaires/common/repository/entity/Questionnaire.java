@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.common.domain;
+package net.pladema.questionnaires.common.repository.entity;
 
 
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class QuestionnaireII {
+public class Questionnaire {
 
 	@JsonIgnore
 	@Id

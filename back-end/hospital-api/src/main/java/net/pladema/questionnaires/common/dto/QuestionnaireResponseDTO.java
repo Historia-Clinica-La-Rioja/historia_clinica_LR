@@ -7,17 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionnaireDTO {
+@Getter
+@Setter
+public class QuestionnaireResponseDTO {
 
 	private Integer questionnaireId;
 
-	List<QuestionnaireAnswers> answers;
+	private List<AnswerDTO> answers;
 
-	public QuestionnaireDTO(List<QuestionnaireAnswers> lstQuestionnaire){
-		this.answers = lstQuestionnaire;
-	}
 }

@@ -5,12 +5,12 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.common.repository.QuestionnaireResponseRepository;
-import net.pladema.questionnaires.general.create.domain.dto.AnswerDTO;
-import net.pladema.questionnaires.general.create.domain.dto.QuestionnaireResponseDTO;
-import net.pladema.questionnaires.general.create.repository.entity.AnswerII;
-import net.pladema.questionnaires.general.create.repository.entity.AnswerRepositoryII;
+import net.pladema.questionnaires.common.dto.AnswerDTO;
+import net.pladema.questionnaires.common.dto.QuestionnaireResponseDTO;
+import net.pladema.questionnaires.common.repository.entity.Answer;
+import net.pladema.questionnaires.common.repository.AnswerRepository;
 
 @Service
 public class CreateQuestionnaireService {
@@ -19,12 +19,12 @@ public class CreateQuestionnaireService {
 	private QuestionnaireResponseRepository responseRepository;
 
 	@Autowired
-	private AnswerRepositoryII answerRepository;
+	private AnswerRepository answerRepository;
 
 	@Transactional
-	public QuestionnaireResponseII createQuestionnaireResponse (QuestionnaireResponseDTO responseDTO, Integer patientId) {
+	public QuestionnaireResponse createQuestionnaireResponse (QuestionnaireResponseDTO responseDTO, Integer patientId) {
 
-		QuestionnaireResponseII questionnaireResponse = new QuestionnaireResponseII();
+		QuestionnaireResponse questionnaireResponse = new QuestionnaireResponse();
 		questionnaireResponse.setQuestionnaireId(responseDTO.getQuestionnaireId());
 		questionnaireResponse.setPatientId(patientId);
 
@@ -33,7 +33,7 @@ public class CreateQuestionnaireService {
 		responseRepository.save(questionnaireResponse);
 
 		for (AnswerDTO answerDTO : responseDTO.getAnswers()) {
-			AnswerII answer = new AnswerII();
+			Answer answer = new Answer();
 			answer.setItemId(answerDTO.getItemId());
 			answer.setValue(answerDTO.getValue());
 			if (answerDTO.getOptionId() != null && answerDTO.getOptionId() == 0) {

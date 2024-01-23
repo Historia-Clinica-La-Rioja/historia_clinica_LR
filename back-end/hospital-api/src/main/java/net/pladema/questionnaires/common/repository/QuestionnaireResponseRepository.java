@@ -8,14 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 
 @Repository
-public interface QuestionnaireResponseRepository extends JpaRepository<QuestionnaireResponseII, Integer> {
+public interface QuestionnaireResponseRepository extends JpaRepository<QuestionnaireResponse, Integer> {
 
-	@Query("SELECT qr FROM QuestionnaireResponseII qr " +
+	@Query("SELECT qr FROM QuestionnaireResponse qr " +
 			"LEFT JOIN FETCH qr.createdByHealthcareProfessional chp " +
 			"WHERE qr.patientId = :patientId")
-	List<QuestionnaireResponseII> findResponsesWithCreatedByDetails(@Param("patientId") Integer patientId, Sort sort);
+	List<QuestionnaireResponse> findResponsesWithCreatedByDetails(@Param("patientId") Integer patientId, Sort sort);
 
 }

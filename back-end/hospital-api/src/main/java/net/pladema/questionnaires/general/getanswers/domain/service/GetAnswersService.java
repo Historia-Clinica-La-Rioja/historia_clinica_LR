@@ -1,11 +1,11 @@
 package net.pladema.questionnaires.general.getanswers.domain.service;
 
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.common.repository.QuestionnaireResponseRepository;
 
-import net.pladema.questionnaires.general.create.domain.dto.AnswerDTO;
-import net.pladema.questionnaires.general.create.repository.entity.AnswerII;
-import net.pladema.questionnaires.general.create.repository.entity.AnswerRepositoryII;
+import net.pladema.questionnaires.common.dto.AnswerDTO;
+import net.pladema.questionnaires.common.repository.entity.Answer;
+import net.pladema.questionnaires.common.repository.AnswerRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,20 +20,20 @@ public class GetAnswersService {
 
 	private final QuestionnaireResponseRepository responseRepository;
 
-	private final AnswerRepositoryII answerRepository;
+	private final AnswerRepository answerRepository;
 
 	@Autowired
-    public GetAnswersService(QuestionnaireResponseRepository responseRepository, AnswerRepositoryII answerRepository) {
+    public GetAnswersService(QuestionnaireResponseRepository responseRepository, AnswerRepository answerRepository) {
         this.responseRepository = responseRepository;
         this.answerRepository = answerRepository;
     }
 
 	public List<AnswerDTO> getAnswersForResponse(Integer responseId) {
 
-		Optional<QuestionnaireResponseII> responseOptional = responseRepository.findById(responseId);
+		Optional<QuestionnaireResponse> responseOptional = responseRepository.findById(responseId);
 
 		if (responseOptional.isPresent()) {
-			List<AnswerII> answers = answerRepository.findByQuestionnaireResponseId(responseId);
+			List<Answer> answers = answerRepository.findByQuestionnaireResponseId(responseId);
 
             return answers.stream()
 					.map(answer -> {

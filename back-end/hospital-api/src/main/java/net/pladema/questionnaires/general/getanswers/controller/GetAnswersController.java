@@ -3,8 +3,7 @@ package net.pladema.questionnaires.general.getanswers.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import net.pladema.questionnaires.general.create.domain.dto.AnswerDTO;
-import net.pladema.questionnaires.general.create.repository.entity.AnswerII;
+import net.pladema.questionnaires.common.dto.AnswerDTO;
 import net.pladema.questionnaires.general.getanswers.domain.service.GetAnswersService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

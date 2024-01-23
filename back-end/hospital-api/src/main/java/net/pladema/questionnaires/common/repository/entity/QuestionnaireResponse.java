@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.common.domain;
+package net.pladema.questionnaires.common.repository.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.questionnaires.general.create.repository.entity.AnswerII;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 
 @Entity
@@ -38,7 +37,7 @@ import net.pladema.staff.repository.entity.HealthcareProfessional;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"creationable", "updateable", "deleteable", "createdBy", "updatedBy"})
-public class QuestionnaireResponseII extends SGXAuditableEntity<Integer> {
+public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,7 +73,7 @@ public class QuestionnaireResponseII extends SGXAuditableEntity<Integer> {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "questionnaire_id", insertable = false, updatable = false)
-	private QuestionnaireII questionnaireData;
+	private Questionnaire questionnaireData;
 
 	@JsonIgnore
 	@ManyToOne
@@ -88,7 +87,7 @@ public class QuestionnaireResponseII extends SGXAuditableEntity<Integer> {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "questionnaireResponse", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<AnswerII> answers = new ArrayList<>();
+	private List<Answer> answers = new ArrayList<>();
 
 	public String getQuestionnaireType() {
 		if (questionnaireData != null) {

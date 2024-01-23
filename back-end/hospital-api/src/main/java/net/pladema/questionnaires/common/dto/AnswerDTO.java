@@ -1,4 +1,4 @@
-package net.pladema.questionnaires.general.create.domain.dto;
+package net.pladema.questionnaires.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
