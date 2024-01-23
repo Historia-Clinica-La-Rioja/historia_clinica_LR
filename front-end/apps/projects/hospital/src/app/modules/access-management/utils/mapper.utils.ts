@@ -40,7 +40,7 @@ export const toReferenceReport = (report: ReferenceReportDto): ReferenceReport =
         dto: report,
         priority: getPriority(report.priority.id),
         coloredIconText: getColoredIconText(report.closureType),
-        state: getState(report.attentionState),
+        state: report.attentionState ? getState(report.attentionState) : null,
         patient: toMinPatientSummary(report.patientFullName, report.identificationType, +report.identificationNumber)
     }
 }

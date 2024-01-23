@@ -50,6 +50,8 @@
     </div>
 
     <app-reference-state-label id="closure-type" fxFlex="15%" [reference]="referenceReport.dto.closureType"></app-reference-state-label>
-
-    <app-colored-label id="state" [description]="referenceReport.state.description" [color]="referenceReport.state.color"></app-colored-label>    
+    <app-regulation-state id="regulation-state" [state]="referenceReport.dto.regulationState"></app-regulation-state>
+    <app-colored-label id="state" *ngIf="referenceReport.state" 
+        [description]="referenceReport.state.description" [color]="referenceReport.state.color">
+    </app-colored-label>
 </div>

@@ -28,6 +28,7 @@ import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.comp
 import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
 
+
 @NgModule({
 	declarations: [
 		//components

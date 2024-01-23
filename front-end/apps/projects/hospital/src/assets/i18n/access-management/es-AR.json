@@ -40,10 +40,10 @@
 					"TITLE": "estado de aprobación",
 					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",
 					"states": {
-						"PENDING": "esperando aprobacion",
-						"SUGGESTED": "revision sugerida",
-						"REJECTED": "solicitud rechazada",
-						"APPROVED": "solicitud aprobada"
+						"PENDING": "Esperando aprobacion",
+						"SUGGESTED": "Revision sugerida",
+						"REJECTED": "Solicitud rechazada",
+						"APPROVED": "Solicitud aprobada"
 					}
 				},
 				"institutional_network_actions": {

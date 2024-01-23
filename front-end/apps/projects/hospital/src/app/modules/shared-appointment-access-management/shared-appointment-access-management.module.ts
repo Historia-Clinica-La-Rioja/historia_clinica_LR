@@ -7,6 +7,7 @@ import { ReferenceDashboardComponent } from './components/reference-dashboard/re
 import { ReferenceDashboardFiltersComponent } from './components/reference-dashboard-filters/reference-dashboard-filters.component';
 import { ReferenceReportComponent } from '@shared-appointment-access-management/components/reference-report/reference-report.component';
 import { ReferenceSummaryComponent } from './components/reference-summary/reference-summary.component';
+import { RegulationStateComponent } from '@shared-appointment-access-management/components/regulation-state/regulation-state.component';
 import { TypeaheadPracticesComponent } from '@shared-appointment-access-management/components/typeahead-practices/typeahead-practices.component';
 //Standalone Components
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
@@ -31,6 +32,7 @@ import { ShowProblemsPipe } from '@shared-appointment-access-management/pipes/sh
     ReferenceDashboardFiltersComponent,
     ReferenceReportComponent,
     ReferenceSummaryComponent,
+    RegulationStateComponent,
     TypeaheadPracticesComponent,
     //dialogs
     ConfirmPrintAppointmentComponent,

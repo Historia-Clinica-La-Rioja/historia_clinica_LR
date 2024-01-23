@@ -1,6 +1,7 @@
 import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.component";
 import { DescriptionPriority } from "@presentation/components/priority-select/priority-select.component";
 import { APPOINTMENT_STATES_ID } from "@turnos/constants/appointment";
+import { ReferenceApprovalState } from "./approval";
 
 const NO_CLOSURE = -1;
 const NO_APPOINTMENT = -1;
@@ -101,19 +102,19 @@ export const PENDING: ColoredLabel = {
 
 export const REGULATION_OPTIONS = [
     {
-        id: 0,
+        id: ReferenceApprovalState.WAITING_APPROVAL,
         description: "Esperando aprobación"
     },
     {
-        id: 1,
+        id: ReferenceApprovalState.APPROVED,
         description: "Solicitud aprobada"
     },
     {
-        id: 2,
+        id: ReferenceApprovalState.REJECTED,
         description: "Solicitud rechazada"
     },
     {
-        id: 3,
+        id: ReferenceApprovalState.SUGGESTED_REVISION,
         description: "Revisión sugerida"
     }
 ];
