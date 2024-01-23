@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-date-range-picker',
@@ -8,30 +8,26 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class DateRangePickerComponent implements OnInit {
 
-	dateRangeForm: FormGroup;
+	dateRangeForm: FormGroup<DateRangeForm> = new FormGroup<DateRangeForm>({
+		start: new FormControl(null),
+		end: new FormControl(null)
+	});
 
 	@Input() label: string;
 	@Input() min?: Date = null;
-	@Input() max = new Date();
+	@Input() max?: Date = null;
 	@Input() dateRange: DateRange;
+
 	@Input()
-	set disabled(value: boolean) {
-		if (value)
-			this.dateRangeForm?.disable();
-		else
-			this.dateRangeForm?.enable();
+	set disabled(disableForm: boolean) {
+		disableForm ? this.dateRangeForm?.disable() : this.dateRangeForm?.enable();
 	};
+
 	@Output() dateRangeChange = new EventEmitter<DateRange>();
 
-	constructor(
-		private readonly formBuilder: FormBuilder,
-	) { }
+	constructor() { }
 
 	ngOnInit() {
-		this.dateRangeForm = this.formBuilder.group({
-			start: [null],
-			end: [null]
-		});
 
 		if (this.dateRange) {
 			this.dateRangeForm.controls.start.setValue(this.dateRange.start);
@@ -42,8 +38,6 @@ export class DateRangePickerComponent implements OnInit {
 			});
 		}
 
-		if (this.disabled)
-			this.dateRangeForm.disable();
 	}
 
 	emitChange() {
@@ -53,6 +47,11 @@ export class DateRangePickerComponent implements OnInit {
 		const end = new Date(this.dateRangeForm.controls.end.value);
 		this.dateRangeChange.emit({ start, end });
 	}
+}
+
+interface DateRangeForm {
+	start: FormControl<Date>;
+	end: FormControl<Date>;
 }
 
 export interface DateRange {

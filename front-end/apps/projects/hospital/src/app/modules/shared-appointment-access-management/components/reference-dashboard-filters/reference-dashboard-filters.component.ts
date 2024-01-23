@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { ReferenceReportDto } from '@api-rest/api-model';
-import { dateMinusDays } from '@core/utils/date.utils';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 import { FiltersType, SelectedFilterOption, SelectedFilters } from '@presentation/components/filters/filters.component'
 import { differenceInDays } from 'date-fns';
@@ -10,6 +9,7 @@ import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.
 import { PracticesService } from '@api-rest/services/practices.service';
 import { forkJoin } from 'rxjs';
 import { DashboardFiltersMapping, setReportFilters } from '@access-management/constants/reference-dashboard-filters';
+import { dateMinusDays } from '@core/utils/date.utils';
 
 const MAX_DAYS = 90;
 
@@ -24,6 +24,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 	reports: ReferenceReportDto[] = [];
 	filterByDocument: FormGroup<SearchByDocument>;
 	filters: FiltersType;
+	today = new Date();
 
 	constructor(
 		readonly dashboardService: DashboardService,
@@ -38,10 +39,9 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 			description: new FormControl(null),
 		});
 
-		const today = new Date();
 		this.dashboardService.dateRange = {
-			start: dateMinusDays(today, MAX_DAYS),
-			end: today
+			start: dateMinusDays(this.today, MAX_DAYS),
+			end: this.today
 		}
 
 		this.setFiltersOptions();

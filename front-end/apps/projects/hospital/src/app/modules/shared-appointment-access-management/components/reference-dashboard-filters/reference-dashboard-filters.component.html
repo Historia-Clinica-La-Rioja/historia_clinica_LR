@@ -13,7 +13,7 @@
     <div fxLayout="column">
         <app-date-range-picker [label]="'access-management.search_references.FILTER_BY_PERIOD'"
             [dateRange]="dashboardService.dateRange" (dateRangeChange)="checkDays($event)"
-            [disabled]="dashboardService.disabledDashboardActions"></app-date-range-picker>
+            [disabled]="dashboardService.disabledDashboardActions" [max]="today"></app-date-range-picker>
         <mat-error *ngIf="showValidation">{{'access-management.search_references.PERIOD_VALIDATIONS' | translate}}</mat-error>
     </div>
 

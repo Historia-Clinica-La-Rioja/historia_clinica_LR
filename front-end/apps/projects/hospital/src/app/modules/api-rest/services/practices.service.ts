@@ -17,8 +17,9 @@ export class PracticesService {
 		private readonly contextService: ContextService,
 	) { }
 
-	get(): Observable<SharedSnomedDto[]> {
-		const url = `${this.PREFIX_URL}/institution/${this.contextService.institutionId}/by-institution`;
+	get(institutionId?: number): Observable<SharedSnomedDto[]> {
+		const institutionIdPathVariable = institutionId || this.contextService.institutionId;
+		const url = `${this.PREFIX_URL}/institution/${institutionIdPathVariable}/by-institution`;
 		return this.http.get<SharedSnomedDto[]>(url);
 	}
 
