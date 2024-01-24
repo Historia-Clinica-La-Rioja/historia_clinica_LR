@@ -164,7 +164,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
 
 			result = result.stream()
-					.filter( r -> filter.getAttentionStateId().equals(r.getAttentionState().getId()))
+					.filter( r -> r.getAttentionState() != null && filter.getAttentionStateId().equals(r.getAttentionState().getId()))
 					.sorted(Comparator.comparing(ReferenceReportBo::getDate))
 					.collect(Collectors.toList());
 
