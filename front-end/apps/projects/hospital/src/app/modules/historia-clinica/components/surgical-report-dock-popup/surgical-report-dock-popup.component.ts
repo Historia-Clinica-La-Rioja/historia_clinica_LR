@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosisDto, EProfessionType, HealthcareProfessionalDto, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
-import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
+import { DiagnosisDto, EProfessionType, ProcedureTypeEnum, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
 import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
@@ -19,7 +19,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class SurgicalReportDockPopupComponent implements OnInit {
 
 	diagnosis: DiagnosisDto[];
-	professionals: HealthcareProfessionalDto[];
+	professionals: ProfessionalDto[];
 	isLoading = false;
 	loadingReport = false;
 	disabled = true;
@@ -74,7 +74,7 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
 		private readonly internmentStateService: InternmentStateService,
-		private readonly healthcareProfessionalByInstitutionService: HealthcareProfessionalByInstitutionService,
+		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly surgicalReportService: SurgicalReportService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
@@ -83,7 +83,8 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 			if (response)
 				this.diagnosis = response;
 		});
-		this.healthcareProfessionalByInstitutionService.getAllDoctors().subscribe(response => {
+
+		this.healthcareProfessionalService.getAllProfessionalsAndTechnicians().subscribe(response => {
 			if (response)
 				this.professionals = response;
 		});

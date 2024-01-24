@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfessionalDto, HealthcareProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfessionalDto, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-surgical-report-professional-team',
@@ -9,7 +9,7 @@ import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfes
 
 export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
-	@Input() professionals: HealthcareProfessionalDto[];
+	@Input() professionals: ProfessionalDto[];
 	@Input() surgicalReport: SurgicalReportDto;
 	ayudanteCount: number = 1;
 

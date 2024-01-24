@@ -1,6 +1,7 @@
 package net.pladema.staff.infrastructure.input.rest;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.staff.application.GetAllProfessionalsAndTechnicians;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessionalbyuserid.GetHealthcareProfessionalByUserId;
 import net.pladema.staff.application.getUserIdByHealthcareProfessionalId.GetUserIdByHealthcareProfessionalId;
@@ -46,8 +47,10 @@ public class HealthcareProfessionalController {
 	private final SaveHealthcareProfessional saveHealthcareProfessional;
 	private final GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId;
 
-	private final GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId;	
-	
+	private final GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId;
+
+	private final GetAllProfessionalsAndTechnicians getAllProfessionalsAndTechnicians;
+
 	private final SaveExternalTemporaryProfessional saveExternalTemporaryProfessional;
 
 	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
@@ -56,6 +59,7 @@ public class HealthcareProfessionalController {
 											SaveHealthcareProfessional saveHealthcareProfessional,
 											GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId,
 											GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId,
+											GetAllProfessionalsAndTechnicians getAllProfessionalsAndTechnicians,
 											SaveExternalTemporaryProfessional saveExternalTemporaryProfessional) {
 		this.healthcareProfessionalService = healthcareProfessionalService;
 		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
@@ -63,6 +67,7 @@ public class HealthcareProfessionalController {
 		this.saveHealthcareProfessional = saveHealthcareProfessional;
 		this.getHealthcareProfessionalByUserId = getHealthcareProfessionalByUserId;		
 		this.getUserIdByHealthcareProfessionalId = getUserIdByHealthcareProfessionalId;
+		this.getAllProfessionalsAndTechnicians = getAllProfessionalsAndTechnicians;
 		this.saveExternalTemporaryProfessional = saveExternalTemporaryProfessional;
 	}
 
@@ -71,6 +76,15 @@ public class HealthcareProfessionalController {
 	public List<ProfessionalDto> getAll() {
 		List<HealthcareProfessionalBo> professionals = healthcareProfessionalService.getAllProfessional();
 		LOG.debug("Get all professional => {}", professionals);
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@GetMapping("/get-all-professionals-and-technicians")
+	public List<ProfessionalDto> getAllProfessionalsAndTechnicians() {
+		LOG.debug("No input parameters");
+		List<HealthcareProfessionalBo> professionals = getAllProfessionalsAndTechnicians.run();
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
 		LOG.debug(OUTPUT, result);
 		return result;

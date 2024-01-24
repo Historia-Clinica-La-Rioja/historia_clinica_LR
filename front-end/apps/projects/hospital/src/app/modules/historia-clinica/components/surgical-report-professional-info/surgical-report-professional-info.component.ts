@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AppFeature, HCEHealthcareProfessionalDto, HealthcareProfessionalDto } from '@api-rest/api-model';
+import { AppFeature, HCEHealthcareProfessionalDto, ProfessionalDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 
@@ -13,11 +13,11 @@ const NO_INFO = 'Sin información';
 export class SurgicalReportProfessionalInfoComponent implements OnInit {
 
 	@Input() professionalTitle: string;
-	@Input() professionals: HealthcareProfessionalDto[];
+	@Input() professionals: ProfessionalDto[];
 	@Input() externalSetProfessional: HCEHealthcareProfessionalDto;
 	@Output() professionalChange = new EventEmitter();
 
-	professional: HealthcareProfessionalDto;
+	professional: ProfessionalDto;
 	nameSelfDeterminationFF: boolean;
 	professionalsTypeAhead: TypeaheadOption<any>[];
 	identificationNumber: string = '';
@@ -33,19 +33,25 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.professionalsTypeAhead = this.professionals?.map(professional => this.mapToTypeaheadOption(this.getFullNameByFF(professional), professional.id));
-		if (this.externalSetProfessional){
+		this.professionalsTypeAhead = this.professionals?.map(professional => this.mapToTypeaheadOption(this.getFullName(professional), professional.id));
+		if (this.externalSetProfessional) {
 			this.identificationNumber = this.externalSetProfessional.person.identificationNumber || NO_INFO;
 			this.licenseNumber = this.externalSetProfessional.licenseNumber || NO_INFO;
 			this.externalSetValue = this.professionalsTypeAhead.find(p => p.value === this.externalSetProfessional.id);
 		}
 	}
 
-	private getFullNameByFF(professional: HealthcareProfessionalDto): string {
-		const nameSelfDetermination = (professional.nameSelfDetermination) ? professional.nameSelfDetermination : professional.person.firstName;
-		return (this.nameSelfDeterminationFF) ?
-			professional.person.lastName + ", " + nameSelfDetermination :
-			professional.person.lastName + ", " + professional.person.firstName;
+	private getFullName(professional: ProfessionalDto): string {
+		let fullName = professional.lastName;
+		if (professional.otherLastNames && professional.otherLastNames.trim() !== '')
+			fullName += " " + professional.otherLastNames;
+		if (this.nameSelfDeterminationFF && professional.nameSelfDetermination && professional.nameSelfDetermination.trim() !== '')
+			fullName += ", " + professional.nameSelfDetermination;
+		else
+			fullName += ", " + professional.firstName;
+		if (!this.nameSelfDeterminationFF && professional.middleNames && professional.middleNames.trim() !== '')
+			fullName += " " + professional.middleNames;
+		return fullName;
 	}
 
 	private mapToTypeaheadOption(professionalName: string, professionalId: number): TypeaheadOption<any> {
@@ -59,8 +65,8 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 	setProfessional(professional: number): void {
 		this.professional = this.professionals.find(p => p.id === professional);
 		if (this.professional) {
-			this.identificationNumber = this.professional?.person.identificationNumber || NO_INFO;
-			this.licenseNumber = this.professional?.licenseNumber || NO_INFO;
+			this.identificationNumber = this.professional?.identificationNumber || NO_INFO;
+			this.licenseNumber = this.professional?.licenceNumber || NO_INFO;
 		}
 		else {
 			this.identificationNumber = '';
@@ -69,18 +75,18 @@ export class SurgicalReportProfessionalInfoComponent implements OnInit {
 		this.professionalChange.emit(this.mapToHCEHealthcareProfessionalDto(this.professional));
 	}
 
-	private mapToHCEHealthcareProfessionalDto(professional: HealthcareProfessionalDto): HCEHealthcareProfessionalDto {
+	private mapToHCEHealthcareProfessionalDto(professional: ProfessionalDto): HCEHealthcareProfessionalDto {
 		if (!professional)
 			return null;
 		else
 			return {
 				id: professional.id,
-				licenseNumber: professional.licenseNumber,
+				licenseNumber: professional.licenceNumber,
 				person: {
-					birthDate: professional.person.birthDate,
-					fullName: this.getFullNameByFF(professional),
-					id: professional.personId,
-					identificationNumber: professional.person.identificationNumber
+					birthDate: null,
+					fullName: this.getFullName(professional),
+					id: professional.id,
+					identificationNumber: professional.identificationNumber
 				}
 			}
 	}
