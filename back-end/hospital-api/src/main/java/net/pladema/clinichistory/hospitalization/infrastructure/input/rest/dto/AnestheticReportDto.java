@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnestheticHistoryDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FoodIntakeDto;
@@ -40,6 +41,9 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid RiskFactorDto riskFactors;
+
+    @Nullable
+    private @Valid AnestheticHistoryDto anestheticHistory;
 
     @Nullable
     private @Valid List<MedicationDto> medications = new ArrayList<>();

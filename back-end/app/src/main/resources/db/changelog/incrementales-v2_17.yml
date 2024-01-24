@@ -286,3 +286,27 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: pre_medication
               validate: true
+
+    - changeSet:
+        id: createTable-anesthetic_history
+        author: mromero
+        changes:
+          - createTable:
+              tableName: anesthetic_history
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_anesthetic_history
+                      references: document(id)
+                      foreignKeyName: FK_document_id_anesthetic_history
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: state_id
+                    type: smallint
+                - column:
+                    name: zone_id
+                    type: smallint

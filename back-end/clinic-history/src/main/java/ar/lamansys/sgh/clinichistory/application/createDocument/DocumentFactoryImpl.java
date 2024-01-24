@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.createDocument;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticHistory;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadFoodInTake;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadPreMedications;
 import java.time.LocalDate;
@@ -77,6 +78,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 	private final LoadHealthcareProfessionals loadHealthcareProfessionals;
 
 	private final LoadProsthesis loadProsthesis;
+
+    private final LoadAnestheticHistory loadAnestheticHistory;
     
     private final LoadPreMedications loadPreMedications;
     
@@ -133,6 +136,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		loadHealthcareProfessionals.run(doc.getId(), documentBo.getHealthcareProfessionals());
 		loadProsthesis.run(doc.getId(), documentBo.getProsthesisDescription());
 
+        loadAnestheticHistory.run(doc.getId(), Optional.ofNullable(documentBo.getAnestheticHistory()));
         loadPreMedications.run(doc.getId(), documentBo.getPreMedications());
         loadFoodIntake.run(doc.getId(), Optional.ofNullable(documentBo.getFoodIntake()));
         

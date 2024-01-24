@@ -158,7 +158,13 @@ export interface AnamnesisDto extends Serializable {
 export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
+export interface AnestheticHistoryDto {
+    stateId: number;
+    zoneId?: number;
+}
+
 export interface AnestheticReportDto {
+    anestheticHistory?: AnestheticHistoryDto;
     anthropometricData?: AnthropometricDataDto;
     diagnosis?: DiagnosisDto[];
     foodIntake?: FoodIntakeDto;

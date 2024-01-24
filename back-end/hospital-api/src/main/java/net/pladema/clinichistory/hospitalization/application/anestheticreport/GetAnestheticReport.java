@@ -41,6 +41,7 @@ public class GetAnestheticReport {
 
         result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(documentId));
         result.setRiskFactors(documentService.getRiskFactorStateFromDocument(documentId));
+        result.setAnestheticHistory(documentService.getAnestheticHistoryStateFromDocument(documentId));
         result.setMedications(documentService.getMedicationStateFromDocument(documentId));
         result.setPreMedications(documentService.getPreMedicationStateFromDocument(documentId));
         result.setFoodIntake(documentService.getFoodIntakeStateFromDocument(documentId));

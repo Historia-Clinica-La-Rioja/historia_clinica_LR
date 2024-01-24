@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import java.time.LocalDate;
@@ -182,6 +183,8 @@ public interface IDocumentBo {
     default boolean isTranscribed() {
         return false;
     }
+
+    default AnestheticHistoryBo getAnestheticHistory() { return null; }
 
     default List<PreMedicationBo> getPreMedications() { return Collections.emptyList(); }
 

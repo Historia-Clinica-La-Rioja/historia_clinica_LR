@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
@@ -9,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.NewbornBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAnestheticHistoryRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
@@ -133,6 +135,8 @@ public class DocumentServiceImpl implements DocumentService {
 	private final DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
 
 	private final DocumentProsthesisRepository documentProsthesisRepository;
+
+    private final DocumentAnestheticHistoryRepository documentAnestheticHistoryRepository;
     
     private final DocumentPreMedicationRepository documentPreMedicationRepository;
 
@@ -586,6 +590,16 @@ public class DocumentServiceImpl implements DocumentService {
         log.debug("Input parameters -> documentId {}", documentId);
         FoodIntakeBo result = documentFoodIntakeRepository.findById(documentId)
                 .map((documentFoodIntake -> new FoodIntakeBo(documentFoodIntake.getDocumentId(), documentFoodIntake.getClockTime())))
+                .orElse(null);
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public AnestheticHistoryBo getAnestheticHistoryStateFromDocument(Long documentId) {
+        log.debug("Input parameters -> documentId {}", documentId);
+        AnestheticHistoryBo result = documentAnestheticHistoryRepository.findById(documentId)
+                .map((documentAnestheticHistory) -> new AnestheticHistoryBo(documentAnestheticHistory.getDocumentId(), documentAnestheticHistory.getStateId(), documentAnestheticHistory.getZoneId()))
                 .orElse(null);
         log.debug(OUTPUT, result);
         return result;
