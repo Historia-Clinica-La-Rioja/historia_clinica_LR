@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
+import { HealthConditionDto, DiagnosisDto, InternmentEpisodeProcessDto, AnamnesisSummaryDto, EpicrisisSummaryDto, EvaluationNoteSummaryDto, DocumentHistoricDto, DocumentSearchDto, ResponseEmergencyCareDto, AppFeature } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { InternmentStateService } from '@api-rest/services/internment-state.service';
@@ -29,6 +29,7 @@ import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/mas
 import { PatientType } from '@historia-clinica/constants/summaries';
 import { NotaDeEvolucionDockPopupComponent } from '@historia-clinica/components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 import { EmergencyCareStateChangedService } from '../../services/emergency-care-state-changed.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-clinical-history-actions',
@@ -59,6 +60,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	documentEpicrisisDraft: DocumentSearchDto;
 
 	isEmergencyCareTemporaryPatient = false;
+	isAnestheticPartEnabled: boolean;
 	@Input() patientId: number;
 	@Input()
 	set internmentEpisodeProcess(episode: InternmentEpisodeProcessDto) {
@@ -111,7 +113,12 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly documentActions: DocumentActionsService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
-	) { }
+		private readonly featureFlagService: FeatureFlagService,
+	) { 
+		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled => 
+			this.isAnestheticPartEnabled = isEnabled
+		);
+	}
 
 	ngOnInit(): void {
 

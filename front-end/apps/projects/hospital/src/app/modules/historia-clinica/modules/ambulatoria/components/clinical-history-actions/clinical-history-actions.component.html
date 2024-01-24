@@ -71,7 +71,7 @@
 					{{'ambulatoria.paciente.card.buttons.actions.MEDICAL_DISCHARGE' | translate}}
 				</button>
 			</ng-container>
-			<ng-container>
+			<ng-container *ngIf="isAnestheticPartEnabled">
 				<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
 					(click)="openAnestheticReport()">
 					{{'ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate}}
