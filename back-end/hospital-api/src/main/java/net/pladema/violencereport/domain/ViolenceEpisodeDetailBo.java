@@ -27,4 +27,12 @@ public class ViolenceEpisodeDetailBo {
 
 	private Short riskLevelId;
 
+	public ViolenceEpisodeDetailBo(LocalDate episodeDate, Short violenceTowardsUnderageTypeId, Boolean schooled, Short schoolLevelId, Short riskLevelId) {
+		this.episodeDate = episodeDate;
+		this.violenceTowardsUnderageTypeId = violenceTowardsUnderageTypeId;
+		this.schooled = schooled;
+		this.schoolLevelId = schoolLevelId;
+		this.riskLevelId = riskLevelId;
+	}
+
 }

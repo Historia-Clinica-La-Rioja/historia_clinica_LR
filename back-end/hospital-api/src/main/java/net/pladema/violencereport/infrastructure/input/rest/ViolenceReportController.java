@@ -3,6 +3,7 @@ package net.pladema.violencereport.infrastructure.input.rest;
 import javax.validation.Valid;
 
 import net.pladema.violencereport.application.GetHistoricList;
+import net.pladema.violencereport.application.GetSituationEvolution;
 import net.pladema.violencereport.application.SaveSituationEvolution;
 
 import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
@@ -56,6 +57,8 @@ public class ViolenceReportController {
 	private SaveSituationEvolution saveSituationEvolution;
 
 	private GetHistoricList getHistoricList;
+
+	private GetSituationEvolution getSituationEvolution;
 
 	@PostMapping(value = "/patient/{patientId}")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
@@ -113,6 +116,18 @@ public class ViolenceReportController {
 		List<ViolenceReportSituationEvolutionBo> violenceReportSituationEvolutionBos = getHistoricList.run(patientId);
 		List<ViolenceReportSituationEvolutionDto> result = violenceReportMapper.toViolenceReportSituationEvolutionDtoList(violenceReportSituationEvolutionBos);
 		log.debug("Output -> result {}", result);
+		return result;
+	}
+
+	@GetMapping(value = "/patient/{patientId}/situation/{situationId}/evolution/{evolutionId}")
+	public ViolenceReportDto getSituationEvolutionData(@PathVariable("institutionId") Integer institutionId,
+													   @PathVariable("patientId") Integer patientId,
+													   @PathVariable("situationId") Short situationId,
+													   @PathVariable("evolutionId") Short evolutionId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, situationId {}, evolutionId {}", institutionId, patientId, situationId, evolutionId);
+		ViolenceReportBo violenceReportBo = getSituationEvolution.run(patientId, situationId, evolutionId);
+		ViolenceReportDto result = violenceReportMapper.toViolenceReportDto(violenceReportBo);
+		log.debug("Output -> {}", result);
 		return result;
 	}
 

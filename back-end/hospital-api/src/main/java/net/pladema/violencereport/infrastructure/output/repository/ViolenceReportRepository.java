@@ -1,6 +1,7 @@
 package net.pladema.violencereport.infrastructure.output.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.violencereport.domain.ViolenceEpisodeDetailBo;
 import net.pladema.violencereport.domain.ViolenceReportBo;
 import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
 import net.pladema.violencereport.infrastructure.output.repository.entity.ViolenceReport;
@@ -62,5 +63,21 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 			"JOIN UserPerson up on (up.pk.userId = vr.creationable.createdBy) " +
 			"ORDER BY vr.creationable.createdOn DESC")
     List<ViolenceReportSituationEvolutionBo> getPatientHistoric(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT vr.id " +
+			"FROM ViolenceReport vr " +
+			"WHERE vr.patientId = :patientId " +
+			"AND vr.situationId = :situationId " +
+			"AND vr.evolutionId = :evolutionId")
+	Integer getReportIdByPatientIdAndSituationIdAndEvolutionId(@Param("patientId") Integer patientId,
+															   @Param("situationId") Short situationId,
+															   @Param("evolutionId") Short evolutionId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.violencereport.domain.ViolenceEpisodeDetailBo(vr.episodeDate, vr.violenceTowardsUnderageTypeId, vr.schooled, vr.schoolLevelId, vr.riskLevelId) " +
+			"FROM ViolenceReport vr " +
+			"WHERE vr.id = :reportId")
+	ViolenceEpisodeDetailBo getEpisodeDataByReportId(@Param("reportId") Integer reportId);
 
 }
