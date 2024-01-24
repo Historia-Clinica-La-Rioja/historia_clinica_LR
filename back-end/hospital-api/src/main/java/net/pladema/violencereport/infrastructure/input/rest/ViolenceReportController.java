@@ -65,7 +65,7 @@ public class ViolenceReportController {
 										 @PathVariable("patientId") Integer patientId,
 										 @RequestBody @Valid ViolenceReportDto violenceReport) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, violenceReport {}", institutionId, patientId, violenceReport);
-		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithoutSituationId(patientId, violenceReport);
+		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithoutSituationId(institutionId, patientId, violenceReport);
 		Integer result = saveNewViolenceReport.run(violenceReportBo);
 		log.debug("Output -> {}", result);
 		return result;
@@ -104,7 +104,7 @@ public class ViolenceReportController {
 										  @PathVariable("situationId") Short situationId,
 										  @RequestBody @Valid ViolenceReportDto violenceReport) {
 		log.debug("Input parameters -> institutionId {}, patientId {}, situationId {}, violenceReport {}", institutionId, patientId, situationId, violenceReport);
-		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithSituationId(patientId, situationId, violenceReport);
+		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithSituationId(institutionId, patientId, situationId, violenceReport);
 		Integer result = saveSituationEvolution.run(violenceReportBo);
 		log.debug("Output -> {}", result);
 		return result;
@@ -131,15 +131,16 @@ public class ViolenceReportController {
 		return result;
 	}
 
-	private ViolenceReportBo parseViolenceReportDtoWithSituationId(Integer patientId, Short situationId, ViolenceReportDto violenceReport) {
-		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithoutSituationId(patientId, violenceReport);
+	private ViolenceReportBo parseViolenceReportDtoWithSituationId(Integer institutionId, Integer patientId, Short situationId, ViolenceReportDto violenceReport) {
+		ViolenceReportBo violenceReportBo = parseViolenceReportDtoWithoutSituationId(institutionId, patientId, violenceReport);
 		violenceReportBo.setSituationId(situationId);
 		return violenceReportBo;
 	}
 
-	private ViolenceReportBo parseViolenceReportDtoWithoutSituationId(Integer patientId, ViolenceReportDto violenceReport) {
+	private ViolenceReportBo parseViolenceReportDtoWithoutSituationId(Integer institutionId, Integer patientId, ViolenceReportDto violenceReport) {
 		ViolenceReportBo violenceReportBo = violenceReportMapper.fromViolenceReportDto(violenceReport);
 		violenceReportBo.setPatientId(patientId);
+		violenceReportBo.setInstitutionId(institutionId);
 		return violenceReportBo;
 	}
 

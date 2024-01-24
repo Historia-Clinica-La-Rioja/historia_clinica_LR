@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_17 
+    - logicalFilePath: incrementales-v2_17
 
     - changeSet:
         id: update_violence_report_text_lengths
@@ -13,3 +13,18 @@ databaseChangeLog:
                 ALTER TABLE health_institution_organization_coordination ALTER COLUMN other_health_institution_organization TYPE varchar(100) USING other_health_institution_organization::varchar;
                 ALTER TABLE institution_report_place ALTER COLUMN other_report_place TYPE varchar(100) USING other_report_place::varchar;
                 ALTER TABLE violence_report ALTER COLUMN observations TYPE text USING observations::text;
+
+    - changeSet:
+        id: violence_report-add-institution_id-column
+        comment: Add institution_id column to violence_report table
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+                    defaultValue: -1

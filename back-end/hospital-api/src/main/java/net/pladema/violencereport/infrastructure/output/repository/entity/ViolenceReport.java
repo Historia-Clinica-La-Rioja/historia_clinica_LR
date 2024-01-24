@@ -112,4 +112,7 @@ public class ViolenceReport extends SGXAuditableEntity<Integer> implements Seria
 	@Column(name = "observations", columnDefinition = "TEXT")
 	private String observations;
 
+	@Column(name = "institution_id", nullable = false)
+	private Integer institutionId;
+
 }

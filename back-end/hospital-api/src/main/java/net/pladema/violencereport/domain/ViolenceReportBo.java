@@ -17,6 +17,8 @@ public class ViolenceReportBo {
 
 	private Short evolutionId;
 
+	private Integer institutionId;
+
 	private ViolenceReportVictimBo victimData;
 
 	private ViolenceEpisodeDetailBo episodeData;
