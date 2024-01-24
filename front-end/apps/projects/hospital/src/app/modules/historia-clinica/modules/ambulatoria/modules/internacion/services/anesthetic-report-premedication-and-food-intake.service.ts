@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
+import { MasterDataDto, SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { PREMEDICATION } from '@historia-clinica/constants/validation-constants';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
@@ -154,7 +154,7 @@ export interface PremedicationForm {
     snomed: FormControl<SnomedDto>;
     dosis: FormControl<number>;
     unit: FormControl<string>;
-    via: FormControl<number>;
+    via: FormControl<MasterDataDto>;
     time: FormControl<TimeDto>;
     lastFoodIntake: FormControl<TimeDto>;
 }
@@ -163,7 +163,7 @@ export interface PremedicationAndFoodIntakeData {
     snomed: SnomedDto,
     dosis: number,
     unit: string,
-    via: number,
+    via: MasterDataDto,
     time: TimeDto,
     lastFoodIntake: TimeDto
 }

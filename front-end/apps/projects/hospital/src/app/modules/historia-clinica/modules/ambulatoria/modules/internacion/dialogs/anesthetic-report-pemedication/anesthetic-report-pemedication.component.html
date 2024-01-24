@@ -60,7 +60,7 @@
             <mat-form-field appearance="outline">
                 <mat-select formControlName="via" placeholder="{{ 'internaciones.anesthesic-report.premedication-and-food-intake.VIA_PLACEHOLDER' | translate }}">
                     <mat-option id="via" name="via"
-                        *ngFor="let via of viaArray" [value]="via.id">
+                        *ngFor="let via of viasArray" [value]="via">
                         {{via.description}}
                     </mat-option>
                 </mat-select>

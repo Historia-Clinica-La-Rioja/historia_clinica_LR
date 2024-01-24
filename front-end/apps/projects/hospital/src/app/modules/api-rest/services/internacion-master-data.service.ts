@@ -93,6 +93,11 @@ export class InternacionMasterDataService {
 		return this.http.get<any[]>(url);
 	}
 
+	getViasPremedication(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-premedication`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 	getOtherIndicationTypes(): Observable<OtherIndicationTypeDto[]> {
 		const url = `${environment.apiBase}/internments/masterdata/other-indication-type`;
 		return this.http.get<OtherIndicationTypeDto[]>(url);
