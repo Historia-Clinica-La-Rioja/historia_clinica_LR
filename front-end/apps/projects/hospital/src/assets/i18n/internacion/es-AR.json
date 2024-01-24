@@ -324,6 +324,7 @@
 			}
 		},
 		"anesthesic-report": {
+			"SUCCESS": "Parte anestésico guardado correctamente",
 			"diagnosis": {
 				"TITLE": "Diagnósticos"
 			},

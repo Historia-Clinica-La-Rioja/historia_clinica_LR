@@ -1,5 +1,5 @@
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { MedicationDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
@@ -105,6 +105,20 @@ export class MedicacionesNuevaConsultaService {
 
 	getMedicaciones(): Medicacion[] {
 		return this.data;
+	}
+
+	getMedicationsAsMedicationDto(): MedicationDto[] {
+		return this.mapToMedicationDto();
+	}
+
+	private mapToMedicationDto(): MedicationDto[] {
+		return this.data.map(medication => {
+			return {
+				snomed: medication.snomed,
+				note: medication.observaciones,
+				suspended: medication.suspendido
+			}
+		})
 	}
 
 	getState(suspendido: boolean): string {

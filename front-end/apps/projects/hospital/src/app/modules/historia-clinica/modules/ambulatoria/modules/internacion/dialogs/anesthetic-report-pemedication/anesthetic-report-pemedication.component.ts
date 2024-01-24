@@ -5,6 +5,7 @@ import { FormGroup } from '@angular/forms';
 import { MasterDataDto, TimeDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { take } from 'rxjs';
+import { hasError } from '@core/utils/form.utils';
 
 @Component({
     selector: 'app-anesthetic-report-pemedication',
@@ -17,6 +18,7 @@ export class AnestheticReportPemedicationComponent {
     possibleTimesList: TimeDto[];
 
     viasArray: MasterDataDto[];
+	public readonly hasError = hasError;
 
     constructor(
         public dialogRef: MatDialogRef<AnestheticReportPemedicationComponent>,
@@ -34,8 +36,10 @@ export class AnestheticReportPemedicationComponent {
     }
 
     addPremedication(){
-        this.data.premedicationService.addToList();
-        this.dialogRef.close();
+        if (this.form.valid){
+            this.data.premedicationService.addToList();
+            this.dialogRef.close();
+        }
     }
 }
 

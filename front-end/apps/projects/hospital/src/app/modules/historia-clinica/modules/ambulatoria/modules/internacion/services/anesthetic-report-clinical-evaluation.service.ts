@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClinicalObservationDto } from '@api-rest/api-model';
+import { ClinicalObservationDto, RiskFactorDto } from '@api-rest/api-model';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { CLINICAL_EVALUATION } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
@@ -122,6 +122,24 @@ export class AnestheticReportClinicalEvaluationService {
 
     isEmpty(): boolean {
         return !(this.form.get("minBloodPressure").value || this.form.get("maxBloodPressure").value || this.form.get("hematocrit").value)
+    }
+
+    getClinicalEvaluationData(): RiskFactorDto {
+        return this.mapToRiskFactorDto();
+    }
+
+    private mapToRiskFactorDto(): RiskFactorDto {
+        return {
+            systolicBloodPressure: this.form.value.maxBloodPressure ? { 
+                value: this.form.value.maxBloodPressure?.toString()
+            } : null,
+            diastolicBloodPressure: this.form.value.minBloodPressure ? {
+                value: this.form.value.minBloodPressure?.toString()
+            } : null,
+            hematocrit: this.form.value.hematocrit ? {
+                value: this.form.value.hematocrit?.toString()
+            } : null,
+        }
     }
 }
 

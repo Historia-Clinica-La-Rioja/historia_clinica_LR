@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { HospitalizationProcedureDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -55,6 +55,17 @@ export class AnestheticReportProposedSurgeryService {
 
     getProposedSurgeries(): Observable<ProposedSurgery[]> {
         return this.data$;
+    }
+
+    getProposedSurgeriesList(): HospitalizationProcedureDto[] {
+        return this.proposedSurgeries.map(surgery => { 
+            if (surgery.isAdded) {
+                return {
+                    snomed: surgery.snomed,
+                    }
+                }
+            }
+        ).filter(value => value != null)
     }
     
     remove(index: number): void {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MasterDataDto, SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
+import { DateTimeDto, MasterDataDto, PreMedicationDto, SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { PREMEDICATION } from '@historia-clinica/constants/validation-constants';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
@@ -34,10 +35,10 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
     ) { 
         this.form = new FormGroup<PremedicationForm>({
             snomed: new FormControl(null, Validators.required),
-            dosis: new FormControl(null, [Validators.min(PREMEDICATION.MIN.dosis)]),
-            unit: new FormControl(null),
-            via: new FormControl(null),
-            time: new FormControl(null),
+            dosis: new FormControl(null, [Validators.required, Validators.min(PREMEDICATION.MIN.dosis)]),
+            unit: new FormControl(null, Validators.required),
+            via: new FormControl(null, Validators.required),
+            time: new FormControl(null, Validators.required),
             lastFoodIntake: new FormControl(null),
         });
 
@@ -105,6 +106,35 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
         this.snomedConcept = selectedConcept;
         const pt = selectedConcept ? selectedConcept.pt : '';
         this.form.controls.snomed.setValue(pt);
+    }
+
+    getPremedicationDto(): PreMedicationDto[] {
+        return this.mapToPremedicationDto();
+    }
+
+    private mapToPremedicationDto(): PreMedicationDto[]{
+        return this.premedicationList.map(premedication => {
+            return {
+                snomed: premedication.snomed,
+                dosage: {
+                    chronic: null,
+                    diary: null,
+                    quantity: {
+                        unit: premedication.unit,
+                        value: premedication.dosis
+                    },
+                    startDateTime: this.getPremedicationTime(premedication.time)
+                },
+                viaId: premedication.via?.id
+            }
+        })
+    }
+
+    private getPremedicationTime(time: TimeDto): DateTimeDto{
+        return time ? {
+            date: dateToDateDto(new Date()),
+            time: time
+        } : null
     }
 
     getPremedication(): Observable<PremedicationAndFoodIntakeData[]> {

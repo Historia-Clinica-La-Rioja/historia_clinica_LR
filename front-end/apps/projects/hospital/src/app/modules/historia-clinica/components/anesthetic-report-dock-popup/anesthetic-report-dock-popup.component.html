@@ -2,7 +2,7 @@
     <div body fxLayout="column" fxLayoutGap="20px">
         <app-new-consultation-expansion-section id="diagnosis-expansion-section"
             [title]="'internaciones.anesthesic-report.diagnosis.TITLE' | translate" icon="assignment"
-            [collapsed]="false" [isEmpty]="false" [hideBorder]="true">
+            [collapsed]="!mainDiagnosis" [isEmpty]="!mainDiagnosis" [hideBorder]="true">
             <app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
                 [(listDiagnosis)]="diagnosis" [type]="'PARTE ANESTESICO'"></app-diagnosticos>
         </app-new-consultation-expansion-section>
@@ -15,14 +15,14 @@
 
         <app-new-consultation-expansion-section id="anthropometric-data-expansion-section"
             [title]="'internaciones.anesthesic-report.anthropometric-data.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anesthesicReportAnthropometricDataService.isEmpty()" [hideBorder]="false">
+            [(collapsed)]="collapsedAnthropometricDataSection" [isEmpty]="anesthesicReportAnthropometricDataService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-anthropometric-data [patientId]="data.patientId"
                 [service]="anesthesicReportAnthropometricDataService"></app-anesthetic-report-anthropometric-data>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anesthesic-clinical-evaluation-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE' | translate"
-            icon="assignment" [collapsed]="true" [isEmpty]="anestheticReportClinicalEvaluationService.isEmpty()"
+            icon="assignment" [(collapsed)]="collapsedClinicalEvaluationSection" [isEmpty]="anestheticReportClinicalEvaluationService.isEmpty()"
             [hideBorder]="false">
             <app-anesthetic-report-clinical-evaluation
                 [service]="anestheticReportClinicalEvaluationService"></app-anesthetic-report-clinical-evaluation>
@@ -37,7 +37,7 @@
 
         <app-new-consultation-expansion-section id="usual-medication-expansion-section"
             [title]="'internaciones.anesthesic-report.usual-medication.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="medicacionesNuevaConsultaService.isEmpty()" [hideBorder]="false">
+            [collapsed]="medicacionesNuevaConsultaService.isEmpty()" [isEmpty]="medicacionesNuevaConsultaService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-usual-medication [service]="medicacionesNuevaConsultaService"></app-anesthetic-report-usual-medication>
         </app-new-consultation-expansion-section>
 

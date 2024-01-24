@@ -18,7 +18,7 @@
 <br>
 <div *ngIf="proposedSurgeries.length > 1">
     <br>
-    <mat-checkbox id="all-selected" [checked]="allChecked" (change)="setAll($event.checked)">
+    <mat-checkbox id="all-selected.surgeries" [checked]="allCheckedSurgeries" (change)="setAllSurgeries($event.checked)">
         <span class="proposed-surgery-text">{{'internaciones.anesthesic-report.proposed-surgery.INCLUDE_ALL' |
             translate}}</span>
     </mat-checkbox>

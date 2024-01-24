@@ -162,6 +162,7 @@ export class InternmentActionsService {
 				autoFocus: false,
 				disableClose: true,
 				patientId: this.patientId,
+				internmentEpisodeId: this.internmentEpisodeId,
 				mainDiagnosis: this.mainDiagnosis,
 				diagnosis: this.diagnosticos,
 			});

@@ -1,7 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
-import { DiagnosisDto, HealthConditionDto, TimeDto } from '@api-rest/api-model';
+import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, TimeDto } from '@api-rest/api-model';
+import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { scrollIntoError } from '@core/utils/form.utils';
 import { AnestheticReportAnestheticHistoryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { AnestheticReportAnthropometricDataService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anthropometric-data.service';
 import { AnestheticReportClinicalEvaluationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-clinical-evaluation.service';
@@ -15,6 +17,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+
+const TIME_OUT = 5000;
 
 @Component({
     selector: 'app-anesthetic-report-dock-popup',
@@ -44,13 +48,18 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
     formFoodIntake: FormGroup;
 
+    collapsedAnthropometricDataSection = true;
+    collapsedClinicalEvaluationSection = true;
+
     constructor(
         @Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
+		private readonly el: ElementRef,
         private readonly snomedService: SnomedService,
 		private readonly formBuilder: UntypedFormBuilder,
         private readonly snackBarService: SnackBarService,
         private readonly translateService: TranslateService,
+        private readonly anesthethicReportService: AnesthethicReportService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
     ) {
@@ -62,13 +71,16 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportClinicalEvaluationService = new AnestheticReportClinicalEvaluationService(this.translateService);
         this.anestheticReportAnestheticHistoryService = new AnestheticReportAnestheticHistoryService();
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService);
-
-
 		this.anestheticReportPremedicationAndFoodIntakeService = new AnestheticReportPremedicationAndFoodIntakeService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportRecordService = new AnestheticReportRecordService(this.snomedService, this.snackBarService);
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
             lastFoodIntake: new FormControl(null),  
+        });
+
+        this.personalRecordForm = new FormGroup<PersonalRecordForm>({
+            observations: new FormControl(null),
+            asa: new FormControl(null)
         });
 
         this.possibleTimesList = this.anestheticReportPremedicationAndFoodIntakeService.possibleTimesList;
@@ -77,15 +89,70 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     ngOnInit(): void {
         this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
-
-        this.personalRecordForm = new FormGroup<PersonalRecordForm>({
-            observations: new FormControl(null),
-            asa: new FormControl(null)
-        });
     }
 
     save(): void {
+		this.isLoading = true;
 
+        const newAnestheticReport: AnestheticReportDto = this.buildAnestheticReportDto();
+
+        if (this.isValidConsultation()) {
+            this.createAnestheticReport(newAnestheticReport);
+        } else {
+            this.checkFormErrors();
+        }
+	}
+
+    private checkFormErrors() {
+        if (this.anesthesicReportAnthropometricDataService.getForm().invalid) {
+            this.collapsedAnthropometricDataSection = false;
+            setTimeout(() => {
+                scrollIntoError(this.anesthesicReportAnthropometricDataService.getForm(), this.el)
+                this.isLoading = false;
+            }, 300);
+        }
+        else if (this.anestheticReportClinicalEvaluationService.getForm().invalid) {
+            this.collapsedClinicalEvaluationSection = false;
+            setTimeout(() => {
+                scrollIntoError(this.anestheticReportClinicalEvaluationService.getForm(), this.el)
+                this.isLoading = false;
+            }, 300);
+        }
+    }
+
+    private createAnestheticReport(newAnestheticReport: AnestheticReportDto) {
+        this.anesthethicReportService.createAnestheticReport(newAnestheticReport, this.data.internmentEpisodeId).subscribe(
+			next => {
+                this.snackBarService.showSuccess('internaciones.anesthesic-report.SUCCESS', { duration: TIME_OUT });
+                this.isLoading = false;
+				this.dockPopupRef.close();
+			},
+			error => {
+				this.snackBarService.showError(error.text)
+                this.isLoading = false;
+			}
+        )
+    }
+
+    isValidConsultation(): boolean {
+        if (this.anesthesicReportAnthropometricDataService.getForm().invalid || this.anestheticReportClinicalEvaluationService.getForm().invalid)
+			return false;
+		return true;
+    }
+
+    buildAnestheticReportDto(): AnestheticReportDto {
+        return {
+            mainDiagnosis: this.mainDiagnosis,
+            diagnosis: this.diagnosis,
+            surgeryProcedures: this.anesthesicReportProposedSurgeryService.getProposedSurgeriesList(),
+            anthropometricData: this.anesthesicReportAnthropometricDataService.getAnthropomethricData(),
+            riskFactors: this.anestheticReportClinicalEvaluationService.getClinicalEvaluationData(),
+            anestheticHistory: this.anestheticReportAnestheticHistoryService.getAnestheticHistoryData(),
+            medications: this.medicacionesNuevaConsultaService.getMedicationsAsMedicationDto(),
+            preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getPremedicationDto(),
+            foodIntake: this.formFoodIntake.value.lastFoodIntake,
+            histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
+		};
 	}
 }
 

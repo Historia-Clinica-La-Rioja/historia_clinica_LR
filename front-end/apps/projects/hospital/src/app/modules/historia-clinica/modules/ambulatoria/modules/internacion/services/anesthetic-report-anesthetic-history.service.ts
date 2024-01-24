@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { AnestheticHistoryDto } from '@api-rest/api-model';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,13 @@ export class AnestheticReportAnestheticHistoryService {
 
     getForm(): FormGroup {
         return this.form;
+    }
+
+    getAnestheticHistoryData(): AnestheticHistoryDto {
+        return {
+            stateId: this.form.value.previousAnesthesiaState,
+            zoneId: this.form.value.previousAnesthesiaState ? this.form.value.anesthesiaZone : null
+        }
     }
 
     setPreviousAnesthesiaData(previousAnesthesiaState: PREVIOUS_ANESTHESIA_STATE_ID){

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { HealthConditionDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -74,6 +74,18 @@ export class AnestheticReportRecordService {
 
     getRecord(): Observable<SnomedDto[]> {
         return this.data$;
+    }
+
+    getRecordAsHealthConditionDto(): HealthConditionDto[] {
+        return this.mapToHealthConditionDto();
+    }
+
+    private mapToHealthConditionDto(): HealthConditionDto[] {
+        return this.recordList.map(record => {
+            return {
+                snomed: record
+            }
+        })
     }
 
     getECL(): SnomedECL {

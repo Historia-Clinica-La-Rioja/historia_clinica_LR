@@ -43,6 +43,9 @@
                         <input id="dosis-input" matInput type="number" formControlName="dosis" name="dosis"
                             placeholder="{{ 'internaciones.anesthesic-report.premedication-and-food-intake.DOSIS_PLACEHOLDER' | translate }}">
                         <mat-error> {{ data.premedicationService.dosisError$ | async }} </mat-error>
+                        <mat-error *ngIf="hasError(form, 'required', 'dosis')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
                     </mat-form-field>
                 </div>
 
@@ -52,6 +55,9 @@
                     <mat-form-field appearance="outline">
                         <input id="unit-input" matInput type="text" formControlName="unit" name="unit"
                             placeholder="{{ 'internaciones.anesthesic-report.premedication-and-food-intake.UNIT_PLACEHOLDER' | translate }}">
+                        <mat-error *ngIf="hasError(form, 'required', 'unit')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -64,6 +70,9 @@
                         {{via.description}}
                     </mat-option>
                 </mat-select>
+                <mat-error *ngIf="hasError(form, 'required', 'via')">
+                    <span translate="forms.REQUIRED"></span>
+                </mat-error>
             </mat-form-field>
 
             <div fxLayout="column">
@@ -75,6 +84,9 @@
                                 {{ time | viewDateDto:'time' | date:'shortTime' }}
                             </mat-option>
                         </mat-select>
+                        <mat-error *ngIf="hasError(form, 'required', 'time')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
                     </mat-form-field>
                     <span>hs.</span>
                 </div>

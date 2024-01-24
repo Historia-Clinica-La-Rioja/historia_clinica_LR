@@ -10,7 +10,7 @@ export class ProposedSurgeryBackgroundListComponent implements OnInit {
 
     @Input() service: AnestheticReportProposedSurgeryService;
     proposedSurgeries: ProposedSurgery[];
-    allChecked = false;
+    allCheckedSurgeries = false;
 
     constructor() { }
 
@@ -22,11 +22,11 @@ export class ProposedSurgeryBackgroundListComponent implements OnInit {
     }
 
     updateAll() {
-		this.allChecked = this.proposedSurgeries?.every(ps => ps.isAdded);
+		this.allCheckedSurgeries = this.proposedSurgeries?.every(ps => ps.isAdded);
 	}
 
-    setAll(completed: boolean) {
-		this.allChecked = completed;
+    setAllSurgeries(completed: boolean) {
+		this.allCheckedSurgeries = completed;
 		if (this.proposedSurgeries == null) {
 			return;
 		}

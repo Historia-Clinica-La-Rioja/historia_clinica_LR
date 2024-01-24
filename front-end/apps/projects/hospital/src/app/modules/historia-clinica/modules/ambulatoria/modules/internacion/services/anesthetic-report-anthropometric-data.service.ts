@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClinicalObservationDto, MasterDataInterface } from '@api-rest/api-model';
+import { AnthropometricDataDto, ClinicalObservationDto, MasterDataInterface } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
@@ -99,6 +99,20 @@ export class AnestheticReportAnthropometricDataService {
     getBloodTypes(): MasterDataInterface<string>[] {
 		return this.bloodTypes;
 	}
+
+    getAnthropomethricData(): AnthropometricDataDto {
+        return {
+            bloodType: {
+                value:  this.form.value.bloodType?.toString() || null
+            },
+            height: {
+                value: this.form.value.height?.toString() || null
+            },
+            weight: {
+                value: this.form.value.weight?.toString() || null
+            },
+        }
+    }
 
     get heightError$(): Observable<string | void> {
 		return this._heightError$;
