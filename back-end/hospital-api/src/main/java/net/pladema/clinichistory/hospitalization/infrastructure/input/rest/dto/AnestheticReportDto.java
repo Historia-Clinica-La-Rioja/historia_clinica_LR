@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Diagnosis
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FoodIntakeDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PreMedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -36,6 +37,9 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid AnthropometricDataDto anthropometricData;
+
+    @Nullable
+    private @Valid RiskFactorDto riskFactors;
 
     @Nullable
     private @Valid List<MedicationDto> medications = new ArrayList<>();

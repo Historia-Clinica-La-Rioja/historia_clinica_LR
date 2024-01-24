@@ -164,6 +164,8 @@ export interface AnestheticReportDto {
     foodIntake?: FoodIntakeDto;
     mainDiagnosis?: DiagnosisDto;
     medications?: MedicationDto[];
+    preMedications?: PreMedicationDto[];
+    riskFactors?: RiskFactorDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
 }
 
@@ -3835,6 +3837,7 @@ export interface RiskFactorDto extends Serializable {
     diastolicBloodPressure?: EffectiveClinicalObservationDto;
     glycosylatedHemoglobin?: EffectiveClinicalObservationDto;
     heartRate?: EffectiveClinicalObservationDto;
+    hematocrit?: EffectiveClinicalObservationDto;
     respiratoryRate?: EffectiveClinicalObservationDto;
     systolicBloodPressure?: EffectiveClinicalObservationDto;
     temperature?: EffectiveClinicalObservationDto;

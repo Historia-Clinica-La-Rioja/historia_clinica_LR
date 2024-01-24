@@ -99,6 +99,9 @@ public class MapClinicalObservationVo {
 		getLastNClinicalObservationByCode(ERiskFactor.CARDIOVASCULAR_RISK.getSctidCode(),i).ifPresent(v ->
 				riskFactorBo.setCardiovascularRisk(new ClinicalObservationBo(v))
 		);
+        getLastNClinicalObservationByCode(ERiskFactor.HEMATOCRIT.getSctidCode(),i).ifPresent(v ->
+                riskFactorBo.setHematocrit(new ClinicalObservationBo(v))
+        );
         LOG.debug(OUTPUT, riskFactorBo);
         if (riskFactorBo.hasValues())
             return Optional.of(riskFactorBo);

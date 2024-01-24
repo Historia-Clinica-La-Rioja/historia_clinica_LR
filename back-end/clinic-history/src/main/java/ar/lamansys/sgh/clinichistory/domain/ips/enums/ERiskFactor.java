@@ -18,7 +18,9 @@ public enum ERiskFactor {
     HEIGHT("50373000", "8302-2"),
     WEIGHT("27113001", "29463-7"),
     HEAD_CIRCUMFERENCE("363812007", "11947-9"),
-    BMI("60621009", "39156-5");
+    BMI("60621009", "39156-5"),
+    HEMATOCRIT("28317006", "20570-8"),
+    ;
 
     private String loincCode;
 
@@ -46,6 +48,11 @@ public enum ERiskFactor {
                 MEAN_PRESSURE.sctidCode, TEMPERATURE.sctidCode, HEART_RATE.sctidCode,
                 RESPIRATORY_RATE.sctidCode, BLOOD_OXYGEN_SATURATION.sctidCode, BLOOD_GLUCOSE.sctidCode,
                 GLYCOSYLATED_HEMOGLOBIN.sctidCode, CARDIOVASCULAR_RISK.sctidCode).contains(sctidCode);
+    }
+
+    public static boolean isCodeAnestheticReportData(String sctidCode) {
+        return Arrays.asList(SYSTOLIC_BLOOD_PRESSURE.sctidCode, DIASTOLIC_BLOOD_PRESSURE.sctidCode, HEMATOCRIT.sctidCode)
+                .contains(sctidCode);
     }
 
 }

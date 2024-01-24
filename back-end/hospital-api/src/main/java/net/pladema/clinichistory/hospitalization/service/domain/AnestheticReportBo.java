@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import java.time.LocalDate;
@@ -52,6 +53,8 @@ public class AnestheticReportBo implements IDocumentBo {
     private List<ProcedureBo> surgeryProcedures;
 
     private AnthropometricDataBo anthropometricData;
+
+    private RiskFactorBo riskFactors;
 
     private List<MedicationBo> medications;
 

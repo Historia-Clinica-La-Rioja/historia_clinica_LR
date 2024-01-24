@@ -49,4 +49,8 @@ public class RiskFactorDto implements Serializable {
     @Nullable
     private EffectiveClinicalObservationDto cardiovascularRisk;
 
+    @Valid
+    @Nullable
+    private EffectiveClinicalObservationDto hematocrit;
+
 }
