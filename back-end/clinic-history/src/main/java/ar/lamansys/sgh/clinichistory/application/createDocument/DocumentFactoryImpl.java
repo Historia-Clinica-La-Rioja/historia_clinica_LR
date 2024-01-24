@@ -1,8 +1,9 @@
 package ar.lamansys.sgh.clinichistory.application.createDocument;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadFoodInTake;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadPreMedications;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
@@ -12,8 +13,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProsthesis;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +38,11 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.snvs.application.ports.patient.PatientStorage;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class DocumentFactoryImpl implements DocumentFactory {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DocumentFactoryImpl.class);
+    
 
     private final DocumentService documentService;
 
@@ -75,41 +77,10 @@ public class DocumentFactoryImpl implements DocumentFactory {
 	private final LoadHealthcareProfessionals loadHealthcareProfessionals;
 
 	private final LoadProsthesis loadProsthesis;
-    public DocumentFactoryImpl(DocumentService documentService,
-                               CreateDocumentFile createDocumentFile,
-                               NoteService noteService,
-                               HealthConditionService healthConditionService,
-                               LoadAllergies loadAllergies,
-                               ClinicalObservationService clinicalObservationService,
-                               LoadImmunizations loadImmunizations,
-                               LoadProcedures loadProcedures,
-                               LoadMedications loadMedications,
-                               LoadDiagnosticReports loadDiagnosticReports,
-                               LoadDentalActions loadDentalActions,
-							   FeatureFlagsService featureFlagsService,
-							   PatientStorage patientStorage,
-							   LoadExternalCause loadExternalCause,
-							   LoadObstetricEvent loadObstetricEvent,
-							   LoadHealthcareProfessionals loadHealthcareProfessionals,
-							   LoadProsthesis loadProsthesis) {
-        this.documentService = documentService;
-        this.createDocumentFile = createDocumentFile;
-        this.noteService = noteService;
-        this.healthConditionService = healthConditionService;
-        this.loadAllergies = loadAllergies;
-        this.clinicalObservationService = clinicalObservationService;
-        this.loadImmunizations = loadImmunizations;
-        this.loadProcedures = loadProcedures;
-        this.loadMedications = loadMedications;
-        this.loadDiagnosticReports = loadDiagnosticReports;
-        this.loadDentalActions = loadDentalActions;
-		this.featureFlagsService = featureFlagsService;
-		this.patientStorage = patientStorage;
-		this.loadExternalCause = loadExternalCause;
-		this.loadObstetricEvent = loadObstetricEvent;
-		this.loadHealthcareProfessionals = loadHealthcareProfessionals;
-		this.loadProsthesis = loadProsthesis;
-    }
+    
+    private final LoadPreMedications loadPreMedications;
+    
+    private final LoadFoodInTake loadFoodIntake;
 
     @Override
 	@Transactional
@@ -161,13 +132,17 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));
 		loadHealthcareProfessionals.run(doc.getId(), documentBo.getHealthcareProfessionals());
 		loadProsthesis.run(doc.getId(), documentBo.getProsthesisDescription());
+
+        loadPreMedications.run(doc.getId(), documentBo.getPreMedications());
+        loadFoodIntake.run(doc.getId(), Optional.ofNullable(documentBo.getFoodIntake()));
+        
         if (createFile)
             generateDocument(documentBo);
         return doc.getId();
     }
 
     private Document loadNotes(Document document, Optional<DocumentObservationsBo> optNotes) {
-        LOG.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
+        log.debug("Input parameters -> anamnesisDocument {}, notes {}", document, optNotes);
         optNotes.ifPresent(notes -> {
             document.setCurrentIllnessNoteId(noteService.createNote(notes.getCurrentIllnessNote()));
             document.setPhysicalExamNoteId(noteService.createNote(notes.getPhysicalExamNote()));

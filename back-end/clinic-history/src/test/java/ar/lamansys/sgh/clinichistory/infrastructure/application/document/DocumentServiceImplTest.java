@@ -23,6 +23,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -89,14 +90,11 @@ class DocumentServiceImplTest {
 	@MockBean
 	private DocumentProsthesisRepository documentProsthesisRepository;
 
+	@InjectMocks
+	private DocumentServiceImpl documentService;
+
 	@BeforeEach
 	void setUp() {
-		documentServiceImpl = new DocumentServiceImpl(documentRepository, documentHealthConditionRepository,
-                documentImmunizationRepository, documentProcedureRepository, documentRiskFactorRepository, documentLabRepository,
-				documentAllergyIntoleranceRepository, documentMedicamentionStatementRepository, documentDiagnosticReportRepository,
-				documentOdontologyProcedureRepository, documentOdontologyDiagnosticRepository, documentExternalCauseRepository,
-				documentObstetricEventRepository, documentTriageRepository, documentReportSnomedConceptRepository, snomedService,
-				documentHealthcareProfessionalRepository, documentProsthesisRepository);
 	}
 
 	@Test

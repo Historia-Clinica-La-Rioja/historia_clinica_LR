@@ -161,8 +161,10 @@ export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 export interface AnestheticReportDto {
     anthropometricData?: AnthropometricDataDto;
     diagnosis?: DiagnosisDto[];
+    foodIntake?: FoodIntakeDto;
     mainDiagnosis?: DiagnosisDto;
     medications?: MedicationDto[];
+    preMedications?: PreMedicationDto[];
 }
 
 export interface AnnexIIDto {
@@ -1748,7 +1750,7 @@ export interface FilterOptionDto {
 }
 
 export interface FoodIntakeDto {
-    clockTime: number;
+    clockTime: TimeDto;
 }
 
 export interface FormVDto {
@@ -3293,6 +3295,11 @@ export interface PracticeDto {
     description: string;
     id: number;
     snomedId: number;
+}
+
+export interface PreMedicationDto extends ClinicalTermDto {
+    dosage: NewDosageDto;
+    viaId: number;
 }
 
 export interface PreferredTermDto {

@@ -2,7 +2,9 @@ package net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FoodIntakeDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PreMedicationDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -33,5 +35,11 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid List<MedicationDto> medications = new ArrayList<>();
+
+    @Nullable
+    private @Valid List<PreMedicationDto> preMedications = new ArrayList<>();
+
+    @Nullable
+    private @Valid FoodIntakeDto foodIntake;
 
 }

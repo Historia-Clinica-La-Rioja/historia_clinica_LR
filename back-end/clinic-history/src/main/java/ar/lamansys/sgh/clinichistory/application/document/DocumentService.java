@@ -7,11 +7,13 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
@@ -26,6 +28,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentPreMedication;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProsthesis;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
@@ -134,5 +137,11 @@ public interface DocumentService {
 	DocumentHealthcareProfessional createDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional);
 
 	DocumentProsthesis createDocumentProsthesis(Long documentId, String description);
+
+    DocumentPreMedication createDocumentPreMedication(Long documentId, Integer preMedicationId);
+
+    List<PreMedicationBo> getPreMedicationStateFromDocument(Long documentId);
+
+    FoodIntakeBo getFoodIntakeStateFromDocument(Long documentId);
 }
 

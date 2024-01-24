@@ -4,8 +4,10 @@ import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import java.time.LocalDate;
@@ -49,6 +51,10 @@ public class AnestheticReportBo implements IDocumentBo {
     private AnthropometricDataBo anthropometricData;
 
     private List<MedicationBo> medications;
+
+    private List<PreMedicationBo> preMedications;
+
+    private FoodIntakeBo foodIntake;
 
     @Override
     public Integer getPatientId() {
