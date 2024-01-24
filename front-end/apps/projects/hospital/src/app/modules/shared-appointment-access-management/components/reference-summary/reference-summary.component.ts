@@ -15,11 +15,11 @@ export class ReferenceSummaryComponent implements OnInit {
 
 	identiferCases = IDENTIFIER_CASES;
 	size = Size.SMALL;
+	destinationClinicalSpecialtiesName: string;
 	@Input() referenceReport: ReferenceReport;
-	clinicalSpecialtiesName: string[] = [];
 
 	ngOnInit(): void {
-		this.clinicalSpecialtiesName = this.referenceReport.dto.destinationClinicalSpecialties.map(specialty => specialty);
+		this.destinationClinicalSpecialtiesName = this.referenceReport.dto.destinationClinicalSpecialties.join(', ');
 	}
 }
 
