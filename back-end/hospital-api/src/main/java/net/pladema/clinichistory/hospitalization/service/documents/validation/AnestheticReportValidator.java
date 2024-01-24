@@ -17,6 +17,7 @@ public class AnestheticReportValidator extends InternmentDocumentValidator {
         super.assertContextValid(anestheticReport);
         super.assertDocumentValid(anestheticReport);
         super.assertDiagnosisValid(anestheticReport, anestheticReport.getMainDiagnosis());
+        super.assertProceduresValid(anestheticReport);
         super.assertAnthropometricData(anestheticReport);
         super.assertMedicationsValid(anestheticReport);
         preMedicationValidator.assertContextValid(anestheticReport.getPreMedications());

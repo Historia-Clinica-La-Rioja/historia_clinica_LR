@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.hospitalization.controller.generalstate.dto.HospitalizationProcedureDto;
 
 @Getter
 @Setter
@@ -29,6 +30,9 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid List<DiagnosisDto> diagnosis = new ArrayList<>();
+
+    @Nullable
+    private @Valid List<HospitalizationProcedureDto> surgeryProcedures = new ArrayList<>();
 
     @Nullable
     private @Valid AnthropometricDataDto anthropometricData;

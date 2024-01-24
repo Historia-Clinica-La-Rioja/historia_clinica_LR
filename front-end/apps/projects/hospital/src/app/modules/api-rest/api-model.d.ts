@@ -164,7 +164,7 @@ export interface AnestheticReportDto {
     foodIntake?: FoodIntakeDto;
     mainDiagnosis?: DiagnosisDto;
     medications?: MedicationDto[];
-    preMedications?: PreMedicationDto[];
+    surgeryProcedures?: HospitalizationProcedureDto[];
 }
 
 export interface AnnexIIDto {

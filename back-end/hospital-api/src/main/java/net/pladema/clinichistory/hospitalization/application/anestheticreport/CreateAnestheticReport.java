@@ -3,7 +3,9 @@ package net.pladema.clinichistory.hospitalization.application.anestheticreport;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +51,8 @@ public class CreateAnestheticReport {
 
         anestheticReport.setPerformedDate(LocalDateTime.now());
 
+        this.setTypeSurgicalProcedures(anestheticReport.getSurgeryProcedures());
+
         this.setEventPeriodUnitDosages(anestheticReport.getPreMedications());
 
         anestheticReportValidator.assertContextValid(anestheticReport);
@@ -59,6 +63,10 @@ public class CreateAnestheticReport {
 
         log.debug("Output -> saved anestheticReport id {}", result);
         return result;
+    }
+
+    public void setTypeSurgicalProcedures(List<ProcedureBo> surgicalProcedures) {
+        surgicalProcedures.forEach(surgicalProcedure -> surgicalProcedure.setType(ProcedureTypeEnum.SURGICAL_PROCEDURE));
     }
 
     public void setEventPeriodUnitDosages(List<PreMedicationBo> preMedications) {

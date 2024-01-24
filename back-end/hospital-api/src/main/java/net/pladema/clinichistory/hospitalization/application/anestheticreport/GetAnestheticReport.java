@@ -2,6 +2,10 @@ package net.pladema.clinichistory.hospitalization.application.anestheticreport;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.exceptions.AnestheticReportException;
@@ -29,6 +33,11 @@ public class GetAnestheticReport {
         GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(documentId);
         result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
         result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
+
+        List<ProcedureBo> procedures = documentService.getProcedureStateFromDocument(documentId).stream()
+                .filter(p -> ProcedureTypeEnum.SURGICAL_PROCEDURE.equals(p.getType()))
+                .collect(Collectors.toList());
+        result.setSurgeryProcedures(procedures);
 
         result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(documentId));
         result.setMedications(documentService.getMedicationStateFromDocument(documentId));

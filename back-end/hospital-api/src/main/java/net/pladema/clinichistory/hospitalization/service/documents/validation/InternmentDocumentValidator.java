@@ -52,6 +52,11 @@ public class InternmentDocumentValidator {
 			throw new ConstraintViolationException("Conceptos repetidos", Collections.emptySet());
 	}
 
+	public void assertProceduresValid(IDocumentBo documentBo) {
+		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(documentBo.getSurgeryProcedures()))
+			throw new ConstraintViolationException("Cirugías propuestas repetidas", Collections.emptySet());
+	}
+
 	public void assertMedicationsValid(IDocumentBo documentBo) {
 		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(documentBo.getMedications()))
 			throw new ConstraintViolationException("Medicaciones repetidas", Collections.emptySet());
