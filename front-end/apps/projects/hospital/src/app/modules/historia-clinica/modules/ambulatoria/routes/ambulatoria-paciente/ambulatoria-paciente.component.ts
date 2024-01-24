@@ -276,9 +276,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 
 		this.studyCategories$ = this.requestMasterDataService.categories();
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
-			.subscribe(show => this.showNursingSection = show);
-
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 	}
 
@@ -415,7 +412,8 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 			if (this.hasHealthRelatedRole || this.hasPrescriptorRole || this.hasEmergencyCareRelatedRole || 
 				this.hasPharmacyStaffRole || this.hasPicturesStaffRole || this.hasLaboratoryStaffRole)	{
 					this.showCardTabs = true;
-				}
+			}
+			this.showNursingTab(userRoles);
 		});
 	}
 
@@ -437,6 +435,15 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 				this.mapToSummaryCoverage(this.medicalCoverageInfo.appointmentConfirmedCoverageInfo) :
 				this.mapToSummaryCoverage(this.medicalCoverageInfo.internmentEpisodeCoverageInfo);
 		return summaryInfo;
+	}
+
+	private showNursingTab(userRoles: ERole[]) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
+			.subscribe(show => {
+				if (anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PERSONAL_DE_FARMACIA])
+					&& show) 
+					this.showNursingSection = show
+			});
 	}
 
 	private mapToSummaryCoverage(patientCoverage: ExternalPatientCoverageDto): SummaryCoverageInformation {
