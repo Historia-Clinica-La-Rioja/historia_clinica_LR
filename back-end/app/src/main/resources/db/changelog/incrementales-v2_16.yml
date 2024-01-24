@@ -670,3 +670,12 @@ databaseChangeLog:
               sql: |-
                 UPDATE reference SET status_id = 2 WHERE deleted = TRUE;
 
+    - changeSet:
+        id: add-metadata-service_request_status
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO service_request_status (id, description) VALUES('89925002', 'Cancelado');
+
