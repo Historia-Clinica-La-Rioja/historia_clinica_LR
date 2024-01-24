@@ -11,10 +11,13 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 
-import net.pladema.hsi.addons.billing.infrastructure.input.BillProcedureExternalService;
+import net.pladema.hsi.addons.billing.infrastructure.input.BillProceduresExternalService;
 import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresRequestDto;
 import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresResponseDto;
+import net.pladema.hsi.addons.billing.infrastructure.input.exception.BillProceduresExternalServiceException;
 import net.pladema.reports.service.domain.AnnexIIProcedureBo;
+
+import net.pladema.reports.service.exception.AnnexReportException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,13 +47,13 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     private final AnnexReportRepository annexReportRepository;
 	private final DocumentAppointmentService documentAppointmentService;
 	private final DocumentService documentService;
-	private final BillProcedureExternalService billProcedureExternalService;
+	private final BillProceduresExternalService billProcedureExternalService;
 
     public AnnexReportServiceImpl(
     	AnnexReportRepository annexReportRepository,
     	DocumentAppointmentService documentAppointmentService,
     	DocumentService documentService,
-    	BillProcedureExternalService billProcedureExternalService)
+    	BillProceduresExternalService billProcedureExternalService)
 	{
         this.annexReportRepository = annexReportRepository;
 		this.documentAppointmentService = documentAppointmentService;
@@ -85,7 +88,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 						result.setExistsConsultation(outpatientconsultationData.getExistsConsultation());
 
 						var billedProcedures = getBilledProcedures(
-							result.getMedicalCoverageCuit() == null ? "30222222221" : result.getMedicalCoverageCuit(),
+							null,//result.getMedicalCoverageCuit() == null ? "30222222221" : result.getMedicalCoverageCuit(),
 							result.getConsultationOrAttentionDate().atStartOfDay(),
 							documentService.getProcedureStateFromDocument(documentId)
 						);
@@ -150,10 +153,13 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 	}
 
 	private BillProceduresResponseDto getBilledProcedures(String medicalCoverageCuit, LocalDateTime date, List<ProcedureBo> procedures) {
-		BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date);
-		procedures.stream().forEach(p -> request.addProcedure(p.getSnomed().getSctid(), p.getSnomed().getPt()));
-		BillProceduresResponseDto billedProcedures = billProcedureExternalService.getBilledProcedures(request);
-		return billedProcedures;
+		try {
+			BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date);
+			procedures.stream().forEach(p -> request.addProcedure(p.getSnomed().getSctid(), p.getSnomed().getPt()));
+			return billProcedureExternalService.getBilledProcedures(request);
+		} catch (BillProceduresExternalServiceException e) {
+			throw new AnnexReportException(e.getCode(), e.getReason(), e.getErrorDetails());
+		}
 	}
 
 	@Override
