@@ -38,7 +38,7 @@ class FetchHospitalizationClinicalObservationStateTest {
 	void test_getRiskFactorsGeneralState_complete() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 2;
-		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
+		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId, List.of()))
 				.thenReturn(new MapClinicalObservationVo(mockRiskFactorsVo(quantity)));
 		Last2RiskFactorsBo last2RiskFactorsBo = clinicalObservationGeneralStateService.getLast2RiskFactorsGeneralState(internmentEpisodeId);
 
@@ -60,7 +60,7 @@ class FetchHospitalizationClinicalObservationStateTest {
 	void test_getRiskFactorsGeneralState_partial() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 1;
-		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
+		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId, List.of()))
 				.thenReturn(new MapClinicalObservationVo(mockRiskFactorsVo(quantity)));
 		Last2RiskFactorsBo last2RiskFactorsBo = clinicalObservationGeneralStateService.getLast2RiskFactorsGeneralState(internmentEpisodeId);
 
@@ -80,7 +80,7 @@ class FetchHospitalizationClinicalObservationStateTest {
 	void test_getRiskFactorsGeneralState_empty() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 0;
-		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
+		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId, List.of()))
 				.thenReturn(new MapClinicalObservationVo(mockRiskFactorsVo(quantity)));
 		Last2RiskFactorsBo last2RiskFactorsBo =  clinicalObservationGeneralStateService.getLast2RiskFactorsGeneralState(internmentEpisodeId);
 

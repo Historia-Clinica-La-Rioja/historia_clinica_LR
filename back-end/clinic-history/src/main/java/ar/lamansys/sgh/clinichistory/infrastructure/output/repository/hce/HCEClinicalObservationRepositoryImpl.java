@@ -3,33 +3,27 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEMapClinicalObservationVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Repository
 public class HCEClinicalObservationRepositoryImpl implements HCEClinicalObservationRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HCEClinicalObservationRepositoryImpl.class);
-
     private final EntityManager entityManager;
-
-    public HCEClinicalObservationRepositoryImpl(EntityManager entityManager){
-        super();
-        this.entityManager = entityManager;
-    }
 
     @Transactional(readOnly = true)
     @Override
     public HCEMapClinicalObservationVo getGeneralState(Integer patientId, List<Short> invalidDocumentTypes) {
-        LOG.debug("Input parameters -> patientId {}, invalidDocumentTypes {}", patientId, invalidDocumentTypes);
+        log.debug("Input parameters -> patientId {}, invalidDocumentTypes {}", patientId, invalidDocumentTypes);
 
 		String invalidDocumentCondition = (invalidDocumentTypes.isEmpty()) ? "" : "AND d.type_id NOT IN :invalidDocumentTypes ";
 		String queryString =
@@ -76,7 +70,7 @@ public class HCEClinicalObservationRepositoryImpl implements HCEClinicalObservat
                     (String) o[3], timeStamp != null ? timeStamp.toLocalDateTime() : null));
         }
         HCEMapClinicalObservationVo result = new HCEMapClinicalObservationVo(clinicalObservationVos);
-        LOG.debug("Output -> {}", result);
+        log.debug("Output -> {}", result);
         return result;
     }
 }

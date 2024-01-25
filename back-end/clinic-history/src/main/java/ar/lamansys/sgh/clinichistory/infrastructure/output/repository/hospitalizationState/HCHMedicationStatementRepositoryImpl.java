@@ -5,6 +5,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.MedicationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
+import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,19 +16,22 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Repository
 public class HCHMedicationStatementRepositoryImpl implements HCHMedicationStatementRepository {
 
-    private final EntityManager entityManager;
+    public static final String OUTPUT = "Output -> {}";
 
-    public HCHMedicationStatementRepositoryImpl(EntityManager entityManager){
-        this.entityManager = entityManager;
-    }
+    private final EntityManager entityManager;
 
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<MedicationVo> findGeneralState(Integer internmentEpisodeId) {
+    public List<MedicationVo> findGeneralState(Integer internmentEpisodeId, List<Short> invalidDocumentTypes) {
+        log.debug("Input parameters -> internmentEpisodeId {} invalidDocumentTypes {}", internmentEpisodeId, invalidDocumentTypes);
+
+        String invalidDocumentCondition = (invalidDocumentTypes.isEmpty()) ? "" : "AND d.type_id NOT IN :invalidDocumentTypes ";
 
         String sqlString = "with temporal as (" +
                 "select distinct " +
@@ -41,6 +47,7 @@ public class HCHMedicationStatementRepositoryImpl implements HCHMedicationStatem
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "and d.status_id IN (:documentStatusId) " +
+                     invalidDocumentCondition +
                 ") " +
                 "select t.id as id, s.sctid as sctid, s.pt, status_id, n.id as note_id, n.description as note " +
                 "from temporal t " +
@@ -49,11 +56,15 @@ public class HCHMedicationStatementRepositoryImpl implements HCHMedicationStatem
                 "where rw = 1 and not status_id = :medicationStatusId " +
                 "order by t.updated_on";
 
-        List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+        Query query = entityManager.createNativeQuery(sqlString)
                 .setParameter("internmentEpisodeId", internmentEpisodeId)
                 .setParameter("documentStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
-                .setParameter("medicationStatusId", MedicationStatementStatus.ERROR)
-                .getResultList();
+                .setParameter("medicationStatusId", MedicationStatementStatus.ERROR);
+        if (!invalidDocumentTypes.isEmpty())
+            query.setParameter("invalidDocumentTypes", invalidDocumentTypes);
+
+        List<Object[]> queryResult = query.getResultList();
+
         List<MedicationVo> result = new ArrayList<>();
         queryResult.forEach(m -> 
             result.add(new MedicationVo(
@@ -64,6 +75,7 @@ public class HCHMedicationStatementRepositoryImpl implements HCHMedicationStatem
                     (String)m[5]
             ))
         );
+        log.debug(OUTPUT, result);
         return result;
     }
 }

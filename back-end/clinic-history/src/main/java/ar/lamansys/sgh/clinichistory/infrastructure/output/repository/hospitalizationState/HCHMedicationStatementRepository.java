@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface HCHMedicationStatementRepository {
 
-    List<MedicationVo> findGeneralState(Integer internmentEpisodeId);
+    List<MedicationVo> findGeneralState(Integer internmentEpisodeId, List<Short> invalidDocumentTypes);
 }

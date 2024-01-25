@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.HCHHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +95,8 @@ public class FetchHospitalizationHealthConditionState {
     }
 
     private List<HealthConditionVo> getGeneralStateData(Integer internmentEpisodeId) {
-        return hchHealthConditionRepository.findGeneralState(internmentEpisodeId);
+        List<Short> invalidDocumentTypes = List.of(DocumentType.ANESTHETIC_REPORT);
+        return hchHealthConditionRepository.findGeneralState(internmentEpisodeId, invalidDocumentTypes);
     }
 
 }

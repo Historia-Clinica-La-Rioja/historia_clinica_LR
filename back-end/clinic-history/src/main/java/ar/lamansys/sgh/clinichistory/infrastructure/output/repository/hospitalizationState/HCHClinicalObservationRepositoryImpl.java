@@ -4,35 +4,32 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Repository
 public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservationRepository {
-
-    private static final Logger LOG = LoggerFactory.getLogger(HCHClinicalObservationRepositoryImpl.class);
 
     public static final String OUTPUT = "Output -> {}";
 
     private final EntityManager entityManager;
 
-    public HCHClinicalObservationRepositoryImpl(EntityManager entityManager){
-        super();
-        this.entityManager = entityManager;
-    }
-
     @Transactional(readOnly = true)
     @Override
-    public MapClinicalObservationVo getGeneralState(Integer internmentEpisodeId) {
-        LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+    public MapClinicalObservationVo getGeneralState(Integer internmentEpisodeId, List<Short> invalidDocumentTypes) {
+        log.debug("Input parameters -> internmentEpisodeId {} invalidDocumentTypes {}", internmentEpisodeId, invalidDocumentTypes);
+
+        String invalidDocumentCondition = (invalidDocumentTypes.isEmpty()) ? "" : "AND d.type_id NOT IN :invalidDocumentTypes ";
+
         Query query = entityManager.createNativeQuery(
                 "   (SELECT  ovs.id, " +
                 "            s.sctid, " +
@@ -46,6 +43,7 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "    WHERE source_id = :internmentEpisodeId " +
                 "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "          AND d.status_id IN (:statusId) " +
+                               invalidDocumentCondition +
                 " )UNION( " +
                 "   SELECT  ovs.id, " +
                 "            s.sctid, " +
@@ -59,10 +57,14 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                 "    WHERE source_id = :internmentEpisodeId " +
                 "          AND source_type_id = " + SourceType.HOSPITALIZATION +" "+
                 "          AND d.status_id IN (:statusId) " +
+                               invalidDocumentCondition +
                 ")" +
                 "    ORDER BY effective_time DESC " );
         query.setParameter("internmentEpisodeId", internmentEpisodeId);
         query.setParameter("statusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT));
+        if(!invalidDocumentTypes.isEmpty())
+            query.setParameter("invalidDocumentTypes", invalidDocumentTypes);
+
         List<Object[]> queryResult = query.getResultList();
         List<ClinicalObservationVo> clinicalObservationVos = new ArrayList<>();
         for (Object[] o : queryResult) {
@@ -71,7 +73,7 @@ public class HCHClinicalObservationRepositoryImpl implements HCHClinicalObservat
                     (String) o[3], timeStamp != null ? timeStamp.toLocalDateTime() : null));
         }
         MapClinicalObservationVo result = new MapClinicalObservationVo(clinicalObservationVos);
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
     }
 }

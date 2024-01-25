@@ -5,6 +5,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
+import javax.persistence.Query;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,20 +17,20 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Repository
 public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepository {
 
     private final EntityManager entityManager;
 
-    public HCHHealthConditionRepositoryImpl(EntityManager entityManager){
-        super();
-        this.entityManager = entityManager;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)
-    public List<HealthConditionVo> findGeneralState(Integer internmentEpisodeId) {
+    public List<HealthConditionVo> findGeneralState(Integer internmentEpisodeId, List<Short> invalidDocumentTypes) {
+        log.debug("Input parameters -> internmentEpisodeId {} invalidDocumentTypes {}", internmentEpisodeId, invalidDocumentTypes);
+
+        String invalidDocumentCondition = (invalidDocumentTypes.isEmpty()) ? "" : "AND d.type_id NOT IN :invalidDocumentTypes ";
 
         String sqlString = "with t as (" +
                 "select hc.id, snomed_id, hc.status_id, hc.main, verification_status_id, problem_id, start_date, hc.note_id, hc.updated_on, " +
@@ -37,7 +40,9 @@ public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepos
                 "join {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
                 "where d.source_id = :internmentEpisodeId " +
                 "and d.source_type_id = " + SourceType.HOSPITALIZATION +" "+
-                "and d.status_id IN (:statusId) )" +
+                "and d.status_id IN (:statusId) " +
+                     invalidDocumentCondition +
+                ") " +
                 "select t.id as id, s.sctid as sctid, s.pt, status_id, t.main, verification_status_id, problem_id, " +
                 "start_date, n.id note_id, n.description as note " +
                 "from t " +
@@ -46,11 +51,14 @@ public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepos
                 "where rw = 1 and not verification_status_id = :verificationId " +
                 "order by t.updated_on desc";
 
-        List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+        Query query = entityManager.createNativeQuery(sqlString)
 				.setParameter("statusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("verificationId", ConditionVerificationStatus.ERROR)
-                .setParameter("internmentEpisodeId", internmentEpisodeId)
-                .getResultList();
+                .setParameter("internmentEpisodeId", internmentEpisodeId);
+        if (!invalidDocumentTypes.isEmpty())
+            query.setParameter("invalidDocumentTypes", invalidDocumentTypes);
+
+        List<Object[]> queryResult =  query.getResultList();
 
         List<HealthConditionVo> result = new ArrayList<>();
 
@@ -65,6 +73,7 @@ public class HCHHealthConditionRepositoryImpl implements HCHHealthConditionRepos
                     h[8] != null ? ((BigInteger)h[8]).longValue() : null,
                     (String)h[9]))
         );
+        log.debug("Output -> {}", result);
         return result;
     }
 }
