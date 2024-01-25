@@ -33,7 +33,7 @@ public class AnthropometricDataValidator {
     }
 
     private void validHeightClinicalObservation(ClinicalObservationBo clinicalObservationBo, String property) {
-        if (clinicalObservationBo == null)
+        if (clinicalObservationBo == null || clinicalObservationBo.getValue() == null)
             return;
         int anthropometricValue = Integer.parseInt(clinicalObservationBo.getValue());
         if (anthropometricValue >= MIN_HEIGHT_VALUE && anthropometricValue <= MAX_HEIGHT_VALUE)
@@ -42,7 +42,7 @@ public class AnthropometricDataValidator {
     }
 
     private void validWeightClinicalObservation(ClinicalObservationBo clinicalObservationBo, String property) {
-        if (clinicalObservationBo == null)
+        if (clinicalObservationBo == null || clinicalObservationBo.getValue() == null)
             return;
         double anthropometricValue = Double.parseDouble(clinicalObservationBo.getValue());
         if (anthropometricValue >= MIN_WEIGHT_VALUE && anthropometricValue <= MAX_WEIGHT_VALUE)

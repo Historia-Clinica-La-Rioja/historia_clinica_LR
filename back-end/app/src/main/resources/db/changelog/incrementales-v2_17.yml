@@ -187,7 +187,7 @@ databaseChangeLog:
                       nullable: true
 
     - changeSet:
-        id: createTable-pre_medication
+        id: createTable-anesthetic_substance
         author: mromero
         changes:
           - createTable:
@@ -216,14 +216,11 @@ databaseChangeLog:
                     type: int
                 - column:
                     constraints:
-                      nullable: false
                       references: dosage(id)
                       foreignKeyName: FK_dosage_id_pre_medication
                     name: dosage_id
                     type: int
                 - column:
-                    constraints:
-                      nullable: false
                     name: via_id
                     type: smallint
 
@@ -243,11 +240,8 @@ databaseChangeLog:
                     name: document_id
                     type: bigint
                 - column:
-                    constraints:
-                      nullable: false
                     name: clock_time
                     type: time
-                    defaultValue: '00:00:00'
 
     - changeSet:
         id: createTable-document_pre_medication
@@ -257,9 +251,13 @@ databaseChangeLog:
               tableName: document_pre_medication
               columns:
                 - column:
+                    constraints:
+                      nullable: false
                     name: document_id
                     type: bigint
                 - column:
+                    constraints:
+                      nullable: false
                     name: pre_medication_id
                     type: int
           - addPrimaryKey:
@@ -303,8 +301,6 @@ databaseChangeLog:
                     name: document_id
                     type: bigint
                 - column:
-                    constraints:
-                      nullable: false
                     name: state_id
                     type: smallint
                 - column:
@@ -330,8 +326,6 @@ databaseChangeLog:
                     name: note_id
                     type: bigint
                 - column:
-                    constraints:
-                      nullable: false
                     name: asa
                     type: smallint
 

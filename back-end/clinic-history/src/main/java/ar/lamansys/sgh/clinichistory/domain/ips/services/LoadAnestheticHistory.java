@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -18,7 +20,8 @@ public class LoadAnestheticHistory {
     public AnestheticHistoryBo run(Long documentId, Optional<AnestheticHistoryBo> anestheticHistory) {
         log.debug("Input parameters -> documentId {} anestheticHistory {}", documentId, anestheticHistory);
 
-        anestheticHistory.ifPresent((anestheticHistoryBo -> {
+        anestheticHistory.filter(anestheticHistoryBo -> nonNull(anestheticHistoryBo.getStateId()) || nonNull(anestheticHistoryBo.getZoneId()))
+                .ifPresent((anestheticHistoryBo -> {
             Short stateId = anestheticHistoryBo.getStateId();
             Short zoneId = anestheticHistoryBo.getZoneId();
             DocumentAnestheticHistory saved = documentAnestheticHistoryRepository.save(new DocumentAnestheticHistory(documentId, stateId, zoneId));

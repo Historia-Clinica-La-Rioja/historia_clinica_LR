@@ -15,8 +15,8 @@ public interface AnestheticHistoryMapper {
     AnestheticHistoryDto toAnestheticHistoryDto(AnestheticHistoryBo anestheticHistoryBo);
 
     @Named("toAnestheticHistoryBo")
-    @Mapping(target = "state", expression = "java(EPreviousAnesthesiaState.map(anestheticHistoryDto.getStateId()))")
-    @Mapping(target = "zone", expression = "java(EAnesthesiaZone.map(anestheticHistoryDto.getZoneId()))")
+    @Mapping(target = "state", expression = "java(anestheticHistoryDto.getStateId() != null ? EPreviousAnesthesiaState.map(anestheticHistoryDto.getStateId()) : null)")
+    @Mapping(target = "zone", expression = "java(anestheticHistoryDto.getZoneId() != null ? EAnesthesiaZone.map(anestheticHistoryDto.getZoneId()) : null)")
     AnestheticHistoryBo toAnestheticHistoryBo(AnestheticHistoryDto anestheticHistoryDto);
 
 }

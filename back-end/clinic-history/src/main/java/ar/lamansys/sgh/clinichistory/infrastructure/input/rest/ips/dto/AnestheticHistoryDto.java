@@ -2,7 +2,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 
 import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class AnestheticHistoryDto {
 
-    @NotNull(message = "${value.mandatory}")
+    @Nullable
     private Short stateId;
 
     @Nullable

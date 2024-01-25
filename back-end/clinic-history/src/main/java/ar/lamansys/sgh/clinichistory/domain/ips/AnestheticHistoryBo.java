@@ -21,12 +21,12 @@ public class AnestheticHistoryBo {
 
     public AnestheticHistoryBo(Long id, Short stateId, Short zoneId) {
         this.id = id;
-        this.state = EPreviousAnesthesiaState.map(stateId);
+        this.state = nonNull(stateId) ? EPreviousAnesthesiaState.map(stateId) : null;
         this.zone = nonNull(zoneId) ? EAnesthesiaZone.map(zoneId) : null;
     }
 
     public Short getStateId() {
-        return state.getId();
+        return nonNull(state) ? state.getId() : null;
     }
 
     public Short getZoneId() {

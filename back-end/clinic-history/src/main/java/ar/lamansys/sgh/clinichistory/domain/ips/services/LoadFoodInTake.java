@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -19,7 +21,8 @@ public class LoadFoodInTake {
     public FoodIntakeBo run(Long documentId, Optional<FoodIntakeBo> foodInTake) {
         log.debug("Input parameters -> documentId {} foodInTake {}", documentId, foodInTake);
 
-        foodInTake.ifPresent((foodInTakeBo -> {
+        foodInTake.filter(foodIntakeBo -> nonNull(foodIntakeBo.getClockTime()))
+                .ifPresent((foodInTakeBo -> {
             LocalTime clockTime = foodInTakeBo.getClockTime();
             DocumentFoodInTake saved = documentFoodInTakeRepository.save(new DocumentFoodInTake(documentId, clockTime));
             foodInTakeBo.setId(saved.getDocumentId());

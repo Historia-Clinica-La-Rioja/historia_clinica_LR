@@ -57,7 +57,7 @@ public class AnestheticReportDto {
     private @Valid FoodIntakeDto foodIntake;
 
     @Nullable
-    private @Valid List<HealthConditionDto> histories;
+    private @Valid List<HealthConditionDto> histories = new ArrayList<>();
 
     @Nullable
     private @Valid ProcedureDescriptionDto procedureDescription;

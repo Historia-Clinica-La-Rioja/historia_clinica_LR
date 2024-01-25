@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
@@ -66,12 +67,16 @@ public class CreateAnestheticReport {
     }
 
     public void setTypeSurgicalProcedures(List<ProcedureBo> surgicalProcedures) {
-        surgicalProcedures.forEach(surgicalProcedure -> surgicalProcedure.setType(ProcedureTypeEnum.SURGICAL_PROCEDURE));
+        surgicalProcedures
+                .stream()
+                .filter(Objects::nonNull)
+                .forEach(surgicalProcedure -> surgicalProcedure.setType(ProcedureTypeEnum.SURGICAL_PROCEDURE));
     }
 
     public void setEventPeriodUnitDosages(List<PreMedicationBo> preMedications) {
         preMedications.stream()
                 .map(PreMedicationBo::getDosage)
+                .filter(Objects::nonNull)
                 .forEach(dosageBo -> dosageBo.setPeriodUnit(EUnitsOfTimeBo.EVENT));
     }
 

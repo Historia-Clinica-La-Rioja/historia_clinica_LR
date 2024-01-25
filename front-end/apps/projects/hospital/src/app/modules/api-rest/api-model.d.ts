@@ -159,7 +159,7 @@ export interface AnamnesisSummaryDto extends DocumentSummaryDto {
 }
 
 export interface AnestheticHistoryDto {
-    stateId: number;
+    stateId?: number;
     zoneId?: number;
 }
 
@@ -1388,7 +1388,7 @@ export interface EducationLevelDto extends Serializable {
 }
 
 export interface EffectiveClinicalObservationDto extends ClinicalObservationDto {
-    effectiveTime: string;
+    effectiveTime?: string;
 }
 
 export interface EmergencyCareDto extends Serializable {
@@ -3367,7 +3367,7 @@ export interface ProblemInfoDto {
 }
 
 export interface ProcedureDescriptionDto {
-    asa: number;
+    asa?: number;
     note?: string;
 }
 

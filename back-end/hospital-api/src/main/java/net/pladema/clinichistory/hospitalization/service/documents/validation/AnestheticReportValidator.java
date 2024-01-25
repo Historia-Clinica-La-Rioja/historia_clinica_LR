@@ -17,7 +17,7 @@ public class AnestheticReportValidator extends InternmentDocumentValidator {
 
         super.assertContextValid(anestheticReport);
         super.assertDocumentValid(anestheticReport);
-        super.assertDiagnosisValid(anestheticReport, anestheticReport.getMainDiagnosis());
+        this.assertMainDiagnosis(anestheticReport);
         super.assertProceduresValid(anestheticReport);
         super.assertAnthropometricData(anestheticReport);
         super.assertMedicationsValid(anestheticReport);
@@ -25,5 +25,10 @@ public class AnestheticReportValidator extends InternmentDocumentValidator {
         bloodRiskFactorsValidator.assertContextValid(anestheticReport.getRiskFactors());
 
         log.trace("Output -> isValid anestheticReport {}", anestheticReport);
+    }
+
+    private void assertMainDiagnosis(AnestheticReportBo anestheticReport) {
+        if (anestheticReport.getMainDiagnosis() != null)
+            super.assertDiagnosisValid(anestheticReport, anestheticReport.getMainDiagnosis());
     }
 }

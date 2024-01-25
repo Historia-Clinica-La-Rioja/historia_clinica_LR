@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static java.util.Objects.nonNull;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -20,7 +22,8 @@ public class LoadProcedureDescription {
     public ProcedureDescriptionBo run(Long documentId, Optional<ProcedureDescriptionBo> procedureDescription) {
         log.debug("Input parameters -> documentId {} procedureDescription {}", documentId, procedureDescription);
 
-        procedureDescription.ifPresent((procedureDescriptionBo -> {
+        procedureDescription.filter(procedureDescriptionBo -> nonNull(procedureDescriptionBo.getNote()) || nonNull(procedureDescriptionBo.getAsa()))
+                .ifPresent((procedureDescriptionBo -> {
             Long noteId = noteService.createNote(procedureDescriptionBo.getNote());
             Short asa = procedureDescriptionBo.getAsa();
             DocumentProcedureDescription saved = documentProcedureDescriptionRepository.save(new DocumentProcedureDescription(documentId, noteId, asa));

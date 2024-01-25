@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +21,7 @@ public class ProcedureDescriptionDto {
     @Nullable
     private String note;
 
-    @NotNull
+    @Nullable
     @Min(1)
     @Max(5)
     private Short asa;

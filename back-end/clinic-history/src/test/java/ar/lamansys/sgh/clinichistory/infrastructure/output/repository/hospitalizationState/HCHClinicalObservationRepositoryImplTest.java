@@ -22,7 +22,6 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -32,7 +31,6 @@ import java.time.format.DateTimeFormatter;
 
 class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 
-	@InjectMocks
 	private HCHClinicalObservationRepositoryImpl clinicalObservationRepository;
 
 	@MockBean
@@ -54,7 +52,9 @@ class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
 
 	@BeforeEach
-	void setUp() {}
+	void setUp() {
+		this.clinicalObservationRepository = new HCHClinicalObservationRepositoryImpl(entityManager);
+	}
 
 	@Test
 	void saveCreateTest() {

@@ -34,9 +34,9 @@ public class PreMedication {
     @Column(name = "snomed_id", nullable = false)
     private Integer snomedId;
 
-    @Column(name = "dosage_id", nullable = false)
+    @Column(name = "dosage_id")
     private Integer dosageId;
 
-    @Column(name = "via_id", nullable = false)
+    @Column(name = "via_id")
     private Short viaId;
 }
