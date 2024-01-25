@@ -2,10 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, DiagnosisDto, HospitalizationProcedureDto, ProblemTypeEnum, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
-import { dateTimeDtoToDate, stringToTimeDto, timeDtotoString } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto, stringToTimeDto, timeDtotoString } from '@api-rest/mapper/date-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { momentToDateDto } from '@core/utils/moment.utils';
+import { sameDayMonthAndYear } from '@core/utils/date.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { DiagnosisCreationEditionComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -27,12 +27,15 @@ export class SurgicalReportProceduresComponent implements OnInit {
 	searchConceptsLocallyFF = false;
 	diagnosis: DiagnosisDto[] = [];
 	description: string;
+	minDate: Date;
+	maxDate: Date;
+	endTimeBeforeStartTimeInvalid = false;
 
 	dateForm = new FormGroup({
 		startDate: new FormControl(null, [Validators.required]),
-		startTime: new FormControl(null, [Validators.required, this.timeFormatValidator]),
+		startTime: new FormControl({ value: null, disabled: true }, [Validators.required, this.timeFormatValidator]),
 		endDate: new FormControl(null, [Validators.required]),
-		endTime: new FormControl(null, [Validators.required, this.timeFormatValidator]),
+		endTime: new FormControl({ value: null, disabled: true }, [Validators.required, this.timeFormatValidator]),
 	});
 
 	constructor(
@@ -64,14 +67,17 @@ export class SurgicalReportProceduresComponent implements OnInit {
 	}
 
 	private loadData(): void {
-		if (this.surgicalReport.startDateTime) {
-			this.dateForm.controls.startDate.setValue(dateTimeDtoToDate(this.surgicalReport.startDateTime));
+		if (this.surgicalReport.startDateTime && this.surgicalReport.endDateTime) {
+			const startDate = dateTimeDtoToDate(this.surgicalReport.startDateTime);
+			const endDate = dateTimeDtoToDate(this.surgicalReport.endDateTime)
+			this.dateForm.controls.startDate.setValue(startDate);
+			this.minDate = startDate;
 			this.dateForm.controls.startTime.setValue(timeDtotoString(this.surgicalReport.startDateTime.time));
-
-		}
-		if (this.surgicalReport.endDateTime) {
-			this.dateForm.controls.endDate.setValue(dateTimeDtoToDate(this.surgicalReport.endDateTime));
+			this.dateForm.get('startTime')?.enable();
+			this.dateForm.controls.endDate.setValue(endDate);
+			this.maxDate = endDate;
 			this.dateForm.controls.endTime.setValue(timeDtotoString(this.surgicalReport.endDateTime.time));
+			this.dateForm.get('endTime')?.enable();
 		}
 		this.description = this.surgicalReport.description;
 	}
@@ -82,6 +88,64 @@ export class SurgicalReportProceduresComponent implements OnInit {
 			return { 'invalidTime': true };
 		}
 		return null;
+	}
+
+	private validateTime(): void {
+		const startTime = this.dateForm.get('startTime').value;
+		const endTime = this.dateForm.get('endTime').value;
+
+		const startHours = parseInt(startTime?.split(':')[0], 10);
+		const startMinutes = parseInt(startTime?.split(':')[1], 10);
+		const endHours = parseInt(endTime?.split(':')[0], 10);
+		const endMinutes = parseInt(endTime?.split(':')[1], 10);
+
+		const startTimeValid = !(this.dateForm.get('startTime').hasError('required') || this.dateForm.get('startTime').hasError('invalidTime'));
+		const endTimeValid = !(this.dateForm.get('endTime').hasError('required') || this.dateForm.get('endTime').hasError('invalidTime'));
+		const endTimeBeforeStartTime = endHours < startHours || (endHours === startHours && endMinutes <= startMinutes);
+
+		const endDateControl = this.dateForm.get('endTime');
+		const currentErrors = endDateControl.errors;
+
+		if (startTimeValid && endTimeValid && endTimeBeforeStartTime) {
+			endDateControl.setErrors({ ...(currentErrors), 'endTimeBeforeStartTime': true });
+		} else {
+			if (currentErrors && currentErrors['endTimeBeforeStartTime']) {
+				delete currentErrors['endTimeBeforeStartTime'];
+				if (Object.keys(currentErrors).length)
+					endDateControl.setErrors(currentErrors);
+				else
+					endDateControl.setErrors(null);
+			}
+		}
+	}
+
+	private validateDate(): void {
+		const startDate: Date = this.dateForm.get('startDate').value;
+		const endDate = this.dateForm.get('endDate').value;
+		const startDateTime = new Date(startDate);
+		const endDateTime = new Date(endDate);
+		const sameDate = sameDayMonthAndYear(startDateTime, endDateTime);
+
+		if (sameDate)
+			this.validateTime();
+
+		this.validDate.emit(this.dateForm.valid);
+	}
+
+	private changeProcedure(procedures): void {
+		procedures.forEach(procedure =>
+			this.surgicalReport.procedures = pushIfNotExists(this.surgicalReport.procedures, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.PROCEDURE), this.compare));
+	}
+
+	private compare(first, second): boolean {
+		return first.snomed.sctid === second.snomed.sctid;
+	}
+
+	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
+		return {
+			snomed: procedure.snomed,
+			type: type
+		}
 	}
 
 	addProcedure() {
@@ -123,39 +187,31 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		this.surgicalReport.procedures = removeFrom(this.surgicalReport.surgeryProcedures, index);
 	}
 
-	changeStartDateTime(date: Moment): void {
-		if (date)
-			this.surgicalReport.startDateTime.date = momentToDateDto(date);
+	changeStartDate(moment: Moment): void {
+		const date = moment?.toDate();
+		if (date) {
+			this.surgicalReport.startDateTime.date = dateToDateDto(date);
+			this.minDate = date;
+			this.dateForm.get('startTime')?.enable();
+		}
+		else
+			this.dateForm.get('startTime')?.disable();
 		this.validateDate();
 	}
 
-	changeEndDateTime(date: Moment): void {
-		if (date)
-			this.surgicalReport.endDateTime.date = momentToDateDto(date);
+	changeEndDate(moment: Moment): void {
+		const date = moment?.toDate();
+		if (date) {
+			this.surgicalReport.endDateTime.date = dateToDateDto(date);
+			this.maxDate = date;
+			this.dateForm.get('endTime')?.enable();
+		}
+		else
+			this.dateForm.get('endTime')?.disable();
 		this.validateDate();
 	}
 
 	changeDescription(description): void {
 		this.surgicalReport.description = description;
-	}
-
-	validateDate(): void {
-		this.validDate.emit(this.dateForm.valid);
-	}
-
-	private changeProcedure(procedures): void {
-		procedures.forEach(procedure =>
-			this.surgicalReport.procedures = pushIfNotExists(this.surgicalReport.procedures, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.PROCEDURE), this.compare));
-	}
-
-	private compare(first, second): boolean {
-		return first.snomed.sctid === second.snomed.sctid;
-	}
-
-	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
-		return {
-			snomed: procedure.snomed,
-			type: type
-		}
 	}
 }

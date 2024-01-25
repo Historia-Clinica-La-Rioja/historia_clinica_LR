@@ -151,6 +151,7 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 		dialogRef.afterClosed().subscribe(reason => {
 			if (reason) {
 				this.surgicalReport.modificationReason = reason;
+				this.isLoading = true;
 				this.surgicalReportService.editSurgicalReport(this.data.internmentEpisodeId, this.data.surgicalReportId, this.surgicalReport).subscribe(
 					success => {
 						this.snackBarService.showSuccess('Parte quirúrgico editado correctamente');

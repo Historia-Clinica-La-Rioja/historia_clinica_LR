@@ -8,8 +8,8 @@
 			<mat-form-field appearance="outline">
 				<mat-label
 					[translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE'"></mat-label>
-				<input matInput id="start" [matDatepicker]="startDatePicker" formControlName="startDate"
-					(dateChange)="changeStartDateTime($event.value)">
+				<input matInput id="start" [matDatepicker]="startDatePicker" formControlName="startDate" [max]="maxDate"
+					(dateChange)="changeStartDate($event.value)">
 				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 				<mat-datepicker #startDatePicker></mat-datepicker>
 				<mat-error *ngIf="dateForm.get('startDate').hasError('required')">Fecha requerida</mat-error>
@@ -29,8 +29,8 @@
 		<div fxLayout="row" fxLayoutGap="20px">
 			<mat-form-field appearance="outline">
 				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE'"></mat-label>
-				<input matInput id="end" [matDatepicker]="endDatePicker" formControlName="endDate"
-					(dateChange)="changeEndDateTime($event.value)">
+				<input matInput id="end" [matDatepicker]="endDatePicker" formControlName="endDate" [min]="minDate"
+					(dateChange)="changeEndDate($event.value)">
 				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 				<mat-datepicker #endDatePicker></mat-datepicker>
 				<mat-error *ngIf="dateForm.get('endDate').hasError('required')">Fecha requerida</mat-error>
@@ -41,6 +41,7 @@
 				<input matInput formControlName="endTime">
 				<mat-icon matSuffix>schedule</mat-icon>
 				<mat-hint>HH:MM</mat-hint>
+				<mat-error *ngIf="dateForm.get('endTime').hasError('endTimeBeforeStartTime')">La hora de cierre debe ser posterior a la fecha de inicio</mat-error>
 				<mat-error *ngIf="dateForm.get('endTime').hasError('required')">Hora requerida</mat-error>
 				<mat-error *ngIf="!dateForm.get('endTime').hasError('required') && dateForm.get('endTime').hasError('invalidTime')">Hora inválida</mat-error>
 			</mat-form-field>

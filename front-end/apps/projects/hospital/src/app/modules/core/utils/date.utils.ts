@@ -119,3 +119,10 @@ export const toHourMinute = (date: Date): string => format(date, HOUR_MINUTE);
 const HOUR_MINUTE_SECOND = 'HH:mm:ss';
 export const toHourMinuteSecond = (date: Date): string => format(date, HOUR_MINUTE_SECOND);
 
+export function sameDayMonthAndYear(date1: Date, date2: Date): boolean {
+	return (
+		date1.getFullYear() === date2.getFullYear() &&
+		date1.getMonth() === date2.getMonth() &&
+		date1.getDate() === date2.getDate()
+	);
+}
