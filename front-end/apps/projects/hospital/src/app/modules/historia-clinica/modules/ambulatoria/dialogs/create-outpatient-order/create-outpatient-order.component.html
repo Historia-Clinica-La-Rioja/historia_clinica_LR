@@ -83,69 +83,69 @@
 	</ng-container>
 
 	<ng-template #confirmStep>
-
+		<mat-dialog-content>
 		<!-- MEDICAL COVERAGE SELECTION -->
 
-		<mat-form-field appearance="outline" class="full-width">
-			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}</mat-label>
-			<mat-select formControlName="patientMedicalCoverage">
-				<mat-option
-					id="medicalCoverage"
-					name="medicalCoverage"
-					*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
-					{{ patientMedicalCoverage | fullMedicalCoverage }}
-				</mat-option>
-				<mat-divider></mat-divider>
-				<mat-option (click)="openMedicalCoverageDialog()">
-					<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
-				</mat-option>
-			</mat-select>
-			<button id="clear-medical-coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverage" matSuffix
-					color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
-				<mat-icon>close</mat-icon>
-			</button>
-		</mat-form-field>
+			<mat-form-field appearance="outline" class="full-width">
+				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}</mat-label>
+				<mat-select formControlName="patientMedicalCoverage">
+					<mat-option
+						id="medicalCoverage"
+						name="medicalCoverage"
+						*ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
+						{{ patientMedicalCoverage | fullMedicalCoverage }}
+					</mat-option>
+					<mat-divider></mat-divider>
+					<mat-option (click)="openMedicalCoverageDialog()">
+						<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
+					</mat-option>
+				</mat-select>
+				<button id="clear-medical-coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverage" matSuffix
+						color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
+					<mat-icon>close</mat-icon>
+				</button>
+			</mat-form-field>
 
-		<div *ngIf="selectedStudyIsTemplate()" class="uppercase template-name"> {{this.getStudyDisplayName()}}: </div>
+			<div *ngIf="selectedStudyIsTemplate()" class="uppercase template-name"> {{this.getStudyDisplayName()}}: </div>
 
-		<div *ngFor="let study of orderStudiesService.getStudies(); let i = index">
-			<div id="selected-study-row" fxLayout="row">
-				<div id="selected-study-name" fxFlex="90%">
-				<span class="capitalize-first-letter">
-					{{ study.snomed.pt }}
-				</span>
+			<div *ngFor="let study of orderStudiesService.getStudies(); let i = index">
+				<div id="selected-study-row" fxLayout="row">
+					<div id="selected-study-name" fxFlex="90%">
+					<span class="capitalize-first-letter">
+						{{ study.snomed.pt }}
+					</span>
+					</div>
+					<button fxFlex="10%" mat-icon-button color="warn" [disabled]="orderStudiesService.getStudies().length <= 1" (click)="removeStudy(i)">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
 				</div>
-				<button fxFlex="10%" mat-icon-button color="warn" [disabled]="orderStudiesService.getStudies().length <= 1" (click)="removeStudy(i)">
-					<mat-icon>delete_outline</mat-icon>
+			</div>
+
+
+			<div>
+				<button class="color-primary bold" mat-button type="button" (click)="openAddAnotherStudyDialog()">
+					{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ADD_STUDY' | translate}}
 				</button>
 			</div>
-		</div>
 
+			<div id="order-detail">
 
-		<div>
-			<button class="color-primary bold" mat-button type="button" (click)="openAddAnotherStudyDialog()">
-				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ADD_STUDY' | translate}}
-			</button>
-		</div>
+				<div id="order-detail-category" class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
 
-		<div id="order-detail">
+				<div id="order-detail-health-problem" class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
 
-			<div id="order-detail-category" class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
+				<div class="detail-text"> {{ getNotesDisplayText() }} </div>
 
-			<div id="order-detail-health-problem" class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
+			</div>
 
-			<div class="detail-text"> {{ getNotesDisplayText() }} </div>
+			<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 
-		</div>
+				<button mat-flat-button color="primary" (click)="confirmOrder()">
+					<span class="uppercase"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
+				</button>
 
-		<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
-
-			<button mat-flat-button color="primary" (click)="confirmOrder()">
-				<span class="uppercase"> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
-			</button>
-
-		</mat-dialog-actions>
-
+			</mat-dialog-actions>
+		</mat-dialog-content>
 	</ng-template>
 
 
