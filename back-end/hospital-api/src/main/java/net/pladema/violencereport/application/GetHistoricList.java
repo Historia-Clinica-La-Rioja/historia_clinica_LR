@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.person.service.PersonService;
+import net.pladema.violencereport.domain.ViolenceReportFilterBo;
 import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
 
 import net.pladema.violencereport.infrastructure.output.repository.ViolenceReportRepository;
@@ -22,9 +23,9 @@ public class GetHistoricList {
 
 	private PersonService personService;
 
-	public List<ViolenceReportSituationEvolutionBo> run(Integer patientId) {
-		log.debug("Input parameters -> patientId {}", patientId);
-		List<ViolenceReportSituationEvolutionBo> result = violenceReportRepository.getPatientHistoric(patientId);
+	public List<ViolenceReportSituationEvolutionBo> run(Integer patientId, ViolenceReportFilterBo filter) {
+		log.debug("Input parameters -> patientId {}, filter {}", patientId, filter);
+		List<ViolenceReportSituationEvolutionBo> result = violenceReportRepository.getPatientHistoric(patientId, filter.getInstitutionId(), filter.getSituationId(), filter.getModalityId(), filter.getTypeId());
 		getProfessionalsNames(result);
 		log.debug("Output -> {}", result);
 		return result;

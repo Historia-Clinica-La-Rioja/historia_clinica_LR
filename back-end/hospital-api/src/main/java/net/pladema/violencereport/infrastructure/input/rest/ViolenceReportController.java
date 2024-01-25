@@ -2,11 +2,15 @@ package net.pladema.violencereport.infrastructure.input.rest;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.pladema.violencereport.application.GetFilters;
 import net.pladema.violencereport.application.GetHistoricList;
 import net.pladema.violencereport.application.GetSituationEvolution;
 import net.pladema.violencereport.application.SaveSituationEvolution;
 
+import net.pladema.violencereport.domain.ViolenceReportFilterBo;
 import net.pladema.violencereport.domain.ViolenceReportFilterOptionBo;
 import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportFilterOptionDto;
@@ -65,6 +69,8 @@ public class ViolenceReportController {
 
 	private GetFilters getFilters;
 
+	private ObjectMapper objectMapper;
+
 	@PostMapping(value = "/patient/{patientId}")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
 										 @PathVariable("patientId") Integer patientId,
@@ -116,12 +122,22 @@ public class ViolenceReportController {
 	}
 
 	@GetMapping(value = "/patient/{patientId}/historic")
-	public List<ViolenceReportSituationEvolutionDto> getHistoric(@PathVariable("institutionId") Integer institutionId, @PathVariable("patientId") Integer patientId) {
-		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
-		List<ViolenceReportSituationEvolutionBo> violenceReportSituationEvolutionBos = getHistoricList.run(patientId);
+	public List<ViolenceReportSituationEvolutionDto> getHistoric(@PathVariable("institutionId") Integer institutionId,
+																 @PathVariable("patientId") Integer patientId,
+																 @RequestParam("filterData") String filterData) throws JsonProcessingException {
+		log.debug("Input parameters -> institutionId {}, patientId {}, filterData {}", institutionId, patientId, filterData);
+		ViolenceReportFilterBo filter = initializeViolenceReportFilter(filterData);
+		List<ViolenceReportSituationEvolutionBo> violenceReportSituationEvolutionBos = getHistoricList.run(patientId, filter);
 		List<ViolenceReportSituationEvolutionDto> result = violenceReportMapper.toViolenceReportSituationEvolutionDtoList(violenceReportSituationEvolutionBos);
 		log.debug("Output -> result {}", result);
 		return result;
+	}
+
+	private ViolenceReportFilterBo initializeViolenceReportFilter(String filterData) throws JsonProcessingException {
+		ViolenceReportFilterBo filter = objectMapper.readValue(filterData, ViolenceReportFilterBo.class);
+		if (filter == null)
+			filter = new ViolenceReportFilterBo();
+		return filter;
 	}
 
 	@GetMapping(value = "/patient/{patientId}/situation/{situationId}/evolution/{evolutionId}")

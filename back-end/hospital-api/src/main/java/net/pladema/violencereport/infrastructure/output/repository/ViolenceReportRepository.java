@@ -59,11 +59,22 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 	Short getSituationLastEvolutionId(@Param("patientId") Integer patientId, @Param("situationId") Short situationId);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo(vr.situationId, vr.evolutionId, vr.episodeDate, vr.creationable.createdOn, up.pk.personId) " +
+	@Query(" SELECT DISTINCT NEW net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo(vr.situationId, vr.evolutionId, vr.episodeDate, vr.creationable.createdOn, up.pk.personId) " +
 			"FROM ViolenceReport vr " +
 			"JOIN UserPerson up on (up.pk.userId = vr.creationable.createdBy) " +
+			"JOIN ViolenceModality vm ON (vm.pk.reportId = vr.id) " +
+			"JOIN ViolenceType vt ON (vt.pk.reportId = vr.id) " +
+			"WHERE vr.patientId = :patientId " +
+			"AND (:institutionId IS NULL OR vr.institutionId = :institutionId) " +
+			"AND (:modalityId IS NULL OR vm.pk.snomedId = :modalityId) " +
+			"AND (:typeId IS NULL OR vt.pk.snomedId = :typeId) " +
+			"AND (:situationId IS NULL OR vr.situationId = :situationId) " +
 			"ORDER BY vr.creationable.createdOn DESC")
-    List<ViolenceReportSituationEvolutionBo> getPatientHistoric(@Param("patientId") Integer patientId);
+    List<ViolenceReportSituationEvolutionBo> getPatientHistoric(@Param("patientId") Integer patientId,
+																@Param("institutionId") Integer institutionId,
+																@Param("situationId") Short situationId,
+																@Param("modalityId") Integer modalityId,
+																@Param("typeId") Integer typeId);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT vr.id " +

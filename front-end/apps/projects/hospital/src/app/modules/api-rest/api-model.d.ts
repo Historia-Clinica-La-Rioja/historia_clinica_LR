@@ -4552,6 +4552,13 @@ export interface ViolenceReportDto {
     victimData: ViolenceReportVictimDto;
 }
 
+export interface ViolenceReportFilterDto {
+    institutionId: number;
+    modalityId: number;
+    situationId: number;
+    typeId: number;
+}
+
 export interface ViolenceReportFilterOptionDto {
     institutions: FilterOptionDto[];
     modalities: FilterOptionDto[];
