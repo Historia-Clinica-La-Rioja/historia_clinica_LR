@@ -2,13 +2,23 @@ import React from 'react';
 import {
     ArrayInput,
     AutocompleteInput,
+    Button,
     maxLength,
     minLength,
     ReferenceInput,
     required,
+    SelectInput,
     SimpleFormIterator,
     TextInput
 } from 'react-admin';
+import { useForm } from 'react-final-form';
+
+
+import ActionDelete from '@material-ui/icons/Delete';
+import { alpha } from '@material-ui/core/styles/colorManipulator';
+import {makeStyles} from "@material-ui/core/styles";
+
+import { TYPE_CHOICES_IDS } from './parameter-type';
 
 export const validateInputCount = (value, allValues) => {
     const uomCount = (allValues?.unitsOfMeasureIds && allValues.unitsOfMeasureIds.length) || 0;
@@ -26,10 +36,61 @@ const validateOptions = (value, allValues) => {
     return undefined;
 }
 
+/**
+ * Overrides the delete button's color on arrayinputs.
+ * Must be set as a parameter for the SimpleFormIterator
+ */
+const useStyles = makeStyles(
+    theme => {
+        // Así seleccionamos la clase button-remove hija de action
+        return ({
+            action: {
+                '& .button-remove': {
+                    color: theme.palette.error.main,
+                    '&:hover': {
+                        backgroundColor: alpha(theme.palette.error.main, 0.12),
+                        // Reset on mouse devices
+                        '@media (hover: none)': {
+                            backgroundColor: 'transparent',
+                        },
+                    }
+                }
+            },
+        });
+    }
+);
+
+export const ParameterTypeInput = (props) => {
+    const form = useForm();
+    return (
+        <SelectInput
+            source="typeId"
+            choices={TYPE_CHOICES_IDS}
+            validate={[required()]}
+            onChange={value => {
+                form.change('unitsOfMeasureIds', null);
+                form.change('snomedGroupId', null);
+                form.change('textOptions', null);
+                form.change('options', null);
+                form.change('inputCount', null);
+            }}
+        />
+    );
+}
+
 export const UnitsOfMeasure = (props) => {
+    const classes = useStyles(props);
     return (
         <ArrayInput source="unitsOfMeasureIds" {...props} validate={[required()]}>
-        <SimpleFormIterator TransitionProps={{ enter: false }}>
+        <SimpleFormIterator
+            TransitionProps={{ enter: false }}
+            removeButton={
+                <Button label='ra.action.delete'>
+                    <ActionDelete/>
+                </Button>
+            }
+            classes={classes}
+            >
             <ReferenceInput
                 reference="units-of-measure"
                 filter={{enabled:true}}
@@ -60,9 +121,19 @@ export const SnomedECL = (props) => {
 };
 
 export const Options = (props) => {
+    const classes = useStyles(props);
     return (
         <ArrayInput source="textOptions" {...props} validate={[required(), validateOptions]}>
-            <SimpleFormIterator source="options" TransitionProps={{ enter: false }}>
+            <SimpleFormIterator
+                source="textOptions"
+                TransitionProps={{ enter: false }}
+                removeButton={
+                    <Button label='ra.action.delete'>
+                        <ActionDelete/>
+                    </Button>
+                }
+                classes={classes}
+            >
                 <TextInput label="resources.proceduretemplateparameters.fields.option" validate={[required(), minLength(1), maxLength(300)]} />
             </SimpleFormIterator>
         </ArrayInput>

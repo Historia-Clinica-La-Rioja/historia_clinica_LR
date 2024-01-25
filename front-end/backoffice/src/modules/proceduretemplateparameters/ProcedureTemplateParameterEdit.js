@@ -4,12 +4,11 @@ import {
     FormDataConsumer,
     NumberInput,
     required,
-    SelectInput,
     SimpleForm,
 } from 'react-admin';
 import CustomToolbar from '../components/CustomToolbar';
-import { LoincCode, LoincDescription, UnitsOfMeasure, validateInputCount, SnomedECL, Options } from './fields';
-import { TYPE_CHOICES_IDS, isNumeric, isOptions, isSnomed } from './parameter-type';
+import { LoincCode, LoincDescription, UnitsOfMeasure, validateInputCount, SnomedECL, Options, ParameterTypeInput } from './fields';
+import {  isNumeric, isOptions, isSnomed } from './parameter-type';
 
 const ProcedureTemplateParameterEdit = props => (
     <Edit {...props}>
@@ -31,7 +30,7 @@ const ProcedureTemplateParameterEdit = props => (
             {/**
              * Type
              */}
-            <SelectInput source="typeId" choices={TYPE_CHOICES_IDS} validate={[required()]}/>
+            <ParameterTypeInput/>
 
             {/**
              * Units of measure
