@@ -39,4 +39,6 @@ public interface ProcedureParameterRepository extends SGXAuditableEntityJPARepos
 
 	@Transactional(readOnly = true)
 	Optional<ProcedureParameter> findByProcedureTemplateIdAndOrderNumber(Integer id, Short order);
+
+	List<ProcedureParameter> findByProcedureTemplateId(Integer parentProcedureTemplate);
 }

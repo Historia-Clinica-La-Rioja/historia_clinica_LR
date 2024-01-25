@@ -222,4 +222,16 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 				procedureParameter.getInputCount(),
 				procedureParameter.getSnomedGroupId());
 	}
+
+	public boolean existsInProcedureTemplateByLoinc(Integer parentProcedureTemplate, Integer loincId) {
+		return procedureParameterRepository.findByProcedureTemplateId(parentProcedureTemplate)
+		.stream()
+		.anyMatch(x -> x.getLoincId().equals(loincId));
+	}
+
+	public boolean existsInProcedureTemplateByLoinc(Integer parentProcedureTemplate, Integer loincId, Integer excludeId) {
+		return procedureParameterRepository.findByProcedureTemplateId(parentProcedureTemplate)
+				.stream()
+				.anyMatch(x -> x.getLoincId().equals(loincId) && !x.getId().equals(excludeId));
+	}
 }
