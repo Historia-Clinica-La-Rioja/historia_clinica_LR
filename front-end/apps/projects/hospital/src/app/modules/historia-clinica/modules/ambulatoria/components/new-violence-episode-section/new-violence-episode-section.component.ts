@@ -114,10 +114,7 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 	}
 
 	updateValidationAgeTypeKid() {
-		if (this.form.value.ageTypeKid === EViolenceTowardsUnderageType.DIRECT_VIOLENCE || this.form.value.ageTypeKid === EViolenceTowardsUnderageType.INDIRECT_VIOLENCE) {
-			updateControlValidator(this.form, 'isKidEscolarized', Validators.required);
-		} else {
-			updateControlValidator(this.form, 'isKidEscolarized', []);
+		if (this.form.value.ageTypeKid === EViolenceTowardsUnderageType.NO_INFORMATION || this.form.value.ageTypeKid === EViolenceTowardsUnderageType.NO_VIOLENCE) {
 			this.form.controls.isKidEscolarized.reset();
 			this.updateValidationKidEscolarized();
 		}
