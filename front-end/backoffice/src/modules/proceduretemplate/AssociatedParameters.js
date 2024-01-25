@@ -77,6 +77,7 @@ const AssociatedParametersDataGrid = (props) => {
                     reference="loinc-codes"
                     link={false}
                     label='resources.proceduretemplateparameters.fields.description'
+                    sortable={false}
                 >
                     <FunctionField render={(x) => x?.customDisplayName || x?.displayName || x?.description || ''} />
                 </ReferenceField>
@@ -88,6 +89,7 @@ const AssociatedParametersDataGrid = (props) => {
                     source="loincId"
                     reference="loinc-codes"
                     link={false}
+                    sortable={false}
                 >
                     <TextField source="code"/>
                 </ReferenceField>
@@ -95,12 +97,21 @@ const AssociatedParametersDataGrid = (props) => {
                 {/**
                  * Type
                 */}
-                <SelectField source='typeId' choices={TYPE_CHOICES_IDS} />
+                <SelectField
+                    source='typeId'
+                    choices={TYPE_CHOICES_IDS}
+                    sortable={false}
+                />
 
                 {/**
                  * Units of measure
                 */}
-                <ReferenceArrayField label="resources.proceduretemplateparameters.fields.unitsOfMeasureIds" reference="units-of-measure" source="unitsOfMeasureIds">
+                <ReferenceArrayField
+                    label="resources.proceduretemplateparameters.fields.unitsOfMeasureIds"
+                    reference="units-of-measure"
+                    source="unitsOfMeasureIds"
+                    sortable={false}
+                >
                     <SingleFieldList>
                         <ChipField source="code" />
                     </SingleFieldList>
