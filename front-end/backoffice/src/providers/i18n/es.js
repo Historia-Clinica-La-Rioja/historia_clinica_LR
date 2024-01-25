@@ -541,8 +541,21 @@ const messages = {
         },
         vclinichistoryaudit: {
             name: 'Auditoria de Acceso',
+            medicalEmergency: 'Urgencia médica',
+	        professinalConsultation : 'Consulta profesional',
+	        patientConsultation: 'Consulta de paciente',
+	        audit: 'Auditoría',
             fields: {
-
+                firstName:'Nombre',
+                lastName:'Apellido',
+                description:'Tipo',
+                identificationNumber:'Nº de documento',
+                username:'Usuario',
+                date:'Fecha',
+                reasonId:'Motivo',
+                institutionName:'Institución',
+                observations:'observaciones',
+                scope:'Motivo'
             }
         },
         snomedgroups: {

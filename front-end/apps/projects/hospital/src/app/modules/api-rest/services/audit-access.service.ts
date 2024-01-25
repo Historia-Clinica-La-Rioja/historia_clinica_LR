@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { AppFeature } from '@api-rest/api-model';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { isValueInStringEnum } from '@core/utils/enum.utils';
 import { AuditAccessRegisterComponent } from '@historia-clinica/dialogs/audit-access-register/audit-access-register.component';
 import { INTERNMENT_SECTOR, SECTOR_AMBULATORIO, SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/masterdata';
-import { Observable, map, of, switchMap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ClinicHistoryAccessService } from './clinic-history-access.service';
 import { ContextClinicHistoryUrl } from '@historia-clinica/modules/ambulatoria/guards/AuditAccess.guard';
 
@@ -25,15 +23,13 @@ export class AuditAccessService {
   constructor(
     private readonly dialog: MatDialog,
     private readonly router: Router,
-    private readonly featureFlagService: FeatureFlagService,
     private readonly clinicHistoryAccessService: ClinicHistoryAccessService,
   ) {
   }
 
 
   verifyConditionToAccessToHC(context: ContextClinicHistoryUrl): Observable<boolean> {
-    return this.featureFlagService.isActive(AppFeature.HABILITAR_AUDITORIA_DE_ACCESO_EN_HC).pipe(
-      switchMap(isActive => isActive ? this.clinicHistoryAccessService.isValid(context.idPatient, context.idInstitution) : of(false)))
+    return this.clinicHistoryAccessService.isValid(context.idPatient, context.idInstitution)
   }
 
 

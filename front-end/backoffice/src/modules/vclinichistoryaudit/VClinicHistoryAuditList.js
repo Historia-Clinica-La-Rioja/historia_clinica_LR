@@ -6,8 +6,22 @@ import {
     DateField,
     Filter,
     TextInput,
-    DateInput
+    DateInput,
+    SelectField,
+    SelectInput
 } from 'react-admin';
+
+const ReasonSelectInput = (props) => {
+    return (
+    <SelectInput {...props} choices= {[
+        { id: 1, name: 'Urgencia médica' },
+        { id: 2, name: 'Consulta profesional' },
+        { id: 3, name: 'Consulta de paciente' },
+        { id: 4, name: 'Auditoría' },
+    ]
+    }
+    />)
+}
 
 const AuditFilter = (props) => (
     <Filter {...props}>
@@ -17,7 +31,7 @@ const AuditFilter = (props) => (
         <TextInput source="lastName" />
         <TextInput source="description" />
         <TextInput source="username" />
-        <TextInput source="reasonId" />
+        <ReasonSelectInput source="reasonId" />
         <TextInput source="institutionName" />
 
     </Filter>
@@ -26,7 +40,7 @@ const AuditFilter = (props) => (
 const ClinicHistoryAuditList = props => {
 
     return (
-        <List {...props} filters={<AuditFilter />}bulkActionButtons={false} hasCreate={false}>
+        <List {...props} filters={<AuditFilter />} bulkActionButtons={false} hasCreate={false} exporter={false}>
             <Datagrid rowClick={"show"}>
                 <TextField source="firstName" />
                 <TextField source="lastName" />
@@ -34,7 +48,12 @@ const ClinicHistoryAuditList = props => {
                 <TextField source="identificationNumber" />
                 <TextField source="username" />
                 <DateField source="date"/>
-                <TextField source="reasonId" />
+                <SelectField source="reasonId" choices={[
+                    { id: 1, name: 'resources.vclinichistoryaudit.medicalEmergency' },
+                    { id: 2, name: 'resources.vclinichistoryaudit.professinalConsultation' },
+                    { id: 3, name: 'resources.vclinichistoryaudit.patientConsultation' },
+                    { id: 4, name: 'resources.vclinichistoryaudit.audit' },
+                ]} />
                 <TextField source="institutionName" />
             </Datagrid>
         </List>

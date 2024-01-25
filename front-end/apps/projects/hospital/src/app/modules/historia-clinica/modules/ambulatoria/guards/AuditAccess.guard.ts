@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { AppFeature } from '@api-rest/api-model';
 import { AuditAccessService } from '@api-rest/services/audit-access.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { Observable, map, of, switchMap } from 'rxjs';
 
 @Injectable({
@@ -12,20 +14,27 @@ export class AuditAccessGuard implements CanActivate {
 
   constructor(
     private readonly auditAccessService: AuditAccessService,
+    private readonly featureFlagService: FeatureFlagService,
   ){}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      const accessToHC = true
-      const contextUrlParameters = this.getContextFromClinicHistoryUrl(state.url)
-      return this.auditAccessService.verifyConditionToAccessToHC(contextUrlParameters).pipe(
-        switchMap(accessGranted => accessGranted ?  of(accessToHC) : this.auditAccessService.getResultAccessDialogAudit(contextUrlParameters)),
-        map( result => !result ?  this.auditAccessService.redirectHomeIfNewTab() : result)
+      return this.featureFlagService.isActive(AppFeature.HABILITAR_AUDITORIA_DE_ACCESO_EN_HC).pipe(
+        switchMap(isActive => isActive ? this.checkAccessToHc(state) : of(true))
       )
   }
 
-  getContextFromClinicHistoryUrl(urlFragment: string) : ContextClinicHistoryUrl {
+  private checkAccessToHc(stateUrl: RouterStateSnapshot): Observable<boolean> {
+    const accessToHC = true
+    const contextUrlParameters = this.getContextFromClinicHistoryUrl(stateUrl.url)
+    return this.auditAccessService.verifyConditionToAccessToHC(contextUrlParameters).pipe(
+      switchMap(accessGranted => accessGranted ?  of(accessToHC) : this.auditAccessService.getResultAccessDialogAudit(contextUrlParameters)),
+      map( result => !result ?  this.auditAccessService.redirectHomeIfNewTab() : result)
+    )
+  }
+
+  private getContextFromClinicHistoryUrl(urlFragment: string) : ContextClinicHistoryUrl {
     const clinicHistoryUrlFragments = urlFragment.split('/')
     const idPatientPosition = this.getPositionValueParameterFromUrl(clinicHistoryUrlFragments, PARAMETERS_CLINIC_HISTORY_URL.PACIENTE)
     const idInstitutionPosition = this.getPositionValueParameterFromUrl(clinicHistoryUrlFragments, PARAMETERS_CLINIC_HISTORY_URL.INSTITUCION)
