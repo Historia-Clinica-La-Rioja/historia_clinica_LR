@@ -1,5 +1,6 @@
 import {
 	addMinutes,
+	compareAsc,
 	differenceInHours,
 	differenceInMinutes,
 	formatISO,
@@ -109,3 +110,12 @@ export function fromStringToDateByDelimeter(date: string, delimeter: string): Da
 	const dayDate = +dateData[2];
 	return new Date(year, month, dayDate);
 }
+
+export const compare = (d1: Date, d2: Date): number => compareAsc(d1, d2); // -1 , 0 , 1
+
+const HOUR_MINUTE = 'HH:mm';
+export const toHourMinute = (date: Date): string => format(date, HOUR_MINUTE);
+
+const HOUR_MINUTE_SECOND = 'HH:mm:ss';
+export const toHourMinuteSecond = (date: Date): string => format(date, HOUR_MINUTE_SECOND);
+
