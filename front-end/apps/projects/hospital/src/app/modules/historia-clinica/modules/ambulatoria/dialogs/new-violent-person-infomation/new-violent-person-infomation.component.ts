@@ -6,8 +6,9 @@ import { DEFAULT_COUNTRY_ID, hasError, includesEventCodeNumber, updateControlVal
 import { Observable } from 'rxjs';
 import { CustomViolenceReportAggressorDto, ViolenceAggressorsNewConsultationService } from '../../services/violence-aggressors-new-consultation.service';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AggressorRelationship, BasicOptions, CriminalRecordStatus, InstitutionOptions, LiveTogetherStatus, RelationshipLengths, StateOptions, ViolenceFrequencys } from '../../constants/violence-masterdata';
+import { AggressorRelationship, BasicOptions, CriminalRecordStatus, FormOption, InstitutionOptions, LiveTogetherStatus, RelationshipLengths, StateOptions, ViolenceFrequencys } from '../../constants/violence-masterdata';
 
+export const idNoInfo = 99;
 @Component({
   selector: 'app-new-violent-person-infomation',
   templateUrl: './new-violent-person-infomation.component.html',
@@ -74,7 +75,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
           lastName: this.form.value.lastname,
           address: this.form.value.address,
           age: this.form.value.age,
-          municipalityId: this.form.value.addressDepartmentId.id,
+          municipalityId: this.form.value.addressDepartmentId? this.form.value.addressDepartmentId.id : null,
         },
         relationshipWithVictim: this.form.value.aggressorRelation,
         otherRelationshipWithVictim: this.form.value.aggressorRelationTextFree,
@@ -90,11 +91,16 @@ export class NewViolentPersonInfomationComponent implements OnInit {
         securityForceTypes: this.form.value.securityForceType,
       },
       violenceViolenceFrequency: this.form.value.violenceFrequency,
-      descriptionMunicipality: this.form.value.addressDepartmentId.description,
+      descriptionMunicipality: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId.description: FormOption.WITHOUT_DATA ,
     }
   }
 
   setDepartments() {
+    if(this.form.value.addressProvinceId === idNoInfo){
+      updateControlValidator(this.form, 'addressDepartmentId', []);
+    }else{
+      updateControlValidator(this.form, 'addressDepartmentId', Validators.required);
+    }
     this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
   }
 

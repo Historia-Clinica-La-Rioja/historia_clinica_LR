@@ -6,6 +6,7 @@ import { DEFAULT_COUNTRY_ID, hasError, includesEventCodeNumber, updateControlVal
 import { Observable } from 'rxjs';
 import { BasicOptions, BasicTwoOptions, DisabilityCertificateStatus, FormOption, RelationOption, Sectors } from '../../constants/violence-masterdata';
 
+const idNoInfo = 99;
 @Component({
 	selector: 'app-violence-situation-person-information',
 	templateUrl: './violence-situation-person-information.component.html',
@@ -116,7 +117,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 					age: this.form.value.age,
 					firstName: this.form.value.name,
 					lastName: this.form.value.lastname,
-					municipalityId: this.form.value.addressDepartmentId,
+					municipalityId: this.form.value.addressDepartmentId? this.form.value.addressDepartmentId : null,
 				},
 				otherRelationshipWithVictim: this.form.value.whichTypeRelation,
 				relationshipWithVictim: this.form.value.relationPersonViolenceSituation,
@@ -145,6 +146,11 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 	}
 
 	setDepartments() {
+		if(this.form.value.addressProvinceId === idNoInfo){
+			updateControlValidator(this.form, 'addressDepartmentId', []);
+		  }else{
+			updateControlValidator(this.form, 'addressDepartmentId', Validators.required);
+		  }
 		this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
 	}
 
