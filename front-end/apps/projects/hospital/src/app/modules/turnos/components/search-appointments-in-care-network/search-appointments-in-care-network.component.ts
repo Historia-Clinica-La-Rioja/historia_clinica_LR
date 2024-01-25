@@ -17,7 +17,7 @@ import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
 import { TabsService } from '@turnos/services/tabs.service';
-import { Tabs } from '@turnos/constants/tabs';
+import { TabsLabel } from '@turnos/constants/tabs';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
 
@@ -336,7 +336,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
 	searchAppointmentsInstitution() {
 		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
-		this.tabsService.setTab(Tabs.INSTITUTION);
+		this.tabsService.setTab(TabsLabel.INSTITUTION);
 	}
 
 	private setValidators() {

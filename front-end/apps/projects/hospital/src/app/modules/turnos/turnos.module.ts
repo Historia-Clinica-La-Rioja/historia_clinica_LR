@@ -18,8 +18,9 @@ import { HomeComponent } from './routes/home/home.component';
 import { EquipmentDiarySetupComponent } from './routes/equipment-diary-setup/equipment-diary-setup.component';
 // components
 import { AppointmentDetailsComponent } from './components/appointment-details/appointment-details.component';
-import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { AppointmentLabelComponent } from './components/appointment-label/appointment-label.component';
+import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
+import { AppointmentTabsComponent } from './components/appointment-tabs/appointment-tabs.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { DiaryInformationComponent } from './components/diary-information/diary-information.component';
@@ -66,8 +67,9 @@ import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment
 		HomeComponent,
 		// components
 		AppointmentDetailsComponent,
-		AppointmentResultViewComponent,
 		AppointmentLabelComponent,
+		AppointmentResultViewComponent,
+		AppointmentTabsComponent,
 		CalendarProfessionalViewComponent,
 		DateRangeTimeFormComponent,
 		DiaryInformationComponent,

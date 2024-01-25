@@ -6,7 +6,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ERole, ReferenceCompleteDataDto } from '@api-rest/api-model';
 import { PermissionsService } from '@core/services/permissions.service';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
-import { Tabs } from '@turnos/constants/tabs';
+import { TabsLabel } from '@turnos/constants/tabs';
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
 import { TabsService } from '@turnos/services/tabs.service';
 import { take } from 'rxjs';
@@ -43,13 +43,13 @@ export class InstitutionalActionsComponent {
 	assignAppointmentInInstitution(): void {
 		this.searchAppointmentsInfoService.loadInformation(this.refenceCompleteDto.patient.patientId, this.refenceCompleteDto.reference);
 		this.dialogRef.close();
-		this.tabsService.setTab(Tabs.INSTITUTION);
+		this.tabsService.setTab(TabsLabel.INSTITUTION);
 	}
 
 	assignAppointmentInCareNetwork(): void {
 		this.searchAppointmentsInfoService.loadInformation(this.refenceCompleteDto.patient.patientId, this.refenceCompleteDto.reference);
 		this.dialogRef.close();
-		this.tabsService.setTab(Tabs.CARE_NETWORK);
+		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
 	}
 
 	cancelAppointment(): void {

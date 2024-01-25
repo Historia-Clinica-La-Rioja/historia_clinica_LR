@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EquipmentDiaryDto, EquipmentDto, ModalityDto } from '@api-rest/api-model';
 import { EquipmentService } from '@api-rest/services/equipment.service';
@@ -20,8 +20,8 @@ import { MatOptionSelectionChange } from '@angular/material/core';
 })
 export class SearchAppointmentsByEquipmentComponent implements OnInit {
 
-	@Input() selectedEquipment: EquipmentDto;
-	@Input() selectedDiary: EquipmentDiaryDto;
+	selectedEquipment: EquipmentDto;
+	selectedDiary: EquipmentDiaryDto;
 
 	modalities$: Observable<TypeaheadOption<ModalityDto>[]>;
 
@@ -49,6 +49,8 @@ export class SearchAppointmentsByEquipmentComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
+		this.selectedEquipment = window.history.state.selectedEquipment;
+		this.selectedDiary = window.history.state.selectedDiary;
 		this.modalities$ = this.setModalityTypeaheadOptions();
 		this.setEquipments();
 		this.searchEquipmentService.getAgendas$().subscribe((data: EquipmentDiaryOptionsData) => {

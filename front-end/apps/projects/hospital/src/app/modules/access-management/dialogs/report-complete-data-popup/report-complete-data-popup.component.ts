@@ -7,7 +7,6 @@ import { PatientSummary } from '../../../hsi-components/patient-summary/patient-
 import { BehaviorSubject, Observable, map, of, switchMap, take, tap } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
-import { Tabs } from '@turnos/constants/tabs';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
 import { PENDING } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
@@ -34,7 +33,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	colapseContactDetails = false;
 
-	Tabs = Tabs;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 	approvedState = EReferenceRegulationState.APPROVED;
 	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;

@@ -4,7 +4,7 @@
 			<h2 id="title" class="page-title" [translate]="'turnos.home.TITLE'"></h2>
 		</div>
 		<div *appHasRole="['ADMINISTRADOR_AGENDA']">
-			<button mat-flat-button color="primary" id="goToNewAgendaButton" *ngIf="ffIsOn else professionalDiary"
+			<button mat-flat-button color="primary" id="goToNewAgendaButton" *ngIf="imageNetworkFF else professionalDiary"
 				fxFlexFill.xs [matMenuTriggerFor]="menu">
 				<span class="uppercase" [translate]="'turnos.home.actions.NEW_AGENDA'"></span>
 			</button>
@@ -25,49 +25,15 @@
 	</section>
 
 	<mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="tabsService.selectedIndex">
-		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}"
-			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRADOR_AGENDA', 'ENFERMERO']">
+		<mat-tab *ngFor="let tab of tabsService.availableTabs" [label]="tab">
 			<ng-template matTabContent>
-				<app-seach-appointments-by-professional></app-seach-appointments-by-professional>
+				<app-appointment-tabs [tabLabel]="tab"></app-appointment-tabs>
 			</ng-template>
-		</mat-tab>
-		<mat-tab label="{{ 'turnos.home.SEARCH_BY_INSTITUTION' | translate | uppercase }}"
-			*appHasRole="['ADMINISTRATIVO']">
-			<ng-template matTabContent>
-				<app-search-appointments-by-specialty></app-search-appointments-by-specialty>
-			</ng-template>
-		</mat-tab>
-		<mat-tab label="{{ 'turnos.home.CARE_NETWORK_OFFER' | translate | uppercase }}"
-			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-			<ng-template matTabContent>
-				<app-search-appointments-in-care-network></app-search-appointments-in-care-network>
-			</ng-template>
-		</mat-tab>
-
-		<mat-tab *ngIf="ffIsOn && hasRoleToViewTab"	label=" {{ 'image-network.home.SEARCH_BY_EQUIPMENT' | translate | uppercase }}">
-			<ng-template matTabContent>
-				<app-search-appointments-by-equipment [selectedEquipment]="selectedEquipment" [selectedDiary]="selectedDiary">
-				</app-search-appointments-by-equipment>
-			</ng-template>
-		</mat-tab>
-
-		<div>
-			<mat-tab label="{{ 'turnos.home.REQUESTS' | translate | uppercase }}"
-				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ABORDAJE_VIOLENCIAS']">
-				<ng-template matTabContent>
-					<app-reference-report></app-reference-report>
-				</ng-template>
-			</mat-tab>
-		</div>
-
-		<mat-tab *ngIf="ffIsOn && hasRoleToViewTab"	label=" {{ 'image-network.home.SEARCH_BY_EQUIPMENT' | translate | uppercase }}">
-			<app-search-appointments-by-equipment [selectedEquipment]="selectedEquipment" [selectedDiary]="selectedDiary">
-			</app-search-appointments-by-equipment>
 		</mat-tab>
 	</mat-tab-group>
 
-	<div *ngIf="noPermission">
-		<app-no-data  *appHasRole="['ADMINISTRATIVO_RED_DE_IMAGENES']" [message]="mssg"></app-no-data>
+	<div *ngIf="noPermission && tabsService.availableTabs.length">
+		<app-no-data *appHasRole="['ADMINISTRATIVO_RED_DE_IMAGENES']" [message]="'image-network.home.NO_PERMISSION'"></app-no-data>
 	</div>
 
 </app-content>

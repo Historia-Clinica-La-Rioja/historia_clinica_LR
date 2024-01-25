@@ -1,64 +1,67 @@
 import { Injectable } from '@angular/core';
-import { ERole } from '@api-rest/api-model';
+import { AppFeature, ERole } from '@api-rest/api-model';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { pushIfNotExists } from '@core/utils/array.utils';
-import { ROLE_TABS, Tabs } from '@turnos/constants/tabs';
-import { take, map } from 'rxjs';
+import { TabsLabel, ALL_TABS, FF_TABS } from '@turnos/constants/tabs';
+import { combineLatest, take } from 'rxjs';
 
-const PRIORITY_ROLES = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 @Injectable({
 	providedIn: 'root'
 })
 export class TabsService {
 
-	private allUserRolesTabs: Tabs[] = [];
+	availableTabs: TabsLabel[] = [];
 	selectedIndex = 0;
-	tabActive = Tabs.PROFESSIONAL;
+	tabActive = TabsLabel.PROFESSIONAL;
 
 	constructor(
-		private readonly permissionService: PermissionsService
-	) { }
+		private readonly permissionService: PermissionsService,
+		private readonly featureFlagService: FeatureFlagService,
+	) {
+		this.getPermissionsAndSetAvailableTabs();
+	}
 
 	setTab(value: string) {
-		if (!this.allUserRolesTabs.length)
-			this.setUserRolesTabs();
-		const index = this.allUserRolesTabs.findIndex(tab => value === tab);
-		this.tabActive = this.allUserRolesTabs[index];
+		if (!this.availableTabs.length)
+			this.getPermissionsAndSetAvailableTabs();
+		const index = this.availableTabs.findIndex(tab => value === tab);
+		this.tabActive = this.availableTabs[index];
 		this.selectedIndex = index;
 	}
 
-	clearInfo() {
+	resetTabs() {
+		this.availableTabs = [];
+		this.tabActive = TabsLabel.PROFESSIONAL;
 		this.selectedIndex = 0;
-		this.tabActive = Tabs.PROFESSIONAL;
-		this.allUserRolesTabs = [];
 	}
 
-	private setUserRolesTabs() {
-		this.permissionService.contextAssignments$().pipe(
-			take(1),
-			map(roles => {
-				let sortRoles = [];
-				PRIORITY_ROLES.forEach(priorityRole => {
-					if (roles.includes(priorityRole))
-						sortRoles = this.sortByRole(roles, priorityRole);
-				});
-				return sortRoles || roles
-			}
-			)).subscribe(roles => {
-				roles.forEach(
-					rol => {
-						const currentRolTabs: Tabs[] = ROLE_TABS[rol];
-						currentRolTabs?.forEach(rolTab => this.allUserRolesTabs = pushIfNotExists(this.allUserRolesTabs, rolTab, this.equalsTabs));
-					})
-			});
+	getPermissionsAndSetAvailableTabs() {
+		const userLoggedPermissions$ = this.permissionService.contextAssignments$();
+		const activeFeatureFlag$ = this.featureFlagService.filterItems$(FF_TABS);
+
+		combineLatest([userLoggedPermissions$, activeFeatureFlag$]).pipe(take(1)).subscribe(([userLoggedPermission, activeFF]) => {
+			this.setAvailableTabs(userLoggedPermission, activeFF.map(activeFF => activeFF.featureFlag));
+		});
 	}
 
-	private sortByRole(roles: ERole[], roleToSort: ERole): ERole[] {
-		return roles.sort(role => role === roleToSort ? -1 : 1)
-	}
+	setAvailableTabs(userLoggedPermissions: ERole[], activeFeatureFlags: AppFeature[]) {
+		const allTabs = ALL_TABS;
 
-	private equalsTabs(tab1: Tabs, tab2: Tabs): boolean {
-		return tab1 === tab2;
-	}
+		const matchRole = (tab: Tabs) => tab.rules.roles.some(role => userLoggedPermissions.includes(role));
+		const matchFeatureFlag = (tab: Tabs) => !tab.rules.featureFlag || activeFeatureFlags.some(activeFeatureFlag => activeFeatureFlag === tab.rules.featureFlag);
 
+		this.availableTabs = allTabs
+			.filter(tab => matchRole(tab) && matchFeatureFlag(tab))
+			.map(tab => tab.label);
+	}
+}
+
+export interface Tabs {
+	label: TabsLabel;
+	rules: TabsRules;
+}
+
+export interface TabsRules {
+	roles: ERole[];
+	featureFlag?: AppFeature;
 }

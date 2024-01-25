@@ -12,7 +12,7 @@ import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
-import { Tabs } from '@turnos/constants/tabs';
+import { TabsLabel } from '@turnos/constants/tabs';
 import { TabsService } from '@turnos/services/tabs.service';
 
 const PAGE_MIN_SIZE = 5;
@@ -235,7 +235,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	searchAppointmentsInCareNetwork() {
 		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
-		this.tabsService.setTab(Tabs.CARE_NETWORK);
+		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
 	}
 
 	private setValidators() {
