@@ -4,6 +4,8 @@ import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationSto
 import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRuleDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.rule.SharedRulePort;
@@ -26,7 +28,11 @@ import java.util.Optional;
 public class HistoricReferenceRegulationStorageImpl implements HistoricReferenceRegulationStorage {
 
 	private final HistoricReferenceRegulationRepository historicReferenceRegulationRepository;
+
+	private final ReferenceRepository referenceRepository;
+
 	private final SharedRulePort sharedRulePort;
+
 	private final SharedStaffPort sharedStaffPort;
 
 	@Override
@@ -105,9 +111,17 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		Optional<HistoricReferenceRegulation> hrr = historicReferenceRegulationRepository.getByReferenceId(referenceId).stream().findFirst();
 		if(validRegulationState(hrr)){
 			historicReferenceRegulationRepository.save(new HistoricReferenceRegulation(null, referenceId, hrr.get().getRuleId(), hrr.get().getRuleLevel(), stateId, reason));
+			updateReferenceRegulationStateId(referenceId, stateId);
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
+	}
+
+	private void updateReferenceRegulationStateId(Integer referenceId, Short stateId) {
+		log.debug("Input parameters -> referenceId {}, stateId {} ", referenceId, stateId);
+		Reference reference = referenceRepository.getById(referenceId);
+		reference.setRegulationStateId(stateId);
+		referenceRepository.save(reference);
 	}
 
 	private boolean validRegulationState(Optional<HistoricReferenceRegulation> hrr){
