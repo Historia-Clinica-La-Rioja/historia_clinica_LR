@@ -21,10 +21,10 @@ import net.pladema.person.repository.IdentificationTypeRepository;
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.entity.IdentificationType;
 import net.pladema.person.repository.entity.Person;
-import net.pladema.questionnaires.common.domain.Answer;
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.common.repository.QuestionnaireResponseRepository;
-import net.pladema.questionnaires.general.getpdf.repository.AnswerRepository;
+import net.pladema.questionnaires.common.repository.entity.Answer;
+import net.pladema.questionnaires.common.repository.AnswerRepository;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
 
@@ -59,7 +59,7 @@ public class GetQuestionnairePdfService {
     }
 
     public Map<String, Object> createQuestionnaireContext(Integer questionnaireResponseId, Integer institutionId) throws DocumentException, IOException {
-		QuestionnaireResponseII response = questionnaireResponseRepository.findById(questionnaireResponseId)
+		QuestionnaireResponse response = questionnaireResponseRepository.findById(questionnaireResponseId)
 				.orElseThrow(() -> new NotFoundException("Questionnaire response not found"));
 
 		List<Answer> answers = answerRepository.findByQuestionnaireResponseId(questionnaireResponseId);
@@ -125,7 +125,7 @@ public class GetQuestionnairePdfService {
 		return fullNameBuilder.toString().trim();
 	}
 
-	public Period calculateAgeAtQuestionnaireResponseCreation(QuestionnaireResponseII questionnaireResponse) {
+	public Period calculateAgeAtQuestionnaireResponseCreation(QuestionnaireResponse questionnaireResponse) {
 
 		Integer patientId = questionnaireResponse.getPatientId();
 		Person person = personRepository.findById(patientId)
@@ -163,7 +163,7 @@ public class GetQuestionnairePdfService {
 		return formattedAge.toString();
 	}
 
-	public String createQuestionnaireFileName(QuestionnaireResponseII response) {
+	public String createQuestionnaireFileName(QuestionnaireResponse response) {
 		Person person = personRepository.findPersonByPatientId(response.getPatientId())
 				.orElseThrow(() -> new NotFoundException("Person not found"));
 

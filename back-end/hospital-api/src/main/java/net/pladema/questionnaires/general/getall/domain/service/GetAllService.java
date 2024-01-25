@@ -9,7 +9,7 @@ import org.webjars.NotFoundException;
 
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.entity.Person;
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.common.repository.QuestionnaireResponseRepository;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
@@ -32,7 +32,7 @@ public class GetAllService {
         this.personRepository = personRepository;
     }
 
-	public List<QuestionnaireResponseII> getResponsesByPatientIdWithDetails(Integer patientId) {
+	public List<QuestionnaireResponse> getResponsesByPatientIdWithDetails(Integer patientId) {
 		Sort sort = Sort.by(Sort.Order.desc("id"));
 
 		return questionnaireResponseRepository.findResponsesWithCreatedByDetails(patientId, sort);
