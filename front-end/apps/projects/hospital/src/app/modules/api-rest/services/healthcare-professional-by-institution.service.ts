@@ -20,7 +20,12 @@ export class HealthcareProfessionalByInstitutionService {
 	}
 
 	getAll(): Observable<ProfessionalDto[]> {
-		const url = `${environment.apiBase}` + BASIC_URL_PREFIX + '/' + `${this.contextService.institutionId}` + BASIC_URL_SUFIX;
+		const url = `${environment.apiBase}${BASIC_URL_PREFIX}/${this.contextService.institutionId}${BASIC_URL_SUFIX}`;
+		return this.http.get<ProfessionalDto[]>(url);
+	}
+
+	getAllByDestinationInstitution(destinationInstitutionId: number): Observable<ProfessionalDto[]> {
+		const url = `${environment.apiBase}${BASIC_URL_PREFIX}/${destinationInstitutionId}${BASIC_URL_SUFIX}`;
 		return this.http.get<ProfessionalDto[]>(url);
 	}
 

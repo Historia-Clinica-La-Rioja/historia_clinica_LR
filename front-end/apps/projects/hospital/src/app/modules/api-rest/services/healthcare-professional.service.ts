@@ -35,4 +35,9 @@ export class HealthcareProfessionalService {
 		const url = `${environment.apiBase}/healthcareprofessional/${healthcareProfesionalId}`;
 		return this.http.get<number>(url);
 	}
+
+	getAllByDepartment(departmentId: number): Observable<ProfessionalDto[]> {
+		const url = `${environment.apiBase}/healthcareprofessional/department/${departmentId}`;
+		return this.http.get<ProfessionalDto[]>(url);
+	}
 }

@@ -60,4 +60,14 @@ export class AddressMasterDataService {
 			clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', clinicalSpecialtyId.toString()));
 		return this.http.get<any[]>(url, { params: queryParams });
 	}
+
+	getDepartmentsByInstitutions(): Observable<AddresProjection[]> {
+		const url = `${environment.apiBase}/address/masterdata/departments`;
+		return this.http.get<AddresProjection[]>(url);
+	}
+}
+
+export interface AddresProjection {
+	id: number;
+	description: string;
 }

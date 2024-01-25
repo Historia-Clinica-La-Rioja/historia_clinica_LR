@@ -39,4 +39,9 @@ export class PracticesService {
 		const params: HttpParams = new HttpParams().append('careLineId', careLineId);
 		return this.http.get<SharedSnomedDto[]>(url, { params });
 	}
+
+	getAllByDepartment(departmentId: number): Observable<SharedSnomedDto[]> {
+		const url =  `${environment.apiBase}/practices/department/${departmentId}`;
+		return this.http.get<SharedSnomedDto[]>(url);
+	}
 }
