@@ -61,7 +61,7 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 			"AND NOT EXISTS " +
 			"	(SELECT 1 " +
 			"	FROM DocumentDiagnosticReport ddr2 " +
-			"	JOIN DiagnosticReport dr2 ON (ddr2.pk.diagnosticReportId = dr.id) " +
+			"	JOIN DiagnosticReport dr2 ON (ddr2.pk.diagnosticReportId = dr2.id) " +
 			"	WHERE ddr2.pk.documentId = d.id AND dr2.statusId <> '" + DiagnosticReportStatus.REGISTERED + "')")
 	List<ServiceRequestProcedureInfoBo> getActiveServiceRequestProcedures(@Param("serviceRequestId") Integer serviceRequestId);
 
