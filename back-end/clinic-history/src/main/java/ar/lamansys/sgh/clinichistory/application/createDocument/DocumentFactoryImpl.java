@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.application.createDocument;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticHistory;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadFoodInTake;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadPreMedications;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedureDescription;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
@@ -85,6 +86,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
     
     private final LoadFoodInTake loadFoodIntake;
 
+    private final LoadProcedureDescription loadProcedureDescription;
+
     @Override
 	@Transactional
     public Long run(IDocumentBo documentBo, boolean createFile) {
@@ -119,6 +122,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
         healthConditionService.loadOtherProblems(patientInfo, doc.getId(), documentBo.getOtherProblems());
 		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPreoperativeDiagnosis());
 		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPostoperativeDiagnosis());
+        healthConditionService.loadOtherHistories(patientInfo, doc.getId(), documentBo.getHistories());
+
 		loadAllergies.run(patientInfo, doc.getId(), documentBo.getAllergies());
         loadImmunizations.run(patientId, doc.getId(), documentBo.getImmunizations());
         loadMedications.run(patientId, doc.getId(), documentBo.getMedications());
@@ -139,7 +144,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadAnestheticHistory.run(doc.getId(), Optional.ofNullable(documentBo.getAnestheticHistory()));
         loadPreMedications.run(doc.getId(), documentBo.getPreMedications());
         loadFoodIntake.run(doc.getId(), Optional.ofNullable(documentBo.getFoodIntake()));
-        
+        loadProcedureDescription.run(doc.getId(), Optional.ofNullable(documentBo.getProcedureDescription()));
+
         if (createFile)
             generateDocument(documentBo);
         return doc.getId();

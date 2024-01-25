@@ -50,6 +50,8 @@ public class GeneralHealthConditionBo implements Serializable {
 
 	private List<DiagnosisBo> postoperativeDiagnosis = new ArrayList<>();
 
+    private List<HealthConditionBo> otherHistories = new ArrayList<>();
+
 	public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
         setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
         setDiagnosis(buildGeneralState(
@@ -85,6 +87,11 @@ public class GeneralHealthConditionBo implements Serializable {
 				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS),
 				this::mapDiagnosis
 		));
+        setOtherHistories(buildGeneralState(
+                healthConditionVos,
+                HealthConditionVo::isOtherHistory,
+                this::mapToHealthConditionBo
+        ));;
     }
 	private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
                                                                     Predicate<? super HealthConditionVo> filterFunction,

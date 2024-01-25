@@ -46,6 +46,9 @@ public class GetAnestheticReport {
         result.setPreMedications(documentService.getPreMedicationStateFromDocument(documentId));
         result.setFoodIntake(documentService.getFoodIntakeStateFromDocument(documentId));
 
+        result.setHistories(generalHealthConditionBo.getOtherHistories());
+        result.setProcedureDescription(documentService.getProcedureDescriptionStateFromDocument(documentId));
+
         log.debug("Output -> anestheticReport {}", result);
         return result;
     }

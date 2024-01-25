@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionNewConsultationBo
 import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHistoryConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PersonalHistoryDto;
@@ -72,5 +73,19 @@ public interface HealthConditionMapper {
 
     @Named("toPersonalHistoryBo")
     PersonalHistoryBo toPersonalHistoryBo(PersonalHistoryDto personalHistory);
+
+    @Named("toHealthConditionDto")
+    HealthConditionDto toHealthConditionDto(HealthConditionBo healthConditionBo);
+
+    @Named("toListHealthConditionDto")
+    @IterableMapping(qualifiedByName = "toHealthConditionDto")
+    List<HealthConditionDto> toListHealthConditionDto(List<HealthConditionBo> healthConditions);
+
+    @Named("toHealthConditionBo")
+    HealthConditionBo toHealthConditionBo(HealthConditionDto healthConditionDto);
+
+    @Named("toListHealthConditionBo")
+    @IterableMapping(qualifiedByName = "toHealthConditionBo")
+    List<HealthConditionBo> toListHealthConditionBo(List<HealthConditionDto> healthConditions);
 
 }

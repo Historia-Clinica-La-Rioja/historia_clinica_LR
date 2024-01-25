@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.domain.document;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -189,4 +190,8 @@ public interface IDocumentBo {
     default List<PreMedicationBo> getPreMedications() { return Collections.emptyList(); }
 
     default FoodIntakeBo getFoodIntake() { return null; }
+
+    default List<HealthConditionBo> getHistories() { return Collections.emptyList(); }
+
+    default ProcedureDescriptionBo getProcedureDescription() { return null; }
 }

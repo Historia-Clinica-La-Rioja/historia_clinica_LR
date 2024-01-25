@@ -4,8 +4,10 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Anestheti
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FoodIntakeDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PreMedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProcedureDescriptionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,5 +55,11 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid FoodIntakeDto foodIntake;
+
+    @Nullable
+    private @Valid List<HealthConditionDto> histories;
+
+    @Nullable
+    private @Valid ProcedureDescriptionDto procedureDescription;
 
 }

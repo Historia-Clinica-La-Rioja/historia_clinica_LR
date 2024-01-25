@@ -310,3 +310,36 @@ databaseChangeLog:
                 - column:
                     name: zone_id
                     type: smallint
+
+    - changeSet:
+        id: createTable-procedure_description
+        author: mromero
+        changes:
+          - createTable:
+              tableName: procedure_description
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_description
+                      references: document(id)
+                      foreignKeyName: FK_document_id_procedure_description
+                    name: document_id
+                    type: bigint
+                - column:
+                    name: note_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: asa
+                    type: smallint
+
+    - changeSet:
+        id: add-metadata2-problem_type
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO problem_type (id, description) VALUES ('00000003', 'Otro Antecedente');

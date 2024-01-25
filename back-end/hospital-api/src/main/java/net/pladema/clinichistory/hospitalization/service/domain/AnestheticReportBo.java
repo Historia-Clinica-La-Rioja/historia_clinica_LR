@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -64,6 +65,10 @@ public class AnestheticReportBo implements IDocumentBo {
     private List<PreMedicationBo> preMedications;
 
     private FoodIntakeBo foodIntake;
+
+    private List<HealthConditionBo> histories;
+
+    private ProcedureDescriptionBo procedureDescription;
 
     @Override
     public Integer getPatientId() {

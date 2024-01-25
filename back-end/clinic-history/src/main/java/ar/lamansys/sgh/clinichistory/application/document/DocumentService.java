@@ -16,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
@@ -146,5 +147,7 @@ public interface DocumentService {
     FoodIntakeBo getFoodIntakeStateFromDocument(Long documentId);
 
     AnestheticHistoryBo getAnestheticHistoryStateFromDocument(Long documentId);
+
+    ProcedureDescriptionBo getProcedureDescriptionStateFromDocument(Long documentId);
 }
 

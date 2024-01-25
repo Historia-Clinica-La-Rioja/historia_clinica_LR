@@ -168,9 +168,11 @@ export interface AnestheticReportDto {
     anthropometricData?: AnthropometricDataDto;
     diagnosis?: DiagnosisDto[];
     foodIntake?: FoodIntakeDto;
+    histories?: HealthConditionDto[];
     mainDiagnosis?: DiagnosisDto;
     medications?: MedicationDto[];
     preMedications?: PreMedicationDto[];
+    procedureDescription?: ProcedureDescriptionDto;
     riskFactors?: RiskFactorDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
 }
@@ -3362,6 +3364,11 @@ export interface ProblemInfoDto {
     diagnosticReportsId?: number[];
     referencesId?: number[];
     serviceRequestsId?: number[];
+}
+
+export interface ProcedureDescriptionDto {
+    asa: number;
+    note?: string;
 }
 
 export interface ProcedureDto {
