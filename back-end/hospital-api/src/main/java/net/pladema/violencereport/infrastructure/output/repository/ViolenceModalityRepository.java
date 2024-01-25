@@ -2,6 +2,7 @@ package net.pladema.violencereport.infrastructure.output.repository;
 
 import java.util.List;
 
+import ar.lamansys.sgh.shared.domain.FilterOptionBo;
 import net.pladema.cipres.domain.SnomedBo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,4 +31,11 @@ public interface ViolenceModalityRepository extends JpaRepository<ViolenceModali
 			"WHERE vm.pk.reportId = :reportId")
 	List<SnomedBo> getViolenceReportSnomedsByReportId(@Param("reportId") Integer reportId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW ar.lamansys.sgh.shared.domain.FilterOptionBo(s.id, s.pt) " +
+			"FROM ViolenceModality vm " +
+			"JOIN Snomed s ON (s.id = vm.pk.snomedId) " +
+			"JOIN ViolenceReport vr ON (vr.id = vm.pk.reportId) " +
+			"WHERE vr.patientId = :patientId")
+	List<FilterOptionBo> getModalityFilterByPatientId(@Param("patientId") Integer patientId);
 }

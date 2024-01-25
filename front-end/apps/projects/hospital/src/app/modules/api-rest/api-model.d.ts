@@ -1735,6 +1735,11 @@ export interface FilePathBo {
     relativePath: string;
 }
 
+export interface FilterOptionDto {
+    description: string;
+    id: number;
+}
+
 export interface FormVDto {
     address: string;
     affiliateNumber: string;
@@ -4545,6 +4550,13 @@ export interface ViolenceReportDto {
     implementedActions: ViolenceReportImplementedActionsDto;
     observation: string;
     victimData: ViolenceReportVictimDto;
+}
+
+export interface ViolenceReportFilterOptionDto {
+    institutions: FilterOptionDto[];
+    modalities: FilterOptionDto[];
+    situations: FilterOptionDto[];
+    types: FilterOptionDto[];
 }
 
 export interface ViolenceReportImplementedActionsDto {

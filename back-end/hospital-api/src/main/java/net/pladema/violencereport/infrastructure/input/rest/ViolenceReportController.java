@@ -2,11 +2,14 @@ package net.pladema.violencereport.infrastructure.input.rest;
 
 import javax.validation.Valid;
 
+import net.pladema.violencereport.application.GetFilters;
 import net.pladema.violencereport.application.GetHistoricList;
 import net.pladema.violencereport.application.GetSituationEvolution;
 import net.pladema.violencereport.application.SaveSituationEvolution;
 
+import net.pladema.violencereport.domain.ViolenceReportFilterOptionBo;
 import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
+import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportFilterOptionDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationEvolutionDto;
 
 import org.springframework.data.domain.Page;
@@ -59,6 +62,8 @@ public class ViolenceReportController {
 	private GetHistoricList getHistoricList;
 
 	private GetSituationEvolution getSituationEvolution;
+
+	private GetFilters getFilters;
 
 	@PostMapping(value = "/patient/{patientId}")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
@@ -127,6 +132,16 @@ public class ViolenceReportController {
 		log.debug("Input parameters -> institutionId {}, patientId {}, situationId {}, evolutionId {}", institutionId, patientId, situationId, evolutionId);
 		ViolenceReportBo violenceReportBo = getSituationEvolution.run(patientId, situationId, evolutionId);
 		ViolenceReportDto result = violenceReportMapper.toViolenceReportDto(violenceReportBo);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping(value = "/patient/{patientId}/get-filter")
+	public ViolenceReportFilterOptionDto getFilters(@PathVariable("institutionId") Integer institutionId,
+													@PathVariable("patientId") Integer patientId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		ViolenceReportFilterOptionBo filters = getFilters.run(patientId);
+		ViolenceReportFilterOptionDto result = violenceReportMapper.toViolenceReportFilterOptionDto(filters);
 		log.debug("Output -> {}", result);
 		return result;
 	}

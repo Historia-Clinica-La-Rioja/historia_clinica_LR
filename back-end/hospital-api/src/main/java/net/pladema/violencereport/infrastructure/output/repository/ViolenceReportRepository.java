@@ -1,5 +1,6 @@
 package net.pladema.violencereport.infrastructure.output.repository;
 
+import ar.lamansys.sgh.shared.domain.FilterOptionBo;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.violencereport.domain.ViolenceEpisodeDetailBo;
 import net.pladema.violencereport.domain.ViolenceReportBo;
@@ -80,4 +81,16 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 			"WHERE vr.id = :reportId")
 	ViolenceEpisodeDetailBo getEpisodeDataByReportId(@Param("reportId") Integer reportId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW ar.lamansys.sgh.shared.domain.FilterOptionBo(i.id, i.name) " +
+			"FROM ViolenceReport vr " +
+			"JOIN Institution i ON (i.id = vr.institutionId) " +
+			"WHERE vr.patientId = :patientId")
+	List<FilterOptionBo> getInstitutionFilterByPatientId(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW ar.lamansys.sgh.shared.domain.FilterOptionBo(vr.situationId, vr.situationId) " +
+			"FROM ViolenceReport vr " +
+			"WHERE vr.patientId = :patientId")
+	List<FilterOptionBo> getSituationFilterByPatientId(@Param("patientId") Integer patientId);
 }
