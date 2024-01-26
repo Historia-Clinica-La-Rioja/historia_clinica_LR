@@ -41,7 +41,7 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT NEW net.pladema.violencereport.domain.ViolenceReportBo(vr.canReadAndWrite, vr.hasIncome, vr.worksAtFormalSector, vr.hasSocialPlan, " +
-			"vr.hasDisability, vr.disabilityCertificateStatusId, vr.isInstitutionalized, vr.institutionalizedDetails, vr.lackOfLegalCapacity, " +
+			"vr.hasDisability, vr.disabilityCertificateStatusId, vr.isInstitutionalized, vr.institutionalizedDetails, vr.lackOfLegalCapacity, vr.coordinationInsideHealthSector, " +
 			"vr.coordinationWithinHealthSystem, vr.coordinationWithinHealthInstitution, vr.internmentIndicatedStatusId, vr.coordinationWithOtherSocialOrganizations, " +
 			"vr.werePreviousEpisodeWithVictimOrKeeper, vr.institutionReported, vr.wasSexualViolence, vr.observations) " +
 			"FROM ViolenceReport vr " +

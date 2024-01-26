@@ -194,6 +194,7 @@ public interface ViolenceReportMapper {
 	@Mapping(target = "reportWasDoneByInstitution", source = "institutionReport.reportWasDoneByInstitution")
 	@Mapping(target = "reportReasonIds", expression = "java(fromEInstitutionReportReason(violenceReportImplementedActionsDto.getInstitutionReport().getReportReasons()))")
 	@Mapping(target = "institutionReportPlaceIds", expression = "java(fromEInstitutionReportPlace(violenceReportImplementedActionsDto.getInstitutionReport().getInstitutionReportPlaces()))")
+	@Mapping(target = "otherInstitutionReportPlace", source = "institutionReport.otherInstitutionReportPlace")
 	@Mapping(target = "wasSexualViolence", source = "sexualViolence.wasSexualViolence")
 	@Mapping(target = "implementedActionIds", expression = "java(fromESexualViolenceAction(violenceReportImplementedActionsDto.getSexualViolence().getImplementedActions()))")
 	@Named("fromViolenceReportImplementedActionsDto")
@@ -326,8 +327,6 @@ public interface ViolenceReportMapper {
 	@Named("toCoordinationOutsideHealthSectorDto")
 	CoordinationOutsideHealthSectorDto toCoordinationOutsideHealthSectorDto (CoordinationOutsideHealthSectorBo coordinationOutsideHealthSectorBo);
 
-	//Nuevo
-
 	default List<EVictimKeeperReportPlace> toEVictimKeeperReportPlace(List<Short> eVictimKeeperReportPlaceIds) {
 		if (eVictimKeeperReportPlaceIds != null)
 			return eVictimKeeperReportPlaceIds.stream().map(EVictimKeeperReportPlace::map).collect(Collectors.toList());
@@ -359,6 +358,7 @@ public interface ViolenceReportMapper {
 	@Mapping(source = "reportWasDoneByInstitution", target = "institutionReport.reportWasDoneByInstitution")
 	@Mapping(target = "institutionReport.reportReasons", expression = "java(toEInstitutionReportReason(violenceReportImplementedActionsBo.getReportReasonIds()))")
 	@Mapping(target = "institutionReport.institutionReportPlaces", expression = "java(toEInstitutionReportPlace(violenceReportImplementedActionsBo.getInstitutionReportPlaceIds()))")
+	@Mapping(target = "institutionReport.otherInstitutionReportPlace", source = "otherInstitutionReportPlace")
 	@Mapping(source = "wasSexualViolence", target = "sexualViolence.wasSexualViolence")
 	@Mapping(target = "sexualViolence.implementedActions", expression = "java(toESexualViolenceAction(violenceReportImplementedActionsBo.getImplementedActionIds()))")
 	@Named("toViolenceReportImplementedActionsDto")
