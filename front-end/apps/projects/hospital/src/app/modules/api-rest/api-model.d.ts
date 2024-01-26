@@ -171,10 +171,15 @@ export interface AnestheticReportDto {
     histories?: HealthConditionDto[];
     mainDiagnosis?: DiagnosisDto;
     medications?: MedicationDto[];
-    preMedications?: PreMedicationDto[];
+    preMedications?: AnestheticSubstanceDto[];
     procedureDescription?: ProcedureDescriptionDto;
     riskFactors?: RiskFactorDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
+}
+
+export interface AnestheticSubstanceDto extends ClinicalTermDto {
+    dosage: NewDosageDto;
+    viaId: number;
 }
 
 export interface AnnexIIDto {
@@ -3307,11 +3312,6 @@ export interface PracticeDto {
     snomedId: number;
 }
 
-export interface PreMedicationDto extends ClinicalTermDto {
-    dosage: NewDosageDto;
-    viaId: number;
-}
-
 export interface PreferredTermDto {
     lang: string;
     term: string;
@@ -5255,6 +5255,7 @@ export const enum ProblemTypeEnum {
     OTHER = "OTHER",
     POSTOPERATIVE_DIAGNOSIS = "POSTOPERATIVE_DIAGNOSIS",
     PREOPERATIVE_DIAGNOSIS = "PREOPERATIVE_DIAGNOSIS",
+    OTHER_HISTORY = "OTHER_HISTORY",
 }
 
 export const enum ProcedureTypeEnum {

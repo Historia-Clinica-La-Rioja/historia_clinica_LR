@@ -1,8 +1,10 @@
 package net.pladema.clinichistory.hospitalization.application.anestheticreport;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnestheticSubstanceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,7 +45,12 @@ public class GetAnestheticReport {
         result.setRiskFactors(documentService.getRiskFactorStateFromDocument(documentId));
         result.setAnestheticHistory(documentService.getAnestheticHistoryStateFromDocument(documentId));
         result.setMedications(documentService.getMedicationStateFromDocument(documentId));
-        result.setPreMedications(documentService.getPreMedicationStateFromDocument(documentId));
+
+        List<AnestheticSubstanceBo> substances = documentService.getAnestheticSubstancesStateFromDocument(documentId);
+
+        result.setPreMedications(substances.stream()
+                .filter(substance -> substance.isOfType(EAnestheticSubstanceType.PRE_MEDICATION))
+                .collect(Collectors.toList()));
         result.setFoodIntake(documentService.getFoodIntakeStateFromDocument(documentId));
 
         result.setHistories(generalHealthConditionBo.getOtherHistories());

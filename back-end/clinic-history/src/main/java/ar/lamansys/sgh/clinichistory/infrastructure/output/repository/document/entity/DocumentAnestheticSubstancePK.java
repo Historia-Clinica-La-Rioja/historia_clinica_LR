@@ -15,29 +15,29 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Embeddable
-public class DocumentPreMedicationPK implements Serializable {
+public class DocumentAnestheticSubstancePK implements Serializable {
 
     @Column(name = "document_id", nullable = false)
     private Long documentId;
 
-    @Column(name = "pre_medication_id", nullable = false)
-    private Integer preMedicationId;
+    @Column(name = "anesthetic_substance_id", nullable = false)
+    private Integer anestheticSubstanceId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DocumentPreMedicationPK)) return false;
+        if (!(o instanceof DocumentAnestheticSubstancePK)) return false;
 
-        DocumentPreMedicationPK that = (DocumentPreMedicationPK) o;
+        DocumentAnestheticSubstancePK that = (DocumentAnestheticSubstancePK) o;
 
         if (!getDocumentId().equals(that.getDocumentId())) return false;
-        return getPreMedicationId().equals(that.getPreMedicationId());
+        return getAnestheticSubstanceId().equals(that.getAnestheticSubstanceId());
     }
 
     @Override
     public int hashCode() {
         int result = getDocumentId().hashCode();
-        result = 31 * result + getPreMedicationId().hashCode();
+        result = 31 * result + getAnestheticSubstanceId().hashCode();
         return result;
     }
 }

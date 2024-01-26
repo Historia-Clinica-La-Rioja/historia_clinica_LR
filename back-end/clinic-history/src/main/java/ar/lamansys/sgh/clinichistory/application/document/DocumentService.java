@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.application.document;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
@@ -14,7 +15,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
@@ -30,7 +30,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentPreMedication;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAnestheticSubstance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProsthesis;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
@@ -140,13 +140,13 @@ public interface DocumentService {
 
 	DocumentProsthesis createDocumentProsthesis(Long documentId, String description);
 
-    DocumentPreMedication createDocumentPreMedication(Long documentId, Integer preMedicationId);
-
-    List<PreMedicationBo> getPreMedicationStateFromDocument(Long documentId);
+    DocumentAnestheticSubstance createDocumentAnestheticSubstance(Long documentId, Integer substanceId);
 
     FoodIntakeBo getFoodIntakeStateFromDocument(Long documentId);
 
     AnestheticHistoryBo getAnestheticHistoryStateFromDocument(Long documentId);
+
+    List<AnestheticSubstanceBo> getAnestheticSubstancesStateFromDocument(Long documentId);
 
     ProcedureDescriptionBo getProcedureDescriptionStateFromDocument(Long documentId);
 }

@@ -191,37 +191,42 @@ databaseChangeLog:
         author: mromero
         changes:
           - createTable:
-              tableName: pre_medication
+              tableName: anesthetic_substance
               columns:
                 - column:
                     autoIncrement: true
                     constraints:
                       primaryKey: true
-                      primaryKeyName: PK_pre_medication
+                      primaryKeyName: PK_anesthetic_substance
                     name: id
                     type: int
                 - column:
                     constraints:
                       nullable: false
                       references: document(id)
-                      foreignKeyName: FK_document_id_pre_medication
+                      foreignKeyName: FK_document_id_anesthetic_substance
                     name: document_id
                     type: bigint
                 - column:
                     constraints:
                       nullable: false
                       references: snomed(id)
-                      foreignKeyName: FK_snomed_id_pre_medication
+                      foreignKeyName: FK_snomed_id_anesthetic_substance
                     name: snomed_id
                     type: int
                 - column:
                     constraints:
                       references: dosage(id)
-                      foreignKeyName: FK_dosage_id_pre_medication
+                      foreignKeyName: FK_dosage_id_anesthetic_substance
                     name: dosage_id
                     type: int
                 - column:
                     name: via_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
                     type: smallint
 
     - changeSet:
@@ -244,11 +249,11 @@ databaseChangeLog:
                     type: time
 
     - changeSet:
-        id: createTable-document_pre_medication
+        id: createTable-document_anesthetic_substance
         author: mromero
         changes:
           - createTable:
-              tableName: document_pre_medication
+              tableName: document_anesthetic_substance
               columns:
                 - column:
                     constraints:
@@ -258,31 +263,31 @@ databaseChangeLog:
                 - column:
                     constraints:
                       nullable: false
-                    name: pre_medication_id
+                    name: anesthetic_substance_id
                     type: int
           - addPrimaryKey:
               clustered: true
-              columnNames: document_id, pre_medication_id
-              constraintName: PK_document_pre_medication
-              tableName: document_pre_medication
+              columnNames: document_id, anesthetic_substance_id
+              constraintName: PK_document_anesthetic_substance
+              tableName: document_anesthetic_substance
               validate: true
           - addForeignKeyConstraint:
               baseColumnNames: document_id
-              baseTableName: document_pre_medication
-              constraintName: FK_document_id_document_pre_medication
+              baseTableName: document_anesthetic_substance
+              constraintName: FK_document_id_document_anesthetic_substance
               onDelete: NO ACTION
               onUpdate: NO ACTION
               referencedColumnNames: id
               referencedTableName: document
               validate: true
           - addForeignKeyConstraint:
-              baseColumnNames: pre_medication_id
-              baseTableName: document_pre_medication
-              constraintName: FK_pre_medication_id_document_pre_medication
+              baseColumnNames: anesthetic_substance_id
+              baseTableName: document_anesthetic_substance
+              constraintName: FK_anesthetic_substance_id_document_anesthetic_substance
               onDelete: NO ACTION
               onUpdate: NO ACTION
               referencedColumnNames: id
-              referencedTableName: pre_medication
+              referencedTableName: anesthetic_substance
               validate: true
 
     - changeSet:

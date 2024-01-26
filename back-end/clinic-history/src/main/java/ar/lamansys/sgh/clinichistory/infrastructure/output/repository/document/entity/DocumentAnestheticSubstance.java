@@ -16,15 +16,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(name = "document_pre_medication")
+@Table(name = "document_anesthetic_substance")
 @Entity
-public class DocumentPreMedication {
+public class DocumentAnestheticSubstance {
 
     @EmbeddedId
-    private DocumentPreMedicationPK documentPreMedicationPK;
+    private DocumentAnestheticSubstancePK documentAnestheticSubstancePK;
 
-    public DocumentPreMedication(Long documentId, Integer preMedicationId) {
-        documentPreMedicationPK = new DocumentPreMedicationPK(documentId, preMedicationId);
+    public DocumentAnestheticSubstance(Long documentId, Integer anestheticSubstanceId) {
+        documentAnestheticSubstancePK = new DocumentAnestheticSubstancePK(documentId, anestheticSubstanceId);
     }
 
 }

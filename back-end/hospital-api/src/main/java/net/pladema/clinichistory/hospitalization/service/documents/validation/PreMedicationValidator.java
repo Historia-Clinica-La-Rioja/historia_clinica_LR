@@ -1,11 +1,10 @@
 package net.pladema.clinichistory.hospitalization.service.documents.validation;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
-import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EVia;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import javax.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,12 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class PreMedicationValidator {
 
-    public void assertContextValid(List<PreMedicationBo> preMedications) {
+    public void assertContextValid(List<AnestheticSubstanceBo> preMedications) {
 
         this.assertNotDuplicated(preMedications);
 
         preMedications.stream()
-                .map(PreMedicationBo::getViaId)
+                .map(AnestheticSubstanceBo::getViaId)
                 .forEach(this::assertViaValid);
     }
 
@@ -32,7 +31,7 @@ public class PreMedicationValidator {
         log.trace("Output -> isValid viaId {}", viaId);
     }
 
-    public void assertNotDuplicated(List<PreMedicationBo> preMedications) {
+    public void assertNotDuplicated(List<AnestheticSubstanceBo> preMedications) {
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(preMedications))
             throw new ConstraintViolationException("Pre-medicaciones repetidas", Collections.emptySet());
     }

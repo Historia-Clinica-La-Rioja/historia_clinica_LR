@@ -12,7 +12,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class PreMedicationDto extends ClinicalTermDto {
+public class AnestheticSubstanceDto extends ClinicalTermDto {
 
     @NotNull(message = "{value.mandatory}")
     private @Valid NewDosageDto dosage;

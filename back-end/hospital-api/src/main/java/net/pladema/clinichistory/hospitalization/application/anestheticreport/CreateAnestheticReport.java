@@ -2,8 +2,9 @@ package net.pladema.clinichistory.hospitalization.application.anestheticreport;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnestheticSubstanceType;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import java.util.List;
@@ -54,7 +55,7 @@ public class CreateAnestheticReport {
 
         this.setTypeSurgicalProcedures(anestheticReport.getSurgeryProcedures());
 
-        this.setEventPeriodUnitDosages(anestheticReport.getPreMedications());
+        this.setPreMedicationsValues(anestheticReport.getPreMedications());
 
         anestheticReportValidator.assertContextValid(anestheticReport);
 
@@ -73,9 +74,10 @@ public class CreateAnestheticReport {
                 .forEach(surgicalProcedure -> surgicalProcedure.setType(ProcedureTypeEnum.SURGICAL_PROCEDURE));
     }
 
-    public void setEventPeriodUnitDosages(List<PreMedicationBo> preMedications) {
+    public void setPreMedicationsValues(List<AnestheticSubstanceBo> preMedications) {
         preMedications.stream()
-                .map(PreMedicationBo::getDosage)
+                .peek(preMedication -> preMedication.setTypeId(EAnestheticSubstanceType.PRE_MEDICATION.getId()))
+                .map(AnestheticSubstanceBo::getDosage)
                 .filter(Objects::nonNull)
                 .forEach(dosageBo -> dosageBo.setPeriodUnit(EUnitsOfTimeBo.EVENT));
     }

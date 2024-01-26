@@ -19,9 +19,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(name = "pre_medication")
+@Table(name = "anesthetic_substance")
 @Entity
-public class PreMedication {
+public class AnestheticSubstance {
 
     @Id
     @Column(name = "id")
@@ -39,4 +39,7 @@ public class PreMedication {
 
     @Column(name = "via_id")
     private Short viaId;
+
+    @Column(name = "type_id", nullable = false)
+    private Short typeId;
 }

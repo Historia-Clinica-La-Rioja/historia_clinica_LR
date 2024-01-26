@@ -1,15 +1,15 @@
 package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.PreMedicationRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.AnestheticSubstanceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.QuantityRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.PreMedication;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.AnestheticSubstance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Quantity;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -19,33 +19,34 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class LoadPreMedications {
+public class LoadAnestheticSubstances {
 
     private final QuantityRepository quantityRepository;
     private final DosageRepository dosageRepository;
     private final SnomedService snomedService;
-    private final PreMedicationRepository preMedicationRepository;
+    private final AnestheticSubstanceRepository anestheticSubstanceRepository;
     private final DocumentService documentService;
 
-    public List<PreMedicationBo> run(Long documentId, List<PreMedicationBo> preMedications) {
-        log.debug("Input parameters -> documentId {} preMedications {}", documentId, preMedications);
+    public List<AnestheticSubstanceBo> run(Long documentId, List<AnestheticSubstanceBo> substances) {
+        log.debug("Input parameters -> documentId {} substances {}", documentId, substances);
 
-        preMedications.forEach((medication) -> {
-            if (medication.getId() == null) {
-                Integer snomedId = snomedService.getSnomedId(medication.getSnomed())
-                        .orElseGet(() -> snomedService.createSnomedTerm(medication.getSnomed()));
-                Long quantityId = createQuantity(medication.getDosage());
-                Integer dosageId = createDosage(medication.getDosage(), quantityId);
-                Short viaId = medication.getViaId();
+        substances.forEach((anestheticSubstanceBo) -> {
+            if (anestheticSubstanceBo.getId() == null) {
+                Integer snomedId = snomedService.getSnomedId(anestheticSubstanceBo.getSnomed())
+                        .orElseGet(() -> snomedService.createSnomedTerm(anestheticSubstanceBo.getSnomed()));
+                Long quantityId = createQuantity(anestheticSubstanceBo.getDosage());
+                Integer dosageId = createDosage(anestheticSubstanceBo.getDosage(), quantityId);
+                Short viaId = anestheticSubstanceBo.getViaId();
+                Short typeId = anestheticSubstanceBo.getTypeId();
 
-                PreMedication preMedication = preMedicationRepository.save(new PreMedication(null, documentId, snomedId, dosageId, viaId));
-                medication.setId(preMedication.getId());
+                AnestheticSubstance anestheticSubstance = anestheticSubstanceRepository.save(new AnestheticSubstance(null, documentId, snomedId, dosageId, viaId, typeId));
+                anestheticSubstanceBo.setId(anestheticSubstance.getId());
             }
-            documentService.createDocumentPreMedication(documentId, medication.getId());
+            documentService.createDocumentAnestheticSubstance(documentId, anestheticSubstanceBo.getId());
         });
 
-        log.debug("Output -> {}", preMedications);
-        return preMedications;
+        log.debug("Output -> {}", substances);
+        return substances;
     }
 
     private Long createQuantity(DosageBo dosageBo) {

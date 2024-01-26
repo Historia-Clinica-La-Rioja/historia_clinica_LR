@@ -6,7 +6,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Diagnosis
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FoodIntakeDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PreMedicationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnestheticSubstanceDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProcedureDescriptionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ public class AnestheticReportDto {
     private @Valid List<MedicationDto> medications = new ArrayList<>();
 
     @Nullable
-    private @Valid List<PreMedicationDto> preMedications = new ArrayList<>();
+    private @Valid List<AnestheticSubstanceDto> preMedications = new ArrayList<>();
 
     @Nullable
     private @Valid FoodIntakeDto foodIntake;

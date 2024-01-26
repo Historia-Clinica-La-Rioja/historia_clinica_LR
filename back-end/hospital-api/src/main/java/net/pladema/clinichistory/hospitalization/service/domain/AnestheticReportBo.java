@@ -3,12 +3,12 @@ package net.pladema.clinichistory.hospitalization.domain;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PreMedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
@@ -62,7 +62,7 @@ public class AnestheticReportBo implements IDocumentBo {
 
     private List<MedicationBo> medications;
 
-    private List<PreMedicationBo> preMedications;
+    private List<AnestheticSubstanceBo> preMedications;
 
     private FoodIntakeBo foodIntake;
 
