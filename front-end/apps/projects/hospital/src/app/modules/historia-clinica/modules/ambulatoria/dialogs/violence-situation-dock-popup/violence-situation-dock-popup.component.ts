@@ -23,13 +23,13 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	buttonRaised: ButtonType = ButtonType.RAISED;
 	isSaving: boolean = false;
 
-	constructor(@Inject(OVERLAY_DATA) public patientId: number,
+	constructor(@Inject(OVERLAY_DATA) public data,
 				public dockPopupRef: DockPopupRef,
-				private readonly violenceReportService: ViolenceReportService, 
-				private snackbarServices: SnackBarService, 
+				private readonly violenceReportService: ViolenceReportService,
+				private snackbarServices: SnackBarService,
 				private readonly violenceAggressorsNewConsultationService: ViolenceAggressorsNewConsultationService,
 				private readonly violenceSituationService: ViolenceSituationsNewConsultationService,
-				private readonly violenceModalityService: ViolenceModalityNewConsultationService, 
+				private readonly violenceModalityService: ViolenceModalityNewConsultationService,
 	 			private readonly violenceReportFacadeService: ViolenceReportFacadeService) {
 		this.newViolenceSituation = {
 			aggressorData: null,
@@ -43,7 +43,13 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	ngOnInit() {
 		this.dockPopupRef.afterClosed().subscribe(close =>{
 			this.resetServices();
-		})
+		});
+		this.setViolenceSituation();
+	}
+
+	setViolenceSituation() {
+		if (this.data.data.situationId)
+			this.violenceReportFacadeService.setViolenceSituation(this.data.data.situationId, this.data.data.patientId);
 	}
 
 	setPersonInformation(event) {
@@ -78,7 +84,7 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 				this.isSaving = false;
 			}
 		}, 1000);
-		
+
 	}
 
 	isValidForm(): boolean{
@@ -86,11 +92,24 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	}
 
 	saveSituationViolence() {
-		this.violenceReportService.saveNewViolenceReport(this.newViolenceSituation, this.patientId).subscribe(res=>{
-		this.violenceReportFacadeService.setAllPatientViolenceSituations(this.patientId, true);
+		if (this.data.data.situationId) {
+			this.violenceReportService.evolveViolenceReport(this.newViolenceSituation, this.data.data.patientId, this.data.data.situationId)
+				.subscribe({
+					next: (_) => this.success()
+				});
+		} else {
+			this.violenceReportService.saveNewViolenceReport(this.newViolenceSituation, this.data.data.patientId)
+				.subscribe({
+					next: (_) => this.success()
+				});
+		}
+
+	}
+
+	success() {
+		this.violenceReportFacadeService.setAllPatientViolenceSituations(this.data.data.patientId, true);
 		this.snackbarServices.showSuccess('ambulatoria.paciente.violence-situations.dialog.SUCCESS')
 		this.dockPopupRef.close();
-	})
 	}
 
 	resetServices() {

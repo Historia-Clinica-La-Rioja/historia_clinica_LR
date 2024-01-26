@@ -29,4 +29,14 @@ export class ViolenceReportService {
 		queryParams = queryParams.append('mustBeLimited', JSON.stringify(mustBeLimited));
 		return this.http.get<PageDto<ViolenceReportSituationDto>>(url, {params: queryParams});
 	}
+
+	getViolenceReport(situationId: number, patientId: number): Observable<ViolenceReportDto> {
+		const url = this.BASE_URL + patientId + `/situation/${situationId}`;
+		return this.http.get<ViolenceReportDto>(url);
+	}
+
+	evolveViolenceReport(violenceReport: ViolenceReportDto, patientId: number, situationId: number) {
+		const url = this.BASE_URL + patientId + `/situation/${situationId}/evolve`;
+		return this.http.post<ViolenceReportDto>(url, violenceReport);
+	}
 }

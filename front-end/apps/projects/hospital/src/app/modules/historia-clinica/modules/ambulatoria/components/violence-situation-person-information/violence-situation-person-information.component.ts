@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EDisabilityCertificateStatus, EKeeperRelationship, MasterDataDto, ViolenceReportVictimDto } from '@api-rest/api-model';
+import { EDisabilityCertificateStatus, EKeeperRelationship, MasterDataDto, ViolenceReportDto, ViolenceReportVictimDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { DEFAULT_COUNTRY_ID, hasError, includesEventCodeNumber, updateControlValidator } from '@core/utils/form.utils';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { BasicOptions, BasicTwoOptions, DisabilityCertificateStatus, FormOption, RelationOption, Sectors } from '../../constants/violence-masterdata';
+import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 
 const idNoInfo = 99;
 @Component({
@@ -12,7 +13,7 @@ const idNoInfo = 99;
 	templateUrl: './violence-situation-person-information.component.html',
 	styleUrls: ['./violence-situation-person-information.component.scss']
 })
-export class ViolenceSituationPersonInformationComponent implements OnInit {
+export class ViolenceSituationPersonInformationComponent implements OnInit, OnDestroy {
 	@Output() personInformation = new EventEmitter<any>();
 	@Input() confirmForm: Observable<boolean>;
 
@@ -32,6 +33,8 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 
 	provinces$: Observable<MasterDataDto[]>;
 	departments$: Observable<MasterDataDto[]>;
+
+	violenceSituationSub: Subscription;
 
 	hasError = hasError;
 
@@ -57,9 +60,56 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 
 	includesEventCodeNumber = includesEventCodeNumber;
 
-	constructor(private addressMasterDataService: AddressMasterDataService) { }
+	constructor(private addressMasterDataService: AddressMasterDataService,
+				private readonly violenceSituationFacadeService: ViolenceReportFacadeService) { }
 
 	ngOnInit(): void {
+		this.setForm();
+		this.setViolenceSituation();
+		this.provinces$ = this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID);
+	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (!changes.confirmForm.isFirstChange()) {
+			if (this.form.valid) {
+				this.personInformation.emit(this.mapPersonInformatio());
+			}else{
+				this.personInformation.emit(null);
+				this.form.markAllAsTouched();
+			}
+		}
+	}
+
+	ngOnDestroy(): void {
+		this.violenceSituationSub.unsubscribe();
+	}
+
+	private setViolenceSituation() {
+		this.violenceSituationSub = this.violenceSituationFacadeService.violenceSituation$
+			.subscribe((result: ViolenceReportDto) => {
+				const {victimData} = result;
+				this.form.controls.knowHowToReadWrite.setValue(victimData.canReadAndWrite ? victimData.canReadAndWrite: null);
+				this.form.controls.receiveIncome.setValue(victimData.incomeData.hasIncome ? victimData.incomeData.hasIncome: null);
+				this.form.controls.whichSector.setValue(victimData.incomeData.worksAtFormalSector);
+				this.form.controls.receivePlanAssistance.setValue(victimData.hasSocialPlan ? victimData.hasSocialPlan: null);
+				this.form.controls.haveDisability.setValue(victimData.disabilityData.hasDisability ? victimData.disabilityData.hasDisability: null);
+				this.form.controls.haveDisabilityCertificate.setValue(victimData.disabilityData.disabilityCertificateStatus);
+				this.form.controls.isPersonInstitutionalized.setValue(victimData.institutionalizedData.isInstitutionalized ? victimData.institutionalizedData.isInstitutionalized: null);
+				this.form.controls.inWhichInstitution.setValue(victimData.institutionalizedData.institutionalizedDetails);
+				this.form.controls.personTypeAge.setValue(victimData.lackOfLegalCapacity);
+				this.form.controls.lastname.setValue(victimData.keeperData?.actorPersonalData.lastName);
+				this.form.controls.name.setValue(victimData.keeperData?.actorPersonalData.firstName);
+				this.form.controls.age.setValue(victimData.keeperData?.actorPersonalData.age);
+				this.form.controls.address.setValue(victimData.keeperData?.actorPersonalData.address);
+				this.form.controls.addressProvinceId.setValue(victimData.keeperData?.actorPersonalData.municipality.provinceId);
+				this.form.controls.addressDepartmentId.setValue(victimData.keeperData?.actorPersonalData.municipality.id);
+				this.setDepartments();
+				this.form.controls.relationPersonViolenceSituation.setValue(victimData.keeperData?.relationshipWithVictim);
+				this.form.controls.whichTypeRelation.setValue(victimData.keeperData?.otherRelationshipWithVictim);
+			});
+	}
+
+	private setForm() {
 		this.form = new FormGroup({
 			knowHowToReadWrite: new FormControl(null),
 			receiveIncome: new FormControl(null),
@@ -79,19 +129,6 @@ export class ViolenceSituationPersonInformationComponent implements OnInit {
 			relationPersonViolenceSituation: new FormControl(null),
 			whichTypeRelation: new FormControl(null),
 		});
-		this.provinces$ = this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID);
-
-	}
-
-	ngOnChanges(changes: SimpleChanges) {
-		if (!changes.confirmForm.isFirstChange()) {
-			if (this.form.valid) {
-				this.personInformation.emit(this.mapPersonInformatio());
-			}else{
-				this.personInformation.emit(null);
-				this.form.markAllAsTouched();
-			}
-		}
 	}
 
 	mapPersonInformatio(): ViolenceReportVictimDto {

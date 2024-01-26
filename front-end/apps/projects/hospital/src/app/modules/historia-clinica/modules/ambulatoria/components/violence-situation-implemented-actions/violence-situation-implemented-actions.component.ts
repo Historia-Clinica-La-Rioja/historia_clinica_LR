@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { hasError, updateControlValidator } from '@core/utils/form.utils';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FormOption, Areas, Establishments, InternmentIndication, MunicipalDevices, ProvincialDevices, NationalDevices, OrganizationsExtended, Organizations, Complaints, Devices, ImplementedActions, BasicTwoOptions } from '../../constants/violence-masterdata';
-import { EHealthInstitutionOrganization, EHealthSystemOrganization, EInstitutionReportPlace, EInstitutionReportReason, EIntermentIndicationStatus, EMunicipalGovernmentDevice, ENationalGovernmentDevice, EProvincialGovernmentDevice, ESexualViolenceAction, ViolenceReportImplementedActionsDto } from '@api-rest/api-model';
+import { EHealthInstitutionOrganization, EHealthSystemOrganization, EInstitutionReportPlace, EInstitutionReportReason, EIntermentIndicationStatus, EMunicipalGovernmentDevice, ENationalGovernmentDevice, EProvincialGovernmentDevice, ESexualViolenceAction, ViolenceReportDto, ViolenceReportImplementedActionsDto } from '@api-rest/api-model';
+import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 
 enum Articulation {
 	IN = 'Articulación con otras áreas/organismos del sector salud',
@@ -15,7 +16,7 @@ enum Articulation {
 	styleUrls: ['./violence-situation-implemented-actions.component.scss']
 })
 
-export class ViolenceSituationImplementedActionsComponent implements OnInit {
+export class ViolenceSituationImplementedActionsComponent implements OnInit, OnDestroy {
 	@Input() confirmForm: Observable<boolean>;
 	@Output() implementedActionsInfo = new EventEmitter<any>();
 
@@ -92,10 +93,12 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 
 	basicOptions = BasicTwoOptions;
 	hasError = hasError;
+	violenceSituationSub: Subscription;
 
-	constructor() { }
+	constructor(private readonly violenceSituationFacadeService: ViolenceReportFacadeService) { }
 
 	ngOnInit(): void {
+		this.setViolenceSituation();
 		this.form = new FormGroup({
 			articulation: new FormControl(null, Validators.required),
 			healthSystemArticulation: new FormControl(false),
@@ -129,6 +132,10 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 				this.form.markAllAsTouched();
 			}
 		}
+	}
+
+	ngOnDestroy(): void {
+		this.violenceSituationSub.unsubscribe();
 	}
 
 	mapImplementedActionsDto(): ViolenceReportImplementedActionsDto {
@@ -228,39 +235,41 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			array.push(value);
 			this.setDevicesValidators(value, true);
 		}
-
+		
 		formControl.setValue(array);
 	}
 
-	setDevicesValidators(value: string, required: boolean) {
+	private setDevicesValidators(value: string, required: boolean) {
 		if (value === Devices.MUNICIPAL_DEVICES) {
 			if (required) {
-				this.form.controls.municipalDevices.setValidators(Validators.required);
+				updateControlValidator(this.form, 'municipalDevices', Validators.required);
 			} else {
 				this.selectedMunicipalDevices = [];
-				this.form.controls.municipalDevices.setValidators([]);
+				this.form.controls.municipalDevices.reset();
+				updateControlValidator(this.form, 'municipalDevices', []);
 			}
-			this.form.controls.municipalDevices.updateValueAndValidity();
 		}
 
 		if (value === Devices.PROVINCIAL_DEVICES) {
 			if (required) {
-				this.form.controls.provincialDevices.setValidators(Validators.required);
+				updateControlValidator(this.form, 'provincialDevices', Validators.required);
+
 			} else {
 				this.selectedProvincialDevices = [];
-				this.form.controls.provincialDevices.setValidators([]);
+				this.form.controls.provincialDevices.reset();
+				updateControlValidator(this.form, 'provincialDevices', []);
+
 			}
-			this.form.controls.provincialDevices.updateValueAndValidity();
 		}
 
 		if (value === Devices.NATIONAL_DEVICES) {
 			if (required) {
-				this.form.controls.nationalDevices.setValidators(Validators.required);
+				updateControlValidator(this.form, 'nationalDevices', Validators.required);
 			} else {
 				this.selectedNationalDevices = [];
-				this.form.controls.provincialDevices.setValidators([]);
+				this.form.controls.nationalDevices.reset();
+				updateControlValidator(this.form, 'nationalDevices', []);
 			}
-			this.form.controls.nationalDevices.updateValueAndValidity();
 		}
 	}
 
@@ -338,7 +347,11 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 		} else {
 			updateControlValidator(this.form, 'institutionComplaintsOrganizations', []);
 			updateControlValidator(this.form, 'institutionComplaints', []);
+			updateControlValidator(this.form, 'autorityName', []);
 			this.form.controls.institutionComplaintsOrganizations.reset();
+			this.form.controls.institutionComplaints.reset();
+			this.form.controls.autorityName.reset();
+			this.selectedComplains = [];
 		}
 	}
 
@@ -362,7 +375,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 
 	updateValidationAutorityName() {
 		if (this.form.value.institutionComplaintsOrganizations.map(institution=> institution.value).includes(this.institutionComplaintsOrganizationsOther)) {
-			updateControlValidator(this.form, 'autorityName', Validators.required);
+			updateControlValidator(this.form, 'autorityName', [Validators.required, Validators.maxLength(20)]);
 		} else {
 			updateControlValidator(this.form, 'autorityName', []);
 		}
@@ -418,7 +431,83 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			updateControlValidator(this.form, 'implementedActions', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'implementedActions', []);
+			this.selectedImplementedActions = [];
+			this.form.controls.implementedActions.reset();
+		}
+	}
+
+	private setViolenceSituation() {
+		this.violenceSituationSub = this.violenceSituationFacadeService.violenceSituation$
+			.subscribe((result: ViolenceReportDto) => {
+				const {implementedActions} = result;
+				if (implementedActions.healthCoordination?.coordinationInsideHealthSector)
+					this.setCoordinationInsideHealthSector(implementedActions);
+
+				if (implementedActions.healthCoordination?.coordinationOutsideHealthSector)
+					this.setCoordinationOutsideHealthSector(implementedActions);
+
+				this.form.controls.personComplaint.setValue(implementedActions.victimKeeperReport.werePreviousEpisodesWithVictimOrKeeper);
+				this.form.controls.agencyComplaint.setValue(implementedActions.victimKeeperReport.reportPlaces);
+				this.form.controls.isInstitutionComplaint.setValue(implementedActions.institutionReport.reportWasDoneByInstitution);
+				this.form.controls.institutionComplaints.setValue(implementedActions.institutionReport.reportReasons?.length ? implementedActions.institutionReport.reportReasons: []);
+				this.selectedComplains = implementedActions.institutionReport.reportReasons?.length ? implementedActions.institutionReport.reportReasons: [];
+				this.form.controls.institutionComplaintsOrganizations.setValue(implementedActions.institutionReport.institutionReportPlaces);
+				this.form.controls.autorityName.setValue(implementedActions.institutionReport.otherInstitutionReportPlace);
+				this.form.controls.isSexualViolence.setValue(implementedActions.sexualViolence.wasSexualViolence);
+				this.form.controls.implementedActions.setValue(implementedActions.sexualViolence.implementedActions);
+				this.selectedImplementedActions = implementedActions.sexualViolence.implementedActions?.length ? implementedActions.sexualViolence.implementedActions: [];
+			});
+	}
+
+	private setCoordinationInsideHealthSector(implementedActions: ViolenceReportImplementedActionsDto) {
+		const {coordinationInsideHealthSector} = implementedActions.healthCoordination;
+		this.form.controls.articulation.setValue(Articulation.IN);
+		this.form.controls.healthSystemArticulation.setValue(coordinationInsideHealthSector.healthSystemOrganization.within);
+		this.form.controls.area.setValue(coordinationInsideHealthSector.healthSystemOrganization.organizations);
+		this.form.controls.otherArea.setValue(coordinationInsideHealthSector.healthSystemOrganization.other);
+		this.form.controls.articulationEstablishment.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.within);
+		this.form.controls.articulationEstablishmentList.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.organizations);
+		this.form.controls.otherArticulationEstablishment.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.other);
+		this.form.controls.internmentIndication.setValue(coordinationInsideHealthSector.wereInternmentIndicated);
+	}
+
+	private setCoordinationOutsideHealthSector(implementedActions: ViolenceReportImplementedActionsDto) {
+		const {municipalGovernmentDevices} = implementedActions.healthCoordination.coordinationOutsideHealthSector;
+		const {provincialGovernmentDevices} = implementedActions.healthCoordination.coordinationOutsideHealthSector;
+		const {nationalGovernmentDevices} = implementedActions.healthCoordination.coordinationOutsideHealthSector;
+		this.form.controls.articulation.setValue(Articulation.OUT);
+		this.form.controls.municipalDevices.setValue(municipalGovernmentDevices);
+		this.prechargeMunicipalDevices(municipalGovernmentDevices);
+		this.prechargeProvincialDevices(provincialGovernmentDevices);
+		this.prechargeNationalDevices(nationalGovernmentDevices);
+		if (implementedActions.healthCoordination.coordinationOutsideHealthSector.withOtherSocialOrganizations)
+			this.selectedDevices.push(this.devicesEnum.SOCIAL_ORGANIZATION);
+	}
+
+	private prechargeMunicipalDevices(municipalGovernmentDevices: EMunicipalGovernmentDevice[]) {
+		this.form.controls.municipalDevices.setValue(municipalGovernmentDevices);
+		if (municipalGovernmentDevices?.length) {
+			this.devices.push(this.devicesEnum.MUNICIPAL_DEVICES);
+			this.selectedDevices.push(this.devicesEnum.MUNICIPAL_DEVICES);
+			this.selectedMunicipalDevices = municipalGovernmentDevices;
+		}
+	}
+
+	private prechargeProvincialDevices(provincialGovernmentDevices: EProvincialGovernmentDevice[]) {
+		this.form.controls.provincialDevices.setValue(provincialGovernmentDevices);
+		if (provincialGovernmentDevices?.length) {
+			this.devices.push(this.devicesEnum.PROVINCIAL_DEVICES);
+			this.selectedDevices.push(this.devicesEnum.PROVINCIAL_DEVICES);
+			this.selectedProvincialDevices = provincialGovernmentDevices;
+		}
+	}
+
+	private prechargeNationalDevices(nationalGovernmentDevices: ENationalGovernmentDevice[]) {
+		this.form.controls.nationalDevices.setValue(nationalGovernmentDevices);
+		if (nationalGovernmentDevices?.length) {
+			this.devices.push(this.devicesEnum.NATIONAL_DEVICES);
+			this.selectedDevices.push(this.devicesEnum.NATIONAL_DEVICES);
+			this.selectedNationalDevices = nationalGovernmentDevices;
 		}
 	}
 }
-

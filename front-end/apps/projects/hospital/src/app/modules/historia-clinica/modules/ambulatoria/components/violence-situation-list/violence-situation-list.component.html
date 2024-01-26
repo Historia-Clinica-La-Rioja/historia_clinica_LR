@@ -37,7 +37,7 @@
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item>
+                <button mat-menu-item (click)="continue(vs.situationId)">
                     <span [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.buttons.CONTINUE'"></span>
                 </button>
             </mat-menu>

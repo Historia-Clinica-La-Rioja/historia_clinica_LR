@@ -115,37 +115,37 @@
         </div>
 
         <div *ngIf="articulation === articulationEnum.OUT" class="aside column" fxLayoutGap="10px">
-            <mat-checkbox (click)="setDevice(devicesEnum.MUNICIPAL_DEVICES)" color="primary">{{
+            <mat-checkbox (change)="setDevice(devicesEnum.MUNICIPAL_DEVICES)" color="primary" [checked]="selectedDevices.includes(devicesEnum.MUNICIPAL_DEVICES)">{{
                 devicesEnum.MUNICIPAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.MUNICIPAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let mdev of municipalDevicesList" (click)="setMunicipalDevices(mdev.value)"
+                <mat-checkbox *ngFor="let mdev of municipalDevicesList" [checked]="selectedMunicipalDevices.includes(mdev.value)" (change)="setMunicipalDevices(mdev.value)"
                     color="primary">{{ mdev.text }}</mat-checkbox>
 
-					<mat-error *ngIf="hasError(form, 'required', 'municipalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
+				<mat-error *ngIf="hasError(form, 'required', 'municipalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 
-            <mat-checkbox (click)="setDevice(devicesEnum.PROVINCIAL_DEVICES)" color="primary">{{
+            <mat-checkbox (change)="setDevice(devicesEnum.PROVINCIAL_DEVICES)" [checked]="selectedDevices.includes(devicesEnum.PROVINCIAL_DEVICES)" color="primary">{{
                 devicesEnum.PROVINCIAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.PROVINCIAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let pdev of provincialDevicesList" (click)="setProvincialDevices(pdev.value)"
+                <mat-checkbox *ngFor="let pdev of provincialDevicesList" [checked]="selectedProvincialDevices.includes(pdev.value)" (change)="setProvincialDevices(pdev.value)"
                     color="primary">{{ pdev.text }}</mat-checkbox>
 
-					<mat-error *ngIf="hasError(form, 'required', 'provincialDevices')" [translate]="'forms.REQUIRED'"></mat-error>
+				<mat-error *ngIf="hasError(form, 'required', 'provincialDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 
-            <mat-checkbox (click)="setDevice(devicesEnum.NATIONAL_DEVICES)" color="primary">{{
+            <mat-checkbox (change)="setDevice(devicesEnum.NATIONAL_DEVICES)" color="primary" [checked]="selectedDevices.includes(devicesEnum.NATIONAL_DEVICES)">{{
                 devicesEnum.NATIONAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.NATIONAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let ndev of nationalDevicesList" (click)="setNationalDevices(ndev.value)"
+                <mat-checkbox *ngFor="let ndev of nationalDevicesList" [checked]="selectedNationalDevices.includes(ndev.value)" (change)="setNationalDevices(ndev.value)"
                     color="primary">{{ ndev.text }}</mat-checkbox>
 
-					<mat-error *ngIf="hasError(form, 'required', 'nationalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
+				<mat-error *ngIf="hasError(form, 'required', 'nationalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 
-            <mat-checkbox (click)="setDevice(devicesEnum.SOCIAL_ORGANIZATION)" color="primary">{{
+            <mat-checkbox (change)="setDevice(devicesEnum.SOCIAL_ORGANIZATION)" color="primary" [checked]="selectedDevices.includes(devicesEnum.SOCIAL_ORGANIZATION)">{{
                 devicesEnum.SOCIAL_ORGANIZATION }}</mat-checkbox>
 
             <mat-error *ngIf="hasError(form, 'required', 'devices') && form.controls.devices.touched"  [translate]="'forms.REQUIRED'"></mat-error>
@@ -198,7 +198,7 @@
             <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_9' |
                 translate}}</label>
 
-            <mat-checkbox *ngFor="let opt of complaints" (click)="setComplaints(opt.value)" color="primary">
+            <mat-checkbox *ngFor="let opt of complaints" [checked]="selectedComplains?.includes(opt.value)" (change)="setComplaints(opt.value)" color="primary">
                 {{opt.text}}
             </mat-checkbox>
             <mat-error *ngIf="hasError(form, 'required', 'institutionComplaints') && form.controls.institutionComplaints.touched"
@@ -255,7 +255,7 @@
             <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_13' |
                 translate}}</label>
 
-            <mat-checkbox *ngFor="let opt of implementedActions" (click)="setImplementedActions(opt.value)" color="primary">
+            <mat-checkbox *ngFor="let opt of implementedActions" [checked]="selectedImplementedActions?.includes(opt.value)" (change)="setImplementedActions(opt.value)" color="primary">
                 {{opt.text}}
             </mat-checkbox>
             <mat-error *ngIf="hasError(form, 'required', 'implementedActions') && form.controls.implementedActions.touched"

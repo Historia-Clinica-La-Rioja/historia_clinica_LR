@@ -51,7 +51,6 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 		});
 	}
 
-	
 	ngOnChanges(changes: SimpleChanges) {
 		if(!changes.confirmForm.isFirstChange()){
 			if(this.form.valid){

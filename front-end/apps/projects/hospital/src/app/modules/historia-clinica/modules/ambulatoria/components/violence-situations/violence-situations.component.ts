@@ -37,7 +37,11 @@ export class ViolenceSituationsComponent implements OnInit {
 	}
 
 	openViolenceSituationDockPopUp() {
-		this.dockPopupService.open(ViolenceSituationDockPopupComponent,this.patientId);
+		this.dockPopupService.open(ViolenceSituationDockPopupComponent, {
+			data: {
+				patientId: this.patientId,
+			}
+		});
 	}
 
 	setPatientViolenceSituations(mustBeLimited: boolean) {
