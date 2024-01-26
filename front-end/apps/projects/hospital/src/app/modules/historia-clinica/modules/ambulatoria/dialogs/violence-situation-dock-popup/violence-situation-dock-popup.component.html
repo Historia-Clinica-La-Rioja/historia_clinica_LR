@@ -13,9 +13,12 @@
     </div>
     <div actions id="buttons">
         <div *ngIf="viewError" ><mat-error>{{'ambulatoria.paciente.violence-situations.dialog.ERROR_FORM' | translate}}</mat-error></div>
-        <div align="end">
-            <button mat-raised-button type="button" (click)="confirmViolenceForm()" color="primary">{{'ambulatoria.paciente.violence-situations.dialog.SAVE' |
-                translate}}</button>
-        </div>
+        <app-button [text]="'ambulatoria.paciente.violence-situations.dialog.SAVE'" 
+            [isLoading]="isSaving"
+            [disabled]="isSaving"
+            [color]="'primary'" 
+            [buttonType]="buttonRaised" 
+            (click)="confirmViolenceForm()">
+        </app-button>
     </div>
 </app-dock-popup>

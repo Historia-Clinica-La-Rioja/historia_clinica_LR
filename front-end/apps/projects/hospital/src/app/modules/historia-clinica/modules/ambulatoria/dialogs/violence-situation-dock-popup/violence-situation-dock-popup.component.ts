@@ -9,6 +9,7 @@ import { Observable, of } from 'rxjs';
 import { ViolenceAggressorsNewConsultationService } from '../../services/violence-aggressors-new-consultation.service';
 import { ViolenceModalityNewConsultationService } from '../../services/violence-modality-new-consultation.service';
 import { ViolenceSituationsNewConsultationService } from '../../services/violence-situations-new-consultation.service';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 @Component({
 	selector: 'app-violence-situation-dock-popup',
@@ -19,6 +20,9 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	confirmForm: Observable<boolean> = of(false);
 	newViolenceSituation: ViolenceReportDto;
 	viewError = false;
+	buttonRaised: ButtonType = ButtonType.RAISED;
+	isSaving: boolean = false;
+
 	constructor(@Inject(OVERLAY_DATA) public patientId: number,
 				public dockPopupRef: DockPopupRef,
 				private readonly violenceReportService: ViolenceReportService, 
@@ -63,6 +67,7 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	}
 
 	confirmViolenceForm(){
+		this.isSaving = true;
 		this.confirmForm = of(true);
 		setTimeout(() => {
 			if(this.isValidForm()){
@@ -70,6 +75,7 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 				this.saveSituationViolence();
 			}else{
 				this.viewError= true;
+				this.isSaving = false;
 			}
 		}, 1000);
 		
