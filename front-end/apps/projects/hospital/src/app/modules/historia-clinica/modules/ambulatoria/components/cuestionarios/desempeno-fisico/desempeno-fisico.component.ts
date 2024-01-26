@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-desempeno-fisico',
@@ -15,7 +16,7 @@ export class DesempenoFisicoComponent implements OnInit {
   selectedoptionB2: string = '';
   selectedoptionE2: string = '';
   counterB2: number = 0;
-  counterC2: number = 0;
+  counterC2: number = undefined;
   counterC3: number = undefined;
   counterE1: number = undefined;
   totalScore: number = 0;
@@ -28,12 +29,14 @@ export class DesempenoFisicoComponent implements OnInit {
   customIconSource: string = 'assets/icons/icon-10.png';
   iconImageSource2: string = 'assets/icons/icon-08.png';
   customIconSource2: string = 'assets/icons/icon-09.png';
+  enviarFormulario: any;
+
 
 
   constructor() { }
 
   ngOnInit(): void {
- 
+
 
   }
 
@@ -76,9 +79,9 @@ export class DesempenoFisicoComponent implements OnInit {
     )
   }
 
-  isCounterDisabledCounterC() : boolean {
-    return! (
-    this.selectedoptionB2 !== '1C'
+  isCounterDisabledCounterC(): boolean {
+    return !(
+      this.selectedoptionB2 !== '1C'
     )
   }
 
@@ -131,18 +134,18 @@ export class DesempenoFisicoComponent implements OnInit {
     let sillaTest1 = (this.selectedoptionE === '1D') ? 1 : 0;
     let sillaTest2 = (this.selectedoptionE2 === '1E') ? 1 : 0;
 
-    
+
     if (this.selectedoptionA === '2A' || this.selectedoptionA === '3A') {
-       this.iconImageSource = this.customIconSource;
+      this.iconImageSource = this.customIconSource;
     } else {
-       this.iconImageSource = 'assets/icons/icon-07.png';
+      this.iconImageSource = 'assets/icons/icon-07.png';
     }
 
     if (this.selectedoptionB === '2B' || this.selectedoptionB === '3B') {
       this.iconImageSource2 = this.customIconSource2;
-   } else {
+    } else {
       this.iconImageSource2 = 'assets/icons/icon-08.png';
-   }
+    }
 
     let counterB2Points = 0;
     if (this.counterB2 < 3.0) {
@@ -196,7 +199,7 @@ export class DesempenoFisicoComponent implements OnInit {
     let totalScore = balance1 + balance2 +
       sillaTest1 + sillaTest2 + counterB2Points + counterC2Points
       + counterC3Points + counterE1Points;
-    
+
     console.log("balance1: ", balance1)
     console.log("balance2: ", balance2)
     console.log("silla1: ", sillaTest1)
@@ -207,13 +210,64 @@ export class DesempenoFisicoComponent implements OnInit {
     console.log("counterE1Points: ", counterE1Points)
     console.log("Trae: ", totalScore)
 
-      this.finalScore = totalScore;
+    this.finalScore = totalScore;
 
-      this.Calculefinal = (this.finalScore >= 8) ? '1F' : '2F';
+    this.Calculefinal = (this.finalScore >= 8) ? '1F' : '2F';
 
     return totalScore;
 
   }
+  submitForm(): void {
+    const textColor = this.finalScore >= 8 ? '#2ba05a' : '#ff6054';
+
+    Swal.fire({
+      icon: 'question',
+      iconColor: '#2687c5',
+      title: '¿Está seguro de enviar el formulario?',
+      text: `DESEMPEÑO FISICO: ${this.Calculefinal === '1F' ? 'ALTO' : 'BAJO'} - Puntaje final: ${this.finalScore}/12`,
+      html: `<span style="color: ${textColor}">DESEMPEÑO FISICO: ${this.Calculefinal === '1F' ? 'ALTO' : 'BAJO'} - Puntaje final: ${this.finalScore}/12</span>`,
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Enviar',
+      confirmButtonColor: '#2687c5',
+      denyButtonText: 'Cancelar',
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'info',
+          iconColor: '#2687c5',
+          title: 'Enviando...',
+          text: 'Por favor, espere un momento.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+            setTimeout(() => {
+              Swal.close();
+              this.enviarFormulario();
+              document.getElementById('contenidoData').style.display = 'none';
+
+
+              Swal.fire({
+                icon: 'success',
+                iconColor: '#2687c5',
+                title: 'Enviado exitosamente',
+                confirmButtonColor: '#2687c5',
+                confirmButtonText: 'Aceptar',
+              });
+            }, 2000);
+          }
+
+        });
+      }
+    });
+  }
+
+  // ENDPOINT AQUI
+
+  // enviarFormulario(): void {
+  //  }
 
 }
 
