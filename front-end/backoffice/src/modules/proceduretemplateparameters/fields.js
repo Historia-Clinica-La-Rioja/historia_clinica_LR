@@ -36,6 +36,17 @@ const validateOptions = (value, allValues) => {
     return undefined;
 }
 
+const uniqueUnitsOfMeasure = (value, allValues) => {
+    if (value && allValues.unitsOfMeasureIds){
+        const values = allValues.unitsOfMeasureIds;
+        const first = values.indexOf(value);
+        const last = values.lastIndexOf(value);
+        if (first !== last)
+            return "resources.proceduretemplateparameters.errors.uniqueUoms"
+    }
+    return undefined;
+}
+
 /**
  * Overrides the delete button's color on arrayinputs.
  * Must be set as a parameter for the SimpleFormIterator
@@ -99,7 +110,7 @@ export const UnitsOfMeasure = (props) => {
                 label="resources.units-of-measure.fields.code"
                 filterToQuery={searchText => ({code: searchText ? searchText : ''})}
             >
-                <AutocompleteInput optionText="code" validate={[required()]} />
+                <AutocompleteInput optionText="code" validate={[required(), uniqueUnitsOfMeasure]} />
             </ReferenceInput>
         </SimpleFormIterator>
         </ArrayInput>
@@ -134,7 +145,10 @@ export const Options = (props) => {
                 }
                 classes={classes}
             >
-                <TextInput label="resources.proceduretemplateparameters.fields.option" validate={[required(), minLength(1), maxLength(300)]} />
+                <TextInput
+                    label="resources.proceduretemplateparameters.fields.option"
+                    validate={[required(), minLength(1), maxLength(300)]}
+                />
             </SimpleFormIterator>
         </ArrayInput>
     );
