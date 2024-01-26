@@ -66,7 +66,7 @@ public class DiaryBookingDataStorageImpl implements DiaryBookingDataStorage {
 		List<Integer> queryResult = entityManager.createNativeQuery(sqlQuery)
 				.setParameter("diaryId", diaryId)
 				.setParameter("openingHoursId", openingHoursId)
-				.setParameter("time", Time.valueOf(time))
+				.setParameter("time", Time.valueOf(time + ":00"))
 				.setParameter("date", Date.valueOf(date))
 				.getResultList();
 		return !queryResult.isEmpty();

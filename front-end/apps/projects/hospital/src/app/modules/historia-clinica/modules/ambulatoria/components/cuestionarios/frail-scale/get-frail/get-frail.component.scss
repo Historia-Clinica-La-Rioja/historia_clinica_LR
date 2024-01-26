@@ -1,0 +1,13 @@
+//BOTON DE DESCARGA
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // height: 100vh; // ajusta la altura del pop up/
+  }
+  
+  .example-button-row {
+    display: table-cell;
+    max-width: 600px;
+  }

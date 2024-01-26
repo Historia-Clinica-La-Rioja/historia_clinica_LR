@@ -78,7 +78,10 @@ import { AdultoMayorComponent } from '@historia-clinica/components/emergente/ini
 import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
 import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frail-scale.component';
 import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
+import { GetFrailComponent } from './components/cuestionarios/frail-scale/get-frail/get-frail.component';
+import { LatestStudiesComponent } from '@historia-clinica/components/emergente/pop-up/latest-studies/latest-studies.component';
 import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-fisico/desempeno-fisico.component';
+
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -138,7 +141,10 @@ import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-f
 		EstudiosPopupComponent,
 		FrailScaleComponent,
 		EdmontonComponent,
+		GetFrailComponent,
+		LatestStudiesComponent,
 		DesempenoFisicoComponent
+
 	],
 	imports: [
 		CommonModule,
