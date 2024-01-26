@@ -137,10 +137,10 @@ import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-f
 		PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
 		TablaSapComponent,
-		AdultoMayorComponent,
 		EstudiosPopupComponent,
-		FrailScaleComponent,
+		AdultoMayorComponent,
 		EdmontonComponent,
+		FrailScaleComponent,
 		GetFrailComponent,
 		LatestStudiesComponent,
 		DesempenoFisicoComponent
