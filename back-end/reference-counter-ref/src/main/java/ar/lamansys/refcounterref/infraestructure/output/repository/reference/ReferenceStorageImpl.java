@@ -10,6 +10,7 @@ import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
@@ -284,6 +285,22 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	public void deleteAndUpdateStatus(Integer referenceId, Short statusId){
 		log.debug("Input parameters -> referenceId {}, statusId {}", referenceId, statusId);
 		referenceRepository.deleteAndUpdateStatus(referenceId, statusId);
+	}
+
+	@Override
+	public Optional<Integer> getReferenceEncounterTypeId(Integer referenceId){
+		log.debug("Input parameters -> referenceId {}", referenceId);
+		Optional<Integer> result = Optional.ofNullable(referenceRepository.getReferenceEncounterTypeId(referenceId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<ReferenceStudyBo> getReferenceStudy (Integer referenceId){
+		log.debug("Input parameteres -> referenceId {}", referenceId);
+		Optional<ReferenceStudyBo> result = referenceRepository.getReferenceStudy(referenceId);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }

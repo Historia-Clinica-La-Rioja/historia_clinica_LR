@@ -5,12 +5,15 @@ import ar.lamansys.refcounterref.application.createreferenceobservation.CreateRe
 import ar.lamansys.refcounterref.application.getreceivedreferences.GetReceivedReferences;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.GetReferenceCompleteData;
 import ar.lamansys.refcounterref.application.getrequestedreferences.GetRequestedReferences;
+import ar.lamansys.refcounterref.application.modifyReference.ModifyReference;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.infraestructure.input.ReferenceReportFilterUtils;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceCompleteDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
+import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +53,10 @@ public class InstitutionalReferenceReportController {
 	private final CancelReference cancelReference;
 
 	private final ObjectMapper objectMapper;
+
+	private final ModifyReference modifyReference;
+
+	private final ReferenceMapper referenceMapper;
 
 	@GetMapping("/received")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
@@ -106,6 +114,18 @@ public class InstitutionalReferenceReportController {
 		log.debug("Input parameters -> institutionId {}, referenceId {}", institutionId, referenceId);
 		Integer currentUserId = SecurityContextUtils.getUserDetails().getUserId();
 		Boolean result = cancelReference.run(currentUserId, referenceId);
+		log.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@PutMapping("/{referenceId}/modify")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	public ResponseEntity<Integer> modifyReference(@PathVariable(name = "institutionId") Integer institutionId,
+												   @PathVariable(name = "referenceId") Integer referenceId,
+												   @RequestBody ReferenceDto referenceDto){
+		log.debug("Input parameters -> institutionId {}, referenceId {}", institutionId, referenceId);
+		Integer currentUserId = SecurityContextUtils.getUserDetails().getUserId();
+		Integer result = modifyReference.run(currentUserId, referenceId, referenceMapper.fromReferenceDto(referenceDto));
 		log.debug("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}

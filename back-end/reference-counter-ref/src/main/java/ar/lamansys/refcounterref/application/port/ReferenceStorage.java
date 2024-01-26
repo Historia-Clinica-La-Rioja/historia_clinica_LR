@@ -3,6 +3,7 @@ package ar.lamansys.refcounterref.application.port;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
@@ -31,5 +32,9 @@ public interface ReferenceStorage {
 	Short getReferenceRegulationStateId(Integer referenceId);
 
 	void deleteAndUpdateStatus(Integer referenceId, Short statusId);
+
+	Optional<Integer> getReferenceEncounterTypeId(Integer referenceId);
+
+	Optional<ReferenceStudyBo> getReferenceStudy(Integer referenceId);
 
 }

@@ -6,7 +6,9 @@ import java.util.Optional;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -361,11 +363,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id)" +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"LEFT JOIN Department d ON (d.id = a.departmentId)" +
+			"LEFT JOIN City c ON (c.id = a.cityId) " +
+			"LEFT JOIN Department d ON (d.id = c.departmentId)" +
 			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id)" +
 			"LEFT JOIN Address a2 ON (i2.addressId = a2.id) " +
-			"LEFT JOIN Department d2 ON (a2.departmentId = d2.id) " +
+			"LEFT JOIN City c2 ON (c2.id = a2.cityId) " +
+			"LEFT JOIN Department d2 ON (c2.departmentId = d2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
@@ -385,11 +389,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id) " +
 			"JOIN Address a ON (a.id = i.addressId) " +
-			"LEFT JOIN Department d ON (d.id = a.departmentId) " +
+			"LEFT JOIN City c ON (a.cityId = c.id) " +
+			"LEFT JOIN Department d ON (d.id = c.departmentId) " +
 			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
 			"LEFT JOIN Address a2 ON (i2.addressId = a.id) " +
-			"LEFT JOIN Department d2 ON (a2.departmentId = d2.id) " +
+			"LEFT JOIN City c2 ON (c2.id = a2.cityId) " +
+			"LEFT JOIN Department d2 ON (c2.departmentId = d2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
@@ -439,5 +445,19 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			", r.statusId = :statusId " +
 			"WHERE r.id = :referenceId")
 	void deleteAndUpdateStatus(@Param("referenceId") Integer referenceId, @Param("statusId") Short statusId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo(s2.sctid, s2.pt, s.sctid, s.pt, sr.categoryId) " +
+			"FROM Reference r " +
+			"JOIN ServiceRequest sr ON (r.serviceRequestId = sr.id) " +
+			"JOIN Document d ON (sr.id = d.sourceId) " +
+			"JOIN DocumentDiagnosticReport ddr ON (ddr.pk.documentId = d.id) " +
+			"JOIN DiagnosticReport dr ON (ddr.pk.diagnosticReportId = dr.id) " +
+			"JOIN Snomed s ON (s.id = dr.snomedId)" +
+			"JOIN HealthCondition hc ON (dr.healthConditionId = hc.id)" +
+			"JOIN Snomed s2 ON (s2.id = hc.snomedId) " +
+			"WHERE r.id = :referenceId " +
+			"AND d.typeId = " + DocumentType.ORDER)
+	Optional<ReferenceStudyBo> getReferenceStudy(@Param("referenceId") Integer referenceId);
 
 }
