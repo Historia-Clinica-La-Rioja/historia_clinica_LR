@@ -16,6 +16,8 @@ import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+
 @Service
 public class ActivityStorageImpl implements ActivityStorage {
 
@@ -39,8 +41,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 	private final EntityManager entityManager;
 
-	public ActivityStorageImpl(EntityManager entityManager) {
+	private final LocalDateMapper localDateMapper;
+
+	public ActivityStorageImpl(EntityManager entityManager, LocalDateMapper localDateMapper) {
 		this.entityManager = entityManager;
+		this.localDateMapper = localDateMapper;
 	}
 
 	private static final String JOIN_PATIENT_MEDICAL_COVERAGE = "LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id)";
@@ -169,7 +174,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitution ActivityStorage -> refsetCode {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, fromDate, toDate, reprocessing);
 
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
 				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing )" +
 				"AND va.scope_id = ";
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
@@ -205,7 +210,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndPatient ActivityStorage -> refsetCode {}, identificationNumber {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, identificationNumber, fromDate, toDate, reprocessing);
 
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
 				"p.identification_number = :identificationNumber AND " +
 				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing) " +
 				"AND va.scope_id = ";
@@ -240,7 +245,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndCoverage ActivityStorage -> refsetCode {}, coverageCuit {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, coverageCuit, fromDate, toDate, reprocessing);
 
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
 				"mc.cuit = :coverageCuit AND " +
 				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing)" +
 				"AND va.scope_id = ";
@@ -269,10 +274,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 	}
 
 	private AttentionInfoBo parseToAttentionInfoBo(Object[] rawAttention) {
+		var attentionDate = localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[1]).toLocalDateTime()).toLocalDate();
 		return new AttentionInfoBo(
 				((BigInteger) rawAttention[0]).longValue(),
 				((Integer)rawAttention[18]).longValue(),
-				((Timestamp) rawAttention[1]).toLocalDateTime().toLocalDate(),
+				attentionDate,
 				new SnomedBo((String) rawAttention[3], (String) rawAttention[2]),
 				buildPersonInfoBo(rawAttention),
 				buildCoverageInfoBo(rawAttention),
@@ -285,7 +291,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 	}
 
 	private DateTimeBo buildDateTimeBo(Object[] rawAttention) {
-		var localDate = ((Timestamp) rawAttention[27]).toLocalDateTime();
+		var localDate = localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[27]).toLocalDateTime());
 		return new DateTimeBo(
 				new DateBo(localDate.toLocalDate().getYear(),
 							localDate.toLocalDate().getMonthValue(),
