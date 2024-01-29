@@ -24,7 +24,14 @@
                 <mat-form-field appearance="outline" class="mt-10">
                     <mat-select id="violence-situation-area-label" multiple formControlName="area" (selectionChange)="updateValidationOtherArea()"
                         placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' | translate}}">
-                        <mat-option *ngFor="let opt of areas" [value]="opt.value">
+                        
+                        <mat-select-trigger>
+                            {{form.controls.area.value?.[0]?.text || ''}} 
+                              <span *ngIf="form.controls.area.value?.length > 1">
+                                ( + {{(form.controls.area.value?.length || 0) - 1}} {{form.controls.area.value?.length === 2 ? 'otro' : 'otros'}})
+                              </span>
+                          </mat-select-trigger>
+                        <mat-option *ngFor="let opt of areasOptions" [value]="opt">
                             {{opt.text}}
                         </mat-option>
                     </mat-select>
@@ -64,7 +71,13 @@
                     <mat-select id="violence-situation-establishment" multiple
                         formControlName="articulationEstablishmentList"
                         placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}" (selectionChange)="updateValidationArticulationEstablishmentOther()">
-                        <mat-option *ngFor="let opt of establishments" [value]="opt.value">
+                        <mat-select-trigger>
+                            {{form.controls.articulationEstablishmentList.value?.[0]?.text || ''}}
+                            <span *ngIf="form.controls.articulationEstablishmentList.value?.length > 1">
+                              (+ {{(form.controls.articulationEstablishmentList.value?.length || 0) - 1}} {{form.controls.articulationEstablishmentList.value?.length === 2 ? 'otro' : 'otros'}})
+                            </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let opt of establishments" [value]="opt">
                             {{opt.text}}
                         </mat-option>
                     </mat-select>
@@ -153,7 +166,13 @@
             <mat-form-field appearance="outline">
                 <mat-select id="violence-situation-establishment" multiple formControlName="agencyComplaint"
                     placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_7' | translate}}">
-                    <mat-option *ngFor="let opt of organizations" [value]="opt.value">
+                    <mat-select-trigger>
+                        {{form.controls.agencyComplaint.value?.[0]?.text || ''}} 
+                        <span *ngIf="form.controls.agencyComplaint.value?.length > 1">
+                          ( + {{(form.controls.agencyComplaint.value?.length || 0) - 1}} {{form.controls.agencyComplaint.value?.length === 2 ? 'otro' : 'otros'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let opt of organizations" [value]="opt">
                         {{opt.text}}
                     </mat-option>
                 </mat-select>
@@ -191,7 +210,13 @@
                 <mat-select id="violence-situation-organizations-extended" multiple
                     formControlName="institutionComplaintsOrganizations" (selectionChange)="updateValidationAutorityName()"
                     placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_10' | translate}}">
-                    <mat-option *ngFor="let opt of organizationsExtended" [value]="opt.value">
+                    <mat-select-trigger>
+                        {{form.controls.institutionComplaintsOrganizations.value?.[0]?.text || ''}}
+                        <span *ngIf="form.controls.institutionComplaintsOrganizations.value?.length > 1">
+                          (  + {{(form.controls.institutionComplaintsOrganizations.value?.length || 0) - 1}} {{form.controls.institutionComplaintsOrganizations.value?.length === 2 ? 'otro' : 'otros'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let opt of organizationsExtended" [value]="opt">
                         {{opt.text}}
                     </mat-option>
                 </mat-select>

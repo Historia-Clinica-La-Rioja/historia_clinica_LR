@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { hasError, updateControlValidator } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
 import { FormOption, Areas, Establishments, InternmentIndication, MunicipalDevices, ProvincialDevices, NationalDevices, OrganizationsExtended, Organizations, Complaints, Devices, ImplementedActions, BasicTwoOptions } from '../../constants/violence-masterdata';
-import { EHealthInstitutionOrganization, EHealthSystemOrganization, EInstitutionReportPlace, EInstitutionReportReason, EIntermentIndicationStatus, EMunicipalGovernmentDevice, ENationalGovernmentDevice, EProvincialGovernmentDevice, ESexualViolenceAction, EVictimKeeperReportPlace, ViolenceReportImplementedActionsDto } from '@api-rest/api-model';
+import { EHealthInstitutionOrganization, EHealthSystemOrganization, EInstitutionReportPlace, EInstitutionReportReason, EIntermentIndicationStatus, EMunicipalGovernmentDevice, ENationalGovernmentDevice, EProvincialGovernmentDevice, ESexualViolenceAction, ViolenceReportImplementedActionsDto } from '@api-rest/api-model';
 
 enum Articulation {
 	IN = 'Articulación con otras áreas/organismos del sector salud',
@@ -22,10 +22,10 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	form: FormGroup<{
 		articulation: FormControl<string>,
 		healthSystemArticulation: FormControl<boolean>,
-		area: FormControl<EHealthSystemOrganization[]>,
+		area: FormControl<any[]>,
 		otherArea: FormControl<string>,
 		articulationEstablishment: FormControl<boolean>,
-		articulationEstablishmentList: FormControl<EHealthInstitutionOrganization[]>,
+		articulationEstablishmentList: FormControl<any[]>,
 		otherArticulationEstablishment: FormControl<string>
 		internmentIndication: FormControl<EIntermentIndicationStatus>,
 		devices: FormControl<string[]>,
@@ -33,10 +33,10 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 		provincialDevices: FormControl<string[]>,
 		nationalDevices: FormControl<string[]>
 		personComplaint: FormControl<boolean>,
-		agencyComplaint: FormControl<EVictimKeeperReportPlace[]>,
+		agencyComplaint: FormControl<any[]>,
 		isInstitutionComplaint: FormControl<boolean>,
 		institutionComplaints: FormControl<string[]>
-		institutionComplaintsOrganizations: FormControl<EInstitutionReportPlace[]>
+		institutionComplaintsOrganizations: FormControl<any[]>
 		autorityName: FormControl<string>,
 		isSexualViolence: FormControl<boolean>,
 		implementedActions: FormControl<string[]>
@@ -84,7 +84,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 
 	formOption = FormOption;
 
-	areas = Areas;
+	areasOptions = Areas;
 
 	areaOther = EHealthSystemOrganization.OTHERS;
 	articulationEstablishmentOther = EHealthInstitutionOrganization.OTHERS;
@@ -124,7 +124,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 		if (!changes.confirmForm.isFirstChange()) {
 			if (this.form.valid) {
 				this.implementedActionsInfo.emit(this.mapImplementedActionsDto());
-			}else{
+			} else {
 				this.implementedActionsInfo.emit(null);
 				this.form.markAllAsTouched();
 			}
@@ -136,27 +136,27 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 			healthCoordination: {
 				coordinationInsideHealthSector: this.form.value.articulation === Articulation.IN ? {
 					healthInstitutionOrganization: {
-						organizations: this.form.value.articulationEstablishmentList,
+						organizations: this.form.value.articulationEstablishmentList.map(articulation=> articulation.value),
 						other: this.form.value.otherArticulationEstablishment,
 						within: this.form.value.articulationEstablishment,
 					},
 					healthSystemOrganization: {
-						organizations: this.form.value.area,
+						organizations: this.form.value.area.map(a => a.value),
 						other: this.form.value.otherArea,
 						within: this.form.value.healthSystemArticulation,
 					},
 					wereInternmentIndicated: this.form.value.internmentIndication
 
-				}: null,
+				} : null,
 				coordinationOutsideHealthSector: this.form.value.articulation === Articulation.OUT ? {
 					municipalGovernmentDevices: this.selectedMunicipalDevices,
 					nationalGovernmentDevices: this.selectedNationalDevices,
 					provincialGovernmentDevices: this.selectedProvincialDevices,
 					withOtherSocialOrganizations: this.selectedDevices.includes(this.devicesEnum.SOCIAL_ORGANIZATION),
-				}: null
+				} : null
 			},
 			institutionReport: {
-				institutionReportPlaces: this.form.value.institutionComplaintsOrganizations,
+				institutionReportPlaces: this.form.value.institutionComplaintsOrganizations.map(institution=> institution.value),
 				otherInstitutionReportPlace: this.form.value.autorityName,
 				reportReasons: this.selectedComplains,
 				reportWasDoneByInstitution: this.form.value.isInstitutionComplaint,
@@ -166,7 +166,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 				wasSexualViolence: this.form.value.isSexualViolence,
 			},
 			victimKeeperReport: {
-				reportPlaces: this.form.value.agencyComplaint,
+				reportPlaces: this.form.value.agencyComplaint.map(agency => agency.value),
 				werePreviousEpisodesWithVictimOrKeeper: this.form.value.personComplaint,
 			}
 		}
@@ -255,7 +255,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 
 		if (value === Devices.NATIONAL_DEVICES) {
 			if (required) {
-				this.form.controls.nationalDevices.setValidators(Validators.required);				
+				this.form.controls.nationalDevices.setValidators(Validators.required);
 			} else {
 				this.selectedNationalDevices = [];
 				this.form.controls.provincialDevices.setValidators([]);
@@ -269,7 +269,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	}
 
 	get area() {
-		return this.form.value.area;
+		return this.form.value.area?.map(a => a.value);
 	}
 
 	get healthSystemArticulation() {
@@ -281,7 +281,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	}
 
 	get articulationEstablishmentList() {
-		return this.form.value.articulationEstablishmentList;
+		return this.form.value.articulationEstablishmentList?.map(articulation=> articulation.value);
 	}
 
 	get personComplaint() {
@@ -297,7 +297,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	}
 
 	get institutionComplaintsOrganizations() {
-		return this.form.value.institutionComplaintsOrganizations;
+		return this.form.value.institutionComplaintsOrganizations?.map(institution=> institution.value);
 	}
 
 	get isSexualViolence() {
@@ -343,7 +343,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	}
 
 	updateValidationOtherArea() {
-		if (this.form.value.area.includes(this.areaOther)) {
+		if (this.form.controls.area.value.map(a => a.value).includes(this.areaOther)) {
 			updateControlValidator(this.form, 'otherArea', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'otherArea', []);
@@ -352,7 +352,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	}
 
 	updateValidationArticulationEstablishmentOther() {
-		if (this.articulationEstablishmentList.includes(this.articulationEstablishmentOther)) {
+		if (this.form.value.articulationEstablishmentList.map(articulation=> articulation.value).includes(this.articulationEstablishmentOther)) {
 			updateControlValidator(this.form, 'otherArticulationEstablishment', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'otherArticulationEstablishment', []);
@@ -361,7 +361,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit {
 	}
 
 	updateValidationAutorityName() {
-		if (this.institutionComplaintsOrganizations.includes(this.institutionComplaintsOrganizationsOther)) {
+		if (this.form.value.institutionComplaintsOrganizations.map(institution=> institution.value).includes(this.institutionComplaintsOrganizationsOther)) {
 			updateControlValidator(this.form, 'autorityName', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'autorityName', []);
