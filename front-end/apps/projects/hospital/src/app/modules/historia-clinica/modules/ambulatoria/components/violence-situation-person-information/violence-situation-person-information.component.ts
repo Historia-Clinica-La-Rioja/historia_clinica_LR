@@ -97,15 +97,17 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 				this.form.controls.isPersonInstitutionalized.setValue(victimData.institutionalizedData.isInstitutionalized != null ? victimData.institutionalizedData.isInstitutionalized: null);
 				this.form.controls.inWhichInstitution.setValue(victimData.institutionalizedData.institutionalizedDetails);
 				this.form.controls.personTypeAge.setValue(victimData.lackOfLegalCapacity);
-				this.form.controls.lastname.setValue(victimData.keeperData?.actorPersonalData.lastName);
-				this.form.controls.name.setValue(victimData.keeperData?.actorPersonalData.firstName);
-				this.form.controls.age.setValue(victimData.keeperData?.actorPersonalData.age);
-				this.form.controls.address.setValue(victimData.keeperData?.actorPersonalData.address);
-				this.form.controls.addressProvinceId.setValue(victimData.keeperData?.actorPersonalData.municipality.provinceId);
-				this.form.controls.addressDepartmentId.setValue(victimData.keeperData?.actorPersonalData.municipality.id);
-				this.setDepartments();
-				this.form.controls.relationPersonViolenceSituation.setValue(victimData.keeperData?.relationshipWithVictim);
-				this.form.controls.whichTypeRelation.setValue(victimData.keeperData?.otherRelationshipWithVictim);
+				if (victimData.lackOfLegalCapacity) {
+					this.form.controls.lastname.setValue(victimData.keeperData.actorPersonalData.lastName);
+					this.form.controls.name.setValue(victimData.keeperData.actorPersonalData.firstName);
+					this.form.controls.age.setValue(victimData.keeperData.actorPersonalData.age);
+					this.form.controls.address.setValue(victimData.keeperData.actorPersonalData.address);
+					this.form.controls.addressProvinceId.setValue(victimData.keeperData.actorPersonalData.municipality.provinceId);
+					this.form.controls.addressDepartmentId.setValue(victimData.keeperData.actorPersonalData.municipality.id);
+					this.setDepartments();
+					this.form.controls.relationPersonViolenceSituation.setValue(victimData.keeperData.relationshipWithVictim);
+					this.form.controls.whichTypeRelation.setValue(victimData.keeperData?.otherRelationshipWithVictim);
+				} 
 			});
 	}
 
