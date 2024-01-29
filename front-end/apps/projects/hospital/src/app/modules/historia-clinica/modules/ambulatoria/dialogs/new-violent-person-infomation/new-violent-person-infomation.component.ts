@@ -100,10 +100,11 @@ export class NewViolentPersonInfomationComponent implements OnInit {
   }
 
   setDepartments() {
-    if(this.form.value.addressProvinceId === idNoInfo){
-      updateControlValidator(this.form, 'addressDepartmentId', []);
-    }else{
-      updateControlValidator(this.form, 'addressDepartmentId', Validators.required);
+    if (this.form.value.addressProvinceId === idNoInfo) {
+      	updateControlValidator(this.form, 'addressDepartment', []);
+		this.form.controls.addressDepartment.setValue(null);
+    } else {
+      	updateControlValidator(this.form, 'addressDepartment', Validators.required);
     }
     this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
   }
