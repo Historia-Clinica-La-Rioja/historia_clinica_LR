@@ -34,19 +34,21 @@ public class GetPatientSituationListRepositoryImpl implements GetPatientSituatio
 		String queryWithString =
 				"WITH last_patient_situation_evolution AS (" +
 					"SELECT vr.situation_id, vr.patient_id , MAX(vr.evolution_id) AS last_evolution_id " +
-					"FROM violence_report vr " +
+					"FROM {h-schema}violence_report vr " +
 					"GROUP BY vr.situation_id, vr.patient_id)," +
 				"first_situation_date AS (" +
 					"SELECT vr.situation_id , vr.patient_id , MIN(vr.created_on) AS first_date " +
-					"FROM violence_report vr " +
+					"FROM {h-schema}violence_report vr " +
 					"GROUP BY vr.situation_id , vr.patient_id)";
 
-		String queryFromString = "FROM violence_report vr " +
+		String queryFromString = "FROM {h-schema}violence_report vr " +
 				"JOIN last_patient_situation_evolution lpse ON (lpse.situation_id = vr.situation_id AND lpse.patient_id = vr.patient_id AND lpse.last_evolution_id = vr.evolution_id) " +
 				"JOIN first_situation_date fsd ON (fsd.situation_id = vr.situation_id AND fsd.patient_id = vr.patient_id) " +
 				"WHERE vr.patient_id = :patientId";
 
-		String queryString = queryWithString + querySelectString + queryFromString;
+		String queryOrderString = " ORDER BY vr.situation_id";
+
+		String queryString = queryWithString + querySelectString + queryFromString + queryOrderString;
 		Query query = entityManager.createNativeQuery(queryString).setParameter("patientId", patientId);
 		if (mustBeLimited)
 			query.setMaxResults(MAX_LIMITED_RESULTS);
