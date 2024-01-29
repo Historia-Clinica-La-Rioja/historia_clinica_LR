@@ -33,6 +33,7 @@ public class BillProceduresResponseItemDto {
 		return new BillProceduresResponseItemBo(
 		this.getCodeNomanclador(),
 		this.getDescriptionNomanclador(),
+		this.getDescription(),
 		this.getAmount(),
 		this.getDate(),
 		this.getRate(),

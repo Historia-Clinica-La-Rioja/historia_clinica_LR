@@ -8,6 +8,7 @@ import lombok.Value;
 public class BillProceduresResponseItemBo {
 	String code;
 	String description;
+	String snomedPt;
 	Integer amount;
 	LocalDateTime date;
 	Float rate;

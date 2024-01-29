@@ -219,6 +219,7 @@ export interface AnnexIIDto {
     formalPatientName: string;
     hasProcedures: boolean;
     medicalCoverage: string;
+    missingProcedures: number;
     patientAge: number;
     patientGender: string;
     problems: string;
@@ -227,6 +228,7 @@ export interface AnnexIIDto {
     proceduresIngressDate: Date;
     proceduresTotal: number;
     rnos: number;
+    showProcedures: boolean;
     sisaCode: string;
     specialty: string;
 }
@@ -235,8 +237,8 @@ export interface AnnexIIProcedureDto {
     amount: number;
     code: string;
     description: string;
+    patientRate: number;
     rate: number;
-    total: number;
 }
 
 export interface AnthropometricDataDto extends Serializable {

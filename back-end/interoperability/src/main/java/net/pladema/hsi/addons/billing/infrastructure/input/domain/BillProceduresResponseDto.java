@@ -11,11 +11,10 @@ public class BillProceduresResponseDto {
 	List<BillProceduresResponseItemDto> procedures;
 	private Float medicalCoverageTotal;
 	private Float patientTotal;
-
 	private String medicalCoverageName;
 	private String medicalCoverageCuit;
-
 	private boolean enabled;
+	private Integer proceduresNotBilledCount;
 
 	public static BillProceduresResponseDto fromBo(BillProceduresResponseBo response) {
 		return new BillProceduresResponseDto(
@@ -24,7 +23,8 @@ public class BillProceduresResponseDto {
 				response.getPatientTotal(),
 				response.getMedicalCoverageName(),
 				response.getMedicalCoverageCuit(),
-				response.isEnabled()
+				response.isEnabled(),
+				response.getProceduresNotBilledCount()
 		);
 	}
 }

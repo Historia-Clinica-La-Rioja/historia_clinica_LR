@@ -20,10 +20,17 @@ import net.pladema.hsi.addons.billing.domain.BillProceduresResponseBo;
 public class BillProceduresWSVoidImpl implements BillProceduresPort {
 
 	public BillProceduresResponseBo getBilling(BillProceduresRequestBo request) {
-		return buildResponse();
+		return buildResponse(request);
 	}
 
-	private BillProceduresResponseBo buildResponse() {
-		return new BillProceduresResponseBo(Collections.emptyList(), 0.0F, 0.0F, "", "", false);
+	private BillProceduresResponseBo buildResponse(BillProceduresRequestBo request) {
+		return new BillProceduresResponseBo(
+			Collections.emptyList(),
+			0.0F,
+			0.0F,
+			"",
+			"",
+			false,
+			request);
 	}
 }

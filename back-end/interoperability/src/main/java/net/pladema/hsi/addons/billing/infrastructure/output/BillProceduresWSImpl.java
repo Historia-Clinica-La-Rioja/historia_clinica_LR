@@ -59,7 +59,7 @@ public class BillProceduresWSImpl implements BillProceduresPort {
 				buildRequest(request),
 				BillProceduresResponseDto.class
 				).getBody().validate();
-			return response.toBo();
+			return response.toBo(request);
 		} catch (RestTemplateApiException e) {
 			throw processException(e);
 		}

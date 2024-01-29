@@ -63,6 +63,7 @@ public class AnnexIIBo {
 	private Float proceduresTotal;
 
 	private Boolean showProcedures;
+	private Integer missingProcedures;
 
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();

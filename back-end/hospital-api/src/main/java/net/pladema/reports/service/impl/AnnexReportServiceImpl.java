@@ -88,7 +88,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 						result.setExistsConsultation(outpatientconsultationData.getExistsConsultation());
 
 						var billedProcedures = getBilledProcedures(
-							null,//result.getMedicalCoverageCuit() == null ? "30222222221" : result.getMedicalCoverageCuit(),
+							result.getMedicalCoverageCuit() == null ? "30222222221" : result.getMedicalCoverageCuit(),
 							result.getConsultationOrAttentionDate().atStartOfDay(),
 							documentService.getProcedureStateFromDocument(documentId)
 						);
@@ -98,6 +98,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 							result.setProceduresIngressDate(outpatientconsultationData.getConsultationDate().atStartOfDay());
 							result.setProceduresEgressDate(outpatientconsultationData.getConsultationDate().atStartOfDay());
 							result.setProceduresTotal(billedProcedures.getPatientTotal());
+							result.setMissingProcedures(billedProcedures.getProceduresNotBilledCount());
 						}
 
 						LOG.debug("Output -> {}", result);
@@ -278,6 +279,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		ctx.put("procedureLinesEgressDate", reportDataDto.getProceduresEgressDate());
 		ctx.put("procedureLinesTotal", reportDataDto.getProceduresTotal());
 		ctx.put("showProcedureLines", reportDataDto.getShowProcedures());
+		ctx.put("missingProcedures", reportDataDto.getMissingProcedures());
 
         return ctx;
     }
