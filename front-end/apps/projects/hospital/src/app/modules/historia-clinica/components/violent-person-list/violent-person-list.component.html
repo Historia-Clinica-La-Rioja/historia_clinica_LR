@@ -2,7 +2,7 @@
     <div fxLayout="row" fxLayoutAlign="space-between center">
         <p>{{'ambulatoria.paciente.violence-situations.dialog.violent-person-information.PERSON_LABEL' | translate}}
             {{i+1}}</p>
-        <button type="button" mat-icon-button color="warn" (click)="removeAggressor(i)" [disabled]="disableDelete">
+        <button type="button" mat-icon-button color="warn" (click)="removeAggressor(i)" [disabled]="!person.canBeDeleted">
             <mat-icon>delete_outline</mat-icon>
         </button>
     </div>

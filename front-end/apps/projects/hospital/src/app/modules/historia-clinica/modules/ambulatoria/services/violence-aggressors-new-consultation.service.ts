@@ -28,5 +28,6 @@ export class ViolenceAggressorsNewConsultationService {
 
 export interface CustomViolenceReportAggressorDto extends ViolenceReportAggressorDto{
 	descriptionMunicipality: string,
+	canBeDeleted?: boolean
 }
 

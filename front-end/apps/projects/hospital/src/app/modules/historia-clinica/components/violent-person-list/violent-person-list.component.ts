@@ -11,9 +11,8 @@ import { Subscription } from 'rxjs';
 	styleUrls: ['./violent-person-list.component.scss']
 })
 export class ViolentPersonListComponent implements OnDestroy {
-	aggressorsList: ViolenceReportAggressorDto[];
+	aggressorsList: CustomViolenceReportAggressorDto[];
 	violenceSituationSub: Subscription;
-	disableDelete: boolean = false;
 	constructor(private readonly violenceAggressorsNewConsultationService: ViolenceAggressorsNewConsultationService,
 				private readonly violenceSituationFacadeService: ViolenceReportFacadeService) {
 		this.setAggressors();
@@ -112,9 +111,9 @@ export class ViolentPersonListComponent implements OnDestroy {
 	private setViolenceSituation() {
 		this.violenceSituationSub = this.violenceSituationFacadeService.violenceSituation$
 			.subscribe((result: ViolenceReportDto) => {
-				this.disableDelete = true;
-				this.aggressorsList = result.aggressorData;
-				this.violenceAggressorsNewConsultationService.violenceAggressors$.next(this.mapAggressor(this.aggressorsList));
+				this.aggressorsList = this.mapAggressor(result.aggressorData);
+				this.violenceAggressorsNewConsultationService.violenceAggressors = this.aggressorsList;
+				this.violenceAggressorsNewConsultationService.violenceAggressors$.next(this.violenceAggressorsNewConsultationService.violenceAggressors);
 			});
 	}
 }

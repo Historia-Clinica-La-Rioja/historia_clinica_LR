@@ -62,8 +62,8 @@ export class NewViolentPersonInfomationComponent implements OnInit {
   addAggressor() {
     this.form.markAllAsTouched();
     if (this.form.valid) {
-      this.violenceAggressorsNewConsultationService.addToList(this.mapAggressor());
-      this.dialogRef.close();
+		this.violenceAggressorsNewConsultationService.addToList(this.mapAggressor());
+		this.dialogRef.close();
     }
   }
 
@@ -96,6 +96,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
       	},
       	violenceViolenceFrequency: this.form.value.violenceFrequency,
       	descriptionMunicipality: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId.description : FormOption.WITHOUT_DATA,
+		canBeDeleted: true
     }
   }
 
