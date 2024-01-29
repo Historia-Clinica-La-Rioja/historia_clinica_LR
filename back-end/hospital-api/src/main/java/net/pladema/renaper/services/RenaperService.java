@@ -5,10 +5,11 @@ import java.util.Optional;
 
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
 import net.pladema.renaper.services.domain.PersonDataResponse;
+import net.pladema.renaper.services.domain.RenaperServiceException;
 
 public interface RenaperService {
 	
-	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Short idSexo);
+	Optional<PersonDataResponse> getPersonData(String nroDocumento, Short idSexo) throws RenaperServiceException;
 	
-	public List<PersonMedicalCoverageBo> getPersonMedicalCoverage(String nroDocumento, Short idSexo);
+	List<PersonMedicalCoverageBo> getPersonMedicalCoverage(String nroDocumento, Short idSexo) throws RenaperServiceException;
 }
