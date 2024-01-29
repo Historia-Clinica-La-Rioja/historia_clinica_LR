@@ -11,12 +11,12 @@
         </button>
     </div>
 
-    <mat-card fxLayout="column">
+    <div fxLayout="column">
         <h3>{{ 'internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE' | translate }}</h3>
         <mat-label [translate]="'internaciones.anesthesic-report.premedication-and-food-intake.HOUR'"></mat-label>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
             <ng-content select="[food-intake-form]"></ng-content>
             <span>hs.</span>
         </div>
-    </mat-card>
+    </div>
 </div>

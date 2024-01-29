@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateTimeDto, MasterDataDto, PreMedicationDto, SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
+import { DateTimeDto, MasterDataDto, AnestheticSubstanceDto, SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { PREMEDICATION } from '@historia-clinica/constants/validation-constants';
@@ -39,7 +39,6 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
             unit: new FormControl(null, Validators.required),
             via: new FormControl(null, Validators.required),
             time: new FormControl(null, Validators.required),
-            lastFoodIntake: new FormControl(null),
         });
 
         this.form.controls.dosis.valueChanges.subscribe(_ => {
@@ -57,7 +56,7 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
         }
     }
 
-    private add(premedication: PremedicationAndFoodIntakeData): boolean {
+    private handleAddPremedication(premedication: PremedicationAndFoodIntakeData): boolean {
         const currentItems = this.premedicationList.length;
         this.premedicationList = pushIfNotExists<any>(this.premedicationList, premedication, this.comparePremedication);
         this.dataEmitter.next(this.premedicationList);
@@ -76,9 +75,8 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
                 unit: this.form.value.unit,
                 via: this.form.value.via,
                 time: this.form.value.time,
-                lastFoodIntake: this.form.value.lastFoodIntake,
             };
-            if (this.add(premedicationData))
+            if (this.handleAddPremedication(premedicationData))
                 this.snackBarService.showError("Premedicacion duplicada");
             this.resetForm();
             return true;
@@ -108,11 +106,11 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
         this.form.controls.snomed.setValue(pt);
     }
 
-    getPremedicationDto(): PreMedicationDto[] {
-        return this.mapToPremedicationDto();
+    getAnestheticSubstanceDto(): AnestheticSubstanceDto[] {
+        return this.mapToAnestheticSubstanceDto();
     }
 
-    private mapToPremedicationDto(): PreMedicationDto[]{
+    private mapToAnestheticSubstanceDto(): AnestheticSubstanceDto[]{
         return this.premedicationList.map(premedication => {
             return {
                 snomed: premedication.snomed,
@@ -186,7 +184,6 @@ export interface PremedicationForm {
     unit: FormControl<string>;
     via: FormControl<MasterDataDto>;
     time: FormControl<TimeDto>;
-    lastFoodIntake: FormControl<TimeDto>;
 }
 
 export interface PremedicationAndFoodIntakeData {
@@ -195,5 +192,4 @@ export interface PremedicationAndFoodIntakeData {
     unit: string,
     via: MasterDataDto,
     time: TimeDto,
-    lastFoodIntake: TimeDto
 }

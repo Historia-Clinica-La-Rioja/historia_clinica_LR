@@ -1,3 +1,9 @@
+@import '../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
 ::ng-deep .cdk-overlay-pane {
 	app-anesthetic-report-dock-popup {
 		width: 100%;

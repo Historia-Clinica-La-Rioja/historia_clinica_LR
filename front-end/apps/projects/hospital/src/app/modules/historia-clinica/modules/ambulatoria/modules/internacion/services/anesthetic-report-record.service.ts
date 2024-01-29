@@ -29,7 +29,7 @@ export class AnestheticReportRecordService {
         });
     }
 
-    private add(record: SnomedDto): boolean {
+    private handleAddRecord(record: SnomedDto): boolean {
         const currentItems = this.recordList.length;
         this.recordList = pushIfNotExists<any>(this.recordList, record, this.compareRecord);
         this.dataEmitter.next(this.recordList);
@@ -42,7 +42,7 @@ export class AnestheticReportRecordService {
 
     addToList(): boolean {
         if (this.form.valid && this.snomedConcept) {
-            if (this.add(this.snomedConcept))
+            if (this.handleAddRecord(this.snomedConcept))
                 this.snackBarService.showError("Antecedente duplicado");
             this.resetForm();
             return true;

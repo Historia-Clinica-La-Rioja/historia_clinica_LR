@@ -149,7 +149,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             riskFactors: this.anestheticReportClinicalEvaluationService.getClinicalEvaluationData(),
             anestheticHistory: this.anestheticReportAnestheticHistoryService.getAnestheticHistoryData(),
             medications: this.medicacionesNuevaConsultaService.getMedicationsAsMedicationDto(),
-            preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getPremedicationDto(),
+            preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto(),
             foodIntake: this.formFoodIntake.value.lastFoodIntake,
             histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
 		};

@@ -28,7 +28,7 @@ export class AnestheticReportProposedSurgeryService {
         });
     }
 
-    private add(proposedSurgery: ProposedSurgery): boolean {
+    private handleAddSurgery(proposedSurgery: ProposedSurgery): boolean {
         const currentItems = this.proposedSurgeries.length;
         this.proposedSurgeries = pushIfNotExists<any>(this.proposedSurgeries, proposedSurgery, this.compareProposedSurgeries);
         this.dataEmitter.next(this.proposedSurgeries);
@@ -45,7 +45,7 @@ export class AnestheticReportProposedSurgeryService {
                 snomed: this.snomedConcept,
                 isAdded: true,
             };
-            if (this.add(proposedSurgery))
+            if (this.handleAddSurgery(proposedSurgery))
                 this.snackBarService.showError("Cirugía propuesta duplicada");
             this.resetForm();
             return true;
