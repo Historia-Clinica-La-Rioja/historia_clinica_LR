@@ -12,6 +12,9 @@ import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceClinica
 import ar.lamansys.refcounterref.domain.document.CounterReferenceDocumentBo;
 import ar.lamansys.refcounterref.domain.counterreference.CounterReferenceInfoBo;
 import ar.lamansys.refcounterref.domain.doctor.CounterReferenceDoctorInfoBo;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
+import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +47,8 @@ public class CreateCounterReference {
                 new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es invalido"));
 
         assertContextValid(counterReferenceBo, doctorInfoBo, referenceData.getConsultation());
+
+		assertValidReferenceStatus(referenceData);
 
         LocalDate now = dateTimeProvider.nowDate();
 
@@ -78,6 +83,7 @@ public class CreateCounterReference {
         if (counterReferenceBo.getClinicalSpecialtyId() != null && !doctorInfoBo.hasSpecialty(counterReferenceBo.getClinicalSpecialtyId()))
             throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_CLINICAL_SPECIALTY_ID, "El doctor no posee la especialidad indicada");
         assertThereAreNoRepeatedConcepts(counterReferenceBo);
+
     }
 
     private void assertThereAreNoRepeatedConcepts(CounterReferenceBo counterReferenceBo) {
@@ -92,5 +98,12 @@ public class CreateCounterReference {
         if (exception.hasErrors())
             throw exception;
     }
+
+	private void assertValidReferenceStatus(Reference reference){
+		if (!reference.getStatusId().equals(EReferenceStatus.ACTIVE.getId()))
+			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE_STATUS, "La referencia debe estar activa");
+		if (!reference.getRegulationStateId().equals(EReferenceRegulationState.APPROVED.getId()))
+			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE_REGULATION_STATE, "La referencia debe haber sido aprobada previamente");
+	}
     
 }
