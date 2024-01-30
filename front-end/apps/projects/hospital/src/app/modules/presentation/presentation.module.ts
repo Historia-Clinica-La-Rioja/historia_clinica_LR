@@ -75,6 +75,7 @@ import { TitledContentComponent } from './components/titled-content/titled-conte
 import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
+import { TypeaheadV2Component } from './components/typeahead-v2/typeahead-v2.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
@@ -165,6 +166,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentComponent,
 		TypeaheadComponent,
 		TypeaheadFilterOptionsComponent,
+		TypeaheadV2Component,
 		UserBadgeComponent,
   		FiltersSelectComponent,
   		TitledSingleContentComponent,
@@ -268,6 +270,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentComponent,
 		TitledSingleContentComponent,
 		TypeaheadComponent,
+		TypeaheadV2Component,
 		UserBadgeComponent,
 		// dialogs
 		// directives
