@@ -12,6 +12,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceStudyDto;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,12 +46,12 @@ public class ReferenceStudyStorageImpl implements ReferenceStudyStorage {
 	}
 
 	@Override
-	public Map<Integer, SnomedBo> getReferencesProcedures(Map<Integer, Integer> referencesStudiesIds) {
+	public Map<Integer, Pair<SnomedBo, String>> getReferencesProcedures(Map<Integer, Integer> referencesStudiesIds) {
 		var referencesProcedures = sharedServiceRequestPort.getProceduresByServiceRequestIds(new ArrayList<>(referencesStudiesIds.keySet()));
-		Map<Integer, SnomedBo> result = new HashMap<>();
+		Map<Integer, Pair<SnomedBo, String>> result = new HashMap<>();
 		referencesProcedures.forEach(rf -> {
 			var snomed = rf.getProcedure();
-			result.put(referencesStudiesIds.get(rf.getServiceRequestId()), new SnomedBo(snomed.getId(), snomed.getSctid(), snomed.getPt()));
+			result.put(referencesStudiesIds.get(rf.getServiceRequestId()), Pair.of(new SnomedBo(snomed.getId(), snomed.getSctid(), snomed.getPt()), rf.getCategory()));
 		});
 		return result;
 	}

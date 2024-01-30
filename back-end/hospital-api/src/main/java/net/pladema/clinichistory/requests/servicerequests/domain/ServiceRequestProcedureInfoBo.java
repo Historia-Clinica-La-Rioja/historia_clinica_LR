@@ -18,11 +18,14 @@ public class ServiceRequestProcedureInfoBo {
 
 	private String statusId;
 
+	private String category;
+
 	public ServiceRequestProcedureInfoBo(Integer serviceRequestId, Integer snomedId,
-										 String sctid, String pt, Integer diagnosticReportId, String statusId) {
+										 String sctid, String pt, Integer diagnosticReportId, String statusId, String category) {
 		this.serviceRequestId = serviceRequestId;
 		this.procedure = new SnomedBo(snomedId, sctid, pt);
 		this.diagnosticReportId = diagnosticReportId;
 		this.statusId = statusId;
+		this.category = category;
 	}
 }

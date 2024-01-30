@@ -23,6 +23,8 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -200,14 +202,15 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		var referencesProblems = referenceHealthConditionRepository.getReferencesProblems(referenceIds);
 		var files = referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdsAndType(referenceIds, EReferenceCounterReferenceType.REFERENCIA);
 		var referencesStudiesIds = references.stream().filter(r -> r.getServiceRequestId() != null).collect(Collectors.toMap(ReferenceDataBo::getServiceRequestId, ReferenceDataBo::getId));
-		Map<Integer, SnomedBo> referencesProcedures = referenceStudyStorage.getReferencesProcedures(referencesStudiesIds);
+		Map<Integer, Pair<SnomedBo, String>> referencesProcedures = referenceStudyStorage.getReferencesProcedures(referencesStudiesIds);
 		return references.stream()
 				.peek(ref -> {
 					ref.setProblems(referencesProblems.stream()
 							.filter(rp -> rp.getReferenceId().equals(ref.getId()))
 							.map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
 					ref.setFiles(files.get(ref.getId()));
-					ref.setProcedure(referencesProcedures.get(ref.getId()));
+					ref.setProcedure(referencesProcedures.get(ref.getId()) != null ? referencesProcedures.get(ref.getId()).getLeft() : null);
+					ref.setProcedureCategory(referencesProcedures.get(ref.getId()) != null ? referencesProcedures.get(ref.getId()).getRight() : null);
 					ref.setProfessionalFullName(sharedPersonPort.getCompletePersonNameById(ref.getProfessionalPersonId()));
 					ref.setDestinationClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(ref.getId()));
 				}).collect(Collectors.toList());

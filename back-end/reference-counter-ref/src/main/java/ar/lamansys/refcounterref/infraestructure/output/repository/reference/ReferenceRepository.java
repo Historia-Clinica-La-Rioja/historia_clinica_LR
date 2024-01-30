@@ -350,14 +350,22 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Integer getReferenceEncounterTypeId(@Param("referenceId") Integer referenceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
-			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
-			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.patientMedicalCoverageId, oc.id, " +
+			"r.consultation, oc.creationable.createdOn, rn.description," +
+			"cl.id, cl.description, cs.id, cs.name, " +
+			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId," +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
-			"JOIN Institution i ON (oc.institutionId = i.id) " +
-			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"JOIN Institution i ON (oc.institutionId = i.id)" +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"LEFT JOIN Department d ON (d.id = a.departmentId)" +
+			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
+			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id)" +
+			"LEFT JOIN Address a2 ON (i2.addressId = a2.id) " +
+			"LEFT JOIN Department d2 ON (a2.departmentId = d2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
@@ -366,14 +374,22 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Optional<ReferenceDataBo> getReferenceDataFromOutpatientConsultation(@Param("referenceId") Integer referenceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
-			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
-			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.patientMedicalCoverageId, oc.id, " +
+			"r.consultation, oc.creationable.createdOn, rn.description, " +
+			"cl.id, cl.description, cs.id, cs.name," +
+			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, " +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id) " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"LEFT JOIN Department d ON (d.id = a.departmentId) " +
+			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"LEFT JOIN Address a2 ON (i2.addressId = a.id) " +
+			"LEFT JOIN Department d2 ON (a2.departmentId = d2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +

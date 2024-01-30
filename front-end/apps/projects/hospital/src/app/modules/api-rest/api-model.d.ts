@@ -3607,17 +3607,21 @@ export interface ReferenceDataDto {
     careLine: CareLineDto;
     clinicalSpecialtyOrigin: ClinicalSpecialtyDto;
     closureType: EReferenceClosureType;
+    consultation: boolean;
     createdBy: number;
     date: DateTimeDto;
     destinationClinicalSpecialties: ClinicalSpecialtyDto[];
+    encounterId: number;
     files: ReferenceCounterReferenceFileDto[];
     id: number;
     institutionDestination: ReferenceInstitutionDto;
     institutionOrigin: ReferenceInstitutionDto;
     note: string;
+    patientMedicalCoverageId: number;
     priority: EReferencePriority;
     problems: string[];
     procedure: SharedSnomedDto;
+    procedureCategory: string;
     professionalFullName: string;
 }
 
@@ -3646,8 +3650,11 @@ export interface ReferenceForwardingDto {
 }
 
 export interface ReferenceInstitutionDto {
+    departmentId: number;
+    departmentName: string;
     description: string;
     id: number;
+    provinceName: string;
 }
 
 export interface ReferenceObservationDto {
@@ -3714,6 +3721,7 @@ export interface ReferenceRequestDto extends Serializable {
 }
 
 export interface ReferenceServiceRequestProcedureDto {
+    category: string;
     procedure: SharedSnomedDto;
     serviceRequestId: number;
 }

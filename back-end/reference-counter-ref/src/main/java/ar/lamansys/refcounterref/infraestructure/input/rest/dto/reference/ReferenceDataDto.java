@@ -22,6 +22,12 @@ public class ReferenceDataDto {
 
     private Integer id;
 
+	private Integer encounterId;
+
+	private Boolean consultation;
+
+	private Integer patientMedicalCoverageId;
+
     private DateTimeDto date;
 
 	private ReferenceInstitutionDto institutionOrigin;
@@ -37,6 +43,8 @@ public class ReferenceDataDto {
 	private List<ClinicalSpecialtyDto> destinationClinicalSpecialties;
 
 	private SharedSnomedDto procedure;
+
+	private String procedureCategory;
 
 	private String professionalFullName;
 

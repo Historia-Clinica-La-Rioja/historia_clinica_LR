@@ -38,8 +38,9 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo(sr.id, " +
-			"s.id, s.sctid, s.pt, dr.id, dr.statusId) " +
+			"s.id, s.sctid, s.pt, dr.id, dr.statusId, src.description) " +
 			"FROM ServiceRequest sr " +
+			"JOIN ServiceRequestCategory src ON (sr.categoryId = src.id) " +
 			"JOIN Document d ON (sr.id = d.sourceId) " +
 			"JOIN DocumentDiagnosticReport ddr ON (d.id = ddr.pk.documentId) " +
 			"JOIN DiagnosticReport dr ON (ddr.pk.diagnosticReportId = dr.id) " +
@@ -50,8 +51,9 @@ public interface ServiceRequestRepository extends SGXAuditableEntityJPARepositor
 
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo(sr.id, " +
-			"s.id, s.sctid, s.pt, dr.id, dr.statusId) " +
+			"s.id, s.sctid, s.pt, dr.id, dr.statusId, src.description) " +
 			"FROM ServiceRequest sr " +
+			"JOIN ServiceRequestCategory src ON (sr.categoryId = src.id) " +
 			"JOIN Document d ON (sr.id = d.sourceId) " +
 			"JOIN DocumentDiagnosticReport ddr ON (d.id = ddr.pk.documentId) " +
 			"JOIN DiagnosticReport dr ON (ddr.pk.diagnosticReportId = dr.id) " +
