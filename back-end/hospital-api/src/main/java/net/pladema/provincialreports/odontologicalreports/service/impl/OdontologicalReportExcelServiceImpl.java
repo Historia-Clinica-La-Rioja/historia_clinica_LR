@@ -237,20 +237,16 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
 		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getInstitution());
+		cell.setCellValue(content.getProfessional());
 		cell.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getProfessional());
+		cell2.setCellValue(content.getProcedures());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getProcedures());
+		cell3.setCellValue(content.getCounter());
 		cell3.setCellStyle(style);
-
-		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getCounter());
-		cell4.setCellStyle(style);
 
 	}
 
