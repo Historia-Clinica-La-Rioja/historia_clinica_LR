@@ -50,7 +50,7 @@ public class OdontologicalReportController {
 		this.institutionRepository = institutionRepository;
 	}
 
-	String[] headers = new String[] {"Institución", "Profesional", "Procedimiento", "Total"};
+	String[] headers = new String[] {"Profesional", "Procedimiento", "Total"};
 
 	@GetMapping(value = "/{institutionId}/promocion-primer-nivel")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
