@@ -27,7 +27,7 @@ public class AppointmentAssignedBo {
 
 	private Integer professionalId;
 
-	private List<String> specialties;
+	private String clinicalSpecialtyName;
 
 	private LocalDate date;
 
@@ -52,6 +52,8 @@ public class AppointmentAssignedBo {
 		this.hour = appointmentAssignedForPatientVo.getHour();
 
 		this.office = appointmentAssignedForPatientVo.getOffice();
+
+		this.clinicalSpecialtyName = appointmentAssignedForPatientVo.getClinicalSpecialtyName();
 	}
 
 	public void setRespectiveProfessionalName(String firstName, String middleNames, String lastName, String otherLastNames, String nameSelfDetermination, boolean includeNameSelfDetermination) {

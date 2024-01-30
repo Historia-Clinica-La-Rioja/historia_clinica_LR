@@ -20,8 +20,8 @@
 	<div fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon" fontSet="material-icons-outlined"> add_box </mat-icon>
 		<div fxLayout="column">
-			<span *ngFor="let specialty of appointment.specialties" class="mat-body text">
-				{{ specialty }}
+			<span class="mat-body text">
+				{{ appointment.clinicalSpecialtyName }}
 			</span>
 		</div>
 	</div>

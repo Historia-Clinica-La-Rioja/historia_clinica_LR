@@ -24,4 +24,5 @@ public class AppointmentAssignedForPatientVo {
 
 	private final String office;
 
+	private final String clinicalSpecialtyName;
 }

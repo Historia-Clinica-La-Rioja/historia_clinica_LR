@@ -464,10 +464,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 				.collect(Collectors.toMap(id -> id, sharedStaffPort::getProfessionalCompleteInfo));
 		result.forEach(appointment -> {
 			ProfessionalInfoDto professional = professionals.get(appointment.getProfessionalId());
-			List<String> specialties = professional.getClinicalSpecialties().stream()
-					.map(ClinicalSpecialtyDto::getName)
-					.collect(Collectors.toList());
-			appointment.setSpecialties(specialties);
+			appointment.setClinicalSpecialtyName(appointment.getClinicalSpecialtyName());
 			appointment.setRespectiveProfessionalName(professional.getFirstName(),professional.getMiddleNames(),
 					professional.getLastName(), professional.getOtherLastNames(), professional.getNameSelfDetermination(),
 					featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));

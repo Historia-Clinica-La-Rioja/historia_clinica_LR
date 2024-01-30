@@ -277,10 +277,11 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentAssignedForPatientVo(" +
-			"a.id, hp.licenseNumber, up.pk.userId, a.dateTypeId, a.hour, do.description)" +
+			"a.id, hp.licenseNumber, up.pk.userId, a.dateTypeId, a.hour, do.description, cs.name)" +
 			"FROM Appointment AS a " +
 			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
+			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
 			"JOIN HealthcareProfessional  AS hp ON (hp.id = d.healthcareProfessionalId) " +
 			"JOIN UserPerson AS up ON (up.pk.personId = hp.personId )" +
 			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId )" +

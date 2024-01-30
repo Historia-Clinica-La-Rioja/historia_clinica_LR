@@ -331,6 +331,7 @@ export interface AppointmentTicketImageDto {
 
 export interface AssignedAppointmentDto {
     associatedReferenceClosureType: EReferenceClosureType;
+    clinicalSpecialtyName: string;
     date: DateDto;
     hasAssociatedReference: boolean;
     hour: TimeDto;
@@ -338,7 +339,6 @@ export interface AssignedAppointmentDto {
     license: string;
     office: string;
     professionalName: string;
-    specialties: string[];
 }
 
 export interface AttentionPlacesQuantityDto {

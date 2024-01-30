@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Setter
 @Getter
 @ToString
@@ -22,7 +20,7 @@ public class AssignedAppointmentDto {
 
 	private String license;
 
-	private List<String> specialties;
+	private String clinicalSpecialtyName;
 
 	private DateDto date;
 
