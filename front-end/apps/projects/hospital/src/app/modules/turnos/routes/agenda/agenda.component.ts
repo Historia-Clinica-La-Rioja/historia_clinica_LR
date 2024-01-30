@@ -78,7 +78,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private loggedUserHealthcareProfessionalId: number;
 	private loggedUserRoles: string[];
 	@Input() canCreateAppoinment = true;
-	idAgenda: number;
+	idAgenda: number = null;
 	@Input()
 	set id(id: number) {
 		if (id) {
@@ -145,12 +145,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnDestroy() {
-		this.agendaSearchService.setAgendaSelected(undefined);
+		this.agendaSearchService.setAgendaSelected(null);
 		this.appointmentFacade.clear();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.idAgenda?.currentValue)
+		if (changes.idAgenda?.currentValue) 
 			this.getAgenda();
 	}
 

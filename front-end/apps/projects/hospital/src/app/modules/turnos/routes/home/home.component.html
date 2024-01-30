@@ -27,16 +27,28 @@
 	<mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="tabsService.selectedIndex">
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_PROFESSIONAL' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ADMINISTRADOR_AGENDA', 'ENFERMERO']">
-			<app-seach-appointments-by-professional [isVisible]="tabsService.tabActive === Tabs.PROFESSIONAL"></app-seach-appointments-by-professional>
+			<ng-template matTabContent>
+				<app-seach-appointments-by-professional></app-seach-appointments-by-professional>
+			</ng-template>
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.SEARCH_BY_INSTITUTION' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO']">
-			<app-search-appointments-by-specialty [isVisible]="tabsService.tabActive === Tabs.INSTITUTION"></app-search-appointments-by-specialty>
+			<ng-template matTabContent>
+				<app-search-appointments-by-specialty></app-search-appointments-by-specialty>
+			</ng-template>
 		</mat-tab>
 		<mat-tab label="{{ 'turnos.home.CARE_NETWORK_OFFER' | translate | uppercase }}"
 			*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-			<app-search-appointments-in-care-network [isVisible]="tabsService.tabActive === Tabs.CARE_NETWORK">
-			</app-search-appointments-in-care-network>
+			<ng-template matTabContent>
+				<app-search-appointments-in-care-network></app-search-appointments-in-care-network>
+			</ng-template>
+		</mat-tab>
+
+		<mat-tab *ngIf="ffIsOn && hasRoleToViewTab"	label=" {{ 'image-network.home.SEARCH_BY_EQUIPMENT' | translate | uppercase }}">
+			<ng-template matTabContent>
+				<app-search-appointments-by-equipment [selectedEquipment]="selectedEquipment" [selectedDiary]="selectedDiary">
+				</app-search-appointments-by-equipment>
+			</ng-template>
 		</mat-tab>
 
 		<div>

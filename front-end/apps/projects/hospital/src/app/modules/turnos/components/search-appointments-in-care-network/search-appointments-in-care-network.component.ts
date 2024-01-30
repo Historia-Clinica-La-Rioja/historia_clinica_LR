@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AddressDto, AppFeature, CareLineDto, ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, InstitutionBasicInfoDto, ProvinceDto, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
@@ -30,13 +30,7 @@ const ONE_ELEMENT = 1;
 	templateUrl: './search-appointments-in-care-network.component.html',
 	styleUrls: ['./search-appointments-in-care-network.component.scss']
 })
-export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChanges {
-
-	@Input()
-	set isVisible(value: boolean) {
-		if (value)
-			this.setReferenceInformation();
-	};
+export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 
 	searchForm: UntypedFormGroup;
 	provinces: ProvinceDto[] = [];
@@ -106,16 +100,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled);
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
-			this.resetAtributtes();
-			this.initSpecialties();
-			this.initCareLines();
-			this.initForm();
-			this.ngOnInit();
-		}
-	}
-
 	ngOnInit(): void {
 		this.initSpecialties();
 		this.initCareLines();
@@ -162,6 +146,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.route.queryParams.subscribe(qp => {
 			this.patientId = Number(qp.idPaciente);
 		});
+		this.setReferenceInformation();
 
 	}
 
@@ -169,7 +154,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 		this.resetResults();
 		this.searchForm.controls.careLine.setValue(careLine);
 		this.showCareLineError = false;
-		this.searchForm.controls.specialty.reset();
+		if(!this.externalInformation?.disabledInput.specialty) this.searchForm.controls.specialty.reset();
 		if (careLine) {
 			this.specialties = careLine.clinicalSpecialties;
 			if (!this.externalInformation?.formInformation?.careLine)
@@ -314,43 +299,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit, OnChang
 	onPageChange($event: any): void {
 		const startPage = $event.pageIndex * $event.pageSize;
 		this.appointmentsCurrentPage = this.protectedAvaibleAppointments.slice(startPage, $event.pageSize + startPage);
-	}
-
-	private resetAtributtes(): void {
-		this.provinces = [];
-		this.departments = [];
-		this.institutions = [];
-		this.careLines = [];
-		this.specialties = [];
-		this.allSpecialties = [];
-		this.practicesBehavior.next([]);
-		this.selectedTypeAttention = SearchCriteria.CONSULTATION;
-
-
-		this.showAppointmentsNotFoundMessage = false;
-		this.showAppointmentResults = false;
-		this.showInvalidFormMessage = false;
-
-		this.showSpecialtyError = false;
-		this.showDepartmentError = false;
-		this.showProvinceError = false;
-
-		this.departmentTypeaheadOptions = [];
-		this.institutionTypeaheadOptions = [];
-		this.provinceTypeaheadOptions = [];
-		this.careLineTypeaheadOptions = [];
-		this.specialtyTypeaheadOptions = [];
-
-		this.initialProvinceTypeaheadOptionSelected = undefined;
-		this.initialDepartmentTypeaheadOptionSelected = undefined;
-		this.initialInstitutionTypeaheadOptionSelected = undefined;
-
-		this.protectedAvaibleAppointments = [];
-
-		this.appointmentsCurrentPage = [];
-		this.showSectionToSearchAppointmentsInInstitution = false;
-		this.externalInformation = null;
-		this.externalSpecialty = null;
 	}
 
 	clearForm() {

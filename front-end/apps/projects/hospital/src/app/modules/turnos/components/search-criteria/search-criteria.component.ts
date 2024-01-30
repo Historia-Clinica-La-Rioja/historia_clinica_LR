@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 
@@ -7,39 +7,31 @@ import { MatRadioChange } from '@angular/material/radio';
 	templateUrl: './search-criteria.component.html',
 	styleUrls: ['./search-criteria.component.scss']
 })
-export class SearchCriteriaComponent implements OnInit, OnChanges {
+export class SearchCriteriaComponent {
 
 	form: UntypedFormGroup;
 	readonly searchCriteria = SearchCriteria;
 	@Input() label: string;
 	@Input() searchCriteryStyle?: string;
-	@Input() defaultOption?: SearchCriteria;
-	@Input() disabled = false;
+	@Input()
+	set defaultOption(defaultOption: SearchCriteria) {
+		if (defaultOption)
+			this.form.controls.criteria.setValue(defaultOption);
+	}
+	@Input()
+	set disabled(disabled: boolean) {
+		if(disabled) this.form.controls.criteria.disable();
+		else this.form.controls.criteria.enable();
+	}
 	@Output() selectedOption = new EventEmitter<SearchCriteria>();
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
-	) { }
-
-	ngOnInit() {
-
+	) {
 		this.form = this.formBuilder.group({
 			criteria: new UntypedFormControl(SearchCriteria.CONSULTATION),
 		});
-
-	}
-
-	ngOnChanges(changes: SimpleChanges) {
-		if (this.form) {
-			if (changes.defaultOption)
-				this.form.controls.criteria.setValue(changes.defaultOption.currentValue);
-
-			if (changes.disabled?.currentValue)
-				this.form.controls.criteria.disable();
-			else
-				this.form.controls.criteria.enable();
-		}
-	}
+	 }
 
 	emit(searchCriteriaValue: MatRadioChange) {
 		this.selectedOption.emit(searchCriteriaValue.value);

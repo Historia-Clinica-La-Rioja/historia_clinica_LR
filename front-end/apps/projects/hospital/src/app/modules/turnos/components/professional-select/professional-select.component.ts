@@ -41,6 +41,7 @@ export class ProfessionalSelectComponent {
 		if (!result) {
 			this.agendaSearchService.search(null);
 			this.selectionChange.emit(null);
+			this.agendaSearchService.clearAll();
 			return;
 		}
 		this.appointmentFacade.setProfessional(result);

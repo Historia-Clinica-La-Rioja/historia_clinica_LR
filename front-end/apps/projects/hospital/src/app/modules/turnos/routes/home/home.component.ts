@@ -73,6 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	tabChanged(tabChangeEvent: MatTabChangeEvent): void {
 		const textLabelWithoutWhiteSpace = tabChangeEvent.tab.textLabel.trim();
 		this.tabsService.setTab(textLabelWithoutWhiteSpace);
+		this.router.navigate([`${this.routePrefix}`]);
 	}
 
 }

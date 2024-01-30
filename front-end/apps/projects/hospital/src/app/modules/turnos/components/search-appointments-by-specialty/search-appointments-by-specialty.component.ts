@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
@@ -26,11 +26,6 @@ const ONE_ELEMENT = 1;
 export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	@ViewChild('paginator') paginator: MatPaginator;
-	@Input()
-	set isVisible(value: boolean) {
-		if (value)
-			this.setReferenceInformation();
-	};
 	aliasTypeaheadOptions: TypeaheadOption<string>[];
 	timesToFilter: TimeDto[];
 	initialTimes: TimeDto[];
@@ -93,16 +88,15 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			practice: [null],
 		});
 
-		this.setClinicalSpecialtiesTypeaheadOptions();
-		this.setPractices();
+		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
+
+		if (!this.externalInformation) {
+			this.setClinicalSpecialtiesTypeaheadOptions();
+			this.setPractices();
+		} 
+		else this.setReferenceInformation();
 	}
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['isVisible'].previousValue && !changes['isVisible'].currentValue) {
-			this.clearResults();
-			this.ngOnInit();
-		}
-	}
 	private initializeTimeFilters() {
 		this.timesToFilter = this.generateInitialTimes();
 		this.endingTimes = this.timesToFilter.slice(8);
@@ -229,15 +223,15 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	setPractice(practice: SharedSnomedDto) {
-		if (practice)
-			this.form.controls.practice.setValue(practice.id);
-		else {
-			this.form.controls.practice.setValue(null);
-			this.emptyAppointments = [];
-			this.emptyAppointmentsFiltered = [];
-		}
-		this.showPracticeError = false;
-	}
+        if (practice)
+            this.form.controls.practice.setValue(practice.id);
+        else {
+            this.form.controls.practice.setValue(null);
+            this.emptyAppointments = [];
+            this.emptyAppointmentsFiltered = [];
+        }
+        this.showPracticeError = false;
+    }
 
 	searchAppointmentsInCareNetwork() {
 		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
@@ -275,30 +269,21 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	private setReferenceInformation(): void {
-		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
-
-		if (!this.externalInformation)
-			return;
-
-		const { patientId, formInformation } = this.externalInformation;
-
-		this.patientId = patientId;
-
-		const { searchCriteria, clinicalSpecialties, practice } = formInformation;
-		this.setCriteria(searchCriteria);
-		if (clinicalSpecialties.length) {
-			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
-			if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
-				this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
-		}
-
-		if (practice) {
-			this.practices = [practice];
-			this.setPractice(practice);
-		}
-
-		this.searchAppointmentsInfoService.clearInfo();
-	}
+        const { patientId, formInformation } = this.externalInformation;
+        this.patientId = patientId;
+        const { searchCriteria, clinicalSpecialties, practice } = formInformation;
+        this.setCriteria(searchCriteria);
+        if (clinicalSpecialties?.length) {
+            this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
+            if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
+                this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
+        }
+        if (practice) {
+            this.practices = [practice];
+            this.setPractice(practice);
+        }
+        this.searchAppointmentsInfoService.clearInfo();
+    }
 
 	private clearLists() {
 		this.emptyAppointments = null;

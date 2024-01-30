@@ -1,8 +1,10 @@
-<app-diary-information [diary]="agenda" ></app-diary-information>
+<ng-container *ngIf="idAgenda">
+	<app-diary-information [diary]="agenda" ></app-diary-information>
 
-<div class="spinner" *ngIf="loading else calendar">
-	<mat-spinner color="primary"></mat-spinner>
-</div>
+	<div class="spinner" *ngIf="loading else calendar">
+		<mat-spinner color="primary"></mat-spinner>
+	</div>
+</ng-container>
 
 <ng-template #calendar>
 	<section class="turnos" id="calendar">

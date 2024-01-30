@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ChildrenOutletContexts, Router } from '@angular/router';
 import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { Subscription } from 'rxjs';
 
@@ -38,6 +38,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	expiredAgendas: DiaryList[] = [];
 	agendaFiltersSubscription: Subscription;
 	agendaIdSubscription: Subscription;
+	agendaSelectedSubscription: Subscription;
 	readonly dateFormats = DatePipeFormat;
 	filters: AgendaFilters;
 
@@ -55,22 +56,30 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		private readonly dailyAppointmentService: DailyAppointmentService,
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly appointmentsFacadeService: AppointmentsFacadeService,
+		private childrenOutlets: ChildrenOutletContexts,
 	) {
 	}
 
 	ngOnInit(): void {
-		this.agendaSearchService.clearAll();
+		this.agendaSelectedSubscription = this.agendaSearchService.getAgendaSelected$().subscribe(agenda => {
+			this.agendaSelected = this.agendas?.find(a => a.diaryList.id === agenda?.id)
+		})
 		this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 			if (data?.agendas) {
 				this.loadAgendas(data.agendas, data.idAgendaSelected);
 				this.filters = data.filteredBy;
+				
 			} else this.agendas = null;
 		});
-		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
+		this.route.queryParams.subscribe(qp => {
+			this.patientId = Number(qp.idPaciente);
+		});
 	}
 
 	ngOnDestroy() {
 		this.agendaFiltersSubscription?.unsubscribe();
+		this.agendaSelectedSubscription.unsubscribe();
+		this.childrenOutlets.onOutletDeactivated();
 	}
 
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {
@@ -204,6 +213,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	clear(control: any): void {
 		this.agendaSelected = null;
+		this.currentAgenda = null;
 		if (this.patientId) {
 			this.router.navigate([`${this.routePrefix}/turnos`], { queryParams: { idPaciente: this.patientId } });
 		} else {
