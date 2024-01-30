@@ -7,6 +7,8 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.establishment.repository.InstitutionRepository;
+import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.provincialreports.odontologicalreports.repository.OdontologicalProceduresConsultationDetail;
 import net.pladema.provincialreports.odontologicalreports.repository.OdontologyConsultationDetail;
 import net.pladema.provincialreports.odontologicalreports.service.OdontologicalReportExcelService;
@@ -27,14 +29,23 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 	private ICellStyle fieldStyle;
 	private ICellStyle subTitleStyle;
 
-	@Override
-	public IWorkbook buildExcelOdontology(String title, String[] headers, List<OdontologyConsultationDetail> result) {
+	private final InstitutionRepository institutionRepository;
+
+    public OdontologicalReportExcelServiceImpl(InstitutionRepository institutionRepository) {
+        this.institutionRepository = institutionRepository;
+    }
+
+    @Override
+	public IWorkbook buildExcelOdontology(String title, String[] headers, List<OdontologyConsultationDetail> result, Integer institutionId) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
+		Institution institution = institutionRepository.getById(institutionId);
+		String institutionName = (institution!=null) ? institution.getName() : "";
+
 		ISheet sheet = wb.createSheet(title);
 
-		fillRow(sheet, getHeaderData(headers, title));
+		fillRow(sheet, getHeaderData(headers, title, institutionName));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -109,7 +120,7 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		subTitleStyle.setVAlign(ICellStyle.VALIGNMENT.BOTTOM);
 	}
 
-	private List<CellContent> getHeaderData(String[] subtitles, String title){
+	private List<CellContent> getHeaderData(String[] subtitles, String title, String institutionName){
 		List<CellContent> data = new ArrayList<>();
 
 		int nRow = 0;
@@ -126,7 +137,7 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
 
 		nRow++;
-		data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO", fieldStyle));
+		data.add(new CellContent(nRow, 0, 1, 2, "2. ESTABLECIMIENTO: " + institutionName, fieldStyle));
 		data.add(new CellContent(nRow, 2, 1, 14, "", basicStyle));
 		data.add(new CellContent(nRow, 16, 1, 1, "3. MES", fieldStyle));
 		data.add(new CellContent(nRow, 17, 1, 1, "", basicStyle));
