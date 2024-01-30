@@ -143,12 +143,12 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 			healthCoordination: {
 				coordinationInsideHealthSector: this.form.value.articulation === Articulation.IN ? {
 					healthInstitutionOrganization: {
-						organizations: this.form.value.articulationEstablishmentList.map(articulation=> articulation.value),
+						organizations: this.form.value.articulationEstablishmentList?.map(articulation=> articulation.value),
 						other: this.form.value.otherArticulationEstablishment,
 						within: this.form.value.articulationEstablishment,
 					},
 					healthSystemOrganization: {
-						organizations: this.form.value.area.map(a => a.value),
+						organizations: this.form.value.area?.map(a => a.value),
 						other: this.form.value.otherArea,
 						within: this.form.value.healthSystemArticulation,
 					},
@@ -163,7 +163,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 				} : null
 			},
 			institutionReport: {
-				institutionReportPlaces: this.form.value.institutionComplaintsOrganizations.map(institution=> institution.value),
+				institutionReportPlaces: this.form.value.institutionComplaintsOrganizations?.map(institution=> institution.value),
 				otherInstitutionReportPlace: this.form.value.autorityName,
 				reportReasons: this.selectedComplains,
 				reportWasDoneByInstitution: this.form.value.isInstitutionComplaint,
@@ -173,7 +173,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 				wasSexualViolence: this.form.value.isSexualViolence,
 			},
 			victimKeeperReport: {
-				reportPlaces: this.form.value.agencyComplaint.map(agency => agency.value),
+				reportPlaces: this.form.value.agencyComplaint?.map(agency => agency.value),
 				werePreviousEpisodesWithVictimOrKeeper: this.form.value.personComplaint,
 			}
 		}
@@ -447,11 +447,15 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 					this.setCoordinationOutsideHealthSector(implementedActions);
 
 				this.form.controls.personComplaint.setValue(implementedActions.victimKeeperReport.werePreviousEpisodesWithVictimOrKeeper);
-				this.form.controls.agencyComplaint.setValue(implementedActions.victimKeeperReport.reportPlaces);
+				const places = implementedActions.victimKeeperReport.reportPlaces?.flatMap(org => Organizations.find(aopt => aopt.value === org));
+				this.form.controls.agencyComplaint.setValue(places);
+				this.updateValidationAgencyComplaint();
 				this.form.controls.isInstitutionComplaint.setValue(implementedActions.institutionReport.reportWasDoneByInstitution);
 				this.form.controls.institutionComplaints.setValue(implementedActions.institutionReport.reportReasons?.length ? implementedActions.institutionReport.reportReasons: []);
 				this.selectedComplains = implementedActions.institutionReport.reportReasons?.length ? implementedActions.institutionReport.reportReasons: [];
-				this.form.controls.institutionComplaintsOrganizations.setValue(implementedActions.institutionReport.institutionReportPlaces);
+				const institutions = implementedActions.institutionReport.institutionReportPlaces?.flatMap(ins => OrganizationsExtended.find(org => org.value === ins));
+				this.form.controls.institutionComplaintsOrganizations.setValue(institutions);
+				this.updateValidationInstitutionComplaint();
 				this.form.controls.autorityName.setValue(implementedActions.institutionReport.otherInstitutionReportPlace);
 				this.form.controls.isSexualViolence.setValue(implementedActions.sexualViolence.wasSexualViolence);
 				this.form.controls.implementedActions.setValue(implementedActions.sexualViolence.implementedActions);
@@ -463,11 +467,20 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		const {coordinationInsideHealthSector} = implementedActions.healthCoordination;
 		this.form.controls.articulation.setValue(Articulation.IN);
 		this.form.controls.healthSystemArticulation.setValue(coordinationInsideHealthSector.healthSystemOrganization.within);
-		this.form.controls.area.setValue(coordinationInsideHealthSector.healthSystemOrganization.organizations);
-		this.form.controls.otherArea.setValue(coordinationInsideHealthSector.healthSystemOrganization.other);
-		this.form.controls.articulationEstablishment.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.within);
-		this.form.controls.articulationEstablishmentList.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.organizations);
-		this.form.controls.otherArticulationEstablishment.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.other);
+		if (coordinationInsideHealthSector.healthSystemOrganization.organizations?.length) {
+			const orgs = coordinationInsideHealthSector.healthSystemOrganization.organizations.flatMap(org => Areas.find(aopt => aopt.value === org));
+			this.form.controls.area.setValue(orgs);
+			this.updateValidationArea();
+			this.form.controls.otherArea.setValue(coordinationInsideHealthSector.healthSystemOrganization.other);
+		}
+
+		if (coordinationInsideHealthSector.healthInstitutionOrganization.organizations?.length) {
+			this.form.controls.articulationEstablishment.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.within);
+			const est = coordinationInsideHealthSector.healthInstitutionOrganization.organizations.flatMap(e => Establishments.find(es => es.value === e));
+			this.form.controls.articulationEstablishmentList.setValue(est);
+			this.updateValidationArticulationEstablishment();
+			this.form.controls.otherArticulationEstablishment.setValue(coordinationInsideHealthSector.healthInstitutionOrganization.other);
+		}
 		this.form.controls.internmentIndication.setValue(coordinationInsideHealthSector.wereInternmentIndicated);
 	}
 

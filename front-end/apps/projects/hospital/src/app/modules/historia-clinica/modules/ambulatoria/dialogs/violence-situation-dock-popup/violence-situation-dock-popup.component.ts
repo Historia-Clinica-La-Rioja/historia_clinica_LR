@@ -5,7 +5,7 @@ import { ViolenceReportService } from '@api-rest/services/violence-report.servic
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable, of } from 'rxjs';
+import { Observable, finalize, of } from 'rxjs';
 import { ViolenceAggressorsNewConsultationService } from '../../services/violence-aggressors-new-consultation.service';
 import { ViolenceModalityNewConsultationService } from '../../services/violence-modality-new-consultation.service';
 import { ViolenceSituationsNewConsultationService } from '../../services/violence-situations-new-consultation.service';
@@ -94,11 +94,13 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 	saveSituationViolence() {
 		if (this.data.data.situationId) {
 			this.violenceReportService.evolveViolenceReport(this.newViolenceSituation, this.data.data.patientId, this.data.data.situationId)
+				.pipe(finalize(() => this.isSaving = false))
 				.subscribe({
 					next: (_) => this.success()
 				});
 		} else {
 			this.violenceReportService.saveNewViolenceReport(this.newViolenceSituation, this.data.data.patientId)
+				.pipe(finalize(() => this.isSaving = false))
 				.subscribe({
 					next: (_) => this.success()
 				});
