@@ -39,7 +39,12 @@ public class CreateConsultationsJob {
 	public void run() {
 		log.warn("Scheduled CreateConsultationsJob starting at {}", new Date());
 		List<OutpatientConsultationBo> consultations = getConsultations.run();
-		cipresConsultationStorage.createOutpatientConsultations(consultations);
+		try {
+			cipresConsultationStorage.createOutpatientConsultations(consultations);
+		}
+		catch (Exception ex){
+			log.debug("Exception occurred while transmitting outpatient encounters: ", ex);
+		}
 		log.warn("Scheduled CreateConsultationsJob done at {}", new Date());
 	}
 
