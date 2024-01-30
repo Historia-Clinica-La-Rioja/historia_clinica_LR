@@ -2389,9 +2389,9 @@
 			<column name="prescriptionUpdateDate" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
+
 	<sql-result-set-mapping name="OdontologicalReports.OdontologyConsultationDetailResult">
 		<constructor-result target-class="net.pladema.provincialreports.odontologicalreports.repository.OdontologyConsultationDetail">
-			<column name="institution" class="java.lang.String"/>
 			<column name="professional" class="java.lang.String"/>
 			<column name="procedures" class="java.lang.String"/>
 			<column name="counter" class="java.lang.String"/>
