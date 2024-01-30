@@ -7,7 +7,7 @@ import ProcedureTemplateCreate from './ProcedureTemplateCreate';
 import { ROOT, ADMINISTRADOR } from '../roles';
 
 const procedureTemplates = (permissions: SGXPermissions) => {
-    const enabled = permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) && permissions.isOn('HABILITAR_RESULTADOS_DE_ESTUDIO_EN_DESAROLLO')
+    const enabled = permissions.hasAnyAssignment(ROOT, ADMINISTRADOR);
     return {
         list: enabled ? ProcedureTemplateList : undefined,
         show: enabled ? ProcedureTemplateShow : undefined,

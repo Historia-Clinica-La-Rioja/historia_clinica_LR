@@ -4,7 +4,7 @@ import { ROOT, ADMINISTRADOR } from '../roles';
 import ProcedureTemplateSnomedCreate from './ProcedureTemplateSnomedCreate';
 
 const procedureTemplateSnomeds = (permissions: SGXPermissions) => {
-    const enabled = permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) && permissions.isOn('HABILITAR_RESULTADOS_DE_ESTUDIO_EN_DESAROLLO')
+    const enabled = permissions.hasAnyAssignment(ROOT, ADMINISTRADOR);
     return {
         list: undefined,
         show: undefined,

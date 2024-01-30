@@ -165,9 +165,6 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitado utilizar nuevo formato PDF para la generación de órdenes de prestación")
 	HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION,
 
-	@Label("Indica si están habilitados los resultados de estudio en desarrollo")
-	HABILITAR_RESULTADOS_DE_ESTUDIO_EN_DESAROLLO,
-
 	@Label("Indica si están habilitados los reportes de violencias en desarrollo")
 	ENABLE_VIOLENCE_REPORT_DEVELOPMENT,
 
