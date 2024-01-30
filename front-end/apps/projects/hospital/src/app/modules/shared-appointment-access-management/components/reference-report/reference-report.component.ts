@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '@access-management/services/dashboard.service';
 
 @Component({
@@ -6,11 +6,15 @@ import { DashboardService } from '@access-management/services/dashboard.service'
 	templateUrl: './reference-report.component.html',
 	styleUrls: ['./reference-report.component.scss']
 })
-export class ReferenceReportComponent {
+export class ReferenceReportComponent implements OnInit {
 
 	constructor(
 		readonly dashboardService: DashboardService,
 	) { }
+
+	ngOnInit(): void {
+		this.dashboardService.initializeService();
+	}
 
 }
 

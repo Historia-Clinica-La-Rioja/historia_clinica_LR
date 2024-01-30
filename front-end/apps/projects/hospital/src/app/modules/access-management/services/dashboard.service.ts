@@ -10,7 +10,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 
 const MAX_DAYS = 90;
 const MIN_SIZE = 5;
@@ -36,9 +36,14 @@ export class DashboardService {
 		private readonly permissionsService: PermissionsService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly contextService: ContextService,
-	) {
+	) { }
+
+	initializeService() {
 		this.initializeFilters();
-		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO]).subscribe(hasRole => this.isAdministrative = hasRole);
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO]).pipe(take(1)).subscribe(hasRole => {
+			this.isAdministrative = hasRole
+			this.updateReports();
+		});
 	}
 
 	updateReports() {
@@ -62,6 +67,7 @@ export class DashboardService {
 		this.dashboardView = DashboardView.RECEIVED;
 		this.dashboardFilters = {} as DashboardFilters;
 		this.pageSize = MIN_SIZE;
+		this.pageNumber = INITIAL_PAGE;
 	}
 
 	updatePaginator(pageInfo: PageEvent) {

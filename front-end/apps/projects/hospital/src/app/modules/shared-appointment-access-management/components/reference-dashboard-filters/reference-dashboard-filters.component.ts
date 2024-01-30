@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
@@ -18,7 +18,7 @@ const MAX_DAYS = 90;
 	templateUrl: './reference-dashboard-filters.component.html',
 	styleUrls: ['./reference-dashboard-filters.component.scss']
 })
-export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
+export class ReferenceDashboardFiltersComponent implements OnInit {
 	dashboardView = DashboardView;
 	showValidation = false;
 	reports: ReferenceReportDto[] = [];
@@ -47,10 +47,6 @@ export class ReferenceDashboardFiltersComponent implements OnInit, OnDestroy {
 		this.setFiltersOptions();
 
 		this.dashboardService.updateReports();
-	}
-
-	ngOnDestroy(): void {
-		this.dashboardService.initializeFilters();
 	}
 
 	checkDays(dateRange: DateRange) {
