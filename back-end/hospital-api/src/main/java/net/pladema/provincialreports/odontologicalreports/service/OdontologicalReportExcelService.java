@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OdontologicalReportExcelService {
 
-	IWorkbook buildExcelOdontology(String title, String[] headers, List<OdontologyConsultationDetail> query);
+	IWorkbook buildExcelOdontology(String title, String[] headers, List<OdontologyConsultationDetail> query, Integer institutionId);
 
 	IWorkbook buildExcelOdontologicalProcedures(String title, String[] headers, List<OdontologicalProceduresConsultationDetail> query, String startDate, String endDate, String institutionName);
 
