@@ -48,15 +48,21 @@ public class GetAnestheticReport {
 
         List<AnestheticSubstanceBo> substances = documentService.getAnestheticSubstancesStateFromDocument(documentId);
 
-        result.setPreMedications(substances.stream()
-                .filter(substance -> substance.isOfType(EAnestheticSubstanceType.PRE_MEDICATION))
-                .collect(Collectors.toList()));
+        result.setPreMedications(this.filterSubstanceBy(substances, EAnestheticSubstanceType.PRE_MEDICATION));
         result.setFoodIntake(documentService.getFoodIntakeStateFromDocument(documentId));
 
         result.setHistories(generalHealthConditionBo.getOtherHistories());
         result.setProcedureDescription(documentService.getProcedureDescriptionStateFromDocument(documentId));
 
+        result.setAnestheticPlans(this.filterSubstanceBy(substances, EAnestheticSubstanceType.ANESTHETIC_PLAN));
+
         log.debug("Output -> anestheticReport {}", result);
         return result;
+    }
+
+    private List<AnestheticSubstanceBo> filterSubstanceBy(List<AnestheticSubstanceBo> substances, EAnestheticSubstanceType type) {
+        return substances.stream()
+                .filter(substance -> substance.isOfType(type))
+                .collect(Collectors.toList());
     }
 }

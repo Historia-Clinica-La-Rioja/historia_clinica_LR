@@ -13,6 +13,7 @@ import lombok.Getter;
 public enum EAnestheticSubstanceType {
 
     PRE_MEDICATION((short) 1, "Premedicación"),
+    ANESTHETIC_PLAN((short) 2, "Plan anestésico"),
     ;
 
     private final Short id;

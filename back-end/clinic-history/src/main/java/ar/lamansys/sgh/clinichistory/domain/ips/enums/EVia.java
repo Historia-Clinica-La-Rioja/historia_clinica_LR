@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.Getter;
 
+@Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EVia {
 
@@ -19,6 +21,10 @@ public enum EVia {
 	INHALATION(5,"Inhalatoria"),
 	INTRAVENOUS(6,"Endovenosa"),
 	OTHER(7, "Otra"),
+	EPIDURAL(8, "Epidural"),
+	RECTAL(9, "Rectal"),
+	TOPICAL(10, "Tópica"),
+	SUBARACHNOID(11, "Subaracnoidea (Raquídea)"),
 	;
 
 
@@ -51,6 +57,11 @@ public enum EVia {
 	}
 
 	@JsonCreator
+	public static List<EVia> getAnestheticPlan(){
+		return Stream.of(EVia.INTRAVENOUS, EVia.EPIDURAL, EVia.INHALATION, EVia.RECTAL, EVia.TOPICAL, EVia.SUBARACHNOID, EVia.OTHER).collect(Collectors.toList());
+	}
+
+	@JsonCreator
 	public static EVia getById(Short id){
 		if (id == null)
 			return null;
@@ -60,11 +71,4 @@ public enum EVia {
 		throw new NotFoundException("ViaType-not-exists", String.format("El valor %s es inválido", id));
 	}
 
-	public Short getId() {
-		return id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
 }

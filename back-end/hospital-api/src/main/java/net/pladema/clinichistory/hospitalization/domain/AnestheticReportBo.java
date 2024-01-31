@@ -70,6 +70,8 @@ public class AnestheticReportBo implements IDocumentBo {
 
     private ProcedureDescriptionBo procedureDescription;
 
+    private List<AnestheticSubstanceBo> anestheticPlans;
+
     @Override
     public Integer getPatientId() {
         return patientInfo != null ? patientInfo.getId() : patientId;

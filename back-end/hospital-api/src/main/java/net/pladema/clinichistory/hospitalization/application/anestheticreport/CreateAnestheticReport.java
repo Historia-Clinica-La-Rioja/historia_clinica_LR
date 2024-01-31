@@ -55,7 +55,9 @@ public class CreateAnestheticReport {
 
         this.setTypeSurgicalProcedures(anestheticReport.getSurgeryProcedures());
 
-        this.setPreMedicationsValues(anestheticReport.getPreMedications());
+        this.setAnestheticSubstanceValues(anestheticReport.getPreMedications(), EAnestheticSubstanceType.PRE_MEDICATION.getId());
+
+        this.setAnestheticSubstanceValues(anestheticReport.getAnestheticPlans(), EAnestheticSubstanceType.ANESTHETIC_PLAN.getId());
 
         anestheticReportValidator.assertContextValid(anestheticReport);
 
@@ -74,9 +76,9 @@ public class CreateAnestheticReport {
                 .forEach(surgicalProcedure -> surgicalProcedure.setType(ProcedureTypeEnum.SURGICAL_PROCEDURE));
     }
 
-    public void setPreMedicationsValues(List<AnestheticSubstanceBo> preMedications) {
-        preMedications.stream()
-                .peek(preMedication -> preMedication.setTypeId(EAnestheticSubstanceType.PRE_MEDICATION.getId()))
+    public void setAnestheticSubstanceValues(List<AnestheticSubstanceBo> substances, Short typeId) {
+        substances.stream()
+                .peek(substance -> substance.setTypeId(typeId))
                 .map(AnestheticSubstanceBo::getDosage)
                 .filter(Objects::nonNull)
                 .forEach(dosageBo -> dosageBo.setPeriodUnit(EUnitsOfTimeBo.EVENT));

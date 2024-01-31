@@ -194,4 +194,6 @@ public interface IDocumentBo {
     default List<HealthConditionBo> getHistories() { return Collections.emptyList(); }
 
     default ProcedureDescriptionBo getProcedureDescription() { return null; }
+
+    default List<AnestheticSubstanceBo> getAnestheticPlans() { return Collections.emptyList(); }
 }

@@ -143,6 +143,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
         loadAnestheticHistory.run(doc.getId(), Optional.ofNullable(documentBo.getAnestheticHistory()));
         loadAnestheticSubstances.run(doc.getId(), documentBo.getPreMedications());
+        loadAnestheticSubstances.run(doc.getId(), documentBo.getAnestheticPlans());
         loadFoodIntake.run(doc.getId(), Optional.ofNullable(documentBo.getFoodIntake()));
         loadProcedureDescription.run(doc.getId(), Optional.ofNullable(documentBo.getProcedureDescription()));
 

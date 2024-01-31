@@ -165,6 +165,7 @@ export interface AnestheticHistoryDto {
 
 export interface AnestheticReportDto {
     anestheticHistory?: AnestheticHistoryDto;
+    anestheticPlans?: AnestheticSubstanceDto[];
     anthropometricData?: AnthropometricDataDto;
     diagnosis?: DiagnosisDto[];
     foodIntake?: FoodIntakeDto;
