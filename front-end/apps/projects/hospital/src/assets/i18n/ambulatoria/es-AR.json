@@ -803,6 +803,11 @@
                         "CONTINUE": "Continuar registro"
                     }
                 },
+                "violence-situation-history": {
+                    "TITLE": "Historial de evoluciones",
+                    "NO_EVOLUTIONS": "No hay evoluciones",
+                    "UNSELECTED_EVOLUTION": "Seleccione una evolución para ver los detalles del mismo"
+                },
                 "dialog": {
                     "TEXT_FREE_LABEL":"Texto libre",
                     "SAVE": "Guardar situación de violencia",

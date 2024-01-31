@@ -72,5 +72,6 @@ export interface ItemListCard {
 
 export interface ItemListOption {
 	title: string,
-	value: string[],
+	value?: string[],
+	isImportant?: boolean
 }

@@ -13,7 +13,8 @@ header {
     }
 }
 
-section {
+.container {
+    margin: 0;
     display: grid;
     grid-template-columns: 1fr 2fr;
     border: 1px solid #d3d3d3;
@@ -21,12 +22,18 @@ section {
 
 .no-information-container {
     height: 60vh;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
+    text-align: center;
 
     h3 {
         color: #9A9A9A;
     }
+}
+
+.no-detailed-information {
+    display: grid;
+    place-items: center;
 }
 
 .cards-container {
@@ -78,5 +85,10 @@ mat-list-item {
 
     &:last-child {
         border-bottom: 0;
+    }
+
+    .important {
+        font-weight: 500;
+        color: #333;
     }
 }

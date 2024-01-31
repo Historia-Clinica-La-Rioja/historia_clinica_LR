@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PageDto, ViolenceReportDto, ViolenceReportSituationDto } from '@api-rest/api-model';
+import { PageDto, ViolenceReportDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -38,5 +38,12 @@ export class ViolenceReportService {
 	evolveViolenceReport(violenceReport: ViolenceReportDto, patientId: number, situationId: number) {
 		const url = this.BASE_URL + patientId + `/situation/${situationId}/evolve`;
 		return this.http.post<ViolenceReportDto>(url, violenceReport);
+	}
+
+	getEvolutions = (patientId: number, filterData: string): Observable<ViolenceReportSituationEvolutionDto[]> => {
+		const url = this.BASE_URL + patientId + '/historic';
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('filterData', filterData);
+		return this.http.get<ViolenceReportSituationEvolutionDto[]>(url, {params: queryParams});
 	}
 }

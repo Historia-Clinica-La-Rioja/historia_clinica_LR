@@ -9,14 +9,18 @@ section {
 }
 
 app-summary-card {
+    margin-bottom: 1rem;
     width: 100%;
-    max-height: 36rem;
-    overflow-y: auto;
 
     .see-all {
         display: flex;
         justify-content: flex-end;
     }
+}
+
+.scrollable {
+    max-height: 45rem;
+    overflow-y: auto;
 }
 
 .no-info {
