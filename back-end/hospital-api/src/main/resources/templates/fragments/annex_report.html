@@ -344,8 +344,8 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    <strong>Fecha ingreso:</strong> <span th:text="${#temporals.format(procedureLinesIngressDate, 'dd/MM/yyyy HH:mm:SS')}"></span>
-                    <strong>Fecha egreso:</strong> <span th:text="${#temporals.format(procedureLinesEgressDate, 'dd/MM/yyyy HH:mm:SS')}"></span>
+                    <strong>Fecha ingreso:</strong> <span th:text="${#temporals.format(procedureLinesIngressDate, 'dd/MM/yyyy HH:mm:ss')}"></span>
+                    <strong>Fecha egreso:</strong> <span th:text="${#temporals.format(procedureLinesEgressDate, 'dd/MM/yyyy HH:mm:ss')}"></span>
                 </td>
                 <td><strong>TOTAL</strong></td>
                 <td th:text="${#numbers.formatDecimal(procedureLinesTotal, 1, 2)}"></td>

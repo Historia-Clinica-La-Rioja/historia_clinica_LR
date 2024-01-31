@@ -11,14 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AnnexIIAppointmentVo extends AnnexIIVo {
-
     private String appointmentState;
-
     private LocalDate attentionDate;
-
     private String medicalCoverage;
 	private String medicalCoverageCuit;
-
 	private Integer rnos;
 
     public AnnexIIAppointmentVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,

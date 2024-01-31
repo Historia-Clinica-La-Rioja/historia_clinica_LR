@@ -26,4 +26,5 @@ public interface AnnexReportRepository {
 	Optional<AnnexIIOutpatientVo> getNursingConsultationAnnexGeneralInfo(Long documentId);
 
 	Optional<AnnexIIReportDataVo> getNursingConsultationAnnexDataInfo(Long documentId);
+
 }

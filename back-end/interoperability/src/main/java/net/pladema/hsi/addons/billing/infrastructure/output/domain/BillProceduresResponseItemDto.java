@@ -25,14 +25,14 @@ public class BillProceduresResponseItemDto {
 
 	private Float total;
 
-	private String descriptionNomanclador;
+	private String descriptionNomenclator;
 
-	private String codeNomanclador;
+	private String codeNomenclator;
 
 	public BillProceduresResponseItemBo toBo() {
 		return new BillProceduresResponseItemBo(
-		this.getCodeNomanclador(),
-		this.getDescriptionNomanclador(),
+		this.getCodeNomenclator(),
+		this.getDescriptionNomenclator(),
 		this.getDescription(),
 		this.getAmount(),
 		this.getDate(),

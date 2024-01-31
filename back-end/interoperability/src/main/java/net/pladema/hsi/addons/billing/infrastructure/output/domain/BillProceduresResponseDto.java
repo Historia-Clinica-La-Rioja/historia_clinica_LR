@@ -1,6 +1,5 @@
 package net.pladema.hsi.addons.billing.infrastructure.output.domain;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,16 +23,12 @@ public class BillProceduresResponseDto {
 	public BillProceduresResponseDto validate() {
 		this.patientTotal = totals.get(0).getPatientTotal();
 		this.medicalCoverageTotal = totals.get(0).getMedicalCoverageTotal();
-		this.medicalCoverageCuit = medicalCoverage.getCuit();
-		this.medicalCoverageName = medicalCoverage.getName();
-
 		return this;
-
 	}
 
 	public BillProceduresResponseBo toBo(BillProceduresRequestBo request) {
 		return new BillProceduresResponseBo(
-				Collections.emptyList(),//this.getNonRegisteredPractices().stream().map(x->x.toBo()).collect(Collectors.toList()),
+				this.getNonRegisteredPractices().stream().map(x->x.toBo()).collect(Collectors.toList()),
 				this.getMedicalCoverageTotal(),
 				this.getPatientTotal(),
 				this.getMedicalCoverageName(),

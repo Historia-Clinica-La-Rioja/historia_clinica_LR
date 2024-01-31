@@ -15,6 +15,7 @@ import net.pladema.hsi.addons.billing.infrastructure.input.BillProceduresExterna
 import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresRequestDto;
 import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresResponseDto;
 import net.pladema.hsi.addons.billing.infrastructure.input.exception.BillProceduresExternalServiceException;
+import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 import net.pladema.reports.service.domain.AnnexIIProcedureBo;
 
 import net.pladema.reports.service.exception.AnnexReportException;
@@ -79,24 +80,24 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			switch (documentSourceType){
 
 				case SourceType.OUTPATIENT: {
-					var outpatientConsultationData = annexReportRepository.getConsultationAnnexInfo(documentId);
-					if (outpatientConsultationData.isPresent()) {
-						var outpatientconsultationData = outpatientConsultationData.get();
+					var data = annexReportRepository.getConsultationAnnexInfo(documentId);
+					if (data.isPresent()) {
+						AnnexIIOutpatientVo outpatientconsultationData = data.get();
 						result.setSpecialty(outpatientconsultationData.getSpecialty());
 						result.setProblems(outpatientconsultationData.getProblems());
 						result.setHasProcedures(outpatientconsultationData.getHasProcedures());
 						result.setExistsConsultation(outpatientconsultationData.getExistsConsultation());
 
-						var billedProcedures = getBilledProcedures(
-							result.getMedicalCoverageCuit() == null ? "30222222221" : result.getMedicalCoverageCuit(),
-							result.getConsultationOrAttentionDate().atStartOfDay(),
+						BillProceduresResponseDto billedProcedures = getBilledProcedures(
+							outpatientconsultationData.getMedicalCoverageCuit(),
+							outpatientconsultationData.getConsultationDate().atStartOfDay(),
 							documentService.getProcedureStateFromDocument(documentId)
 						);
 						result.setShowProcedures(billedProcedures.isEnabled());
 						if (billedProcedures.isEnabled()) {
 							result.setProcedures(mapProcedures(billedProcedures));
-							result.setProceduresIngressDate(outpatientconsultationData.getConsultationDate().atStartOfDay());
-							result.setProceduresEgressDate(outpatientconsultationData.getConsultationDate().atStartOfDay());
+							result.setProceduresIngressDate(outpatientconsultationData.getCreatedOn());
+							result.setProceduresEgressDate(outpatientconsultationData.getCreatedOn());
 							result.setProceduresTotal(billedProcedures.getPatientTotal());
 							result.setMissingProcedures(billedProcedures.getProceduresNotBilledCount());
 						}
