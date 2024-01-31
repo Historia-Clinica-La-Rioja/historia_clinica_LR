@@ -225,6 +225,16 @@ La funcionalidad para reporte epimediológico se activa solamente si el feature 
 | ws.firmador.path.multiple.sign |  | -                                       | Opcional | Path que provee el firmador para firmar multiples documentos. **Obligatoria** si el FF de HABILITR_FIRMA_DIGITAL esta habilitado                                    | v2.2.0 |
 
 
+### Addons: Prefacturación (billing)
+| Propiedad                    | Variable de ambiente | Valor por defecto | Condición | Descripción | Desde   |
+|------------------------------| ------ |----------------------------------------------------------| -------- |------------------------------------------------------------------|---------|
+| ws.addons.billing.enabled| | false | Opcional | Indica si se debe solicitar información de prefacturación al servidor Addons. | v2.17.0 |
+| ws.addons.billing.url| | - | Obligatorio si enabled=true | Url base donde se encuentra el servidor Addons. Ejemplo: https://addons.prefacturacion-soma.dev-env.lamansys.ar/api/addons/external | v2.17.0 |
+| ws.addons.billing.appKey| | - | Obligatorio si enabled=true | App key para poder acceder a los endpoints de Addons. | v2.17.0 |
+| ws.addons.billing.appKeyHeader| | external-token | Obligatorio si enabled=true | Nombre del header donde se envía el app key. | v2.17.0 |
+| ws.addons.billing.encounterUrl| | encounter | Obligatorio si enabled=true | Sub-path donde se encuentra el servicio de prefacturación. La url completa se arma como url + '/' + encounterUrl. | v2.17.0 |
+
+
 ## Integración con sistemas relacionados
 | Propiedad | Variable de ambiente   | Valor por defecto       | Necesidad | Descripcion | Desde |
 | ----------------------- | ----------------| ----------------------- | --------- | ----------- | ----- |

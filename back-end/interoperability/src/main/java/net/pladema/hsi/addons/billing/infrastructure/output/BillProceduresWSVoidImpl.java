@@ -12,7 +12,7 @@ import net.pladema.hsi.addons.billing.domain.BillProceduresResponseBo;
 
 @Slf4j
 @ConditionalOnProperty(
-		value="app.addons.billing.enabled",
+		value="ws.addons.billing.enabled",
 		havingValue = "false",
 		matchIfMissing = true
 )
@@ -24,13 +24,6 @@ public class BillProceduresWSVoidImpl implements BillProceduresPort {
 	}
 
 	private BillProceduresResponseBo buildResponse(BillProceduresRequestBo request) {
-		return new BillProceduresResponseBo(
-			Collections.emptyList(),
-			0.0F,
-			0.0F,
-			"",
-			"",
-			false,
-			request);
+		return BillProceduresResponseBo.allRequestedLinesMissing(request, false);
 	}
 }

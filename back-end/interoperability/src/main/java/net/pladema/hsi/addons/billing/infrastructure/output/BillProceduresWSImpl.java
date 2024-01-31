@@ -29,7 +29,7 @@ import net.pladema.hsi.addons.billing.infrastructure.output.domain.BillProcedure
 
 @Slf4j
 @ConditionalOnProperty(
-		value="app.addons.billing.enabled",
+		value="ws.addons.billing.enabled",
 		havingValue = "true"
 )
 @Service

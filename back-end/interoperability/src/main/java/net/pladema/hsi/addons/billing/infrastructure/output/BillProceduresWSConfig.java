@@ -11,10 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConditionalOnProperty(
-		value="app.addons.billing.enabled",
+		value="ws.addons.billing.enabled",
 		havingValue = "true"
 )
-@ConfigurationProperties(prefix = "app.addons.billing")
+@ConfigurationProperties(prefix = "ws.addons.billing")
 public class BillProceduresWSConfig {
 	private String url;
 	private String appKey;
