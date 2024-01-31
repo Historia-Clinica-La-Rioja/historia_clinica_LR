@@ -13,7 +13,7 @@ const personData = (person) => {
 };
 
 const InstitutionalGroupUserCreate = (props) => {
-    const redirect=`/institutionalgroups/${props?.location?.state?.record?.institutionalGroupId}/show`;
+    const redirect=`/institutionalgroups/${props?.location?.state?.record?.institutionalGroupId}/show/1`;
     return (
         <Create {...props}> 
             <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
