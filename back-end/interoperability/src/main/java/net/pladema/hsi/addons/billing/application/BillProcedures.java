@@ -14,13 +14,27 @@ public class BillProcedures {
 	private final BillProceduresPort billProceduresPort;
 
 	/**
-	 * For each requested procedure missing in the getBilling response we
-	 * return an empty line. These will be filled manually by the secretary
 	 * @param request
 	 * @return
 	 * @throws BillProceduresException
 	 */
 	public BillProceduresResponseBo run(BillProceduresRequestBo request) throws BillProceduresException {
-		return billProceduresPort.getBilling(request);
+		try {
+			return billProceduresPort.getBilling(request);
+		} catch (BillProceduresException e) {
+			return failStrategy(e, request);
+		}
+	}
+
+	/**
+	 * If the port call fails we act as if all the requested lines
+	 * were missing from the response
+	 *
+	 * @param e
+	 * @param request
+	 * @return
+	 */
+	private BillProceduresResponseBo failStrategy(BillProceduresException e, BillProceduresRequestBo request) {
+		return BillProceduresResponseBo.allRequestedLinesMissing(request, e.isEnabled());
 	}
 }

@@ -62,11 +62,19 @@ public class BillProceduresWSImpl implements BillProceduresPort {
 			return response.toBo(request);
 		} catch (RestTemplateApiException e) {
 			throw processException(e);
+		} catch (Exception e) {
+			throw processException(e);
 		}
+
+	}
+
+	private BillProceduresException processException(Exception e) {
+		log.error("Error en el llamado a addons billing: ", e);
+		return BillProceduresException.addonsBillingApiException(e.getMessage());
 	}
 
 	private BillProceduresException processException(RestTemplateApiException ex) {
-		log.error("Error en el llamado a addons billing: {}", ex);
+		log.error("Error en el llamado a addons billing: ", ex);
 		//Errores 5xx
 		if (ex.getStatusCode().series().equals(HttpStatus.Series.SERVER_ERROR)) {
 

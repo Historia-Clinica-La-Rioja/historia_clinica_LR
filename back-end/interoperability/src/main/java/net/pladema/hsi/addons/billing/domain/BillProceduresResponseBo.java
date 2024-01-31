@@ -1,5 +1,6 @@
 package net.pladema.hsi.addons.billing.domain;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -21,6 +22,33 @@ public class BillProceduresResponseBo {
 	@Getter(lazy = true)
 	private Integer proceduresNotBilledCount = computeProceduresNotBilledCount();
 
+	/**
+	 * All the requested lines are missing from the response.
+	 * This is an alternative to throwing an exception. Instead, we mock
+	 * an empty response.
+	 * The proceduresNotBilledCount will be equal to the number of requested
+	 * procedures.
+	 * @param request
+	 * @param enabled
+	 * @return
+	 */
+	public static BillProceduresResponseBo allRequestedLinesMissing(BillProceduresRequestBo request, boolean enabled) {
+		return new BillProceduresResponseBo(
+			Collections.emptyList(),
+			0.0F,
+			0.0F,
+			"",
+			request.getMedicalCoverageCuit(),
+			enabled,
+			request
+		);
+	}
+
+	/**
+	 * For each requested procedure missing in the getBilling response we
+	 * return an empty line. These will be filled manually by the secretary.
+	 * @return
+	 */
 	private Integer computeProceduresNotBilledCount() {
 		Long missing = 0L;
 		//The port only returns pts. Two requested procedures may have the same pt (but different sctid).

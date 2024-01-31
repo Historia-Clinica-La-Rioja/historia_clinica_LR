@@ -182,6 +182,10 @@
             text-transform: uppercase;
         }
 
+        .atomic-block {
+            page-break-inside: avoid;
+        }
+
         /* Procedure lines */
         .procedure-lines-table table,
         .procedure-lines-table td,
@@ -307,11 +311,10 @@
             <label th:if="${hasProcedures}">X</label>
             <label th:unless="${hasProcedures}">&nbsp;</label>
         </div>
-        <div class="code-nhpgd">Códigos NHPdGD:</div>
     </div>
 
     <!-- Procedure lines-->
-    <div th:if="${showProcedureLines}" class="procedure-lines-table">
+    <div th:if="${showProcedureLines}" class="procedure-lines-table atomic-block">
         <table>
             <colgroup>
                 <col style="width: 10%;"/>
@@ -354,20 +357,19 @@
         </table>
     </div>
 
-
-    <div>
+    <div class="atomic-block">
         <div class="internment">INTERNACIÓN</div>
         <div style="width: 23px;">&nbsp;</div>
         <div class="diagnostics">Diagnóstico de egreso <br></br>CIE10</div>
         <div class="principal-code">CÓDIGO PRINCIPAL:</div>
         <div class="other-codes">OTROS CÓDIGOS:</div>
     </div>
-    <div>
+    <div class="atomic-block">
         <div class="nhpdgd-data">
             NHPdGD: Nomenclador Hospitales Públicos de Gestión Descentralizada - CIE 10: Clasificación Internacional de Enfermedades
         </div>
     </div>
-    <div>
+    <div class="atomic-block">
         <div class="signature-section">
             <div>Firma del Médico y sello con N° de matrícula</div>
         </div>
@@ -381,7 +383,7 @@
             <div class="border-bottom">AÑO</div>
         </div>
     </div>
-    <div>
+    <div class="atomic-block">
         <div class="medical-coverage-title">
             NOMBRE DEL AGENTE DEL SEGURO DE SALUD
         </div>
@@ -389,7 +391,7 @@
             <div>RNOS</div>
         </div>
     </div>
-    <div>
+    <div class="atomic-block">
         <div class="medical-coverage">
             <label th:if="${medicalCoverage != null}" th:text="${medicalCoverage}"></label>
             <label th:unless="${medicalCoverage != null}">&nbsp;</label>
@@ -399,7 +401,7 @@
             <label th:unless="${rnos != null}">&nbsp;</label>
         </div>
     </div>
-    <div>
+    <div class="atomic-block">
         <div class="administrative-signature">
             <div class="border-bottom">Firma del Responsable Administrativo/Contable</div>
         </div>
