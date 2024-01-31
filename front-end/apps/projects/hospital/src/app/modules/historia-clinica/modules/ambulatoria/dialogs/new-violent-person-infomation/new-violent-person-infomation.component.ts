@@ -76,7 +76,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
 				address: this.form.value.address,
 				age: this.form.value.age,
 				municipality: {
-					id: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId.id : null,
+					id: this.form.value.addressDepartment ? this.form.value.addressDepartment.id : null,
 					provinceId: null,
 					description: null
 				},
@@ -95,7 +95,7 @@ export class NewViolentPersonInfomationComponent implements OnInit {
         	securityForceTypes: this.form.value.securityForceType,
       	},
       	violenceViolenceFrequency: this.form.value.violenceFrequency,
-      	descriptionMunicipality: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId.description : FormOption.WITHOUT_DATA,
+      	descriptionMunicipality: this.form.value.addressDepartment ? this.form.value.addressDepartment.description : FormOption.WITHOUT_DATA,
 		canBeDeleted: true
     }
   }
