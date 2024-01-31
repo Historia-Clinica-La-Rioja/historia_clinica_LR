@@ -10,7 +10,9 @@ import { SearchCriteria } from '@turnos/components/search-criteria/search-criter
 })
 export class RegulationSearchCriteriaComponent implements OnInit {
 
-	form: FormGroup<RegulationSearchCriteriaForm>;
+	form: FormGroup<RegulationSearchCriteriaForm> = new FormGroup<RegulationSearchCriteriaForm>({
+		criteria: new FormControl(RegulationSearchCriteria.CONSULTATION),
+	});
 	readonly searchCriteria = SearchCriteria;
 	@Input() label: string;
 	@Input() searchCriteryStyle?: string;
@@ -21,11 +23,6 @@ export class RegulationSearchCriteriaComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit() {
-
-		this.form = new FormGroup<RegulationSearchCriteriaForm>({
-			criteria: new FormControl(RegulationSearchCriteria.CONSULTATION),
-		});
-
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -35,6 +32,7 @@ export class RegulationSearchCriteriaComponent implements OnInit {
 
 			if (changes.disabled?.currentValue)
 				this.form.controls.criteria.disable();
+
 			else
 				this.form.controls.criteria.enable();
 		}

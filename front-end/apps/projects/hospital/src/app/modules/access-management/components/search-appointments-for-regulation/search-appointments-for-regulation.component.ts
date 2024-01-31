@@ -1,25 +1,26 @@
+import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject, of, map } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 import { Validators, AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { ProvinceDto, DepartmentDto, InstitutionBasicInfoDto, CareLineDto, ClinicalSpecialtyDto, DiaryAvailableAppointmentsDto, EAppointmentModality, AppFeature, SharedSnomedDto, SnomedDto } from '@api-rest/api-model';
+import { ProvinceDto, DepartmentDto, InstitutionBasicInfoDto, CareLineDto, ClinicalSpecialtyDto, DiaryAvailableAppointmentsDto, EAppointmentModality, AppFeature, SharedSnomedDto, SnomedDto, AddressDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { PracticesService } from '@api-rest/services/practices.service';
 import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
 import { DateFormat, datePlusDays } from '@core/utils/date.utils';
 import { DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
+import { listToTypeaheadOptions, objectToTypeaheadOption } from '@presentation/utils/typeahead.mapper.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
-import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
 import { format } from 'date-fns';
-import { BehaviorSubject, of } from 'rxjs';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs/internal/operators/map';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
+const ONE_ELEMENT = 1;
 
 @Component({
 	selector: 'app-search-appointments-for-regulation',
@@ -43,6 +44,12 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		province: false,
 		practice: false
 	}
+
+	externalInformation: SearchAppointmentInformation;
+	externalSpecialty: TypeaheadOption<ClinicalSpecialtyDto>;
+	initialProvinceTypeaheadOptionSelected: TypeaheadOption<ProvinceDto>;
+	initialDepartmentTypeaheadOptionSelected: TypeaheadOption<DepartmentDto>;
+	initialInstitutionTypeaheadOptionSelected: TypeaheadOption<InstitutionBasicInfoDto>;
 
 	careLineTypeaheadOptions$: Observable<TypeaheadOption<CareLineDto>[]>;
 	specialtyTypeaheadOptions: TypeaheadOption<ClinicalSpecialtyDto>[] = [];
@@ -77,6 +84,7 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		private diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly practicesService: PracticesService,
+		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled);
 	}
@@ -89,18 +97,22 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		this.careLineTypeaheadOptions$ = this.careLineService.getCareLines().pipe(map(careLines => listToTypeaheadOptions(careLines, 'description')));
 
 		this.provinceTypeaheadOptions$ = this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID).pipe(map(provinces => listToTypeaheadOptions(provinces, 'description')));
+
+		this.setReferenceInformation();
 	}
 
 	setCareLine(careLine: CareLineDto) {
 		this.resetResults();
 		this.searchForm.controls.careLine.setValue(careLine);
-		this.searchForm.controls.specialty.reset();
 		if (careLine) {
-			this.specialtyTypeaheadOptions = listToTypeaheadOptions(careLine.clinicalSpecialties, 'name');
+			if (!this.externalInformation){
+				this.searchForm.controls.specialty.reset();
+				this.specialtyTypeaheadOptions = listToTypeaheadOptions(careLine.clinicalSpecialties, 'name');
+			}
 			this.practicesService.getAll(careLine.id).subscribe(practices => this.practicesBehavior.next(practices));
 		}
 		else {
-			this.specialtyTypeaheadOptions = listToTypeaheadOptions(this.allSpecialties, 'name');
+			if (!this.externalInformation) this.specialtyTypeaheadOptions = listToTypeaheadOptions(this.allSpecialties, 'name');
 			this.practicesBehavior.next(this.allPractices);
 		}
 	}
@@ -109,6 +121,10 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		this.resetResults();
 		this.searchForm.controls.specialty.setValue(clinicalSpecialty);
 		this.showTypeaheadErrors.specialty = false;
+		if (this.externalInformation && !clinicalSpecialty) {
+			this.externalSpecialty = null;
+			this.specialtyTypeaheadOptions = listToTypeaheadOptions(this.externalInformation.formInformation.clinicalSpecialties, 'name');
+		}
 	}
 
 	setDepartment(department: DepartmentDto) {
@@ -120,11 +136,14 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		if (department)
 			this.institutionTypeaheadOptions$ = this.institutionService.findByDepartmentId(department.id).pipe(map(
 				institutions => listToTypeaheadOptions(institutions, 'name')));
+
+		else this.initialDepartmentTypeaheadOptionSelected = undefined;
 	}
 
 	setInstitution(institution: InstitutionBasicInfoDto) {
 		this.resetResults();
 		this.searchForm.controls.institution.setValue(institution);
+		if (!institution) this.initialInstitutionTypeaheadOptionSelected = undefined;
 	}
 
 	setProvince(province) {
@@ -137,6 +156,8 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		if (province)
 			this.departmentTypeaheadOptions$ = this.addressMasterDataService.getDepartmentsByProvince(province.id).pipe(map(
 				departments => listToTypeaheadOptions(departments, 'description')));
+
+		else this.initialProvinceTypeaheadOptionSelected = undefined;
 	}
 
 	updateEndDate(initialDate: any) {
@@ -219,6 +240,15 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 			value: null
 		}
 		this.resetForm();
+		this.resetExternalInfo();
+	}
+
+	resetExternalInfo(): void {
+		this.externalInformation = null;
+		this.externalSpecialty = null;
+		this.initialProvinceTypeaheadOptionSelected = null;
+		this.initialDepartmentTypeaheadOptionSelected = null;
+		this.initialInstitutionTypeaheadOptionSelected = null;
 	}
 
 	resetResults(): void {
@@ -243,6 +273,70 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 			this.resetResults();
 		}
 		this.showTypeaheadErrors.practice = false;
+	}
+
+	setReferenceInformation(): void {
+		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
+
+		if (!this.externalInformation) return;
+
+		const { formInformation } = this.externalInformation;
+		const { searchCriteria, careLine, clinicalSpecialties, practice } = formInformation;
+
+		this.setCriteria(searchCriteria);
+		this.setCareLine(careLine.value);
+		
+		if (clinicalSpecialties?.length) {
+			this.specialtyTypeaheadOptions = listToTypeaheadOptions(clinicalSpecialties, 'name');
+			this.externalSpecialty = this.specialtyTypeaheadOptions[0];
+			if (clinicalSpecialties.length > ONE_ELEMENT) {
+				this.externalInformation.disabledInput.specialty = false;
+			}
+		}
+		
+		if (practice) {
+			this.practicesBehavior.next([practice]);
+			this.setPractice(practice);
+		}
+
+		this.getProvinceDepartamentInstitutionReference();
+
+		this.searchAppointmentsInfoService.clearInfo();
+	}
+
+	getProvinceDepartamentInstitutionReference(): void {
+		this.institutionService.getInstitutionAddress(this.externalInformation.referenceCompleteData.institutionDestination.id).subscribe(
+			(institutionAddress: AddressDto) => {
+				
+				this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID).subscribe(
+					provinces => {
+
+						const foundState = provinces.find((province: ProvinceDto) => { return (province.id === institutionAddress.provinceId) });
+						this.initialProvinceTypeaheadOptionSelected = foundState ? objectToTypeaheadOption(foundState, 'description') : undefined;
+
+						if (institutionAddress.provinceId) {
+							this.addressMasterDataService.getDepartmentsByProvince(institutionAddress.provinceId).subscribe(
+								departaments => {
+									
+									const foundDepartament = departaments.find((departament: DepartmentDto) => { return (departament.id === institutionAddress.departmentId) });
+									this.initialDepartmentTypeaheadOptionSelected = objectToTypeaheadOption(foundDepartament, 'description');
+
+									this.institutionService.findByDepartmentId(foundDepartament.id).subscribe(
+										institutions => {
+
+											const foundInstitution = institutions.find((institution: InstitutionBasicInfoDto) => {
+												return (institution.id === this.externalInformation.referenceCompleteData.institutionDestination.id)
+											});
+											this.initialInstitutionTypeaheadOptionSelected = objectToTypeaheadOption(foundInstitution, 'name');
+										}
+									);
+								}
+							);
+						}
+					}
+				);
+			}
+		);
 	}
 
 	private setValidators() {
@@ -334,3 +428,4 @@ interface SearchAppointmentForRegulationForm {
 	startDate: FormControl<Date>,
 	endDate: FormControl<Date>,
 }
+
