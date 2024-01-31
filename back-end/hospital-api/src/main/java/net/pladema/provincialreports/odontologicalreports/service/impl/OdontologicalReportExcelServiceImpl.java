@@ -28,7 +28,6 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 	private ICellStyle titleStyle;
 	private ICellStyle fieldStyle;
 	private ICellStyle subTitleStyle;
-
 	private final InstitutionRepository institutionRepository;
 
     public OdontologicalReportExcelServiceImpl(InstitutionRepository institutionRepository) {
@@ -36,7 +35,7 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
     }
 
     @Override
-	public IWorkbook buildExcelOdontology(String title, String[] headers, List<OdontologyConsultationDetail> result, Integer institutionId) {
+	public IWorkbook buildExcelOdontology(String title, String[] headers, List<OdontologyConsultationDetail> result, String startDate, String endDate, Integer institutionId) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -45,7 +44,7 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 
 		ISheet sheet = wb.createSheet(title);
 
-		fillRow(sheet, getHeaderData(headers, title, institutionName));
+		fillRow(sheet, getHeaderData(headers, title, startDate, endDate, institutionName));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -175,7 +174,7 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		data.add(new CellContent(nRow, 23, 1, 1, "", basicStyle));
 
 		nRow++;
-		data.add(new CellContent(nRow, 0, 1, 2, "PERIODO:" + startDate + " hasta " + endDate, basicStyle));
+		data.add(new CellContent(nRow, 0, 1, 2, "PERIODO: " + startDate + " hasta " + endDate, basicStyle));
 		data.add(new CellContent(nRow, 19, 1, 5, "", basicStyle));
 
 		nRow++;
