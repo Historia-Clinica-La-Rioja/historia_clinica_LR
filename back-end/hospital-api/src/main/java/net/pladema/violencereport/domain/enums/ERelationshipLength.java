@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public enum ERelationshipLength {
 
-	UP_TO_SIX_MONTHS(1, "UP_TO_SIX_MONTHS"),
-	ONE_YEAR(2, "ONE_YEAR"),
-	MORE_THAN_ONE_YEAR(3, "MORE_THAN_ONE_YEAR");
+	UP_TO_SIX_MONTHS(1, "Hasta 6 meses"),
+	ONE_YEAR(2, "Hasta 1 año"),
+	MORE_THAN_ONE_YEAR(3, "Más de 1 año");
 
 	private Short id;
 

@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public enum EIntermentIndicationStatus {
 
-	YES(1, "YES"),
-	AS_PROTECTIVE_MEASURE(2, "AS_PROTECTIVE_MEASURE"),
-	NO(3, "NO");
+	YES(1, "Si"),
+	AS_PROTECTIVE_MEASURE(2, "Si, como medida de resguardo"),
+	NO(3, "No");
 
 	private Short id;
 

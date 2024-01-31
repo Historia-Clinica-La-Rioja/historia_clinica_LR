@@ -6,17 +6,17 @@ import lombok.Getter;
 @Getter
 public enum EHealthSystemOrganization {
 
-	PROVINCIAL_HOSPITAL(1, "PROVINCIAL_HOSPITAL"),
-	SANITARY_REGION(2, "SANITARY_REGION"),
+	PROVINCIAL_HOSPITAL(1, "Hospital provincial"),
+	SANITARY_REGION(2, "Sede región sanitaria"),
 	UPA(3, "UPA"),
 	CPA(4, "CPA"),
-	POSTAS(5, "POSTAS"),
+	POSTAS(5, "Postas"),
 	SIES(6, "SIES"),
-	VACCINATION_CENTER(7, "VACCINATION_CENTER"),
+	VACCINATION_CENTER(7, "Vacunatorio"),
 	CETEC(8, "CETEC"),
-	MINISTRY_CENTER(9, "MINISTRY_CENTER"),
+	MINISTRY_CENTER(9, "Sede central del ministerio"),
 	CAPS(10, "CAPS"),
-	OTHERS(11, "OTHERS");
+	OTHERS(11, "Otros");
 
 	private Short id;
 

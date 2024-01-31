@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public enum EInstitutionReportReason {
 
-	SERIOUS_EXTREMELY_INJURIES(1, "SERIOUS_EXTREMELY_INJURIES"),
-	AGAINST_CHILDHOOD_ADOLESCENCE(2, "AGAINST_CHILDHOOD_ADOLESCENCE"),
-	OTHER(3, "OTHER");
+	SERIOUS_EXTREMELY_INJURIES(1, "Lesiones graves o gravísimas a personas adultas"),
+	AGAINST_CHILDHOOD_ADOLESCENCE(2, "Violencias contra niñeces y adolescencias"),
+	OTHER(3, "Otro");
 
 	private Short id;
 

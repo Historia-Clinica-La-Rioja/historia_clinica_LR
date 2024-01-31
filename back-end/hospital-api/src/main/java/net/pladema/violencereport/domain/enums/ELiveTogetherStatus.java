@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public enum ELiveTogetherStatus {
 
-	YES(1, "YES"),
-	SAME_SPACE(2, "SAME_SPACE"),
-	NO(3, "NO"),
-	NOT_NOW(4, "NOT_NOW"),
-	NO_INFORMATION(5, "NO_INFORMATION");
+	YES(1, "Si"),
+	SAME_SPACE(2, "Si, otra casa en el mismo terreno"),
+	NO(3, "No"),
+	NOT_NOW(4, "No convive, pero convivió"),
+	NO_INFORMATION(5, "Sin información");
 
 	private Short id;
 

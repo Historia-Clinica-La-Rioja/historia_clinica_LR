@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public enum ECriminalRecordStatus {
 
-	YES(1, "YES"),
-	WITH_OTHER_PEOPLE(2, "WITH_OTHER_PEOPLE"),
-	NO(3, "NO"),
-	NO_INFORMATION(4, "NO_INFORMATION");
+	YES(1, "Si"),
+	WITH_OTHER_PEOPLE(2, "Si, con otras personas"),
+	NO(3, "No"),
+	NO_INFORMATION(4, "Sin información");
 
 	private Short id;
 

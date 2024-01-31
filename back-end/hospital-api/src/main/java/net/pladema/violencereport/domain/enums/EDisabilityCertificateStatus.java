@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public enum EDisabilityCertificateStatus {
 
-	HAS_CERTIFICATE(1, "HAS_CERTIFICATE"),
-	HAS_NOT_CERTIFICATE(2, "HAS_NOT_CERTIFICATE"),
-	PENDING(3, "PENDING"),
-	NO_INFORMATION(4, "NO_INFORMATION");
+	HAS_CERTIFICATE(1, "Si"),
+	HAS_NOT_CERTIFICATE(2, "No"),
+	PENDING(3, "En trámite"),
+	NO_INFORMATION(4, "Sin información");
 
 	private Short id;
 
