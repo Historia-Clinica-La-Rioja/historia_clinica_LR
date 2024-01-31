@@ -448,6 +448,16 @@
 				"OBSERVATIONS": "Observaciones: ",
 				"ADD_OBSERVATIONS": "Agregar observaciones",
 				"ASA": "ASA"
+			},
+			"intrasurgical-anesthetic-procedures": {
+				"TITLE": "Procedimientos anestésicos intraquirúrgicos",
+				"options": {
+					"YES": "Si",
+					"NO": "No"
+				},
+				"VENOUS_ACCESS": "Acceso venoso",
+				"NASOGASTRIC_TUBE": "Sonda nasogastrica",
+				"URINARY_CATHETER": "Sonda vesical"
 			}
 		},
 		"clinical-assessment-diagnosis": {

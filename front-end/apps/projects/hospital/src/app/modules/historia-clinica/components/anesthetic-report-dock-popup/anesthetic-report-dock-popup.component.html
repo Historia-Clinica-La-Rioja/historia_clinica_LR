@@ -120,6 +120,11 @@
             [title]="'internaciones.anesthesic-report.fluid-administration.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="!(fluidAdministrationList$ | async ).length" [hideBorder]="false">
             <app-fluid-administration [service]="fluidAdministrationService"></app-fluid-administration>
+
+        <app-new-consultation-expansion-section id="intrasurgical-anesthetic-procedures-expansion-section"
+            [title]="'internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anestheticReportIntrasurgicalAnestheticProceduresService.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-report-intrasurgical-anesthetic-procedures [service]="anestheticReportIntrasurgicalAnestheticProceduresService"></app-anesthetic-report-intrasurgical-anesthetic-procedures>
         </app-new-consultation-expansion-section>
     </div>
 
