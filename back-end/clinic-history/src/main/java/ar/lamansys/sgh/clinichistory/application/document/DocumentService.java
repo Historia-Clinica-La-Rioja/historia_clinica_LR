@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
@@ -21,6 +22,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAnestheticTechnique;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthCondition;
@@ -152,5 +154,9 @@ public interface DocumentService {
     ProcedureDescriptionBo getProcedureDescriptionStateFromDocument(Long documentId);
 
     List<AnalgesicTechniqueBo> getAnalgesicTechniquesStateFromDocument(Long documentId);
+
+    DocumentAnestheticTechnique createDocumentAnestheticTechnique(Long documentId, Integer anestheticTechniqueId);
+
+    List<AnestheticTechniqueBo> getAnestheticTechniquesStateFromDocument(Long documentId);
 }
 

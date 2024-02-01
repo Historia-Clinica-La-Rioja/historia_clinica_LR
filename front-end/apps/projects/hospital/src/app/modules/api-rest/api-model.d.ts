@@ -173,6 +173,7 @@ export interface AnestheticReportDto {
     analgesicTechniques?: AnalgesicTechniqueDto[];
     anestheticHistory?: AnestheticHistoryDto;
     anestheticPlans?: AnestheticSubstanceDto[];
+    anestheticTechniques?: AnestheticTechniqueDto[];
     anthropometricData?: AnthropometricDataDto;
     diagnosis?: DiagnosisDto[];
     foodIntake?: FoodIntakeDto;
@@ -189,6 +190,14 @@ export interface AnestheticSubstanceDto extends ClinicalTermDto {
     dosage: NewDosageDto;
     viaId: number;
     viaNote?: string;
+}
+
+export interface AnestheticTechniqueDto extends ClinicalTermDto {
+    breathingId?: number;
+    circuitId?: number;
+    techniqueId?: number;
+    trachealIntubation?: boolean;
+    trachealIntubationMethodIds?: number[];
 }
 
 export interface AnnexIIDto {

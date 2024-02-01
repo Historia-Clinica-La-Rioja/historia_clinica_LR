@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.createDocument;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnalgesicTechniques;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticHistory;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticTechniques;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadFoodInTake;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticSubstances;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedureDescription;
@@ -91,6 +92,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private final LoadAnalgesicTechniques loadAnalgesicTechniques;
 
+    private final LoadAnestheticTechniques loadAnestheticTechniques;
+
     @Override
 	@Transactional
     public Long run(IDocumentBo documentBo, boolean createFile) {
@@ -150,6 +153,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadFoodIntake.run(doc.getId(), Optional.ofNullable(documentBo.getFoodIntake()));
         loadProcedureDescription.run(doc.getId(), Optional.ofNullable(documentBo.getProcedureDescription()));
         loadAnalgesicTechniques.run(doc.getId(), documentBo.getAnalgesicTechniques());
+        loadAnestheticTechniques.run(doc.getId(), documentBo.getAnestheticTechniques());
 
         if (createFile)
             generateDocument(documentBo);

@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapp
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnalgesicTechniqueMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnestheticHistoryMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnestheticTechniqueMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.FoodIntakeMapper;
@@ -19,7 +20,8 @@ import org.mapstruct.Named;
 
 @Mapper(uses = {LocalDateMapper.class, SnomedMapper.class, HealthConditionMapper.class, AnthropometricDataMapper.class,
         MedicationMapper.class, AnestheticSubstanceMapper.class, FoodIntakeMapper.class, RiskFactorMapper.class,
-        AnestheticHistoryMapper.class, ProcedureDescriptionMapper.class, AnalgesicTechniqueMapper.class})
+        AnestheticHistoryMapper.class, ProcedureDescriptionMapper.class, AnalgesicTechniqueMapper.class,
+        AnestheticTechniqueMapper.class})
 public interface AnestheticReportMapper {
 
     @Named("fromAnestheticReportDto")
@@ -35,6 +37,7 @@ public interface AnestheticReportMapper {
     @Mapping(target = "procedureDescription", source = "procedureDescription", qualifiedByName = "toProcedureDescriptionBo")
     @Mapping(target = "anestheticPlans", source = "anestheticPlans", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "analgesicTechniques", source = "analgesicTechniques", qualifiedByName = "toListAnalgesicTechniqueBo")
+    @Mapping(target = "anestheticTechniques", source = "anestheticTechniques", qualifiedByName = "toListAnestheticTechniqueBo")
     AnestheticReportBo fromAnestheticReportDto(AnestheticReportDto anestheticReport);
 
     @Named("fromAnestheticReportBo")
@@ -50,5 +53,6 @@ public interface AnestheticReportMapper {
     @Mapping(target = "procedureDescription", source = "procedureDescription", qualifiedByName = "toProcedureDescriptionDto")
     @Mapping(target = "anestheticPlans", source = "anestheticPlans", qualifiedByName = "toListAnestheticSubstanceDto")
     @Mapping(target = "analgesicTechniques", source = "analgesicTechniques", qualifiedByName = "toListAnalgesicTechniqueDto")
+    @Mapping(target = "anestheticTechniques", source = "anestheticTechniques", qualifiedByName = "toListAnestheticTechniqueDto")
     AnestheticReportDto fromAnestheticReportBo(AnestheticReportBo anestheticReport);
 }

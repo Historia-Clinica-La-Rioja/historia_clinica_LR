@@ -1,5 +1,9 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnestheticTechnique;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EBreathing;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ECircuit;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ETrachealIntubation;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnit;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EVia;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -208,6 +212,30 @@ public class InternmentMasterdataController {
 		log.debug("{}", "All units types");
 		return ResponseEntity.ok().body(EnumWriter.writeList(EUnit.getAll()));
 	}
+
+    @GetMapping(value = "/anesthetic-technique")
+    public ResponseEntity<Collection<MasterDataDto>> getAnestheticTechniqueTypes() {
+        log.debug("{}", "All anesthetic techniques types");
+        return ResponseEntity.ok().body(EnumWriter.writeList(EAnestheticTechnique.getAll()));
+    }
+
+    @GetMapping(value = "/tracheal-intubation")
+    public ResponseEntity<Collection<MasterDataDto>> getTrachealIntubationTypes() {
+        log.debug("{}", "All tracheal intubation types");
+        return ResponseEntity.ok().body(EnumWriter.writeList(ETrachealIntubation.getAll()));
+    }
+
+    @GetMapping(value = "/breathing")
+    public ResponseEntity<Collection<MasterDataDto>> getBreathingTypes() {
+        log.debug("{}", "All breathing types");
+        return ResponseEntity.ok().body(EnumWriter.writeList(EBreathing.getAll()));
+    }
+
+    @GetMapping(value = "/circuit")
+    public ResponseEntity<Collection<MasterDataDto>> getCircuitTypes() {
+        log.debug("{}", "All circuit types");
+        return ResponseEntity.ok().body(EnumWriter.writeList(ECircuit.getAll()));
+    }
 
 	private String getDocumentTypeDescription(String despcription) {
 		String result = null;

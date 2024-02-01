@@ -58,6 +58,8 @@ public class GetAnestheticReport {
 
         result.setAnalgesicTechniques(documentService.getAnalgesicTechniquesStateFromDocument(documentId));
 
+        result.setAnestheticTechniques(documentService.getAnestheticTechniquesStateFromDocument(documentId));
+
         log.debug("Output -> anestheticReport {}", result);
         return result;
     }

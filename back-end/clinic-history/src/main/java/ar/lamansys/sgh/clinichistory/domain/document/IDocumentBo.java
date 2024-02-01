@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.domain.document;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
@@ -199,4 +200,6 @@ public interface IDocumentBo {
     default List<AnestheticSubstanceBo> getAnestheticPlans() { return Collections.emptyList(); }
 
     default List<AnalgesicTechniqueBo> getAnalgesicTechniques() { return Collections.emptyList(); }
+
+    default List<AnestheticTechniqueBo> getAnestheticTechniques() { return Collections.emptyList(); }
 }

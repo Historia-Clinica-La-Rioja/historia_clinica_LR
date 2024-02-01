@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
@@ -74,6 +75,8 @@ public class AnestheticReportBo implements IDocumentBo {
     private List<AnestheticSubstanceBo> anestheticPlans;
 
     private List<AnalgesicTechniqueBo> analgesicTechniques;
+
+    private List<AnestheticTechniqueBo> anestheticTechniques;
 
     @Override
     public Integer getPatientId() {

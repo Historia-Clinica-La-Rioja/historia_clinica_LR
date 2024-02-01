@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
@@ -25,6 +26,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAllergyIntoleranceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAnestheticHistoryRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAnestheticTechniqueRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFoodInTakeRepository;
@@ -46,6 +48,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAnestheticTechnique;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDownloadDataVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
@@ -137,6 +140,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentFoodInTakeRepository documentFoodIntakeRepository;
 
     private final DocumentProcedureDescriptionRepository documentProcedureDescriptionRepository;
+
+    private final DocumentAnestheticTechniqueRepository documentAnestheticTechniqueRepository;
 
     @Override
     public Optional<Document> findById(Long documentId) {
@@ -613,6 +618,25 @@ public class DocumentServiceImpl implements DocumentService {
     public List<AnalgesicTechniqueBo> getAnalgesicTechniquesStateFromDocument(Long documentId) {
         log.debug("Input parameters -> documentId {}", documentId);
         List<AnalgesicTechniqueBo> result = documentAnestheticSubstanceRepository.getAnalgesicTechniquesStateFromDocument(documentId);
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public DocumentAnestheticTechnique createDocumentAnestheticTechnique(Long documentId, Integer anestheticTechniqueId) {
+        log.debug("Input parameters -> documentId {}, preMedicationId {}", documentId, anestheticTechniqueId);
+        DocumentAnestheticTechnique result = new DocumentAnestheticTechnique(documentId, anestheticTechniqueId);
+        result = documentAnestheticTechniqueRepository.save(result);
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<AnestheticTechniqueBo> getAnestheticTechniquesStateFromDocument(Long documentId) {
+        log.debug("Input parameters -> documentId {}", documentId);
+        List<AnestheticTechniqueBo> result = documentAnestheticTechniqueRepository.getAnestheticTechniquesStateFromDocument(documentId);
+        result.forEach(anestheticTechniqueBo -> anestheticTechniqueBo.setTrachealIntubationMethodIds(
+                documentAnestheticTechniqueRepository.getTrachealIntubationState(anestheticTechniqueBo.getId())));
         log.debug(OUTPUT, result);
         return result;
     }

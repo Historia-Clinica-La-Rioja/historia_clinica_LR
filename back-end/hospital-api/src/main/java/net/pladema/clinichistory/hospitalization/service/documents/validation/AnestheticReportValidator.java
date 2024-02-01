@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AnestheticReportValidator extends InternmentDocumentValidator {
 
-    private final AnestheticSubstanceValidator anestheticSubstanceValidator;
     private final BloodRiskFactorsValidator bloodRiskFactorsValidator;
+    private final AnestheticSubstanceValidator anestheticSubstanceValidator;
+    private final AnestheticTechniqueValidator anestheticTechniqueValidator;
 
     public void assertContextValid(AnestheticReportBo anestheticReport) {
 
@@ -20,11 +21,12 @@ public class AnestheticReportValidator extends InternmentDocumentValidator {
         this.assertMainDiagnosis(anestheticReport);
         super.assertProceduresValid(anestheticReport);
         super.assertAnthropometricData(anestheticReport);
+        bloodRiskFactorsValidator.assertContextValid(anestheticReport.getRiskFactors());
         super.assertMedicationsValid(anestheticReport);
         anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getPreMedications());
         anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getAnestheticPlans());
         anestheticSubstanceValidator.assertSnomedAndDosageFields(anestheticReport.getAnalgesicTechniques());
-        bloodRiskFactorsValidator.assertContextValid(anestheticReport.getRiskFactors());
+        anestheticTechniqueValidator.assertContextValid(anestheticReport.getAnestheticTechniques());
 
         log.trace("Output -> isValid anestheticReport {}", anestheticReport);
     }
