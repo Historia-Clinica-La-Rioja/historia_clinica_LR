@@ -1,5 +1,6 @@
 package net.pladema.violencereport.application;
 
+import io.jsonwebtoken.lang.Assert;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,9 +22,14 @@ public class GetLastSituationEvolutionReport {
 	public ViolenceReportBo run(Integer patientId, Integer situationId) {
 		log.debug("Input parameters -> patientId {}, situationId {}", patientId, situationId);
 		Integer reportId = violenceReportRepository.getLastSituationEvolutionReportId(patientId, situationId);
+		assertNonNullReportId(reportId);
 		ViolenceReportBo result = getEditViolenceReportById.run(reportId);
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private void assertNonNullReportId(Integer reportId) {
+		Assert.notNull(reportId, "No se puede evolucionar un episodio inexistente");
 	}
 
 }
