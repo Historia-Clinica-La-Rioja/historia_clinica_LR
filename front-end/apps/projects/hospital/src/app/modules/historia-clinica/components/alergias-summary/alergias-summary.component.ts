@@ -27,6 +27,8 @@ export class AlergiasSummaryComponent {
 	set allergiesDto(allergiesDto: HCEAllergyDto[] | AllergyConditionDto[]) {
 		if (allergiesDto?.length) {
 			this.setCategoryAndCriticallyAndAllergies(allergiesDto);
+		}else{
+			this.allergies = [];
 		}
 	}
 

@@ -122,6 +122,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 			);
 
 			this.details = details;
+		}else{
+			this.details = [];
 		}
 	}
 
