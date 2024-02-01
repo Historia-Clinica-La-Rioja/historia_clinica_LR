@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import ar.lamansys.sgh.publicapi.domain.PersonInfoExtendedBo;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +65,8 @@ public class FetchActivityByIdTest {
 						new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 						new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"),
 						new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
-						new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
+						new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45)),
+						new PersonInfoExtendedBo("Pedro", "Perez", "jp@gmail.com", "Juan", (short)1)
 				)));
 
 		setUserCanAccess(refsetCode, 10);

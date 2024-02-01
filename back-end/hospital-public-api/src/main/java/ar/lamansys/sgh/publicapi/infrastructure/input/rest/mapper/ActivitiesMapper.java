@@ -7,12 +7,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
+import ar.lamansys.sgh.publicapi.domain.PersonInfoExtendedBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DiagnosesDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DocumentInfoDto;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.PersonExtendedInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleAttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleDiagnosticDto;
 
@@ -73,6 +75,7 @@ public class ActivitiesMapper {
 				.responsibleDoctor(mapToProfessional(attentionInfoBo.getResponsibleDoctor()))
 				.singleDiagnosticDto(mapToSingleDiagnosticBo(attentionInfoBo.getSingleDiagnosticBo()))
 				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
+				.personExtendedInfo(mapToPersonExtendedInfoDto(attentionInfoBo.getPersonInfoExtended()))
 				.build();
 	}
 
@@ -88,6 +91,17 @@ public class ActivitiesMapper {
 				.internmentInfo(mapToInternment(attentionInfoBo.getInternmentInfo()))
 				.responsibleDoctor(mapToProfessional(attentionInfoBo.getResponsibleDoctor()))
 				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
+				.personExtendedInfo(mapToPersonExtendedInfoDto(attentionInfoBo.getPersonInfoExtended()))
+				.build();
+	}
+
+	private PersonExtendedInfoDto mapToPersonExtendedInfoDto(PersonInfoExtendedBo personInfoExtended) {
+		return PersonExtendedInfoDto.builder()
+				.email(personInfoExtended.getEmail())
+				.middleNames(personInfoExtended.getMiddleNames())
+				.nameSelfDetermination(personInfoExtended.getNameSelfDetermination())
+				.otherLastNames(personInfoExtended.getOtherLastNames())
+				.genderSelfDeterminationId(personInfoExtended.getGenderSelfDeterminationId())
 				.build();
 	}
 
@@ -245,6 +259,7 @@ public class ActivitiesMapper {
 						.diagnoses(diagnosis)
 						.id(lastMainDiagnosis.getId())
 						.attentionDateWithTime(lastMainDiagnosis.getAttentionDateWithTime())
+						.personExtendedInfo(lastMainDiagnosis.getPersonExtendedInfo())
 						.build();
 
 				result.add(attention);

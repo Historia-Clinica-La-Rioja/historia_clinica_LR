@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ar.lamansys.sgh.publicapi.domain.PersonInfoExtendedBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 
@@ -87,13 +88,20 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.updated_on, " +
 					"mcp.plan, " +
 					"hc.cie10_codes, " +
-					"va.created_on " +
+					"va.created_on, " +
+					"p.middle_names, " +
+					"p.other_last_names, " +
+					"p.email, " +
+					"p.name_self_determination, " +
+					"p.gender_self_determination " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
+					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number, pp.gender_id, pp.birth_date, " +
+					"pp.middle_names, pp.other_last_names, pe.email, pe.name_self_determination, pe.gender_self_determination " +
 					"FROM {h-schema}patient pat " +
-					"JOIN {h-schema}person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
+					"JOIN {h-schema}person pp on pp.id = pat.person_id " +
+					"LEFT JOIN {h-schema}person_extended pe on pe.person_id = pp.id) AS p ON (p.patient_id = va.patient_id) " +
 					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
 					"FROM {h-schema}healthcare_professional hp " +
 					"JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
@@ -127,16 +135,23 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.updated_on, " +
 					"mcp.plan, " +
 					"hc.cie10_codes, " +
-					"va.created_on " +
-					"FROM {h-schema} v_attention va " +
-					"LEFT JOIN {h-schema} attention_reads ar ON (ar.attention_id = va.id) " +
-					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
+					"va.created_on, " +
+					"p.middle_names, " +
+					"p.other_last_names, " +
+					"p.email, " +
+					"p.name_self_determination, " +
+					"p.gender_self_determination " +
+					"FROM {h-schema}v_attention va " +
+					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
+					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
+					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number, pp.gender_id, pp.birth_date, " +
+					"pp.middle_names, pp.other_last_names, pe.email, pe.name_self_determination, pe.gender_self_determination " +
 					"FROM {h-schema} patient pat " +
-					"JOIN {h-schema} person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
+					"JOIN {h-schema}person pp on pp.id = pat.person_id " +
+					"LEFT JOIN {h-schema}person_extended pe on pe.person_id = pp.id) AS p ON (p.patient_id = va.patient_id) " +
 					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
-					"FROM {h-schema} healthcare_professional hp " +
-					"JOIN {h-schema} person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
+					"FROM {h-schema}healthcare_professional hp " +
+					"JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
 					"LEFT JOIN (SELECT cs.id, cs.name, cs.sctid_code " +
 					"FROM {h-schema} clinical_specialty cs) snm ON (va.clinical_speciality_id = snm.id) " +
 					"LEFT JOIN {h-schema} patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
@@ -286,7 +301,18 @@ public class ActivityStorageImpl implements ActivityStorage {
 				buildInternmentBo(rawAttention),
 				buildProfessionalBo(rawAttention),
 				buildDiagnoses(rawAttention),
-				buildDateTimeBo(rawAttention)
+				buildDateTimeBo(rawAttention),
+				buildPersonExtendedInfoBo(rawAttention)
+		);
+	}
+
+	private PersonInfoExtendedBo buildPersonExtendedInfoBo(Object[] rawAttention) {
+		return new PersonInfoExtendedBo(
+				(String)rawAttention[28],
+				(String)rawAttention[29],
+				(String)rawAttention[30],
+				(String)rawAttention[31],
+				(Short)rawAttention[32]
 		);
 	}
 
