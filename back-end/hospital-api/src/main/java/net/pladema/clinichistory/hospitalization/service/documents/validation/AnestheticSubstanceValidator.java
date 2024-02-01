@@ -24,6 +24,13 @@ public class AnestheticSubstanceValidator {
                 .forEach(this::assertViaValid);
     }
 
+    public void assertSnomedAndDosageFields(List<? extends AnestheticSubstanceBo> substances) {
+
+        this.assertNotDuplicated(substances);
+
+        substances.forEach(this::assertDosageField);
+    }
+
     private void assertDosageField(AnestheticSubstanceBo substance) {
         if (substance.getDosage() == null
                 || substance.getDosage().getQuantity() == null
@@ -47,7 +54,7 @@ public class AnestheticSubstanceValidator {
             this.assertOtherViaValid(substance);
     }
 
-    private void assertNotDuplicated(List<AnestheticSubstanceBo> substances) {
+    private void assertNotDuplicated(List<? extends AnestheticSubstanceBo> substances) {
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(substances))
             throw new ConstraintViolationException(String.format("Sustancias de '%s' repetidas", substances.get(0).getDescriptionType()), Collections.emptySet());
     }

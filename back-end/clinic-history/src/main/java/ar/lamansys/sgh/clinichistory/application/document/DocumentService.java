@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.document;
 
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
@@ -149,5 +150,7 @@ public interface DocumentService {
     List<AnestheticSubstanceBo> getAnestheticSubstancesStateFromDocument(Long documentId);
 
     ProcedureDescriptionBo getProcedureDescriptionStateFromDocument(Long documentId);
+
+    List<AnalgesicTechniqueBo> getAnalgesicTechniquesStateFromDocument(Long documentId);
 }
 

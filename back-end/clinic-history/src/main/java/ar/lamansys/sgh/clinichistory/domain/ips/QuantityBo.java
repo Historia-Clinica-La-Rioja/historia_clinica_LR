@@ -19,5 +19,4 @@ public class QuantityBo {
 		return value == null || unit == null;
 	}
 
-
 }

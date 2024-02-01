@@ -119,3 +119,53 @@ databaseChangeLog:
               constraintName: PK_unsatisfied_appointment_demand_day
               tableName: unsatisfied_appointment_demand_day
               validate: true
+
+    - changeSet:
+        id: createTable-analgesic_technique
+        author: mromero
+        changes:
+          - createTable:
+              tableName: analgesic_technique
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_analgesic_technique
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: anesthetic_substance(id)
+                      foreignKeyName: FK_anesthetic_substance_id_analgesic_technique
+                    name: anesthetic_substance_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_injection_note_id_analgesic_technique
+                    name: injection_note_id
+                    type: bigint
+                - column:
+                    name: catheter
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_catheter_note_id_analgesic_technique
+                    name: catheter_note_id
+                    type: bigint
+
+    - changeSet:
+        id: dropNotNullConstraints-via_id-dosage_id-anesthetic_substance
+        author: mromero
+        changes:
+          - dropNotNullConstraint:
+              tableName: anesthetic_substance
+              columnName: via_id
+          - dropNotNullConstraint:
+              tableName: anesthetic_substance
+              columnName: dosage_id

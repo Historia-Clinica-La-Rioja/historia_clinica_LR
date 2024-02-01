@@ -139,6 +139,12 @@ export interface AllergyIntoleranceDto {
     verificationStatus: FhirCodeDto;
 }
 
+export interface AnalgesicTechniqueDto extends AnestheticSubstanceDto {
+    catheter?: boolean;
+    catheterNote?: string;
+    injectionNote?: string;
+}
+
 export interface AnamnesisDto extends Serializable {
     allergies: AllergyConditionDto[];
     anthropometricData?: AnthropometricDataDto;
@@ -164,6 +170,7 @@ export interface AnestheticHistoryDto {
 }
 
 export interface AnestheticReportDto {
+    analgesicTechniques?: AnalgesicTechniqueDto[];
     anestheticHistory?: AnestheticHistoryDto;
     anestheticPlans?: AnestheticSubstanceDto[];
     anthropometricData?: AnthropometricDataDto;

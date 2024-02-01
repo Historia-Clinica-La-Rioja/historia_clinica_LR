@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.document;
 
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
@@ -604,6 +605,14 @@ public class DocumentServiceImpl implements DocumentService {
     public ProcedureDescriptionBo getProcedureDescriptionStateFromDocument(Long documentId) {
         log.debug("Input parameters -> documentId {}", documentId);
         ProcedureDescriptionBo result = documentProcedureDescriptionRepository.getDocumentProcedureDescription(documentId);
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<AnalgesicTechniqueBo> getAnalgesicTechniquesStateFromDocument(Long documentId) {
+        log.debug("Input parameters -> documentId {}", documentId);
+        List<AnalgesicTechniqueBo> result = documentAnestheticSubstanceRepository.getAnalgesicTechniquesStateFromDocument(documentId);
         log.debug(OUTPUT, result);
         return result;
     }

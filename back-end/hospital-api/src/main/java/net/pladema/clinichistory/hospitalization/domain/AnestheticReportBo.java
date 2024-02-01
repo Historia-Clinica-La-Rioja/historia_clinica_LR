@@ -2,6 +2,7 @@ package net.pladema.clinichistory.hospitalization.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
@@ -71,6 +72,8 @@ public class AnestheticReportBo implements IDocumentBo {
     private ProcedureDescriptionBo procedureDescription;
 
     private List<AnestheticSubstanceBo> anestheticPlans;
+
+    private List<AnalgesicTechniqueBo> analgesicTechniques;
 
     @Override
     public Integer getPatientId() {

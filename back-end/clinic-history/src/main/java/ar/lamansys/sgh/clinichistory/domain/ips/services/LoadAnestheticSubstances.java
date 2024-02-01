@@ -12,10 +12,13 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Quanti
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.AnestheticSubstance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Quantity;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import static java.util.Objects.nonNull;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +32,7 @@ public class LoadAnestheticSubstances {
     private final NoteService noteService;
     private final DocumentService documentService;
 
-    public List<AnestheticSubstanceBo> run(Long documentId, List<AnestheticSubstanceBo> substances) {
+    public List<? extends AnestheticSubstanceBo> run(Long documentId, List<? extends AnestheticSubstanceBo> substances) {
         log.debug("Input parameters -> documentId {} substances {}", documentId, substances);
 
         substances.forEach((anestheticSubstanceBo) -> {
@@ -78,7 +81,7 @@ public class LoadAnestheticSubstances {
             return null;
         Dosage newDosage = new Dosage();
         newDosage.setChronic(dosage.isChronic());
-        newDosage.setStartDate(dosage.getStartDate());
+        newDosage.setStartDate(nonNull(dosage.getStartDate()) ? dosage.getStartDate() : LocalDateTime.now());
         newDosage.setEndDate(dosage.getEndDate());
         newDosage.setSuspendedStartDate(dosage.getSuspendedStartDate());
         newDosage.setSuspendedEndDate(dosage.getSuspendedEndDate());

@@ -56,6 +56,8 @@ public class GetAnestheticReport {
 
         result.setAnestheticPlans(this.filterSubstanceBy(substances, EAnestheticSubstanceType.ANESTHETIC_PLAN));
 
+        result.setAnalgesicTechniques(documentService.getAnalgesicTechniquesStateFromDocument(documentId));
+
         log.debug("Output -> anestheticReport {}", result);
         return result;
     }

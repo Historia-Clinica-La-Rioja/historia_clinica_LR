@@ -59,6 +59,8 @@ public class CreateAnestheticReport {
 
         this.setAnestheticSubstanceValues(anestheticReport.getAnestheticPlans(), EAnestheticSubstanceType.ANESTHETIC_PLAN.getId());
 
+        this.setAnestheticSubstanceValues(anestheticReport.getAnalgesicTechniques(), EAnestheticSubstanceType.ANALGESIC_TECHNIQUE.getId());
+
         anestheticReportValidator.assertContextValid(anestheticReport);
 
         documentFactory.run(anestheticReport, false);
@@ -76,7 +78,7 @@ public class CreateAnestheticReport {
                 .forEach(surgicalProcedure -> surgicalProcedure.setType(ProcedureTypeEnum.SURGICAL_PROCEDURE));
     }
 
-    public void setAnestheticSubstanceValues(List<AnestheticSubstanceBo> substances, Short typeId) {
+    public void setAnestheticSubstanceValues(List<? extends AnestheticSubstanceBo> substances, Short typeId) {
         substances.stream()
                 .peek(substance -> substance.setTypeId(typeId))
                 .map(AnestheticSubstanceBo::getDosage)
