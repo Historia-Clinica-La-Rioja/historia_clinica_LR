@@ -121,6 +121,12 @@
             [collapsed]="true" [isEmpty]="!(fluidAdministrationList$ | async ).length" [hideBorder]="false">
             <app-fluid-administration [service]="fluidAdministrationService"></app-fluid-administration>
 
+        <app-new-consultation-expansion-section id="anesthetic-agents-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-agents.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anestheticReportAnestheticAgent.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-report-anesthetic-agents [service]="anestheticReportAnestheticAgent"></app-anesthetic-report-anesthetic-agents>
+        </app-new-consultation-expansion-section>
+
         <app-new-consultation-expansion-section id="intrasurgical-anesthetic-procedures-expansion-section"
             [title]="'internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="anestheticReportIntrasurgicalAnestheticProceduresService.isEmpty()" [hideBorder]="false">

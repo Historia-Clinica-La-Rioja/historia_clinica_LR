@@ -98,6 +98,7 @@ import { FluidAdministrationComponent } from './modules/ambulatoria/modules/inte
 import { FluidAdministrationPopupComponent } from './modules/ambulatoria/modules/internacion/fluid-administration-popup/fluid-administration-popup.component';
 import { FluidAdministrationListComponent } from './modules/ambulatoria/modules/internacion/fluid-administration-list/fluid-administration-list.component';
 import { AnestheticReportIntrasurgicalAnestheticProceduresComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-intrasurgical-anesthetic-procedures/anesthetic-report-intrasurgical-anesthetic-procedures.component';
+import { AnestheticReportAnestheticAgentsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-agents/anesthetic-report-anesthetic-agents.component';
 
 @NgModule({
 	declarations: [
@@ -143,6 +144,7 @@ import { AnestheticReportIntrasurgicalAnestheticProceduresComponent } from './mo
 		FluidAdministrationListComponent,
 		FluidAdministrationComponent,
 		AnestheticReportIntrasurgicalAnestheticProceduresComponent,
+		AnestheticReportAnestheticAgentsComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

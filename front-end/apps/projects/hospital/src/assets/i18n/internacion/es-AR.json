@@ -449,6 +449,11 @@
 				"ADD_OBSERVATIONS": "Agregar observaciones",
 				"ASA": "ASA"
 			},
+			"anesthetic-agents":{
+				"TITLE": "Agentes anestésicos",
+				"REGISTERED_ANESTHETIC_AGENTS": "Agenes anestésicos registrados",
+				"ADD_ANESTHETIC_AGENT": "+ Agregar agente anestésico"
+			},
 			"intrasurgical-anesthetic-procedures": {
 				"TITLE": "Procedimientos anestésicos intraquirúrgicos",
 				"options": {
