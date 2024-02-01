@@ -2,9 +2,13 @@ package net.pladema.violencereport.infrastructure.input.rest;
 
 import javax.validation.Valid;
 
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.pladema.violencereport.application.GeneratePDFDocument;
 import net.pladema.violencereport.application.GetFilters;
 import net.pladema.violencereport.application.GetHistoricList;
 import net.pladema.violencereport.application.GetSituationEvolution;
@@ -16,9 +20,11 @@ import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportFilterOptionDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationEvolutionDto;
 
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,6 +76,8 @@ public class ViolenceReportController {
 	private GetFilters getFilters;
 
 	private ObjectMapper objectMapper;
+
+	private GeneratePDFDocument generatePDFDocument;
 
 	@PostMapping(value = "/patient/{patientId}")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
@@ -173,6 +181,18 @@ public class ViolenceReportController {
 		violenceReportBo.setPatientId(patientId);
 		violenceReportBo.setInstitutionId(institutionId);
 		return violenceReportBo;
+	}
+
+	@GetMapping(value = "/patient/{patientId}/situation/{situationId}/evolution/{evolutionId}/download")
+	public ResponseEntity<Resource> downloadDocument(@PathVariable("institutionId") Integer institutionId,
+													 @PathVariable("patientId") Integer patientId,
+													 @PathVariable("situationId") Short situationId,
+													 @PathVariable("evolutionId") Short evolutionId) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, situationId {}, evolutionId {}", institutionId, patientId, situationId, evolutionId);
+		StoredFileBo document = generatePDFDocument.run(patientId, situationId, evolutionId);
+		ResponseEntity<Resource> result = StoredFileResponse.sendFile(document);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }

@@ -35,7 +35,7 @@ public interface PersonExtendedRepository extends JpaRepository<PersonExtended, 
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT NEW ar.lamansys.sgh.shared.domain.general.ContactInfoBo(pe.phonePrefix, pe.phoneNumber, a.street, a.number, a.floor, a.apartment, c.description," +
-			"p.description) " +
+			"p.description, pe.email) " +
 			"FROM PersonExtended pe " +
 			"JOIN Address a ON (a.id = pe.addressId) " +
 			"LEFT JOIN City c ON (c.id = a.cityId) " +
