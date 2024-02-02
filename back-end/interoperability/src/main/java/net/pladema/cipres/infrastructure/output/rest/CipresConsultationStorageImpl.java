@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,8 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 	private final CipresEncounterRepository cipresEncounterRepository;
 
 	@Override
-	public void createOutpatientConsultations(List<OutpatientConsultationBo> consultations) {
+	public Integer createOutpatientConsultations(List<OutpatientConsultationBo> consultations) {
+		AtomicInteger sentQuantity = new AtomicInteger();
 		consultations.forEach(c -> {
 			var establishment = cipresEncounterStorage.getEstablishmentBySisaCode(c.getInstitutionSisaCode());
 			if (establishment.isPresent()) {
@@ -42,24 +44,29 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 				var apiPatientId = cipresPatientStorage.getPatientId(c.getPatient(), establishmentId);
 				if (apiPatientId.isPresent()) {
 					c.setApiPatientId(apiPatientId.get());
-					createOutpatientConsultation(c, establishmentId);
+					var consultationIdSaved = createOutpatientConsultation(c, establishmentId);
+					if (consultationIdSaved.isPresent())
+						sentQuantity.addAndGet(1);
 				}
 			}
 		});
+		return sentQuantity.get();
 	}
 
-	private void createOutpatientConsultation(OutpatientConsultationBo consultation, String establishmentId) {
+	private Optional<Integer> createOutpatientConsultation(OutpatientConsultationBo consultation, String establishmentId) {
 		var clinicalSpecialtyIRI = getClinicalSpecialtyIRI(consultation.getClinicalSpecialtySctid());
 		if (clinicalSpecialtyIRI.isPresent()) {
 			CipresEncounterBo cipresEncounterBo = cipresEncounterStorage.createOutpatientConsultation(consultation, clinicalSpecialtyIRI.get(), getEstablishmentIRI2(establishmentId));
-			handleCipresEncounterResponse(cipresEncounterBo);
+			return handleCipresEncounterResponse(cipresEncounterBo);
 		}
+		return Optional.empty();
 	}
 
-	private void handleCipresEncounterResponse(CipresEncounterBo cipresEncounterBo) {
+	private Optional<Integer> handleCipresEncounterResponse(CipresEncounterBo cipresEncounterBo) {
 		int responseCode = cipresEncounterBo.getResponseCode();
 		if (isValidToSave(responseCode, cipresEncounterBo.getStatus()))
-			cipresEncounterRepository.save(mapToEncounterApiSalud(cipresEncounterBo));
+			return Optional.of(cipresEncounterRepository.save(mapToEncounterApiSalud(cipresEncounterBo)).getId());
+		return Optional.empty();
 	}
 
 	private boolean isValidToSave(int responseCode, String status) {

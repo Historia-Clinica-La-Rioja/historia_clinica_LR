@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CipresConsultationStorage {
 
-	void createOutpatientConsultations(List<OutpatientConsultationBo> consultations);
+	Integer createOutpatientConsultations(List<OutpatientConsultationBo> consultations);
 
 }
