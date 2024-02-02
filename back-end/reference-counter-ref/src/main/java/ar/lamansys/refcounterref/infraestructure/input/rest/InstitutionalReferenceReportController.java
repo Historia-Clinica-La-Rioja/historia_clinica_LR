@@ -11,18 +11,13 @@ import ar.lamansys.refcounterref.infraestructure.input.rest.dto.ReferenceReportD
 import ar.lamansys.refcounterref.infraestructure.input.rest.dto.reference.ReferenceCompleteDataDto;
 import ar.lamansys.refcounterref.infraestructure.input.rest.mapper.GetReferenceMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
-
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,7 +90,7 @@ public class InstitutionalReferenceReportController {
 	}
 
 	@PostMapping("/{referenceId}/add-observation")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<Boolean> addObservation(@PathVariable(name = "institutionId") Integer institutionId,
 												  @PathVariable(name = "referenceId") Integer referenceId,
 												  @RequestParam(name = "observation") String observation) {
