@@ -28,3 +28,11 @@ databaseChangeLog:
                     name: institution_id
                     type: int
                     defaultValue: -1
+        
+    - changeSet:
+        id: set-snomed_group-ecl-text-data-type-default
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                ALTER TABLE snomed_group ALTER COLUMN ecl TYPE text USING ecl::text;

@@ -29,7 +29,7 @@ public class SnomedGroup {
 	@Column(name = "description", length = 100, nullable = false)
 	private String description;
 
-	@Column(name = "ecl", length = 255, nullable = false)
+	@Column(name = "ecl", columnDefinition = "TEXT", nullable = false)
 	private String ecl;
 
 	@Column(name = "custom_id", length = 50, nullable = false)

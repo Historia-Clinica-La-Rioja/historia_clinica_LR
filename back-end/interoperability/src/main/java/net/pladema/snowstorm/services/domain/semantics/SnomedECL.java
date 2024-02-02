@@ -19,6 +19,9 @@ public enum SnomedECL {
 	PERSONAL_RECORD,
 	PROCEDURE,
 	VACCINE,
+	VIOLENCE_PROBLEM,
+	VIOLENCE_MODALITY,
+	VIOLENCE_TYPE
 	;
 
 	public static SnomedECL map(String id) {

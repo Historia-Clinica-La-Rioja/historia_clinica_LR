@@ -171,6 +171,18 @@ public class SnomedSemantics {
 	@ToString.Include
 	private String electrocardiographicProcedureGroupEcl;
 
+	@Value("${snomed-semantics.violenceProblemGroup.ecl}")
+	@ToString.Include
+	private String violenceProblemGroupEcl;
+
+	@Value("${snomed-semantics.violenceModalityGroup.ecl}")
+	@ToString.Include
+	private String violenceModalityGroupEcl;
+
+	@Value("${snomed-semantics.violenceTypeGroup.ecl}")
+	@ToString.Include
+	private String violenceTypeGroupEcl;
+
     private Map<SnomedECL, String> snomedECLStringMap;
 
     @PostConstruct
@@ -192,6 +204,9 @@ public class SnomedSemantics {
 		snomedECLStringMap.put(SnomedECL.HYPERTENSION, hypertensionGroupEcl);
 		snomedECLStringMap.put(SnomedECL.CARDIOVASCULAR_DISORDER, cardiovascularDisorderGroupEcl);
 		snomedECLStringMap.put(SnomedECL.ELECTROCARDIOGRAPHIC_PROCEDURE, electrocardiographicProcedureGroupEcl);
+		snomedECLStringMap.put(SnomedECL.VIOLENCE_PROBLEM, violenceProblemGroupEcl);
+		snomedECLStringMap.put(SnomedECL.VIOLENCE_MODALITY, violenceModalityGroupEcl);
+		snomedECLStringMap.put(SnomedECL.VIOLENCE_TYPE, violenceTypeGroupEcl);
     }
 
     public String getEcl(SnomedECL key) {
