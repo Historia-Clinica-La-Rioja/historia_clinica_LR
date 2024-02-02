@@ -38,6 +38,7 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticPlans", source = "anestheticPlans", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "analgesicTechniques", source = "analgesicTechniques", qualifiedByName = "toListAnalgesicTechniqueBo")
     @Mapping(target = "anestheticTechniques", source = "anestheticTechniques", qualifiedByName = "toListAnestheticTechniqueBo")
+    @Mapping(target = "fluidAdministrations", source = "fluidAdministrations", qualifiedByName = "toListAnestheticSubstanceBo")
     AnestheticReportBo fromAnestheticReportDto(AnestheticReportDto anestheticReport);
 
     @Named("fromAnestheticReportBo")
@@ -54,5 +55,6 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticPlans", source = "anestheticPlans", qualifiedByName = "toListAnestheticSubstanceDto")
     @Mapping(target = "analgesicTechniques", source = "analgesicTechniques", qualifiedByName = "toListAnalgesicTechniqueDto")
     @Mapping(target = "anestheticTechniques", source = "anestheticTechniques", qualifiedByName = "toListAnestheticTechniqueDto")
+    @Mapping(target = "fluidAdministrations", source = "fluidAdministrations", qualifiedByName = "toListAnestheticSubstanceDto")
     AnestheticReportDto fromAnestheticReportBo(AnestheticReportBo anestheticReport);
 }

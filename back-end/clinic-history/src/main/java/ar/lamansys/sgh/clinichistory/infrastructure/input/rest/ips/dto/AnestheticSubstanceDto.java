@@ -21,7 +21,7 @@ public class AnestheticSubstanceDto extends ClinicalTermDto {
     @NotNull(message = "{value.mandatory}")
     private @Valid NewDosageDto dosage;
 
-    @NotNull(message = "{value.mandatory}")
+    @Nullable
     private Short viaId;
 
     @Nullable

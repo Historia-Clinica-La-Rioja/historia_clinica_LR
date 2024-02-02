@@ -73,4 +73,7 @@ public class AnestheticReportDto {
     @Nullable
     private @Valid List<AnestheticTechniqueDto> anestheticTechniques = new ArrayList<>();
 
+    @Nullable
+    private @Valid List<AnestheticSubstanceDto> fluidAdministrations = new ArrayList<>();
+
 }

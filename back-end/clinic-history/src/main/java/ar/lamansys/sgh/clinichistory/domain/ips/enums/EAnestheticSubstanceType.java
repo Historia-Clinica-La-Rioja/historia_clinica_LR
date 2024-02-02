@@ -15,6 +15,7 @@ public enum EAnestheticSubstanceType {
     PRE_MEDICATION((short) 1, "Premedicación"),
     ANESTHETIC_PLAN((short) 2, "Plan anestésico"),
     ANALGESIC_TECHNIQUE((short) 3, "Técnica analgésica"),
+    FLUID_ADMINISTRATION((short) 4, "Administración de líquido"),
     ;
 
     private final Short id;

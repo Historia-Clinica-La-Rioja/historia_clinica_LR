@@ -202,4 +202,6 @@ public interface IDocumentBo {
     default List<AnalgesicTechniqueBo> getAnalgesicTechniques() { return Collections.emptyList(); }
 
     default List<AnestheticTechniqueBo> getAnestheticTechniques() { return Collections.emptyList(); }
+
+    default List<AnestheticSubstanceBo> getFluidAdministrations() { return Collections.emptyList(); }
 }

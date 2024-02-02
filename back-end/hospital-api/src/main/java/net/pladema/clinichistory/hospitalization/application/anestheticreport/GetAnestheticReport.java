@@ -60,6 +60,8 @@ public class GetAnestheticReport {
 
         result.setAnestheticTechniques(documentService.getAnestheticTechniquesStateFromDocument(documentId));
 
+        result.setFluidAdministrations(this.filterSubstanceBy(substances, EAnestheticSubstanceType.FLUID_ADMINISTRATION));
+
         log.debug("Output -> anestheticReport {}", result);
         return result;
     }
