@@ -97,6 +97,7 @@ export class PediatricTriageComponent implements OnInit {
 
 	confirmPediatricTriage(): void {
 		if (this.pediatricForm.valid) {
+			this.disableConfirmButton = true;
 			const triage: TriagePediatricDto = this.buildTriagePediatricDto();
 			this.confirm.emit(triage);
 		}
