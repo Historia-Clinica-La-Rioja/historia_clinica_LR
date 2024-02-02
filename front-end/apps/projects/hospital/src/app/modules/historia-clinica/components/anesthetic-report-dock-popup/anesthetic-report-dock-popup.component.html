@@ -138,6 +138,12 @@
             [collapsed]="true" [isEmpty]="anestheticReportIntrasurgicalAnestheticProceduresService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-intrasurgical-anesthetic-procedures [service]="anestheticReportIntrasurgicalAnestheticProceduresService"></app-anesthetic-report-intrasurgical-anesthetic-procedures>
         </app-new-consultation-expansion-section>
+                
+        <app-new-consultation-expansion-section id="antibiotic-prophylaxis-expansion-section"
+            [title]="'internaciones.anesthesic-report.antibiotic-prophylaxis.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anestheticReportAntibioticProphylaxisService.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-report-antibiotic-prophylaxis [service]="anestheticReportAntibioticProphylaxisService"></app-anesthetic-report-antibiotic-prophylaxis>
+        </app-new-consultation-expansion-section>
     </div>
 
     <div actions id="buttons" fxLayoutAlign="end">

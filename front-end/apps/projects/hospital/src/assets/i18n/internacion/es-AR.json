@@ -468,6 +468,11 @@
 				"VENOUS_ACCESS": "Acceso venoso",
 				"NASOGASTRIC_TUBE": "Sonda nasogastrica",
 				"URINARY_CATHETER": "Sonda vesical"
+			},
+			"antibiotic-prophylaxis":{
+				"TITLE": "Profilaxis antibiótica",
+				"REGISTERED_ANTIBIOTIC_PROPHYLAXIS": "Profilaxis antibióticas registradas",
+				"ADD_ANTIBIOTIC_PROPHYLAXIS": "+ Agregar profilaxis antibiótica"
 			}
 		},
 		"clinical-assessment-diagnosis": {
