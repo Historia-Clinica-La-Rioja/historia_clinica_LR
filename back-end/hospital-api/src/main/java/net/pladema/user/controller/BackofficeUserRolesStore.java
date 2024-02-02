@@ -109,7 +109,13 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 		if (ERoleLevel.LEVEL0.equals(ERole.map(userRole.getRoleId()).getLevel()) && assignedInstitution(userRole))
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El tipo de rol no debe asociarse a una institución ");
 		checkManagerRole(userRole);
+		if (this.isAlreadyDefinedThisRole(userRole))
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.ROLE_ALREADY_ASSIGNED, "El usuario ya cuenta con ese rol en la institución");
 		return user;
+	}
+
+	private boolean isAlreadyDefinedThisRole(UserRole userRole) {
+		return userRoleRepository.findByRoleInstitutionAndUserId(userRole.getUserId(), userRole.getRoleId(), userRole.getInstitutionId()).isPresent();
 	}
 
 	private boolean assignedInstitution(UserRole userRole) {
