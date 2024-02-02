@@ -303,7 +303,7 @@
         <div class="signature">
             <div>&nbsp;</div>
             <div class="signature-data">23. FIRMA PROFESIONAL</div>
-            <div class="professional-name" th:text="${#strings.length(completeProfessionalName) > 67 ? #strings.substring(completeProfessionalName, 0, 67) + '...' : completeProfessionalName}"></div>
+            <div class="professional-name" th:text="${completeProfessionalName} ? ${#strings.length(completeProfessionalName) > 67 ? #strings.substring(completeProfessionalName, 0, 67) + '...' : completeProfessionalName} : ''"></div>
             <span th:each="license,iter: ${licenses}">
                 <div style="margin-bottom: -30px" th:text="${license}"></div>
             </span>
