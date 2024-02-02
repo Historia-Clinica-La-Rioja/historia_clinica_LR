@@ -101,8 +101,6 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.initSpecialties();
-		this.initCareLines();
 		this.initForm();
 
 		this.institutionService.getInstitutionAddress(this.contextService.institutionId).subscribe(
@@ -146,15 +144,15 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 		this.route.queryParams.subscribe(qp => {
 			this.patientId = Number(qp.idPaciente);
 		});
-		this.setReferenceInformation();
+
+		this.setInformationToSearchAppointments();
 
 	}
 
 	setCareLine(careLine: CareLineDto) {
 		this.resetResults();
 		this.searchForm.controls.careLine.setValue(careLine);
-		this.showCareLineError = false;
-		if(!this.externalInformation?.disabledInput.specialty) this.searchForm.controls.specialty.reset();
+		this.showCareLineError = false; 
 		if (careLine) {
 			this.specialties = careLine.clinicalSpecialties;
 			if (!this.externalInformation?.formInformation?.careLine)
@@ -164,7 +162,11 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 			this.specialties = this.allSpecialties;
 			this.practicesBehavior.next([]);
 		}
-		this.loadSpecialtyTypeaheadOptions();
+
+		if (!this.externalInformation?.formInformation.clinicalSpecialties) {
+			this.searchForm.controls.specialty.reset();
+			this.loadSpecialtyTypeaheadOptions();
+		}
 	}
 
 	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
@@ -420,19 +422,13 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 	}
 
 	private setReferenceInformation(): void {
-
-		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
-
-		if (!this.externalInformation)
-			return;
-
 		const { patientId, formInformation } = this.externalInformation;
 
 		this.patientId = patientId;
 
 		const { searchCriteria, careLine, clinicalSpecialties, practice } = formInformation;
 		this.setCriteria(searchCriteria);
-		this.setCareLine(careLine.value);
+		this.setCareLineTypeaheadOptions(careLine);
 
 		if (clinicalSpecialties?.length) {
 			this.specialtyTypeaheadOptions = listToTypeaheadOptions(clinicalSpecialties, 'name');
@@ -456,6 +452,24 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 		formControls.practiceId.enable();
 		formControls.careLine.setValue(null);
 		formControls.careLine.enable();
+	}
+
+	private setCareLineTypeaheadOptions(careLine: TypeaheadOption<CareLineDto>) {
+		this.careLineTypeaheadOptions = [careLine];
+	}
+
+	private setInformationToSearchAppointments() {
+		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
+
+		if (!this.externalInformation)
+			this.setAllSpecialtiesAndCareLines();
+		else
+			this.setReferenceInformation();
+	}
+
+	private setAllSpecialtiesAndCareLines() {
+		this.initSpecialties();
+		this.initCareLines();
 	}
 
 }
