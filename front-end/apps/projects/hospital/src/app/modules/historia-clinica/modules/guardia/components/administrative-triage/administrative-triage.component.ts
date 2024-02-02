@@ -29,6 +29,7 @@ export class AdministrativeTriageComponent {
 	}
 
 	confirmTriage(): void {
+		this.disableConfirmButton = true;
 		const triage: TriageAdministrativeDto = {
 			categoryId: this.triageCategoryId,
 			doctorsOfficeId: this.doctorsOfficeId
