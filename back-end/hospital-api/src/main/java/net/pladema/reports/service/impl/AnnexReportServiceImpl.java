@@ -98,7 +98,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 							result.setProcedures(mapProcedures(billedProcedures));
 							result.setProceduresIngressDate(outpatientconsultationData.getCreatedOn());
 							result.setProceduresEgressDate(outpatientconsultationData.getCreatedOn());
-							result.setProceduresTotal(billedProcedures.getPatientTotal());
+							result.setProceduresTotal(billedProcedures.getMedicalCoverageTotal());
 							result.setMissingProcedures(billedProcedures.getProceduresNotBilledCount());
 						}
 

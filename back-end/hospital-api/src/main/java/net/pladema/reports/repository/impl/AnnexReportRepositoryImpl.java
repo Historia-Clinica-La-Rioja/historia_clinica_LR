@@ -99,7 +99,13 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     @Override
     public Optional<AnnexIIOutpatientVo> getConsultationAnnexInfo(Long documentId) {
         String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
+                "       SELECT d.id as doc_id, " +
+                 "oc.start_date, " +
+                  "oc.institution_id, " +
+                   "oc.patient_id, " +
+                    "oc.clinical_specialty_id, " +
+                     "oc.patient_medical_coverage_id, " +
+                      "d.created_on " +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)" +
                 "       WHERE d.id = :documentId " +

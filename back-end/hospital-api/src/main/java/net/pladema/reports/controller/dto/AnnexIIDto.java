@@ -56,5 +56,6 @@ public class AnnexIIDto {
 	private Float proceduresTotal;
 
 	private Boolean showProcedures;
+
 	private Integer missingProcedures;
 }

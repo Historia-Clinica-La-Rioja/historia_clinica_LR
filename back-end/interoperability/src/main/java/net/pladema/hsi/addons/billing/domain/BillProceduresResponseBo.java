@@ -6,11 +6,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 import net.pladema.hsi.addons.billing.application.BillProceduresException;
 
-@Value
+@Getter
+@ToString
+@EqualsAndHashCode
 public class BillProceduresResponseBo {
 	List<BillProceduresResponseItemBo> procedures;
 	private Float medicalCoverageTotal;
@@ -20,7 +25,17 @@ public class BillProceduresResponseBo {
 	private boolean enabled;
 	private BillProceduresRequestBo request;
 	@Getter(lazy = true)
-	private Integer proceduresNotBilledCount = computeProceduresNotBilledCount();
+	private final Integer proceduresNotBilledCount = computeProceduresNotBilledCount();
+
+	public BillProceduresResponseBo(List<BillProceduresResponseItemBo> procedures, Float medicalCoverageTotal, Float patientTotal, String medicalCoverageName, String medicalCoverageCuit, boolean enabled, BillProceduresRequestBo request) {
+		this.procedures = procedures == null ? Collections.emptyList() : procedures;
+		this.medicalCoverageTotal = medicalCoverageTotal == null ? 0.0F : medicalCoverageTotal;
+		this.patientTotal = patientTotal == null ? 0.0F : patientTotal;
+		this.medicalCoverageName = medicalCoverageName == null ? "" : medicalCoverageName;
+		this.medicalCoverageCuit = medicalCoverageCuit == null ? "" : medicalCoverageCuit;
+		this.enabled = enabled;
+		this.request = request;
+	}
 
 	/**
 	 * All the requested lines are missing from the response.
