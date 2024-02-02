@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DigitalSignatureDocumentDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, LoggedUserDto, MedicationDto, PageDto, PersonalHistoryDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model.d';
 import { DigitalSignatureService } from '@api-rest/services/digital-signature.service';
-import { ItemListCard, ItemListOption } from '@presentation/components/selectable-card/selectable-card.component';
+import { ItemListCard, ItemListOption, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { DocumentService } from '@api-rest/services/document.service';
 import { finalize } from 'rxjs';
 import { AccountService } from '@api-rest/services/account.service';
@@ -99,8 +99,8 @@ export class HomeComponent implements OnInit {
         this.documentService.downloadUnnamedFile(id);
     }
 
-    seeDetails(id: number) {
-        this.documentService.getDocumentInfo(id)
+    seeDetails(ids: SelectableCardIds) {
+        this.documentService.getDocumentInfo(ids.id)
             .subscribe((document: DocumentDto) => this.buildDetailedInformation(document));
     }
 

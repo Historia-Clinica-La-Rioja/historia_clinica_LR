@@ -110,6 +110,7 @@ export class ViolenceSituationDockPopupComponent implements OnInit{
 
 	success() {
 		this.violenceReportFacadeService.setAllPatientViolenceSituations(this.data.data.patientId, true);
+		this.violenceReportFacadeService.setEvolutions(this.data.data.patientId, null);
 		this.snackbarServices.showSuccess('ambulatoria.paciente.violence-situations.dialog.SUCCESS')
 		this.dockPopupRef.close();
 	}

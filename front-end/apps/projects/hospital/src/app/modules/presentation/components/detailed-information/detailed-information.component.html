@@ -7,7 +7,7 @@
                 <span>{{oneColumn.title | translate}}</span>
             </header>
             <div class="one-column">
-                <p *ngFor="let value of oneColumn.value">{{value}}</p>
+                <p *ngFor="let value of oneColumn.value">{{value | translate}}</p>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
                 <span>{{twoColumn.title | translate}}</span>
             </header>
             <div class="two-columns">
-                <p *ngFor="let value of twoColumn.value">{{value}}</p>
+                <p *ngFor="let value of twoColumn.value">{{value | translate}}</p>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
                 <span>{{threeColumn.title | translate}}</span>
             </header>
             <div class="three-columns">
-                <p *ngFor="let value of threeColumn.value">{{value}}</p>
+                <p *ngFor="let value of threeColumn.value">{{value | translate}}</p>
             </div>
         </div>
     </div>

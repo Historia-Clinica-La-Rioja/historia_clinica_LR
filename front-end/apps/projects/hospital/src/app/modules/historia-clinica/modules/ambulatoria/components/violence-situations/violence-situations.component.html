@@ -25,6 +25,8 @@
             [isDownloadable]="false"
             [enableCheckboxes]="false"
             [dataList]="evolutions"
+            (selectedId)="seeDetails($event)"
+            [detailedInformation]="selectedViolenceEvolution"
             [noDataMessage]="'ambulatoria.paciente.violence-situations.violence-situation-history.NO_EVOLUTIONS'">
             <span translate="ambulatoria.paciente.violence-situations.violence-situation-history.UNSELECTED_EVOLUTION" class="unselected-message"></span>
         </app-selectable-card>

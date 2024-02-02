@@ -3,6 +3,11 @@ import { DetailedInformation } from '../detailed-information/detailed-informatio
 
 const INPUT_NODE_NAME: string = "INPUT";
 
+export interface SelectableCardIds {
+	id: number,
+	relatedId: number
+}
+
 @Component({
   selector: 'app-selectable-card',
   templateUrl: './selectable-card.component.html',
@@ -18,8 +23,7 @@ export class SelectableCardComponent {
 
 	@Output() selectedDataList: EventEmitter<number[]> = new EventEmitter();
 	@Output() downloadId: EventEmitter<number> = new EventEmitter();
-	@Output() selectedId: EventEmitter<number> = new EventEmitter();
-
+	@Output() selectedId: EventEmitter<SelectableCardIds> = new EventEmitter();
 	private isAllSelected: boolean = false;
 	private selectedIds: number[] = [];
 
@@ -51,10 +55,10 @@ export class SelectableCardComponent {
 		this.downloadId.emit(id);
 	}
 
-	seeDetails(id: number, event: any) {
+	seeDetails(id: number, relatedId: number, event: any) {
 		(event.target.nodeName === INPUT_NODE_NAME)
 			? event.stopPropagation()
-			: this.selectedId.emit(id);
+			: this.selectedId.emit({id, relatedId});
 	}
 
 	private toggleAllCheckboxes(value: boolean) {
@@ -64,6 +68,7 @@ export class SelectableCardComponent {
 
 export interface ItemListCard {
 	id: number,
+	relatedId?: number,
 	icon: string,
 	title: string,
 	options: ItemListOption[],

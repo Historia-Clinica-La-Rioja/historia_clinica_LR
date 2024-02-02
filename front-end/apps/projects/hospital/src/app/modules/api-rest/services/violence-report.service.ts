@@ -46,4 +46,9 @@ export class ViolenceReportService {
 		queryParams = queryParams.append('filterData', filterData);
 		return this.http.get<ViolenceReportSituationEvolutionDto[]>(url, {params: queryParams});
 	}
+
+	getEvolutionData = (patientId: number, situationId: number, evolutionId: number): Observable<ViolenceReportDto> => {
+		const url = this.BASE_URL + patientId + `/situation/${situationId}/evolution/${evolutionId}`;
+		return this.http.get<ViolenceReportDto>(url);
+	}
 }

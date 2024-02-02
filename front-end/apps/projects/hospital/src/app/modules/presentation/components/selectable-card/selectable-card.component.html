@@ -8,7 +8,7 @@
         </mat-list-item>
 
         <div class="cards-container">
-            <mat-list-option *ngFor="let data of dataList" id="selected-card" (click)="seeDetails(data.id, $event)">
+            <mat-list-option *ngFor="let data of dataList" id="selected-card" (click)="seeDetails(data.id, data.relatedId, $event)">
                 <header>
                     <input *ngIf="enableCheckboxes" type="checkbox" [checked]="data.checked" [value]="data.id" (change)="checkboxSelect(data.id)">
                     <mat-icon class="title-icon" color="primary" fontSet="material-icons-outlined">{{data.icon}}</mat-icon>
