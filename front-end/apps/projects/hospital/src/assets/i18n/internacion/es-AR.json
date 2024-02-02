@@ -451,8 +451,13 @@
 			},
 			"anesthetic-agents":{
 				"TITLE": "Agentes anestésicos",
-				"REGISTERED_ANESTHETIC_AGENTS": "Agenes anestésicos registrados",
+				"REGISTERED_ANESTHETIC_AGENTS": "Agentes anestésicos registrados",
 				"ADD_ANESTHETIC_AGENT": "+ Agregar agente anestésico"
+			},
+			"non-anesthetic-drugs":{
+				"TITLE": "Drogas no anestésicas",
+				"REGISTERED_NON_ANESTHETIC_DRUGS": "Drogas no anestésicas registradas",
+				"ADD_NON_ANESTHETIC_DRUG": "+ Agregar droga no anestésica"
 			},
 			"intrasurgical-anesthetic-procedures": {
 				"TITLE": "Procedimientos anestésicos intraquirúrgicos",

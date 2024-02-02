@@ -126,6 +126,12 @@
             [collapsed]="true" [isEmpty]="anestheticReportAnestheticAgent.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-anesthetic-agents [service]="anestheticReportAnestheticAgent"></app-anesthetic-report-anesthetic-agents>
         </app-new-consultation-expansion-section>
+        
+        <app-new-consultation-expansion-section id="non-anesthetic-drugs-expansion-section"
+            [title]="'internaciones.anesthesic-report.non-anesthetic-drugs.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anestheticReportNonAnestheticDrugs.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-report-non-anesthetic-drugs [service]="anestheticReportNonAnestheticDrugs"></app-anesthetic-report-non-anesthetic-drugs>
+        </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="intrasurgical-anesthetic-procedures-expansion-section"
             [title]="'internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.TITLE' | translate" icon="assignment"

@@ -52,6 +52,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     anestheticTechnique: AnestheticTechniqueService
     fluidAdministrationService: FluidAdministrationService
     anestheticReportAnestheticAgent: MedicationService;
+    anestheticReportNonAnestheticDrugs: MedicationService;
     anestheticReportIntrasurgicalAnestheticProceduresService: AnestheticReportIntrasurgicalAnestheticProceduresService;
 
     personalRecordForm: FormGroup;
@@ -93,6 +94,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticTechnique = new AnestheticTechniqueService(this.snomedService, this.snackBarService)
         this.fluidAdministrationService = new FluidAdministrationService(this.snomedService, this.snackBarService)
         this.anestheticReportAnestheticAgent = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticReportAnestheticAgent = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticReportNonAnestheticDrugs = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportIntrasurgicalAnestheticProceduresService = new AnestheticReportIntrasurgicalAnestheticProceduresService();
 
 
