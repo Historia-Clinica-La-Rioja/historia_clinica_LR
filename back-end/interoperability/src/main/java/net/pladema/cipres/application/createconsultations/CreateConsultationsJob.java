@@ -38,14 +38,15 @@ public class CreateConsultationsJob {
 	@SchedulerLock(name = "CreateConsultationsJob")
 	public void run() {
 		log.warn("Scheduled CreateConsultationsJob starting at {}", new Date());
-		List<OutpatientConsultationBo> consultations = getConsultations.run();
+		int sentQuantity = 0;
 		try {
-			cipresConsultationStorage.createOutpatientConsultations(consultations);
+			List<OutpatientConsultationBo> consultations = getConsultations.run();
+			sentQuantity = cipresConsultationStorage.createOutpatientConsultations(consultations);
 		}
 		catch (Exception ex){
 			log.debug("Exception occurred while transmitting outpatient encounters: ", ex);
 		}
-		log.warn("Scheduled CreateConsultationsJob done at {}", new Date());
+		log.warn("Scheduled CreateConsultationsJob done, processing {} at {}", sentQuantity, new Date());
 	}
 
 }
