@@ -21,11 +21,6 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			" 	AND sg.groupId IS NULL ")
     Integer getBaseGroupIdByEclAndDescription(@Param("ecl") String ecl, @Param("description") String description);
 
-	@Query( " SELECT sg.id " +
-			" FROM SnomedGroup sg " +
-			" WHERE sg.description = :description ")
-	List<Integer> getIdByDescription(@Param("description") String description);
-
 	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
 			" FROM SnomedGroup sg " +
 			" JOIN SnomedGroup baseGroup ON (sg.groupId = baseGroup.id) " +
@@ -99,5 +94,15 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			"WHERE sg.description = :description " +
 			"AND sg.institutionId = :institutionId")
 	Optional<Integer> getIdByDescriptionAndInstitutionId(@Param("description") String description, @Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT 1 " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedRelatedGroup srg ON (srg.groupId = sg.id) " +
+			"JOIN Snomed s ON (s.id = srg.snomedId) " +
+			"WHERE s.sctid = :conceptId " +
+			"AND s.pt = :term " +
+			"AND sg.description = :ecl")
+	Integer isEclRelatedBySnomedConceptIdAndTerm(@Param("conceptId") String conceptId, @Param("term") String term, @Param("ecl") String ecl);
 
 }
