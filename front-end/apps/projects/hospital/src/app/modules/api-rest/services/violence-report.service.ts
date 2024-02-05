@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PageDto, ViolenceReportDto, ViolenceReportFilterOptionDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
+import { DownloadService } from '@core/services/download.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -13,7 +14,8 @@ export class ViolenceReportService {
 	private readonly BASE_URL: string;
 
 	constructor(
-		private http: HttpClient, private readonly contextService: ContextService
+		private http: HttpClient, private readonly contextService: ContextService,
+		private downloadService: DownloadService
 	) {
 		this.BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}/violence-report/patient/`;
 	}
@@ -55,5 +57,13 @@ export class ViolenceReportService {
 	getPatientFilters = (patientId: number): Observable<ViolenceReportFilterOptionDto> => {
 		const url = this.BASE_URL + patientId + "/get-filter";
 		return this.http.get<ViolenceReportFilterOptionDto>(url);
+	}
+
+	download(patientId: number, situationId: number, evolutionId: number) {
+		const url = this.BASE_URL + patientId + `/situation/${situationId}/evolution/${evolutionId}/download`;
+		this.downloadService.downloadPdf(
+			url,
+			'Documento',
+		).subscribe();
 	}
 }

@@ -55,6 +55,10 @@ export class ViolenceReportFacadeService {
             });
     }
 
+	download(patientId: number, situationId: number, evolutionId: number) {
+		this.violenceReportService.download(patientId, situationId, evolutionId);
+	}	
+
     private mapToDetailedInformation(result: ViolenceReportDto, situationId: number, evolutionId: number) {
 		const detailed = {
 			id: null,

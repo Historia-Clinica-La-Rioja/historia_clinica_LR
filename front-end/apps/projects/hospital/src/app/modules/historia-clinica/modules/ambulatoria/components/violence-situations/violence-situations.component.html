@@ -23,7 +23,7 @@
     <app-summary-card [header]="violenceHistoryHeader">
         <app-violence-situation-history-filters [patientId]="patientId"></app-violence-situation-history-filters>
         <app-selectable-card class="scrollable"
-            [isDownloadable]="false"
+            (downloadId)="download($event)"
             [enableCheckboxes]="false"
             [dataList]="evolutions"
             (selectedId)="seeDetails($event)"

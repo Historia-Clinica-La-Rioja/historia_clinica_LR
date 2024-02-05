@@ -78,7 +78,7 @@ export class HomeComponent implements OnInit {
     }
 
     downloadPdf() {
-        this.selectedDocumentsId.forEach(selectedId => this.download(selectedId));
+        this.selectedDocumentsId.forEach(selectedId => this.download({id: selectedId}));
     }
 
     sign() {
@@ -95,8 +95,8 @@ export class HomeComponent implements OnInit {
 
     }
 
-    download(id: number) {
-        this.documentService.downloadUnnamedFile(id);
+    download(ids: SelectableCardIds) {
+        this.documentService.downloadUnnamedFile(ids.id);
     }
 
     seeDetails(ids: SelectableCardIds) {

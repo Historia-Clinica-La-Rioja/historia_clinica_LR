@@ -5,7 +5,7 @@ const INPUT_NODE_NAME: string = "INPUT";
 
 export interface SelectableCardIds {
 	id: number,
-	relatedId: number
+	relatedId?: number
 }
 
 @Component({
@@ -22,7 +22,7 @@ export class SelectableCardComponent {
 	@Input() detailedInformation: DetailedInformation;
 
 	@Output() selectedDataList: EventEmitter<number[]> = new EventEmitter();
-	@Output() downloadId: EventEmitter<number> = new EventEmitter();
+	@Output() downloadId: EventEmitter<SelectableCardIds> = new EventEmitter();
 	@Output() selectedId: EventEmitter<SelectableCardIds> = new EventEmitter();
 	private isAllSelected: boolean = false;
 	private selectedIds: number[] = [];
@@ -51,8 +51,8 @@ export class SelectableCardComponent {
 		this.selectedDataList.emit(this.selectedIds);
 	}
 	
-	download(id: number) {
-		this.downloadId.emit(id);
+	download(id: number, relatedId: number) {
+		this.downloadId.emit({id, relatedId});
 	}
 
 	seeDetails(id: number, relatedId: number, event: any) {

@@ -63,6 +63,10 @@ export class ViolenceSituationsComponent implements OnInit {
 		this.violenceSituationReportFacadeService.getEvolutionData(this.patientId, ids.id, ids.relatedId);
 	}
 
+	download(ids: SelectableCardIds) {
+		this.violenceSituationReportFacadeService.download(this.patientId, ids.id, ids.relatedId);
+	}
+
 	private setEvolutions = () => {
 		this.violenceSituationReportFacadeService.setEvolutions(this.patientId, null);
 		this.violenceSituationReportFacadeService.evolutions$
