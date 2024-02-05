@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PageDto, ViolenceReportDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDto } from '@api-rest/api-model';
+import { PageDto, ViolenceReportDto, ViolenceReportFilterOptionDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -50,5 +50,10 @@ export class ViolenceReportService {
 	getEvolutionData = (patientId: number, situationId: number, evolutionId: number): Observable<ViolenceReportDto> => {
 		const url = this.BASE_URL + patientId + `/situation/${situationId}/evolution/${evolutionId}`;
 		return this.http.get<ViolenceReportDto>(url);
+	}
+
+	getPatientFilters = (patientId: number): Observable<ViolenceReportFilterOptionDto> => {
+		const url = this.BASE_URL + patientId + "/get-filter";
+		return this.http.get<ViolenceReportFilterOptionDto>(url);
 	}
 }

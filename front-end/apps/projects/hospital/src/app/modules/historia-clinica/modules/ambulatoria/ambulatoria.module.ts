@@ -97,6 +97,7 @@ import { ViolenceSituationImplementedActionsComponent } from './components/viole
 import { ViolenceSituationViolentPersonInformationComponent } from './components/violence-situation-violent-person-information/violence-situation-violent-person-information.component';
 import { NewViolentPersonInfomationComponent } from './dialogs/new-violent-person-infomation/new-violent-person-infomation.component';
 import { ViolenceSituationListComponent } from './components/violence-situation-list/violence-situation-list.component';
+import { ViolenceSituationHistoryFiltersComponent } from './components/violence-situation-history-filters/violence-situation-history-filters.component';
 
 @NgModule({
 	declarations: [
@@ -173,7 +174,8 @@ import { ViolenceSituationListComponent } from './components/violence-situation-
 		ViolenceSituationViolentPersonInformationComponent,
   		NewViolentPersonInfomationComponent,
       	ViolenceSituationImplementedActionsComponent,
-      	ViolenceSituationListComponent
+      	ViolenceSituationListComponent,
+       ViolenceSituationHistoryFiltersComponent
 	],
 	imports: [
 		CommonModule,

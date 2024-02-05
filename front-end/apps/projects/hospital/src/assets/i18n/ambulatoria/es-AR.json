@@ -807,6 +807,10 @@
                     "TITLE": "Historial de evoluciones",
                     "NO_EVOLUTIONS": "No hay evoluciones",
                     "UNSELECTED_EVOLUTION": "Seleccione una evolución para ver los detalles del mismo",
+                    "SITUATION_NUMBER_LABEL": "Número de Situación",
+                    "VIOLENCE_TYPE": "Tipo de violencia",
+                    "VIOLENCE_MODALITY": "Modalidad de violencia",
+                    "INSTITUTION": "Institución",
                     "detailed-information": {
                         "expanded-person-information": {
                             "TITLE": "Información ampliada de la persona",

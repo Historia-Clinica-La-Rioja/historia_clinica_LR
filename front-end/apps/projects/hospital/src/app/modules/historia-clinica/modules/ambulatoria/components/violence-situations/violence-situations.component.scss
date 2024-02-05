@@ -2,7 +2,7 @@
     margin-bottom: 1.5rem;
 }
 
-section {
+.container {
     display: flex;
     flex-direction: column;
     align-items: end;
@@ -28,4 +28,8 @@ app-summary-card {
 	text-align: center;
 	font-weight: bold;
 	color: #a8a8a8;
+}
+
+app-violence-situation-history-filters {
+    padding: 1rem;
 }

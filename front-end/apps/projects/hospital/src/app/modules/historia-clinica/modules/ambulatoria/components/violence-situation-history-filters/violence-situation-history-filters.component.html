@@ -1,0 +1,71 @@
+<form [formGroup]="form">
+	<mat-form-field appearance="outline">
+		<mat-label>{{'ambulatoria.paciente.violence-situations.violence-situation-history.SITUATION_NUMBER_LABEL' | translate}}</mat-label>
+		<mat-select formControlName="situationId">
+		  <mat-option 
+		  	value="{{vn.id}}" 
+		  	*ngFor="let vn of situationNumbers">
+			Situación #{{vn.description}}
+		</mat-option>
+		</mat-select>
+		<button id="clear-situation-number" type="button" mat-button *ngIf="situationId.value" matSuffix
+				color="warn"
+				mat-icon-button
+				(click)="resetControl($event, situationId)">
+			<mat-icon>close</mat-icon>
+		</button>
+	  </mat-form-field>
+
+	  <mat-form-field appearance="outline">
+		<mat-label>{{'ambulatoria.paciente.violence-situations.violence-situation-history.VIOLENCE_TYPE' | translate}}</mat-label>
+		<mat-select formControlName="typeId">
+		  <mat-option 
+		  	value="{{t.id}}" 
+		  	*ngFor="let t of types">
+			{{t.description}}
+		</mat-option>
+		</mat-select>
+		<button id="clear-type" type="button" mat-button *ngIf="typeId.value" matSuffix
+				color="warn"
+				mat-icon-button
+				(click)="resetControl($event, typeId)">
+			<mat-icon>close</mat-icon>
+		</button>
+	  </mat-form-field>
+
+	  <mat-form-field appearance="outline">
+		<mat-label>{{'ambulatoria.paciente.violence-situations.violence-situation-history.VIOLENCE_MODALITY' | translate}}</mat-label>
+		<mat-select formControlName="modalityId">
+		  <mat-option 
+		  	value="{{m.id}}" 
+		  	*ngFor="let m of modalities">
+			{{m.description}}
+		</mat-option>
+		</mat-select>
+		<button id="clear-modality" type="button" mat-button *ngIf="modalityId.value" matSuffix
+				color="warn"
+				mat-icon-button
+				(click)="resetControl($event, modalityId)">
+			<mat-icon>close</mat-icon>
+		</button>
+	  </mat-form-field>
+
+	  <mat-form-field appearance="outline">
+		<mat-label>{{'ambulatoria.paciente.violence-situations.violence-situation-history.INSTITUTION' | translate}}</mat-label>
+		<mat-select formControlName="institutionId">
+		  <mat-option 
+		  	value="{{i.id}}" 
+		  	*ngFor="let i of institutions">
+			{{i.description}}
+		</mat-option>
+		</mat-select>
+		<button id="clear-institution" type="button" mat-button *ngIf="institutionId.value" matSuffix
+				color="warn"
+				mat-icon-button
+				(click)="resetControl($event, institutionId)">
+			<mat-icon>close</mat-icon>
+		</button>
+	  </mat-form-field>
+
+	  <button mat-raised-button color="primary" (click)="applyFilters()">{{'buttons.APPLY_FILTERS' | translate}}</button>
+</form>
