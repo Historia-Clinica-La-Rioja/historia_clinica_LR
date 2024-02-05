@@ -26,6 +26,7 @@ import { OAuthModule } from "angular-oauth2-oidc";
 import { StompService } from './stomp.service';
 import { stompServiceFactory } from './stomp-factory';
 import { ApiOverlayDelayComponent } from './api-overlay-delay/api-overlay-delay.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 registerLocaleData(localeEsAr, localeEsArExtras);
 
@@ -62,6 +63,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		httpInterceptorProviders,
 		pwaInstallProviders,
 		DatePipe,
+		DateFormatPipe,
 		TitleCasePipe,
 		{ provide: LOCALE_ID, useValue: DEFAULT_LANG }, // Esto lo usa el calendario
 		{ provide: StompService, useFactory: stompServiceFactory }
