@@ -1,0 +1,48 @@
+<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayout.lt-md="column">
+
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+
+		<app-identifier-cases [identifierCase]="identiferCases.DATE"
+			[description]="appointment.date | viewDateDto: 'date' | date: 'fullDate'">
+		</app-identifier-cases>
+
+		<div fxLayout="row">
+			<app-identifier-cases [identifierCase]="identiferCases.HOUR"
+				[description]="appointment.hour | viewDateDto: 'time' | dateFormat: 'time'">
+			</app-identifier-cases>
+			<span>hs</span>
+		</div>
+
+	</div>
+
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+
+		<app-identifier-cases [identifierCase]="identiferCases.INSTITUTION"
+			[description]="appointment.institution.name">
+		</app-identifier-cases>
+
+		<app-identifier-cases [identifierCase]="identiferCases.DISTRICT"
+			[description]="appointment.department.description">
+		</app-identifier-cases>
+
+	</div>
+
+	<div fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start center">
+		<app-identifier-cases [identifierCase]="identiferCases.PROFESSIONAL" [description]="appointment.professionalFullName"></app-identifier-cases>
+		<span *ngIf="appointment.jointDiary"> ({{'turnos.appointment-result-view.JOINT_DIARY' | translate}}) </span>
+	</div>
+
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
+
+		<app-identifier-cases *ngIf="appointment.clinicalSpecialty" [identifierCase]="identiferCases.SPECIALTY"
+			[description]="appointment.clinicalSpecialty.name">
+		</app-identifier-cases>
+
+		<app-identifier-cases [identifierCase]="identiferCases.ROOM" [description]="appointment.doctorOffice">
+		</app-identifier-cases>
+
+	</div>
+
+	<ng-content></ng-content>
+
+</div>
