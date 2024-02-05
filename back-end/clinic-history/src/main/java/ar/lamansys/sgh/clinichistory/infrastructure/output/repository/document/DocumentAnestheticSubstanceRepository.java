@@ -15,12 +15,13 @@ public interface DocumentAnestheticSubstanceRepository extends JpaRepository<Doc
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT new ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo(" +
-            "s.sctid, s.pt, q.value, q.unit, d.periodUnit, d.startDate, asub.viaId, asub.typeId)" +
+            "s.sctid, s.pt, q.value, q.unit, d.periodUnit, d.startDate, asub.viaId, n.description, asub.typeId)" +
             "FROM DocumentAnestheticSubstance dpm " +
             "JOIN AnestheticSubstance asub ON (dpm.documentAnestheticSubstancePK.anestheticSubstanceId = asub.id) " +
             "JOIN Snomed s ON (asub.snomedId = s.id) " +
             "JOIN Dosage d ON (asub.dosageId = d.id) " +
             "JOIN Quantity q ON (d.doseQuantityId = q.id) " +
+            "LEFT JOIN Note n ON (asub.viaNoteId = n.id) " +
             "WHERE dpm.documentAnestheticSubstancePK.documentId = :documentId")
     List<AnestheticSubstanceBo> getAnestheticSubstancesStateFromDocument(@Param("documentId") Long documentId);
 }

@@ -17,15 +17,17 @@ import lombok.ToString;
 public class AnestheticSubstanceBo extends ClinicalTerm {
     private DosageBo dosage;
     private Short viaId;
+    private String viaNote;
     private Short typeId;
 
-    public AnestheticSubstanceBo(String stcid, String pt, Double quantityValue, String quantityUnit, String periodUnit, LocalDateTime startDate, Short viaId, Short typeId) {
+    public AnestheticSubstanceBo(String stcid, String pt, Double quantityValue, String quantityUnit, String periodUnit, LocalDateTime startDate, Short viaId, String viaNote, Short typeId) {
         this.setSnomed(new SnomedBo(stcid, pt));
         this.dosage = new DosageBo();
         this.dosage.setQuantity(new QuantityBo(quantityValue.intValue(), quantityUnit));
         this.dosage.setPeriodUnit(EUnitsOfTimeBo.map(periodUnit));
         this.dosage.setStartDate(startDate);
         this.viaId = viaId;
+        this.viaNote = viaNote;
         this.typeId = typeId;
     }
 

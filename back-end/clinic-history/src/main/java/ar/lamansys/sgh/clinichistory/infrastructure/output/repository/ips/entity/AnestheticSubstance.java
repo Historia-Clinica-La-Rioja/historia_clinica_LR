@@ -40,6 +40,9 @@ public class AnestheticSubstance {
     @Column(name = "via_id")
     private Short viaId;
 
+    @Column(name = "via_note_id")
+    private Long viaNoteId;
+
     @Column(name = "type_id", nullable = false)
     private Short typeId;
 }

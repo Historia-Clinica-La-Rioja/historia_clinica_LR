@@ -18,6 +18,7 @@ public enum EVia {
 	ORAL(4,"Oral"),
 	INHALATION(5,"Inhalatoria"),
 	INTRAVENOUS(6,"Endovenosa"),
+	OTHER(7, "Otra"),
 	;
 
 
@@ -46,7 +47,7 @@ public enum EVia {
 
 	@JsonCreator
 	public static List<EVia> getPreMedication(){
-		return Stream.of(EVia.INTRAVENOUS, EVia.SUBCUTANEA, EVia.INHALATION).collect(Collectors.toList());
+		return Stream.of(EVia.INTRAVENOUS, EVia.SUBCUTANEA, EVia.INHALATION, EVia.OTHER).collect(Collectors.toList());
 	}
 
 	@JsonCreator

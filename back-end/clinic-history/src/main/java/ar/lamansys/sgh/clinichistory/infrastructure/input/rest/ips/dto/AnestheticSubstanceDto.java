@@ -1,7 +1,9 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
+import javax.annotation.Nullable;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,4 +21,7 @@ public class AnestheticSubstanceDto extends ClinicalTermDto {
 
     @NotNull(message = "{value.mandatory}")
     private Short viaId;
+
+    @Nullable @NotEmpty
+    private String viaNote;
 }

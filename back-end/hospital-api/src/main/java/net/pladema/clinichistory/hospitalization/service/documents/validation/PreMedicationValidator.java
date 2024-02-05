@@ -20,15 +20,21 @@ public class PreMedicationValidator {
         this.assertNotDuplicated(preMedications);
 
         preMedications.stream()
-                .map(AnestheticSubstanceBo::getViaId)
-                .forEach(this::assertViaValid);
+                .peek(this::assertViaValid)
+                .filter(substance -> EVia.OTHER.getId().equals(substance.getViaId()))
+                .forEach(this::assertOtherViaValid);
     }
 
-    public void assertViaValid(Short viaId) {
-        EVia via = EVia.getById(viaId);
+    public void assertOtherViaValid(AnestheticSubstanceBo substance) {
+        String note = substance.getViaNote();
+        if (note == null || note.isBlank())
+            throw new ConstraintViolationException(String.format("La descripción asociada a la vía %s no puede estar en blanco", EVia.OTHER.getDescription()), Collections.emptySet());
+    }
+
+    public void assertViaValid(AnestheticSubstanceBo substance) {
+        EVia via = EVia.getById(substance.getViaId());
         if (!EVia.getPreMedication().contains(via))
-            throw new ConstraintViolationException(String.format("Vía '%s' no válida como premedicación", via), Collections.emptySet());
-        log.trace("Output -> isValid viaId {}", viaId);
+            throw new ConstraintViolationException(String.format("Vía '%s' no válida como premedicación", via.getDescription()), Collections.emptySet());
     }
 
     public void assertNotDuplicated(List<AnestheticSubstanceBo> preMedications) {

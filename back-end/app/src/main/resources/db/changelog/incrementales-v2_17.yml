@@ -225,6 +225,13 @@ databaseChangeLog:
                     type: smallint
                 - column:
                     constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_via_note_id_anesthetic_substance
+                    name: via_note_id
+                    type: bigint
+                - column:
+                    constraints:
                       nullable: false
                     name: type_id
                     type: smallint

@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips.services;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.QuantityBo;
@@ -25,6 +26,7 @@ public class LoadAnestheticSubstances {
     private final DosageRepository dosageRepository;
     private final SnomedService snomedService;
     private final AnestheticSubstanceRepository anestheticSubstanceRepository;
+    private final NoteService noteService;
     private final DocumentService documentService;
 
     public List<AnestheticSubstanceBo> run(Long documentId, List<AnestheticSubstanceBo> substances) {
@@ -37,9 +39,13 @@ public class LoadAnestheticSubstances {
                 Long quantityId = createQuantity(anestheticSubstanceBo.getDosage());
                 Integer dosageId = createDosage(anestheticSubstanceBo.getDosage(), quantityId);
                 Short viaId = anestheticSubstanceBo.getViaId();
+                String viaNote = anestheticSubstanceBo.getViaNote();
+                Long viaNoteId = null;
+                if (viaNote != null)
+                    viaNoteId = noteService.createNote(viaNote);
                 Short typeId = anestheticSubstanceBo.getTypeId();
 
-                AnestheticSubstance anestheticSubstance = anestheticSubstanceRepository.save(new AnestheticSubstance(null, documentId, snomedId, dosageId, viaId, typeId));
+                AnestheticSubstance anestheticSubstance = anestheticSubstanceRepository.save(new AnestheticSubstance(null, documentId, snomedId, dosageId, viaId, viaNoteId, typeId));
                 anestheticSubstanceBo.setId(anestheticSubstance.getId());
             }
             documentService.createDocumentAnestheticSubstance(documentId, anestheticSubstanceBo.getId());
