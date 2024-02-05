@@ -88,10 +88,13 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 						result.setHasProcedures(outpatientconsultationData.getHasProcedures());
 						result.setExistsConsultation(outpatientconsultationData.getExistsConsultation());
 
+						Optional<Integer> encounterId = Optional.ofNullable(outpatientconsultationData.getId());
+
 						BillProceduresResponseDto billedProcedures = getBilledProcedures(
 							outpatientconsultationData.getMedicalCoverageCuit(),
 							outpatientconsultationData.getConsultationDate().atStartOfDay(),
-							documentService.getProcedureStateFromDocument(documentId)
+							documentService.getProcedureStateFromDocument(documentId),
+							encounterId
 						);
 						result.setShowProcedures(billedProcedures.isEnabled());
 						if (billedProcedures.isEnabled()) {
@@ -154,9 +157,14 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			).collect(Collectors.toList());
 	}
 
-	private BillProceduresResponseDto getBilledProcedures(String medicalCoverageCuit, LocalDateTime date, List<ProcedureBo> procedures) {
+	private BillProceduresResponseDto getBilledProcedures(
+		String medicalCoverageCuit,
+		LocalDateTime date,
+		List<ProcedureBo> procedures,
+		Optional<Integer> encounterId)
+	{
 		try {
-			BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date);
+			BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date, encounterId);
 			procedures.stream().forEach(p -> request.addProcedure(p.getSnomed().getSctid(), p.getSnomed().getPt()));
 			return billProcedureExternalService.getBilledProcedures(request);
 		} catch (BillProceduresExternalServiceException e) {

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class BillProceduresResponseBoComputeMissingProceduresTest {
 	String medicalCoverageCuit = "123";
@@ -25,9 +26,7 @@ public class BillProceduresResponseBoComputeMissingProceduresTest {
 		 * 2 procedures requested
 		 */
 
-		BillProceduresRequestBo request = new BillProceduresRequestBo(
-			medicalCoverageCuit,
-			LocalDateTime.now(),
+		BillProceduresRequestBo request = makeBillProceduresRequestBo(
 			List.of(
 				new BillProceduresRequestItemBo("sctid1", "pt1"),
 				new BillProceduresRequestItemBo("sctid2", "pt2")
@@ -63,9 +62,7 @@ public class BillProceduresResponseBoComputeMissingProceduresTest {
 		 * Request
 		 */
 
-		BillProceduresRequestBo request = new BillProceduresRequestBo(
-				medicalCoverageCuit,
-				LocalDateTime.now(),
+		BillProceduresRequestBo request = makeBillProceduresRequestBo(
 				List.of(
 						new BillProceduresRequestItemBo("sctid1", "pt1"),
 						new BillProceduresRequestItemBo("sctid2", "pt2"),
@@ -97,9 +94,7 @@ public class BillProceduresResponseBoComputeMissingProceduresTest {
 		 * Request
 		 */
 
-		BillProceduresRequestBo request = new BillProceduresRequestBo(
-				medicalCoverageCuit,
-				LocalDateTime.now(),
+		BillProceduresRequestBo request = makeBillProceduresRequestBo(
 				List.of(
 						new BillProceduresRequestItemBo("sctid1", "pt1"),
 						new BillProceduresRequestItemBo("sctid2", "pt1"),
@@ -133,4 +128,16 @@ public class BillProceduresResponseBoComputeMissingProceduresTest {
 	private static BillProceduresResponseItemBo getBillProceduresResponseItemBo(String pt) {
 		return new BillProceduresResponseItemBo("code", "description", pt, 123, LocalDateTime.now(), 1.0F, 2.0F, 3.0F, 4.0F, 5.0F);
 	}
+
+
+	private BillProceduresRequestBo makeBillProceduresRequestBo(List<BillProceduresRequestItemBo> procedures) {
+		BillProceduresRequestBo request = new BillProceduresRequestBo(
+				medicalCoverageCuit,
+				LocalDateTime.now(),
+				procedures,
+				Optional.empty()
+		);
+		return request;
+	}
+
 }

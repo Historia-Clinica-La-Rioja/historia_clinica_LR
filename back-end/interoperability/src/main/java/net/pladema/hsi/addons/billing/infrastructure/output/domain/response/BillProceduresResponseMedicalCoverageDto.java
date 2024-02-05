@@ -1,4 +1,4 @@
-package net.pladema.hsi.addons.billing.infrastructure.output.domain;
+package net.pladema.hsi.addons.billing.infrastructure.output.domain.response;
 
 import lombok.Getter;
 import lombok.Setter;

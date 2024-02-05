@@ -1,4 +1,4 @@
-package net.pladema.hsi.addons.billing.infrastructure.output.domain;
+package net.pladema.hsi.addons.billing.infrastructure.output.domain.response;
 
 import java.time.LocalDateTime;
 

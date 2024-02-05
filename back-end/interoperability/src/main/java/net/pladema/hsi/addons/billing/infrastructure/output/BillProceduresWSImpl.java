@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.pladema.hsi.addons.billing.application.BillProceduresException;
 
-import net.pladema.hsi.addons.billing.infrastructure.output.domain.BillProceduresErrorResponseDto;
+import net.pladema.hsi.addons.billing.infrastructure.output.domain.response.BillProceduresResponseDto;
+import net.pladema.hsi.addons.billing.infrastructure.output.domain.response.BillProceduresErrorResponseDto;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +26,6 @@ import net.pladema.hsi.addons.billing.application.port.BillProceduresPort;
 import net.pladema.hsi.addons.billing.domain.BillProceduresRequestBo;
 import net.pladema.hsi.addons.billing.domain.BillProceduresResponseBo;
 import net.pladema.hsi.addons.billing.infrastructure.output.domain.BillProceduresRequestDto;
-import net.pladema.hsi.addons.billing.infrastructure.output.domain.BillProceduresResponseDto;
 
 @Slf4j
 @ConditionalOnProperty(
@@ -52,20 +52,54 @@ public class BillProceduresWSImpl implements BillProceduresPort {
 		};
 	}
 
+	/**
+	 * The addons server offers 2 endpoints for fetching billing data.
+	 *  * By encounterId
+	 *  * Through a list of snomeds (sctid, pt) pairs.
+	 * The workflow is as follows:
+	 * 1. Try to fetch the billing data by encounterId. The addons service may not yet have the data
+	 * for that encounterId.
+	 * 2. If 1 doesn't return anything (or returns 4xx), we call the other endpoint (fetch by snomed)
+	 * @param request
+	 * @return
+	 * @throws BillProceduresException
+	 */
 	public BillProceduresResponseBo getBilling(BillProceduresRequestBo request) throws BillProceduresException {
+		if (request.getEncounterId().isPresent()) {
+			return fetchByEncounter(request);
+		} else {
+			return fetchBySnomeds(request);
+		}
+	}
+
+	public BillProceduresResponseBo fetchByEncounter(BillProceduresRequestBo request) throws BillProceduresException {
+		try {
+			Integer encounterId = request.getEncounterId().orElseThrow(() -> new RuntimeException("No hay encounterId"));
+			BillProceduresResponseDto response = restClient.exchangeGet(
+					billingWSConfig.getEncounterUrl() + "/" + encounterId,
+					BillProceduresResponseDto.class
+			).getBody().validate();
+			return response.toBo(request);
+		} catch (Exception e) {
+			//Just log the exception and try to fetch by snomeds
+			log.warn("Fetch por encounterId falló, se continua por lista de snomeds");
+			return fetchBySnomeds(request);
+		}
+	}
+
+	private BillProceduresResponseBo fetchBySnomeds(BillProceduresRequestBo request) throws BillProceduresException {
 		try {
 			BillProceduresResponseDto response = restClient.exchangePut(
-				billingWSConfig.getEncounterUrl(),
-				buildRequest(request),
-				BillProceduresResponseDto.class
-				).getBody().validate();
+					billingWSConfig.getEncounterUrl(),
+					buildRequest(request),
+					BillProceduresResponseDto.class
+			).getBody().validate();
 			return response.toBo(request);
 		} catch (RestTemplateApiException e) {
 			throw processException(e);
 		} catch (Exception e) {
 			throw processException(e);
 		}
-
 	}
 
 	private BillProceduresException processException(Exception e) {

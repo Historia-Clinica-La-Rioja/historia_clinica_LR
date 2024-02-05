@@ -2,11 +2,11 @@ package net.pladema.hsi.addons.billing.domain;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import lombok.Value;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 @Getter
 @ToString
@@ -24,10 +24,10 @@ public class BillProceduresResponseItemBo {
 	Float total;
 
 	public BillProceduresResponseItemBo(String code, String description, String snomedPt, Integer amount, LocalDateTime date, Float rate, Float coveragePercentage, Float coverageRate, Float patientRate, Float total) {
-		this.code = code == null ? "" : code;
-		this.description = description == null ? "" : description;
-		this.snomedPt = snomedPt == null ? "" : snomedPt;
-		this.amount = amount == null ? 0 : amount;
+		this.code = ObjectUtils.defaultIfNull(code, "");
+		this.description = ObjectUtils.firstNonNull(description, snomedPt, "");
+		this.snomedPt = ObjectUtils.defaultIfNull(snomedPt, "");
+		this.amount = ObjectUtils.defaultIfNull(amount, 0);
 		this.date = date;
 		this.rate = zeroIfNull(rate);
 		this.coveragePercentage = zeroIfNull(coveragePercentage);

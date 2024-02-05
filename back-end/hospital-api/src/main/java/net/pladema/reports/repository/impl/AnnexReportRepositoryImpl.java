@@ -51,7 +51,8 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 			(String) a[14],
 			(String) a[15],
 			(Integer) a[16],
-			mapCreatedOn(a[17])
+			mapCreatedOn(a[17]),
+			(Integer) a[18]
 		);
 	}
 
@@ -99,18 +100,12 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     @Override
     public Optional<AnnexIIOutpatientVo> getConsultationAnnexInfo(Long documentId) {
         String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, " +
-                 "oc.start_date, " +
-                  "oc.institution_id, " +
-                   "oc.patient_id, " +
-                    "oc.clinical_specialty_id, " +
-                     "oc.patient_medical_coverage_id, " +
-                      "d.created_on " +
+                "       SELECT oc.id, d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)" +
                 "       WHERE d.id = :documentId " +
                 "       UNION ALL " +
-                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id, vc.patient_medical_coverage_id, d.created_on " +
+                "       SELECT vc.id, d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id, vc.patient_medical_coverage_id, d.created_on " +
                 "       FROM {h-schema}document AS d " +
                 "       JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
                 "       WHERE d.id = :documentId " +
@@ -118,7 +113,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
                 "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, " +
                 "               cs.name, i.sisa_code, prob.descriptions as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos, " +
-                "				t.created_on as createdOn " +
+                "				t.created_on as createdOn, t.id as id " +
                 "       FROM t " +
                 "           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
                 "           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -157,14 +152,14 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	@Override
 	public Optional<AnnexIIOutpatientVo> getOdontologyConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
+				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}odontology_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 6)" +
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
 				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos	" +
-				"               t.created_on as createdOn " +
+				"               t.created_on as createdOn, t.id as id" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
@@ -248,14 +243,14 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 	@Override
 	public Optional<AnnexIIOutpatientVo> getNursingConsultationAnnexGeneralInfo(Long documentId) {
 		String query = "WITH t AS (" +
-				"       SELECT d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
+				"       SELECT oc.id, d.id as doc_id, oc.performed_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id, d.created_on " +
 				"       FROM {h-schema}document AS d " +
 				"       JOIN {h-schema}nursing_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 7)" +
 				"       WHERE d.id = :documentId) " +
 				"       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
 				"               pe.birth_date, it.description as idType, pe.identification_number, t.performed_date, null as hasProcedures, " +
 				"               null, i.sisa_code, null as problems, mc.name as medicalCoverageName, mc.cuit as medicalCoverageCuit, hi.rnos   " +
-				"               t.created_on as createdOn" +
+				"               t.created_on as createdOn, t.id as id" +
 				"       FROM t " +
 				"           JOIN {h-schema}Institution AS i ON (t.institution_id = i.id) " +
 				"           JOIN {h-schema}Patient AS pa ON (t.patient_id = pa.id) " +
