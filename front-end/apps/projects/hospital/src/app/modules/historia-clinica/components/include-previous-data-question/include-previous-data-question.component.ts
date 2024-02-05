@@ -6,9 +6,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./include-previous-data-question.component.scss']
 })
 export class IncludePreviousDataQuestionComponent {
+  @Input() question: string;
+  @Input() message: string;
+  @Input() addButtonLabel?: string;
+  @Input() discardButtonLabel?: string;
 
-  @Input() dataName: string;
-  @Input() date: string;
   @Output() response = new EventEmitter<boolean>();
 
 }

@@ -53,10 +53,17 @@
 			"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
 		},
 		"include-previous-data-question": {
+			"TITLE":"Aviso",
 			"DESCRIPTION": "Últimos {{dataName}} cargados previamente el {{date}}",
 			"QUESTION": "¿Desea incluirlos en la consulta?",
-			"ADD": "SI, INCLUIRLOS",
-			"DISCARD": "NO, DESCARTARLOS"
+			"ADD": "Si, incluirlos",
+			"DISCARD": "No, descartarlos",
+			"violence-situations": {
+                "DESCRIPTION": "Se incluyó el problema {{problem}}, se recomienda inlcuir una solicitud de referencia para un equipo especializado en abordaje de violencias.",
+                "QUESTION": "¿Desea incluir una solicitud de referencia en la consulta?",
+				"ADD": "Si, incluir",
+				"DISCARD": "No, descartar"
+			}
 		},
 		"template-concept-search": {
 			"TEMPLATE_OPTION_GROUP": "Plantillas",

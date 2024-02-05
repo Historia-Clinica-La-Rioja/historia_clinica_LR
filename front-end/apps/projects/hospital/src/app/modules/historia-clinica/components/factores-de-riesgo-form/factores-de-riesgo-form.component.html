@@ -1,8 +1,9 @@
 <div>
     <h2 *ngIf="showTitle" class="mat-h2" [translate]="'historia-clinica.factores-de-riesgo-form.TITLE'"></h2>
-    <app-include-previous-data-question *ngIf="showPreloadData"
-        [dataName]="'historia-clinica.factores-de-riesgo-form.NAME' | translate"
-        [date]="factoresDeRiesgoFormService.getDate()" (response)="savePreloadData($event)" id="risk_factors_question">
+    <app-include-previous-data-question *ngIf="showPreloadData" [question]="'historia-clinica.include-previous-data-question.QUESTION' | translate"
+    [message]="'historia-clinica.include-previous-data-question.DESCRIPTION'
+    | translate: { dataName: 'historia-clinica.factores-de-riesgo-form.NAME' | translate, date: factoresDeRiesgoFormService.getDate()}"
+     (response)="savePreloadData($event)" id="risk_factors_question">
     </app-include-previous-data-question>
     <app-document-section>
         <ng-container concept-form>

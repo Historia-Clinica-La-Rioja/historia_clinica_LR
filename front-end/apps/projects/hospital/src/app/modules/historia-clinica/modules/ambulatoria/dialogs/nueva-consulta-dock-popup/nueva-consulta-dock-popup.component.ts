@@ -59,6 +59,8 @@ const TIME_OUT = 5000;
 	styleUrls: ['./nueva-consulta-dock-popup.component.scss']
 })
 export class NuevaConsultaDockPopupComponent implements OnInit {
+	showWarningViolenceSituation = true;
+	dataName='"Golpes"';
 	disableConfirmButton = false;
 	formEvolucion: UntypedFormGroup;
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
@@ -253,6 +255,14 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			}
 
 		});
+	}
+
+	openReferenceDialog(event){
+		if(event){
+			this.ambulatoryConsultationReferenceService.openReferenceDialog();
+		}else{
+			this.showWarningViolenceSituation = false;
+		}
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], nuevaConsulta: CreateOutpatientDto): void {

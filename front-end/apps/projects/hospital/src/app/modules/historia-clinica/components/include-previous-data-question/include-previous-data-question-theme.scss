@@ -4,4 +4,10 @@
     .background-primary {
         background-color: mat-color($palette-primary, 100);
     }
+
+    .title{
+        color: mat-color($palette-primary);
+        font-weight: 500;
+        font-size: large;
+    }
 }

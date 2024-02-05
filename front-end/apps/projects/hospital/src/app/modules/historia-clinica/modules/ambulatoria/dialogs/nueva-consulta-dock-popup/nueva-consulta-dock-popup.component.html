@@ -186,6 +186,15 @@
 			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
 
+				<app-include-previous-data-question *ngIf="showWarningViolenceSituation"
+					[question]="'historia-clinica.include-previous-data-question.violence-situations.QUESTION'
+                    | translate"
+					[message]="'historia-clinica.include-previous-data-question.violence-situations.DESCRIPTION'
+                    | translate: {problem: dataName}"
+					(response)="openReferenceDialog($event)"
+					id="violence_situation_data_question">
+				</app-include-previous-data-question>
+
 				<app-titled-content-card *ngIf="!ambulatoryConsultationReferenceService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGISTERED_REQUEST' }}">
 					<app-reference-request-list [service]="ambulatoryConsultationReferenceService">

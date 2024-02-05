@@ -1,7 +1,9 @@
 <div>
     <app-include-previous-data-question *ngIf="showPreloadData"
-        [dataName]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.NAME' | translate"
-        [date]="datosAntropometricosNuevaConsultaService.getDate()" (response)="savePreloadData($event)"
+        [question]="'historia-clinica.include-previous-data-question.QUESTION' | translate"
+        [message]="'historia-clinica.include-previous-data-question.DESCRIPTION'
+        | translate: { dataName: 'ambulatoria.paciente.nueva-consulta.datos-antropometricos.NAME' | translate, date: datosAntropometricosNuevaConsultaService.getDate()}"
+        (response)="savePreloadData($event)"
         id="anthropometric_data_question">
     </app-include-previous-data-question>
     <app-document-section>
