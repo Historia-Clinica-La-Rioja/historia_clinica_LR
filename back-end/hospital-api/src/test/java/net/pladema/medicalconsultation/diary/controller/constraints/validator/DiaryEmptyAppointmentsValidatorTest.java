@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.controller.constraints.validator;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,11 +35,13 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	@Mock
 	private LocalDateMapper localDateMapper;
 
+	@Mock
+	private FeatureFlagsService featureFlagsService;
+
 
 	@BeforeEach
 	void setUp() {
-		diaryEmptyAppointmentsValidator = new DiaryEmptyAppointmentsValidator(appointmentService,
-				localDateMapper);
+		diaryEmptyAppointmentsValidator = new DiaryEmptyAppointmentsValidator(appointmentService, localDateMapper, featureFlagsService);
 		when(localDateMapper.fromStringToLocalDate("2020-08-01")).thenReturn(LocalDate.parse("2020-08-01"));
 		when(localDateMapper.fromStringToLocalDate("2020-08-31")).thenReturn(LocalDate.parse("2020-08-31"));
 		when(localDateMapper.fromStringToLocalTime("10:00:00")).thenReturn(LocalTime.parse("10:00:00"));
@@ -62,7 +64,7 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 				.snomedId(55)
 				.build();
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
-		when(appointmentService.getFutureActiveAppointmentsByDiary(anyInt())).thenReturn(returnFutureAppmets);
+		when(appointmentService.getAppointmentsByDiaries(any(), any(), any())).thenReturn(returnFutureAppmets);
 
 	}
 
@@ -78,7 +80,7 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 				.medicalAttentionTypeId((short) 2)
 				.build();
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
-		when(appointmentService.getFutureActiveAppointmentsByDiary(anyInt())).thenReturn(returnFutureAppmets);
+		when(appointmentService.getAppointmentsByDiaries(any(), any(), any())).thenReturn(returnFutureAppmets);
 
 	}
 

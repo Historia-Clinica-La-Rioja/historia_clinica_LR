@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +38,8 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 
 	private final LocalDateMapper localDateMapper;
 
+	private final FeatureFlagsService featureFlagsService;
+
 	@Override
 	public void initialize(DiaryEmptyAppointmentsValid constraintAnnotation) {
 		// nothing to do
@@ -43,38 +48,47 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 	@Override
 	public boolean isValid(DiaryDto diaryToUpdate, ConstraintValidatorContext context) {
 		LOG.debug("Input parameters -> diaryToUpdateId {}", diaryToUpdate);
-		Collection<AppointmentBo> appointments = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
+		if (!featureFlagsService.isOn(AppFeature.ENABLE_DYNAMIC_DIARIES))
+			return validateAppointments(diaryToUpdate, context);
+		return true;
+	}
 
+	private boolean validateAppointments(DiaryDto diaryToUpdate, ConstraintValidatorContext context) {
 		LocalDate from = localDateMapper.fromStringToLocalDate(diaryToUpdate.getStartDate());
 		LocalDate to = localDateMapper.fromStringToLocalDate(diaryToUpdate.getEndDate());
+
+		Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), null, null);
 
 		HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday = diaryToUpdate.getDiaryOpeningHours().stream()
 				.collect(groupingBy(doh -> doh.getOpeningHours().getDayWeekId(),
 						HashMap<Short, List<DiaryOpeningHoursDto>>::new, Collectors.toList()));
 
-		Optional<AppointmentBo> appointmentOutOfBounds = appointments.stream().filter(a -> {
-			List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
-			return newHours == null
-					|| outOfDiaryBounds(from, to, a)
-					|| outOfOpeningHoursBounds(a, newHours);
-		}).findFirst();
+		Optional<AppointmentBo> appointmentOutOfBounds = appointments.stream().filter(a -> filterOutOfBpundsOpeningHours(a, appointmentsByWeekday, from, to)).findFirst();
 
-		Optional<AppointmentBo> appointmentWithDifferentTypeOfMedicalAttention = appointments.stream().filter(a -> {
-			List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
-			return newHours == null
-					|| differentTypeOfMedicalAttention(a, newHours);
-		}).findFirst();
+		Optional<AppointmentBo> appointmentWithDifferentTypeOfMedicalAttention = appointments.stream().filter(a -> filterOpeningHours(a, appointmentsByWeekday)).findFirst();
 
-		if (appointmentOutOfBounds.isPresent()) {
-			buildResponse(context, "{diary.appointments.invalid}");
-			return false;
-		}
+		if (appointmentOutOfBounds.isPresent())
+			return parseErrorResponse(context, "{diary.appointments.invalid}");
 
-		if (appointmentWithDifferentTypeOfMedicalAttention.isPresent()) {
-			buildResponse(context, "{diary.appointments.invalid.type}");
-			return false;
-		}
+		if (appointmentWithDifferentTypeOfMedicalAttention.isPresent())
+			return parseErrorResponse(context, "{diary.appointments.invalid.type}");
+
 		return true;
+	}
+
+	private boolean parseErrorResponse(ConstraintValidatorContext context, String message) {
+		buildResponse(context, message);
+		return false;
+	}
+
+	private boolean filterOutOfBpundsOpeningHours(AppointmentBo a, HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday, LocalDate from, LocalDate to) {
+		List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
+		return newHours == null || outOfDiaryBounds(from, to, a) || outOfOpeningHoursBounds(a, newHours);
+	}
+
+	private boolean filterOpeningHours(AppointmentBo a, HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday) {
+		List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
+		return newHours == null || differentTypeOfMedicalAttention(a, newHours);
 	}
 
 	private boolean outOfOpeningHoursBounds(AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {

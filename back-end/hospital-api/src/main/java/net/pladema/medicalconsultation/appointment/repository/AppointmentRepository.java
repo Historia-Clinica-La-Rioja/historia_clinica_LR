@@ -53,10 +53,9 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
             "LEFT JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
-			"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
+			"LEFT JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
 			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
             "WHERE a.id = :appointmentId " +
-			"AND doh.pk.openingHoursId = aa.pk.openingHoursId " +
 			"AND a.deleteable.deleted = FALSE " +
             "AND ( has.pk.changedStateDate IS NULL OR has.pk.changedStateDate = " +
             "   ( SELECT MAX (subHas.pk.changedStateDate) FROM HistoricAppointmentState subHas WHERE subHas.pk.appointmentId = a.id) ) " +
@@ -68,7 +67,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"FROM Appointment AS a " +
 			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
-			"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
+			"LEFT JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
 			"WHERE a.id = :appointmentId " +
 			"AND a.deleteable.deleted = FALSE")
 	List<AppointmentVo> getAppointmentSummary(@Param("appointmentId") Integer appointmentId);

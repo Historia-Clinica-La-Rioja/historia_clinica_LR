@@ -180,6 +180,9 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitado generar el documento parte anestésico en internación")
 	HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO,
 
+	
+	@Label("Permite flexibilidad a la hora de manipular franjas horarias de las agendas")
+	ENABLE_DYNAMIC_DIARIES,
 	;
 
 	public boolean isActive() {

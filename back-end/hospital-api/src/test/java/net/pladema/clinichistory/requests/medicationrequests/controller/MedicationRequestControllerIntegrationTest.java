@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -99,6 +100,9 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private FetchDocumentFileById fetchDocumentFileById;
+
+	@MockBean
+	private SharedPersonPort sharedPersonPort;
 
     @BeforeEach
     void setup() {
