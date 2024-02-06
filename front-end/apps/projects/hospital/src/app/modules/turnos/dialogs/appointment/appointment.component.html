@@ -255,7 +255,7 @@
 				</div>
 
 				<div class="recurring-type" *appFeatureFlag="HABILITAR_RECURRENCIA_EN_DESARROLLO">
-					<div *ngIf="isAppointmentAfterToday && !appointment.overturn">
+					<div *ngIf="isAppointmentAfterToday">
 						<mat-form-field appearance="outline">
 							<mat-label [translate]="'turnos.appointment.RECURRING_TYPE'"></mat-label>
 							<mat-select formControlName="recurringType">

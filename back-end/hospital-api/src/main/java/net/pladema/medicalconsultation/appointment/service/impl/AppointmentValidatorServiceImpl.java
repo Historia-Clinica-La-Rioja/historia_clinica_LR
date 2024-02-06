@@ -45,12 +45,12 @@ import static net.pladema.medicalconsultation.appointment.repository.entity.Appo
 import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.OUT_OF_DIARY;
 import static net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState.SERVED;
 import javax.validation.ConstraintViolationException;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.RecurringAppointmentException;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentOption;
 import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.service.domain.CreateCustomAppointmentBo;
-import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
 
 @Service
 public class AppointmentValidatorServiceImpl implements AppointmentValidatorService {
@@ -162,7 +162,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, String.format("El estado del turno es invalido."));
 		}
 
-		if (appointmentService.existAppointment(appointmentBo.get().getDiaryId(),date,time, appointmentId)) {
+		if (appointmentService.existAppointment(appointmentBo.get().getDiaryId(),date,time, appointmentId) && !appointmentService.isAppointmentOverturn(appointmentId)) {
 			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_ALREADY_ASSIGNED, String.format("En ese horario ya existe un turno asignado o la agenda se encuentra bloqueada."));
 		}
 
@@ -186,7 +186,7 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
 		if (recurringAppointmentOption != null && recurringAppointmentOption.equals(RecurringAppointmentOption.CURRENT_APPOINTMENT.getId())) {
 			if (appointmentService.existAppointment(diaryId, localDateMapper.fromStringToLocalDate(date), localDateMapper.fromStringToLocalTime(hour), appointmentId))
-				throw new ConstraintViolationException(OCUPPIED_APPOINTMENT, Collections.emptySet());
+				throw new RecurringAppointmentException(OCUPPIED_APPOINTMENT);
 		} else {
 			if (appointmentBo.getParentAppointmentId() != null)
 				date = setStartDate(appointmentBo, recurringAppointmentOption, date);
@@ -209,13 +209,11 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		LOG.debug("Input parameters -> bo {}", bo);
 		setEndDateDto(bo);
 		AppointmentBo appointmentBo = bo.getCreateAppointmentBo();
-		CustomRecurringAppointmentBo customRecurringAppointmentBo = bo.getCustomRecurringAppointmentBo();
-
 		AppointmentBo appointment = getAppointment(appointmentBo.getId(), RecurringAppointmentType.EVERY_WEEK);
 
 		if (appointmentBo.getAppointmentOptionId() != null && appointmentBo.getAppointmentOptionId().equals(RecurringAppointmentOption.CURRENT_APPOINTMENT.getId())) {
 			if (appointmentService.existAppointment(appointmentBo.getDiaryId(), appointmentBo.getDate(), appointmentBo.getHour(), appointmentBo.getId()))
-				throw new ConstraintViolationException(OCUPPIED_APPOINTMENT, Collections.emptySet());
+				throw new RecurringAppointmentException(OCUPPIED_APPOINTMENT);
 		} else {
 			if (appointment.getParentAppointmentId() != null) {
 				appointmentBo.setDate(
@@ -228,13 +226,8 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 				);
 			}
 
-			checkWeekRepetition(
-					appointmentBo.getDate(),
-					customRecurringAppointmentBo.getEndDate(),
-					customRecurringAppointmentBo.getRepeatEvery(),
-					appointmentBo.getDiaryId(),
-					appointmentBo.getHour(),
-					appointmentBo.getOpeningHoursId());
+			if (!bo.isOverturn())
+				checkWeekRepetition(bo);
 		}
 	}
 
@@ -261,10 +254,10 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 			throw new ConstraintViolationException("El turno se quiere cambiar a una recurrencia no permitida", Collections.emptySet());
 	}
 
-	private void checkWeekRepetition(LocalDate date, LocalDate endDate, Short repeatEvery, Integer diaryId, LocalTime hour, Integer openingHoursId) {
-		for (LocalDate initDate = date.plusDays(WEEK_DAYS * repeatEvery); !initDate.isAfter(endDate); initDate = initDate.plusDays(WEEK_DAYS * repeatEvery)) {
-			if (appointmentService.existAppointment(diaryId, openingHoursId, initDate, hour))
-				throw new ConstraintViolationException("Ya hay al menos un turno ocupado en alguna de las fechas", Collections.emptySet());
+	private void checkWeekRepetition(CreateCustomAppointmentBo bo) {
+		for (LocalDate initDate = bo.getDate().plusDays(WEEK_DAYS * bo.getRepeatEvery()); !initDate.isAfter(bo.getEndDate()); initDate = initDate.plusDays(WEEK_DAYS * bo.getRepeatEvery())) {
+			if (appointmentService.existAppointment(bo.getDiaryId(), bo.getOpeningHours(), initDate, bo.getHour()))
+				throw new RecurringAppointmentException("Ya hay al menos un turno ocupado en alguna de las fechas");
 		}
 	}
 

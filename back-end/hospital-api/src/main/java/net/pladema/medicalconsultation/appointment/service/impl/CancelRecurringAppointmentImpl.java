@@ -9,9 +9,13 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CancelRecurringAppointment;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.RecurringAppointmentException;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,13 +26,16 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 
 	private final AppointmentService appointmentService;
 
+	private final static String APPOINTMENT_NOT_FOUND = "No se ha encontrado le turno";
+
+	@Transactional
 	@Override
 	public boolean execute(Integer appointmentId, Boolean cancelAllAppointments) {
 		log.debug("Input parameters -> appointmentId {}, cancelAllAppointments {}", appointmentId, cancelAllAppointments);
-		Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+		Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new RecurringAppointmentException(APPOINTMENT_NOT_FOUND));
 
-		if (appointment.isPresent() && appointment.get().getParentAppointmentId() != null)
-			appointmentId = appointment.get().getParentAppointmentId();
+		if (appointment.getParentAppointmentId() != null)
+			appointmentId = appointment.getParentAppointmentId();
 
 		if (cancelAllAppointments) {
 			appointmentRepository.cancelAllRecurringAppointments(appointmentId, UserInfo.getCurrentAuditor());
@@ -37,29 +44,36 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 			appointmentRepository.cancelCurrentAndLaterRecurringAppointments(
 					appointmentId,
 					UserInfo.getCurrentAuditor(),
-					appointment.get().getCreationable().getCreatedOn()
+					appointment.getCreationable().getCreatedOn()
 			);
 			appointmentService.checkRemainingChildAppointments(appointmentId);
-			if (appointment.get().getParentAppointmentId() == null)
+			if (appointment.getParentAppointmentId() == null)
 				appointmentRepository.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor());
 		}
+		AppointmentBo appointmentBo = appointmentService.getAppointment(appointment.getId()).orElseThrow(() -> new RecurringAppointmentException(APPOINTMENT_NOT_FOUND));
+		appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId(), appointmentBo.getDate(), appointmentBo.getDate());
 		return true;
 	}
 
+	@Transactional
 	@Override
 	public boolean execute(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
+		Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new RecurringAppointmentException(APPOINTMENT_NOT_FOUND));
 
-		if (appointment.isPresent() && appointment.get().getParentAppointmentId() != null) {
+		if (appointment.getParentAppointmentId() != null) {
 			appointmentService.deleteParentId(appointmentId);
 			appointmentService.deleteCustomAppointment(appointmentId);
-			appointmentId = appointment.get().getParentAppointmentId();
+			appointmentId = appointment.getParentAppointmentId();
 		}
 
-		LocalDateTime createdOn = appointment.get().getCreationable().getCreatedOn();
+		LocalDateTime createdOn = appointment.getCreationable().getCreatedOn();
 		appointmentRepository.cancelLaterRecurringAppointments(appointmentId, UserInfo.getCurrentAuditor(), createdOn);
 		appointmentService.checkRemainingChildAppointments(appointmentId);
+
+		AppointmentBo appointmentBo = appointmentService.getAppointment(appointment.getId()).orElseThrow(() -> new RecurringAppointmentException(APPOINTMENT_NOT_FOUND));
+		appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId(), appointmentBo.getDate(), appointmentBo.getDate());
+
 		return true;
 	}
 }

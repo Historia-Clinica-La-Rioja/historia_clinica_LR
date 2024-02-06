@@ -8,6 +8,9 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -17,6 +20,33 @@ import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppoi
 public class CreateCustomAppointmentBo {
 
 	private AppointmentBo createAppointmentBo;
-
 	private CustomRecurringAppointmentBo customRecurringAppointmentBo;
+
+	public LocalDate getDate() {
+		return createAppointmentBo.getDate();
+	}
+
+	public Short getRepeatEvery() {
+		return customRecurringAppointmentBo.getRepeatEvery();
+	}
+
+	public LocalDate getEndDate() {
+		return customRecurringAppointmentBo.getEndDate();
+	}
+
+	public Integer getDiaryId() {
+		return createAppointmentBo.getDiaryId();
+	}
+
+	public Integer getOpeningHours() {
+		return createAppointmentBo.getOpeningHoursId();
+	}
+
+	public LocalTime getHour() {
+		return createAppointmentBo.getHour();
+	}
+
+	public boolean isOverturn() {
+		return createAppointmentBo.isOverturn();
+	}
 }

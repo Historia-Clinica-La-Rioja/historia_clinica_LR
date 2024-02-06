@@ -24,29 +24,30 @@ import lombok.AllArgsConstructor;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.patient.service.PatientMedicalCoverageService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentOption;
 import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDateVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.CustomAppointment;
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.RecurringAppointmentException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateExceptionEnum;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.clinichistory.application.ports.OrderImageFileStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
@@ -343,8 +344,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time, Integer openingHoursId, Short recurringAppointmentTypeId) {
 		appointmentRepository.updateDate(appointmentId, date, time);
 
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO))
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
 			appointmentRepository.updateRecurringType(appointmentId, recurringAppointmentTypeId);
+		}
 
 		appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId);
 		verifyProtectedCondition(appointmentId);
@@ -692,8 +694,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public void checkAppointmentEveryWeek(Integer diaryId, LocalTime hour, LocalDate date, Short dayWeekId, Integer appointmentId) {
 		log.debug("Input parameters -> diaryId {}, hour {}, date {}, dayWeekId {}, appointmentId {}", diaryId, hour, date, dayWeekId, appointmentId);
 		List<Appointment> appointments = appointmentRepository.getLaterAppointmentsByHourAndDate(diaryId, hour, date, dayWeekId, appointmentId);
-		if (!appointments.isEmpty())
-			throw new ConstraintViolationException("Ya hay al menos un turno ocupado en alguna de las fechas", Collections.emptySet());
+		Boolean isOverturn = isAppointmentOverturn(appointmentId);
+		if (!appointments.isEmpty() && !isOverturn)
+			throw new RecurringAppointmentException("Ya hay al menos un turno ocupado en alguna de las fechas");
 	}
 
 	@Override
@@ -713,6 +716,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 			}
 			updateRecurringAppointmentDate(currentAppointment, newAppointment);
 		}
+		verifyRecurringAppointmentsOverturn(currentAppointment.getDiaryId(), newAppointment.getDate(), newAppointment.getDate());
 	}
 
 	@Override
@@ -774,6 +778,35 @@ public class AppointmentServiceImpl implements AppointmentService {
 		if (dayOfWeek == DayOfWeek.SUNDAY.getValue())
 			dayOfWeek = 0;
 		return (short) dayOfWeek;
+	}
+
+	@Override
+	public Boolean isAppointmentOverturn(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		return appointmentRepository.isAppointmentOverturn(appointmentId);
+	}
+
+	@Override
+	public void verifyRecurringAppointmentsOverturn(Integer diaryId, LocalDate from, LocalDate to) {
+		log.debug("Input parameters -> diaryId {}, from {}, to {}", diaryId, from, to);
+
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
+			List<AppointmentDateVo> appointments = appointmentRepository.getAssignedAppointmentsByDiary(diaryId);
+
+			if (!appointments.isEmpty()) {
+				appointments.stream().peek(appointmentVo -> {
+					List<Appointment> appointmentsFromDate = appointmentRepository.getAppointmentsFromDate(diaryId, appointmentVo.getDate(), appointmentVo.getDate(), appointmentVo.getHour());
+					if (!appointmentsFromDate.isEmpty() && appointmentsFromDate.get(0).getIsOverturn()) {
+						Appointment firstAppointment = appointmentsFromDate.get(0);
+						updateState(firstAppointment.getId(), AppointmentState.ASSIGNED, UserInfo.getCurrentAuditor(), null);
+						firstAppointment.setIsOverturn(false);
+						firstAppointment.setHour(appointmentVo.getHour());
+						firstAppointment.setDateTypeId(appointmentVo.getDate());
+						appointmentRepository.save(firstAppointment);
+					}
+				}).collect(Collectors.toList());
+			}
+		}
 	}
 
 	private void updateRecurringAppointmentDate(AppointmentBo currentAppointment, AppointmentBo newAppointment) {

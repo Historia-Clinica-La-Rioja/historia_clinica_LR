@@ -118,4 +118,8 @@ public interface AppointmentService {
 	void deleteCustomAppointment(Integer appointmentId);
 
 	void deleteParentId(Integer appointmentId);
+
+	Boolean isAppointmentOverturn(Integer appointmentId);
+
+	void verifyRecurringAppointmentsOverturn(Integer diaryId, LocalDate from, LocalDate to);
 }

@@ -6,12 +6,10 @@ import net.pladema.medicalconsultation.appointment.infraestructure.output.reposi
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateEveryWeekAppointmentService;
-
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-
 import net.pladema.medicalconsultation.appointment.service.domain.RecurringTypeBo;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -27,6 +25,9 @@ public class CreateEveryWeekAppointmentServiceImpl implements CreateEveryWeekApp
 
 	private final AppointmentService appointmentService;
 
+	private final ValidateAppointmentOverturnLimit validateAppointmentOverturnLimit;
+
+	@Transactional
 	@Override
 	public boolean execute(AppointmentBo newAppointment, LocalDate diaryEndDate) {
 		log.debug("Input parameters -> newAppointment {}, diaryEndDate {}", newAppointment, diaryEndDate);
@@ -38,6 +39,7 @@ public class CreateEveryWeekAppointmentServiceImpl implements CreateEveryWeekApp
 				appointmentService.checkUpdateType(currentAppointment.get(), newAppointment);
 			} else {
 				for (LocalDate initDate = newAppointment.getDate().plusDays(WEEK_DAYS); !initDate.isAfter(diaryEndDate); initDate = initDate.plusDays(WEEK_DAYS)) {
+					validateAppointmentOverturnLimit.checkFutureAvailableOverturn(newAppointment, initDate);
 					newAppointment.setDate(initDate);
 					newAppointment.setRecurringTypeBo(new RecurringTypeBo(RecurringAppointmentType.EVERY_WEEK.getId(), RecurringAppointmentType.EVERY_WEEK.getValue()));
 					newAppointment.setParentAppointmentId(newAppointment.getId());

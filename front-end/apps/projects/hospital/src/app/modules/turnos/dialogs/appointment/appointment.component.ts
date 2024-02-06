@@ -18,7 +18,7 @@ import {
 	RECURRING_APPOINTMENT_OPTIONS,
 } from '../../constants/appointment';
 import {
-	ApiErrorDto,
+	ApiErrorMessageDto,
 	AppFeature,
 	AppointmentDto,
 	AppointmentListDto,
@@ -39,7 +39,6 @@ import {
 	RecurringTypeDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
-	ApiErrorMessageDto,
 } from '@api-rest/api-model.d';
 
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
@@ -757,21 +756,13 @@ export class AppointmentComponent implements OnInit {
 				.subscribe((appointments: AppointmentListDto[]) => {
 					const appointmentsInDate = this.generateEventsFromAppointments(appointments)
 						.filter(appointment => appointment.start.getTime() == previousDate.getTime());
+
 					if (appointmentsInDate.length > 0 && !this.data.appointmentData.overturn) {
 						this.updateAppointmentOverturn(
 							appointmentsInDate[0].meta.appointmentId,
 							appointmentsInDate[0].meta.appointmentStateId,
 							false,
 							appointmentsInDate[0].meta.patient.id
-						);
-					}
-
-					if (this.data.appointmentData.overturn) {
-						this.updateAppointmentOverturn(
-							this.data.appointmentData.appointmentId,
-							this.data.appointmentData.appointmentStateId,
-							false,
-							this.data.appointmentData.patient.id
 						);
 					}
 					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
@@ -818,8 +809,8 @@ export class AppointmentComponent implements OnInit {
 			.subscribe(_ => {
 				this.setCustomAppointment();
 				this.updateDate(updateAppointmentDate, previousDate, newDate);
-			}, (error: ApiErrorDto) => {
-				this.formDate.controls.recurringType.setErrors({invalid: error?.errors[0]});
+			}, (error: ApiErrorMessageDto) => {
+				this.formDate.controls.recurringType.setErrors({invalid: error.text});
 			})
 	}
 

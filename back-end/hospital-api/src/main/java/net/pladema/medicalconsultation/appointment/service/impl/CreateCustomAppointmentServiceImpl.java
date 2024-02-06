@@ -17,6 +17,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.RecurringTypeB
 import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -34,6 +35,9 @@ public class CreateCustomAppointmentServiceImpl implements CreateCustomAppointme
 
 	private final CustomAppointmentRepository customAppointmentRepository;
 
+	private final ValidateAppointmentOverturnLimit validateAppointmentOverturnLimit;
+
+	@Transactional
 	@Override
 	public boolean execute(CreateCustomAppointmentBo bo) {
 		log.debug("Input parameters -> bo {}", bo);
@@ -49,11 +53,13 @@ public class CreateCustomAppointmentServiceImpl implements CreateCustomAppointme
 			} else {
 				customAppointmentSave(currentAppointment.get().getId(), customRecurringAppointmentBo.getRepeatEvery(), customRecurringAppointmentBo.getWeekDayId(), customRecurringAppointmentBo.getEndDate());
 				for (LocalDate initDate = appointmentBo.getDate().plusDays(WEEK_DAYS * repeatEvery); !initDate.isAfter(customRecurringAppointmentBo.getEndDate()); initDate = initDate.plusDays(WEEK_DAYS * repeatEvery)) {
+					validateAppointmentOverturnLimit.checkFutureAvailableOverturn(bo.getCreateAppointmentBo(), initDate);
 					appointmentBo.setDate(initDate);
 					appointmentBo.setRecurringTypeBo(new RecurringTypeBo(RecurringAppointmentType.CUSTOM.getId(), RecurringAppointmentType.CUSTOM.getValue()));
 					appointmentBo.setParentAppointmentId(appointmentBo.getId());
 					Integer appointmentId = createAppointmentService.execute(appointmentBo).getId();
 					customAppointmentSave(appointmentId, customRecurringAppointmentBo.getRepeatEvery(), customRecurringAppointmentBo.getWeekDayId(), customRecurringAppointmentBo.getEndDate());
+					appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId(), bo.getDate(), bo.getDate());
 				}
 			}
 			return true;
