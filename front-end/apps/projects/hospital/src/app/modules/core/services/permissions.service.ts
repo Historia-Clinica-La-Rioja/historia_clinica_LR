@@ -6,7 +6,7 @@ import { ContextService } from './context.service';
 import { ERole, RoleAssignmentDto } from '@api-rest/api-model';
 import { anyMatch } from '@core/utils/array.utils';
 
-const itemHasAnyRole = (itemRoles: ERole[], userRoles: ERole[]) => itemRoles.some(role => userRoles.includes(role));
+export const itemHasAnyRole = (itemRoles: ERole[], userRoles: ERole[]) => itemRoles.some(role => userRoles.includes(role));
 
 const filterRoleAssignment = (institutionId: number) =>
 	(assignments: RoleAssignmentDto[]) =>

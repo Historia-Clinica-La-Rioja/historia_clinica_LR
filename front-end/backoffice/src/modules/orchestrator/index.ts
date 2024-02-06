@@ -1,19 +1,21 @@
 import ContactMailIcon from '@material-ui/icons/ContactMail';
+import SGXPermissions from '../../libs/sgx/auth/SGXPermissions';
+import { DEFAULT_BO_ROLES } from '../roles-set';
 
 import OrchestratorShow from './OrchestratorShow';
 import OrchestratorList from './OrchestratorList';
 import OrchestratorCreate from './OrchestratorCreate';
 import OrchestratorEdit from './OrchestratorEdit';
 
-const orchestrator = {
+const orchestrator = (permissions: SGXPermissions) => ({
     icon: ContactMailIcon,
     show: OrchestratorShow,
-    list: OrchestratorList,
+    list: permissions.hasAnyAssignment(...DEFAULT_BO_ROLES) ? OrchestratorList : undefined,
     create: OrchestratorCreate,
     edit: OrchestratorEdit,
     options: {
         submenu: 'facilities'
     }
-};
+});
 
 export default orchestrator;

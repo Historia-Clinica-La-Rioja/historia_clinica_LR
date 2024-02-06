@@ -20,6 +20,17 @@ class SGXPermissions {
         return hasAny;
     }
 
+    hasAnyRoleName(...aRoleName: string[]) {
+        if (aRoleName.length === 0) {
+            return true;
+        }
+        const hasAny = aRoleName.find(roleName => 
+            this.roleAssignments.find(userAssignment => userAssignment.role === roleName)
+        ) !== undefined;
+
+        return hasAny;
+    }
+
     isOn(featureFlag: string) {
         return this.featureFlags.find(ff => ff === featureFlag) !== undefined;
     }

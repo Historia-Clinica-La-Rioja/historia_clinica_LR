@@ -15,17 +15,7 @@ import {
 	UpdatePasswordSuccessComponent
 } from "../auth/components/update-password-success/update-password-success.component";
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
-
-export const PUBLIC_API_ROLES = [
-	ERole.API_FACTURACION,
-	ERole.API_TURNOS,
-	ERole.API_PACIENTES,
-	ERole.API_RECETAS,
-	ERole.API_SIPPLUS,
-	ERole.API_USERS,
-	ERole.API_IMAGENES,
-	ERole.API_ORQUESTADOR,
-];
+import { MANAGER_ROLES } from './constants/menu';
 
 export enum HomeRoutes {
 	Home = '',						// pantalla inicial
@@ -36,8 +26,6 @@ export enum HomeRoutes {
 	Auditoria = 'auditoria',
 	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
 }
-
-const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL];
 
 const routes: Routes = [
 	{

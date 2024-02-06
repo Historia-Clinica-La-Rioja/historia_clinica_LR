@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import { RoleAssignmentDto } from '@api-rest/api-model';
 import { Observable, map } from 'rxjs';
-import { PUBLIC_API_ROLES } from '../../home-routing.module';
+import { RoleAssignmentDto } from '@api-rest/api-model';
+
+import { LoggedUserService } from '../../../auth/services/logged-user.service';
+import { PUBLIC_API_ROLES } from '../../constants/menu';
+
 
 export const hasAccessToManageKeys = (allRoles: RoleAssignmentDto[]) => {
 	return allRoles.filter((ra) => PUBLIC_API_ROLES.find(r => ra.role === r)).length > 0;

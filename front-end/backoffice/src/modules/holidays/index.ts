@@ -9,7 +9,7 @@ import { ROOT, ADMINISTRADOR } from '../roles';
 
 const holidays = (permissions: SGXPermissions) => ({
     show: HolidayShow,
-    list: HolidayList,
+    list: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? HolidayList : undefined,
     create: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? HolidayCreate : undefined,
     edit: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? HolidayEdit : undefined,
     options: {

@@ -1,7 +1,22 @@
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { MenuItemDef } from '@core/core-model';
 
-const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL];
+export const MANAGER_ROLES = [
+	ERole.GESTOR_DE_ACCESO_DE_DOMINIO,
+	ERole.GESTOR_DE_ACCESO_REGIONAL,
+	ERole.GESTOR_DE_ACCESO_LOCAL,
+];
+
+export const PUBLIC_API_ROLES = [
+	ERole.API_FACTURACION,
+	ERole.API_TURNOS,
+	ERole.API_PACIENTES,
+	ERole.API_RECETAS,
+	ERole.API_SIPPLUS,
+	ERole.API_USERS,
+	ERole.API_IMAGENES,
+	ERole.API_ORQUESTADOR,
+];
 
 export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 	{

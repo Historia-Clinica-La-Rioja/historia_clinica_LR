@@ -9,7 +9,7 @@ import { ROOT, ADMINISTRADOR } from '../roles';
 
 const careLines = (permissions: SGXPermissions) => ({
     show: CareLineShow,
-    list: CareLineList,
+    list: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? CareLineList : undefined,
     create: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? CareLineCreate : undefined,
     edit: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? CareLineEdit : undefined,
     options: {

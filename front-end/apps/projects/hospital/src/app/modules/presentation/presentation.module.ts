@@ -8,8 +8,10 @@ import { AppMaterialModule } from '@material/app.material.module';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { QuillModule } from 'ngx-quill';
 // components
+import { AddObservationsComponent } from './components/add-observations/add-observations.component';
 import { AsignPatientButtonComponent } from './components/asign-patient-button/asign-patient-button.component';
 import { BarComponent } from './components/bar/bar.component';
+import { ButtonComponent } from './components/button/button.component';
 import { CardComponent } from './components/card/card.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
 import { CellTemplatesComponent } from './components/cell-templates/cell-templates.component';
@@ -17,6 +19,7 @@ import { ChipsAutocompleteComponent } from './components/chips-autocomplete/chip
 import { ColoredDivPatientStateComponent } from './components/colored-div-patient-state/colored-div-patient-state.component';
 import { ColoredIconTextComponent } from './components/colored-icon-text/colored-icon-text.component';
 import { ColoredLabelComponent } from './colored-label/colored-label.component';
+import { ColorSelectorComponent } from './components/color-selector/color-selector.component';
 import { ContentTitleComponent } from './components/content-title/content-title.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
@@ -30,12 +33,12 @@ import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care
 import { ExpansionSectionComponent } from './components/expansion-section/expansion-section.component';
 import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
-import { FiltersComponent } from './components/filters/filters.component';
 import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
+import { FiltersComponent } from './components/filters/filters.component';
+import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
 import { FiltersSelectV2Component } from './components/filters-select-v2/filters-select-v2.component';
 import { FiltersTypeaheadComponent } from '../presentation/components/filters-typeahead/filters-typeahead.component';
-import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
 import { FloatingDivComponent } from './components/floating-div/floating-div.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
@@ -73,8 +76,6 @@ import { TitledSingleContentComponent } from './components/titled-single-content
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
-import { ButtonComponent } from './components/button/button.component';
-import { ColorSelectorComponent } from './components/color-selector/color-selector.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -88,22 +89,21 @@ import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { FullMedicalCoveragePipe } from './pipes/full-medical-coverage.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
-import { PatientToPersonPipe } from "./pipes/PatientToPersonPipe";
+import { PatientToPersonPipe } from './pipes/PatientToPersonPipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-import { AddObservationsComponent } from './components/add-observations/add-observations.component';
-
 
 
 @NgModule({
 	declarations: [
 		// components
-		AsignPatientButtonComponent,
 		AddObservationsComponent,
+		AsignPatientButtonComponent,
 		BarComponent,
+		ButtonComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
@@ -111,6 +111,7 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		ColoredDivPatientStateComponent,
 		ColoredIconTextComponent,
 		ColoredLabelComponent,
+		ColorSelectorComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
 		DateRangePickerComponent,
@@ -124,9 +125,9 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
-		FiltersComponent,
 		FilterButtonComponent,
 		FiltersCardComponent,
+		FiltersComponent,
 		FiltersSelectV2Component,
 		FiltersTypeaheadComponent,
 		FloatingDivComponent,
@@ -163,17 +164,15 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		TitledContentCardComponent,
 		TitledContentComponent,
 		TypeaheadComponent,
+		TypeaheadFilterOptionsComponent,
 		UserBadgeComponent,
   		FiltersSelectComponent,
   		TitledSingleContentComponent,
-		TypeaheadFilterOptionsComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
 		DiscardWarningComponent,
 		ViewPdfComponent,
-		ViewPdfComponent,
-		ColorSelectorComponent,
 		// directives
 		CtrlTemplateDirective,
 		// pipes
@@ -188,7 +187,6 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-		ButtonComponent,
 	],
 	imports: [
 		CommonModule,
@@ -208,8 +206,8 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		CoreModule,
 		AppMaterialModule,
 		// components
-		AsignPatientButtonComponent,
 		AddObservationsComponent,
+		AsignPatientButtonComponent,
 		BarComponent,
 		ButtonComponent,
 		CardComponent,
@@ -219,6 +217,7 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		ColoredDivPatientStateComponent,
 		ColoredIconTextComponent,
 		ColoredLabelComponent,
+		ColorSelectorComponent,
 		ContentTitleComponent,
 		DatepickerComponent,
 		DateRangePickerComponent,
@@ -232,9 +231,9 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
-		FiltersComponent,
 		FilterButtonComponent,
 		FiltersCardComponent,
+		FiltersComponent,
 		FiltersSelectComponent,
 		FloatingDivComponent,
 		IconedTextComponent,
@@ -270,7 +269,6 @@ import { AddObservationsComponent } from './components/add-observations/add-obse
 		TitledSingleContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		ColorSelectorComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
