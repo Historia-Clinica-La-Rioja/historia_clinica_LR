@@ -174,6 +174,8 @@ public enum AppFeature implements Feature {
 	@Label("Indica si esta habilitada la auditoria de acceso a la historia clinica de un paciente")
 	HABILITAR_AUDITORIA_DE_ACCESO_EN_HC,
 
+	@Label("Indica si esta habilitada la pantalla de monitoreo de integreación con CIPRES")
+	HABILITAR_MONITOREO_CIPRES,
 	;
 
 	public boolean isActive() {

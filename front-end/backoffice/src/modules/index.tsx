@@ -89,7 +89,7 @@ import procedureTemplateSnomeds from './proceduretemplatesnomeds';
 import loincCodes from './loinc-codes';
 import unitsOfMeasure from './units-of-measure';
 import procedureTemplateParameters from './proceduretemplateparameters'; 
-
+import cipresencounters from './cipresencounters';
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -111,7 +111,7 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
     <Resource name="medicalcoverageplans" {...medicalcoverageplans} />,
     <Resource name="medicalcoveragesmerge" />,
     // Ampliación
-    // 
+    //
 ];
 
 const resourcesFor = (permissions: SGXPermissions) =>
@@ -220,6 +220,8 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="modality" {...modality} />,
     <Resource name="movestudies" {...movestudies(permissions)} />,
     <Resource name="vclinichistoryaudit" {...vclinichistoryaudit(permissions)} />,
+    <Resource name="cipresencounters" {...cipresencounters(permissions)}/>,
+
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,

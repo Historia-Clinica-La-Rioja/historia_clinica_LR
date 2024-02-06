@@ -1009,6 +1009,15 @@ const messages = {
             addRelated: 'Asociar parámetro',
             deleteRelated: 'Desasociar parámetro',
             editRelated: 'Editar parámetro'
+        },
+        cipresencounters: {
+            name: 'Monitoreo de Cipres',
+            fields: {
+                encounterId: 'Id de consulta en HSI',
+                encounterApiId: 'Id de consulta en Cipres',
+                status:'Estado',
+                date:'Fecha'
+            }
         }
     }
 };
