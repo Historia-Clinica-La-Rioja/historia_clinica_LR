@@ -11,8 +11,11 @@ import net.pladema.clinichistory.outpatient.application.port.OutpatientConsultat
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBasicDataBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryStorage;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +28,9 @@ import java.util.stream.Collectors;
 public class OutpatientConsultationStorageImpl implements OutpatientConsultationStorage {
 
 	private static final Integer LIMIT = 500;
+
+	@Value("${app.cipres.consultations.days.ago:7}")
+	private Integer DAYS_AGO;
 	
 	private final OutpatientConsultationSummaryStorage outpatientConsultationSummaryStorage;
 
@@ -32,7 +38,10 @@ public class OutpatientConsultationStorageImpl implements OutpatientConsultation
 
 	@Override
 	public List<OutpatientBasicDataBo> getOutpatientConsultationsToCipres() {
-		List<OutpatientBasicDataBo> result = outpatientConsultationSummaryStorage.getOutpatientConsultationsToCipres(LIMIT);
+		LocalDateTime start = LocalDateTime.now().minusDays(DAYS_AGO).with(LocalTime.MIDNIGHT).plusHours(3);
+		LocalDateTime end = LocalDateTime.now().with(LocalTime.MIDNIGHT).plusHours(3);
+		List<OutpatientBasicDataBo> result = outpatientConsultationSummaryStorage.getOutpatientConsultationsToCipres(LIMIT, start, end);
+
 		List<Integer> outpatientConsultationIds = result.stream().map(OutpatientBasicDataBo::getId).collect(Collectors.toList());
 
 		List<HealthConditionSummaryVo> healthConditions = outpatientConsultationSummaryStorage.getHealthConditionsByOutpatientIds(outpatientConsultationIds);
@@ -52,6 +61,7 @@ public class OutpatientConsultationStorageImpl implements OutpatientConsultation
 						Collectors.mapping(m -> new SnomedBo(m.getSnomedSctid(), m.getSnomedPt()), Collectors.toList())));
 
 		result.forEach(oc -> {
+			normalizeDate(oc);
 			oc.setProcedures(procedureMap.getOrDefault(oc.getId(), Collections.emptyList()));
 			oc.setProblems(healthConditionMap.getOrDefault(oc.getId(), Collections.emptyList()));
 			oc.setMedications(medicationMap.getOrDefault(oc.getId(), Collections.emptyList()));
@@ -61,6 +71,14 @@ public class OutpatientConsultationStorageImpl implements OutpatientConsultation
 
 		log.debug("Output size -> {} ", result.size());
 		return result;
+	}
+
+	private void normalizeDate(OutpatientBasicDataBo consultation) {
+		LocalTime startHour = LocalTime.of(0, 0);
+		LocalTime endHour = LocalTime.of(3, 0);
+		LocalTime consultationTime = consultation.getDate().toLocalTime();
+		if ((consultationTime.equals(startHour) || consultationTime.isAfter(startHour)) && consultationTime.isBefore(endHour))
+			consultation.setDate(consultation.getDate().minusDays(1));
 	}
 
 }

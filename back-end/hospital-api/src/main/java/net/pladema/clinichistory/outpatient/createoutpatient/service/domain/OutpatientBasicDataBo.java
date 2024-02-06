@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,7 +20,7 @@ public class OutpatientBasicDataBo {
 
 	private Long documentId;
 
-	private LocalDate date;
+	private LocalDateTime date;
 
 	private OutpatientPatientBo patient;
 
@@ -39,7 +39,7 @@ public class OutpatientBasicDataBo {
 	private RiskFactorBo riskFactorData;
 
 
-	public OutpatientBasicDataBo(Integer id, Long documentId, LocalDate date,
+	public OutpatientBasicDataBo(Integer id, Long documentId, LocalDateTime date,
 								 String clinicalSpecialtySctid, String institutionSisaCode,
 								 Integer patientId, Integer personId, Short identificationType,
 								 String identificationNumber, Short genderId) {

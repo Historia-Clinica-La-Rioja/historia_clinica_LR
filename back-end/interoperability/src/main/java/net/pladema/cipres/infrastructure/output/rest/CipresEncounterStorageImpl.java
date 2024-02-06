@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +103,7 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		CipresEncounterBo cipresEncounter = new CipresEncounterBo();
 		cipresEncounter.setEncounterId(encounterId);
 		cipresEncounter.setResponseCode(responseCode.shortValue());
-		cipresEncounter.setStatus(response == null ? " " : "Error=" + response.getDetail());
+		cipresEncounter.setStatus(response == null ? " " : response.getDetail());
 		cipresEncounter.setEncounterApiId(encounterApiId);
 		return cipresEncounter;
 	}
@@ -112,7 +113,7 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 																	 String establishmentIRI) {
 		return CipresConsultationPayload.builder()
 				.idPaciente(oc.getApiPatientId())
-				.fecha(LocalDate.parse(oc.getDate()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+				.fecha(LocalDateTime.parse(oc.getDate()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
 				.especialidad(clinicalSpecialtyIRI)
 				.motivoConsulta(CipresMasterData.CONSULTATION_REASON)
 				.contactoMedicoPaciente(CipresMasterData.PATIENT_MEDICAL_CONTACT)
