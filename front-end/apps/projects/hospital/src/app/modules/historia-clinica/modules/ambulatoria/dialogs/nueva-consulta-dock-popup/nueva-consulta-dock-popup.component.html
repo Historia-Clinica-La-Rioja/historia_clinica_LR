@@ -180,17 +180,17 @@
 				</div>
 			</div>
 		</app-new-consultation-expansion-section>
-
-		<app-new-consultation-expansion-section id="solicitud-referencia"
+		<app-new-consultation-expansion-section id="solicitud-referencia" 
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
-			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()">
-			<div fxLayout="column" fxLayoutGap="2vh">
-
-				<app-include-previous-data-question *ngIf="showWarningViolenceSituation"
+			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [collapsed]="!showWarningViolenceSituation">
+			<div fxLayout="column" fxLayoutGap="2vh" #referenceRequest>
+				<app-include-previous-data-question *ngIf="showWarningViolenceSituation" 
 					[question]="'historia-clinica.include-previous-data-question.violence-situations.QUESTION'
                     | translate"
 					[message]="'historia-clinica.include-previous-data-question.violence-situations.DESCRIPTION'
                     | translate: {problem: dataName}"
+					[addButtonLabel]="'historia-clinica.include-previous-data-question.violence-situations.ADD'"
+					[discardButtonLabel]="'historia-clinica.include-previous-data-question.violence-situations.DISCARD'"
 					(response)="openReferenceDialog($event)"
 					id="violence_situation_data_question">
 				</app-include-previous-data-question>
@@ -223,7 +223,7 @@
 
 	<div actions id="buttons">
 		<div align="end">
-			<button class="uppercase" mat-raised-button color="primary" (click)="save()"
+			<button class="uppercase" mat-raised-button color="primary" (click)="previousAlertReference()"
 				[disabled]="disableConfirmButton">
 				<span [translate]="'buttons.CONFIRM'"></span>
 			</button>

@@ -59,8 +59,8 @@ const TIME_OUT = 5000;
 	styleUrls: ['./nueva-consulta-dock-popup.component.scss']
 })
 export class NuevaConsultaDockPopupComponent implements OnInit {
-	showWarningViolenceSituation = true;
-	dataName='"Golpes"';
+	showWarningViolenceSituation = false;
+	dataName: string[];
 	disableConfirmButton = false;
 	formEvolucion: UntypedFormGroup;
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
@@ -95,6 +95,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	episodeData: EpisodeData;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
+	@ViewChild('referenceRequest') sectionReference: ElementRef;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -211,6 +212,27 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		else return of(true);
 	}
 
+	previousAlertReference() {
+		const problems = this.ambulatoryConsultationProblemsService.getProblemas().map(p => ({
+			pt: p.snomed.pt,
+			sctid: p.snomed.sctid
+		}));
+
+		this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
+			if (res) {
+				this.dataName = problems.map(p=> ` "${p.pt}"`)
+				this.showWarningViolenceSituation = true;
+				setTimeout(() => {
+					this.sectionReference.nativeElement.scrollIntoView({ behavior: 'smooth' });
+				}, 200);
+				
+			} else {
+				this.showWarningViolenceSituation = false;
+				this.save();
+			}
+		});
+	}
+
 	save(): void {
 		this.previousDataIsConfirmed().subscribe((answerPreviousData: boolean) => {
 
@@ -257,10 +279,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
-	openReferenceDialog(event){
-		if(event){
+	openReferenceDialog(event) {
+		if (event) {
 			this.ambulatoryConsultationReferenceService.openReferenceDialog();
-		}else{
+		} else {
 			this.showWarningViolenceSituation = false;
 		}
 	}
@@ -329,7 +351,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			res => {
 				res.orderIds.forEach((orderId) => {
 					this.openNewEmergencyCareStudyConfirmationDialog([orderId]);
-				  });
+				});
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
 				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 				if (this.thereAreProblemsToSnvsReport()) {
@@ -589,7 +611,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			disableClose: true,
 		});
 	}
-	
 	addPersonalHistory(): void {
 		this.dialog.open(NewConsultationPersonalHistoryFormComponent, {
 			data: {
