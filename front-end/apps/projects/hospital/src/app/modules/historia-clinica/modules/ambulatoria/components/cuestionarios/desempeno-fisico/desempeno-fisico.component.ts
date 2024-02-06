@@ -16,7 +16,7 @@ export class DesempenoFisicoComponent implements OnInit {
   selectedoptionE: string = '';
   selectedoptionB2: string = '';
   selectedoptionE2: string = '';
-  counterB2: number = 0;
+  counterB2: number;
   counterC2: number = undefined;
   counterC3: number = undefined;
   counterE1: number = undefined;
@@ -283,9 +283,9 @@ export class DesempenoFisicoComponent implements OnInit {
 
   mappingCounter1() {
     const firstCounterMap = {
-      '4A': 0,
+      'B2': 0,
     };
-    return firstCounterMap[this.selectedoptionA] || undefined;
+    return firstCounterMap[this.counterB2] || undefined;
   }
 
   mappingBalance2() {
@@ -300,9 +300,9 @@ export class DesempenoFisicoComponent implements OnInit {
 
   mappingCounter2() {
     const secondCounterMap = {
-      '4B': 0,
+      'E4': 0,
     };
-    return secondCounterMap[this.selectedoptionB] || undefined;
+    return secondCounterMap[this.counterC3] || undefined;
   }
 
   mappingBalance3() {
@@ -354,7 +354,7 @@ export class DesempenoFisicoComponent implements OnInit {
     const fiveCounterMap = {
       'E4': 0,
     }
-    return fiveCounterMap[this.selectedoptionD] || undefined;
+    return fiveCounterMap[this.counterC3] || undefined;
   }
 
 
@@ -383,7 +383,7 @@ export class DesempenoFisicoComponent implements OnInit {
     const sixCounterMap = {
       'F4': 0,
     }
-    return sixCounterMap[this.selectedoptionE2] || undefined;
+    return sixCounterMap[this.counterE1] || undefined;
   }
 
   construirDatos() {
@@ -422,7 +422,7 @@ export class DesempenoFisicoComponent implements OnInit {
         {
           "itemId": 77,
           "optionId": this.mappingCounter3(),
-          "value": ""
+          "value": this.counterB2
         },
 
         // SEGUNDA SECCION
@@ -445,7 +445,7 @@ export class DesempenoFisicoComponent implements OnInit {
         {
           "itemId": 82,
           "optionId": this.mappingCounter5(),
-          "value": ""
+          "value": this.counterC3
         },
 
         // TERCERA SECCION 
@@ -456,7 +456,6 @@ export class DesempenoFisicoComponent implements OnInit {
           "value": ""
         },
 
-        // falta septima consulta y verificar value en html (que no se repitan en el typescript)
         {
           "itemId": 85,
           "optionId": this.mappingMarch2(),
@@ -466,7 +465,7 @@ export class DesempenoFisicoComponent implements OnInit {
         {
           "itemId": 86,
           "optionId": this.mappingCounter6(),
-          "value": ""
+          "value": this.counterE1
         },
 
       ]
