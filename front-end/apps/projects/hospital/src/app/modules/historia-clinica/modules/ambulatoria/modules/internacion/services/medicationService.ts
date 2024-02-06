@@ -12,7 +12,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class AnestheticReportPremedicationAndFoodIntakeService {
+export class MedicationService {
 
     private readonly ECL = SnomedECL.MEDICINE;
     private form: FormGroup;
@@ -23,22 +23,24 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
     private dosisErrorSource = new Subject<string | void>();
 	private _dosisError$ = this.dosisErrorSource.asObservable();
 
-    private premedicationList: PremedicationAndFoodIntakeData[] = [];
+    private medicationList: MedicationData[] = [];
 
-    private dataEmitter = new BehaviorSubject<PremedicationAndFoodIntakeData[]>(this.premedicationList);
+    private dataEmitter = new BehaviorSubject<MedicationData[]>(this.medicationList);
 	private data$ = this.dataEmitter.asObservable();
+    private ANOTHER_VIA_DESCRIPTION = 'Otras';
 
     constructor(
         private readonly snomedService: SnomedService,
         private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService,
     ) { 
-        this.form = new FormGroup<PremedicationForm>({
+        this.form = new FormGroup<MedicationForm>({
             snomed: new FormControl(null, Validators.required),
             dosis: new FormControl(null, [Validators.required, Validators.min(PREMEDICATION.MIN.dosis)]),
             unit: new FormControl(null, Validators.required),
             via: new FormControl(null, Validators.required),
             time: new FormControl(null, Validators.required),
+            viaNote: new FormControl(null)
         });
 
         this.form.controls.dosis.valueChanges.subscribe(_ => {
@@ -56,28 +58,29 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
         }
     }
 
-    private handleAddPremedication(premedication: PremedicationAndFoodIntakeData): boolean {
-        const currentItems = this.premedicationList.length;
-        this.premedicationList = pushIfNotExists<any>(this.premedicationList, premedication, this.comparePremedication);
-        this.dataEmitter.next(this.premedicationList);
-        return currentItems === this.premedicationList.length;
+    private handleAddMedication(premedication: MedicationData): boolean {
+        const currentItems = this.medicationList.length;
+        this.medicationList = pushIfNotExists<any>(this.medicationList, premedication, this.compareByEqualPremedication);
+        this.dataEmitter.next(this.medicationList);
+        return currentItems === this.medicationList.length;
     }
 
-    private comparePremedication(data: PremedicationAndFoodIntakeData, data2: PremedicationAndFoodIntakeData): boolean {
+    private compareByEqualPremedication(data: MedicationData, data2: MedicationData): boolean {
         return data.snomed.sctid === data2.snomed.sctid;
     }
 
     addToList(): boolean {
         if (this.form.valid && this.snomedConcept) {
-            const premedicationData: PremedicationAndFoodIntakeData = {
+            const medicationData: MedicationData = {
                 snomed: this.snomedConcept,
                 dosis: this.form.value.dosis,
                 unit: this.form.value.unit,
                 via: this.form.value.via,
                 time: this.form.value.time,
+                viaNote: this.form.value.viaNote,
             };
-            if (this.handleAddPremedication(premedicationData))
-                this.snackBarService.showError("Premedicacion duplicada");
+            if (this.handleAddMedication(medicationData))
+                this.snackBarService.showError("Medicacion duplicada");
             this.resetForm();
             return true;
         }
@@ -85,8 +88,8 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
     }
 
     remove(index: number): void {
-        this.premedicationList = removeFrom<PremedicationAndFoodIntakeData>(this.premedicationList, index);
-        this.dataEmitter.next(this.premedicationList);
+        this.medicationList = removeFrom<MedicationData>(this.medicationList, index);
+        this.dataEmitter.next(this.medicationList);
     }
 
     openSearchDialog(searchValue: string): void {
@@ -111,31 +114,47 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
     }
 
     private mapToAnestheticSubstanceDto(): AnestheticSubstanceDto[]{
-        return this.premedicationList.map(premedication => {
+        return this.medicationList.map(medication => {
             return {
-                snomed: premedication.snomed,
+                snomed: medication.snomed,
                 dosage: {
                     chronic: null,
                     diary: null,
                     quantity: {
-                        unit: premedication.unit,
-                        value: premedication.dosis
+                        unit: medication.unit,
+                        value: medication.dosis
                     },
-                    startDateTime: this.getPremedicationTime(premedication.time)
+                    startDateTime: this.getMedicationTime(medication.time)
                 },
-                viaId: premedication.via?.id
+                viaId: medication.via?.id,
+                viaNote: medication.viaNote
             }
         })
     }
 
-    private getPremedicationTime(time: TimeDto): DateTimeDto{
+    private getMedicationTime(time: TimeDto): DateTimeDto{
         return time ? {
             date: dateToDateDto(new Date()),
             time: time
         } : null
     }
 
-    getPremedication(): Observable<PremedicationAndFoodIntakeData[]> {
+    getViaInputStatus():Observable<MasterDataDto> {
+        return this.getForm().get('via').valueChanges
+    }
+
+
+    HandleValidatorRequiredViaNotes(viaData: MasterDataDto): void{
+        if (viaData?.description && viaData?.description === this.ANOTHER_VIA_DESCRIPTION)
+            this.getForm().get('viaNote').setValidators(Validators.required)
+        else
+        {
+            this.getForm().get('viaNote').clearValidators()
+            this.getForm().get('viaNote').updateValueAndValidity()
+        }
+    }
+
+    getMedication(): Observable<MedicationData[]> {
         return this.data$;
     }
 
@@ -153,7 +172,7 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
     }
 
     isEmpty(): boolean {
-        return !(!!this.premedicationList.length)
+        return !(!!this.medicationList.length)
     }
 
     get dosisError$(): Observable<string | void> {
@@ -178,18 +197,20 @@ export class AnestheticReportPremedicationAndFoodIntakeService {
 	}
 }
 
-export interface PremedicationForm {
+export interface MedicationForm {
     snomed: FormControl<SnomedDto>;
     dosis: FormControl<number>;
     unit: FormControl<string>;
     via: FormControl<MasterDataDto>;
     time: FormControl<TimeDto>;
+    viaNote?: FormControl<string>;
 }
 
-export interface PremedicationAndFoodIntakeData {
+export interface MedicationData {
     snomed: SnomedDto,
     dosis: number,
     unit: string,
     via: MasterDataDto,
     time: TimeDto,
+    viaNote?: string
 }

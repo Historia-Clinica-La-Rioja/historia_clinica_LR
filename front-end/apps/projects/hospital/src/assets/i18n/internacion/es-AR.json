@@ -386,6 +386,17 @@
 				"HOUR": "Hora",
 				"LAST_FOOD_INTAKE": "Última ingesta de comida:"
 			},
+			"drug": {
+				"HOUR": "Hora",
+				"UNIT_LABEL": "Unidad: ",
+				"UNIT_PLACEHOLDER": "Ingresar unidad",
+				"VIA_LABEL": "Via: ",
+				"VIA_PLACEHOLDER": "Ingresar via",
+				"DOSIS_LABEL": "Dosis: ",
+				"DOSIS_PLACEHOLDER": "Ingresar dosis",
+				"DRUG_LABEL": "Droga",
+				"VIA_TEXT_PLACEHOLDER": "Ingresar via"
+			},
 			"record": {
 				"TITLE": "Antecedentes",
 				"REGISTERED_RECORDS": "Antecedentes registrados",

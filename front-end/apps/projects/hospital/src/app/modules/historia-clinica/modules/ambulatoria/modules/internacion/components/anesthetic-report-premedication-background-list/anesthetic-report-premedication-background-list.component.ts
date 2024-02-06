@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticReportPremedicationAndFoodIntakeService, PremedicationAndFoodIntakeData } from '../../services/anesthetic-report-premedication-and-food-intake.service';
+import { MedicationData, MedicationService } from '../../services/medicationService';
 
 @Component({
     selector: 'app-anesthetic-report-premedication-background-list',
@@ -8,13 +8,13 @@ import { AnestheticReportPremedicationAndFoodIntakeService, PremedicationAndFood
 })
 export class AnestheticReportPremedicationBackgroundListComponent implements OnInit {
 
-    @Input() service: AnestheticReportPremedicationAndFoodIntakeService;
-    premedicationList: PremedicationAndFoodIntakeData[];
+    @Input() service: MedicationService;
+    premedicationList: MedicationData[];
 
     constructor() { }
 
     ngOnInit(): void {
-        this.service.getPremedication().subscribe(premedicationList => {
+        this.service.getMedication().subscribe(premedicationList => {
             this.premedicationList = premedicationList;
         })
     }

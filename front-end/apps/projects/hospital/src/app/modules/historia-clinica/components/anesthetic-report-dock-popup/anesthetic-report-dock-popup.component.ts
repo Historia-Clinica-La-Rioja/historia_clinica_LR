@@ -7,9 +7,9 @@ import { scrollIntoError } from '@core/utils/form.utils';
 import { AnestheticReportAnestheticHistoryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { AnestheticReportAnthropometricDataService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anthropometric-data.service';
 import { AnestheticReportClinicalEvaluationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-clinical-evaluation.service';
-import { AnestheticReportPremedicationAndFoodIntakeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-premedication-and-food-intake.service';
 import { AnestheticReportProposedSurgeryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-proposed-surgery.service';
 import { AnestheticReportRecordService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-record.service';
+import { MedicationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/medicationService';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { MedicacionesNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -40,7 +40,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     anestheticReportClinicalEvaluationService: AnestheticReportClinicalEvaluationService;
     anestheticReportAnestheticHistoryService: AnestheticReportAnestheticHistoryService;
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
-    anestheticReportPremedicationAndFoodIntakeService: AnestheticReportPremedicationAndFoodIntakeService;
+    anestheticReportPremedicationAndFoodIntakeService: MedicationService;
     anestheticReportRecordService: AnestheticReportRecordService;
 
     personalRecordForm: FormGroup;
@@ -71,11 +71,11 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportClinicalEvaluationService = new AnestheticReportClinicalEvaluationService(this.translateService);
         this.anestheticReportAnestheticHistoryService = new AnestheticReportAnestheticHistoryService();
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService);
-		this.anestheticReportPremedicationAndFoodIntakeService = new AnestheticReportPremedicationAndFoodIntakeService(this.snomedService, this.snackBarService, this.translateService);
+		this.anestheticReportPremedicationAndFoodIntakeService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportRecordService = new AnestheticReportRecordService(this.snomedService, this.snackBarService);
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
-            lastFoodIntake: new FormControl(null),  
+            lastFoodIntake: new FormControl(null),
         });
 
         this.personalRecordForm = new FormGroup<PersonalRecordForm>({
@@ -150,7 +150,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             anestheticHistory: this.anestheticReportAnestheticHistoryService.getAnestheticHistoryData(),
             medications: this.medicacionesNuevaConsultaService.getMedicationsAsMedicationDto(),
             preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto(),
-            foodIntake: this.formFoodIntake.value.lastFoodIntake,
+            foodIntake: {clockTime: this.formFoodIntake.value.lastFoodIntake},
             histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
 		};
 	}
