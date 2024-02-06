@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
-
+import { PhysicalPerformanceService } from '@api-rest/services/physical-performance.service';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-desempeno-fisico',
   templateUrl: './desempeno-fisico.component.html',
@@ -29,11 +30,19 @@ export class DesempenoFisicoComponent implements OnInit {
   customIconSource: string = 'assets/icons/icon-10.png';
   iconImageSource2: string = 'assets/icons/icon-08.png';
   customIconSource2: string = 'assets/icons/icon-09.png';
-  enviarFormulario: any;
+  patientId: number;
+  questionnaireId: number;
 
 
 
-  constructor() { }
+  constructor(private physicalService: PhysicalPerformanceService,
+
+    @Inject(MAT_DIALOG_DATA) public data: any,
+
+  ) {
+    this.patientId = data.patientId
+
+  }
 
   ngOnInit(): void {
 
@@ -87,7 +96,7 @@ export class DesempenoFisicoComponent implements OnInit {
 
   isCounterDisabled4(): boolean {
     return !(
-      this.selectedoptionC !== '2C'
+      this.selectedoptionC !== 'D3'
 
 
     )
@@ -96,14 +105,14 @@ export class DesempenoFisicoComponent implements OnInit {
 
   isCounterDisabled5(): boolean {
     return !(
-      this.selectedoptionD !== '3C'
+      this.selectedoptionD !== 'E3'
 
     )
   }
 
   isSubmitDisabled4(): boolean {
     return !(
-      this.selectedoptionC !== '2C'
+      this.selectedoptionC !== 'D3'
 
     )
   }
@@ -124,15 +133,14 @@ export class DesempenoFisicoComponent implements OnInit {
 
   isCounterDisabled7(): boolean {
     return !(
-      this.selectedoptionE2 === '1E'
+      this.selectedoptionE2 === '1FINAL'
 
     )
   }
   calculePoints(): number {
     let balance1 = (this.selectedoptionA === '1A') ? 1 : 0;
     let balance2 = (this.selectedoptionB === '1B') ? 1 : 0;
-    let sillaTest1 = (this.selectedoptionE === '1D') ? 1 : 0;
-    let sillaTest2 = (this.selectedoptionE2 === '1E') ? 1 : 0;
+    // let sillaTest1 = (this.selectedoptionE === '1D') ? 1 : 0;
 
 
     if (this.selectedoptionA === '2A' || this.selectedoptionA === '3A') {
@@ -157,15 +165,15 @@ export class DesempenoFisicoComponent implements OnInit {
     }
 
 
-    let counterC2Points = 0;
-    if (this.counterC2 < 3.0) {
-      counterC2Points = 0;
+    // let counterC2Points = 0;
+    // if (this.counterC2 < 3.0) {
+    //   counterC2Points = 0;
 
-    } else if (this.counterC2 >= 3.0 && this.counterC2 < 10) {
-      counterC2Points = 1;
-    } else if (this.counterC2 >= 10 && this.counterC2 <= 15) {
-      counterC2Points = 2;
-    }
+    // } else if (this.counterC2 >= 3.0 && this.counterC2 < 10) {
+    //   counterC2Points = 1;
+    // } else if (this.counterC2 >= 10 && this.counterC2 <= 15) {
+    //   counterC2Points = 2;
+    // }
 
     let counterC3Points = 0;
 
@@ -196,19 +204,17 @@ export class DesempenoFisicoComponent implements OnInit {
       counterE1Points = 0;
     }
 
-    let totalScore = balance1 + balance2 +
-      sillaTest1 + sillaTest2 + counterB2Points + counterC2Points
+    let totalScore = balance1 + balance2 + counterB2Points
       + counterC3Points + counterE1Points;
 
-    console.log("balance1: ", balance1)
-    console.log("balance2: ", balance2)
-    console.log("silla1: ", sillaTest1)
-    console.log("silla2: ", sillaTest2)
-    console.log("counterB2Points: ", counterB2Points)
-    console.log("counterC2Points: ", counterC2Points)
-    console.log("counterC3Points: ", counterC3Points)
-    console.log("counterE1Points: ", counterE1Points)
-    console.log("Trae: ", totalScore)
+    // console.log("balance1: ", balance1)
+    // console.log("balance2: ", balance2)
+    // console.log("silla1: ", sillaTest1)
+    // console.log("counterB2Points: ", counterB2Points)
+    // console.log("counterC2Points: ")
+    // console.log("counterC3Points: ", counterC3Points)
+    // console.log("counterE1Points: ", counterE1Points)
+    // console.log("Trae: ", totalScore)
 
     this.finalScore = totalScore;
 
@@ -264,10 +270,214 @@ export class DesempenoFisicoComponent implements OnInit {
     });
   }
 
-  // ENDPOINT AQUI
+  // PRIMERA SECCION
 
-  // enviarFormulario(): void {
-  //  }
+  mappingBalance1() {
+    const firstBalanceMap = {
+      '1A': 20,
+      '2A': 19,
+      '3A': 51,
+    };
+    return firstBalanceMap[this.selectedoptionA] || undefined;
+  }
+
+  mappingCounter1() {
+    const firstCounterMap = {
+      '4A': 0,
+    };
+    return firstCounterMap[this.selectedoptionA] || undefined;
+  }
+
+  mappingBalance2() {
+    const secondBalanceMap = {
+
+      '1B': 20,
+      '2B': 19,
+      '3B': 51,
+    }
+    return secondBalanceMap[this.selectedoptionB] || undefined;
+  }
+
+  mappingCounter2() {
+    const secondCounterMap = {
+      '4B': 0,
+    };
+    return secondCounterMap[this.selectedoptionB] || undefined;
+  }
+
+  mappingBalance3() {
+    const thirdBalanceMap = {
+      '1C': 51,
+
+    }
+
+    return thirdBalanceMap[this.selectedoptionB2] || undefined;
+  }
+
+
+  mappingCounter3() {
+    const thirdCounterMap = {
+      '4C': 0,
+    };
+    return thirdCounterMap[this.selectedoptionB2] || undefined;
+  }
+
+
+  // SEGUNDA SECCION
+
+  mappingProgress1() {
+    const firstProgressMap = {
+      'D1': 20,
+      'D2': 19,
+      'D3': 51,
+    }
+
+    return firstProgressMap[this.selectedoptionC] || undefined;
+  }
+
+  mappingCounter4() {
+    const fourCounterMap = {
+      'D4': 0,
+    }
+    return fourCounterMap[this.selectedoptionC] || undefined;
+  }
+
+  mappingProgress2() {
+    const secondProgressMap = {
+
+      'E3': 51,
+    }
+
+    return secondProgressMap[this.selectedoptionD] || undefined;
+  }
+  mappingCounter5() {
+    const fiveCounterMap = {
+      'E4': 0,
+    }
+    return fiveCounterMap[this.selectedoptionD] || undefined;
+  }
+
+
+  // TERCERA SECCION 
+
+  mappingMarch1() {
+    const firstMarchMap = {
+      'D1': 20,
+      'D2': 19,
+      'D3': 51,
+    }
+
+    return firstMarchMap[this.selectedoptionE] || undefined;
+  }
+
+  mappingMarch2() {
+    const sixMarchMap = {
+      'E1': 20,
+      'E2': 19,
+      'E3': 51,
+    }
+    return sixMarchMap[this.selectedoptionE2] || undefined;
+  }
+
+  mappingCounter6() {
+    const sixCounterMap = {
+      'F4': 0,
+    }
+    return sixCounterMap[this.selectedoptionE2] || undefined;
+  }
+
+  construirDatos() {
+    const datos = {
+      "questionnaireId": 4,
+      "answers": [
+
+
+        // PRIMERA SECCION
+        {
+          "itemId": 72,
+          "optionId": this.mappingBalance1(),
+          "value": ""
+        },
+
+        {
+          "itemId": 73,
+          "optionId": this.mappingCounter1(),
+          "value": ""
+        },
+        {
+          "itemId": 74,
+          "optionId": this.mappingBalance2(),
+          "value": ""
+        },
+        {
+          "itemId": 75,
+          "optionId": this.mappingCounter2(),
+          "value": ""
+        },
+        {
+          "itemId": 76,
+          "optionId": this.mappingBalance3(),
+          "value": ""
+        },
+        {
+          "itemId": 77,
+          "optionId": this.mappingCounter3(),
+          "value": ""
+        },
+
+        // SEGUNDA SECCION
+
+        {
+          "itemId": 79,
+          "optionId": this.mappingProgress1(),
+          "value": ""
+        },
+        {
+          "itemId": 80,
+          "optionId": this.mappingCounter4(),
+          "value": ""
+        },
+        {
+          "itemId": 81,
+          "optionId": this.mappingProgress2(),
+          "value": ""
+        },
+        {
+          "itemId": 82,
+          "optionId": this.mappingCounter5(),
+          "value": ""
+        },
+
+        // TERCERA SECCION 
+
+        {
+          "itemId": 84,
+          "optionId": this.mappingMarch1(),
+          "value": ""
+        },
+
+        // falta septima consulta y verificar value en html (que no se repitan en el typescript)
+        {
+          "itemId": 85,
+          "optionId": this.mappingMarch2(),
+          "value": ""
+        },
+
+        {
+          "itemId": 86,
+          "optionId": this.mappingCounter6(),
+          "value": ""
+        },
+
+      ]
+    };
+    return datos;
+  }
+
+
+  enviarFormulario(): void {
+    this.physicalService.createPhysical(this.patientId, this.construirDatos()).subscribe();
+  }
 
 }
 
