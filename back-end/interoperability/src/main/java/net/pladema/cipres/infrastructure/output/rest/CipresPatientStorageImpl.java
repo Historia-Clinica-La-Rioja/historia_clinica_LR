@@ -8,6 +8,7 @@ import net.pladema.cipres.application.port.CipresStorage;
 import net.pladema.cipres.domain.BasicDataPatientBo;
 import net.pladema.cipres.domain.BasicDataPersonBo;
 import net.pladema.cipres.domain.PersonDataBo;
+import net.pladema.cipres.infrastructure.output.repository.CipresEncounterRepository;
 import net.pladema.cipres.infrastructure.output.repository.CipresPatient;
 import net.pladema.cipres.infrastructure.output.repository.CipresPatientPk;
 import net.pladema.cipres.infrastructure.output.repository.CipresPatientRepository;
@@ -67,6 +68,10 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 
 	private static final String GET_PATIENT_URL = "%s?esDocumentoArgentino=%s&numeroDocumento=%s&sexo=%s&esDocumentoPropio=true&incluirRelaciones=false&incluirDomicilio=true&establecimiento=%s";
 
+	private static final String NO_ADDRESS_DATA = "No se cuenta la información necesaria para dar de alta/modificar el domicilio del paciente. Verificar, país, departamento y localidad";
+
+	private static final String NO_IDENTIFICATION_PATIENT_DATA = "No se cuenta con la información necesaria para identificar al paciente. Verificar tipo de documento, número de documento y género";
+
 	private static final List<Short> nationalDocumentTypes = List.of(IDENTIFICATION_TYPE_DNI, IDENTIFICATION_TYPE_CI, IDENTIFICATION_TYPE_LC, IDENTIFICATION_TYPE_LE, IDENTIFICATION_TYPE_CUIT);
 
 	private static final List<Short> foreignDocumentTypes = List.of(IDENTIFICATION_TYPE_FOREIGN_PASSPORT, IDENTIFICATION_TYPE_FOREIGN_IDENTITY_CARD, IDENTIFICATION_TYPE_OTHER_FOREIGN_DOCUMENT, IDENTIFICATION_TYPE_CEDULA_MERCOSUR);
@@ -78,65 +83,72 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 	public CipresPatientStorageImpl (CipresRestTemplate cipresRestTemplate,
 									 CipresWSConfig cipresWSConfig,
 									 CipresPersonStorage cipresPersonStorage,
-									 CipresPatientRepository cipresPatientRepository) {
-		super(cipresRestTemplate, cipresWSConfig);
+									 CipresPatientRepository cipresPatientRepository,
+									 CipresEncounterRepository cipresEncounterRepository) {
+		super(cipresRestTemplate, cipresWSConfig, cipresEncounterRepository);
 		this.cipresPersonStorage = cipresPersonStorage;
 		this.cipresPatientRepository = cipresPatientRepository;
 	}
 
 	@Override
-	public Optional<Long> getPatientId(BasicDataPatientBo patientData, String establishmentId) {
+	public Optional<Long> getPatientId(BasicDataPatientBo patientData, String establishmentId, Integer encounterId) {
 		var cipresPatientId = this.cipresPatientRepository.getCipresPatientId(patientData.getId());
-		return cipresPatientId.or(() -> foundPatientId(patientData, establishmentId));
+		return cipresPatientId.or(() -> foundPatientId(patientData, establishmentId, encounterId));
 	}
 
-	private Optional<Long> foundPatientId(BasicDataPatientBo patientData, String establishmentId) {
-		String url = this.buildPatientUrl(patientData.getPerson(), establishmentId);
-		Optional<Long> result = Optional.empty();
-		try {
-			ResponseEntity<CipresPatientResponse[]> response = restClient.exchangeGet(url, CipresPatientResponse[].class);
-			if (isSuccessfulResponse(response))
-				result = processPatientSuccessfulResponse(response.getBody(), establishmentId, patientData);
-		} catch (RestTemplateApiException e) {
-			result = handlePatientRestTemplateApiException(e, patientData, establishmentId);
-		} catch (ResourceAccessException e) {
-			handleResourceAccessException(e);
-		}
-        result.ifPresent(cipresPatientId -> createCipresPatient(patientData.getId(), cipresPatientId));
-		return result;
+	private Optional<Long> foundPatientId(BasicDataPatientBo patientData, String establishmentId, Integer encounterId) {
+		if (validIdentificationPatientData(patientData.getPerson())) {
+			String url = this.buildPatientUrl(patientData.getPerson(), establishmentId);
+			Optional<Long> result = Optional.empty();
+			try {
+				ResponseEntity<CipresPatientResponse[]> response = restClient.exchangeGet(url, CipresPatientResponse[].class);
+				if (isSuccessfulResponse(response))
+					result = processPatientSuccessfulResponse(response.getBody(), establishmentId, patientData, encounterId);
+			} catch (RestTemplateApiException e) {
+				result = handlePatientRestTemplateApiException(e, patientData, establishmentId, encounterId);
+			} catch (ResourceAccessException e) {
+				handleResourceAccessException(e);
+			}
+			result.ifPresent(cipresPatientId -> createCipresPatient(patientData.getId(), cipresPatientId));
+			return result;
+		} else
+			saveStatusError(encounterId, NO_IDENTIFICATION_PATIENT_DATA, HttpStatus.BAD_REQUEST.value());
+		return Optional.empty();
 	}
 
 	private Optional<Long> handlePatientRestTemplateApiException(RestTemplateApiException e, BasicDataPatientBo patientData,
-																	String establishmentId) {
+																	String establishmentId, Integer encounterId) {
 		var personData = patientData.getPerson();
-		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND) && validIdentificationData(personData)) {
+		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND) && validCuitIdentificationTypeData(personData)) {
 			PersonDataBo person = cipresPersonStorage.getPersonData(personData.getId());
 			if (validPatientMinimalData(person))
 				return createPatient(person, establishmentId);
+			else
+				saveStatusError(encounterId, "No se cuenta con alguno de los datos mínimos requeridos del paciente (fecha de nacimiento, nombres y apellidos, pais, departamento, localidad)", HttpStatus.BAD_REQUEST.value());
 		} else
 			log.debug("Error al intentar obtener un paciente");
 		return Optional.empty();
 	}
 
 	private Optional<Long> processPatientSuccessfulResponse(CipresPatientResponse[] patients, String establishmentId,
-															   BasicDataPatientBo patientData) {
+															BasicDataPatientBo patientData, Integer encounterId) {
 		var patient = patients[0].getPaciente();
 		var patientId = patient.get(ID).toString();
-
 		if (patient.get(ADDRESS) != null)
 			return Optional.of(Long.parseLong(patientId));
 
 		PersonDataBo person = cipresPersonStorage.getPersonData(patientData.getPerson().getId());
 		if (validAddressData(person)) {
-			var addressId = savePatientAddress(person, patientId, establishmentId);
+			var addressId = savePatientAddress(person, patientId, establishmentId, encounterId);
 			if (addressId.isPresent())
 				return Optional.of(Long.parseLong(patientId));
-		}
+		} else
+			saveStatusError(encounterId, NO_ADDRESS_DATA, HttpStatus.BAD_REQUEST.value());
 
 		return Optional.empty();
 	}
 
-	public Optional<Integer> savePatientAddress(PersonDataBo person, String patientId, String establishmentId) {
+	public Optional<Integer> savePatientAddress(PersonDataBo person, String patientId, String establishmentId, Integer encounterId) {
 		String url = cipresWSConfig.getAddressUrl().concat(ESTABLISHMENT_URL+ establishmentId);
 		var body = mapToCipresPatientAddressPayload(person);
 		if (body.getLocalidad() != null && body.getNacionalidad() != null) {
@@ -150,7 +162,9 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 			} catch (ResourceAccessException e) {
 				handleResourceAccessException(e);
 			}
-		}
+		} else
+			saveStatusError(encounterId, NO_ADDRESS_DATA, HttpStatus.BAD_REQUEST.value());
+			
 		return Optional.empty();
 	}
 
@@ -340,11 +354,15 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 		cipresPatientRepository.save(new CipresPatient(new CipresPatientPk(patientId, cipresPatientId), LocalDate.now()));
 	}
 
+	private boolean validIdentificationPatientData(BasicDataPersonBo person) {
+		return person.getGenderId() != null && person.getIdentificationTypeId() != null && person.getIdentificationNumber() != null;
+	}
+
 	private boolean validPatientMinimalData(PersonDataBo person) {
 		return person.getBirthDate() != null && person.getFirstName() != null && person.getLastName() != null && validAddressData(person);
 	}
 
-	private boolean validIdentificationData(BasicDataPersonBo basicDataPersonBo) {
+	private boolean validCuitIdentificationTypeData(BasicDataPersonBo basicDataPersonBo) {
 		boolean isCUITIdentificationType = basicDataPersonBo.getIdentificationTypeId().equals(IDENTIFICATION_TYPE_CUIT);
 		return !isCUITIdentificationType || basicDataPersonBo.getIdentificationNumber().length() == CUIT_LENGTH;
 	}

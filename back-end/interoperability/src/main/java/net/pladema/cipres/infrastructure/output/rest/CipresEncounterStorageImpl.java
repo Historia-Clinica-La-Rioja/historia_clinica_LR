@@ -14,6 +14,7 @@ import net.pladema.cipres.domain.OutpatientConsultationBo;
 import net.pladema.cipres.domain.RiskFactorBo;
 import net.pladema.cipres.domain.SnomedBo;
 
+import net.pladema.cipres.infrastructure.output.repository.CipresEncounterRepository;
 import net.pladema.cipres.infrastructure.output.rest.domain.consultation.CipresConsultationPayload;
 
 import net.pladema.cipres.infrastructure.output.rest.domain.consultation.CipresDatosClinicosPayload;
@@ -47,8 +48,9 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 
 	private static final String BLANK = "";
 
-	public CipresEncounterStorageImpl(CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig) {
-		super(cipresRestTemplate, cipresWSConfig);
+	public CipresEncounterStorageImpl(CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig,
+									  CipresEncounterRepository cipresEncounterRepository) {
+		super(cipresRestTemplate, cipresWSConfig, cipresEncounterRepository);
 	}
 
 	@Override
