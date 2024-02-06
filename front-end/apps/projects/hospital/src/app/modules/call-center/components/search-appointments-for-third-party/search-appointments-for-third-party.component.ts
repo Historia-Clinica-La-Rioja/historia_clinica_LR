@@ -19,7 +19,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 
 	form: FormGroup<ThirdPartyAppointmentSearchForm>;
 
-	dateRange: DateRange;
+	initialDateRange: DateRange;
 	showResults = false;
 	showValidations = {
 		periodRange: false,
@@ -35,18 +35,19 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.setRange();
 		this.createForm();
+		this.setInitialDateRange();
 		this.searchAppointmentsForThirdPartyDataService.setDepartmentsTypeahead();
 	}
 
-	verifyDateRangeNotExceedMaxiumDays(dateRange: DateRange) {
+	verifyDateRangeNotExceedMaxiumDaysAndSetDate(dateRange: DateRange) {
+		this.resetResults();
 		this.showValidations.periodRange = false;
 		if (differenceInDays(dateRange.end, dateRange.start) > this.MAX_DAYS) {
 			this.showValidations.periodRange = true;
 			return;
 		}
-		this.dateRange = dateRange;
+		this.setDateRange(dateRange);
 	}
 
 	submit() {
@@ -109,7 +110,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 		if (!this.form.valid)
 			this.showValidations.department = true;
 
-		return !hasCriteriaSearch || !this.form.valid;
+		return !hasCriteriaSearch || this.showValidations.periodRange || !this.form.valid;
 	}
 
 	private setAvailableAppointments() {
@@ -124,11 +125,17 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 		);
 	}
 
-	private setRange() {
-		this.dateRange = {
+	private setInitialDateRange() {
+		this.initialDateRange = {
 			start: this.today,
 			end: datePlusDays(this.today, this.MAX_DAYS)
 		}
+		this.setDateRange(this.initialDateRange);
+	}
+
+	private setDateRange(dateRange: DateRange) {
+		this.form.controls.startDate.setValue(dateRange.start);
+		this.form.controls.endDate.setValue(dateRange.end);
 	}
 
 	private clearForm(controls: ThirdPartyAppointmentSearchForm, excludeControlsName?: string[]) {
@@ -151,8 +158,8 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 			specialtyId: new FormControl(null),
 			professionalId: new FormControl(null),
 			practiceId: new FormControl(null),
-			startDate: new FormControl(this.dateRange.start, Validators.required),
-			endDate: new FormControl(this.dateRange.end, Validators.required),
+			startDate: new FormControl(null, Validators.required),
+			endDate: new FormControl(null, Validators.required),
 		});
 	}
 }
