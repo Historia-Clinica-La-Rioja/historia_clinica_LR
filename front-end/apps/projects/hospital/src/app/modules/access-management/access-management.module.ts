@@ -28,6 +28,8 @@ import { DeriveRequestComponent } from './components/derive-request/derive-reque
 import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
+//services
+import { TabsService } from './services/tabs.service';
 
 
 @NgModule({
@@ -50,6 +52,9 @@ import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data
 		ReasonPopUpComponent,
 		ReportCompleteDataPopupComponent,
 		RegulationNewAppointmentPopUpComponent,
+	],
+	providers: [
+		TabsService
 	],
 	imports: [
 		AccessManagementRoutingModule,

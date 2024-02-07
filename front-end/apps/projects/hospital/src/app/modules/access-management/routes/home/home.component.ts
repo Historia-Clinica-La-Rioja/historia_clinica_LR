@@ -13,15 +13,13 @@ export class HomeComponent {
 
   constructor( readonly tabsService: TabsService ) { }
 
-  ngOnChanges(): void {
-    this.currentTab = this.tabsService.getTabActive();
+  ngOnInit() {
+    this.tabsService.getTabActive().subscribe(
+			currentTab => { this.currentTab = currentTab }
+    );
   }
 
-  ngOnDestroy(): void {
-    this.tabsService.clearInfo();
-  }
-
-  tabChanged(tabChangeIndex: number): void {
+  tabChanged(tabChangeIndex: number) {
     this.tabsService.setTabActive(tabChangeIndex);
   }
 

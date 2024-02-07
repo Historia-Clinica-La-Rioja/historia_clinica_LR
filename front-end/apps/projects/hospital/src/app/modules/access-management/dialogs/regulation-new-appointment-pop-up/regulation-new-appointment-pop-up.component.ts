@@ -41,7 +41,7 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 	public appointmentInfoForm: UntypedFormGroup;
 	public associateReferenceForm: UntypedFormGroup;
 	public modalityForm: UntypedFormGroup;
-	referenceList$: Observable<ReferenceSummaryDto[]>;
+	referenceList: ReferenceSummaryDto[];
 	public identifyTypeArray: IdentificationTypeDto[];
 	public genderOptions: GenderDto[];
 	public healtInsuranceOptions: MedicalCoverageDto[] = [];
@@ -112,7 +112,6 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 			reference: [null, Validators.required],
 			professionalEmail: [null, Validators.email]
 		});
-
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
 			identificationTypes => {
@@ -371,7 +370,13 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 	}
 
 	private setReferenceInformation() {
-		this.referenceList$ = this.referenceService.getReferencesSummary(this.patientId, this.data.searchAppointmentCriteria);
+		if (this.data.referenceSummary) {
+			const referenceSummary = this.data.referenceSummary;
+			this.referenceList = [referenceSummary];
+			this.associateReferenceForm.controls.reference.setValue(referenceSummary);
+			this.associateReferenceForm.controls.reference.disable();
+		}
+		else this.referenceService.getReferencesSummary(this.patientId, this.data.searchAppointmentCriteria).subscribe(reference => this.referenceList = reference);
 	}
 }
 
@@ -384,6 +389,7 @@ export interface RegulationNewAppointmentData {
 	patientId?: number,
 	modalityAttention: EAppointmentModality,
 	searchAppointmentCriteria?: SearchAppointmentCriteria,
+	referenceSummary?: ReferenceSummaryDto,
 	institutionId: number,
 }
 

@@ -1,28 +1,27 @@
 import { Tabs } from '@access-management/routes/home/home.component';
 import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class TabsService {
 
-  tabs: Tabs[] = [Tabs.REQUESTS, Tabs.REGULATION_OFFER];
+  tabs = [Tabs.REQUESTS, Tabs.REGULATION_OFFER];
   selectedIndex = 0;
-  tabActive = Tabs.REQUESTS;
+  tabActive$: Observable<Tabs> = of(Tabs.REQUESTS);
 
   constructor() { }
 
-  getTabActive(): Tabs {
-    return this.tabActive;
+  getTabActive(): Observable<Tabs> {
+    return this.tabActive$;
   }
 
-  setTabActive(index: number): void {
-    this.tabActive = this.tabs[index];
+  setTabActive(index: number) {
+    this.tabActive$ = of(this.tabs[index]);
     this.selectedIndex = index;
   }
 
-  clearInfo(): void {
+  clearInfo() {
     this.selectedIndex = 0;
-    this.tabActive = Tabs.REQUESTS;
+    this.tabActive$ = of(Tabs.REQUESTS);
   }
 }

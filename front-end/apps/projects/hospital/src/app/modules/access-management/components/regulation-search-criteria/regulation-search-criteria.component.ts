@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
@@ -8,7 +8,7 @@ import { SearchCriteria } from '@turnos/components/search-criteria/search-criter
 	templateUrl: './regulation-search-criteria.component.html',
 	styleUrls: ['./regulation-search-criteria.component.scss']
 })
-export class RegulationSearchCriteriaComponent implements OnInit {
+export class RegulationSearchCriteriaComponent {
 
 	form: FormGroup<RegulationSearchCriteriaForm> = new FormGroup<RegulationSearchCriteriaForm>({
 		criteria: new FormControl(RegulationSearchCriteria.CONSULTATION),
@@ -21,9 +21,6 @@ export class RegulationSearchCriteriaComponent implements OnInit {
 	@Output() selectedOption = new EventEmitter<SearchCriteria>();
 
 	constructor() { }
-
-	ngOnInit() {
-	}
 
 	ngOnChanges(changes: SimpleChanges) {
 		if (this.form) {

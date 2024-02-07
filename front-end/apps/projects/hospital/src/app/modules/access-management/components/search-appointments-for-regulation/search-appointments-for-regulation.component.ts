@@ -137,7 +137,7 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 			this.institutionTypeaheadOptions$ = this.institutionService.findByDepartmentId(department.id).pipe(map(
 				institutions => listToTypeaheadOptions(institutions, 'name')));
 
-		else this.initialDepartmentTypeaheadOptionSelected = undefined;
+		else this.initialDepartmentTypeaheadOptionSelected = null;
 	}
 
 	setInstitution(institution: InstitutionBasicInfoDto) {
@@ -275,7 +275,7 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		this.showTypeaheadErrors.practice = false;
 	}
 
-	setReferenceInformation(): void {
+	setReferenceInformation() {
 		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
 
 		if (!this.externalInformation) return;
@@ -285,14 +285,7 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 
 		this.setCriteria(searchCriteria);
 		this.setCareLine(careLine.value);
-		
-		if (clinicalSpecialties?.length) {
-			this.specialtyTypeaheadOptions = listToTypeaheadOptions(clinicalSpecialties, 'name');
-			this.externalSpecialty = this.specialtyTypeaheadOptions[0];
-			if (clinicalSpecialties.length > ONE_ELEMENT) {
-				this.externalInformation.disabledInput.specialty = false;
-			}
-		}
+		this.setExternalClincalSpecialtie(clinicalSpecialties);
 		
 		if (practice) {
 			this.practicesBehavior.next([practice]);
@@ -304,37 +297,57 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		this.searchAppointmentsInfoService.clearInfo();
 	}
 
-	getProvinceDepartamentInstitutionReference(): void {
+	setExternalClincalSpecialtie(clinicalSpecialties: ClinicalSpecialtyDto[]) {
+		if (clinicalSpecialties?.length) {
+			this.specialtyTypeaheadOptions = listToTypeaheadOptions(clinicalSpecialties, 'name');
+			this.externalSpecialty = this.specialtyTypeaheadOptions[0];
+			if (clinicalSpecialties.length > ONE_ELEMENT) {
+				this.externalInformation.disabledInput.specialty = false;
+			}
+		}
+	}
+
+	getProvinceDepartamentInstitutionReference() {
 		this.institutionService.getInstitutionAddress(this.externalInformation.referenceCompleteData.institutionDestination.id).subscribe(
 			(institutionAddress: AddressDto) => {
 				
-				this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID).subscribe(
-					provinces => {
+				this.findProvince(institutionAddress);
+			}
+		);
+	}
 
-						const foundState = provinces.find((province: ProvinceDto) => { return (province.id === institutionAddress.provinceId) });
-						this.initialProvinceTypeaheadOptionSelected = foundState ? objectToTypeaheadOption(foundState, 'description') : undefined;
+	private findProvince(institutionAddress: AddressDto) {
+		this.addressMasterDataService.getByCountry(DEFAULT_COUNTRY_ID).subscribe(
+			provinces => {
 
-						if (institutionAddress.provinceId) {
-							this.addressMasterDataService.getDepartmentsByProvince(institutionAddress.provinceId).subscribe(
-								departaments => {
-									
-									const foundDepartament = departaments.find((departament: DepartmentDto) => { return (departament.id === institutionAddress.departmentId) });
-									this.initialDepartmentTypeaheadOptionSelected = objectToTypeaheadOption(foundDepartament, 'description');
+				const foundState = provinces.find((province: ProvinceDto) => { return (province.id === institutionAddress.provinceId) });
+				this.initialProvinceTypeaheadOptionSelected = foundState ? objectToTypeaheadOption(foundState, 'description') : undefined;
 
-									this.institutionService.findByDepartmentId(foundDepartament.id).subscribe(
-										institutions => {
+				if (institutionAddress.provinceId) {
+					this.findDepartament(institutionAddress);
+				}
+			}
+		);
+	}
 
-											const foundInstitution = institutions.find((institution: InstitutionBasicInfoDto) => {
-												return (institution.id === this.externalInformation.referenceCompleteData.institutionDestination.id)
-											});
-											this.initialInstitutionTypeaheadOptionSelected = objectToTypeaheadOption(foundInstitution, 'name');
-										}
-									);
-								}
-							);
-						}
-					}
-				);
+	private findDepartament(institutionAddress: AddressDto) {
+		this.addressMasterDataService.getDepartmentsByProvince(institutionAddress.provinceId).subscribe(
+			departaments => {
+				const foundDepartament = departaments.find((departament: DepartmentDto) => { return (departament.id === institutionAddress.departmentId) });
+				this.initialDepartmentTypeaheadOptionSelected = objectToTypeaheadOption(foundDepartament, 'description');
+				this.findInstitution(foundDepartament);
+			}
+		);
+	}
+
+	private findInstitution(foundDepartament: any) {
+		this.institutionService.findByDepartmentId(foundDepartament.id).subscribe(
+			institutions => {
+
+				const foundInstitution = institutions.find((institution: InstitutionBasicInfoDto) => {
+					return (institution.id === this.externalInformation.referenceCompleteData.institutionDestination.id)
+				});
+				this.initialInstitutionTypeaheadOptionSelected = objectToTypeaheadOption(foundInstitution, 'name');
 			}
 		);
 	}

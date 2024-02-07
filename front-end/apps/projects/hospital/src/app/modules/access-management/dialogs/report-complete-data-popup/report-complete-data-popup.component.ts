@@ -18,11 +18,11 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/derive-request/derive-request.component'
 import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
-import { Tabs } from '@access-management/routes/home/home.component';
 import { TabsService } from '@access-management/services/tabs.service';
 
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
+const TAB_OFERTA_POR_REGULACION = 1;
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -147,7 +147,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	redirectToOfferByRegulation(): void {
 		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
-		this.tabsService.setTabActive(1);
+		this.tabsService.setTabActive(TAB_OFERTA_POR_REGULACION);
 		this.dialogRef.close();
 	}
 
