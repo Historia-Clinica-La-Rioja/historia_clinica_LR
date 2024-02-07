@@ -224,7 +224,7 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.ADDRESS');
 			array.push(aggressor.aggressorData.actorPersonalData.address);
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.MUNICIPALTY');
-			array.push(aggressor.aggressorData.actorPersonalData.municipality.description);
+			array.push(aggressor.aggressorData.actorPersonalData.municipality.description ? aggressor.aggressorData.actorPersonalData.municipality.description : 'Sin información');
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.questions.QUESTION_1');
 			const guns: BasicOption = BasicOptions.find(opt => opt.value === aggressor.hasGuns);
 			array.push(guns.text);
@@ -362,7 +362,7 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.ADDRESS');
 			array.push(victimData.keeperData.actorPersonalData.address);
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.MUNICIPALTY');
-			array.push(victimData.keeperData.actorPersonalData.municipality.description);
+			array.push(victimData.keeperData.actorPersonalData.municipality.description ? victimData.keeperData.actorPersonalData.municipality.description : 'Sin información');
 			const relationship: ValueOption = RelationOption.find(opt => opt.value === victimData.keeperData.relationshipWithVictim);
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.RELATIONSHIP_WITH_VICTIM');
 			array.push(relationship.text === RelationOptionDescription.OTHER ? `${relationship.text}: ${victimData.keeperData.otherRelationshipWithVictim}`: relationship.text);
