@@ -88,13 +88,13 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 		this.violenceSituationSub = this.violenceSituationFacadeService.violenceSituation$
 			.subscribe((result: ViolenceReportDto) => {
 				const {victimData} = result;
-				this.form.controls.knowHowToReadWrite.setValue(victimData.canReadAndWrite != null ? victimData.canReadAndWrite: null);
-				this.form.controls.receiveIncome.setValue(victimData.incomeData.hasIncome != null ? victimData.incomeData.hasIncome: null);
+				this.form.controls.knowHowToReadWrite.setValue(victimData.canReadAndWrite);
+				this.form.controls.receiveIncome.setValue(victimData.incomeData.hasIncome);
 				this.form.controls.whichSector.setValue(victimData.incomeData.worksAtFormalSector);
-				this.form.controls.receivePlanAssistance.setValue(victimData.hasSocialPlan != null ? victimData.hasSocialPlan: null);
-				this.form.controls.haveDisability.setValue(victimData.disabilityData.hasDisability != null ? victimData.disabilityData.hasDisability: null);
+				this.form.controls.receivePlanAssistance.setValue(victimData.hasSocialPlan);
+				this.form.controls.haveDisability.setValue(victimData.disabilityData.hasDisability);
 				this.form.controls.haveDisabilityCertificate.setValue(victimData.disabilityData.disabilityCertificateStatus);
-				this.form.controls.isPersonInstitutionalized.setValue(victimData.institutionalizedData.isInstitutionalized != null ? victimData.institutionalizedData.isInstitutionalized: null);
+				this.form.controls.isPersonInstitutionalized.setValue(victimData.institutionalizedData.isInstitutionalized);
 				this.form.controls.inWhichInstitution.setValue(victimData.institutionalizedData.institutionalizedDetails);
 				this.form.controls.personTypeAge.setValue(victimData.lackOfLegalCapacity);
 				if (victimData.lackOfLegalCapacity) {
@@ -107,7 +107,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 					this.setDepartments();
 					this.form.controls.relationPersonViolenceSituation.setValue(victimData.keeperData.relationshipWithVictim);
 					this.form.controls.whichTypeRelation.setValue(victimData.keeperData?.otherRelationshipWithVictim);
-				} 
+				}
 			});
 	}
 
