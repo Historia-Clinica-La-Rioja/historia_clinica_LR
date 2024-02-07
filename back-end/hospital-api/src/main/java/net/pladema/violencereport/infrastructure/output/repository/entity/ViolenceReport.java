@@ -109,7 +109,7 @@ public class ViolenceReport extends SGXAuditableEntity<Integer> implements Seria
 	@Column(name = "was_sexual_violence", nullable = false)
 	private Boolean wasSexualViolence;
 
-	@Column(name = "observations", length = 200)
+	@Column(name = "observations", columnDefinition = "TEXT")
 	private String observations;
 
 }

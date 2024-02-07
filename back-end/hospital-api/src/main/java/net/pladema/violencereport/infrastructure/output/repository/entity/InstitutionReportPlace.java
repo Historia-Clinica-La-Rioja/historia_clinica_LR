@@ -26,7 +26,7 @@ public class InstitutionReportPlace implements Serializable {
 	@EmbeddedId
 	private InstitutionReportPlacePK pk;
 
-	@Column(name = "other_report_place", length = 20)
+	@Column(name = "other_report_place", length = 100)
 	private String otherReportPlace;
 
 }

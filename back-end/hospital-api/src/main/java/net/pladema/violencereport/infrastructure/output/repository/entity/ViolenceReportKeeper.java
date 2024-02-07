@@ -44,7 +44,7 @@ public class ViolenceReportKeeper implements Serializable {
 	@Column(name = "relationship_with_victim_id", nullable = false)
 	private Short relationshipWithVictimId;
 
-	@Column(name = "other_relationship_with_victim", length = 15)
+	@Column(name = "other_relationship_with_victim", length = 30)
 	private String otherRelationshipWithVictim;
 
 }

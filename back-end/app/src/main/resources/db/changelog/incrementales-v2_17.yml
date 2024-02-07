@@ -1,3 +1,15 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_17 
 
+    - changeSet:
+        id: update_violence_report_text_lengths
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                ALTER TABLE violence_report_keeper ALTER COLUMN other_relationship_with_victim TYPE varchar(30) USING other_relationship_with_victim::varchar;
+                ALTER TABLE violence_report_aggressor ALTER COLUMN other_relationship_with_victim TYPE varchar(30) USING other_relationship_with_victim::varchar;
+                ALTER TABLE health_system_organization_coordination ALTER COLUMN other_health_system_organization TYPE varchar(100) USING other_health_system_organization::varchar;
+                ALTER TABLE health_institution_organization_coordination ALTER COLUMN other_health_institution_organization TYPE varchar(100) USING other_health_institution_organization::varchar;
+                ALTER TABLE institution_report_place ALTER COLUMN other_report_place TYPE varchar(100) USING other_report_place::varchar;
+                ALTER TABLE violence_report ALTER COLUMN observations TYPE text USING observations::text;
