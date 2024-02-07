@@ -292,8 +292,9 @@
 				</ng-template>
 
 				<ng-template #templatePlan let-event="event" class="calendar-event">
-					<app-calendar-event-view [event]="event" [appointmentDuration]="form.controls.appointmentDuration.value"
-					></app-calendar-event-view>
+					<app-calendar-event-view [appointmentDuration]="form.controls.appointmentDuration.value"
+						[title]="event.title" [startDateSlot]="event.start" [endDateSlot]="event.end" [metaCalendarEvent]="event.meta">
+					</app-calendar-event-view>
 				</ng-template>
 
 				<mwl-calendar-week-view [viewDate]="TODAY"

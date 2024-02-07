@@ -72,7 +72,6 @@
 			"OVERTURNS": "Atiende {{overturnCount}} sobreturnos",
 			"NO_OVERTURN": "No atiende sobreturnos",
 			"PROTECTED_APPOINTMENT_REGULATION": "Regulación",
-			"PROTECTED_APPOINTMENT_WEB": "Web",
 			"NO_PROTECTED_APPOINTMENT": "No atiende turnos protegidos"
 		},
 		"agenda-setup": {
@@ -122,7 +121,7 @@
 				"ATTENDS_FACE_TO_FACE": "Atiende presencial",
 				"TAKE_PROTECTED_ONLINE": "Atiende turnos protegidos por linea de cuidado",
 				"SERVES_SHIFTS_PROTECTED_BY_REGULATION": "Atiende turnos protegidos por regulación",
-				"ATTEND_ONLINE": "Atiende turnos online",
+				"ONLINE_APPOINTMENTS": "Turnos online (centro de llamado y autogestión)",
 				"ATTEND_SHIFTS_PROTECTED_BY_LINES_OF_CARE": "Atiende turnos protegidos por líneas de cuidado",
 				"ERROR": "No se puede destildar esta opción porque hay turno asignados de este tipo",
 				"ATTENDS_BY_TELECONSULTATION_OF_PATIENT": "Atiende teleconsultas a pacientes",

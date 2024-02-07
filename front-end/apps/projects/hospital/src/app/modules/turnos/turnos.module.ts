@@ -55,7 +55,7 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 import { PracticesPipe } from './pipes/practices.pipe';
 import { CalendarEventViewComponent } from './components/calendar-event-view/calendar-event-view.component';
 import { ShowAppointmentOverTurnPipe } from './pipes/show-appointment-over-turn.pipe';
-import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment.pipe';
+import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 
 
 @NgModule({
@@ -98,7 +98,7 @@ import { ShowProtectedAppointmentPipe } from './pipes/show-protected-appointment
 		//pipes
 		PracticesPipe,
 		ShowAppointmentOverTurnPipe,
-		ShowProtectedAppointmentPipe,
+		ShowTimeSlotDetailsPipe,
 	],
 	imports: [
 		CommonModule,

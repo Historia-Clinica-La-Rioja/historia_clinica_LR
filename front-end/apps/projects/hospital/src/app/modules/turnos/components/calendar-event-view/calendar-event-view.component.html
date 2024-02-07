@@ -1,22 +1,22 @@
 <div class="container">
-    <p class="title">{{event?.title}}</p>
+    <p class="title">{{title}}</p>
 
-    <div class="calendar-event info" *ngIf="event.meta?.medicalAttentionType && showInformation">
+    <div class="calendar-event info" *ngIf="calendarEventProperties.medicalAttentionType && showInformation">
         <div fxLayout="row">
-            <mat-icon class="material-icons-outlined modality" *ngIf="!!event.meta.onSiteAttentionAllowed">meeting_room</mat-icon>
-            <mat-icon class="material-icons-outlined modality" *ngIf="!!event.meta.patientVirtualAttentionAllowed">video_call</mat-icon>
-            <mat-icon class="material-icons-outlined modality" *ngIf="!!event.meta.secondOpinionVirtualAttentionAllowed">switch_video</mat-icon>
+            <mat-icon class="material-icons-outlined modality" *ngIf="calendarEventProperties.onSiteAttentionAllowed">meeting_room</mat-icon>
+            <mat-icon class="material-icons-outlined modality" *ngIf="calendarEventProperties.patientVirtualAttentionAllowed">video_call</mat-icon>
+            <mat-icon class="material-icons-outlined modality" *ngIf="calendarEventProperties.secondOpinionVirtualAttentionAllowed">switch_video</mat-icon>
         </div>
 
-        <div fxLayout="row" class="text" [ngClass]="event.meta.overturnCount > 0 ? '' : 'grey'">
+        <div fxLayout="row" class="text" [ngClass]="calendarEventProperties.overturnCount ? '' : 'grey'">
             <mat-icon>more_time</mat-icon>
-            <p [translate]="event.meta.overturnCount | showAppointmentOverTurn"
-                [translateParams]="{overturnCount: event.meta.overturnCount}">
+            <p [translate]="calendarEventProperties.overturnCount | showAppointmentOverTurn"
+                [translateParams]="{overturnCount: calendarEventProperties.overturnCount}">
             </p>
         </div>
-        <div fxLayout="row" class="text" [ngClass]="event.meta.regulationProtectedAppointmentsAllowed || event.meta.protectedAppointmentsAllowed || event.meta.availableForBooking ? '' : 'grey'">
+        <div fxLayout="row" class="text" [ngClass]="calendarEventProperties.anyDetails ? '' : 'grey'">
             <mat-icon class="material-icons-outlined">verified_user</mat-icon>
-            <p [translate]="[event.meta.protectedAppointmentsAllowed, event.meta.availableForBooking, event.meta.regulationProtectedAppointmentsAllowed] | showProtectedAppointment"></p>
+            <p>{{ calendarEventProperties | showTimeSlotDetails }}</p>
         </div>
     </div>
 </div>
