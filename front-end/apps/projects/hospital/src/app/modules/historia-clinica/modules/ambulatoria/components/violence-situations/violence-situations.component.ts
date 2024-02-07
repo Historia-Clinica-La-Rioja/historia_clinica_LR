@@ -7,10 +7,12 @@ import { VIOLENCE_SITUATION_HISTORY, VIOLENCE_SITUATION_LIST } from '@historia-c
 import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 import { map } from 'rxjs';
 import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
-import { dateDtoToDate, dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { dateTimeToViewDateHourMinute, dateToViewDate } from '@core/utils/date.utils';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateToViewDate } from '@core/utils/date.utils';
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
-import { PageDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDto } from '@api-rest/api-model';
+import { DateTimeDto, PageDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDto } from '@api-rest/api-model';
+import { ViewDateDtoPipe } from '@presentation/pipes/view-date-dto.pipe';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-violence-situations',
@@ -30,6 +32,8 @@ export class ViolenceSituationsComponent implements OnInit {
 	evolutions: ItemListCard[] = [];
 	showSeeAll: boolean = true;
 	selectedViolenceEvolution: DetailedInformation;
+	viewDateDtoPipe: ViewDateDtoPipe = new ViewDateDtoPipe();
+	dateFormatPipe: DateFormatPipe = new DateFormatPipe();
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
@@ -93,9 +97,15 @@ export class ViolenceSituationsComponent implements OnInit {
 					title: evolution.professionalFullName
 				},
 				{
-					title: `${dateTimeToViewDateHourMinute(dateTimeDtoToDate(evolution.createdOn))} hs`
+					title: `${this.parseDate(evolution.createdOn)} hs`
 				},
 			]
 		}
 	}
+
+	private parseDate(dateTimeDto: DateTimeDto): string {
+		const date: Date = this.viewDateDtoPipe.transform(dateTimeDto, 'localdatetime');
+		return this.dateFormatPipe.transform(date, 'datetime');
+	}
+
 }
