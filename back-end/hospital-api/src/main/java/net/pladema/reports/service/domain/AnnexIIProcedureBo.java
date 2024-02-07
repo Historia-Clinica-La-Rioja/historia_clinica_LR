@@ -11,7 +11,8 @@ import lombok.Getter;
 @Builder
 public class AnnexIIProcedureBo {
 
-	private String code;
+	private String codeNomenclator;
+	private String descriptionNomenclator;
 	private String description;
 	private Integer amount;
 	private LocalDateTime date;

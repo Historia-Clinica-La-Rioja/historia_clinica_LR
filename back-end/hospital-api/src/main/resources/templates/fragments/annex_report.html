@@ -332,8 +332,8 @@
                 <th class="thead-light"> IMPORTE </th>
             </tr>
             <tr th:each="procedureLine, iter: ${procedureLines}">
-                <td th:text="${procedureLine.code}"></td>
-                <td th:text="${procedureLine.description}"></td>
+                <td th:text="${procedureLine.codeNomenclator}"></td>
+                <td th:text="${procedureLine.descriptionNomenclator}"></td>
                 <td th:text="${#numbers.formatDecimal(procedureLine.rate, 1, 2)}"></td>
                 <td th:text="${procedureLine.amount}"></td>
                 <td th:text="${#numbers.formatDecimal(procedureLine.patientRate, 1, 2)}"></td>
@@ -356,7 +356,8 @@
             </tbody>
         </table>
     </div>
-
+    <div style="page-break-before: always;">
+    </div>
     <div class="atomic-block">
         <div class="internment">INTERNACIÓN</div>
         <div style="width: 23px;">&nbsp;</div>
@@ -412,6 +413,7 @@
             <div class="border-bottom">Firma del Beneficiario</div>
         </div>
     </div>
+
 </div>
 
 </body>

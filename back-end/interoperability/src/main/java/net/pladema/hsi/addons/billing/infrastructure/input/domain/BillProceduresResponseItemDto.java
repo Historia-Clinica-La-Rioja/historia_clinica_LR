@@ -7,7 +7,8 @@ import net.pladema.hsi.addons.billing.domain.BillProceduresResponseItemBo;
 
 @Value
 public class BillProceduresResponseItemDto {
-	String code;
+	String codeNomenclator;
+	String descriptionNomenclator;
 	String description;
 	Integer amount;
 	LocalDateTime date;
@@ -19,7 +20,8 @@ public class BillProceduresResponseItemDto {
 
 	public static BillProceduresResponseItemDto fromBo(BillProceduresResponseItemBo bo) {
 		return new BillProceduresResponseItemDto(
-			bo.getCode(),
+			bo.getCodeNomenclator(),
+			bo.getDescriptionNomenclator(),
 			bo.getDescription(),
 			bo.getAmount(),
 			bo.getDate(),

@@ -235,8 +235,9 @@ export interface AnnexIIDto {
 
 export interface AnnexIIProcedureDto {
     amount: number;
-    code: string;
+    codeNomenclator: string;
     description: string;
+    descriptionNomenclator: string;
     patientRate: number;
     rate: number;
 }

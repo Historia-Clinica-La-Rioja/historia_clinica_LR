@@ -11,16 +11,6 @@ import java.util.stream.Collectors;
 
 @Setter
 public class BillProceduresResponseDto {
-	/**
-	 * private List<EncounterItemSummaryBo> beds;
-	 * 	private List<EncounterItemSummaryBo> practices;
-	 * 	private List<EncounterItemSummaryBo> medications;
-	 * 	private List<EncounterItemSummaryBo> modules;
-	 * 	private List<EncounterItemSummaryBo> nonRegisteredPractices;
-	 * 	private List<BackofficeEncounterTotal> totals;
-	 * 	private MedicalCoverage medicalCoverage;
-	 * 	private Person patient;
-	 */
 
 	private List<BillProceduresResponseItemDto> beds;
 	private List<BillProceduresResponseItemDto> practices;
@@ -32,7 +22,7 @@ public class BillProceduresResponseDto {
 	private String medicalCoverageCuit;
 	private String medicalCoverageName;
 
-	public BillProceduresResponseBo toBo(BillProceduresRequestBo request) {
+	public BillProceduresResponseBo toBo(BillProceduresRequestBo request, boolean encounterExistsInRemote) {
 		Float patientTotal = null;
 		Float medicalCoverageTotal = null;
 		if (totals != null && !totals.isEmpty()) {
@@ -47,23 +37,24 @@ public class BillProceduresResponseDto {
 				this.medicalCoverageName,
 				this.medicalCoverageCuit,
 				true,
-				request
+				request,
+				encounterExistsInRemote
 		);
 	}
 
 	private List<BillProceduresResponseItemBo> collectPractices() {
 		List<BillProceduresResponseItemBo> ret = new ArrayList<>();
-		if (this.practices != null)
-			ret.addAll(this.practices.stream().map(x->x.toBo()).collect(Collectors.toList()));
-		if (this.nonRegisteredPractices != null)
-			ret.addAll(this.nonRegisteredPractices.stream().map(x->x.toBo()).collect(Collectors.toList()));
-		if (this.beds != null)
-			ret.addAll(this.beds.stream().map(x->x.toBo()).collect(Collectors.toList()));
-		if (this.medications != null)
-			ret.addAll(this.medications.stream().map(x->x.toBo()).collect(Collectors.toList()));
-		if (this.modules != null)
-			ret.addAll(this.modules.stream().map(x->x.toBo()).collect(Collectors.toList()));
+		addAll(ret, this.practices, BillProceduresResponseItemBo.PracticeType.PRACTICE);
+		addAll(ret, this.nonRegisteredPractices, BillProceduresResponseItemBo.PracticeType.NON_REGISTERED);
+		addAll(ret, this.beds, BillProceduresResponseItemBo.PracticeType.BED);
+		addAll(ret, this.medications, BillProceduresResponseItemBo.PracticeType.MEDICATION);
+		addAll(ret, this.modules, BillProceduresResponseItemBo.PracticeType.MODULE);
 		return ret;
+	}
+
+	private void addAll(List<BillProceduresResponseItemBo> ret, List<BillProceduresResponseItemDto> items, BillProceduresResponseItemBo.PracticeType practiceType) {
+		if (items != null)
+			ret.addAll(items.stream().map(x->x.toBo(practiceType)).collect(Collectors.toList()));
 	}
 
 	public BillProceduresResponseDto validate() {

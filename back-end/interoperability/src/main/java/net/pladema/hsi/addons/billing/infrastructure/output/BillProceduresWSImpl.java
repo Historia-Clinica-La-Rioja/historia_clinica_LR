@@ -79,7 +79,7 @@ public class BillProceduresWSImpl implements BillProceduresPort {
 					billingWSConfig.getEncounterUrl() + "/" + encounterId,
 					BillProceduresResponseDto.class
 			).getBody().validate();
-			return response.toBo(request);
+			return response.toBo(request, true);
 		} catch (Exception e) {
 			//Just log the exception and try to fetch by snomeds
 			log.warn("Fetch por encounterId falló, se continua por lista de snomeds");
@@ -94,7 +94,7 @@ public class BillProceduresWSImpl implements BillProceduresPort {
 					buildRequest(request),
 					BillProceduresResponseDto.class
 			).getBody().validate();
-			return response.toBo(request);
+			return response.toBo(request, false);
 		} catch (RestTemplateApiException e) {
 			throw processException(e);
 		} catch (Exception e) {

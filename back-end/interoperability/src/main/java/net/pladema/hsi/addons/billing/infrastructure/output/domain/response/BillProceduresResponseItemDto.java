@@ -29,18 +29,19 @@ public class BillProceduresResponseItemDto {
 
 	private String codeNomenclator;
 
-	public BillProceduresResponseItemBo toBo() {
+	public BillProceduresResponseItemBo toBo(BillProceduresResponseItemBo.PracticeType practiceType) {
 		return new BillProceduresResponseItemBo(
-		this.getCodeNomenclator(),
-		this.getDescriptionNomenclator(),
-		this.getDescription(),
-		this.getAmount(),
-		this.getDate(),
-		this.getRate(),
-		this.getCoveragePercentage(),
-		this.getPatientRate(),
-		this.getCoverageRate(),
-		this.getTotal()
+			this.getCodeNomenclator(),
+			this.getDescriptionNomenclator(),
+			this.getDescription(),
+			this.getAmount(),
+			this.getDate(),
+			this.getRate(),
+			this.getCoveragePercentage(),
+			this.getPatientRate(),
+			this.getCoverageRate(),
+			this.getTotal(),
+			practiceType
 		);
 	}
 }

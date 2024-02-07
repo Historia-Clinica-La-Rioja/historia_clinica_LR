@@ -12,9 +12,11 @@ import org.apache.commons.lang3.ObjectUtils;
 @ToString
 @EqualsAndHashCode
 public class BillProceduresResponseItemBo {
-	String code;
+	public enum PracticeType {PRACTICE, NON_REGISTERED, BED, MEDICATION, MODULE;};
+
+	String codeNomenclator;
+	String descriptionNomenclator;
 	String description;
-	String snomedPt;
 	Integer amount;
 	LocalDateTime date;
 	Float rate;
@@ -22,21 +24,43 @@ public class BillProceduresResponseItemBo {
 	Float coverageRate;
 	Float patientRate;
 	Float total;
-
-	public BillProceduresResponseItemBo(String code, String description, String snomedPt, Integer amount, LocalDateTime date, Float rate, Float coveragePercentage, Float coverageRate, Float patientRate, Float total) {
-		this.code = ObjectUtils.defaultIfNull(code, "");
-		this.description = ObjectUtils.firstNonNull(description, snomedPt, "");
-		this.snomedPt = ObjectUtils.defaultIfNull(snomedPt, "");
-		this.amount = ObjectUtils.defaultIfNull(amount, 0);
+	PracticeType practiceType;
+	public BillProceduresResponseItemBo(String codeNomenclator, String descriptionNomenclator, String description, Integer amount, LocalDateTime date,
+		Float rate, Float coveragePercentage, Float coverageRate, Float patientRate, Float total, PracticeType practiceType) {
+		this.codeNomenclator = codeNomenclator;
+		this.descriptionNomenclator = descriptionNomenclator;
+		this.description = description;
+		this.amount = amount;
 		this.date = date;
-		this.rate = zeroIfNull(rate);
-		this.coveragePercentage = zeroIfNull(coveragePercentage);
-		this.coverageRate = zeroIfNull(coverageRate);
-		this.patientRate = zeroIfNull(patientRate);
-		this.total = zeroIfNull(total);
+		this.rate = rate;
+		this.coveragePercentage = coveragePercentage;
+		this.coverageRate = coverageRate;
+		this.patientRate = patientRate;
+		this.total = total;
+		this.practiceType = practiceType;
+	}
+	public boolean isNonRegistered() {
+		return this.getPracticeType().equals(PracticeType.NON_REGISTERED);
 	}
 
-	private static Float zeroIfNull(Float value) {
-		return value == null ? 0.0F : value;
+	public boolean withoutCode() {
+		return (this.getCodeNomenclator() == null || this.getCodeNomenclator().isEmpty());
 	}
+
+	public boolean withoutDescriptionNomenclator() {
+		return (this.getDescriptionNomenclator() == null || this.getDescriptionNomenclator().isEmpty());
+	}
+
+	public boolean withoutPrice() {
+		return this.rate == null;
+	}
+
+	public BillProceduresResponseItemBo useDescriptionAsDescriptionNomenclator() {
+		return new BillProceduresResponseItemBo(codeNomenclator, description, descriptionNomenclator, amount, date, rate, coveragePercentage, coverageRate, patientRate, total, practiceType);
+	}
+
+	public BillProceduresResponseItemBo clearPrice() {
+		return new BillProceduresResponseItemBo(codeNomenclator, description, descriptionNomenclator, null, date, null, null, null, null, null, practiceType);
+	}
+
 }

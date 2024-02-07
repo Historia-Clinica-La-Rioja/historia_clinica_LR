@@ -8,7 +8,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class AnnexIIProcedureDto {
-	private String code;
+	private String codeNomenclator;
+	private String descriptionNomenclator;
 	private String description;
 	private Float rate;
 	private Integer amount;

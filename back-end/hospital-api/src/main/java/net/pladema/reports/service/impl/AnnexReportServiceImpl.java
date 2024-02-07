@@ -144,8 +144,9 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			.getProcedures()
 			.stream().map(x ->
 				AnnexIIProcedureBo.builder()
+					.codeNomenclator(x.getCodeNomenclator())
+					.descriptionNomenclator(x.getDescriptionNomenclator())
 					.description(x.getDescription())
-					.code(x.getCode())
 					.amount(x.getAmount())
 					.date(x.getDate())
 					.rate(x.getRate())
