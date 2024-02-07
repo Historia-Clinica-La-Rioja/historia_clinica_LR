@@ -9,7 +9,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoB
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
-import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
@@ -68,7 +67,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -416,7 +414,7 @@ public class ServiceRequestController {
 	}
 
     @GetMapping(value = "/{serviceRequestId}/download-pdf")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
     public ResponseEntity<Resource> downloadPdf(@PathVariable(name = "institutionId") Integer institutionId,
 												@PathVariable(name = "patientId") Integer patientId,
 												@PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {
@@ -427,7 +425,7 @@ public class ServiceRequestController {
     }
 
 	@GetMapping(value = "/transcribed/{transcribedServiceRequestId}/download-pdf")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, TECNICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public ResponseEntity<Resource> downloadTranscribedOrderPdf(@PathVariable(name = "institutionId") Integer institutionId,
 												@PathVariable(name = "patientId") Integer patientId,
 												@PathVariable(name = "transcribedServiceRequestId") Integer transcribedServiceRequestId,
@@ -436,13 +434,6 @@ public class ServiceRequestController {
 		StoredFileBo result = createTranscribedServiceRequestPdf.run(institutionId, patientId, transcribedServiceRequestId, Integer.valueOf(appointmentId));
 		log.trace(OUTPUT, result);
 		return StoredFileResponse.sendFile(result);
-	}
-
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ RuntimeException.class })
-	public ApiErrorDto handleValidationExceptions(RuntimeException ex) {
-		log.error("Constraint violation -> {}", ex.getMessage());
-		return new ApiErrorDto("Constraint violation", ex.getMessage());
 	}
 
 }
