@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-const MIN_APPOINTMENTS = 7;
+const MIN_APPOINTMENTS = 8;
 const MILISECOND = 1000;
 const MINUTES = 60;
 
