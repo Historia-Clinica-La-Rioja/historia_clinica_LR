@@ -254,7 +254,7 @@ export class ViolenceReportFacadeService {
 	private buildRelationWithAggressor = (array: string[], aggressor: ViolenceReportAggressorDto) => {
 		array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.questions.QUESTION_5');
 		const relation: ValueOption = AggressorRelationship.find(opt => opt.value === aggressor.aggressorData.relationshipWithVictim);
-		array.push(relation.text === EAggressorRelationship.ACQUAINTANCE ? `${relation.text}: ${aggressor.aggressorData.otherRelationshipWithVictim}`: relation.text);
+		array.push(relation.value === EAggressorRelationship.ACQUAINTANCE ? `${relation.text}: ${aggressor.aggressorData.otherRelationshipWithVictim}`: relation.text);
 	}
 
 	private buildBelongsToSecurityForces = (array: string[], aggressor: ViolenceReportAggressorDto) => {
