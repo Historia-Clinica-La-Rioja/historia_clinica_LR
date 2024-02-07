@@ -8,7 +8,7 @@ import EpisodeDocumentTypeCreate from './EpisodeDocumentTypeCreate';
 import EpisodeDocumentTypeEdit from './EpisodeDocumentTypeEdit';
 
 const episodesDocumentTypes = (permissions: SGXPermissions) => {
-    const hasAccess = permissions.hasAnyRoleName(ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role) || permissions.hasAnyAssignment(ADMINISTRADOR);
+    const hasAccess = permissions.hasAnyAssignment(ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR);
     return {
         icon: DescriptionIcon,
         show: EpisodeDocumentTypeShow,
