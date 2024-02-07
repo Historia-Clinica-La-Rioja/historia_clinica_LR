@@ -57,12 +57,12 @@ export class ViolenceReportFacadeService {
 
 	download(patientId: number, situationId: number, evolutionId: number) {
 		this.violenceReportService.download(patientId, situationId, evolutionId);
-	}	
+	}
 
     private mapToDetailedInformation(result: ViolenceReportDto, situationId: number, evolutionId: number) {
 		const detailed = {
 			id: null,
-			title: `Situación #${situationId} | Evolución ${evolutionId}`,
+			title: `Situación #${situationId} | ` + this.parseEvolutionText(evolutionId),
 			oneColumn: [
 				{
 					icon: 'cancel',
@@ -94,6 +94,10 @@ export class ViolenceReportFacadeService {
 			}
 		): null;
 		return detailed;
+	}
+
+	public parseEvolutionText(evolutionId: number): string {
+		return evolutionId !== 0 ? `Evolución ${evolutionId}` : 'Inicio de abordaje';
 	}
 
 	private buildImplementedActions = (actions: ViolenceReportImplementedActionsDto): string[] => {
@@ -140,7 +144,7 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.implemented-actions.questions.QUESTION_10');
 			const authOrgs: ValueOption[] = OrganizationsExtended.filter(opt => institutionReportDto.institutionReportPlaces.find(org => org === opt.value));
 			authOrgs.forEach(org => array.push(org.value === EInstitutionReportPlace.OTHER ? `${org.text}: ${institutionReportDto.otherInstitutionReportPlace}`: org.text));
-		}	
+		}
 	}
 
 	private buildPersonComplaint = (array: string[], victimKeeperReportDto: VictimKeeperReportDto) => {
@@ -209,7 +213,7 @@ export class ViolenceReportFacadeService {
 			array.push(indicated.text);
 		}
 	}
-	
+
 	private buildViolentPersonInformation = (aggressorData: ViolenceReportAggressorDto[]): string[] => {
 		const array: string[] = [];
 		aggressorData.forEach((aggressor: ViolenceReportAggressorDto) => {

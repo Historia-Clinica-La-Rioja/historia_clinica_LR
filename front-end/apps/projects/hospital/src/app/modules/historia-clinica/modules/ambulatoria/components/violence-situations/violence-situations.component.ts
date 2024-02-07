@@ -18,8 +18,8 @@ import { PageDto, ViolenceReportSituationDto, ViolenceReportSituationEvolutionDt
 	styleUrls: ['./violence-situations.component.scss']
 })
 export class ViolenceSituationsComponent implements OnInit {
-	
-	constructor(private readonly dockPopupService: DockPopupService, 
+
+	constructor(private readonly dockPopupService: DockPopupService,
 				private route: ActivatedRoute,
 				private violenceSituationReportFacadeService: ViolenceReportFacadeService) { }
 
@@ -58,7 +58,7 @@ export class ViolenceSituationsComponent implements OnInit {
 	setPatientViolenceSituations(mustBeLimited: boolean) {
 		this.violenceSituationReportFacadeService.setAllPatientViolenceSituations(this.patientId, mustBeLimited);
 	}
-	
+
 	seeDetails = (ids: SelectableCardIds) => {
 		this.violenceSituationReportFacadeService.getEvolutionData(this.patientId, ids.id, ids.relatedId);
 	}
@@ -86,7 +86,7 @@ export class ViolenceSituationsComponent implements OnInit {
 			title: `Situación #${evolution.situationId} (${dateToViewDate(dateDtoToDate(evolution.episodeDate))})`,
 			options: [
 				{
-					title: `Evolución ${evolution.evolutionId}`,
+					title: this.violenceSituationReportFacadeService.parseEvolutionText(evolution.evolutionId),
 					isImportant: true
 				},
 				{
