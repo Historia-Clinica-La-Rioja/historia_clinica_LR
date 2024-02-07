@@ -321,9 +321,11 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.new-violence-episode.questions.QUESTION_5');
 			const escolarized: BasicOption = BasicOptions.find(opt => opt.value === episode.violenceTowardsUnderage.schooled);
 			array.push(escolarized.text);
-			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.new-violence-episode.questions.QUESTION_6');
 			const schoolLevel: ValueOption = EscolarizationLevels.find(e => e.value === episode.violenceTowardsUnderage.schoolLevel);
-			array.push(schoolLevel.text);
+			if (schoolLevel) {
+				array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.new-violence-episode.questions.QUESTION_6');
+				array.push(schoolLevel.text);
+			}
 		}
 	}
 
