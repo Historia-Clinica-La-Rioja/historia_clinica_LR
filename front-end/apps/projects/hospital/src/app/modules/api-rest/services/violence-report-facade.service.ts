@@ -3,7 +3,7 @@ import { CoordinationInsideHealthSectorDto, CoordinationOutsideHealthSectorDto, 
 import { BehaviorSubject, Subject } from 'rxjs';
 import { ViolenceReportService } from './violence-report.service';
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
-import { AggressorRelationship, Areas, BasicOption, BasicOptions, BasicTwoOptions, Complaints, CriminalRecordStatus, Devices, DisabilityCertificateStatus, EscolarizationLevels, FormOption, ImplementedActions, InstitutionOptions, InternmentIndication, LiveTogetherStatus, MunicipalDevices, NationalDevices, Organizations, OrganizationsExtended, ProvincialDevices, RelationOption, RelationOptionDescription, RelationshipLengths, RiskLevels, Sectors, StateOptions, ValueOption, ViolenceFrequencys, ViolenceTypes } from '@historia-clinica/modules/ambulatoria/constants/violence-masterdata';
+import { AggressorRelationship, Areas, BasicOption, BasicOptions, BasicTwoOptions, Complaints, CriminalRecordStatus, Devices, DisabilityCertificateStatus, EscolarizationLevels, Establishments, FormOption, ImplementedActions, InstitutionOptions, InternmentIndication, LiveTogetherStatus, MunicipalDevices, NationalDevices, Organizations, OrganizationsExtended, ProvincialDevices, RelationOption, RelationOptionDescription, RelationshipLengths, RiskLevels, Sectors, StateOptions, ValueOption, ViolenceFrequencys, ViolenceTypes } from '@historia-clinica/modules/ambulatoria/constants/violence-masterdata';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateToViewDate } from '@core/utils/date.utils';
 import { Articulation } from '@historia-clinica/modules/ambulatoria/components/violence-situation-implemented-actions/violence-situation-implemented-actions.component';
@@ -205,7 +205,7 @@ export class ViolenceReportFacadeService {
 			array.push(artEst.text);
 			if (artEst.value) {
 				array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.implemented-actions.questions.QUESTION_3');
-				const establishments: ValueOption[] = Areas.filter(opt => coordinationInsideHealthSector.healthInstitutionOrganization.organizations.find(org => org === opt.value));
+				const establishments: ValueOption[] = Establishments.filter(opt => coordinationInsideHealthSector.healthInstitutionOrganization.organizations.find(org => org === opt.value));
 				establishments.map(est => array.push(est.value === EHealthInstitutionOrganization.OTHERS ? `${est.text}: ${coordinationInsideHealthSector.healthInstitutionOrganization.other}`: est.text));
 			}
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.implemented-actions.questions.QUESTION_5');
