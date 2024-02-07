@@ -84,15 +84,13 @@ export class ViolenceReportFacadeService {
 					title: 'ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.implemented-actions.TITLE',
 					value: this.buildImplementedActions(result.implementedActions)
 				},
+				{
+					icon: 'cancel',
+					title: 'ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.relevant-information.TITLE',
+					value: [result.observation ? result.observation : 'Sin información']
+				}
 			]
 		}
-		result.observation ? detailed.oneColumn.push(
-			{
-				icon: 'cancel',
-				title: 'ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.relevant-information.TITLE',
-				value: [result.observation]
-			}
-		): null;
 		return detailed;
 	}
 
