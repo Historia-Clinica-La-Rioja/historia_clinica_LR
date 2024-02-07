@@ -405,7 +405,7 @@
     </div>
     <span class="title">Información relevante</span>
     <div class="non-broken-content">
-        <span class="content free-text" th:text="${observations != null ? observations : 'Sin información'}"></span>
+        <span class="content free-text" th:text="${observations != null && observations != '' ? observations : 'Sin información'}"></span>
     </div>
 </body>
 </html>
