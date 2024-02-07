@@ -17,7 +17,8 @@ export class AnestheticDrugComponent implements OnInit {
     possibleTimesList: TimeDto[];
     viasArray: MasterDataDto[];
     anotherViaEnabled = false
-	readonly hasError = hasError;
+    readonly hasError = hasError;
+    private ANOTHER_VIA_ID = 7;
 
     constructor(
         public dialogRef: MatDialogRef<AnestheticDrugComponent>,
@@ -31,12 +32,12 @@ export class AnestheticDrugComponent implements OnInit {
 
     ngOnInit(): void {
         this.data.premedicationService.getViaInputStatus().subscribe
-        (
-          via => {
-                this.anotherViaEnabled =  via?.description && via?.description === 'Otra'
-                this.data.premedicationService.HandleValidatorRequiredViaNotes(via)
-            }
-        )
+            (
+                via => {
+                    this.anotherViaEnabled = via?.description && via?.id === this.ANOTHER_VIA_ID
+                    this.data.premedicationService.HandleValidatorRequiredViaNotes(via)
+                }
+            )
     }
 
     close(): void {
@@ -45,7 +46,7 @@ export class AnestheticDrugComponent implements OnInit {
     }
 
     addDrug(): void {
-        if (this.form.valid){
+        if (this.form.valid) {
             this.data.premedicationService.addToList();
             this.dialogRef.close();
         }

@@ -98,6 +98,11 @@ export class InternacionMasterDataService {
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
+	getViasAnestheticPlan(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-anesthetic-plan`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 	getOtherIndicationTypes(): Observable<OtherIndicationTypeDto[]> {
 		const url = `${environment.apiBase}/internments/masterdata/other-indication-type`;
 		return this.http.get<OtherIndicationTypeDto[]>(url);

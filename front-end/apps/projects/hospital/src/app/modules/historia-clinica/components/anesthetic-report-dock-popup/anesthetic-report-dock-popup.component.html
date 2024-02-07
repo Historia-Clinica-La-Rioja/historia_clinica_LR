@@ -15,15 +15,16 @@
 
         <app-new-consultation-expansion-section id="anthropometric-data-expansion-section"
             [title]="'internaciones.anesthesic-report.anthropometric-data.TITLE' | translate" icon="assignment"
-            [(collapsed)]="collapsedAnthropometricDataSection" [isEmpty]="anesthesicReportAnthropometricDataService.isEmpty()" [hideBorder]="false">
+            [(collapsed)]="collapsedAnthropometricDataSection"
+            [isEmpty]="anesthesicReportAnthropometricDataService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-anthropometric-data [patientId]="data.patientId"
                 [service]="anesthesicReportAnthropometricDataService"></app-anesthetic-report-anthropometric-data>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anesthesic-clinical-evaluation-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE' | translate"
-            icon="assignment" [(collapsed)]="collapsedClinicalEvaluationSection" [isEmpty]="anestheticReportClinicalEvaluationService.isEmpty()"
-            [hideBorder]="false">
+            icon="assignment" [(collapsed)]="collapsedClinicalEvaluationSection"
+            [isEmpty]="anestheticReportClinicalEvaluationService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-clinical-evaluation
                 [service]="anestheticReportClinicalEvaluationService"></app-anesthetic-report-clinical-evaluation>
         </app-new-consultation-expansion-section>
@@ -37,17 +38,22 @@
 
         <app-new-consultation-expansion-section id="usual-medication-expansion-section"
             [title]="'internaciones.anesthesic-report.usual-medication.TITLE' | translate" icon="assignment"
-            [collapsed]="medicacionesNuevaConsultaService.isEmpty()" [isEmpty]="medicacionesNuevaConsultaService.isEmpty()" [hideBorder]="false">
-            <app-anesthetic-report-usual-medication [service]="medicacionesNuevaConsultaService"></app-anesthetic-report-usual-medication>
+            [collapsed]="medicacionesNuevaConsultaService.isEmpty()"
+            [isEmpty]="medicacionesNuevaConsultaService.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-report-usual-medication
+                [service]="medicacionesNuevaConsultaService"></app-anesthetic-report-usual-medication>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="premedication-and-food-intake-expansion-section"
-            [title]="'internaciones.anesthesic-report.premedication-and-food-intake.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticReportPremedicationAndFoodIntakeService.isEmpty() && !formFoodIntake.value.lastFoodIntake" [hideBorder]="false">
-            <app-anesthetic-report-premedication-and-food-intake [service]="anestheticReportPremedicationAndFoodIntakeService">
+            [title]="'internaciones.anesthesic-report.premedication-and-food-intake.TITLE' | translate"
+            icon="assignment" [collapsed]="true"
+            [isEmpty]="anestheticReportPremedicationAndFoodIntakeService.isEmpty() && !formFoodIntake.value.lastFoodIntake"
+            [hideBorder]="false">
+            <app-anesthetic-report-premedication-and-food-intake
+                [service]="anestheticReportPremedicationAndFoodIntakeService">
                 <ng-container food-intake-form>
 
-					<form [formGroup]="formFoodIntake">
+                    <form [formGroup]="formFoodIntake">
                         <mat-form-field appearance="outline" data-id="food-intake-selector">
                             <mat-select id="lastFoodIntake" formControlName="lastFoodIntake">
                                 <mat-option [value]="time" *ngFor="let time of possibleTimesList">
@@ -55,20 +61,20 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-					</form>
+                    </form>
 
-				</ng-container>
+                </ng-container>
             </app-anesthetic-report-premedication-and-food-intake>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="record-expansion-section"
-            [title]="'internaciones.anesthesic-report.record.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticReportRecordService.isEmpty()" [hideBorder]="false">
+            [title]="'internaciones.anesthesic-report.record.TITLE' | translate" icon="assignment" [collapsed]="true"
+            [isEmpty]="anestheticReportRecordService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-person-record [service]="anestheticReportRecordService">
                 <ng-container person-record-form>
 
-					<form [formGroup]="personalRecordForm">
-						<mat-label [translate]="'internaciones.anesthesic-report.record.OBSERVATIONS'"></mat-label>
+                    <form [formGroup]="personalRecordForm">
+                        <mat-label [translate]="'internaciones.anesthesic-report.record.OBSERVATIONS'"></mat-label>
                         <mat-form-field appearance="outline" data-id="observations">
                             <textarea matInput type="text" id="observations-input" formControlName="observations"
                                 placeholder="{{'internaciones.anesthesic-report.record.ADD_OBSERVATIONS' | translate }}">
@@ -85,10 +91,16 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-					</form>
+                    </form>
 
                 </ng-container>
             </app-anesthetic-report-person-record>
+        </app-new-consultation-expansion-section>
+        <app-new-consultation-expansion-section id="anesthetic-plan-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-plan.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anestheticPlan.isEmpty()" [hideBorder]="false">
+            <app-anesthetic-plan [service]="anestheticPlan">
+            </app-anesthetic-plan>
         </app-new-consultation-expansion-section>
     </div>
 

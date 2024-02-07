@@ -386,6 +386,13 @@
 				"HOUR": "Hora",
 				"LAST_FOOD_INTAKE": "Última ingesta de comida:"
 			},
+			"anesthetic-plan": {
+				"TITLE": "Plan anestésico",
+				"ADD_PLAN_TITLE": "Agregar plan anestésico",
+				"ADD_PLAN": " + Agregar plan anestésico",
+				"MEDICATION": "Medicación",
+				"PLAN_RECORDS": "Planes anestésicos registrados"
+			},
 			"drug": {
 				"HOUR": "Hora",
 				"UNIT_LABEL": "Unidad: ",

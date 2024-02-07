@@ -27,7 +27,7 @@ export class MedicationService {
 
     private dataEmitter = new BehaviorSubject<MedicationData[]>(this.medicationList);
 	private data$ = this.dataEmitter.asObservable();
-    private ANOTHER_VIA_DESCRIPTION = 'Otra';
+    private ANOTHER_VIA_ID = 7;
 
     constructor(
         private readonly snomedService: SnomedService,
@@ -145,7 +145,7 @@ export class MedicationService {
 
 
     HandleValidatorRequiredViaNotes(viaData: MasterDataDto): void{
-        if (viaData?.description && viaData?.description === this.ANOTHER_VIA_DESCRIPTION)
+        if (viaData?.description && viaData?.id === this.ANOTHER_VIA_ID)
             this.getForm().get('viaNote').setValidators(Validators.required)
         else
         {

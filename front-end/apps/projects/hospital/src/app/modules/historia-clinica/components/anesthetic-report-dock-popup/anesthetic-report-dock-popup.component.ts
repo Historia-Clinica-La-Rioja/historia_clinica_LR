@@ -42,6 +42,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 	medicacionesNuevaConsultaService: MedicacionesNuevaConsultaService;
     anestheticReportPremedicationAndFoodIntakeService: MedicationService;
     anestheticReportRecordService: AnestheticReportRecordService;
+    anestheticPlan: MedicationService;
 
     personalRecordForm: FormGroup;
     readonly ASAOptions = [1,2,3,4,5]
@@ -73,6 +74,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService);
 		this.anestheticReportPremedicationAndFoodIntakeService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportRecordService = new AnestheticReportRecordService(this.snomedService, this.snackBarService);
+        this.anestheticPlan = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
             lastFoodIntake: new FormControl(null),
@@ -152,6 +154,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto(),
             foodIntake: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto().length > 0 ? {clockTime: this.formFoodIntake.value.lastFoodIntake} : null,
             histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
+            anestheticPlans: this.anestheticPlan.getAnestheticSubstanceDto()
 		};
 	}
 }

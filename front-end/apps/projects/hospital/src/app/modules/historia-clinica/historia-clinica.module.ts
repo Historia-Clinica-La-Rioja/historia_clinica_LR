@@ -87,7 +87,7 @@ import { AnestheticReportUsualMedicationComponent } from './modules/ambulatoria/
 import { AnestheticReportPremedicationAndFoodIntakeComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-premedication-and-food-intake/anesthetic-report-premedication-and-food-intake.component';
 import { AnestheticReportPremedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-premedication-background-list/anesthetic-report-premedication-background-list.component';
 import { AnestheticReportPersonRecordComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-person-record/anesthetic-report-person-record.component';
-
+import { AnestheticPlanComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-plan/anesthetic-plan.component';
 @NgModule({
 	declarations: [
 		// components
@@ -124,6 +124,7 @@ import { AnestheticReportPersonRecordComponent } from './modules/ambulatoria/mod
 		AnestheticReportPremedicationAndFoodIntakeComponent,
 		AnestheticReportPremedicationBackgroundListComponent,
 		AnestheticReportPersonRecordComponent,
+		AnestheticPlanComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
