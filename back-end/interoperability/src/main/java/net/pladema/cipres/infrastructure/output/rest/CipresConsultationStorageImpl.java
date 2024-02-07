@@ -38,7 +38,7 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 	public Integer createOutpatientConsultations(List<OutpatientConsultationBo> consultations) {
 		AtomicInteger sentQuantity = new AtomicInteger();
 		consultations.forEach(c -> {
-			var establishment = cipresEncounterStorage.getEstablishmentBySisaCode(c.getInstitutionSisaCode());
+			var establishment = cipresEncounterStorage.getEstablishmentBySisaCode(c.getInstitutionSisaCode(), c.getId());
 			if (establishment.isPresent()) {
 				var establishmentId = establishment.get().getId();
 				var apiPatientId = cipresPatientStorage.getPatientId(c.getPatient(), establishmentId, c.getId());
@@ -54,7 +54,7 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 	}
 
 	private Optional<Integer> createOutpatientConsultation(OutpatientConsultationBo consultation, String establishmentId) {
-		var clinicalSpecialtyIRI = getClinicalSpecialtyIRI(consultation.getClinicalSpecialtySctid());
+		var clinicalSpecialtyIRI = getClinicalSpecialtyIRI(consultation.getClinicalSpecialtySctid(), consultation.getId());
 		if (clinicalSpecialtyIRI.isPresent()) {
 			CipresEncounterBo cipresEncounterBo = cipresEncounterStorage.createOutpatientConsultation(consultation, clinicalSpecialtyIRI.get(), getEstablishmentIRI2(establishmentId));
 			return handleCipresEncounterResponse(cipresEncounterBo);
@@ -85,8 +85,8 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 		return result;
 	}
 
-	private Optional<String> getClinicalSpecialtyIRI(String snomedSctid) {
-		Optional<String> clinicalSpecialtyId = cipresEncounterStorage.getClinicalSpecialtiyBySnomedCode(snomedSctid);
+	private Optional<String> getClinicalSpecialtyIRI(String snomedSctid, Integer encounterId) {
+		Optional<String> clinicalSpecialtyId = cipresEncounterStorage.getClinicalSpecialtyBySnomedCode(snomedSctid, encounterId);
         return clinicalSpecialtyId.map(s -> CipresMasterData.CLINICAL_SPECIALTY_IRI + s);
     }
 

@@ -54,7 +54,7 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 	}
 
 	@Override
-	public Optional<String> getClinicalSpecialtiyBySnomedCode(String snomedCode) {
+	public Optional<String> getClinicalSpecialtyBySnomedCode(String snomedCode, Integer encounterId) {
 		String url = String.join("?codigoSnomed=", cipresWSConfig.getClinicalSpecialtiesUrl(), snomedCode);
 		ResponseEntity<CipresEntityResponse[]> response = null;
 		try {
@@ -64,11 +64,13 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		}
 		if (isSuccessfulResponse(response))
 				return Optional.of(response.getBody()[0].getId());
+		else
+			this.saveStatusError(encounterId, "No se pudo recuperar el identificador de especialidad clinica con snomed sctid " + snomedCode, HttpStatus.BAD_REQUEST.value());
 		return Optional.empty();
 	}
 
 	@Override
-	public Optional<CipresEstablishmentResponse> getEstablishmentBySisaCode(String sisaCode) {
+	public Optional<CipresEstablishmentResponse> getEstablishmentBySisaCode(String sisaCode, Integer encounterId) {
 		String url = String.join( "?codigoRefes=", cipresWSConfig.getDependenciesUrl(), sisaCode);
 		ResponseEntity<CipresEstablishmentResponse[]> response = null;
 		try {
@@ -78,6 +80,8 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		}
 		if (isSuccessfulResponse(response))
 			return Optional.of(response.getBody()[0]);
+		else
+			this.saveStatusError(encounterId, "No se encontró el identificador del establecimiento con código sisa: " + sisaCode, HttpStatus.BAD_REQUEST.value());
 		return Optional.empty();
 	}
 	
@@ -91,10 +95,10 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		try {
 			response = restClient.exchangePost(url, body, CipresEntityResponse.class);
 		} catch (RestTemplateApiException e) {
-			log.warn("Error al intentar crear la consulta");
+			log.debug("Error al intentar crear la consulta con id: ", consultation.getId());
 			return mapCipresEncounterResponse(consultation.getId(), e.getStatusCode().value(), e.mapErrorBody(CipresRegisterResponse.class), null);
 		} catch (ResourceAccessException e){
-			log.warn("Fallo en la comunicación - API SALUD");
+			log.debug("Fallo en la comunicación - API SALUD");
 			return mapCipresEncounterResponse(consultation.getId(), HttpStatus.SERVICE_UNAVAILABLE.value(), null, null);
 		}
 		return mapCipresEncounterResponse(consultation.getId(), response.getStatusCodeValue(), null, Integer.parseInt(response.getBody().getId()));
