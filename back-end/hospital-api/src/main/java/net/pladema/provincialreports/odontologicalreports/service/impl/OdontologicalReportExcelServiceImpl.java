@@ -226,11 +226,11 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getProfessionalId());
+		cell3.setCellValue(content.getProfessionalIdentificationNumber());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getProfessionalRegistrationNumber());
+		cell4.setCellValue(content.getProfessionalLicenseNumber());
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
@@ -242,20 +242,20 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getPatientName());
+		cell7.setCellValue(content.getPatientNames());
 		cell7.setCellStyle(style);
 
 
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getPatientId());
+		cell8.setCellValue(content.getPatientIdentificationNumber());
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getPatientSex());
+		cell9.setCellValue(content.getPatientGender());
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getPatientGender());
+		cell10.setCellValue(content.getPatientSelfPerceivedGender());
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
@@ -267,15 +267,15 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(content.getPatientAgeWhenAttended());
+		cell13.setCellValue(content.getPatientAgeTurn());
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-		cell14.setCellValue(content.getPatientAge());
+		cell14.setCellValue(content.getPatientAgeToday());
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getPatientSocialCoverage());
+		cell15.setCellValue(content.getPatientMedicalCoverage());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
@@ -311,7 +311,7 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 		cell23.setCellStyle(style);
 
 		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getCommonMedication());
+		cell24.setCellValue(content.getUsualMedication());
 		cell24.setCellStyle(style);
 
 		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
