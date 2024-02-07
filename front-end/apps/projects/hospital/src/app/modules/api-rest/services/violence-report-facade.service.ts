@@ -351,6 +351,9 @@ export class ViolenceReportFacadeService {
 	}
 
 	private buildLackOfLegalCapacity = (array: string[], victimData: ViolenceReportVictimDto) => {
+		const lackOfLegalCapacity: BasicOption = BasicOptions.find(opt => opt.value === victimData.lackOfLegalCapacity);
+		array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_8');
+		array.push(lackOfLegalCapacity.text);
 		if (victimData.lackOfLegalCapacity) {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.LASTNAME');
 			array.push(victimData.keeperData.actorPersonalData.lastName);
