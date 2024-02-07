@@ -8,4 +8,4 @@ COPY .docker/app.jar /app/app.jar
 ENV SERVER_PORT=80
 EXPOSE 80
 
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java","-XX:+UseSerialGC","-verbose:gc","-jar","/app/app.jar"]
