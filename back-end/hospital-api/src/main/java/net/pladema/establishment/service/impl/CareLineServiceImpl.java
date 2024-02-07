@@ -66,10 +66,9 @@ public class CareLineServiceImpl implements CareLineService {
     }
 
     @Override
-	public List<CareLineBo> getAllByProblems(List<String> snomedSctids, Integer institutionId, Integer loggedUserId) {
-		LOG.debug("Input parameters -> snomedSctids {}, institutionId {}, loggedUserId {}", snomedSctids, institutionId, loggedUserId);
-		List<Short> loggedUserRoleIds = sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, loggedUserId);
-		List<CareLineBo> careLines = careLineRepository.getCareLinesAttachedToInstitutions(loggedUserRoleIds);
+	public List<CareLineBo> getAllByProblems(List<String> snomedSctids) {
+		LOG.debug("Input parameters -> snomedSctids {}", snomedSctids);
+		List<CareLineBo> careLines = careLineRepository.getCareLinesAttachedToInstitutions();
 		List<CareLineBo> result = this.getCareLinesWithAllProblems(careLines, snomedSctids);
 		result.forEach(careLine -> careLine.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(careLine.getId())));
 		LOG.trace(OUTPUT, result);

@@ -41,8 +41,7 @@ public class CareLineController {
 	public ResponseEntity<List<CareLineDto>> getAllByProblems(@PathVariable(name = "institutionId") Integer institutionId,
 															  @RequestParam(name = "snomedSctids") List<String> snomedSctids) {
 		log.debug("Input parameters -> institutionId {}, snomedSctids {}", institutionId, snomedSctids);
-		Integer loggedUserId = UserInfo.getCurrentAuditor();
-		List<CareLineBo> careLinesBo = careLineService.getAllByProblems(snomedSctids, institutionId, loggedUserId);
+		List<CareLineBo> careLinesBo = careLineService.getAllByProblems(snomedSctids);
 		log.debug("Get care lines by problems (snomed sctids) {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}
