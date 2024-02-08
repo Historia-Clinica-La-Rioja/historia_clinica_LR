@@ -156,8 +156,8 @@
                     <app-regulation-appointment-result-view [appointment]="appointment" (resetInformation)="clearForm()"
                         [modalityAttention]="searchForm.controls.modality.value"
                         [searchAppointmentCriteria]="searchAppointmentCriteria"
-                        [patientId]="externalInformation.patientId"
-                        [referenceSummary]="externalInformation.referenceSummary">
+                        [patientId]="externalInformation?.patientId"
+                        [referenceSummary]="externalInformation?.referenceSummary">
                     </app-regulation-appointment-result-view>
                     <mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
                 </div>
