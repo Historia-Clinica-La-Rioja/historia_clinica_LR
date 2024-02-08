@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.surgicalre
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface SurgicalReportRepository extends JpaRepository<SurgicalReport, Integer> {
@@ -58,5 +59,9 @@ public interface SurgicalReportRepository extends JpaRepository<SurgicalReport, 
 			"WHERE sr.documentId = :documentId")
 	void updateEndDateTimeIdByDocumentId(@Param("documentId") Long documentId, @Param("endDateTime") LocalDateTime endDateTime);
 
-
+	@Transactional(readOnly = true)
+	@Query(" SELECT sr " +
+			"FROM SurgicalReport sr " +
+			"WHERE sr.patientId IN :patientIds")
+    List<SurgicalReport> getPatientsSurgicalReportIds(@Param("patientIds") List<Integer> patientIds);
 }

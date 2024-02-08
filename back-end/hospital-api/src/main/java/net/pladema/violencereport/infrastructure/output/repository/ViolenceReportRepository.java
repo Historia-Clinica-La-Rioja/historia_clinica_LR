@@ -7,6 +7,7 @@ import net.pladema.violencereport.domain.ViolenceReportBo;
 import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
 import net.pladema.violencereport.infrastructure.output.repository.entity.ViolenceReport;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -104,4 +105,16 @@ public interface ViolenceReportRepository extends SGXAuditableEntityJPARepositor
 			"FROM ViolenceReport vr " +
 			"WHERE vr.patientId = :patientId")
 	List<FilterOptionBo> getSituationFilterByPatientId(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW net.pladema.violencereport.domain.ViolenceReportBo(vr.id, vr.situationId, vr.patientId) " +
+			"FROM ViolenceReport vr " +
+			"WHERE vr.patientId IN :patientIds")
+	List<ViolenceReportBo> getAllPatientsSituationIds(@Param("patientIds") List<Integer> patientId);
+
+	//The @Transactional label is not used because the only method that'll call this is already within a transaction.
+	@Modifying
+	@Query("UPDATE ViolenceReport vr SET vr.situationId = :situationId WHERE vr.id = :reportId")
+	void updateViolenceReportSituationId(@Param("reportId") Integer reportId, @Param("situationId") Short situationId);
+
 }

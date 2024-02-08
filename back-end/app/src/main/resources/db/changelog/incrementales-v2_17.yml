@@ -55,3 +55,25 @@ databaseChangeLog:
                         AND hc.problem_id = '00000002'
                     );
 
+    - changeSet:
+        id: violence_report_situation_history-createTable
+        comment: Create table violence_report_situation_history
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report_situation_history
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report_situation_history
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: old_situation_id
+                    type: smallint
