@@ -64,7 +64,6 @@ public class CreateTranscribedServiceRequestPdf {
 
         formV.setEstablishment(transcribedServiceRequest.getInstitutionName());
         formV.setCompleteProfessionalName(transcribedServiceRequest.getHealthcareProfessionalName());
-        formV.setProblems(transcribedServiceRequest.getHealthCondition().getPt());
 
         if (medicalCoverage != null) {
             formV.setMedicalCoverage(medicalCoverage.getMedicalCoverageName());

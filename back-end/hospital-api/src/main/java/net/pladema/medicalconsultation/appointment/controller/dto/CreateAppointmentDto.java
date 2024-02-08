@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.controller.dto;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedServiceRequestSummaryDto;
 import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
 @Getter
@@ -67,7 +67,7 @@ public class CreateAppointmentDto {
 	private EAppointmentModality modality;
 
 	@Nullable
-	private TranscribedDiagnosticReportInfoDto transcribedOrderData;
+	private TranscribedServiceRequestSummaryDto transcribedOrderData;
 
 	@Nullable
 	private DiagnosticReportInfoDto orderData;

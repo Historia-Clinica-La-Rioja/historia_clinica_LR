@@ -378,7 +378,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Transactional(readOnly = true)
 	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo(" +
 			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
-			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, s.description, sn.pt) " +
+			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, s.description, sn.pt, dr.id) " +
 			"FROM Appointment a " +
 			"JOIN EquipmentAppointmentAssn ea ON(a.id = ea.pk.appointmentId) " +
 			"JOIN EquipmentDiary d ON(d.id = ea.pk.equipmentDiaryId) " +
@@ -413,7 +413,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Transactional(readOnly = true)
 	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo(" +
 			"i.name, per.identificationNumber, per.lastName, per.otherLastNames, per.firstName, per.middleNames, " +
-			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, s.description, sn.pt) " +
+			"pex.nameSelfDetermination, mc.name, hi.acronym, a.dateTypeId, a.hour, s.description, '', aoi.transcribedOrderId) " +
 			"FROM Appointment a " +
 			"JOIN EquipmentAppointmentAssn ea ON(a.id = ea.pk.appointmentId) " +
 			"JOIN EquipmentDiary d ON(d.id = ea.pk.equipmentDiaryId) " +
@@ -424,9 +424,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"LEFT JOIN MedicalCoverage mc ON(pmc.medicalCoverageId = mc.id) " +
 			"LEFT JOIN HealthInsurance hi ON(hi.id = mc.id) " +
 			"JOIN AppointmentOrderImage aoi ON(aoi.pk.appointmentId = a.id)" +
-			"JOIN TranscribedServiceRequest ts ON(aoi.transcribedOrderId = ts.id)" +
-			"LEFT JOIN DiagnosticReport dr ON(ts.studyId = dr.id)" +
-			"LEFT JOIN Snomed sn ON(dr.snomedId = sn.id) " +
 			"JOIN Equipment e ON(d.equipmentId = e.id) " +
 			"JOIN Sector s ON(s.id = e.sectorId) " +
 			"JOIN Institution i On(s.institutionId = i.id) " +

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,11 +9,14 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class TranscribedDiagnosticReportInfoDto {
-	private Integer serviceRequestId;
-	private Integer studyId;
-	private String studyName;
+@ToString
+public class DiagnosticReportSummaryDto {
+
+    @NotNull(message = "${value.mandatory}")
+    private Integer diagnosticReportId;
+
+    @NotNull(message = "${value.mandatory}")
+    private String pt;
 }

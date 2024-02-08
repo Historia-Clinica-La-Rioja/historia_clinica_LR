@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.controller.mapper;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
@@ -52,7 +53,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointm
 
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class, SnomedMapper.class})
+@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class, SnomedMapper.class, StudyMapper.class})
 public interface AppointmentMapper {
 
     @Named("toAppointmentListDto")
@@ -78,13 +79,14 @@ public interface AppointmentMapper {
 	@Mapping(target = "patient", source = "patient")
 	@Mapping(target = "isProtected", source = "equipmentAppointmentBo.protected")
 	@Mapping(target = "reportStatusId", source = "equipmentAppointmentBo.reportStatusId")
-	@Mapping(target = "studyName", source = "equipmentAppointmentBo.studyName")
+	@Mapping(target = "studyName", expression = "java(!equipmentAppointmentBo.getStudies().isEmpty() ? equipmentAppointmentBo.getStudies().get(0) : null)")
+	@Mapping(target = "studies", source = "equipmentAppointmentBo.studies")
 	EquipmentAppointmentListDto toEquipmentAppointmentListDto(EquipmentAppointmentBo equipmentAppointmentBo, AppointmentBasicPatientDto patient);
   
     @Named("toAppointmentDto")
 	@Mapping(target = "protected", source = "appointmentBo.protected")
 	@Mapping(target = "orderData.serviceRequestId", source = "appointmentBo.orderData.encounterId")
-	@Mapping(target = "transcribedOrderData", source = "appointmentBo.transcribedData")
+	@Mapping(target = "transcribedOrderData", source = "appointmentBo.transcribedOrderData", qualifiedByName = "toTranscribedServiceRequestSummaryDto")
 	@Mapping(target = "modality", source = "modalityId")
 	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
 	@Mapping(target = "diaryLabelDto", source = "appointmentBo.diaryLabelBo")

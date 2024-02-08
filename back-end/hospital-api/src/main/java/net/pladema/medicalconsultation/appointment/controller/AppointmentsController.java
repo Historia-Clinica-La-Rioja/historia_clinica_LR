@@ -490,7 +490,8 @@ public class AppointmentsController {
 				false,
 				institutionMapper.fromInstitutionBasicInfoBo(equipmentAppointmentBo.getDerivedTo()),
 				equipmentAppointmentBo.getReportStatusId(),
-				equipmentAppointmentBo.getStudyName(),
+				equipmentAppointmentBo.getStudies().get(0),
+				equipmentAppointmentBo.getStudies(),
 				equipmentAppointmentBo.getServiceRequestId(),
 				equipmentAppointmentBo.getTranscribedServiceRequestId(),
 				null

@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -183,11 +184,10 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		obs.setConfirmed(createFile);
 
 		Integer originInstitutionId =moveStudiesService.getInstitutionByAppointmetId(appointmentId);
-		if (originInstitutionId != null && originInstitutionId != obs.getInstitutionId())
+		if (originInstitutionId != null && !originInstitutionId.equals(obs.getInstitutionId()))
 			obs.setInstitutionId(originInstitutionId);
 
-		obs.setDiagnosticReports(diagnosticReportInfoService.getByAppointmentId(appointmentId) != null ? List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)) : null);
-		obs.setTranscribedDiagnosticReport(transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
+		obs.setDiagnosticReports(this.getDiagnosticReports(appointmentId));
 
 		obs.setPatientId(appointmentRepository.getPatientByAppointmentId(appointmentId));
 		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(obs.getPatientId());
@@ -207,6 +207,19 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 	private void deletedOldSnomedConcepts(Long reportDocumentId) {
 		documentReportSnomedConceptRepository.deleteByReportDocumentId(reportDocumentId);
+	}
+
+	private List<DiagnosticReportBo> getDiagnosticReports(Integer appointmentId) {
+
+		DiagnosticReportBo diagnosticReportFromOrder = diagnosticReportInfoService.getByAppointmentId(appointmentId);
+		if (diagnosticReportFromOrder != null)
+			return List.of(diagnosticReportFromOrder);
+
+		List<DiagnosticReportBo> transcribedDiagnosticReports = transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId).getDiagnosticReports();
+		if (transcribedDiagnosticReports != null && !transcribedDiagnosticReports.isEmpty())
+			return transcribedDiagnosticReports;
+
+		return List.of();
 	}
 
 }

@@ -429,7 +429,7 @@ databaseChangeLog:
                 - column:
                     name: reason
                     type: text
-                    
+
 
     - changeSet:
         id: create-move-studies-view
@@ -450,3 +450,49 @@ databaseChangeLog:
                     join public.equipment_diary   ed on ed.id = ep.equipment_diary_id
                     join public.equipment e   on e.id = ed.equipment_id
                     join public.modality m on m.id = e.modality_id)
+
+    - changeSet:
+        id: createTable-transcribed_service_request_diagnostic_report
+        author: mromero
+        changes:
+          - createTable:
+              tableName: transcribed_service_request_diagnostic_report
+              columns:
+                - column:
+                    constraints:
+                      foreignKeyName: FK_transcribed_service_request_id_transcribed_service_request
+                      references: transcribed_service_request(id)
+                      nullable: false
+                    name: transcribed_service_request_id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_diagnostic_report_id_diagnostic_report
+                      references: diagnostic_report(id)
+                      nullable: false
+                    name: diagnostic_report_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: transcribed_service_request_id, diagnostic_report_id
+              constraintName: PK_transcribed_service_request_diagnostic_report
+              tableName: transcribed_service_request_diagnostic_report
+              validate: true
+
+    - changeSet:
+        id: migrate-study_id-transcribed_service_request_diagnostic_report
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO transcribed_service_request_diagnostic_report(transcribed_service_request_id, diagnostic_report_id)
+                SELECT tsr.id, tsr.study_id
+                FROM transcribed_service_request tsr;
+
+    - changeSet:
+        id: dropColumn-study_id-transcribed_service_request
+        author: mromero
+        changes:
+          - dropColumn:
+              tableName: transcribed_service_request
+              columnName: study_id

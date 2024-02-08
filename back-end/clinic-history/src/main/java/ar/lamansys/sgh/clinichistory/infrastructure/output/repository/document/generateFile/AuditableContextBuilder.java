@@ -206,7 +206,6 @@ public class AuditableContextBuilder {
 
 	private <T extends IDocumentBo> void addImageReportData(Map<String, Object> ctx, T document) {
 		ctx.put("diagnosticReportList", document.getDiagnosticReports());
-		ctx.put("transcribedDiagnosticReport", document.getTranscribedDiagnosticReport());
 		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionDataById(document.getInstitutionId()));
 		ctx.put("institutionAddress",sharedInstitutionPort.fetchInstitutionAddress(document.getInstitutionId()));
 		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
@@ -215,8 +214,8 @@ public class AuditableContextBuilder {
 				.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingOrderAuthorId(document.getEncounterId()))
 				.ifPresent(professionalId -> ctx.put("authorOrder", sharedStaffPort.getProfessionalComplete(professionalId)));
 
-		Optional.ofNullable(document.getTranscribedDiagnosticReport())
-				.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingTranscribedOrderAuthor(l.getServiceRequestId()))
+		Optional.ofNullable(document.getDiagnosticReports().get(0).getEncounterId())
+				.flatMap(sharedDiagnosticImagingOrder::getDiagnosticImagingTranscribedOrderAuthor)
 				.ifPresent(professional -> ctx.put("authorTranscribedOrder", professional));
 
 		ctx.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));

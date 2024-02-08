@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,8 @@ import javax.validation.ConstraintViolationException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import lombok.AllArgsConstructor;
 
+import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
+import net.pladema.clinichistory.requests.servicerequests.repository.TranscribedServiceRequestRepository;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
@@ -47,6 +50,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.clinichistory.application.ports.OrderImageFileStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
@@ -128,6 +133,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentAssnRepository appointmentAssnRepository;
 
+	private final ServiceRequestStorage serviceRequestStorage;
+
+	private final TranscribedServiceRequestRepository transcribedServiceRequestRepository;
+
 	@Override
 	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> diaryIds {}", diaryIds);
@@ -161,10 +170,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 				.stream()
 				.distinct()
 				.sorted(Comparator.comparing(EquipmentAppointmentBo::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(EquipmentAppointmentBo::getHour))
-				.map(e -> {
-					e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId()));
-					return e;
-				})
+				.peek(e -> e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId())))
+				.peek(e -> e.setStudies(serviceRequestStorage.getDiagnosticReportsFrom(e)))
 				.collect(Collectors.toList());
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
@@ -552,16 +559,22 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public AppointmentTicketImageBo getAppointmentImageTicketData(Integer appointmentId, boolean isTranscribed) {
 		log.debug("Input parameters -> appointmentId {}, transcribed {}", appointmentId, isTranscribed);
-	   	var result = isTranscribed ? this.appointmentRepository.getAppointmentImageTranscribedTicketData(appointmentId).orElseThrow(
-				()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado")) :
-				this.appointmentRepository.getAppointmentImageTicketData(appointmentId).orElseThrow(
-						()-> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado"));
-		if (result.getMedicalCoverage() == null && result.getMedicalCoverageAcronym() == null)
-		{
+		var result = isTranscribed
+				? this.appointmentRepository.getAppointmentImageTranscribedTicketData(appointmentId)
+					.map(appointmentTicketImageBo -> {
+					appointmentTicketImageBo.setStudyDescription(this.getTranscribedDiagnosticReports(appointmentTicketImageBo.getServiceRequestId()));
+					return appointmentTicketImageBo;
+					})
+					.orElseThrow(() -> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado"))
+				: this.appointmentRepository.getAppointmentImageTicketData(appointmentId)
+					.orElseThrow(() -> new AppointmentException(AppointmentEnumException.APPOINTMENT_ID_NOT_FOUND, "el id no corresponde con ningun turno asignado"));
+
+		if (result.getMedicalCoverage() == null && result.getMedicalCoverageAcronym() == null) {
 			Optional<MedicalCoverageAppoinmentOrderBo> medicalCoverage = this.appointmentRepository.getMedicalCoverageOrderByAppointment(appointmentId);
 			result.setMedicalCoverage(medicalCoverage.get().getMedicalCoverage());
 			result.setMedicalCoverageAcronym(medicalCoverage.get().getMedicalCoverageAcronym());
 		}
+
 		log.trace(OUTPUT, result);
 		return result;
 	}
@@ -952,10 +965,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointments.forEach(a -> a.setProtected(protectedAppointments.contains(a.getId())));
 		return appointments;
 	}
-	
+
 	private void verifyProtectedCondition(Integer appointmentId) {
 		boolean isProtected = sharedReferenceCounterReference.isProtectedAppointment(appointmentId);
 		if (isProtected)
 			sharedReferenceCounterReference.updateProtectedAppointment(appointmentId);
 	}
+
+	private String getTranscribedDiagnosticReports(Integer serviceRequestId) {
+		return transcribedServiceRequestRepository.getDiagnosticReports(serviceRequestId).stream()
+				.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
+				.collect(Collectors.joining(", "));
+	}
+
 }

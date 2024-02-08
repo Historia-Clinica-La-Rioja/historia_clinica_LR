@@ -206,14 +206,9 @@
                             <span class="data-text" th:text="${diagnosticReport.snomed.pt}"></span>
                         </span>
                     </div>
-                    <div th:if="${transcribedDiagnosticReport != null}">
-                        <span class="data-text" th:text="${transcribedDiagnosticReport.studyName}"></span>
-                    </div>
-                    <div th:if="${transcribedDiagnosticReport == null && #lists.isEmpty(diagnosticReportList)}">
+                    <div th:if="${#lists.isEmpty(diagnosticReportList)}">
                         <span class="data-text" th:text="${' - '}"></span>
                     </div>
-
-        
                 </div>
             </div>
             <div style="clear: both;padding-top: 1px">

@@ -1030,7 +1030,7 @@ export interface CreateAppointmentDto {
     phoneNumber?: string;
     phonePrefix?: string;
     referenceId?: number;
-    transcribedOrderData?: TranscribedDiagnosticReportInfoDto;
+    transcribedOrderData?: TranscribedServiceRequestSummaryDto;
 }
 
 export interface CreateCustomAppointmentDto {
@@ -1156,6 +1156,11 @@ export interface DiagnosticReportInfoDto {
 
 export interface DiagnosticReportInfoWithFilesDto extends DiagnosticReportInfoDto {
     files: FileDto[];
+}
+
+export interface DiagnosticReportSummaryDto {
+    diagnosticReportId: number;
+    pt: string;
 }
 
 export interface DiaryADto {
@@ -1738,6 +1743,7 @@ export interface EquipmentAppointmentListDto {
     protected: boolean;
     reportStatusId: number;
     serviceRequestId: number;
+    studies?: string[];
     studyName: string;
     transcribedOrderAttachedFiles?: OrderImageFileInfoDto[];
     transcribedServiceRequestId: number;
@@ -4426,6 +4432,7 @@ export interface StudyOrderReportInfoDto {
 
 export interface StudyTranscribedOrderReportInfoDto {
     creationDate: Date;
+    diagnosticReports: string[];
     hceDocumentDataDto?: HCEDocumentDataDto;
     healthCondition: string;
     imageId?: string;
@@ -4528,18 +4535,17 @@ export interface ToothSurfacesDto {
     right: OdontologySnomedDto;
 }
 
-export interface TranscribedDiagnosticReportInfoDto {
-    serviceRequestId: number;
-    studyId: number;
-    studyName: string;
-}
-
-export interface TranscribedPrescriptionDto extends Serializable {
+export interface TranscribedServiceRequestDto {
+    diagnosticReports: SnomedDto[];
     healthCondition: SnomedDto;
     healthcareProfessionalName: string;
-    institutionName?: string;
+    institutionName: string;
     observations?: string;
-    study: SnomedDto;
+}
+
+export interface TranscribedServiceRequestSummaryDto {
+    diagnosticReports: DiagnosticReportSummaryDto[];
+    serviceRequestId: number;
 }
 
 export interface TriageAdministrativeDto extends TriageDto {

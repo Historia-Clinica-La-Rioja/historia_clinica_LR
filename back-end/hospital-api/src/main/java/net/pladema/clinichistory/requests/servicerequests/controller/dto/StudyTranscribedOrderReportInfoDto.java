@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,24 +25,28 @@ public class StudyTranscribedOrderReportInfoDto {
 	@Nullable
 	private HCEDocumentDataDto hceDocumentDataDto;
 	
-	@NotNull(message = "value.mandatory")
+	@NotNull(message = "${value.mandatory}")
 	private String professionalName;
 	
-	@NotNull(message = "value.mandatory")
+	@NotNull(message = "${value.mandatory}")
 	private String healthCondition;
 	
-	@NotNull(message = "value.mandatory")
+	@NotNull(message = "${value.mandatory}")
+	@Deprecated
 	private String snomed;
 
-	@NotNull(message = "value.mandatory")
+	@NotNull(message = "${value.mandatory}")
+	private List<String> diagnosticReports;
+
+	@NotNull(message = "${value.mandatory}")
 	private Boolean status;
 	
-	@NotNull(message = "value.mandatory")
+	@NotNull(message = "${value.mandatory}")
 	private LocalDateTime creationDate;
 
-	@NotNull(message = "value.mandatory")
+	@NotNull(message = "${value.mandatory}")
 	private Boolean isAvailableInPACS;
 
-	@NotNull(message = "value.mandatory")
+	@NotNull(message = "${value.mandatory}")
 	private Boolean viewReport;
 }

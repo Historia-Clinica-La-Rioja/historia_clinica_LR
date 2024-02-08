@@ -8,7 +8,6 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.domain.general.AddressBo;
@@ -40,8 +39,6 @@ public class InformerObservationBo implements IDocumentBo {
 	private AddressBo institutionAddress;
 
 	private List<DiagnosticReportBo> diagnosticReports;
-
-	private TranscribedDiagnosticReportBo transcribedDiagnosticReport;
 
 	@Override
 	public short getDocumentType() { return DocumentType.MEDICAL_IMAGE_REPORT;	}

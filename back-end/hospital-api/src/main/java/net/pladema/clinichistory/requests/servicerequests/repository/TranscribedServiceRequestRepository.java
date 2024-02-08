@@ -1,5 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.repository;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import java.util.List;
+import java.util.Optional;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.TranscribedServiceRequest;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,16 +11,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Repository
 public interface TranscribedServiceRequestRepository extends JpaRepository<TranscribedServiceRequest, Integer> {
 
 	@Transactional(readOnly = true)
-	@Query("SELECT tsr.studyId " +
+	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo(" +
+			"dr.id, tsr.id, dr.healthConditionId, s_hc.sctid, s_hc.pt, hc.cie10Codes, s_dr.sctid, s_dr.pt, dr.observations) " +
 			"FROM TranscribedServiceRequest tsr " +
+			"JOIN TranscribedServiceRequestDiagnosticReport tsrdr ON (tsr.id = tsrdr.pk.transcribedServiceRequestId) " +
+			"JOIN DiagnosticReport dr ON (tsrdr.pk.diagnosticReportId = dr.id) " +
+			"JOIN Snomed s_dr ON (dr.snomedId = s_dr.id) " +
+			"JOIN HealthCondition hc ON (dr.healthConditionId = hc.id) " +
+			"JOIN Snomed s_hc ON (hc.snomedId = s_hc.id) " +
 			"WHERE tsr.id = :orderId ")
-	Integer getStudyIdByOrderId(@Param("orderId") Integer orderId);
+	List<DiagnosticReportBo> getDiagnosticReports(@Param("orderId") Integer orderId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT tsr.healthcareProfessionalName " +
@@ -26,18 +33,11 @@ public interface TranscribedServiceRequestRepository extends JpaRepository<Trans
 	Optional<String> getHealthcareProfessionalName(@Param("orderId") Integer orderId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo(" +
-			"tsr.id, tsr.patientId, " +
-			"s_problem.sctid, s_problem.pt, hc.cie10Codes, " +
-			"s_study.sctid, s_study.pt, " +
-			"tsr.healthcareProfessionalName, tsr.institutionName, tsr.creationDate, " +
-			"dr.observations) " +
+	@Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo(" +
+			"tsr.id, tsr.patientId, tsr.healthcareProfessionalName, tsr.institutionName, tsr.creationDate, " +
+			"'') " +
 			"FROM TranscribedServiceRequest tsr " +
-			"JOIN DiagnosticReport dr ON (tsr.studyId = dr.id) " +
-			"JOIN Snomed s_study ON (dr.snomedId = s_study.id) " +
-			"JOIN HealthCondition hc ON (dr.healthConditionId = hc.id) " +
-			"JOIN Snomed s_problem ON (hc.snomedId = s_problem.id) " +
-			"WHERE tsr.id = :id ")
-	Optional<TranscribedServiceRequestBo> getTranscribedServiceRequest(@Param("id") Integer id);
+			"WHERE tsr.id = :orderId ")
+	Optional<TranscribedServiceRequestBo> getTranscribedServiceRequest(@Param("orderId") Integer orderId);
 
 }

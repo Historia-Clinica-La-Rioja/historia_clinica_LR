@@ -1,12 +1,10 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
-
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,11 +12,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 
 import javax.annotation.Nullable;
 
@@ -78,7 +77,7 @@ public class AppointmentBo {
 	
 	private DiagnosticReportBo orderData;
 
-	private TranscribedDiagnosticReportBo transcribedData;
+	private TranscribedServiceRequestBo transcribedOrderData;
 
 	private String applicantHealthcareProfessionalEmail;
 
@@ -115,7 +114,7 @@ public class AppointmentBo {
 		this.modalityId = modalityId;
 		this.patientEmail = patientEmail;
 		this.callId = callId;
-		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;				
+		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;
 	}
 
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Integer openingHoursId,

@@ -1,37 +1,11 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import ar.lamansys.sgh.clinichistory.application.fetchorderimagefile.FetchOrderImageFileById;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
@@ -39,11 +13,16 @@ import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
-import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescriptionDto;
+import net.pladema.clinichistory.requests.controller.dto.TranscribedServiceRequestDto;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateServiceRequestPdf;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateTranscribedServiceRequestPdf;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
@@ -52,7 +31,7 @@ import net.pladema.clinichistory.requests.servicerequests.controller.dto.Diagnos
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyTranscribedOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedServiceRequestSummaryDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
@@ -77,6 +56,7 @@ import net.pladema.clinichistory.requests.servicerequests.service.UploadDiagnost
 import net.pladema.clinichistory.requests.servicerequests.service.UploadTranscribedOrderFileService;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.DiagnosticReportFilterBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
@@ -85,6 +65,24 @@ import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @Slf4j
@@ -167,13 +165,18 @@ public class ServiceRequestController {
 	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public Integer createTranscribed(@PathVariable(name = "institutionId") Integer institutionId,
-										@PathVariable(name = "patientId") Integer patientId,
-									 	@RequestBody @Valid TranscribedPrescriptionDto prescription) {
-		log.debug("Input parameters -> institutionId {}, patientId {}, TranscriptPrescriptionDto {}", institutionId, patientId, prescription);
+									 @PathVariable(name = "patientId") Integer patientId,
+									 @Valid @RequestBody TranscribedServiceRequestDto transcribedServiceRequest) {
+		log.debug("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequest {}", institutionId, patientId, transcribedServiceRequest);
+		TranscribedServiceRequestBo transcribedServiceRequestBo = studyMapper.toTranscribedServiceRequestBo(transcribedServiceRequest);
+
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
-		Integer srId = createTranscribedServiceRequestService.execute(prescription, patientDto);
-		log.debug(OUTPUT, srId);
-		return srId;
+		PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
+		transcribedServiceRequestBo.setPatientInfo(patientInfoBo);
+		Integer serviceRequestId = createTranscribedServiceRequestService.execute(transcribedServiceRequestBo);
+
+		log.debug(OUTPUT, serviceRequestId);
+		return serviceRequestId;
 	}
 
 	@DeleteMapping("/{orderId}/delete-transcribed")
@@ -367,9 +370,9 @@ public class ServiceRequestController {
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public List<StudyTranscribedOrderReportInfoDto> getListStudyTranscribedOrder(@PathVariable(name = "institutionId") Integer institutionId,
 																				 @PathVariable(name = "patientId") Integer patientId) {
-		log.debug("Input parameters -> patientId {}", patientId);
+		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 
-		List<StudyTranscribedOrderReportInfoBo> resultService = listTranscribedDiagnosticReportInfoService.getListTranscribedOrder(patientId);
+		List<StudyTranscribedOrderReportInfoBo> resultService = listTranscribedDiagnosticReportInfoService.getListStudyTranscribedOrderReports(patientId);
 
 		List<StudyTranscribedOrderReportInfoDto> result = resultService.stream()
 				.map(transcribedDiagnosticReportInfoMapper::parseToDto)
@@ -397,17 +400,15 @@ public class ServiceRequestController {
 
 	@GetMapping("/transcribedOrders")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA')")
-	public List<TranscribedDiagnosticReportInfoDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
-															@PathVariable(name = "patientId") Integer patientId,
+	public List<TranscribedServiceRequestSummaryDto> getList(@PathVariable(name = "institutionId") Integer institutionId,
+															 @PathVariable(name = "patientId") Integer patientId,
 															 @RequestParam(value = "orderId", required = false) String orderId) {
-		log.debug("Input parameters -> patientId {}, orderId) {}",
-				patientId,
-				orderId);
+		log.debug("Input parameters -> institutionId {}, patientId {}, orderId {}", institutionId, patientId, orderId);
 
-		List<TranscribedDiagnosticReportBo> resultService = listTranscribedDiagnosticReportInfoService.execute(patientId);
+		List<TranscribedServiceRequestBo> resultService = listTranscribedDiagnosticReportInfoService.execute(patientId);
 
-		List<TranscribedDiagnosticReportInfoDto> result = resultService.stream()
-				.map(transcribedDiagnosticReportInfoMapper::parseTo)
+		List<TranscribedServiceRequestSummaryDto> result = resultService.stream()
+				.map(studyMapper::toTranscribedServiceRequestSummaryDto)
 				.collect(Collectors.toList());
 
 		log.trace(OUTPUT, result);

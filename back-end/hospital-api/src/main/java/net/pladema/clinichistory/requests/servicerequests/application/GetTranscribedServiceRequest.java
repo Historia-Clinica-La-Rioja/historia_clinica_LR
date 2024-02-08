@@ -6,9 +6,10 @@ import net.pladema.clinichistory.requests.servicerequests.application.port.Servi
 import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import org.springframework.stereotype.Service;
 
-@Service
+
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class GetTranscribedServiceRequest {
 
     private final ServiceRequestStorage serviceRequestStorage;
