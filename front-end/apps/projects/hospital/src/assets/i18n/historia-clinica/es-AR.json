@@ -60,7 +60,7 @@
 			"DISCARD": "No, descartarlos",
 			"ERROR": "Respuesta requerida",
 			"violence-situations": {
-                "DESCRIPTION": "Se incluyó el problema{{problem}}, se recomienda inlcuir una solicitud de referencia para un equipo especializado en abordaje de violencias.",
+                "DESCRIPTION": "Se incluyó el problema{{problem}}, se recomienda incluir una solicitud de referencia para un equipo especializado en abordaje de violencias.",
                 "QUESTION": "¿Desea incluir una solicitud de referencia en la consulta?",
 				"ADD": "Si, incluir",
 				"DISCARD": "No, descartar"

@@ -94,6 +94,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	snowstormServiceErrorMessage: string;
 	episodeData: EpisodeData;
 	touchedConfirm = false;
+	referenceSituationViolence = null;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -221,20 +222,29 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if(!this.touchedConfirm && this.showWarningViolenceSituation){
 			this.touchedConfirm = true;
 		}
-		this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
-			if (res) {
-				this.dataName = problems.map(p=> ` "${p.pt}"`)
-				this.showWarningViolenceSituation = true;
-				setTimeout(() => {
-					this.sectionReference.nativeElement.scrollIntoView({ behavior: 'smooth' });
-				}, 200);
-			} else {
-				this.showWarningViolenceSituation = false;
-				this.save();
-			}
-		});
+			this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
+				if (res) {
+					this.dataName = problems.map(p=> ` "${p.pt}"`)
+					this.showWarningViolenceSituation = true;
+					setTimeout(() => {
+						this.sectionReference.nativeElement.scrollIntoView({ behavior: 'smooth' });
+					}, 200);
+				} else {
+					this.showWarningViolenceSituation = false;
+					this.touchedConfirm = false;
+					this.save();
+				}
+			});
 	}
 
+	confirmForm(){
+		if(this.referenceSituationViolence === null){
+			this.previousAlertReference();
+		}else if(this.referenceSituationViolence || !this.referenceSituationViolence){
+			this.save();
+		}
+	}
+	
 	save(): void {
 		this.previousDataIsConfirmed().subscribe((answerPreviousData: boolean) => {
 
@@ -284,7 +294,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	openReferenceDialog(event) {
 		if (event) {
 			this.ambulatoryConsultationReferenceService.openReferenceDialog();
+			this.referenceSituationViolence = true;
 		} else {
+			this.referenceSituationViolence = false;
 			this.showWarningViolenceSituation = false;
 		}
 	}
