@@ -16,7 +16,7 @@ export class FamilyRecordService {
   ) { }
 
   enviarFamilyRecord(patientId: number, familyRecord: CreateQuestionnaireDTO): Observable<any> {
-    const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/familybg`;
+    const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/patient/${patientId}/questionnaire/create`;
     //const url = `${environment.apiBase}/institution/2/patient/1/hce/general-state/familybg`;
     return this.http.post(url, familyRecord);
   }

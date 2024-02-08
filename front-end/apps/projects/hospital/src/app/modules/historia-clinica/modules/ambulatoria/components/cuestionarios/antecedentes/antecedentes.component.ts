@@ -298,48 +298,49 @@ export class AntecedentesComponent implements OnInit {
   crearCuestionario(): CreateQuestionnaireDTO{
       const questionnaireAnswers: QuestionnaireAnswerDTO[] = [
         //Preguntas convive con
-        { questionId: 24, answerId: this.cambiarRespuestaPreguntaFamilia(0), value: "1"},
-        { questionId: 25, answerId: this.cambiarRespuestaPreguntaFamilia(1), value: "1"},
-        { questionId: 26, answerId: this.cambiarRespuestaPreguntaFamilia(2), value: "1"},
-        { questionId: 27, answerId: this.cambiarRespuestaPreguntaFamilia(3), value: "1"},
-        { questionId: 28, answerId: this.cambiarRespuestaPreguntaFamilia(4), value: "1"},
-        { questionId: 29, answerId: this.cambiarRespuestaPreguntaFamilia(5), value: "1"},
-        { questionId: 54, answerId: this.cambiarRespuestaPreguntaFamilia(6), value: "1"},
-        { questionId: 55, answerId: this.cambiarRespuestaPreguntaFamilia(7), value: "1"},
-        { questionId: 30, answerId: this.cambiarRespuestaPreguntaFamilia(8), value: "1"},
+        { itemId: 24, optionId: this.cambiarRespuestaPreguntaFamilia(0), value: "1"},
+        { itemId: 25, optionId: this.cambiarRespuestaPreguntaFamilia(1), value: "1"},
+        { itemId: 26, optionId: this.cambiarRespuestaPreguntaFamilia(2), value: "1"},
+        { itemId: 27, optionId: this.cambiarRespuestaPreguntaFamilia(3), value: "1"},
+        { itemId: 28, optionId: this.cambiarRespuestaPreguntaFamilia(4), value: "1"},
+        { itemId: 29, optionId: this.cambiarRespuestaPreguntaFamilia(5), value: "1"},
+        { itemId: 54, optionId: this.cambiarRespuestaPreguntaFamilia(6), value: "1"},
+        { itemId: 55, optionId: this.cambiarRespuestaPreguntaFamilia(7), value: "1"},
+        { itemId: 30, optionId: this.cambiarRespuestaPreguntaFamilia(8), value: "1"},
         //Preguntas vive en
-        { questionId: 32, answerId: this.cambiarRespuestaPreguntaVive(0), value: "1"},
-        { questionId: 33, answerId: this.cambiarRespuestaPreguntaVive(1), value: "1"},
-        { questionId: 34, answerId: this.cambiarRespuestaPreguntaVive(2), value: "1"},
-        { questionId: 35, answerId: this.cambiarRespuestaPreguntaVive(3), value: "1"},
+        { itemId: 32, optionId: this.cambiarRespuestaPreguntaVive(0), value: "1"},
+        { itemId: 33, optionId: this.cambiarRespuestaPreguntaVive(1), value: "1"},
+        { itemId: 34, optionId: this.cambiarRespuestaPreguntaVive(2), value: "1"},
+        { itemId: 35, optionId: this.cambiarRespuestaPreguntaVive(3), value: "1"},
         //Preguntas nivel de instrucción madre
-        { questionId: 37, answerId: this.RespuestaNivelDeInstruccionMadre(), value: "1"},
+        { itemId: 37, optionId: this.RespuestaNivelDeInstruccionMadre(), value: "1"},
         //Preguntas nivel de instrucción padre
-        { questionId: 38, answerId: this.RespuestaNivelDeInstruccionPadre(), value: "1"},
+        { itemId: 38, optionId: this.RespuestaNivelDeInstruccionPadre(), value: "1"},
         //Preguntas Madre
-        { questionId: 40, answerId: this.cambiarRespuestaTrabajoRemuneradoMadre(), value: "1"},
-        { questionId: 41, answerId: 0, value: this.edadMadre.toString()}, //¿Es la edad o la cantidad de hs fuera?
-        { questionId: 42, answerId: 0, value: this.horasFueraDeLaCasaMadre.toString()},
-        { questionId: 43, answerId: this.cambiarEstadoCivilMadre(), value: "1"},
+        { itemId: 40, optionId: this.cambiarRespuestaTrabajoRemuneradoMadre(), value: "1"},
+        { itemId: 41, optionId: 0, value: this.edadMadre.toString()}, //¿Es la edad o la cantidad de hs fuera?
+        { itemId: 42, optionId: 0, value: this.horasFueraDeLaCasaMadre.toString()},
+        { itemId: 43, optionId: this.cambiarEstadoCivilMadre(), value: "1"},
         //Preguntas Padre
-        { questionId: 58, answerId: this.cambiarRespuestaTrabajoRemuneradoPadre(), value: "1"},
-        { questionId: 57, answerId: 0, value: this.edadPadre.toString()}, //¿Es la edad o la cantidad de hs fuera?
-        { questionId: 45, answerId: 0, value: this.horasFueraDeLaCasaPadre.toString()},
-        { questionId: 56, answerId: this.cambiarEstadoCivilPadre(), value: "1"},
+        { itemId: 58, optionId: this.cambiarRespuestaTrabajoRemuneradoPadre(), value: "1"},
+        { itemId: 57, optionId: 0, value: this.edadPadre.toString()}, //¿Es la edad o la cantidad de hs fuera?
+        { itemId: 45, optionId: 0, value: this.horasFueraDeLaCasaPadre.toString()},
+        { itemId: 56, optionId: this.cambiarEstadoCivilPadre(), value: "1"},
         //Hermanos
-        { questionId: 47, answerId: 0, value: this.hermanosVivos.toString()},
-        { questionId: 48, answerId: 0, value: this.hermanosMuertos.toString()},
+        { itemId: 47, optionId: 0, value: this.hermanosVivos.toString()},
+        { itemId: 48, optionId: 0, value: this.hermanosMuertos.toString()},
         //Vivienda
-        { questionId: 50, answerId: 0, value: this.numeroDeCuartos.toString()},
-        { questionId: 51, answerId: this.cambiarEnergiaElectrica(), value: "1"},
+        { itemId: 50, optionId: 0, value: this.numeroDeCuartos.toString()},
+        { itemId: 51, optionId: this.cambiarEnergiaElectrica(), value: "1"},
         //Agua
-        { questionId: 52, answerId: this.RespuestasAgua(), value: "1"},
+        { itemId: 52, optionId: this.RespuestasAgua(), value: "1"},
         //Excretas
-        { questionId: 53, answerId: this.RespuestasExcretas(), value: "1"},
+        { itemId: 53, optionId: this.RespuestasExcretas(), value: "1"},
       ]
     
       const questionnaireData: CreateQuestionnaireDTO = {
-        questionnaire: questionnaireAnswers
+        questionnaireId: 2,
+        answers: questionnaireAnswers
       };
 
       return questionnaireData;

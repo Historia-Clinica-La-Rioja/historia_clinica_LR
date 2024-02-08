@@ -1074,13 +1074,14 @@ export interface DocumentReduceInfoDto extends Serializable {
 }
 
 export interface QuestionnaireAnswerDTO {
-	questionId: number;
-	answerId: number;
+	itemId: number;
+	optionId: number;
 	value: string;
 }
 
 export interface CreateQuestionnaireDTO {
-	questionnaire: QuestionnaireAnswerDTO[];
+    questionnaireId: number;
+	answers: QuestionnaireAnswerDTO[];
 }
 
 export interface EdMontonAnswers {
