@@ -1,0 +1,25 @@
+.reference-type {
+	.mat-radio-button ~ .mat-radio-button {
+		margin-left: 50px;
+    }
+
+	mat-label {
+		font-weight: 500;
+		height: 30px;
+	}
+
+	height: 60px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.search-criteria {
+	margin-bottom: 10px;
+	font-weight: 500;
+}
+
+.subtitle {
+	font-size: 16px;
+}

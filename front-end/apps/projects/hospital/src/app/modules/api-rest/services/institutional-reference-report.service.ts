@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PageDto, ReferenceCompleteDataDto, ReferenceReportDto } from '@api-rest/api-model';
+import { PageDto, ReferenceCompleteDataDto, ReferenceDto, ReferenceReportDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { DashboardFilters } from '@shared-appointment-access-management/components/reference-dashboard-filters/reference-dashboard-filters.component';
@@ -55,5 +55,10 @@ export class InstitutionalReferenceReportService {
 	cancelReference(referenceId: number): Observable<boolean> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/cancel`;
 		return this.http.put<boolean>(url, {});
+	}
+
+	modifyReference(referenceId: number, reference: ReferenceDto): Observable<boolean> {
+		const url = `${this.BASE_URL}/${this.contextService.institutionId}/references-report/${referenceId}/modify`;
+		return this.http.put<boolean>(url, reference);
 	}
 }

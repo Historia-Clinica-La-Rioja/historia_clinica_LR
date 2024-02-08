@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+    <mat-form-field appearance="outline" fxFlex="100%">
+        <mat-label
+            [translate]="'access-management.reference-edition.PLACEHOLDER_ASSOCIATED_PROBLEM'">
+        </mat-label>
+        <mat-select name="problems" formControlName="problems" multiple>
+            <mat-select-trigger>
+                <span>{{form.value.problems | showMoreConcepts}}</span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let problem of form.value.problems" [value]="problem">
+                {{problem | translate}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</form>

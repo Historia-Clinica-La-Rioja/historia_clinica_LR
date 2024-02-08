@@ -1,5 +1,5 @@
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
-import { ReferenceEditionPopUpComponent } from '@access-management/dialogs/reference-edition-pop-up/reference-edition-pop-up.component';
+import { ReferenceEditionPopUpComponent, ReferenceEditionPopUpData } from '@access-management/dialogs/reference-edition-pop-up/reference-edition-pop-up.component';
 import { ReportCompleteDataPopupComponent } from '@access-management/dialogs/report-complete-data-popup/report-complete-data-popup.component';
 import { DashboardService } from '@access-management/services/dashboard.service';
 import { Component, Input } from '@angular/core';
@@ -7,7 +7,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ButtonType } from '@presentation/components/button/button.component';
-import { ReferenceDataDto } from '@api-rest/api-model';
+import { ReferenceCompleteDataDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-approval-actions',
@@ -17,7 +17,7 @@ import { ReferenceDataDto } from '@api-rest/api-model';
 export class ApprovalActionsComponent {
 
 	ButtonType = ButtonType;
-	@Input() referenceDataDto: ReferenceDataDto;
+	@Input() referenceCompleteDataDto: ReferenceCompleteDataDto;
 
 	constructor(
 		private reportCompleteDataDialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
@@ -40,7 +40,8 @@ export class ApprovalActionsComponent {
 		confirmDialog.afterClosed().subscribe(
 			cancelReference => {
 				if (cancelReference) {
-					this.institutionalReferenceReportService.cancelReference(this.referenceDataDto.id).subscribe({
+					const referenceId = this.referenceCompleteDataDto.reference.id;
+					this.institutionalReferenceReportService.cancelReference(referenceId).subscribe({
 						next: (response) => {
 							this.snackBarService.showSuccess('access-management.search_references.reference.approval_actions.CANCEL_SUCCESS');
 							this.dashboardService.updateReports();
@@ -54,11 +55,12 @@ export class ApprovalActionsComponent {
 	}
 
 	edit() {
-
+		const referenceEditionData: ReferenceEditionPopUpData = {
+			referenceDataDto: this.referenceCompleteDataDto.reference,
+			referencePatientDto: this.referenceCompleteDataDto.patient
+		}
 		const referenceEditionDialogRef = this.dialog.open(ReferenceEditionPopUpComponent, {
-			data: {
-				referenceDataDto: this.referenceDataDto
-			},
+			data: referenceEditionData,
 			autoFocus: false,
 			disableClose: true,
 			width: '50%',

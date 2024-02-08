@@ -1,0 +1,13 @@
+<h2 class="subtitle">{{"access-management.reference-edition.PRIORITY_CRITERIA" | translate}}</h2>
+<form [formGroup]="form">
+	<mat-form-field appearance="outline">
+		<mat-select id="priority" formControlName="priority">
+			<mat-select-trigger>
+				<app-show-priority [priority]="form.value.priority"></app-show-priority>
+			</mat-select-trigger>
+			<mat-option *ngFor="let priority of priorities$ | async" [value]="priority">
+				<app-show-priority [priority]="priority"></app-show-priority>
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+</form>

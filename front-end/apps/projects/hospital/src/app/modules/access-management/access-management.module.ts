@@ -14,16 +14,26 @@ import { ViewMedicalHistoryButtonComponent } from '../hsi-components/view-medica
 import { ApprovalComponent } from './components/approval/approval.component';
 import { ApprovalActionsComponent } from './components/approval-actions/approval-actions.component';
 import { AppointmentSummaryComponent } from './components/appointment-summary/appointment-summary.component';
+import { AvailableAppointmentCountInformationComponent } from './components/available-appointment-count-information/available-appointment-count-information.component';
 import { ContactDetailsComponent } from './components/contact-details/contact-details.component';
 import { DeriveRequestComponent } from './components/derive-request/derive-request.component';
+import { DestinationInstitutionInformationComponent } from './components/destination-institution-information/destination-institution-information.component';
 import { HomeComponent } from './routes/home/home.component';
+import { HomeInstitutionInformationComponent } from './components/home-institution-information/home-institution-information.component';
 import { InstitutionalActionsComponent } from './components/institutional-actions/institutional-actions.component';
 import { InstitutionalNetworkActionsComponent } from './components/institutional-network-actions/institutional-network-actions.component';
+import { ObservationsComponent } from './components/observations/observations.component';
+import { PatientPhoneComponent } from './components/patient-phone/patient-phone.component';
+import { PatientProblemsComponent } from './components/patient-problems/patient-problems.component';
 import { PopupActionsComponent } from './components/popup-actions/popup-actions.component';
+import { PriorizationCriteriaSelectComponent } from './components/priorization-criteria-select/priorization-criteria-select.component';
 import { ReferenceCompleteDataComponent } from './components/reference-complete-data/reference-complete-data.component';
+import { ReferenceFilesComponent } from './components/reference-files/reference-files.component';
+import { ReferenceMedicalConceptsInformationComponent } from './components/reference-medical-concepts-information/reference-medical-concepts-information.component';
 import { RegulationAppointmentResultViewComponent } from './components/regulation-appointment-result-view/regulation-appointment-result-view.component';
 import { RegulationSearchCriteriaComponent } from './components/regulation-search-criteria/regulation-search-criteria.component';
 import { SearchAppointmentsForRegulationComponent } from './components/search-appointments-for-regulation/search-appointments-for-regulation.component';
+import { ShowPriorityComponent } from './components/show-priority/show-priority.component';
 //dialogs
 import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
@@ -39,21 +49,31 @@ import { TabsService } from './services/tabs.service';
 		ApprovalComponent,
 		ApprovalActionsComponent,
 		AppointmentSummaryComponent,
+		AvailableAppointmentCountInformationComponent,
 		ContactDetailsComponent,
 		DeriveRequestComponent,
+		DestinationInstitutionInformationComponent,
 		InstitutionalActionsComponent,
 		InstitutionalNetworkActionsComponent,
 		HomeComponent,
+		HomeInstitutionInformationComponent,
+		ObservationsComponent,
+		PatientPhoneComponent,
+		PatientProblemsComponent,
 		PopupActionsComponent,
+		PriorizationCriteriaSelectComponent,
 		ReferenceCompleteDataComponent,
+		ReferenceFilesComponent,
+		ReferenceMedicalConceptsInformationComponent,
 		RegulationAppointmentResultViewComponent,
 		RegulationSearchCriteriaComponent,
 		SearchAppointmentsForRegulationComponent,
+		ShowPriorityComponent,
 		//dialogs
 		ReasonPopUpComponent,
 		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
-		ReportCompleteDataPopupComponent,
+		ReportCompleteDataPopupComponent,  
 	],
 	providers: [
 		TabsService

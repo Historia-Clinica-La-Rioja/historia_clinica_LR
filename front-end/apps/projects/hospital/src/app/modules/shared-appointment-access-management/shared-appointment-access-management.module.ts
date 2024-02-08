@@ -60,6 +60,8 @@ import { ShowProblemsPipe } from '@shared-appointment-access-management/pipes/sh
     TypeaheadPracticesComponent,
     //dialogs
     ConfirmPrintAppointmentComponent,
+    //pipes
+		ShowProblemsPipe,
   ]
 })
 export class SharedAppointmentAccessManagementModule { }

@@ -93,6 +93,7 @@ import { IsoToDatePipe } from './pipes/iso-to-date.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { PatientToPersonPipe } from './pipes/PatientToPersonPipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
+import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
@@ -188,6 +189,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PaginatePipe,
 		PatientToPersonPipe,
 		PersonIdentificationPipe,
+		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
@@ -287,6 +289,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PaginatePipe,
 		PatientToPersonPipe,
 		PersonIdentificationPipe,
+		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,

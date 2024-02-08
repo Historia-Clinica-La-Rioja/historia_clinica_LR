@@ -1,0 +1,59 @@
+<h2 [translate]="'access-management.reference-edition.DESTINATION'"></h2>
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="10px">
+	<div class="reference-type" fxLayout="column" fxLayoutGap="10px">
+		<h2 class="subtitle" [translate]="'access-management.reference-edition.SEARCH_BY_CARE_LINE'"></h2>
+		<mat-radio-group id="request-by-care-line" formControlName="requestByCareLine" fxLayoutGap="5px">
+			<mat-radio-button color="primary" [value]="true">
+				{{'buttons.YES' | translate}}
+			</mat-radio-button>
+			<mat-radio-button color="primary" [value]=false>
+				{{'buttons.NO' | translate}}
+			</mat-radio-button>
+		</mat-radio-group>
+	</div>
+
+	<mat-form-field appearance="outline" *ngIf="form.value.requestByCareLine" fxFlex="100%" fxLayoutGap="7px">
+		<mat-label [translate]="'access-management.reference-edition.PLACEHOLDER_CARE_LINE'"></mat-label>
+		<input matInput id="care-line" formControlName="careLine">
+	</mat-form-field>
+
+	<div>
+		<h2 class="subtitle">{{'access-management.reference-edition.REFERENCE_TYPE' | translate}}</h2>
+		<mat-radio-group id="search-criteria" fxLayout="row" fxLayoutGap="40px" formControlName="referenceType">
+			<mat-radio-button color="primary" [value]="searchCriteria.CONSULTATION">
+				{{'access-management.reference-edition.CONSULTATION' | translate}}
+			</mat-radio-button>
+			<mat-radio-button color="primary" [value]="searchCriteria.PRACTICES">
+				{{'access-management.reference-edition.PRACTICE' | translate}}
+			</mat-radio-button>
+		</mat-radio-group>
+	</div>
+
+	<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+		<mat-label
+			[translate]="form.value.specialties ? 'access-management.reference-edition.PLACEHOLDER_SPECIALITY' : 'access-management.reference-edition.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
+		<mat-select id="specialty" formControlName="specialties" multiple>
+			<mat-select-trigger>
+				<span>
+					{{form.value.specialties | showMoreConcepts}}
+				</span>
+			</mat-select-trigger>
+			<mat-option *ngFor="let specialty of form.value.specialties" [value]="specialty">
+				{{specialty | translate}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+
+	<div fxLayout="column" fxLayoutGap="10px" *ngIf="form.value.referenceType === searchCriteria.PRACTICES">
+
+		<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+			<mat-label>{{'access-management.reference-edition.STUDY_CATEGORY' | translate}}</mat-label>
+			<input matInput id="study-category" formControlName="studyCategory">
+		</mat-form-field>
+
+		<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
+			<mat-label>{{'access-management.reference-edition.PRACTICE_PROCEDURE' | translate}}</mat-label>
+			<input matInput id="practice" formControlName="practice">
+		</mat-form-field>
+	</div>
+</form>

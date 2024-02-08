@@ -23,9 +23,9 @@ export class ReferenceFileService {
 		return this.http.post<number>(url, fileFormdata);
 	}
 
-	deleteReferenceFiles(fileIds: number[]): Observable<any> {
+	deleteReferenceFiles(fileIds: number[]): Observable<boolean> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference-file/delete`;
-		return this.http.delete(url, {
+		return this.http.delete<boolean>(url, {
 			params: {
 				fileIds
 			}
@@ -40,4 +40,5 @@ export class ReferenceFileService {
 			fileName,
 		).subscribe();
 	}
+
 }

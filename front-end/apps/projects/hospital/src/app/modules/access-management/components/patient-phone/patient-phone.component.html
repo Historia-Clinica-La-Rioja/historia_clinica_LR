@@ -1,0 +1,16 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="5px">
+    <h2 [translate]="'access-management.reference-edition.PATIENT_PHONE'"></h2>
+    <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex="30%" appearance="outline">
+            <mat-label [translate]="'access-management.reference-edition.PHONE_PREFIX'"></mat-label>
+            <input matInput type="text" id="phonePrefix" name="phonePrefix" formControlName="phonePrefix"
+                placeholder="{{'access-management.reference-edition.PHONE_PREFIX' | translate }}">
+        </mat-form-field>
+
+        <mat-form-field fxFlex="70%" appearance="outline">
+            <mat-label [translate]="'access-management.reference-edition.PHONE_NUMBER'"></mat-label>
+            <input matInput type="text" id="phoneNumber" name="phoneNumber" formControlName="phoneNumber"
+                placeholder="{{'access-management.reference-edition.PHONE_NUMBER' | translate }}">
+        </mat-form-field>
+    </div>
+</form>

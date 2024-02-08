@@ -1,0 +1,31 @@
+<div fxLayout="column" fxLayoutGap="10px">
+	<div fxLayoutAlign="end">
+		<button id="close" mat-icon-button mat-dialog-close>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+	<h2 [translate]="'access-management.reference-edition.TITLE'"></h2>
+
+	<mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+		<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
+			<div fxLayout="column" fxFlex="50%">
+				<app-home-institution-information [homeInstitutionInfo]="oldReferenceInfo.homeInstitutionInfo"></app-home-institution-information>
+				<app-patient-problems [problems]="oldReferenceInfo.problems"></app-patient-problems>
+				<app-priorization-criteria-select [oldPriorityId]="oldReferenceInfo.priorityId" (newPriority)="setPriorityId($event)"></app-priorization-criteria-select>
+				<app-patient-phone [patientPhone]="oldReferenceInfo.patientPhone"></app-patient-phone> 
+			</div>
+			<div fxFlex="50%">
+				<app-reference-medical-concepts-information [referenceMedicalConceptsInfo]="oldReferenceInfo.referenceMedicalConceptsInfo"></app-reference-medical-concepts-information>
+				<app-destination-institution-information [destinationInstitutionInfo]="oldReferenceInfo.destinationInstitutionInfo" [submitForm]="submitForm" (institutionIdSelected)="setDestinationInstitutionId($event)"></app-destination-institution-information>
+			</div>
+		</div>
+		<app-observations [oldObservations]="oldReferenceInfo.note" (newObservations)="setNote($event)"></app-observations>
+		<app-reference-files [oldFiles]="oldReferenceInfo.files" (selectedFiles)="setReferencesFiles($event)"></app-reference-files>
+	</mat-dialog-content>
+</div>
+
+<mat-dialog-actions fxLayoutAlign="end">
+	<button mat-raised-button color="primary" (click)="save()">
+		<span [translate]="'ambulatoria.paciente.nueva-consulta.reference-dialog.ADD_REFERENCE'"></span>
+	</button>
+</mat-dialog-actions>

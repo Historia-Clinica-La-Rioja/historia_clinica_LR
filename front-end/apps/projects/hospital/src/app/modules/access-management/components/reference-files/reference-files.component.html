@@ -1,0 +1,30 @@
+<div id="attach_files" fxLayout="column">
+    <div class="span-clickable primary" fxLayout="row">
+        <mat-icon>attachment_icon</mat-icon>
+        <span [translate]="'access-management.reference-edition.UPLOAD_FILES'" (click)="fileInput.click()"></span>
+        <span [hidden]="true">
+            <input id="add-new-file" type="file" #fileInput multiple (change)="addNewFile($event)"/>
+        </span>
+    </div>
+
+    
+    <div *ngFor="let file of referenceFiles.oldFiles; let index = index">
+        <span class="span-clickable primary" (click)="downloadFile(file)">
+            {{file.fileName}}
+        </span>
+        <button id="delete-old-file" mat-button color="warn" (click)="removeFile(referenceFiles.oldFiles, index)">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+
+    <div *ngIf="referenceFiles.newFiles.length">
+        <div *ngFor="let file of referenceFiles.newFiles; let index = index">
+            <span class="mat-body element-light-color">
+                {{file.name}}
+            </span>
+            <button id="delete-new-file" mat-button color="warn" (click)="removeFile(referenceFiles.newFiles, index)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

@@ -41,7 +41,7 @@ export class ReferenceDashboardComponent {
 			},
 			autoFocus: false,
 			disableClose: true,
-			width: '40%',
+			width: '50%',
 		});
 	}
 

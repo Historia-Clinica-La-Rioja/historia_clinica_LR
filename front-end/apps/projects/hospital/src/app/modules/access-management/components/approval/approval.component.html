@@ -21,6 +21,6 @@
 	</div>
 
 	<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-		<app-approval-actions *ngIf="loggedUserCanDoActions" [referenceDataDto]="referenceDataDto"></app-approval-actions>
+		<app-approval-actions *ngIf="loggedUserCanDoActions" [referenceCompleteDataDto]="referenceCompleteDataDto"></app-approval-actions>
 	</div>
 </div>
