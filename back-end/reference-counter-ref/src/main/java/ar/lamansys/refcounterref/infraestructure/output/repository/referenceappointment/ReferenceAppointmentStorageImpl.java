@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 @Service
 public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStorage {
 
+	private static final Short APPOINTMENT_CANCELLED_STATE = 4;
+
 	private final ReferenceAppointmentRepository referenceAppointmentRepository;
 
 	private final SharedAppointmentPort sharedAppointmentPort;
@@ -48,7 +50,7 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 	@Override
 	public Map<Integer, List<Integer>> getReferenceAppointmentsIds(List<Integer> referenceIds) {
 		log.debug("Fetch appointment ids by reference ids");
-		List<ReferenceAppointmentBo> referenceAppointmentBos = referenceAppointmentRepository.getAppointmentIdsByReferenceIds(referenceIds);
+		List<ReferenceAppointmentBo> referenceAppointmentBos = referenceAppointmentRepository.getAppointmentIdsByReferenceIds(referenceIds, APPOINTMENT_CANCELLED_STATE);
 		return referenceAppointmentBos.stream()
 				.collect(Collectors.groupingBy(ReferenceAppointmentBo::getReferenceId,
 						Collectors.mapping(ReferenceAppointmentBo::getAppointmentId, Collectors.toList())));

@@ -645,7 +645,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Person p ON (hp.personId = p.id) " +
 			"JOIN PersonExtended pe ON (p.id = pe.id) " +
 			"WHERE a.id IN (:appointmentIds) " +
-			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
 			"ORDER BY a.dateTypeId DESC, a.hour ASC")
 	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);

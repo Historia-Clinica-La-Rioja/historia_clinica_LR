@@ -135,7 +135,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		if (filter.getIdentificationNumber() != null)
 			condition.append(" AND pe.identification_number = '").append(filter.getIdentificationNumber()).append("' ");
 		if (filter.getAttentionStateId() != null && filter.getAttentionStateId().equals(EReferenceAttentionState.PENDING.getId()))
-			condition.append(" AND (ra.appointment_id IS null AND cr.closure_type_id IS null AND r.regulation_state_id = ").append(EReferenceRegulationState.APPROVED.getId()).append(") ");
+			condition.append(" AND (cr.closure_type_id IS null AND r.regulation_state_id = ").append(EReferenceRegulationState.APPROVED.getId()).append(") ");
 
 		if (filter.getManagerUserId() != null) {
 			condition.append(" AND igu.user_id = ").append(filter.getManagerUserId());
