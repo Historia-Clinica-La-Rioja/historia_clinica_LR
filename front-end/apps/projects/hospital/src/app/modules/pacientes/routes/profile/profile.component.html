@@ -54,8 +54,8 @@
 			</em>
 		</div>
 		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
-			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
-				<div *ngIf="createUsersIsEnable">
+			<div >
+				<div >
 					<mat-card class="box user-data">
 						<mat-card-header>
 							<mat-card-title>
@@ -92,7 +92,7 @@
 									<div fxLayout="row" fxLayoutGap="5px">
 										<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
 										<span *ngIf="userData.lastLogin else noInformation">
-											{{userData.lastLogin | date: 'dd/MM/yyyy - HH:mm'}} hs
+											{{userData.lastLogin | dateFormat: 'datetime'}}
 										</span>
 									</div>
 									<div fxLayout="row">

@@ -20,7 +20,7 @@
             [translate]="'ambulatoria.paciente.problemas.amend_problems.information.EDITED_DATE'">
         </div>
         <div class="mat-body capitalize-first-letter">
-            {{ errorProblem.timePerformed | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy  - HH:mm' }} hs.
+            {{ errorProblem.timePerformed | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}
         </div>
     </div>
 </div>

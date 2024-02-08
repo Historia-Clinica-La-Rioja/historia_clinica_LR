@@ -7,7 +7,7 @@
 						{{ problem.mainDiagnose.snomed.pt }}
 					</span>
 					<span mat-line>
-						{{ problem.entryDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy') :
+						{{ problem.entryDate | viewDateDto : 'datetime' | dateFormat: 'date' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | dateFormat: 'date') :
 						"actualmente en guardia" }}
 					</span>
 				</div>

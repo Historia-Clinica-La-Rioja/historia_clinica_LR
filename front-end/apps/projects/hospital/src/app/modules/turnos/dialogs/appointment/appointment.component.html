@@ -157,7 +157,7 @@
 							class="icon-grey">
 							access_time
 						</mat-icon>
-						<span class="mat-body subtitle-size"> {{selectedDate | date:"H:mm"}} hs</span>
+						<span class="mat-body subtitle-size"> {{selectedDate |  dateFormat: 'time'}}</span>
 					</div>
 					<div>
 						<app-modality-label class="custom-label-modality" [modality]="selectedModality?.value"></app-modality-label>
@@ -169,7 +169,7 @@
 						*ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
 						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn
-							| date:"dd/MM/yyyy H:mm"}}hs.</span>
+							|  dateFormat: 'datetime'}}</span>
 					</div>
 					<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
 						<app-reference-state-label [reference]="appointment.associatedReferenceClosureType"></app-reference-state-label>

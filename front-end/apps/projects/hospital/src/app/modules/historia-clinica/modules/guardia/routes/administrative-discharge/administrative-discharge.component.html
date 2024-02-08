@@ -8,7 +8,7 @@
 
 			<div fxLayout="column" fxLayoutGap="1px" id="dateTime">
 				<span class="grid-title" translate="guardia.episode.administrative_discharge.medical_discharge_card.DATE_TIME"></span>
-				<span class="content-primary">{{ administrativeDischarge.medicalDischargeOn | viewDateDto : 'localdatetime' | date: 'dd/MM/yyyy  - HH:mm' }} hs</span>
+				<span class="content-primary">{{ administrativeDischarge.medicalDischargeOn | viewDateDto : 'localdatetime' | dateFormat: 'datetime' }}</span>
 			</div>
 
 			<div fxLayout="column" fxLayoutGap="1px" id="dateTime">

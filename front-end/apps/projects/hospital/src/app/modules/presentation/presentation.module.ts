@@ -89,6 +89,7 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { FullMedicalCoveragePipe } from './pipes/full-medical-coverage.pipe';
+import { IsoToDatePipe } from './pipes/iso-to-date.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { PatientToPersonPipe } from './pipes/PatientToPersonPipe';
 import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
@@ -96,6 +97,7 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
+
 
 
 @NgModule({
@@ -182,6 +184,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
+		IsoToDatePipe,
 		PaginatePipe,
 		PatientToPersonPipe,
 		PersonIdentificationPipe,
@@ -280,6 +283,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
+		IsoToDatePipe,
 		PaginatePipe,
 		PatientToPersonPipe,
 		PersonIdentificationPipe,

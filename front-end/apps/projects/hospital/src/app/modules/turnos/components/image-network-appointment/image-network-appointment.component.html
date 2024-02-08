@@ -12,7 +12,8 @@
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
-				<app-patient-summary data-id="patient-summary" *ngIf="patientSummary" [person]="patientSummary"></app-patient-summary>
+				<app-patient-summary data-id="patient-summary" *ngIf="patientSummary"
+					[person]="patientSummary"></app-patient-summary>
 				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
 					<button id="print-appointment" mat-stroked-button color="primary" btn-block type="button"
 						(click)="getAppointmentTicketReport()">
@@ -149,7 +150,8 @@
 							text="{{selectedDate | date:'EEEE, d ' | titlecase }} de {{selectedDate | date:'MMMM ' | titlecase}} de {{selectedDate | date:'y ' | titlecase}}"></app-iconed-text>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-time">
-						<app-iconed-text icon="access_time" text="{{selectedDate | date:'H:mm'}} hs"></app-iconed-text>
+						<app-iconed-text icon="access_time"
+							text="{{selectedDate | dateFormat:'time'}}"></app-iconed-text>
 					</div>
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
@@ -159,7 +161,7 @@
 						data-id="assignment-professional">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}
 							{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn |
-							date:"dd/MM/yyyy H:mm"}}hs.</span>
+							dateFormat:'datetime'}}</span>
 					</div>
 				</div>
 			</div>
@@ -282,7 +284,7 @@
 <ng-template #bookingAppointment>
 	<div class="assigned-by" fxLayout="column">
 		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy
-			H:mm"}}hs.</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn |
+			dateFormat:'datetime'}}</span>
 	</div>
 </ng-template>

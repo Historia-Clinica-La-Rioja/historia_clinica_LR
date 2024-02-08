@@ -182,7 +182,7 @@
 											{{ problem.mainDiagnose.snomed.pt }}
 										</span>
 										<span mat-line>
-											{{ problem.entryDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy') :
+											{{ problem.entryDate | viewDateDto : 'datetime' | dateFormat: 'date' }} - {{ problem.dischargeDate ? (problem.dischargeDate | viewDateDto : 'datetime' | dateFormat: 'date') :
 											"actualmente internado" }}
 										</span>
 									</div>
@@ -311,7 +311,7 @@
 																{{historicalProblem.consultationEvolutionNote}}</p>
 														</div>
 
-														<app-amended-problems-information *ngIf="historicalProblem.markedAsError" 
+														<app-amended-problems-information *ngIf="historicalProblem.markedAsError"
 															[errorProblem]="historicalProblem.errorProblem"></app-amended-problems-information>
 													</div>
 													<div fxLayout="column" fxLayoutGap="10px" fxFlex="calc(30% - 10px)"
@@ -321,7 +321,7 @@
 															<h3 class="mat-h2 {{ historicalProblem.color }}"
 																[translate]="'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE'">
 															</h3>
-															{{historicalProblem.consultationDate | viewDateDto: 'localdatetime' | date : 'dd/MM/yyyy'}}
+															{{historicalProblem.consultationDate | viewDateDto: 'localdatetime' | dateFormat : 'date'}}
 														</div>
 														<div>
 															<h3 class="mat-h2 {{ historicalProblem.color }}"

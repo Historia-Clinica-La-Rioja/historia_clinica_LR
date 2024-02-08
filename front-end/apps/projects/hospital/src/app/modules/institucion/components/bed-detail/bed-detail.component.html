@@ -10,10 +10,10 @@
                 <div *ngIf="bedInfo.bedNurse else assignNurseTemplate">
                     <button mat-menu-item (click)="openNurseAssign()">
                         <span [translate]="'gestion-camas.detail.more-actions.NURSE_EDIT_ASSIGN'"></span>
-                    </button> 
+                    </button>
                     <button mat-menu-item (click)="deleteAssignedNurse()">
                         <span [translate]="'gestion-camas.detail.more-actions.DELETE_NURSE'"></span>
-                    </button> 
+                    </button>
                 </div>
 
                 <ng-template #assignNurseTemplate>
@@ -86,7 +86,7 @@
                 <div mat-line >
                     <span class="mat-body-1" [translate]="'gestion-camas.detail.PROBABLE_DISCHARGE_DATE'"></span>
                     <span class="mat-body-2" *ngIf="bedInfo.probableDischargeDate">
-                        {{bedInfo.probableDischargeDate | date : 'dd/MM/yyyy'}}
+                        {{bedInfo.probableDischargeDate | isoToDate | dateFormat : 'date'}}
                     </span>
                     <span *ngIf="!bedInfo.probableDischargeDate" class="mat-body-2" [translate]="'gestion-camas.detail.NO_DISCHARGE_DATE'"></span>
                 </div>

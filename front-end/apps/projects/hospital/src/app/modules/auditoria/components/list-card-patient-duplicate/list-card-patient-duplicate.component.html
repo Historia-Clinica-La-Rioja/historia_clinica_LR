@@ -41,7 +41,7 @@
 			</div>
 
 			<div fxLayoutAlign="none center" class="content" fxFlex="20%">
-				<span *ngIf="patient.birthdate else noData">{{patient.birthdate | date: 'dd/MM/yyyy'}}</span>
+				<span *ngIf="patient.birthdate else noData">{{patient.birthdate | isoToDate | dateFormat: 'date'}}</span>
 			</div>
 			<div fxLayoutAlign="none center" class="content lowercase" fxFlex="10%">
 				<span class="primary">{{patient?.numberOfCandidates}} {{'pacientes.audit.LABEL_CANDIDATES' |

@@ -48,7 +48,7 @@
 		</mat-card>
 		<div class="space"></div>
 		<div class="previous-login" *ngIf="enabledPreviousLogin">
-			<span>{{'home.instituciones.PREVIOUS_LOGIN' | translate}}: </span>{{previousLogin | date: 'short'}}
+			<span>{{'home.instituciones.PREVIOUS_LOGIN' | translate}}: </span>{{previousLogin | dateFormat: 'datetime'}}
 		</div>
 	</ng-container>
 	<div class="space"></div>

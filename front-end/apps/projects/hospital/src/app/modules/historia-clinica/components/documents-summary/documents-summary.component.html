@@ -178,7 +178,7 @@
 						</div>
 						<div *ngFor="let procedure of activeDocument.document.procedures" class="subcontent">
 							<div *ngIf="procedure.performedDate" class="mat-body-strong">
-								{{procedure.procedure}} - {{procedure.performedDate | date: 'dd/MM/yy'}}
+								{{procedure.procedure}} - {{ procedure.performedDate | isoToDate | dateFormat: 'date'}}
 							</div>
 							<div *ngIf="!procedure.performedDate" class="mat-body-strong">
 								{{procedure.procedure}}

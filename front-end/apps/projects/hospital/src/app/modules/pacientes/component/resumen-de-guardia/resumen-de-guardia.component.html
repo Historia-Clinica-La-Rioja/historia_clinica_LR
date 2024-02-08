@@ -42,7 +42,7 @@
             <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
                 <strong> {{ 'ambulatoria.paciente.guardia.ENTRANCE' | translate }}: </strong>
                 <span *ngIf="responseEmergencyCare?.creationDate as creationDate" id="creation_date">
-                    {{ creationDate | viewDateDto : 'datetime' | date: 'dd/MM/yyyy - HH:mm'}}
+                    {{ creationDate | viewDateDto : 'datetime' | dateFormat: 'datetime'}}
                 </span>
                 <ng-container *ngIf="responseEmergencyCare?.entranceType?.description">
                     <span id="entrance_type"> ({{ responseEmergencyCare?.entranceType?.description }}) </span>
@@ -104,8 +104,7 @@
 
                                 <div id="left-side">
                                     <span style="margin-right: 20px">
-                                        {{ triage.creationDate | date: 'dd/MM/yyyy - HH:mm' }}
-                                        hs
+                                        {{ triage.creationDate | dateFormat: 'datetime' }}
                                     </span>
                                     <app-triage-chip [category]="triage.category"></app-triage-chip>
                                 </div>
@@ -157,7 +156,7 @@
                     {{
                     policeInterventionDetails.callDate |
                     viewDateDto:
-                    'date' | date: 'dd/MM/yyyy'
+                    'date' | dateFormat: 'date'
                     }}
                 </span>
                 <span *ngIf="policeInterventionDetails.callDate && policeInterventionDetails.callTime">
@@ -166,8 +165,8 @@
                     {{
                     policeInterventionDetails.callTime |
                     viewDateDto:
-                    'time' | date: 'HH:mm'
-                    }} hs
+                    'time' | dateFormat: 'time'
+                    }}
                 </span>
             </div>
         </div>
