@@ -18,7 +18,7 @@ import {
 	PatientMedicalCoverageDto,
 	ReferenceSummaryDto,
 	DiagnosticReportInfoDto,
-	TranscribedDiagnosticReportInfoDto,
+	TranscribedServiceRequestSummaryDto,
 	EAppointmentModality,
 	AppFeature,
 } from '@api-rest/api-model';
@@ -543,7 +543,7 @@ export class NewAppointmentComponent implements OnInit {
 		});
 	}
 
-	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]) {
+	mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedServiceRequestSummaryDto[]) {
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {

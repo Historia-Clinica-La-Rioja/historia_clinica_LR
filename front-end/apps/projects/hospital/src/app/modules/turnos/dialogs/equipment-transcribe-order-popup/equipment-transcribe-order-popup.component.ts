@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SnomedDto, SnomedECL, TranscribedPrescriptionDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL, TranscribedServiceRequestDto } from '@api-rest/api-model';
 import { HCEHealthConditionDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { hasError } from '@core/utils/form.utils';
@@ -83,7 +83,7 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
         this.checkForOrderDeletion();
 
-        let transcribedData: TranscribedPrescriptionDto = {
+        let transcribedData: TranscribedServiceRequestDto = {
 			study: this.selectedStudy,
 			healthCondition: this.selectedProblem,
 			healthcareProfessionalName: orderProfessionalName,

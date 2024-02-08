@@ -4,7 +4,7 @@ import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto, DiagnosticReportInfoDto, TranscribedDiagnosticReportInfoDto, ApiErrorMessageDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto, DiagnosticReportInfoDto, TranscribedServiceRequestSummaryDto, ApiErrorMessageDto } from '@api-rest/api-model.d';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -297,7 +297,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		})
 	}
 
-	private mapTranscribedOrderToMedicalOrderInfo(order: TranscribedDiagnosticReportInfoDto) {
+	private mapTranscribedOrderToMedicalOrderInfo(order: TranscribedServiceRequestSummaryDto) {
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {
@@ -329,7 +329,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		});
 	}
 
-	private mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedDiagnosticReportInfoDto[]) {
+	private mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedServiceRequestSummaryDto[]) {
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
 
 		this.translateService.get(text).subscribe(translatedText => {

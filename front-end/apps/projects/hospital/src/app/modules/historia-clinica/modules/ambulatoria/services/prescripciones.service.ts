@@ -7,8 +7,8 @@ import {
 	MedicationInfoDto,
 	PrescriptionDto,
 	ProfessionalLicenseNumberValidationResponseDto,
-	TranscribedDiagnosticReportInfoDto,
-	TranscribedPrescriptionDto
+	TranscribedServiceRequestDto,
+	TranscribedServiceRequestSummaryDto,
 } from '@api-rest/api-model';
 import { DocumentService } from '@api-rest/services/document.service';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
@@ -43,7 +43,7 @@ export class PrescripcionesService {
 		}
 	}
 
-	createTranscribedOrder(patientId: number, transcribedInfo: TranscribedPrescriptionDto): Observable<number>{
+	createTranscribedOrder(patientId: number, transcribedInfo: TranscribedServiceRequestDto): Observable<number>{
 		return this.serviceRequestService.createTranscribedOrder(patientId, transcribedInfo);
 	}
 
@@ -55,7 +55,7 @@ export class PrescripcionesService {
 		return this.serviceRequestService.getMedicalOrders(patientId, statusId, categoryId);
 	}
 
-	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]> {
+	getTranscribedOrders(patientId: number): Observable<TranscribedServiceRequestSummaryDto[]> {
 		return this.serviceRequestService.getTranscribedOrders(patientId);
 	}
 

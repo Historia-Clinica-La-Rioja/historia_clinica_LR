@@ -8,10 +8,10 @@ import {
 	DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto,
 	PrescriptionDto,
 	StudyOrderReportInfoDto,
-	StudyWithoutOrderReportInfoDto,
-	TranscribedDiagnosticReportInfoDto,
 	StudyTranscribedOrderReportInfoDto,
-	TranscribedPrescriptionDto,
+	StudyWithoutOrderReportInfoDto,
+	TranscribedServiceRequestDto,
+	TranscribedServiceRequestSummaryDto,
 } from '@api-rest/api-model';
 
 import { switchMap } from 'rxjs/operators';
@@ -55,7 +55,7 @@ export class ServiceRequestService {
 		return this.http.post<number[]>(url, prescriptionDto);
 	}
 
-	createTranscribedOrder(patientId: number, transcribedInfo: TranscribedPrescriptionDto){
+	createTranscribedOrder(patientId: number, transcribedInfo: TranscribedServiceRequestDto){
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed`;
 		return this.http.post<number>(url, transcribedInfo)
 	}
@@ -73,9 +73,9 @@ export class ServiceRequestService {
 		return this.http.get<DiagnosticReportInfoDto[]>(url, { params: queryParams });
 	}
 
-	getTranscribedOrders(patientId: number): Observable<TranscribedDiagnosticReportInfoDto[]>{
+	getTranscribedOrders(patientId: number): Observable<TranscribedServiceRequestSummaryDto[]>{
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribedOrders`;
-		return this.http.get<TranscribedDiagnosticReportInfoDto[]>(url)
+		return this.http.get<TranscribedServiceRequestSummaryDto[]>(url)
 	}
 
 	saveAttachedFiles(patientId: number, serviceRequestId: number, selectedFiles: File[]): Observable<void> {
