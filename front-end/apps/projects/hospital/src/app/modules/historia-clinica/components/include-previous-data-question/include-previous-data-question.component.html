@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutGap="16px" class="background-primary">
+<div fxLayout="row" fxLayoutGap="16px" class="background-primary" [ngClass]="viewError ? 'background-primary error-border' : 'background-primary' ">
     <div fxLayout="column" fxLayoutGap="2px">
         <div fxLayout="row" fxLayoutGap="2px">
             <mat-icon color="primary">error_outline</mat-icon>
@@ -22,6 +22,7 @@
                     :'historia-clinica.include-previous-data-question.DISCARD') | translate }}
                 </button>
             </div>
+            <mat-error *ngIf="viewError">{{'historia-clinica.include-previous-data-question.ERROR' | translate}}</mat-error>
         </div>
     </div>
 </div>

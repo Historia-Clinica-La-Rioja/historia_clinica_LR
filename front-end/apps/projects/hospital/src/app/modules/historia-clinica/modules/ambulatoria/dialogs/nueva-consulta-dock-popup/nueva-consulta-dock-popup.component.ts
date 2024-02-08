@@ -93,6 +93,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
 	episodeData: EpisodeData;
+	touchedConfirm = false;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -217,7 +218,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			pt: p.snomed.pt,
 			sctid: p.snomed.sctid
 		}));
-
+		if(!this.touchedConfirm && this.showWarningViolenceSituation){
+			this.touchedConfirm = true;
+		}
 		this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
 			if (res) {
 				this.dataName = problems.map(p=> ` "${p.pt}"`)
@@ -225,7 +228,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				setTimeout(() => {
 					this.sectionReference.nativeElement.scrollIntoView({ behavior: 'smooth' });
 				}, 200);
-				
 			} else {
 				this.showWarningViolenceSituation = false;
 				this.save();

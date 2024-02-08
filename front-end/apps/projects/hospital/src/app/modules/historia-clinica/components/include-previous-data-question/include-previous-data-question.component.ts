@@ -10,6 +10,7 @@ export class IncludePreviousDataQuestionComponent {
   @Input() message: string;
   @Input() addButtonLabel?: string;
   @Input() discardButtonLabel?: string;
+  @Input() viewError?: boolean;
 
   @Output() response = new EventEmitter<boolean>();
 
