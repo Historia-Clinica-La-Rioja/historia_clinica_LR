@@ -58,6 +58,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
+	enableAnestethicPart = false
 
 	isEmergencyCareTemporaryPatient = false;
 	isAnestheticPartEnabled: boolean;
@@ -116,7 +117,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 	) { 
 		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled => 
-			this.isAnestheticPartEnabled = isEnabled
+			this.isAnestheticPartEnabled = true
 		);
 	}
 
@@ -311,6 +312,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	private hasToDoInternmentAction() {
 		if (this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
+			this.enableAnestethicPart = true
 			return;
 		}
 		if (this.epicrisisDoc?.confirmed && !this.hasMedicalRole) {
