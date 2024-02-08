@@ -30,7 +30,8 @@ public interface TranscribedServiceRequestRepository extends JpaRepository<Trans
 			"tsr.id, tsr.patientId, " +
 			"s_problem.sctid, s_problem.pt, hc.cie10Codes, " +
 			"s_study.sctid, s_study.pt, " +
-			"tsr.healthcareProfessionalName, tsr.institutionName, tsr.creationDate) " +
+			"tsr.healthcareProfessionalName, tsr.institutionName, tsr.creationDate, " +
+			"dr.observations) " +
 			"FROM TranscribedServiceRequest tsr " +
 			"JOIN DiagnosticReport dr ON (tsr.studyId = dr.id) " +
 			"JOIN Snomed s_study ON (dr.snomedId = s_study.id) " +

@@ -39,7 +39,7 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
 
     public TranscribedServiceRequestBo(Integer transcribedServiceRequestId, Integer patientId, String healthConditionSctid, String healthConditionPt, String cie10Codes, String studySctid, String studyPt,
                                        String healthcareProfessionalName, String institutionName,
-                                       LocalDateTime creationDate) {
+                                       LocalDateTime creationDate, String observations) {
         this.transcribedServiceRequestId = transcribedServiceRequestId;
         this.patientId = patientId;
         this.healthCondition = new SnomedBo(healthConditionSctid, healthConditionPt);
@@ -48,6 +48,7 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
         this.healthcareProfessionalName = healthcareProfessionalName;
         this.institutionName = institutionName;
         this.creationDate = creationDate;
+        this.observations = observations;
     }
 
     public TranscribedServiceRequestBo(TranscribedPrescriptionDto transcribedPrescriptionDto, Integer patientId) {
