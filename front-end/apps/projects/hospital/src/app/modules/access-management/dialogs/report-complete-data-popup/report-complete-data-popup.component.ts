@@ -8,7 +8,7 @@ import { BehaviorSubject, Observable, map, of, switchMap, take, tap } from 'rxjs
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
-import { PENDING } from '@access-management/constants/reference';
+import { PENDING, REFERENCE_STATES } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
@@ -23,6 +23,8 @@ import { TabsService } from '@access-management/services/tabs.service';
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
 const TAB_OFERTA_POR_REGULACION = 1;
+const PENDING_STATE = REFERENCE_STATES.PENDING;
+const ABSENT_STATE = REFERENCE_STATES.ABSENT;
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -49,6 +51,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	hasObservation: boolean = false;
 	hasDerivationRequest = false;
 	isRoleGestor: boolean;
+	hasAppointment = false;
 
 	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -201,6 +204,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			reference: referenceDetails.reference,
 			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment,
 		}
+		this.hasAppointment = this.reportCompleteData.appointment.state.description === PENDING_STATE || this.reportCompleteData.appointment.state.description === ABSENT_STATE;
 	}
 }
 
