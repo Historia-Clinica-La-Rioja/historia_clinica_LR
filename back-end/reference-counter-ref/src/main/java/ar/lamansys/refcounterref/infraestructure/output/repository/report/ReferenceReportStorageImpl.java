@@ -95,24 +95,22 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private String getCondition(ReferenceReportFilterBo filter, String dateFilterAndCommonData) {
 		StringBuilder condition = new StringBuilder();
-		String conditionWithoutClassifiedData = getCommonFilterDataIncludingProfessional(filter);
+		String sharedCondition = getSharedFilterData(filter);
 		condition.append("(".concat(dateFilterAndCommonData));
-		condition.append(conditionWithoutClassifiedData);
-		condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) AND");
-		condition.append(dateFilterAndCommonData);
-		condition.append(getSharedFilterData(filter));
-		condition.append(")");
-		return condition.toString();
-	}
-
-	private String getCommonFilterDataIncludingProfessional(ReferenceReportFilterBo filter) {
-		StringBuilder condition = getSharedFilterData(filter);
-		if (filter.getHealthcareProfessionalId() != null)
+		condition.append(sharedCondition);
+		if (filter.getHealthcareProfessionalId() == null)
+			condition.append("AND clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE)");
+		else {
 			condition.append(" AND oc.doctor_id = ").append(filter.getHealthcareProfessionalId());
+			condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) AND");
+			condition.append(dateFilterAndCommonData);
+			condition.append(sharedCondition);
+			condition.append(")");
+		}
 		return condition.toString();
 	}
 
-	private StringBuilder getSharedFilterData(ReferenceReportFilterBo filter) {
+	private String getSharedFilterData(ReferenceReportFilterBo filter) {
 		StringBuilder condition = new StringBuilder();
 		if (filter.getDestinationInstitutionId() != null)
 			condition.append(" AND r.destination_institution_id = ").append(filter.getDestinationInstitutionId());
@@ -148,7 +146,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		if (filter.getRegulationStateId() != null)
 			condition.append(" AND r.regulation_state_id = ").append(filter.getRegulationStateId());
 
-		return condition;
+		return condition.toString();
 	}
 
 	private Page<ReferenceReportBo> executeQueryAndProcessResults(String sqlQueryData, String sqlCountQuery, ReferenceReportFilterBo filter, Pageable pageable) {
