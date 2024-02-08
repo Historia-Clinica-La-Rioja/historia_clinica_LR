@@ -297,8 +297,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.referenceSituationViolence = true;
 		} else {
 			this.referenceSituationViolence = false;
-			this.showWarningViolenceSituation = false;
 		}
+		this.showWarningViolenceSituation = false;
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], nuevaConsulta: CreateOutpatientDto): void {
