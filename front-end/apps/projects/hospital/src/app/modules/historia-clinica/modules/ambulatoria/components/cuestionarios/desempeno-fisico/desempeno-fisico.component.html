@@ -49,11 +49,11 @@
             </mat-radio-group>
 
 
-            <div class="counter" id="CT1" name="counter1" *ngIf="!isCounterDisabled()">
+            <div class="counter" id="CT1" *ngIf="!isCounterDisabled()">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="73" type="number" name="Num" value="4A" min="0" class="chart" />
-
-            </div>
+                <input id="73" type="number" name="Num" [(ngModel)]="counterA1" value="4A" min="0" class="chart" />
+              </div>
+              
 
             <!-- SEGUNDA CONSULTA -->
 
@@ -81,9 +81,9 @@
             </mat-radio-group>
 
 
-            <div class="counter" id="CT2" name="counter2" *ngIf="!isCounterDisabled2()">
+            <div class="counter" id="CT2" *ngIf="!isCounterDisabled2()">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="75" type="number" name="Num" value="4B" min="0" class="chart" />
+                <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" value="B2" min="0" class="chart" />
 
             </div>
 
@@ -115,8 +115,7 @@
             <mat-radio-group id="76" name="balance3" [disabled]="isSubmitDisabled3()" [(ngModel)]="selectedoptionB2"
                 (change)="calculePoints()">
                 <div class="radio2">
-                    <mat-radio-button value="3C" color="primary">Si</mat-radio-button>
-                    <mat-radio-button value="2C" color="primary">No</mat-radio-button>
+                    <mat-radio-button value="2C" color="primary">Accede a la prueba</mat-radio-button>
                     <mat-radio-button value="1C" color="primary">Se rehúsa</mat-radio-button>
                 </div>
             </mat-radio-group>
@@ -153,8 +152,7 @@
 
             <mat-radio-group id="79" name="marcha1" [(ngModel)]="selectedoptionC">
                 <div class="radio3">
-                    <mat-radio-button value="D1" color="primary">Si</mat-radio-button>
-                    <mat-radio-button value="D2" color="primary">No</mat-radio-button>
+                    <mat-radio-button value="D1" color="primary">Accede a la prueba</mat-radio-button>
                     <mat-radio-button value="D3" color="primary">Se rehúsa</mat-radio-button>
                 </div>
             </mat-radio-group>
@@ -184,8 +182,7 @@
             <mat-radio-group id="81" name="marcha2" [(ngModel)]="selectedoptionD" [disabled]="isSubmitDisabled4()"
                 (change)="calculePoints()">
                 <div class="radio3">
-                    <mat-radio-button value="E1" color="primary">Si</mat-radio-button>
-                    <mat-radio-button value="E2" color="primary">No</mat-radio-button>
+                    <mat-radio-button value="E1" color="primary">Accede a la prueba</mat-radio-button>
                     <mat-radio-button value="E3" color="primary">Se rehúsa</mat-radio-button>
                 </div>
             </mat-radio-group>

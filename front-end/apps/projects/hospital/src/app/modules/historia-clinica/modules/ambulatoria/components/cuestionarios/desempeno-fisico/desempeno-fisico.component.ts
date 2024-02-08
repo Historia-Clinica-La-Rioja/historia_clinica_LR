@@ -20,6 +20,8 @@ export class DesempenoFisicoComponent implements OnInit {
   counterC2: number = undefined;
   counterC3: number = undefined;
   counterE1: number = undefined;
+  counterA1: number;
+  counterA2: number;
   totalScore: number = 0;
   Calculefinal: any;
   finalScore: number = 0;
@@ -68,7 +70,7 @@ export class DesempenoFisicoComponent implements OnInit {
   isCounterDisabled2(): boolean {
     return !(
 
-      this.selectedoptionB === '1B' || this.selectedoptionB === '2B'
+      this.selectedoptionB == '1B' || this.selectedoptionB === '2B'
 
     )
 
@@ -140,7 +142,6 @@ export class DesempenoFisicoComponent implements OnInit {
   calculePoints(): number {
     let balance1 = (this.selectedoptionA === '1A') ? 1 : 0;
     let balance2 = (this.selectedoptionB === '1B') ? 1 : 0;
-    // let sillaTest1 = (this.selectedoptionE === '1D') ? 1 : 0;
 
 
     if (this.selectedoptionA === '2A' || this.selectedoptionA === '3A') {
@@ -164,16 +165,23 @@ export class DesempenoFisicoComponent implements OnInit {
       counterB2Points = 2;
     }
 
+  
+    let counterA1NoPoints = 0;
 
-    // let counterC2Points = 0;
-    // if (this.counterC2 < 3.0) {
-    //   counterC2Points = 0;
+    if (this.counterA1 < 0) {
+      counterA1NoPoints = 0;
+    };
 
-    // } else if (this.counterC2 >= 3.0 && this.counterC2 < 10) {
-    //   counterC2Points = 1;
-    // } else if (this.counterC2 >= 10 && this.counterC2 <= 15) {
-    //   counterC2Points = 2;
-    // }
+    let counterA2NoPoints = 0;
+    if (this.counterA2 < 0) {
+      counterA2NoPoints = 0;
+    }
+
+
+    let counterC2NoPoints = 0;
+    if (this.counterC2 < 0) {
+      counterC2NoPoints = 0;
+    }
 
     let counterC3Points = 0;
 
@@ -204,7 +212,7 @@ export class DesempenoFisicoComponent implements OnInit {
       counterE1Points = 0;
     }
 
-    let totalScore = balance1 + balance2 + counterB2Points
+    let totalScore = balance1 + balance2 + counterB2Points+ counterA1NoPoints + counterA2NoPoints + counterC2NoPoints
       + counterC3Points + counterE1Points;
 
     // console.log("balance1: ", balance1)
@@ -283,9 +291,9 @@ export class DesempenoFisicoComponent implements OnInit {
 
   mappingCounter1() {
     const firstCounterMap = {
-      'B2': 0,
+      '4A': 0,
     };
-    return firstCounterMap[this.counterB2] || undefined;
+    return firstCounterMap[this.selectedoptionA] || undefined;
   }
 
   mappingBalance2() {
@@ -300,14 +308,15 @@ export class DesempenoFisicoComponent implements OnInit {
 
   mappingCounter2() {
     const secondCounterMap = {
-      'E4': 0,
+      'B2': 0,
     };
-    return secondCounterMap[this.counterC3] || undefined;
+    return secondCounterMap[this.selectedoptionB] || undefined;
   }
 
   mappingBalance3() {
     const thirdBalanceMap = {
       '1C': 51,
+      '2C': 20,
 
     }
 
@@ -328,7 +337,6 @@ export class DesempenoFisicoComponent implements OnInit {
   mappingProgress1() {
     const firstProgressMap = {
       'D1': 20,
-      'D2': 19,
       'D3': 51,
     }
 
@@ -344,7 +352,7 @@ export class DesempenoFisicoComponent implements OnInit {
 
   mappingProgress2() {
     const secondProgressMap = {
-
+      'E1': 20,
       'E3': 51,
     }
 
@@ -362,9 +370,9 @@ export class DesempenoFisicoComponent implements OnInit {
 
   mappingMarch1() {
     const firstMarchMap = {
-      'D1': 20,
-      'D2': 19,
-      'D3': 51,
+      '1D': 20,
+      '2D': 19,
+      '3D': 51,
     }
 
     return firstMarchMap[this.selectedoptionE] || undefined;
@@ -372,9 +380,9 @@ export class DesempenoFisicoComponent implements OnInit {
 
   mappingMarch2() {
     const sixMarchMap = {
-      'E1': 20,
-      'E2': 19,
-      'E3': 51,
+      '1FINAL': 20,
+      '2FINAL': 19,
+      '3FINAL': 51,
     }
     return sixMarchMap[this.selectedoptionE2] || undefined;
   }
@@ -402,7 +410,7 @@ export class DesempenoFisicoComponent implements OnInit {
         {
           "itemId": 73,
           "optionId": this.mappingCounter1(),
-          "value": ""
+          "value": this.counterA1
         },
         {
           "itemId": 74,
@@ -412,7 +420,7 @@ export class DesempenoFisicoComponent implements OnInit {
         {
           "itemId": 75,
           "optionId": this.mappingCounter2(),
-          "value": ""
+          "value": this.counterA2
         },
         {
           "itemId": 76,
@@ -435,7 +443,7 @@ export class DesempenoFisicoComponent implements OnInit {
         {
           "itemId": 80,
           "optionId": this.mappingCounter4(),
-          "value": ""
+          "value": this.counterC2
         },
         {
           "itemId": 81,
