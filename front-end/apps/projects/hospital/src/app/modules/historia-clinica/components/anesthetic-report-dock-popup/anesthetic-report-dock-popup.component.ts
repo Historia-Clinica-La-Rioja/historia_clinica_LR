@@ -150,7 +150,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             anestheticHistory: this.anestheticReportAnestheticHistoryService.getAnestheticHistoryData(),
             medications: this.medicacionesNuevaConsultaService.getMedicationsAsMedicationDto(),
             preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto(),
-            foodIntake: {clockTime: this.formFoodIntake.value.lastFoodIntake},
+            foodIntake: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto().length > 0 ? {clockTime: this.formFoodIntake.value.lastFoodIntake} : null,
             histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
 		};
 	}

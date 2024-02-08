@@ -35,7 +35,7 @@
             </button>
         </div>
 
-		<mat-label class="actions-labels color-grey">
+		<mat-label *ngIf="(hasInternmentActionsToDo || enableAnestethicPart)" class="actions-labels color-grey">
 			{{'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}
 		</mat-label>
 		<div id="internacion" *ngIf="hasInternmentActionsToDo">
@@ -78,7 +78,7 @@
 			</button>
 		</ng-container>
 	</div>
-	<ng-container *ngIf="isAnestheticPartEnabled">
+	<ng-container *ngIf="(hasInternmentActionsToDo || enableAnestethicPart)">
 		<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
 			(click)="openAnestheticReport()">
 			{{'ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate}}
