@@ -195,14 +195,16 @@
             </div>
             <div class="date">
                 <div class="border-bottom">FECHA</div>
-                <!--<div th:text="${reportDate}"></div>-->
                 <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
                 <label th:unless="${consultationDate != null}" th:text="${attentionDate}"></label>
             </div>
         </div>
         <div>
-            <!--<div class="hospital" th:text="${'HOSPITAL: ' + establishment}"></div>-->
-            <div class="designation">Denominación HPdGD</div>
+            <div class="designation">
+                <div class="border-bottom">Denominación HPdGD</div>
+                <div>&nbsp;</div>
+                <div th:text="${establishment}"></div>
+            </div>
             <div class="code-hpdgd">
                 <div class="border-bottom">Código HPdGD-REFES</div>
                 <div>&nbsp;</div>
