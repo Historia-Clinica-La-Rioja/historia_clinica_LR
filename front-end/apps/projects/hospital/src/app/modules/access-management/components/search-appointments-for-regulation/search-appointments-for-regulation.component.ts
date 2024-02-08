@@ -300,10 +300,8 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 	setExternalClincalSpecialtie(clinicalSpecialties: ClinicalSpecialtyDto[]) {
 		if (clinicalSpecialties?.length) {
 			this.specialtyTypeaheadOptions = listToTypeaheadOptions(clinicalSpecialties, 'name');
-			this.externalSpecialty = this.specialtyTypeaheadOptions[0];
-			if (clinicalSpecialties.length > ONE_ELEMENT) {
-				this.externalInformation.disabledInput.specialty = false;
-			}
+			if (clinicalSpecialties.length > ONE_ELEMENT) this.externalInformation.disabledInput.specialty = false;
+			else this.externalSpecialty = this.specialtyTypeaheadOptions[0];
 		}
 	}
 
@@ -391,7 +389,8 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		this.specialtyService.getAll().subscribe(
 			(specialties: ClinicalSpecialtyDto[]) => {
 				this.allSpecialties = specialties;
-				this.specialtyTypeaheadOptions = listToTypeaheadOptions(this.allSpecialties, 'name');
+				if(!this.externalInformation?.referenceCompleteData.destinationClinicalSpecialties)
+					this.specialtyTypeaheadOptions = listToTypeaheadOptions(this.allSpecialties, 'name');
 			}
 		);
 	}
