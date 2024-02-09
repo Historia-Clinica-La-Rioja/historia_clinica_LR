@@ -819,6 +819,7 @@ const messages = {
             pending:'Pendiente',
             moving:'Moviendo',
             finished:'Finalizado',
+            failed:'Movimiento Fallido',
             errorPriority:'La prioridad puede ser 0 o 1',
             fields: {
                 institutionId: 'Intitución',
@@ -829,7 +830,8 @@ const messages = {
                 pacServerId: 'PAC Destino',
                 result: 'Resultado',
                 status:'Estado',
-                priorityMax:'Prioridad Máxima'
+                priorityMax:'Prioridad Máxima',
+                beginOfMove: 'Fecha de inicio de movimiento'
             }
         },
         hierarchicalunittypes: {

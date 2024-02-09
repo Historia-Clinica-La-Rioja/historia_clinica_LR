@@ -9,6 +9,7 @@ import {
     ReferenceField,
     SimpleShowLayout,
     SelectField,
+    DateField,
     useRedirect
 } from 'react-admin';
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -60,13 +61,15 @@ const MoveStudiesShow = (props) => (
             <ReferenceField link={false} source="institutionId" reference="institutions">
                 <TextField source="name" />
             </ReferenceField>
+            <DateField source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
             <TextField source="imageId" />
             <TextField source="sizeImage" />
             <TextField source="result" />
             <SelectField source="status" choices={[
                { id: 'PENDING', name: 'resources.movestudies.pending' },
                { id: 'FINISHED', name: 'resources.movestudies.finished' },
-               { id: 'MOVING', name: 'resources.movestudies.moving' }
+               { id: 'MOVING', name: 'resources.movestudies.moving' },
+               { id: 'FAILED', name: 'resources.movestudies.failed' }
             ]} />
 
             <ReferenceField link={false} source="pacServerId"  reference="pacservers">

@@ -4,7 +4,9 @@ import {
     List,
     TextField,
     ReferenceField,
-    SelectField
+    SelectField,
+    DateField,
+    TextInput
 } from 'react-admin';
 
 
@@ -17,12 +19,14 @@ const MoveStudiesList = props => {
                 <ReferenceField link={false} source="institutionId" reference="institutions">
                     <TextField source="name" />
                 </ReferenceField>
+                <DateField source="beginOfMove" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }}/>
                 <TextField source="imageId" />
 
                 <SelectField source="status" choices={[
                     { id: 'PENDING', name: 'resources.movestudies.pending' },
                     { id: 'FINISHED', name: 'resources.movestudies.finished' },
-                    { id: 'MOVING', name: 'resources.movestudies.moving' }
+                    { id: 'MOVING', name: 'resources.movestudies.moving' },
+                    { id: 'FAILED', name: 'resources.movestudies.failed' }
                 ]} />
                 <TextField source="result" />
                 <TextField source="sizeImage" />
