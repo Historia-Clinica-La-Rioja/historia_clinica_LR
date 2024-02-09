@@ -21,6 +21,7 @@ import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/util
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -211,10 +212,26 @@ export class StudyComponent implements OnInit {
 		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [serviceRequestId], PrescriptionTypes.STUDY);
 	}
 
+	confirmDeleteStudy(studyToDelete: DiagnosticReportInfoDto): void {
+		const dialogConfirmDeleteStudy = this.dialog.open(ConfirmDialogComponent,
+			{
+				data: {
+					title: 'ambulatoria.paciente.studies.dialog.TITLE_DELETE_STUDY_CONFIRM',
+					okButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE',
+					cancelButtonLabel: 'ambulatoria.paciente.problemas.nueva_opened_confirm_dialog.CANCEL_BUTTON',
+					showMatIconError: true,
+				}
+			}
+		);
+		dialogConfirmDeleteStudy.afterClosed().subscribe( result => {
+			if (result) this.deleteStudy(studyToDelete)
+		});
+	}
+
 	deleteStudy(studyToDelete: DiagnosticReportInfoDto): void {
 		let deleteQuery = this.sameOrderStudies.has(studyToDelete.serviceRequestId) ?
-			this.sameOrderStudies.get(studyToDelete.serviceRequestId).map(report => this.prescripcionesService.deleteStudy(this.patientId, report.diagnosticInformation.id))
-			: this.prescripcionesService.deleteStudy(this.patientId, studyToDelete.id);
+		this.sameOrderStudies.get(studyToDelete.serviceRequestId).map(report => this.prescripcionesService.deleteStudy(this.patientId, report.diagnosticInformation.id))
+		: this.prescripcionesService.deleteStudy(this.patientId, studyToDelete.id);
 		forkJoin(deleteQuery).subscribe(
 			() => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');

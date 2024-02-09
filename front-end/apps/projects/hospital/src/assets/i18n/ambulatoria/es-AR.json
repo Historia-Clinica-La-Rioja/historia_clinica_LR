@@ -654,6 +654,9 @@
                     "OTHER_PROCEDURES_AND_PRACTICES": "Otros procedimientos y prácticas",
                     "ADVICE": "Asesoramiento",
                     "EDUCATION": "Educación"
+                },
+                "dialog": {
+                    "TITLE_DELETE_STUDY_CONFIRM": "¿Seguro que desea eliminar el estudio?"
                 }
             },
             "internacion": {
