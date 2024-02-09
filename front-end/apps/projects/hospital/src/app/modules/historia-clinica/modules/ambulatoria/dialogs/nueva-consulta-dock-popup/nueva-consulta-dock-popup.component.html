@@ -182,7 +182,7 @@
 		</app-new-consultation-expansion-section>
 		<app-new-consultation-expansion-section id="solicitud-referencia" 
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
-			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [collapsed]="!showWarningViolenceSituation">
+			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [(collapsed)]="collapsedReferenceRequest">
 			<div fxLayout="column" fxLayoutGap="2vh" #referenceRequest>
 				<app-include-previous-data-question *ngIf="showWarningViolenceSituation" 
 					[question]="'historia-clinica.include-previous-data-question.violence-situations.QUESTION'

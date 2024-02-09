@@ -16,7 +16,7 @@ import net.pladema.snowstorm.controller.dto.SnomedEclDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
 import net.pladema.snowstorm.controller.dto.SnomedTemplateDto;
-import net.pladema.snowstorm.domain.IsSnomedConceptEclRelated;
+import net.pladema.snowstorm.domain.GetSnomedConceptEclRelated;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnomedTemplateSearchItemBo;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
@@ -65,7 +65,7 @@ public class SnowstormController {
 
 	private ObjectMapper objectMapper;
 
-	private IsSnomedConceptEclRelated isSnomedConceptEclRelated;
+	private GetSnomedConceptEclRelated getSnomedConceptEclRelated;
 
     @GetMapping(value = CONCEPTS)
     public SnomedSearchDto getConceptsWithResultCount(
@@ -101,11 +101,11 @@ public class SnowstormController {
 	}
 
 	@GetMapping(value = "/concept-related-ecl")
-	public Boolean areConceptsECLRelated(@RequestParam(value = "snomedConcepts") String snomedConcepts, @Param("ecl") SnomedECL ecl) throws JsonProcessingException {
+	public List<SharedSnomedDto> areConceptsECLRelated(@RequestParam(value = "snomedConcepts") String snomedConcepts, @Param("ecl") SnomedECL ecl) throws JsonProcessingException {
 		LOG.debug("Input parameters -> snomedConcepts {}, ecl {}", snomedConcepts, ecl);
 		List<SharedSnomedDto> parsedSnomeds = objectMapper.readValue(snomedConcepts, objectMapper.getTypeFactory().constructCollectionType(List.class, SharedSnomedDto.class));
 		List<SnomedBo> snomedBos = parsedSnomeds.stream().map(snomed -> new SnomedBo(snomed.getSctid(), snomed.getPt())).collect(Collectors.toList());
-		Boolean result = isSnomedConceptEclRelated.run(snomedBos, ecl);
+		List<SharedSnomedDto> result = getSnomedConceptEclRelated.run(snomedBos, ecl).stream().map(concept -> new SharedSnomedDto(concept.getSctid(), concept.getPt())).collect(Collectors.toList());
 		LOG.debug("Output -> {}", result);
 		return result;
 	}

@@ -88,6 +88,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	readonly SEVERITY_CODES = SEVERITY_CODES;
 	collapsedAnthropometricDataSection = false;
 	collapsedRiskFactorsSection = false;
+	collapsedReferenceRequest = true;
 	isEnablePopUpConfirm: boolean = true;
 
 	snowstormServiceNotAvailable = false;
@@ -223,9 +224,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.touchedConfirm = true;
 		}
 			this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
-				if (res) {
-					this.dataName = problems.map(p=> ` "${p.pt}"`)
+				if (res.length) {
+					this.dataName = res.map(p=> ` "${p.pt}"`);
 					this.showWarningViolenceSituation = true;
+					this.collapsedReferenceRequest = false;
 					setTimeout(() => {
 						this.sectionReference.nativeElement.scrollIntoView({ behavior: 'smooth' });
 					}, 200);

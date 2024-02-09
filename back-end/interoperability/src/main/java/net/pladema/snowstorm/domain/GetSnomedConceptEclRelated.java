@@ -10,37 +10,26 @@ import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
 @Service
-public class IsSnomedConceptEclRelated {
+public class GetSnomedConceptEclRelated {
 
 	private SnomedGroupRepository snomedGroupRepository;
 
-	public Boolean run(List<SnomedBo> concepts, SnomedECL ecl) {
+	public List<SnomedBo> run(List<SnomedBo> concepts, SnomedECL ecl) {
 		log.debug("Input parameters -> concepts {}, ecl {}", concepts, ecl);
-		boolean result = conceptIsRelatedWithEcl(concepts, ecl);
+		List<SnomedBo> result = concepts.stream().filter(concept -> conceptIsRelatedWithEcl(concept, ecl)).collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private boolean conceptIsRelatedWithEcl(List<SnomedBo> concepts, SnomedECL ecl) {
-		boolean result = false;
-		Iterator<SnomedBo> iterator = concepts.iterator();
-		while (iterator.hasNext() && !result)
-			result = checkEclConceptRelation(ecl, iterator, result);
-		return result;
-	}
-
-	private boolean checkEclConceptRelation(SnomedECL ecl, Iterator<SnomedBo> iterator, boolean result) {
-		SnomedBo concept = iterator.next();
+	private boolean conceptIsRelatedWithEcl(SnomedBo concept, SnomedECL ecl) {
 		Integer isRelated = snomedGroupRepository.isEclRelatedBySnomedConceptIdAndTerm(concept.getSctid(), concept.getPt(), ecl.name());
-		if (isRelated != null)
-			result = true;
-		return result;
+		return isRelated != null;
 	}
 
 }
