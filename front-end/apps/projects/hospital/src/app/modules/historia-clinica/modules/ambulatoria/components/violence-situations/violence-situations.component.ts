@@ -22,8 +22,9 @@ import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 export class ViolenceSituationsComponent implements OnInit {
 
 	constructor(private readonly dockPopupService: DockPopupService,
-				private route: ActivatedRoute,
-				private violenceSituationReportFacadeService: ViolenceReportFacadeService) { }
+		private route: ActivatedRoute,
+		private violenceSituationReportFacadeService: ViolenceReportFacadeService,
+		private readonly dateFormatPipe: DateFormatPipe) { }
 
 	patientId: number;
 	violenceListHeader: SummaryHeader = VIOLENCE_SITUATION_LIST;
@@ -33,7 +34,6 @@ export class ViolenceSituationsComponent implements OnInit {
 	showSeeAll: boolean = true;
 	selectedViolenceEvolution: DetailedInformation;
 	viewDateDtoPipe: ViewDateDtoPipe = new ViewDateDtoPipe();
-	dateFormatPipe: DateFormatPipe = new DateFormatPipe();
 
 	ngOnInit(): void {
 		this.route.paramMap.subscribe(
@@ -97,7 +97,7 @@ export class ViolenceSituationsComponent implements OnInit {
 					title: evolution.professionalFullName
 				},
 				{
-					title: `${this.parseDate(evolution.createdOn)} hs`
+					title: `${this.parseDate(evolution.createdOn)}`
 				},
 			]
 		}
