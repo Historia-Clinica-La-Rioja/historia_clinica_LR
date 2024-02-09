@@ -7,17 +7,17 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.outpatient.application.port.OutpatientConsultationStorage;
+import net.pladema.clinichistory.outpatient.application.port.OutpatientConsultationCipresStorage;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBasicDataBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryStorage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,12 +25,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class OutpatientConsultationStorageImpl implements OutpatientConsultationStorage {
-
-	private static final Integer LIMIT = 500;
+public class OutpatientConsultationCipresStorageImpl implements OutpatientConsultationCipresStorage {
 
 	@Value("${app.cipres.consultations.days.ago:7}")
 	private Integer DAYS_AGO;
+
+	@Value("${app.cipres.consultations.quantity:500}")
+	private Integer LIMIT;
 	
 	private final OutpatientConsultationSummaryStorage outpatientConsultationSummaryStorage;
 

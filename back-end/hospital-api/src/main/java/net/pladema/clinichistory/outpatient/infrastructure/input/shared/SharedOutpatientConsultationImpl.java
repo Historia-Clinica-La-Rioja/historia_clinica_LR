@@ -12,16 +12,14 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedRiskFactorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.outpatient.application.port.OutpatientConsultationStorage;
+import net.pladema.clinichistory.outpatient.application.port.OutpatientConsultationCipresStorage;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBasicDataBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientPatientBo;
 
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -29,12 +27,12 @@ import java.util.stream.Collectors;
 @Service
 public class SharedOutpatientConsultationImpl implements SharedOutpatientConsultationPort {
 
-	private final OutpatientConsultationStorage outpatientConsultationStorage;
+	private final OutpatientConsultationCipresStorage outpatientConsultationCipresStorage;
 
 	@Override
 	public List<OutpatientConsultationDto> getOutpatientConsultationsToCipres() {
 		log.debug("fetch consultations to create");
-		List<OutpatientBasicDataBo> consultations = outpatientConsultationStorage.getOutpatientConsultationsToCipres();
+		List<OutpatientBasicDataBo> consultations = outpatientConsultationCipresStorage.getOutpatientConsultationsToCipres();
 		List<OutpatientConsultationDto> result = consultations
 				.stream()
 				.map(this::mapToOutpatientConsultationDto)
