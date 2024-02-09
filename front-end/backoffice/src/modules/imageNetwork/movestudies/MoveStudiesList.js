@@ -6,14 +6,21 @@ import {
     ReferenceField,
     SelectField,
     DateField,
-    TextInput
+    TextInput,
+    Filter,
+    SelectInput
 } from 'react-admin';
-
+import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
+const StudyFilter = props =>(
+    <Filter {...props}>
+        <TextInput source="imageId" />
+    </Filter>
+);
 
 const MoveStudiesList = props => {
 
     return (
-        <List {...props} bulkActionButtons={false} hasCreate={false}>
+        <List {...props} bulkActionButtons={false} filters={<StudyFilter />} hasCreate={false}>
             <Datagrid rowClick={"show"}>
 
                 <ReferenceField link={false} source="institutionId" reference="institutions">
