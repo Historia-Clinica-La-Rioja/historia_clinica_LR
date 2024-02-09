@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
+
 import java.util.Date;
 
 @Getter
@@ -46,4 +48,8 @@ public class MoveStudiesBO {
 	private Integer institutionId;
 
 	private String domainPac;
+
+	private Date beginOfMove;
+
+	private Date endOfMove;
 }
