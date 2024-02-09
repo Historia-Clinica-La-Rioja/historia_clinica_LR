@@ -26,7 +26,7 @@ public interface DiagnosticReportRepository extends SGXAuditableEntityJPAReposit
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo(" +
-			"dr.id, d.sourceId, dr.healthConditionId, s_hc.sctid, s_hc.pt, hc.cie10Codes, s_dr.sctid, s_dr.pt, dr.observations) " +
+			"dr.id, d.sourceId, dr.healthConditionId, s_hc.sctid, s_hc.pt, hc.cie10Codes, s_dr.sctid, s_dr.pt) " +
 			"FROM DiagnosticReport dr " +
 			"JOIN DocumentDiagnosticReport ddr ON (dr.id = ddr.pk.diagnosticReportId) " +
 			"JOIN Document d ON (ddr.pk.documentId = d.id) " +

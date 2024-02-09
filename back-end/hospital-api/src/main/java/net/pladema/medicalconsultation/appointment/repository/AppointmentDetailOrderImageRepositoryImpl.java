@@ -49,7 +49,7 @@ public class AppointmentDetailOrderImageRepositoryImpl implements AppointmentDet
 	@Transactional(readOnly = true)
 	public AppointmentOrderDetailImageBO getOrderTranscribedDetailImage(Integer appointmentId) {
 
-		String sqlString = "SELECT aoi.transcribed_order_id, '', tsr.creation_date, tsr.healthcare_professional_name " +
+		String sqlString = "SELECT aoi.transcribed_order_id, tsr.observations, tsr.creation_date, tsr.healthcare_professional_name " +
 				"FROM {h-schema}appointment_order_image aoi " +
 				"JOIN {h-schema}transcribed_service_request tsr ON aoi.transcribed_order_id = tsr.id " +
 				"WHERE  aoi.appointment_id = :appointmentId";

@@ -31,7 +31,7 @@ public class DiagnosticReportBo extends ClinicalTerm {
 	private Integer sourceId;
 
     public DiagnosticReportBo(Integer id, Integer encounterId, Integer healthConditionId, String healthConditionSctid, String healthConditionPt,
-                              String cie10Codes, String diagnosticReportSctid, String diagnosticReportPt, String observations) {
+                              String cie10Codes, String diagnosticReportSctid, String diagnosticReportPt) {
         this.setId(id);
         this.encounterId = encounterId;
         this.healthConditionId = healthConditionId;
@@ -39,7 +39,6 @@ public class DiagnosticReportBo extends ClinicalTerm {
         this.healthCondition.setId(this.healthConditionId);
         this.healthCondition.setCie10codes(cie10Codes);
         this.setSnomed(new SnomedBo(diagnosticReportSctid, diagnosticReportPt));
-        this.observations = observations;
     }
 
     public String getDiagnosticReportSnomedPt() {

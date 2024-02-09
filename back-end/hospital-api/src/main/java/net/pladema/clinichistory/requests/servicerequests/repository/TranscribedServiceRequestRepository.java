@@ -16,7 +16,7 @@ public interface TranscribedServiceRequestRepository extends JpaRepository<Trans
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo(" +
-			"dr.id, tsr.id, dr.healthConditionId, s_hc.sctid, s_hc.pt, hc.cie10Codes, s_dr.sctid, s_dr.pt, dr.observations) " +
+			"dr.id, tsr.id, dr.healthConditionId, s_hc.sctid, s_hc.pt, hc.cie10Codes, s_dr.sctid, s_dr.pt) " +
 			"FROM TranscribedServiceRequest tsr " +
 			"JOIN TranscribedServiceRequestDiagnosticReport tsrdr ON (tsr.id = tsrdr.pk.transcribedServiceRequestId) " +
 			"JOIN DiagnosticReport dr ON (tsrdr.pk.diagnosticReportId = dr.id) " +
@@ -35,7 +35,7 @@ public interface TranscribedServiceRequestRepository extends JpaRepository<Trans
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo(" +
 			"tsr.id, tsr.patientId, tsr.healthcareProfessionalName, tsr.institutionName, tsr.creationDate, " +
-			"'') " +
+			"tsr.observations) " +
 			"FROM TranscribedServiceRequest tsr " +
 			"WHERE tsr.id = :orderId ")
 	Optional<TranscribedServiceRequestBo> getTranscribedServiceRequest(@Param("orderId") Integer orderId);

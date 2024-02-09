@@ -111,7 +111,8 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
 		TranscribedServiceRequest newTranscribedServiceRequest = new TranscribedServiceRequest(
 				transcribedServiceRequestBo.getHealthcareProfessionalName(),
 				transcribedServiceRequestBo.getInstitutionName(),
-				transcribedServiceRequestBo.getPatientId()
+				transcribedServiceRequestBo.getPatientId(),
+				transcribedServiceRequestBo.getObservations()
 		);
 		return transcribedServiceRequestRepository.save(newTranscribedServiceRequest);
 	}
@@ -125,8 +126,6 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
 			diagnosticReport.setPatientId(transcribedServiceRequestBo.getPatientId());
 			diagnosticReport.setSnomedId(getSnomedId(diagnosticReportBo.getSnomed()));
 			diagnosticReport.setHealthConditionId(healthConditionBo.getId());
-
-			diagnosticReport.setObservations(transcribedServiceRequestBo.getObservations());
 
 			diagnosticReport = diagnosticReportRepository.save(diagnosticReport);
 			diagnosticReportBo.setId(diagnosticReport.getId());

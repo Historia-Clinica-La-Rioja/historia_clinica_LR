@@ -496,3 +496,37 @@ databaseChangeLog:
           - dropColumn:
               tableName: transcribed_service_request
               columnName: study_id
+
+    - changeSet:
+        id: addColumn-observations-transcribed_service_request
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: transcribed_service_request
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: observations
+                    type: text
+
+    - changeSet:
+        id: update-observations-transcribed_service_request-diagnostic_report
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                UPDATE transcribed_service_request tsr 
+                  SET observations = (SELECT dr.observations
+                                      FROM transcribed_service_request_diagnostic_report tsrdr
+                                      JOIN diagnostic_report dr ON (tsrdr.diagnostic_report_id = dr.id)
+                                      WHERE tsr.id = tsrdr.transcribed_service_request_id);
+
+    - changeSet:
+        id: dropColumn-observations-diagnostic_report
+        author: mromero
+        changes:
+          - dropColumn:
+              tableName: diagnostic_report
+              columnName: observations
+

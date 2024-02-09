@@ -42,9 +42,13 @@ public class TranscribedServiceRequest {
     @Column(name = "creation_date")
     private LocalDateTime creationDate = LocalDateTime.now();
 
-    public TranscribedServiceRequest(String healthcareProfessionalName, String institutionName, Integer patientId) {
+    @Column(name = "observations", columnDefinition = "TEXT")
+    private String observations;
+
+    public TranscribedServiceRequest(String healthcareProfessionalName, String institutionName, Integer patientId, String observations) {
         this.healthcareProfessionalName = healthcareProfessionalName;
         this.institutionName = institutionName;
         this.patientId = patientId;
+        this.observations = observations;
     }
 }
