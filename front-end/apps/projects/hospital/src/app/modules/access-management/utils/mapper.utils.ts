@@ -1,4 +1,4 @@
-import { ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
+import { CareLineDto, ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component";
 import { getPriority, getState, getAppointmentState } from "./reference.utils";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
@@ -70,6 +70,18 @@ export const practiceToTypeaheadOption = (practice: SharedSnomedDto): TypeaheadO
 export const specialtiesToTypeaheadOptions = (specialties: ClinicalSpecialtyDto[]): TypeaheadOption<any>[] => {
     return specialties.map(practice => specialtyToTypeaheadOption(practice));
 }
+
+export const careLinesToTypeaheadOptions = (careLines: CareLineDto[]): TypeaheadOption<any>[] => {
+    return careLines.map(careLine => careLineToTypeaheadOption(careLine));
+}
+
+export const careLineToTypeaheadOption = (careLine: CareLineDto): TypeaheadOption<any> => {
+    return {
+        compareValue: careLine.description,
+        value: careLine.id
+    }
+}
+
 
 export const specialtyToTypeaheadOption = (specialty: ClinicalSpecialtyDto): TypeaheadOption<any> => {
     return {

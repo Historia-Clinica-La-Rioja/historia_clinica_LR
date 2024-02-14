@@ -10,6 +10,7 @@ import { PracticesService } from '@api-rest/services/practices.service';
 import { forkJoin } from 'rxjs';
 import { DashboardFiltersMapping, setReportFilters } from '@access-management/constants/reference-dashboard-filters';
 import { dateMinusDays } from '@core/utils/date.utils';
+import { CareLineService } from '@api-rest/services/care-line.service';
 
 const MAX_DAYS = 90;
 
@@ -31,6 +32,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly practiceService: PracticesService,
 		private readonly changeDetectorRef: ChangeDetectorRef,
+		private readonly careLineService: CareLineService,
 	) { }
 
 	ngOnInit(): void {
@@ -113,9 +115,10 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 
 		const clinicalSpecialties$ = this.clinicalSpecialtyService.getAll();
 		const practices$ = this.practiceService.getAll();
+		const careLines$ = this.careLineService.getCareLines();
 
-		forkJoin([clinicalSpecialties$, practices$]).subscribe(([clinicalSpecialties, practices]) =>
-			this.filters = setReportFilters(practices, clinicalSpecialties));
+		forkJoin([clinicalSpecialties$, practices$, careLines$]).subscribe(([clinicalSpecialties, practices, careLines]) =>
+			this.filters = setReportFilters(practices, clinicalSpecialties, careLines));
 	}
 
 }

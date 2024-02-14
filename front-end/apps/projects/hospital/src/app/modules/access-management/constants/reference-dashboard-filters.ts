@@ -1,7 +1,7 @@
-import { SharedSnomedDto, ClinicalSpecialtyDto } from "@api-rest/api-model";
+import { SharedSnomedDto, ClinicalSpecialtyDto, CareLineDto } from "@api-rest/api-model";
 import { filter } from "@presentation/components/filters-select/filters-select.component";
 import { FilterTypeahead, FiltersType } from "@presentation/components/filters/filters.component";
-import { practicesToTypeaheadOptions, specialtiesToTypeaheadOptions } from "@access-management/utils/mapper.utils";
+import { careLinesToTypeaheadOptions, practicesToTypeaheadOptions, specialtiesToTypeaheadOptions } from "@access-management/utils/mapper.utils";
 import { ATTENTION_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, REGULATION_OPTIONS } from "@access-management/constants/reference";
 
 export enum EDashboardFilters {
@@ -12,7 +12,8 @@ export enum EDashboardFilters {
     PRACTICE = 'practice',
     SPECIALTY = 'specialty',
     IDENTIFICATION_NUMBER = 'identificationNumber',
-    REGULATION_STATES = 'regulationState'
+    REGULATION_STATES = 'regulationState',
+    CARE_LINE = 'careLine',
 }
 
 export const DashboardFiltersMapping = {
@@ -26,7 +27,7 @@ export const DashboardFiltersMapping = {
     [EDashboardFilters.REGULATION_STATES]: 'regulationStateId',
 }
 
-export const setReportFilters = (practices: SharedSnomedDto[], clinicalSpecialties: ClinicalSpecialtyDto[]): FiltersType => {
+export const setReportFilters = (practices: SharedSnomedDto[], clinicalSpecialties: ClinicalSpecialtyDto[], careLines: CareLineDto[]): FiltersType => {
     const filterSelects: filter[] = [
         {
             key: EDashboardFilters.CLOSURE_TYPE,
@@ -47,7 +48,7 @@ export const setReportFilters = (practices: SharedSnomedDto[], clinicalSpecialti
             key: EDashboardFilters.REGULATION_STATES,
             name: "access-management.search_references.REGULATION_STATES",
             options: REGULATION_OPTIONS,
-        },
+        }
     ];
 
     const filterTypeahead: FilterTypeahead[] = [
@@ -63,6 +64,13 @@ export const setReportFilters = (practices: SharedSnomedDto[], clinicalSpecialti
             typeaheadOption: {
                 key: EDashboardFilters.SPECIALTY,
                 options: specialtiesToTypeaheadOptions(clinicalSpecialties)
+            }
+        },
+		{
+            name: "access-management.search_references.CARE_LINE",
+            typeaheadOption: {
+                key: EDashboardFilters.CARE_LINE,
+                options: careLinesToTypeaheadOptions(careLines)
             }
         },
     ];
