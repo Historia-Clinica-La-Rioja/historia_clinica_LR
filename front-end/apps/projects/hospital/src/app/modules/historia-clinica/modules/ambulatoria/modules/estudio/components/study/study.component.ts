@@ -225,6 +225,7 @@ export class StudyComponent implements OnInit {
 					okButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE',
 					cancelButtonLabel: 'ambulatoria.paciente.problemas.nueva_opened_confirm_dialog.CANCEL_BUTTON',
 					showMatIconError: true,
+					okBottonColor: 'warn'
 				}
 			}
 		);
