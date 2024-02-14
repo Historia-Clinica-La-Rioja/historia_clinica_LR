@@ -93,7 +93,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		if (!this.externalInformation) {
 			this.setClinicalSpecialtiesTypeaheadOptions();
 			this.setPractices();
-		} 
+		}
 		else this.setReferenceInformation();
 	}
 
@@ -200,6 +200,10 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	onPageChange($event) {
 		this.emptyAppointmentsFiltered = this.emptyAppointments.slice($event.pageIndex * $event.pageSize, $event.pageIndex * $event.pageSize + $event.pageSize);
+	}
+
+	clearSearchAppointment() {
+		this.clearLists();
 	}
 
 	clearInformation() {

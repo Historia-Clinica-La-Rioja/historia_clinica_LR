@@ -13,7 +13,7 @@
 						[translate]="'turnos.OPTIONAL'"></span>
 				</div>
 				<app-typeahead [titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
-					[options]="aliasTypeaheadOptions" [externalSetValue]="externalSetValueSpecialty" 
+					[options]="aliasTypeaheadOptions" [externalSetValue]="externalSetValueSpecialty"
 					[disabled]="externalInformation?.disabledInput.specialty" (selectionChange)="setClinicalSpecialty($event)">
 				</app-typeahead>
 
@@ -33,7 +33,7 @@
 
 		<div fxLayout="column" fxLayoutGap="16px">
 			<span class="category-title" [translate]="'turnos.MODALITY_ATTENTION'"></span>
-			<mat-radio-group formControlName="modality">
+			<mat-radio-group formControlName="modality" (change)="clearSearchAppointment()">
 				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
 					translate}}</mat-radio-button>
 				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION"

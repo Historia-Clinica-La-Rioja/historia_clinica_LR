@@ -25,7 +25,7 @@
 	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column">
 		<div fxLayout="column" fxLayoutGap="5px" fxFlex="100">
 			<strong [translate]="'turnos.MODALITY_ATTENTION'"></strong>
-			<mat-radio-group formControlName="modality">
+			<mat-radio-group formControlName="modality" (change)="resetResults()">
 				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
 					translate}}</mat-radio-button>
 				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION"
