@@ -19,23 +19,13 @@
 					[disabled]="dashboardService.disabledDashboardActions" [max]="today"></app-date-range-picker>
 				<mat-error *ngIf="showValidation">{{'access-management.search_references.PERIOD_VALIDATIONS' | translate}}</mat-error>
 			</div>
-
-
 			<div filters>
 				<form  class="form" [formGroup]="filterByDocument" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start">
 					<mat-form-field appearance="outline">
 						<mat-label>{{'access-management.search_references.DOCUMENT_SEARCH' | translate}}</mat-label>
 						<input matInput formControlName="description">
 					</mat-form-field>
-					<div>
-						<button id="search-by-document" mat-flat-button color="primary" matSuffix (click)="searchByDocument()">
-							<mat-icon>search</mat-icon>
-							<span class="uppercase" [translate]="'buttons.SEARCH'"></span>
-						</button>
-					</div>
-
 				</form>
-
 			</div>
 		</app-filters>
 	</div>

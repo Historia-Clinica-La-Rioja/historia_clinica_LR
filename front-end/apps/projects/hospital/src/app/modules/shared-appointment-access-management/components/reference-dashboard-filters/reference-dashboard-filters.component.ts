@@ -69,6 +69,7 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 	}
 
 	setFilters(selectedFilters: SelectedFilters) {
+		this.searchByDocument();
 		let appliedFilters: DashboardFilters = {} as DashboardFilters;
 
 		const results = this.concatFilters(selectedFilters);
@@ -85,7 +86,6 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 
 	searchByDocument() {
 		this.dashboardService.dashboardFilters = this.setDocumentFilter(this.dashboardService.dashboardFilters);
-		this.updatePaginatorAndReports();
 	}
 
 	private setDocumentFilter(dashboardFilters: DashboardFilters): DashboardFilters {
