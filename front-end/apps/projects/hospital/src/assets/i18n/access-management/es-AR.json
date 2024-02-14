@@ -66,7 +66,10 @@
 				"approval_actions": {
 					"CANCEL": "cancelar solicitud",
 					"CANCEL_SUCCESS": "Se cancelo la solicitud exitosamente",
-					"CANCEL_ERROR": "Error al cancelar la solicitud"
+					"CANCEL_ERROR": "Error al cancelar la solicitud",
+					"CONFIRMATION_CANCEL_TITLE": "¿Estás seguro que desea cancelar la solicitud de referencia?",
+					"CONFIRMATION_CANCEL_BUTTON_CONFIRM": "SI, CANCELAR",
+					"CONFIRMATION_CANCEL_BUTTON_CANCEL": "NO, REGRESAR"
 				}
 			}
 		},

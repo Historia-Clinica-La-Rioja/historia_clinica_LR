@@ -1,8 +1,9 @@
 import { ReportCompleteDataPopupComponent } from '@access-management/dialogs/report-complete-data-popup/report-complete-data-popup.component';
 import { DashboardService } from '@access-management/services/dashboard.service';
 import { Component, Input } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -16,20 +17,36 @@ export class ApprovalActionsComponent {
 
 	constructor(
 		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
+		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
 		private readonly dashboardService: DashboardService,
 	) { }
 
 	cancel() {
-		this.institutionalReferenceReportService.cancelReference(this.referenceId).subscribe({
-			next: (response) => {
-				this.snackBarService.showSuccess('access-management.search_references.reference.approval_actions.CANCEL_SUCCESS');
-				this.dashboardService.updateReports();
-				this.dialogRef.close();
-			},
-			error: (_) => this.snackBarService.showError('access-management.search_references.reference.approval_actions.CANCEL_ERROR')
-		});
+		const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
+			data: {
+				title: 'access-management.search_references.reference.approval_actions.CONFIRMATION_CANCEL_TITLE',
+				okButtonLabel: 'access-management.search_references.reference.approval_actions.CONFIRMATION_CANCEL_BUTTON_CONFIRM',
+				cancelButtonLabel: 'access-management.search_references.reference.approval_actions.CONFIRMATION_CANCEL_BUTTON_CANCEL',
+				showMatIconError: true,
+				okBottonColor: 'warn'
+			}
+		})
+		confirmDialog.afterClosed().subscribe(
+			cancelReference => {
+				if (cancelReference) {
+					this.institutionalReferenceReportService.cancelReference(this.referenceId).subscribe({
+						next: (response) => {
+							this.snackBarService.showSuccess('access-management.search_references.reference.approval_actions.CANCEL_SUCCESS');
+							this.dashboardService.updateReports();
+							this.dialogRef.close();
+						},
+						error: (_) => this.snackBarService.showError('access-management.search_references.reference.approval_actions.CANCEL_ERROR')
+					});
+				}
+			}
+		)
 	}
 
 }
