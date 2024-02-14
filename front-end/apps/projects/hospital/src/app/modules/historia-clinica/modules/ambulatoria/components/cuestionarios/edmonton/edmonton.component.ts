@@ -3,6 +3,7 @@ import { EdmontonService } from '@api-rest/services/edmonton.service';
 import Swal from 'sweetalert2';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CreateQuestionnaireDTO, QuestionnaireAnswerDTO } from '@api-rest/api-model';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edmonton',
@@ -41,6 +42,7 @@ export class EdmontonComponent {
   constructor(
     private edmontonService: EdmontonService,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialog: MatDialog 
   ){
     this.patientId = data.patientId;
   }
@@ -287,6 +289,7 @@ export class EdmontonComponent {
   enviarFormulario(): void {
     const datos: CreateQuestionnaireDTO = this.construirDatos();
     this.edmontonService.createEdmonton(this.patientId, datos).subscribe();
+    this.dialog.closeAll();
   }
  
 }
