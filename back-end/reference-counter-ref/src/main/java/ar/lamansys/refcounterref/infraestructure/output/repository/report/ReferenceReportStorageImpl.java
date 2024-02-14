@@ -99,7 +99,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		condition.append("(".concat(dateFilterAndCommonData));
 		condition.append(sharedCondition);
 		if (filter.getHealthcareProfessionalId() == null)
-			condition.append("AND ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) OR cl.classified IS FALSE))");
+			condition.append("AND ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL))");
 		else {
 			condition.append(" AND oc.doctor_id = ").append(filter.getHealthcareProfessionalId());
 			condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) AND");
