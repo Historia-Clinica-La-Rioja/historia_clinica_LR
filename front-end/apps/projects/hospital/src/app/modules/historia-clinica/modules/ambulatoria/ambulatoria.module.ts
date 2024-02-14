@@ -81,6 +81,7 @@ import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.
 import { GetFrailComponent } from './components/cuestionarios/frail-scale/get-frail/get-frail.component';
 import { LatestStudiesComponent } from '@historia-clinica/components/emergente/pop-up/latest-studies/latest-studies.component';
 import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-fisico/desempeno-fisico.component';
+import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fisico/input-desempeno/input-desempeno.component';
 
 @NgModule({
 	declarations: [
@@ -143,7 +144,8 @@ import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-f
 		FrailScaleComponent,
 		GetFrailComponent,
 		LatestStudiesComponent,
-		DesempenoFisicoComponent
+		DesempenoFisicoComponent,
+  InputDesempenoComponent
 
 	],
 	imports: [
