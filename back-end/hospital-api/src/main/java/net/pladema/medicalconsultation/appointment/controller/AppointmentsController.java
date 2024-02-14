@@ -14,6 +14,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
@@ -25,6 +28,7 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateB
 
 import net.pladema.staff.controller.dto.ProfessionalDto;
 
+import org.apache.pdfbox.contentstream.operator.state.Save;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -183,6 +187,8 @@ public class AppointmentsController {
 	private final CreateAppointmentLabel createAppointmentLabel;
 	
 	private final ReassignAppointment reassignAppointment;
+
+	private final SharedBookingPort sharedBookingPort;
 
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
@@ -862,6 +868,17 @@ public class AppointmentsController {
 		}
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
+	}
+
+	@PostMapping("/third-party")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	@ResponseStatus(HttpStatus.CREATED)
+	public SavedBookingAppointmentDto createThirdPartyAppointment(@PathVariable("institutionId") Integer institutionId,
+													  @RequestBody BookingDto bookingDto){
+		log.debug("Input parameters -> institutionId {}, bookingDto {}", institutionId, bookingDto);
+		SavedBookingAppointmentDto result = sharedBookingPort.makeBooking(bookingDto);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }
