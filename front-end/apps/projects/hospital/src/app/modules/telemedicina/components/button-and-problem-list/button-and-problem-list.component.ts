@@ -3,9 +3,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { momentFormat, DateFormat } from '@core/utils/moment.utils';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { Problema } from '@historia-clinica/services/problemas.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ProblemConceptSearchDialogComponent } from '@historia-clinica/dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
@@ -32,13 +30,9 @@ export class ButtonAndProblemListComponent implements OnInit {
 		});
 		this.consultationProblemsService.problems$.subscribe(problemesData => {
 			this.problems = problemesData.map(
-				(problema: Problema) => {
+				(problema: AmbulatoryConsultationProblem) => {
 					return {
-						severity: problema.codigoSeveridad,
-						chronic: problema.cronico,
-						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
 						snomed: problema.snomed,
-						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
 					};
 				}
 			)
@@ -49,6 +43,7 @@ export class ButtonAndProblemListComponent implements OnInit {
 
 
 	addProblem(): void {
+		this.consultationProblemsService.setShowInitialDate(false);
 		this.dialog.open(ProblemConceptSearchDialogComponent, {
 			data: {
 				ambulatoryConsultationProblemsService: this.consultationProblemsService,
