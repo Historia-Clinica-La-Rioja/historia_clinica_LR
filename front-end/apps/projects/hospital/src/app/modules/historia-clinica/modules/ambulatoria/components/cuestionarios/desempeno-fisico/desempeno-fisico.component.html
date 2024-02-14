@@ -49,12 +49,13 @@
             </mat-radio-group>
 
 
-            <div class="counter" id="CT1" *ngIf="!isCounterDisabled()">
-                <label for="number">Tiempo en segundos:</label>
-                <input id="73" type="number" name="Num" [(ngModel)]="counterA1" value="4A" min="0" class="chart" />
-              </div>
-              
+            <!-- CONTADOR DESDE INPUT-DESEMPENO.COMPONENT -->
 
+                 <app-input-desempeno *ngIf="!isCounterDisabled()" class="counter" [(ngModel)]="selectedoptionA" [(counterValue)]="counterA1"
+                    (optionChange)="onInputDesempenoChange($event, counterA1, 'A')"
+                    (counterChange)="onInputDesempenoChange(selectedoptionA, $event, 'A')"></app-input-desempeno>
+                
+  
             <!-- SEGUNDA CONSULTA -->
 
             <div>
@@ -82,9 +83,8 @@
 
 
             <div class="counter" id="CT2" *ngIf="!isCounterDisabled2()">
-                <label for="number">Tiempo en segundos:</label>
+                <label for="75">Tiempo en segundos:</label>
                 <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" value="B2" min="0" class="chart" />
-
             </div>
 
             <!-- TERCERA CONSULTA -->
@@ -107,8 +107,8 @@
             <div class="counter2" id="CT3" name="counter3"
                 *ngIf="!isCounterDisabled3() && !isCounterDisabledCounterC()">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="77" type="number" [(ngModel)]="counterB2" value="4C" (change)="calculePoints()"
-                    class="chart" name="Num" min="0" value="B2" />(Máx.15)
+                <input id="77" type="number" [(ngModel)]="counterB2" value="4C" (change)="calculePoints()" class="chart"
+                    name="Num" min="0" value="B2" />(Máx.15)
 
             </div>
 
@@ -144,8 +144,8 @@
 
             <div class="counter3" id="CT4" name="counter4" *ngIf="!isCounterDisabled4()">
                 <label for="number">Tiempo en segundos:</label>
-                <input type="number" [(ngModel)]="counterC2" (change)="calculePoints()" class="chart"
-                    name="Num" id="80" value="D4" min="0" />(Máx.15)
+                <input type="number" [(ngModel)]="counterC2" (change)="calculePoints()" class="chart" name="Num" id="80"
+                    value="D4" min="0" />(Máx.15)
 
 
             </div>
@@ -174,8 +174,8 @@
 
             <div class="counter3" id="CT5" name="counter5" *ngIf="!isCounterDisabled4() && !isCounterDisabled5() ">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="82" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" class="chart"
-                    name="Num" min="0" value="E4" />(Máx.15)
+                <input id="82" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" class="chart" name="Num"
+                    min="0" value="E4" />(Máx.15)
 
             </div>
 
@@ -248,8 +248,8 @@
 
             <div class="counter4" id="CT6" name="counter6" *ngIf="!isCounterDisabled6() && !isCounterDisabled7()">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="86" type="number" [(ngModel)]="counterE1" (change)="calculePoints()" class="chart"
-                    name="Num" min="0" value="F4" />
+                <input id="86" type="number" [(ngModel)]="counterE1" (change)="calculePoints()" class="chart" name="Num"
+                    min="0" value="F4" />
 
             </div>
 

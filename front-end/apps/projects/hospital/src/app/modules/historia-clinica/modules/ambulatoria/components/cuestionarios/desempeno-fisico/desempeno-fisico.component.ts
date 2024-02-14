@@ -51,12 +51,24 @@ export class DesempenoFisicoComponent implements OnInit {
 
   }
 
+  //       CONTADOR DESDE INPUT-DESEMPENO.COMPONENT (NO LLM)
+
+
+  onInputDesempenoChange(option: string, counter: number, inputType: string): void {
+    if (inputType === 'A') {
+      this.selectedoptionA = option;
+      this.counterA1 = counter;
+    } else if (inputType === 'B') {
+      this.selectedoptionB = option;
+      this.counterA2 = counter;
+    }
+  }
+// HASTA AQUI
+
 
   isSubmitDisabled(): boolean {
     return !(
       this.selectedoptionA === '1A'
-
-
     )
   }
 
