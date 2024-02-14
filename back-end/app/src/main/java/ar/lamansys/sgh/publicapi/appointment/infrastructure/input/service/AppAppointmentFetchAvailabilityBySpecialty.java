@@ -16,7 +16,7 @@ public class AppAppointmentFetchAvailabilityBySpecialty implements AppointmentAv
 	private final ApiConsumerCondition apiConsumerCondition;
 
 	@Override
-	public boolean canCheckAvailabilityBySpecialty(Integer institutionId) {
+	public boolean canCheckAvailability(Integer institutionId) {
 		return userSessionStorage.getRolesAssigned().anyMatch(
 				roleAssignment -> roleAssignment.isAssigment(ERole.API_TURNOS, institutionId)
 						|| apiConsumerCondition.isRole(roleAssignment)

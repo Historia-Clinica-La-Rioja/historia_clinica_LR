@@ -1,27 +1,24 @@
 package ar.lamansys.sgh.publicapi.appointment.application;
 
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.publicapi.appointment.application.exception.AppointmentAvailabilityAccessDeniedException;
 import ar.lamansys.sgh.publicapi.appointment.infrastructure.input.service.AppointmentAvailabilityPublicApiPermissions;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
-
 import lombok.AllArgsConstructor;
-
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class FetchAvailabilityBySpecialty {
+public class FetchAvailabilityByProfessional {
 
 	private final SharedBookingPort sharedBookingPort;
 
 	private final AppointmentAvailabilityPublicApiPermissions appointmentAvailabilityPublicApiPermissions;
 
-	public List<ProfessionalAvailabilityDto> run(Integer institutionId, Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId) {
+	public ProfessionalAvailabilityDto run(Integer institutionId, Integer healthcareProfessionalId, Integer clinicalSpecialtyId, Integer practiceId) {
 		assertUserCanAccess(institutionId);
-		return sharedBookingPort.fetchAvailabilityByPractice(institutionId, clinicalSpecialtyId, practiceId, medicalCoverageId);
+		return sharedBookingPort.fetchAvailabilityByPracticeAndProfessional(institutionId, healthcareProfessionalId, clinicalSpecialtyId, practiceId);
 	}
 
 	private void assertUserCanAccess(Integer institutionId) {
@@ -29,6 +26,5 @@ public class FetchAvailabilityBySpecialty {
 			throw new AppointmentAvailabilityAccessDeniedException();
 		}
 	}
-
 
 }
