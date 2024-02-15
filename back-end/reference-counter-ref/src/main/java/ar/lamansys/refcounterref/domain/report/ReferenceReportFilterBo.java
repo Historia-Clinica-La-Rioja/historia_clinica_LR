@@ -57,4 +57,13 @@ public class ReferenceReportFilterBo {
 	@Nullable
 	private Short regulationStateId;
 
+	@Nullable
+	private Integer careLineId;
+
+	@Nullable
+	private Integer institutionalGroupId;
+
+	@Nullable
+	private Integer destinationDepartmentId;
+
 }

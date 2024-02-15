@@ -145,8 +145,20 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			condition.append(" AND igi.deleted IS FALSE ");
 		}
 
+		if (filter.getInstitutionalGroupId() != null) {
+			condition.append(" AND igi.institutional_group_id = ").append(filter.getInstitutionalGroupId());
+			condition.append(" AND igi.deleted IS FALSE ");
+		}
+
+
 		if (filter.getRegulationStateId() != null)
 			condition.append(" AND r.regulation_state_id = ").append(filter.getRegulationStateId());
+
+		if (filter.getCareLineId() != null)
+			condition.append(" AND r.care_line_id = ").append(filter.getCareLineId());
+
+		if (filter.getDestinationDepartmentId() != null)
+			condition.append(" AND de.id = ").append(filter.getDestinationDepartmentId());
 
 		return condition.toString();
 	}
@@ -192,16 +204,19 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
+				"LEFT JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
 				(filter.getAttentionStateId() != null ?
 						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
 				(filter.getManagerUserId() != null ?
-						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
 						"JOIN {h-schema}institutional_group_user igu ON (igi.institutional_group_id = igu.institutional_group_id) " : "") +
 				"LEFT JOIN {h-schema}document d ON (r.service_request_id = d.source_id AND d.type_id = 6)  " +
 				"LEFT JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
 				"LEFT JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id) " +
 				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
-				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
+				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id)" +
+				"LEFT JOIN {h-schema}address a ON (i2.address_id = a.id)" +
+				"LEFT JOIN {h-schema}city c ON (a.city_id = c.id)" +
+				"LEFT JOIN {h-schema}department de ON (c.department_id = de.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
@@ -218,16 +233,20 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
+				"LEFT JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
+
 				(filter.getAttentionStateId() != null ?
 						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
 				(filter.getManagerUserId() != null ?
-						"JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
 						"JOIN {h-schema}institutional_group_user igu ON (igi.institutional_group_id = igu.institutional_group_id) " : "") +
 				"LEFT JOIN {h-schema}document d ON (r.service_request_id = d.source_id AND d.type_id = 6)  " +
 				"LEFT JOIN {h-schema}document_diagnostic_report ddr ON (d.id = ddr.document_id) " +
 				"LEFT JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id) " +
 				"LEFT JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
 				"LEFT JOIN {h-schema}institution i2 ON (r.destination_institution_id = i2.id) " +
+				"LEFT JOIN {h-schema}address a ON (i2.address_id = a.id)" +
+				"LEFT JOIN {h-schema}city c ON (a.city_id = c.id)" +
+				"LEFT JOIN {h-schema}department de ON (c.department_id = de.id) " +
 				"LEFT JOIN {h-schema}identification_type it ON (pe.identification_type_id = it.id) " +
 				"LEFT JOIN {h-schema}care_line cl ON (r.care_line_id = cl.id) " +
 				"LEFT JOIN {h-schema}counter_reference cr ON (r.id = cr.reference_id) " +
