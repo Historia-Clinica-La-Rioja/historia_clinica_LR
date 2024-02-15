@@ -6,10 +6,12 @@ import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { SharedAppointmentAccessManagementModule } from '@shared-appointment-access-management/shared-appointment-access-management.module';
 import { PresentationModule } from '@presentation/presentation.module';
 //Standalone Components
+import { AvailableAppointmentDataComponent } from '@turnos/standalone/components/available-appointment-data/available-appointment-data.component';
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-label/reference-state-label.component';
 import { ViewMedicalHistoryButtonComponent } from '../hsi-components/view-medical-history-button/view-medical-history-button.component';
+import { ToAvailableAppointmentDataPipe } from '@turnos/standalone/pipes/to-available-appointment-data.pipe';
 //components
 import { ApprovalComponent } from './components/approval/approval.component';
 import { ApprovalActionsComponent } from './components/approval-actions/approval-actions.component';
@@ -85,10 +87,12 @@ import { TabsService } from './services/tabs.service';
 		LazyMaterialModule,
 		PresentationModule,
 		SharedAppointmentAccessManagementModule,
-		//Standalone Components
+		//Standalone
+		AvailableAppointmentDataComponent,
 		IdentifierCasesComponent,
 		PatientSummaryComponent,
 		ReferenceStateLabelComponent,
+		ToAvailableAppointmentDataPipe,
 		ViewMedicalHistoryButtonComponent,
 	],
 	exports: [

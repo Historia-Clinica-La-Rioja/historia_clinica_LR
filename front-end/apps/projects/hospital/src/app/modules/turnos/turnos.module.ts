@@ -39,8 +39,10 @@ import { SearchAppointmentsInCareNetworkComponent } from './components/search-ap
 import { SearchCriteriaComponent } from './components/search-criteria/search-criteria.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
 //Standalone Component
+import { AvailableAppointmentDataComponent } from './standalone/components/available-appointment-data/available-appointment-data.component';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-label/reference-state-label.component';
+import { ToAvailableAppointmentDataPipe } from './standalone/pipes/to-available-appointment-data.pipe';
 // dialogs
 import { AppointmentComponent } from './dialogs/appointment/appointment.component';
 import { BlockAgendaRangeComponent } from './dialogs/block-agenda-range/block-agenda-range.component';
@@ -114,8 +116,10 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		SharedAppointmentAccessManagementModule,
 		PresentationModule,
 		//Standalone Components
+		AvailableAppointmentDataComponent,
 		PatientSummaryComponent,
 		ReferenceStateLabelComponent,
+		ToAvailableAppointmentDataPipe
 	],
 	exports: [
 		CalendarProfessionalViewComponent,
