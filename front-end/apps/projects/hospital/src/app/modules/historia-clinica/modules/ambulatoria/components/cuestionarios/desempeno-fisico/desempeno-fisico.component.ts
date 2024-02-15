@@ -35,8 +35,6 @@ export class DesempenoFisicoComponent implements OnInit {
   patientId: number;
   questionnaireId: number;
 
-
-
   constructor(private physicalService: PhysicalPerformanceService,
 
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -47,12 +45,7 @@ export class DesempenoFisicoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
   }
-
-  //       CONTADOR DESDE INPUT-DESEMPENO.COMPONENT (NO LLM)
-
 
   onInputDesempenoChange(option: string, counter: number, inputType: string): void {
     if (inputType === 'A') {
@@ -63,8 +56,10 @@ export class DesempenoFisicoComponent implements OnInit {
       this.counterA2 = counter;
     }
   }
-// HASTA AQUI
 
+  onInputDesempenoChange2(event: any): void {
+    this.counterE1 = event.target.value;
+  }
 
   isSubmitDisabled(): boolean {
     return !(
@@ -111,8 +106,6 @@ export class DesempenoFisicoComponent implements OnInit {
   isCounterDisabled4(): boolean {
     return !(
       this.selectedoptionC !== 'D3'
-
-
     )
 
   }
@@ -151,6 +144,7 @@ export class DesempenoFisicoComponent implements OnInit {
 
     )
   }
+
   calculePoints(): number {
     let balance1 = (this.selectedoptionA === '1A') ? 1 : 0;
     let balance2 = (this.selectedoptionB === '1B') ? 1 : 0;
@@ -212,17 +206,18 @@ export class DesempenoFisicoComponent implements OnInit {
 
 
     let counterE1Points = 0;
-    if (this.counterE1 <= 11.19) {
-      counterE1Points = 4
+     if (this.counterE1 <= 11.19) {
+       counterE1Points = 4
     } else if (this.counterE1 >= 11.2 && this.counterE1 <= 13.69) {
       counterE1Points = 3;
-    } else if (this.counterE1 > 13.69 && this.counterE1 <= 16.69) {
+     } else if (this.counterE1 > 13.69 && this.counterE1 <= 16.69) {
       counterE1Points = 2;
     } else if (this.counterE1 > 16.69 && this.counterE1 <= 60) {
       counterE1Points = 1;
     } else if (this.counterE1 > 60.00) {
       counterE1Points = 0;
     }
+    
 
     let totalScore = balance1 + balance2 + counterB2Points+ counterA1NoPoints + counterA2NoPoints + counterC2NoPoints
       + counterC3Points + counterE1Points;
@@ -492,7 +487,6 @@ export class DesempenoFisicoComponent implements OnInit {
     };
     return datos;
   }
-
 
   enviarFormulario(): void {
     this.physicalService.createPhysical(this.patientId, this.construirDatos()).subscribe();

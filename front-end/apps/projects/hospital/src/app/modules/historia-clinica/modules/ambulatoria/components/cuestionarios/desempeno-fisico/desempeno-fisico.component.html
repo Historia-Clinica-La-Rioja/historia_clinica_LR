@@ -51,11 +51,10 @@
 
             <!-- CONTADOR DESDE INPUT-DESEMPENO.COMPONENT -->
 
-                 <app-input-desempeno *ngIf="!isCounterDisabled()" class="counter" [(ngModel)]="selectedoptionA" [(counterValue)]="counterA1"
-                    (optionChange)="onInputDesempenoChange($event, counterA1, 'A')"
-                    (counterChange)="onInputDesempenoChange(selectedoptionA, $event, 'A')"></app-input-desempeno>
-                
-  
+            <app-input-desempeno *ngIf="!isCounterDisabled()" class="counter" [(ngModel)]="selectedoptionA"
+                [(counterValue)]="counterA1" (optionChange)="onInputDesempenoChange($event, counterA1, 'A')"
+                (counterChange)="onInputDesempenoChange(selectedoptionA, $event, 'A')"></app-input-desempeno>
+
             <!-- SEGUNDA CONSULTA -->
 
             <div>
@@ -146,8 +145,6 @@
                 <label for="number">Tiempo en segundos:</label>
                 <input type="number" [(ngModel)]="counterC2" (change)="calculePoints()" class="chart" name="Num" id="80"
                     value="D4" min="0" />(Máx.15)
-
-
             </div>
 
             <mat-radio-group id="79" name="marcha1" [(ngModel)]="selectedoptionC">
@@ -248,10 +245,9 @@
 
             <div class="counter4" id="CT6" name="counter6" *ngIf="!isCounterDisabled6() && !isCounterDisabled7()">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="86" type="number" [(ngModel)]="counterE1" (change)="calculePoints()" class="chart" name="Num"
-                    min="0" value="F4" />
-
-            </div>
+                <input id="86" type="number"  value="F4" (change)="calculePoints()" [(ngModel)]="counterE1" (change)="onInputDesempenoChange2($event)"
+                    class="chart" />
+             </div>
 
             <!-- RESULTADO FINAL -->
 
