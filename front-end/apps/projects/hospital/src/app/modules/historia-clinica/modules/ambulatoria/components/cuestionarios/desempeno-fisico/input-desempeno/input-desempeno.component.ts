@@ -9,17 +9,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class InputDesempenoComponent {
   @Input() selectedOption: string;
   @Input() counterValue: number;
+
   @Output() optionChange = new EventEmitter<string>();
   @Output() counterChange = new EventEmitter<number>();
   selectedoptionA: string;
 
-  isCounterDisabled(): boolean {
-    return !(
-
-      this.selectedoptionA === '1A' || this.selectedoptionA === '2A'
-
-    )
-  }
+  
 
   onOptionChange(): void {
     this.optionChange.emit(this.selectedOption);
@@ -29,3 +24,4 @@ export class InputDesempenoComponent {
     this.counterChange.emit(this.counterValue);
   }
 }
+
