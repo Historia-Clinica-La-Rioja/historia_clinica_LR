@@ -8,7 +8,7 @@ import com.lowagie.text.DocumentException;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.common.repository.QuestionnaireResponseRepository;
 import net.pladema.questionnaires.general.getpdf.domain.service.GetQuestionnairePdfService;
 
@@ -33,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping
-@Tag(name = "Patient consultation - General", description = "Patient consultation - General")
+@Tag(name = "Patient questionnaires and assessments", description = "Patient questionnaires and assessments")
 public class GetQuestionnairePdfController {
 	private final Logger logger = LoggerFactory.getLogger(GetQuestionnairePdfController.class);
 
@@ -59,7 +59,7 @@ public class GetQuestionnairePdfController {
 			@PathVariable Integer institutionId) throws PDFDocumentException, DocumentException, IOException {
 		logger.debug("input parameter -> questionnaireResponseId: {}", questionnaireResponseId);
 
-		QuestionnaireResponseII response = questionnaireResponseRepository.findById(questionnaireResponseId)
+		QuestionnaireResponse response = questionnaireResponseRepository.findById(questionnaireResponseId)
 				.orElseThrow(() -> new NotFoundException("Questionnaire response not found with id %s"));
 
 		String outputFileName = getQuestionnairePdfService.createQuestionnaireFileName(response);
@@ -77,7 +77,7 @@ public class GetQuestionnairePdfController {
 	}
 
 	private ResponseEntity<InputStreamResource> generatePdfResponse(Map<String, Object> context, String outputFileName, Integer questionnaireId) throws IOException {
-		logger.debug("input parameters -> context: {}, outputFileName {}", context, outputFileName);
+		logger.debug("input parameters -> context: {}, outputFileName {}, questionnaireId: {}", context, outputFileName, questionnaireId);
 		String templateName = "";
 		if (questionnaireId == 1) {
 			templateName = "edmonton_reports";
@@ -87,6 +87,9 @@ public class GetQuestionnairePdfController {
 		}
 		if (questionnaireId == 3) {
 			templateName = "frail_reports";
+		}
+		if (questionnaireId == 4) {
+			templateName = "physicalperformance_reports";
 		}
 
 		FileContentBo fileContentBo = pdfService.generate(templateName, context);

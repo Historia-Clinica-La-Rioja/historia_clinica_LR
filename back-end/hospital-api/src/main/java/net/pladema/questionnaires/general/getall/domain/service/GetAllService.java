@@ -3,12 +3,13 @@ package net.pladema.questionnaires.general.getall.domain.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import net.pladema.person.repository.PersonRepository;
 import net.pladema.person.repository.entity.Person;
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.common.repository.QuestionnaireResponseRepository;
 import net.pladema.staff.repository.HealthcareProfessionalRepository;
 import net.pladema.staff.repository.entity.HealthcareProfessional;
@@ -31,8 +32,10 @@ public class GetAllService {
         this.personRepository = personRepository;
     }
 
-	public List<QuestionnaireResponseII> getResponsesByPatientIdWithDetails(Integer patientId) {
-		return questionnaireResponseRepository.findResponsesWithCreatedByDetails(patientId);
+	public List<QuestionnaireResponse> getResponsesByPatientIdWithDetails(Integer patientId) {
+		Sort sort = Sort.by(Sort.Order.desc("id"));
+
+		return questionnaireResponseRepository.findResponsesWithCreatedByDetails(patientId, sort);
 	}
 
 	public String getFullNameByHealthcareProfessionalId(Integer healthcareProfessionalId) {

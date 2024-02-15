@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import net.pladema.questionnaires.common.domain.QuestionnaireResponseII;
+import net.pladema.questionnaires.common.repository.entity.QuestionnaireResponse;
 import net.pladema.questionnaires.general.getall.domain.service.GetAllService;
 
 
 @RestController
 @RequestMapping
-@Tag(name = "Patient consultation - General", description = "Patient consultation - General")
+@Tag(name = "Patient questionnaires and assessments", description = "Patient questionnaires and assessments")
 public class GetAllController {
 
 	private final Logger logger = LoggerFactory.getLogger(GetAllController.class);
@@ -34,14 +34,14 @@ public class GetAllController {
 
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	@GetMapping("institution/{institutionId}/patient/{patientId}/all-questionnaire-responses")
-	public ResponseEntity<List<QuestionnaireResponseII>> getResponsesByPatientIdWithDetails (
+	public ResponseEntity<List<QuestionnaireResponse>> getResponsesByPatientIdWithDetails (
 			@PathVariable Integer patientId,
 			@PathVariable Integer institutionId
 	) {
 		try {
-			List<QuestionnaireResponseII> responses = getAllService.getResponsesByPatientIdWithDetails(patientId);
+			List<QuestionnaireResponse> responses = getAllService.getResponsesByPatientIdWithDetails(patientId);
 
-			for (QuestionnaireResponseII response : responses) {
+			for (QuestionnaireResponse response : responses) {
 
 				Integer createdByHealthcareProfessionalId = response.getCreatedBy();
 				Integer updatedByHealthcareProfessionalId = response.getUpdatedBy();
