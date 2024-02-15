@@ -22,14 +22,14 @@ export class AvailableAppointmentListComponent {
 
 	readonly pageSizeOptions = PAGE_SIZE_OPTIONS;
 	appointmentsCurrentPage: DiaryAvailableAppointmentsDto[] = [];
-	appointments: DiaryAvailableAppointmentsDto[] = [];
+	appointments: DiaryAvailableAppointmentsDto[] = [];	
 	pageSize: Observable<number>;
 	@Input() showResults: boolean;
 	@Input() practiceId: number;
 	@Input()
 	set availableAppointments(availableAppointments: DiaryAvailableAppointmentsDto[]) {
 		this.appointments = availableAppointments;
-		this.setPageSizeAndLoadFirstPage();
+		this.setPageSizeAndLoadFirstPage();		
 	}
 	@Output() clearSearch = new EventEmitter<void>();
 
@@ -44,8 +44,7 @@ export class AvailableAppointmentListComponent {
 		this.appointmentsCurrentPage = this.appointments.slice(startPage, $event.pageSize + startPage);
 	}
 
-	checkHolidayAndAssign(indexOfAppointment: number) {
-		const appointmentToAssign = this.appointmentsCurrentPage[indexOfAppointment];
+	checkHolidayAndAssign(appointmentToAssign: DiaryAvailableAppointmentsDto) {
 		const date = dateDtoToDate(appointmentToAssign.date);
 		const stringDate = format(date, DateFormat.API_DATE);
 

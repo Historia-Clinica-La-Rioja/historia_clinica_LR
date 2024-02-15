@@ -15,7 +15,8 @@ import { SearchAppointmentsForThirdPartyComponent } from '@call-center/component
 //deps
 import { PresentationModule } from '@presentation/presentation.module';
 //deps standalone
-import { AvailableAppointmentDataComponent } from '@turnos/components-standalone/available-appointment-data/available-appointment-data.component';
+import { AvailableAppointmentDataComponent } from '@turnos/standalone/components/available-appointment-data/available-appointment-data.component';
+import { ToAvailableAppointmentDataPipe } from '@turnos/standalone/pipes/to-available-appointment-data.pipe';
 
 @NgModule({
 	declarations: [
@@ -36,7 +37,8 @@ import { AvailableAppointmentDataComponent } from '@turnos/components-standalone
 		//deps
 		PresentationModule,
 		//Standalone
-		AvailableAppointmentDataComponent
+		AvailableAppointmentDataComponent,
+		ToAvailableAppointmentDataPipe,
 	]
 })
 export class CallCenterModule { }
