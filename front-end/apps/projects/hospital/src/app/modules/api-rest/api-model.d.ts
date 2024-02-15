@@ -1098,6 +1098,7 @@ export interface DiaryAvailableAppointmentsDto {
     jointDiary: boolean;
     openingHoursId: number;
     overturnMode: boolean;
+    practice: SnomedDto;
     professionalFullName: string;
 }
 
@@ -1519,6 +1520,7 @@ export interface EmptyAppointmentDto {
     openingHoursId: number;
     overturnMode: boolean;
     patientId: number;
+    practice: SnomedDto;
 }
 
 export interface EpicrisisDto extends Serializable {

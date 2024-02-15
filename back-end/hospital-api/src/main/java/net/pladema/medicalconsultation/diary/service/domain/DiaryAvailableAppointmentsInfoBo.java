@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,8 @@ public class DiaryAvailableAppointmentsInfoBo {
 	private String doctorOffice;
 
 	private Boolean isJointDiary;
+
+	private SnomedBo practice;
 
 	public DiaryAvailableAppointmentsInfoBo(Integer diaryId, Short appointmentDuration, LocalDate startDate,
 											LocalDate endDate, InstitutionBasicInfoBo institution,

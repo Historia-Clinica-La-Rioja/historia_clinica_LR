@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class EmptyAppointmentBo {
 	private String alias;
 	private String doctorFullName;
 	private Boolean includeNameSelfDetermination = AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS.isActive();
+	private SnomedBo practice;
 
 	public EmptyAppointmentBo(LocalDate date, Integer diaryId, LocalTime hour, Integer openingHoursId, boolean overturnMode, Integer patientId, String doctorsOfficeDescription, String clinicalSpecialtyName,String alias) {
 		this.date = date;

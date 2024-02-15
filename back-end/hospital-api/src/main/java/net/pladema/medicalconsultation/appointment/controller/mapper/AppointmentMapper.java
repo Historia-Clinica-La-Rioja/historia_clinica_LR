@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
@@ -45,7 +46,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointm
 
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class})
+@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class, SnomedMapper.class})
 public interface AppointmentMapper {
 
     @Named("toAppointmentListDto")

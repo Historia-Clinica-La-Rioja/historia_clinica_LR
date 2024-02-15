@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
@@ -37,4 +38,6 @@ public class DiaryAvailableAppointmentsDto {
 	private Integer openingHoursId;
 
 	private boolean overturnMode;
+
+	private SnomedDto practice;
 }

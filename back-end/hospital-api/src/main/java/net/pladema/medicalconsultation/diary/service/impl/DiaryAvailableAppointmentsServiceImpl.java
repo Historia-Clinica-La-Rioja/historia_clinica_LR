@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -77,6 +79,8 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 
 	private final ClinicalSpecialtyRepository clinicalSpecialtyRepository;
 
+	private final SnomedService snomedService;
+
 	@Override
 	public List<DiaryAvailableAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryAppointmentsSearchBo searchCriteria, Integer institutionId) {
 	log.debug("Input parameter -> searchCriteria {}, institutionId {}", searchCriteria, institutionId);
@@ -101,13 +105,21 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 	}
 
 	private List<DiaryAvailableAppointmentsBo> getAvailableAppointmentsBySearchCriteria(DiaryAppointmentsSearchBo searchCriteria, Integer institutionId) {
+		Integer practiceId = searchCriteria.getPracticeId();
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS))
 			searchCriteria.setIncludeNameSelfDetermination(true);
 
 		List<DiaryAvailableAppointmentsInfoBo> diariesInfo = diaryAvailableAppointmentsSearchRepository.getAllDiaryAppointmentsByFilter(searchCriteria);
 
-		if (searchCriteria.getClinicalSpecialtyIds() != null && !searchCriteria.getClinicalSpecialtyIds().isEmpty() && searchCriteria.getPracticeId() == null)
+		if (searchCriteria.getClinicalSpecialtyIds() != null && !searchCriteria.getClinicalSpecialtyIds().isEmpty() && practiceId == null)
 			diariesInfo = diariesInfo.stream().filter( diary -> !diaryService.hasPractices(diary.getDiaryId())).collect(Collectors.toList());
+
+		if (practiceId != null) {
+			diariesInfo.stream().forEach( diary -> {
+				SnomedBo practice = snomedService.getSnomed(practiceId);
+				diary.setPractice(practice);
+			});
+		}
 
 		List<Integer> diaryIds = diariesInfo.stream().map(DiaryAvailableAppointmentsInfoBo::getDiaryId).collect(Collectors.toList());
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(diaryIds, searchCriteria.getInitialSearchDate(), searchCriteria.getEndSearchDate());
@@ -276,6 +288,7 @@ public class DiaryAvailableAppointmentsServiceImpl implements DiaryAvailableAppo
 				.clinicalSpecialty(diary.getClinicalSpecialty())
 				.professionalFullName(diary.getProfessionalFullName())
 				.isJointDiary(diary.getIsJointDiary())
+				.practice(diary.getPractice())
 				.build();
 	}
 

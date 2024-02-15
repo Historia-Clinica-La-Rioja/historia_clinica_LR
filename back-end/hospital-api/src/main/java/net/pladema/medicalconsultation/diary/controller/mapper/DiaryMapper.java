@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableAppointmentsBo;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
@@ -20,7 +21,7 @@ import org.mapstruct.Named;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class, DiaryOpeningHoursMapper.class})
+@Mapper(uses = {LocalDateMapper.class, DiaryOpeningHoursMapper.class, SnomedMapper.class})
 public interface DiaryMapper {
 
     @Named("toOccupationDto")
