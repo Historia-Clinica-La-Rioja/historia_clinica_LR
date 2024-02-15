@@ -1,0 +1,202 @@
+.container {
+    padding: 5%;
+    max-width: 92%;
+    height: 538px;
+
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 2%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 1%;
+    }
+}
+.box {
+    border: 1px solid #e0eef7;
+    box-shadow: 0px 5px 3px 0px rgb(179, 177, 179);
+    padding: 3%;
+
+}
+
+.title1 {
+    text-align: center;
+    background-color: #E0EEF7;
+    color: #2687c5;
+    font-size: 22px;
+
+}
+
+h3 {
+    text-align: center;
+    font-weight: 500;
+
+}
+
+.title-consignas {
+    text-align: left;
+}
+
+
+.tipos {
+    border-radius: 5px;
+    color: #2687c5;
+    padding: 2%;
+    background-color: aliceblue;
+}
+
+.icon {
+    height: 150px;
+}
+
+.intro {
+    font-size: 15px;
+}
+
+p {
+    margin-top: 1;
+    margin-bottom: 1;
+
+}
+
+.requeriment {
+    color: red;
+    padding: 2.5%
+}
+
+.intro-requeriments {
+    margin-top: 2%;
+
+}
+
+.title-test {
+
+    text-align: left;
+    border-radius: 5px;
+    font-size: 18px;
+    color: #2687c5;
+    padding: 2%;
+    background-color: aliceblue;
+
+}
+
+.title-final {
+
+    text-align: center;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #2687c5;
+    padding: 2%;
+    background-color: aliceblue;
+    font-weight: 500;
+
+}
+
+.slogans {
+
+    display: flex;
+}
+
+.slogans2 {
+    display: flex;
+}
+
+
+.counter {
+
+    margin: auto;
+    display: table;
+    position: relative;
+    left: 3px;
+    bottom: 61px;
+}
+
+.counter2 {
+
+    margin: auto;
+    display: table;
+    position: relative;
+    left: 30px;
+    bottom: 33px;
+}
+
+.counter3 {
+
+    padding: 2%;
+    position: relative;
+    right: 12px;
+}
+
+.counter4 {
+
+    padding: 2%;
+    position: relative;
+    right: -137px;
+    bottom: 76px
+}
+
+.radio2 {
+    position: relative;
+    bottom: 99px;
+    right: 60px;
+    margin-left: 20%;
+    display: flex;
+    justify-content: space-evenly;
+
+
+
+}
+
+.radio3 {
+    padding: 2%;
+    position: relative;
+    right: 34%;
+    display: flex;
+    margin-left: 20%;
+    justify-content: space-evenly;
+
+}
+
+
+.radio {
+    display: flex;
+    justify-content: space-evenly;
+    position: relative;
+    margin-left: 20%;
+    bottom: 90px;
+    right: 60px;
+}
+
+
+label {
+
+    margin-right: 20px;
+}
+
+
+.mat-raised-button {
+
+    display: block;
+    margin: 0 auto;
+    margin-top: 5%;
+}
+
+
+.resultado {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+
+}
+
+.chart {
+
+    max-width: 99px;
+    border: 2px solid #2687c5d4;
+    border-radius: 3px;
+    margin: 2px;
+}

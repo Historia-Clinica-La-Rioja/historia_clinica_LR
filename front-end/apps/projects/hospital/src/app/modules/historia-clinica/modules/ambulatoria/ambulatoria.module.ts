@@ -80,6 +80,9 @@ import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frai
 import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
 import { GetFrailComponent } from './components/cuestionarios/frail-scale/get-frail/get-frail.component';
 import { LatestStudiesComponent } from '@historia-clinica/components/emergente/pop-up/latest-studies/latest-studies.component';
+import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-fisico/desempeno-fisico.component';
+import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fisico/input-desempeno/input-desempeno.component';
+
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -135,12 +138,14 @@ import { LatestStudiesComponent } from '@historia-clinica/components/emergente/p
 		PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
 		TablaSapComponent,
-		AdultoMayorComponent,
 		EstudiosPopupComponent,
-		FrailScaleComponent,
+		AdultoMayorComponent,
 		EdmontonComponent,
+		FrailScaleComponent,
 		GetFrailComponent,
-		LatestStudiesComponent
+		LatestStudiesComponent,
+		DesempenoFisicoComponent,
+  InputDesempenoComponent
 
 	],
 	imports: [
