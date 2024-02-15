@@ -80,6 +80,8 @@ import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frai
 import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
 import { GetFrailComponent } from './components/cuestionarios/frail-scale/get-frail/get-frail.component';
 import { LatestStudiesComponent } from '@historia-clinica/components/emergente/pop-up/latest-studies/latest-studies.component';
+import { AntecedentesComponent } from './components/cuestionarios/antecedentes/antecedentes.component';
+import { GetAntecedentesComponent } from './components/cuestionarios/antecedentes/get-antecedentes/get-antecedentes.component';
 @NgModule({
 	declarations: [
 		HomeComponent,
@@ -140,9 +142,10 @@ import { LatestStudiesComponent } from '@historia-clinica/components/emergente/p
 		FrailScaleComponent,
 		EdmontonComponent,
 		GetFrailComponent,
-		LatestStudiesComponent
-
-	],
+		LatestStudiesComponent,
+     	AntecedentesComponent,
+      GetAntecedentesComponent
+ 	],
 	imports: [
 		CommonModule,
 		FormsModule,

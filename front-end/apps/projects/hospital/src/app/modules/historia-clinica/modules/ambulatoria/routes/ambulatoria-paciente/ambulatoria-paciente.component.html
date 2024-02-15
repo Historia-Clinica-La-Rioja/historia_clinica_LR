@@ -283,6 +283,15 @@
 						</mat-tab>
 					</section>
 
+					<mat-tab id="tab_antecedentes">
+						<ng-template mat-tab-label>
+							<span>ANTECEDENTES</span>
+						</ng-template>
+						<ng-template matTabContent>
+							<app-antecedentes></app-antecedentes>
+						</ng-template>
+					</mat-tab>
+
 					<mat-tab *ngFor="let extensionWCTab of extensionWCTabs$ | async" [id]="extensionWCTab.title">
 						<ng-template mat-tab-label>
 							<span>{{extensionWCTab.title | uppercase}}</span>
