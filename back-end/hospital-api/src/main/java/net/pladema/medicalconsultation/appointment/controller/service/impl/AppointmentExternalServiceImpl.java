@@ -349,6 +349,8 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				.genderId(bookingPersonDto.getGenderId())
 				.idNumber(bookingPersonDto.getIdNumber())
 				.lastName(bookingPersonDto.getLastName())
+				.phonePrefix(bookingPersonDto.getPhonePrefix())
+				.phoneNumber(bookingPersonDto.getPhoneNumber())
 				.build();
 	}
 

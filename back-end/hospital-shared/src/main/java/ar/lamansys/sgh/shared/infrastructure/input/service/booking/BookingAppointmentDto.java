@@ -14,6 +14,7 @@ public class BookingAppointmentDto {
     private Integer diaryId;
     private String hour;
     private Integer openingHoursId;
+	private String phonePrefix;
     private String phoneNumber;
     private Integer snomedId;
 	private Integer specialtyId;

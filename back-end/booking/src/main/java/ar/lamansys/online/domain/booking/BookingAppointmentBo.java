@@ -12,6 +12,7 @@ public class BookingAppointmentBo {
     private final String day;
     private final String hour;
     private final Integer openingHoursId;
+	private final String phonePrefix;
     private final String phoneNumber;
     private final Integer coverageId;
     private final Integer snomedId;

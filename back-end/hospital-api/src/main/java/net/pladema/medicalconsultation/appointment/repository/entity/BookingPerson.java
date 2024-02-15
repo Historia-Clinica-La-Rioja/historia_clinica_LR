@@ -49,6 +49,12 @@ public class BookingPerson implements Serializable {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+	@Column(name = "phone_prefix", length = 10)
+	private String phonePrefix;
+
+	@Column(name = "phone_number", length = 20)
+	private String phoneNumber;
+
     public static BookingPerson fromBookingPersonBo(BookingPersonBo person) {
         BookingPerson b = new BookingPerson();
         b.setBirthDate(person.getBirthDate());
@@ -57,6 +63,8 @@ public class BookingPerson implements Serializable {
         b.setLastName(person.getLastName());
         b.setGenderId(person.getGenderId());
         b.setIdentificationNumber(person.getIdNumber());
+		b.setPhoneNumber(person.getPhoneNumber());
+		b.setPhonePrefix(person.getPhonePrefix());
         return b;
     }
 

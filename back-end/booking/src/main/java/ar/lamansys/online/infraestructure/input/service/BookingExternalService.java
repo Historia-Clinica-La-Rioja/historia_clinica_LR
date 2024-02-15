@@ -232,6 +232,7 @@ public class BookingExternalService implements SharedBookingPort {
 				.hour(bookingAppointmentDto.getHour())
 				.openingHoursId(bookingAppointmentDto.getOpeningHoursId())
 				.phoneNumber(bookingAppointmentDto.getPhoneNumber())
+				.phonePrefix(bookingAppointmentDto.getPhonePrefix())
 				.coverageId(bookingAppointmentDto.getCoverageId())
 				.snomedId(bookingAppointmentDto.getSnomedId())
 				.specialtyId(bookingAppointmentDto.getSpecialtyId())
@@ -249,6 +250,8 @@ public class BookingExternalService implements SharedBookingPort {
 				.idNumber(bookingPersonDto.getIdNumber())
 				.genderId(bookingPersonDto.getGenderId())
 				.birthDate(bookingPersonDto.getBirthDate())
+				.phoneNumber(bookingPersonDto.getPhoneNumber())
+				.phonePrefix(bookingPersonDto.getPhonePrefix())
 				.build();
 
 	}

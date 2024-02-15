@@ -603,6 +603,7 @@ export interface BookingAppointmentDto {
     hour: string;
     openingHoursId: number;
     phoneNumber: string;
+    phonePrefix: string;
     snomedId: number;
     specialtyId: number;
 }
@@ -654,6 +655,8 @@ export interface BookingPersonDto {
     genderId: number;
     idNumber: string;
     lastName: string;
+    phoneNumber: string;
+    phonePrefix: string;
 }
 
 export interface BookingProfessionalDto {

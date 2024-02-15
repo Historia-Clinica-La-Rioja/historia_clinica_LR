@@ -61,7 +61,9 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
                 bookingPerson.getFirstName(),
                 bookingPerson.getGenderId(),
                 bookingPerson.getIdNumber(),
-                bookingPerson.getLastName()
+                bookingPerson.getLastName(),
+				bookingPerson.getPhonePrefix(),
+				bookingPerson.getPhoneNumber()
         );
     }
 
@@ -73,7 +75,8 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
                 bookingAppointment.getDiaryId(),
                 bookingAppointment.getHour(),
                 bookingAppointment.getOpeningHoursId(),
-                bookingAppointment.getPhoneNumber(),
+                bookingAppointment.getPhonePrefix(),
+				bookingAppointment.getPhoneNumber(),
                 bookingAppointment.getSnomedId(),
 				bookingAppointment.getSpecialtyId());
     }
