@@ -20,6 +20,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institution.Instituti
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
+import net.pladema.medicalconsultation.appointment.repository.entity.BookingPerson;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
 import net.pladema.medicalconsultation.diary.service.DiaryService;
@@ -154,23 +155,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 			BookingPersonDto bookingPersonDto,
 			String email
 	) {
-		log.debug("Appointment Service -> method: {}", "saveBooking");
-		log.debug("Input parameters -> bookingAppointmentDto {}, bookingPersonDto {}", bookingAppointmentDto, bookingPersonDto);
-		Integer bookingPersonId;
-		if(bookingPersonDto == null) {
-			var b = bookingPersonService.findByEmail(email);
-			if(b.isPresent())
-				bookingPersonId = b.get().getId();
-			else
-				throw new ConstraintViolationException("El mail no existe", Collections.emptySet());
-		}
-		else bookingPersonId = bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
-
+		log.debug("saveBooking -> bookingAppointmentDto {}, bookingPersonDto {}", bookingAppointmentDto, bookingPersonDto);
+		BookingPerson bookingPerson = getBookingPerson(bookingPersonDto);
 		AppointmentBo newAppointmentBo = mapTo(bookingAppointmentDto);
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer appointmentId = newAppointmentBo.getId();
 
-		BookingAppointmentBo bookingAppointmentBo = getBookingAppointmentBo(appointmentId, bookingPersonId);
+		BookingAppointmentBo bookingAppointmentBo = getBookingAppointmentBo(appointmentId, bookingPerson.getId());
 		createBookingAppointmentService.execute(bookingAppointmentBo);
 
 		log.debug(OUTPUT,bookingAppointmentBo);
@@ -178,6 +169,18 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				bookingAppointmentBo.getBookingPersonId(),
 				bookingAppointmentBo.getAppointmentId(),
 				bookingAppointmentBo.getUuid());
+	}
+
+	private BookingPerson getBookingPerson(BookingPersonDto bookingPersonDto) throws RuntimeException {
+		BookingPerson bookingPerson = null;
+		if(bookingPersonDto == null){
+			bookingPerson = bookingPersonService.findByEmail(bookingPersonDto.getEmail()).orElse(null);
+			if (bookingPerson == null)
+				throw new ConstraintViolationException("El mail no existe", Collections.emptySet());
+		} else {
+			return bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
+		}
+		return bookingPerson;
 	}
 
 	@Override
@@ -362,6 +365,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		appointmentBo.setAppointmentStateId(AppointmentState.BOOKED);
 		appointmentBo.setOverturn(false);
 		appointmentBo.setPhoneNumber(bookingAppointmentDto.getPhoneNumber());
+		appointmentBo.setPhonePrefix(bookingAppointmentDto.getPhonePrefix());
 		appointmentBo.setOpeningHoursId(bookingAppointmentDto.getOpeningHoursId());
 		appointmentBo.setSnomedId(bookingAppointmentDto.getSnomedId());
 		appointmentBo.setModalityId((short)1);

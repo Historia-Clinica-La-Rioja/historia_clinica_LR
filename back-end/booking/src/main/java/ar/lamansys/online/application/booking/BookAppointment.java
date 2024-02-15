@@ -25,7 +25,9 @@ public class BookAppointment {
 		}
 		catch (Exception e){
 			log.error(e.getMessage(), e);
+			this.bookingAppointmentStorage.cancelBooking(savedBooking.getUuid());
 		}
 		return savedBooking;
 	}
+
 }

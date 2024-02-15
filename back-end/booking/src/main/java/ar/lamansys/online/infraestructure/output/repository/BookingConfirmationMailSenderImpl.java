@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -47,6 +49,8 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 	private final BookingClinicalSpecialtyJpaRepository bookingClinicalSpecialtyJpaRepository;
 
 	private final FeatureFlagsService featureFlagsService;
+
+	private final SharedInstitutionPort sharedInstitutionPort;
 
 	@Override
 	public void sendEmail(
