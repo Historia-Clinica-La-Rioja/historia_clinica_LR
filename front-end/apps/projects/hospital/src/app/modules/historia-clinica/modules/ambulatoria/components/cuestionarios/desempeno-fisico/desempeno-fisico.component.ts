@@ -59,6 +59,7 @@ export class DesempenoFisicoComponent implements OnInit {
 
   onInputDesempenoChange2(event: any): void {
     this.counterE1 = event.target.value;
+    this.calculePoints(); 
   }
 
   isSubmitDisabled(): boolean {
