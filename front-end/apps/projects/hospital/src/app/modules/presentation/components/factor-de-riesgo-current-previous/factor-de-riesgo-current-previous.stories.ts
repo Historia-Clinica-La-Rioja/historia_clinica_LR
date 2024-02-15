@@ -1,15 +1,15 @@
 import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { FactorDeRiesgoCurrentPreviousComponent } from './factor-de-riesgo-current-previous.component';
 
-import { FactorDeRiesgoComponent } from '../factor-de-riesgo-current/factor-de-riesgo.component';
+import { PresentationModule } from '@presentation/presentation.module';
 
 const meta: Meta<FactorDeRiesgoCurrentPreviousComponent> = {
-	title: 'Example/FactorDeRiesgoCurrentPreviousComponent',
+	title: 'HSI/FactorDeRiesgoCurrentPreviousComponent',
 	component: FactorDeRiesgoCurrentPreviousComponent,
 	tags: ['autodocs'],
 	decorators: [
 		moduleMetadata({
-			declarations: [FactorDeRiesgoComponent, ]
+			imports: [PresentationModule, ]
 		}),
 	],
 };

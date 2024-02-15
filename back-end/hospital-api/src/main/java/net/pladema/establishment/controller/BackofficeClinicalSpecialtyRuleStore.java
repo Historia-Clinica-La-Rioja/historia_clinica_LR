@@ -1,5 +1,6 @@
 package net.pladema.establishment.controller;
 
+import net.pladema.establishment.controller.dto.ERuleLevel;
 import net.pladema.establishment.repository.RuleRepository;
 import net.pladema.establishment.repository.entity.Rule;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
@@ -39,7 +40,7 @@ public class BackofficeClinicalSpecialtyRuleStore implements BackofficeStore<Cli
 		clinicalSpecialty.setClinicalSpecialtyTypeId(ClinicalSpecialtyType.Specialty);
 		if(clinicalSpecialty.withoutName())
 			clinicalSpecialty.setName(null);
-		List<Integer> existingRulesSpecialtyIds = ruleRepository.findAll().stream().map(Rule::getClinicalSpecialtyId).filter(Objects::nonNull).collect(Collectors.toList());
+		List<Integer> existingRulesSpecialtyIds = ruleRepository.findAll().stream().filter(rule -> rule.getLevel().equals(ERuleLevel.GENERAL.getId())).map(Rule::getClinicalSpecialtyId).filter(Objects::nonNull).collect(Collectors.toList());
 		List<ClinicalSpecialty> specialties = clinicalSpecialtyRepository.findAll(
 				buildExample(clinicalSpecialty),
 				PageRequest.of(

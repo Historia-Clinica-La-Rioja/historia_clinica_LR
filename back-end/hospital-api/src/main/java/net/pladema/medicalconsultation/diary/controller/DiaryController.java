@@ -3,8 +3,10 @@ package net.pladema.medicalconsultation.diary.controller;
 import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
 import static java.util.stream.Collectors.groupingBy;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -13,16 +15,27 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.AppointmentMapper;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
+import net.pladema.medicalconsultation.diary.application.GetDailyFreeAppointmentTimes;
+import net.pladema.medicalconsultation.diary.application.GetMonthlyFreeAppointmentDates;
 import net.pladema.medicalconsultation.diary.controller.constraints.DiaryEmptyAppointmentsValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.EditDiaryOpeningHoursValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiaryPeriodValid;
 
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursFreeTimesDto;
+import net.pladema.medicalconsultation.diary.controller.mapper.DiaryOpeningHoursMapper;
+import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
+import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursFreeTimesBo;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.staff.service.HealthcareProfessionalService;
 
@@ -88,6 +101,14 @@ public class DiaryController {
 
 	private final AppointmentMapper appointmentMapper;
 
+	private final DiaryOpeningHoursMapper diaryOpeningHoursMapper;
+
+	private final GetMonthlyFreeAppointmentDates getMonthlyFreeAppointmentDates;
+
+	private final GetDailyFreeAppointmentTimes getDailyFreeAppointmentTimes;
+
+	private final ObjectMapper objectMapper;
+
     public DiaryController(
             DiaryMapper diaryMapper,
             DiaryService diaryService,
@@ -95,7 +116,11 @@ public class DiaryController {
             AppointmentService appointmentService,
 			HealthcareProfessionalService healthcareProfessionalService,
             LocalDateMapper localDateMapper,
-			AppointmentMapper appointmentMapper
+			AppointmentMapper appointmentMapper,
+			DiaryOpeningHoursMapper diaryOpeningHoursMapper,
+			GetMonthlyFreeAppointmentDates getMonthlyFreeAppointmentDates,
+			GetDailyFreeAppointmentTimes getDailyFreeAppointmentTimes,
+			ObjectMapper objectMapper
     ) {
         this.diaryMapper = diaryMapper;
         this.diaryService = diaryService;
@@ -104,6 +129,10 @@ public class DiaryController {
 		this.healthcareProfessionalService = healthcareProfessionalService;
         this.localDateMapper = localDateMapper;
 		this.appointmentMapper = appointmentMapper;
+		this.diaryOpeningHoursMapper = diaryOpeningHoursMapper;
+		this.getMonthlyFreeAppointmentDates = getMonthlyFreeAppointmentDates;
+		this.getDailyFreeAppointmentTimes = getDailyFreeAppointmentTimes;
+		this.objectMapper = objectMapper;
     }
 
     @GetMapping("/{diaryId}")
@@ -295,6 +324,42 @@ public class DiaryController {
 		List<EmptyAppointmentDto> result = emptyAppointments.stream().map(appointmentMapper::toEmptyAppointmentDto).collect(Collectors.toList());
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
+	}
+	
+	@GetMapping("/{diaryId}/monthly-free-appointment-dates")
+	public List<DateDto> getMonthlyFreeAppointmentDates(@PathVariable(name = "institutionId") Integer institutionId,
+														@PathVariable(name = "diaryId") Integer diaryId,
+														@RequestParam(name = "filter") String filter) {
+		try {
+			log.debug("Input parameters -> institutionId {}, diaryId {}, filter {}", institutionId, diaryId, filter);
+			FreeAppointmentSearchFilterBo filterData = appointmentMapper.fromFreeAppointmentSearchFilterDto(objectMapper.readValue(filter, FreeAppointmentSearchFilterDto.class));
+			List<LocalDate> dates = getMonthlyFreeAppointmentDates.run(diaryId, filterData);
+			List<DateDto> result = dates.stream().map(localDateMapper::toDateDto).collect(Collectors.toList());
+			log.debug(OUTPUT, result);
+			return result;
+		}
+		catch (IOException e) {
+			log.error("Error when mapping filters: {}", e.getMessage());
+			return new ArrayList<>();
+		}
+	}
+
+	@GetMapping("/{diaryId}/daily-free-appointment-times")
+	public List<DiaryOpeningHoursFreeTimesDto> getDailyFreeAppointmentTimes(@PathVariable(name = "institutionId") Integer institutionId,
+																			@PathVariable(name = "diaryId") Integer diaryId,
+																			@RequestParam(name = "filter") String filter) {
+		try {
+			log.debug("Input parameters -> institutionId {}, diaryId {}, filter {}", institutionId, diaryId, filter);
+			FreeAppointmentSearchFilterBo filterData = appointmentMapper.fromFreeAppointmentSearchFilterDto(objectMapper.readValue(filter, FreeAppointmentSearchFilterDto.class));
+			List<DiaryOpeningHoursFreeTimesBo> diaryOpeningHoursFreeTimesBos = getDailyFreeAppointmentTimes.run(diaryId, filterData);
+			List<DiaryOpeningHoursFreeTimesDto> result = diaryOpeningHoursMapper.fromDiaryOpeningHoursFreeTimesBoList(diaryOpeningHoursFreeTimesBos);
+			log.debug(OUTPUT, result);
+			return result;
+		}
+		catch (IOException e) {
+			log.error("Error when mapping filters: {}", e.getMessage());
+			return new ArrayList<>();
+		}
 	}
 
 }

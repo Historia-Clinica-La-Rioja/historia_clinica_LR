@@ -1,0 +1,965 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_16
+
+    - changeSet:
+        id: createView-v_user_person_data
+        comment: Create view v_user_person_data
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_user_person_data
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT 
+                up.user_id AS id,
+                u.username AS sub,
+                pe.email AS email,
+                CASE WHEN p.middle_names IS NOT NULL THEN CONCAT(p.first_name, ' ', p.middle_names) ELSE p.first_name END AS given_name,
+                CASE WHEN p.other_last_names IS NOT NULL THEN CONCAT(p.last_name, ' ', p.other_last_names) ELSE p.last_name END AS family_name,
+                pe.cuil AS cuil,
+                it.description AS identification_type,
+                p.identification_number AS identification_number,
+                g.description AS gender
+                FROM users u 
+                LEFT JOIN user_person up on u.id = up.user_id 
+                LEFT JOIN person p ON p.id = up.person_id
+                LEFT JOIN person_extended pe ON pe.person_id = p.id
+                LEFT JOIN identification_type it ON it.id = p.identification_type_id
+                LEFT JOIN gender g ON g.id = p.gender_id;
+
+    - changeSet:
+        id: violence_report-createTable
+        comment: Create table violence_report
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_patient_violence_report
+                      references: patient(id)
+                      nullable: false
+                    name: patient_id
+                    type: integer
+                - column:
+                    constraints:
+                      nullable: false
+                    name: situation_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: evolution_id
+                    type: smallint
+                - column:
+                    name: can_read_and_write
+                    type: boolean
+                - column:
+                    name: has_income
+                    type: boolean
+                - column:
+                    name: works_at_formal_sector
+                    type: boolean
+                - column:
+                    name: has_social_plan
+                    type: boolean
+                - column:
+                    name: has_disability
+                    type: boolean
+                - column:
+                    name: disability_certificate_status_id
+                    type: smallint
+                - column:
+                    name: is_institutionalized
+                    type: boolean
+                - column:
+                    name: institutionalized_details
+                    type: varchar(200)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: lack_of_legal_capacity
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: episode_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: violence_towards_underage_type_id
+                    type: smallint
+                - column:
+                    name: schooled
+                    type: boolean
+                - column:
+                    name: school_level_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: risk_level_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: coordination_inside_health_sector
+                    type: boolean
+                - column:
+                    name: coordination_within_health_system
+                    type: boolean
+                - column:
+                    name: coordination_within_health_institution
+                    type: boolean
+                - column:
+                    name: internment_indicated_status_id
+                    type: smallint
+                - column:
+                    name: coordination_with_other_social_organizations
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: were_previous_episode_with_victim_or_keeper
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_reported
+                    type: boolean
+                - column:
+                    constraints:
+                      nullable: false
+                    name: was_sexual_violence
+                    type: boolean
+                - column:
+                    name: observations
+                    type: varchar(200)
+
+    - changeSet:
+        id: violence_report_keeper-createTable
+        comment: Create table violence_report_keeper
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report_keeper
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report_keeper
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    name: first_name
+                    type: varchar(20)
+                - column:
+                    name: last_name
+                    type: varchar(20)
+                - column:
+                    name: age
+                    type: smallint
+                - column:
+                    name: address
+                    type: varchar(30)
+                - column:
+                    constraints:
+                      foreignKeyName: FK_department_violence_keeper
+                      references: department(id)
+                    name: municipality_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: relationship_with_victim_id
+                    type: smallint
+                - column:
+                    name: other_relationship_with_victim
+                    type: varchar(15)
+
+    - changeSet:
+        id: violence_type-createTable
+        comment: Create table violence_type
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_type
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, snomed_id
+              constraintName: PK_violence_type
+              tableName: violence_type
+              validate: true
+
+    - changeSet:
+        id: violence_modality-createTable
+        comment: Create table violence_modality
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_modality
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, snomed_id
+              constraintName: PK_violence_modality
+              tableName: violence_modality
+              validate: true
+
+    - changeSet:
+        id: violence_report_aggressor-createTable
+        comment: Create table violence_report_aggressor
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: violence_report_aggressor
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_violence_report_aggressor
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    name: first_name
+                    type: varchar(20)
+                - column:
+                    name: last_name
+                    type: varchar(20)
+                - column:
+                    name: age
+                    type: smallint
+                - column:
+                    name: address
+                    type: varchar(30)
+                - column:
+                    constraints:
+                      foreignKeyName: FK_department_violence_aggressor
+                      references: department(id)
+                    name: municipality_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: relationship_with_victim_id
+                    type: smallint
+                - column:
+                    name: other_relationship_with_victim
+                    type: varchar(15)
+                - column:
+                    name: has_guns
+                    type: boolean
+                - column:
+                    name: has_been_treated
+                    type: boolean
+                - column:
+                    name: belongs_to_security_forces
+                    type: boolean
+                - column:
+                    name: in_duty
+                    type: boolean
+                - column:
+                    name: security_force_type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: live_together_status_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: relationship_length_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: violence_frequency_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: criminal_record_status_id
+                    type: smallint
+
+    - changeSet:
+        id: health_system_organization_coordination-createTable
+        comment: Create table health_system_organization_coordination
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: health_system_organization_coordination
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: health_system_organization_id
+                    type: smallint
+                - column:
+                    name: other_health_system_organization
+                    type: varchar(20)
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, health_system_organization_id
+              constraintName: PK_health_system_organization_coordination
+              tableName: health_system_organization_coordination
+              validate: true
+
+    - changeSet:
+        id: health_institution_organization_coordination-createTable
+        comment: Create table health_institution_organization_coordination
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: health_institution_organization_coordination
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: health_institution_organization_id
+                    type: smallint
+                - column:
+                    name: other_health_institution_organization
+                    type: varchar(20)
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, health_institution_organization_id
+              constraintName: PK_health_institution_organization_coordination
+              tableName: health_institution_organization_coordination
+              validate: true
+
+    - changeSet:
+        id: municipal_state_device-createTable
+        comment: Create table municipal_state_device
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: municipal_state_device
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: municipal_state_device_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, municipal_state_device_id
+              constraintName: PK_municipal_state_device
+              tableName: municipal_state_device
+              validate: true
+
+    - changeSet:
+        id: provincial_state_device-createTable
+        comment: Create table provincial_state_device
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: provincial_state_device
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: provincial_state_device_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, provincial_state_device_id
+              constraintName: PK_provincial_state_device
+              tableName: provincial_state_device
+              validate: true
+
+    - changeSet:
+        id: national_state_device-createTable
+        comment: Create table national_state_device
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: national_state_device
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: national_state_device_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, national_state_device_id
+              constraintName: PK_national_state_device
+              tableName: national_state_device
+              validate: true
+
+    - changeSet:
+        id: victim_keeper_report_place-createTable
+        comment: Create table victim_keeper_report_place
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: victim_keeper_report_place
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: report_place_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, report_place_id
+              constraintName: PK_victim_keeper_report_place
+              tableName: victim_keeper_report_place
+              validate: true
+
+    - changeSet:
+        id: institution_report_reason-createTable
+        comment: Create table institution_report_reason
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: institution_report_reason
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: reason_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, reason_id
+              constraintName: PK_institution_report_reason
+              tableName: institution_report_reason
+              validate: true
+
+    - changeSet:
+        id: institution_report_place-createTable
+        comment: Create table institution_report_place
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: institution_report_place
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: report_place_id
+                    type: smallint
+                - column:
+                    name: other_report_place
+                    type: varchar(20)
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, report_place_id
+              constraintName: PK_institution_report_place
+              tableName: institution_report_place
+              validate: true
+
+    - changeSet:
+        id: sexual_violence_action-createTable
+        comment: Create table sexual_violence_action
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: sexual_violence_action
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: violence_report(id)
+                      foreignKeyName: FK_violence_report
+                    name: report_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: action_id
+                    type: smallint
+          - addPrimaryKey:
+              clustered: true
+              columnNames: report_id, action_id
+              constraintName: PK_sexual_violence_action
+              tableName: sexual_violence_action
+              validate: true
+
+    - changeSet:
+        id: violence_report-add-auditable-columns
+        comment: Add auditable data columns to violence_report table
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: addColumn-regulation_state_id-reference and fillColumn-regulation_state_id-reference
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: regulation_state_id
+                    type: smallint
+
+          - sql:
+              sql: |-
+                UPDATE reference
+                SET regulation_state_id = (
+                  SELECT state_id
+                  FROM historic_reference_regulation
+                  WHERE reference.id = historic_reference_regulation.reference_id
+                  ORDER BY historic_reference_regulation.created_on DESC
+                  LIMIT 1
+                )
+
+    - changeSet:
+        id: addColumn-status_id-to-reference
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: reference
+              columns:
+                - column:
+                    name: status_id
+                    type: smallint
+                    defaultValue: 1
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: reference-update
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE reference SET status_id = 2 WHERE deleted = TRUE;
+
+    - changeSet:
+        id: add-metadata-service_request_status
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO service_request_status (id, description) VALUES('89925002', 'Cancelado');
+
+    - changeSet:
+        id: procedure_parameter_type-createTable
+        comment: Create table procedure_parameter_type
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_parameter_type
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_parameter_type
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(50)
+
+    - changeSet:
+        id: procedure_parameter_type-metadata
+        author: mvalin
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO procedure_parameter_type (id, description) VALUES(1, 'Numerico');
+                INSERT INTO procedure_parameter_type (id, description) VALUES(2, 'Texto libre');
+                INSERT INTO procedure_parameter_type (id, description) VALUES(3, 'SNOMED ECL');
+                INSERT INTO procedure_parameter_type (id, description) VALUES(4, 'Lista de opciones');
+
+    - changeSet:
+        id: procedure_parameter-createTable
+        comment: Create table procedure_parameter
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_parameter
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_parameter
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: procedure_template(id)
+                      foreignKeyName: FK_procedure_parameter_procedure_template_id
+                    name: procedure_template_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: loinc_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: order_number
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                      references: procedure_parameter_type(id)
+                      foreignKeyName: FK_procedure_parameter_procedure_parameter_type_id
+                    name: type_id
+                    type: smallint
+                - column:
+                    name: input_count
+                    type: smallint
+                - column:
+                    constraints:
+                      references: snomed_group(id)
+                      foreignKeyName: FK_procedure_parameter_snomed_group_id
+                    name: snomed_group_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: procedure_parameter_unit_of_measure-createTable
+        comment: creation of procedure_parameter_unit_of_measure table
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_parameter_unit_of_measure
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: procedure_parameter(id)
+                      foreignKeyName: FK_procedure_parameter_unit_of_measure_procedure_parameter_id
+                    name: procedure_parameter_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: unit_of_measure(id)
+                      foreignKeyName: FK_procedure_parameter_unit_of_measure_unit_of_measure_id
+                    name: unit_of_measure_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: procedure_parameter_id, unit_of_measure_id
+              constraintName: PK_procedure_parameter_unit_of_measure
+              tableName: procedure_parameter_unit_of_measure
+              validate: true
+
+    - changeSet:
+        id: procedure_parameter_text_option-createTable
+        comment: Create table procedure_parameter_text_option
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: procedure_parameter_text_option
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_parameter_text_option
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: false
+                      references: procedure_parameter(id)
+                      foreignKeyName: FK_procedure_parameter_text_option_procedure_parameter_id
+                    name: procedure_parameter_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: clinic_history_audit-createTable
+        comment: Create table clinic_history_audit
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: clinic_history_audit
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_clinic_history_audit
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_clinic_history_audit_patient
+                    name: patient_id
+                    type: int
+                - column:
+                    name: observations
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                      references: users(id)
+                      foreignKeyName: FK_clinic_history_audit_user
+                    name: user_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_clinic_history_audit_institution
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: access_date
+                    type: datetime
+                - column:
+                    constraints:
+                      nullable: false
+                    name: reason_id
+                    type: smallint
+                - column:
+                    name: scope
+                    type: smallint
+                    constraints:
+                      references: sector_type(id)
+                      foreignKeyName: FK_clinic_history_audit_sector_type
+
+    - changeSet:
+        id: update-create-clinic-history-audit-view
+        comment: create view v_clinic_history_audit
+        author: amurrie
+        changes:
+          - createView:
+              - viewName: v_clinic_history_audit
+              - replaceIfExists:  true
+              - fullDefinition: false
+              - selectQuery: |-
+                  (select cha.id ,per.first_name ,per.last_name , pe.name_self_determination,it.description, per.identification_number ,u.username ,date(cha.access_date) ,cha.reason_id,cha.observations,cha.scope, i.name  
+                   from clinic_history_audit cha
+                   join patient p  on p.id = cha.patient_id
+                   join person per on per.id = p.person_id
+                   join person_extended pe on pe.person_id = per.id  
+                   join institution i on  i.id = cha.institution_id
+                   join users u on u.id = cha.user_id
+                   join identification_type it on it.id = per.identification_type_id)

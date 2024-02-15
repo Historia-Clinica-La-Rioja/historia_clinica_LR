@@ -1,0 +1,50 @@
+<div id="observation-section">
+	<button id="add-observation" *ngIf="!_observation" [disabled]="showEditObservations" mat-button type="button"
+		(click)="setShowEditObservations()" color="primary" onclick="this.blur()">
+		<span>
+			{{'presentation.observations.ADD_OBSERVATION' | translate}}
+		</span>
+	</button>
+
+	<div *ngIf="showEditObservations" fxLayout="column" fxLayoutGap="10px">
+		<div fxLayout="row" fxLayoutAlign="space-between center">
+			<span class="title">
+				{{'presentation.observations.OBSERVATIONS' | translate}}
+			</span>
+
+			<button *ngIf="!editObservations" type="button" mat-icon-button color="primary"
+				(click)="setEditObservations()">
+				<mat-icon class="material-icons-outlined">edit</mat-icon>
+			</button>
+		</div>
+
+		<div *ngIf="editObservations else showInfo">
+			<form [formGroup]="formObservations" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="updateObservation()">
+				<mat-form-field appearance="outline">
+					<textarea formControlName="observation"
+						placeholder="{{'presentation.observations.ADD_OBSERVATION_SUBTITLE' | translate }}"
+						rows="4" matInput type="text">
+					</textarea>
+				</mat-form-field>
+
+				<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="15px">
+					<button mat-stroked-button color="primary" btn-block type="button" (click)="cancelObservation()">
+						<span> {{'turnos.appointment.CANCEL' | translate}}</span>
+					</button>
+					<button mat-flat-button color="primary" btn-block type="button"
+						[disabled]="!formObservations.valid || (disabled$ | async)" (click)="updateObservation()">
+						<span> {{'turnos.appointment.SAVE' | translate}}</span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<ng-template #showInfo>
+		<span> "{{formObservations.value.observation}}" </span>
+		<app-register-editor-info *ngIf="registerEditor"
+			[registerEditor]="registerEditor"
+			[registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
+		</app-register-editor-info>
+	</ng-template>
+</div>

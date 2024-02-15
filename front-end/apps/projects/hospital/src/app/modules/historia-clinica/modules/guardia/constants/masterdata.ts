@@ -11,6 +11,7 @@ export enum Triages {
 	AMARILLO_NIVEL_3 = 3,
 	VERDE_NIVEL_4 = 4,
 	AZUL_NIVEL_5 = 5,
+	GRIS_SIN_TRIAGE = 6
 }
 
 export enum EmergencyCareTypes {

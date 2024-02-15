@@ -3,6 +3,7 @@ package net.pladema.address.service;
 import net.pladema.address.controller.service.domain.DepartmentBo;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface AddressMasterDataService {
 
@@ -24,8 +25,8 @@ public interface AddressMasterDataService {
 
 	DepartmentBo findDepartmentById(Short departmentId);
 
-	<T> Collection<T> getDepartmentsForReference(Integer provinceId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz);
+	<T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz);
 
-	<T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz);
+	<T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceId, Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz);
 
 }

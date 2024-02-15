@@ -32,7 +32,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 	public ProfessionalCompleteBo fetchProfessionalByUserId(Integer userId) {
 		log.debug("fetchProfessionalByUserId -> userId={}", userId);
 		String sqlString = "" +
-				"SELECT hp.id, p.id, p.firstName, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
+				"SELECT hp.id, p.id, p.firstName, p.middleNames, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
 				"FROM HealthcareProfessional AS hp " +
 				"RIGHT JOIN UserPerson AS up ON (up.pk.personId = hp.personId) " +
 				"JOIN Person p ON (up.pk.personId = p.id) " +
@@ -42,7 +42,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		query.setParameter("userId", userId);
 		Object[] authorInfo = (Object[]) query.getSingleResult();
 		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (Integer) authorInfo[1],
-				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5]);
+				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5], (String) authorInfo[6]);
 
 		result.setProfessions(buildProfessions(result.getPersonId()));
 		log.trace("execute result query -> {}", result);
@@ -53,7 +53,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 	public ProfessionalCompleteBo fetchProfessionalById(Integer professionalId) {
 		log.debug("fetchProfessionalById -> professionalId={}", professionalId);
 		String sqlString = "" +
-				"SELECT hp.id, p.id, p.firstName, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
+				"SELECT hp.id, p.id, p.firstName, p.middleNames, p.lastName, pe.nameSelfDetermination, p.otherLastNames " +
 				"FROM HealthcareProfessional AS hp " +
 				"JOIN Person p ON (hp.personId = p.id) " +
 				"JOIN PersonExtended pe ON (p.id = pe.id) " +
@@ -63,7 +63,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		query.setParameter("professionalId", professionalId);
 		Object[] authorInfo = (Object[]) query.getSingleResult();
 		ProfessionalCompleteBo result = new ProfessionalCompleteBo((Integer) authorInfo[0], (Integer) authorInfo[1],
-				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5]);
+				(String) authorInfo[2], (String) authorInfo[3], (String) authorInfo[4], (String) authorInfo[5], (String) authorInfo[6]);
 
 		result.setProfessions(buildProfessions(result.getPersonId()));
 		log.trace("execute result query -> {}", result);

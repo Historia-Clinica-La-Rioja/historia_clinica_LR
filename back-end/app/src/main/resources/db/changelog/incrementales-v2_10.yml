@@ -1,0 +1,304 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_10
+
+    - changeSet:
+        id: update-sector-informer-set-default_values
+        context: "!schema-only"
+        author: mromero
+        changes:
+            - sql:
+                sql: |-
+                    UPDATE sector SET informer = false WHERE informer IS NULL;
+
+    - changeSet:
+        id: update-sector-informer-default
+        author: mromero
+        changes:
+            - sql:
+                sql: |-
+                     ALTER TABLE sector ALTER COLUMN informer SET DEFAULT false;
+
+    - changeSet:
+        id: createTable-institutional_group_user
+        comment: Create table institutional_group_user
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institutional_group_user
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_group_user
+                    name: id
+                    type: int
+                - column:
+                    name: institutional_group_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: user_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: institutional_group_id
+              baseTableName: institutional_group_user
+              constraintName: FK_institutional_group_user_institutional_group_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institutional_group
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: user_id
+              baseTableName: institutional_group_user
+              constraintName: FK_institutional_group_user_user_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+      
+    - changeSet:
+        id: createConsentDocuments-episode-document-types
+        author: fdemuguruza
+        dbms: postgresql
+        changes:
+          - sql: |
+              DELETE FROM episode_document_types WHERE consent_id = 2;
+              DELETE FROM episode_document_types WHERE consent_id = 3;
+              INSERT INTO episode_document_types (description, rich_text_body, consent_id)
+              VALUES ('Consentimiento informado de Internación', 'Estimado(a) paciente,
+              <br />
+              antes de llevar a cabo el procedimiento quirúrgico al que ha sido programado(a), es importante que comprenda y acepte plenamente los detalles de la intervención y los riesgos asociados. Por lo tanto, le solicitamos que lea detenidamente y firme este formulario de consentimiento informado. Procedimiento quirúrgico propuesto: [ Describir el procedimiento quirúrgico específico ]
+              <br />
+              Objetivo de la cirugía: [ Explicar el propósito o el objetivo de la cirugía ]
+              <br />
+              Riesgos y complicaciones:
+                Aunque se espera que esta cirugía sea beneficiosa, es importante tener en cuenta que existen ciertos riesgos y complicaciones asociados. Estos pueden incluir, pero no se limitan a:
+              <br />
+              <ol>
+              <li>Sangrado excesivo durante o después de la cirugía.</li>
+              <li>Infección en el sitio quirúrgico.</li>
+              <li>Reacciones adversas a la anestesia o medicamentos utilizados durante la cirugía.</li>
+              <li>Lesiones a órganos o tejidos adyacentes durante la cirugía.</li>
+              <li>Formación de coágulos sanguíneos.</li>
+              <li>Dolor o malestar persistente después de la cirugía.</li>
+              <li>Resultados estéticos o insatisfactorios.</li>
+              <li>Necesidad de procedimientos adicionales o revisiones quirúrgicas.</li>
+              </ol>
+              <br />
+              Alternativas: Existen alternativas al procedimiento quirúrgico propuesto, como [mencionar las alternativas disponibles]. Sin embargo, es importante tener en cuenta que estas alternativas pueden no proporcionar los mismos resultados o beneficios que la cirugía propuesta.', 2);
+              INSERT INTO episode_document_types (description, rich_text_body, consent_id)
+              VALUES ('Consentimiento informado Quirúrgico', 'Estimado(a) paciente,
+              <br />
+              antes de llevar a cabo el procedimiento quirúrgico al que ha sido programado(a), es importante que comprenda y acepte plenamente los detalles de la intervención y los riesgos asociados. Por lo tanto, le solicitamos que lea detenidamente y firme este formulario de consentimiento informado. Procedimiento quirúrgico propuesto: [ Describir el procedimiento quirúrgico específico ]
+              <br />
+              Objetivo de la cirugía: [ Explicar el propósito o el objetivo de la cirugía ]
+              <br />
+              Riesgos y complicaciones:
+                Aunque se espera que esta cirugía sea beneficiosa, es importante tener en cuenta que existen ciertos riesgos y complicaciones asociados. Estos pueden incluir, pero no se limitan a:
+              <br />
+              <ol>
+              <li>Sangrado excesivo durante o después de la cirugía.</li>
+              <li>Infección en el sitio quirúrgico.</li>
+              <li>Reacciones adversas a la anestesia o medicamentos utilizados durante la cirugía.</li>
+              <li>Lesiones a órganos o tejidos adyacentes durante la cirugía.</li>
+              <li>Formación de coágulos sanguíneos.</li>
+              <li>Dolor o malestar persistente después de la cirugía.</li>
+              <li>Resultados estéticos o insatisfactorios.</li>
+              <li>Necesidad de procedimientos adicionales o revisiones quirúrgicas.</li>
+              </ol>
+              <br />
+              Alternativas: Existen alternativas al procedimiento quirúrgico propuesto, como [mencionar las alternativas disponibles]. Sin embargo, es importante tener en cuenta que estas alternativas pueden no proporcionar los mismos resultados o beneficios que la cirugía propuesta.', 3);
+
+    - changeSet:
+        id: observation_vital_sign-table-patient-data-update
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  row_data RECORD;
+                BEGIN
+                  FOR row_data IN (
+                    SELECT distinct t.id, ece.patient_id 
+                    FROM emergency_care_episode ece
+                    JOIN triage t ON (t.emergency_care_episode_id = ece.id)
+                    JOIN triage_vital_signs tvs ON (tvs.triage_id = t.id)
+                    JOIN observation_vital_sign ovs ON (ovs.id = tvs.observation_vital_sign_id)
+                    WHERE ovs.patient_id IS NULL
+                    AND ece.patient_id IS NOT NULL
+                  ) LOOP
+                    UPDATE observation_vital_sign SET patient_id = row_data.patient_id WHERE id IN (SELECT tvs.observation_vital_sign_id FROM triage_vital_signs tvs WHERE tvs.triage_id = row_data.id);
+                  END LOOP;
+                END $$;
+
+    - changeSet:
+        id: add-incharge_nurse_id-column-bed
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: bed
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: incharge_nurse_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: incharge_nurse_id
+              baseTableName: bed
+              constraintName: FK_incharge_nurse_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+
+    - changeSet:
+        id: createTable-historic_incharge_nurse_bed
+        comment: Create table historic_incharge_nurse_bed
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: historic_incharge_nurse_bed
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_historic_incharge_nurse_bed
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: true
+                    name: incharge_nurse_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: bed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: incharge_nurse_id
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_incharge_nurse_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: created_by
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_created_by_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: updated_by
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_updated_by_bed_users_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: users
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: bed_id
+              baseTableName: historic_incharge_nurse_bed
+              constraintName: FK_bed_id_bed
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: bed
+              validate: true
+        
+    - changeSet:    
+        id: update-document_file-signature_status_id
+        context: "!schema-only"
+        author: mmalyvarni
+        changes:
+          - sql:
+              sql: |-
+                UPDATE document_file SET signature_status_id = -1;

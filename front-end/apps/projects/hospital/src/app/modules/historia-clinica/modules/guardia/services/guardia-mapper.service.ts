@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Triage } from '../components/triage-details/triage-details.component';
-import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateToDateTimeDto, dateDtoToDate, timeDtoToDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
+import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateDtoToDate, timeDtoToDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import {
 	AdministrativeDischargeDto,
 	AMedicalDischargeDto,
@@ -207,7 +207,7 @@ export class GuardiaMapperService {
 			if (riskFactorsValue[key]) {
 				riskFactors[key] = {
 					value: riskFactorsValue[key].value,
-					effectiveTime: dateToDateTimeDto(riskFactorsValue[key].effectiveTime)
+					effectiveTime: dateToDateTimeDtoUTC(riskFactorsValue[key].effectiveTime)
 				};
 			}
 		});
@@ -221,7 +221,7 @@ export class GuardiaMapperService {
 
 		return {
 			value: effectiveObservation.value,
-			effectiveTime: dateToDateTimeDto(effectiveObservation.effectiveTime)
+			effectiveTime: dateToDateTimeDtoUTC(effectiveObservation.effectiveTime)
 		};
 	}
 

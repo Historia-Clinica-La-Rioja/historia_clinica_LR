@@ -59,4 +59,12 @@ public class PatientMedicalCoverageBo {
 		PatientMedicalCoverageBo that = (PatientMedicalCoverageBo) o;
 		return Objects.equals(getId(), that.getId());
 	}
+
+	public String getMedicalCoverageName() {
+		return medicalCoverage != null ? medicalCoverage.getName(): null;
+	}
+
+	public String getConditionValue() {
+		return condition != null ? condition.getValue(): null;
+	}
 }

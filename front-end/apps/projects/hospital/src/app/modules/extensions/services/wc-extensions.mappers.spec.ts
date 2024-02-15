@@ -4,8 +4,8 @@ import { SlotedInfo } from './wc-extensions.service';
 
 const mockSlotedInfo = (componentName: string): SlotedInfo => ({
 	componentName,
-	url: `http://someurl.componentName.com/main.js`,
-});
+	fullUrl: `http://someurl.componentName.com/main.js`,
+} as SlotedInfo);
 
 describe('wc-extensions.mappers.findSlotedInfoById = (wcId) => (slotedInfoList): SlotedInfo', () => {
 	it('Should return undefined if wcId or slotedInfoList is not defined', () => {

@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MasterDataInterface } from '../../../api-rest/api-model';
-import { MedicalConsultationMasterdataService } from '../../../api-rest/services/medical-consultation-masterdata.service';
+import { MasterDataInterface } from '@api-rest/api-model';
+import { MedicalConsultationMasterdataService } from '@api-rest/services/medical-consultation-masterdata.service';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
@@ -24,12 +24,12 @@ export class NewAttentionComponent implements OnInit {
 
 	availableForBooking: boolean;
 	isEnableOnlineAppointments: boolean = false;
-	existsBookeddAppointment = false;
-	existsProtectedAppointments = false;
-	availableForAppoitmentOnline = false;
 	availbleForCareLine = false;
 	isEnableTelemedicina: boolean = false;
-
+	isSpontaneousMedicalAttention = false;
+	showErrorModality: boolean = false;
+	regulationProtectedAppointmentsAllowed = false;
+	isEnableReportReference = false;
 	constructor(
 		public dialogRef: MatDialogRef<NewAttentionComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
@@ -38,11 +38,26 @@ export class NewAttentionComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.featureFlagService.isActive(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS).subscribe(isEnabled => this.isEnableOnlineAppointments = isEnabled);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled)
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO).subscribe(isEnabled => this.isEnableReportReference = isEnabled);
 	}
 
 
 	ngOnInit(): void {
+		this.regulationProtectedAppointmentsAllowed = this.data.regulationProtectedAppointmentsAllowed;
+		this.form = this.formBuilder.group({
+			startingHour: [this.data.start, Validators.required],
+			endingHour: [this.data.end, Validators.required],
+			overturnCount: [this.data.overturnCount, Validators.min(0)],
+			medicalAttentionType: [null, Validators.required],
+			availableForBooking: [this.data?.availableForBooking],
+			protectedAppointmentsAllowed: [this.data?.protectedAppointmentsAllowed],
+			patientVirtualAttentionAllowed: [this.data.patientVirtualAttentionAllowed],
+			secondOpinionVirtualAttentionAllowed: [this.data.secondOpinionVirtualAttentionAllowed],
+			onSiteAttentionAllowed: [this.data.onSiteAttentionAllowed],
+			regulationProtectedAppointmentsAllowed: [this.data.regulationProtectedAppointmentsAllowed],
+		});
+
 		this.medicalConsultationMasterdataService.getMedicalAttention()
 			.subscribe(medicalAttentionTypes => {
 				this.medicalAttentionTypes = medicalAttentionTypes;
@@ -53,18 +68,8 @@ export class NewAttentionComponent implements OnInit {
 					medicalAttentionTypeDefaultValue = this.medicalAttentionTypes[0];
 				}
 				this.form.controls.medicalAttentionType.setValue(medicalAttentionTypeDefaultValue);
+				this.isSpontaneousMedicalAttention = this.form?.value?.medicalAttentionType?.description === this.SPONTANEOUS;
 			});
-		this.form = this.formBuilder.group({
-			startingHour: [this.data.start, Validators.required],
-			endingHour: [this.data.end, Validators.required],
-			overturnCount: [this.data.overturnCount, Validators.min(0)],
-			medicalAttentionType: [null, Validators.required],
-			availableForBooking: [this.data?.availableForBooking],
-			protectedAppointmentsAllowed: [this.data?.protectedAppointmentsAllowed],
-			patientVirtualAttentionAllowed: [this.data.patientVirtualAttentionAllowed],
-			secondOpinionVirtualAttentionAllowed: [this.data.secondOpinionVirtualAttentionAllowed],
-			onSiteAttentionAllowed:[this.data.onSiteAttentionAllowed],
-		});
 
 		this.availableForBooking = this.data.availableForBooking;
 		this.availbleForCareLine = this.data?.hasSelectedLinesOfCare ? this.data.protectedAppointmentsAllowed : false;
@@ -78,11 +83,13 @@ export class NewAttentionComponent implements OnInit {
 		const medicalAttentionType = this.form.controls.medicalAttentionType.value;
 
 		if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
+			this.isSpontaneousMedicalAttention = true;
 			this.form.controls.availableForBooking.setValue(false);
 			this.form.controls.protectedAppointmentsAllowed.setValue(false);
 			this.form.controls.overturnCount.disable();
 			this.form.controls.availableForBooking.disable();
 		} else {
+			this.isSpontaneousMedicalAttention = false;
 			this.form.controls.overturnCount.enable();
 			this.form.controls.availableForBooking.enable();
 		}
@@ -99,12 +106,18 @@ export class NewAttentionComponent implements OnInit {
 				this.form.value.availableForBooking = this.availableForBooking;
 				this.form.value.protectedAppointmentsAllowed = this.availbleForCareLine;
 			}
+			this.form.value.regulationProtectedAppointmentsAllowed = this.regulationProtectedAppointmentsAllowed;
 			this.dialogRef.close(this.form.value);
 		}
 	}
 
-	validModality():boolean{
-		return(this.form.controls.patientVirtualAttentionAllowed.value || this.form.controls.secondOpinionVirtualAttentionAllowed.value || this.form.controls.onSiteAttentionAllowed.value)
+	validModality(): boolean {
+		if (this.form.controls.patientVirtualAttentionAllowed.value || this.form.controls.secondOpinionVirtualAttentionAllowed.value || this.form.controls.onSiteAttentionAllowed.value) {
+			this.showErrorModality = false;
+		} else {
+			this.showErrorModality = true;
+		}
+		return (!this.showErrorModality);
 	}
 
 	closeDialog() {
@@ -129,6 +142,10 @@ export class NewAttentionComponent implements OnInit {
 	changeAvailbleForCareLine() {
 		this.availbleForCareLine = !this.availbleForCareLine;
 	}
+
+	changeAvailbleProtectedByRegulation() {
+		this.regulationProtectedAppointmentsAllowed = !this.regulationProtectedAppointmentsAllowed;
+	}
 }
 
 export interface NewAttentionElements {
@@ -145,6 +162,7 @@ export interface NewAttentionElements {
 	openingHoursId?: number,
 	patientVirtualAttentionAllowed: boolean,
 	secondOpinionVirtualAttentionAllowed: boolean,
-	onSiteAttentionAllowed:boolean,
-	diaryType: EDiaryType
+	onSiteAttentionAllowed: boolean,
+	diaryType: EDiaryType,
+	regulationProtectedAppointmentsAllowed: boolean,
 }

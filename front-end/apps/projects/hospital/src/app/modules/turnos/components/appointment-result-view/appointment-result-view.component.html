@@ -40,7 +40,7 @@
 
     <div fxFlex="20" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px">
 
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" *ngIf="appointment.clinicalSpecialty">
             <mat-icon fontSet="material-icons-outlined">medical_services</mat-icon>
             <span>{{ appointment.clinicalSpecialty.name }}</span>
         </div>

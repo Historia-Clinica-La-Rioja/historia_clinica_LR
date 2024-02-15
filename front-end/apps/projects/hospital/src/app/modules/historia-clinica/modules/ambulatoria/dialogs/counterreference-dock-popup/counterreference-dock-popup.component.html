@@ -3,20 +3,26 @@
 
 		<div id="reference">
 			<mat-card fxLayout="column">
-				<app-colored-label class="reference-label"
-					[description]="'ambulatoria.paciente.reference-notification.REFERENCE_REQUEST' | translate"
-					[color]="Color.RED"></app-colored-label>
+				<div class="reference-label" fxLayoutAlign="start">
+					<app-reference-state-label [reference]="undefined"></app-reference-state-label>
+				</div>
 				<div class="primary" *ngFor="let problem of data.reference.problems" fxLayout="row" fxLayoutGap="10px"
 					fxFlex="30px">
 					<mat-icon color="primary">assignment</mat-icon>
-					<span> {{problem.snomed.pt}} </span>
+					<span>{{problem}}</span>
 				</div>
-				<div class="reference-description" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
-					<span>{{data.reference.careLine.description}}</span>
-					<span>{{data.reference.clinicalSpecialty.name}}</span>
-				</div>
+				<form [formGroup]="formReferenceClosure">
+					<mat-form-field appearance="outline" id="specialties-select">
+						<mat-label>{{'ambulatoria.paciente.reference-notification.SPECIALTY' | translate }}</mat-label>
+						<mat-select #select formControlName="specialty">
+							<mat-option *ngFor="let specialty of professionalSpecialties"
+								[value]="specialty">{{specialty.name}}</mat-option>
+						</mat-select>
+						<mat-error translate="forms.REQUIRED"></mat-error>
+					</mat-form-field>
+				</form>
 
-				<span *ngIf="data.reference.note.description">“{{data.reference.note.description}}”</span>
+				<span *ngIf="data.reference.note">“{{data.reference.note}}”</span>
 
 				<div class="primary" *ngFor="let file of data.reference.files" fxLayout="row">
 					<mat-icon>attachment_icon</mat-icon>
@@ -27,8 +33,8 @@
 
 				<div class="grayText" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center"
 					fxFlex="50px">
-					<span>{{data.reference.professional.firstName}} {{data.reference.professional.lastName}}</span>
-					<span>{{data.reference.referenceDate.day}}/{{data.reference.referenceDate.month}}/{{data.reference.referenceDate.year}}</span>
+					<span>{{data.reference.professionalFullName}}</span>
+					<span>{{data.reference.date | viewDateDto: 'localdatetime' | dateFormat: 'date' }}</span>
 				</div>
 			</mat-card>
 		</div>

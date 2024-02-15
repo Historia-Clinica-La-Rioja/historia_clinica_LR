@@ -41,6 +41,8 @@ public class DocumentType implements Serializable {
 	public static final short TRIAGE = (short) 15;
 	public static final short EMERGENCY_CARE_EVOLUTION_NOTE = (short) 16;
 	public static final short MEDICAL_IMAGE_REPORT = (short) 17;
+	public static final short SURGICAL_HOSPITALIZATION_REPORT = (short) 18;
+	public static final short EMERGENCY_SURGICAL_REPORT = (short) 19;
 
 	@Id
 	@Column(name = "id")

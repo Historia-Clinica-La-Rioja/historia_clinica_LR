@@ -43,6 +43,9 @@ public class DiaryOpeningHours implements Serializable {
 
 	@Column(name = "second_opinion_virtual_attention_allowed")
 	private Boolean secondOpinionVirtualAttentionAllowed;
+
+	@Column(name = "regulation_protected_appointments_allowed")
+	private Boolean regulationProtectedAppointmentsAllowed;
     
     public DiaryOpeningHours(
             Integer diaryId,

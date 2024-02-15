@@ -79,7 +79,7 @@ export class PatientProfileComponent implements OnInit {
 						this.internmentEpisode = internmentEpisodeProcessDto;
 					});
 
-				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+				this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 					.subscribe( emergencyCareEpisodeInProgressDto => {
 						this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 					});
@@ -88,5 +88,10 @@ export class PatientProfileComponent implements OnInit {
 	goToMedicalHistory() {
 		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/ambulatoria/${AppRoutes.PortalPaciente}/${this.patientId}`;
 		this.router.navigate([url]);
+	}
+
+	newAppointment() {
+		const url = `${AppRoutes.Institucion}/${this.contextService.institutionId}/turnos`;
+		this.router.navigate([url], { queryParams: { idPaciente: this.patientId } });
 	}
 }

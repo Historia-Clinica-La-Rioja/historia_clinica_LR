@@ -20,9 +20,9 @@ const MoveStudiesEdit = props => {
                 <ReferenceInput link={false} source="institutionId" reference="institutions" disabled>
                     <SelectInput optionText="name" optionValue="id" />
                 </ReferenceInput>
-                <TextInput source="imageId" disabled/>
+                <TextInput source="imageId"/>
                 <TextInput source="sizeImage" disabled />
-                <TextInput source="result" disabled/>
+                <TextInput source="result"/>
                 <SelectInput source="status" choices={[
                     { id: 'PENDING', name: 'resources.movestudies.pending' },
                     { id: 'FINISHED', name: 'resources.movestudies.finished' },

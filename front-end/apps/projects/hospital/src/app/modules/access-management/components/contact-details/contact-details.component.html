@@ -1,0 +1,10 @@
+<div fxLayout="column" fxLayoutGap="10px">
+    <div fxLayout="column" fxLayoutGap="2px">
+        <span>{{'turnos.appointment.phoneNumber.PHONE_NUMBER' | translate}}</span>
+        <span>{{ phone }}</span>
+    </div>
+    <div fxLayout="column" fxLayoutGap="2px" *ngIf="email">
+        <span>{{'turnos.new-appointment.EMAIL' | translate}}</span>
+        <span>{{ email }}</span>
+    </div>
+</div>

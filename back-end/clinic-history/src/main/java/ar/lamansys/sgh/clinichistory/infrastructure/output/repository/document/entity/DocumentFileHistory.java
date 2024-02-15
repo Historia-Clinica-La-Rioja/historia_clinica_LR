@@ -46,7 +46,7 @@ public class DocumentFileHistory extends SGXAuditableEntity<Long> {
 	@Column(name = "file_path", length = 200, nullable = false)
 	private String filepath;
 
-	@Column(name = "file_name", length = 40, nullable = false)
+	@Column(name = "file_name", length = 60, nullable = false)
 	private String filename;
 
 	@Column(name = "uuid_file", length = 36, nullable = false)
@@ -55,8 +55,11 @@ public class DocumentFileHistory extends SGXAuditableEntity<Long> {
 	@Column(name = "checksum", length = 512)
 	private String checksum;
 
+	@Column(name = "signature_status_id", nullable = false)
+	private Short signatureStatusId;
+
 	public DocumentFileHistory(Long documentId, Integer sourceId, Short sourceTypeId, Short documentType,
-						String filepath, String filename, String uuidFile, String checksum){
+						String filepath, String filename, String uuidFile, String checksum, Short signatureStatusId){
 		this.documentId = documentId;
 		this.sourceId = sourceId;
 		this.sourceTypeId = sourceTypeId;
@@ -65,6 +68,7 @@ public class DocumentFileHistory extends SGXAuditableEntity<Long> {
 		this.filename = filename;
 		this.uuidfile = uuidFile;
 		this.checksum = checksum;
+		this.signatureStatusId = signatureStatusId;
 	}
 	public DocumentFileHistory(DocumentFile df) {
 		this.documentId = df.getId();
@@ -75,6 +79,7 @@ public class DocumentFileHistory extends SGXAuditableEntity<Long> {
 		this.filename = df.getFilename();
 		this.uuidfile = df.getUuidfile();
 		this.checksum = df.getChecksum();
+		this.signatureStatusId = df.getSignatureStatusId();
 	}
 
 }

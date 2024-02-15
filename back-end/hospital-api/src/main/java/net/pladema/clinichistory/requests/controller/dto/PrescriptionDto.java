@@ -36,4 +36,7 @@ public class PrescriptionDto implements Serializable {
 
     @NotEmpty
     private List<@Valid PrescriptionItemDto> items = new ArrayList<>();
+
+	@Nullable
+	private String observations;
 }

@@ -38,6 +38,7 @@ public class CreateEmergencyCareServiceRequestImpl implements CreateEmergencyCar
 				.associatedSourceTypeId(SourceType.EMERGENCY_CARE)
 				.medicalCoverageId(extendedServiceRequestBo.getMedicalCoverageId())
 				.associatedSourceId(episodeId)
+				.observations(extendedServiceRequestBo.getObservations())
 				.build();
 	}
 

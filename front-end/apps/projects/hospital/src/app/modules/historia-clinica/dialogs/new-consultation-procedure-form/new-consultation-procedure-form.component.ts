@@ -33,4 +33,5 @@ export class NewConsultationProcedureFormComponent {
 interface ProcedureData {
   procedureService: ProcedimientosService,
   searchConceptsLocallyFF: boolean,
+  hideDate?: boolean
 }

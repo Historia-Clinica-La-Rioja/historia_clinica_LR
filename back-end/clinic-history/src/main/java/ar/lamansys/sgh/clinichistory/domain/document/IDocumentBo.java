@@ -11,25 +11,31 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.shared.domain.general.AddressBo;
 
 public interface IDocumentBo {
 
     default PatientInfoBo getPatientInfo() {
         return null;
     }
+
+	default AddressBo getInstitutionAddress(){return null;}
 
     default Long getId() {
         return null;
@@ -55,11 +61,11 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-    default List<HealthHistoryConditionBo> getPersonalHistories() {
+    default List<PersonalHistoryBo> getPersonalHistories() {
         return Collections.emptyList();
     }
 
-    default List<HealthHistoryConditionBo> getFamilyHistories() {
+    default List<FamilyHistoryBo> getFamilyHistories() {
         return Collections.emptyList();
     }
 
@@ -119,7 +125,15 @@ public interface IDocumentBo {
 
     default List<DiagnosticReportBo> getDiagnosticReports(){
         return Collections.emptyList();
-    };
+    }
+
+	default TranscribedDiagnosticReportBo getTranscribedDiagnosticReport(){
+		return null;
+	}
+
+	default String getEvolutionNote(){
+		return null;
+	}
 
     default List<DentalActionBo> getDentalActions() {
         return Collections.emptyList();
@@ -143,4 +157,27 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
+	default List<DocumentHealthcareProfessionalBo> getHealthcareProfessionals() { return Collections.emptyList(); }
+
+	default List<DiagnosisBo> getPreoperativeDiagnosis() { return Collections.emptyList(); }
+
+	default List<DiagnosisBo> getPostoperativeDiagnosis() { return Collections.emptyList(); }
+
+	default List<ProcedureBo> getSurgeryProcedures() { return Collections.emptyList(); }
+
+	default List<ProcedureBo> getAnesthesia() { return Collections.emptyList(); }
+
+	default List<ProcedureBo> getCultures() { return Collections.emptyList(); }
+
+	default List<ProcedureBo> getFrozenSectionBiopsies() { return Collections.emptyList(); }
+
+	default List<ProcedureBo> getDrainages() { return Collections.emptyList(); }
+
+	default String getProsthesisDescription() { return null; }
+
+	default String getDescription() { return null; }
+
+    default boolean isTranscribed() {
+        return false;
+    }
 }

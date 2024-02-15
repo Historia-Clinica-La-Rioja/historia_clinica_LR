@@ -5,13 +5,14 @@ import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface  EmergencyCareEpisodeService {
 
-    List<EmergencyCareBo> getAll(Integer institutionId);
+    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId);
 
-    EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
+	EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId);
 
 	EmergencyCareBo getEpisodeSummary(Integer institutionId, Integer episodeId);
 
@@ -36,5 +37,7 @@ public interface  EmergencyCareEpisodeService {
 	boolean isBedOccupiedByEmergencyEpisode(Integer bedId);
 	
 	Boolean hasEvolutionNote(Integer episodeId);
+
+	Integer getEmergencyEpisodeEpisodeIdByDate(Integer institutionId, Integer patientId, LocalDateTime date);
 
 }

@@ -1,0 +1,22 @@
+<div class="container">
+    <p class="title">{{event?.title}}</p>
+
+    <div class="calendar-event info" *ngIf="event.meta?.medicalAttentionType && showInformation">
+        <div fxLayout="row">
+            <mat-icon class="material-icons-outlined modality" *ngIf="!!event.meta.onSiteAttentionAllowed">meeting_room</mat-icon>
+            <mat-icon class="material-icons-outlined modality" *ngIf="!!event.meta.patientVirtualAttentionAllowed">video_call</mat-icon>
+            <mat-icon class="material-icons-outlined modality" *ngIf="!!event.meta.secondOpinionVirtualAttentionAllowed">switch_video</mat-icon>
+        </div>
+
+        <div fxLayout="row" class="text" [ngClass]="event.meta.overturnCount > 0 ? '' : 'grey'">
+            <mat-icon>more_time</mat-icon>
+            <p [translate]="event.meta.overturnCount | showAppointmentOverTurn"
+                [translateParams]="{overturnCount: event.meta.overturnCount}">
+            </p>
+        </div>
+        <div fxLayout="row" class="text" [ngClass]="event.meta.regulationProtectedAppointmentsAllowed || event.meta.protectedAppointmentsAllowed || event.meta.availableForBooking ? '' : 'grey'">
+            <mat-icon class="material-icons-outlined">verified_user</mat-icon>
+            <p [translate]="[event.meta.protectedAppointmentsAllowed, event.meta.availableForBooking, event.meta.regulationProtectedAppointmentsAllowed] | showProtectedAppointment"></p>
+        </div>
+    </div>
+</div>

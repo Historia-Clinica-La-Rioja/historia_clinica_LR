@@ -1,5 +1,12 @@
 package net.pladema.imagenetwork.derivedstudies.service.impl;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.mqtt.application.ports.MqttClientService;
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +28,6 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.scheduledjobs.jobs.MoveStudiesJob;
-import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -129,6 +130,12 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			if (moveStudy.isPresent()) {
 				MoveStudies ms = moveStudy.get();
 				savePacWhereStudyIsHosted.run(new StudyPacBo(ms.getImageId(), ms.getPacServerId()));
+				Optional<String> imageId = appointmentOrderImageService.getImageId(ms.getAppointmentId());
+				if (imageId.isPresent()){
+					if (!imageId.get().equals(ms.getImageId())){
+						appointmentOrderImageService.setImageId(ms.getAppointmentId(), ms.getImageId());
+					}
+				}
 			}
 		}
 
@@ -162,6 +169,17 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			mqttClientService.publish(data);
 		}
 
+	}
+
+	@Override
+	public Integer getInstitutionByAppointmetId(Integer appointmentId) {
+		return moveStudiesRepository.getInstitutionIdByAppointmetId(appointmentId)
+				.orElse(null);
+	}
+
+	@Override
+	public Optional<Integer> getSizeImageByAppointmentId(Integer appointmentId) {
+		return moveStudiesRepository.getSizeImageByAppointmentId(appointmentId);
 	}
 
 	private MoveStudiesBO createMoveStudyBOInstance(MoveStudies moveStudy){

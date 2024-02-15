@@ -2,7 +2,6 @@ package net.pladema.medicalconsultation.appointment.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,17 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
+import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
+import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
+import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
+import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
+import net.pladema.medicalconsultation.appointment.application.ReassignAppointment;
+
+import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
+
+import net.pladema.staff.controller.dto.ProfessionalDto;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -39,7 +48,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalPatientCovera
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -51,6 +59,7 @@ import net.pladema.establishment.controller.dto.HierarchicalUnitDto;
 import net.pladema.establishment.controller.mapper.InstitutionMapper;
 import net.pladema.establishment.service.domain.HierarchicalUnitBo;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
+import net.pladema.medicalconsultation.appointment.application.GetCurrentAppointmentHierarchicalUnit.GetCurrentAppointmentHierarchicalUnit;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentDiary;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointmentState;
@@ -65,6 +74,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEqu
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentListDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.BookedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.DetailsOrderImageDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
@@ -119,7 +129,6 @@ public class AppointmentsController {
 
 	private final MoveStudiesService moveStudiesService;
 
-
 	private final AppointmentValidatorService appointmentValidatorService;
 
 	private final CreateAppointmentService createAppointmentService;
@@ -144,7 +153,7 @@ public class AppointmentsController {
 
 	private final DeriveReportService deriveReportService;
 
-	private final LocalDateMapper dateMapper;
+	private final AssociateReferenceAppointment associateReferenceAppointment;
 
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
@@ -156,6 +165,9 @@ public class AppointmentsController {
 
 	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
 
+
+	private final DetailOrderImageMapper detailOrderImageMapper;
+
 	private final MqttClientService mqttClientService;
 
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
@@ -165,11 +177,15 @@ public class AppointmentsController {
 	@Value("${scheduledjobs.updateappointmentsstate.pastdays:1}")
 	private Long PAST_DAYS;
 
-	private Long MAX_DAYS = 30L;
+	private final Long MAX_DAYS = 90L;
 	private final GetCurrentAppointmentHierarchicalUnit getCurrentAppointmentHierarchicalUnit;
 
+	private final CreateAppointmentLabel createAppointmentLabel;
+	
+	private final ReassignAppointment reassignAppointment;
+
 	@PostMapping
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	@ValidAppointment
 	public ResponseEntity<Integer> create(
 			@PathVariable(name = "institutionId") Integer institutionId,
@@ -179,6 +195,10 @@ public class AppointmentsController {
 		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer result = newAppointmentBo.getId();
+		if (createAppointmentDto.getReferenceId() != null) {
+			boolean alreadyHasPhone = newAppointmentBo.getPhoneNumber() != null;
+			associateReferenceAppointment.run(createAppointmentDto.getReferenceId(), result, alreadyHasPhone);
+		}
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
@@ -403,7 +423,9 @@ public class AppointmentsController {
 						? new ProfessionalPersonDto(
 						appointmentBo.getProfessionalPersonBo().getId(),
 						appointmentBo.getProfessionalPersonBo().getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)))
-						:  null
+						:  null,
+				appointmentBo.getDiaryLabelBo() != null ? new DiaryLabelDto(appointmentBo.getDiaryLabelBo()): null,
+				appointmentBo.getPatientEmail()
 		);
 	}
 
@@ -423,7 +445,9 @@ public class AppointmentsController {
 				institutionMapper.fromInstitutionBasicInfoBo(equipmentAppointmentBo.getDerivedTo()),
 				equipmentAppointmentBo.getReportStatusId(),
 				equipmentAppointmentBo.getStudyName(),
-				equipmentAppointmentBo.getServiceRequestId()
+				equipmentAppointmentBo.getServiceRequestId(),
+				equipmentAppointmentBo.getTranscribedServiceRequestId(),
+				null
 		);
 	}
 
@@ -463,6 +487,7 @@ public class AppointmentsController {
 	private EquipmentAppointmentListDto mapEquipmentData(EquipmentAppointmentBo equipmentAppointmentBo, Map<Integer, BasicPatientDto> patientData) {
 		AppointmentBasicPatientDto appointmentBasicPatientDto = toAppointmentBasicPatientDto(patientData.get(equipmentAppointmentBo.getPatientId()), null, null);
 		EquipmentAppointmentListDto result = appointmentMapper.toEquipmentAppointmentListDto(equipmentAppointmentBo, appointmentBasicPatientDto);
+		result.mapTranscribedOrderAttachedFiles(equipmentAppointmentBo.getTranscribedOrderAttachedFiles());
 		log.debug("AppointmentListDto id result {}", result.getId());
 		log.trace(OUTPUT, result);
 		return result;
@@ -526,7 +551,7 @@ public class AppointmentsController {
 
 
 	@GetMapping("/current-appointment")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR, ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<Boolean> hasNewConsultationEnabled(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@RequestParam(name = "patientId") Integer patientId
@@ -657,17 +682,13 @@ public class AppointmentsController {
 
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	@PutMapping(value = "/{appointmentId}/update-date")
-	public ResponseEntity<Boolean> updateDate(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "appointmentId") Integer appointmentId,
-			@RequestBody UpdateAppointmentDateDto updateAppointmentDate) {
-		log.debug("Input parameters -> institutionId {},appointmentId {}, fullDate {}, openingHoursId {}", institutionId, appointmentId, updateAppointmentDate.getDate(), updateAppointmentDate.getOpeningHoursId());
-		DateTimeDto fullDate = updateAppointmentDate.getDate();
-		LocalDate date = dateMapper.fromDateDto(fullDate.getDate());
-		LocalTime time = dateMapper.fromTimeDto(fullDate.getTime());
-		Integer openingHoursId = updateAppointmentDate.getOpeningHoursId();
-		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, date, time);
-		boolean result = appointmentService.updateDate(appointmentId, date, time, openingHoursId);
+	public ResponseEntity<Boolean> updateDate(@PathVariable(name = "institutionId") Integer institutionId,
+											  @PathVariable(name = "appointmentId") Integer appointmentId,
+											  @RequestBody UpdateAppointmentDateDto updateAppointmentDate) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, updateAppointmentDate {}", institutionId, appointmentId, updateAppointmentDate);
+		UpdateAppointmentDateBo updateAppointmentData = appointmentMapper.fromUpdateAppointmentDateDto(updateAppointmentDate);
+		appointmentValidatorService.validateDateUpdate(institutionId, appointmentId, updateAppointmentData.getDate(), updateAppointmentData.getTime());
+		boolean result = reassignAppointment.run(updateAppointmentData);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
@@ -708,31 +729,45 @@ public class AppointmentsController {
 		BasicDataPersonDto basicPatientDto = basicData.getPerson();
 		BasicPersonalDataDto basicPersonalDataDto = new BasicPersonalDataDto(
 				basicPatientDto.getFirstName(),
+				basicPatientDto.getMiddleNames(),
 				basicPatientDto.getLastName(),
+				basicPatientDto.getOtherLastNames(),
 				basicPatientDto.getIdentificationNumber(),
 				basicPatientDto.getIdentificationTypeId(),
 				phonePrefix,
 				phoneNumber,
 				basicPatientDto.getGender().getId(),
-				basicPatientDto.getNameSelfDetermination()
+				basicPatientDto.getNameSelfDetermination(),
+				null,
+				basicPatientDto.getBirthDate()
 		);
 		return new AppointmentBasicPatientDto(basicData.getId(), basicPersonalDataDto, basicData.getTypeId());
 	}
 
 	@GetMapping("/{patientId}/get-assigned-appointments")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Collection<AssignedAppointmentDto>> getAssignedAppointmentsList(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		LocalDate minDate = LocalDate.now().minusDays(PAST_DAYS);
 		LocalDate maxDate = LocalDate.now().plusDays(MAX_DAYS);
-		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId, minDate, maxDate).stream().map(appointmentAssigned -> (appointmentMapper.toAssignedAppointmentDto(appointmentAssigned))).collect(Collectors.toList());
+		var result = appointmentService.getCompleteAssignedAppointmentInfo(patientId, minDate, maxDate).stream().map(appointmentMapper::toAssignedAppointmentDto).collect(Collectors.toList());
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping("/{identificationNumber}/get-booking-appointments")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public List<BookedAppointmentDto> getBookingAppointmentsList(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "identificationNumber") String identificationNumber) {
+		log.debug("Input parameters -> institutionId {}, identificationNumber {}", institutionId, identificationNumber);
+		List<AppointmentBookingBo> bookedAppointments = appointmentService.getCompleteBookingAppointmentInfo(identificationNumber);
+		List<BookedAppointmentDto> result = appointmentMapper.toBookingAppointmentDtoList(bookedAppointments);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	@GetMapping("/patient/{patientId}/get-medical-coverage")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR, ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<ExternalPatientCoverageDto> getCurrentAppointmentMedicalCoverage(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId) {
@@ -747,7 +782,7 @@ public class AppointmentsController {
 	}
 
 	@GetMapping("/patient/{patientId}/verify-existing-appointments")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<AppointmentShortSummaryDto> getAppointmentFromDeterminatedDate(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "patientId") Integer patientId,
@@ -796,4 +831,40 @@ public class AppointmentsController {
 		}
 		return null;
 	}
+
+	@PostMapping(value = "/{appointmentId}/label")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	public ResponseEntity<Boolean> updateLabel(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "appointmentId") Integer appointmentId,
+			@RequestBody(required = false) Integer diaryLabelId) {
+		log.debug("Input parameters -> institutionId {}, diaryLabelId {}, appointmentId {}", institutionId, diaryLabelId, appointmentId);
+		Boolean result = createAppointmentLabel.execute(diaryLabelId, appointmentId);
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+
+
+	@GetMapping("{appointmentId}/detailOrderImage/transcribed-order/{transcribed}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA, ADMINISTRATIVO_RED_DE_IMAGENES ')")
+	public ResponseEntity<AppointmentOrderDetailImageDto> getOrderDetailImage(@PathVariable(name = "institutionId") Integer institutionId,
+												   @PathVariable(name = "appointmentId") Integer appointmentId,
+												   @PathVariable(name = "transcribed") Boolean isTranscribed
+	)  {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		log.debug("Input parameters -> isTranscribed {}", isTranscribed);
+		AppointmentOrderDetailImageDto result;
+		var bo = this.appointmentOrderImageService.getDetailOrdenImageTechnical(appointmentId, isTranscribed);
+		if (!isTranscribed){
+			ProfessionalDto professionalDto = bo.getIdDoctor() == null ? null :
+					healthcareProfessionalExternalService.findProfessionalByUserId(bo.getIdDoctor());
+			result = this.detailOrderImageMapper.parseToAppointmentOrderDetailDto(bo, professionalDto);
+		}
+		else {
+			result = this.detailOrderImageMapper.parseToAppointmentOrderTranscribedDetailDto(bo);
+		}
+		return ResponseEntity.ok(result);
+	}
+
 }

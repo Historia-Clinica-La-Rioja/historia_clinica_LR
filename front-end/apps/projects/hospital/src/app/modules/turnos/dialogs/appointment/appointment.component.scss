@@ -80,12 +80,6 @@
 	.purple {
 		color: #AA4EF2;
 	}
-
-	.modality{
-		background-color: #EEDAF2;
-		padding: 7px;
-		border-radius: 5px;
-	}
 }
 
 .appointment-details {
@@ -145,6 +139,8 @@
 }
 
 .observation-section {
+	margin-top: 15px;
+
 	a {
 		cursor: pointer;
 	}
@@ -242,6 +238,16 @@ mat-dialog-actions {
 
 .mat-dialog-container {
 	padding-right: 0px;
+}
+
+app-colored-label {
+	margin: .25rem 0 1rem 0;
+	font-weight: 500;
+}
+
+.custom-label-modality{
+	display: flex;
+	justify-content: flex-start;
 }
 
 @media only screen and (max-width: 426px) {

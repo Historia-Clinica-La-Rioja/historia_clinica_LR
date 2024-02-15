@@ -31,10 +31,16 @@ import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
 import carelineproblems from './carelineproblems';
+import carelinerole from './carelinerole';
 import userroles from './userroles';
 import hierarchicalunittypes from './hierarchicalunittypes';
 
-import { ROOT, ADMINISTRADOR } from './roles';
+import {
+    ROOT,
+    ADMINISTRADOR,
+    ADMINISTRADOR_DE_ACCESO_DOMINIO,
+    AUDITORIA_DE_ACCESO,
+} from './roles';
 import snomedconcepts from './snomedconcepts';
 import snomedrelatedgroups from './snomedrelatedgroups';
 import medicalcoverageplans from "./medicalcoverageplans";
@@ -70,8 +76,20 @@ import hierarchicalunitrelationships from "./hierarchicalunitrelationships";
 import hierarchicalunitstaff from "./hierarchicalunitstaff";
 import institutionuserpersons from "./institutionuserpersons";
 import movestudies from './movestudies';
+import vclinichistoryaudit from './vclinichistoryaudit';
+
 import hierarchicalunitsectors from './hierarchicalunitsectors';
 import rules from './rules';
+import institutionalgroups from './institutionalgroups';
+import institutionalgroupinstitutions from './institutionalgroupinstitutions';
+import institutionalgroupusers from './institutionalgroupusers';
+import institutionalgrouprules from './institutionalgrouprules';
+import procedureTemplates from './proceduretemplate';
+import procedureTemplateSnomeds from './proceduretemplatesnomeds';
+import loincCodes from './loinc-codes';
+import unitsOfMeasure from './units-of-measure';
+import procedureTemplateParameters from './proceduretemplateparameters'; 
+
 
 const resourcesAdminInstitucional = (permissions: SGXPermissions) =>
     permissions.isOn('BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS') ?
@@ -98,7 +116,7 @@ const resourcesAdminRoot = (permissions: SGXPermissions) => [
 
 const resourcesFor = (permissions: SGXPermissions) =>
     permissions.hasAnyAssignment(
-        ROOT, ADMINISTRADOR
+        ROOT, ADMINISTRADOR, ADMINISTRADOR_DE_ACCESO_DOMINIO,AUDITORIA_DE_ACCESO
     ) ? resourcesAdminRoot(permissions): resourcesAdminInstitucional(permissions);
 
 const resources = (permissions: SGXPermissions) => [
@@ -122,17 +140,26 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="clinicalspecialtycarelines" {...clinicalspecialtycarelines} />,
     <Resource name="carelines" {...careLines(permissions)} />,
     <Resource name="carelineproblems" {...carelineproblems} />,
+    <Resource name="carelinerole" {...carelinerole} />,
     <Resource name="carelineinstitution" {...careLineInstitution(permissions)} />,
     <Resource name="carelineinstitutionspecialty" {...carelineinstitutionspecialty(permissions)} />,
     <Resource name="carelineinstitutionpractice" {...careLineInstitutionPractice(permissions)} />,
     <Resource name="practicesinstitution" />,
     <Resource name="carelinespecialtyinstitution" />,
-    <Resource name="snowstormproblems" />,
+    <Resource name="snomedproblems" />,
     <Resource name="hierarchicalunits" {...hierarchicalunits} />,
     <Resource name="hierarchicalunitrelationships" {...hierarchicalunitrelationships} />,
     <Resource name="hierarchicalunitstaff" {...hierarchicalunitstaff} />,
     <Resource name="institutionuserpersons" {...institutionuserpersons} />,
     <Resource name="hierarchicalunitsectors" {...hierarchicalunitsectors} />,
+    <Resource name="institutionalgroups" {...institutionalgroups(permissions)} />,
+    <Resource name="institutionalgrouptypes" />,
+    <Resource name="institutionalgroupinstitutions" {...institutionalgroupinstitutions(permissions)} />,
+    <Resource name="departmentinstitutions" />,
+    <Resource name="institutionalgroupusers" {...institutionalgroupusers(permissions)} />,
+    <Resource name="manageruserpersons" />,
+    <Resource name="institutionalgrouprules" {...institutionalgrouprules(permissions)} />,
+
     // debug
     <Resource name="snvs"  {...snvs} />,
     <Resource name="documentfiles" {...documentFiles(permissions)} />,
@@ -155,7 +182,15 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="snomedgrouptypes" />,
     <Resource name="rules" {...rules(permissions)} />,
     <Resource name="clinicalspecialtyrules" />,
-    <Resource name="practiceprocedurerules" />,
+    <Resource name="snomedprocedurerules" />,
+    <Resource name="proceduretemplates" {...procedureTemplates(permissions)}/>,
+    <Resource name="proceduretemplatesnomeds" {...procedureTemplateSnomeds(permissions)}/>,
+    <Resource name="loinc-codes" {...loincCodes(permissions)} />,
+    <Resource name="loinc-statuses" />,
+    <Resource name="loinc-systems" />,
+    <Resource name="units-of-measure" {...unitsOfMeasure(permissions)} />,
+    <Resource name="proceduretemplateparameters" {...procedureTemplateParameters(permissions)} />,
+    
     // more
     <Resource name="identificationTypes" />,
     <Resource name="patient" />,
@@ -175,7 +210,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="licensenumbertypes" {...licensenumbertypes} />,
     <Resource name="institutionpractices" {...institutionpractices} />,
     <Resource name="institutionpracticesrelatedgroups" {...institutionpracticesrelatedgroups} />,
-    <Resource name="snowstormpractices" />,
+    <Resource name="snomedpractices" />,
     <Resource name="pacservers" {...globalpacs(permissions)} />,
     <Resource name="pacservertypes" />,
     <Resource name="pacserverprotocols" />,
@@ -184,6 +219,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="equipment" {...equipment} />,
     <Resource name="modality" {...modality} />,
     <Resource name="movestudies" {...movestudies(permissions)} />,
+    <Resource name="vclinichistoryaudit" {...vclinichistoryaudit(permissions)} />,
 
     <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,

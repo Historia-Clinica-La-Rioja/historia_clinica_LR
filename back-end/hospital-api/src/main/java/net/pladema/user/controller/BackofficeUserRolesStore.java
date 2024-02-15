@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import net.pladema.establishment.repository.InstitutionalGroupUserRepository;
 import net.pladema.permissions.repository.RoleRepository;
 
 import net.pladema.permissions.repository.entity.Role;
@@ -40,6 +41,7 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 	private final ProfessionalProfessionRepository professionalProfessionRepository;
 	private final BackofficeRolesFilter backofficeRolesFilter;
 	private final RoleRepository roleRepository;
+	private final InstitutionalGroupUserRepository institutionalGroupUserRepository;
 
 
 	@Override
@@ -106,6 +108,7 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El tipo de rol requiere definir una institución ");
 		if (ERoleLevel.LEVEL0.equals(ERole.map(userRole.getRoleId()).getLevel()) && assignedInstitution(userRole))
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El tipo de rol no debe asociarse a una institución ");
+		checkManagerRole(userRole);
 		return user;
 	}
 
@@ -139,7 +142,8 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 				ERole.PROFESIONAL_DE_SALUD.getId().equals(roleId) ||
 				ERole.ESPECIALISTA_EN_ODONTOLOGIA.getId().equals(roleId) ||
 				ERole.VIRTUAL_CONSULTATION_PROFESSIONAL.getId().equals(roleId) ||
-				ERole.VIRTUAL_CONSULTATION_RESPONSIBLE.getId().equals(roleId);
+				ERole.VIRTUAL_CONSULTATION_RESPONSIBLE.getId().equals(roleId) ||
+				ERole.ABORDAJE_VIOLENCIAS.getId().equals(roleId);
 	}
 
 	@Override
@@ -156,6 +160,8 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 			if(isROOTUser(user.getUsername()))
 				throw new BackofficeUserException(BackofficeUserExceptionEnum.ROOT_LOST_PERMISSION, "El admin no puede perder el rol: ROOT");
 		}
+		if (isManager(userRole) && institutionalGroupUserRepository.existsByUserId(userRole.getUserId()))
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_BELONGS_TO_GROUP, "El usuario no puede perder el rol ya que se encuentra asociado a grupos institucionales");
 		userRoleRepository.deleteById(id);
 	}
 
@@ -172,6 +178,21 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 		return StreamSupport
 				.stream(roles.spliterator(), false)
 				.collect(Collectors.toList());
+	}
+
+	private void checkManagerRole(UserRole userRole){
+		if (!isManager(userRole))
+			return;
+		List<Short> rolesIds = userRoleRepository.findByUserId(userRole.getUserId()).stream().map(UserRole::getRoleId).collect(Collectors.toList());
+		if (rolesIds.contains(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId()) || rolesIds.contains(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) || rolesIds.contains(ERole.GESTOR_DE_ACCESO_LOCAL.getId()))
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El usuario ya cuenta con un rol de tipo Gestor");
+	}
+
+	private boolean isManager(UserRole role){
+		Short roleId = role.getRoleId();
+		return roleId.equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId()) ||
+				roleId.equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) ||
+				roleId.equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId());
 	}
 
 }

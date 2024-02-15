@@ -62,3 +62,18 @@ mat-divider.header-divider {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+@media (max-width: 1280px){
+    .show-patient-btn {
+        order: 0;
+    }
+    .actions-btn {
+        order: 1;
+    }
+}
+
+@media (max-width: 960px){
+    mat-divider.first-divider {
+        display: none;
+    }
+}

@@ -6,11 +6,11 @@ $default-color: 50;
 @mixin general($theme) {
 	$primary: map-get($theme, primary);
 	mat-sidenav-content {
-		background-color: mat-color($primary, 25);
+		background-color: mat-color($primary, 50);
 	}
 
 	.app-background-color {
-		background-color: mat-color($primary, 25);
+		background-color: mat-color($primary, 50);
 	}
 }
 
@@ -39,7 +39,7 @@ $default-color: 50;
 	mat-selection-list {
 		.mat-list-single-selected-option {
 			&, &:hover, &:focus {
-				background-color: mat-color($palette, 100);
+				background-color: mat-color($palette, 200);
 			}
 		}
 	}

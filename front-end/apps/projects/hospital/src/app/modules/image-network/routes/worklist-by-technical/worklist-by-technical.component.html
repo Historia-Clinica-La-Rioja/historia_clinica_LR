@@ -52,7 +52,7 @@
                     <div style="height: 50px;">
                         <button id="button-filter" mat-button color="primary" fxLayoutAlign="center start" (click)="setPanelState()">
                             <mat-icon color="primary">filter_list</mat-icon>
-                            {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary" 
+                            {{'internaciones.internment-patient-card.filters.FILTER'| translate | uppercase }} <mat-icon color="primary"
                             [ngClass]="{'button-filter-effect':panelOpenState }">
                                 keyboard_arrow_down</mat-icon>
                         </button>
@@ -79,8 +79,14 @@
                                         {{appointment.patientFullName | titlecase}}
                                     </span>
                                     <span class="patient-identification grey smaller-font">DNI
-                                        {{appointment.data.patient.person.identificationNumber}} - ID
+                                        {{appointment.data.patient.person.identificationNumber ? appointment.data.patient.person.identificationNumber : 'Sin información'}} - ID
                                         {{appointment.data.patient.id}}</span>
+                                </div>
+
+                                <div fxFlex.gt-sm="5">
+                                    <div *ngIf="!appointment.data.serviceRequestId">
+                                        <app-tooltip-order [typeOrder]="!appointment.data.studyName ? 'sin orden' : 'transcripta'"></app-tooltip-order>
+                                    </div>
                                 </div>
 
                                 <div fxFlex.gt-sm="20">
@@ -98,7 +104,7 @@
 										<span class="uppercase" [translate]="'image-network.appointments.FINISH'"></span>
 									</button>
                                     <div *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED" fxFlexLayout="row">
-                                        <app-view-report *ngIf="appointment.reportStatus.id == reportStates.COMPLETED; else showLabel" 
+                                        <app-view-report *ngIf="appointment.reportStatus.id == reportStates.COMPLETED; else showLabel"
                                             [appointmentId]="appointment.data.id" [buttonText]="'image-network.worklist.VIEW_REPORT'">
                                         </app-view-report>
                                         <ng-template #showLabel>
@@ -110,9 +116,9 @@
                                 </div>
                             </div>
                             <div fxFlex="5%" class="options-btn">
-                                <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED || appointment.data.serviceRequestId"
-                                    mat-icon-button [matMenuTriggerFor]="menu">
-                                    <mat-icon>more_vert</mat-icon>
+                                <button *ngIf="appointment.data.appointmentStateId === appointmentStatesId.SERVED || appointment.data.serviceRequestId || appointment.data.transcribedServiceRequestId"
+                                        mat-icon-button [matMenuTriggerFor]="menu">
+                                        <mat-icon>more_vert</mat-icon>
                                 </button>
                                 <mat-menu #menu="matMenu">
                                     <button *ngIf="appointment.reportStatus?.id != reportStates.NOT_REQUIRED && appointment.data.appointmentStateId === appointmentStatesId.SERVED"
@@ -124,7 +130,8 @@
                                         mat-menu-item (click)="requestReport(appointment)">
                                         <span [translate]="'image-network.worklist.REQUEST_REPORT'"></span>
                                     </button>
-                                    <button *ngIf="appointment.data.serviceRequestId" mat-menu-item (click)="downloadOrder(appointment.data)">
+                                    <button   [disabled]="!(appointment.data.serviceRequestId || (appointment.data.transcribedServiceRequestId && appointment.data.transcribedOrderAttachedFiles.length > 0))"
+                                        mat-menu-item (click)="downloadOrderHandler(appointment.data)">
                                         <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DOWNLOAD_STUDY'"></span>
                                     </button>
                                 </mat-menu>

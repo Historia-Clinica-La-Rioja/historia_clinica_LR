@@ -1,13 +1,9 @@
 package net.pladema.clinichistory.documents.domain;
 
-import com.google.common.base.Joiner;
-
 import net.pladema.clinichistory.documents.infrastructure.output.repository.entity.VClinicHistory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CHIndicationBo extends CHDocumentBo {
 
@@ -21,7 +17,15 @@ public class CHIndicationBo extends CHDocumentBo {
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
 		List<ClinicalRecordBo> result = new ArrayList<>();
-		if(indication!=null && !indication.isBlank()) result.add(new ClinicalRecordBo("Indicación", indication.replace("\\n", ".<br />")));
+		if(indication!=null && !indication.isBlank()){
+			String description = indication.replace("&", "&#38;")
+					.replace("<", "&lt;")
+					.replace(">", "&gt;")
+					.replace("'", "&#39;")
+					.replace("\"", "&#34;")
+					.replace("\\n", ".<br />");
+			result.add(new ClinicalRecordBo("Indicación", description));
+		}
 		return result;
 	}
 

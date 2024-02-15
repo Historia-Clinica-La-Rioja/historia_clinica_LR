@@ -63,7 +63,7 @@ export class BlockAgendaRangeComponent implements OnInit {
 				this.dialogRef.close(true);
 			},
 			error => {
-				this.snackBarService.showError(error.message);
+				this.snackBarService.showError(error.errors[0]);
 			}
 		);
 	}

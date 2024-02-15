@@ -12,5 +12,5 @@ public interface HCEReferenceCounterReferenceStorage {
 
     List<ReferenceCounterReferenceFileBo> getReferenceFilesData(Integer referenceId);
 
-    List<HCEReferenceProblemBo> getProblemsWithReferences(Integer patientId);
+    List<HCEReferenceProblemBo> getProblemsWithReferences(Integer patientId, List<Short> loggedUserRoleIds);
 }

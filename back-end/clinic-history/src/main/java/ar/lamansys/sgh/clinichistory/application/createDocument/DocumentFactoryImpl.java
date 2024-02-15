@@ -2,11 +2,15 @@ package ar.lamansys.sgh.clinichistory.application.createDocument;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadExternalCause;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadHealthcareProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadObstetricEvent;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProsthesis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +72,9 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final LoadObstetricEvent loadObstetricEvent;
 
+	private final LoadHealthcareProfessionals loadHealthcareProfessionals;
+
+	private final LoadProsthesis loadProsthesis;
     public DocumentFactoryImpl(DocumentService documentService,
                                CreateDocumentFile createDocumentFile,
                                NoteService noteService,
@@ -82,7 +89,9 @@ public class DocumentFactoryImpl implements DocumentFactory {
 							   FeatureFlagsService featureFlagsService,
 							   PatientStorage patientStorage,
 							   LoadExternalCause loadExternalCause,
-							   LoadObstetricEvent loadObstetricEvent) {
+							   LoadObstetricEvent loadObstetricEvent,
+							   LoadHealthcareProfessionals loadHealthcareProfessionals,
+							   LoadProsthesis loadProsthesis) {
         this.documentService = documentService;
         this.createDocumentFile = createDocumentFile;
         this.noteService = noteService;
@@ -98,6 +107,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		this.patientStorage = patientStorage;
 		this.loadExternalCause = loadExternalCause;
 		this.loadObstetricEvent = loadObstetricEvent;
+		this.loadHealthcareProfessionals = loadHealthcareProfessionals;
+		this.loadProsthesis = loadProsthesis;
     }
 
     @Override
@@ -132,11 +143,14 @@ public class DocumentFactoryImpl implements DocumentFactory {
         healthConditionService.loadFamilyHistories(patientInfo, doc.getId(), documentBo.getFamilyHistories());
         healthConditionService.loadProblems(patientInfo, doc.getId(), documentBo.getProblems());
         healthConditionService.loadOtherProblems(patientInfo, doc.getId(), documentBo.getOtherProblems());
+		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPreoperativeDiagnosis());
+		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPostoperativeDiagnosis());
 		loadAllergies.run(patientInfo, doc.getId(), documentBo.getAllergies());
         loadImmunizations.run(patientId, doc.getId(), documentBo.getImmunizations());
         loadMedications.run(patientId, doc.getId(), documentBo.getMedications());
         loadProcedures.run(patientId, doc.getId(), documentBo.getProcedures());
-        loadDentalActions.run(patientInfo, doc.getId(), documentBo.getDentalActions());
+		loadSurgicalProcedures(patientId, doc.getId(), documentBo);
+		loadDentalActions.run(patientInfo, doc.getId(), documentBo.getDentalActions());
 
         clinicalObservationService.loadRiskFactors(patientId, doc.getId(), Optional.ofNullable(documentBo.getRiskFactors()));
         clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
@@ -145,7 +159,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 		loadExternalCause.run(doc.getId(), Optional.ofNullable(documentBo.getExternalCause()));
 		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));
-
+		loadHealthcareProfessionals.run(doc.getId(), documentBo.getHealthcareProfessionals());
+		loadProsthesis.run(doc.getId(), documentBo.getProsthesisDescription());
         if (createFile)
             generateDocument(documentBo);
         return doc.getId();
@@ -164,6 +179,14 @@ public class DocumentFactoryImpl implements DocumentFactory {
         });
         return document;
     }
+
+	private void loadSurgicalProcedures(Integer patientId, Long documentId, IDocumentBo documentBo){
+		loadProcedures.run(patientId,documentId, documentBo.getSurgeryProcedures());
+		loadProcedures.run(patientId,documentId, documentBo.getAnesthesia());
+		loadProcedures.run(patientId, documentId, documentBo.getCultures());
+		loadProcedures.run(patientId, documentId, documentBo.getFrozenSectionBiopsies());
+		loadProcedures.run(patientId, documentId, documentBo.getDrainages());
+	}
 
     private void generateDocument(IDocumentBo documentBo) {
         OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(documentBo);

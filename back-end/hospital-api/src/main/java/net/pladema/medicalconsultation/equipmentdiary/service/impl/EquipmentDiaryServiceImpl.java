@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -201,7 +203,10 @@ public class EquipmentDiaryServiceImpl implements EquipmentDiaryService {
 		apmtsByNewDOH.forEach((doh, apmtsList) -> {
 			apmtsList.addAll(apmts.stream().filter(apmt -> belong(apmt, doh)).collect(toList()));
 			if (overturnsOutOfLimit(doh, apmtsList)) {
-				throw new OverturnsLimitException();
+				throw new OverturnsLimitException(
+						"Se encuentran asignados una cantidad mayor de sobreturnos al límite establecido en la franja del dia " +
+								EDayOfWeek.map(doh.getOpeningHours().getDayWeekId()).getDescription() +
+								", en el horario de " + doh.getOpeningHours().getFrom() + " a " + doh.getOpeningHours().getTo());
 			}
 		});
 	}

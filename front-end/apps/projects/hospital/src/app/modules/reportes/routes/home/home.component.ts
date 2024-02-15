@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProfessionalLicenseService } from "@api-rest/services/professional-license.service";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { map } from 'rxjs/operators';
@@ -23,12 +23,13 @@ import {
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ReportsService } from '@api-rest/services/reports.service';
 
-import { REPORT_TYPES } from '../../constants/report-types';
+import { REPORT_TYPES, REPORT_TYPES_ID } from '../../constants/report-types';
 import { UIComponentDto } from '@extensions/extensions-model';
 import { anyMatch } from '@core/utils/array.utils';
 import { PermissionsService } from '@core/services/permissions.service';
 import { HierarchicalUnitsService } from "@api-rest/services/hierarchical-units.service";
 import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-unit-type.service";
+import { APPOINTMENT_STATES_DESCRIPTION, APPOINTMENT_STATES_ID, AppointmentState } from "@turnos/constants/appointment";
 
 @Component({
 	selector: 'app-home',
@@ -37,7 +38,7 @@ import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-uni
 })
 export class HomeComponent implements OnInit {
 
-	form: UntypedFormGroup;
+	form: FormGroup<ReportForm>;
 	public submitted = false;
 
 	public hasError = hasError;
@@ -48,6 +49,7 @@ export class HomeComponent implements OnInit {
 	hierarchicalUnitTypesTypeahead: TypeaheadOption<HierarchicalUnitTypeDto>[];
 	hierarchicalUnitsTypeahead: TypeaheadOption<HierarchicalUnitDto>[];
 	hierarchicalUnits: HierarchicalUnitDto[];
+	appointmentStates: AppointmentState[];
 
 	specialtiesTypeaheadOptions$: Observable<TypeaheadOption<ProfessionalsByClinicalSpecialtyDto>[]>;
 
@@ -55,6 +57,7 @@ export class HomeComponent implements OnInit {
 	idSpecialty: number;
 
 	REPORT_TYPES = REPORT_TYPES;
+	REPORT_TYPES_ID = REPORT_TYPES_ID;
 
 	minDate = MIN_DATE;
 
@@ -65,7 +68,6 @@ export class HomeComponent implements OnInit {
 	private licensesTypeMasterData: LicenseNumberTypeDto[];
 
 	constructor(
-		private readonly formBuilder: UntypedFormBuilder,
 		private readonly professionalLicenseService: ProfessionalLicenseService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly reportsService: ReportsService,
@@ -78,15 +80,16 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			reportType: [null, Validators.required],
-			startDate: [this.firstDayOfThisMonth(), Validators.required],
-			endDate: [this.lastDayOfThisMonth(), Validators.required],
-			specialtyId: [null],
-			professionalId: [null],
-			hierarchicalUnitTypeId: [null],
-			hierarchicalUnitId: [null],
-			includeHierarchicalUnitDescendants: [null]
+		this.form = new FormGroup<ReportForm>({
+			reportType: new FormControl(null, Validators.required),
+			startDate: new FormControl(this.firstDayOfThisMonth(), Validators.required),
+			endDate: new FormControl(this.lastDayOfThisMonth(), Validators.required),
+			specialtyId: new FormControl(null),
+			professionalId: new FormControl(null),
+			hierarchicalUnitTypeId: new FormControl(null),
+			hierarchicalUnitId: new FormControl(null),
+			includeHierarchicalUnitDescendants: new FormControl(null),
+			appointmentStateId: new FormControl(null)
 		});
 		this.professionalLicenseService.getAllProfessionalRegistrationNumbers().subscribe(professionals => {
 			this.professionals = professionals;
@@ -95,7 +98,9 @@ export class HomeComponent implements OnInit {
 		});
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
-				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != 1 && report.id != 2);
+				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.MONTHLY
+					&& report.id != REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT
+					&& report.id != REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL);
 		});
 		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
 			this.hierarchicalUnits = hierarchicalUnits;
@@ -106,6 +111,8 @@ export class HomeComponent implements OnInit {
 		this.professionalLicenseService.getLicensesType().subscribe(licensesTypeMasterData => {
 			this.licensesTypeMasterData = licensesTypeMasterData;
 		});
+
+		this.appointmentStates = this.getAppointmentStates();
 	}
 
 	private firstDayOfThisMonth(): Moment {
@@ -171,9 +178,9 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	setProfessional(professional: ProfessionalLicenseNumberDto) {
-		this.idProfessional = professional?.id;
-		this.form.controls.professionalId.setValue(professional?.id);
+	setProfessional(professional: ProfessionalRegistrationNumbersDto) {
+		this.idProfessional = professional?.healthcareProfessionalId;
+		this.form.controls.professionalId.setValue(this.idProfessional);
 	}
 
 	private getProfessionalsFilteredBy(specialty: ProfessionalsByClinicalSpecialtyDto): ProfessionalRegistrationNumbersDto[] {
@@ -225,8 +232,8 @@ export class HomeComponent implements OnInit {
 			return !arr.slice(0, index).some(other => (other.typeId === item.typeId && other.licenseNumber === item.licenseNumber));
 		});
 
-		return `${licenseUnique.map((l) => 
-			this.licensesTypeMasterData.find(item => item.id === l.typeId).description + ' ' + l.licenseNumber)
+		return `${licenseUnique.map((l) =>
+			this.licensesTypeMasterData?.find(item => item.id === l.typeId).description + ' ' + l.licenseNumber)
 			.join(' - ')}`;
 	}
 
@@ -259,40 +266,44 @@ export class HomeComponent implements OnInit {
 		this.submitted = true;
 		if (this.form.valid) {
 			this.isLoadingRequestReport = true;
-			const params = {
+			let params: ReportFilters = {
 				startDate: this.form.controls.startDate.value,
 				endDate: this.form.controls.endDate.value,
 				specialtyId: this.form.controls.specialtyId.value,
 				professionalId: this.form.controls.professionalId.value,
 				hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
 				hierarchicalUnitId: this.form.controls.hierarchicalUnitId.value,
-				includeHierarchicalUnitDescendants: this.form.controls.includeHierarchicalUnitDescendants.value
+				includeHierarchicalUnitDescendants: this.form.controls.includeHierarchicalUnitDescendants.value,
+				appointmentStateId: this.form.controls.appointmentStateId.value
 			}
-			const reportId = this.form.controls.reportType.value;
+			const reportId = this.form.value.reportType;
 			switch (reportId) {
-				case 1:
+				case REPORT_TYPES_ID.MONTHLY:
 					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
-				case 2:
+				case REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT:
 					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
-				case 3:
+				case REPORT_TYPES_ID.DIABETIC_PATIENTS:
 					this.reportsService.getDiabetesReport().subscribe(result => {
 						this.cubeReportData = result
 						this.isLoadingRequestReport = false
 					});
 					break;
-				case 4:
+				case REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS:
 					this.reportsService.getHypertensionReport().subscribe(result => {
 						this.cubeReportData = result
 						this.isLoadingRequestReport = false
 					});
 					break;
-				case 5:
+				case REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT:
 					this.reportsService.getEpidemiologicalWeekReport().subscribe(result => {
 						this.cubeReportData = result
 						this.isLoadingRequestReport = false
 					});
+					break;
+				case REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL:
+					this.reportsService.getNominalAppointmentsDetail(params, `${this.REPORT_TYPES[5].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
 				default:
 			}
@@ -303,4 +314,58 @@ export class HomeComponent implements OnInit {
 		this.cubeReportData = null;
 	}
 
+	clearAppointmentStateId(): void {
+		this.form.controls.appointmentStateId.setValue(null);
+	}
+
+	private getAppointmentStates() : AppointmentState[] {
+		return [
+			{
+				id: APPOINTMENT_STATES_ID.ASSIGNED,
+				description: APPOINTMENT_STATES_DESCRIPTION.ASSIGNED
+			},
+			{
+				id: APPOINTMENT_STATES_ID.CONFIRMED,
+				description: APPOINTMENT_STATES_DESCRIPTION.CONFIRMED
+			},
+			{
+				id: APPOINTMENT_STATES_ID.ABSENT,
+				description: APPOINTMENT_STATES_DESCRIPTION.ABSENT
+			},
+			{
+				id: APPOINTMENT_STATES_ID.CANCELLED,
+				description: APPOINTMENT_STATES_DESCRIPTION.CANCELLED
+			},
+			{
+				id: APPOINTMENT_STATES_ID.SERVED,
+				description: APPOINTMENT_STATES_DESCRIPTION.SERVED
+			},
+			{
+				id: APPOINTMENT_STATES_ID.BOOKED,
+				description: APPOINTMENT_STATES_DESCRIPTION.BOOKED
+			}]
+	}
+}
+
+interface ReportForm {
+	reportType: FormControl<number>,
+	startDate: FormControl<Moment>,
+	endDate: FormControl<Moment>,
+	specialtyId: FormControl<number>,
+	professionalId: FormControl<number>,
+	hierarchicalUnitTypeId: FormControl<number>,
+	hierarchicalUnitId: FormControl<number>,
+	includeHierarchicalUnitDescendants: FormControl<boolean>,
+	appointmentStateId: FormControl<number>
+}
+
+export interface ReportFilters {
+	startDate: Moment;
+	endDate: Moment;
+	specialtyId?: number;
+	professionalId?: number;
+	hierarchicalUnitTypeId?: number;
+	hierarchicalUnitId?: number;
+	includeHierarchicalUnitDescendants?: boolean;
+	appointmentStateId?: number;
 }

@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.triage.controller.mapper;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorObservationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;

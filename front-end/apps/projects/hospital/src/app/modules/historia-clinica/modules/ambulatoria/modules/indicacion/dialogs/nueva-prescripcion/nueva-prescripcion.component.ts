@@ -65,6 +65,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	submitted: boolean = false;
 	showCoverageMessage: boolean = false;
 	showAddMedicationError: boolean = false;
+	isLoading = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -214,7 +215,9 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	openPharmacosFrequestDialog() {
+		this.isLoading = true;
 		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.data.patientId).subscribe((pharmacos: SnomedDto[]) => {
+			this.isLoading = false;
 			this.dialog.open(PharmacosFrequentComponent, {
 				width: '50%',
 				data: { pharmacos }

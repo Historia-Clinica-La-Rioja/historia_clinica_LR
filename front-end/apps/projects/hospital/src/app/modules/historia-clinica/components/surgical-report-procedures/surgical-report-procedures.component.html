@@ -1,0 +1,98 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="'ambulatoria.paciente.surgical-report.procedures.TITLE' | translate" icon="library_add" [collapsed]="false"
+	[hideBorder]="false">
+
+	<form [formGroup]="dateForm">
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field appearance="outline">
+				<mat-label
+					[translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE'"></mat-label>
+				<input matInput id="start" [matDatepicker]="startDatePicker" formControlName="startDate" [max]="maxDate"
+					(dateChange)="changeStartDate($event.value)">
+				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #startDatePicker></mat-datepicker>
+				<mat-error *ngIf="dateForm.get('startDate').hasError('required')">Fecha requerida</mat-error>
+			</mat-form-field>
+
+
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_OPENING'"></mat-label>
+				<input matInput formControlName="startTime">
+				<mat-icon matSuffix>schedule</mat-icon>
+				<mat-hint>HH:MM</mat-hint>
+				<mat-error *ngIf="dateForm.get('startTime').hasError('required')">Hora requerida</mat-error>
+				<mat-error *ngIf="!dateForm.get('startTime').hasError('required') && dateForm.get('startTime').hasError('invalidTime')">Hora inválida</mat-error>
+			</mat-form-field>
+		</div>
+
+		<div fxLayout="row" fxLayoutGap="20px">
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE'"></mat-label>
+				<input matInput id="end" [matDatepicker]="endDatePicker" formControlName="endDate" [min]="minDate"
+					(dateChange)="changeEndDate($event.value)">
+				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+				<mat-datepicker #endDatePicker></mat-datepicker>
+				<mat-error *ngIf="dateForm.get('endDate').hasError('required')">Fecha requerida</mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_CLOSURE'"></mat-label>
+				<input matInput formControlName="endTime">
+				<mat-icon matSuffix>schedule</mat-icon>
+				<mat-hint>HH:MM</mat-hint>
+				<mat-error *ngIf="dateForm.get('endTime').hasError('endTimeBeforeStartTime')">La hora de cierre debe ser posterior a la fecha de inicio</mat-error>
+				<mat-error *ngIf="dateForm.get('endTime').hasError('required')">Hora requerida</mat-error>
+				<mat-error *ngIf="!dateForm.get('endTime').hasError('required') && dateForm.get('endTime').hasError('invalidTime')">Hora inválida</mat-error>
+			</mat-form-field>
+		</div>
+	</form>
+	<div fxLayout="column" fxLayoutGap="20px">
+		<div>
+			<button mat-button type="button" id="add-procedure-button" color="primary" (click)="addProcedure()">
+				+ {{ 'ambulatoria.paciente.surgical-report.procedures.ADD' | translate }}
+			</button>
+		</div>
+		<app-titled-content-card *ngIf="!procedureService.isEmpty() || surgicalReport.procedures.length"
+			[title]="'ambulatoria.paciente.surgical-report.procedures.REGISTERED_PROCEDURES'">
+			<div *ngFor="let procedure of surgicalReport.procedures; index as i; last as isLast">
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<div fxLayout="column">
+						<span>{{ procedure.snomed.pt }}</span>
+					</div>
+					<button type="button" mat-icon-button color="warn" (click)="deleteProcedure(i)">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</div>
+				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+			</div>
+		</app-titled-content-card>
+	</div>
+
+	<mat-form-field appearance="outline">
+		<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_DESCRIPTION'"></mat-label>
+		<textarea matInput [(ngModel)]="description" (ngModelChange)="changeDescription($event)"></textarea>
+	</mat-form-field>
+
+	<div>
+		<button id="clear_identification_type" type="button" mat-button color="primary" (click)="addDiagnosis()">
+			+ {{'ambulatoria.paciente.surgical-report.procedures.ADD_DIAGNOSIS' | translate}}
+		</button>
+	</div>
+
+	<app-titled-content-card *ngIf="surgicalReport.postoperativeDiagnosis.length"
+		[title]="'ambulatoria.paciente.surgical-report.procedures.DIAGNOSIS' | translate">
+		<div *ngFor="let diagnosis of surgicalReport.postoperativeDiagnosis; index as i; last as isLast">
+			<div fxLayout="row" fxLayoutAlign="space-between center">
+				<div fxLayout="column">
+					<span>{{ diagnosis.snomed.pt }}</span>
+				</div>
+				<button type="button" mat-icon-button color="warn" (click)="deleteDiagnosis(i)">
+					<mat-icon>delete_outline</mat-icon>
+				</button>
+			</div>
+			<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+		</div>
+	</app-titled-content-card>
+
+</app-new-consultation-expansion-section>

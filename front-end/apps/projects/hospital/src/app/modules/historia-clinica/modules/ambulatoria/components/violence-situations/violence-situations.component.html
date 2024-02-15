@@ -1,0 +1,20 @@
+<section>
+    <button id="new-violence-situation" class="new-violence-situation" mat-raised-button color="primary" (click)="openViolenceSituationDockPopUp()">+ {{'ambulatoria.paciente.violence-situations.NEW_VIOLENCE_SITUATION' | translate | uppercase}}</button>
+
+    <app-summary-card [header]="header">
+        <ng-container *ngIf="!violenceSituations?.content.length">
+            <span class="no-info" fxLayoutAlign="center" [translate]="'ambulatoria.paciente.violence-situations.violence-situation-list.NO_INFO'"></span>
+        </ng-container>
+
+        <ng-container *ngIf="violenceSituations?.content.length">
+            <app-violence-situation-list [violenceSituations]="violenceSituations.content"></app-violence-situation-list>
+            <mat-list-item class="see-all" *ngIf="violenceSituations.totalElementsAmount > 5">
+                <button *ngIf="showSeeAll else seeLess" mat-button color="primary" (click)="setPatientViolenceSituations(false)">{{'ambulatoria.paciente.violence-situations.violence-situation-list.SEE_ALL' | translate}}</button>
+            
+				<ng-template #seeLess>
+					<button mat-button color="primary" (click)="setPatientViolenceSituations(true)">{{'ambulatoria.paciente.violence-situations.violence-situation-list.SEE_LESS' | translate}}</button>
+				</ng-template>
+			</mat-list-item>
+        </ng-container>
+    </app-summary-card>
+</section>

@@ -38,10 +38,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,15 +81,15 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 
 	@Override
 	public List<CHDocumentBo> getClinicHistoryDocuments(List<Long> ids) {
-		List<VClinicHistory> documents = repository.findAllById(ids);
-		List<VClinicHistory> resultList = sortDocumentsByIds(ids, documents);
-		filterCancelledOrders(resultList);
-		filterEmptyTriages(resultList);
+		List<VClinicHistory> result = repository.findAllById(ids);
+		filterCancelledOrders(result);
+		filterEmptyTriages(result);
 
-		return resultList
+		return result
 				.stream()
 				.map(this::mapToBo)
 				.filter(Objects::nonNull)
+				.sorted(Comparator.comparing(CHDocumentBo::getStartDate).reversed().thenComparing(Comparator.comparing(CHDocumentBo::getCreatedOn).reversed()))
 				.collect(Collectors.toList());
 	}
 
@@ -182,18 +180,6 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		if (row.getDocumentTypeId().equals(EDocumentType.EMERGENCY_CARE.getId()) || row.getDocumentTypeId().equals(EDocumentType.IMMUNIZATION.getId()))
 			return ECHDocumentType.OTHER;
 		return ECHDocumentType.CLINICAL_NOTES;
-	}
-
-	private List<VClinicHistory> sortDocumentsByIds (List<Long> ids, List<VClinicHistory> documents) {
-		List<VClinicHistory> result = new ArrayList<>();
-		Map<Long, VClinicHistory> documentsMap = new HashMap<>();
-		documents.forEach(doc -> { documentsMap.put(doc.getId(), doc); });
-		ids.forEach(id -> {
-			if (documentsMap.containsKey(id)) {
-				result.add(documentsMap.get(id));
-			}
-		});
-		return result;
 	}
 
 }

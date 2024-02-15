@@ -287,7 +287,7 @@ export class ProfileComponent implements OnInit {
 
 
 						this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_GUARDIA).subscribe(isOn => {
-							this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+							this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 								.subscribe(emergencyCareEpisodeInProgressDto => {
 									this.emergencyCareEpisodeInProgress = emergencyCareEpisodeInProgressDto;
 									this.episodeId = this.emergencyCareEpisodeInProgress?.id;

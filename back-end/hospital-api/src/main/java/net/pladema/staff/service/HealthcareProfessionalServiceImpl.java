@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import net.pladema.permissions.RoleUtils;
+import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.staff.repository.HealthcareProfessionalSpecialtyRepository;
 import net.pladema.staff.repository.ProfessionalProfessionRepository;
 
@@ -24,6 +25,7 @@ import net.pladema.staff.service.domain.HealthcareProfessionalBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalEnumException;
 import net.pladema.staff.service.exceptions.HealthcareProfessionalException;
+import static java.util.List.of;
 
 @Service
 public class HealthcareProfessionalServiceImpl implements  HealthcareProfessionalService {
@@ -155,6 +157,20 @@ public class HealthcareProfessionalServiceImpl implements  HealthcareProfessiona
 	public List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId) {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		List<HealthcareProfessionalBo> result = healthcareProfessionalRepository.getVirtualConsultationProfessionalsByInstitutionId(institutionId).stream().map(HealthcareProfessionalBo::new).collect(Collectors.toList());
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<HealthcareProfessionalBo> getVirtualConsultationResponsiblesByInstitutionId(Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<Short> professionalERolIds = of(ERole.VIRTUAL_CONSULTATION_RESPONSIBLE.getId());
+		List<HealthcareProfessionalVo> queryResults = healthcareProfessionalRepository
+				.findAllByInstitution(institutionId, professionalERolIds);
+		List<HealthcareProfessionalBo> result = new ArrayList<>();
+		queryResults.forEach(hcp ->
+				result.add(new HealthcareProfessionalBo(hcp))
+		);
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

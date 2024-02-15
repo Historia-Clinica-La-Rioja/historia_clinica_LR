@@ -58,6 +58,7 @@ public class DiagnosticReportInfoServiceImpl implements DiagnosticReportInfoServ
         DiagnosticReportBo result = new DiagnosticReportBo();
         result.setId((Integer) row[0]);
         result.setSnomed(new SnomedBo((Integer) row[1], (String)  row[2], (String) row[3]));
+		result.setHealthConditionId((Integer) row[4]);
 
 
         HealthConditionBo healthConditionBo = new HealthConditionBo();

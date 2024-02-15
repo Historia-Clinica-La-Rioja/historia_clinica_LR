@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto } from '@api-rest/api-model';
+import { ClinicalSpecialtyDto, CounterReferenceDto, DateDto, ReferenceCounterReferenceFileDto, ReferenceDataDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
@@ -25,6 +25,7 @@ import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialog
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 @Component({
 	selector: 'app-counterreference-dock-popup',
 	templateUrl: './counterreference-dock-popup.component.html',
@@ -48,9 +49,10 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	searchConceptsLocallyFFIsOn = false;
 	disableConfirmButton = false;
 	episodeData: EpisodeData;
+	professionalSpecialties: ClinicalSpecialtyDto[] = [];
 
 	constructor(
-		@Inject(OVERLAY_DATA) public data: any,
+		@Inject(OVERLAY_DATA) public data: CounterreferenceData,
 		public dockPopupRef: DockPopupRef,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snomedService: SnomedService,
@@ -64,7 +66,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly referenceMasterDataService: ReferenceMasterDataService,
 		private readonly el: ElementRef,
 		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
-
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
@@ -74,7 +76,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	ngOnInit(): void {
 		this.formReferenceClosure = this.formBuilder.group({
 			closureType: [null, [Validators.required]],
-			description: [null, [Validators.required]]
+			description: [null, [Validators.required]],
+			specialty: [null, [Validators.required]]
 		});
 
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(allergyCriticalities => {
@@ -90,6 +93,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 			this.closureTypes = closureTypes;
 		})
 
+		this.setProfessionalSpecialties();
 	}
 
 	save(): void {
@@ -131,6 +135,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 				this.formReferenceClosure.controls['closureType'].markAsTouched();
 				this.formReferenceClosure.controls['description'].markAsTouched();
+				this.formReferenceClosure.controls.specialty.markAllAsTouched();
 				this.collapsedCounterReference = false;
 				setTimeout(() => {
 					scrollIntoError(this.formReferenceClosure, this.el)
@@ -175,6 +180,16 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		});
 	}
 
+	private setProfessionalSpecialties() {
+		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties()
+			.subscribe((specialties: ClinicalSpecialtyDto[]) => {
+				this.professionalSpecialties = specialties.filter(professionalSpecialty =>
+					this.data.reference.destinationClinicalSpecialties.some(referenceSpecialty => referenceSpecialty.id === professionalSpecialty.id)
+				);
+				this.formReferenceClosure.controls.specialty.setValue(this.professionalSpecialties[0]);
+			});
+	}
+
 	private buildCounterReferenceDto(fileIds): CounterReferenceDto {
 
 		return {
@@ -189,7 +204,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 					verificationId: null,
 				};
 			}),
-			clinicalSpecialtyId: this.data.reference.clinicalSpecialty.id,
+			clinicalSpecialtyId: this.formReferenceClosure.controls.specialty.value.id,
 			counterReferenceNote: this.formReferenceClosure.value.description,
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {
@@ -234,6 +249,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 				this.dockPopupRef.close(mapToFieldsToUpdate());
 			},
 			error => {
+				this.disableConfirmButton = false;
 				this.snackBarService.showError('ambulatoria.paciente.counterreference.messages.ERROR');
 			}
 		);
@@ -264,4 +280,9 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		this.selectedFilesShow.splice(index, 1);
 	}
 
+}
+
+interface CounterreferenceData {
+	reference: ReferenceDataDto;
+	patientId: number;
 }

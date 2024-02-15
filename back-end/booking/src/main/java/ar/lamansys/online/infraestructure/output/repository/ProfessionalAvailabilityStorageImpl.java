@@ -209,8 +209,8 @@ public class ProfessionalAvailabilityStorageImpl implements ProfessionalAvailabi
 				"JOIN v_booking_appointment_assn AS aa ON (a.id = aa.appointment_id) " +
 				"JOIN v_booking_diary d ON (d.id = aa.diary_id) " +
 				"JOIN v_booking_diary_opening_hours AS doh ON (doh.diary_id = d.id AND doh.opening_hours_id = aa.opening_hours_id) " +
-				"WHERE aa.diary_id IN (:diaryIds) AND (d.deleted = false OR d.deleted IS NULL) " +
-				"AND NOT a.appointment_state_id = 4 " +
+				"WHERE aa.diary_id IN (:diaryIds) AND NOT d.deleted = true " +
+				"AND NOT a.appointment_state_id = 4 AND NOT a.deleted = true " +
 				"AND a.date_type_id >= CURRENT_DATE " +
 				"ORDER BY d.id, a.is_overturn";
 

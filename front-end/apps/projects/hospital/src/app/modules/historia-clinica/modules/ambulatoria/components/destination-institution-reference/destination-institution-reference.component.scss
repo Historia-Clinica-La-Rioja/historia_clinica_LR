@@ -24,10 +24,18 @@ h2 {
 
 .message {
 	width: 500px;
+	min-width: fit-content;
+    max-width: min-content;
+}
+
+.green {
 	color: #27ae60;
 }
 
-.message-warning {
-	width: 500px;
+.purple {
+	color: #7A3FB5;
+}
+
+.red {
     color: #f44336
 }

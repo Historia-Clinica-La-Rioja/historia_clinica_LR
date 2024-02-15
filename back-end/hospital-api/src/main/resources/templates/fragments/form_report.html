@@ -31,6 +31,13 @@
             padding: 3px;
         }
 
+        .row-data > div, .professional-name {
+            font-family: inherit;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            vertical-align: middle;
+        }
+
         .space {
             height: 25px;
         }
@@ -189,7 +196,6 @@
         .diagnosis::first-letter {
             text-transform: uppercase;
         }
-
     </style>
 </head>
 
@@ -203,8 +209,8 @@
         <div class="code">CÓDIGO</div>
     </div>
     <div class="row-data">
-        <div class="establishment" th:text="${establishment}"></div>
-        <div class="code" th:text="${sisaCode}"></div>
+        <div class="establishment" th:text="${#strings.length(establishment) > 67 ? #strings.substring(establishment, 0, 67) + '...' : establishment}"></div>
+        <div class="code" th:text="${code}"></div>
     </div>
     <div class="row">
         <div class="complete-name">2. APELLIDOS Y NOMBRES</div>
@@ -212,12 +218,9 @@
         <div class="date">3. FECHA</div>
     </div>
     <div class="row-data">
-        <div class="complete-name" th:text="${completePatientName}"></div>
-        <div class="address" th:text="${address}"></div>
-        <div class="date">
-            <label th:if="${consultationDate != null}" th:text="${consultationDate}"></label>
-            <label th:unless="${consultationDate != null}" th:text="${reportDate}"></label>
-        </div>
+        <div class="complete-name" th:text="${formalPatientName}"></div>
+        <div class="address" th:text="${address} ? ${#strings.length(address) > 52 ? #strings.substring(address, 0, 52) + '...' : address} : ''"></div>
+        <div class="date" th:text="${consultationDate != null} ? ${consultationDate} : ${reportDate}"></div>
     </div>
     <div class="row">
         <div class="gender">4. SEXO</div>
@@ -234,10 +237,10 @@
         <div class="age" th:text="${patientAge}"></div>
         <div class="doc-number" th:text="${documentNumber}"></div>
         <div class="doc-type" th:text="${documentType}"></div>
-        <div class="ce">&nbsp;</div>
-        <div class="room">&nbsp;</div>
-        <div class="bed">&nbsp;</div>
-        <div class="hcn">&nbsp;</div>
+        <div class="ce" th:text="${ce} ? 'X' : ''" ></div>
+        <div class="room" th:text="${room}"></div>
+        <div class="bed" th:text="${bed}"></div>
+        <div class="hcn" th:text="${hcnId}"></div>
     </div>
     <div class="row">
         <div class="condition">12. CONDICIÓN</div>
@@ -246,7 +249,7 @@
         <div class="affiliate-number">15. N° DE AFILIADO</div>
     </div>
     <div class="row-data">
-        <div class="condition">&nbsp;</div>
+        <div class="condition" th:text="${medicalCoverageCondition}"></div>
         <div class="coverage" th:text="${medicalCoverage}"></div>
         <div class="affiliate-type">&nbsp;</div>
         <div class="affiliate-number" th:text="${affiliateNumber}"></div>
@@ -256,10 +259,11 @@
         <div class="code">17. CÓDIGO</div>
     </div>
     <div th:if="${problems != null}">
-        <div class="row-data" th:each="problem, iter: ${#strings.arraySplit(problems,'|')}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
-             th:with="cie10CodesList = ${#strings.arraySplit(cie10Codes,'|')}">
-            <div class="diagnosis" th:text="${problem}"></div>
-            <div class="code" th:text="${cie10CodesList[iter.index]}"></div>
+        <div class="row-data" th:each="problem, iter: ${problems}" th:style="${iter.index == 0 ? 'margin-top: 0px' : 'margin-top:5px'}"
+             th:with="cie10CodesList = ${cie10Codes}">
+            <div class="diagnosis" th:text="${!iter.last} ? ${problem} + ',' : ${problem}"></div>
+            <div th:if="${cie10Codes != null}" class="code" th:text="${!iter.last} ? ${cie10CodesList[iter.index]} + ',' : ${cie10CodesList[iter.index]}"></div>
+            <div th:unless="${cie10Codes != null}" class="code">&nbsp;</div>
         </div>
     </div>
     <div th:unless="${problems != null}">
@@ -270,12 +274,15 @@
     </div>
     <div class="row">
         <div class="cant-code">
-            <div>18. CANT O CÓD</div>
+            <div>18. CANT. ó CÓD.</div>
             <div class="space">&nbsp;</div>
         </div>
         <div class="concept">
             <div class="concept-title">19. CONCEPTO</div>
             <div class="space"><p class="rp-concept">Rp/</p>
+                <div th:each="study, iter: ${studies}">
+                    <span th:text="${!iter.last} ? ${study} + ',' : ${study}"></span>
+                </div>
             </div>
         </div>
         <div class="unitary">
@@ -296,6 +303,10 @@
         <div class="signature">
             <div>&nbsp;</div>
             <div class="signature-data">23. FIRMA PROFESIONAL</div>
+            <div class="professional-name" th:text="${completeProfessionalName} ? ${#strings.length(completeProfessionalName) > 67 ? #strings.substring(completeProfessionalName, 0, 67) + '...' : completeProfessionalName} : ''"></div>
+            <span th:each="license,iter: ${licenses}">
+                <div style="margin-bottom: -30px" th:text="${license}"></div>
+            </span>
             <div class="enrollment-stamp"><p>Sello y Matrícula</p></div>
         </div>
         <div class="total-billing">
@@ -315,7 +326,7 @@
                 <div>Firma Profesional</div>
                 <div>Sello aclaratorio</div>
             </div>
-            <div class="delegation-stamp">SELLO O DELEGACIÓN</div>
+            <div class="delegation-stamp">SELLO DELEGACIÓN</div>
         </div>
         <div class="practice-autor">
             <div>28. PRÁCTICA REALIZADA POR</div>

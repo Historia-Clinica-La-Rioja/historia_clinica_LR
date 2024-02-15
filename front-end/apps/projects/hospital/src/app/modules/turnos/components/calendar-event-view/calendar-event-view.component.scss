@@ -1,0 +1,38 @@
+mat-icon {
+    margin-left: 3px;
+    overflow: visible;
+}
+
+.modality {
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+}
+
+div {
+    margin-top: 8px;
+}
+
+div.container {
+    align-items: center;
+}
+
+div.info {
+    white-space: normal;
+}
+
+p {
+    margin: 0;
+    width: 50%;
+    text-align: start;
+    line-height: normal;
+}
+
+.title {
+    width: min-content;
+}
+
+.text {
+    align-items: flex-start;
+    gap: 4px;
+}

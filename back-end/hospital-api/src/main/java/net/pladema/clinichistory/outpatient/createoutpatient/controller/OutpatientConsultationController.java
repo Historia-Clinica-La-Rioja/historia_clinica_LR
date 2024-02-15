@@ -1,17 +1,37 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
-
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import ar.lamansys.sgx.shared.security.UserInfo;
+import lombok.RequiredArgsConstructor;
+import net.pladema.clinichistory.outpatient.application.markaserroraproblem.CanBeMarkAsError;
+import net.pladema.clinichistory.outpatient.application.markaserroraproblem.MarkAsErrorAProblem;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
+import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
+import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ErrorProblemDto;
+import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ProblemInfoDto;
+import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
+import net.pladema.patient.controller.service.PatientExternalService;
+import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,38 +41,21 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
-import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
-import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.security.UserInfo;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientEvolutionSummaryDto;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
-import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.OutpatientSummaryService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.EvolutionSummaryBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
-import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
-import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 @RequestMapping("/institutions/{institutionId}/patient/{patientId}/outpatient/consultations")
 public class OutpatientConsultationController implements OutpatientConsultationAPI {
 
@@ -77,36 +80,14 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     @Value("${test.stress.disable.validation:false}")
     private boolean disableValidation;
-    
-    private final OutpatientSummaryService outpatientSummaryService;
 
 	private final SharedAppointmentPort sharedAppointmentPort;
 
     private final SharedReferenceCounterReference sharedReferenceCounterReference;
 
-    public OutpatientConsultationController(CreateOutpatientConsultationService createOutpatientConsultationService,
-                                            CreateOutpatientDocumentService createOutpatientDocumentService,
-                                            OutpatientReasonService outpatientReasonService,
-                                            HealthcareProfessionalExternalServiceImpl healthcareProfessionalExternalService,
-                                            OutpatientConsultationMapper outpatientConsultationMapper,
-                                            AppointmentExternalService appointmentExternalService,
-                                            DateTimeProvider dateTimeProvider,
-                                            OutpatientSummaryService outpatientSummaryService,
-                                            PatientExternalService patientExternalService,
-											SharedAppointmentPort sharedAppointmentPort,
-                                            SharedReferenceCounterReference sharedReferenceCounterReference) {
-        this.createOutpatientConsultationService = createOutpatientConsultationService;
-        this.createOutpatientDocumentService = createOutpatientDocumentService;
-        this.outpatientReasonService = outpatientReasonService;
-        this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
-        this.outpatientConsultationMapper = outpatientConsultationMapper;
-        this.appointmentExternalService = appointmentExternalService;
-        this.dateTimeProvider = dateTimeProvider;
-        this.outpatientSummaryService = outpatientSummaryService;
-        this.patientExternalService = patientExternalService;
-		this.sharedAppointmentPort = sharedAppointmentPort;
-        this.sharedReferenceCounterReference = sharedReferenceCounterReference;
-    }
+    private final MarkAsErrorAProblem markAsErrorAProblem;
+
+    private final CanBeMarkAsError canBeMarkAsError;
 
     @Override
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
@@ -268,18 +249,30 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         return ResponseEntity.ok().body(true);
     }
 
-
-    @GetMapping("/summary-list")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-    public ResponseEntity<List<OutpatientEvolutionSummaryDto>> getEvolutionSummaryList(
-            @PathVariable(name = "institutionId") Integer institutionId,
-            @PathVariable(name = "patientId") Integer patientId){
-        List<EvolutionSummaryBo> evolutions = outpatientSummaryService.getSummary(patientId);
-        List<OutpatientEvolutionSummaryDto> result = outpatientConsultationMapper.fromListOutpatientEvolutionSummaryBo(evolutions);
-        LOG.debug("Get summary  => {}", result);
-        return ResponseEntity.ok(result);
+    @Transactional
+    @PostMapping("/markProblemAsError")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
+    public ResponseEntity<Boolean> markAsErrorHealthCondition(
+            @PathVariable Integer institutionId,
+            @PathVariable Integer patientId,
+            @RequestBody @Valid ErrorProblemDto errorProblemDto) {
+        LOG.debug("Input parameters -> institutionId {}, patientId {}, ErrorProblemDto {}", institutionId, patientId, errorProblemDto);
+        ProblemErrorBo problem = outpatientConsultationMapper.fromErrorProblemDto(errorProblemDto);
+        Boolean result = markAsErrorAProblem.run(institutionId, patientId, problem);
+        return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/validateProblemAsError/{healthConditionId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
+    public ResponseEntity<ProblemInfoDto> validateMarkAsError(
+            @PathVariable Integer institutionId,
+            @PathVariable Integer patientId,
+            @PathVariable Integer healthConditionId) {
+        LOG.debug("Input parameters -> institutionId {}, patientId {}, healthConditionId {}", institutionId, patientId, healthConditionId);
+        ProblemErrorBo problemInfo = canBeMarkAsError.run(institutionId, patientId, healthConditionId);
+        ProblemInfoDto result = outpatientConsultationMapper.fromProblemErrorBo(problemInfo);
+        return ResponseEntity.ok().body(result);
+    }
 
 	private List<CompleteReferenceDto> mapToCompleteReferenceDto(List<ReferenceDto> references, Integer institutionId,
 											 Integer doctorId, Integer patientMedicalCoverageId,
@@ -289,12 +282,12 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 				result.setNote(r.getNote());
 				result.setConsultation(r.getConsultation());
 				result.setCareLineId(r.getCareLineId());
-				result.setClinicalSpecialtyId(r.getClinicalSpecialtyId());
+				result.setClinicalSpecialtyIds(r.getClinicalSpecialtyIds());
 				result.setProblems(r.getProblems());
 				result.setFileIds(r.getFileIds());
 				result.setDestinationInstitutionId(r.getDestinationInstitutionId());
-				result.setPhonePrefix(r.getPhoneNumber());
 				result.setPhonePrefix(r.getPhonePrefix());
+				result.setPhoneNumber(r.getPhoneNumber());
 				result.setPriority(r.getPriority());
 				result.setStudy(r.getStudy());
 				result.setInstitutionId(institutionId);

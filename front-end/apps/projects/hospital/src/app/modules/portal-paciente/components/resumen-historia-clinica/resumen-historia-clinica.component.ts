@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { HCEAllergyDto, HCEAnthropometricDataDto, HCELast2RiskFactorsDto, HCEMedicationDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { HCEAllergyDto, HCEAnthropometricDataDto, HCELast2RiskFactorsDto, HCEMedicationDto, HCEHealthConditionDto } from '@api-rest/api-model';
 import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../historia-clinica/constants/summaries';
 import { PatientPortalService } from '@api-rest/services/patient-portal.service';
 
@@ -14,9 +14,9 @@ export class ResumenHistoriaClinicaComponent implements OnInit {
 	private anthropometricDataListSubject: Subject<HCEAnthropometricDataDto[]> = new BehaviorSubject<HCEAnthropometricDataDto[]>([]);
 
 	public allergies$: Observable<HCEAllergyDto[]>;
-	public familyHistories$: Observable<HCEPersonalHistoryDto[]>;
+	public familyHistories$: Observable<HCEHealthConditionDto[]>;
 	public readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
-	public personalHistory$: Observable<HCEPersonalHistoryDto[]>;
+	public patientProblems$: Observable<HCEHealthConditionDto[]>;
 	public readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
 	public readonly medicationsHeader = MEDICACION_HABITUAL;
 	public medications$: Observable<HCEMedicationDto[]>;
@@ -29,7 +29,7 @@ export class ResumenHistoriaClinicaComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.personalHistory$ = this.patientPortalService.getPersonalHistories();
+		this.patientProblems$ = this.patientPortalService.getPatientProblems();
 		this.familyHistories$ = this.patientPortalService.getFamilyHistories();
 		this.medications$ = this.patientPortalService.getMedications();
 		this.allergies$ = this.patientPortalService.getAllergies();

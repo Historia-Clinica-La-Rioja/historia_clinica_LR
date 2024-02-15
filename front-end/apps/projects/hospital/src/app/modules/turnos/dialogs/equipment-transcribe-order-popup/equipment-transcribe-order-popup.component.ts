@@ -1,12 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SnomedDto, SnomedECL } from '@api-rest/api-model';
-import { HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { SnomedDto, SnomedECL, TranscribedPrescriptionDto } from '@api-rest/api-model';
+import { HCEHealthConditionDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { hasError } from '@core/utils/form.utils';
 import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
+import { TranscribedOrderInfoEdit } from '@turnos/components/medical-order-input/medical-order-input.component';
+import { Observable, map, of, switchMap } from 'rxjs';
 
 @Component({
     selector: 'app-equipment-transcribe-order-popup',
@@ -15,7 +17,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
-    transcribeOrderForm: FormGroup;
+    transcribeOrderForm: FormGroup<TranscribedFormModel>;
     public readonly hasError = hasError;
     readonly studyECL = SnomedECL.PROCEDURE;
     readonly problemECL = SnomedECL.DIAGNOSIS;
@@ -29,19 +31,20 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
     constructor(
         public dialogRef: MatDialogRef<EquipmentTranscribeOrderPopupComponent>,
-        @Inject(MAT_DIALOG_DATA) public data,
+        @Inject(MAT_DIALOG_DATA) public data: TranscribedOrderInfoEdit,
         private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
-		private prescriptionService: PrescripcionesService,
+		private readonly prescriptionService: PrescripcionesService,
 		private readonly translateService: TranslateService
         ) { }
 
     ngOnInit(): void {
-        this.transcribeOrderForm = this.formBuilder.group({
-            study: [null, Validators.required],
-            assosiatedProblem: [null, Validators.required],
-            professional: [null, Validators.required],
-            institution: [null]
+        this.transcribeOrderForm = this.formBuilder.group<TranscribedFormModel>({
+            study: new FormControl (null, Validators.required),
+            assosiatedProblem: new FormControl (null, Validators.required),
+            professional: new FormControl (null, Validators.required),
+            institution: new FormControl (null, Validators.required),
+            observations:  new FormControl (null)
         });
         if (this.data.transcribedOrder){
             this.selectedStudy = this.data.transcribedOrder.study;
@@ -59,13 +62,14 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         this.transcribeOrderForm.controls.assosiatedProblem.setValue(order.problem.pt)
         this.transcribeOrderForm.controls.professional.setValue(order.professional)
         this.transcribeOrderForm.controls.institution.setValue(order.institution)
+        this.transcribeOrderForm.controls.observations.setValue(order.observations)
     }
 
     private getPatientHealthProblems() {
-        this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+        this.hceGeneralStateService.getActiveProblems(this.data.patientId).subscribe((activeProblems: HCEHealthConditionDto[]) => {
 			const activeProblemsList = activeProblems.map(problem => ({id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid}));
 
-			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+			this.hceGeneralStateService.getChronicConditions(this.data.patientId).subscribe((chronicProblems: HCEHealthConditionDto[]) => {
 				const chronicProblemsList = chronicProblems.map(problem => ({id: problem.id, description: problem.snomed.pt,  sctId: problem.snomed.sctid}));
 				const healthProblems = activeProblemsList.concat(chronicProblemsList);
                 this.healthProblems = healthProblems;
@@ -74,37 +78,64 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     }
 
     saveOrder() {
-
-        let orderProfessional = this.transcribeOrderForm.controls.professional?.value;
-        let orderInstitution = this.transcribeOrderForm.controls.institution?.value;
+        let orderProfessionalName = this.transcribeOrderForm.controls.professional?.value;
+        let orderInstitutionName = this.transcribeOrderForm.controls.institution?.value;
 
         this.checkForOrderDeletion();
 
-        this.prescriptionService.createTranscribedOrder(this.data.patientId, this.selectedStudy, this.selectedProblem, orderProfessional, orderInstitution)
-            .subscribe(serviceRequestId => {
-                this.prescriptionService.saveAttachedFiles(this.data.patientId, serviceRequestId, this.selectedFiles).subscribe();
-                let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
-                this.translateService.get(text).subscribe(translatedText => {
-                    let transcribedOrder = {
+        let transcribedData: TranscribedPrescriptionDto = {
+			study: this.selectedStudy,
+			healthCondition: this.selectedProblem,
+			healthcareProfessionalName: orderProfessionalName,
+			institutionName: orderInstitutionName,
+            observations:  this.transcribeOrderForm.controls.observations.value
+		}
+
+        this.prescriptionService.createTranscribedOrder(this.data.patientId, transcribedData)
+            .pipe(
+                switchMap(serviceRequestId => this.handleAttachedFilesByCondition(serviceRequestId)),
+                switchMap(serviceRequestId => this.buildTranscribedOrderContext(serviceRequestId)))
+            .subscribe(transcribedOrderContext => {
+                this.dialogRef.close({
+                    transcribeOrder: transcribedOrderContext.contextInfo,
+                    order: {
+                        serviceRequestId: transcribedOrderContext.contextInfo.serviceRequestId,
+                        studyName: this.selectedStudy.pt,
+                        displayText: `${transcribedOrderContext.title} - ${this.selectedStudy.pt}`,
+                        isTranscribed: true
+                    }
+                })
+            })
+    }
+
+    private buildTranscribedOrderContext(serviceRequestId: number): Observable<TranscribeOrderPopupContext> {
+        let orderProfessional = this.transcribeOrderForm.controls.professional?.value;
+        let orderInstitution = this.transcribeOrderForm.controls.institution?.value;
+        let orderObservations = this.transcribeOrderForm.controls.observations?.value;
+
+        let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
+        return this.translateService.get(text)
+            .pipe(map(translatedText => {
+                return {
+                    contextInfo: {
                         study: this.selectedStudy,
                         serviceRequestId: serviceRequestId,
                         problem: this.selectedProblem,
                         professional: orderProfessional,
                         institution: orderInstitution,
                         selectedFiles: this.selectedFiles,
-                        selectedFilesShow: this.selectedFilesShow
-                    }
-                    this.dialogRef.close({
-                        transcribedOrder,
-                        order: {
-                            serviceRequestId: serviceRequestId,
-                            studyName: this.selectedStudy.pt,
-                            displayText: `${translatedText} - ${this.selectedStudy.pt}`,
-                            isTranscribed: true
-                    }})
-            });
-        })
-        
+                        selectedFilesShow: this.selectedFilesShow,
+                        observations: orderObservations
+                    },
+                    title: translatedText
+                }
+            }))
+    }
+
+    private handleAttachedFilesByCondition(serviceRequestId: number): Observable<number> {
+        const sourceExistsAttachedFiles$: Observable<number> = this.prescriptionService.saveAttachedFiles(this.data.patientId, serviceRequestId, this.selectedFiles).pipe(map( _ => serviceRequestId ))
+        const source$ = this.selectedFiles.length > 0 ?  sourceExistsAttachedFiles$ : of(serviceRequestId)
+        return source$
     }
 
     checkForOrderDeletion(){
@@ -123,10 +154,11 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         })
     }
 
+
     isFormValid(): boolean {
-        if(this.selectedFiles.length && !this.filesExtension)
-            return this.transcribeOrderForm.valid;
-        return false
+        if (this.selectedFiles.length > 0)
+            return !this.filesExtension && this.transcribeOrderForm.valid
+        return this.transcribeOrderForm.valid
     }
 
     onFileSelected($event){
@@ -171,4 +203,29 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         this.selectedProblem = null;
         this.transcribeOrderForm.controls.assosiatedProblem.setValue(null);
     }
+}
+
+
+export interface TranscribeOrderPopupContext {
+    contextInfo: InfoTranscribeOrderPopup,
+    title: string
+}
+
+export interface InfoTranscribeOrderPopup {
+    study: SnomedDto
+    serviceRequestId: number
+    problem: SnomedDto
+    professional: string
+    institution: string
+    selectedFiles: File[]
+    selectedFilesShow: File[]
+    observations: string
+}
+
+export interface TranscribedFormModel {
+    study:  FormControl<string>;
+    assosiatedProblem: FormControl<string>,
+    professional: FormControl<string>,
+    institution:  FormControl<string>,
+    observations:  FormControl<string>
 }

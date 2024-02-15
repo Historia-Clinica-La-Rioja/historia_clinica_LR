@@ -11,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @Validated
-public class OdontologyConsultationDto implements Serializable {
+public class OdontologyConsultationDto {
 
     @NotNull(message = "{value.mandatory}")
     private Integer clinicalSpecialtyId;

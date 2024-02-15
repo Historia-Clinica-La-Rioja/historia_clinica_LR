@@ -63,6 +63,7 @@ export class ConceptTypeaheadSearchComponent {
 				pt: selectedOption.pt.term
 			};
 			!this.enableSubmitButton && this.conceptSelected.emit(this.snomedConcept);
+			this.clear();
 		}
 	}
 

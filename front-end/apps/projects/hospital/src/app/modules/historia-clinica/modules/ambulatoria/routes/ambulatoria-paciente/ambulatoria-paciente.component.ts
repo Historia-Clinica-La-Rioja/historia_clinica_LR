@@ -93,6 +93,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	hasLaboratoryStaffRole = false;
 	hasPharmacyStaffRole = false;
 	hasEmergencyCareRelatedRole = false;
+	hasViolenceRole = false;
 	showNursingSection = false;
 	femenino = FEMENINO;
 	selectedTab = 0;
@@ -108,6 +109,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 	isEmergencyCareTemporalPatient = false;
 	patientType: number;
 	isTemporaryPatient: boolean = false;
+	showCardTabs: boolean = false;
 
 	emergencyCareEpisode: ResponseEmergencyCareDto;
 	emergencyCareEpisodeState: EstadosEpisodio;
@@ -192,7 +194,7 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 						this.hasInternmentEpisodeInThisInstitution = internmentEpisodeProcess.inProgress && !!internmentEpisodeProcess.id;
 						this.emergencyCareTabIndex = this.hasInternmentEpisodeInThisInstitution ? EMERGENCY_CARE_INDEX_WHEN_INTERNED : EMERGENCY_CARE_INDEX;
 
-						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId).subscribe(
+						this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId).subscribe(
 							emergencyCareEpisodeInProgressDto => {
 
 								if (emergencyCareEpisodeInProgressDto.id) {
@@ -273,9 +275,6 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		this.diagnosticReportsStatus$ = this.requestMasterDataService.diagnosticReportStatus();
 
 		this.studyCategories$ = this.requestMasterDataService.categories();
-
-		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
-			.subscribe(show => this.showNursingSection = show);
 
 		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
 	}
@@ -373,9 +372,10 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 		if (event.index == RESUMEN_INDEX) {
 			this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({
 				allergies: false,
-				familyHistories: false,
 				personalHistories: false,
-				personalHistoriesByRole: true,
+				familyHistories: false,
+				patientProblems: false,
+				patientProblemsByRole: true,
 				riskFactors: false,
 				medications: true,
 				anthropometricData: false,
@@ -400,13 +400,20 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
 			this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 			this.hasHealthProfessionalRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD]);
-			this.hasEmergencyCareRelatedRole = (this.hasMedicalRole || this.hasNurseRole || this.hasHealthProfessionalRole);
 			this.hasOdontologyRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_EN_ODONTOLOGIA]);
+			this.hasEmergencyCareRelatedRole = (this.hasMedicalRole || this.hasNurseRole || this.hasHealthProfessionalRole || this.hasOdontologyRole);
 			this.hasHealthRelatedRole = anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO_ADULTO_MAYOR]);
 			this.hasPicturesStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_IMAGENES]);
 			this.hasLaboratoryStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LABORATORIO]);
 			this.hasPharmacyStaffRole = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_FARMACIA]);
 			this.hasPrescriptorRole = anyMatch<ERole>(userRoles, [ERole.PRESCRIPTOR]);
+			this.hasViolenceRole = anyMatch<ERole>(userRoles, [ERole.ABORDAJE_VIOLENCIAS]);
+
+			if (this.hasHealthRelatedRole || this.hasPrescriptorRole || this.hasEmergencyCareRelatedRole || 
+				this.hasPharmacyStaffRole || this.hasPicturesStaffRole || this.hasLaboratoryStaffRole)	{
+					this.showCardTabs = true;
+			}
+			this.showNursingTab(userRoles);
 		});
 	}
 
@@ -436,6 +443,15 @@ export class AmbulatoriaPacienteComponent implements OnInit, OnDestroy, Componen
 				this.mapToSummaryCoverage(this.medicalCoverageInfo.appointmentConfirmedCoverageInfo) :
 				this.mapToSummaryCoverage(this.medicalCoverageInfo.internmentEpisodeCoverageInfo);
 		return summaryInfo;
+	}
+
+	private showNursingTab(userRoles: ERole[]) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO)
+			.subscribe(show => {
+				if (anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PERSONAL_DE_FARMACIA])
+					&& show) 
+					this.showNursingSection = show
+			});
 	}
 
 	private mapToSummaryCoverage(patientCoverage: ExternalPatientCoverageDto): SummaryCoverageInformation {

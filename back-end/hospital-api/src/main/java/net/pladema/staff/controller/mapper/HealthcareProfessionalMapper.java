@@ -3,8 +3,10 @@ package net.pladema.staff.controller.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.pladema.staff.controller.dto.ExternalTemporaryHealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 
+import net.pladema.staff.domain.ExternalTemporaryHealthcareProfessionalBo;
 import net.pladema.staff.service.domain.HealthcareProfessionalCompleteBo;
 
 import org.mapstruct.IterableMapping;
@@ -39,6 +41,9 @@ public interface HealthcareProfessionalMapper {
 	@Named("fromHealthcareProfessionalCompleteDto")
 	HealthcareProfessionalCompleteBo fromHealthcareProfessionalCompleteDto(HealthcareProfessionalCompleteDto healthcareProfessionalCompleteDto);
 
+	@Named("fromExternalTemporaryHealthcareProfessionalDto")
+	ExternalTemporaryHealthcareProfessionalBo fromExternalTemporaryHealthcareProfessionalDto(ExternalTemporaryHealthcareProfessionalDto externalTemporaryHealthcareProfessionalDto);
+
 	@Named("fromHealthcarePersonList")
 	@IterableMapping(qualifiedByName = "fromHealthcarePersonBo")
 	List<HealthcareProfessionalDto> fromHealthcarePersonList(List<HealthcarePersonBo> healthcarePersonList);
@@ -57,7 +62,7 @@ public interface HealthcareProfessionalMapper {
 
 	@Name("fromProfessionalCompleteBo")
 	default ProfessionalCompleteDto fromProfessionalCompleteBo(ProfessionalCompleteBo professionalCompleteBo) {
-		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(),
+		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(), professionalCompleteBo.getMiddleNames(),
 				professionalCompleteBo.getLastName(), professionalCompleteBo.getNameSelfDetermination(),
 				mapProfessions(professionalCompleteBo.getProfessions()), professionalCompleteBo.getOtherLastNames());
 	}

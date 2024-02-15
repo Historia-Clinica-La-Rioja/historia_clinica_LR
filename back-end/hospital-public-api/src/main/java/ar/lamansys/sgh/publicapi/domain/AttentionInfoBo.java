@@ -2,6 +2,7 @@ package ar.lamansys.sgh.publicapi.domain;
 
 import java.time.LocalDate;
 
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,6 @@ public class AttentionInfoBo {
 	private InternmentBo internmentInfo;
 	private ProfessionalBo responsibleDoctor;
 	private SingleDiagnosticBo singleDiagnosticBo;
+	private DateTimeBo attentionDateWithTime;
 
 }

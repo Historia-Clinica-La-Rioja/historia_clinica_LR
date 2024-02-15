@@ -22,7 +22,7 @@ public class OutpatientBasicDataBo {
 
 	private LocalDate date;
 
-	private PatientBo patient;
+	private OutpatientPatientBo patient;
 
 	private String clinicalSpecialtySctid;
 
@@ -32,6 +32,8 @@ public class OutpatientBasicDataBo {
 
 	private List<SnomedBo> problems;
 
+	private List<SnomedBo> medications;
+
 	private AnthropometricDataBo anthropometricData;
 
 	private RiskFactorBo riskFactorData;
@@ -39,15 +41,13 @@ public class OutpatientBasicDataBo {
 
 	public OutpatientBasicDataBo(Integer id, Long documentId, LocalDate date,
 								 String clinicalSpecialtySctid, String institutionSisaCode,
-								 Integer patientId, String firstName, String middleNames, String lastName,
-								 String otherLastNames, Short identificationType, String identificationNumber,
-								 LocalDate birthDate, Short genderId) {
+								 Integer patientId, Integer personId, Short identificationType,
+								 String identificationNumber, Short genderId) {
 		this.id = id;
 		this.documentId = documentId;
 		this.date = date;
 		this.clinicalSpecialtySctid = clinicalSpecialtySctid;
 		this.institutionSisaCode = institutionSisaCode;
-		this.patient = new PatientBo(patientId, firstName, middleNames, lastName, otherLastNames,
-				identificationType, identificationNumber, birthDate, genderId);
+		this.patient = new OutpatientPatientBo(patientId, personId, identificationType, identificationNumber, genderId);
 	}
 }

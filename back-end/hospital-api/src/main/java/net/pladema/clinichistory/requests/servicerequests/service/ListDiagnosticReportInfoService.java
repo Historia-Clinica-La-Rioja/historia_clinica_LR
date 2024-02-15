@@ -11,4 +11,7 @@ public interface ListDiagnosticReportInfoService {
     List<DiagnosticReportBo> getList(DiagnosticReportFilterBo diagnosticReportFilterBo);
 
 	List<DiagnosticReportBo> getMedicalOrderList(DiagnosticReportFilterBo filter);
+
+	List<DiagnosticReportBo> getListIncludingConfidential(DiagnosticReportFilterBo diagnosticReportFilterBo, Integer institutionId);
+
 }

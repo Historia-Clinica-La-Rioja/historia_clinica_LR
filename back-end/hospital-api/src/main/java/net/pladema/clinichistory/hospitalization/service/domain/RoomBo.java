@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.establishment.repository.domain.RoomVo;
 
 import java.io.Serializable;
 
@@ -28,4 +29,8 @@ public class RoomBo implements Serializable {
         this.roomNumber = roomNumber;
         this.sector = sector;
     }
+
+	public RoomBo(RoomVo room) {
+		this.description = room.getDescription();
+	}
 }

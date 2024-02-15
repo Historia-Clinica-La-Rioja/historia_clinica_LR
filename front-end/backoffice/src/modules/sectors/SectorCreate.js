@@ -29,7 +29,7 @@ const SectorType = (sourceId) => {
             sort={{ field: 'description', order: 'ASC' }}
             defaultValue={SIN_TIPO}
             onChange={ _ => {
-                form.change('informer', null);
+                form.change('informer', false);
                 form.change('ageGroupId', null);
                 form.change('sectorOrganizationId', null);
                 form.change('careTypeId', null);

@@ -48,7 +48,7 @@ export class UiExternalComponentComponent implements OnChanges {
 			);
 			return;
 		}
-		const script = this.extensionJSLoaderService.addScriptTag(this.params.url);
+		const script = this.extensionJSLoaderService.addScriptTag(this.params.url + `?ts=${Date.now()}`);
 		script.addEventListener("load", () => {
 			const exist = customElements.get(this.params.componentName);
 			if (!exist) {

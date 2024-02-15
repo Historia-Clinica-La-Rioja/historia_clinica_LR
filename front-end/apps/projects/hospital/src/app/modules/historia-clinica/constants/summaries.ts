@@ -23,7 +23,7 @@ export const DIAGNOSTICOS: SummaryHeader = {
 };
 
 export const FACTORES_DE_RIESGO: SummaryHeader = {
-	title: 'Factores de riesgo',
+	title: 'Signos vitales y factores de riesgo',
 	matIcon: 'favorite_border'
 };
 
@@ -67,6 +67,11 @@ export const DOCUMENTS: SummaryHeader = {
 	matIcon: 'assignment'
 };
 
+export const VIOLENCE_SITUATION: SummaryHeader = {
+	title: 'ambulatoria.paciente.violence-situations.violence-situation-list.TITLE',
+	matIcon: 'history'
+}
+
 export const DOCUMENTS_SEARCH_FIELDS: SearchField[] = [
 	{
 		field: EDocumentSearch.DIAGNOSIS,
@@ -104,6 +109,11 @@ export const PROBLEMAS_RESUELTOS: SummaryHeader = {
 export const PROBLEMAS_ANTECEDENTES: SummaryHeader = {
 	title: 'Problemas activos y crónicos',
 	matIcon: 'error_outline'
+};
+
+export const PROBLEMAS_POR_ERROR: SummaryHeader = {
+	title: 'Registros incorrectos',
+	matIcon: 'report_problem'
 };
 
 export const PROBLEMAS_INTERNACION: SummaryHeader = {

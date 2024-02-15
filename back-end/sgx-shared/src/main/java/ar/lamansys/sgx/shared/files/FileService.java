@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -146,10 +147,10 @@ public class FileService {
 		return "application/octet-stream";
 	}
 
-	public String readFileAsString(FilePathBo path, Charset encoding) {
+	public Optional<String> readFileAsString(FilePathBo path, Charset encoding) {
 
 		try {
-			return blobStorage.readFileAsString(path, encoding);
+			return Optional.of(blobStorage.readFileAsString(path, encoding));
 		} catch (IOException e) {
 			log.error(e.getMessage());
 			saveFileError(new FileErrorInfo(
@@ -157,10 +158,7 @@ public class FileService {
 					String.format("readFileAsString error => %s", e),
 					appNode.nodeId
 			));
-			throw new FileServiceException(
-					FileServiceEnumException.SAVE_IOEXCEPTION,
-					String.format("La lectura del siguiente archivo %s tuvo el siguiente error %s", path.relativePath, e)
-			);
+			return Optional.empty();
 		}
 	}
 

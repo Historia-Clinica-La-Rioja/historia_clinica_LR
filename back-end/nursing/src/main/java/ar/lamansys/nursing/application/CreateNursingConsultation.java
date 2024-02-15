@@ -1,11 +1,13 @@
 package ar.lamansys.nursing.application;
 
-import java.time.LocalDate;
+import static ar.lamansys.nursing.domain.NursingConsultationInfoBo.newNursingConsultationInfoBo;
 
+import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.nursing.application.exceptions.NursingConsultationException;
 import ar.lamansys.nursing.application.exceptions.NursingConsultationExceptionEnum;
@@ -14,14 +16,11 @@ import ar.lamansys.nursing.application.port.NursingConsultationStorage;
 import ar.lamansys.nursing.application.port.NursingDoctorStorage;
 import ar.lamansys.nursing.application.port.NursingDocumentStorage;
 import ar.lamansys.nursing.domain.NursingConsultationBo;
-import ar.lamansys.nursing.domain.NursingConsultationInfoBo;
 import ar.lamansys.nursing.domain.doctor.DoctorInfoBo;
 import ar.lamansys.nursing.domain.document.NursingDocumentBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreateNursingConsultation {
@@ -58,18 +57,15 @@ public class CreateNursingConsultation {
 
         LocalDate now = dateTimeProvider.nowDate();
 
-		Integer medicalCoverageId = nursingConsultationBo.getPatientMedicalCoverageId();
-		if (medicalCoverageId == null)
-        	medicalCoverageId = nursingAppointmentStorage.getPatientMedicalCoverageId(nursingConsultationBo.getPatientId(), doctorInfoBo.getId());
+		setPatientMedicalCoverageIfEmpty(nursingConsultationBo, doctorInfoBo);
 
-        var encounterId = nursingConsultationStorage.save(
-                new NursingConsultationInfoBo(null,
+		var encounterId = nursingConsultationStorage.save(
+                newNursingConsultationInfoBo(
                         nursingConsultationBo,
-                        medicalCoverageId,
                         doctorInfoBo.getId(),
                         now,
-                        false,
-						nursingConsultationBo.getHierarchicalUnitId()));
+                        false
+				));
 
         Long documentId = nursingDocumentStorage.save(new NursingDocumentBo(null, nursingConsultationBo, encounterId, doctorInfoBo.getId(), now));
         Integer appointmentId = nursingAppointmentStorage.run(nursingConsultationBo.getPatientId(), doctorInfoBo.getId(), now);
@@ -77,7 +73,15 @@ public class CreateNursingConsultation {
 			this.sharedAppointmentPort.saveDocumentAppointment(new DocumentAppointmentDto(documentId, appointmentId));
     }
 
-    private void assertContextValid(NursingConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {
+	private void setPatientMedicalCoverageIfEmpty(NursingConsultationBo nursingConsultationBo, DoctorInfoBo doctorInfoBo) {
+		if (nursingConsultationBo.getPatientMedicalCoverageId() == null) {
+			nursingConsultationBo.setPatientMedicalCoverageId(
+					nursingAppointmentStorage.getPatientMedicalCoverageId(nursingConsultationBo.getPatientId(), doctorInfoBo.getId())
+			);
+		}
+	}
+
+	private void assertContextValid(NursingConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {
         if (consultationBo.getInstitutionId() == null)
             throw new NursingConsultationException(NursingConsultationExceptionEnum.NULL_INSTITUTION_ID.NULL_INSTITUTION_ID, "El id de la institución es obligatorio");
         if (consultationBo.getPatientId() == null)

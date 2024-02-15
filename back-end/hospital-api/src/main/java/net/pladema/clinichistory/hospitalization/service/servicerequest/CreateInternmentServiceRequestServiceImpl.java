@@ -44,6 +44,7 @@ public class CreateInternmentServiceRequestServiceImpl implements CreateInternme
 				.requestDate(genericServiceRequestBo.getRequestDate())
 				.associatedSourceTypeId(SourceType.HOSPITALIZATION)
 				.associatedSourceId(activeEpisodeId)
+				.observations(genericServiceRequestBo.getObservations())
 				.build();
 	}
 

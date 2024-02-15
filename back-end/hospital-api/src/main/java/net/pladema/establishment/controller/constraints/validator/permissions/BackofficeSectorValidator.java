@@ -1,6 +1,5 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import io.jsonwebtoken.lang.Assert;
 import net.pladema.establishment.repository.HierarchicalUnitSectorRepository;
 import net.pladema.establishment.repository.SectorRepository;
 import net.pladema.establishment.repository.entity.Sector;

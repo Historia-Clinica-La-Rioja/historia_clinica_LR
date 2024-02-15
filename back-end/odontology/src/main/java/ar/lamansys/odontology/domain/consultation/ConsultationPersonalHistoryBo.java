@@ -1,6 +1,6 @@
 package ar.lamansys.odontology.domain.consultation;
 
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +8,12 @@ import lombok.Setter;
 @Setter
 public class ConsultationPersonalHistoryBo extends ClinicalTermBo {
 
-	private DateDto startDate;
+	private LocalDate startDate;
+	private LocalDate inactivationDate;
+	private Short typeId;
+	private String note;
 
-	public ConsultationPersonalHistoryBo(DateDto startDate) {
+	public ConsultationPersonalHistoryBo(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 }

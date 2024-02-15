@@ -160,7 +160,8 @@ public class ClinicHistoryContextBuilder {
 
 	private void addPatientInfo(Map<String, Object> context, CHDocumentBo document){
 		context.put("patient", patientExternalService.getBasicDataFromPatient(document.getPatientId()));
-		context.put("patientAge", document.getPatientAgePeriod().substring(1, document.getPatientAgePeriod().indexOf("Y")));
+		String patientAge = document.getPatientAgePeriod().contains("Y") ? document.getPatientAgePeriod().substring(1, document.getPatientAgePeriod().indexOf("Y")) : "0";
+		context.put("patientAge", patientAge);
 	}
 
 	private void addEncounterInfo(Map<String, Object> context, CHDocumentBo document, Integer episodeId, ECHEncounterType encounterType){

@@ -1,0 +1,266 @@
+<app-new-consultation-expansion-section
+    [title]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.TITLE' | translate" icon="cancel">
+
+    <form [formGroup]="form">
+        <mat-radio-group class="basic-options" color="primary" formControlName="articulation" (change)="updateValidationArticulations()">
+            <mat-radio-button *ngFor="let opt of articulations" [value]="opt">
+                {{opt}}
+            </mat-radio-button>
+            <mat-error *ngIf="hasError(form, 'required', 'articulation') && form.controls.articulation.touched"
+            [translate]="'forms.REQUIRED'"></mat-error>
+        </mat-radio-group>
+
+        <div *ngIf="articulation === articulationEnum.IN" class="aside column">
+            <mat-radio-group class="basic-options" color="primary" formControlName="healthSystemArticulation" (change)="updateValidationArea()">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.SUBTITLE_1' |
+                    translate}}</label>
+                <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
+                    {{opt.text}}
+                </mat-radio-button>
+            </mat-radio-group>
+            <div *ngIf="healthSystemArticulation" class="column">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' |
+                    translate}}</label>
+                <mat-form-field appearance="outline" class="mt-10">
+                    <mat-select id="violence-situation-area-label" multiple formControlName="area" (selectionChange)="updateValidationOtherArea()"
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' | translate}}">
+                        
+                        <mat-select-trigger>
+                            {{form.controls.area.value?.[0]?.text || ''}} 
+                              <span *ngIf="form.controls.area.value?.length > 1">
+                                ( + {{(form.controls.area.value?.length || 0) - 1}} {{form.controls.area.value?.length === 2 ? 'otro' : 'otros'}})
+                              </span>
+                          </mat-select-trigger>
+                        <mat-option *ngFor="let opt of areasOptions" [value]="opt">
+                            {{opt.text}}
+                        </mat-option>
+                    </mat-select>
+                    <button id="clear_violence-situation-area" type="button" mat-button *ngIf="form.value.area?.length"
+                        matSuffix color="warn" mat-icon-button
+                        (click)="form.controls.area.reset(); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error *ngIf="hasError(form, 'required', 'area')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="area?.includes(areaOther)" class="column mt-10">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_2' |
+                    translate}}</label>
+                <mat-form-field appearance="outline">
+                    <input matInput type="text" id="violence-situation-other-area" formControlName="otherArea"
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.TEXT_FREE_LABEL' | translate}}"
+                        required>
+                    <mat-error *ngIf="hasError(form, 'required', 'otherArea')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+
+            <mat-radio-group class="basic-options" color="primary" formControlName="articulationEstablishment" (change)="updateValidationArticulationEstablishment()">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.SUBTITLE_2' |
+                    translate}}</label>
+                <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
+                    {{opt.text}}
+                </mat-radio-button>
+            </mat-radio-group>
+
+            <div *ngIf="articulationEstablishment" class="column">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' |
+                    translate}}</label>
+                <mat-form-field appearance="outline">
+                    <mat-select id="violence-situation-establishment" multiple
+                        formControlName="articulationEstablishmentList"
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}" (selectionChange)="updateValidationArticulationEstablishmentOther()">
+                        <mat-select-trigger>
+                            {{form.controls.articulationEstablishmentList.value?.[0]?.text || ''}}
+                            <span *ngIf="form.controls.articulationEstablishmentList.value?.length > 1">
+                              (+ {{(form.controls.articulationEstablishmentList.value?.length || 0) - 1}} {{form.controls.articulationEstablishmentList.value?.length === 2 ? 'otro' : 'otros'}})
+                            </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let opt of establishments" [value]="opt">
+                            {{opt.text}}
+                        </mat-option>
+                    </mat-select>
+                    <button id="clear_violence-situation-establishments" type="button" mat-button
+                        *ngIf="form.value.articulationEstablishmentList?.length" matSuffix color="warn" mat-icon-button
+                        (click)="form.controls.articulationEstablishmentList.reset(); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error *ngIf="hasError(form, 'required', 'articulationEstablishmentList')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="articulationEstablishmentList?.includes(articulationEstablishmentOther)" class="column">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_4' |
+                    translate}}</label>
+                <mat-form-field appearance="outline">
+                    <input matInput type="text" id="violence-situation-other-establishment"
+                        formControlName="otherArticulationEstablishment"
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.TEXT_FREE_LABEL' | translate}}"
+                        required>
+                    <mat-error *ngIf="hasError(form, 'required', 'otherArticulationEstablishment')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+
+            <mat-radio-group class="basic-options" color="primary" formControlName="internmentIndication">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_5' |
+                    translate}}</label>
+                <mat-radio-button *ngFor="let opt of intermentIndicationOptions" [value]="opt.value">
+                    {{opt.text}}
+                </mat-radio-button>
+            </mat-radio-group>
+
+        </div>
+
+        <div *ngIf="articulation === articulationEnum.OUT" class="aside column" fxLayoutGap="10px">
+            <mat-checkbox (change)="setDevice(devicesEnum.MUNICIPAL_DEVICES)" color="primary" [checked]="selectedDevices.includes(devicesEnum.MUNICIPAL_DEVICES)">{{
+                devicesEnum.MUNICIPAL_DEVICES }}</mat-checkbox>
+
+            <div *ngIf="devices.includes(devicesEnum.MUNICIPAL_DEVICES)" class="aside column">
+                <mat-checkbox *ngFor="let mdev of municipalDevicesList" [checked]="selectedMunicipalDevices.includes(mdev.value)" (change)="setMunicipalDevices(mdev.value)"
+                    color="primary">{{ mdev.text }}</mat-checkbox>
+
+				<mat-error *ngIf="hasError(form, 'required', 'municipalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
+            </div>
+
+            <mat-checkbox (change)="setDevice(devicesEnum.PROVINCIAL_DEVICES)" [checked]="selectedDevices.includes(devicesEnum.PROVINCIAL_DEVICES)" color="primary">{{
+                devicesEnum.PROVINCIAL_DEVICES }}</mat-checkbox>
+
+            <div *ngIf="devices.includes(devicesEnum.PROVINCIAL_DEVICES)" class="aside column">
+                <mat-checkbox *ngFor="let pdev of provincialDevicesList" [checked]="selectedProvincialDevices.includes(pdev.value)" (change)="setProvincialDevices(pdev.value)"
+                    color="primary">{{ pdev.text }}</mat-checkbox>
+
+				<mat-error *ngIf="hasError(form, 'required', 'provincialDevices')" [translate]="'forms.REQUIRED'"></mat-error>
+            </div>
+
+            <mat-checkbox (change)="setDevice(devicesEnum.NATIONAL_DEVICES)" color="primary" [checked]="selectedDevices.includes(devicesEnum.NATIONAL_DEVICES)">{{
+                devicesEnum.NATIONAL_DEVICES }}</mat-checkbox>
+
+            <div *ngIf="devices.includes(devicesEnum.NATIONAL_DEVICES)" class="aside column">
+                <mat-checkbox *ngFor="let ndev of nationalDevicesList" [checked]="selectedNationalDevices.includes(ndev.value)" (change)="setNationalDevices(ndev.value)"
+                    color="primary">{{ ndev.text }}</mat-checkbox>
+
+				<mat-error *ngIf="hasError(form, 'required', 'nationalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
+            </div>
+
+            <mat-checkbox (change)="setDevice(devicesEnum.SOCIAL_ORGANIZATION)" color="primary" [checked]="selectedDevices.includes(devicesEnum.SOCIAL_ORGANIZATION)">{{
+                devicesEnum.SOCIAL_ORGANIZATION }}</mat-checkbox>
+
+            <mat-error *ngIf="hasError(form, 'required', 'devices') && form.controls.devices.touched"  [translate]="'forms.REQUIRED'"></mat-error>
+        </div>
+
+
+        <mat-radio-group class="basic-options" color="primary" formControlName="personComplaint" (change)="updateValidationAgencyComplaint()">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_6' |
+                translate}}</label>
+            <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
+                {{opt.text}}
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="personComplaint" class="aside column">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_7' |
+                translate}}</label>
+            <mat-form-field appearance="outline">
+                <mat-select id="violence-situation-establishment" multiple formControlName="agencyComplaint"
+                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_7' | translate}}">
+                    <mat-select-trigger>
+                        {{form.controls.agencyComplaint.value?.[0]?.text || ''}} 
+                        <span *ngIf="form.controls.agencyComplaint.value?.length > 1">
+                          ( + {{(form.controls.agencyComplaint.value?.length || 0) - 1}} {{form.controls.agencyComplaint.value?.length === 2 ? 'otro' : 'otros'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let opt of organizations" [value]="opt">
+                        {{opt.text}}
+                    </mat-option>
+                </mat-select>
+                <button id="clear_violence-situation-organizations" type="button" mat-button
+                    *ngIf="form.value.agencyComplaint?.length" matSuffix color="warn" mat-icon-button
+                    (click)="form.controls.agencyComplaint.reset(); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="hasError(form, 'required', 'agencyComplaint')"
+                    [translate]="'forms.REQUIRED'"></mat-error>
+            </mat-form-field>
+        </div>
+
+        <mat-radio-group class="basic-options" color="primary" formControlName="isInstitutionComplaint" (change)="updateValidationInstitutionComplaint()">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_8' |
+                translate}}</label>
+            <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
+                {{opt.text}}
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="isInstitutionComplaint" class="aside column">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_9' |
+                translate}}</label>
+
+            <mat-checkbox *ngFor="let opt of complaints" [checked]="selectedComplains?.includes(opt.value)" (change)="setComplaints(opt.value)" color="primary">
+                {{opt.text}}
+            </mat-checkbox>
+            <mat-error *ngIf="hasError(form, 'required', 'institutionComplaints') && form.controls.institutionComplaints.touched"
+            [translate]="'forms.REQUIRED'"></mat-error>
+
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_10' |
+                translate}}</label>
+            <mat-form-field appearance="outline">
+                <mat-select id="violence-situation-organizations-extended" multiple
+                    formControlName="institutionComplaintsOrganizations" (selectionChange)="updateValidationAutorityName()"
+                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_10' | translate}}">
+                    <mat-select-trigger>
+                        {{form.controls.institutionComplaintsOrganizations.value?.[0]?.text || ''}}
+                        <span *ngIf="form.controls.institutionComplaintsOrganizations.value?.length > 1">
+                          (  + {{(form.controls.institutionComplaintsOrganizations.value?.length || 0) - 1}} {{form.controls.institutionComplaintsOrganizations.value?.length === 2 ? 'otro' : 'otros'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let opt of organizationsExtended" [value]="opt">
+                        {{opt.text}}
+                    </mat-option>
+                </mat-select>
+                <button id="clear_violence-situation-organizations-extended" type="button" mat-button
+                    *ngIf="form.value.institutionComplaintsOrganizations?.length" matSuffix color="warn" mat-icon-button
+                    (click)="form.controls.institutionComplaintsOrganizations.reset(); $event.stopPropagation()">
+                    <mat-icon>close</mat-icon>
+                </button>
+                <mat-error *ngIf="hasError(form, 'required', 'institutionComplaintsOrganizations')"
+                    [translate]="'forms.REQUIRED'"></mat-error>
+            </mat-form-field>
+
+            <div *ngIf="institutionComplaintsOrganizations?.includes(institutionComplaintsOrganizationsOther)" class="column">
+                <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_11' |
+                    translate}}</label>
+                <mat-form-field appearance="outline">
+                    <textarea matInput type="text" id="violence-situation-name-autority" formControlName="autorityName"
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_11' | translate }}"
+                        required>
+                    </textarea>
+                    <mat-error *ngIf="hasError(form, 'required', 'autorityName')"
+                        [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <mat-radio-group class="basic-options" color="primary" formControlName="isSexualViolence" (change)="updateValidationSexualViolence()">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_12' |
+                translate}}</label>
+            <mat-radio-button *ngFor="let opt of basicOptions" [value]="opt.value">
+                {{opt.text}}
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="isSexualViolence" class="column aside">
+            <label>{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_13' |
+                translate}}</label>
+
+            <mat-checkbox *ngFor="let opt of implementedActions" [checked]="selectedImplementedActions?.includes(opt.value)" (change)="setImplementedActions(opt.value)" color="primary">
+                {{opt.text}}
+            </mat-checkbox>
+            <mat-error *ngIf="hasError(form, 'required', 'implementedActions') && form.controls.implementedActions.touched"
+            [translate]="'forms.REQUIRED'"></mat-error>
+        </div>
+    </form>
+
+</app-new-consultation-expansion-section>

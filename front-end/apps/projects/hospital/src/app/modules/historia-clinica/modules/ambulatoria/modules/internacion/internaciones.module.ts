@@ -30,6 +30,7 @@ import { FormDynamicNewBornComponent } from './components/form-dynamic-new-born/
 import { ProcedureComponent } from './components/procedure/procedure.component';
 import { ListConceptComponent } from './components/list-concept/list-concept.component';
 import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
+import { SearchCasesComponent } from 'projects/hospital/src/app/modules/hsi-components/search-cases/search-cases.component';
 // dialogs
 import { AnamnesisDockPopupComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/anamnesis-dock-popup/anamnesis-dock-popup.component";
 import { ConceptDateFormComponent } from './dialogs/concept-date-form/concept-date-form.component';
@@ -104,7 +105,8 @@ import { MedicationComponent } from './components/medication/medication.componen
 		HistoriaClinicaModule,
 		PresentationModule,
 		LazyMaterialModule,
-		TurnosModule
+		TurnosModule,
+		SearchCasesComponent,
 	],
 	providers: [
 		ComponentEvaluationManagerService,

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DateTimeDto, DocumentSearchDto, LoggedUserDto, PatientDischargeDto } from "@api-rest/api-model";
+import { DocumentSearchDto, LoggedUserDto, PatientDischargeDto } from "@api-rest/api-model";
 import { differenceInHours } from "date-fns";
 import { AccountService } from "@api-rest/services/account.service";
-import { dateTimeDtoToDate, dateTimeDtoToStringDate, dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
+import { dateTimeDtoToDate, dateTimeDtotoLocalDate } from "@api-rest/mapper/date-dto.mapper";
 import { DeleteDocumentActionService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service";
 import { EditDocumentActionService } from './edit-document-action.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
@@ -84,16 +84,6 @@ export class DocumentActionsService {
 		return true;
 	}
 
-	loadTime(creteadOn: DateTimeDto): string {
-		const date = new Date(dateTimeDtoToStringDate(creteadOn));
-		let minutes: number | string = date.getMinutes();
-		if (minutes < 10) {
-			minutes = minutes.toString();
-			minutes = `0${minutes}`;
-		}
-		return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${minutes}hs`;
-	}
-
 	deleteDocument(document: DocumentSearchDto, internmentEpisodeId: number): Observable<InternmentFields> {
 		this.deleteDocumentAction.delete(document, internmentEpisodeId);
 		return this.deleteDocumentAction.updateFields$;
@@ -112,8 +102,6 @@ export class DocumentActionsService {
 export interface DocumentSearch {
 	document: DocumentSearchDto;
 	canDoAction?: DocumentAction;
-	createdOn: string;
-	editedOn?: string;
 }
 
 interface DocumentAction {

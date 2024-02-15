@@ -1,12 +1,20 @@
 @import "../../../../../assets/styles/mat-mixins";
 
-.mat-form-field-appearance-outline {
-    margin: .25em 0.75em;
-	min-width: 30%
-}
 #filters{
 	@include mat-form-field-background-white;
 }
 #button-filter{
 	margin-bottom: 3%;
+}
+
+.filters-reference{
+	margin: .25em 0.75em;
+	max-width: 22%;
+	min-width: 22%;
+}
+
+.filters-telemedicina{
+	margin: .25em 0.75em;
+	max-width: 30%;
+	min-width: 30%;
 }

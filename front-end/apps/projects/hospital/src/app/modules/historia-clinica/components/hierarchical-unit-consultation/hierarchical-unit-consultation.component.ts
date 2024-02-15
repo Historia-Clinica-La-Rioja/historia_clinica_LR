@@ -34,6 +34,7 @@ export class HierarchicalUnitConsultationComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.form = this.hierarchicalUnitformService.getForm();
+		this.response.emit(this.form.value.hierarchicalUnitId);
 
 		this.accountService.getInfo().pipe(
 			tap(userInfo => this.userId = userInfo.id),

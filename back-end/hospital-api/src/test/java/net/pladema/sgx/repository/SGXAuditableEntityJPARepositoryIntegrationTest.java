@@ -1,5 +1,6 @@
 package net.pladema.sgx.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.auth.user.SgxUserDetails;
 import net.pladema.UnitRepository;
 import org.assertj.core.api.Assertions;
@@ -27,6 +28,9 @@ class SGXAuditableEntityJPARepositoryIntegrationTest extends UnitRepository {
 
     @MockBean
     private SecurityEvaluationContextExtension securityEvaluationContextExtension;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @Configuration
     static class ContextConfiguration {

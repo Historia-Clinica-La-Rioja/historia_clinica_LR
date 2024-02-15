@@ -4,7 +4,7 @@ import { ContentComponent } from './content.component';
 
 // More on how to set up stories at: https://storybook.js.org/docs/angular/writing-stories/introduction
 const meta: Meta<ContentComponent> = {
-	title: 'Example/ContentComponent',
+	title: 'Presentation/ContentComponent',
 	component: ContentComponent,
 	tags: ['autodocs'],
 	render: (args: ContentComponent) => ({

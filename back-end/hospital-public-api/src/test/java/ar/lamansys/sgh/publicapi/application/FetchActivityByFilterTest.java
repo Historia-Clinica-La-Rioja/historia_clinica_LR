@@ -7,11 +7,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import ar.lamansys.sgh.publicapi.application.port.out.AttentionReadStorage;
-import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
-
-import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ar.lamansys.sgh.publicapi.application.fetchactivitiesbyfilter.ActivitySearchFilter;
 import ar.lamansys.sgh.publicapi.application.fetchactivitiesbyfilter.FetchActivitiesByFilter;
 import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
+import ar.lamansys.sgh.publicapi.application.port.out.AttentionReadStorage;
 import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
 import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
 import ar.lamansys.sgh.publicapi.domain.GenderEnum;
@@ -29,7 +25,12 @@ import ar.lamansys.sgh.publicapi.domain.InternmentBo;
 import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 @ExtendWith(MockitoExtension.class)
 public class FetchActivityByFilterTest {
 
@@ -59,7 +60,8 @@ public class FetchActivityByFilterTest {
 								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
 								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
-								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
+								new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
 						),
 						new AttentionInfoBo(
 								11L, 2L, LocalDate.ofYearDay(2020, 2),
@@ -68,7 +70,8 @@ public class FetchActivityByFilterTest {
 								new CoverageActivityInfoBo(), ScopeEnum.INTERNACION,
 								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 								new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"),
-								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
+								new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
 						),
 						new AttentionInfoBo(
 								12L, 3L, LocalDate.ofYearDay(2020, 3),
@@ -77,7 +80,8 @@ public class FetchActivityByFilterTest {
 								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
 								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
-								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
+								new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
 						)
 				)
 		);
@@ -101,7 +105,8 @@ public class FetchActivityByFilterTest {
 								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
 								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
-								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
+								new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
 						)
 				)
 		);
@@ -126,7 +131,8 @@ public class FetchActivityByFilterTest {
 								new CoverageActivityInfoBo(), ScopeEnum.AMBULATORIA,
 								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 								new ProfessionalBo(1, "Jose", "Fernandez", "DOC-30000000", "30000000"),
-								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
+								new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
 						),
 						new AttentionInfoBo(
 								11L,2L, LocalDate.ofYearDay(2020, 2),
@@ -135,7 +141,8 @@ public class FetchActivityByFilterTest {
 								new CoverageActivityInfoBo(), ScopeEnum.INTERNACION,
 								new InternmentBo("100", LocalDate.ofYearDay(2020, 1).atStartOfDay(), LocalDate.ofYearDay(2020, 20).atStartOfDay()),
 								new ProfessionalBo(1, "Juan", "Perez", "DOC-30000000", "30000000"),
-								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now())
+								new SingleDiagnosticBo(new SnomedCIE10Bo("1", "1", "1"), true, "1234345", "2345435", LocalDateTime.now()),
+								new DateTimeBo(new DateBo(2020, 1, 1), new TimeBo(20, 30, 45))
 						)
 				));
 

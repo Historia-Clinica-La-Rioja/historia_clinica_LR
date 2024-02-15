@@ -20,7 +20,10 @@ const FileRebuildButton = ({ record }) => {
                 refresh();
             })
             .catch((e) => {
-                notify('La regeneración del documento tuvo un error', { type: 'warning' })
+                if (!e.body.text)
+                    notify('La regeneración del documento tuvo un error', { type: 'warning' })
+                else
+                    notify(e.body.text, { type: 'warning' })
             })
             .finally(() => {
                 setLoading(false);

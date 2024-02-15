@@ -7,6 +7,7 @@ import { VirtualConstultationService } from '@api-rest/services/virtual-constult
 import { ContextService } from '@core/services/context.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { MapperService } from '@presentation/services/mapper.service';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
 	selector: 'app-new-telemedicine-request',
@@ -19,7 +20,8 @@ export class NewTelemedicineRequestComponent implements OnInit {
 	photoSelectedPatient: PersonPhotoDto;
 	firstStepForm: UntypedFormGroup;
 	secondStepForm: UntypedFormGroup;
-	confirmAndValidateForm = false;
+	confirmAndValidateForm = new ReplaySubject<boolean>();
+	secondStepForReset = false;
 
 	constructor(public dialogRef: MatDialogRef<NewTelemedicineRequestComponent>, private mapperService: MapperService, private readonly formBuilder: UntypedFormBuilder, private virtualConstultationService: VirtualConstultationService,
 		private contextService: ContextService) { }
@@ -31,6 +33,14 @@ export class NewTelemedicineRequestComponent implements OnInit {
 		this.secondStepForm = this.formBuilder.group({
 			requestInformationData: [null, Validators.required],
 		});
+	}
+
+	onStepChange(stepper: MatStepper) {
+		if (stepper.selectedIndex === 0) {
+			this.secondStepForReset = true
+		} else if (stepper.selectedIndex === 1) {
+			this.secondStepForReset = false;
+		}
 	}
 
 	onSelectedPatient(selectedPatient: Patient) {
@@ -48,15 +58,14 @@ export class NewTelemedicineRequestComponent implements OnInit {
 		if (this.secondStepForm.valid) {
 			this.saveVirtualConsultationRequest();
 		} else {
-			this.confirmAndValidateForm = true;
+			this.confirmAndValidateForm.next(true);
 		}
 	}
 
 	prepareVirtualConsultationRequest(informationConsultation: any) {
+		this.secondStepForm.controls.requestInformationData.setValue(informationConsultation);
 		if (informationConsultation) {
-			this.secondStepForm.controls.requestInformationData.setValue(informationConsultation);
 			this.virtualConsultationRequest = this.mapToVirtualConsultationRequestDto(informationConsultation);
-
 		}
 	}
 	saveVirtualConsultationRequest() {

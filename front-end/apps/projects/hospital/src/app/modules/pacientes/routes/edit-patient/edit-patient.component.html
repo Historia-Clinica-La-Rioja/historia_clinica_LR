@@ -374,12 +374,12 @@
 						</div>
 						<mat-form-field class="prefix-field" appearance="outline" class="matInput">
 							<input id="phonePrefix" name="phonePrefix" (keyup)="updatePhoneValidators()"
-								formControlName="phonePrefix" maxlength="4" minlength="2"
+								formControlName="phonePrefix"
 								placeholder="{{'pacientes.form.PHONE_PREFIX' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phonePrefix')">
 								<span translate="forms.REQUIRED"></span>
 							</mat-error>
-							<mat-error *ngIf="hasError(form, 'minlength', 'phonePrefix')"
+							<mat-error *ngIf="form.hasError('maxlength', 'phonePrefix')"
 								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 10}">
 							</mat-error>
 							<mat-error *ngIf="hasError(form, 'pattern', 'phonePrefix')"
@@ -393,10 +393,13 @@
 						</div>
 						<mat-form-field appearance="outline" class="matInput">
 							<input id="phoneNumber" (keyup)="updatePhoneValidators()" name="phoneNumber"
-								formControlName="phoneNumber" maxlength="15" minlength="15"
+								formControlName="phoneNumber"
 								placeholder="{{'pacientes.form.PHONE_NUMBER' | translate}}" matInput>
 							<mat-error *ngIf="hasError(form, 'required', 'phoneNumber')">
 								<span translate="forms.REQUIRED"></span>
+							</mat-error>
+							<mat-error *ngIf="form.hasError('maxlength', 'phoneNumber')"
+								translate="forms.MAX_LENGTH_ERROR" [translateParams]="{max: 15}">
 							</mat-error>
 							<mat-error *ngIf="hasError(form, 'pattern', 'phoneNumber')"
 								[translate]="'forms.FORMAT_NUMERIC'">

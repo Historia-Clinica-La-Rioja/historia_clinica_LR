@@ -1,0 +1,228 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_11
+
+    - changeSet:
+        id: addColumn-uuid-medication-request
+        author: mvalin
+        changes:
+          - addColumn:
+              tableName: medication_request
+              columns:
+                - column:
+                    name: uuid
+                    type: uuid
+
+    - changeSet:
+        id: addColumn-uuid-medication-statement
+        author: mvalin
+        changes:
+          - addColumn:
+              tableName: medication_statement
+              columns:
+                - column:
+                    name: uuid
+                    type: uuid
+
+    - changeSet:
+        id: add-until_date-column-historic_incharge_nurse_bed
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: historic_incharge_nurse_bed
+              columns:
+                - column:
+                    name: until_date
+                    type: datetime
+    
+    - changeSet:    
+        id: add-protected_appointment-column-reference_appointment
+        author: jvaldez
+        changes:
+          - addColumn:
+              tableName: reference_appointment
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: protected_appointment
+                    type: boolean
+                    defaultValue: ${boolean.true}
+
+
+    - changeSet:
+        id: v_attention-updateView
+        comment: Update v_attention view
+        author: mmalyvarni
+        changes:
+          - createView:
+              viewName: v_attention
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT d.id as id, oc.patient_id as patient_id, oc.institution_id as institution_id, oc.clinical_specialty_id as clinical_speciality_id,
+                        oc.start_date as performed_date, d.source_id as encounter_id, d.source_type_id as scope_id, oc.doctor_id as doctor_id,
+                        oc.created_by as created_by, oc.created_on as created_on, oc.updated_by as updated_by, oc.updated_on as updated_on,
+                        oc.deleted_by as deleted_by, oc.deleted_on as deleted_on, oc.deleted as deleted
+                FROM outpatient_consultation as oc
+                JOIN document as d ON (oc.id = d.source_id and d.source_type_id = 1)
+                    UNION ALL
+                SELECT d.id as id, ie.patient_id, ie.institution_id , ie.clinical_specialty_id , ie.entry_date, d.source_id, d.source_type_id, hpg.healthcare_professional_id,
+                        d.created_by, d.created_on, ie.updated_by, d.updated_on, d.deleted_by, d.deleted_on, d.deleted
+                FROM internment_episode as ie
+                JOIN document AS d ON (ie.id = d.source_id and d.source_type_id = 0)
+                JOIN healthcare_professional_group AS hpg ON (ie.id = hpg.internment_episode_id and hpg.responsible)
+                    UNION ALL
+                SELECT d.id as id, dc.patient_id, dc.institution_id , dc.clinical_specialty_id , dc.performed_date, d.source_id, d.source_type_id, dc.doctor_id,
+                        dc.created_by, dc.created_on, dc.updated_by, dc.updated_on, dc.deleted_by, dc.deleted_on, dc.deleted
+                FROM odontology_consultation as dc
+                JOIN document as d ON (dc.id = d.source_id and d.source_type_id = 6)
+                    UNION ALL
+                SELECT d.id as id, vc.patient_id, vc.institution_id , vc.clinical_specialty_id , vc.performed_date, d.source_id, d.source_type_id, vc.doctor_id,
+                        vc.created_by, vc.created_on, vc.updated_by, vc.updated_on, vc.deleted_by, vc.deleted_on, vc.deleted
+                FROM vaccine_consultation as vc
+                JOIN document as d ON (vc.id = d.source_id and d.source_type_id = 5)
+                    UNION ALL
+                SELECT d.id AS id, ecen.patient_id, ecen.institution_id, ecen.clinical_specialty_id, ecen.start_date, d.source_id, d.source_type_id, ecen.doctor_id,
+                        ecen.created_by, ecen.created_on, ecen.updated_by, ecen.updated_on, ecen.deleted_by, ecen.deleted_on, ecen.deleted
+                FROM emergency_care_evolution_note ecen
+                JOIN document d ON (d.source_id = ecen.id AND d.source_type_id = 4)
+
+    - changeSet:
+        id: dropColumn-type_id-rule
+        author: fsimaro
+        changes:
+          - dropColumn:
+              tableName: rule
+              columnName: type_id
+              
+    - changeSet:
+        id: addColumn-level-rule
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: rule
+              columns:
+                - column:
+                    name: level
+                    type: smallint
+                    constraints:
+                      nullable: false
+                    defaultValue: 0
+
+    - changeSet:
+        id: createTable-institutional_group_rule
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institutional_group_rule
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_group_rule
+                    name: id
+                    type: int
+                - column:
+                    name: rule_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_institutional_group_rule_rule_id
+                      references: rule(id)
+                - column:
+                    name: institutional_group_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_institutional_group_rule_institutional_group_id
+                      references: institutional_group(id)
+                - column:
+                    name: regulated
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.true}
+                - column:
+                    name: comment
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: relate_rules_to_groups
+        author: fsimaro
+        comment: Relate rules to groups
+        changes:
+          - sql:
+              dbms: postgresql  # Ajusta según tu base de datos
+              endDelimiter: ;
+              splitStatements: true
+              sql: |
+                INSERT INTO institutional_group_rule (rule_id, institutional_group_id)
+                SELECT r.id, ig.id
+                FROM rule r
+                CROSS JOIN institutional_group ig
+                WHERE r.deleted = false AND ig.deleted = false;
+
+    - changeSet:
+        id: createTable-problem_error_reason
+        author: mromero
+        changes:
+            - createTable:
+                tableName: problem_error_reason
+                columns:
+                  - column:
+                      constraints:
+                        primaryKey: true
+                        primaryKeyName: PK_problem_error_reason
+                      name: health_condition_id
+                      type: int
+                  - column:
+                      constraints:
+                        nullable: false
+                      name: reason_id
+                      type: smallint
+            - addForeignKeyConstraint:
+                  baseColumnNames: health_condition_id
+                  baseTableName: problem_error_reason
+                  constraintName: FK_problem_error_reason_health_condition_id
+                  onDelete: NO ACTION
+                  onUpdate: NO ACTION
+                  referencedColumnNames: id
+                  referencedTableName: health_condition
+                  validate: true

@@ -86,7 +86,7 @@ public class DocumentSearchQuery {
 				"and not exists (select 1 \n" +
 				"					from HealthCondition hc2 \n" +
 				"					where hc.id = hc2.id \n" +
-				"					and (hc2.problemId = '" + ProblemType.HISTORY +"' \n"+
+				"					and (hc2.problemId = '" + ProblemType.FAMILY_HISTORY +"' \n"+
 				"					or hc2.problemId = '" + ProblemType.PROBLEM +"' \n"+
 				"					or hc2.problemId = '" + ProblemType.OTHER +"' \n"+
 				"					or hc2.verificationStatusId = '" + ConditionVerificationStatus.ERROR +"' \n))");

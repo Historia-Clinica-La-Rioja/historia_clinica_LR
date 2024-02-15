@@ -25,6 +25,7 @@ import { environment } from '@environments/environment';
 import { OAuthModule } from "angular-oauth2-oidc";
 import { StompService } from './stomp.service';
 import { stompServiceFactory } from './stomp-factory';
+import { ApiOverlayDelayComponent } from './api-overlay-delay/api-overlay-delay.component';
 
 registerLocaleData(localeEsAr, localeEsArExtras);
 
@@ -32,6 +33,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 	declarations: [
 		// components
 		AppComponent,
+		ApiOverlayDelayComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,
@@ -93,6 +95,9 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
 			{ prefix: './assets/i18n/home/', suffix },
 			{ prefix: './assets/i18n/image-network/', suffix },
 			{ prefix: './assets/i18n/telemedicina/', suffix },
+			{ prefix: './assets/i18n/digital-signature/', suffix},
+			{ prefix: './assets/i18n/access-management/', suffix},
+			{ prefix: './assets/i18n/hsi-components/', suffix}
 		]
 	);
 }

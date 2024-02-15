@@ -21,7 +21,7 @@ public class HealthConditionTestMocks {
 
     public static HealthCondition createFamilyHistory(Integer patientId, Integer snomedId, String statusId, String verificationId){
         HealthCondition result = createMinimumHealthCondition(patientId, snomedId, statusId, verificationId);
-        result.setProblemId(ProblemType.HISTORY);
+        result.setProblemId(ProblemType.FAMILY_HISTORY);
         return result;
     }
 

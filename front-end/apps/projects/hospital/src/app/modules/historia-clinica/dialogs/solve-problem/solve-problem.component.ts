@@ -5,7 +5,7 @@ import { format } from "date-fns";
 
 import { hasError } from '@core/utils/form.utils';
 import { DateFormat, MIN_DATE } from "@core/utils/date.utils";
-import { HCEPersonalHistoryDto, HealthConditionNewConsultationDto, MasterDataInterface } from '@api-rest/api-model';
+import { HCEHealthConditionDto, HealthConditionNewConsultationDto, MasterDataInterface } from '@api-rest/api-model';
 import { HealthConditionService } from '@api-rest/services/healthcondition.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -27,7 +27,7 @@ export class SolveProblemComponent implements OnInit {
 	problemasService: ProblemasService;
 	private readonly form: UntypedFormGroup;
 	private problema: HealthConditionNewConsultationDto;
-	private dataDto: HCEPersonalHistoryDto;
+	private dataDto: HCEHealthConditionDto;
 	private readonly patientId: number;
 	private readonly problemId: number;
 	dateIsReadOnly: boolean;

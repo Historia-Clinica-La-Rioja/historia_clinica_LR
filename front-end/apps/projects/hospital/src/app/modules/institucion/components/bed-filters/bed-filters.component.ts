@@ -2,8 +2,10 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { BedManagementFacadeService, Sector, Service } from '../../services/bed-management-facade.service';
 import { momentFormat, DateFormat, momentParse } from '@core/utils/moment.utils';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { HierarchicalUnitsService } from '@api-rest/services/hierarchical-units.service';
+import { HierarchicalUnitDto } from '@api-rest/api-model';
 
 @Component({
   selector: 'app-bed-filters',
@@ -20,10 +22,12 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 
 	@Input() sectorTypeId?: number;
 	isEmergencyEpisode: boolean = false;
+	hierarchicalUnits$: Observable<HierarchicalUnitDto[]>;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly bedManagementFacadeService: BedManagementFacadeService
+		private readonly bedManagementFacadeService: BedManagementFacadeService,
+		private readonly hierarchicalUnitsService: HierarchicalUnitsService
   	) { }
 	
 	ngOnInit(): void {
@@ -32,7 +36,8 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 			sector: [null],
 			service: [null],
 			probableDischargeDate: [null],
-			filled: [true]
+			filled: [true],
+			hierarchicalUnits: [null]
 		});
 
 		this.bedManagementFacadeService.getBedSummary().subscribe( data => {
@@ -50,11 +55,15 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 						momentParse(data.probableDischargeDate, DateFormat.API_DATE) : null);
 				this.form.controls.filled.setValue(data.filled);
 			});
-
+		this.setHierarchicalUnits();
   	}
 
 	public sendAllFiltersOnFilterChange() {
 		this.bedManagementFacadeService.sendBedManagementFilter(this.getBedManagementFilter());
+	}
+
+	get hierarchicalUnits() {
+		return this.form.get('hierarchicalUnits');
 	}
 
 	private getBedManagementFilter(): BedManagementFilter {
@@ -63,7 +72,8 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 			service: this.form.value.service,
 			probableDischargeDate: this.form.value.probableDischargeDate ?
 				momentFormat(this.form.value.probableDischargeDate, DateFormat.API_DATE) : null,
-			filled: this.form.value.filled
+			filled: this.form.value.filled,
+			hierarchicalUnits: this.form.value.hierarchicalUnits?.map(hu => hu.id)
 		};
 	}
 
@@ -76,6 +86,10 @@ export class BedFiltersComponent implements OnInit, OnDestroy {
 		this.bedManagementFilter$.unsubscribe();
   	}
 
+	private setHierarchicalUnits() {
+		this.hierarchicalUnits$ = this.hierarchicalUnitsService.getByInstitution();
+	}
+
 }
 
 export class BedManagementFilter {
@@ -83,4 +97,5 @@ export class BedManagementFilter {
 	service: number;
 	probableDischargeDate: string;
 	filled: boolean;
+	hierarchicalUnits: number[]
 }

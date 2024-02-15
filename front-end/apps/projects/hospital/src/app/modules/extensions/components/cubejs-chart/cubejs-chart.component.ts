@@ -19,7 +19,6 @@ const toUIComponentDto = (error: any): UIComponentDto => ({
 export class CubejsChartComponent implements OnDestroy, OnInit {
 
 	@Input() chartOptions?: ChartOptions;
-	@Input() dateFormat?: string;
 	@Input() title?: UILabelDto;
 	@Input() chartDefinitionService: ChartDefinitionService;
 	@Input() query: string;

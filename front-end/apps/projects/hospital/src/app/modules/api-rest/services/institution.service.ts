@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { AddressDto, InstitutionBasicInfoDto, InstitutionDto } from '@api-rest/api-model';
@@ -56,33 +56,34 @@ export class InstitutionService {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/province/${provinceId}`);
 	}
 
-	getInstitutionsByDepartmentHavingClinicalSpecialty(departmentId: number, clinicalSpecialtyId: number, careLine: number): Observable<InstitutionBasicInfoDto[]> {
-		const url = `${environment.apiBase}/institution/by-department/${departmentId}/with-specialty/${clinicalSpecialtyId}`;
+	getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId: number, clinicalSpecialtyIds: number[], careLine: number): Observable<InstitutionBasicInfoDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/by-reference-clinical-specialty-filter`;
+		let queryParams = new HttpParams().append('departmentId', JSON.stringify(departmentId));
+		clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
 		if (careLine) {
-			const queryParams = { careLineId: careLine.toString() };
+			queryParams = queryParams.append('careLineId', JSON.stringify(careLine));
 			return this.http.get<any[]>(url, { params: queryParams });
 		}
 		else
-			return this.http.get<any[]>(url);
+			return this.http.get<any[]>(url, { params: queryParams });
 	}
 
 	getVirtualConsultationInstitutions():Observable<InstitutionBasicInfoDto[]>{
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/virtual-consultation`);
 	}
 
-	getInstitutionsByReferenceByPracticeFilter(practiceSnomedId: number, departmentId: number, careLineId?: number, clinicalSpecialtyId?: number): Observable<InstitutionBasicInfoDto[]> {
+	getInstitutionsByReferenceByPracticeFilter(practiceSnomedId: number, departmentId: number, careLineId?: number, clinicalSpecialtyIds?: number[]): Observable<InstitutionBasicInfoDto[]> {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/by-reference-practice-filter`;
-		let queryParams = { practiceSnomedId: practiceSnomedId.toString() };
+		let queryParams = new HttpParams().append('practiceSnomedId', practiceSnomedId.toString());
 
-		queryParams['departmentId'] = departmentId.toString();
+		queryParams = queryParams.append('departmentId', departmentId.toString());
 
-		if (careLineId !== undefined && careLineId !== null) {
-			queryParams['careLineId'] = careLineId.toString();
-		}
+		if (careLineId !== undefined && careLineId !== null)
+			queryParams = queryParams.append('careLineId', careLineId.toString());
 
-		if (clinicalSpecialtyId !== undefined && clinicalSpecialtyId !== null) {
-			queryParams['clinicalSpecialtyId'] = clinicalSpecialtyId.toString();
-		}
+
+		if (clinicalSpecialtyIds !== undefined && clinicalSpecialtyIds !== null && clinicalSpecialtyIds.length)
+			clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', clinicalSpecialtyId.toString()));
 
 		return this.http.get<any[]>(url, { params: queryParams });
 	}

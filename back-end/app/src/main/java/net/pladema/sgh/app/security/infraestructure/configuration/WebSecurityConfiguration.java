@@ -118,7 +118,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),
 					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue(),
-					ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getValue())
+					ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getValue(),
+					ERole.AUDITORIA_DE_ACCESO.getValue())
 				.antMatchers(RECAPTCHA + "/**").permitAll()
 				.antMatchers("/oauth/**").permitAll()
 				.antMatchers(HttpMethod.GET,PUBLIC + "/**").permitAll()
@@ -127,6 +128,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/assets/**").permitAll()
 				.antMatchers("/fhir/**").permitAll()
 				.antMatchers(BOOKING_API_RESOURCES).permitAll()
+				.antMatchers("/public-api/digital-signature/callback/**").permitAll()
 				.antMatchers(PUBLIC_API_CONTEXT_MATCHER).hasAnyAuthority(publicApiRolesAuthorities)
 				.antMatchers("/**").authenticated()
 		.anyRequest().authenticated();

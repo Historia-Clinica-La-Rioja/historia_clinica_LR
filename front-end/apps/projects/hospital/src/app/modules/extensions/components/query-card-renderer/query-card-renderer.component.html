@@ -1,0 +1,10 @@
+<div class="numeric-container">
+	<mat-card class="card colored" *ngFor="let value of numericValues">
+		<mat-card-header class="card-header colored">
+			<mat-card-title>{{ title }}</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+			<p>{{ value | number }}</p>
+			</mat-card-content>
+	</mat-card>
+</div>

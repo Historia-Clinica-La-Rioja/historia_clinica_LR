@@ -12,7 +12,9 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
@@ -24,6 +26,8 @@ public interface AppointmentService {
 	Optional<AppointmentBo> getAppointment(Integer appointmentId);
 
 	Optional<AppointmentBo> getAppointmentSummary(Integer appointmentId);
+
+	List<AppointmentBookingBo> getCompleteBookingAppointmentInfo(String identificationNumber);
 
 	Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId);
 
@@ -57,8 +61,6 @@ public interface AppointmentService {
 
 	boolean updatePhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber, Integer userId);
 
-	boolean updateDate(Integer appointmentId,  LocalDate date, LocalTime time, Integer openingHoursId);
-
 	boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage);
 
 	boolean saveObservation(Integer appointmentId, String observation);
@@ -91,4 +93,15 @@ public interface AppointmentService {
 
 	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
 
+	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
+
+	Boolean openingHourAllowedProtectedAppointment(Integer appointmentId, Integer diaryId);
+
+	void deleteLabelFromAppointment(Integer diaryId, List<Integer> ids);
+
+	PatientMedicalCoverageBo getMedicalCoverageFromAppointment(Integer appointmentId);
+	
+	Boolean hasOldAppointmentWithMinDateLimit(Integer patientId, Integer healthcareProfessionalId, Short minDateLimit);
+
+	Boolean hasFutureAppointmentByPatientId(Integer patientId, Integer healthcareProfessionalId);
 }

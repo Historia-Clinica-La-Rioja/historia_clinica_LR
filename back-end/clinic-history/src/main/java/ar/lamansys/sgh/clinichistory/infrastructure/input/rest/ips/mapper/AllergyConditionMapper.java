@@ -21,4 +21,9 @@ public interface AllergyConditionMapper {
     @Named("toListAllergyConditionBo")
     @IterableMapping(qualifiedByName = "toAllergyConditionBo")
     List<AllergyConditionBo> toListAllergyConditionBo(List<AllergyConditionDto> allergyConditionDto);
+
+	@Named("toListAllergyConditionDto")
+	@IterableMapping(qualifiedByName = "toAllergyConditionDto")
+	List<AllergyConditionDto> toListAllergyConditionDto(List<AllergyConditionBo> allergyConditionBo);
+
 }

@@ -21,6 +21,11 @@ export class HealthcareProfessionalService {
 		return this.http.get<ProfessionalDto[]>(url);
 	}
 
+	getAllProfessionalsAndTechnicians(): Observable<ProfessionalDto[]> {
+		const url = `${environment.apiBase}/healthcareprofessional/get-all-professionals-and-technicians`;
+		return this.http.get<ProfessionalDto[]>(url);
+	}
+
 	getHealthcareProfessionalByUserId(): Observable<number> {
 		const url = `${environment.apiBase}/healthcareprofessional/by-user-logged`;
 		return this.http.get<number>(url);

@@ -13,10 +13,11 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -51,12 +52,12 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
     private List<@Valid DiagnosisBo> diagnosis;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid HealthHistoryConditionBo> personalHistories;
+    private List<@Valid PersonalHistoryBo> personalHistories;
 
     private List<@Valid ProcedureBo> procedures;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid HealthHistoryConditionBo> familyHistories;
+    private List<@Valid FamilyHistoryBo> familyHistories;
 
     @NotNull(message = "{value.mandatory}")
     private List<@Valid MedicationBo> medications;

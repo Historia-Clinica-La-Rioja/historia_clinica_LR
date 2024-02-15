@@ -3,7 +3,7 @@ import { DateRangePickerComponent } from './date-range-picker.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 const meta: Meta<DateRangePickerComponent> = {
-    title: 'Example/DateRangePickerComponent',
+    title: 'Presentation/DateRangePickerComponent',
     component: DateRangePickerComponent,
     tags: ['autodocs'],
     decorators: [
@@ -24,7 +24,7 @@ export const withoutMinMax: Story = {
             start: new Date(),
             end: new Date()
         }
-    }, 
+    },
 };
 
 export const full: Story = {
@@ -36,6 +36,6 @@ export const full: Story = {
             start: new Date('2023-09-01T00:00:00'),
             end: new Date('2023-09-30T00:00:00')
         }
-    }, 
+    },
 }
 

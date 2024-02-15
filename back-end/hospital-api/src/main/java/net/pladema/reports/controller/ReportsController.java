@@ -14,6 +14,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
 import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 
+import net.pladema.reports.application.fetchnominalconsultationdetail.FetchNominalConsultationDetail;
+import net.pladema.reports.application.fetchnominalappointmentdetail.FetchNominalAppointmentDetail;
+
+import net.pladema.reports.domain.NominalAppointmentDetailFiterlBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -42,7 +47,7 @@ import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
 import net.pladema.reports.repository.QueryFactory;
 import net.pladema.reports.service.AnnexReportService;
-import net.pladema.reports.service.ExcelService;
+import net.pladema.reports.service.NominalDetailExcelService;
 import net.pladema.reports.service.FetchConsultations;
 import net.pladema.reports.service.FormReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
@@ -58,7 +63,7 @@ public class ReportsController {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final ExcelService excelService;
+    private final NominalDetailExcelService nominalDetailExcelService;
 
     private final ConsultationSummaryReport consultationSummaryReport;
 
@@ -78,8 +83,18 @@ public class ReportsController {
 
 	private final FeatureFlagsService featureFlagsService;
 
-    public ReportsController(ExcelService excelService, ConsultationSummaryReport consultationSummaryReport, QueryFactory queryFactory, LocalDateMapper localDateMapper, PdfService pdfService, AnnexReportService annexReportService, FormReportService formReportService, ReportsMapper reportsMapper, FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService){
-        this.excelService = excelService;
+	private final FetchNominalConsultationDetail fetchNominalConsultationDetail;
+
+	private final FetchNominalAppointmentDetail fetchNominalAppointmentDetail;
+
+    public ReportsController(NominalDetailExcelService nominalDetailExcelService, ConsultationSummaryReport consultationSummaryReport,
+							 QueryFactory queryFactory, LocalDateMapper localDateMapper,
+							 PdfService pdfService, AnnexReportService annexReportService,
+							 FormReportService formReportService, ReportsMapper reportsMapper,
+							 FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService,
+							 FetchNominalConsultationDetail fetchNominalConsultationDetail,
+							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail){
+        this.nominalDetailExcelService = nominalDetailExcelService;
         this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
         this.localDateMapper = localDateMapper;
@@ -89,6 +104,8 @@ public class ReportsController {
         this.reportsMapper = reportsMapper;
         this.fetchConsultations = fetchConsultations;
 		this.featureFlagsService = featureFlagsService;
+		this.fetchNominalAppointmentDetail = fetchNominalAppointmentDetail;
+		this.fetchNominalConsultationDetail = fetchNominalConsultationDetail;
 	}
 
     @GetMapping(value = "/{institutionId}/monthly")
@@ -116,7 +133,7 @@ public class ReportsController {
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
         // obtengo el workbook en base a la query pasada como parametro
-        IWorkbook wb = this.excelService.buildExcelFromQuery(title, headers, this.queryFactory.query(institutionId, startDate, endDate,
+        IWorkbook wb = fetchNominalConsultationDetail.run(title, headers, this.queryFactory.query(institutionId, startDate, endDate,
 				clinicalSpecialtyId, doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants));
 
         // armo la respuesta con el workbook obtenido
@@ -308,4 +325,34 @@ public class ReportsController {
 		return ResponseEntity.ok(result);
 	}
 
+	@GetMapping(value = "/institution/{institutionId}/nominal-appointment-detail")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<Resource> getNominalAppointmentDetailReport(@PathVariable Integer institutionId,
+																	  @RequestParam(value="fromDate") String fromDate,
+																	  @RequestParam(value="toDate") String toDate,
+																	  @RequestParam(value="clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
+																	  @RequestParam(value="doctorId", required = false) Integer doctorId,
+																	  @RequestParam(value="hierarchicalUnitTypeId", required = false) Integer hierarchicalUnitTypeId,
+																	  @RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
+																	  @RequestParam(value="appointmentStateId", required = false) Short appointmentStateId,
+																	  @RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants) throws Exception {
+		LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, appointmentStateId {}, includeHierarchicalUnitDescendants {}" ,
+				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants);
+
+		String title = "DNT";
+
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		IWorkbook wb = fetchNominalAppointmentDetail.run(title, new NominalAppointmentDetailFiterlBo(institutionId, startDate, endDate, clinicalSpecialtyId,
+				doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants));
+
+		String filename = title + "." + wb.getExtension();
+
+		return StoredFileResponse.sendFile(
+				buildReport(wb),
+				filename,
+				wb.getContentType()
+		);
+	}
 }

@@ -1,6 +1,7 @@
 package net.pladema.patient.service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -72,6 +74,9 @@ class PatientServiceImplIntegrationTest extends UnitRepository {
 
 	@Mock
 	private PatientTypeRepository patientTypeRepository;
+    
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@Mock
 	private EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;

@@ -1,6 +1,6 @@
-import { Component, Inject} from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CallDetails } from '@presentation/components/call-details/call-details.component';
+import { CallDetails } from '../call-details/call-details.component';
 
 @Component({
 	selector: 'app-in-progress-call',

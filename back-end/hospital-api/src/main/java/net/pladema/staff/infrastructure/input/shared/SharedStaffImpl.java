@@ -2,6 +2,13 @@ package net.pladema.staff.infrastructure.input.shared;
 
 import java.util.Optional;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
+import lombok.extern.slf4j.Slf4j;
+
+import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
@@ -13,6 +20,7 @@ import net.pladema.staff.controller.service.HealthcareProfessionalExternalServic
 import net.pladema.staff.service.ClinicalSpecialtyService;
 
 @Service
+@Slf4j
 public class SharedStaffImpl implements SharedStaffPort {
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
@@ -21,12 +29,16 @@ public class SharedStaffImpl implements SharedStaffPort {
 
     private final ClinicalSpecialtyMapper clinicalSpecialtyMapper;
 
+	private final FeatureFlagsService featureFlagsService;
+
     public SharedStaffImpl(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                            ClinicalSpecialtyService clinicalSpecialtyService,
-                           ClinicalSpecialtyMapper clinicalSpecialtyMapper) {
+                           ClinicalSpecialtyMapper clinicalSpecialtyMapper,
+						   FeatureFlagsService featureFlagsService) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.clinicalSpecialtyService = clinicalSpecialtyService;
         this.clinicalSpecialtyMapper = clinicalSpecialtyMapper;
+		this.featureFlagsService = featureFlagsService;
     }
 
     @Override
@@ -62,4 +74,22 @@ public class SharedStaffImpl implements SharedStaffPort {
 	public ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId) {
 		return healthcareProfessionalExternalService.getProfessionalCompleteInfoById(professionalId);
 	}
+
+	@Override
+	public Optional<String> getProfessionalCompleteNameByUserId(Integer userId){
+		log.debug("Input parameteres -> userId {}", userId);
+		ProfessionalCompleteDto professionalInfo = healthcareProfessionalExternalService.getProfessionalCompleteInfoByUser(userId);
+		Optional<String> result = getCompleteName(professionalInfo);
+		log.debug("Output -> result");
+		return result;
+	}
+
+	private Optional<String> getCompleteName(ProfessionalCompleteDto professionalInfo){
+		if (professionalInfo == null)
+			return Optional.empty();
+		String name = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? professionalInfo.getNameSelfDetermination() : FhirString.joining(professionalInfo.getFirstName(), professionalInfo.getMiddleNames());
+		String completeName = professionalInfo.getCompleteName(name);
+		return Optional.of(completeName);
+	}
+
 }

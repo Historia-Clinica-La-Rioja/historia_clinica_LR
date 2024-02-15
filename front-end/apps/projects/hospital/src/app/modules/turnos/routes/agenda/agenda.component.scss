@@ -169,3 +169,17 @@ div.spinner {
 .svg-icon {
 	transform: scale(0.8);
 }
+
+::ng-deep .appointment-label {
+	margin: 0;
+	margin-left: -5px;
+	margin-right: 5px;
+	min-height: 28px;
+	min-width: 7px;
+	max-width: 7px;
+	border-right: 1px solid #FFF5E0;
+}
+
+::ng-deep .appointment-description {
+	display: flex;
+}

@@ -1,10 +1,9 @@
 package net.pladema.establishment.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.establishment.repository.domain.SectorOfTypeVo;
 import net.pladema.establishment.repository.entity.Sector;
-
 import net.pladema.establishment.service.domain.AttentionPlacesQuantityBo;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,34 +19,37 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
     @Query("SELECT s "+
             "FROM Sector AS s " +
             "WHERE s.institutionId = :institutionId " +
-			"AND deleted IS FALSE ")
+			"AND s.deleteable.deleted IS FALSE ")
     List<Sector> getSectorsByInstitution(@Param("institutionId") Integer institutionId);
+
     @Transactional(readOnly = true)
-    @Query("SELECT s "+
+    @Query("SELECT NEW net.pladema.establishment.repository.domain.SectorOfTypeVo(s, CASE WHEN COUNT(dso.sectorId) > 0 THEN TRUE ELSE FALSE END) "+
 			"FROM Sector AS s " +
+			"LEFT JOIN DoctorsOffice AS dso ON s.id = dso.sectorId "+
 			"WHERE s.institutionId = :institutionId " +
 			"AND s.sectorTypeId = :sectorTypeId " +
-			"AND deleted IS FALSE")
-    List<Sector> getSectorsOfTypeByInstitution(@Param("institutionId") Integer institutionId, @Param("sectorTypeId") Short sectorTypeId);
+			"AND s.deleteable.deleted IS FALSE " +
+			"GROUP BY s.id ")
+    List<SectorOfTypeVo> getSectorsOfTypeByInstitution(@Param("institutionId") Integer institutionId, @Param("sectorTypeId") Short sectorTypeId);
 
     @Transactional(readOnly = true)
     @Query("SELECT s.institutionId "+
             "FROM Sector AS s " +
             "WHERE s.id = :id " +
-			"AND deleted IS FALSE")
+			"AND s.deleteable.deleted IS FALSE")
     Integer getInstitutionId(@Param("id")  Integer id);
 
     @Transactional(readOnly = true)
     @Query("SELECT s.id "+
             "FROM Sector AS s " +
-			"WHERE deleted IS FALSE")
+			"WHERE s.deleteable.deleted IS FALSE")
     List<Integer> getAllIds();
 
     @Transactional(readOnly = true)
     @Query("SELECT s.id "+
             "FROM Sector AS s " +
             "WHERE s.institutionId IN :institutionsIds " +
-			"AND deleted IS FALSE")
+			"AND s.deleteable.deleted IS FALSE")
     List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
 
 	@Transactional(readOnly = true)
@@ -55,14 +57,14 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 			"FROM Sector s " +
 			"WHERE s.institutionId = :institutionId " +
 			"AND s.description = :description " +
-			"AND deleted IS FALSE")
+			"AND s.deleteable.deleted IS FALSE")
 	Optional<Sector> findByInstitutionIdAndDescription(@Param("institutionId") Integer institutionId, @Param("description") String description);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT s " +
 			"FROM Sector s " +
 			"WHERE s.sectorId = :sectorId " +
-			"AND deleted IS FALSE")
+			"AND s.deleteable.deleted IS FALSE")
 	List<Sector> getChildSectorsBySectorId(@Param("sectorId") Integer sectorId);
 
 	@Transactional(readOnly = true)

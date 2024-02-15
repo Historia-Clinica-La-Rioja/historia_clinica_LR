@@ -128,9 +128,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 			canDoAction: {
 				delete: this.documentActions.canDeleteDocument(d.document),
 				edit: this.documentActions.canEditDocument(d.document)
-			},
-			createdOn: d.createdOn,
-			editedOn: d.document.editedOn ? this.documentActions.loadTime(d.document.editedOn) : null
+			}
 		};
 	}
 
@@ -142,7 +140,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		});
 		this.documentActions.setPatientDocuments(documents);
 		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
+			return { document }
 		})
 		this.changeDetectorRef.detectChanges();
 	}
@@ -155,7 +153,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		});
 		this.documentActions.setPatientDocuments(documents);
 		this.documentsToShow = documents.map(document => {
-			return { document, createdOn: this.documentActions.loadTime(document.createdOn) }
+			return { document }
 		});
 		this.changeDetectorRef.detectChanges();
 	}

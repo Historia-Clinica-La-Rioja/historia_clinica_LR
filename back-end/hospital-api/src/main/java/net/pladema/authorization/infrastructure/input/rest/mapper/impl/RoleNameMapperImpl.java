@@ -61,6 +61,12 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case API_IMAGENES: return "API Red de Imágenes";
 			case API_ORQUESTADOR: return "API Centro de Imágenes";
 			case ADMINISTRADOR_DE_ACCESO_DOMINIO: return "Administrador de acceso dominio";
+			case GESTOR_DE_ACCESO_DE_DOMINIO: return "Gestor de acceso de dominio";
+			case GESTOR_DE_ACCESO_LOCAL: return "Gestor de acceso local";
+			case GESTOR_DE_ACCESO_REGIONAL: return "Gestor de acceso regional";
+			case ABORDAJE_VIOLENCIAS: return "Abordaje violencias";
+			case GESTOR_CENTRO_LLAMADO: return "Gestor de centro de llamado";
+			case AUDITORIA_DE_ACCESO: return "Auditoria de Acceso";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}

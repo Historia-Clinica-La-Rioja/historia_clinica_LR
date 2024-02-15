@@ -15,6 +15,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
+	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 
@@ -52,6 +53,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 	confirmAdultGynecologicalTriage(): void {
 		const formValue = this.adultGynecologicalForm.value;
 		if (this.adultGynecologicalForm.valid && this.riskFactorsForm.valid) {
+			this.disableConfirmButton = true;
 			const riskFactorsValue: RiskFactorsValue = this.factoresDeRiesgoFormService.buildRiskFactorsValue(this.riskFactorsForm);
 			const triage: TriageAdultGynecologicalDto = {
 				categoryId: this.triageCategoryId,

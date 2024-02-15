@@ -62,12 +62,6 @@ export class QueryRendererComponent {
 	@Input('chartType')
 	chartType$: any;
 
-	@Input('dateFormat')
-	dateFormat?: any;
-
-	@Input('reverse')
-	reverse?: boolean = false;
-
 	@Input('chartOptions')
 	set ChartOptions(chartOptions: ChartOptions) {
 		this.chartOptions = chartOptions || {
@@ -75,9 +69,6 @@ export class QueryRendererComponent {
 			maintainAspectRatio: false,
 		}
 	};
-
-	@Input('defaultColor')
-	defaultColor?: string;
 
 	@Input() title: string
 	chartOptions: ChartOptions;
@@ -189,7 +180,7 @@ export class QueryRendererComponent {
 		this.chartData = resultSet.series(pivotConfig).map((item) => {
 			if (this.chartType === 'pie' || this.chartType === 'doughnut') {
 				return {
-					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
+					data: item.series.map(({ value }) => value),
 				};
 			}
 
@@ -205,14 +196,14 @@ export class QueryRendererComponent {
 				let title = (pivotConfig.y.length>1) ? item.title.charAt(0).toUpperCase() + item.title.slice(1, -5) : item.title;
 				return {
 					label: title,
-					data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1))
+					data: item.series.map(({ value }) => value)
 				};
 			}
 
 
 			return {
 				label: item.title,
-				data: item.series.map(({ value }) => value * (this.reverse ? -1 : 1)),
+				data: item.series.map(({ value }) => value),
 				stack: 'a',
 			};
 		});
@@ -225,13 +216,6 @@ export class QueryRendererComponent {
 		if(!this.noData) {
 			if (this.chartType === 'pie' || this.chartType === 'doughnut') {
 				this.loadPieData();
-			}
-
-			if (this.defaultColor) {
-				this.chartData.forEach(value => {
-					value.backgroundColor = this.defaultColor;
-					value.hoverBackgroundColor = this.defaultColor;
-				});
 			}
 		}
 	}
@@ -296,11 +280,6 @@ export class QueryRendererComponent {
 			this.chartLabels = this.originalChartLabels;
 			this.chartData = this.showPercentage ? [{ data: this.percentageData }] : [{ data: this.originalData }];
 		}
-	}
-
-	formatDate(resultSet) {
-		const dateFormatter = ({ x }) => moment(x).format(this.dateFormat);
-		this.chartLabels = resultSet.chartPivot().map(dateFormatter);
 	}
 
 	updateTableData(resultSet, pivotConfig) {

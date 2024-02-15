@@ -1,11 +1,11 @@
 import { ERole, VirtualConsultationAvailableProfessionalAmountDto, VirtualConsultationDto, VirtualConsultationFilterDto, VirtualConsultationResponsibleProfessionalAvailabilityDto, VirtualConsultationStatusDataDto } from '@api-rest/api-model';
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
-import { Observable, ReplaySubject, map } from 'rxjs';
-import { StompService } from '../../stomp.service';
+import { Observable, ReplaySubject} from 'rxjs';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
 import { Injectable } from '@angular/core';
+import { VirtualConsultationStompService } from '../api-web-socket/virtual-consultation-stomp.service';
 
 @Injectable()
 export class VirtualConsultationsFacadeService {
@@ -20,27 +20,11 @@ export class VirtualConsultationsFacadeService {
 
 	isVirtualConsultatitioResponsible: boolean = false;
 
-	private readonly virtualConsultationStatusChanged$: Observable<VirtualConsultationStatusDataDto> =
-		this.stompService.watch('/topic/virtual-consultation-state-change')
-			.pipe(map(m => JSON.parse(m.body)))
-
-	private readonly solicitanteAvailableChanged$: Observable<any> =
-		this.stompService.watch('/topic/virtual-consultation-responsible-state-change')
-			.pipe(map(m => JSON.parse(m.body)))
-
-	private readonly newRequest$: Observable<number> =
-		this.stompService.watch('/topic/new-virtual-consultation')
-			.pipe(map(m => JSON.parse(m.body)))
-
-	private readonly professionalAvailableChanged$: Observable<any> =
-		this.stompService.watch('/topic/virtual-consultation-professional-state-change')
-			.pipe(map(m => JSON.parse(m.body)))
-
 	constructor(
 		private virtualConsultationService: VirtualConstultationService,
-		private readonly stompService: StompService,
 		private contextService: ContextService,
 		private readonly permissionsService: PermissionsService,
+		private readonly virtualConsultationStompService: VirtualConsultationStompService,
 	) {
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.isVirtualConsultatitioResponsible = anyMatch<ERole>(userRoles, [ERole.VIRTUAL_CONSULTATION_RESPONSIBLE]);
@@ -61,7 +45,7 @@ export class VirtualConsultationsFacadeService {
 
 		this.getVirtualConsultationByInstitution(filterCriteria);
 
-		this.solicitanteAvailableChanged$.subscribe(
+		this.virtualConsultationStompService.solicitanteAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationResponsibleProfessionalAvailabilityDto) => {
 				this.virtualConsultationsRequest
 					?.forEach(vc => {
@@ -80,9 +64,20 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
+		this.virtualConsultationStompService.responsibleProfessionalChanged$.subscribe((responsibleProfessional : any)=>{
+			this.virtualConsultationService.getResponsibleProfessional(responsibleProfessional.healthcareProfessionalId,this.contextService.institutionId).subscribe(res=>{
+				if (!this.isVirtualConsultatitioResponsible) {
+					const attentionToChange = this.virtualConsultationsAttention.find(vc => vc.id === responsibleProfessional.virtualConsultationId);
+					attentionToChange.responsibleData = res;
+					this.virtualConsultationsAttentionEmitter.next(this.virtualConsultationsAttention)
+				}
+				const requesttoChange = this.virtualConsultationsRequest.find(vc => vc.id === responsibleProfessional.virtualConsultationId);
+				requesttoChange.responsibleData = res;
+				this.virtualConsultationsRequestEmitter.next(this.virtualConsultationsRequest)	
+			})
+		})
 
-
-		this.professionalAvailableChanged$.subscribe(
+		this.virtualConsultationStompService.professionalAvailableChanged$.subscribe(
 			(availabilityChanged: VirtualConsultationAvailableProfessionalAmountDto[]) => {
 				availabilityChanged.forEach(cv => {
 					const virtualConsultation = this.virtualConsultationsRequest.find(vc => vc.id === cv.virtualConsultationId);
@@ -93,7 +88,7 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
-		this.virtualConsultationStatusChanged$.subscribe(
+		this.virtualConsultationStompService.virtualConsultationStatusChanged$.subscribe(
 			(newState: VirtualConsultationStatusDataDto) => {
 				if (!this.isVirtualConsultatitioResponsible) {
 					const attentionToChange = this.virtualConsultationsAttention.find(vc => vc.id === newState.virtualConsultationId);
@@ -111,7 +106,7 @@ export class VirtualConsultationsFacadeService {
 			}
 		)
 
-		this.newRequest$.subscribe(
+		this.virtualConsultationStompService.newRequest$.subscribe(
 			(newVirtualConsultationId: number) => {
 				this.virtualConsultationService.getVirtualConsultation(newVirtualConsultationId).subscribe(
 					vc => {

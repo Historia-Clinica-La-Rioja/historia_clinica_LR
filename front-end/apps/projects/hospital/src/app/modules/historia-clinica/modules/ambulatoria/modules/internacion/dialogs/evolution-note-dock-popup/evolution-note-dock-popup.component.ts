@@ -271,7 +271,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		error.errors?.forEach(val => {
 			this.apiErrors.push(val);
 		});
-		this.snackBarService.showError('internaciones.nota-evolucion.messages.ERROR');
+		let msg = (error.text) ? error.text : 'internaciones.nota-evolucion.messages.ERROR';
+		this.snackBarService.showError(msg);
 	}
 
 	private openEditReason(evolutionNote: EvolutionNoteDto) {

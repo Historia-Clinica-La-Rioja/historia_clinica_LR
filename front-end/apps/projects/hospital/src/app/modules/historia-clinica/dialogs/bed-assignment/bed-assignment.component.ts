@@ -30,7 +30,8 @@ export class BedAssignmentComponent implements OnInit, OnDestroy {
 			sector: null,
 			service: null,
 			probableDischargeDate: null,
-			filled: false
+			filled: false,
+			hierarchicalUnits: null
 		});
 		this.managementBed$ = this.bedManagementFacadeService.getBedManagement(this.data.sectorsType).pipe(
 			tap(bedsSummary => this.bedsAmount = bedsSummary ? bedsSummary.length : 0)

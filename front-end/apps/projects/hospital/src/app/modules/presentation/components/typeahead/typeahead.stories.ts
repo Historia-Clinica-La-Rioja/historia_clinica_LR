@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TypeaheadComponent } from './typeahead.component';
 
 const meta: Meta<TypeaheadComponent> = {
-    title: 'Example/TypeaheadComponent',
+    title: 'Presentation/TypeaheadComponent',
     component: TypeaheadComponent,
     tags: ['autodocs'],
     decorators: [

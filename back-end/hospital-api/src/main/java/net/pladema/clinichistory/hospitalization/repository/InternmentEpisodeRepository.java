@@ -8,6 +8,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -266,5 +268,26 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 			"AND ie.statusId = :statusId " +
 			"AND (ie.deleteable.deleted = false or ie.deleteable.deleted is null)")
 	boolean haveMoreThanOneFromPatients(@Param("patientIds") List<Integer> patientIds, @Param("statusId") Short statusId);
-	
+
+	@Transactional(readOnly = true)
+	@Query("SELECT (CASE WHEN COUNT(edt.id) >= 1 THEN TRUE ELSE FALSE END) " +
+			"FROM InternmentEpisode ie " +
+			"JOIN EpisodeDocument ed ON (ed.internmentEpisodeId = ie.id) " +
+			"JOIN EpisodeDocumentType edt ON (ed.episodeDocumentTypeId = edt.id) " +
+			"WHERE ie.id = :internmentEpisodeId " +
+			"AND edt.consentId = :consentId")
+	boolean existsConsentDocumentInInternmentEpisode(@Param("internmentEpisodeId") Integer internmentEpisodeId,
+													 @Param("consentId") Integer consentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ie.id " +
+			"FROM InternmentEpisode ie " +
+			"WHERE ie.institutionId = :institutionId " +
+			"AND ie.patientId = :patientId " +
+			"AND ie.creationable.createdOn <= :date " +
+			"ORDER BY ie.creationable.createdOn DESC")
+	Page<Integer> getInternmentEpisodeIdByDate(@Param("institutionId") Integer institutionId,
+											   @Param("patientId") Integer patientId,
+											   @Param("date") LocalDateTime date,
+											   Pageable pageable);
 }

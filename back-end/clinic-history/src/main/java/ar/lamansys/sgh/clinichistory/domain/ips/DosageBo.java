@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

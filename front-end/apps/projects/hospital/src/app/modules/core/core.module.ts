@@ -14,9 +14,11 @@ import { ContentComponent } from './components/content/content.component';
 import { ExchangeableThemeComponent } from './components/exchangeable-theme/exchangeable-theme.component';
 // directives
 import { HasRoleDirective } from './directives/has-role.directive';
+import { HasRoleWithoutContextDirective } from './directives/has-role-without-context.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { StringSeparatorPipe } from './pipes/string-separator.pipe';
 
 @NgModule({
 	declarations: [
@@ -26,6 +28,9 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		HasRoleWithoutContextDirective,
+		//pipes
+		StringSeparatorPipe,
 	],
 	imports: [
 		CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
@@ -60,6 +65,9 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
+		HasRoleWithoutContextDirective,
+		//pipes
+		StringSeparatorPipe
 	],
 	providers: []
 })

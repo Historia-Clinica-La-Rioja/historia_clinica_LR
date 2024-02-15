@@ -338,8 +338,8 @@ export class EditPatientComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);

@@ -59,15 +59,30 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 					|| outOfOpeningHoursBounds(a, newHours);
 		}).findFirst();
 
+		Optional<AppointmentBo> appointmentWithDifferentTypeOfMedicalAttention = appointments.stream().filter(a -> {
+			List<DiaryOpeningHoursDto> newHours = appointmentsByWeekday.get(getWeekDay(a.getDate()));
+			return newHours == null
+					|| differentTypeOfMedicalAttention(a, newHours);
+		}).findFirst();
+
 		if (appointmentOutOfBounds.isPresent()) {
 			buildResponse(context, "{diary.appointments.invalid}");
+			return false;
+		}
+
+		if (appointmentWithDifferentTypeOfMedicalAttention.isPresent()) {
+			buildResponse(context, "{diary.appointments.invalid.type}");
 			return false;
 		}
 		return true;
 	}
 
 	private boolean outOfOpeningHoursBounds(AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
-		return newHours.stream().noneMatch(newOH -> fitsIn(a, newOH.getOpeningHours()) && sameMedicalAttention(a, newOH));
+		return newHours.stream().noneMatch(newOH -> fitsIn(a, newOH.getOpeningHours()));
+	}
+
+	private boolean differentTypeOfMedicalAttention (AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {
+		return newHours.stream().noneMatch(newOH -> sameMedicalAttention(a, newOH));
 	}
 
 	private boolean sameMedicalAttention(AppointmentBo a, DiaryOpeningHoursDto newOH) {

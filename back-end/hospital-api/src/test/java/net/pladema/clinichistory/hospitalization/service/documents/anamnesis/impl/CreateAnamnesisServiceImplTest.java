@@ -12,6 +12,27 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.service.PersonService;
+
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,16 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -45,6 +56,8 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.Anamne
 import net.pladema.clinichistory.hospitalization.service.anamnesis.impl.CreateAnamnesisServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 class CreateAnamnesisServiceImplTest extends UnitRepository {
@@ -81,15 +94,47 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 
 	private AnamnesisValidator anamnesisValidator;
 
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+	@Mock
+	private PdfService pdfService;
+
+	@Mock
+	private PatientService patientService;
+
+	@Mock
+	private PersonService personService;
+
+	@Mock
+	private InstitutionService institutionService;
+
+	@Mock
+	private FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
+
+	@Mock
+	private HealthcareProfessionalService healthcareProfessionalService;
+
+	@Mock
+	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
 	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
 				internmentEpisodeRepository,
-                dateTimeProvider, evolutionNoteDocumentRepository,
+				dateTimeProvider,
+				evolutionNoteDocumentRepository,
 				patientDischargeRepository,
+				medicalCoveragePlanRepository,
 				documentService,
-                medicalCoveragePlanRepository,
-                internmentEpisodeStorage, featureFlagsService);
+				internmentEpisodeStorage,
+				featureFlagsService,
+				pdfService,
+				patientService,
+				personService,
+				institutionService,
+				fetchEpisodeDocumentTypeById,
+				healthcareProfessionalService,
+				getLicenseNumberByProfessional);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
 						new AnamnesisValidator(featureFlagsService));
@@ -228,18 +273,18 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		);
 		Assertions.assertTrue(exception.getMessage().contains("personalHistories: {value.mandatory}"));
 
-		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
+		anamnesis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
+		anamnesis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setPersonalHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
-				new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
+		anamnesis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+				new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 				createAnamnesisServiceImpl.execute(anamnesis)
 		);
@@ -261,18 +306,18 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		);
 		Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
-		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("", ""))));
+		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("", ""))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo(null, null))));
+		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo(null, null))));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setFamilyHistories(List.of(new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED")),
-				new HealthHistoryConditionBo(new SnomedBo("REPEATED", "REPEATED"))));
+		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+				new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 				createAnamnesisServiceImpl.execute(anamnesis)
 		);

@@ -147,4 +147,12 @@ public class HealthcareProfessionalByInstitutionController {
 		return result;
 	}
 
+	@GetMapping(value = "/virtual-consultation-responsibles")
+	public List<ProfessionalDto> getVirtualConsultationResponsiblesByInstitutionId(@PathVariable("institutionId") Integer institutionId) {
+		LOG.debug("Input parameters -> institutionId {}", institutionId);
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(healthcareProfessionalService.getVirtualConsultationResponsiblesByInstitutionId(institutionId));
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 }

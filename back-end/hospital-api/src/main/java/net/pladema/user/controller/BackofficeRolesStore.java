@@ -5,8 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import ar.lamansys.sgx.shared.security.UserInfo;
-
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.permissions.repository.enums.ERole;
 
 import org.springframework.data.domain.Example;
@@ -27,12 +27,26 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 	private final RoleRepository roleRepository;
 	private final BackofficeRolesFilter backofficeRolesFilter;
 	private final BackofficeAuthoritiesValidator backofficeAuthoritiesValidator;
+	private final FeatureFlagsService featureFlagsService;
 
 	@Override
 	public Page<Role> findAll(Role example, Pageable pageable) {
 		List<Role> content = toList(roleRepository.findAll()).stream().filter(backofficeRolesFilter::filterRoles).collect(Collectors.toList());
-		if(!backofficeAuthoritiesValidator.hasRole(ERole.ROOT)){
+		if(!backofficeAuthoritiesValidator.hasRole(ERole.ROOT))
 			content = content.stream().filter(role -> !role.getId().equals(ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getId())).collect(Collectors.toList());
+		if (!backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR) || !featureFlagsService.isOn(AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO))
+			content.removeIf(role -> role.getId().equals(ERole.GESTOR_CENTRO_LLAMADO.getId()));
+		if(!backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO)){
+			content = content.stream().filter(role -> !role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) &&
+					!role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) &&
+					!role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId())).collect(Collectors.toList());
+		} else {
+			if (!backofficeAuthoritiesValidator.hasRole(ERole.ROOT) && !backofficeAuthoritiesValidator.hasRole(ERole.ADMINISTRADOR)) {
+				content = content.stream().filter(role -> role.getId().equals(ERole.GESTOR_DE_ACCESO_LOCAL.getId()) ||
+						role.getId().equals(ERole.GESTOR_DE_ACCESO_REGIONAL.getId()) ||
+						role.getId().equals(ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId())).collect(Collectors.toList());
+
+			}
 		}
 		return new PageImpl<>(content, pageable, content.size());
 	}
@@ -72,4 +86,5 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 				.stream(roles.spliterator(), false)
 				.collect(Collectors.toList());
 	}
+
 }

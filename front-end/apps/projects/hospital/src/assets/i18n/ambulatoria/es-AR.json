@@ -48,7 +48,8 @@
                         "NUEVA_CONSULTA": "Nueva consulta",
                         "AMBULATORY": "Ambulatoria",
                         "NURSING": "Enfermería",
-                        "EPICRISIS_DRAFT": "Continuar epicrisis"
+                        "EPICRISIS_DRAFT": "Continuar epicrisis",
+						"SURGICAL_REPORT": "Parte quirúrgico"
                     }
                 },
                 "GROUP_AND_FACTOR": "Grupo y factor",
@@ -175,9 +176,16 @@
                         }
                     },
                     "TITLE": "Antecedentes personales",
-                    "ANTECEDENTES_PERSONALES": "Antecedentes personales",
-                    "TIPO_DE_PROBLEMA": "Tipo de problema",
-                    "FECHA": "Fecha de registro"
+                    "PERSONAL_HISTORIES": "Antecedentes personales",
+                    "REGISTERED_PERSONAL_HISTORIES": "Antecedentes personales registrados",
+                    "SEARCH_PLACEHOLDER": "Buscar antecedentes personales",
+                    "HISTORY_TYPE": "Tipo",
+                    "FROM_DATE_PREFIX": "Desde",
+                    "TO_DATE_PREFIX": "Hasta",
+                    "START_DATE": "Fecha de inicio",
+                    "END_DATE": "Fecha de fin",
+                    "OBSERVATIONS": "Observaciones",
+                    "PERSONAL_HISTORIES_DETAILS": "Detalle de antecedente personal"
                 },
                 "datos-antropometricos": {
                     "TITLE": "Datos antropométricos",
@@ -192,8 +200,8 @@
                     "DISCARD": "NO, DESCARTARLOS",
                     "ASK": "¿Desea incluirlos en la consulta?",
                     "CONTENT_ANTHROMETRIC": "Hay datos antropométricos cargados previamente.",
-                    "CONTENT_RISK_FACTORS": "Hay factores de riesgo cargados previamente.",
-                    "CONTENT": "Hay datos antropométricos y factores de riesgo cargados previamente."
+                    "CONTENT_RISK_FACTORS": "Hay signos vitales y factores de riesgo cargados previamente.",
+                    "CONTENT": "Hay datos antropométricos, signos vitales y factores de riesgo cargados previamente."
                 },
                 "alergias": {
                     "TITLE": "Alergias",
@@ -243,8 +251,8 @@
                     "PHONE_PREFIX": "Prefijo",
                     "PRIORITY_CRITERIA": "Criterio de priorización",
 					"RECEIVER": "Receptor",
-					"AVAILABLE_APPOINTMENT": "<b>{{ appointment }}</b> turnos disponibles en los próximos 60 dias.",
-					"NOT_AVAILABLE_APPOINTMENT": "Sin turnos disponibles en los proximos 60 días.",
+					"PROTECTED_APPOINTMENT": " turnos protegidos disponibles para ser asignados por red de atención en los próximos 60 días.",
+                    "APPOINTMENT": " turnos disponibles para ser asignados por la institución destino en los próximos 60 días.",
 					"PRACTICE_PROCEDURE": "Práctica/procedimiento",
 					"STUDY_CATEGORY": "Categoría de estudios"
                 }
@@ -253,13 +261,14 @@
                 "title": {
                     "AT_LEAST_ONE": "Hay al menos una ",
                     "REFERENCE_APPLICATION": "solicitud de referencia ",
-                    "CARE_LINE_RELATED": "en relación a la línea de cuidado a la que usted pertenece:"
+                    "CARE_LINE_RELATED": "en relación a su especialidad:"
                 },
                 "REFERENCE_REQUEST": "REFERENCIA SOLICITADA",
                 "OMIT_REFERENCE": "Si no desea responder a la referencia y realizar una consulta independientemente seleccione 'Consulta clásica'.",
                 "DESCRIPTION": "Si no desea responder a la referencia y realizar una consulta independiente seleccione “Consulta clásica”.",
                 "NEW_CONSULTATION": "CONSULTA CLÁSICA",
-                "COUNTERREFERENCE": "CONTRARREFERENCIA"
+                "COUNTERREFERENCE": "CONTRARREFERENCIA",
+                "SPECIALTY": "Especialidad"
             },
             "counterreference": {
                 "TITLE": "Responder referencia",
@@ -274,6 +283,69 @@
                     "SUCCESS": "El documento de contrarreferencia se guardó exitosamente"
                 }
             },
+			"surgical-report": {
+				"diagnosis": {
+					"TITLE": "Diagnósticos",
+					"PRE_SURGERY": "Diagnóstico Pre-Operatorio",
+					"ADD": "+ Agregar otro diagnóstico",
+					"ADD_SURGERY": "Agregar cirugía propuesta",
+					"SURGERY": "Cirugía Propuesta"
+				},
+				"surgical-team": {
+					"TITLE": "Equipo Quirófano",
+					"CIRUJANO": "Cirujano",
+					"AYUDANTE": "Ayudante",
+					"ANESTESIOLOGO": "Anestesiólogo",
+					"CARDIOLOGO": "Cardiólogo",
+					"INSTRUMENTADOR": "Instrumentador",
+					"OBSTETRA": "Obstetra",
+					"PEDIATRA": "Pediatra",
+					"DNI": "DNI",
+					"MATRICULA": "Matrícula",
+					"ADD_AYUDANTE": "+ Agregar ayudante"
+				},
+				"procedures": {
+					"TITLE": "Procedimientos",
+					"SURGERY_START_DATE": "Fecha de inicio de cirugía",
+					"SURGERY_END_DATE": "Fecha de fin de cirugía",
+					"SKIN_OPENING": "Apertura de piel",
+					"SKIN_CLOSURE": "Cierre de piel",
+					"ADD": "Agregar procedimiento",
+					"REGISTERED_PROCEDURES": "Procedimientos registrados",
+					"SURGERY_DESCRIPTION": "Descripción de cirugía realizada",
+					"ADD_DIAGNOSIS": "Agregar diagnóstico post-operatorio",
+					"DIAGNOSIS": "Diagnóstico Post-Operatorio"
+				},
+				"exam": {
+					"TITLE": "Examen Anatomopatológico",
+					"PATOLOGO": "Patólogo"
+				},
+				"blood-solutions": {
+					"TITLE": "Sangre y soluciones",
+					"TRANSFUSIONISTA": "Técnico en hemoterapia"
+				},
+				"culture": {
+					"TITLE": "Cultivo",
+					"TABLE_TITLE": "Cultivo registrado",
+					"BUTTON_TITLE": "Agregar cultivo"
+				},
+				"prosthesis": {
+					"TITLE": "Prótesis",
+					"YES": "Si",
+					"NO": "No"
+				},
+				"biopsy": {
+					"TITLE": "Biopsia por congelación",
+					"TABLE_TITLE": "Biopsia registrada",
+					"BUTTON_TITLE": "Agregar biopsia"
+				},
+				"drainage": {
+					"TITLE": "Drenajes",
+					"TABLE_TITLE": "Drenaje registrado",
+					"BUTTON_TITLE": "Agregar drenaje"
+				},
+				"DESCRIPTION": "Descripción"
+			},
             "problemas": {
                 "TAB_LABEL": "Problemas",
                 "TITLE": "Problemas y evoluciones",
@@ -309,6 +381,7 @@
                     "EVOLUTION_NOTE": "Descripción/Resumen",
                     "CONSULTATION_DATE": "Fecha de consulta",
                     "REFERENCE_REQUEST": "referencia solicitada",
+                    "CANCELLED_REFERENCE": "Referencia cancelada",
                     "CARE_LINE": "Línea de cuidado",
                     "INSTITUTION": "Institución",
                     "SUMMARY_REFERENCE": "Resumen de referencia",
@@ -362,7 +435,30 @@
                     "ID": "ID",
                     "FAILED_REPORT_ERROR": "Fallo al reportar el problema"
                 },
-                "PENDING_REFERENCE": "Referencia pendiente"
+                "PENDING_REFERENCE": "Referencia pendiente",
+                "VIEW_DETAIL": "Ver detalle",
+                "amend_problems": {
+                    "AMEND_PROBLEM": "Marcar como registro incorrecto",
+                    "TITLE": "Cancelación en los turnos, referencias y solicitudes asociadas",
+                    "CONTENT": "Al marcar este problema como un 'registro incorrecto', todas las referencias, turnos y solicitudes de estudio asociados al mismo se cancelarán automáticamente.",
+                    "MARK_AS_ERROR": "Marcar como registro incorrecto",
+                    "COMPLETE_DATA": "Ingrese los siguientes datos",
+                    "ERROR_MOTIVE": "Motivo del error",
+                    "OBSERVATIONS": "Observaciones*",
+                    "OK_BUTTON": "Marcar como registro incorrecto",
+                    "BACK_BUTTON": "Volver",
+                    "AMENDED_PROBLEMS": "Registros incorrectos",
+                    "INCORRECT_PROBLEM": "Registro incorrecto",
+                    "information": {
+                        "MOTIVE": "Motivo de error",
+                        "OBSERVATIONS": "Observaciones",
+                        "EDITED_DATE": "Fecha de edición"
+                    },
+                    "error": {
+                        "TITLE": "No se puede marcar el registro como incorrecto",
+                        "OK_BUTTON": "Aceptar"
+                    }
+                }
             },
             "ordenes_prescripciones": {
                 "TAB_LABEL": "Órdenes y prescripciones",
@@ -584,7 +680,7 @@
                 "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
                 "HISTORIAL_TRIAGE": "Historial de triages",
                 "NUEVO_TRIAGE": "Nuevo triage",
-                "RISK_FACTORS_TOOLTIP": "Factores de riesgo"
+                "RISK_FACTORS_TOOLTIP": "Signos vitales y factores de riesgo"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
@@ -688,7 +784,118 @@
 				"VALUE_ERROR":"Ingrese un numero entre 1 y 30.",
 				"ERROR_NOT_HAS_GESTATION": "Aún no se han registrado gestas",
 				"ERROR_REPEAT_VALUE": "No es posible sobrescribir gestas"
-			}
+			},
+            "violence-situations": {
+                "TAB_LABEL": "Situaciones de violencia",
+                "NEW_VIOLENCE_SITUATION": "Nueva situación de violencia",
+                "violence-situation-list": {
+                    "TITLE": "Listado de situaciones de violencia",
+                    "NO_INFO": "No hay información para mostrar",
+                    "TYPE": "Tipo:",
+                    "MODALITY": "Modalidad:",
+                    "RISK_LEVEL": "Nivel de riesgo:",
+                    "INIT_DATE": "Inicio:",
+                    "LAST_UPDATE": "Última modificación:",
+                    "SEE_ALL": "Ver todas las situaciones de violencia",
+                    "SEE_LESS": "Ver menos",
+                    "SITUATION_NUMBER": "Situación #{{id}}",
+                    "buttons": {
+                        "CONTINUE": "Continuar registro"
+                    }
+                },
+                "dialog": {
+                    "TEXT_FREE_LABEL":"Texto libre",
+                    "SAVE": "Guardar situación de violencia",
+                    "SUCCESS": "Episodio de violencia cargado exitosamente",
+                    "ERROR_FORM": "Faltan completar campos",
+                    "expanded-person-information": {
+                        "TITLE": "Información ampliada de la persona",
+                        "CARE_REFERENCE_PERSON_INFORMATION": "Información de la persona referente de cuidado",
+                        "LASTNAME": "Apellido",
+                        "NAME": "Nombre",
+                        "AGE": "Edad",
+                        "ADDRESS": "Domicilio",
+                        "PROVINCE": "Provincia",
+                        "DEPARTMENT": "Partido",
+                        "LOCALTY": "Municipio de residencia",
+                        "RELATION_PERSON_IN_VIOLENCE_SITUATION": "Vínculo con la persona en situación de violencia",
+                        "WHICH_TYPE_RELATION": "¿Qué tipo de vínculo?",
+                        "questions": {
+                            "QUESTION_1": "¿Sabe leer y escribir?",
+                            "QUESTION_2": "¿Percibe ingresos?",
+                            "QUESTION_3": "¿Percibe plan o asignación social?",
+                            "QUESTION_4": "¿Tiene alguna discapacidad?",
+                            "QUESTION_5": "¿Tiene certificado de discapacidad?",
+                            "QUESTION_6": "¿La persona se encuentra institucionalizada?",
+                            "QUESTION_7": "¿En qué institución?",
+                            "QUESTION_8": "¿La persona en situación de violencia es un niño, niña, adolescente o persona con alguna condición que lo requiera?",
+                            "QUESTION_9": "¿En qué sector?"
+                        }
+                    },
+                    "new-violence-episode": {
+                        "TITLE": "Nuevo episodio de violencia",
+                        "VIOLENCE_TYPE_REGISTERED": "Tipo de violencia registrada",
+                        "VIOLENCE_MODALITY_REGISTERED": "Modalidad de violencia registrada",
+                        "questions": {
+                            "QUESTION_1": "Fecha del episodio",
+                            "QUESTION_2": "Tipo de violencia",
+                            "QUESTION_3": "Modalidad de violencia",
+                            "QUESTION_4": "¿El episodio de violencia involucra niños, niñas y/o adolescentes?",
+                            "QUESTION_5": "¿La niña, niño o adolescente se encuentra escolarizada/o?",
+                            "QUESTION_6": "Nivel de escolarización",
+                            "QUESTION_7": "Evaluación de nivel de riesgo"
+                        }
+                    },
+                    "implemented-actions": {
+                        "TITLE": "Acciones implementadas",
+                        "SUBTITLE_1": "Articulación al interior del sistema de salud",
+                        "SUBTITLE_2": "Articulación al interior del establecimiento de salud",
+                        "questions": {
+                            "QUESTION_1": "¿Ante qué área/organismo?",
+                            "QUESTION_2": "Nombre de área/organismo",
+                            "QUESTION_3": "Establecimiento",
+                            "QUESTION_4": "Nombre del establecimiento",
+                            "QUESTION_5": "Se indica internación",
+                            "QUESTION_6": "La persona en situación de violencia y/o la persona referente de cuidado, ¿realizó denuncias por esta u otras situaciones?",
+                            "QUESTION_7": "¿Ante qué organismo?",
+                            "QUESTION_8": "¿Desde la institución de salud se realizó la denuncia ante la autoridad pertinente?",
+                            "QUESTION_9": "Denuncia por:",
+                            "QUESTION_10": "¿Ante qué autoridad/organismo?",
+                            "QUESTION_11": "Nombre de autoridad/organismo",
+                            "QUESTION_12": "¿Se registra violencia sexual?",
+                            "QUESTION_13": "Acciones implementadas"
+                        }
+                    },
+                    "relevant-information": {
+                        "TITLE": "Información relevante",
+                        "questions": {
+                            "QUESTION_1": "Observaciones"
+                        }
+                    },
+                    "violent-person-information":{
+                        "TITLE": "Información sobre la persona que ejerce violencia",
+                        "SUBTITLE": "Persona/s que ejercen violencia registrada/s",
+                        "ADD_BUTTON": "Agregar persona que ejerce violencia",
+                        "SUBMIT_BUTTON": "Agregar persona agresora",
+                        "PERSON_LABEL": "Persona",
+                        "questions": {
+                                "QUESTION_1": "¿Posee armas de fuego?",
+                                "QUESTION_2": "¿Transita un abordaje por su ejercicio de violencia?",
+                                "QUESTION_3": "¿Pertenece a fuerzas de seguridad o FFAA?",
+                                "QUESTION_4": "¿A cuál institución/es?",
+                                "PLACEHOLDER_QUESTION_4": "Seleccionar institución/es",
+                                "QUESTION_5": "Vinculo con la persona",
+                                "PLACEHOLDER_QUESTION_5": "Seleccionar vinculo",
+                                "QUESTION_6": "¿Qué tipo de vínculo?",
+                                "QUESTION_7": "¿Convive?",
+                                "QUESTION_8": "Antigüedad del vínculo",
+                                "QUESTION_9": "Frecuencia del maltrato",
+                                "QUESTION_10" : "¿Tiene antecedentes de incumplimiento de medidas de restricción y/o denuncias previas?",
+                                "STATE": "Estado"
+                            } 
+                    }
+                }
+            }
         },
 		"print":{
             "TITLE": "Imprimir historia clínica",
@@ -755,6 +962,26 @@
             "COINCIDENCE": "coincidencia",
             "VIEW_BUTTON": "Ver",
             "PRINT_HC_BUTTON": "Imprimir HC"
-        }
+        },
+		"reference-study-close": {
+			"TITLE": "Completar estudio ",
+			"CLOSURE_TYPE": "Tipo de cierre",
+			"PLACEHOLDER_DESCRIPTION": "Descripción",
+			"SUCCESS": "El estudio de contrarreferencia se guardó exitosamente",
+			"ERROR": "No podés completar el estudio porque tiene una referencia asociada con una especialidad a la que no pertenecés",
+			"ERROR_TITLE": "Sin permisos para completar el estudio",
+			"COMPLETE_BUTTON": "Completar",
+			"UPLOAD_FILES": "Adjuntar archivos",
+			"OK_BUTTON": "Aceptar",
+            "SPECIALTIES": "Especialidades",
+            "NO_PERMISSION": "El profesional no posee las especialidades de la referencia para realizar el cierre de la misma"
+		},
+		"reference-study-closure-information":{
+			"TITLE": "Resultados del estudio",
+			"OBSERVATIONS": "Observaciones"
+		},
+		"reference-request-data": {
+			"TITLE": "Datos de referencia"
+		}
     }
 }

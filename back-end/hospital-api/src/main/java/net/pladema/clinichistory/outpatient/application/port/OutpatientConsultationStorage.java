@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface OutpatientConsultationStorage {
 
-	Map<Integer, List<OutpatientBasicDataBo>> getOutpatientConsultationsToCipres();
+	List<OutpatientBasicDataBo> getOutpatientConsultationsToCipres();
 
 }

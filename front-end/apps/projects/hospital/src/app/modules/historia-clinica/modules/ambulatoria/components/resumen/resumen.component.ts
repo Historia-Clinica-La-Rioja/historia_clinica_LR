@@ -7,16 +7,17 @@ import {
 	HCEAnthropometricDataDto,
 	HCELast2RiskFactorsDto,
 	HCEMedicationDto,
-	HCEPersonalHistoryDto,
+	HCEHealthConditionDto,
 	MedicationInteroperabilityDto,
-	PatientSummaryDto
+	PatientSummaryDto,
+	HCEPersonalHistoryDto
 } from '@api-rest/api-model';
 import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
 import { TableModel } from '@presentation/components/table/table.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ANTECEDENTES_FAMILIARES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
+import { ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @Component({
@@ -27,12 +28,14 @@ import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summ
 export class ResumenComponent implements OnInit, OnChanges {
 
 	readonly familyHistoriesHeader = ANTECEDENTES_FAMILIARES;
+	readonly personalHistoriesHeader = ANTECEDENTES_PERSONALES;
 	readonly personalProblemsHeader = PROBLEMAS_ANTECEDENTES;
 	readonly medicationsHeader = MEDICACION_HABITUAL;
 	allergies$: Observable<HCEAllergyDto[]>;
 	patientId: number;
-	familyHistories$: Observable<HCEPersonalHistoryDto[]>;
-	personalHistory$: Observable<HCEPersonalHistoryDto[]>;
+	personalHistories$: Observable<HCEPersonalHistoryDto[]>;
+	familyHistories$: Observable<HCEHealthConditionDto[]>;
+	patientProblems$: Observable<HCEHealthConditionDto[]>;
 	medications$: Observable<HCEMedicationDto[]>;
 	riskFactors$: Observable<HCELast2RiskFactorsDto>;
 	anthropometricDataList$: Observable<HCEAnthropometricDataDto[]>;
@@ -67,13 +70,14 @@ export class ResumenComponent implements OnInit, OnChanges {
 
 	initSummaries(): void {
 		if (this.canOnlyViewSelfAddedProblems){
-			this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistoriesByRole$.pipe(
+			this.patientProblems$ = this.ambulatoriaSummaryFacadeService.patientProblemsByRole$.pipe(
 				map(this.formatProblemsDates)
 				);
 		} else {
 			this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
+			this.personalHistories$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
 			this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
-			this.personalHistory$ = this.ambulatoriaSummaryFacadeService.personalHistories$.pipe(
+			this.patientProblems$ = this.ambulatoriaSummaryFacadeService.patientProblems$.pipe(
 				map(this.formatProblemsDates)
 				);
 			this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
@@ -82,8 +86,8 @@ export class ResumenComponent implements OnInit, OnChanges {
 		}
 	}
 
-	private formatProblemsDates(problemas: HCEPersonalHistoryDto[]) {
-		return problemas.map((problema: HCEPersonalHistoryDto) => {
+	private formatProblemsDates(problemas: HCEHealthConditionDto[]) {
+		return problemas.map((problema: HCEHealthConditionDto) => {
 			return {
 				...problema,
 				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,

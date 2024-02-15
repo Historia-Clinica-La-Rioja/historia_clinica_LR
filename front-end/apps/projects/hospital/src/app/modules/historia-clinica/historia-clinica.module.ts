@@ -6,7 +6,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 // components
 import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
-import { AntecedentesPersonalesSummaryComponent } from './components/antecedentes-personales-summary/antecedentes-personales-summary.component';
+import { PatientProblemsSummaryComponent } from './components/patient-problems-summary/patient-problems-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
@@ -62,13 +62,27 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
+import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
+import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
+import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
+import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
+import { SurgicalReportProfessionalTeamComponent } from './components/surgical-report-professional-team/surgical-report-professional-team.component';
+import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
+import { SurgicalReportProceduresComponent } from './components/surgical-report-procedures/surgical-report-procedures.component';
+import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
+import { ProcedureAndDescriptionComponent } from './components/procedure-and-description/procedure-and-description.component';
+import { SurgicalReportProsthesisComponent } from './components/surgical-report-prosthesis/surgical-report-prosthesis.component';
+import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
+import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
+import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
+import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/audit-access-register.component';
 
 @NgModule({
 	declarations: [
 		// components
 		AlergiasSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
-		AntecedentesPersonalesSummaryComponent,
+		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,
@@ -121,6 +135,20 @@ import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-s
 		FactoresDeRiesgoFormV2Component,
 		AlergiasFormComponent,
 		ProblemConceptSearchDialogComponent,
+		PersonalHistoriesBackgroundListComponent,
+		PersonalHistoriesSummaryComponent,
+		SurgicalReportDockPopupComponent,
+		SurgicalReportDiagnosisComponent,
+		SurgicalReportProfessionalTeamComponent,
+		SurgicalReportProfessionalInfoComponent,
+		SurgicalReportProceduresComponent,
+		ProfessionalAndDescriptionComponent,
+		ProcedureAndDescriptionComponent,
+		SurgicalReportProsthesisComponent,
+  		ViolenceSituationsListComponent,
+    	ViolenceModalitiesListComponent,
+     	ViolentPersonListComponent,
+  		AuditAccessRegisterComponent,
 	],
 	imports: [
 		CommonModule,
@@ -133,7 +161,7 @@ import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-s
 		// components
 		AlergiasSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
-		AntecedentesPersonalesSummaryComponent,
+		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,
@@ -156,13 +184,18 @@ import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-s
 		ReferenceRequestListComponent,
 		BedAssignmentComponent,
 		EpisodeDataComponent,
+		PersonalHistoriesBackgroundListComponent,
+		PersonalHistoriesSummaryComponent,
+		ViolenceSituationsListComponent,
+		ViolenceModalitiesListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,
 		DiagnosticosComponent,
 		DatosAntropometricosNuevaConsultaComponent,
-		ProblemListComponent
+		ProblemListComponent,
+		ViolentPersonListComponent,
 	],
 	providers: [
 		InternmentSummaryFacadeService,

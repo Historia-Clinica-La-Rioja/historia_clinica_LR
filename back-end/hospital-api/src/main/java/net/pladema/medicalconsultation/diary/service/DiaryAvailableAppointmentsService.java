@@ -10,6 +10,8 @@ public interface DiaryAvailableAppointmentsService {
 
 	List<DiaryAvailableProtectedAppointmentsBo> getAvailableProtectedAppointmentsBySearchCriteria(DiaryProtectedAppointmentsSearch diaryProtectedAppointmentsSearch, Integer institutionId);
 
-	Integer geAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionDestinationId, Integer clinicalSpecialtyId, AppointmentSearchBo searchCriteria);
+	Integer getAvailableAppointmentsBySearchCriteriaQuantity(Integer institutionDestinationId, List<Integer> clinicalSpecialtyIds, AppointmentSearchBo searchCriteria);
+
+	Integer getAvailableAppointmentsQuantityByCareLineDiaries(Integer institutionId, List<Integer> clinicalSpecialtyIds, AppointmentSearchBo searchCriteria, Integer careLineId);
 
 }
