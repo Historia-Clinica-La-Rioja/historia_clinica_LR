@@ -845,25 +845,22 @@ public class AppointmentsController {
 	}
 
 
-
 	@GetMapping("{appointmentId}/detailOrderImage/transcribed-order/{transcribed}")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA, ADMINISTRATIVO_RED_DE_IMAGENES ')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA, ADMINISTRATIVO_RED_DE_IMAGENES, TECNICO')")
 	public ResponseEntity<AppointmentOrderDetailImageDto> getOrderDetailImage(@PathVariable(name = "institutionId") Integer institutionId,
-												   @PathVariable(name = "appointmentId") Integer appointmentId,
-												   @PathVariable(name = "transcribed") Boolean isTranscribed
-	)  {
-		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		log.debug("Input parameters -> isTranscribed {}", isTranscribed);
+																			  @PathVariable(name = "appointmentId") Integer appointmentId,
+																			  @PathVariable(name = "transcribed") Boolean isTranscribed) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, isTranscribed {}", institutionId, appointmentId, isTranscribed);
 		AppointmentOrderDetailImageDto result;
 		var bo = this.appointmentOrderImageService.getDetailOrdenImageTechnical(appointmentId, isTranscribed);
-		if (!isTranscribed){
+		if (!isTranscribed) {
 			ProfessionalDto professionalDto = bo.getIdDoctor() == null ? null :
 					healthcareProfessionalExternalService.findProfessionalByUserId(bo.getIdDoctor());
 			result = this.detailOrderImageMapper.parseToAppointmentOrderDetailDto(bo, professionalDto);
-		}
-		else {
+		} else {
 			result = this.detailOrderImageMapper.parseToAppointmentOrderTranscribedDetailDto(bo);
 		}
+		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
 
