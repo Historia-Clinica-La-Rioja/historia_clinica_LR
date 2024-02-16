@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MedicationData, MedicationService } from '../../services/medicationService';
 
 @Component({
-    selector: 'app-anesthetic-report-premedication-background-list',
-    templateUrl: './anesthetic-report-premedication-background-list.component.html',
-    styleUrls: ['./anesthetic-report-premedication-background-list.component.scss']
+    selector: 'app-medication-background-list',
+    templateUrl: './medication-background-list.component.html',
+    styleUrls: ['./medication-background-list.component.scss']
 })
-export class AnestheticReportPremedicationBackgroundListComponent implements OnInit {
+export class MedicationBackgroundListComponent implements OnInit {
 
     @Input() service: MedicationService;
     premedicationList: MedicationData[];

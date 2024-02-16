@@ -54,7 +54,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     anestheticReportAnestheticAgent: MedicationService;
     anestheticReportNonAnestheticDrugs: MedicationService;
     anestheticReportIntrasurgicalAnestheticProceduresService: AnestheticReportIntrasurgicalAnestheticProceduresService;
-    anestheticReportAntibioticProphylaxisService: AnestheticReportPremedicationAndFoodIntakeService;
+    anestheticReportAntibioticProphylaxisService: MedicationService;
 
     personalRecordForm: FormGroup;
     readonly ASAOptions = [1,2,3,4,5]
@@ -95,10 +95,9 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticTechnique = new AnestheticTechniqueService(this.snomedService, this.snackBarService)
         this.fluidAdministrationService = new FluidAdministrationService(this.snomedService, this.snackBarService)
         this.anestheticReportAnestheticAgent = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
-        this.anestheticReportAnestheticAgent = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportNonAnestheticDrugs = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportIntrasurgicalAnestheticProceduresService = new AnestheticReportIntrasurgicalAnestheticProceduresService();
-        this.anestheticReportAntibioticProphylaxisService = new AnestheticReportPremedicationAndFoodIntakeService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
 
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
@@ -188,8 +187,13 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             analgesicTechniques: this.analgesicTechnique.getAnalgesicTechniqueDto(),
             anestheticTechniques: this.anestheticTechnique.getAnestheticTechniqueDto(),
             fluidAdministrations: this.fluidAdministrationService.getFluidAdministrationDto()
-            /* intrasurgicalAnestheticProcedures = this.anestheticReportIntrasurgicalAnestheticProceduresService.getIntrasurgicalAnestheticProceduresData() 
-            -- Devuelve un objeto con los valores de los 3 radiobuttons */
+            /* 
+            anestheticAgents = this.anestheticReportAnestheticAgent.getAnestheticSubstanceDto(),
+            nonAnestheticDrugs = this.anestheticReportNonAnestheticDrugs.getAnestheticSubstanceDto(),
+            intrasurgicalAnestheticProcedures = this.anestheticReportIntrasurgicalAnestheticProceduresService.getIntrasurgicalAnestheticProceduresData(),
+            -- Devuelve un objeto con los valores de los 3 radiobuttons 
+            antibioticProphylaxis = this.anestheticReportAntibioticProphylaxisService.getAnestheticSubstanceDto(),
+            */
 		};
 	}
 }

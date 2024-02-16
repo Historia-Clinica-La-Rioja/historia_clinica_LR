@@ -452,12 +452,14 @@
 			"anesthetic-agents":{
 				"TITLE": "Agentes anestésicos",
 				"REGISTERED_ANESTHETIC_AGENTS": "Agentes anestésicos registrados",
-				"ADD_ANESTHETIC_AGENT": "+ Agregar agente anestésico"
+				"ADD_ANESTHETIC_AGENT": "+ Agregar agente anestésico",
+				"LABEL": "Agente anestésico"
 			},
 			"non-anesthetic-drugs":{
 				"TITLE": "Drogas no anestésicas",
 				"REGISTERED_NON_ANESTHETIC_DRUGS": "Drogas no anestésicas registradas",
-				"ADD_NON_ANESTHETIC_DRUG": "+ Agregar droga no anestésica"
+				"ADD_NON_ANESTHETIC_DRUG": "+ Agregar droga no anestésica",
+				"LABEL": "Droga no anestésica"
 			},
 			"intrasurgical-anesthetic-procedures": {
 				"TITLE": "Procedimientos anestésicos intraquirúrgicos",
@@ -472,7 +474,8 @@
 			"antibiotic-prophylaxis":{
 				"TITLE": "Profilaxis antibiótica",
 				"REGISTERED_ANTIBIOTIC_PROPHYLAXIS": "Profilaxis antibióticas registradas",
-				"ADD_ANTIBIOTIC_PROPHYLAXIS": "+ Agregar profilaxis antibiótica"
+				"ADD_ANTIBIOTIC_PROPHYLAXIS": "+ Agregar profilaxis antibiótica",
+				"LABEL": "Profilaxis antibiótica"
 			}
 		},
 		"clinical-assessment-diagnosis": {

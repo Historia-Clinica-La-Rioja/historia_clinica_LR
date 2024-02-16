@@ -85,7 +85,7 @@ import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulator
 import { AnestheticReportAnestheticHistoryComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-history/anesthetic-report-anesthetic-history.component';
 import { AnestheticReportUsualMedicationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-usual-medication/anesthetic-report-usual-medication.component';
 import { AnestheticReportPremedicationAndFoodIntakeComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-premedication-and-food-intake/anesthetic-report-premedication-and-food-intake.component';
-import { AnestheticReportPremedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-premedication-background-list/anesthetic-report-premedication-background-list.component';
+import { MedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/medication-background-list/medication-background-list.component';
 import { AnestheticReportPersonRecordComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-person-record/anesthetic-report-person-record.component';
 import { AnestheticPlanComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-plan/anesthetic-plan.component';
 import { AnalgesicTechniqueBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/analgesic-technique-background-list/analgesic-technique-background-list.component';
@@ -99,6 +99,8 @@ import { FluidAdministrationPopupComponent } from './modules/ambulatoria/modules
 import { FluidAdministrationListComponent } from './modules/ambulatoria/modules/internacion/fluid-administration-list/fluid-administration-list.component';
 import { AnestheticReportIntrasurgicalAnestheticProceduresComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-intrasurgical-anesthetic-procedures/anesthetic-report-intrasurgical-anesthetic-procedures.component';
 import { AnestheticReportAnestheticAgentsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-agents/anesthetic-report-anesthetic-agents.component';
+import { AnestheticReportNonAnestheticDrugsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-non-anesthetic-drugs/anesthetic-report-non-anesthetic-drugs.component';
+import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-antibiotic-prophylaxis/anesthetic-report-antibiotic-prophylaxis.component';
 
 @NgModule({
 	declarations: [
@@ -134,7 +136,7 @@ import { AnestheticReportAnestheticAgentsComponent } from './modules/ambulatoria
 		AnestheticReportAnestheticHistoryComponent,
 		AnestheticReportUsualMedicationComponent,
 		AnestheticReportPremedicationAndFoodIntakeComponent,
-		AnestheticReportPremedicationBackgroundListComponent,
+		MedicationBackgroundListComponent,
 		AnestheticReportPersonRecordComponent,
 		AnestheticPlanComponent,
 		AnalgesicTechniqueBackgroundListComponent,
@@ -145,6 +147,8 @@ import { AnestheticReportAnestheticAgentsComponent } from './modules/ambulatoria
 		FluidAdministrationComponent,
 		AnestheticReportIntrasurgicalAnestheticProceduresComponent,
 		AnestheticReportAnestheticAgentsComponent,
+		AnestheticReportNonAnestheticDrugsComponent,
+		AnestheticReportAntibioticProphylaxisComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
