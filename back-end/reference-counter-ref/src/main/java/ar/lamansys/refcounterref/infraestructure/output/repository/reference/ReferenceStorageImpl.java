@@ -86,7 +86,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		if (referenceBo.getStudy() != null)
 			saveReferenceOrder(referenceBo, orderIds, reference, referenceId);
 		saveReferenceRegulationState(reference, referenceBo);
-		referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
+		if (referenceBo.getFileIds() != null)
+			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
 	}
 
 	private void saveReferenceRegulationState(Reference reference, CompleteReferenceBo referenceBo) {

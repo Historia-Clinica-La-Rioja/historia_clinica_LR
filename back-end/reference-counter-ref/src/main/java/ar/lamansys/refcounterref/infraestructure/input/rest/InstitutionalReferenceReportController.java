@@ -120,14 +120,13 @@ public class InstitutionalReferenceReportController {
 
 	@PutMapping("/{referenceId}/modify")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
-	public ResponseEntity<Integer> modifyReference(@PathVariable(name = "institutionId") Integer institutionId,
+	public ResponseEntity<Boolean> modifyReference(@PathVariable(name = "institutionId") Integer institutionId,
 												   @PathVariable(name = "referenceId") Integer referenceId,
 												   @RequestBody ReferenceDto referenceDto){
 		log.debug("Input parameters -> institutionId {}, referenceId {}", institutionId, referenceId);
 		Integer currentUserId = SecurityContextUtils.getUserDetails().getUserId();
-		Integer result = modifyReference.run(currentUserId, referenceId, referenceMapper.fromReferenceDto(referenceDto));
-		log.debug("Output -> {}", result);
-		return ResponseEntity.ok().body(result);
+		modifyReference.run(currentUserId, referenceId, referenceMapper.fromReferenceDto(referenceDto));
+		return ResponseEntity.ok().body(Boolean.TRUE);
 	}
 
 }

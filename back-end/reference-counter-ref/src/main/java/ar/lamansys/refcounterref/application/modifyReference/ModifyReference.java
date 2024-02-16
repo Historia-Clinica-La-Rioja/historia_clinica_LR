@@ -39,14 +39,13 @@ public class ModifyReference {
 	private final ReferenceHealthConditionStorage referenceHealthConditionStorage;
 
 	@Transactional
-	public Integer run(Integer userId, Integer oldReferenceId, ReferenceBo referenceBo){
+	public void run(Integer userId, Integer oldReferenceId, ReferenceBo referenceBo){
 		log.debug("Input parameters -> userId {}, oldReferenceId {}, referenceBo{}", userId, oldReferenceId, referenceBo);
 		CompleteReferenceBo completeReference = buildCompleteReference(userId, oldReferenceId, referenceBo);
 		cancelServiceRequest(oldReferenceId);
 		referenceStorage.deleteAndUpdateStatus(oldReferenceId, EReferenceStatus.MODIFIED.getId());
-		Integer result = referenceStorage.save(Collections.singletonList(completeReference)).get(0);
-		log.debug("Output -> {}", result);
-		return result;
+		referenceStorage.save(Collections.singletonList(completeReference));
+		log.debug("reference successfully modified");
 	}
 
 	private CompleteReferenceBo buildCompleteReference(Integer userId, Integer oldReferenceId, ReferenceBo referenceBo){
