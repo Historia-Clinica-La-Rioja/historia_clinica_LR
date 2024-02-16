@@ -7,6 +7,7 @@ import {
 	AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	BookedAppointmentDto,
+	BookingDto,
 	CreateAppointmentDto,
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
@@ -14,6 +15,7 @@ import {
 	HierarchicalUnitDto,
 	InstitutionBasicInfoDto,
 	PatientAppointmentHistoryDto,
+	SavedBookingAppointmentDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
@@ -342,5 +344,10 @@ export class AppointmentsService {
 	getAppoinmentOrderDetail(appointmentId: number, isOrderTranscribed: boolean): Observable<AppointmentOrderDetailImageDto>{
 		const url = `${this.BASE_URL}/${appointmentId}/detailOrderImage/transcribed-order/${isOrderTranscribed}`;
 		return this.http.get<AppointmentOrderDetailImageDto>(url);
+	}
+
+	bookAppointment(bookingDto: BookingDto): Observable<SavedBookingAppointmentDto>{
+		const url = `${this.BASE_URL}/third-party`;
+		return this.http.post<SavedBookingAppointmentDto>(url, bookingDto);
 	}
 }
