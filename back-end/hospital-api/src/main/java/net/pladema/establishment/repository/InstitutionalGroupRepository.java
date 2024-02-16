@@ -39,4 +39,13 @@ public interface InstitutionalGroupRepository extends SGXAuditableEntityJPARepos
 			"AND igu.deleteable.deleted = FALSE")
 	boolean existsUsersByGroupId (@Param("id") Integer id);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT ig " +
+			"FROM InstitutionalGroup ig " +
+			"JOIN InstitutionalGroupUser igu ON (igu.institutionalGroupId = ig.id) " +
+			"WHERE igu.userId = :userId " +
+			"AND ig.deleteable.deleted IS FALSE " +
+			"AND igu.deleteable.deleted IS FALSE")
+	List<InstitutionalGroup> getInstitutionalGroupByUserId(@Param("userId")Integer userId);
+
 }
