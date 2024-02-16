@@ -8,11 +8,12 @@ import { format } from 'date-fns';
 })
 export class DateFormatPipe implements PipeTransform {
 
-	constructor(
-		private readonly datePipe: DatePipe
-	) { }
-
+	datePipe: DatePipe;
 	currentLang = DEFAULT_LANG;
+
+	constructor() {
+		this.datePipe = new DatePipe(this.currentLang);
+	}
 
 	transform(paramDate: Date, type: 'date' | 'time' | 'datetime' | 'localtime'): string {
 		if (!paramDate) {
