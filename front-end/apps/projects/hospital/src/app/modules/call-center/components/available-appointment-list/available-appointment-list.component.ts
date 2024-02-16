@@ -1,15 +1,16 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { DiaryAvailableAppointmentsDto } from '@api-rest/api-model';
-import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, timeDtotoString } from '@api-rest/mapper/date-dto.mapper';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { format } from 'date-fns';
 import { Observable, of } from 'rxjs';
 import { DateFormat } from '@core/utils/date.utils';
+import { NewAppointmentForThirdPartyPopupComponent, NewAppointmentForThirdPartyPopupData } from '@call-center/dialogs/new-appointment-for-third-party-popup/new-appointment-for-third-party-popup.component';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 @Component({
@@ -24,11 +25,13 @@ export class AvailableAppointmentListComponent {
 	appointments: DiaryAvailableAppointmentsDto[] = [];
 	pageSize: Observable<number>;
 	@Input() showResults: boolean;
+	@Input() practiceId: number;
 	@Input()
 	set availableAppointments(availableAppointments: DiaryAvailableAppointmentsDto[]) {
 		this.appointments = availableAppointments;
 		this.setPageSizeAndLoadFirstPage();
 	}
+	@Output() clearSearch = new EventEmitter<void>();
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -43,19 +46,20 @@ export class AvailableAppointmentListComponent {
 
 	checkHolidayAndAssign(indexOfAppointment: number) {
 
-		const date = dateDtoToDate(this.appointments[indexOfAppointment].date);
+		const appointmentToAssign = this.appointments[indexOfAppointment];
+		const date = dateDtoToDate(appointmentToAssign.date);
 		const stringDate = format(date, DateFormat.API_DATE);
 
 		this.holidayService.getHolidays(stringDate, stringDate).subscribe(holidays => {
 			if (!holidays.length) {
-				this.assignAppointment();
+				this.assignAppointment(appointmentToAssign);
 				return;
 			}
-			this.openHolidayWarning(date);
+			this.openHolidayWarning(appointmentToAssign, date);
 		});
 	}
 
-	private openHolidayWarning(date: Date) {
+	private openHolidayWarning(appointmentToAssign: DiaryAvailableAppointmentsDto, date: Date) {
 		const holidayText = 'corresponde a un día feriado.';
 		const holidayDate = this.datePipe.transform(date, DatePipeFormat.FULL_DATE);
 		const dialogRef = this.dialog.open(DiscardWarningComponent, {
@@ -71,11 +75,28 @@ export class AvailableAppointmentListComponent {
 
 		dialogRef.afterClosed().subscribe(assignAnotherAppointment => {
 			if (!assignAnotherAppointment)
-				this.assignAppointment();
+				this.assignAppointment(appointmentToAssign);
 		});
 	}
 
-	private assignAppointment() {
+	private assignAppointment(appointmentToAssign: DiaryAvailableAppointmentsDto) {
+		const data: NewAppointmentForThirdPartyPopupData = {
+			diaryId: appointmentToAssign.diaryId,
+			openingHoursId: appointmentToAssign.openingHoursId,
+			specialtyId: appointmentToAssign.clinicalSpecialty.id,
+			day: format(dateDtoToDate(appointmentToAssign.date), DateFormat.API_DATE),
+			hour: timeDtotoString(appointmentToAssign.hour),
+			practiceId: this.practiceId
+		}
+		const dialogRef = this.dialog.open(NewAppointmentForThirdPartyPopupComponent, {
+			width: '45%',
+			disableClose: true,
+			data,
+		});
+		dialogRef.afterClosed().subscribe(created => {
+			if (created)
+				this.clearSearch.emit();
+		});
 
 	}
 

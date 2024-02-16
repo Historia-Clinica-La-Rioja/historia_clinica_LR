@@ -101,6 +101,11 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 		this.showValidations.criteriaSearch = false;
 	}
 
+	resetResults() {
+		this.availableAppointments = [];
+		this.showResults = false;
+	}
+
 	private invalidSearch(): boolean {
 		const hasCriteriaSearch = this.form.value.specialtyId || this.form.value.professionalId || this.form.value.practiceId;
 
@@ -144,11 +149,6 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 				controls[key].setValue(null);
 			}
 		});
-	}
-
-	private resetResults() {
-		this.availableAppointments = [];
-		this.showResults = false;
 	}
 
 	private createForm() {

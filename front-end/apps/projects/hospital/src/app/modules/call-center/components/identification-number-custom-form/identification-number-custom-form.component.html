@@ -1,0 +1,7 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="5px">
+    <span>{{ "call-center.new-appointment.custom-form.identification-number.TITLE" | translate}}</span>
+    <mat-form-field appearance="outline">
+        <input matInput type="text" [placeholder]="'call-center.new-appointment.custom-form.identification-number.TITLE' | translate" formControlName="identificationNumber" (blur)="onTouched()">
+        <mat-error>{{ "forms.REQUIRED" | translate }}</mat-error>
+    </mat-form-field>
+</form>

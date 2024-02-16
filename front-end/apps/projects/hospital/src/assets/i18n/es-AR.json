@@ -80,7 +80,9 @@
 		"FORMAT_WHITOUT_BLANK_SPACES": "El valor no puede contener espacios en blanco",
 		"YES": "Si",
 		"NO": "No",
-		"REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH": "Debe ingresar al menos un campo más para realizar la búsqueda"
+		"REQUIRING_OTHER_FIELD_MORE_FOR_SEARCH": "Debe ingresar al menos un campo más para realizar la búsqueda",
+		"INVALID_EMAIL": "Formato inválido de mail",
+		"FORMAT_STRING": "El formato debe ser con caracteres alfabéticos"
 	},
 	"logos": {
 		"footer_right": "Logo inferior derecho",

@@ -1,0 +1,10 @@
+<div fxLayout="column" fxLayoutGap="5px">
+    <span>{{ "call-center.new-appointment.custom-form.gender.TITLE" | translate}}</span>
+    <form [formGroup]="form">
+        <mat-radio-group formControlName="genderId" fxLayout="row" fxLayoutGap="10px">
+            <mat-radio-button *ngFor="let gender of genders$ | async" [value]="gender.id" color="primary">
+                {{gender.description}}
+            </mat-radio-button>
+        </mat-radio-group>
+    </form>
+</div>

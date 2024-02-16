@@ -76,6 +76,6 @@
 
     </form>
 
-    <app-available-appointment-list  [showResults]="showResults" [availableAppointments]="availableAppointments"></app-available-appointment-list>
+    <app-available-appointment-list [practiceId]="form.value.practiceId" [showResults]="showResults" [availableAppointments]="availableAppointments" (clearSearch)="resetResults()"></app-available-appointment-list>
 
 </div>

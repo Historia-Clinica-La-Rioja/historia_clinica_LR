@@ -10,7 +10,6 @@
 			<app-identifier-cases [identifierCase]="identiferCases.HOUR"
 				[description]="appointment.hour | viewDateDto: 'time' | dateFormat: 'time'">
 			</app-identifier-cases>
-			<span>hs</span>
 		</div>
 
 	</div>
@@ -43,6 +42,8 @@
 
 	</div>
 
-	<ng-content></ng-content>
+	<div>
+		<ng-content></ng-content>
+	</div>
 
 </div>

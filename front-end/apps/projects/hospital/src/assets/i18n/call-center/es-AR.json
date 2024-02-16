@@ -14,6 +14,32 @@
             "SEARCH": "Buscar turnos",
             "INVALID_SEARCH":"Ingrese al menos uno de los siguientes campos: Especialidad, Profesional o Práctica/Procedimiento",
             "PERIOD_VALIDATIONS": "El rango de fechas no debe superar los {{max}} días"
+        },
+        "new-appointment": {
+            "TITLE": "Solicitar turno online",
+            "SUCCESS": "Turno creado exitosamente",
+            "ERROR": "Hubo un error al crear el turno",
+            "custom-form": {
+                "full-name": {
+                    "TITLE": "Nombre y apellido",
+                    "PLACEHOLDER_NAME": "Nombre",
+                    "PLACEHOLDER_LAST_NAME": "Apellido"
+                },
+                "identification-number": {
+                    "TITLE": "Documento"
+                },
+                "gender": {
+                    "TITLE": "Sexo"
+                },
+                "phone": {
+                    "TITLE": "Teléfono",
+                    "PLACEHOLDER_PREFIX": "Prefijo",
+                    "PLACEHOLDER_NUMBER": "Número"
+                },
+                "email": {
+                    "TITLE": "Mail"
+                }
+            }
         }
     }
 }
