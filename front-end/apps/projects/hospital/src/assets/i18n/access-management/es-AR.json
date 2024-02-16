@@ -110,7 +110,7 @@
 			"DERIVATION_MESSAGE_TITLE": "DERIVADO A GESTIÓN {{forwardingType}}"
 		},
 		"reference-edition": {
-			"TITLE": "Editar solicitud solicitud de referencia",
+			"TITLE": "Editar solicitud de referencia",
 			"PLACEHOLDER_ASSOCIATED_PROBLEM": "Problema asociado",
 			"PLACEHOLDER_CARE_LINE": "Línea de cuidado",
 			"SEARCH_BY_CARE_LINE": "Solicitar por línea de cuidado?",
