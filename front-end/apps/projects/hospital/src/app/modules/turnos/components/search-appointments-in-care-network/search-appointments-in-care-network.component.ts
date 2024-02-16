@@ -304,12 +304,15 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 	}
 
 	clearForm() {
-		this.resetForm();
+		this.externalSpecialty = null;	
 		this.externalInformation = null;
-		this.selectedTypeAttention = SearchCriteria.CONSULTATION;
+		this.patientId = null;
+		this.setAllSpecialtiesAndCareLines();
+		this.resetForm();
 		this.showSectionToSearchAppointmentsInInstitution = false;
 		this.searchAppointmentsInfoService.clearInfo();
-		this.resetResults();
+		this.setCriteria(SearchCriteria.CONSULTATION);
+		this.searchForm.controls.modality.setValue(this.MODALITY_ON_SITE_ATTENTION);
 	}
 
 	resetResults(): void {

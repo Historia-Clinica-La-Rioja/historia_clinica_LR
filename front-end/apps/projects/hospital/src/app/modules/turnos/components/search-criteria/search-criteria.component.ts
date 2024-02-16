@@ -15,8 +15,9 @@ export class SearchCriteriaComponent {
 	@Input() searchCriteryStyle?: string;
 	@Input()
 	set defaultOption(defaultOption: SearchCriteria) {
-		if (defaultOption)
+		if (defaultOption >= 0){
 			this.form.controls.criteria.setValue(defaultOption);
+		}
 	}
 	@Input()
 	set disabled(disabled: boolean) {
