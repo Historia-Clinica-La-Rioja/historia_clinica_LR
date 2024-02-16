@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { EdMontonAnswers, EdMontonSummary } from '@api-rest/api-model';
 import { CreateQuestionnaireDTO} from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -31,5 +32,27 @@ export class EdmontonService {
     const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/summary/edmonton/${edmontonId}`;
     return this.http.get<EdMontonSummary>(url);
   }
+
+  getAllQuestionnaireResponses(institutionId: string, patientId: string): Observable<any[]> {
+    const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/patient/${patientId}/all-questionnaire-responses`;
+    return this.http.get<any[]>(url);
+  }
+
+  getPdf(institutionId: string, questionnaireResponseId: string): Observable<Blob> {
+    const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/questionnaire/${questionnaireResponseId}/get-pdf`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
+  getQuestionnaireId(institutionId: string, patientId: string): Observable<number> {
+    return this.getAllQuestionnaireResponses(institutionId, patientId).pipe(
+      map((responses) => {
+        // Aquí asumimos que estamos tomando el primer questionnaireId de la respuesta
+        // Ajusta esto según la lógica específica de tu aplicación
+        const firstResponse = responses[0];
+        return firstResponse ? firstResponse.id : null;
+      })
+    );
+  }
+
 
 }
