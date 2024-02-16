@@ -58,7 +58,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 .setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
                 .setParameter("patientId", patientId)
                 .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
-                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT))
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
                 .getResultList();
 
         List<HCEHealthConditionVo> result = new ArrayList<>();
@@ -116,7 +116,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 				.setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
 				.setParameter("patientId", patientId)
 				.setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
-				.setParameter("documentTypes", List.of(DocumentType.OUTPATIENT))
+				.setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
 				.setParameter("userId", userId)
 				.getResultList();
 

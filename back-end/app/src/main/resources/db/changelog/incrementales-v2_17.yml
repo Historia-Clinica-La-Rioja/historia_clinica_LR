@@ -36,3 +36,22 @@ databaseChangeLog:
           - sql:
               sql: |-
                 ALTER TABLE snomed_group ALTER COLUMN ecl TYPE text USING ecl::text;
+
+    - changeSet:
+        id: rollback-odontology-problems-problem_id-health_condition
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE health_condition hc
+                    SET problem_id = '55607006'
+                    WHERE EXISTS (
+                        SELECT 1
+                        FROM document_health_condition dhc
+                        JOIN document d on (dhc.document_id = d.id)
+                        WHERE dhc.health_condition_id = hc.id
+                        AND d.source_type_id = 6
+                        AND hc.problem_id = '00000002'
+                    );
+
