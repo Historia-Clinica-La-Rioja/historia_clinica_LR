@@ -80,6 +80,7 @@ public class ViolenceReportController {
 	private GeneratePDFDocument generatePDFDocument;
 
 	@PostMapping(value = "/patient/{patientId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public Integer saveNewViolenceReport(@PathVariable("institutionId") Integer institutionId,
 										 @PathVariable("patientId") Integer patientId,
 										 @RequestBody @Valid ViolenceReportDto violenceReport) {
@@ -92,6 +93,7 @@ public class ViolenceReportController {
 
 	//Se devuelve un PageDto en lugar de una List ya que el dato de la cantidad TOTAL de elementos en la DB resulta relevante para flujos en el FE.
 	@GetMapping(value = "/patient/{patientId}/get-situations")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public PageDto<ViolenceReportSituationDto> getAllPatientViolenceSituations(@PathVariable("institutionId") Integer institutionId,
 																			   @PathVariable("patientId") Integer patientId,
 																			   @RequestParam("mustBeLimited") boolean mustBeLimited) {
@@ -107,6 +109,7 @@ public class ViolenceReportController {
 	}
 
 	@GetMapping(value = "/patient/{patientId}/situation/{situationId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public ViolenceReportDto getLastSituationEvolutionReport(@PathVariable("institutionId") Integer institutionId,
 															 @PathVariable("patientId") Integer patientId,
 															 @PathVariable("situationId") Integer situationId) {
@@ -118,6 +121,7 @@ public class ViolenceReportController {
 	}
 
 	@PostMapping(value = "/patient/{patientId}/situation/{situationId}/evolve")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public Integer saveSituationEvolution(@PathVariable("institutionId") Integer institutionId,
 										  @PathVariable("patientId") Integer patientId,
 										  @PathVariable("situationId") Short situationId,
@@ -130,6 +134,7 @@ public class ViolenceReportController {
 	}
 
 	@GetMapping(value = "/patient/{patientId}/historic")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public List<ViolenceReportSituationEvolutionDto> getHistoric(@PathVariable("institutionId") Integer institutionId,
 																 @PathVariable("patientId") Integer patientId,
 																 @RequestParam("filterData") String filterData) throws JsonProcessingException {
@@ -149,6 +154,7 @@ public class ViolenceReportController {
 	}
 
 	@GetMapping(value = "/patient/{patientId}/situation/{situationId}/evolution/{evolutionId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public ViolenceReportDto getSituationEvolutionData(@PathVariable("institutionId") Integer institutionId,
 													   @PathVariable("patientId") Integer patientId,
 													   @PathVariable("situationId") Short situationId,
@@ -161,6 +167,7 @@ public class ViolenceReportController {
 	}
 
 	@GetMapping(value = "/patient/{patientId}/get-filter")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public ViolenceReportFilterOptionDto getFilters(@PathVariable("institutionId") Integer institutionId,
 													@PathVariable("patientId") Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
@@ -184,6 +191,7 @@ public class ViolenceReportController {
 	}
 
 	@GetMapping(value = "/patient/{patientId}/situation/{situationId}/evolution/{evolutionId}/download")
+	@PreAuthorize("hasPermission(#institutionId, 'ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<Resource> downloadDocument(@PathVariable("institutionId") Integer institutionId,
 													 @PathVariable("patientId") Integer patientId,
 													 @PathVariable("situationId") Short situationId,
