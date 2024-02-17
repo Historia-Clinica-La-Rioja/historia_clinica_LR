@@ -63,13 +63,10 @@
 
 		<!-- NOTES TEXT FIELD -->
 
-		<div *ngIf="false">
+		<div>
 			<mat-form-field appearance="outline" class="full-width">
 				<mat-label> {{'ambulatoria.paciente.internment-order.create-order-dialog.NOTES' | translate}} </mat-label>
 				<textarea matInput type="text" id="notes" formControlName="notes"></textarea>
-				<mat-error *ngIf="hasError(this.form, 'maxlength', 'notes')" translate="forms.MAX_LENGTH_ERROR"
-						   [translateParams]="{max: TEXT_AREA_MAX_LENGTH}">
-				</mat-error>
 			</mat-form-field>
 		</div>
 
@@ -85,47 +82,47 @@
 </ng-container>
 
 <ng-template #confirmStep>
+	<mat-dialog-content>
+		<div *ngIf="selectedStudyIsTemplate()" class="uppercase template-name"> {{this.getStudyDisplayName()}}: </div>
 
-	<div *ngIf="selectedStudyIsTemplate()" class="uppercase template-name"> {{this.getStudyDisplayName()}}: </div>
-
-	<div *ngFor="let study of orderStudiesService.getStudies(); let i = index">
-		<div id="selected-study-row" fxLayout="row">
-			<div id="selected-study-name" fxFlex="90%">
-			<span class="capitalize-first-letter">
-				{{ study.snomed.pt }}
-			</span>
+		<div *ngFor="let study of orderStudiesService.getStudies(); let i = index">
+			<div id="selected-study-row" fxLayout="row">
+				<div id="selected-study-name" fxFlex="90%">
+					<span class="capitalize-first-letter">
+						{{ study.snomed.pt }}
+					</span>
+				</div>
+				<button fxFlex="10%" mat-icon-button color="warn" [disabled]="orderStudiesService.getStudies().length <= 1" (click)="removeStudy(i)">
+					<mat-icon>delete_outline</mat-icon>
+				</button>
 			</div>
-			<button fxFlex="10%" mat-icon-button color="warn" [disabled]="orderStudiesService.getStudies().length <= 1" (click)="removeStudy(i)">
-				<mat-icon>delete_outline</mat-icon>
+		</div>
+
+
+		<div>
+			<button class="color-primary bold" mat-button type="button" (click)="openAddAnotherStudyDialog()">
+				{{'ambulatoria.paciente.internment-order.create-order-dialog.ADD_STUDY' | translate}}
 			</button>
 		</div>
-	</div>
 
+		<div id="order-detail">
 
-	<div>
-		<button class="color-primary bold" mat-button type="button" (click)="openAddAnotherStudyDialog()">
-			{{'ambulatoria.paciente.internment-order.create-order-dialog.ADD_STUDY' | translate}}
-		</button>
-	</div>
+			<div id="order-detail-category" class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
 
-	<div id="order-detail">
+			<div id="order-detail-health-problem" class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
 
-		<div id="order-detail-category" class="detail-text"> {{ getSelectedCategoryDisplayName() }} </div>
+			<div class="detail-text"> {{ getNotesDisplayText() }} </div>
 
-		<div id="order-detail-health-problem" class="color-primary bold line-height capitalize-first-letter"> {{ getSelectedHealthProblemDisplayName() }} </div>
+		</div>
 
-		<div class="detail-text"> {{ getNotesDisplayText() }} </div>
+		<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 
-	</div>
+			<button mat-flat-button color="primary" (click)="confirmOrder()">
+				<span class="uppercase"> {{'ambulatoria.paciente.internment-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
+			</button>
 
-	<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
-
-		<button mat-flat-button color="primary" (click)="confirmOrder()">
-			<span class="uppercase"> {{'ambulatoria.paciente.internment-order.create-order-dialog.CONFIRM_ORDER' | translate}} </span>
-		</button>
-
-	</mat-dialog-actions>
-
+		</mat-dialog-actions>
+	</mat-dialog-content>
 </ng-template>
 
 

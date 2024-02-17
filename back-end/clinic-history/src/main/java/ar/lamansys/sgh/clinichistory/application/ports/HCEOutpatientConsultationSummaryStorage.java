@@ -18,6 +18,6 @@ public interface HCEOutpatientConsultationSummaryStorage {
 
     List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> outpatientIds);
 
-    List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId);
+    List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId, List<Short> loggedUserRoleIds);
 
 }

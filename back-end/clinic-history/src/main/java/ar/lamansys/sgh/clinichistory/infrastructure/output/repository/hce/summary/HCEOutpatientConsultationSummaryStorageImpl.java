@@ -13,29 +13,34 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @Repository
 public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatientConsultationSummaryStorage {
 
+	private static final Short REJECTED_REGULATION_STATE = 2;
+
     private final EntityManager entityManager;
 
-    public HCEOutpatientConsultationSummaryStorageImpl(EntityManager entityManager){
-        this.entityManager = entityManager;
-    }
+	private final MapReferenceSummary mapReferenceSummary;
 
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     @Override
     public List<OutpatientEvolutionSummaryBo> getAllOutpatientEvolutionSummary(Integer patientId) {
-        String sqlString =" SELECT oc.id, oc.startDate, "
+        String sqlString =" SELECT oc.id, oc.creationable.createdOn, "
                 + "hp.id AS healthcarProfessionalId, hp.licenseNumber, hp.personId, "
                 + "p.firstName, p.lastName, p.identificationNumber, pe.nameSelfDetermination, "
                 + "cs.id AS clinicalSpecialtyId, cs.name AS clinicalSpecialtyName, cs.clinicalSpecialtyTypeId, "
@@ -60,7 +65,7 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
         queryResult.forEach(a ->
                  result.add(new OutpatientEvolutionSummaryBo(
                         (Integer)a[0],
-                        a[1] != null ? (LocalDate)a[1] : null,
+                        a[1] != null ? (LocalDateTime) a[1] : null,
                         new HealthcareProfessionalBo((Integer) a[2], (String) a[3], (Integer) a[4], (String) a[5], (String) a[6], (String) a[7], (String) a[8],(String) a[15], (String) a[16] ),
                          a[9] != null ? new ClinicalSpecialtyBo((Integer)a[9], (String)a[10], (Short) a[11]) : null,
                         (String)a[12],
@@ -76,12 +81,18 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
                 +"  s.sctid, s.pt, "
                 +"  d.statusId, "
                 +"  hc.startDate, hc.inactivationDate, "
-                +"  hc.main, hc.problemId, oc.id "
+                +"  hc.main, hc.problemId, oc.id, "
+                +"  (hc.verificationStatusId = :verificationStatusError),"
+                +"  hc.updateable.updatedOn AS timePerformedError,"
+                +"  per.reasonId,"
+                +"  n.description AS observationsError"
                 +"  FROM OutpatientConsultation oc "
                 +"  JOIN Document d ON (d.sourceId = oc.id) "
                 +"  JOIN DocumentHealthCondition dhc ON (d.id = dhc.pk.documentId) "
                 +"  JOIN HealthCondition hc ON (dhc.pk.healthConditionId = hc.id) "
                 +"  JOIN Snomed s ON (s.id = hc.snomedId)"
+                +"  LEFT JOIN ProblemErrorReason per ON (hc.id = per.healthConditionId)"
+                +"  LEFT JOIN Note n ON (hc.noteId = n.id)"
                 +"  WHERE d.statusId = '" + DocumentStatus.FINAL + "'"
                 +"  AND d.sourceTypeId =" + SourceType.OUTPATIENT
                 +"  AND d.typeId = "+ DocumentType.OUTPATIENT
@@ -92,6 +103,7 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("patientId", patientId)
                 .setParameter("outpatientIds", outpatientIds)
+                .setParameter("verificationStatusError", ConditionVerificationStatus.ERROR)
                 .getResultList();
         List<HealthConditionSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a ->
@@ -104,7 +116,11 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
                         a[6] != null ? (LocalDate)a[6] : null,
                         (boolean)a[7],
                         (String)a[8],
-                        (Integer) a[9]))
+                        (Integer) a[9],
+                        (Boolean) a[10],
+                        (LocalDateTime) a[11],
+                        (Short) a[12],
+                        (String) a[13]))
         );
         return result;
     }
@@ -163,32 +179,31 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
     }
 
     @Override
-    public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId) {
-        String sqlString = "SELECT r.id, cl.description , cs.name, rn.description, i.name"
+    public List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer outpatientId, List<Short> loggedUserRoleIds) {
+        String sqlString = "SELECT DISTINCT r.id, cl.description, rn.description, i.name,"
+                +"  r.deleteable.deleted AS cancelled"
                 +"  FROM Reference r"
                 +"  JOIN OutpatientConsultation oc ON (r.encounterId = oc.id)"
 				+"  LEFT JOIN Institution i ON (r.destinationInstitutionId = i.id)"
                 +"  LEFT JOIN CareLine cl ON (r.careLineId = cl.id)"
-                +"  JOIN ClinicalSpecialty cs ON (r.clinicalSpecialtyId = cs.id)"
+				+"  LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id)"
                 +"  JOIN ReferenceHealthCondition rhc ON (r.id = rhc.pk.referenceId)"
+                +"  JOIN HealthCondition hc ON (rhc.pk.healthConditionId = hc.id)"
                 +"  LEFT JOIN ReferenceNote rn ON (r.referenceNoteId = rn.id)"
                 +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
                 +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
-                +"  AND oc.id = :outpatientId ";
+                +"  AND oc.id = :outpatientId"
+				+"  AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:userRoles) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))"
+				+"  AND r.regulationStateId <> :regulationStateId" ;
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("outpatientId", outpatientId)
+				.setParameter("userRoles", loggedUserRoleIds)
+				.setParameter("regulationStateId", REJECTED_REGULATION_STATE)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
-        queryResult.forEach(a ->
-                result.add(new ReferenceSummaryBo(
-                        (Integer)a[0],
-                        (String) a[1],
-                        (String) a[2],
-                        a[3] != null ? (String) a[3] : null,
-						(String) a[4]))
-        );
+        queryResult.forEach(a -> result.add(mapReferenceSummary.processReferenceSummaryBo(a)));
         return result;
     }
 }

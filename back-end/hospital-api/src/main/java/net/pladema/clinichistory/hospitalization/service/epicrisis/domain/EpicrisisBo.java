@@ -1,6 +1,18 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.domain;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.*;
+import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import lombok.Getter;
@@ -43,13 +55,13 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     private List<@Valid DiagnosisBo> diagnosis;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid HealthHistoryConditionBo> personalHistories;
+    private List<@Valid PersonalHistoryBo> personalHistories;
 
 	@NotNull(message = "{value.mandatory}")
 	private List<@Valid ProcedureBo> procedures;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid HealthHistoryConditionBo> familyHistories;
+    private List<@Valid FamilyHistoryBo> familyHistories;
 
     @NotNull(message = "{value.mandatory}")
     private List<@Valid MedicationBo> medications;

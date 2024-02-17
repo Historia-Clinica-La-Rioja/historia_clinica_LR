@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +30,8 @@ import net.pladema.terminology.cache.infrastructure.output.SnowmedCacheFileInges
 import net.pladema.terminology.cache.infrastructure.output.repository.SnomedCacheFileRepository;
 import net.pladema.terminology.cache.jobs.DownloadCacheCSVJob;
 import net.pladema.terminology.cache.jobs.IngestCacheCSVJob;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -51,6 +55,9 @@ class TerminologyCacheControllerTest extends UnitRepository {
 	private IngestCacheCSVJob ingestJob;
 
 	private TerminologyCacheController controller;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@BeforeEach
 	void setUp() {

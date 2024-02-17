@@ -112,7 +112,8 @@ export class DiagnosticosComponent {
 	}
 
 	removeMainDiagnosis() {
-		this.mainDiagnosisChange.emit(null);
+		this.mainDiagnosis = null;
+		this.mainDiagnosisChange.emit(this.mainDiagnosis);
 	}
 
 	updateAll() {

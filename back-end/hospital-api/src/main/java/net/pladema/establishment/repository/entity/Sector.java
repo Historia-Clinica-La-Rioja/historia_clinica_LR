@@ -1,5 +1,12 @@
 package net.pladema.establishment.repository.entity;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -8,19 +15,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 @Entity
 @Table(name = "sector")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @EntityListeners(SGXAuditListener.class)
 public class Sector extends SGXAuditableEntity<Integer> {
 
@@ -55,5 +55,5 @@ public class Sector extends SGXAuditableEntity<Integer> {
 	private Short hospitalizationTypeId;
 
 	@Column(name = "informer")
-	private Boolean informer;
+	private Boolean informer = false;
 }

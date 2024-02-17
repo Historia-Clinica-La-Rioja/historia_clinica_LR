@@ -4,11 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +23,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ClinicalSpecialty implements Serializable, Comparable<ClinicalSpecialty> {
+@EntityListeners(SGXAuditListener.class)
+public class ClinicalSpecialty extends SGXAuditableEntity<Integer> implements Serializable, Comparable<ClinicalSpecialty> {
 
 	private static final long serialVersionUID = -5082786259164464584L;
 	public static final String FIX_NAME = "ERRÓNEA-";

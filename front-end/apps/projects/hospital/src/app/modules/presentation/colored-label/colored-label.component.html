@@ -1,1 +1,4 @@
- <span class="{{color}}">{{description}}</span>
+ <div fxLayout="row" fxLayoutAlign="space-between center" class="{{color}}">
+    <mat-icon class="material-icons-outlined" *ngIf="icon">{{icon}}</mat-icon>
+    <span>{{description}}</span>
+ </div>

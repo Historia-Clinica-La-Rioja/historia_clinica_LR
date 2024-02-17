@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.DocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AllergyConditionMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.DocumentHealthcareProfessionalMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.ImmunizationMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.MedicationMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
@@ -15,7 +16,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(uses = {AllergyConditionMapper.class, HealthConditionMapper.class, ImmunizationMapper.class, MedicationMapper.class,
-        RiskFactorMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class})
+        RiskFactorMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class, DocumentHealthcareProfessionalMapper.class})
 public interface DocumentMapper {
 
     @Named("fromDocumentDto")
@@ -24,8 +25,18 @@ public interface DocumentMapper {
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationBo")
     @Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationBo")
     @Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionBo")
-    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionBo")
-    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionBo")
-    DocumentBo from(DocumentDto documentDto);
+    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListPersonalHistoryBoFromPersonalHistoryDto")
+    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListFamilyHistoryBoFromHealthHistory")
+	@Mapping(target = "healthcareProfessionals", source = "healthcareProfessionals", qualifiedByName = "toDocumentHealthcareProfessionalBoList")
+    DocumentBo fromDto(DocumentDto documentDto);
 
+	@Named("fromDocumentBo")
+	@Mapping(target = "riskFactors", source = "riskFactors", qualifiedByName = "fromRiskFactorBo")
+	@Mapping(target = "anthropometricData", source = "anthropometricData", qualifiedByName = "fromAnthropometricDataBo")
+	@Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
+	@Mapping(target = "immunizations", source = "immunizations", qualifiedByName = "toListImmunizationDto")
+	@Mapping(target = "allergies", source = "allergies", qualifiedByName = "toListAllergyConditionDto")
+	@Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toPersonalHistoryDto")
+	@Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toHealthHistoryConditionDto")
+	DocumentDto fromBo(DocumentBo documentBo);
 }

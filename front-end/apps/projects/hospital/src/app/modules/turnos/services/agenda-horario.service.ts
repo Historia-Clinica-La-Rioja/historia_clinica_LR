@@ -1,4 +1,4 @@
-import { SnackBarService } from './../../presentation/services/snack-bar.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, Observable } from 'rxjs';
@@ -60,11 +60,7 @@ export class AgendaHorarioService {
 
 	getMedicalAttentionTypeText(medicalAttentionTypeId: number): string {
 		const medicalAttentionType = medicalAttentionTypeId === 2 ? 'Espontánea' : 'Programada';
-		return `<strong>Atención ${medicalAttentionType} </strong> <br>`;
-	}
-
-	getOverturnsText(overturnCount: number): string {
-		return overturnCount > 0 ? '<span>Atiende sobreturnos</span>' : '<span>No atiende sobreturnos</span>';
+		return `Atención ${medicalAttentionType}`;
 	}
 
 	startDragToCreate(segment: WeekViewHourSegment, segmentElement: HTMLElement, hasSelectedLinesOfCare?: boolean, editMode?: boolean): void {
@@ -113,11 +109,15 @@ export class AgendaHorarioService {
 					protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
 					hasSelectedLinesOfCare: this.hasSelectedLinesOfCare,
 					editMode: this.editMode,
-					patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
-					secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
+					patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
+					secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
 					onSiteAttentionAllowed: true,
-					diaryType: this.diaryType
-				}
+					diaryType: this.diaryType,
+					regulationProtectedAppointmentsAllowed: !!event.meta.regulationProtectedAppointmentsAllowed,
+				},
+				maxHeight: 'fit-content',
+				autoFocus: false,
+				height: '95%'
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
 			if (!dialogInfo) {
@@ -170,11 +170,14 @@ export class AgendaHorarioService {
 						hasSelectedLinesOfCare: hasSelectedLinesOfCare,
 						openingHoursId: event.meta.diaryOpeningHourId,
 						protectedAppointmentsAllowed: !!event.meta.protectedAppointmentsAllowed,
-						patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed ? true : false,
-						secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed ? true : false,
-						onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed ? true : false,
-						diaryType: this.diaryType
-					}
+						patientVirtualAttentionAllowed: !!event.meta.patientVirtualAttentionAllowed,
+						secondOpinionVirtualAttentionAllowed: !!event.meta.secondOpinionVirtualAttentionAllowed,
+						onSiteAttentionAllowed: !!event.meta.onSiteAttentionAllowed,
+						diaryType: this.diaryType,
+						regulationProtectedAppointmentsAllowed: !!event.meta.regulationProtectedAppointmentsAllowed,
+					},
+					maxHeight: 'fit-content',
+					autoFocus: false,
 				});
 			dialogRef.afterClosed().subscribe(dialogInfo => {
 				if (!dialogInfo) {
@@ -253,6 +256,7 @@ export class AgendaHorarioService {
 				patientVirtualAttentionAllowed: event.meta.patientVirtualAttentionAllowed,
 				secondOpinionVirtualAttentionAllowed: event.meta.secondOpinionVirtualAttentionAllowed,
 				onSiteAttentionAllowed: event.meta.onSiteAttentionAllowed,
+				regulationProtectedAppointmentsAllowed: event.meta.regulationProtectedAppointmentsAllowed
 			};
 		}
 	}
@@ -285,8 +289,7 @@ export class AgendaHorarioService {
 		return {
 			start: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.from),
 			end: this.getFullDate(diaryOpeningHour.openingHours.dayWeekId, diaryOpeningHour.openingHours.to),
-			title: this.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId)
-				+ this.getOverturnsText(diaryOpeningHour.overturnCount),
+			title: this.getMedicalAttentionTypeText(diaryOpeningHour.medicalAttentionTypeId),
 			color: this.getMedicalAttentionColor(diaryOpeningHour.medicalAttentionTypeId),
 			meta: {
 				diaryOpeningHourId: diaryOpeningHour.openingHours.id,
@@ -297,6 +300,7 @@ export class AgendaHorarioService {
 				patientVirtualAttentionAllowed: diaryOpeningHour.patientVirtualAttentionAllowed,
 				secondOpinionVirtualAttentionAllowed: diaryOpeningHour.secondOpinionVirtualAttentionAllowed,
 				onSiteAttentionAllowed: diaryOpeningHour.onSiteAttentionAllowed,
+				regulationProtectedAppointmentsAllowed: diaryOpeningHour.regulationProtectedAppointmentsAllowed
 			}
 
 		};
@@ -356,7 +360,6 @@ export class AgendaHorarioService {
 			event.meta = dialogInfo;
 			event.title = this.getMedicalAttentionTypeText(dialogInfo.medicalAttentionType.id);
 			event.color = this.getMedicalAttentionColor(dialogInfo.medicalAttentionType.id);
-			event.title += this.getOverturnsText(dialogInfo.overturnCount);
 		}
 	}
 

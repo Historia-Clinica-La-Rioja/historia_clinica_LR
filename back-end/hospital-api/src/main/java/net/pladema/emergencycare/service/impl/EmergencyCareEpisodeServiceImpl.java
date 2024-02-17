@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeReasonRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.PoliceInterventionRepository;
@@ -19,24 +20,23 @@ import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
-import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -52,6 +52,8 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     private static final String WRONG_CARE_ID_EPISODE = "wrong-care-id-episode";
 
     private static final String CARE_EPISODE_NOT_FOUND = "El episodio de guardia no se encontró o no existe";
+
+	private final Short WITHOUT_TRIAGE_LEVEL_ID = 6;
 
     private final TriageService triageService;
 
@@ -84,33 +86,31 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		this.patientExternalService = patientExternalService;
     }
 
-    @Override
-    public List<EmergencyCareBo> getAll(Integer institutionId) {
-        LOG.debug("Input parameters -> institutionId {}", institutionId);
-        List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getAll(institutionId);
-        List<EmergencyCareBo> result = resultQuery.stream().map(EmergencyCareBo::new)
-                .sorted(Comparator.comparing(EmergencyCareBo::getEmergencyCareStateId).thenComparing(EmergencyCareBo::getTriageCategoryId).thenComparing(EmergencyCareBo::getCreatedOn))
-                        .collect(Collectors.toList());
-        result.forEach(ec -> {
-			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
-			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
-				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
-				ec.setRelatedProfessional(professional);
-			}
+	@Override
+	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgressByInstitution(Integer institutionId, Integer patientId) {
+		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
+		EmergencyCareEpisodeInProgressBo result = new EmergencyCareEpisodeInProgressBo(null, false);
+		Optional<Integer> resultQuery = emergencyCareEpisodeRepository.emergencyCareEpisodeInProgressByInstitution(institutionId, patientId);
+		resultQuery.ifPresent(id -> {
+			result.setId(id);
+			result.setInProgress(true);
 		});
-        LOG.debug(OUTPUT, result);
-        return result;
-    }
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 
 	@Override
 	public EmergencyCareEpisodeInProgressBo emergencyCareEpisodeInProgress(Integer institutionId, Integer patientId) {
 		LOG.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		EmergencyCareEpisodeInProgressBo result = new EmergencyCareEpisodeInProgressBo(null, false);
-		Optional<Integer> resultQuery = emergencyCareEpisodeRepository.emergencyCareEpisodeInProgress(institutionId, patientId);
-		resultQuery.ifPresent(id -> {
-			result.setId(id);
+		List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.emergencyCareEpisodeInProgress(patientId);
+		if(!resultQuery.isEmpty()) {
 			result.setInProgress(true);
-		});
+			resultQuery.forEach(rq -> {
+				if (rq.getInstitutionId().equals(institutionId))
+					result.setId(rq.getId());
+			});
+		}
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -138,7 +138,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
                 .map(ReasonBo::new)
                 .collect(Collectors.toList());
         result.setReasons(reasons);
-
+		result.setRoom(emergencyCareEpisode.getRoom() != null ? new RoomBo(emergencyCareEpisode.getRoom()): null);
         result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
 		LOG.debug(OUTPUT, result);
 		return result;
@@ -210,6 +210,14 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		Boolean result = emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId);
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public Integer getEmergencyEpisodeEpisodeIdByDate(Integer institutionId, Integer patientId, LocalDateTime date) {
+		Page<Integer> id = emergencyCareEpisodeRepository.getInternmentEpisodeIdByDate(institutionId, patientId, date, PageRequest.of(0, 1));
+		if (!id.getContent().isEmpty())
+			return id.getContent().get(0);
+		return null;
 	}
 
 	private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){
@@ -357,26 +365,35 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     private TriageBo saveTriageAdult(SaveTriageArgs args) {
         LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId {}", args.triageBo, args.emergencyCareEpisodeId, args.institutionId);
-        args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
-        TriageBo result = triageService.createAdultGynecological(args.triageBo, args.institutionId);
-        LOG.debug(OUTPUT, result);
-        return result;
+		if (!args.triageBo.getCategoryId().equals(WITHOUT_TRIAGE_LEVEL_ID)) {
+			args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
+			TriageBo result = triageService.createAdultGynecological(args.triageBo, args.institutionId);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}
+		return null;
     }
 
     private TriageBo saveTriageAdministrative(SaveTriageArgs args) {
         LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId {}", args.triageBo, args.emergencyCareEpisodeId, args.institutionId);
-        args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
-        TriageBo result = triageService.createAdministrative(args.triageBo, args.institutionId);
-        LOG.debug(OUTPUT, result);
-        return result;
+		if (!args.triageBo.getCategoryId().equals(WITHOUT_TRIAGE_LEVEL_ID)) {
+			args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
+			TriageBo result = triageService.createAdministrative(args.triageBo, args.institutionId);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}
+		return null;
     }
 
     private TriageBo saveTriagePediatric(SaveTriageArgs args) {
         LOG.debug("Input parameters -> triageBo {}, emergencyCareEpisodeId {}, institutionId {}", args.triageBo, args.emergencyCareEpisodeId, args.institutionId);
-        args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
-        TriageBo result = triageService.createPediatric(args.triageBo, args.institutionId);
-        LOG.debug(OUTPUT, result);
-        return result;
+		if (!args.triageBo.getCategoryId().equals(WITHOUT_TRIAGE_LEVEL_ID)) {
+			args.triageBo.setEmergencyCareEpisodeId(args.emergencyCareEpisodeId);
+			TriageBo result = triageService.createPediatric(args.triageBo, args.institutionId);
+			LOG.debug(OUTPUT, result);
+			return result;
+		}
+		return null;
     }
 
     private List<ReasonBo> saveReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {

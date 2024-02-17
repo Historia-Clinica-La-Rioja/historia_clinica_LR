@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import net.pladema.medicalconsultation.virtualConsultation.application.changeVirtualConsultationResponsible.ChangeVirtualConsultationResponsible;
+import net.pladema.medicalconsultation.virtualConsultation.application.getResponsibleProfessionalService.GetResponsibleProfessionalService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationAcceptedCall.NotifyVirtualConsultationAcceptedCallService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationCancelledCall.NotifyVirtualConsultationCancelledCallService;
 import net.pladema.medicalconsultation.virtualConsultation.application.notifyVirtualConsultationIncomingCall.NotifyVirtualConsultationIncomingCallService;
@@ -13,7 +15,9 @@ import net.pladema.medicalconsultation.virtualConsultation.application.notifyVir
 import net.pladema.medicalconsultation.virtualConsultation.domain.VirtualConsultationFilterBo;
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationFilterDto;
 
+import net.pladema.medicalconsultation.virtualConsultation.infrastructure.input.rest.dto.VirtualConsultationResponsibleDataDto;
 import net.pladema.medicalconsultation.virtualConsultation.infrastructure.mapper.VirtualConsultationMapper;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -81,6 +85,8 @@ public class VirtualConsultationController {
 
 	private final ChangeVirtualConsultationStatusService changeVirtualConsultationStatusService;
 
+	private final ChangeVirtualConsultationResponsible changeVirtualConsultationResponsible;
+
 	private final ObjectMapper objectMapper;
 
 	private final GetVirtualConsultationByIdService getVirtualConsultationByIdService;
@@ -94,6 +100,8 @@ public class VirtualConsultationController {
 	private final GetAvailableProfessionalAmountByProfessionalIdService getAvailableProfessionalAmountByProfessionalIdService;
 
 	private final GetVirtualConsultationsByInstitutionService getVirtualConsultationsByInstitutionService;
+
+	private final GetResponsibleProfessionalService getResponsibleProfessionalService;
 
 	private final NotifyVirtualConsultationIncomingCallService notifyVirtualConsultationIncomingCallService;
 
@@ -255,6 +263,26 @@ public class VirtualConsultationController {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		Boolean result = getResponsibleProfessionalAvailabilityService.run(doctorId, institutionId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+
+	@PutMapping(value = "/{virtualConsultationId}/transfer")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL', 'VIRTUAL_CONSULTATION_RESPONSIBLE')")
+	public Boolean transferResponsibleProfessionaltOfVirtualConsultation(@PathVariable(name = "virtualConsultationId") Integer virtualConsultationId,
+											   @RequestBody @Valid Integer responsibleHealthcareProfessionalId) throws JsonProcessingException {
+		log.debug("Input parameters -> virtualConsultationId {}, responsibleProfessionalId {}", virtualConsultationId, responsibleHealthcareProfessionalId);
+		Boolean result = changeVirtualConsultationResponsible.run(virtualConsultationId, responsibleHealthcareProfessionalId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping(value = "/institution/{institutionId}/get-responsible-healthcare-professional/{responsibleHealthcareProfessionalId}")
+	@PreAuthorize("hasAnyAuthority('VIRTUAL_CONSULTATION_PROFESSIONAL', 'VIRTUAL_CONSULTATION_RESPONSIBLE')")
+	public VirtualConsultationResponsibleDataDto getResponsibleProfessional( @PathVariable(name = "institutionId") Integer institutionId,@PathVariable(name = "responsibleHealthcareProfessionalId") Integer responsibleHealthcareProfessionalId) {
+		log.debug("Input parameters -> institutionId {}, responsibleHealthcareProfessionalId {}", institutionId,responsibleHealthcareProfessionalId);
+		VirtualConsultationResponsibleDataDto result = getResponsibleProfessionalService.run(institutionId,responsibleHealthcareProfessionalId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

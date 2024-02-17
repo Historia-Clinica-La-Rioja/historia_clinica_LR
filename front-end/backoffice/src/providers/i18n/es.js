@@ -97,6 +97,11 @@ const messages = {
             "invalid-cuit": "El CUIT debe ser numérico",
             "plan-exists": "El plan ya se encuentra asociado a la cobertura médica",
         },
+        "loinc-code": {
+            "create-disallowed" : "La creación de códigos LOINC esta deshabilitada",
+            "editable-fields-disallowed" : "Solo se puede editar el campo 'Nombre en sistema'",
+            "delete-disallowed" : "La eliminación de códigos LOINC esta deshabilitada"
+        }
     },
     files: {
         cant_download: 'No se pudo descargar el archivo'
@@ -367,7 +372,8 @@ const messages = {
                 roleId: 'Rol',
                 email: "E-mail",
                 roles: 'Roles',
-                hierarchicalUnits: 'Unidades jerárquicas'
+                hierarchicalUnits: 'Unidades jerárquicas',
+                institutionalGroups: 'Grupos institucionales'
             },
             fieldGroups: {
                 passwordResets: 'Establecer clave de acceso',
@@ -438,6 +444,7 @@ const messages = {
                 atentionType: 'Tipo de atención',
                 consultation: 'Consulta',
                 procedure: 'Procedimiento',
+                classified: 'Confidencial'
             }
         },
         clinicalspecialtycarelines: {
@@ -531,6 +538,25 @@ const messages = {
                 plan: 'Plan',
             },
             addRelated: 'Agregar plan',
+        },
+        vclinichistoryaudit: {
+            name: 'Auditoria de Acceso',
+            medicalEmergency: 'Urgencia médica',
+	        professinalConsultation : 'Consulta profesional',
+	        patientConsultation: 'Consulta de paciente',
+	        audit: 'Auditoría',
+            fields: {
+                firstName:'Nombre',
+                lastName:'Apellido',
+                description:'Tipo',
+                identificationNumber:'Nº de documento',
+                username:'Usuario',
+                date:'Fecha',
+                reasonId:'Motivo',
+                institutionName:'Institución',
+                observations:'observaciones',
+                scope:'Motivo'
+            }
         },
         snomedgroups: {
             name: 'Grupo de terminología |||| Grupos de terminología',
@@ -635,12 +661,20 @@ const messages = {
                 description: 'Descripción',
             }
         },
+        carelinerole: {
+            name: 'Roles confidenciales',
+            addRelated: 'Agregar rol',
+            fields: {
+                careLineId: 'Línea de cuidado',
+                roleId: 'Rol',
+            }
+        },
         carelineproblems: {
             name: 'Problemas',
             fields: {
                 careLineId: 'Línea de cuidado',
                 snomedId: 'Problema',
-                conceptSctid: 'sctid',
+                conceptId: 'Id concepto',
                 pt: 'pt',
             },
             addRelated: 'Agregar problema',
@@ -703,8 +737,8 @@ const messages = {
                 snomedId: 'Práctica'
             },
         },
-        snowstormproblems: {
-            name: 'Concepto Snowstorm',
+        snomedproblems: {
+            name: 'Concepto Snomed',
             fields: {
                 conceptSctid: 'Id Concepto',
                 term: 'Descripción',
@@ -867,7 +901,7 @@ const messages = {
                 sctidCode: 'Código SNOMED',
             },
         },
-        practiceprocedurerules: {
+        snomedprocedurerules: {
             fields: {
                 orden: 'Orden',
                 lastUpdate: 'Última actualización',
@@ -876,6 +910,105 @@ const messages = {
                 conceptSctid: 'Snomed CT ID',
                 conceptPt: 'Término'
             },
+        },
+        institutionalgroups: {
+            name: 'Grupo de instituciones |||| Grupos de instituciones',
+            fields: {
+                name: 'Nombre',
+                typeId: 'Tipo',
+                institutions: 'Instituciones'
+            },
+            tabs: {
+                institutions: 'Instituciones',
+                users: 'Usuarios'
+            },
+            createRelated: 'Crear Grupo de instituciones'
+        },
+        institutionalgroupinstitutions: {
+            name: 'Asociación de institución a Grupo',
+            fields: {
+                institutionId: 'Institución',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Agregar institución'
+        },
+        institutionalgroupusers: {
+            name: 'Asociación de usuario a Grupo',
+            fields: {
+                userId: 'Usuario',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Agregar usuario'
+        },
+        institutionalgrouprules: {
+            name: 'Regla local',
+            fields: {
+                ruleId: 'Regla',
+                institutionalGroupId: 'Grupo de instituciones'
+            },
+            createRelated: 'Crear regla local'
+        },
+        proceduretemplates: {
+            name: 'Resultados de estudios',
+            fields: {
+                description: 'Nombre de estudio',
+                associatedPractices: 'Prácticas asociadas',
+                associatedParameters: 'Parámetros asociados'
+            },
+        },
+        proceduretemplatesnomeds: {
+            name: 'Prácticas asociadas',
+            fields: {
+            },
+            addRelated: 'Asociar práctica',
+            deleteRelated: 'Desasociar práctica',
+        },
+        'loinc-codes': {
+            name: 'LOINC',
+            fields: {
+                code: 'Código LOINC',
+                description: 'Component',
+                statusId: 'Status',
+                systemId: 'System',
+                displayName: 'DisplayName',
+                customDisplayName: 'Nombre en sistema'
+            }
+        },
+        "units-of-measure": {
+            name: 'Unidades de estudios',
+            fields: {
+                code: 'Unidad',
+                enabled: 'Disponible en sistema'
+            },
+        },
+        proceduretemplateparameters: {
+            name: 'Parametros asociados',
+            fields: {
+                loincId: 'Código LOINC',
+                description: 'Descripción',
+                typeId: 'Tipo de parámetro',
+                order: 'Orden',
+                unitsOfMeasureIds: 'Unidades de medida',
+                inputCount: 'Cantidad de valores a ingresar',
+                eclId: 'ECL',
+                option: 'Opción',
+                textOptions: 'Opciones'
+            },
+            typeChoices: {
+                numeric: 'Numérico',
+                options: 'Lista de opciones',
+                snomed: 'SNOMED (ECL)',
+                text: 'Texto libre'
+            },
+            errors: {
+                inputCountLte0: 'El número de valores a ingresar debe ser mayor a 0',
+                inputCountGtUomCount: 'La cantidad de valores a ingresar debe ser menor o igual al número de unidades de medida',
+                optionsMinLength: 'El número de opciones debe ser mayor o igual a 2',
+                uniqueUoms: 'Las unidades de medida no pueden repetirse'
+            },
+            addRelated: 'Asociar parámetro',
+            deleteRelated: 'Desasociar parámetro',
+            editRelated: 'Editar parámetro'
         }
     }
 };

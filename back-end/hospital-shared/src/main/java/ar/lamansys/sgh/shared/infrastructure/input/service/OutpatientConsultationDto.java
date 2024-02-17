@@ -31,4 +31,5 @@ public class OutpatientConsultationDto {
 
 	private List<SharedSnomedDto> procedures;
 
+	private List<SharedSnomedDto> medications;
 }

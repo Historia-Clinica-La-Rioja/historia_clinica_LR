@@ -35,20 +35,20 @@ public class Rule extends SGXAuditableEntity<Integer> implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name = "type_id")
-	private Short typeId;
-
 	@Column(name = "clinical_specialty_id")
 	private Integer clinicalSpecialtyId;
 
 	@Column(name = "snomed_id")
 	private Integer snomedId;
 
+	@Column(name = "level")
+	private Short level;
+
 	public Rule (RuleDto dto){
 		this.id = dto.getId();
-		this.typeId = dto.getTypeId();
 		this.clinicalSpecialtyId = dto.getClinicalSpecialtyId();
 		this.snomedId = dto.getSnomedId();
+		this.level = dto.getLevel();
 	}
 
 }

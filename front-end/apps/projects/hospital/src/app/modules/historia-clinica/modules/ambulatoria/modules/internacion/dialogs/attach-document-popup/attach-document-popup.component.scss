@@ -1,36 +1,71 @@
 .example-full-width {
-    width: 100%;
+	width: 100%;
 }
 
-div {
-    display: flex;
-    justify-content: flex-end;
+.end {
+	display: flex;
+	justify-content: flex-end;
 }
 
 .typeahead-required {
-    color: #f44336;
-    font-size: 75%;
-    padding: 0 1em;
+	color: #f44336;
+	font-size: 75%;
+	padding: 0 1em;
 }
 
 .selected-file {
-    mat-error {
-        margin-top: -2em;
-    }
+	mat-error {
+		margin-top: -2em;
+	}
 }
 
-.actions {
-    display: flex;
-    justify-content: flex-end;
+.file-actions {
+	button {
+		margin-bottom: 1em;
+	}
 
-    button {
-        margin: .50rem;
-    }
+	mat-icon {
+		margin-right: 0.2em;
+	}
+}
+
+.file {
+	margin-left: 0.5em;
+
+	a {
+		color: #2687c5;
+		cursor: pointer;
+	}
+}
+
+.dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+
+	button {
+		margin: .50rem;
+	}
 }
 
 @media (max-width: 360px) {
-    section {
-        align-items: center;
-        flex-direction: column;
-    }
+	section {
+		align-items: center;
+		flex-direction: column;
+	}
+}
+
+.form-field {
+	width: 100%;
+    margin-top: 3vh;
+}
+
+.form-field-reduced {
+    margin-top: 3vh;
+	margin-left: 0.5em;
+	width: 98%;
+}
+
+.observation {
+	margin-left: 0.3em;
+	width: 98%;
 }

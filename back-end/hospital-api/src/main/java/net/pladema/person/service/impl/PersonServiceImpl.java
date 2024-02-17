@@ -1,31 +1,31 @@
 package net.pladema.person.service.impl;
 
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
-
-import net.pladema.patient.controller.dto.AuditPatientSearch;
-import net.pladema.person.repository.domain.CompletePersonNameBo;
-import net.pladema.person.repository.domain.DuplicatePersonVo;
-
-import net.pladema.person.repository.domain.PersonSearchResultVo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.PersonExtendedRepository;
 import net.pladema.person.repository.PersonHistoryRepository;
 import net.pladema.person.repository.PersonRepository;
+import net.pladema.person.repository.domain.CompletePersonNameBo;
 import net.pladema.person.repository.domain.CompletePersonVo;
+import net.pladema.person.repository.domain.DuplicatePersonVo;
+import net.pladema.person.repository.domain.PersonSearchResultVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
 import net.pladema.person.repository.entity.PersonHistory;
 import net.pladema.person.service.PersonService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +37,7 @@ public class PersonServiceImpl implements PersonService {
     private final PersonRepository personRepository;
     private final PersonExtendedRepository personExtendedRepository;
 	private final PersonHistoryRepository personHistoryRepository;
+	private final FeatureFlagsService featureFlagsService;
 
 
     @Override
@@ -142,6 +143,42 @@ public class PersonServiceImpl implements PersonService {
 		return result;
 	}
 
+	@Override
+	public String getCompletePersonNameById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameById(personId);
+		return parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
+	}
+
+	@Override
+	public String getFormalPersonNameById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameById(personId);
+		return parseFormalPersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
+	}
+
+	@Override
+	public String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
+		String finalFirstName = this.getFinalFirstName(firstName, middleNames, selfDeterminateName);
+		String finalLastName = this.getFinalLastName(lastName, otherLastNames);
+		return String.join(" ", finalFirstName, finalLastName);
+	}
+
+	@Override
+	public String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
+		String finalFirstName = this.getFinalFirstName(firstName, middleNames, selfDeterminateName);
+		String finalLastName = this.getFinalLastName(lastName, otherLastNames);
+		return String.join(" ", finalLastName, finalFirstName);
+	}
+
+	@Override
+	public ContactInfoBo getContactInfoById(Integer personId) {
+		LOG.debug("Input parameters -> personId {}", personId);
+		ContactInfoBo result = personExtendedRepository.getContactInfoById(personId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
 	private Supplier<NotFoundException> personNotFound(Integer personId) {
         return () -> new NotFoundException("person-not-exists", String.format("La persona %s no existe", personId));
     }
@@ -152,6 +189,14 @@ public class PersonServiceImpl implements PersonService {
 		Optional<Person> result = personRepository.findPersonByPatientId(patientId);
 		LOG.debug("Output result -> {}", result);
 		return result;
+	}
+
+	private String getFinalFirstName(String firstName, String middleNames, String selfDeterminateName) {
+		return featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName != null ? firstName : "", middleNames != null ? middleNames : "") : firstName != null ? firstName : "";
+	}
+
+	private String getFinalLastName(String lastName, String otherLastNames) {
+		return otherLastNames != null ? String.join(" ", lastName != null ? lastName : "", otherLastNames != null ? otherLastNames : "") : lastName != null ? lastName : "";
 	}
 
 }

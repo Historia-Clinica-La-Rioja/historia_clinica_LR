@@ -12,7 +12,8 @@ export class UiComponentComponent {
 		card: 'card',
 		code: 'code',
 		columns: 'columns',
-		cubejs_chart: 'cubejs-chart',
+		cubejs_chart: 'cubejs-chart_old',
+		ui_chart: 'cubejs-chart', //hsi-936
 		cubejs_dashboard: 'cubejs-dashboard',
 		cubejs_card: 'cubejs-card',
 		divider: 'divider',

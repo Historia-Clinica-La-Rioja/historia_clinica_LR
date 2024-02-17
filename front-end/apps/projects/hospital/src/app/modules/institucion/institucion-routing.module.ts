@@ -66,6 +66,12 @@ const routes: Routes = [
 				loadChildren: () => import('../telemedicina/telemedicina.module').then(m => m.TelemedicinaModule),
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_TELEMEDICINA }
+			},
+			{
+				path: 'firma-digital/documentos',
+				loadChildren: () => import('../digital-signature/digital-signature.module').then(m => m.DigitalSignatureModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_FIRMA_DIGITAL }
 			}
 		],
 		canActivate: [RoleGuard],
@@ -74,7 +80,7 @@ const routes: Routes = [
 			ERole.ENFERMERO, ERole.ENFERMERO_ADULTO_MAYOR, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ROOT, ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 			ERole.ADMINISTRADOR_DE_CAMAS, ERole.PERSONAL_DE_IMAGENES, ERole.PERSONAL_DE_LABORATORIO, ERole.PERSONAL_DE_FARMACIA, ERole.PERSONAL_DE_ESTADISTICA,
 			ERole.ADMINISTRATIVO_RED_DE_IMAGENES, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PRESCRIPTOR, ERole.AUDITOR_MPI, ERole.TECNICO,
-			ERole.PERSONAL_DE_LEGALES, ERole.INFORMADOR, ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE]
+			ERole.PERSONAL_DE_LEGALES, ERole.INFORMADOR, ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE, ERole.ABORDAJE_VIOLENCIAS]
 		},
 
 	}

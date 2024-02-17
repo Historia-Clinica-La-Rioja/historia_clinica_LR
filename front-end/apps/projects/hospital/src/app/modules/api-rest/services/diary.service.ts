@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
-import { DiaryADto, CompleteDiaryDto, DiaryDto, BlockDto, AppointmentSearchDto, EmptyAppointmentDto } from '@api-rest/api-model';
+import { DiaryADto, CompleteDiaryDto, DiaryDto, BlockDto, AppointmentSearchDto, EmptyAppointmentDto, DateDto, DiaryOpeningHoursFreeTimesDto, FreeAppointmentSearchFilterDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -56,4 +56,15 @@ export class DiaryService {
 		return this.http.post<any>(url, searchCriteria);
 	}
 
+	getMonthlyFreeAppointmentDates(diaryId: number, searchCriteria: FreeAppointmentSearchFilterDto): Observable<DateDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/${diaryId}/monthly-free-appointment-dates`;
+		const params = { filter: JSON.stringify(searchCriteria) };
+		return this.http.get<DateDto[]>(url, { params });
+	}
+
+	getDailyFreeAppointmentTimes(diaryId: number, searchCriteria: FreeAppointmentSearchFilterDto): Observable<DiaryOpeningHoursFreeTimesDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/${diaryId}/daily-free-appointment-times`;
+		const params = { filter: JSON.stringify(searchCriteria) };
+		return this.http.get<DiaryOpeningHoursFreeTimesDto[]>(url, { params });
+	}
 }

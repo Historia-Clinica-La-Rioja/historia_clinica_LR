@@ -2,7 +2,7 @@
 	"historia-clinica": {
 		"reference-request-list": {
 			"CARE_LINE": "Línea de cuidado",
-			"SPECIALTY": "Especialidad",
+			"SPECIALTIES": "Especialidades",
 			"PROBLEMS": "Problemas"
 		},
 		"new-consultation-expansion-section": {
@@ -21,7 +21,7 @@
 				"TOOLTIP": "Agregar alergia"
 			},
 			"factores-de-riesgo": {
-				"TOOLTIP": "Actualizar factores de riesgo"
+				"TOOLTIP": "Actualizar signos vitales y factores de riesgo"
 			},
 			"datos-antropometricos": {
 				"TOOLTIP": "Agregar información antropométrica"
@@ -40,8 +40,8 @@
 			"CONCEPTS_COULD_NOT_BE_OBTAINED": "Los conceptos de SNOMED no pudieron ser obtenidos."
 		},
 		"factores-de-riesgo-form": {
-			"TITLE": "Factores de Riesgo",
-			"NAME": "factores de riesgo",
+			"TITLE": "Signos vitales y factores de riesgo",
+			"NAME": "Signos vitales y factores de riesgo",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"RESPIRATORY_RATE": "Frecuencia respiratoria (/min)",
 			"TEMPERATURE": "Temperatura corporal",
@@ -92,6 +92,15 @@
 			"TITLE": "Unidad jerárquica",
 			"IS_A_REPLACEMENT": "Es un reemplazo",
 			"PLACEHOLDER": "Seleccione una unidad jerárquica"
+		},
+		"audit-access":{
+			"TITLE": "Alerta de acceso",
+			"RESUME": "Esta historia clínica es confidencial y tiene restricciones de acceso. Para verla, indicar motivo de consulta.",
+			"MOTIVE": "Motivo de ingreso",
+			"SELECT": "Seleccionar motivo",
+			"OBSERVATIONS": "Observaciones",
+			"GO_TO_PATIENT": "Ver historia clinica"
 		}
+
 	}
 }

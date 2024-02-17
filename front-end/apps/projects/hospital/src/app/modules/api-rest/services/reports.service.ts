@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { DownloadService } from '@core/services/download.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { UIComponentDto } from '@extensions/extensions-model';
+import { ReportFilters } from "../../reportes/routes/home/home.component";
 
 @Injectable({
 	providedIn: 'root'
@@ -18,7 +19,7 @@ export class ReportsService {
 		private http: HttpClient
 	) { }
 
-	private getReport(params: any, fileName: string, url: any): Observable<any> {
+	private getReport(params: ReportFilters, fileName: string, url: any): Observable<any> {
 		let requestParams: HttpParams = new HttpParams();
 		requestParams = requestParams.append('fromDate', momentFormat(params.startDate, DateFormat.API_DATE));
 		requestParams = requestParams.append('toDate', momentFormat(params.endDate, DateFormat.API_DATE));
@@ -37,15 +38,18 @@ export class ReportsService {
 		if (params.includeHierarchicalUnitDescendants) {
 			requestParams = requestParams.append('includeHierarchicalUnitDescendants', params.includeHierarchicalUnitDescendants);
 		}
+		if (params.appointmentStateId) {
+			requestParams = requestParams.append('appointmentStateId', params.appointmentStateId);
+		}
 		return this.downloadService.downloadXlsWithRequestParams(url, fileName, requestParams);
 	}
 
-	getMonthlyReport(params: any, fileName: string): Observable<any> {
+	getMonthlyReport(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/monthly`;
 		return this.getReport(params, fileName, url);
 	}
 
-	getOutpatientSummaryReport(params: any, fileName: string): Observable<any> {
+	getOutpatientSummaryReport(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/${this.contextService.institutionId}/summary`;
 		return this.getReport(params, fileName, url);
 	}
@@ -64,6 +68,11 @@ export class ReportsService {
 	getEpidemiologicalWeekReport(): Observable<UIComponentDto> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/epidemiological_week`;
 		return this.http.get<UIComponentDto>(url);
+	}
+
+	getNominalAppointmentsDetail(params: ReportFilters, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-appointment-detail`;
+		return this.getReport(params, fileName, url);
 	}
 
 }

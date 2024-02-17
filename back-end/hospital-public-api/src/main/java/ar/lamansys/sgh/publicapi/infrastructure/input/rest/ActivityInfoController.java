@@ -18,12 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgh.publicapi.application.fetchactivitybyid.FetchActivityById;
 import ar.lamansys.sgh.publicapi.application.fetchbedrelocationbyactivity.FetchBedRelocationByActivity;
 import ar.lamansys.sgh.publicapi.application.fetchproceduresbyactivity.FetchProcedureByActivity;
 import ar.lamansys.sgh.publicapi.application.fetchsuppliesbyactivity.FetchSuppliesByActivity;
 import ar.lamansys.sgh.publicapi.application.processactivity.ProcessActivity;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.BedRelocationInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ProcedureInformationDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SupplyInformationDto;
@@ -40,7 +38,6 @@ public class ActivityInfoController {
 	private static final String INPUT = "Input data -> ";
 
 	private final ActivitiesMapper activitiesMapper;
-	private final FetchActivityById fetchActivityById;
 	private final FetchProcedureByActivity fetchProcedureByActivity;
 	private final ProcessActivity processActivity;
 	private final FetchSuppliesByActivity fetchSuppliesByActivity;
@@ -48,34 +45,17 @@ public class ActivityInfoController {
 	private final FetchDocumentsInfoByActivity fetchDocumentsInfoByActivity;
 
 	public ActivityInfoController(ActivitiesMapper activitiesMapper,
-								  FetchActivityById fetchActivityById,
 								  FetchProcedureByActivity fetchProcedureByActivity,
 								  ProcessActivity processActivity,
 								  FetchSuppliesByActivity fetchSuppliesByActivity,
 								  FetchBedRelocationByActivity fetchBedRelocationByActivity,
 								  FetchDocumentsInfoByActivity fetchDocumentsInfoByActivity) {
 		this.activitiesMapper = activitiesMapper;
-		this.fetchActivityById = fetchActivityById;
 		this.fetchProcedureByActivity = fetchProcedureByActivity;
 		this.processActivity = processActivity;
 		this.fetchSuppliesByActivity = fetchSuppliesByActivity;
 		this.fetchBedRelocationByActivity = fetchBedRelocationByActivity;
 		this.fetchDocumentsInfoByActivity = fetchDocumentsInfoByActivity;
-	}
-
-	@GetMapping("")
-	public ResponseEntity<AttentionInfoDto> getActivityByInstitution(
-			@PathVariable("refsetCode") String refsetCode,
-			@PathVariable("activityId") Long activityId
-	) {
-		LOG.debug(INPUT + "refsetCode {}, activityId{}", refsetCode, activityId);
-
-		var attention = fetchActivityById.run(refsetCode, activityId);
-		AttentionInfoDto result = (attention != null) ? activitiesMapper.mapToAttentionInfoDto(attention) : null;
-
-		LOG.debug(OUTPUT, result);
-
-		return ResponseEntity.ok().body(result);
 	}
 
 	@PutMapping("/process")

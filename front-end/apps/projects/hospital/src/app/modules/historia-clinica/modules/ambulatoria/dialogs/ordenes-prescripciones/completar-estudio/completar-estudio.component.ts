@@ -98,6 +98,6 @@ export class CompletarEstudioComponent implements OnInit {
 	}
 
 	disableButton(): boolean {
-		return !(this.selectedFiles.length || this.completeStudyForm.controls.observations.value);
+		return !(this.selectedFiles.length || this.completeStudyForm.controls.observations.value) || this.completeStudyForm.invalid;
 	}
 }

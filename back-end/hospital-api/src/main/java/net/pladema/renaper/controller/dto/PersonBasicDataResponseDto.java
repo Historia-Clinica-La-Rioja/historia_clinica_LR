@@ -25,4 +25,8 @@ public class PersonBasicDataResponseDto implements Serializable{
     private String photo;
 
     private String cuil;
+
+	private String identificationNumber;
+
+	private Short identificationTypeId;
 }

@@ -19,6 +19,7 @@ export class NewEpisodeAdminTriageComponent {
 	private triage: TriageAdministrativeDto;
 	private emergencyCareDto = {} as ECAdministrativeDto;
 	private readonly routePrefix;
+	NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE = true;
 
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,

@@ -38,4 +38,13 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 			"JOIN City c ON (a.cityId = c.id) " +
 			"WHERE i.id = :institutionId")
     Optional<AddressBo> findByInstitutionId(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new ar.lamansys.sgh.shared.domain.general.AddressBo(a.street, a.number, a.floor, a.apartment, a.postcode, c.description, p.description) " +
+			"FROM Institution i " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"LEFT JOIN Province p ON (a.provinceId = p.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
+			"WHERE i.id = :institutionId")
+	Optional<ar.lamansys.sgh.shared.domain.general.AddressBo> findAddressDataByInstitutionId(@Param("institutionId") Integer institutionId);
 }

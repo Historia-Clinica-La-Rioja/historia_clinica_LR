@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from '@storybook/angular';
 import { DetailBoxComponent } from './detail-box.component';
 
 const meta: Meta<DetailBoxComponent> = {
-	title: 'Example/DetailBoxComponent',
+	title: 'Presentation/DetailBoxComponent',
 	component: DetailBoxComponent,
 	tags: ['autodocs'],
 };

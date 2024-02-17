@@ -5,7 +5,7 @@
 			[routerLinkActiveOptions]="menuItem.options || {exact: false}"
 			[id]="menuItem.id"
 			*ngFor="let menuItem of menuItems">
-		<mat-icon matListIcon fontSet="material-icons-outlined">{{menuItem.icon}}</mat-icon>
+		<mat-icon  matListIcon class="margin material-symbols-outlined">{{menuItem.icon}}</mat-icon>
 		<app-label [hidden]="hideName"  [label]="menuItem.label"></app-label>
 	</mat-list-item>
 </mat-nav-list>

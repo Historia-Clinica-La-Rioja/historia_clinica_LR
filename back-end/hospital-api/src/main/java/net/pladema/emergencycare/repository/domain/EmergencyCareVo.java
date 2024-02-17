@@ -9,7 +9,9 @@ import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
 import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
 import net.pladema.establishment.repository.domain.BedVo;
+import net.pladema.establishment.repository.domain.RoomVo;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.Room;
 import net.pladema.medicalconsultation.doctorsoffice.repository.domain.DoctorsOfficeVo;
 import net.pladema.medicalconsultation.shockroom.domain.ShockroomVo;
 import net.pladema.person.repository.entity.Person;
@@ -60,6 +62,8 @@ public class EmergencyCareVo implements Serializable {
 
 	private LocalDateTime endDate;
 
+	private RoomVo room;
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
 						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
 						   String shockroomDescription, Bed bed){
@@ -82,9 +86,15 @@ public class EmergencyCareVo implements Serializable {
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
 						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
-						   String shockroomDescription, Bed bed, LocalDateTime endDate){
+						   String shockroomDescription, Bed bed, LocalDateTime endDate, Room room){
 		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage, shockroomDescription, bed);
 		this.policeInterventionDetails = policeInterventionDetails != null ? new PoliceInterventionDetailsVo(policeInterventionDetails) : null;
 		this.endDate = endDate;
+		this.room = room != null ? new RoomVo(room): null;
+	}
+
+	public EmergencyCareVo(Integer id, Integer institutionId){
+		this.id = id;
+		this.institutionId = institutionId;
 	}
 }

@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.outpatient.application.port.OutpatientConsultationStorage;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBasicDataBo;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.PatientBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientPatientBo;
 
 import org.springframework.stereotype.Service;
 
@@ -32,17 +32,13 @@ public class SharedOutpatientConsultationImpl implements SharedOutpatientConsult
 	private final OutpatientConsultationStorage outpatientConsultationStorage;
 
 	@Override
-	public Map<Integer, List<OutpatientConsultationDto>> getOutpatientConsultationsToCipres() {
+	public List<OutpatientConsultationDto> getOutpatientConsultationsToCipres() {
 		log.debug("fetch consultations to create");
-		Map<Integer, List<OutpatientBasicDataBo>> consultations = outpatientConsultationStorage.getOutpatientConsultationsToCipres();
-		Map<Integer, List<OutpatientConsultationDto>> result = new HashMap<>();
-		consultations.entrySet().forEach(consultation -> {
-			result.put(
-					consultation.getKey(),
-					consultation.getValue().stream()
-							.map(this::mapToOutpatientConsultationDto)
-							.collect(Collectors.toList()));
-		});
+		List<OutpatientBasicDataBo> consultations = outpatientConsultationStorage.getOutpatientConsultationsToCipres();
+		List<OutpatientConsultationDto> result = consultations
+				.stream()
+				.map(this::mapToOutpatientConsultationDto)
+				.collect(Collectors.toList());
 		log.debug("Output size -> {}", result.size());
 		return result;
 	}
@@ -58,27 +54,24 @@ public class SharedOutpatientConsultationImpl implements SharedOutpatientConsult
 				.riskFactor(mapToSharedRiskFactorDto(oc.getRiskFactorData()))
 				.procedures(oc.getProcedures().stream().map(p -> new SharedSnomedDto(p.getSctid(), p.getPt())).collect(Collectors.toList()))
 				.problems(oc.getProblems().stream().map(p -> new SharedSnomedDto(p.getSctid(), p.getPt())).collect(Collectors.toList()))
+				.medications(oc.getMedications().stream().map(m -> new SharedSnomedDto(m.getSctid(), m.getPt())).collect(Collectors.toList()))
 				.build();
 	}
 
-	public BasicPatientDto mapToBasicPatientDto(PatientBo patientBo) {
+	public BasicPatientDto mapToBasicPatientDto(OutpatientPatientBo outpatientPatientBo) {
 		BasicPatientDto result = new BasicPatientDto();
-		result.setId(patientBo.getId());
-		result.setPerson(mapToBasicDataPersonDto(patientBo));
+		result.setId(outpatientPatientBo.getId());
+		result.setPerson(mapToBasicDataPersonDto(outpatientPatientBo));
 		return result;
 	}
 
-	public BasicDataPersonDto mapToBasicDataPersonDto(PatientBo patientBo) {
+	public BasicDataPersonDto mapToBasicDataPersonDto(OutpatientPatientBo outpatientPatientBo) {
 		BasicDataPersonDto result = new BasicDataPersonDto();
-		result.setFirstName(patientBo.getFirstName());
-		result.setMiddleNames(patientBo.getMiddleNames());
-		result.setLastName(patientBo.getLastName());
-		result.setOtherLastNames(patientBo.getOtherLastNames());
-		result.setIdentificationTypeId(patientBo.getIdentificationType());
-		result.setIdentificationNumber(patientBo.getIdentificationNumber());
-		result.setBirthDate(patientBo.getBirthDate());
+		result.setId(outpatientPatientBo.getPersonId());
+		result.setIdentificationTypeId(outpatientPatientBo.getIdentificationType());
+		result.setIdentificationNumber(outpatientPatientBo.getIdentificationNumber());
 		GenderDto gender = new GenderDto();
-		gender.setId(patientBo.getGenderId());
+		gender.setId(outpatientPatientBo.getGenderId());
 		result.setGender(gender);
 		return result;
 	}

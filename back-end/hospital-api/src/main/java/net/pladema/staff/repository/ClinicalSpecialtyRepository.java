@@ -2,6 +2,8 @@ package net.pladema.staff.repository;
 
 import java.util.List;
 
+import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +14,7 @@ import net.pladema.staff.repository.entity.ClinicalSpecialty;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 @Repository
-public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpecialty, Integer>{
+public interface ClinicalSpecialtyRepository extends SGXAuditableEntityJPARepository<ClinicalSpecialty, Integer> {
 
 	@Transactional(readOnly = true)
     @Query(value = " SELECT cs "
@@ -38,7 +40,11 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
     ClinicalSpecialtyBo findClinicalSpecialtyBoById(@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
     @Transactional(readOnly = true)
-	@Query(value = " SELECT cs FROM ClinicalSpecialty cs where cs.clinicalSpecialtyTypeId = 2")
+	@Query(value = " SELECT cs " +
+					"FROM ClinicalSpecialty cs " +
+					"WHERE cs.clinicalSpecialtyTypeId = 2 " +
+					"AND cs.deleteable.deleted = FALSE " +
+					"ORDER BY cs.name ")
 	List<ClinicalSpecialty> findAllSpecialties();
 
 	@Transactional(readOnly = true)
@@ -88,15 +94,12 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"JOIN HealthcareProfessional hp ON (hp.id = pp.healthcareProfessionalId) " +
 			"JOIN UserPerson up ON (hp.personId = up.pk.personId) " +
 			"JOIN UserRole ur ON (up.pk.userId = ur.userId) " +
-			"JOIN Institution i ON (ur.institutionId = i.id) " +
-			"JOIN Address a ON (i.addressId = a.id) " +
-			"WHERE a.provinceId = :provinceId " +
-			"AND hps.deleteable.deleted = FALSE " +
+			"WHERE hps.deleteable.deleted = FALSE " +
 			"AND pp.deleteable.deleted = FALSE " +
 			"AND hp.deleteable.deleted = FALSE " +
 			"AND ur.deleteable.deleted = FALSE " +
 			"ORDER BY cs.name")
-	List<ClinicalSpecialtyBo> getClinicalSpecialtiesByProvinceId(@Param("provinceId") Short provinceId);
+	List<ClinicalSpecialtyBo> getClinicalSpecialtiesInAllInstitutions();
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT DISTINCT NEW net.pladema.staff.service.domain.ClinicalSpecialtyBo(cs.id, cs.name) " +
@@ -104,5 +107,11 @@ public interface ClinicalSpecialtyRepository extends JpaRepository<ClinicalSpeci
 			"JOIN VirtualConsultation vc ON (vc.clinicalSpecialtyId = cs.id) " +
 			"WHERE vc.institutionId = :institutionId")
 	List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT cs.name " +
+			"FROM ClinicalSpecialty cs " +
+			"WHERE cs.id IN :clinicalSpecialtyIds")
+	List<String> getClinicalSpecialtyNamesByIds(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds);
 
 }

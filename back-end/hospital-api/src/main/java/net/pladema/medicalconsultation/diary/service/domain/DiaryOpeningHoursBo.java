@@ -29,6 +29,8 @@ public class DiaryOpeningHoursBo {
 
 	private Boolean secondOpinionVirtualAttentionAllowed;
 
+	private Boolean regulationProtectedAppointmentsAllowed;
+
 	public boolean overlap(DiaryOpeningHoursBo other) {
         return openingHours.overlap(other.getOpeningHours());
     }

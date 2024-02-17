@@ -6,8 +6,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -55,7 +55,7 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 
 	private RiskFactorBo riskFactors;
 
-	private List<HealthHistoryConditionBo> familyHistories;
+	private List<FamilyHistoryBo> familyHistories;
 
 	private List<AllergyConditionBo> allergies;
 

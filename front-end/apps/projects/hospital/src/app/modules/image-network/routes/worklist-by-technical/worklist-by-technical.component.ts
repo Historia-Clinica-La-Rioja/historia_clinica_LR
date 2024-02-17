@@ -9,11 +9,12 @@ import { mapDateWithHypenToDateWithSlash, timeToString } from '@api-rest/mapper/
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { Color } from '@presentation/colored-label/colored-label.component';
+import { PatientNameService } from "@core/services/patient-name.service";
 import {
 	WORKLIST_APPOINTMENT_STATES,
 	APPOINTMENT_STATES_ID,
 	AppointmentState,
+    stateColor,
 } from '@turnos/constants/appointment';
 import { REPORT_STATES, ReportState, REPORT_STATES_ID } from '../../constants/report';
 import { Observable } from 'rxjs';
@@ -29,16 +30,11 @@ import * as moment from 'moment';
 import { SearchFilters, WorklistFiltersComponent } from '../../components/worklist-filters/worklist-filters.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { WorklistFacadeService } from '../../services/worklist-facade.service';
+import { DownloadTranscribedOrderComponent } from '../../dialogs/download-transcribed-order/download-transcribed-order.component';
+import { ViewPdfBo } from '@presentation/dialogs/view-pdf/view-pdf.service';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
-const stateColor = {
-    [APPOINTMENT_STATES_ID.CONFIRMED]:  Color.YELLOW,
-    [APPOINTMENT_STATES_ID.ABSENT]: Color.GREY,
-    [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
-    [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
-    [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE
-}
 
 @Component({
     selector: 'app-worklist-by-technical',
@@ -96,11 +92,8 @@ export class WorklistByTechnicalComponent implements OnInit {
 	    public dialog: MatDialog,
 		private readonly formBuilder: UntypedFormBuilder,
         private readonly worklistFacadeService: WorklistFacadeService,
+        private readonly patientNameService: PatientNameService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
-			this.nameSelfDeterminationFF = isOn
-		});
-
         this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(isOn => {
             this.permission = isOn;
         })
@@ -186,6 +179,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     onEquipmentChange(equipment: MatSelectChange){
+        this.startPage = 0;
         this.resetDate();
         this.equipmentId = equipment.value.id;
         this.setDefaultStates();
@@ -194,6 +188,7 @@ export class WorklistByTechnicalComponent implements OnInit {
     }
 
     setSelectedDate(){
+        this.startPage = 0;
         this.startDate = this.filtersForm.get('datePicker').get('start').value?.format('YYYY-MM-DD');
         this.endDate = this.filtersForm.get('datePicker').get('end').value?.format('YYYY-MM-DD');
         if (this.startDate && this.endDate && this.equipmentId) {
@@ -224,7 +219,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.fetchingData = true;
         this.worklistFiltersComponent.clearInputs();
         this.disableInputs();
-        this.worklistFacadeService.changeFilters(equipmentId, this.startDate, this.endDate);
+        this.worklistFacadeService.changeTechnicalFilters(equipmentId, this.startDate, this.endDate);
     }
 
     private resetAppointmentsData() {
@@ -284,7 +279,7 @@ export class WorklistByTechnicalComponent implements OnInit {
         return WORKLIST_APPOINTMENT_STATES.find(a => a.id == appointmentStateId).description
     }
 
-    private mapAppointmentsToDetailedAppointments(appointments){
+    private mapAppointmentsToDetailedAppointments(appointments: EquipmentAppointmentListDto[]){
         return appointments.map(appointment => {
             return {
                 data: appointment,
@@ -295,23 +290,10 @@ export class WorklistByTechnicalComponent implements OnInit {
                 canBeFinished: appointment.appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED,
                 derive: appointment.derivedTo.id ? appointment.derivedTo : null,
                 reportStatus: this.getReportStatus(appointment.reportStatusId),
-                patientFullName: this.getPatientName(appointment),
+                patientFullName: this.patientNameService.completeName(appointment.patient.person.firstName, appointment.patient.person.nameSelfDetermination, appointment.patient.person.lastName, appointment.patient.person.middleNames, appointment.patient.person.otherLastNames),
                 canBeDerived: appointment.reportStatusId === this.reportStates.PENDING,
             }
         })
-    }
-
-    private getPatientName(appointment: EquipmentAppointmentListDto) {
-        let patientName = '';
-        if (this.nameSelfDeterminationFF) {
-            patientName += appointment.patient.person.nameSelfDetermination?.length ? 
-                        appointment.patient.person.nameSelfDetermination + ' ' :
-                        appointment.patient.person.firstName + ' ';
-        } else {
-            patientName += (appointment.patient.person.firstName || '') + ' ';
-        }
-        patientName += appointment.patient.person.lastName || '';
-        return patientName;
     }
 
     private getReportStatus(reportStatusId): ReportState{
@@ -327,16 +309,20 @@ export class WorklistByTechnicalComponent implements OnInit {
 
 	finishStudy(appointment: EquipmentAppointmentListDto) {
 		this.selectedAppointment = appointment;
-		this.openFinishStudyDialog();
+		this.openFinishStudyDialog(appointment);
 	}
 
-	private openFinishStudyDialog() {
+	private openFinishStudyDialog(appointment: EquipmentAppointmentListDto) {
+        appointment.studyName
         const data: StudyInfo = {
             appointmentId: this.selectedAppointment.id,
             patientId: this.selectedAppointment.patient.id,
+            studyName: appointment.studyName,
+            isTranscribed: !appointment.serviceRequestId && !!appointment.studyName,
+            hasOrder: !!appointment.serviceRequestId
         }
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
-			width: '35%',
+			width: '38%',
 			autoFocus: false,
 			data
 		});
@@ -356,9 +342,42 @@ export class WorklistByTechnicalComponent implements OnInit {
         this.appointments = this.appointments.map(app => (app.id === this.selectedAppointment.id ? { ...app, reportStatusId: statusToSet } : app));
     }
 
-    downloadOrder(appointment: EquipmentAppointmentListDto) : void {
-		this.prescripcionesService.downloadPrescriptionPdf(appointment.patient.id, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
+    downloadOrderHandler(appointment: EquipmentAppointmentListDto) : void {
+        let patientId = appointment.patient.id;
+        if (appointment.serviceRequestId) {
+            this.prescripcionesService.downloadPrescriptionPdf(patientId, [appointment.serviceRequestId], PrescriptionTypes.STUDY);
+        } else {
+            this.downloadTranscribedOrder(patientId, appointment);
+        }
 	}
+
+    downloadTranscribedOrder(patientId: number, appointment: EquipmentAppointmentListDto){
+        let attachedFiles = [];
+        appointment.transcribedOrderAttachedFiles.forEach(file => {
+            attachedFiles.push({url: this.prescripcionesService.getTranscribedAttachedFileUrl(patientId, file.id), filename: file.name})
+        })
+        
+        if (attachedFiles.length > 1){
+            this.dialog.open(DownloadTranscribedOrderComponent, {
+                minWidth: '300px',
+                minHeight: '150px',
+                autoFocus: false,
+                data: attachedFiles,
+            });
+        } else {
+            this.downloadUniqueOrder(attachedFiles[0]);
+        }
+    }
+
+    downloadUniqueOrder(file: ViewPdfBo){
+        const anchor = document.createElement("a");
+        anchor.href = file.url.toString();
+        anchor.download = file.filename;
+
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    }
 
     requestReport(appointment: detailedAppointment) {
         this.appointmentsService.requireReport(appointment.data.id).subscribe(() => {

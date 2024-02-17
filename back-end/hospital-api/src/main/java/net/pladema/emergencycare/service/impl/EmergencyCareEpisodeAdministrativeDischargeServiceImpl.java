@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Service
 public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements EmergencyCareEpisodeAdministrativeDischargeService {
@@ -64,11 +63,10 @@ public class EmergencyCareEpisodeAdministrativeDischargeServiceImpl implements E
 
     private void assertValidDischarge(AdministrativeDischargeBo administrativeDischargeBo, LocalDateTime medicalDischargeDate) {
         LocalDateTime administrativeDischargeOn = administrativeDischargeBo.getAdministrativeDischargeOn();
-        Assert.isTrue( !administrativeDischargeOn.isBefore(medicalDischargeDate), "care-episode.administrative-discharge.exceeds-min-date");
+        Assert.isTrue( !administrativeDischargeOn.isBefore(medicalDischargeDate), "La fecha de alta administrativa debe ser posterior o igual a la fecha de alta medica del episodio");
 
         LocalDateTime today = dateTimeProvider.nowDateTime();
-        Assert.isTrue( !administrativeDischargeOn.isAfter(today), "care-episode.administrative-discharge.exceeds-max-date");
-
+        Assert.isTrue( !administrativeDischargeOn.isAfter(today), "La fecha de alta administrativa debe ser anterior o igual a la fecha actual");
     }
 
 }

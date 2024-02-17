@@ -66,7 +66,7 @@ public class ProfessionalLicenseNumberController {
 	}
 
 	@GetMapping("/registration-numbers")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA, ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<ProfessionalRegistrationNumbersDto>> getAllProfessionalRegistrationNumbers(@PathVariable Integer institutionId) {
 		log.debug("Input parameters -> {}", institutionId);
 		List<ProfessionalRegistrationNumbersDto> result = getAllProfessionalRegistrationNumbers.run(institutionId).stream()

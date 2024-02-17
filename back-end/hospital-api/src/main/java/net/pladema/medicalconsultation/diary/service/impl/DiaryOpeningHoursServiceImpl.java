@@ -96,6 +96,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 		diaryOpeningHours.setOnSiteAttentionAllowed(doh.getOnSiteAttentionAllowed());
 		diaryOpeningHours.setPatientVirtualAttentionAllowed(doh.getPatientVirtualAttentionAllowed());
 		diaryOpeningHours.setSecondOpinionVirtualAttentionAllowed(doh.getSecondOpinionVirtualAttentionAllowed());
+		diaryOpeningHours.setRegulationProtectedAppointmentsAllowed(doh.getRegulationProtectedAppointmentsAllowed());
         return diaryOpeningHours;
     }
 
@@ -200,6 +201,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 		result.setOnSiteAttentionAllowed(diaryOpeningHoursVo.getOnSiteAttentionAllowed());
 		result.setPatientVirtualAttentionAllowed(diaryOpeningHoursVo.getPatientVirtualAttentionAllowed());
 		result.setSecondOpinionVirtualAttentionAllowed(diaryOpeningHoursVo.getSecondOpinionVirtualAttentionAllowed());
+		result.setRegulationProtectedAppointmentsAllowed(diaryOpeningHoursVo.getRegulationProtectedAppointmentsAllowed());
         LOG.debug(OUTPUT, result);
         return result;
     }

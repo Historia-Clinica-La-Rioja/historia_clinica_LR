@@ -223,7 +223,7 @@
     <named-native-query name="Reports.ConsultationDetail" result-set-mapping="Reports.ConsultationDetailResult">
         <query>
 			WITH consultation AS (SELECT oc.patient_id, oc.patient_medical_coverage_id, oc.clinical_specialty_id,
-			oc.doctor_id, oc.start_date as start_date, reasons.description as reasons,
+			oc.doctor_id, oc.created_on as start_date, reasons.description as reasons,
 			problems.description as problems, proced.description as procedures,
 			MAX(CASE WHEN ovs.loinc_code='8480-6' THEN ovs.value END) as systolicBloodPressure,
 			MAX(CASE WHEN ovs.loinc_code='8462-4' THEN ovs.value END) as diastolicBloodPressure,
@@ -259,7 +259,7 @@
 			LEFT JOIN observation_vital_sign ovs ON (dvs.observation_vital_sign_id = ovs.id)
 			WHERE oc.institution_id = :institutionId
 			AND oc.billable = true
-			AND oc.start_date BETWEEN :startDate AND :endDate
+			AND oc.created_on BETWEEN :startDate AND :endDate
 			GROUP BY oc.id, oc.patient_id , oc.patient_medical_coverage_id , oc.clinical_specialty_id , oc.doctor_id, oc.doctor_id, reasons.description, problems.description, proced.description
 			UNION ALL
 			SELECT  vc.patient_id, vc.patient_medical_coverage_id, vc.clinical_specialty_id,
@@ -280,7 +280,7 @@
 			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
 			px.phone_number as phoneNumber, px.email as email,
 			mc."name" as coverageName, pmc.affiliate_number as affiliateNumber,
-			to_char(cst.start_date,'DD/MM/YYYY') as startDate,
+			cst.start_date as startDate,
 			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
 			hp.id as professionalId,
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
@@ -366,7 +366,7 @@
 			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
 			px.phone_number as phoneNumber, px.email as email,
 			mc."name" as coverageName, pmc.affiliate_number as affiliateNumber,
-			to_char(cst.start_date,'DD/MM/YYYY') as startDate,
+			cst.start_date as startDate,
 			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
 			hp.id as professionalId,
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
@@ -437,7 +437,7 @@
 			CONCAT(a2.street, ' ', a2.number, ' ', a2.floor, ' ', a2.apartment, ' ', c2.description) as address,
 			px.phone_number as phoneNumber, px.email as email,
 			mc."name" as coverageName, pmc.affiliate_number as affiliateNumber,
-			to_char(cst.start_date,'DD/MM/YYYY') as startDate,
+			cst.start_date as startDate,
 			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
 			hp.id as professionalId,
 			CONCAT(p2.last_name, ' ', p2.other_last_names, ' ',p2.first_name, ' ', p2.middle_names) as professionalName,
@@ -2020,7 +2020,7 @@
             <column name="email" class="java.lang.String"/>
             <column name="coverageName" class="java.lang.String"/>
             <column name="affiliateNumber" class="java.lang.String"/>
-            <column name="startDate" class="java.lang.String"/>
+            <column name="startDate" class="java.time.LocalDateTime"/>
             <column name="clinicalSpecialtyId" class="java.lang.Integer"/>
             <column name="clinicalSpecialty" class="java.lang.String"/>
             <column name="professionalId" class="java.lang.Integer"/>

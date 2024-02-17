@@ -128,14 +128,6 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
-
-		this.printAmbulatoryService.getPatientClinicHistoryLastDownload(this.patientId).subscribe(response => {
-			if (response.user && response.downloadDate) {
-				this.showLastPrinted = true;
-				this.userLastDownload = response.user;
-				this.dateLastDownload = dateTimeDtotoLocalDate(response.downloadDate);
-			}
-		});
 	}
 
 	dateRangeChange(range): void {
@@ -144,6 +136,16 @@ export class PrintAmbulatoriaComponent implements OnInit {
 			end: momentFormat(range.end, DateFormat.API_DATE),
 		}
 		this.hideEncounterListSection();
+	}
+
+	private updateLastDownload(): void {
+		this.printAmbulatoryService.getPatientClinicHistoryLastDownload(this.patientId).subscribe(response => {
+			if (response.user && response.downloadDate) {
+				this.showLastPrinted = true;
+				this.userLastDownload = response.user;
+				this.dateLastDownload = dateTimeDtotoLocalDate(response.downloadDate);
+			}
+		});
 	}
 
 	private atLeastOneChecked(formGroup: FormGroup) {
@@ -241,12 +243,13 @@ export class PrintAmbulatoriaComponent implements OnInit {
 						default: return item[property];
 					}
 				};
-				this.sort.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
+				this.sort?.sort(({ id: 'startDate', start: 'desc' }) as MatSortable);
 				this.dataSource.sort = this.sort;
 				this.showEncounterListSection();
 				this.selection.clear();
 				this.toggleAllRows();
 				this.loadingTable = false;
+				this.updateLastDownload();
 			});
 	}
 
@@ -267,7 +270,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	}
 
 	download(document) {
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, [document.id]).subscribe();
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, [document.id]).subscribe(()=>this.updateLastDownload());
 	}
 
 	downloadSelected() {
@@ -288,7 +291,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		});
 
 		const selectedIds = selectedItems.map(item => item.id);
-		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe();
+		this.printAmbulatoryService.downloadClinicHistory(this.patientDni, selectedIds).subscribe(()=>this.updateLastDownload());
+
 	}
 
 }

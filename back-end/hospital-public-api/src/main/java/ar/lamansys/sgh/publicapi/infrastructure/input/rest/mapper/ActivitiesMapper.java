@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DiagnosesDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DocumentInfoDto;
@@ -16,6 +17,8 @@ import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleAttentionIn
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleDiagnosticDto;
 
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SnomedCIE10Dto;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 
 import org.springframework.stereotype.Component;
 
@@ -69,6 +72,7 @@ public class ActivitiesMapper {
 				.internmentInfo(mapToInternment(attentionInfoBo.getInternmentInfo()))
 				.responsibleDoctor(mapToProfessional(attentionInfoBo.getResponsibleDoctor()))
 				.singleDiagnosticDto(mapToSingleDiagnosticBo(attentionInfoBo.getSingleDiagnosticBo()))
+				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
 				.build();
 	}
 
@@ -83,7 +87,14 @@ public class ActivitiesMapper {
 				.scope(attentionInfoBo.getScope().name())
 				.internmentInfo(mapToInternment(attentionInfoBo.getInternmentInfo()))
 				.responsibleDoctor(mapToProfessional(attentionInfoBo.getResponsibleDoctor()))
+				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
 				.build();
+	}
+
+	private DateTimeDto mapToAttentionDateWithTimeDto(DateTimeBo attentionDateWithTime) {
+		return new DateTimeDto(
+				new DateDto(attentionDateWithTime.getDate().getYear(), attentionDateWithTime.getDate().getMonth(), attentionDateWithTime.getDate().getDay()),
+				new TimeDto(attentionDateWithTime.getTime().getHours(), attentionDateWithTime.getTime().getMinutes(), attentionDateWithTime.getTime().getSeconds()));
 	}
 
 	private SingleDiagnosticDto mapToSingleDiagnosticBo(SingleDiagnosticBo singleDiagnosticBo) {
@@ -233,6 +244,7 @@ public class ActivitiesMapper {
 						.internmentInfo(lastMainDiagnosis.getInternmentInfo())
 						.diagnoses(diagnosis)
 						.id(lastMainDiagnosis.getId())
+						.attentionDateWithTime(lastMainDiagnosis.getAttentionDateWithTime())
 						.build();
 
 				result.add(attention);

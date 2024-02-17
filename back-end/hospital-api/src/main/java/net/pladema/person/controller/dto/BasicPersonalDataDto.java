@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.*;
 
+import javax.annotation.Nullable;
+
 import java.time.LocalDate;
 
 @Getter
@@ -32,6 +34,9 @@ public class BasicPersonalDataDto implements IBasicPersonalData {
     private Short genderId;
 
     private String nameSelfDetermination;
+
+	@Nullable
+	private String cuil;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate birthDate;

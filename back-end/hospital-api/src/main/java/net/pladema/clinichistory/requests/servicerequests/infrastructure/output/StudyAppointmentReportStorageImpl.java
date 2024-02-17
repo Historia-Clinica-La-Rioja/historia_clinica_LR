@@ -12,28 +12,26 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentReportSnomedConcept;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.StudyAppointmentReportStorage;
 import net.pladema.clinichistory.requests.servicerequests.domain.InformerObservationBo;
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
+import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
+import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
+import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.DetailsOrderImageRepository;
-import net.pladema.medicalconsultation.appointment.repository.entity.DetailsOrderImage;
 import net.pladema.patient.controller.service.PatientExternalService;
-import net.pladema.person.controller.service.PersonExternalService;
-import net.pladema.user.controller.dto.UserPersonDto;
+import net.pladema.person.service.PersonService;
 import net.pladema.user.repository.UserPersonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,58 +43,57 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private final AppointmentRepository appointmentRepository;
 	private final AppointmentOrderImageRepository appointmentOrderImageRepository;
 	private final DocumentReportSnomedConceptRepository documentReportSnomedConceptRepository;
-	private final FeatureFlagsService featureFlagsService;
 	private final DetailsOrderImageRepository detailsOrderImageRepository;
 	private final SnomedService snomedService;
 	private final DocumentService documentService;
 	private final NoteService noteService;
 	private final UserPersonRepository userPersonRepository;
-	private final PersonExternalService personExternalService;
 	private final PatientExternalService patientExternalService;
 	private final DocumentFactory documentFactory;
-	private final DateTimeProvider dateTimeProvider;
 	private final SharedDocumentPort sharedDocumentPort;
+	private final DiagnosticReportInfoService diagnosticReportInfoService;
+	private final ListTranscribedDiagnosticReportInfoService transcribedDiagnosticReportInfoService;
+	private final PersonService personService;
+	private final MoveStudiesService moveStudiesService;
+	private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
 
 	@Override
 	public StudyAppointmentBo getStudyByAppointment(Integer appointmentId) {
 		log.debug("Get study by appointmentId {}", appointmentId);
 
-		StudyAppointmentBo result = appointmentRepository.getPatientInfoByAppointmentId(appointmentId);
+		StudyAppointmentBo result = appointmentRepository.getCompletionInformationAboutStudy(appointmentId);
 
-		result.setPatientFullName(result.getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
+		result.setPatientFullName(personService.getCompletePersonNameById(result.getPersonId()));
 
-		Optional<Long> reportDocumentId = appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId);
+		appointmentOrderImageRepository.getReportDocumentIdByAppointmentId(appointmentId)
+			.ifPresent(documentId -> {
+				var obs = new InformerObservationBo();
+				documentService.findById(documentId).ifPresent(d -> {
+					obs.setId(d.getId());
+					if (d.getEvolutionNoteId() != null)
+						obs.setEvolutionNote(noteService.getDescriptionById(d.getEvolutionNoteId()));
 
-		if (reportDocumentId.isPresent()) {
-			Long documentId = reportDocumentId.get();
-			var obs = new InformerObservationBo();
-			documentService.findById(documentId).ifPresent( d -> {
-				if (d.getEvolutionNoteId() != null)
-					obs.setEvolutionNote(noteService.getDescriptionById(d.getEvolutionNoteId()));
-				obs.setActionTime(d.getUpdatedOn());
-				obs.setCreatedBy(getFullNameByUserId(d.getCreatedBy()));
-				obs.setConfirmed(d.getStatusId().equals(DocumentStatus.FINAL));
-				obs.setId(d.getId());
-			});
+					userPersonRepository.getPersonIdByUserId(d.getCreatedBy())
+									.ifPresent(informerPersonId -> obs.setCreatedBy(personService.getCompletePersonNameById(informerPersonId)));
 
-			obs.setConclusions(documentService.getConclusionsFromDocument(documentId));
-			result.setInformerObservations(obs);
+					obs.setConfirmed(d.getStatusId().equals(DocumentStatus.FINAL));
+					obs.setActionTime(d.getUpdatedOn());
 
-			if(obs.isConfirmed()) {
-				result.setStatusId(EDiagnosticImageReportStatus.COMPLETED.getId());
-				result.setActionTime(obs.getActionTime());
-			}
-			else {
-				result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
-				Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(appointmentId);
-				doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
-			}
-		}
-		else {
-			result.setStatusId(EDiagnosticImageReportStatus.PENDING.getId());
-			Optional<DetailsOrderImage> doi = detailsOrderImageRepository.findById(appointmentId);
-			doi.ifPresent(detailsOrderImage -> result.setActionTime(detailsOrderImage.getCompletedOn()));
-		}
+					if (obs.isConfirmed())
+						result.setStatusId(EDiagnosticImageReportStatus.COMPLETED.getId());
+				});
+
+				obs.setConclusions(documentService.getConclusionsFromDocument(documentId));
+				result.setInformerObservations(obs);
+				});
+
+		moveStudiesService.getSizeImageByAppointmentId(appointmentId)
+				.ifPresent(result::setSizeImage);
+
+		appointmentOrderImageRepository.getIdImage(appointmentId).ifPresent(studyInstanceUID -> {
+			result.setIsAvailableInPACS(getPacWhereStudyIsHosted.run(studyInstanceUID, false).isAvailableInPACS());
+			result.setImageId(studyInstanceUID);
+		});
 
 		log.debug("Output -> {}", result);
 		return result;
@@ -170,11 +167,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		Assert.notNull(evolutionNote, "Las observaciones son obligatorias");
 	}
 
-	private void assertConclusionsIsNotEmptyAndNull(List<ConclusionBo> conclusions) {
-		Assert.notNull(conclusions, "Es obligatorio que se agregue al menos una conclusión");
-		Assert.isTrue(!conclusions.isEmpty(), "Es obligatorio que se agregue al menos una conclusión");
-	}
-
 	private void saveSnomedConceptReport(Long id, List<ConclusionBo> conclusions) {
 		if (conclusions != null)
 			conclusions.forEach(conclusion -> {
@@ -190,13 +182,18 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		obs.setEncounterId(appointmentId);
 		obs.setConfirmed(createFile);
 
-		Integer patientId = appointmentRepository.getPatientByAppointmentId(appointmentId);
-		obs.setPatientId(patientId);
-		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(patientId);
-		obs.setPatientInfo(new PatientInfoBo(bpd.getId(), bpd.getPerson().getGender().getId(), bpd.getPerson().getAge()));
+		Integer originInstitutionId =moveStudiesService.getInstitutionByAppointmetId(appointmentId);
+		if (originInstitutionId != null && originInstitutionId != obs.getInstitutionId())
+			obs.setInstitutionId(originInstitutionId);
 
-		LocalDateTime now = dateTimeProvider.nowDateTime();
-		obs.setPerformedDate(now);
+		obs.setDiagnosticReports(diagnosticReportInfoService.getByAppointmentId(appointmentId) != null ? List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)) : null);
+		obs.setTranscribedDiagnosticReport(transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
+
+		obs.setPatientId(appointmentRepository.getPatientByAppointmentId(appointmentId));
+		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(obs.getPatientId());
+		obs.setPatientInfo(new PatientInfoBo(bpd.getId(), bpd.getPerson().getGender().getId(), bpd.getPerson().getAge(),bpd.getIdentificationType(), bpd.getIdentificationNumber()));
+
+		obs.setPerformedDate(detailsOrderImageRepository.getCompletedDateByAppointmentId(appointmentId));
 
 		Long documentId = documentFactory.run(obs, createFile);
 
@@ -210,27 +207,6 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 	private void deletedOldSnomedConcepts(Long reportDocumentId) {
 		documentReportSnomedConceptRepository.deleteByReportDocumentId(reportDocumentId);
-	}
-
-	private String getFullNameByUserId(Integer userId) {
-		Optional<UserPersonDto> informer = userPersonRepository.getPersonIdByUserId(userId)
-				.map(personExternalService::getUserPersonInformation);
-
-		String fullName;
-
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && informer.get().getNameSelfDetermination() != null) {
-			fullName = informer.get().getNameSelfDetermination() + " " + informer.get().getLastName();
-		} else {
-			fullName = informer.get().getFirstName();
-			if (informer.get().getMiddleNames() != null)
-				fullName += " " + informer.get().getMiddleNames();
-
-			fullName += " " + informer.get().getLastName();
-		}
-		if (informer.get().getOthersLastNames() != null)
-			fullName += " " + informer.get().getOthersLastNames();
-
-		return fullName;
 	}
 
 }

@@ -26,6 +26,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -228,9 +229,16 @@ public class RestExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ DateParseException.class })
-	protected ApiErrorMessageDto handleDateTimeParseException(DateParseException ex, Locale locale) {
+	protected ApiErrorMessageDto handleDateTimeParseException(DateParseException ex) {
 		LOG.debug("DateTimeParseException -> originalDateValue {}", ex.originalDateValue, ex);
 		return new ApiErrorMessageDto("invalid-date", ex.originalDateValue);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RequestRejectedException.class })
+	protected ApiErrorMessageDto handleRequestRejectedException(RequestRejectedException ex) {
+		LOG.warn("RequestRejectedException {}", ex.getMessage());
+		return new ApiErrorMessageDto("request-rejected", ex.getMessage());
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

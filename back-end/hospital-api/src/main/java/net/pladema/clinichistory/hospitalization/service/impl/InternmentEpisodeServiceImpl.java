@@ -1,17 +1,46 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
+
+import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.establishment.service.domain.InstitutionBo;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.service.PersonService;
+
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
+import net.pladema.staff.service.HealthcareProfessionalService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
@@ -41,6 +70,9 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMed
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
+import org.xhtmlrenderer.util.XRRuntimeException;
+import static net.pladema.staff.repository.entity.EpisodeDocumentType.SURGICAL_CONSENT;
+
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
@@ -53,6 +85,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     private static final String LOGGING_OUTPUT = "Output -> {}";
     private static final short ACTIVE = 1;
     private static final String WRONG_ID_EPISODE = "wrong-id-episode";
+	private static final String SURGICAL = "Quirúrgico";
+	private static final String ADMISSION = "Ingreso a internación";
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
 
@@ -70,25 +104,53 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final PdfService pdfService;
+
+	private final PatientService patientService;
+
+	private final PersonService personService;
+
+	private final InstitutionService institutionService;
+
+	private final FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
+
+	private final HealthcareProfessionalService healthcareProfessionalService;
+
+	private final GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
 	public InternmentEpisodeServiceImpl(InternmentEpisodeRepository internmentEpisodeRepository,
 										DateTimeProvider dateTimeProvider,
 										EvolutionNoteDocumentRepository evolutionNoteDocumentRepository,
 										PatientDischargeRepository patientDischargeRepository,
-										DocumentService documentService,
 										MedicalCoveragePlanRepository medicalCoveragePlanRepository,
+										DocumentService documentService,
 										InternmentEpisodeStorage internmentEpisodeStorage,
-										FeatureFlagsService featureFlagsService) {
-        this.internmentEpisodeRepository = internmentEpisodeRepository;
-        this.dateTimeProvider = dateTimeProvider;
-        this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
-        this.patientDischargeRepository = patientDischargeRepository;
-        this.documentService = documentService;
+										FeatureFlagsService featureFlagsService,
+										PdfService pdfService,
+										PatientService patientService,
+										PersonService personService,
+										InstitutionService institutionService,
+										FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById,
+										HealthcareProfessionalService healthcareProfessionalService,
+										GetLicenseNumberByProfessional getLicenseNumberByProfessional) {
+		this.internmentEpisodeRepository = internmentEpisodeRepository;
+		this.dateTimeProvider = dateTimeProvider;
+		this.evolutionNoteDocumentRepository = evolutionNoteDocumentRepository;
+		this.patientDischargeRepository = patientDischargeRepository;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
+		this.documentService = documentService;
 		this.internmentEpisodeStorage = internmentEpisodeStorage;
 		this.featureFlagsService = featureFlagsService;
+		this.pdfService = pdfService;
+		this.patientService = patientService;
+		this.personService = personService;
+		this.institutionService = institutionService;
+		this.fetchEpisodeDocumentTypeById = fetchEpisodeDocumentTypeById;
+		this.healthcareProfessionalService = healthcareProfessionalService;
+		this.getLicenseNumberByProfessional = getLicenseNumberByProfessional;
 	}
 
-    @Override
+	@Override
     public void updateAnamnesisDocumentId(Integer internmentEpisodeId, Long anamnesisDocumentId) {
         LOG.debug("Input parameters -> internmentEpisodeId {}, anamnesisDocumentId {}", internmentEpisodeId, anamnesisDocumentId);
         internmentEpisodeRepository.updateAnamnesisDocumentId(internmentEpisodeId, anamnesisDocumentId, LocalDateTime.now());
@@ -422,4 +484,91 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		return result;
 	}
 
+	@Override
+	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}, procedures {}, observations {}, professionalId {}", institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
+		InternmentEpisode internmentEpisode = getInternmentEpisode(internmentEpisodeId, institutionId);
+		Optional<Patient> patient = patientService.getPatient(internmentEpisode.getPatientId());
+		if (patient.isEmpty())
+			throw new PatientNotFoundException();
+		var pa = patient.get();
+		Optional<Person> person = personService.findByPatientId(pa.getId());
+		if (person.isEmpty())
+			throw new PersonNotFoundException();
+		var pe = person.get();
+		Optional<InternmentSummaryBo> internmentSummaryBo = getIntermentSummary(internmentEpisodeId);
+		if (internmentSummaryBo.isEmpty())
+			throw new InternmentEpisodeNotFoundException();
+		var isbo = internmentSummaryBo.get();
+
+		if (consentId.equals((int) SURGICAL_CONSENT)) {
+			var professional = healthcareProfessionalService.findActiveProfessionalById(Integer.parseInt((professionalId)));
+			var licenses = getLicenseNumberByProfessional.run(professional.getId());
+			isbo.setDoctor(new ResponsibleDoctorBo(professional.getId(), professional.getFirstName(), professional.getLastName(), licenses
+					.stream()
+					.map(ProfessionalLicenseNumberBo::getCompleteTypeLicenseNumber)
+					.collect(Collectors.toList())));
+		}
+
+		InstitutionBo institutionBo = institutionService.get(institutionId);
+		EpisodeDocumentTypeBo episodeDocumentTypeBo = fetchEpisodeDocumentTypeById.run(consentId);
+		Map<String, Object> context = createContext(mapToBasicDataPersonDto(pe),
+				isbo.getDoctor(),
+				institutionBo.getName(),
+				LocalDateTime.from(internmentEpisode.getEntryDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3"))),
+				internmentEpisodeId,
+				episodeDocumentTypeBo.getRichTextBody(),
+				consentId,
+				procedures,
+				observations);
+		String template = "consent_document";
+
+		return StoredFileResponse.sendFile(
+				getGenerate(context, template),
+				String.format("%s_.pdf", "Documento de consentimiento"),
+				MediaType.APPLICATION_PDF
+		);
+	}
+
+	@Override
+	public void existsConsentDocumentInInternmentEpisode(Integer internmentEpisodeId, Integer consentId) throws MoreThanOneConsentDocumentException {
+		LOG.debug("Input parameters -> internmentEpisodeId {}, consentId {}", internmentEpisodeId, consentId);
+		if (internmentEpisodeRepository.existsConsentDocumentInInternmentEpisode(internmentEpisodeId, consentId))
+			throw new MoreThanOneConsentDocumentException();
+	}
+
+	private Map<String, Object> createContext(BasicDataPersonDto personDto, ResponsibleDoctorBo doctor, String institutionName, LocalDateTime entryDate, Integer internmentEpisodeId, String richBody, Integer consentId, List<String> procedures, String observations){
+		Map<String, Object> ctx = new HashMap<>();
+		ctx.put("personDto", personDto);
+		ctx.put("doctorDto", doctor);
+		ctx.put("institutionName", institutionName);
+		ctx.put("entryDate", entryDate);
+		ctx.put("internmentEpisodeId", internmentEpisodeId);
+		ctx.put("richBody", richBody);
+		ctx.put("subtitle", consentId.equals((int) SURGICAL_CONSENT) ? SURGICAL : ADMISSION);
+		ctx.put("procedures", procedures);
+		ctx.put("observations", observations);
+		return ctx;
+	}
+
+	private BasicDataPersonDto mapToBasicDataPersonDto(Person person) {
+		BasicDataPersonDto dto = new BasicDataPersonDto();
+		dto.setFirstName(person.getFirstName());
+		dto.setLastName(person.getLastName());
+		dto.setMiddleNames(person.getMiddleNames());
+		dto.setIdentificationNumber(person.getIdentificationNumber());
+		return dto;
+	}
+
+	private FileContentBo getGenerate(Map<String, Object> context, String template) throws GeneratePdfException {
+		try {
+			return pdfService.generate(template, context);
+		} catch(XRRuntimeException exc) {
+			LOG.error(exc.getMessage());
+			throw new GeneratePdfException(exc.getMessage());
+		} catch(Exception exc) {
+			LOG.error(exc.getMessage(), exc);
+			throw new GeneratePdfException(exc.getMessage());
+		}
+	}
 }

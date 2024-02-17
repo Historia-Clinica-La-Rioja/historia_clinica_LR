@@ -8,6 +8,17 @@
 		},
         "filter-button": {
             "FILTER": "Filtrar"
-        }
+
+		},
+        "selectable-card": {
+            "SELECT_ALL": "Seleccionar todos",
+            "NO_DATA": "No hay información para mostrar"
+        },
+		"observations": {
+			"OBSERVATIONS": "Observaciones",
+			"UPDATE_SUCCESS": "Las observaciones se han modificado correctamente",
+			"ADD_OBSERVATION": "+ Agregar observaciones",
+			"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones..."
+		}
     }
 }

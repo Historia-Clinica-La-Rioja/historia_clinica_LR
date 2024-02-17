@@ -43,6 +43,7 @@ public class StudyAppointmentReportController {
 	private final DocumentService documentService;
 
 	@GetMapping(value = "/study/by-appointment/{appointmentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'INFORMADOR')")
 	public ResponseEntity<StudyAppointmentDto> getStudyByAppointment(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "appointmentId") Integer appointmentId

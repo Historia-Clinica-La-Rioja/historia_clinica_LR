@@ -18,4 +18,5 @@ public class EpisodeDocumentDto {
 	private MultipartFile file;
 	private Integer episodeDocumentTypeId;
 	private Integer internmentEpisodeId;
+	private Integer consentId;
 }

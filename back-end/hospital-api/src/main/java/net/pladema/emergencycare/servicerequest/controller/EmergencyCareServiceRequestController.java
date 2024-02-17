@@ -72,13 +72,13 @@ public class EmergencyCareServiceRequestController {
 		Integer patientMedicalCoverageId = emergencyCareEpisodeService.getPatientMedicalCoverageIdByEpisode(episodeId);
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
 		List<Integer> result = new ArrayList<>();
-		srGroupBy.forEach((categoryId, studyListDto) ->	handleStudyList(institutionId, episodeId, doctorId, patientMedicalCoverageId, patientDto, result, categoryId, studyListDto));
+		srGroupBy.forEach((categoryId, studyListDto) ->	handleStudyList(institutionId, episodeId, doctorId, patientMedicalCoverageId, patientDto, result, categoryId, studyListDto, serviceRequestListDto.getObservations()));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private void handleStudyList(Integer institutionId, Integer episodeId, Integer doctorId, Integer medicalCoverageId, BasicPatientDto patientDto, List<Integer> result, String categoryId, List<PrescriptionItemDto> studyListDto) {
-		ExtendedServiceRequestBo serviceRequestBo = parseTo(doctorId, patientDto, categoryId, medicalCoverageId, studyListDto);
+	private void handleStudyList(Integer institutionId, Integer episodeId, Integer doctorId, Integer medicalCoverageId, BasicPatientDto patientDto, List<Integer> result, String categoryId, List<PrescriptionItemDto> studyListDto, String observations) {
+		ExtendedServiceRequestBo serviceRequestBo = parseTo(doctorId, patientDto, categoryId, medicalCoverageId, studyListDto, observations);
 		serviceRequestBo.setInstitutionId(institutionId);
 		Integer srId = emergencyCareServiceRequestService.execute(serviceRequestBo, episodeId);
 		hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId));
@@ -93,7 +93,7 @@ public class EmergencyCareServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public ExtendedServiceRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies){
+	public ExtendedServiceRequestBo parseTo(Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations){
 		log.debug("parseTo -> doctorId {}, patientDto {}, categoryId {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, categoryId, medicalCoverageId, studies);
 		ExtendedServiceRequestBo result = new ExtendedServiceRequestBo();
 		result.setCategoryId(categoryId);
@@ -101,6 +101,7 @@ public class EmergencyCareServiceRequestController {
 		result.setDoctorId(doctorId);
 		result.setDiagnosticReports(studyMapper.parseToList(studies));
 		result.setMedicalCoverageId(medicalCoverageId);
+		result.setObservations(observations);
 		log.debug("Output -> {}", result);
 		return result;
 	}

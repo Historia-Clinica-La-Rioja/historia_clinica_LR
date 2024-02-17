@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-	AppointmentOrderImageExistCheckDto,
 	CompleteRequestDto,
 	DiagnosticReportInfoDto,
 	DiagnosticReportInfoWithFilesDto,
@@ -8,8 +7,8 @@ import {
 	MedicationInfoDto,
 	PrescriptionDto,
 	ProfessionalLicenseNumberValidationResponseDto,
-	SnomedDto,
-	TranscribedDiagnosticReportInfoDto
+	TranscribedDiagnosticReportInfoDto,
+	TranscribedPrescriptionDto
 } from '@api-rest/api-model';
 import { DocumentService } from '@api-rest/services/document.service';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
@@ -44,8 +43,8 @@ export class PrescripcionesService {
 		}
 	}
 
-	createTranscribedOrder(patientId: number, studySCTID: SnomedDto, problemSCTID: SnomedDto, professional: string, institution: string): Observable<number>{
-		return this.serviceRequestService.createTranscribedOrder(patientId, studySCTID, problemSCTID, professional, institution);
+	createTranscribedOrder(patientId: number, transcribedInfo: TranscribedPrescriptionDto): Observable<number>{
+		return this.serviceRequestService.createTranscribedOrder(patientId, transcribedInfo);
 	}
 
 	deleteTranscribedOrder(patientId: number, serviceRequestId: number): Observable<void> {
@@ -64,12 +63,13 @@ export class PrescripcionesService {
 		return this.serviceRequestService.saveAttachedFiles(patientId, serviceRequestId, selectedFiles);
 	}
 
-	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string, healthCondition: string, study?: string, categoryId?: string): Observable<any> {
+	getPrescription(prescriptionType: PrescriptionTypes, patientId: number, statusId: string, medicationStatement: string,
+		 healthCondition: string, study?: string, categoryId?: string, categoryExcluded?: string): Observable<any> {
 		switch (prescriptionType) {
 			case PrescriptionTypes.MEDICATION:
 				return this.medicationRequestService.medicationRequestList(patientId, statusId, medicationStatement, healthCondition);
 			case PrescriptionTypes.STUDY:
-				return this.serviceRequestService.getList(patientId, statusId, study, healthCondition, categoryId);
+				return this.serviceRequestService.getList(patientId, statusId, study, healthCondition, categoryId, categoryExcluded);
 		}
 	}
 
@@ -77,9 +77,6 @@ export class PrescripcionesService {
 			return this.medicationRequestService.medicationRequestListByRoles(patientId, statusId, medicationStatement, healthCondition);
 	}
 
-	getPrescriptionStatus(patientId: number, diagnosticReportId: number): Observable<AppointmentOrderImageExistCheckDto>{
-		return this.serviceRequestService.getStudyStatus(patientId, diagnosticReportId);
-	}
 
 	changeMedicationStatus(statusChange: string, patientId: number, medicationsIds: number[], dayQuantity?: number, observations?: string): Observable<void> {
 		switch (statusChange) {
@@ -107,6 +104,16 @@ export class PrescripcionesService {
 				});
 				break;
 		}
+	}
+
+	downloadTranscribedOrderPdf(patientId: number, prescriptionPdfInfo: number[], appointmentId: number): void {
+		prescriptionPdfInfo.forEach(orderId => {
+			this.serviceRequestService.downloadTranscribedOrderPdf(patientId, orderId, appointmentId);
+		});
+	}
+
+	getTranscribedAttachedFileUrl(patientId: number, documentId: number): string{
+		return this.documentService.getTranscribedFileUrl(documentId, patientId)
 	}
 
 	deleteStudy(patientId: number, serviceRequestId: number): Observable<string> {

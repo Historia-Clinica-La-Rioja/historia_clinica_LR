@@ -13,7 +13,7 @@ export const toInstitutionWCParams = (institutionId: number) =>
 export const slotedInfoToWCParamsMapper = (element: SlotedInfo, params): WCParams => element ? {
 	title: element.title,
 	componentName: element.componentName,
-	url: element.url,
+	url: element.fullUrl,
 	params,
 } : undefined;
 

@@ -2,25 +2,33 @@ import { Injectable } from '@angular/core';
 import {
 	AppointmentDailyAmountDto,
 	AppointmentDto,
-	AppointmentListDto, AppointmentShortSummaryDto,
+	AppointmentListDto,
+	AppointmentOrderDetailImageDto,
+	AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
+	BookedAppointmentDto,
 	CreateAppointmentDto,
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
 	ExternalPatientCoverageDto,
 	HierarchicalUnitDto,
 	InstitutionBasicInfoDto,
+	PatientAppointmentHistoryDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
-	UpdateAppointmentDto
+	UpdateAppointmentDto,
 } from '@api-rest/api-model';
 import { Observable, of } from 'rxjs';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { ContextService } from '@core/services/context.service';
-import { DownloadService } from "@core/services/download.service";
-import { DateFormat, momentFormat } from "@core/utils/moment.utils";
+import { DownloadService } from '@core/services/download.service';
+import {
+	DateFormat,
+	momentFormat,
+} from '@core/utils/moment.utils';
+
 import { environment } from '@environments/environment';
 import * as moment from 'moment';
 
@@ -274,16 +282,34 @@ export class AppointmentsService {
 		return this.http.get<AssignedAppointmentDto[]>(url);
 	}
 
+	getBookingAppointmentsList(identificationNumber: string): Observable<BookedAppointmentDto[]> {
+		const url = `${this.BASE_URL}/${identificationNumber}/get-booking-appointments`;
+		return this.http.get<BookedAppointmentDto[]>(url);
+	}
+
+	getAppointmentHistoric(pageNumber: number, patientId: number): Observable<PatientAppointmentHistoryDto[]> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/appointment-history/patient/${patientId}/by-professional-diaries`;
+		let queryParam: HttpParams = new HttpParams();
+		queryParam = queryParam.append('page', pageNumber);
+		return this.http.get<PatientAppointmentHistoryDto[]>(url, { params: queryParam});
+	}
+
 	getCurrentAppointmentMedicalCoverage(patientId: number): Observable<ExternalPatientCoverageDto> {
 		const url = `${this.BASE_URL}/patient/${patientId}/get-medical-coverage`;
 		return this.http.get<ExternalPatientCoverageDto>(url);
 	}
 
-	verifyExistingAppointments(patientId: number, date: string, hour: string): Observable<AppointmentShortSummaryDto> {
-		const url = `${this.BASE_URL}/patient/${patientId}/verify-existing-appointments`;
+	verifyExistingAppointments(patientId: number, date: string, hour: string, institutionId?: number,): Observable<AppointmentShortSummaryDto> {
+		const url = this.getVerifyExistingAppointmentUrl(patientId, institutionId);
 		let queryParam: HttpParams = new HttpParams();
 		queryParam = queryParam.append('date', date).append('hour', hour);
-		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });
+		return this.http.get<AppointmentShortSummaryDto>(url, { params: queryParam });		
+	}
+
+	private getVerifyExistingAppointmentUrl(patientId: number, institutionId?: number): string {
+		return institutionId ?
+			`${environment.apiBase}/institutions/${institutionId}/medicalConsultations/appointments/patient/${patientId}/verify-existing-appointments`
+			: `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/patient/${patientId}/verify-existing-appointments`;
 	}
 
 	verifyExistingEquipmentAppointments(patientId: number, date: string): Observable<AppointmentShortSummaryDto> {
@@ -306,5 +332,15 @@ export class AppointmentsService {
 	hasCurrentAppointment(patientId: number): Observable<number> {
 		const url = `${this.BASE_URL}/patient/${patientId}/has-current-appointment`;
 		return this.http.get<number>(url);
+	}
+
+	setAppointmentLabel(labelId: number, appointmentId: number) {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/label`;
+		return this.http.post<boolean>(url, labelId);
+	}
+
+	getAppoinmentOrderDetail(appointmentId: number, isOrderTranscribed: boolean): Observable<AppointmentOrderDetailImageDto>{
+		const url = `${this.BASE_URL}/${appointmentId}/detailOrderImage/transcribed-order/${isOrderTranscribed}`;
+		return this.http.get<AppointmentOrderDetailImageDto>(url);
 	}
 }

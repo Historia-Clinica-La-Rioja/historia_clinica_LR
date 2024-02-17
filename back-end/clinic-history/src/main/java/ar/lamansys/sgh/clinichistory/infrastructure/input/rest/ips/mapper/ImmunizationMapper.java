@@ -22,4 +22,8 @@ public interface ImmunizationMapper {
     @IterableMapping(qualifiedByName = "toImmunizationBo")
     List<ImmunizationBo> toListImmunizationBo(List<ImmunizationDto> immunizationDto);
 
+	@Named("toListImmunizationDto")
+	@IterableMapping(qualifiedByName = "toImmunizationDto")
+	List<ImmunizationDto> toListImmunizationDto(List<ImmunizationBo> immunizationBo);
+
 }

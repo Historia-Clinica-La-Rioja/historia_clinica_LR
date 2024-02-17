@@ -35,16 +35,15 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 			consultationDate: [null],
 			referenceState: [null],
 		});
-
 		this.setFilterOptions();
 
 		this.historicalProblemsFilter$ = this.historicalProblemsFacadeService.getHistoricalProblemsFilter().subscribe(
 			data => {
-				this.form.controls.specialty.setValue(data.specialty);
-				this.form.controls.professional.setValue(data.professional);
-				this.form.controls.problem.setValue(data.problem);
-				this.form.controls.consultationDate.setValue(data.consultationDate ? momentParseDate(data.consultationDate) : null);
-				this.form.controls.referenceState.setValue(data.referenceStateId);
+				this.form.controls.specialty.setValue(data?.specialty);
+				this.form.controls.professional.setValue(data?.professional);
+				this.form.controls.problem.setValue(data?.problem);
+				this.form.controls.consultationDate.setValue(data?.consultationDate ? momentParseDate(data.consultationDate) : null);
+				this.form.controls.referenceState.setValue(data?.referenceStateId);
 			});
 	}
 
@@ -72,11 +71,12 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 	}
 
 	private setFilterOptions(): void{
-		const filterOptions = this.historicalProblemsFacadeService.getFilterOptions();
-		this.specialties = filterOptions.specialties;
-		this.professionals = filterOptions.professionals;
-		this.problems = filterOptions.problems;
-		this.referenceStates = filterOptions.referenceStates;
+		this.historicalProblemsFacadeService.getFilterOptions().subscribe(filterOptions => {
+			this.specialties = filterOptions.specialties;
+			this.professionals = filterOptions.professionals;
+			this.problems = filterOptions.problems;
+			this.referenceStates = filterOptions.referenceStates;
+		});
 	}
 
 }
@@ -85,6 +85,6 @@ export class HistoricalProblemsFilter {
 	specialty: number;
 	professional: number;
 	problem: string;
-	consultationDate: string;
+	consultationDate?: string;
 	referenceStateId: REFERENCE_STATES;
 }

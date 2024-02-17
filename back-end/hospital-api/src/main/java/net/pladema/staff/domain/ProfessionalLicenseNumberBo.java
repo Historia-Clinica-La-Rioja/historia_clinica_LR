@@ -33,4 +33,8 @@ public class ProfessionalLicenseNumberBo {
 				&& Objects.equals(this.professionalProfessionId,bo.getProfessionalProfessionId())
 				&& Objects.equals(this.healthcareProfessionalSpecialtyId, bo.getHealthcareProfessionalSpecialtyId());
 	}
+
+	public String getCompleteTypeLicenseNumber() {
+		return String.join("-", type.getAcronym(), licenseNumber);
+	}
 }

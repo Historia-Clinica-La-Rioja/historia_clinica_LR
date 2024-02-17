@@ -41,10 +41,10 @@ public class QueryFactory {
 										  Integer hierarchicalUnitTypeId, Integer hierarchicalUnitId,
 										  boolean includeHierarchicalUnitDescendants) {
 
-		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0,0);
-		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23,59,59, LocalTime.MAX.getNano());
+		LocalDateTime startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0,0);
+		LocalDateTime endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23,59,59).plusHours(3);
 
-        Query outpatientQuery = entityManager.createNamedQuery("Reports.ConsultationDetail");
+		Query outpatientQuery = entityManager.createNamedQuery("Reports.ConsultationDetail");
         outpatientQuery.setParameter("institutionId", institutionId);
         outpatientQuery.setParameter("startDate", startDate);
         outpatientQuery.setParameter("endDate", endDate);

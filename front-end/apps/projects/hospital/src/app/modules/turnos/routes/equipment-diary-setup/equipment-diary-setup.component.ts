@@ -17,7 +17,7 @@ import { AgendaHorarioService, EDiaryType } from '@turnos/services/agenda-horari
 import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
 import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
-import { Tabs } from '@turnos/routes/home/home.component';
+import { TabsLabel } from '@turnos/constants/tabs';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
@@ -59,7 +59,6 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 	editMode = false;
 	editingDiaryId: number;
-	editingDiary: CompleteEquipmentDiaryDto;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -99,7 +98,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 
 		this.sectorService.getTypes().subscribe(types => {
 			const diagnosticImagingId = types.find(type => type.description === DIAGNOSTIC_IMAGING).id;
-			this.sectors$ = this.sectorService.getDiagnosticImagingType(diagnosticImagingId);
+			this.sectors$ = this.sectorService.getAllSectorByType(diagnosticImagingId);
 		});
 
 		this.route.data.subscribe(data => {
@@ -205,9 +204,18 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		if (agendaId) {
 			this.snackBarService.showSuccess('turnos.agenda-setup.messages.SUCCESS');
 			const url = `${this.routePrefix}${ROUTE_APPOINTMENT}`;
-			let selectedEquipment = window.history.state.selectedEquipment;
+
+			let selectedEquipment = window.history.state.selectedEquipment || {id: this.form.get('equipmentId').value};
 			let selectedDiary = window.history.state.selectedDiary;
-			this.router.navigate([url], { state: { tab: Tabs.DIAGNOSTICO_POR_IMAGEN, selectedEquipment, selectedDiary} });
+
+			if (!window.history.state.selectedDiary) {
+				this.equipmentDiaryService.getBy(agendaId).subscribe(agenda => {
+					selectedDiary = agenda;
+					this.router.navigate([url], { state: { tab: TabsLabel.IMAGE_NETWORK, selectedEquipment, selectedDiary} });
+				});
+			} else {
+				this.router.navigate([url], { state: { tab: TabsLabel.IMAGE_NETWORK, selectedEquipment, selectedDiary} });
+			}
 		}
 	}
 
@@ -233,9 +241,9 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.form.controls.sectorId.setValue(diary.sectorId);
 		this.setEquipmentsBySector();
 		this.form.controls.equipmentId.setValue(diary.equipmentId);
-		this.loadCalendar();
 		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
 		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
+		this.loadCalendar();
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
 
 		this.disableNotEditableControls();

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,7 +52,7 @@ public class BedController {
 	}
 	
 	@GetMapping("/{bedId}/info")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<BedInfoDto> getBedInfo(@PathVariable(name = "institutionId") Integer institutionId, 
 			@PathVariable(name = "bedId") Integer bedId) {
 		Optional<BedInfoVo> bed = bedService.getBedInfo(bedId);
@@ -60,7 +62,7 @@ public class BedController {
 	}
 
 	@GetMapping("/summary-list")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ADMINISTRADOR_DE_CAMAS, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<BedSummaryDto>> getNewBedSummaryDto(@PathVariable(name = "institutionId") Integer institutionId,
 																   @RequestParam(name = "sectorsType") Short[] sectorsType){
 		LOG.debug("Input parameter -> institutionId {}, sectorsType {}", institutionId, sectorsType);
@@ -78,5 +80,15 @@ public class BedController {
 		List<Bed> beds = bedService.getFreeBeds(institutionId, clinicalSpecialtyId);
 		LOG.debug("Get free Beds by ClinicalSpecialty response=> {}", beds);
 		return ResponseEntity.ok(bedMapper.toListBedDto(beds));
+	}
+
+	@PutMapping("/{bedId}/update-bed-nurse")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_DE_CAMAS')")
+	public void updateBedNurse(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "bedId") Integer bedId,
+			@RequestBody(required = false) Integer userId) {
+		LOG.debug("Input parameter -> institutionId {}, userId {}, bedId {}", institutionId, userId, bedId);
+		bedService.updateBedNurse(userId, bedId);
 	}
 }

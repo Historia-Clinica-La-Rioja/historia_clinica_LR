@@ -21,7 +21,7 @@ public class SavePacWhereStudyIsHosted {
 	public String run(StudyPacBo studyPacBo) {
 		log.debug("Save PAC Server {} where the study {} is hosted", studyPacBo.getPacServerId(), studyPacBo.getStudyInstanceUID());
 		String study = studyStorage.saveStudyPacAssociation(studyPacBo)
-				.orElseThrow(() -> new StudyException(StudyExceptionEnum.PAC_SERVER_NOT_FOUND, StudyExceptionEnum.PAC_SERVER_NOT_FOUND.getMessage()));
+				.orElseThrow(() -> new StudyException(StudyExceptionEnum.PAC_SERVER_NOT_FOUND, "app.imagenetwork.error.pacs-not-found"));
 		log.debug("Output -> study {} and pac-host registered", study);
 		return study;
 	}

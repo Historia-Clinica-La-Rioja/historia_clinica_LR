@@ -3,6 +3,8 @@ package net.pladema.clinichistory.requests.servicerequests.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
+import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 
 import java.time.LocalDateTime;
 
@@ -12,41 +14,25 @@ import java.time.LocalDateTime;
 public class StudyAppointmentBo {
 
 	private Integer patientId;
-	private String patientFirstName;
-	private String patientMiddleNames;
-	private String patientLastName;
-	private String patientOtherNames;
-	private String patientNameSelfDetermiantion;
+	private Integer personId;
 	private String patientFullName;
 	private LocalDateTime actionTime;
 	private Short statusId;
 	private InformerObservationBo informerObservations;
+	private InstitutionBasicInfoBo completionInstitution;
+	private String technicianObservations;
+	private Integer sizeImage;
+	private Boolean isAvailableInPACS;
+	private String imageId;
 
-	public StudyAppointmentBo(Integer patientId, String patientFirstName, String patientMiddleNames, String patientLastName, String patientOtherNames, String patientNameSelfDetermiantion) {
+	public StudyAppointmentBo(Integer patientId, Integer personId, LocalDateTime completedOn, String technicianObservations,
+							  Integer completionInstitutionId, String completionInstitutionName) {
 		this.patientId = patientId;
-		this.patientFirstName = patientFirstName;
-		this.patientMiddleNames = patientMiddleNames;
-		this.patientLastName = patientLastName;
-		this.patientOtherNames = patientOtherNames;
-		this.patientNameSelfDetermiantion = patientNameSelfDetermiantion;
-	}
-
-	public String getFullName(boolean ffIsOn) {
-
-		String fullName;
-
-		if (ffIsOn && this.patientNameSelfDetermiantion != null) {
-			fullName = this.patientNameSelfDetermiantion + " " + this.patientLastName;
-		} else {
-			fullName = this.patientFirstName;
-			if (this.patientMiddleNames != null) {
-				fullName += " " + this.patientMiddleNames;
-			}
-			fullName += " " + this.patientLastName;
-		}
-		if (this.patientOtherNames != null) {
-			fullName += " " + this.patientOtherNames;
-		}
-		return fullName;
+		this.personId = personId;
+		this.actionTime = completedOn;
+		this.statusId = EDiagnosticImageReportStatus.PENDING.getId();
+		this.technicianObservations = technicianObservations;
+		this.completionInstitution = new InstitutionBasicInfoBo(completionInstitutionId, completionInstitutionName);
+		this.isAvailableInPACS = false;
 	}
 }

@@ -1,78 +1,48 @@
-<div class="reference-notification" fxLayout="column" fxLayoutGap="10px">
+<div fxLayout="row">
+    <div class="reference-notification" fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row">
+            <mat-icon online class="icon" color="primary">error_outline</mat-icon>
 
-    <div fxLayout="row">
-        <mat-icon online class="icon" color="primary">error_outline</mat-icon>
+            <div class="title">
+                <span [translate]="'ambulatoria.paciente.reference-notification.title.AT_LEAST_ONE'"></span>
+                <strong [translate]="'ambulatoria.paciente.reference-notification.title.REFERENCE_APPLICATION'"></strong>
+                <span [translate]="'ambulatoria.paciente.reference-notification.title.CARE_LINE_RELATED'"></span>
+            </div>
 
-        <div class="title">
-            <span [translate]="'ambulatoria.paciente.reference-notification.title.AT_LEAST_ONE'"></span>
-            <strong [translate]="'ambulatoria.paciente.reference-notification.title.REFERENCE_APPLICATION'"></strong>
-            <span [translate]="'ambulatoria.paciente.reference-notification.title.CARE_LINE_RELATED'"></span>
         </div>
 
+        <mat-dialog-content>
+            <div fxLayout="column" *ngFor="let reference of data" fxLayoutGap="10px">
+
+                <mat-divider></mat-divider>
+
+                <app-reference-complete-data [reference]="reference"></app-reference-complete-data>
+
+                <div align="end" fxFlex="50px">
+                    <button mat-raised-button color="primary" (click)="goToCounterreference(reference)">
+                        <span [translate]="'ambulatoria.paciente.reference-notification.COUNTERREFERENCE'"></span>
+                    </button>
+                </div>
+
+            </div>
+
+        </mat-dialog-content>
+
+        <mat-divider></mat-divider>
+
+        <span class="grayText" [translate]="'ambulatoria.paciente.reference-notification.DESCRIPTION'"></span>
+
+        <mat-dialog-actions align="end">
+
+            <button mat-stroked-button color="primary" (click)="goToNewConsultation()">
+                <span [translate]="'ambulatoria.paciente.reference-notification.NEW_CONSULTATION'"></span>
+            </button>
+
+        </mat-dialog-actions>
     </div>
 
-    <mat-dialog-content>
-        <div fxLayout="column" *ngFor="let reference of data" fxLayoutGap="10px">
-
-            <mat-divider></mat-divider>
-
-			<app-colored-label
-				[description]="'ambulatoria.paciente.reference-notification.REFERENCE_REQUEST' | translate | uppercase"
-				[color]="Color.RED">
-			</app-colored-label>
-
-            <div class="primary" *ngFor="let problem of reference.problems" fxLayout="row" fxLayoutGap="10px">
-                <mat-icon color="primary">assignment</mat-icon>
-                <span> {{problem.snomed.pt}} </span>
-            </div>
-
-            <div class="reference-description" fxLayout="row" fxLayoutGap="10px" fxFlex="30px">
-                <span>{{reference.careLine.description}}</span>
-                <span>{{reference.clinicalSpecialty.name}}</span>
-            </div>
-
-            <span *ngIf="reference.note.description">“{{reference.note.description}}”</span>
-
-            <div class="primary" *ngFor="let file of reference.files" fxLayout="row">
-                <mat-icon>attachment_icon</mat-icon>
-                <span class="span-clickable" (click)="downloadReferenceFile(file)">
-                    {{file.fileName}}
-                </span>
-            </div>
-
-            <div class="grayText" fxLayout="row" fxLayoutAlign="space-between center" fxFlex="50px">
-				<span>
-					{{getFullName(reference.professional.firstName,
-						reference.professional.nameSelfDetermination)}}
-						{{reference.professional.lastName}}
-				</span>
-                <span>{{reference.referenceDate.day}}/{{reference.referenceDate.month}}/{{reference.referenceDate.year}}</span>
-            </div>
-
-            <div align="end" fxFlex="50px">
-                <button mat-raised-button color="primary" (click)="goToCounterreference(reference)">
-                    <span [translate]="'ambulatoria.paciente.reference-notification.COUNTERREFERENCE'"></span>
-                </button>
-            </div>
-
-        </div>
-
-    </mat-dialog-content>
-
-    <mat-divider></mat-divider>
-
-    <span class="grayText" [translate]="'ambulatoria.paciente.reference-notification.DESCRIPTION'"></span>
-
-    <mat-dialog-actions align="end">
-
-        <button mat-stroked-button color="primary" (click)="goToNewConsultation()">
-            <span [translate]="'ambulatoria.paciente.reference-notification.NEW_CONSULTATION'"></span>
-        </button>
-
-        <button class="close" type="button" mat-dialog-close mat-icon-button matSuffix (click)="goBack()">
-            <mat-icon>close</mat-icon>
-        </button>
-
-    </mat-dialog-actions>
+    <button type="button" mat-dialog-close mat-icon-button matSuffix (click)="goBack()">
+        <mat-icon>close</mat-icon>
+    </button>
 
 </div>

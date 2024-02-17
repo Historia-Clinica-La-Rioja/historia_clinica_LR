@@ -6,6 +6,16 @@ import java.util.Collections;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.service.PersonService;
+
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +44,8 @@ import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpi
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.clinichistory.hospitalization.service.maindiagnoses.domain.MainDiagnosisBo;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
@@ -69,15 +81,47 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+	@Mock
+	private PdfService pdfService;
+
+	@Mock
+	private PatientService patientService;
+
+	@Mock
+	private PersonService personService;
+
+	@Mock
+	private InstitutionService institutionService;
+
+	@Mock
+	private FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
+
+	@Mock
+	private HealthcareProfessionalService healthcareProfessionalService;
+
+	@Mock
+	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
     @BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
-                internmentEpisodeRepository,
-                dateTimeProvider, evolutionNoteDocumentRepository,
-                patientDischargeRepository,
-                documentService,
+				internmentEpisodeRepository,
+				dateTimeProvider,
+				evolutionNoteDocumentRepository,
+				patientDischargeRepository,
 				medicalCoveragePlanRepository,
-                internmentEpisodeStorage, featureFlagsService);
+				documentService,
+				internmentEpisodeStorage,
+				featureFlagsService,
+				pdfService,
+				patientService,
+				personService,
+				institutionService,
+				fetchEpisodeDocumentTypeById,
+				healthcareProfessionalService,
+				getLicenseNumberByProfessional);
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

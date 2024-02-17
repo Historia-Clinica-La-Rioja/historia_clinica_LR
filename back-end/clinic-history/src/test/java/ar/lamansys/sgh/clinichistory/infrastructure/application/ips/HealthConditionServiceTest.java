@@ -6,10 +6,13 @@ import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.GetLastHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.HealthConditionRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.PersonalHistoryRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.GetLastHealthConditionRepositotyImpl;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.HealthCondition;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.ConditionClinicalStatusRepository;
@@ -70,6 +73,15 @@ class HealthConditionServiceTest extends UnitRepository {
 	@MockBean
 	private DocumentRepository documentRepository;
 
+	@MockBean
+	private DocumentFileRepository documentFileRepository;	
+	
+	@MockBean
+	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
+
+    @MockBean
+    private PersonalHistoryRepository personalHistoryRepository;
+
     @BeforeEach
     void setUp(){
 
@@ -85,7 +97,8 @@ class HealthConditionServiceTest extends UnitRepository {
                 documentService,
                 noteService,
                 dateTimeProvider,
-                getLastHealthConditionRepository
+                getLastHealthConditionRepository,
+                personalHistoryRepository
         );
     }
 

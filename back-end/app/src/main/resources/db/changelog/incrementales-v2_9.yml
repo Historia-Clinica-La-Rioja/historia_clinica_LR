@@ -1,0 +1,208 @@
+databaseChangeLog:
+    - logicalFilePath: incrementales-v2_9
+
+    - changeSet:
+        id: createTable-institutional_group
+        comment: Create table institutional_group
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institutional_group
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_group
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: createTable-institutional_group_institution
+        comment: Create table institutional_group_institution
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institutional_group_institution
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_group_institution
+                    name: id
+                    type: int
+                - column:
+                    name: institutional_group_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: institutional_group_id
+              baseTableName: institutional_group_institution
+              constraintName: FK_institutional_group_institution_institutional_group_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institutional_group
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: institutional_group_institution
+              constraintName: FK_institutional_group_institution_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+
+    - changeSet:
+        id: add-signature_status_id-column-document_file
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: document_file
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: signature_status_id
+                    type: smallint
+                    defaultValue: 1
+
+    - changeSet:
+        id: add-signature_status_id-column-document_file_history
+        author: mvenere
+        changes:
+          - addColumn:
+              tableName: document_file_history
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: signature_status_id
+                    type: smallint
+                    defaultValue: 1      
+
+    - changeSet:
+        id: add-digital_signature_hash-column-document_file
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: document_file
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: digital_signature_hash
+                    type: varchar(44)
+
+    - changeSet:
+        id: addColumn-deleted-document_template
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: document_template
+              columns:
+                - column:
+                    name: deleted
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.false}
+
+    - changeSet:
+        id: dropUniqueConstraint-document_template
+        author: mromero
+        changes:
+          - dropUniqueConstraint:
+                tableName: document_template
+                constraintName: UQ_document_template_user_id_type_id_name
+                uniqueColumns: user_id, type_id, name

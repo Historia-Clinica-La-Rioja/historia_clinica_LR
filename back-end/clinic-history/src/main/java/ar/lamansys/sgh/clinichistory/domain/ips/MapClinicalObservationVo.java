@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EObservationLab;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import lombok.Getter;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.ClinicalObservationVo;
 import org.slf4j.Logger;

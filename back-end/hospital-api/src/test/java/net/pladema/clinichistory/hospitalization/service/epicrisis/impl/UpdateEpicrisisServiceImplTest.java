@@ -11,6 +11,10 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +37,8 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.UpdateEpicris
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentDocumentModificationValidatorImpl;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentDocumentException;
+
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 class UpdateEpicrisisServiceImplTest extends UnitRepository {
@@ -62,6 +68,9 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 	private EpicrisisService epicrisisService;
 
 	private EpicrisisValidator epicrisisValidator;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@BeforeEach
 	public void setUp() {
@@ -147,6 +156,16 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		assertEquals(actualMessage, expectedMessage);
 	}
 
+	@Test
+	void updateDocumentWithInvalidSignatureStatus() {
+		when(epicrisisService.getDocument(OLD_DOCUMENT_ID)).thenReturn(validUpdateEpicrisis(INSTITUTION_ID, INTERNMET_EPISODE_ID, OLD_DOCUMENT_ID));
+		when(sharedDocumentPort.getDocument(OLD_DOCUMENT_ID)).thenReturn(signedDocumentReduceInfoDto(2, DOCUMENT_TYPE_ID));
+		Exception exception = Assertions.assertThrows(InternmentDocumentException.class, () -> updateEpicrisisService.execute(INTERNMET_EPISODE_ID, OLD_DOCUMENT_ID, validUpdateEpicrisis(INSTITUTION_ID, INTERNMET_EPISODE_ID, null)));
+		String expectedMessage = "No es posible llevar a cabo la acción dado que el documento fue firmado digitalmente";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage, expectedMessage);
+	}
+
 	private EpicrisisBo basicEpicrisisInfo(Integer institutionId, Integer encounterId, Long id) {
 		var epicrisisBo = new EpicrisisBo();
 		epicrisisBo.setId(id);
@@ -182,6 +201,7 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		result.setTypeId(typeId);
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
+		result.setSignatureStatus(ESignatureStatus.PENDING);
 		return result;
 	}
 
@@ -191,6 +211,17 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		result.setTypeId(typeId);
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now().minusDays(1).minusHours(1));
+		result.setSignatureStatus(ESignatureStatus.PENDING);
+		return result;
+	}
+
+	private DocumentReduceInfoDto signedDocumentReduceInfoDto(Integer userId, Short typeId) {
+		DocumentReduceInfoDto result = new DocumentReduceInfoDto();
+		result.setSourceId(INTERNMET_EPISODE_ID);
+		result.setTypeId(typeId);
+		result.setCreatedBy(userId);
+		result.setCreatedOn(LocalDateTime.now());
+		result.setSignatureStatus(ESignatureStatus.SIGNED);
 		return result;
 	}
 

@@ -21,6 +21,13 @@ export const dateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 	return dateTimeMapped;
 };
 
+export const convertDateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
+	const { day, month, year } = dateTimeDto.date;
+	const { hours, minutes = 0 } = dateTimeDto.time;
+	return new Date(Date.UTC(year, month - 1, day, hours, minutes));
+}
+
+
 export const dateTimeDtotoLocalDate = (dateTimeDto: DateTimeDto): Date => {
 	return new Date(dateTimeDtoToStringDate(dateTimeDto));
 }
@@ -78,6 +85,8 @@ export const stringToTimeDto = (date: string): TimeDto => {
 	}
 }
 
+export const stringToDate = (date: string): Date => new Date(date);
+
 export const timeToString = (time: string): string => {
 	const timeArray = time.split(":");
 	return timeArray[0] + ":" + timeArray[1]
@@ -90,4 +99,10 @@ export const mapDateWithHypenToDateWithSlash = (date: string): string => {
 
 export const mapToString = (date: DateDto): string => {
 	return date.year.toString() + date.month.toString() + date.day.toString();
+}
+
+export const timeDtotoString = (time: TimeDto): string => {
+	const hours = time.hours.toString().padStart(2, '0');
+	const minutes = time.minutes.toString().padStart(2, '0');
+	return `${hours}:${minutes}`;
 }

@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 import lombok.*;
 

@@ -2,14 +2,13 @@
 @import "./dialogs/appointment/appointment.component.scss-theme.scss";
 @import "./components/image-network-appointment/image-network-appointment.component.scss-theme.scss";
 @import "./components/equipment-diary/equipment-diary..component.scss-theme.scss";
-@import "./components/reference-report/reference-report.component.scss-theme.scss";
+
 
 @mixin turnos-mixins($theme) {
     @include app-agenda($theme);
     @include app-appointment($theme);
     @include app-equipment-appointment($theme);
     @include app-equipment-diary($theme);
-    @include app-reference-report($theme);
 }
 
 .turnos div.calendar-event-white-text .cal-event-title {

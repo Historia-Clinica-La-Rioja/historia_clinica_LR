@@ -22,7 +22,7 @@ public class ReferenceFileDownloadController {
 
 
     @GetMapping("/download/{fileId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRATIVO')")
     public ResponseEntity<Resource> download(@PathVariable(name = "institutionId") Integer institutionId,
 											 @PathVariable(name = "fileId") Integer fileId) {
         log.debug("Input parameters -> institutionId {}, fileId {}", institutionId, fileId);

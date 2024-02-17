@@ -4,17 +4,21 @@ import {
     EditButton,
     ReferenceField,
     ReferenceManyField,
-    TextField
+    TextField,
+    usePermissions
 } from "react-admin";
 import React, {Fragment} from "react";
 import CreateRelatedButton from "../components/CreateRelatedButton";
 import SectionTitle from "../components/SectionTitle";
 
+import { ROOT, ADMINISTRADOR} from "../roles";
+
+
 const HierarchicalUnitSection = (props) => {
     return (
         <Fragment>
             <SectionTitle label="resources.users.fields.hierarchicalUnits"/>
-            <AssociateHierarchicalUnit {...props}/>
+            <AssociateHierarchicalUnit {...props} />
             <ReferenceManyField
                 addLabel={false}
                 reference="hierarchicalunitstaff"
@@ -39,13 +43,16 @@ const HierarchicalUnitSection = (props) => {
 
 const AssociateHierarchicalUnit = ({ record }) => {
     const customRecord = {personId: record.personId, userId: record.id};
-    return ( <CreateRelatedButton
+    const { permissions } = usePermissions();
+    const userIsRootOrAdmin = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR.role) || (roleAssignment.role === ROOT.role)).length > 0;
+    return userIsRootOrAdmin ? ( <CreateRelatedButton
             customRecord={customRecord}
             reference="hierarchicalunitstaff"
             refFieldName="userId"
             label="resources.users.buttons.addHierarchicalUnit"
+            disabled={true}
         />
-    );
+    ) : null;
 };
 
 export default HierarchicalUnitSection;

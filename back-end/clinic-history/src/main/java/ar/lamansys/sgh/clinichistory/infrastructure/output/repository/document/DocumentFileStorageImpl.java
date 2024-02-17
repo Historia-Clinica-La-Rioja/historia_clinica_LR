@@ -1,14 +1,21 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document;
 
-import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
-import ar.lamansys.sgh.clinichistory.domain.document.DocumentFileBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgh.clinichistory.application.ports.DocumentFileStorage;
+import ar.lamansys.sgh.clinichistory.domain.document.DigitalSignatureDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.DocumentFileBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
+
+@Slf4j
 @Service
 public class DocumentFileStorageImpl implements DocumentFileStorage {
 
@@ -29,6 +36,28 @@ public class DocumentFileStorageImpl implements DocumentFileStorage {
 		return documentRepository.findAllById(ids).stream().map(DocumentFile::getId).collect(Collectors.toList());
 	}
 
+	@Override
+	public boolean isDocumentBelongsToUser(Long documentId, Integer userId){
+		return documentRepository.findById(documentId)
+				.map(document -> document.getCreatedBy().equals(userId))
+				.orElse(false);
+	}
+
+	@Override
+	public void updateDigitalSignatureHash(Long documentId, String hash) {
+		log.debug("Input parameters -> documentId {}, hash {}", documentId, hash);
+		documentRepository.updateDigitalSignatureHash(documentId, hash);
+	}
+
+	@Override
+	public Page<DigitalSignatureDocumentBo> findDocumentsByUserAndInstitution(Integer userId, Integer institutionId, Pageable pageable) {
+		log.debug("Input parameters -> userId {}, institutionId {}, pageable {}", userId, institutionId, pageable);
+		Page<DigitalSignatureDocumentBo> result = documentRepository.findDocumentsByUserAndInstitution(userId, institutionId, pageable);
+		result.forEach(bo -> bo.setSnomedConceptBo(documentRepository.findSnomedConceptsByDocumentId(bo.getDocumentId())));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private DocumentFileBo mapToDocumentFileBo(DocumentFile documentFile) {
         return new DocumentFileBo(
                 documentFile.getId(),
@@ -38,6 +67,8 @@ public class DocumentFileStorageImpl implements DocumentFileStorage {
                 documentFile.getFilepath(),
                 documentFile.getFilename(),
                 documentFile.getUuidfile(),
-                documentFile.getChecksum());
+                documentFile.getChecksum(),
+				documentFile.getSignatureStatusId(),
+				documentFile.getDigitalSignatureHash());
     }
 }

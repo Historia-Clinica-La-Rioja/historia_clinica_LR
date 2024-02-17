@@ -27,7 +27,7 @@ const InstitutionPracticeRelatedGroupCreate = props => {
 
                 <ReferenceInput
                     source="snomedId"
-                    reference="snowstormpractices"
+                    reference="snomedpractices"
                     filterToQuery={searchText => ({conceptPt: searchText})}
                 >
                     <AutocompleteInput optionText="conceptPt" optionValue="id" validate={[required()]} resettable helperText="* Mínimo 3 caracteres para realizar la búsqueda en Snowstorm" />

@@ -1,7 +1,11 @@
 package net.pladema.reports.service.domain;
 
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import net.pladema.reports.repository.entity.FormVAppointmentVo;
 import net.pladema.reports.repository.entity.FormVOutpatientVo;
 
@@ -12,11 +16,16 @@ import java.util.stream.Stream;
 
 @Getter
 @Setter
+@ToString
+@AllArgsConstructor
+@Builder
 public class FormVBo {
 
     private String establishment;
 
     private String completePatientName;
+
+	private String formalPatientName;
 
     private String address;
 
@@ -42,11 +51,28 @@ public class FormVBo {
 
     private String cie10Codes;
 
+    private String medicalCoverageCondition;
+
+    private String establishmentProvinceCode;
+
+    private Integer hcnId;
+
+    private String completeProfessionalName;
+
+    private List<String> licenses;
+
+    private String bedNumber;
+
+    private String roomNumber;
+
     public FormVBo(FormVOutpatientVo formVOutpatientVo){
         this.establishment = formVOutpatientVo.getEstablishment();
         this.completePatientName = Stream.of(formVOutpatientVo.getFirstName(), formVOutpatientVo.getMiddleNames(), formVOutpatientVo.getLastName(), formVOutpatientVo.getOtherLastNames())
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
+		this.formalPatientName = Stream.of(formVOutpatientVo.getLastName(), formVOutpatientVo.getOtherLastNames(), formVOutpatientVo.getFirstName(), formVOutpatientVo.getMiddleNames())
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
         this.reportDate = LocalDate.now();
         this.patientGender = formVOutpatientVo.getPatientGender();
         this.patientAge = formVOutpatientVo.getAge();
@@ -69,7 +95,10 @@ public class FormVBo {
         this.completePatientName = Stream.of(formVAppointmentVo.getFirstName(), formVAppointmentVo.getMiddleNames(), formVAppointmentVo.getLastName(), formVAppointmentVo.getOtherLastNames())
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(" "));
-        this.reportDate = LocalDate.now();
+        this.formalPatientName = Stream.of(formVAppointmentVo.getLastName(), formVAppointmentVo.getOtherLastNames(), formVAppointmentVo.getFirstName(), formVAppointmentVo.getMiddleNames())
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
+        this.reportDate = formVAppointmentVo.getDate().toLocalDate();
         this.patientGender = formVAppointmentVo.getPatientGender();
         this.patientAge = formVAppointmentVo.getAge();
         this.documentType = formVAppointmentVo.getDocumentType();

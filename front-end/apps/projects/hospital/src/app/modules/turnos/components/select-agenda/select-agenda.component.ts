@@ -2,12 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ChildrenOutletContexts, Router } from '@angular/router';
 import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { Subscription } from 'rxjs';
 
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipeFormat, fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { processErrors } from '@core/utils/form.utils';
 
 import { DiaryListDto } from '@api-rest/api-model';
@@ -31,12 +31,14 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	viewDate: Date = new Date();
 
-	agendaSelected: DiaryListDto;
-	agendas: DiaryListDto[];
-	activeAgendas: DiaryListDto[] = [];
-	expiredAgendas: DiaryListDto[] = [];
+	currentAgenda: DiaryListDto;
+	agendaSelected: DiaryList;
+	agendas: DiaryList[];
+	activeAgendas: DiaryList[] = [];
+	expiredAgendas: DiaryList[] = [];
 	agendaFiltersSubscription: Subscription;
 	agendaIdSubscription: Subscription;
+	agendaSelectedSubscription: Subscription;
 	readonly dateFormats = DatePipeFormat;
 	filters: AgendaFilters;
 
@@ -54,27 +56,40 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		private readonly dailyAppointmentService: DailyAppointmentService,
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly appointmentsFacadeService: AppointmentsFacadeService,
+		private childrenOutlets: ChildrenOutletContexts,
 	) {
 	}
 
 	ngOnInit(): void {
-		this.agendaSearchService.clearAll();
+		this.agendaSelectedSubscription = this.agendaSearchService.getAgendaSelected$().subscribe(agenda => {
+			this.agendaSelected = this.agendas?.find(a => a.diaryList.id === agenda?.id)
+		})
 		this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
-			if (data) {
+			if (data?.agendas) {
 				this.loadAgendas(data.agendas, data.idAgendaSelected);
 				this.filters = data.filteredBy;
-			}
+				
+			} else this.agendas = null;
 		});
-		this.route.queryParams.subscribe(qp => this.patientId = Number(qp.idPaciente));
+		this.route.queryParams.subscribe(qp => {
+			this.patientId = Number(qp.idPaciente);
+		});
 	}
 
 	ngOnDestroy() {
 		this.agendaFiltersSubscription?.unsubscribe();
+		this.agendaSelectedSubscription.unsubscribe();
+		this.childrenOutlets.onOutletDeactivated();
 	}
 
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {
 		if (event.isUserInput) {
-			this.agendaSelected = agenda;
+			this.agendaSelected ={
+				diaryList: agenda,
+				startDate: null,
+				endDate: null
+			};
+			this.currentAgenda = agenda;
 			if (this.patientId) {
 				this.router.navigate([`agenda/${agenda.id}`], { relativeTo: this.route, queryParams: { idPaciente: this.patientId } });
 			} else {
@@ -83,16 +98,25 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private loadAgendas(diaries, idAgendaSelected?): void {
-		delete this.agendas;
+	private loadAgendas(diaries: DiaryListDto[], idAgendaSelected?: number): void {
+		this.agendas= [];
 		delete this.agendaSelected;
-		this.agendas = diaries;
+		diaries.forEach( diary => {
+			this.agendas.push({
+				diaryList: diary,
+				endDate: null,
+				startDate: null
+			});
+		})
 		this.categorizeAgendas(diaries);
 		if (idAgendaSelected) {
-			this.agendaSelected = this.agendas.find(agenda => agenda.id === idAgendaSelected);
+			this.agendaSelected = this.agendas.find(agenda => {
+				return agenda.diaryList.id === idAgendaSelected;
+			});
 			if (!this.agendaSelected) {
 				this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
-			}
+			} else 
+				this.currentAgenda = this.agendaSelected.diaryList;
 		}
 	}
 
@@ -100,17 +124,22 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		this.expiredAgendas = [];
 		this.activeAgendas = [];
 		if (diaries?.length)
-			diaries.forEach(diary =>
-				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(diary) : this.activeAgendas.push(diary)
-			);
+			diaries.forEach(diary => {
+				const newDiary: DiaryList = {
+					diaryList: diary,
+					endDate: fromStringToDateByDelimeter(diary.endDate, '-'),
+					startDate: fromStringToDateByDelimeter(diary.startDate, '-')
+				}
+				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(newDiary) : this.activeAgendas.push(newDiary)
+			});
 	}
 
 	goToEditAgenda(): void {
-		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/agenda/${this.agendaSelected.id}/editar`]);
+		this.router.navigate([`institucion/${this.contextService.institutionId}/turnos/agenda/${this.agendaSelected.diaryList.id}/editar`]);
 	}
 
 	blockAgenda() {
-		this.diaryService.get(this.agendaSelected.id).subscribe(result => {
+		this.diaryService.get(this.agendaSelected.diaryList.id).subscribe(result => {
 			const dialogRef = this.dialog.open(BlockAgendaRangeComponent, {
 				data: {
 					selectedAgenda: result
@@ -126,12 +155,12 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	deleteAgenda(): void {
-		const content = this.agendaSelected.alias ? `¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.alias} (${this.agendaSelected.clinicalSpecialtyName}) <br>
-						Desde ${this.datePipe.transform(this.agendaSelected.startDate, 'dd/MM/yyyy')}, hasta
-						${this.datePipe.transform(this.agendaSelected.endDate, 'dd/MM/yyyy')} ` :
-						`¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.clinicalSpecialtyName} <br>
-						Desde ${this.datePipe.transform(this.agendaSelected.startDate, 'dd/MM/yyyy')}, hasta
-						${this.datePipe.transform(this.agendaSelected.endDate, 'dd/MM/yyyy')} `;
+		const content = this.agendaSelected.diaryList.alias ? `¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.diaryList.alias} (${this.agendaSelected.diaryList.clinicalSpecialtyName}) <br>
+						Desde ${this.datePipe.transform(this.agendaSelected.diaryList.startDate, 'dd/MM/yyyy')}, hasta
+						${this.datePipe.transform(this.agendaSelected.diaryList.endDate, 'dd/MM/yyyy')} ` :
+						`¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.diaryList.clinicalSpecialtyName} <br>
+						Desde ${this.datePipe.transform(this.agendaSelected.diaryList.startDate, 'dd/MM/yyyy')}, hasta
+						${this.datePipe.transform(this.agendaSelected.diaryList.endDate, 'dd/MM/yyyy')} `;
 		const dialogRef = this.dialog.open(ConfirmDialogComponent,
 			{
 				data: {
@@ -144,12 +173,12 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				this.diaryService.delete(this.agendaSelected.id)
+				this.diaryService.delete(this.agendaSelected.diaryList.id)
 					.subscribe((deleted: boolean) => {
 						if (deleted) {
 							this.snackBarService.showSuccess('turnos.delete-agenda.messages.SUCCESS');
-							this.agendas = this.agendas.filter(agenda => agenda.id !== this.agendaSelected.id);
-							this.categorizeAgendas(this.agendas);
+							this.agendas = this.agendas.filter(agenda => agenda.diaryList.id !== this.agendaSelected.diaryList.id);
+							this.categorizeAgendas(this.agendas.map(agenda => agenda.diaryList));
 							this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 						}
 					}, error => processErrors(error, (msg) => {
@@ -169,21 +198,22 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 				title: 'Imprimir agenda del día',
 				okButtonLabel: 'Imprimir',
 				cancelButtonLabel: 'cancelar',
-				minDate: this.agendaSelected.startDate,
-				maxDate: this.agendaSelected.endDate
+				minDate: this.agendaSelected.diaryList.startDate,
+				maxDate: this.agendaSelected.diaryList.endDate
 			}
 		});
 
 		dialogRef.afterClosed()
 			.subscribe(value => {
 				if (value) {
-					this.dailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate(this.agendaSelected.id, value);
+					this.dailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate(this.agendaSelected.diaryList.id, value);
 				}
 			});
 	}
 
 	clear(control: any): void {
 		this.agendaSelected = null;
+		this.currentAgenda = null;
 		if (this.patientId) {
 			this.router.navigate([`${this.routePrefix}/turnos`], { queryParams: { idPaciente: this.patientId } });
 		} else {
@@ -196,4 +226,10 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		return clinicalSpecialtyName ? `${alias} (${clinicalSpecialtyName})` : `${alias}`;
 	}
 
+}
+
+export interface DiaryList {
+	diaryList: DiaryListDto;
+    endDate: Date;
+    startDate: Date;
 }

@@ -1,0 +1,24 @@
+.color {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: .5rem;
+}
+
+.color-grey {
+	color: #a8a8a8;
+}
+
+.change-color {
+    display: flex;
+	align-items: center;
+	
+	button {
+		display: flex;
+		align-items: center;
+		margin-top: -1.34375em;
+
+        mat-icon {
+            margin-left: 1.5rem;
+        }
+	}
+}

@@ -2,7 +2,6 @@ package net.pladema.patient.repository;
 
 import ar.lamansys.sgx.shared.repositories.QueryPart;
 import net.pladema.patient.controller.dto.MergedPatientSearchFilter;
-import net.pladema.patient.controller.dto.PatientSearchFilter;
 import net.pladema.patient.service.domain.MergedPatientSearch;
 
 import javax.persistence.EntityManager;
@@ -10,8 +9,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import java.util.List;
-
-import static net.pladema.patient.repository.PatientSearchQuery.OR_JOINING_OPERATOR;
 
 public class MergedPatientRepositorySearchImpl implements MergedPatientRepositorySearch{
 

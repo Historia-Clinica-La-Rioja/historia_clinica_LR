@@ -13,11 +13,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
 
 @Getter
 @Setter
@@ -79,6 +79,26 @@ public class AppointmentBo {
 
 	private String applicantHealthcareProfessionalEmail;
 
+	private DiaryLabelBo diaryLabelBo;
+	
+	private boolean hasAssociatedReference;
+
+	private Short associatedReferenceClosureTypeId;
+	
+	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
+						 String applicantHealthcareProfessionalEmail) {
+		this.diaryId = diaryId;
+		this.patientId = patientId;
+		this.date = date;
+		this.hour = hour;
+		this.modalityId = modalityId;
+		this.patientEmail = patientEmail;
+		this.callId = callId;
+		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;
+	}
+
+	private Integer referenceId;
+
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
 				.id(appointmentDiaryVo.getId())
@@ -95,6 +115,8 @@ public class AppointmentBo {
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
 				.createdOn(appointmentDiaryVo.getCreatedOn())
 				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
+				.patientEmail(appointmentDiaryVo.getEmail())
+				.diaryLabelBo(appointmentDiaryVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentDiaryVo.getDiaryLabel()): null)
 				.build();
 	}
 
@@ -114,6 +136,8 @@ public class AppointmentBo {
 				.observationBy(appointmentVo.getObservationBy())
 				.callId(appointmentVo.getCallId())
 				.modalityId(appointmentVo.getModalityId())
+				.diaryLabelBo(appointmentVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentVo.getDiaryLabel()): null)
+				.patientEmail(appointmentVo.getPatientEmail())
 				.build();
 	}
 

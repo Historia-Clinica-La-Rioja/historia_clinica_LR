@@ -13,11 +13,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.validation.ConstraintViolationException;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
+import lombok.AllArgsConstructor;
+
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
+import net.pladema.patient.service.PatientMedicalCoverageService;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ar.lamansys.sgh.clinichistory.application.ports.OrderImageFileStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
@@ -32,7 +43,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
-import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
@@ -49,6 +59,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.HistoricApp
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
@@ -65,10 +76,7 @@ import net.pladema.patient.controller.service.PatientExternalMedicalCoverageServ
 import net.pladema.patient.service.domain.PatientCoverageInsuranceDetailsBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import javax.validation.ConstraintViolationException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+@AllArgsConstructor
 @Slf4j
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -76,8 +84,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private static final String OUTPUT = "Output -> {}";
 
 	private final AppointmentRepository appointmentRepository;
-
-	private final AppointmentAssnRepository appointmentAssnRepository;
 
 	private final AppointmentObservationRepository appointmentObservationRepository;
 
@@ -107,37 +113,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final EquipmentAppointmentStorage equipmentAppointmentStorage;
 
-	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,
-								  AppointmentObservationRepository appointmentObservationRepository,
-								  HistoricAppointmentStateRepository historicAppointmentStateRepository,
-								  SharedStaffPort sharedStaffPort,
-								  DateTimeProvider dateTimeProvider,
-								  PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-								  InstitutionExternalService institutionExternalService,
-								  MedicalCoveragePlanRepository medicalCoveragePlanRepository,
-								  FeatureFlagsService featureFlagsService,
-								  AppointmentStorage appointmentStorage,
-								  AppointmentUpdateRepository appointmentUpdateRepository,
-								  AppointmentAssnRepository appointmentAssnRepository, AppointmentOrderImageRepository appointmentOrderImageRepository,
-								  SharedReferenceCounterReference sharedReferenceCounterReference, LocalDateMapper localDateMapper,
-								  EquipmentAppointmentStorage equipmentAppointmentStorage) {
-		this.appointmentRepository = appointmentRepository;
-		this.appointmentObservationRepository = appointmentObservationRepository;
-		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
-		this.sharedStaffPort = sharedStaffPort;
-		this.featureFlagsService = featureFlagsService;
-		this.dateTimeProvider = dateTimeProvider;
-		this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
-		this.institutionExternalService = institutionExternalService;
-		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
-		this.appointmentStorage = appointmentStorage;
-		this.appointmentUpdateRepository = appointmentUpdateRepository;
-		this.appointmentAssnRepository = appointmentAssnRepository;
-		this.appointmentOrderImageRepository = appointmentOrderImageRepository;
-		this.sharedReferenceCounterReference = sharedReferenceCounterReference;
-		this.localDateMapper = localDateMapper;
-		this.equipmentAppointmentStorage = equipmentAppointmentStorage;
-	}
+	private final OrderImageFileStorage orderImageFileStorage;
+
+	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
 	@Override
 	public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
@@ -168,11 +146,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public Collection<EquipmentAppointmentBo> getAppointmentsByEquipmentId(Integer equipmentId, Integer institutionId, LocalDate from, LocalDate to) {
 		log.debug("Input parameters -> equipmentDiaryId {} institutionId {}, from {} to {}", equipmentId, institutionId, from, to);
-		Collection<EquipmentAppointmentBo> result = equipmentAppointmentStorage.getAppointmentsByEquipmentId(equipmentId, institutionId, from, to).stream()
+		Collection<EquipmentAppointmentBo> result = equipmentAppointmentStorage.getAppointmentsByEquipmentId(equipmentId, institutionId, from, to)
+				.stream()
 				.distinct()
 				.sorted(Comparator.comparing(EquipmentAppointmentBo::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(EquipmentAppointmentBo::getHour))
+				.map(e -> {
+					e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId()));
+					return e;
+				})
 				.collect(Collectors.toList());
-
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
 		return result;
@@ -249,6 +231,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 			List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
 			result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
 					.stream().findFirst();
+			var referenceAppointment = sharedReferenceCounterReference.getReferenceByAppointmentId(result.get().getId());
+			result.get().setHasAssociatedReference(referenceAppointment.isPresent());
+			result.get().setAssociatedReferenceClosureTypeId(referenceAppointment.map(ReferenceAppointmentStateDto::getReferenceClosureTypeId).orElse(null));
 		}
 		log.debug(OUTPUT, result);
 		return result;
@@ -327,15 +312,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public boolean updateDate(Integer appointmentId, LocalDate date, LocalTime time, Integer openingHoursId) {
-		appointmentRepository.updateDate(appointmentId, date, time);
-		appointmentAssnRepository.updateOpeningHoursId(openingHoursId, appointmentId);
-		verifyProtectedCondition(appointmentId);
-		log.debug(OUTPUT, Boolean.TRUE);
-		return Boolean.TRUE;
-	}
-
-	@Override
 	public boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage) {
 		appointmentRepository.findById(appointmentId).ifPresent(a -> {
 			if(a.isAssigned()) {
@@ -348,6 +324,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	public List<AppointmentBookingBo> getCompleteBookingAppointmentInfo(String identificationNumber) {
+		log.debug("Input parameters -> identificationNumber {}", identificationNumber);
+		List<AppointmentBookingBo> result = appointmentRepository.getCompleteBookingAppointmentInfo(identificationNumber).stream().map(AppointmentBookingBo::new)
+				.collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public Integer getMedicalCoverage(Integer patientId, Integer healthcareProfessionalId,
 									  LocalDate currentDate) {
 		List<Integer> medicalCoverages = appointmentRepository.getMedicalCoverage(patientId, currentDate,
@@ -355,6 +340,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 		Integer patientMedicalCoverageId = medicalCoverages.stream().findAny().orElse(null);
 		log.debug(OUTPUT, patientMedicalCoverageId);
 		return patientMedicalCoverageId;
+	}
+
+	@Override
+	public PatientMedicalCoverageBo getMedicalCoverageFromAppointment(Integer appointmentId) {
+		log.debug("Input parameters -> appointmentId {}", appointmentId);
+		return appointmentRepository.getAppointmentMedicalCoverageId(appointmentId)
+				.flatMap(patientMedicalCoverageService::getCoverage)
+				.orElse(null);
 	}
 
 	@Override
@@ -471,13 +464,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 				.collect(Collectors.toMap(id -> id, sharedStaffPort::getProfessionalCompleteInfo));
 		result.forEach(appointment -> {
 			ProfessionalInfoDto professional = professionals.get(appointment.getProfessionalId());
-			List<String> specialties = professional.getClinicalSpecialties().stream()
-					.map(ClinicalSpecialtyDto::getName)
-					.collect(Collectors.toList());
-			appointment.setSpecialties(specialties);
+			appointment.setClinicalSpecialtyName(appointment.getClinicalSpecialtyName());
 			appointment.setRespectiveProfessionalName(professional.getFirstName(),professional.getMiddleNames(),
 					professional.getLastName(), professional.getOtherLastNames(), professional.getNameSelfDetermination(),
 					featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+			var referenceAppointment = sharedReferenceCounterReference.getReferenceByAppointmentId(appointment.getId());
+			appointment.setHasAssociatedReference(referenceAppointment.isPresent());
+			appointment.setAssociatedReferenceClosureTypeId(referenceAppointment.map(ReferenceAppointmentStateDto::getReferenceClosureTypeId).orElse(null));
 		});
 		log.debug("Result size {}", result.size());
 		log.trace(OUTPUT, result);
@@ -603,6 +596,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 			completeDiaryUnblock(unblock, diaryBo, blockedDates, listAppointments);
 		else
 			blockedDates.forEach(date -> generateUnblockInterval(diaryBo, listAppointments, date, unblock));
+
+		if (listAppointments.isEmpty())
+			throw new ConstraintViolationException("No hay ningún bloqueo de agenda en ese día y horario.",Collections.emptySet());
+
 		return listAppointments;
 	}
 
@@ -610,6 +607,43 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		Integer result = this.getCurrentAppointmentId(patientId, institutionId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds) {
+		log.debug("Input parameter -> appointmentIds {}", appointmentIds);
+		return appointmentRepository.getAppointmentDataByAppointmentIds(appointmentIds);
+	}
+
+	@Override
+	public Boolean openingHourAllowedProtectedAppointment(Integer appointmentId, Integer diaryId) {
+		log.debug("Input parameter -> appointmentId {}, diaryId {} ", appointmentId, diaryId);
+		Boolean result = appointmentRepository.openingHourAllowedProtectedAppointment(appointmentId, diaryId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public void deleteLabelFromAppointment(Integer diaryId, List<Integer> ids) {
+		log.debug("Input parameters -> diaryId {}", ids);
+		appointmentRepository.deleteLabelFromAppointment(diaryId, ids);
+	}
+
+	@Override
+	public Boolean hasOldAppointmentWithMinDateLimit(Integer patientId, Integer healthcareProfessionalId, Short minDateLimit) {
+		log.debug("Input parameters -> patientId {}, healthcareProfessionalId {}, minDateLimit {}", patientId, healthcareProfessionalId, minDateLimit);
+		LocalDate fiveDaysAgo = LocalDate.now().minus(minDateLimit, ChronoUnit.DAYS);
+		Boolean result = appointmentRepository.hasOldAppointmentWithMinDateLimitByPatientId(patientId, healthcareProfessionalId, fiveDaysAgo);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Boolean hasFutureAppointmentByPatientId(Integer patientId, Integer healthcareProfessionalId) {
+		log.debug("Input parameters -> patientId {}, healthcareProfessionalId {}", patientId, healthcareProfessionalId);
+		Boolean result = appointmentRepository.hasFutureAppointmentsByPatientId(patientId, healthcareProfessionalId);
 		log.debug(OUTPUT, result);
 		return result;
 	}
@@ -728,19 +762,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private Collection<AppointmentBo> setIsAppointmentProtected(Collection<AppointmentBo> appointments, List<Integer> diaryIds) {
 		List<Integer> protectedAppointments = sharedReferenceCounterReference.getProtectedAppointmentsIds(diaryIds);
-		appointments.stream().forEach(a -> {
-			if (protectedAppointments.contains(a.getId()))
-				a.setProtected(true);
-			else
-				a.setProtected(false);
-		});
+		appointments.forEach(a -> a.setProtected(protectedAppointments.contains(a.getId())));
 		return appointments;
-	}
-	
-	private void verifyProtectedCondition(Integer appointmentId) {
-		boolean isProtected = sharedReferenceCounterReference.isProtectedAppointment(appointmentId);
-		if (isProtected)
-			sharedReferenceCounterReference.updateProtectedAppointment(appointmentId);
 	}
 
 }

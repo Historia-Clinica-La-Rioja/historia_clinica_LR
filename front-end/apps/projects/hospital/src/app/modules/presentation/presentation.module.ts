@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 // deps
 import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from '@material/app.material.module';
@@ -20,17 +21,28 @@ import { ContentTitleComponent } from './components/content-title/content-title.
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
+import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
+import { ExpansionSectionComponent } from './components/expansion-section/expansion-section.component';
 import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
+import { FiltersComponent } from './components/filters/filters.component';
+import { FilterButtonComponent } from './components/filter-button/filter-button.component';
 import { FiltersCardComponent } from './components/filters-card/filters-card.component';
+import { FiltersSelectV2Component } from './components/filters-select-v2/filters-select-v2.component';
+import { FiltersTypeaheadComponent } from '../presentation/components/filters-typeahead/filters-typeahead.component';
+import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
+import { FloatingDivComponent } from './components/floating-div/floating-div.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
+import { IdentifierComponent } from './components/identifier/identifier.component';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 import { IndicationComponent } from './components/indication/indication.component';
+import { ItemSummaryComponent } from './components/item-summary/item-summary.component';
 import { LabelComponent } from './components/label/label.component';
 import { ListElementItemComponent } from './components/list-element-item/list-element-item.component';
 import { LocationBadgeComponent } from './components/location-badge/location-badge.component';
@@ -41,28 +53,28 @@ import { MessageFlaggedForAuditComponent } from './components/message-flagged-fo
 import { MessageSnackbarComponent } from './components/message-snackbar/message-snackbar.component';
 import { NewDocumentSectionComponent } from './components/new-document-section/new-document-section-component.component';
 import { NoDataComponent } from './components/no-data/no-data.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 import { PatientCardComponent } from './components/patient-card/patient-card.component';
 import { PatientCardHeaderComponent } from './components/patient-card-header/patient-card-header.component';
 import { PatientTypeLogoComponent } from './components/patient-type-logo/patient-type-logo.component';
 import { PersonalInformationComponent } from './components/personal-information/personal-information.component';
+import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
+import { PriorityComponent } from './components/priority/priority.component';
+import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
+import { RegisterEditorInfoComponent } from './components/register-editor-info/register-editor-info.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
+import { SearchComponent } from './components/search/search.component';
+import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
 import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
-import { TypeaheadComponent } from './components/typeahead/typeahead.component';
-import { UserBadgeComponent } from './components/user-badge/user-badge.component';
-import { FilterButtonComponent } from './components/filter-button/filter-button.component';
-import { FloatingDivComponent } from './components/floating-div/floating-div.component';
-import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
-import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
-import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
-import { PaginatorComponent } from './components/paginator/paginator.component';
-import { PriorityComponent } from './components/priority/priority.component';
-import { CallDetailsComponent } from './components/call-details/call-details.component';
 import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
-import { FiltersSelectComponent } from './components/filters-select/filters-select.component';
-
+import { TypeaheadComponent } from './components/typeahead/typeahead.component';
+import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
+import { UserBadgeComponent } from './components/user-badge/user-badge.component';
+import { ButtonComponent } from './components/button/button.component';
+import { ColorSelectorComponent } from './components/color-selector/color-selector.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -71,6 +83,7 @@ import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 // pipes
+import { DateFormatPipe } from './pipes/date-format.pipe';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { FullMedicalCoveragePipe } from './pipes/full-medical-coverage.pipe';
@@ -81,14 +94,16 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AddObservationsComponent } from './components/add-observations/add-observations.component';
+
+
 
 @NgModule({
 	declarations: [
 		// components
 		AsignPatientButtonComponent,
+		AddObservationsComponent,
 		BarComponent,
-		CallDetailsComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
@@ -100,18 +115,27 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		DatepickerComponent,
 		DateRangePickerComponent,
 		DetailBoxComponent,
+		DetailedInformationComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
+		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
+		FiltersComponent,
+		FilterButtonComponent,
 		FiltersCardComponent,
+		FiltersSelectV2Component,
+		FiltersTypeaheadComponent,
 		FloatingDivComponent,
 		FooterComponent,
+		IconedTextComponent,
+		IdentifierComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
+		ItemSummaryComponent,
 		LabelComponent,
 		ListElementItemComponent,
 		LocationBadgeComponent,
@@ -122,28 +146,38 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		MessageSnackbarComponent,
 		NewDocumentSectionComponent,
 		NoDataComponent,
+		PaginatorComponent,
 		PatientCardComponent,
 		PatientCardHeaderComponent,
 		PatientTypeLogoComponent,
 		PersonalInformationComponent,
+		PersonShortDescriptionComponent,
+		PriorityComponent,
+		PrioritySelectComponent,
+		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
+		SearchComponent,
+		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		FilterButtonComponent,
-		PaginatorComponent,
-		PrioritySelectComponent,
+  		FiltersSelectComponent,
+  		TitledSingleContentComponent,
+		TypeaheadFilterOptionsComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
 		DiscardWarningComponent,
 		ViewPdfComponent,
+		ViewPdfComponent,
+		ColorSelectorComponent,
 		// directives
 		CtrlTemplateDirective,
 		// pipes
+		DateFormatPipe,
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
@@ -154,11 +188,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-		PersonShortDescriptionComponent,
-		IconedTextComponent,
-		PriorityComponent,
-  		TitledSingleContentComponent,
-  		FiltersSelectComponent,
+		ButtonComponent,
 	],
 	imports: [
 		CommonModule,
@@ -179,8 +209,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		AppMaterialModule,
 		// components
 		AsignPatientButtonComponent,
+		AddObservationsComponent,
 		BarComponent,
-		CallDetailsComponent,
+		ButtonComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
 		CellTemplatesComponent,
@@ -192,18 +223,25 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		DatepickerComponent,
 		DateRangePickerComponent,
 		DetailBoxComponent,
+		DetailedInformationComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
+		ExpansionSectionComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
+		FiltersComponent,
+		FilterButtonComponent,
 		FiltersCardComponent,
+		FiltersSelectComponent,
 		FloatingDivComponent,
 		IconedTextComponent,
+		IdentifierComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
+		ItemSummaryComponent,
 		LabelComponent,
 		ListElementItemComponent,
 		LocationBadgeComponent,
@@ -220,20 +258,24 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		PersonalInformationComponent,
 		PersonShortDescriptionComponent,
 		PriorityComponent,
+		PrioritySelectComponent,
+		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
+		SearchComponent,
+		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
+		TitledSingleContentComponent,
 		TypeaheadComponent,
 		UserBadgeComponent,
-		FilterButtonComponent,
-		PrioritySelectComponent,
-		FiltersSelectComponent,
+		ColorSelectorComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
 		// pipes
+		DateFormatPipe,
 		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
@@ -244,7 +286,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-		TitledSingleContentComponent,
 	],
 	entryComponents: [
 		DockPopupComponent,

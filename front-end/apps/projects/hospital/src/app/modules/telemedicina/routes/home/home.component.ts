@@ -6,10 +6,10 @@ import { VirtualConsultationsFacadeService } from '../../virtual-consultations-f
 import { VirtualConstultationService } from '@api-rest/services/virtual-constultation.service';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { StompService } from 'projects/hospital/src/app/stomp.service';
 import { EntryCallStompService } from '../../../api-web-socket/entry-call-stomp.service';
 import { ShowEntryCallService } from '../../show-entry-call.service';
 import { Subscription } from 'rxjs';
+import { VirtualConsultationStompService } from '../../../api-web-socket/virtual-consultation-stomp.service';
 
 @Component({
 	selector: 'app-home',
@@ -22,19 +22,21 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	private entryCallSubs: Subscription;
 
-	constructor(public virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
+	constructor(
+		public virtualConsultationsFacadeService: VirtualConsultationsFacadeService,
 		private virtualConsultationService: VirtualConstultationService,
-		private readonly stompService: StompService,
 		private contextService: ContextService,
 		private readonly permissionsService: PermissionsService,
 		private entryCallStompService: EntryCallStompService,
-		private showEntryCallService: ShowEntryCallService,) {
+		private showEntryCallService: ShowEntryCallService,
+		private readonly virtualConsultationStompService: VirtualConsultationStompService,
+	) {
 		this.setPriotityOptionsFilter();
 		this.setAvailabilityOptionsFilter();
 	}
 
 	ngOnInit(): void {
-		this.virtualConsultationsFacadeService = new VirtualConsultationsFacadeService(this.virtualConsultationService, this.stompService, this.contextService, this.permissionsService);
+		this.virtualConsultationsFacadeService = new VirtualConsultationsFacadeService(this.virtualConsultationService, this.contextService, this.permissionsService,this.virtualConsultationStompService);
 		this.entryCallSubs = this.entryCallStompService.entryCall$.subscribe(
 			(call: VirtualConsultationNotificationDataDto) => {
 				this.showEntryCallService.show(call);

@@ -1,13 +1,11 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
-import java.util.List;
-import java.util.Optional;
-
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
@@ -21,6 +19,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentDiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentExternalCause;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthCondition;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthcareProfessional;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
@@ -28,9 +27,13 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyProcedure;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProcedure;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentProsthesis;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentRiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentTriage;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface DocumentService {
 
@@ -78,7 +81,13 @@ public interface DocumentService {
 
     DocumentDiagnosticReport getDocumentFromDiagnosticReport(Integer drid);
 
+	List<DocumentHealthcareProfessionalBo> getHealthcareProfessionalsFromDocument(Long documentId);
+
+	Optional<String> getProsthesisDescriptionFromDocument(Long documentId);
+    
     List<Long> getDocumentId(Integer sourceId, Short sourceTypeId);
+
+    List<Long> getDocumentIdBySourceAndType(Integer sourceId, Short typeId);
 
     void deleteHealthConditionHistory(Long documentId);
 
@@ -122,5 +131,8 @@ public interface DocumentService {
 
     List<ConclusionBo> getConclusionsFromDocument(Long documentId);
 
+	DocumentHealthcareProfessional createDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional);
+
+	DocumentProsthesis createDocumentProsthesis(Long documentId, String description);
 }
 

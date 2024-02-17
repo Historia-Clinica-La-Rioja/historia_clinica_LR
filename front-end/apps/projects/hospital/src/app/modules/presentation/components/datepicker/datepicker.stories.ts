@@ -3,7 +3,7 @@ import { DatepickerComponent } from './datepicker.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 const meta: Meta<DatepickerComponent> = {
-	title: 'Example/DatepickerComponent',
+	title: 'Presentation/DatepickerComponent',
 	component: DatepickerComponent,
 	tags: ['autodocs'],
 	decorators: [

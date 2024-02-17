@@ -1,7 +1,6 @@
 package net.pladema.address.service.impl;
 
 import net.pladema.address.controller.mapper.DepartmentMapper;
-import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.address.repository.CityRepository;
 import net.pladema.address.repository.CountryRepository;
@@ -9,7 +8,6 @@ import net.pladema.address.repository.DepartmentRepository;
 import net.pladema.address.repository.ProvinceRepository;
 import net.pladema.address.repository.entity.Department;
 import net.pladema.address.service.AddressMasterDataService;
-import net.pladema.address.service.AddressService;
 
 import net.pladema.snowstorm.repository.entity.SnomedGroupType;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
@@ -21,7 +19,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 @Service
 public class AddressMasterDataServiceImpl implements AddressMasterDataService {
@@ -40,18 +38,15 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 
 	private final DepartmentMapper departmentMapper;
 
-	private final AddressService addressService;
-
 	public AddressMasterDataServiceImpl(CityRepository cityRepository, ProvinceRepository provinceRepository,
 										DepartmentRepository departmentRepository, CountryRepository countryRepository,
-										DepartmentMapper departmentMapper, AddressService addressService) {
+										DepartmentMapper departmentMapper) {
 		super();
 		this.cityRepository = cityRepository;
 		this.provinceRepository = provinceRepository;
 		this.countryRepository = countryRepository;
 		this.departmentRepository = departmentRepository;
 		this.departmentMapper = departmentMapper;
-		this.addressService = addressService;
 		LOG.debug("{}", "created service");
 	}
 
@@ -102,24 +97,22 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	}
 
 	@Override
-	public <T> Collection<T> getDepartmentsForReference(Integer institutionId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz) {
-		AddressBo institutionAddress = addressService.getAddressByInstitution(institutionId);
-		if (institutionAddress.getProvinceId() != null) {
-			if (careLineId == null)
-				return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyId, clazz);
-			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyId, clazz);
-		}
-		return Collections.emptyList();
+	public <T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz) {
+		LOG.debug("Input parameters -> careLineId {}, clinicalSpecialtyIds {}, clazz {}", careLineId, clinicalSpecialtyIds, clazz);
+		if (careLineId != null)
+			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyIds, clazz);
+		return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyIds, clazz);
 	}
 
 	@Override
-	public <T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceSnomedId, Integer careLineId, Integer clinicalSpecialtyId, Class<T> clazz) {
-		if (careLineId != null && clinicalSpecialtyId == null)
+	public <T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceSnomedId, Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz) {
+		LOG.debug("Input parameters -> practiceSnomedId {}, careLineId {}, clinicalSpecialtyIds {}, clazz {}", practiceSnomedId, careLineId, clinicalSpecialtyIds, clazz);
+		if (careLineId != null && (clinicalSpecialtyIds == null || clinicalSpecialtyIds.isEmpty()))
 			return departmentRepository.findAllByCareLineIdAndPracticeSnomedId(careLineId, practiceSnomedId, clazz);
 		if (careLineId != null)
-			return departmentRepository.findAllByCareLineIdClinicalSpecialtyIdAndPracticeSnomedId(careLineId, clinicalSpecialtyId, practiceSnomedId, clazz);
-		if (clinicalSpecialtyId != null)
-			return departmentRepository.findAllByClinicalSpecialtyIdAndPracticeSnomedId(clinicalSpecialtyId, practiceSnomedId, SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, clazz);
+			return departmentRepository.findAllByCareLineIdClinicalSpecialtyIdAndPracticeSnomedId(careLineId, clinicalSpecialtyIds, practiceSnomedId, clazz);
+		if (clinicalSpecialtyIds != null && !clinicalSpecialtyIds.isEmpty())
+			return departmentRepository.findAllByClinicalSpecialtyIdAndPracticeSnomedId(clinicalSpecialtyIds, practiceSnomedId, SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, clazz);
 		return departmentRepository.findAllByPractice(practiceSnomedId, SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, clazz);
 	}
 }

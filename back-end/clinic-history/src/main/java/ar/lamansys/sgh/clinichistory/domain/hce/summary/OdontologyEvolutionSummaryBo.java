@@ -3,16 +3,17 @@ package ar.lamansys.sgh.clinichistory.domain.hce.summary;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-public class OdontologyEvolutionSummaryBo implements Serializable {
+public class OdontologyEvolutionSummaryBo {
 
     private Integer consultationId;
 
@@ -24,7 +25,7 @@ public class OdontologyEvolutionSummaryBo implements Serializable {
 
     private List<HealthConditionSummaryBo> healthConditions;
 
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     private List<ReasonSummaryBo> reasons;
 
@@ -32,7 +33,7 @@ public class OdontologyEvolutionSummaryBo implements Serializable {
 
     private String evolutionNote;
 
-    public OdontologyEvolutionSummaryBo(Integer id, LocalDate startDate,
+    public OdontologyEvolutionSummaryBo(Integer id, LocalDateTime startDate,
                                         HealthcareProfessionalBo professional,
                                         ClinicalSpecialtyBo clinicalSpecialty,
                                         String evolutionNote, DocumentDataBo document){

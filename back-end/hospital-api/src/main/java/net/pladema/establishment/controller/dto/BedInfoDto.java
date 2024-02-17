@@ -28,5 +28,7 @@ public class BedInfoDto implements Serializable {
 
 	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
 	private String probableDischargeDate;
+
+	private BedNurseDto bedNurse;
     
 }

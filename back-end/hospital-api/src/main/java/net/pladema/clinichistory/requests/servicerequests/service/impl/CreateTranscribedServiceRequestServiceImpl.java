@@ -68,7 +68,7 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
 		Integer studyId = diagnosticReportRepository.save(getNewDiagnosticReport(patientInfoBo, transcribedServiceRequestBo)).getId();
 
         TranscribedServiceRequest newServiceRequest = createServiceRequest(transcribedServiceRequestBo, studyId);
-		transcribedServiceRequestBo.setId(newServiceRequest.getId());
+		transcribedServiceRequestBo.setTranscribedServiceRequestId(newServiceRequest.getId());
 		LOG.debug(OUTPUT, transcribedServiceRequestBo);
         return newServiceRequest.getId();
     }
@@ -93,8 +93,11 @@ public class CreateTranscribedServiceRequestServiceImpl implements CreateTranscr
 		DiagnosticReport result = new DiagnosticReport();
 		result.setPatientId(patientInfoBo.getId());
 		result.setSnomedId(getSnomedId(transcribedServiceRequestBo.getStudy()));
-		Integer healthConditionId = healthConditionRepository.save(buildBasicHealthCondition(patientInfoBo, transcribedServiceRequestBo.getHealthCondition())).getId();
+		result.setObservations(transcribedServiceRequestBo.getObservations());
+		HealthCondition savedHealthCondition = healthConditionRepository.save(buildBasicHealthCondition(patientInfoBo, transcribedServiceRequestBo.getHealthCondition()));
+		Integer healthConditionId = savedHealthCondition.getId();
 		result.setHealthConditionId(healthConditionId);
+		transcribedServiceRequestBo.setCie10Codes(savedHealthCondition.getCie10Codes());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

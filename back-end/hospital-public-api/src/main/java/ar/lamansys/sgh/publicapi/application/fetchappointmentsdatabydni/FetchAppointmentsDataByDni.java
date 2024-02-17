@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgh.publicapi.application.port.out.AppointmentStorage;
 import ar.lamansys.sgh.publicapi.domain.AppointmentsByUserBo;
 
-import java.time.LocalDate;
-
 @Service
 public class FetchAppointmentsDataByDni {
 

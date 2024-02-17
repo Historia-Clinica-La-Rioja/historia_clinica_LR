@@ -25,4 +25,11 @@ public class PersonDataDto {
 
     @Nullable
     private String username;
+
+	private String fullName;
+
+	public PersonDataDto(Integer userId, String fullName) {
+		this.userId = userId;
+		this.fullName = fullName;
+	}
 }

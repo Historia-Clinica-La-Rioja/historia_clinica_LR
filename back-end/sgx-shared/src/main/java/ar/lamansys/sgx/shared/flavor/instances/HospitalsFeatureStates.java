@@ -1,10 +1,10 @@
 package ar.lamansys.sgx.shared.flavor.instances;
 
-import java.util.EnumMap;
-import java.util.Optional;
-
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.states.InitialFeatureStates;
+
+import java.util.EnumMap;
+import java.util.Optional;
 
 public class HospitalsFeatureStates implements InitialFeatureStates {
 
@@ -61,8 +61,13 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_IMPRESION_HISTORIA_CLINICA_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_API_CONSUMER, true);
 		map.put(AppFeature.HABILITAR_TELEMEDICINA, false);
-		map.put(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO, true);
 		map.put(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS, false);
+		map.put(AppFeature.HABILITAR_FIRMA_DIGITAL, false);
+		map.put(AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION, false);
+		map.put(AppFeature.ENABLE_VIOLENCE_REPORT_DEVELOPMENT, false);
+		map.put(AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO, false);
+		map.put(AppFeature.HABILITAR_AUDITORIA_DE_ACCESO_EN_HC, false);
 		map.put(AppFeature.HABILITAR_CUESTIONARIOS, false);
 	}
 

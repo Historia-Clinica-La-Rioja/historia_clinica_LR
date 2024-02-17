@@ -33,7 +33,7 @@ public class ReferenceBo {
     private Integer careLineId;
 
     @NotNull(message = "{value.mandatory}")
-    private Integer clinicalSpecialtyId;
+    private List<Integer> clinicalSpecialtyIds;
 
     private List<Integer> fileIds;
 

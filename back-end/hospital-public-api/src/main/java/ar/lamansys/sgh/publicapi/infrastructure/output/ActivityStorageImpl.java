@@ -11,15 +11,16 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+
+import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageException;
-import ar.lamansys.sgh.publicapi.application.port.out.exceptions.ActivityStorageExceptionEnum;
 import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
 import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
 import ar.lamansys.sgh.publicapi.domain.GenderEnum;
@@ -29,6 +30,8 @@ import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 @Service
 public class ActivityStorageImpl implements ActivityStorage {
 
@@ -45,10 +48,12 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+	private static final String JOIN_EMERGENCY_CARE = "LEFT JOIN {h-schema}emergency_care_evolution_note event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 
 	private static final Integer HOSPITALIZATION = 0;
 	private static final Integer OUTPATIENT_CONSULTATION = 1;
 	private static final Integer ODONTOLOGY = 6;
+	private static final Integer EMERGENCY_CARE = 4;
 
 	private static final String JOIN_ANY_EVENT = "LEFT JOIN {h-schema}internment_episode ie ON ie.id = va.encounter_id AND va.scope_id =" + HOSPITALIZATION + " " +
 			"LEFT JOIN {h-schema}outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
@@ -76,7 +81,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.verification_status_id, " +
 					"hc.updated_on, " +
 					"mcp.plan, " +
-					"hc.cie10_codes " +
+					"hc.cie10_codes, " +
+					"va.created_on " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -115,7 +121,8 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.verification_status_id, " +
 					"hc.updated_on, " +
 					"mcp.plan, " +
-					"hc.cie10_codes " +
+					"hc.cie10_codes, " +
+					"va.created_on " +
 					"FROM {h-schema} v_attention va " +
 					"LEFT JOIN {h-schema} attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
@@ -150,12 +157,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 		var queryResult = query.getResultList();
 
 		Object[] resultSearch = queryResult.size() == 1 ? (Object[]) queryResult.get(0) : null;
-		AttentionInfoBo result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo)
-				.orElseThrow(() -> new ActivityStorageException(ActivityStorageExceptionEnum.ACTIVITY_NOT_EXISTS,
-						"La actividad no existe"));
+
+		Optional<AttentionInfoBo> result = Optional.ofNullable(resultSearch).map(this::parseToAttentionInfoBo);
 
 		LOG.trace("Output -> {}", result);
-		return Optional.of(result);
+		return result;
 	}
 
 	@Override
@@ -170,7 +176,9 @@ public class ActivityStorageImpl implements ActivityStorage {
 				+ " UNION ALL " +
 				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING_ODONTOLOGY, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")";
+				"("+String.format(SQL_STRING_ODONTOLOGY, JOIN_ODONTOLOGY, whereClause + ODONTOLOGY) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 
 
 		Query query = entityManager.createNativeQuery(finalQuery)
@@ -204,7 +212,9 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("identificationNumber", identificationNumber)
@@ -237,7 +247,9 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
 				+ " UNION ALL " +
-				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")";
+				"("+String.format(SQL_STRING, JOIN_OUTPATIENT, whereClause + OUTPATIENT_CONSULTATION) +")"
+				+ " UNION ALL " +
+				"("+String.format(SQL_STRING, JOIN_EMERGENCY_CARE, whereClause + EMERGENCY_CARE) +")";
 		Query query = entityManager.createNativeQuery(finalQuery)
 				.setParameter("refsetCode", refsetCode)
 				.setParameter("fromDate", fromDate)
@@ -267,7 +279,20 @@ public class ActivityStorageImpl implements ActivityStorage {
 				ScopeEnum.map((Short) rawAttention[10]),
 				buildInternmentBo(rawAttention),
 				buildProfessionalBo(rawAttention),
-				buildDiagnoses(rawAttention)
+				buildDiagnoses(rawAttention),
+				buildDateTimeBo(rawAttention)
+		);
+	}
+
+	private DateTimeBo buildDateTimeBo(Object[] rawAttention) {
+		var localDate = ((Timestamp) rawAttention[27]).toLocalDateTime();
+		return new DateTimeBo(
+				new DateBo(localDate.toLocalDate().getYear(),
+							localDate.toLocalDate().getMonthValue(),
+							localDate.toLocalDate().getDayOfMonth()),
+				new TimeBo(localDate.getHour(),
+							localDate.getMinute(),
+							localDate.getSecond())
 		);
 	}
 

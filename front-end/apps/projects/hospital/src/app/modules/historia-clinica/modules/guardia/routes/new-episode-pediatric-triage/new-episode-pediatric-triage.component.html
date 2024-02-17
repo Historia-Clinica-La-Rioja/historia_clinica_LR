@@ -7,7 +7,8 @@
 		<div>
 			<h3 [translate]="'guardia.new-episode.ADM_TRIAGE'"></h3>
 			<app-pediatric-triage (confirm)="confirmEvent($event)"
-								  (cancel)="cancelEvent()"></app-pediatric-triage>
+								  (cancel)="cancelEvent()"
+								  [canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE"></app-pediatric-triage>
 		</div>
 	</section>
 </app-content>

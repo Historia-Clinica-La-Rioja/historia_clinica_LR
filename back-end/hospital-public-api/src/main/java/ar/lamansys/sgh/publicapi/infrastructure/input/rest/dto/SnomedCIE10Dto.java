@@ -24,7 +24,9 @@ public class SnomedCIE10Dto implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		SnomedCIE10Dto snomedDto = (SnomedCIE10Dto) o;
-		return sctId.equals(snomedDto.sctId) && pt.equals(snomedDto.pt) && CIE10Id.equals(snomedDto.getCIE10Id());
+		if (snomedDto.getCIE10Id() != null)
+			return sctId.equals(snomedDto.sctId) && pt.equals(snomedDto.pt) && CIE10Id.equals(snomedDto.getCIE10Id());
+		return sctId.equals(snomedDto.sctId) && pt.equals(snomedDto.pt);
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package net.pladema.establishment.controller;
 
-import java.util.regex.Pattern;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgx.auth.twoWayEncryption.infrastructure.output.TwoWayEncryptionService;
-import ar.lamansys.sgx.auth.user.application.registeruser.exceptions.RegisterUserEnumException;
-import ar.lamansys.sgx.auth.user.application.registeruser.exceptions.RegisterUserException;
 import net.pladema.establishment.repository.PacServerRepository;
 import net.pladema.establishment.repository.entity.PacServer;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;

@@ -13,7 +13,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.EUnitsOfTimeBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LoadMedications {
@@ -98,7 +99,7 @@ public class LoadMedications {
 				medicationBo.getIsDigital(),
 				medicationBo.getPrescriptionDate(),
 				medicationBo.getDueDate());
-
+		medicationStatement.setUuid(UUID.randomUUID());
         medicationStatement = medicationStatementRepository.save(medicationStatement);
         LOG.debug("medicationStatement saved -> {}", medicationStatement.getId());
         LOG.debug(OUTPUT, medicationStatement);

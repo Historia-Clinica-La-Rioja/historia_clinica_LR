@@ -7,10 +7,6 @@ import lombok.ToString;
 
 import javax.persistence.Embeddable;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Embeddable
 @Getter
 @Setter

@@ -18,5 +18,5 @@ public interface OdontologyConsultationSummaryStorage {
 
     List<ProcedureSummaryBo> getProceduresByPatient(Integer patientId, List<Integer> odontologyConsultationIds);
 
-    List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer consultationId);
+    List<ReferenceSummaryBo> getReferencesByHealthCondition(Integer healthConditionId, Integer consultationId, List<Short> loggedUserRoleIds);
 }

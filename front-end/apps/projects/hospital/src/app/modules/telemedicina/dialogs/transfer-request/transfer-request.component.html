@@ -1,0 +1,28 @@
+<div mat-dialog-title>
+    <div fxLayout="row" fxLayoutAlign="end end">
+        <button mat-dialog-close mat-icon-button>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="mat-h2 capitalize-first-letter" [translate]="'telemedicina.requests.TRANSFER_REQUEST'"></div>
+</div>
+
+<mat-dialog-content fxLayout="column" fxLayoutGap="20px">
+    <div>
+        <p>{{'telemedicina.requests.form.PATIENT' | translate}}</p>
+        <app-patient-card [patient]="patientBasicData" [personPhoto]="null"></app-patient-card>
+    </div>
+    <div>
+        <p>{{'telemedicina.requests.form.ASSIGN_TO' | translate}}</p>
+     <app-typeahead [options]="responsibleProfessionals" (selectionChange)="setResponsibleSelectionChange($event)"></app-typeahead>
+     <mat-error *ngIf="showMessage" [translate]="'forms.REQUIRED'"></mat-error>
+    </div>
+</mat-dialog-content>
+
+<div mat-dialog-actions align="end">
+    <button mat-stroked-button [mat-dialog-close]=false class="uppercase" color='primary' id="cancel-button">
+        {{'buttons.CANCEL' | translate}}</button>
+    <button mat-raised-button color='primary' class="uppercase" (click)="confirm()"
+        id="confirm-button">
+        {{'buttons.CONFIRM' | translate}}</button>
+</div>

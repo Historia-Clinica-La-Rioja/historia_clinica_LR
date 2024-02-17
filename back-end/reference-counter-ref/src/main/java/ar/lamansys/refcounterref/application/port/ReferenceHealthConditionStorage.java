@@ -9,4 +9,6 @@ public interface ReferenceHealthConditionStorage {
 	Integer fetchHealthConditionByEncounterAndSnomedData(Integer encounterId, Integer sourceTypeId, String sctid, String pt);
 
 	List<Integer> saveProblems(Integer referenceId, CompleteReferenceBo referenceBo);
+
+	List<Integer> getReferenceIds(Integer healthConditionId);
 }

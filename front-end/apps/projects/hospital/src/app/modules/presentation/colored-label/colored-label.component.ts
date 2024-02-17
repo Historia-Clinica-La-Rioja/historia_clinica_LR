@@ -8,11 +8,19 @@ import { Component, Input } from '@angular/core';
 export class ColoredLabelComponent {
 
 	@Input() description: string;
-	@Input() color: Color
+	@Input() color: Color;
+	@Input() icon?: string;
+
 	constructor() { }
 
 }
 
 export enum Color {
-	RED = 'red', GREEN = 'green', YELLOW = 'yellow', GREY = 'grey', BLUE = 'blue'
+	RED = 'red', GREEN = 'green', YELLOW = 'yellow', GREY = 'grey', BLUE = 'blue', PURPLE = 'purple'
+}
+
+export interface ColoredLabel {
+	description: string; 
+	color: Color;
+	icon?: string;
 }

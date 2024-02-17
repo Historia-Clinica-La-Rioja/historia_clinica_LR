@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
+
 import org.mapstruct.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +21,7 @@ public class DiagnosticReportInfoMapper {
     private static final Logger LOG = LoggerFactory.getLogger(DiagnosticReportInfoMapper.class);
 
     @Named("parseTo")
-    public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto){
+    public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto, ReferenceRequestDto referenceRequestDto){
         LOG.debug("input -> diagnosticReportBo{},a professionalDto {}", diagnosticReportBo, professionalDto);
         DiagnosticReportInfoDto result = new DiagnosticReportInfoDto();
         result.setId(diagnosticReportBo.getId());
@@ -33,12 +35,13 @@ public class DiagnosticReportInfoMapper {
 		result.setCategory(diagnosticReportBo.getCategory());
 		result.setSource(diagnosticReportBo.getSource());
 		result.setSourceId(diagnosticReportBo.getSourceId());
+		result.setReferenceRequestDto(referenceRequestDto);
         LOG.debug("Output: {}", result);
         return result;
     }
 
 	@Named("parseTo")
-	public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto, PatientMedicalCoverageDto patientMedicalCoverage){
+	public DiagnosticReportInfoDto parseTo(DiagnosticReportBo diagnosticReportBo, ProfessionalDto professionalDto, PatientMedicalCoverageDto patientMedicalCoverage, ReferenceRequestDto referenceRequestDto){
 		LOG.debug("input -> diagnosticReportBo{},a professionalDto {}", diagnosticReportBo, professionalDto);
 		DiagnosticReportInfoDto result = new DiagnosticReportInfoDto();
 		result.setId(diagnosticReportBo.getId());
@@ -53,6 +56,7 @@ public class DiagnosticReportInfoMapper {
 		result.setSource(diagnosticReportBo.getSource());
 		result.setSourceId(diagnosticReportBo.getSourceId());
 		result.setCoverageDto(patientMedicalCoverage);
+		result.setReferenceRequestDto(referenceRequestDto);
 		LOG.debug("Output: {}", result);
 		return result;
 	}

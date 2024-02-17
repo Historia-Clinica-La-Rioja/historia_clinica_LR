@@ -38,4 +38,7 @@ public class BedSummaryVo implements Serializable {
 		this.sector.addSpecialty(clinicalSpecialty);
 	}
 
+	public void addHierarchicalUnit(HierarchicalUnitVo hierarchicalUnitVo) {
+		this.sector.addHierarchicalUnit(hierarchicalUnitVo);
+	}
 }

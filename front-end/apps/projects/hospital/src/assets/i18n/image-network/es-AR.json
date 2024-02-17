@@ -46,6 +46,7 @@
                 "ASSOCIATED_PROBLEM": "Problema asociado",
                 "PROFESSIONAL": "Profesional solicitante",
                 "INSTITUTION": "Institución",
+                "OBSERVATIONS": "Observaciones",
                 "ATTACH_EXTERNAL_ORDER": "Adjuntar orden externa",
                 "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF"
             },
@@ -76,7 +77,11 @@
                 "CONCLUTIONS": "Conclusiones:",
                 "OBSERVATIONS": "Detalle de informe:",
                 "VIEW_STUDY": "ver estudio",
-                "SNACKBAR_ERROR_STUDY": "No es posible abrir el estudio",
+                "DOWNLOAD_STUDY": "descargar estudio",
+                "TECHNICIAN_OBSERVATIONS": "Observaciones del técnico",
+                "IMAGE_SIZE": "Peso de la imagen:",
+                "ERROR_VIEW_STUDY": "No es posible visualizar el estudio",
+                "ERROR_DOWNLOAD_STUDY": "No es posible descargar el estudio",
                 "conclutions": {
                     "ADD_CONCLUTION": "Agregar conclusión",
                     "REGISTERED_CONCLUTIONS": "Conclusiones registradas",
@@ -88,6 +93,7 @@
                 "TEMPLATE": "Plantillas",
                 "SAVE_TEMPLATE_TITLE":"Guardar como plantilla",
                 "IMPORT_TEMPLATE":"Importar plantilla",
+                "DELETE_TEMPLATE":"Eliminar plantilla",
                 "NAME_TEMPLATE":"Nombre de la plantilla",
                 "NAME_EXISTS":"Ya existe una plantilla con ese nombre. Por favor, elija otro",
                 "SNACKBAR_SUCCESS_TEMPLATE": "Plantilla guardada exitosamente",
@@ -96,7 +102,9 @@
                 "TEMPLATE_CONFIRM_BUTTON_OK":"SI, SELECCIONAR PLANTILLA",
                 "TEMPLATE_CONFIRM_BUTTON_CANCEL":"NO, CANCELAR",
                 "SELECT_TEMPLATE_IMPORT": "Seleccione plantilla a importar",
-                "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente"
+                "SELECT_TEMPLATE_DELETE": "Seleccione plantilla a eliminar",
+                "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente",
+                "SNACKBAR_SUCCESS_DELETE_TEMPLATE": "Plantilla eliminada exitosamente"
 
             },
             "filters": {
@@ -126,7 +134,8 @@
             "VIEW_REPORT": "Ver informe",
             "DOWNLOAD_REPORT": "Descargar informe",
             "REPORT_NOT_REQUIRED": "No requiere informe",
-            "REPORT_REQUIRED": "Informe solicitado"
+            "REPORT_REQUIRED": "Informe solicitado",
+            "ATTACHED_DOCUMENTS": "Documentos adjuntos"
 		}
 
 	}

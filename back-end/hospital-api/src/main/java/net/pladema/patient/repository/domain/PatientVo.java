@@ -29,4 +29,10 @@ public class PatientVo implements Serializable {
 		this.id = patientId;
 	}
 
+	public PatientVo(Integer patientId, Person person, String identificationType, Short genderId, String genderDescription) {
+		this.person = new BasicPersonVo(person.getFirstName(), person.getLastName(), identificationType,
+				person.getIdentificationNumber(), genderId,genderDescription);
+		this.id = patientId;
+	}
+
 }

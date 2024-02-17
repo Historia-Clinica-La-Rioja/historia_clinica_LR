@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import ar.lamansys.sgh.clinichistory.domain.ips.Last2RiskFactorsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, Subject } from "rxjs";
 import { InternmentStateService } from "@api-rest/services/internment-state.service";
-import { AllergyConditionDto, AnthropometricDataDto, DocumentSearchFilterDto, HCEAllergyDto, HCEPersonalHistoryDto, HealthHistoryConditionDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
+import { AllergyConditionDto, AnthropometricDataDto, DocumentSearchFilterDto, HCEAllergyDto, HCEHealthConditionDto, HealthHistoryConditionDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
 import { DocumentSearchService } from "@api-rest/services/document-search.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { momentParseDateTime } from "@core/utils/moment.utils";
@@ -185,7 +185,7 @@ export class InternmentSummaryFacadeService {
 			});
 	}
 
-	private mapToHealthHistoryConditionDto(familyHistory: HCEPersonalHistoryDto): HealthHistoryConditionDto {
+	private mapToHealthHistoryConditionDto(familyHistory: HCEHealthConditionDto): HealthHistoryConditionDto {
 		return {
 			startDate: familyHistory.startDate,
 			note: null,

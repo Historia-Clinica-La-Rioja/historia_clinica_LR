@@ -47,6 +47,12 @@
 			],
 			"@extensions/*": [
 				"projects/hospital/src/app/modules/extensions/*"
+			],
+			"@access-management/*": [
+				"projects/hospital/src/app/modules/access-management/*"
+			],
+			"@shared-appointment-access-management/*": [
+				"projects/hospital/src/app/modules/shared-appointment-access-management/*"
 			]
 		},
 		"importHelpers": true,

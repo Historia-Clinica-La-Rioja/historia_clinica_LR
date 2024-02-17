@@ -56,7 +56,8 @@ export class BedManagementFacadeService {
 			this.filterBySector(newFilter, bedManagement)
 			&& this.filterByService(newFilter, bedManagement)
 			&& this.filterByProbableDischargeDate(newFilter, bedManagement)
-			&& this.filterByFreeBed(newFilter, bedManagement)));
+			&& this.filterByFreeBed(newFilter, bedManagement)
+			&& this.filterByHierarchicalUnits(newFilter, bedManagement)));
 		this.initialFilters = newFilter;
 		this.bedSummarySubject.next(result);
 		this.bedManagementFilterSubject.next(newFilter);
@@ -71,11 +72,19 @@ export class BedManagementFacadeService {
 	}
 
 	private filterByProbableDischargeDate(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
-		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrBefore(momentParseDate(filter.probableDischargeDate)) : false : true);
+		return (filter.probableDischargeDate ? bed.probableDischargeDate ? momentParseDateTime(bed.probableDischargeDate).isSameOrAfter(momentParseDate(filter.probableDischargeDate)) : false : true);
 	}
 
 	private filterByFreeBed(filter: BedManagementFilter, bed: BedSummaryDto): boolean {
 		return (filter.filled ? true : bed.bed.free);
+	}
+
+	private filterByHierarchicalUnits(filter: BedManagementFilter, bed: BedSummaryDto) {
+		return (filter.hierarchicalUnits?.length ? this.sectorHasHierarchicalUnits(filter, bed): true);
+	}
+
+	private sectorHasHierarchicalUnits(filter: BedManagementFilter, bed: BedSummaryDto) {
+		return bed.sector.hierarchicalUnit.length ? bed.sector.hierarchicalUnit.some(h => filter.hierarchicalUnits.includes(h.id)): false;
 	}
 
 	public getFilterOptions() {

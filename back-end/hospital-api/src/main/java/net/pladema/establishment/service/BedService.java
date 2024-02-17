@@ -23,4 +23,6 @@ public interface BedService {
 	
 	public List<BedSummaryVo> getBedSummary(Integer institutionId, Short[] sectorType);
 
+	void updateBedNurse(Integer userId, Integer bedId);
+
 }

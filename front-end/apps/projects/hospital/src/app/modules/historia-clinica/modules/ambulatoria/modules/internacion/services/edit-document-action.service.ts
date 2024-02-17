@@ -35,6 +35,10 @@ export class EditDocumentActionService {
 			this.internmentActions.epicrisis$.subscribe(fieldsToUpdate => this.updateInternment(fieldsToUpdate));
 			this.internmentActions.openEpicrisis(document.id);
 		}
+		if (document.documentType === "Parte quirúrgico de internación") {
+			this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => this.updateInternment(fieldsToUpdate));
+			this.internmentActions.openSurgicalReport(document.id);
+		}
 	}
 
 	editDraftEpicrisis(document: DocumentSearchDto, canConfirmedDocument: boolean) {

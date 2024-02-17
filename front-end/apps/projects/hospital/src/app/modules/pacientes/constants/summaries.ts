@@ -4,3 +4,8 @@ export const ASSIGNED_APPOINTMENTS_SUMMARY: SummaryHeader = {
     title: 'pacientes.assigned-appointments.TITLE',
     matIcon: 'calendar_today'
 };
+
+export const BOOKING_APPOINTMENTS_SUMMARY: SummaryHeader = {
+    title: 'pacientes.booking-appointments.TITLE',
+    matIcon: 'calendar_today'
+}

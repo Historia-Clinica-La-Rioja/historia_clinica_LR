@@ -22,7 +22,7 @@ export class StudyImagesReportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.isImageOrderCasesIncomplete = this.studyInfo.typeOrder !== 'completa' && !this.studyInfo.infoOrderInstances.status
-    this.showAccessToFiles = this.studyInfo.typeOrder === 'completa' && this.studyInfo.statusId === STUDY_STATUS.FINAL_RDI.id
+    this.showAccessToFiles = this.studyInfo.typeOrder === 'completa' && this.studyInfo.statusId === STUDY_STATUS.FINAL.id
     || this.studyInfo.typeOrder !== 'completa' && this.studyInfo.infoOrderInstances.status
   }
 

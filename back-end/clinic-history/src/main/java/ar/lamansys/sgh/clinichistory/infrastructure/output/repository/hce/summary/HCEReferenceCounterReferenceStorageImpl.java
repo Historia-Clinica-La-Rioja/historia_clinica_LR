@@ -30,7 +30,9 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
     @Override
     public CounterReferenceSummaryBo getCounterReference(Integer referenceId) {
         log.debug("Input parameter -> referenceId {}", referenceId);
-		return mapToCounterReferenceSummaryBo(sharedReferenceCounterReference.getCounterReference(referenceId));
+		return sharedReferenceCounterReference.getCounterReference(referenceId)
+				.map(this::mapToCounterReferenceSummaryBo)
+				.orElse(new CounterReferenceSummaryBo());
     }
 
     @Override
@@ -43,9 +45,9 @@ public class HCEReferenceCounterReferenceStorageImpl implements HCEReferenceCoun
     }
 
     @Override
-    public List<HCEReferenceProblemBo> getProblemsWithReferences(Integer patientId) {
-        log.debug("Input parameters -> patientId {} ", patientId);
-        return mapToHCEReferenceProblemBoList(sharedReferenceCounterReference.getReferencesProblemsByPatient(patientId));
+    public List<HCEReferenceProblemBo> getProblemsWithReferences(Integer patientId, List<Short> loggedUserRoleIds) {
+        log.debug("Input parameters -> patientId {}, loggedUserRoleIds {}", patientId, loggedUserRoleIds);
+        return mapToHCEReferenceProblemBoList(sharedReferenceCounterReference.getReferencesProblemsByPatient(patientId, loggedUserRoleIds));
     }
 
     private CounterReferenceSummaryBo mapToCounterReferenceSummaryBo(CounterReferenceSummaryDto counterReferenceSummaryDto) {

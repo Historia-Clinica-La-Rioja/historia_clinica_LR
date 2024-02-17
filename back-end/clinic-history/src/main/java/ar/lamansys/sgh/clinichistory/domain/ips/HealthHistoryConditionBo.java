@@ -15,10 +15,6 @@ public class HealthHistoryConditionBo extends HealthConditionBo {
 
     private String note;
 
-    public HealthHistoryConditionBo(SnomedBo snomed) {
-        super(snomed);
-    }
-
     public HealthHistoryConditionBo() {
         super();
     }

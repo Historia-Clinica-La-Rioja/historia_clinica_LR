@@ -28,7 +28,8 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.PERSONAL_DE_LABORATORIO,
 			ERole.PERSONAL_DE_IMAGENES,
 			ERole.PERSONAL_DE_FARMACIA,
-			ERole.PERSONAL_DE_LEGALES
+			ERole.PERSONAL_DE_LEGALES,
+			ERole.ABORDAJE_VIOLENCIAS
 		],
 		featureFlag: AppFeature.HABILITAR_HISTORIA_CLINICA_AMBULATORIA
 	},
@@ -57,13 +58,14 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ADMINISTRADOR_AGENDA,
 			ERole.ENFERMERO,
 			ERole.ESPECIALISTA_EN_ODONTOLOGIA,
-			ERole.ADMINISTRATIVO_RED_DE_IMAGENES
+			ERole.ADMINISTRATIVO_RED_DE_IMAGENES,
+			ERole.ABORDAJE_VIOLENCIAS
 		],
 		featureFlag: AppFeature.HABILITAR_GESTION_DE_TURNOS
 	},
 	{
 		text: 'app.menu.CAMAS',
-		icon: 'single_bed',
+		icon: 'hotel',
 		id: 'camas',
 		url: './camas',
 		permissions: [
@@ -83,7 +85,8 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ENFERMERO,
 			ERole.ESPECIALISTA_MEDICO,
 			ERole.PROFESIONAL_DE_SALUD,
-			ERole.ADMINISTRATIVO_RED_DE_IMAGENES
+			ERole.ADMINISTRATIVO_RED_DE_IMAGENES,
+			ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 		],
 		featureFlag: AppFeature.HABILITAR_MODULO_GUARDIA
 	},
@@ -128,5 +131,19 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		url: './telesalud',
 		permissions: [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE],
 		featureFlag: AppFeature.HABILITAR_TELEMEDICINA
+	},
+	{
+		text: 'app.menu.DIGITAL_SIGNATURE',
+		icon: 'border_color',
+		id: 'digitalSignature',
+		url: './firma-digital/documentos',
+		permissions: [
+			ERole.ESPECIALISTA_MEDICO,
+			ERole.PROFESIONAL_DE_SALUD,
+			ERole.ENFERMERO_ADULTO_MAYOR,
+			ERole.ENFERMERO,
+			ERole.ESPECIALISTA_EN_ODONTOLOGIA
+		],
+		featureFlag: AppFeature.HABILITAR_FIRMA_DIGITAL
 	},
 ];

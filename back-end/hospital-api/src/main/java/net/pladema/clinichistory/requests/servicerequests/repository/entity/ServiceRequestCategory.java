@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class ServiceRequestCategory {
 
 	public static final String LABORATORY_PROCEDURE = "108252007";
-	public static final String PROCEDURE = "363679005";
+	public static final String DIAGNOSTIC_IMAGING = "363679005";
 	public static final String COUNSELLING = "409063005";
 	public static final String EDUCATION = "409073007";
 	public static final String SURGICAL_PROCEDURE = "387713003";

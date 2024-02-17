@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ChipsAutocompleteComponent } from './chips-autocomplete.component';
 
 const meta: Meta<ChipsAutocompleteComponent> = {
-    title: 'Example/ChipsAutocompleteComponent',
+    title: 'Presentation/ChipsAutocompleteComponent',
     component: ChipsAutocompleteComponent,
     tags: ['autodocs'],
     decorators: [

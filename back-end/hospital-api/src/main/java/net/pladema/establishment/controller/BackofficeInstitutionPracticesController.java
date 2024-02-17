@@ -1,6 +1,7 @@
 package net.pladema.establishment.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -42,9 +43,11 @@ public class BackofficeInstitutionPracticesController extends BackofficeSnomedGr
 
 	@Override
 	public Page<SnomedGroup> getList(Pageable pageable, SnomedGroup entity) {
-		Integer procedureId = snomedGroupRepository.getIdByDescription(SnomedECL.PROCEDURE.toString());
-		String ecl = snomedGroupRepository.getById(procedureId).getEcl();
-		entity.setEcl(ecl);
+		Optional<Integer> procedureGroupId = snomedGroupRepository.getIdByDescriptionAndInstitutionId(SnomedECL.PROCEDURE.toString(), -1);
+		procedureGroupId.ifPresent(id -> {
+			String ecl = snomedGroupRepository.getById(id).getEcl();
+			entity.setEcl(ecl);
+		});
 		entity.setGroupType(SnomedGroupType.SEARCH_GROUP);
 
 		if (authoritiesValidator.hasRole(ERole.ROOT) || authoritiesValidator.hasRole(ERole.ADMINISTRADOR))

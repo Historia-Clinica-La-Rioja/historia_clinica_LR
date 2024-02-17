@@ -17,7 +17,7 @@ export class DateRangePickerComponent implements OnInit {
 	@Input()
 	set disabled(value: boolean) {
 		if (value)
-			this.dateRangeForm.disable();
+			this.dateRangeForm?.disable();
 		else
 			this.dateRangeForm?.enable();
 	};

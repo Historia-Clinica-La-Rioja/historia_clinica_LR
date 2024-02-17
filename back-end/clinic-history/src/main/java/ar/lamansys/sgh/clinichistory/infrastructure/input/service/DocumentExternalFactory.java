@@ -34,7 +34,7 @@ public class DocumentExternalFactory {
     }
 
     private DocumentBo mapToDocument(DocumentDto documentDto) {
-        DocumentBo result = documentMapper.from(documentDto);
+        DocumentBo result = documentMapper.fromDto(documentDto);
         result.setPatientInfo(mapToPatient(documentDto.getPatientId()));
         return result;
     }

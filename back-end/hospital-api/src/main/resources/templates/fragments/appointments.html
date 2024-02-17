@@ -29,7 +29,7 @@
 		    width: 23px;
 		}
 	    .health-coverage-column {
-	        width: 240px;
+	        width: 180px;
 	    }
 	    .affiliate-number-column {
 	        width : 80px;
@@ -42,6 +42,9 @@
 	    }
 	    .appointment-state-column {
 	        width: 70px;
+	    }
+	    .phone-number-column {
+	        width: 60px;
 	    }
 	    .patient-id-cell {
 	        text-align: center;
@@ -80,6 +83,7 @@
                                 <th scope="col" class="last-name-column">Apellidos </th>
                                 <th scope="col" class="health-coverage-column">Cobertura médica</th>
                                 <th scope="col" class="affiliate-number-column">Nro. de Credencial </th>
+                                <th scope="col" class="phone-number-column">Teléfono </th>
                                 <th scope="col" class="appointment-state-column">Estado del turno </th>
                             </tr>
                             </thead>
@@ -96,6 +100,7 @@
                                         + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
                                 <td th:text="${appointment.medicalCoverageName}"></td>
                                 <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
+                                <td th:text="${appointment.completePhone}"></td>
                                 <td th:text="${appointment.appointmentState}"></td>
                             </tr>
                             </tbody>
@@ -120,6 +125,7 @@
                             <th scope="col" class="last-name-column">Apellidos </th>
                             <th scope="col" class="health-coverage-column">Cobertura médica</th>
                             <th scope="col" class="affiliate-number-column">Nro. de Credencial </th>
+                            <th scope="col" class="phone-number-column">Teléfono </th>
                             <th scope="col" class="appointment-state-column">Estado del turno </th>
                         </tr>
                         </thead>
@@ -135,6 +141,7 @@
                                     + ' ' + #strings.defaultString(appointment.otherLastNames, '')}"></td>
                             <td th:text="${appointment.medicalCoverageName}"></td>
                             <td th:text="${appointment.medicalCoverageAffiliateNumber}"></td>
+                            <td th:text="${appointment.completePhone}"></td>
                             <td th:text="${appointment.appointmentState}"></td>
                         </tr>
                         </tbody>

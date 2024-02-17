@@ -149,6 +149,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 					personExtended.getReligion(),
 					getEthnicity(personExtended.getEthnicityId())
 			);
+			result.setEmail(personExtended.getEmail());
 			result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
 			if (!personFileDtoList.isEmpty()) {
 				result.setFiles(personFileDtoList);
@@ -239,6 +240,7 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 		result.setPhonePrefix(personExtended.getPhonePrefix());
 		result.setPhoneNumber(personExtended.getPhoneNumber());
 		result.setNameSelfDetermination(personExtended.getNameSelfDetermination());
+		result.setCuil(personExtended.getCuil());
 		LOG.debug(OUTPUT, result);
 		return result;
 	}

@@ -84,6 +84,9 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 	@Column(name = "applicant_healthcare_professional_email")
 	private String applicantHealthcareProfessionalEmail;
 
+	@Column(name = "diary_label_id")
+	private Integer diaryLabelId;
+
 	public static Appointment newFromAppointmentBo(AppointmentBo appointmentBo) {
 		return Appointment.builder()
 				.dateTypeId(appointmentBo.getDate())

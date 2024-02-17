@@ -1,0 +1,12 @@
+<button *ngIf="addButtonText" mat-button type="button" color="primary" id="add-button" [matMenuTriggerFor]="colorOptions">
+    + {{ addButtonText | translate }}
+</button>
+<mat-menu #colorOptions="matMenu">
+    <button (click)="selectColor(color)" class="color mat-elevation-z0" mat-fab *ngFor="let color of colorList" [ngStyle]="{'background': color.color}"></button>
+</mat-menu>
+
+<div *ngIf="!addButtonText" class="change-color">
+    <button mat-fab class="color mat-elevation-z0" type="button" id="change-button" [ngStyle]="{'background': currentColor.color}" [matMenuTriggerFor]="colorOptions">
+        <mat-icon class="color-grey">arrow_drop_down</mat-icon>
+    </button>
+</div>

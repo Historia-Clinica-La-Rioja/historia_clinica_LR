@@ -1,25 +1,29 @@
 package net.pladema.renaper.services.impl;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.pladema.renaper.configuration.RenaperCondition;
-
 import org.springframework.context.annotation.Conditional;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ar.lamansys.sgx.shared.restclient.services.RestClient;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.renaper.configuration.RenaperCondition;
 import net.pladema.renaper.configuration.RenaperRestTemplateAuth;
 import net.pladema.renaper.configuration.RenaperWSConfig;
 import net.pladema.renaper.services.RenaperService;
 import net.pladema.renaper.services.domain.PersonDataResponse;
 import net.pladema.renaper.services.domain.PersonMedicalCoverageBo;
-import ar.lamansys.sgx.shared.restclient.services.RestClient;
+import net.pladema.renaper.services.domain.RenaperServiceException;
 
+@Slf4j
 @Service
 @Conditional(RenaperCondition.class)
 public class RenaperServiceImpl extends RestClient implements RenaperService {
@@ -36,36 +40,41 @@ public class RenaperServiceImpl extends RestClient implements RenaperService {
 	}
 
 	@Override
-	public List<PersonMedicalCoverageBo> getPersonMedicalCoverage(String nroDocumento, Short idSexo) {
+	public List<PersonMedicalCoverageBo> getPersonMedicalCoverage(String nroDocumento, Short idSexo) throws RenaperServiceException {
 		String urlWithParams = renaperWSConfig.getUrlCobertura() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo;
-		ResponseEntity<PersonMedicalCoverageBo[]> response = exchangeGet(urlWithParams,
-			PersonMedicalCoverageBo[].class);
-		switch(response.getStatusCode()) {
-			case OK:
-				return Arrays.asList(response.getBody());
-			case NO_CONTENT:
-			case INTERNAL_SERVER_ERROR:
-			default:
-				return Collections.emptyList();
+		try{
+			ResponseEntity<PersonMedicalCoverageBo[]> response = exchangeGet(urlWithParams,
+				PersonMedicalCoverageBo[].class);
+			if (response.getStatusCode() == HttpStatus.OK) {
+				var body = response.getBody();
+				if (body == null) {
+					return Collections.emptyList();
+				}
+				return Arrays.asList(body);
+			}
+			throw new RenaperServiceException(String.format("Bad status code %s", response.getStatusCode()));
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+			throw new RenaperServiceException(e.getMessage());
 		}
 	}
 
 	@Override
-	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Short idSexo) {
+	public Optional<PersonDataResponse> getPersonData(String nroDocumento, Short idSexo) throws RenaperServiceException {
 		String urlWithParams = renaperWSConfig.getUrlPersona() + "?nroDocumento=" + nroDocumento + "&idSexo=" + idSexo; 
 		try{
 			ResponseEntity<String> response = exchangeGet(urlWithParams, String.class);
-			switch(response.getStatusCode()){
-				case OK:
-					return Optional.ofNullable(jackson.readValue(response.getBody(), PersonDataResponse.class));
-				case INTERNAL_SERVER_ERROR:
-				default:
+			if (response.getStatusCode() == HttpStatus.OK) {
+				String body = response.getBody();
+				if (body == null) {
 					return Optional.empty();
+				}
+				return Optional.of(jackson.readValue(body, PersonDataResponse.class));
 			}
-		}
-		catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return Optional.empty();
+			throw new RenaperServiceException(String.format("Bad status code %s", response.getStatusCode()));
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+			throw new RenaperServiceException(e.getMessage());
 		}
 	}
 

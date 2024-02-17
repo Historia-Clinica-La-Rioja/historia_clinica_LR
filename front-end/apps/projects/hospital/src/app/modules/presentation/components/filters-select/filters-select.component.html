@@ -5,7 +5,7 @@
 <div *ngIf="isFilterExpanded" id="filters" fxLayout="row" fxLayoutAlign="start end">
 	<form [formGroup]="filterForm">
 		<ng-container *ngFor="let filter of filters">
-			<mat-form-field appearance="outline">
+			<mat-form-field [class]="filtersSelectStyle" appearance="outline">
 				<mat-label>{{filter?.name | translate}}</mat-label>
 				<mat-select [id]="filter.key" [formControlName]="filter?.key">
 					<mat-option *ngFor="let option of filter.options" [value]="option.id">
