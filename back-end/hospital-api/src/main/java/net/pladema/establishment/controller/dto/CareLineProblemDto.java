@@ -25,10 +25,4 @@ public class CareLineProblemDto {
 		this.snomedId = snomedId;
 	}
 
-	public CareLineProblemDto(Integer id, Integer careLineId, Integer snomedId) {
-		this.id = id;
-		this.careLineId = careLineId;
-		this.snomedId = snomedId;
-	}
-
 }
