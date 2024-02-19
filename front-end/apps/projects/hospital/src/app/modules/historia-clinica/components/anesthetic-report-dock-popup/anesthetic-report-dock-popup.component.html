@@ -96,11 +96,21 @@
                 </ng-container>
             </app-anesthetic-report-person-record>
         </app-new-consultation-expansion-section>
+
         <app-new-consultation-expansion-section id="anesthetic-plan-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthetic-plan.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="anestheticPlan.isEmpty()" [hideBorder]="false">
             <app-anesthetic-plan [service]="anestheticPlan">
             </app-anesthetic-plan>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section
+            id="anesthetic-plan-expansion-section"
+            [title]="'internaciones.anesthesic-report.analgesic-technique.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="analgesicTechnique.isEmpty()" [hideBorder]="false">
+            <app-analgesic-technique
+            [service]="analgesicTechnique"
+            ></app-analgesic-technique>
         </app-new-consultation-expansion-section>
     </div>
 
