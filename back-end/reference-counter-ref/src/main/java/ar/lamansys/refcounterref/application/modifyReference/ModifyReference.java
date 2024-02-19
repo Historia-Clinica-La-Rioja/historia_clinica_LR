@@ -15,16 +15,15 @@ import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Reference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedServiceRequestPort;
-import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +36,7 @@ public class ModifyReference {
 	private final ReferenceStorage referenceStorage;
 	private final SharedServiceRequestPort sharedServiceRequestPort;
 	private final ReferenceHealthConditionStorage referenceHealthConditionStorage;
+	private final SharedStaffPort sharedStaffPort;
 
 	@Transactional
 	public void run(Integer userId, Integer oldReferenceId, ReferenceBo referenceBo){
@@ -61,6 +61,9 @@ public class ModifyReference {
 
 		Optional<ReferenceStudyBo> referenceStudy = referenceStorage.getReferenceStudy(oldReferenceId);
 
+		Integer doctorId = sharedStaffPort.getProfessionalId(UserInfo.getCurrentAuditor());
+
+
 		assertContextValid(userId, referenceData);
 		/* Modifiable fields */
 		result.setNote(referenceBo.getNote());
@@ -77,10 +80,9 @@ public class ModifyReference {
 		result.setClinicalSpecialtyIds(referenceData.getDestinationClinicalSpecialties().stream().map(ClinicalSpecialtyBo::getId).collect(Collectors.toList()));
 		result.setPhoneNumber(referenceData.getPhoneNumber());
 		result.setPhonePrefix(referenceData.getPhonePrefix());
-		result.setDoctorId(referenceData.getCreatedBy());
+		result.setDoctorId(doctorId);
 		result.setPatientId(referenceData.getPatientId());
 		result.setPatientMedicalCoverageId(referenceData.getPatientMedicalCoverageId());
-		result.setDoctorId(referenceData.getCreatedBy());
 		result.setStudy(referenceStudy.orElse(null));
 
 		return result;

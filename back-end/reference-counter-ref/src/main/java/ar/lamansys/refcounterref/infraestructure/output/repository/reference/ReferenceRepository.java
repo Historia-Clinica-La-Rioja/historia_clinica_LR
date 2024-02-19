@@ -447,7 +447,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	void deleteAndUpdateStatus(@Param("referenceId") Integer referenceId, @Param("statusId") Short statusId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo(s2.sctid, s2.pt, s.sctid, s.pt, sr.categoryId) " +
+	@Query("SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo(s2.id, s2.sctid, s2.pt, s.id, s.sctid, s.pt, sr.categoryId) " +
 			"FROM Reference r " +
 			"JOIN ServiceRequest sr ON (r.serviceRequestId = sr.id) " +
 			"JOIN Document d ON (sr.id = d.sourceId) " +

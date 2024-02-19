@@ -18,9 +18,9 @@ public class ReferenceStudyBo {
 
 	private String categoryId;
 
-	public ReferenceStudyBo(String problemSctid, String problemPt, String practiceSctid, String practicePt, String categoryId){
-		this.problem = new SnomedBo(problemSctid, problemPt);
-		this.practice = new SnomedBo(practiceSctid, practicePt);
+	public ReferenceStudyBo(Integer problemId, String problemSctid, String problemPt, Integer practiceId, String practiceSctid, String practicePt, String categoryId){
+		this.problem = new SnomedBo(problemId, problemSctid, problemPt);
+		this.practice = new SnomedBo(practiceId, practiceSctid, practicePt);
 		this.categoryId = categoryId;
 	}
 
