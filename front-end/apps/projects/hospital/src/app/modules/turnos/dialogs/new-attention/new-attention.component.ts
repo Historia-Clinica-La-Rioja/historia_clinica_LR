@@ -86,7 +86,7 @@ export class NewAttentionComponent implements OnInit {
 			this.isSpontaneousMedicalAttention = true;
 			this.form.controls.availableForBooking.setValue(false);
 			this.form.controls.protectedAppointmentsAllowed.setValue(false);
-			this.form.controls.overturnCount.disable();
+			this.form.controls.overturnCount.setValue(0);
 			this.form.controls.availableForBooking.disable();
 		} else {
 			this.isSpontaneousMedicalAttention = false;
@@ -101,6 +101,9 @@ export class NewAttentionComponent implements OnInit {
 			if (medicalAttentionType.description === MEDICAL_ATTENTION.SPONTANEOUS) {
 				this.form.controls.availableForBooking.setValue(false);
 				this.form.controls.protectedAppointmentsAllowed.setValue(false);
+				this.form.controls.patientVirtualAttentionAllowed.setValue(false);
+				this.form.controls.secondOpinionVirtualAttentionAllowed.setValue(false);
+				this.regulationProtectedAppointmentsAllowed = false;
 			}
 			else {
 				this.form.value.availableForBooking = this.availableForBooking;
@@ -151,7 +154,7 @@ export class NewAttentionComponent implements OnInit {
 export interface NewAttentionElements {
 	start: Date,
 	end: Date,
-	overturnCount?: number,
+	overturnCount: number,
 	medicalAttentionTypeId?: number,
 	isEdit?: boolean,
 	possibleScheduleHours: Date[],
