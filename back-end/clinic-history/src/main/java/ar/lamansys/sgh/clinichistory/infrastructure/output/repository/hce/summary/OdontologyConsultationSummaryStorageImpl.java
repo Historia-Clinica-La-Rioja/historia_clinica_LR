@@ -30,6 +30,8 @@ import java.util.List;
 @Repository
 public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsultationSummaryStorage {
 
+	private final List<Short> INVALID_REFERENCE_STATUS = List.of((short)3, (short)4);
+
     private final EntityManager entityManager;
 
 	private final MapReferenceSummary mapReferenceSummary;
@@ -192,13 +194,15 @@ public class OdontologyConsultationSummaryStorageImpl implements OdontologyConsu
                 +"  WHERE rhc.pk.healthConditionId = :healthConditionId"
                 +"  AND r.sourceTypeId= " + SourceType.ODONTOLOGY
                 +"  AND oc.id = :consultationId "
-				+"  AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:userRoles) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))";
+				+"  AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:userRoles) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE)) "
+				+"	AND r.statusId NOT IN :invalidReferenceStatus";
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("consultationId", consultationId)
                 .setParameter("healthConditionError", ConditionVerificationStatus.ERROR)
 				.setParameter("userRoles", loggedUserRoleIds)
+				.setParameter("invalidReferenceStatus", INVALID_REFERENCE_STATUS)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a -> result.add(mapReferenceSummary.processReferenceSummaryBo(a)));
