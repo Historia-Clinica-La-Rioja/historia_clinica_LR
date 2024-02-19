@@ -83,7 +83,7 @@ export class AvailableAppointmentListComponent {
 		const data: NewAppointmentForThirdPartyPopupData = {
 			diaryId: appointmentToAssign.diaryId,
 			openingHoursId: appointmentToAssign.openingHoursId,
-			specialtyId: appointmentToAssign.clinicalSpecialty.id,
+			specialtyId: appointmentToAssign.clinicalSpecialty?.id,
 			day: format(dateDtoToDate(appointmentToAssign.date), DateFormat.API_DATE),
 			hour: timeDtotoString(appointmentToAssign.hour),
 			practiceId: this.practiceId
