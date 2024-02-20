@@ -38,6 +38,7 @@ import { SearchAppointmentsBySpecialtyComponent } from './components/search-appo
 import { SearchAppointmentsInCareNetworkComponent } from './components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { SearchCriteriaComponent } from './components/search-criteria/search-criteria.component';
 import { SelectAgendaComponent } from './components/select-agenda/select-agenda.component';
+import { NoAppointmentAvailableComponent } from './components/no-appointment-available/no-appointment-available.component';
 //Standalone Component
 import { AvailableAppointmentDataComponent } from './standalone/components/available-appointment-data/available-appointment-data.component';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
@@ -58,7 +59,6 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 import { PracticesPipe } from './pipes/practices.pipe';
 import { ShowAppointmentOverTurnPipe } from './pipes/show-appointment-over-turn.pipe';
 import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
-
 
 @NgModule({
 	declarations: [
@@ -89,6 +89,7 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		SearchCriteriaComponent,
 		SelectAgendaComponent,
 		CalendarEventViewComponent,
+		NoAppointmentAvailableComponent,
 		// dialogs
 		AppointmentComponent,
 		BlockAgendaRangeComponent,

@@ -41,7 +41,9 @@
 			"NOT_FOUND_APPOINTMENTS": "¿No encuentra turnos disponibles para el paciente?",
 			"SEARCH_IN_CARE_NETWORK": "Buscar turnos en red de atención",
 			"messages": {
-				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
+				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda",
+				"NO_APPOINTMENT-AVAILABLE": "No se encontraron turnos disponibles",
+				"SUGGESTION" : "Intente refinando los criterios de búsqueda o en caso contrario puede: "
 			}
 		},
 		"MODALITY_ATTENTION":"Modalidad de atención",
