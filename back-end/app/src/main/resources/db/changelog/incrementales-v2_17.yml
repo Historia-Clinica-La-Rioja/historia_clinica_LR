@@ -349,3 +349,18 @@ databaseChangeLog:
           - sql:
               sql: |-
                 INSERT INTO problem_type (id, description) VALUES ('00000003', 'Otro Antecedente');
+
+    - changeSet:
+        id: addColumns-phonePrefix-phoneNumber-booking_person
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: booking_person
+              columns:
+                - column:
+                    name: phone_number
+                    type: varchar(20)
+                - column:
+                    name: phone_prefix
+                    type: varchar(10)
+
