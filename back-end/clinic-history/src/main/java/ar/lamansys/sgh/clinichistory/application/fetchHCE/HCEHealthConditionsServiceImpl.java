@@ -147,9 +147,8 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
     @Override
     public List<HCEHealthConditionBo> getProblemsAndChronicConditionsMarkedAsError(Integer patientId) {
         log.debug(LOGGING_INPUT, patientId);
-        List<HCEHealthConditionBo> result = hceHealthConditionRepository.getSummaryProblems(patientId).stream()
+        List<HCEHealthConditionBo> result = hceHealthConditionRepository.getProblemsMarkedAsError(patientId).stream()
                 .map(HCEHealthConditionBo::new)
-                .filter(HCEHealthConditionBo::isMarkedAsError)
                 .sorted(Comparator.comparing(HCEHealthConditionBo::getStartDate).reversed())
                 .collect(Collectors.toList());
         log.debug(LOGGING_OUTPUT, result);
