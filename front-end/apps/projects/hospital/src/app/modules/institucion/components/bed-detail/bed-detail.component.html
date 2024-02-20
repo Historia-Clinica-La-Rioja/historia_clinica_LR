@@ -65,19 +65,19 @@
                 </div>
                 <div mat-line>
                     <span class="mat-body-2">
-                        {{bedInfo.patient.person.firstName}} {{bedInfo.patient.person.lastName}}
+                        {{bedInfo.patient.person?.firstName}} {{bedInfo.patient.person?.lastName}}
                     </span>
                 </div>
                 <div mat-line>
-                    <span *ngIf="bedInfo.patient.person.identificationType" class="mat-body-2">
+                    <span *ngIf="bedInfo.patient.person?.identificationType" class="mat-body-2">
                         {{bedInfo.patient.person.identificationType}}:
                     </span>
                     <span class="mat-body-2">
-                        {{bedInfo.patient.person.identificationNumber}}
+                        {{bedInfo.patient.person?.identificationNumber}}
                     </span>
                 </div>
                 <div mat-line>
-                    <span *ngIf="bedInfo.patient.person.gender" class="mat-body-3">
+                    <span *ngIf="bedInfo.patient.person?.gender" class="mat-body-3">
                         Sexo: {{bedInfo.patient.person.gender.description}}
                     </span>
                 </div>

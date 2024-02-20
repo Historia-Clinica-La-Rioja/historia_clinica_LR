@@ -50,7 +50,7 @@ export class BedDetailComponent implements OnInit, OnChanges {
 	}
 
 	private setPatientData() {
-		if (this.bedInfo.patient)
+		if (this.bedInfo.patient) {
 			this.internmentPatientService.internmentEpisodeIdInProcess(this.bedInfo.patient.id).subscribe(internmentEpisode => {
 				if (internmentEpisode.inProgress) {
 					this.patientInternmentId = internmentEpisode.id
@@ -58,6 +58,12 @@ export class BedDetailComponent implements OnInit, OnChanges {
 						this.patientHasAnamnesis = !!internmentSummaryDto.documents?.anamnesis)
 				}
 			});
+			if (!this.bedInfo.patient.person)
+				this.bedInfo.patient.person  = {
+					firstName: 'Paciente temporal',
+					...this.bedInfo.patient.person
+				};
+		}
 	}
 
 	assignBed() {
