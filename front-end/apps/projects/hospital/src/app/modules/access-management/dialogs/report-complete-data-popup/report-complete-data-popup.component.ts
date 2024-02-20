@@ -4,7 +4,7 @@ import { EReferenceRegulationState, ERole, ReferenceCompleteDataDto, ReferenceDa
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { BehaviorSubject, Observable, map, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, take } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
@@ -82,12 +82,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
 	}
 
-	updateApprovalStatus() {
-		const referenceDetails$ = this.getObservable();
-		this.referenceRegulationDto$ = referenceDetails$.pipe(
-			map(referenceDetails => { return referenceDetails.regulation }),
-			tap(regulationNewState => this.referenceCompleteData = { ...this.referenceCompleteData, regulation: regulationNewState })
-		);
+	closeDialog(event: boolean) {
+		this.dialogRef.close(event);
 	}
 
 	private getObservable(): Observable<ReferenceCompleteDataDto> {

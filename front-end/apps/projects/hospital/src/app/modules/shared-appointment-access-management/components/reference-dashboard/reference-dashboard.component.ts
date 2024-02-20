@@ -35,13 +35,17 @@ export class ReferenceDashboardComponent {
 	) { }
 
 	openRequest(referenceId: number) {
-		this.dialog.open(ReportCompleteDataPopupComponent, {
+		const dialogRef = this.dialog.open(ReportCompleteDataPopupComponent, {
 			data: {
 				referenceId
 			},
 			autoFocus: false,
 			disableClose: true,
 			width: '50%',
+		});
+		dialogRef.afterClosed().subscribe(updated => {
+			if (updated)
+				this.dashboardService.updateReports();
 		});
 	}
 
