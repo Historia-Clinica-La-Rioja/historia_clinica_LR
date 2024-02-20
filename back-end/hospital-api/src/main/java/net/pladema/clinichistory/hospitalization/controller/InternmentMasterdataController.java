@@ -185,26 +185,34 @@ public class InternmentMasterdataController {
 
 	@GetMapping(value = "/vias")
 	public ResponseEntity<Collection<MasterDataDto>> getVias() {
-		log.debug("{}", "All via types");
-		return ResponseEntity.ok().body(EnumWriter.writeList(EVia.getAllParenteral()));
+		log.debug("All via parenteral-plan types");
+        var result = EnumWriter.writeList(EVia.getAllParenteral());
+        log.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping(value = "/vias-pharmaco")
 	public ResponseEntity<Collection<MasterDataDto>> getViasPharmaco() {
-		log.debug("{}", "All via types");
-		return ResponseEntity.ok().body(EnumWriter.writeList(EVia.getAllPharmaco()));
+		log.debug("All via pharmaco types");
+        var result = EnumWriter.writeList(EVia.getAllPharmaco());
+        log.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
 	}
 
     @GetMapping(value = "/vias-premedication")
     public ResponseEntity<Collection<MasterDataDto>> getViasPreMedication() {
-        log.debug("{}", "All via types");
-        return ResponseEntity.ok().body(EnumWriter.writeList(EVia.getPreMedication()));
+        log.debug("All via premedication types");
+        var result = EnumWriter.writeList(EVia.getPreMedication());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(value = "/vias-anesthetic-plan")
     public ResponseEntity<Collection<MasterDataDto>> getViasAnestheticPlan() {
-        log.debug("{}", "All via types");
-        return ResponseEntity.ok().body(EnumWriter.writeList(EVia.getAnestheticPlan()));
+        log.debug("All via anesthetic-plan types");
+        var result = EnumWriter.writeList(EVia.getAnestheticPlan());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
 	@GetMapping(value = "/units")
@@ -215,26 +223,34 @@ public class InternmentMasterdataController {
 
     @GetMapping(value = "/anesthetic-technique")
     public ResponseEntity<Collection<MasterDataDto>> getAnestheticTechniqueTypes() {
-        log.debug("{}", "All anesthetic techniques types");
-        return ResponseEntity.ok().body(EnumWriter.writeList(EAnestheticTechnique.getAll()));
+        log.debug("All anesthetic technique types");
+        var result = EnumWriter.writeList(EAnestheticTechnique.getAll());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(value = "/tracheal-intubation")
     public ResponseEntity<Collection<MasterDataDto>> getTrachealIntubationTypes() {
-        log.debug("{}", "All tracheal intubation types");
-        return ResponseEntity.ok().body(EnumWriter.writeList(ETrachealIntubation.getAll()));
+        log.debug("All tracheal intubation types");
+        var result = EnumWriter.writeList(ETrachealIntubation.getAll());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(value = "/breathing")
     public ResponseEntity<Collection<MasterDataDto>> getBreathingTypes() {
-        log.debug("{}", "All breathing types");
-        return ResponseEntity.ok().body(EnumWriter.writeList(EBreathing.getAll()));
+        log.debug("All breathing types");
+        var result = EnumWriter.writeList(EBreathing.getAll());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(value = "/circuit")
     public ResponseEntity<Collection<MasterDataDto>> getCircuitTypes() {
         log.debug("{}", "All circuit types");
-        return ResponseEntity.ok().body(EnumWriter.writeList(ECircuit.getAll()));
+        var result = EnumWriter.writeList(ECircuit.getAll());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
     }
 
 	private String getDocumentTypeDescription(String despcription) {

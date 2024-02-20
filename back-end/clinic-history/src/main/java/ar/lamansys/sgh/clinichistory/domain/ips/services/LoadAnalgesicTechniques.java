@@ -25,25 +25,31 @@ public class LoadAnalgesicTechniques {
 
         loadAnestheticSubstances.run(documentId, analgesicTechniques);
         analgesicTechniques.stream()
-                .filter(analgesicTechniqueBo -> nonNull(analgesicTechniqueBo.getInjectionNote())
-                        || nonNull(analgesicTechniqueBo.getCatheter())
-                        || nonNull(analgesicTechniqueBo.getCatheterNote()))
-                .forEach((analgesicTechniqueBo) -> {
-
-                    Integer anestheticSubstanceId = analgesicTechniqueBo.getId();
-
-                    String injectionNote = analgesicTechniqueBo.getInjectionNote();
-                    Long injectionNoteId = nonNull(injectionNote) && !injectionNote.isBlank()  ? noteService.createNote(injectionNote) : null;
-
-                    Boolean catheter = analgesicTechniqueBo.getCatheter();
-                    String catheterNote = analgesicTechniqueBo.getCatheterNote();
-                    Long catheterNoteId = nonNull(catheterNote) && !catheterNote.isBlank() ? noteService.createNote(catheterNote) : null;
-
-                    AnalgesicTechnique analgesicTechnique = analgesicTechniqueRepository.save(new AnalgesicTechnique(null, anestheticSubstanceId, injectionNoteId, catheter, catheterNoteId));
-                    analgesicTechniqueBo.setAnalgesicTechniqueId(analgesicTechnique.getId());
-                });
+                .filter(this::hasToSaveAnalgesicTechniqueEntity)
+                .forEach(this::saveEntity);
 
         log.debug("Output -> {}", analgesicTechniques);
         return analgesicTechniques;
+    }
+
+    private void saveEntity(AnalgesicTechniqueBo analgesicTechniqueBo) {
+
+        Integer anestheticSubstanceId = analgesicTechniqueBo.getId();
+
+        String injectionNote = analgesicTechniqueBo.getInjectionNote();
+        Long injectionNoteId = nonNull(injectionNote) && !injectionNote.isBlank()  ? noteService.createNote(injectionNote) : null;
+
+        Boolean catheter = analgesicTechniqueBo.getCatheter();
+        String catheterNote = analgesicTechniqueBo.getCatheterNote();
+        Long catheterNoteId = nonNull(catheterNote) && !catheterNote.isBlank() ? noteService.createNote(catheterNote) : null;
+
+        AnalgesicTechnique analgesicTechnique = analgesicTechniqueRepository.save(new AnalgesicTechnique(null, anestheticSubstanceId, injectionNoteId, catheter, catheterNoteId));
+        analgesicTechniqueBo.setAnalgesicTechniqueId(analgesicTechnique.getId());
+    }
+
+    private boolean hasToSaveAnalgesicTechniqueEntity(AnalgesicTechniqueBo analgesicTechniqueBo) {
+        return nonNull(analgesicTechniqueBo.getInjectionNote())
+                || nonNull(analgesicTechniqueBo.getCatheter())
+                || nonNull(analgesicTechniqueBo.getCatheterNote());
     }
 }

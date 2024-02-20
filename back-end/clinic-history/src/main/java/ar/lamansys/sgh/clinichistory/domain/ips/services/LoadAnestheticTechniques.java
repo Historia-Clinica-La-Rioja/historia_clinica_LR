@@ -24,26 +24,37 @@ public class LoadAnestheticTechniques {
     public List<AnestheticTechniqueBo> run(Long documentId, List<AnestheticTechniqueBo> anestheticTechniques) {
         log.debug("Input parameters -> documentId {} anestheticTechniques {}", documentId, anestheticTechniques);
 
-        anestheticTechniques.forEach(anestheticTechniqueBo -> {
-            Boolean trachealIntubation = anestheticTechniqueBo.getTrachealIntubation();
-            if (anestheticTechniqueBo.getId() == null) {
-                Integer snomedId = snomedService.getSnomedId(anestheticTechniqueBo.getSnomed())
-                        .orElseGet(() -> snomedService.createSnomedTerm(anestheticTechniqueBo.getSnomed()));
-                Short techniqueId = anestheticTechniqueBo.getTechniqueId();
-                Short breathingId = anestheticTechniqueBo.getBreathingId();
-                Short circuitId = anestheticTechniqueBo.getCircuitId();
-
-                AnestheticTechnique anestheticTechnique = anestheticTechniqueRepository.save(new AnestheticTechnique(null, documentId, snomedId, techniqueId, trachealIntubation, breathingId, circuitId));
-                anestheticTechniqueBo.setId(anestheticTechnique.getId());
-            }
-            documentService.createDocumentAnestheticTechnique(documentId, anestheticTechniqueBo.getId());
-
-            if (trachealIntubation)
-                anestheticTechniqueBo.getTrachealIntubationMethodIds()
-                        .forEach(methodId -> trachealIntubationRepository.save(new TrachealIntubation(anestheticTechniqueBo.getId(), methodId)));
-        });
+        anestheticTechniques.forEach(anestheticTechniqueBo -> loadAnestheticTechnique(documentId, anestheticTechniqueBo));
 
         log.debug("Output -> {}", anestheticTechniques);
         return anestheticTechniques;
+    }
+
+    private void loadAnestheticTechnique(Long documentId, AnestheticTechniqueBo anestheticTechniqueBo) {
+        if (anestheticTechniqueBo.getId() == null)
+            this.saveAnestheticTechnique(documentId, anestheticTechniqueBo);
+        documentService.createDocumentAnestheticTechnique(documentId, anestheticTechniqueBo.getId());
+
+        this.saveTrachealIntubation(anestheticTechniqueBo);
+    }
+
+    private void saveAnestheticTechnique(Long documentId, AnestheticTechniqueBo anestheticTechniqueBo) {
+        if (anestheticTechniqueBo.getId() == null) {
+            Integer snomedId = snomedService.getSnomedId(anestheticTechniqueBo.getSnomed())
+                    .orElseGet(() -> snomedService.createSnomedTerm(anestheticTechniqueBo.getSnomed()));
+            Short techniqueId = anestheticTechniqueBo.getTechniqueId();
+            Short breathingId = anestheticTechniqueBo.getBreathingId();
+            Short circuitId = anestheticTechniqueBo.getCircuitId();
+            Boolean trachealIntubation = anestheticTechniqueBo.getTrachealIntubation();
+
+            AnestheticTechnique anestheticTechnique = anestheticTechniqueRepository.save(new AnestheticTechnique(null, documentId, snomedId, techniqueId, trachealIntubation, breathingId, circuitId));
+            anestheticTechniqueBo.setId(anestheticTechnique.getId());
+        }
+    }
+
+    private void saveTrachealIntubation(AnestheticTechniqueBo anestheticTechniqueBo) {
+        if (anestheticTechniqueBo.getTrachealIntubation())
+            anestheticTechniqueBo.getTrachealIntubationMethodIds()
+                    .forEach(methodId -> trachealIntubationRepository.save(new TrachealIntubation(anestheticTechniqueBo.getId(), methodId)));
     }
 }
