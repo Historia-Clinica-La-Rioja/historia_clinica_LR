@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.application.booking.BookingAppointmentStorage;
@@ -16,9 +18,11 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPerson
 public class BookingAppointmentStorageImpl implements BookingAppointmentStorage {
 
     private final SharedAppointmentPort sharedAppointmentPort;
+	private final SharedInstitutionPort sharedInstitutionPort;
 
-    public BookingAppointmentStorageImpl(SharedAppointmentPort sharedAppointmentPort) {
+    public BookingAppointmentStorageImpl(SharedAppointmentPort sharedAppointmentPort, SharedInstitutionPort sharedInstitutionPort) {
         this.sharedAppointmentPort = sharedAppointmentPort;
+		this.sharedInstitutionPort = sharedInstitutionPort;
     }
 
     @Override
@@ -49,6 +53,14 @@ public class BookingAppointmentStorageImpl implements BookingAppointmentStorage 
     public Optional<String> getProfessionalName(Integer diaryId) {
         return sharedAppointmentPort.getProfessionalName(diaryId);
     }
+
+	@Override
+	public String getInstitutionAddress(Integer diaryId) {
+		Integer institutionId = sharedAppointmentPort.getInstitutionId(diaryId);
+		String institutionName = sharedInstitutionPort.fetchInstitutionById(institutionId).getName();
+		String institutionAddress = sharedInstitutionPort.fetchInstitutionAddress(institutionId).getCompleteAddress();
+		return institutionName + " - " + institutionAddress;
+	}
 
     private BookingPersonDto mapToBookingPerson(BookingBo bookingBo) {
         if(bookingBo.bookingPerson == null) {

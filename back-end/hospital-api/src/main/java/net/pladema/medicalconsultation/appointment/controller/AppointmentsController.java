@@ -876,7 +876,7 @@ public class AppointmentsController {
 	public SavedBookingAppointmentDto createThirdPartyAppointment(@PathVariable("institutionId") Integer institutionId,
 													  @RequestBody BookingDto bookingDto){
 		log.debug("Input parameters -> institutionId {}, bookingDto {}", institutionId, bookingDto);
-		SavedBookingAppointmentDto result = sharedBookingPort.makeBooking(bookingDto);
+		SavedBookingAppointmentDto result = sharedBookingPort.makeBooking(bookingDto, false);
 		log.debug("Output -> {}", result);
 		return result;
 	}

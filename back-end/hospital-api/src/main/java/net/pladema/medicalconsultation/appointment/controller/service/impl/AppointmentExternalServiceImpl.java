@@ -260,6 +260,14 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber, loggedUserId);
 	}
 
+	@Override
+	public Integer getInstitutionId(Integer diaryId){
+		log.debug("Input parameters -> diaryId {}", diaryId);
+		Integer result = diaryService.getInstitution(diaryId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private Optional<AppointmentSummaryBo> getNearestAppointment(List<Integer> appointmentIds) {
 		List<AppointmentSummaryBo> appointments = this.appointmentService.getAppointmentDataByAppointmentIds(appointmentIds);
 		List<AppointmentSummaryBo> futureAppointments = appointments.stream()

@@ -65,11 +65,12 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional;
 	private final FetchAvailabilityByPractice fetchAvailabilityByPractice;
 
-	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto) {
+	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) {
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
 				mapToAppointment(bookingDto.getBookingAppointmentDto()),
-				mapToPerson(bookingDto.getBookingPersonDto())
+				mapToPerson(bookingDto.getBookingPersonDto()),
+				onlineBooking
 		);
 		return bookAppointment.run(bookingBo);
 	}

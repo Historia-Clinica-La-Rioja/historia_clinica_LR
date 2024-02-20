@@ -45,7 +45,7 @@ public class BookingByInstitutionPublicController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public SavedBookingAppointmentDto bookPreappointment(@RequestBody BookingDto bookingDto) {
-		return bookAppointmentPort.makeBooking(bookingDto);
+		return bookAppointmentPort.makeBooking(bookingDto, true);
 	}
 
 

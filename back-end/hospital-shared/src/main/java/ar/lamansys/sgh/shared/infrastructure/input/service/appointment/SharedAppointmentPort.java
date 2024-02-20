@@ -55,4 +55,6 @@ public interface SharedAppointmentPort {
 
 	void updateAppointmentPhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber);
 
+	Integer getInstitutionId(Integer diaryId);
+
 }

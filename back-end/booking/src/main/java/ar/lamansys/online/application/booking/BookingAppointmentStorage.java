@@ -11,4 +11,5 @@ public interface BookingAppointmentStorage {
     void cancelBooking(String uuid);
     Optional<String> getPatientName(String uuid);
     Optional<String> getProfessionalName(Integer diaryId);
+	String getInstitutionAddress(Integer diaryId);
 }
