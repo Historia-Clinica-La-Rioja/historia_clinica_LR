@@ -27,7 +27,7 @@ export class MedicationService {
 
     private dataEmitter = new BehaviorSubject<MedicationData[]>(this.medicationList);
 	private data$ = this.dataEmitter.asObservable();
-    private ANOTHER_VIA_DESCRIPTION = 'Otras';
+    private ANOTHER_VIA_DESCRIPTION = 'Otra';
 
     constructor(
         private readonly snomedService: SnomedService,

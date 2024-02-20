@@ -33,7 +33,7 @@ export class AnestheticDrugComponent implements OnInit {
         this.data.premedicationService.getViaInputStatus().subscribe
         (
           via => {
-                this.anotherViaEnabled =  via?.description && via?.description === 'Otras'
+                this.anotherViaEnabled =  via?.description && via?.description === 'Otra'
                 this.data.premedicationService.HandleValidatorRequiredViaNotes(via)
             }
         )
