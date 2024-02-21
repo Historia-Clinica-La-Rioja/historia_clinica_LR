@@ -20,6 +20,7 @@ import { SearchComponent } from './routes/search/search.component';
 import { AppointmentHistoricDetailComponent } from './component/appointment-historic-detail/appointment-historic-detail.component';
 import { AssignedAppointmentComponent } from './component/assigned-appointment/assigned-appointment.component';
 import { AssignedAppointmentsComponent } from './component/assigned-appointments/assigned-appointments.component';
+import { BookingAppointmentsComponent } from './component/booking-appointments/booking-appointments.component';
 import { CardLicenseComponent } from './component/card-license/card-license.component';
 import { CardPatientComponent } from './component/card-patient/card-patient.component';
 import { CardProfessionsComponent } from './component/card-professions/card-professions.component';
@@ -54,7 +55,6 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
-import { BookingAppointmentsComponent } from './component/booking-appointments/booking-appointments.component';
 
 
 

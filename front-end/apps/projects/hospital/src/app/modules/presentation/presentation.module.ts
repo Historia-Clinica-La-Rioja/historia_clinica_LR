@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule, FlexModule } from '@angular/flex-layout';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { QuillModule } from 'ngx-quill';
 // deps
 import { CoreModule } from '@core/core.module';
 import { AppMaterialModule } from '@material/app.material.module';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { QuillModule } from 'ngx-quill';
 // components
 import { AddObservationsComponent } from './components/add-observations/add-observations.component';
 import { AsignPatientButtonComponent } from './components/asign-patient-button/asign-patient-button.component';

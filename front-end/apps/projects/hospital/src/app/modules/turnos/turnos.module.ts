@@ -21,6 +21,7 @@ import { AppointmentDetailsComponent } from './components/appointment-details/ap
 import { AppointmentLabelComponent } from './components/appointment-label/appointment-label.component';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { AppointmentTabsComponent } from './components/appointment-tabs/appointment-tabs.component';
+import { CalendarEventViewComponent } from './components/calendar-event-view/calendar-event-view.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
 import { DiaryInformationComponent } from './components/diary-information/diary-information.component';
@@ -53,7 +54,6 @@ import { CustomDateFormatter } from './services/custom-date-formatter.service';
 import { EquipmentAppointmentsFacadeService } from './services/equipment-appointments-facade.service';
 // pipes
 import { PracticesPipe } from './pipes/practices.pipe';
-import { CalendarEventViewComponent } from './components/calendar-event-view/calendar-event-view.component';
 import { ShowAppointmentOverTurnPipe } from './pipes/show-appointment-over-turn.pipe';
 import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 
@@ -112,7 +112,7 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		IdentifierCasesComponent,
 		LazyMaterialModule,
 		SharedAppointmentAccessManagementModule,
-		PresentationModule,		
+		PresentationModule,
 		//Standalone Components
 		PatientSummaryComponent,
 		ReferenceStateLabelComponent,

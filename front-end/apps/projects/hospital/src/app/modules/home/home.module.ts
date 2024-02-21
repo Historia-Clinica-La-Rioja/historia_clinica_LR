@@ -19,6 +19,7 @@ import { FeatureSettingsComponent } from './components/feature-settings/feature-
 import { LogoSettingsComponent } from './components/logo-settings/logo-settings.component';
 import { SnomedCacheComponent } from './components/snomed-cache/snomed-cache.component';
 import { SnomedCacheFormComponent } from './components/snomed-cache-form/snomed-cache-form.component';
+import { SnomedTerminologyCardComponent } from './components/snomed-terminology-card/snomed-terminology-card.component';
 import { UsageCardComponent } from './components/usage-card/usage-card.component';
 import { UserKeysComponent } from './components/user-keys/user-keys.component';
 import { UserKeysFormComponent } from './components/user-keys-form/user-keys-form.component';
@@ -26,7 +27,6 @@ import { UserKeysFormComponent } from './components/user-keys-form/user-keys-for
 // dialogs
 import { ActivateTwoFactorAuthenticationComponent } from "./dialogs/activate-two-factor-authentication/activate-two-factor-authentication.component";
 import { GenerateApiKeyFormComponent } from './dialogs/generate-api-key-form/generate-api-key-form.component';
-import { SnomedTerminologyCardComponent } from './components/snomed-terminology-card/snomed-terminology-card.component';
 
 @NgModule({
 	declarations: [

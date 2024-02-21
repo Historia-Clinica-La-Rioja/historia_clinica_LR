@@ -19,22 +19,22 @@ import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatr
 // components
 import { AdministrativeTriageComponent } from './components/administrative-triage/administrative-triage.component';
 import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
+import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
+import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
+import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
 import { TriageComponent } from './components/triage/triage.component';
 import { TriageDetailsComponent } from './components/triage-details/triage-details.component';
-import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 // dialogs
 import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
+import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/attention-place-dialog.component';
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
 import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-consultorio.component';
 // services
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
-import { LastTriageComponent } from './components/last-triage/last-triage.component';
-import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
-import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/attention-place-dialog.component';
 
 @NgModule({
 	declarations: [

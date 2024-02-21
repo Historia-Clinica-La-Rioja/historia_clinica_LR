@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+//deps
+import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
+import { PresentationModule } from '@presentation/presentation.module';
 //components
 import { ModalityLabelComponent } from '@shared-appointment-access-management/components/modality-label/modality-label.component';
 import { ModalityRadioButtonFormComponent } from '@shared-appointment-access-management/components/modality-radio-button-form/modality-radio-button-form.component';
@@ -15,9 +18,6 @@ import { PatientSummaryComponent } from '../hsi-components/patient-summary/patie
 import { ReferenceStateLabelComponent } from '../hsi-components/reference-state-label/reference-state-label.component';
 //dialogs
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
-//deps
-import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
-import { PresentationModule } from '@presentation/presentation.module';
 //pipes
 import { ShowProblemsPipe } from '@shared-appointment-access-management/pipes/show-problems.pipe';
 

@@ -1,31 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImageNetworkRoutingModule } from './image-network-routing.module';
+//deps
 import { PresentationModule } from '@presentation/presentation.module';
-import { WorklistByTechnicalComponent } from './routes/worklist-by-technical/worklist-by-technical.component';
-import { HomeComponent } from './routes/home/home.component';
-import { FinishStudyComponent } from './dialogs/finish-study/finish-study.component';
-import { StudyStatusPopupComponent } from './dialogs/study-status-popup/study-status-popup.component';
-import { WorklistComponent } from './components/worklist/worklist.component';
-import { WorklistByInformerComponent } from './components/worklist-by-informer/worklist-by-informer.component';
-import { StudyDetailsComponent } from './routes/study-details/study-details.component';
 import { HistoriaClinicaModule } from "../historia-clinica/historia-clinica.module";
-import { ReportStudyComponent } from './components/report-study/report-study.component';
-import { ViewStudyComponent } from './components/view-study/view-study.component';
-import { DeriveReportComponent } from './dialogs/derive-report/derive-report.component';
+//routes
+import { ImageNetworkRoutingModule } from './image-network-routing.module';
+import { HomeComponent } from './routes/home/home.component';
+import { StudyDetailsComponent } from './routes/study-details/study-details.component';
+import { WorklistByTechnicalComponent } from './routes/worklist-by-technical/worklist-by-technical.component';
+//dialogs
 import { AddConclusionFormComponent } from './dialogs/add-conclusion-form/add-conclusion-form.component';
-import { ViewReportComponent } from './components/view-report/view-report.component';
-import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
-import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
-import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
-import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
-import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.component';
-import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
 import { DeleteTemplateComponent } from './dialogs/delete-template/delete-template.component';
+import { DeriveReportComponent } from './dialogs/derive-report/derive-report.component';
+import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
+import { FinishStudyComponent } from './dialogs/finish-study/finish-study.component';
+import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
+import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
+import { StudyStatusPopupComponent } from './dialogs/study-status-popup/study-status-popup.component';
+//components
 import { DownloadStudyComponent } from './components/download-study/download-study.component';
-import { OrderImageDetailComponent } from './components/order-image-detail/order-image-detail.component';
-import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { ImageOrderColoredIconTextCasesComponent } from './components/image-order-identifier-cases/image-order-coloredIconText-cases.component';
+import { OrderImageDetailComponent } from './components/order-image-detail/order-image-detail.component';
+import { ReportStudyComponent } from './components/report-study/report-study.component';
+import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.component';
+import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
+import { ViewReportComponent } from './components/view-report/view-report.component';
+import { ViewStudyComponent } from './components/view-study/view-study.component';
+import { WorklistByInformerComponent } from './components/worklist-by-informer/worklist-by-informer.component';
+import { WorklistComponent } from './components/worklist/worklist.component';
+import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
+//standalone
+import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+//pipes
 import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
 
 @NgModule({
