@@ -391,7 +391,7 @@
 				"ADD_PLAN_TITLE": "Agregar plan anestésico",
 				"ADD_PLAN": " + Agregar plan anestésico",
 				"MEDICATION": "Medicación",
-				"PLAN_RECORDS": "Planes anestésicos registrados"
+				"PLAN_RECORDS": "Plan anestésico registrado"
 			},
 			"analgesic-technique": {
 				"TITLE": "Técnica analgésica",
@@ -406,8 +406,19 @@
 				"INJECTION_ZONE": "Zona de inyección",
 				"AGENT":"Agente",
 				"CATETER_NOTE_LABEL":"Ingresar tipo de cateter"
-
-
+			},
+			"anesthetic-technique": {
+				"TITLE": "Técnica anestésica",
+				"TYPE": "Tipo",
+				"ADD_TITLE": "Agregar técnica anestésica",
+				"ADD_ANESTHETIC_TECHNIQUE": " + Agregar técnica anestésica",
+				"TECHNIQUE_RECORDS": "Técnica anestésica registrada",
+				"TECHNIQUE_LABEL": "Tecnica",
+				"TRACHEAL_INTUBATION_LABEL": "Intubación traqueal",
+				"BREATHING_LABEL": "Respiración",
+				"CIRCUIT_LABEL": "Circuito",
+				"OPTION_YES": "Si",
+				"OPTION_NO":"No"
 			},
 			"drug": {
 				"HOUR": "Hora",

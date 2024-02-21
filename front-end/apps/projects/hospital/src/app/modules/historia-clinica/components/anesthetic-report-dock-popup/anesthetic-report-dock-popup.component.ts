@@ -10,6 +10,7 @@ import { AnestheticReportAnthropometricDataService } from '@historia-clinica/mod
 import { AnestheticReportClinicalEvaluationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-clinical-evaluation.service';
 import { AnestheticReportProposedSurgeryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-proposed-surgery.service';
 import { AnestheticReportRecordService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-record.service';
+import { AnestheticTechniqueService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-technique.service';
 import { MedicationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/medicationService';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { MedicacionesNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service';
@@ -44,7 +45,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     anestheticReportPremedicationAndFoodIntakeService: MedicationService;
     anestheticReportRecordService: AnestheticReportRecordService;
     anestheticPlan: MedicationService;
-    analgesicTechnique: AnalgesicTechniqueService
+    analgesicTechnique: AnalgesicTechniqueService;
+    anestheticTechnique: AnestheticTechniqueService
 
     personalRecordForm: FormGroup;
     readonly ASAOptions = [1,2,3,4,5]
@@ -78,6 +80,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportRecordService = new AnestheticReportRecordService(this.snomedService, this.snackBarService);
         this.anestheticPlan = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.analgesicTechnique = new AnalgesicTechniqueService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticTechnique = new AnestheticTechniqueService(this.snomedService, this.snackBarService)
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
             lastFoodIntake: new FormControl(null),
@@ -158,7 +161,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             foodIntake: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto().length > 0 ? {clockTime: this.formFoodIntake.value.lastFoodIntake} : null,
             histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
             anestheticPlans: this.anestheticPlan.getAnestheticSubstanceDto(),
-            analgesicTechniques: this.analgesicTechnique.getAnalgesicTechniqueDto()
+            analgesicTechniques: this.analgesicTechnique.getAnalgesicTechniqueDto(),
+            anestheticTechniques: this.anestheticTechnique.getAnestheticTechniqueDto(),
 		};
 	}
 }

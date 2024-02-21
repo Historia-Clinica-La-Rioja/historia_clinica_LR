@@ -7,7 +7,7 @@
 </div>
 
 <div mat-dialog-content>
-    <ng-container *ngIf="!data.analgesicTechniqueService.snomedConcept else inject">
+    <ng-container *ngIf="!data.analgesicTechniqueService.snomedConcept else AnalgesicTechniqueForm">
         <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else injectTypeaheadSearch"
             [label]="'internaciones.anesthesic-report.analgesic-technique.MEDICATION'"
             (search)="data.analgesicTechniqueService.openSearchDialog($event)">
@@ -22,7 +22,7 @@
     </ng-container>
 </div>
 
-<ng-template #inject>
+<ng-template #AnalgesicTechniqueForm>
     <form [formGroup]="form" (ngSubmit)="addAnalgesicTechnique()">
         <div fxLayout="column" fxLayoutGap="5px">
             <mat-label [translate]="'internaciones.anesthesic-report.analgesic-technique.AGENT'"></mat-label>

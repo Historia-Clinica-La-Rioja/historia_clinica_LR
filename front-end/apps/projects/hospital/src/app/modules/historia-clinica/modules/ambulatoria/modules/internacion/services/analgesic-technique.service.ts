@@ -13,8 +13,8 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 export class AnalgesicTechniqueService {
 
+  snomedConcept:SnomedDto;
   private form:FormGroup
-  snomedConcept:  SnomedDto;
 
   private dosisErrorSource = new Subject<string | void>();
 	private _dosisError$ = this.dosisErrorSource.asObservable();

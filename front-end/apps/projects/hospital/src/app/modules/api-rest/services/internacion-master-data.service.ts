@@ -117,4 +117,25 @@ export class InternacionMasterDataService {
 		const url = `${environment.apiBase}/internments/masterdata/document/type`;
 		return this.http.get<MasterDataDto[]>(url);
 	}
+
+    public getAnestheticTechniqueTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/anesthetic-technique`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
+    public getTrachealIntubationTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/tracheal-intubation`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
+    public getBreathingTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/breathing`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
+    public getCircuitTypes(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/circuit`;
+		return this.http.get<MasterDataDto[]>(url);
+    }
+
 }

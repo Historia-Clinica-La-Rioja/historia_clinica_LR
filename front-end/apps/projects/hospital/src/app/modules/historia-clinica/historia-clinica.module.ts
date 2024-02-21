@@ -91,6 +91,9 @@ import { AnestheticPlanComponent } from './modules/ambulatoria/modules/internaci
 import { AnalgesicTechniqueBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/analgesic-technique-background-list/analgesic-technique-background-list.component';
 import { AnalgesicTechniquePopupComponent } from './modules/ambulatoria/modules/internacion/dialogs/analgesic-technique-popup/analgesic-technique-popup.component';
 import { AnalgesicTechniqueComponent } from './modules/ambulatoria/modules/internacion/components/analgesic-technique/analgesic-technique.component';
+import { AnestheticTechniquePopupComponent } from './modules/ambulatoria/modules/internacion/dialogs/anesthetic-technique-popup/anesthetic-technique-popup.component';
+import { AnestheticTechniqueComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-technique/anesthetic-technique.component';
+import { AnestheticTechniqueListComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-technique-list/anesthetic-technique-list.component';
 
 @NgModule({
 	declarations: [
@@ -131,7 +134,8 @@ import { AnalgesicTechniqueComponent } from './modules/ambulatoria/modules/inter
 		AnestheticPlanComponent,
 		AnalgesicTechniqueBackgroundListComponent,
 		AnalgesicTechniqueComponent,
-		AnalgesicTechniquePopupComponent,
+		AnestheticTechniqueComponent,
+		AnestheticTechniqueListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -179,6 +183,8 @@ import { AnalgesicTechniqueComponent } from './modules/ambulatoria/modules/inter
   		AuditAccessRegisterComponent,
  		AnestheticReportDockPopupComponent,
   		AnestheticReportDockPopupComponent,
+		AnestheticTechniquePopupComponent,
+		AnalgesicTechniquePopupComponent
 	],
 	imports: [
 		CommonModule,

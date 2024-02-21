@@ -1,0 +1,41 @@
+<div *ngFor="let anestheticTechnique of anestheticTechniqueList; index as i; last as isLastElement">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+        <div fxLayout="column" fxLayoutGap="10px">
+            <span>{{'internaciones.anesthesic-report.anesthetic-technique.TYPE' | translate}}:
+                <span class="bold-text">
+                    {{ anestheticTechnique.snomed.pt }}
+                </span>
+            </span>
+            <span *ngIf="anestheticTechnique.technique">
+                {{ 'internaciones.anesthesic-report.anesthetic-technique.TECHNIQUE_LABEL' | translate }} :
+                <span class="bold-text">{{anestheticTechnique.technique.description }}</span>
+             </span>
+            <div class="font-size" fxLayout="column" fxLayoutGap="5px">
+                <span *ngIf="anestheticTechnique.trachealIntubation">
+                    {{ 'internaciones.anesthesic-report.anesthetic-technique.TRACHEAL_INTUBATION_LABEL' | translate }} :
+                    <span class="bold-text">
+                        {{ anestheticTechnique.trachealIntubationMethod.description }}
+                    </span>
+                </span>
+                <span *ngIf="anestheticTechnique.breathing">
+                    {{ 'internaciones.anesthesic-report.anesthetic-technique.BREATHING_LABEL' | translate }} :
+                    <span class="bold-text">
+                        {{ anestheticTechnique.breathing.description }}
+                    </span>
+                </span>
+                <span *ngIf="anestheticTechnique.circuit">
+                    {{ 'internaciones.anesthesic-report.anesthetic-technique.CIRCUIT_LABEL' | translate }} :
+                    <span class="bold-text">
+                        {{ anestheticTechnique.circuit.description }}
+                    </span>
+                </span>
+            </div>
+        </div>
+        <ng-container>
+            <button mat-icon-button color="warn" (click)="service.remove(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </ng-container>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLastElement"></mat-divider>
+</div>
