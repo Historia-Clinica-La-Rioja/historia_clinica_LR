@@ -223,6 +223,14 @@ public class InternmentMasterdataController {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping(value = "/vias-non-anesthetic-drug")
+    public ResponseEntity<Collection<MasterDataDto>> getViasNonAnestheticDrug() {
+        log.debug("All via non-anesthetic-drug types");
+        var result = EnumWriter.writeList(EVia.getNonAnestheticDrug());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
+
 	@GetMapping(value = "/units")
 	public ResponseEntity<Collection<MasterDataDto>> getUnits() {
 		log.debug("{}", "All units types");

@@ -156,6 +156,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadAnestheticTechniques.run(doc.getId(), documentBo.getAnestheticTechniques());
         loadAnestheticSubstances.run(doc.getId(), documentBo.getFluidAdministrations());
         loadAnestheticSubstances.run(doc.getId(), documentBo.getAnestheticAgents());
+        loadAnestheticSubstances.run(doc.getId(), documentBo.getNonAnestheticDrugs());
 
         if (createFile)
             generateDocument(documentBo);

@@ -17,6 +17,7 @@ public enum EAnestheticSubstanceType {
     ANALGESIC_TECHNIQUE((short) 3, "Técnica analgésica"),
     FLUID_ADMINISTRATION((short) 4, "Administración de líquido"),
     ANESTHETIC_AGENT((short) 5, "Agente anestésico"),
+    NON_ANESTHETIC_DRUG((short) 6, "Droga no anestésica"),
     ;
 
     private final Short id;

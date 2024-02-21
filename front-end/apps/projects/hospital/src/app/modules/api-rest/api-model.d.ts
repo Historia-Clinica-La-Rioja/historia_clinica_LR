@@ -182,6 +182,7 @@ export interface AnestheticReportDto {
     histories?: HealthConditionDto[];
     mainDiagnosis?: DiagnosisDto;
     medications?: MedicationDto[];
+    nonAnestheticDrugs?: AnestheticSubstanceDto[];
     preMedications?: AnestheticSubstanceDto[];
     procedureDescription?: ProcedureDescriptionDto;
     riskFactors?: RiskFactorDto;
