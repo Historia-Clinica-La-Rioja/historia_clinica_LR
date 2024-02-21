@@ -30,7 +30,7 @@ const ProcedureTemplateSnomedCreate = props => {
 
         const ret = {
             id: record.id,
-            associatedPractices: [{id: pt.conceptId}],
+            associatedPractices: [{id: pt.conceptId, pt: pt.conceptPt, sctid: pt.conceptId}],
         };
         return ret
 
