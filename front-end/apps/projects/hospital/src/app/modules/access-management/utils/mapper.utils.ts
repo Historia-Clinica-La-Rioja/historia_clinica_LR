@@ -1,4 +1,4 @@
-import { CareLineDto, ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
+import { CareLineDto, ClinicalSpecialtyDto, InstitutionBasicInfoDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component";
 import { getPriority, getState, getAppointmentState } from "./reference.utils";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
@@ -6,6 +6,8 @@ import { ReferenceReport } from "@shared-appointment-access-management/component
 import { AppointmentSummary } from "@access-management/components/appointment-summary/appointment-summary.component";
 import { ContactDetails } from "@access-management/components/contact-details/contact-details.component";
 import { ReferenceCompleteData } from "@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component";
+import { AddressProjection } from "@api-rest/services/address-master-data.service";
+import { listToTypeaheadOptions } from "@presentation/utils/typeahead.mapper.utils";
 
 export const toPatientSummary = (patient: ReferencePatientDto): PatientSummary => {
     return {
@@ -57,22 +59,34 @@ export const toMinPatientSummary = (fullName: string, identificationType: string
 }
 
 export const practicesToTypeaheadOptions = (practices: SharedSnomedDto[]): TypeaheadOption<any>[] => {
-    return practices.map(practice => practiceToTypeaheadOption(practice));
+	return practices.map(practice => practiceToTypeaheadOption(practice));
 }
 
 export const practiceToTypeaheadOption = (practice: SharedSnomedDto): TypeaheadOption<any> => {
-    return {
-        compareValue: practice.pt,
-        value: practice.id
-    }
+	return {
+		compareValue: practice.pt,
+		value: practice.id
+	}
 }
 
 export const specialtiesToTypeaheadOptions = (specialties: ClinicalSpecialtyDto[]): TypeaheadOption<any>[] => {
-    return specialties.map(practice => specialtyToTypeaheadOption(practice));
+	return specialties.map(practice => specialtyToTypeaheadOption(practice));
 }
 
-export const careLinesToTypeaheadOptions = (careLines: CareLineDto[]): TypeaheadOption<any>[] => {
-    return careLines.map(careLine => careLineToTypeaheadOption(careLine));
+export const careLinesToTypeaheadOptions = (careLines: CareLineDto[]): TypeaheadOption<CareLineDto>[] => {
+	return listToTypeaheadOptions(careLines, 'description');
+}
+
+export const destinationInstitutionsToTypeaheadOptions = (destinationInstitutions: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
+	return listToTypeaheadOptions(destinationInstitutions, 'name');
+}
+
+export const destinationDepartamentsToTypeaheadOptions = (departaments: AddressProjection[]): TypeaheadOption<AddressProjection>[] => {
+	return listToTypeaheadOptions(departaments, 'description');
+}
+
+export const institutionalGroupsToTypeaheadOptions = (destinationInstitutions: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
+	return listToTypeaheadOptions(destinationInstitutions, 'description');
 }
 
 export const careLineToTypeaheadOption = (careLine: CareLineDto): TypeaheadOption<any> => {
@@ -90,7 +104,7 @@ export const specialtyToTypeaheadOption = (specialty: ClinicalSpecialtyDto): Typ
     }
 }
 
-export const mapToReferenceCompleteData = (referenceData: ReferenceDataDto): ReferenceCompleteData =>{
+export const mapToReferenceCompleteData = (referenceData: ReferenceDataDto): ReferenceCompleteData => {
 	return {
 		dto: referenceData,
 		priority: getPriority(referenceData.priority.id),

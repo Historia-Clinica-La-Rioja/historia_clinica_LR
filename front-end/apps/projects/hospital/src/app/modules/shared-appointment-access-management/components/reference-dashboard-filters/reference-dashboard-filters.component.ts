@@ -7,10 +7,15 @@ import { differenceInDays } from 'date-fns';
 import { DashboardService } from '@access-management/services/dashboard.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { PracticesService } from '@api-rest/services/practices.service';
-import { forkJoin } from 'rxjs';
-import { DashboardFiltersMapping, setReportFilters } from '@access-management/constants/reference-dashboard-filters';
+import { lastValueFrom, take } from 'rxjs';
+import { DashboardFiltersMapping, getReportFiltersForManagers, getReportFiltersForOthersRoles} from '@access-management/constants/reference-dashboard-filters';
 import { dateMinusDays } from '@core/utils/date.utils';
 import { CareLineService } from '@api-rest/services/care-line.service';
+import { InstitutionService } from '@api-rest/services/institution.service';
+import { InstitutionalGroupsService } from '@api-rest/services/institutional-groups.service';
+import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
+import { MANAGER_ROLES } from '../../../home/constants/menu';
+import { PermissionsService } from '@core/services/permissions.service';
 
 const MAX_DAYS = 90;
 
@@ -33,6 +38,11 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 		private readonly practiceService: PracticesService,
 		private readonly changeDetectorRef: ChangeDetectorRef,
 		private readonly careLineService: CareLineService,
+		private readonly institutionService: InstitutionService,
+		private readonly institutionalGroupsService: InstitutionalGroupsService,
+		private readonly addressMasterDataService: AddressMasterDataService,
+		private readonly permissionService: PermissionsService,
+
 	) { }
 
 	ngOnInit(): void {
@@ -113,13 +123,35 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 
 	private setFiltersOptions() {
 
-		const clinicalSpecialties$ = this.clinicalSpecialtyService.getAll();
-		const practices$ = this.practiceService.getAll();
-		const careLines$ = this.careLineService.getCareLines();
-
-		forkJoin([clinicalSpecialties$, practices$, careLines$]).subscribe(([clinicalSpecialties, practices, careLines]) =>
-			this.filters = setReportFilters(practices, clinicalSpecialties, careLines));
+		this.permissionService.hasContextAssignments$(MANAGER_ROLES)
+			.pipe(take(1))
+			.subscribe((hasRoleOfManager: boolean) =>
+				this.filtersOptions(hasRoleOfManager)
+			);
 	}
+
+	private async filtersOptions(hasRoleOfManager: boolean) {
+		const [practices, clinicalSpecialties, careLines] = await Promise.all([
+			lastValueFrom(this.practiceService.getAll()),
+			lastValueFrom(this.clinicalSpecialtyService.getAll()),
+			lastValueFrom(this.careLineService.getCareLines())
+		]);
+
+		if (hasRoleOfManager) {
+			const [destinationInstitution, institutionalGroups, destinationDepartament] = await Promise.all([
+				lastValueFrom(this.institutionService.getAllInstitutions()),
+				lastValueFrom(this.institutionalGroupsService.getCurrentUserGroups()),
+				lastValueFrom(this.addressMasterDataService.getDepartmentsByInstitutions())
+			]);
+
+			this.filters = getReportFiltersForManagers(practices, clinicalSpecialties, careLines, destinationInstitution, institutionalGroups, destinationDepartament);
+		} else {
+			this.filters = getReportFiltersForOthersRoles(practices, clinicalSpecialties, careLines);
+		}
+
+	}
+
+
 
 }
 
