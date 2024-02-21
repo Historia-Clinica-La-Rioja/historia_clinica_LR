@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ReferenceReportDto } from '@api-rest/api-model';
 import { Color } from '@presentation/colored-label/colored-label.component';
-import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 import { Size } from '@presentation/components/item-summary/item-summary.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
@@ -27,7 +26,6 @@ export interface ReferenceReport {
 	dto: ReferenceReportDto;
 	priority: string;
 	state: ReferenceState;
-	coloredIconText: ColoredIconText;
 	patient: PatientSummary;
 }
 

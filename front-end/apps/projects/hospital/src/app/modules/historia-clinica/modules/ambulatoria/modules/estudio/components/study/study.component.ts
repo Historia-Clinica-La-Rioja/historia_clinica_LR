@@ -17,7 +17,7 @@ import { capitalize } from '@core/utils/core.utils';
 import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
 import { ReferenceCompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/components/reference-complete-study/reference-complete-study.component';
 import { ReportReference } from '@historia-clinica/modules/ambulatoria/components/reference-study-closure-information/reference-study-closure-information.component';
-import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/utils/reference.utils';
+import { getColoredIconText } from '@access-management/utils/reference.utils';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
@@ -75,8 +75,7 @@ export class StudyComponent implements OnInit {
 		const prescriptionStatus =  diagnosticReport.statusId ? this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId) :
 		this.prescripcionesService.renderStatusDescriptionStudyImage(reportImageCase.infoOrderInstances.status)
 		const updateDate = diagnosticReport.creationDate;
-		const closureType = diagnosticReport?.referenceRequestDto?.closureTypeId;
-		const isReferenceStudyPending = diagnosticReport?.referenceRequestDto && !closureType;
+		const isReferenceStudyPending = diagnosticReport?.referenceRequestDto;
 		return {
 			status: {
 				description: prescriptionStatus,
@@ -280,7 +279,7 @@ export class StudyComponent implements OnInit {
 		return {
 			dto: reference,
 			priority: reference.priority,
-			coloredIconText: getColoredIconText(REQUESTED_REFERENCE)
+			coloredIconText: getColoredIconText(reference.closureTypeDescription)
 		}
 	}
 
@@ -288,7 +287,6 @@ export class StudyComponent implements OnInit {
 		return {
 			doctor: diagnosticReport.referenceRequestDto.professionalInfo,
 			observations: diagnosticReport.observations,
-			closureTypeDescription: diagnosticReport.referenceRequestDto.closureTypeDescription,
 			date: diagnosticReport.referenceRequestDto.closureDateTime
 		}
 	}

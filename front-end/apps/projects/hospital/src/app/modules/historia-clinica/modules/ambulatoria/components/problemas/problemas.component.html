@@ -414,10 +414,7 @@
 																	<mat-icon>subdirectory_arrow_right</mat-icon>
 
 																	<ng-container>
-																		<app-colored-label
-																			[description]="reference.counterReference.closureType | translate | uppercase"
-																			[color]="Color.BLUE">
-																		</app-colored-label>
+																		<app-reference-state-label [referenceClosureDescription]="reference.counterReference.closureType"></app-reference-state-label>
 																	</ng-container>
 
 																</div>

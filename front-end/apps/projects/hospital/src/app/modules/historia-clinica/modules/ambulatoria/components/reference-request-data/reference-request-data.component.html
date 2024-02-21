@@ -11,7 +11,7 @@
 	<div class="stretch-container" fxLayout="column" fxLayoutGap="12px" id="refernece-info">
 		<h2>{{'ambulatoria.reference-request-data.TITLE'|translate}}</h2>
 
-		<app-colored-icon-text id="closure-type" fxLayoutAlign="start" [coloredIconText]="reference.closureType"></app-colored-icon-text>
+		<app-reference-state-label id="closure-type" fxLayoutAlign="start" [referenceClosureDescription]="reference.dto.closureType?.description"></app-reference-state-label>
 
 		<div class="row-container" id="refernece-info-first" fxLayout="column" fxLayoutGap="12px">
 			<app-identifier-cases [position]="Position.ROW" [showLegend]="true"

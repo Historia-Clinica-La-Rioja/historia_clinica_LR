@@ -1,4 +1,4 @@
-import { EReferenceAttentionState, EReferenceClosureType } from "@api-rest/api-model";
+import { EReferenceAttentionState } from "@api-rest/api-model";
 import { PRIORITY } from "@historia-clinica/modules/ambulatoria/constants/reference-masterdata";
 import { Color, ColoredLabel } from "@presentation/colored-label/colored-label.component";
 import { ColoredIconText } from "@presentation/components/colored-icon-text/colored-icon-text.component";
@@ -15,10 +15,9 @@ export function getPriority(id: number): string {
 	return Priority.LOW;
 }
 
-export function getColoredIconText(closureType: EReferenceClosureType): ColoredIconText {
-	if (closureType)
-		return { icon: "swap_horiz", text: closureType.description, color: Color.YELLOW }
-	return { icon: "swap_horiz", text: "access-management.search_references.REQUESTED_REFERENCE", color: Color.RED }
+export function getColoredIconText(closureType: string): ColoredIconText {
+	return closureType ? { icon: "swap_horiz", text: closureType, color: Color.GREEN }
+	 : { icon: "swap_horiz", text: "access-management.search_references.REQUESTED_REFERENCE", color: Color.YELLOW }
 }
 
 export function getAppointmentState(appointmentStateId: number): ColoredLabel {
