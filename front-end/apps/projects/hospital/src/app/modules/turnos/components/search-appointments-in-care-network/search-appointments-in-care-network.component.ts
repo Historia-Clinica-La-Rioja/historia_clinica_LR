@@ -146,6 +146,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 		});
 
 		this.setInformationToSearchAppointments();
+		this.setSearchCriteriaAppointment();
 
 	}
 
@@ -468,6 +469,16 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 			this.setAllSpecialtiesAndCareLines();
 		else
 			this.setReferenceInformation();
+	}
+
+	private setSearchCriteriaAppointment(){
+		let values = this.searchAppointmentsInfoService.getSearchCriteriaValues();
+		if(values){
+			this.setCriteria(values.searchCriteria);
+			this.searchForm.controls.modality.setValue(values.careModality);
+			this.searchForm.controls.startDate.setValue(values.startDate);
+			this.updateEndDate(values.startDate);
+		}
 	}
 
 	private setAllSpecialtiesAndCareLines() {

@@ -131,7 +131,7 @@
 		</div>
 		<ng-template #noInfo>
 			<mat-card>
-				<app-no-appointment-available></app-no-appointment-available>
+				<app-no-appointment-available (preloadData)="sendPreloadedData()"></app-no-appointment-available>
 			</mat-card>
 		</ng-template>
 	</div>

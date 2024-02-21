@@ -11,7 +11,7 @@ import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
-import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
+import { SearchAppointmentInformation, SearchAppointmentsInfoService, SearchCriteriaValues } from '@access-management/services/search-appointment-info.service';
 import { TabsLabel } from '@turnos/constants/tabs';
 import { TabsService } from '@turnos/services/tabs.service';
 
@@ -240,6 +240,15 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	searchAppointmentsInCareNetwork() {
 		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
 		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
+	}
+
+	sendPreloadedData(){
+		let values: SearchCriteriaValues  = {
+			careModality: this.form.controls.modality.value,
+			searchCriteria: this.selectedSearchCriteria,
+			startDate: this.form.controls.searchInitialDate.value,
+		}
+		this.searchAppointmentsInfoService.setSearchCriteria(values);
 	}
 
 	private setValidators() {

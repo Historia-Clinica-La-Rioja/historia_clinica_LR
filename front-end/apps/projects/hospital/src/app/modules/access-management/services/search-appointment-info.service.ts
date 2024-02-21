@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CareLineDto, ClinicalSpecialtyDto, ReferenceDataDto, ReferenceSummaryDto, SharedSnomedDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, EAppointmentModality, ReferenceDataDto, ReferenceSummaryDto, SharedSnomedDto } from '@api-rest/api-model';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { objectToTypeaheadOption } from '@presentation/utils/typeahead.mapper.utils';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
+import { Moment } from 'moment';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,12 +13,17 @@ export class SearchAppointmentsInfoService {
 	patientId: number;
 	referenceData: ReferenceDataDto;
 	searchAppointmentsInTabs = false;
+	searchCriteriaAppointment: SearchCriteriaValues;
 
 	constructor() { }
 
 	loadInformation(patientId: number, referenceData: ReferenceDataDto) {
 		this.patientId = patientId;
 		this.referenceData = referenceData;
+	}
+
+	setSearchCriteria(values: SearchCriteriaValues){
+		this.searchCriteriaAppointment = values;
 	}
 
 	clearInfo() {
@@ -36,6 +42,10 @@ export class SearchAppointmentsInfoService {
 			enableSectionToSearchAppointmentInOtherTab: this.searchAppointmentsInTabs,
 			patientId: this.patientId
 		} : null;
+	}
+
+	getSearchCriteriaValues(): SearchCriteriaValues{
+		return this.searchCriteriaAppointment;
 	}
 
 	private getReferenceSummary(): ReferenceSummaryDto {
@@ -85,4 +95,10 @@ export interface ExternalSetValues {
 	practice: SharedSnomedDto;
 	clinicalSpecialties: ClinicalSpecialtyDto[];
 	searchCriteria: SearchCriteria;
+}
+
+export interface SearchCriteriaValues{
+	searchCriteria: SearchCriteria;
+	careModality: EAppointmentModality;
+	startDate: Moment;
 }
