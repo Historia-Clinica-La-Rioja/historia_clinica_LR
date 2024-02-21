@@ -363,4 +363,3 @@ databaseChangeLog:
                 - column:
                     name: phone_prefix
                     type: varchar(10)
-

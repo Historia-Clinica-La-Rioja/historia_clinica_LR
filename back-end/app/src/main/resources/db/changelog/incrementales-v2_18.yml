@@ -1,3 +1,121 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_18 
+    - logicalFilePath: incrementales-v2_18
 
+    - changeSet:
+        id: createTable-unsatisfied_appointment_demand
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: unsatisfied_appointment_demand
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_unsatisfied_appointment_demand
+                    name: id
+                    type: int
+                - column:
+                    name: clinical_specialty_name_or_alias
+                    type: varchar(100)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: initial_search_time
+                    type: time
+                - column:
+                    constraints:
+                      nullable: false
+                    name: end_search_time
+                    type: time
+                - column:
+                    constraints:
+                      nullable: false
+                    name: initial_search_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: end_search_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: modality_id
+                    type: smallint
+                - column:
+                    constraints:
+                      references: snomed(id)
+                      foreignKeyName: FK_unsatisfied_appointment_demand_snomed
+                    name: practice_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_unsatisfied_appointment_demand_institution
+                    name: institution_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: createTable-unsatisfied_appointment_demand_day
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: unsatisfied_appointment_demand_day
+              columns:
+                - column:
+                    constraints:
+                      references: unsatisfied_appointment_demand(id)
+                      foreignKeyName: FK_unsatisfied_appointment_demand_unsatisfied_appointment_demand_day
+                    name: unsatisfied_appointment_demand_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: week_day_id
+                    type: smallint
+                - addPrimaryKey:
+                    clustered: true
+                    columnNames: unsatisfied_appointment_demand_id, week_day_id
+                    constraintName: PK_unsatisfied_appointment_demand_day
+                    tableName: unsatisfied_appointment_demand_day
+                    validate: true
