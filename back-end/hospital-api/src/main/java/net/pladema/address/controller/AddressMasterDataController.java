@@ -89,7 +89,7 @@ public class AddressMasterDataController {
 	}
 
 	@GetMapping(value = "/departments")
-	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_LOCAL')")
 	public ResponseEntity<Collection<AddressProjection>> getDepartmentsByInstitutions() {
 		Collection<AddressProjection> result = addressMasterDataService.getDepartmentsByInstitutions();
 		LOG.debug("Output result -> {}", result);
