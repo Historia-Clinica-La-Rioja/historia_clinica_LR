@@ -4394,6 +4394,17 @@ export interface URI extends Comparable<URI>, Serializable {
 export interface URL extends Serializable {
 }
 
+export interface UnsatisfiedAppointmentDemandDto {
+    aliasOrSpecialtyName: string;
+    daysOfWeek: number[];
+    endSearchTime: TimeDto;
+    endingSearchDate: DateDto;
+    initialSearchDate: DateDto;
+    initialSearchTime: TimeDto;
+    modality: EAppointmentModality;
+    practiceId: number;
+}
+
 export interface UpdateAppointmentDateDto {
     appointmentId: number;
     date: DateTimeDto;
