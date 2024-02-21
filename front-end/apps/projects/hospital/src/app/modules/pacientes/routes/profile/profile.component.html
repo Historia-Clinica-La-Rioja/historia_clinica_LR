@@ -56,7 +56,7 @@
 		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
 			<div >
 				<div >
-					<mat-card class="box user-data">
+					<mat-card class="box user-data" *ngIf="hasRoleToViewUserData">
 						<mat-card-header>
 							<mat-card-title>
 								<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">

@@ -91,6 +91,7 @@ export class ProfileComponent implements OnInit {
 	userRoles: string[] = [];
 	roles: RoleDto[] = [];
 	assignableRoles: RoleDto[] = [];
+	hasRoleToViewUserData = false;
 	userId: number = null;
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
@@ -206,6 +207,7 @@ export class ProfileComponent implements OnInit {
 								});
 						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe(hasRoleToViewUserData => {
 							if (hasRoleToViewUserData) {
+								this.hasRoleToViewUserData = true;
 								this.checkIfProfessional();
 								if (this.createUsersIsEnable) {
 									this.userService.getUserData(this.personId)
