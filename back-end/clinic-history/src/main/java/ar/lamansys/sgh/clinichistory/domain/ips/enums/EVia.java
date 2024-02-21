@@ -62,6 +62,11 @@ public enum EVia {
 	}
 
 	@JsonCreator
+	public static List<EVia> getAnestheticAgent(){
+		return Stream.of(EVia.INTRAVENOUS, EVia.EPIDURAL, EVia.INHALATION, EVia.RECTAL, EVia.TOPICAL, EVia.SUBARACHNOID, EVia.OTHER).collect(Collectors.toList());
+	}
+
+	@JsonCreator
 	public static EVia getById(Short id){
 		if (id == null)
 			return null;

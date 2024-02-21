@@ -28,6 +28,7 @@ public class AnestheticReportValidator extends InternmentDocumentValidator {
         anestheticSubstanceValidator.assertSnomedAndDosageFields(anestheticReport.getAnalgesicTechniques());
         anestheticTechniqueValidator.assertContextValid(anestheticReport.getAnestheticTechniques());
         anestheticSubstanceValidator.assertSnomedAndDosageFields(anestheticReport.getFluidAdministrations());
+        anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getAnestheticAgents());
 
         log.trace("Output -> isValid anestheticReport {}", anestheticReport);
     }

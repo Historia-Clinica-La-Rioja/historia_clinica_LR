@@ -80,6 +80,8 @@ public class AnestheticReportBo implements IDocumentBo {
 
     private List<AnestheticSubstanceBo> fluidAdministrations;
 
+    private List<AnestheticSubstanceBo> anestheticAgents;
+
     @Override
     public Integer getPatientId() {
         return patientInfo != null ? patientInfo.getId() : patientId;

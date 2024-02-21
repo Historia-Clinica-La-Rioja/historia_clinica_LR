@@ -171,6 +171,7 @@ export interface AnestheticHistoryDto {
 
 export interface AnestheticReportDto {
     analgesicTechniques?: AnalgesicTechniqueDto[];
+    anestheticAgents?: AnestheticSubstanceDto[];
     anestheticHistory?: AnestheticHistoryDto;
     anestheticPlans?: AnestheticSubstanceDto[];
     anestheticTechniques?: AnestheticTechniqueDto[];
