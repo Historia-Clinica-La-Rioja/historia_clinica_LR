@@ -9,7 +9,7 @@ const loincCodes = (permissions: SGXPermissions) => ({
     create: undefined,
     edit: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ?  LoincCodeEdit : undefined,
     options: {
-        submenu: 'masterData'
+        submenu: 'terminology'
     }
 });
 export default loincCodes;

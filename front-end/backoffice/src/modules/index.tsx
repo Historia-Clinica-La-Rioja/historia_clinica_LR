@@ -30,6 +30,7 @@ import properties from './properties';
 import restClientMeasures from './rest-client-measures';
 import medicalCoverage from './medicalcoverage';
 import snomedgroups from './snomedgroups';
+import snomedGroupConcept from './snomedgroupconcepts';
 import carelineproblems from './carelineproblems';
 import carelinerole from './carelinerole';
 import userroles from './userroles';
@@ -174,6 +175,7 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="addresses" {...addresses} />,
     <Resource name="documenttypes" {...documentTypes(permissions)} />,
     <Resource name="snomedgroups"   {...snomedgroups(permissions)} />,
+    <Resource name="snomedgroupconcepts" {...snomedGroupConcept(permissions)}/>,
     <Resource name="medicalcoverages" {...medicalCoverage(permissions)} />,
     <Resource name="clinicalspecialties" {...clinicalspecialties(permissions)} />,
     <Resource name="clinicalservices" {...clinicalservices(permissions)} />,
@@ -222,8 +224,6 @@ const resources = (permissions: SGXPermissions) => [
     <Resource name="vclinichistoryaudit" {...vclinichistoryaudit(permissions)} />,
     <Resource name="cipresencounters" {...cipresencounters(permissions)}/>,
 
-
-    <Resource name="snomedgroupconcepts" />,
     <Resource name="snomedrelatedgroups"  {...snomedrelatedgroups} />,
     <Resource name="snomedconcepts" {...snomedconcepts} />,
     <Resource name="internmentepisodes" />,

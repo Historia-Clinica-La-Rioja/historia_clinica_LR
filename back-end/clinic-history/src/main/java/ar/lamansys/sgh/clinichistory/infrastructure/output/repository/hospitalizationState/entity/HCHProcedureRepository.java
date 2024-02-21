@@ -46,15 +46,15 @@ public class HCHProcedureRepository {
 		"join {h-schema}document_procedure di on (d.id = di.document_id) " +
 		"join {h-schema}procedures i on (di.procedure_id = i.id) " +
 		"where d.source_id = :internmentEpisodeId " +
-		"and d.source_type_id = " + SourceType.HOSPITALIZATION +
-		"and d.status_id IN (:documentStatusId) " +
+		" and d.source_type_id = " + SourceType.HOSPITALIZATION +
+		" and d.status_id IN (:documentStatusId) " +
 			 invalidDocumentCondition +
 		") " +
 		"select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.performed_date, t.procedure_type_id " +
 		"from temporal t " +
 		"join {h-schema}snomed s on t.snomed_id = s.id " +
 		"where rw = 1 and not status_id = :procedureStatusId " +
-         "order by t.updated_on";
+		"order by t.updated_on";
 
 		Query query = entityManager.createNativeQuery(sqlString)
 				.setParameter("internmentEpisodeId", internmentEpisodeId)

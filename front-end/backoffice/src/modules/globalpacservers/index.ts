@@ -14,7 +14,7 @@ const globalpacs = (permissions: SGXPermissions) => ({
     create: permissions.hasAnyAssignment(ROOT) ? GlobalPacsCreate : undefined,
     edit: permissions.hasAnyAssignment(ROOT) ? GlobalPacsEdit : undefined,
     options: {
-        submenu: 'more'
+        submenu: 'imageNetwork'
     }
 });
 

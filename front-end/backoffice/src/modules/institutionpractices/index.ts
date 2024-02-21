@@ -12,7 +12,7 @@ const institutionpractices = (permissions: SGXPermissions) => ({
     create: InstitutionPracticesCreate,
     edit: InstitutionPracticesEdit,
     options: {
-        submenu: 'more'
+        submenu: 'masterData'
     }
 });
 

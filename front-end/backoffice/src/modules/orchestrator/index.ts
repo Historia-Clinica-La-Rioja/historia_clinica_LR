@@ -14,7 +14,7 @@ const orchestrator = (permissions: SGXPermissions) => ({
     create: OrchestratorCreate,
     edit: OrchestratorEdit,
     options: {
-        submenu: 'facilities'
+        submenu: 'imageNetwork'
     }
 });
 

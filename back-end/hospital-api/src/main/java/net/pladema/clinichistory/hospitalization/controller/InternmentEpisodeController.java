@@ -139,7 +139,8 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@PathVariable(name = "consentId") Integer consentId,
 			@RequestPart("file") MultipartFile file) throws MoreThanOneConsentDocumentException {
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}, consentId", institutionId, internmentEpisodeId, episodeDocumentTypeId, file, consentId);
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}, consentId {}",
+				institutionId, internmentEpisodeId, episodeDocumentTypeId, file, consentId);
 		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId, consentId);
 		Integer result = createEpisodeDocument.run(dto);
 		LOG.debug(OUTPUT, result);

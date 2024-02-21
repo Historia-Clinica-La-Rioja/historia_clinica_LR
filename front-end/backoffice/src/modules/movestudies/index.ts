@@ -9,7 +9,7 @@ const moveStudies = (permissions: SGXPermissions) => ({
     list: permissions.hasAnyAssignment(ROOT,ADMINISTRADOR) ? MoveStudiesList: undefined,
     edit: permissions.hasAnyAssignment(ROOT,ADMINISTRADOR) ?MoveStudiesEdit: undefined,
     options: {
-        submenu: 'more'
+        submenu: 'imageNetwork'
     }
 });
 

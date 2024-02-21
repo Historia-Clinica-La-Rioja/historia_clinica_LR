@@ -12,7 +12,7 @@ const snomedgroups = (permissions: SGXPermissions) => ({
     create: SnomedGroupCreate,
     edit: SnomedGroupEdit,
     options: {
-        submenu: 'masterData'
+        submenu: 'terminology'
     }
 });
 

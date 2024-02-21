@@ -25,7 +25,9 @@ const messages = {
             facilities: 'Instalaciones',
             debug: 'Inspeccionar',
             masterData: 'Datos maestros',
+            terminology: 'Terminología',
             booking: 'Reservas online',
+            imageNetwork: 'Red de Imágenes',
             more: 'Mas',
 
         },

@@ -14,7 +14,7 @@ const equipment = (permissions: SGXPermissions) => ({
     create: EquipmentCreate,
     edit: EquipmentEdit,
     options: {
-        submenu: 'facilities'
+        submenu: 'imageNetwork'
     }
 });
 
