@@ -176,6 +176,7 @@ export interface AnestheticReportDto {
     anestheticPlans?: AnestheticSubstanceDto[];
     anestheticTechniques?: AnestheticTechniqueDto[];
     anthropometricData?: AnthropometricDataDto;
+    antibioticProphylaxis?: AnestheticSubstanceDto[];
     diagnosis?: DiagnosisDto[];
     fluidAdministrations?: AnestheticSubstanceDto[];
     foodIntake?: FoodIntakeDto;

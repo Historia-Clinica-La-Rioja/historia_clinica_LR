@@ -32,6 +32,7 @@ public class AnestheticSubstanceBo extends ClinicalTerm {
         VIA_MAP.put(EAnestheticSubstanceType.ANESTHETIC_PLAN.getId(), EVia.getAnestheticPlan());
         VIA_MAP.put(EAnestheticSubstanceType.ANESTHETIC_AGENT.getId(), EVia.getAnestheticAgent());
         VIA_MAP.put(EAnestheticSubstanceType.NON_ANESTHETIC_DRUG.getId(), EVia.getNonAnestheticDrug());
+        VIA_MAP.put(EAnestheticSubstanceType.ANTIBIOTIC_PROPHYLAXIS.getId(), EVia.getAntibioticProphylaxis());
     }
 
     public AnestheticSubstanceBo(String stcid, String pt, Double quantityValue, String quantityUnit, String periodUnit, LocalDateTime startDate, Short viaId, String viaNote, Short typeId) {

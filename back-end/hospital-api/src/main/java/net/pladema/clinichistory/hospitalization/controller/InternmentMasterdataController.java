@@ -231,6 +231,14 @@ public class InternmentMasterdataController {
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping(value = "/vias-antibiotic-prophylaxis")
+    public ResponseEntity<Collection<MasterDataDto>> getViasAntibioticProphylaxis() {
+        log.debug("All via antibiotic-prophylaxis types");
+        var result = EnumWriter.writeList(EVia.getAntibioticProphylaxis());
+        log.debug("Output -> {}", result);
+        return ResponseEntity.ok().body(result);
+    }
+
 	@GetMapping(value = "/units")
 	public ResponseEntity<Collection<MasterDataDto>> getUnits() {
 		log.debug("{}", "All units types");

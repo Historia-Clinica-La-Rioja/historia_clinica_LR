@@ -72,6 +72,12 @@ public enum EVia {
 	}
 
 	@JsonCreator
+	public static List<EVia> getAntibioticProphylaxis(){
+		return Stream.of(EVia.INTRAVENOUS, EVia.OTHER).collect(Collectors.toList());
+	}
+
+
+	@JsonCreator
 	public static EVia getById(Short id){
 		if (id == null)
 			return null;

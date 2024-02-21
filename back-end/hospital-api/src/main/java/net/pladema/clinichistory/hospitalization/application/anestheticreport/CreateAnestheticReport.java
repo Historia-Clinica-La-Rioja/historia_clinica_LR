@@ -67,6 +67,8 @@ public class CreateAnestheticReport {
 
         this.setAnestheticSubstanceValues(anestheticReport.getNonAnestheticDrugs(), EAnestheticSubstanceType.NON_ANESTHETIC_DRUG.getId());
 
+        this.setAnestheticSubstanceValues(anestheticReport.getAntibioticProphylaxis(), EAnestheticSubstanceType.ANTIBIOTIC_PROPHYLAXIS.getId());
+
         anestheticReportValidator.assertContextValid(anestheticReport);
 
         documentFactory.run(anestheticReport, false);

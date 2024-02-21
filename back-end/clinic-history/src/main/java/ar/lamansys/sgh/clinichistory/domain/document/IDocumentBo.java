@@ -208,4 +208,6 @@ public interface IDocumentBo {
     default List<AnestheticSubstanceBo> getAnestheticAgents() { return Collections.emptyList(); }
 
     default List<AnestheticSubstanceBo> getNonAnestheticDrugs() { return Collections.emptyList(); }
+
+    default List<AnestheticSubstanceBo> getAntibioticProphylaxis() { return Collections.emptyList(); }
 }

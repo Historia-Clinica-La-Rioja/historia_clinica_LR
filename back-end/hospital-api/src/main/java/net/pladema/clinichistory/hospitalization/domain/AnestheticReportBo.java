@@ -84,6 +84,8 @@ public class AnestheticReportBo implements IDocumentBo {
 
     private List<AnestheticSubstanceBo> nonAnestheticDrugs;
 
+    private List<AnestheticSubstanceBo> antibioticProphylaxis;
+
     @Override
     public Integer getPatientId() {
         return patientInfo != null ? patientInfo.getId() : patientId;

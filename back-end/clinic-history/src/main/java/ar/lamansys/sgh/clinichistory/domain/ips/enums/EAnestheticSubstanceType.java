@@ -18,6 +18,7 @@ public enum EAnestheticSubstanceType {
     FLUID_ADMINISTRATION((short) 4, "Administración de líquido"),
     ANESTHETIC_AGENT((short) 5, "Agente anestésico"),
     NON_ANESTHETIC_DRUG((short) 6, "Droga no anestésica"),
+    ANTIBIOTIC_PROPHYLAXIS((short) 7, "Profilaxis antibiótica"),
     ;
 
     private final Short id;
