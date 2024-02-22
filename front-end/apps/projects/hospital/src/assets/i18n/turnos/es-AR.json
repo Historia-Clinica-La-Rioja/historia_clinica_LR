@@ -8,7 +8,8 @@
 				"CREATE_AGENDA": "Crear agenda",
 				"PROFESSONAL": "Profesionales",
 				"NEW_AGENDA": "Nueva agenda",
-				"SEARCH_APPOINTMENTS": "Buscar turnos"
+				"SEARCH_APPOINTMENTS": "Buscar turnos",
+				"REGISTER_UNSATISFIED_DEMAND": "Registrar como demanda insatisfecha"
 			},
 			"PROFESSIONAL_SEARCH": "Profesional",
 			"SPECIALTY_SEARCH": "Especialidad",
@@ -43,7 +44,9 @@
 			"messages": {
 				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda",
 				"NO_APPOINTMENT-AVAILABLE": "No se encontraron turnos disponibles",
-				"SUGGESTION" : "Intente refinando los criterios de búsqueda o en caso contrario puede: "
+				"SUGGESTION" : "Intente refinando los criterios de búsqueda o en caso contrario puede: ",
+				"TITLE_REGISTER_UNSATISFIED_DEMAND": "¿Registrar como demanda insatisfecha?",
+				"MESSAGE_REGISTER_UNSATISFIED_DEMAND": "Si confirma la demanda insatisfecha quedará registrado que no hay turnos disponibles bajo los criterios buscados, a fin de evaluar y mejorar la oferta de turnos en el futuro."
 			}
 		},
 		"MODALITY_ATTENTION":"Modalidad de atención",
