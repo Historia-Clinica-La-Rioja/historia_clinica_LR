@@ -52,7 +52,7 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	@Override
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertCreate(HierarchicalUnit entity) {
-		if (repository.findByAlias(entity.getAlias()).isPresent())
+		if (validateHierarchicalUnitExistsByAliasInInstitutionID(entity.getAlias(), entity.getInstitutionId()))
 			throw new BackofficeValidationException("hierarchical-unit.alias.exists");
 		validateClinicalSpecialtyIdData(entity);
 	}
@@ -61,7 +61,7 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertUpdate(Integer id, HierarchicalUnit entity) {
 		repository.findById(id).ifPresentOrElse(hu -> {
-			if (!hu.getAlias().equals(entity.getAlias()))
+			if (!hu.getAlias().equals(entity.getAlias()) && validateHierarchicalUnitExistsByAliasInInstitutionID(entity.getAlias(), entity.getInstitutionId()))
 				throw new BackofficeValidationException("hierarchical-unit.alias.exists");
 			}, () -> new BackofficeValidationException("hierarchical-unit.invalid-id")
 		);
@@ -107,4 +107,7 @@ public class BackofficeHierarchicalUnitValidator implements BackofficePermission
 		return hierarchicalUnitRelationshipRepository.findParentsIdsByHierarchicalUnitChildId(hierarchicalUnitId);
 	}
 
+	private boolean validateHierarchicalUnitExistsByAliasInInstitutionID(String alias, Integer institutionId) {
+		return repository.existsByAliasAndInstitutionId(alias, institutionId);
+	}
 }
