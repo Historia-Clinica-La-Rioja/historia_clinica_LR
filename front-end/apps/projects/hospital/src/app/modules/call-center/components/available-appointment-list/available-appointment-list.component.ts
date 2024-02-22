@@ -45,8 +45,7 @@ export class AvailableAppointmentListComponent {
 	}
 
 	checkHolidayAndAssign(indexOfAppointment: number) {
-
-		const appointmentToAssign = this.appointments[indexOfAppointment];
+		const appointmentToAssign = this.appointmentsCurrentPage[indexOfAppointment];
 		const date = dateDtoToDate(appointmentToAssign.date);
 		const stringDate = format(date, DateFormat.API_DATE);
 
