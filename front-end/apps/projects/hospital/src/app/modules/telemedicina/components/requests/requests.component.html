@@ -16,8 +16,8 @@
 		</div>
 
 		<div fxLayout="column" fxLayoutAlign="end end" fxLayoutGap="1em">
-			<app-toggle-avaiability (availabilityChanged)="availabilityChanged($event)" label="Disponible para llamadas"
-				[initialValue]="initialResponsableStatus"></app-toggle-avaiability>
+			<app-toggle-availability (availabilityChanged)="availabilityChanged($event)" label="Disponible para llamadas"
+				[initialValue]="initialResponsableStatus"></app-toggle-availability>
 			<button mat-raised-button color="primary" (click)="openAddRequest()">{{'telemedicina.requests.BUTTON_ADD' |
 				translate}}</button>
 		</div>

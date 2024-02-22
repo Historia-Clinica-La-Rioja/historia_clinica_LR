@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToggleAvaiabilityComponent } from './toggle-avaiability.component';
+import { ToggleAvailabilityComponent } from './toggle-availability.component';
 
 describe('ToogleAvaiabilityComponent', () => {
-  let component: ToggleAvaiabilityComponent;
-  let fixture: ComponentFixture<ToggleAvaiabilityComponent>;
+  let component: ToggleAvailabilityComponent;
+  let fixture: ComponentFixture<ToggleAvailabilityComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ToggleAvaiabilityComponent ]
+      declarations: [ ToggleAvailabilityComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ToggleAvaiabilityComponent);
+    fixture = TestBed.createComponent(ToggleAvailabilityComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

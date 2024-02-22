@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-	selector: 'app-toggle-avaiability',
-	templateUrl: './toggle-avaiability.component.html',
-	styleUrls: ['./toggle-avaiability.component.scss']
+	selector: 'app-toggle-availability',
+	templateUrl: './toggle-availability.component.html',
+	styleUrls: ['./toggle-availability.component.scss']
 })
-export class ToggleAvaiabilityComponent {
+export class ToggleAvailabilityComponent {
 
 	@Input() set initialValue(value: boolean) {
 		this.isChecked = value;
