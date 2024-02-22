@@ -5,13 +5,16 @@ import HolidayList from './list';
 import HolidayCreate from './create';
 import HolidayEdit from './edit';
 
-import { ROOT, ADMINISTRADOR } from '../roles';
+import {
+    DEFAULT_BO_ROLES,
+    BASIC_BO_ROLES,
+} from '../roles-set';
 
 const holidays = (permissions: SGXPermissions) => ({
     show: HolidayShow,
-    list: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? HolidayList : undefined,
-    create: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? HolidayCreate : undefined,
-    edit: permissions.hasAnyAssignment(ROOT, ADMINISTRADOR) ? HolidayEdit : undefined,
+    list: permissions.hasAnyAssignment(...DEFAULT_BO_ROLES) ? HolidayList : undefined,
+    create: permissions.hasAnyAssignment(...BASIC_BO_ROLES) ? HolidayCreate : undefined,
+    edit: permissions.hasAnyAssignment(...BASIC_BO_ROLES) ? HolidayEdit : undefined,
     options: {
         submenu: 'masterData'
     }
