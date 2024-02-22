@@ -116,16 +116,22 @@ import StackAlt from './assets/stackalt.svg';
   `}
 </style>
 
-# Welcome to Storybook
+# Bienvenidos a Storybook!
 
-Storybook helps you build UI components in isolation from your app's business logic, data, and context.
-That makes it easy to develop hard-to-reach states. Save these UI states as **stories** to revisit during development, testing, or QA.
+Storybook ayuda a crear componentes aislados de la logica de la aplicacion, sus datos y contexto.
+Esto hace que sea mas facil alcanzar los estados mas complejos. Cada estado debe ser almacenado como **stories** para consultarlas durante desarrollo, testing o para resolver dudas.
 
-Browse example stories now by navigating to them in the sidebar.
-View their code in the `stories` directory to learn how they work.
-We recommend building UIs with a [**component-driven**](https://componentdriven.org) process starting with atomic components and ending with pages.
+El codigo de cada componente puede encontrarse en los archivos `stories`.
 
-<div className="subheading">Configure</div>
+Es importante mantener la separacion de las secciones que se ven en el menu lateral:
+
+- **Presentacion**: Aqui se encuentran todos los componentes que en el codigo estan en este modulo.
+
+- **HSI**: Son componentes globales a la aplicacion que suele usarse en varios modulos. Se espera que sean standalone.
+
+- **Modulo**: Componentes que son propios de ciertos modulos y que se reutilizan a lo largo de la aplicacion deben quedar encapsulados en el modulo correspondiente.
+
+<div className="subheading">Configuracion</div>
 
 <div className="link-list">
   <a
@@ -174,7 +180,7 @@ We recommend building UIs with a [**component-driven**](https://componentdriven.
   </a>
 </div>
 
-<div className="subheading">Learn</div>
+<div className="subheading">Aprendizaje</div>
 
 <div className="link-list">
   <a className="link-item" href="https://storybook.js.org/docs" target="_blank">
@@ -207,7 +213,3 @@ We recommend building UIs with a [**component-driven**](https://componentdriven.
   </a>
 </div>
 
-<div className="tip-wrapper">
-  <span className="tip">Tip</span>Edit the Markdown in{' '}
-  <code>stories/Introduction.stories.mdx</code>
-</div>

@@ -2,7 +2,7 @@ import { type Meta, type StoryObj } from '@storybook/angular';
 import { IconedTextComponent } from './iconed-text.component';
 
 const meta: Meta<IconedTextComponent> = {
-    title: 'Example/IconedTextComponent',
+    title: 'Presentation/IconedTextComponent',
     component: IconedTextComponent,
     tags: ['autodocs'],
     argTypes: {
