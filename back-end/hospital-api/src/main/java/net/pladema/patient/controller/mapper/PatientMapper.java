@@ -1,5 +1,6 @@
 package net.pladema.patient.controller.mapper;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.PersonAgeDto;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
@@ -13,8 +14,11 @@ import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.controller.mapper.PersonMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -25,6 +29,12 @@ public interface PatientMapper {
 	PatientSearchDto fromPatientSearch(PatientSearch patientSearch);
 
 	List<PatientSearchDto> fromListPatientSearch(List<PatientSearch> patientSearch);
+
+	@AfterMapping
+	default void personAgeMapping(@MappingTarget PatientSearchDto target, PatientSearch source){
+		if (source.getPerson() != null && source.getPerson().getBirthDate() != null)
+			target.getPerson().setPersonAge(new PersonAgeDto(source.getPerson().getBirthDate()));
+	}
 
 	@Named("toPatientRegistrationSearchDto")
 	@Mapping(target = "idPatient", source = "patientId")

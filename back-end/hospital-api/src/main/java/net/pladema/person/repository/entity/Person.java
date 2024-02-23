@@ -81,13 +81,13 @@ public class Person implements Serializable {
 		this.identificationNumber = identificationNumber;
 	}
 
-    @JsonIgnore
+    /*@JsonIgnore
     public Short getAge(){
         if (birthDate == null)
             return null;
         LocalDate today = LocalDate.now();
         Period p = Period.between(birthDate, today);
         return (short) p.getYears();
-    }
+    }*/
 
 }

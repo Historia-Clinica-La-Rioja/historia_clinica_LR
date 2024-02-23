@@ -63,6 +63,7 @@ export interface APersonDto {
     occupationId: number;
     otherGenderSelfDetermination?: string;
     otherLastNames: string;
+    personAge?: PersonAgeDto;
     phoneNumber: string;
     phonePrefix: string;
     postcode: string;
@@ -540,6 +541,7 @@ export interface BasicDataPersonDto extends Serializable {
     nameSelfDetermination: string;
     occupation: string;
     otherLastNames: string;
+    personAge: PersonAgeDto;
     religion: string;
     selfPerceivedGender: string;
 }
@@ -3257,6 +3259,13 @@ export interface PatientType extends Serializable {
 
 export interface PermissionsDto {
     roleAssignments: RoleAssignmentDto[];
+}
+
+export interface PersonAgeDto {
+    days: number;
+    months: number;
+    totalDays: number;
+    years: number;
 }
 
 export interface PersonBasicDataResponseDto extends Serializable {
