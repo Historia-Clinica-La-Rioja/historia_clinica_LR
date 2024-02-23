@@ -11,6 +11,7 @@ import { TabsService } from '@turnos/services/tabs.service';
 })
 export class NoAppointmentAvailableComponent implements OnInit {
   @Output() preloadData = new EventEmitter<boolean>();
+  @Output() registerUnsatisfiedDemand = new EventEmitter<boolean>();
 
   constructor(
     private readonly tabsService: TabsService, private dialog: MatDialog) { }
@@ -23,8 +24,8 @@ export class NoAppointmentAvailableComponent implements OnInit {
     this.tabsService.setTab(TabsLabel.CARE_NETWORK);
   }
 
-  registerUnsatisfiedDemand() {
-    this.dialog.open(DiscardWarningComponent, {
+  openRegisterUnsatisfiedDemand() {
+   let dialogRef = this.dialog.open(DiscardWarningComponent, {
       data: {
         title: 'turnos.home.messages.TITLE_REGISTER_UNSATISFIED_DEMAND',
         content: 'turnos.home.messages.MESSAGE_REGISTER_UNSATISFIED_DEMAND',
@@ -37,5 +38,10 @@ export class NoAppointmentAvailableComponent implements OnInit {
       width: '35%',
       autoFocus: false
     })
+    dialogRef.afterClosed().subscribe(confirmSaveRegister => {
+			if (confirmSaveRegister) {
+        this.registerUnsatisfiedDemand.emit(true);
+			}
+		});
   }
 }

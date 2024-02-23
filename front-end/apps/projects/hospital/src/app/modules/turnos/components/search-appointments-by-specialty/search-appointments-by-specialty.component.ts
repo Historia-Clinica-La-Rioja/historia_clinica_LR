@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
-import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, SharedSnomedDto, TimeDto } from '@api-rest/api-model';
+import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, SharedSnomedDto, TimeDto, UnsatisfiedAppointmentDemandDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -14,6 +14,9 @@ import { PracticesService } from '@api-rest/services/practices.service';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService, SearchCriteriaValues } from '@access-management/services/search-appointment-info.service';
 import { TabsLabel } from '@turnos/constants/tabs';
 import { TabsService } from '@turnos/services/tabs.service';
+import { UnsatisfiedDemandService } from '@api-rest/services/unsatisfied-demand.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { processErrors } from '@core/utils/form.utils';
 
 const PAGE_MIN_SIZE = 5;
 const ONE_ELEMENT = 1;
@@ -46,7 +49,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	externalInformation: SearchAppointmentInformation;
 	externalSetValueSpecialty: TypeaheadOption<string>;
 	showCareNetworkSection = false;
-
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
 		parsedDate?.setHours(0, 0, 0, 0);
@@ -61,6 +63,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		private readonly practicesService: PracticesService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 		private readonly tabsService: TabsService,
+		private readonly unsatisfiedDemandService: UnsatisfiedDemandService,
+		private readonly snackBarService: SnackBarService
 	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled) }
 
 	ngOnInit(): void {
@@ -158,23 +162,28 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		}
 	}
 
+	setSelectedDaysOfWeek():number[] {
+		const selectedDaysOfWeek = [];
+		if (this.form.value.mondayControl)
+			selectedDaysOfWeek.push(1);
+		if (this.form.value.tuesdayControl)
+			selectedDaysOfWeek.push(2);
+		if (this.form.value.wednesdayControl)
+			selectedDaysOfWeek.push(3);
+		if (this.form.value.thursdayControl)
+			selectedDaysOfWeek.push(4);
+		if (this.form.value.fridayControl)
+			selectedDaysOfWeek.push(5);
+		if (this.form.value.saturdayControl)
+			selectedDaysOfWeek.push(6);
+		if (this.form.value.sundayControl)
+			selectedDaysOfWeek.push(0);
+		return selectedDaysOfWeek;
+	}
+
 	submit() {
 		if (this.form.valid) {
-			const selectedDaysOfWeek = [];
-			if (this.form.value.mondayControl)
-				selectedDaysOfWeek.push(1);
-			if (this.form.value.tuesdayControl)
-				selectedDaysOfWeek.push(2);
-			if (this.form.value.wednesdayControl)
-				selectedDaysOfWeek.push(3);
-			if (this.form.value.thursdayControl)
-				selectedDaysOfWeek.push(4);
-			if (this.form.value.fridayControl)
-				selectedDaysOfWeek.push(5);
-			if (this.form.value.saturdayControl)
-				selectedDaysOfWeek.push(6);
-			if (this.form.value.sundayControl)
-				selectedDaysOfWeek.push(0);
+			const selectedDaysOfWeek = this.setSelectedDaysOfWeek();
 			const searchAppointmentDto = this.buildAppointmentSearch(selectedDaysOfWeek);
 			this.diaryService.generateEmptyAppointments(searchAppointmentDto).subscribe(emptyAppointments => {
 				this.emptyAppointments = emptyAppointments;
@@ -227,28 +236,50 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	setPractice(practice: SharedSnomedDto) {
-        if (practice)
-            this.form.controls.practice.setValue(practice.id);
-        else {
-            this.form.controls.practice.setValue(null);
-            this.emptyAppointments = [];
-            this.emptyAppointmentsFiltered = [];
-        }
-        this.showPracticeError = false;
-    }
+		if (practice)
+			this.form.controls.practice.setValue(practice.id);
+		else {
+			this.form.controls.practice.setValue(null);
+			this.emptyAppointments = [];
+			this.emptyAppointmentsFiltered = [];
+		}
+		this.showPracticeError = false;
+	}
 
 	searchAppointmentsInCareNetwork() {
 		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
 		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
 	}
 
-	sendPreloadedData(){
-		let values: SearchCriteriaValues  = {
+	sendPreloadedData() {
+		let values: SearchCriteriaValues = {
 			careModality: this.form.controls.modality.value,
 			searchCriteria: this.selectedSearchCriteria,
 			startDate: this.form.controls.searchInitialDate.value,
 		}
 		this.searchAppointmentsInfoService.setSearchCriteria(values);
+	}
+
+	saveRegisterUnsatisfiedDemand() {
+		this.unsatisfiedDemandService.saveUnsatisfiedAppointmentDemand(this.prepareRegisterUnsatisfiedDemand()).subscribe(res=>{
+			this.snackBarService.showSuccess('turnos.home.messages.SUCCESS_REGISTER_UNSATISFIED_DEMAND')
+			}, error => processErrors(error, (msg) => {
+			this.snackBarService.showError(msg);
+		}));
+	}
+
+	prepareRegisterUnsatisfiedDemand(): UnsatisfiedAppointmentDemandDto {
+		const selectedDaysOfWeek = this.setSelectedDaysOfWeek();
+		return  {
+			aliasOrSpecialtyName: this.form.controls.clinicalSpecialty.value,
+			daysOfWeek: selectedDaysOfWeek,
+			endSearchTime: this.form.controls.endingTime.value,
+			endingSearchDate: dateToDateDto(new Date(this.form.controls.searchEndingDate.value)),
+			initialSearchDate: dateToDateDto(new Date(this.form.controls.searchInitialDate.value)),
+			initialSearchTime: this.form.controls.initialTime.value,
+			modality: this.form.controls.modality.value,
+			practiceId: this.form.controls.practice.value,
+		}
 	}
 
 	private setValidators() {
@@ -282,21 +313,21 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	private setReferenceInformation(): void {
-        const { patientId, formInformation } = this.externalInformation;
-        this.patientId = patientId;
-        const { searchCriteria, clinicalSpecialties, practice } = formInformation;
-        this.setCriteria(searchCriteria);
-        if (clinicalSpecialties?.length) {
-            this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
-            if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
-                this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
-        }
-        if (practice) {
-            this.practices = [practice];
-            this.setPractice(practice);
-        }
-        this.searchAppointmentsInfoService.clearInfo();
-    }
+		const { patientId, formInformation } = this.externalInformation;
+		this.patientId = patientId;
+		const { searchCriteria, clinicalSpecialties, practice } = formInformation;
+		this.setCriteria(searchCriteria);
+		if (clinicalSpecialties?.length) {
+			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
+			if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
+				this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
+		}
+		if (practice) {
+			this.practices = [practice];
+			this.setPractice(practice);
+		}
+		this.searchAppointmentsInfoService.clearInfo();
+	}
 
 	private clearLists() {
 		this.emptyAppointments = null;

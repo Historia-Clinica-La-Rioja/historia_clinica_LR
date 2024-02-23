@@ -46,7 +46,8 @@
 				"NO_APPOINTMENT-AVAILABLE": "No se encontraron turnos disponibles",
 				"SUGGESTION" : "Intente refinando los criterios de búsqueda o en caso contrario puede: ",
 				"TITLE_REGISTER_UNSATISFIED_DEMAND": "¿Registrar como demanda insatisfecha?",
-				"MESSAGE_REGISTER_UNSATISFIED_DEMAND": "Si confirma la demanda insatisfecha quedará registrado que no hay turnos disponibles bajo los criterios buscados, a fin de evaluar y mejorar la oferta de turnos en el futuro."
+				"MESSAGE_REGISTER_UNSATISFIED_DEMAND": "Si confirma la demanda insatisfecha quedará registrado que no hay turnos disponibles bajo los criterios buscados, a fin de evaluar y mejorar la oferta de turnos en el futuro.",
+				"SUCCESS_REGISTER_UNSATISFIED_DEMAND": "Búsqueda de turnos registrada como demanda insatisfecha"
 			}
 		},
 		"MODALITY_ATTENTION":"Modalidad de atención",
