@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CareLineDto, ClinicalSpecialtyDto, EAppointmentModality, ReferenceDataDto, ReferenceSummaryDto, SharedSnomedDto } from '@api-rest/api-model';
+import { CareLineDto, ClinicalSpecialtyDto, DateDto, EAppointmentModality, ReferenceDataDto, ReferenceSummaryDto, SharedSnomedDto } from '@api-rest/api-model';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { objectToTypeaheadOption } from '@presentation/utils/typeahead.mapper.utils';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
-import { Moment } from 'moment';
 
 @Injectable({
 	providedIn: 'root'
@@ -100,5 +99,5 @@ export interface ExternalSetValues {
 export interface SearchCriteriaValues{
 	searchCriteria: SearchCriteria;
 	careModality: EAppointmentModality;
-	startDate: Moment;
+	startDate: DateDto;
 }

@@ -20,6 +20,7 @@ import { TabsService } from '@turnos/services/tabs.service';
 import { TabsLabel } from '@turnos/constants/tabs';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
+import * as moment from 'moment';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
@@ -477,7 +478,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 			this.setCriteria(values.searchCriteria);
 			this.searchForm.controls.modality.setValue(values.careModality);
 			this.searchForm.controls.startDate.setValue(values.startDate);
-			this.updateEndDate(values.startDate);
+			this.updateEndDate(moment(values.startDate));
 		}
 	}
 
