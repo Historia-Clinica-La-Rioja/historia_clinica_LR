@@ -1889,6 +1889,14 @@ export interface GeneratedApiKeyDto {
     name: string;
 }
 
+export interface GroupAppointmentResponseDto {
+    appointmentId: number;
+    appointmentStateId: number;
+    identificationNumber: string;
+    patientFullName: string;
+    patientId: number;
+}
+
 export interface HCEAllergyDto extends ClinicalTermDto {
     categoryId: number;
     criticalityId: number;

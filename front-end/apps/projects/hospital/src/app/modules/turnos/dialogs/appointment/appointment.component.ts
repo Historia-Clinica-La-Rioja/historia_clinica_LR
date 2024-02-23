@@ -758,6 +758,7 @@ export class AppointmentComponent implements OnInit {
 			const date = momentFormat(moment(previousDate), DateFormat.API_DATE);
 			this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
 				.subscribe((appointments: AppointmentListDto[]) => {
+					this.appointmentFacade.loadAppointments();
 					const appointmentsInDate = this.generateEventsFromAppointments(appointments)
 						.filter(appointment => appointment.start.getTime() == previousDate.getTime());
 
@@ -974,6 +975,7 @@ export class AppointmentComponent implements OnInit {
 			this.appointmentFacade.cancelRecurringAppointments(this.data.appointmentData.appointmentId, false)
 				.subscribe(_ => {
 					this.snackBarService.showSuccess('turnos.cancel.PLURAL_SUCCESS');
+					this.appointmentFacade.loadAppointments();
 					this.closeDialog('statuschanged')
 				});
 		}
@@ -982,6 +984,7 @@ export class AppointmentComponent implements OnInit {
 			this.appointmentFacade.cancelRecurringAppointments(this.data.appointmentData.appointmentId, true)
 				.subscribe(_ => {
 					this.snackBarService.showSuccess('turnos.cancel.PLURAL_SUCCESS');
+					this.appointmentFacade.loadAppointments();
 					this.closeDialog('statuschanged')
 				});
 		}

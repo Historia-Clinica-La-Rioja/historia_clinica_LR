@@ -21,6 +21,8 @@ import { AppointmentDetailsComponent } from './components/appointment-details/ap
 import { AppointmentLabelComponent } from './components/appointment-label/appointment-label.component';
 import { AppointmentResultViewComponent } from './components/appointment-result-view/appointment-result-view.component';
 import { AppointmentTabsComponent } from './components/appointment-tabs/appointment-tabs.component';
+import { AppointmentListComponent } from './dialogs/appointment-list/appointment-list.component';
+import { AppointmentListDetailComponent } from './components/appointment-list-detail/appointment-list-detail.component';
 import { CalendarEventViewComponent } from './components/calendar-event-view/calendar-event-view.component';
 import { CalendarProfessionalViewComponent } from '@turnos/components/calendar-professional-view/calendar-professional-view.component';
 import { DateRangeTimeFormComponent } from './components/date-range-time-form/date-range-time-form.component';
@@ -74,6 +76,8 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		AppointmentLabelComponent,
 		AppointmentResultViewComponent,
 		AppointmentTabsComponent,
+		AppointmentListComponent,
+		AppointmentListDetailComponent,
 		CalendarProfessionalViewComponent,
 		DateRangeTimeFormComponent,
 		DiaryInformationComponent,
@@ -102,6 +106,8 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		NewAttentionComponent,
 		RecurringCustomizePopupComponent,
 	  	RecurringCancelPopupComponent,
+		RecurringCancelPopupComponent,
+  		RecurringCustomizePopupComponent,
 		//pipes
 		PracticesPipe,
 		ShowAppointmentOverTurnPipe,

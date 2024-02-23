@@ -38,8 +38,11 @@ import * as moment from 'moment';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import { APPOINTMENT_STATES_ID, MINUTES_IN_HOUR } from '../../constants/appointment';
+import { APPOINTMENT_STATES_ID, COLORES, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AgendaSearchService } from '../../services/agenda-search.service';
+import { pushIfNotExists } from '@core/utils/array.utils';
+import { MAX_APPOINTMENT_PER_HOUR, getHourFromString } from '@turnos/utils/appointment.utils';
+import { AppointmentListComponent } from '@turnos/dialogs/appointment-list/appointment-list.component';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -90,6 +93,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() view: CalendarView = CalendarView.Week;
 	@Input() viewDate: Date = new Date();
 	modality: EAppointmentModality = null;
+	appointmentsCopy: CalendarEvent[] = [];
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -382,21 +386,36 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 						});
 					});
 			} else {
-				dialogRef = this.dialog.open(AppointmentComponent, {
-					disableClose: true,
-					data: {
-						appointmentData: event.meta,
-						hasPermissionToAssignShift: this.agenda.professionalAssignShift,
-						agenda: this.agenda
-					},
-				});
+				if (!event.meta.quantity) {
+					dialogRef = this.dialog.open(AppointmentComponent, {
+						disableClose: true,
+						data: {
+							appointmentData: event.meta,
+							hasPermissionToAssignShift: this.agenda.professionalAssignShift,
+							agenda: this.agenda
+						},
+					});
+					dialogRef.afterClosed().subscribe((appointmentInformation) => {
+						this.viewDate = appointmentInformation.date;
+						this.setDateRange(this.viewDate);
+						this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+					});
+				} else {
+					this.openAppointmentListDialog(event);
+				}
 			}
-			dialogRef.afterClosed().subscribe((appointmentInformation) => {
-				this.viewDate = appointmentInformation.date;
-				this.setDateRange(this.viewDate);
-				this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
-			});
 		}
+	}
+
+	private openAppointmentListDialog = (event: CalendarEvent) => {
+		this.dialog.open(AppointmentListComponent, {
+			data: {
+				date: event.start,
+				hasPermissionToAssignShift: this.agenda.professionalAssignShift,
+				agenda: this.agenda,
+				appointments: this.appointmentsCopy
+			}
+		});
 	}
 
 	setAgenda(agenda: CompleteDiaryDto): void {
@@ -537,7 +556,67 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		}
 		unifiedEvents.push(this.unifyBlockedEvents(processedEvents));
 		unifiedEvents = unifiedEvents.concat(events.filter(event => event.allDay));
+		this.appointmentsCopy = unifiedEvents;
+		unifiedEvents = this.unifyManyAppointments(unifiedEvents);
 		return unifiedEvents;
+	}
+
+	private unifyManyAppointments = (unifiedEvents: CalendarEvent[]) => {
+		const dates: Date[] = this.getUniqueDates(unifiedEvents);
+		return this.getAppointmentsFromDateTime(dates, unifiedEvents);
+	}
+
+	private compareAppointmentsDate = (date: Date, date2: Date): boolean => {
+		return new Date(date).toLocaleDateString() === new Date(date2).toLocaleDateString()
+			&& new Date(date).toLocaleTimeString() === new Date(date2).toLocaleTimeString()
+	}
+
+	private getUniqueDates = (unifiedEvents: CalendarEvent[]): Date[] => {
+		let dates: Date[] = [];
+		unifiedEvents.map((event: CalendarEvent) => {
+			dates = pushIfNotExists<Date>(dates, event.start, this.compareAppointmentsDate);
+		});
+		return dates;
+	}
+
+	private getAppointmentsFromDateTime = (dates: Date[], unifiedEvents: CalendarEvent[]) => {
+		const filteredUnifiedEvents: CalendarEvent[] = [];
+
+		const eventsPerDate: Map<string, number> = this.getEventQuantityByDate(unifiedEvents);
+		dates.forEach((date: Date) => {
+			const dateString = date.toISOString();
+
+			if (eventsPerDate.has(dateString) && eventsPerDate.get(dateString) >= MAX_APPOINTMENT_PER_HOUR) {
+				const firstEvent = unifiedEvents.find((ce: CalendarEvent) => this.compareAppointmentsDate(ce.start, date));
+				if (firstEvent) {
+					const hour = getHourFromString(firstEvent.title);
+					const quantity = eventsPerDate.get(dateString);
+					firstEvent.title = `${hour} ${quantity} turnos`;
+					firstEvent.meta.quantity = quantity;
+					firstEvent.color = {
+						primary: COLORES.ASSIGNED,
+						secondary: COLORES.ASSIGNED
+					}
+					filteredUnifiedEvents.push(firstEvent);
+				}
+			} else {
+				unifiedEvents.forEach((ce: CalendarEvent) => {
+					if (this.compareAppointmentsDate(ce.start, date)) {
+						filteredUnifiedEvents.push(ce);
+					}
+				});
+			}
+		});
+		return filteredUnifiedEvents;
+	}
+
+	private getEventQuantityByDate = (unifiedEvents: CalendarEvent[]) => {
+		const eventsPerDate: Map<string, number> = new Map(); 
+		unifiedEvents.forEach((ce: CalendarEvent) => {
+			const dateString = ce.start.toISOString();
+			eventsPerDate.set(dateString, (eventsPerDate.get(dateString) || 0) + 1);
+		});
+		return eventsPerDate;
 	}
 
 	private unifyBlockedEvents(events: CalendarEvent[]): CalendarEvent {

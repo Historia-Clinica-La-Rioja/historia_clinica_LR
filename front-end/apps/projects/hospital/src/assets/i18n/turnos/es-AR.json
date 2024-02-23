@@ -341,6 +341,12 @@
 		"report-complete-data": {
 			"SHOW_SUCCESS_OBSERVATION": "La observación se agregó correctamente",
 			"SHOW_ERROR_OBSERVATION": "Error al cargar la observación"
+		},
+		"group-appointment": {
+			"SELECT_APPOINTMENT": "Seleccionar turno",
+			"DNI": "DNI {{DNI}} - ",
+			"ID": "ID {{ID}}",
+			"SEE_DETAIL": "Ver detalle"
 		}
 	}
 }

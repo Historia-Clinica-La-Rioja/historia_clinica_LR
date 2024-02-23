@@ -7,7 +7,6 @@ import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEqu
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.BookedAppointmentDto;
-import net.pladema.medicalconsultation.appointment.controller.dto.CreateCustomAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.CustomRecurringAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
@@ -15,9 +14,9 @@ import net.pladema.medicalconsultation.appointment.controller.dto.PatientAppoint
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
+import net.pladema.medicalconsultation.appointment.controller.dto.GroupAppointmentResponseDto;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
-import net.pladema.medicalconsultation.appointment.service.domain.CreateCustomAppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
@@ -25,7 +24,9 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSea
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
 
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.GroupAppointmentResponseBo;
 import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
+
 import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
 import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
 import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
@@ -153,4 +154,7 @@ public interface AppointmentMapper {
 
 	@Named("toCustomRecurringAppointmentDto")
 	CustomRecurringAppointmentDto toCustomRecurringAppointmentDto(CustomRecurringAppointmentBo customRecurringAppointmentBo);
+
+	@Named("toGroupAppointmentDto")
+	GroupAppointmentResponseDto toGroupAppointmentDto(GroupAppointmentResponseBo groupAppointmentResponseBo);
 }

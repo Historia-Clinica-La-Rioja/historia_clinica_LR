@@ -233,3 +233,17 @@ export enum RECURRING_APPOINTMENT_OPTIONS {
 	EVERY_WEEK = 2,
 	CUSTOM = 3
 }
+
+export const getAppointmentLabelColor = (appointmentStateId: number): string => {
+	if (appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED)
+		return Color.BLUE;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.ABSENT)
+		return Color.RED;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED)
+		return Color.YELLOW;
+		
+	if (appointmentStateId === APPOINTMENT_STATES_ID.SERVED)
+		return Color.GREEN;
+}

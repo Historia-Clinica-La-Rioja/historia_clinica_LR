@@ -170,3 +170,10 @@ export function getSpanColor(appointment: AppointmentListDto): string {
 function showProtectedAppointment(appointment: AppointmentListDto) {
     return appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED && appointment.protected
 }
+
+export function getHourFromString(value: string): RegExpMatchArray {
+    const pattern = /\b\d{1,2}:\d{2}\b/g;
+    return value.match(pattern);
+}
+
+export const MAX_APPOINTMENT_PER_HOUR = 4;

@@ -1,0 +1,12 @@
+.mat-card-patient-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+section {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+}
