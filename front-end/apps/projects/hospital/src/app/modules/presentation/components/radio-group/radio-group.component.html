@@ -1,0 +1,8 @@
+<div [class]="position" class="spacing-title">
+    <span class="title" [translate]="title"></span>
+    <mat-radio-group [color]="color" [class]="optionsPosition" class="spacing-radio-buttons" (change)="onValueChange($event)">
+        <mat-radio-button *ngFor="let radioButton of data" [value]="radioButton">
+            {{ radioButton.description | translate }}
+        </mat-radio-button>
+    </mat-radio-group>
+</div>

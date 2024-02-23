@@ -65,6 +65,7 @@ import { PersonalInformationComponent } from './components/personal-information/
 import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
 import { PriorityComponent } from './components/priority/priority.component';
 import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
+import { RadioGroupComponent } from './components/radio-group/radio-group.component';
 import { RegisterEditorInfoComponent } from './components/register-editor-info/register-editor-info.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
 import { SearchComponent } from './components/search/search.component';
@@ -205,6 +206,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
+  		RadioGroupComponent,
 	],
 	imports: [
 		CommonModule,
@@ -277,6 +279,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PersonShortDescriptionComponent,
 		PriorityComponent,
 		PrioritySelectComponent,
+		RadioGroupComponent,
 		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
 		SearchComponent,

@@ -38,6 +38,11 @@
         },
         "time-picker": {
             "HOUR": "Hora"
+            
+        },
+        "radio-group": {
+            "YES": "Si",
+            "NO": "No"
         }
     }
 }
