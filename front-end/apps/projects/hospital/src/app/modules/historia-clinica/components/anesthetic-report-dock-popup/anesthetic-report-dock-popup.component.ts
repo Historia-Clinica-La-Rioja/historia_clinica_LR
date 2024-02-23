@@ -4,14 +4,15 @@ import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, TimeDto } from '
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { scrollIntoError } from '@core/utils/form.utils';
-import { AnalgesicTechniqueService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/analgesic-technique.service';
+import { AnalgesicTechniqueData, AnalgesicTechniqueService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/analgesic-technique.service';
 import { AnestheticReportAnestheticHistoryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { AnestheticReportAnthropometricDataService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anthropometric-data.service';
 import { AnestheticReportClinicalEvaluationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-clinical-evaluation.service';
 import { AnestheticReportProposedSurgeryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-proposed-surgery.service';
 import { AnestheticReportRecordService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-record.service';
-import { AnestheticTechniqueService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-technique.service';
-import { MedicationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/medicationService';
+import { AnestheticTechniqueData, AnestheticTechniqueService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-technique.service';
+import { FluidAdministrationData, FluidAdministrationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/fluid-administration.service';
+import { MedicationData, MedicationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/medicationService';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { MedicacionesNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -19,6 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { Observable } from 'rxjs';
 
 const TIME_OUT = 5000;
 
@@ -47,6 +49,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     anestheticPlan: MedicationService;
     analgesicTechnique: AnalgesicTechniqueService;
     anestheticTechnique: AnestheticTechniqueService
+    fluidAdministrationService: FluidAdministrationService
 
     personalRecordForm: FormGroup;
     readonly ASAOptions = [1,2,3,4,5]
@@ -55,6 +58,10 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
     collapsedAnthropometricDataSection = true;
     collapsedClinicalEvaluationSection = true;
+    fluidAdministrationList$: Observable<FluidAdministrationData[]>;
+    anestheticPlanList$: Observable<MedicationData[]>
+    analgesicTechniqueList$: Observable<AnalgesicTechniqueData[]>
+    anestheticTechniqueList$: Observable<AnestheticTechniqueData[]>
 
     constructor(
         @Inject(OVERLAY_DATA) public data: any,
@@ -81,6 +88,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticPlan = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.analgesicTechnique = new AnalgesicTechniqueService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticTechnique = new AnestheticTechniqueService(this.snomedService, this.snackBarService)
+        this.fluidAdministrationService = new FluidAdministrationService(this.snomedService, this.snackBarService)
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
             lastFoodIntake: new FormControl(null),
@@ -97,6 +105,11 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     ngOnInit(): void {
         this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
+        this.fluidAdministrationList$ = this.fluidAdministrationService.getFluidAdministrationList()
+        this.analgesicTechniqueList$ = this.analgesicTechnique.getAnalgesicTechniqueList()
+        this.anestheticPlanList$ = this.anestheticPlan.getMedication()
+        this.anestheticTechniqueList$ = this.anestheticTechnique.getAnestheticTechniqueList()
+        
     }
 
     save(): void {
@@ -163,6 +176,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             anestheticPlans: this.anestheticPlan.getAnestheticSubstanceDto(),
             analgesicTechniques: this.analgesicTechnique.getAnalgesicTechniqueDto(),
             anestheticTechniques: this.anestheticTechnique.getAnestheticTechniqueDto(),
+            fluidAdministrations: this.fluidAdministrationService.getFluidAdministrationDto()
 		};
 	}
 }

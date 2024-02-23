@@ -99,28 +99,28 @@
 
         <app-new-consultation-expansion-section id="anesthetic-plan-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthetic-plan.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticPlan.isEmpty()" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="!(anestheticPlanList$ | async ).length" [hideBorder]="false">
             <app-anesthetic-plan [service]="anestheticPlan">
             </app-anesthetic-plan>
         </app-new-consultation-expansion-section>
 
-        <app-new-consultation-expansion-section
-            id="anesthetic-plan-expansion-section"
+        <app-new-consultation-expansion-section id="anesthetic-plan-expansion-section"
             [title]="'internaciones.anesthesic-report.analgesic-technique.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="analgesicTechnique.isEmpty()" [hideBorder]="false">
-            <app-analgesic-technique
-            [service]="analgesicTechnique"
-            ></app-analgesic-technique>
+            [collapsed]="true" [isEmpty]="!(analgesicTechniqueList$ | async ).length" [hideBorder]="false">
+            <app-analgesic-technique [service]="analgesicTechnique"></app-analgesic-technique>
         </app-new-consultation-expansion-section>
 
-        <app-new-consultation-expansion-section
-        id="anesthetic-technique-expansion-section"
-        [title]="'internaciones.anesthesic-report.anesthetic-technique.TITLE' | translate" icon="assignment"
-        [collapsed]="true" [isEmpty]="anestheticTechnique.isEmpty()" [hideBorder]="false">
-        <app-anesthetic-technique
-        [service]="anestheticTechnique"
-        ></app-anesthetic-technique>
-    </app-new-consultation-expansion-section>
+        <app-new-consultation-expansion-section id="anesthetic-technique-expansion-section"
+            [title]="'internaciones.anesthesic-report.anesthetic-technique.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="!(anestheticTechniqueList$ | async ).length" [hideBorder]="false">
+            <app-anesthetic-technique [service]="anestheticTechnique"></app-anesthetic-technique>
+        </app-new-consultation-expansion-section>
+
+        <app-new-consultation-expansion-section id="fluid-Administrations-expansion-section"
+            [title]="'internaciones.anesthesic-report.fluid-administration.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="!(fluidAdministrationList$ | async ).length" [hideBorder]="false">
+            <app-fluid-administration [service]="fluidAdministrationService"></app-fluid-administration>
+        </app-new-consultation-expansion-section>
     </div>
 
     <div actions id="buttons" fxLayoutAlign="end">

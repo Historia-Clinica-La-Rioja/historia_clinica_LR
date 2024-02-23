@@ -118,10 +118,6 @@ setConcept(selectedConcept: SnomedDto): void {
   this.form.controls.snomed.setValue(pt)
 }
 
-isEmpty(): boolean {
-  return !(!!this.analgesicTechniqueList.length)
-}
-
 
 getAnalgesicTechniqueDto(): AnalgesicTechniqueDto[]{
   return this.analgesicTechniqueList.map(aTechnique => {

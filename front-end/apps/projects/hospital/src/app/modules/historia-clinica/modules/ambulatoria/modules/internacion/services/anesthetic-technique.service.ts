@@ -96,10 +96,6 @@ export class AnestheticTechniqueService {
     this.form.reset();
   }
 
-  isEmpty(): boolean {
-    return !(!!this.anestheticTechniqueList.length)
-  }
-
   getAnestheticTechniqueDto(): AnestheticTechniqueDto[] {
     return this.anestheticTechniqueList.map(anestheticTechnique => {
       return {

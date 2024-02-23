@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticTechniqueService } from '../../services/anesthetic-technique.service';
+import { AnestheticTechniqueData, AnestheticTechniqueService } from '../../services/anesthetic-technique.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { AnestheticTechniquePopupComponent } from '../../dialogs/anesthetic-technique-popup/anesthetic-technique-popup.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-anesthetic-technique',
@@ -14,6 +15,7 @@ export class AnestheticTechniqueComponent implements OnInit {
 
   @Input() service: AnestheticTechniqueService;
   searchConceptsLocallyFFIsOn = false;
+  anestheticTechniqueList$: Observable<AnestheticTechniqueData[]>
 
   constructor(
     private readonly dialog: MatDialog,
@@ -21,6 +23,7 @@ export class AnestheticTechniqueComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.anestheticTechniqueList$ = this.service.getAnestheticTechniqueList()
     this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});

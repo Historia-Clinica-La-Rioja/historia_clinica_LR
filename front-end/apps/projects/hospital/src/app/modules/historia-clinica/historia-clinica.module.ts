@@ -94,6 +94,9 @@ import { AnalgesicTechniqueComponent } from './modules/ambulatoria/modules/inter
 import { AnestheticTechniquePopupComponent } from './modules/ambulatoria/modules/internacion/dialogs/anesthetic-technique-popup/anesthetic-technique-popup.component';
 import { AnestheticTechniqueComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-technique/anesthetic-technique.component';
 import { AnestheticTechniqueListComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-technique-list/anesthetic-technique-list.component';
+import { FluidAdministrationComponent } from './modules/ambulatoria/modules/internacion/fluid-administration/fluid-administration.component';
+import { FluidAdministrationPopupComponent } from './modules/ambulatoria/modules/internacion/fluid-administration-popup/fluid-administration-popup.component';
+import { FluidAdministrationListComponent } from './modules/ambulatoria/modules/internacion/fluid-administration-list/fluid-administration-list.component';
 
 @NgModule({
 	declarations: [
@@ -136,6 +139,8 @@ import { AnestheticTechniqueListComponent } from './modules/ambulatoria/modules/
 		AnalgesicTechniqueComponent,
 		AnestheticTechniqueComponent,
 		AnestheticTechniqueListComponent,
+		FluidAdministrationListComponent,
+		FluidAdministrationComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -184,7 +189,8 @@ import { AnestheticTechniqueListComponent } from './modules/ambulatoria/modules/
  		AnestheticReportDockPopupComponent,
   		AnestheticReportDockPopupComponent,
 		AnestheticTechniquePopupComponent,
-		AnalgesicTechniquePopupComponent
+		AnalgesicTechniquePopupComponent,
+		FluidAdministrationPopupComponent
 	],
 	imports: [
 		CommonModule,

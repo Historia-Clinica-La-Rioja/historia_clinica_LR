@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, MasterDataDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { MedicationService } from '../../services/medicationService';
+import { MedicationData, MedicationService } from '../../services/medicationService';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { take } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { AnestheticDrugComponent } from '../../dialogs/anesthetic-drug/anesthetic-drug.component';
 
@@ -18,6 +18,7 @@ export class AnestheticPlanComponent implements OnInit {
   @Input() service: MedicationService;
 	searchConceptsLocallyFFIsOn = false;
   viasArray: MasterDataDto[];
+  anestheticPlanList$: Observable<MedicationData[]>
   private title: string
   private label: string
 
@@ -31,6 +32,7 @@ export class AnestheticPlanComponent implements OnInit {
     ngOnInit(): void {
       this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFFIsOn = isOn;
+      this.anestheticPlanList$ = this.service.getMedication()
 		});
     this.translateService.get(['internaciones.anesthesic-report.anesthetic-plan.ADD_PLAN_TITLE', 'internaciones.anesthesic-report.anesthetic-plan.MEDICATION' ]).subscribe(
       (msg) => {

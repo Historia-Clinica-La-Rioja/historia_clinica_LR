@@ -420,6 +420,14 @@
 				"OPTION_YES": "Si",
 				"OPTION_NO":"No"
 			},
+			"fluid-administration": {
+				"TITLE": "Administración de líquidos",
+				"FLUID_RECORDS": "Liquidos registrados",
+				"ADD_FLUID": "+ Agregar liquido",
+				"ADD_TITLE": "Agregar liquido",
+				"LIQUID_LABEL": "Liquido",
+				"AMOUNT_LABEL": "Cantidad"
+			},
 			"drug": {
 				"HOUR": "Hora",
 				"UNIT_LABEL": "Unidad: ",
