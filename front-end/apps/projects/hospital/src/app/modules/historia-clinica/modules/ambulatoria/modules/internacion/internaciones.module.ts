@@ -54,6 +54,7 @@ import { SearchCasesComponent } from 'projects/hospital/src/app/modules/hsi-comp
 import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 //review
 import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
+
 @NgModule({
 	declarations: [
 		// routing
@@ -97,7 +98,7 @@ import { InternmentEpisodeSummaryComponent } from "@historia-clinica/modules/amb
 		DeleteDocumentPopupComponent,
 		AnesthesicReportAddProposedSurgeryComponent,
 		AnestheticReportAddRecordComponent,
-		AnestheticDrugComponent
+		AnestheticDrugComponent,
 	],
 	exports: [
 		InternmentEpisodeSummaryComponent,

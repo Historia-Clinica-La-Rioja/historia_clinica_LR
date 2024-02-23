@@ -476,6 +476,28 @@
 				"REGISTERED_ANTIBIOTIC_PROPHYLAXIS": "Profilaxis antibióticas registradas",
 				"ADD_ANTIBIOTIC_PROPHYLAXIS": "+ Agregar profilaxis antibiótica",
 				"LABEL": "Profilaxis antibiótica"
+			},
+			"end-of-anesthesia-status": {
+				"TITLE": "Estado al finalizar la anestesia",
+				"sections": {
+					"PAINFUL_SENSITIVITY": "Sensibilidad dolorosa",
+					"CORNEAL_REFLEX": "Reflejo corneal",
+					"OBEY_ORDERS": "Obedece órdenes",
+					"TALK": "Conversa",
+					"RESPIRATORY_DEPRESSION": "Depresión respiratoria",
+					"CIRCULATORY_DEPRESSION": "Depresión circulatoria",
+					"VOMITING": "Vómitos",
+					"CURED": "Curarizado",
+					"TRACHEAL_CANNULA": "Cánula traqueal",
+					"PHARYNGEAL_CANNULA": "Cánula faringea",
+					"GOES_INSIDE": "Se interna",
+					"goes-inside-options": {
+						"FLOOR": "Se interna en piso",
+						"INTENSIVE_CARE_UNIT": "Se interna en unidad de terapia intensiva"
+					}
+				},
+				"OBSERVATIONS": "Observaciones: ",
+				"ADD_OBSERVATIONS": "Agregar observaciones"
 			}
 		},
 		"clinical-assessment-diagnosis": {

@@ -145,6 +145,25 @@
             [collapsed]="true" [isEmpty]="anestheticReportAntibioticProphylaxisService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-antibiotic-prophylaxis [service]="anestheticReportAntibioticProphylaxisService"></app-anesthetic-report-antibiotic-prophylaxis>
         </app-new-consultation-expansion-section>
+                        
+        <app-new-consultation-expansion-section id="end-of-anesthesia-status-expansion-section"
+            [title]="'internaciones.anesthesic-report.end-of-anesthesia-status.TITLE' | translate" icon="assignment"
+            [collapsed]="true" [isEmpty]="anestheticReportEndOfAnesthesiaStatusService.isEmpty$ | async" [hideBorder]="false">
+            <app-anesthetic-report-end-of-anesthesia-status [service]="anestheticReportEndOfAnesthesiaStatusService">
+                <ng-container end-of-anesthesia-status-form>
+
+					<form [formGroup]="endOfAnesthesiaStatusForm">
+						<mat-label [translate]="'internaciones.anesthesic-report.end-of-anesthesia-status.OBSERVATIONS'"></mat-label>
+                        <mat-form-field appearance="outline" data-id="observations">
+                            <textarea matInput type="text" id="end-of-anesthesia-observations" formControlName="observations"
+                                placeholder="{{'internaciones.anesthesic-report.end-of-anesthesia-status.ADD_OBSERVATIONS' | translate }}">
+                            </textarea>
+                        </mat-form-field>
+					</form>
+
+                </ng-container>
+            </app-anesthetic-report-end-of-anesthesia-status>
+        </app-new-consultation-expansion-section>
     </div>
 
     <div actions id="buttons" fxLayoutAlign="end">

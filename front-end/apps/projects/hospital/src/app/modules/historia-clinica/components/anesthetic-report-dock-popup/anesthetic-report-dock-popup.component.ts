@@ -8,6 +8,7 @@ import { AnalgesicTechniqueData, AnalgesicTechniqueService } from '@historia-cli
 import { AnestheticReportAnestheticHistoryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { AnestheticReportAnthropometricDataService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anthropometric-data.service';
 import { AnestheticReportClinicalEvaluationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-clinical-evaluation.service';
+import { AnestheticReportEndOfAnesthesiaStatusService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-end-of-anesthesia-status.service';
 import { AnestheticReportIntrasurgicalAnestheticProceduresService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-intrasurgical-anesthetic-procedures.service';
 import { AnestheticReportProposedSurgeryService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-proposed-surgery.service';
 import { AnestheticReportRecordService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-record.service';
@@ -55,11 +56,13 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     anestheticReportNonAnestheticDrugs: MedicationService;
     anestheticReportIntrasurgicalAnestheticProceduresService: AnestheticReportIntrasurgicalAnestheticProceduresService;
     anestheticReportAntibioticProphylaxisService: MedicationService;
+    anestheticReportEndOfAnesthesiaStatusService: AnestheticReportEndOfAnesthesiaStatusService;
 
     personalRecordForm: FormGroup;
     readonly ASAOptions = [1,2,3,4,5]
 
     formFoodIntake: FormGroup;
+    endOfAnesthesiaStatusForm: FormGroup;
 
     collapsedAnthropometricDataSection = true;
     collapsedClinicalEvaluationSection = true;
@@ -98,6 +101,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportNonAnestheticDrugs = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportIntrasurgicalAnestheticProceduresService = new AnestheticReportIntrasurgicalAnestheticProceduresService();
         this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticReportEndOfAnesthesiaStatusService = new AnestheticReportEndOfAnesthesiaStatusService();
 
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
@@ -108,6 +112,10 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             observations: new FormControl(null),
             asa: new FormControl(null)
         });
+
+        this.endOfAnesthesiaStatusForm = new FormGroup<EndOfAnesthesiaStatusForm>({
+            observations: new FormControl(null),
+        })
 
         this.possibleTimesList = this.anestheticReportPremedicationAndFoodIntakeService.possibleTimesList;
     }
@@ -213,4 +221,8 @@ export interface FoodIntakeForm {
 export interface PersonalRecordForm {
     observations: FormControl<string>;
     asa: FormControl<number>;
+}
+
+export interface EndOfAnesthesiaStatusForm {
+    observations: FormControl<string>;
 }
