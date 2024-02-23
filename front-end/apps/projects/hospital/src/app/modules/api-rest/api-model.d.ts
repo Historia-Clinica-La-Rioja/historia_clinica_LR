@@ -3930,6 +3930,7 @@ export interface SectorDto {
     description: string;
     hasDoctorsOffice: boolean;
     id: number;
+    type: number;
 }
 
 export interface SectorSummaryDto {

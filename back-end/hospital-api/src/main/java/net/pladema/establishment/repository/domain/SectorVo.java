@@ -22,10 +22,13 @@ public class SectorVo implements Serializable {
 	private Integer id;
 
 	private String description;
+
+	private Short type;
 	
 	public SectorVo(Sector sector) {
 		id = sector.getId();
 		description = sector.getDescription();
+		type = sector.getSectorTypeId();
 	}
 	
 }

@@ -99,7 +99,7 @@
                 <span mat-line [translate]="'gestion-camas.detail.NURSE_DNI'" [translateParams]="{nurseDni: bedInfo.bedNurse.identificationNumber}"></span>
             </mat-list-item>
 			<mat-list-item>
-				<div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis">
+				<div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis && INTERNMENT_SECTOR_TYPE === bedInfo.bed.room.sector.type">
 					<button mat-raised-button color="primary" (click)="physicalDischarge()" *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="physical-discharge">
 						<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
 					</button>

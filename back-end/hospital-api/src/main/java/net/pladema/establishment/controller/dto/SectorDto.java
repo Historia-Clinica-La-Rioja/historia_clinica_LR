@@ -14,4 +14,6 @@ public class SectorDto {
     private String description;
 
 	private Boolean hasDoctorsOffice;
+
+	private Short type;
 }

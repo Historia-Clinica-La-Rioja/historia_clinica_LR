@@ -24,6 +24,7 @@ export class BedDetailComponent implements OnInit, OnChanges {
 	bedInfo: BedInfoDto;
 	patientHasAnamnesis = false;
 	patientInternmentId: number;
+	INTERNMENT_SECTOR_TYPE = 2;
 
 	constructor(
 		private readonly bedService: BedService,
