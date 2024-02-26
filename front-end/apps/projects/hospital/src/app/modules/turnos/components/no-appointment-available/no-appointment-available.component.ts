@@ -12,6 +12,7 @@ import { TabsService } from '@turnos/services/tabs.service';
 export class NoAppointmentAvailableComponent implements OnInit {
   @Output() preloadData = new EventEmitter<boolean>();
   @Output() registerUnsatisfiedDemand = new EventEmitter<boolean>();
+  disabledButtonRegister = false;
 
   constructor(
     private readonly tabsService: TabsService, private dialog: MatDialog) { }
@@ -40,6 +41,7 @@ export class NoAppointmentAvailableComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(confirmSaveRegister => {
 			if (confirmSaveRegister) {
+        this.disabledButtonRegister = true;
         this.registerUnsatisfiedDemand.emit(true);
 			}
 		});

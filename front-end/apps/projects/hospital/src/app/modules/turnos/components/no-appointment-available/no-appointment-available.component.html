@@ -4,6 +4,6 @@
 
     <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="16px">
         <button mat-stroked-button color="primary" (click)="redirectToSearchInCareNetwork()">{{'turnos.home.SEARCH_IN_CARE_NETWORK' | translate}}</button>
-        <button mat-stroked-button color="primary" (click)="openRegisterUnsatisfiedDemand()">{{'turnos.home.actions.REGISTER_UNSATISFIED_DEMAND' | translate}}</button>
+        <button mat-stroked-button color="primary" (click)="openRegisterUnsatisfiedDemand()" [disabled]="disabledButtonRegister">{{'turnos.home.actions.REGISTER_UNSATISFIED_DEMAND' | translate}}</button>
     </div>
 </div>
