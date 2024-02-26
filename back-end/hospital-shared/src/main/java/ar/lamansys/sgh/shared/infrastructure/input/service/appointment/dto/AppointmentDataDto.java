@@ -2,11 +2,14 @@ package ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,5 +34,9 @@ public class AppointmentDataDto {
 	private String professionalFullName;
 
 	private String patientEmail;
+
+	private String authorFullName;
+
+	private DateTimeDto createdOn;
 
 }

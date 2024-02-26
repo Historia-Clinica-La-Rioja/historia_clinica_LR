@@ -272,6 +272,8 @@ export interface AppointmentDailyAmountDto {
 
 export interface AppointmentDataDto {
     appointmentId: number;
+    authorFullName: string;
+    createdOn: DateTimeDto;
     date: DateDto;
     hour: TimeDto;
     institution: InstitutionInfoDto;
@@ -3627,6 +3629,8 @@ export interface ReducedPatientDto {
 export interface ReferenceAppointmentDto {
     appointmentId: number;
     appointmentStateId: number;
+    authorFullName: string;
+    createdOn: DateTimeDto;
     date: DateTimeDto;
     institution: ReferenceInstitutionDto;
     professionalFullName: string;

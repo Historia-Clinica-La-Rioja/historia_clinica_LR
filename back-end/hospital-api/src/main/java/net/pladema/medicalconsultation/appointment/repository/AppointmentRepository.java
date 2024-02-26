@@ -635,7 +635,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo(a.id, a.appointmentStateId, " +
 			"i.id, i.name, a.dateTypeId, a.hour, a.phonePrefix, a.phoneNumber, a.patientEmail, p.firstName," +
-			" p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination) " +
+			" p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, up.pk.personId, a.creationable.createdOn) " +
 			"FROM Appointment a " +
 			"JOIN AppointmentAssn asn ON (a.id = asn.pk.appointmentId) " +
 			"JOIN Diary d ON (asn.pk.diaryId = d.id) " +
@@ -644,6 +644,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
 			"JOIN Person p ON (hp.personId = p.id) " +
 			"JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"JOIN UserPerson up ON (a.creationable.createdBy = up.pk.userId) " +
 			"WHERE a.id IN (:appointmentIds) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
 			"ORDER BY a.dateTypeId DESC, a.hour ASC")

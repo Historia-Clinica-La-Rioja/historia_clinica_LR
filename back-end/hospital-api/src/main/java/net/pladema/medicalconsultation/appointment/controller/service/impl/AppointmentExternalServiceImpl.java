@@ -287,8 +287,6 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	private AppointmentDataDto mapFromAppointmentSummaryBo(AppointmentSummaryBo appointment) {
-		String patientFullName = sharedPersonPort.parseCompletePersonName(appointment.getProfessionalFirstName(), appointment.getProfessionalMiddleNames(),
-				appointment.getProfessionalLastName(), appointment.getProfessionalOtherLastNames(), appointment.getProfessionalNameSelfDetermination());
 		return AppointmentDataDto.builder()
 				.appointmentId(appointment.getId())
 				.state(appointment.getStateId())
@@ -297,8 +295,11 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				.hour(localDateMapper.toTimeDto(appointment.getHour()))
 				.phonePrefix(appointment.getPhonePrefix())
 				.phoneNumber(appointment.getPhoneNumber())
-				.professionalFullName(patientFullName)
+				.professionalFullName(getCompletePersonNameByParams(appointment.getProfessionalFirstName(), appointment.getProfessionalMiddleNames(),
+						appointment.getProfessionalLastName(), appointment.getProfessionalOtherLastNames(), appointment.getProfessionalNameSelfDetermination()))
 				.patientEmail(appointment.getPatientEmail())
+				.authorFullName(getCompletePersonNameById(appointment.getAuthorPersonId()))
+				.createdOn(localDateMapper.toDateTimeDto(appointment.getCreatedOn()))
 				.build();
 	}
 
@@ -388,4 +389,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		appointmentBo.setModalityId((short)1);
 		return appointmentBo;
 	}
+	private String getCompletePersonNameByParams(String firstName, String middleNames, String lastName,
+												 String otherLastNames, String nameSelfDetermination) {
+		return sharedPersonPort.parseCompletePersonName(firstName, middleNames, lastName, otherLastNames, nameSelfDetermination);
+	}
+
+	private String getCompletePersonNameById(Integer personId) {
+		return sharedPersonPort.getCompletePersonNameById(personId);
+	}
+
 }

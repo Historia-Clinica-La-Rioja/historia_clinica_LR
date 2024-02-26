@@ -87,6 +87,8 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 				.phoneNumber(appointmentData.getPhoneNumber())
 				.professionalFullName(appointmentData.getProfessionalFullName())
 				.email(appointmentData.getPatientEmail())
+				.authorFullName(appointmentData.getAuthorFullName())
+				.createdOn(localDateMapper.fromDateTimeDto(appointmentData.getCreatedOn()))
 				.build();
 	}
 
