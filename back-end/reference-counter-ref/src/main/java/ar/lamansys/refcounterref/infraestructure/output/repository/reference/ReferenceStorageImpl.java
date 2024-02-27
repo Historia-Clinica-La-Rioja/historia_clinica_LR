@@ -6,6 +6,7 @@ import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorag
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
@@ -130,7 +131,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     @Override
     public List<ReferenceProblemBo> getReferencesProblems(Integer patientId, List<Short> loggedUserRoleIds) {
         log.debug("Input parameters -> patientId {}, loggedUserRoleIds {}", patientId, loggedUserRoleIds);
-        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId, loggedUserRoleIds);
+        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId, loggedUserRoleIds, EReferenceRegulationState.REJECTED.getId());
     }
 
 	@Override
