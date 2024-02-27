@@ -162,7 +162,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		}
 	}
 
-	setSelectedDaysOfWeek():number[] {
+	getSelectedDaysOfWeek():number[] {
 		const selectedDaysOfWeek = [];
 		if (this.form.value.mondayControl)
 			selectedDaysOfWeek.push(1);
@@ -183,7 +183,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	submit() {
 		if (this.form.valid) {
-			const selectedDaysOfWeek = this.setSelectedDaysOfWeek();
+			const selectedDaysOfWeek = this.getSelectedDaysOfWeek();
 			const searchAppointmentDto = this.buildAppointmentSearch(selectedDaysOfWeek);
 			this.diaryService.generateEmptyAppointments(searchAppointmentDto).subscribe(emptyAppointments => {
 				this.emptyAppointments = emptyAppointments;
@@ -252,12 +252,13 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	sendPreloadedData() {
-		let values: SearchCriteriaValues = {
+		const values: SearchCriteriaValues = {
 			careModality: this.form.controls.modality.value,
 			searchCriteria: this.selectedSearchCriteria,
 			startDate: this.form.controls.searchInitialDate.value,
 		}
 		this.searchAppointmentsInfoService.setSearchCriteria(values);
+		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
 	}
 
 	saveRegisterUnsatisfiedDemand() {
@@ -269,7 +270,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	prepareRegisterUnsatisfiedDemand(): UnsatisfiedAppointmentDemandDto {
-		const selectedDaysOfWeek = this.setSelectedDaysOfWeek();
+		const selectedDaysOfWeek = this.getSelectedDaysOfWeek();
 		return  {
 			aliasOrSpecialtyName: this.form.controls.clinicalSpecialty.value,
 			daysOfWeek: selectedDaysOfWeek,

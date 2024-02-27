@@ -1,28 +1,21 @@
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { TabsLabel } from '@turnos/constants/tabs';
-import { TabsService } from '@turnos/services/tabs.service';
 @Component({
   selector: 'app-no-appointment-available',
   templateUrl: './no-appointment-available.component.html',
   styleUrls: ['./no-appointment-available.component.scss']
 })
-export class NoAppointmentAvailableComponent implements OnInit {
+export class NoAppointmentAvailableComponent {
   @Output() preloadData = new EventEmitter<boolean>();
   @Output() registerUnsatisfiedDemand = new EventEmitter<boolean>();
-  disabledButtonRegister = false;
+  isRegisterButtonDisabled = false;
 
-  constructor(
-    private readonly tabsService: TabsService, private dialog: MatDialog) { }
-
-  ngOnInit(): void {
-  }
+  constructor(private dialog: MatDialog) { }
 
   redirectToSearchInCareNetwork() {
     this.preloadData.emit(true);
-    this.tabsService.setTab(TabsLabel.CARE_NETWORK);
   }
 
   openRegisterUnsatisfiedDemand() {
@@ -41,7 +34,7 @@ export class NoAppointmentAvailableComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(confirmSaveRegister => {
 			if (confirmSaveRegister) {
-        this.disabledButtonRegister = true;
+        this.isRegisterButtonDisabled = true;
         this.registerUnsatisfiedDemand.emit(true);
 			}
 		});
