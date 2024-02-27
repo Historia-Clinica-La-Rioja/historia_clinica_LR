@@ -477,6 +477,15 @@
 				"ADD_ANTIBIOTIC_PROPHYLAXIS": "+ Agregar profilaxis antibiótica",
 				"LABEL": "Profilaxis antibiótica"
 			},
+			"vital-signs": {
+				"TITLE": "Signos vitales durante la anestesia",
+				"DATE": "Fecha",
+				"TIME": "Hora",
+				"ANESTHESIA_START": "Comienzo anestesia",
+				"ANESTHESIA_END": "Fin anestesia",
+				"SURGERY_START": "Comienzo cirugía",
+				"SURGERY_END": "Fin cirugía"
+			},
 			"end-of-anesthesia-status": {
 				"TITLE": "Estado al finalizar la anestesia",
 				"sections": {

@@ -70,18 +70,7 @@ export class AnestheticReportEndOfAnesthesiaStatusService {
 
     getForm(): FormGroup {
         return this.form;
-    }
-
-    isEmpty(): boolean {
-        for (let controlName in this.form.controls) {
-            if (this.form.controls.hasOwnProperty(controlName)) {
-                if (this.form.controls[controlName].value) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }    
+    }  
 }
 
 export interface IntrasurgicalAnestheticProceduresForm{

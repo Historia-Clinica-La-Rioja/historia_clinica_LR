@@ -15,6 +15,7 @@ import { AnestheticReportRecordService } from '@historia-clinica/modules/ambulat
 import { AnestheticTechniqueData, AnestheticTechniqueService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-technique.service';
 import { FluidAdministrationData, FluidAdministrationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/fluid-administration.service';
 import { MedicationData, MedicationService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/medicationService';
+import { AnestheticReportVitalSignsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-vital-signs.service';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { MedicacionesNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -57,12 +58,14 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     anestheticReportIntrasurgicalAnestheticProceduresService: AnestheticReportIntrasurgicalAnestheticProceduresService;
     anestheticReportAntibioticProphylaxisService: MedicationService;
     anestheticReportEndOfAnesthesiaStatusService: AnestheticReportEndOfAnesthesiaStatusService;
+    anestheticReportVitalSignsService: AnestheticReportVitalSignsService;
 
     personalRecordForm: FormGroup;
     readonly ASAOptions = [1,2,3,4,5]
 
     formFoodIntake: FormGroup;
     endOfAnesthesiaStatusForm: FormGroup;
+    vitalSignsForm: FormGroup;
 
     collapsedAnthropometricDataSection = true;
     collapsedClinicalEvaluationSection = true;
@@ -102,7 +105,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportIntrasurgicalAnestheticProceduresService = new AnestheticReportIntrasurgicalAnestheticProceduresService();
         this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportEndOfAnesthesiaStatusService = new AnestheticReportEndOfAnesthesiaStatusService();
-
+        this.anestheticReportVitalSignsService = new AnestheticReportVitalSignsService();
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
             lastFoodIntake: new FormControl(null),
@@ -115,6 +118,17 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
         this.endOfAnesthesiaStatusForm = new FormGroup<EndOfAnesthesiaStatusForm>({
             observations: new FormControl(null),
+        })
+
+        this.vitalSignsForm = new FormGroup<VitalSignsForm>({
+            anesthesiaStartDate: new FormControl(null),
+            anesthesiaEndDate: new FormControl(null),
+            anesthesiaStartTime: new FormControl(null),
+            anesthesiaEndTime: new FormControl(null),
+            surgeryStartDate: new FormControl(null),
+            surgeryEndDate: new FormControl(null),
+            surgeryStartTime: new FormControl(null),
+            surgeryEndTime: new FormControl(null),
         })
 
         this.possibleTimesList = this.anestheticReportPremedicationAndFoodIntakeService.possibleTimesList;
@@ -211,6 +225,22 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             note: this.personalRecordForm.value.observation,
             asa: this.personalRecordForm.value.asa
         }
+    }    
+        
+    setAnesthesiaStartDate(date: Date) {
+        console.log(date);
+    }
+
+    setAnesthesiaEndDate(date: Date) {
+        console.log(date);
+    }
+
+    setSurgeryStartDate(date: Date) {
+        console.log(date);
+    }
+
+    setSurgeryEndDate(date: Date) {
+        console.log(date);
     }
 }
 
@@ -225,4 +255,15 @@ export interface PersonalRecordForm {
 
 export interface EndOfAnesthesiaStatusForm {
     observations: FormControl<string>;
+}
+
+export interface VitalSignsForm {
+    anesthesiaStartDate: FormControl<Date>;
+    anesthesiaEndDate: FormControl<Date>;
+    anesthesiaStartTime: FormControl<TimeDto>;
+    anesthesiaEndTime: FormControl<TimeDto>;
+    surgeryStartDate: FormControl<Date>;
+    surgeryEndDate: FormControl<Date>;
+    surgeryStartTime: FormControl<TimeDto>;
+    surgeryEndTime: FormControl<TimeDto>;
 }
