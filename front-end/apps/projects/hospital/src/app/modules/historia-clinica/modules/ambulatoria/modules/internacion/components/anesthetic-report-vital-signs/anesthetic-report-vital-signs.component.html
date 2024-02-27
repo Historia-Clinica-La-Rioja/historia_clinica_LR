@@ -1,0 +1,40 @@
+<ng-content select="[vital-signs-form]"></ng-content>
+
+<div class="measuring-point-container">
+    <span class="measuring-point-title" [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.ADD_MEASURING_POINT'"></span>
+
+    <form [formGroup]="form" fxLayout="column" fxLayoutGap="16px" class="measuring-point-form">
+        <div fxLayout="row" fxLayoutGap="24px" data-id="measure-point">
+            <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_DATE'" (selectDate)="setSelectedDate($event)"></app-datepicker>
+            <div fxLayout="column" fxLayoutGap="10px">
+                <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_TIME'"></mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="measuringPointStartTime" placeholder="00:00">
+                        <mat-option [value]="time" *ngFor="let time of possibleTimesList">
+                            {{ time | viewDateDto:'time' | dateFormat:'time' }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- <div fxLayout="column" fxLayoutAlign="space-between start">
+            <mat-label [translate]="'internaciones.anesthesic-report.anthropometric-data.HEIGHT'">
+            </mat-label>
+            <mat-form-field appearance="outline">
+                <input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput
+                    (keypress)="isNumberOrDot($event.key)">
+                <mat-error> {{ service.heightError$ | async }} </mat-error>
+            </mat-form-field>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="space-between start">
+            <mat-label [translate]="'internaciones.anesthesic-report.anthropometric-data.WEIGHT'">
+            </mat-label>
+            <mat-form-field appearance="outline">
+                <input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput
+                    (keypress)="isNumberOrDot($event.key)">
+                <mat-error> {{ service.weightError$ | async }} </mat-error>
+            </mat-form-field>
+        </div> -->
+    </form>
+</div>

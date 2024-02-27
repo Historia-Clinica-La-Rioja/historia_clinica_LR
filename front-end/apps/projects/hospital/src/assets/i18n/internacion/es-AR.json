@@ -484,7 +484,12 @@
 				"ANESTHESIA_START": "Comienzo anestesia",
 				"ANESTHESIA_END": "Fin anestesia",
 				"SURGERY_START": "Comienzo cirugía",
-				"SURGERY_END": "Fin cirugía"
+				"SURGERY_END": "Fin cirugía",
+				"measuring-point": {
+					"ADD_MEASURING_POINT": "Agregar nuevo punto de medición",
+					"SURGERY_DATE": "Fecha cirugía",
+					"SURGERY_TIME": "Hora control"
+				}
 			},
 			"end-of-anesthesia-status": {
 				"TITLE": "Estado al finalizar la anestesia",

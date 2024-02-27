@@ -103,6 +103,7 @@ import { AnestheticReportNonAnestheticDrugsComponent } from './modules/ambulator
 import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-antibiotic-prophylaxis/anesthetic-report-antibiotic-prophylaxis.component';
 import { AnesthesiaFormComponent } from './dialogs/anesthesia-form/anesthesia-form.component';
 import { AnestheticReportEndOfAnesthesiaStatusComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-end-of-anesthesia-status/anesthetic-report-end-of-anesthesia-status.component';
+import { AnestheticReportVitalSignsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-vital-signs/anesthetic-report-vital-signs.component';
 
 @NgModule({
 	declarations: [
@@ -152,6 +153,7 @@ import { AnestheticReportEndOfAnesthesiaStatusComponent } from './modules/ambula
 		AnestheticReportNonAnestheticDrugsComponent,
 		AnestheticReportAntibioticProphylaxisComponent,
 		AnestheticReportEndOfAnesthesiaStatusComponent,
+		AnestheticReportVitalSignsComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

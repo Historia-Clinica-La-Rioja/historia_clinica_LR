@@ -149,8 +149,8 @@
         <app-new-consultation-expansion-section id="vital-signs-expansion-section"
             [title]="'internaciones.anesthesic-report.vital-signs.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
-            <!-- <app-anesthetic-report-vital-signs [service]="anestheticReportAntibioticProphylaxisService">
-                <ng-container vital-signs-form> -->
+            <app-anesthetic-report-vital-signs [service]="anestheticReportVitalSignsService">
+                <ng-container vital-signs-form>
 
 					<form [formGroup]="vitalSignsForm">                        
                         <div fxLayout="column" fxLayoutGap="8px" data-id="anesthesia-start">
@@ -222,8 +222,8 @@
                         </div>
 					</form>
 
-                <!-- </ng-container>
-            </app-anesthetic-report-vital-signs> -->
+                </ng-container>
+            </app-anesthetic-report-vital-signs>
         </app-new-consultation-expansion-section>
                         
         <app-new-consultation-expansion-section id="end-of-anesthesia-status-expansion-section"
