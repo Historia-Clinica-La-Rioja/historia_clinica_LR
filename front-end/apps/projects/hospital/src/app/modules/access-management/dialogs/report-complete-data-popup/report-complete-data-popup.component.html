@@ -15,8 +15,8 @@
 		</div>
 	</div>
 
-	<mat-dialog-content fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
-		<div fxLayout="column" fxLayoutGap="10px" fxFlex="50">
+	<mat-dialog-content fxLayoutAlign="start" fxLayoutGap="20px">
+		<div fxLayout="column" fxLayoutGap="10px" class="columns">
 			<app-expansion-section [title]="'access-management.search_references.reference.CONTACT_DATA'"
 				[collapsed]="colapseContactDetails">
 				<app-contact-details [contactDetails]="reportCompleteData.contactDetails"></app-contact-details>
@@ -29,7 +29,7 @@
 			</app-expansion-section>
 		</div>
 
-		<div fxLayout="column" fxLayoutGap="10px" fxFlex="50" *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">
+		<div fxLayout="column" fxLayoutGap="10px" class="columns" *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading">
 			<div>
 				<app-approval [approval]="referenceRegulationDto" [referenceCompleteDataDto]="referenceCompleteData"></app-approval>
 			</div>

@@ -41,7 +41,7 @@ export class ReferenceDashboardComponent {
 			},
 			autoFocus: false,
 			disableClose: true,
-			width: '50%',
+			width: '60%',
 		});
 		dialogRef.afterClosed().subscribe(updated => {
 			if (updated)

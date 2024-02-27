@@ -7,3 +7,19 @@ mat-dialog-content.mat-dialog-content {
 	justify-content: flex-end;
 	margin-right: 24px;
 }
+
+.columns {
+	width: 50%;
+}
+
+@media (max-width: 800px) {
+	mat-dialog-content.mat-dialog-content {
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+
+	.columns {
+		width: 100%;
+		margin-bottom: 8px;
+	}
+}

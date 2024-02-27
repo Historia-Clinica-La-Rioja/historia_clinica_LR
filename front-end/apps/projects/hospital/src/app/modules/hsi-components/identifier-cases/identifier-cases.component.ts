@@ -39,7 +39,7 @@ export enum IDENTIFIER_CASES {
 	CARE_LINE = 'Línea de cuidado',
 	PROBLEM = 'Problema',
 	PROFESSIONAL = 'Profesional',
-	PRACTICE = 'Práctica/Procedimiento',
+	PRACTICE = 'Práctica / Procedimiento',
 	SPECIALTY = 'Especialidades',
 	DATE = 'Fecha',
 	STARTDATE = 'FechaInicio',
@@ -74,7 +74,7 @@ const professional: IconLegend = {
 
 const practice: IconLegend = {
 	icon: 'library_add',
-	legend: 'Práctica/Procedimiento',
+	legend: 'Práctica / Procedimiento',
 }
 
 const specialty: IconLegend = {
