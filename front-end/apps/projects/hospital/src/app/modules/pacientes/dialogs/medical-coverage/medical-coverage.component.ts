@@ -18,6 +18,7 @@ import { PatientMedicalCoverageService } from "@api-rest/services/patient-medica
 import { MapperService } from "@core/services/mapper.service";
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { fixDate } from '@core/utils/date/format';
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -123,7 +124,15 @@ export class MedicalCoverageComponent implements OnInit {
 
 	save() {
 		this.dialogRef.close({
-			patientMedicalCoverages: this.patientMedicalCoverages.filter(pmc => pmc.id || isNewAndNotDeleted(pmc))
+			patientMedicalCoverages: this.patientMedicalCoverages
+				.filter(pmc => pmc.id || isNewAndNotDeleted(pmc))
+				.map(r => {
+					return {
+						...r,
+						startDate: fixDate(r.startDate),
+						endDate: fixDate(r.endDate)
+					}
+				})
 		});
 
 		function isNewAndNotDeleted(pmc: PatientMedicalCoverage): boolean {
