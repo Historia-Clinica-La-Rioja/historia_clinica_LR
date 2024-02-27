@@ -22,15 +22,31 @@ public class LoadProcedureDescription {
     public ProcedureDescriptionBo run(Long documentId, Optional<ProcedureDescriptionBo> procedureDescription) {
         log.debug("Input parameters -> documentId {} procedureDescription {}", documentId, procedureDescription);
 
-        procedureDescription.filter(procedureDescriptionBo -> nonNull(procedureDescriptionBo.getNote()) || nonNull(procedureDescriptionBo.getAsa()))
-                .ifPresent((procedureDescriptionBo -> {
-            Long noteId = noteService.createNote(procedureDescriptionBo.getNote());
-            Short asa = procedureDescriptionBo.getAsa();
-            DocumentProcedureDescription saved = documentProcedureDescriptionRepository.save(new DocumentProcedureDescription(documentId, noteId, asa));
-            procedureDescriptionBo.setId(saved.getDocumentId());
-        }));
+        procedureDescription.filter(this::hasToSaveAnalgesicTechniqueEntity)
+                .ifPresent(procedureDescriptionBo -> saveEntity(documentId, procedureDescriptionBo));
 
         log.debug("Output -> {}", procedureDescription);
         return procedureDescription.orElse(null);
     }
+
+    private boolean hasToSaveAnalgesicTechniqueEntity(ProcedureDescriptionBo procedureDescription) {
+        return nonNull(procedureDescription.getNote())
+                || nonNull(procedureDescription.getAsa())
+                || nonNull(procedureDescription.getVenousAccess())
+                || nonNull(procedureDescription.getNasogastricTube())
+                || nonNull(procedureDescription.getUrinaryCatheter());
+    }
+
+    private void saveEntity(Long documentId, ProcedureDescriptionBo procedureDescriptionBo) {
+
+        Long noteId = noteService.createNote(procedureDescriptionBo.getNote());
+        Short asa = procedureDescriptionBo.getAsa();
+        Boolean venousAccess = procedureDescriptionBo.getVenousAccess();
+        Boolean nasogastricTube = procedureDescriptionBo.getNasogastricTube();
+        Boolean urinaryCatheter = procedureDescriptionBo.getUrinaryCatheter();
+
+        DocumentProcedureDescription saved = documentProcedureDescriptionRepository.save(new DocumentProcedureDescription(documentId, noteId, asa, venousAccess, nasogastricTube, urinaryCatheter));
+        procedureDescriptionBo.setId(saved.getDocumentId());
+    }
+
 }

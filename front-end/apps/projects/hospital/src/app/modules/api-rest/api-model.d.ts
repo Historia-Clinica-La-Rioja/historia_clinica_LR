@@ -3397,7 +3397,10 @@ export interface ProblemInfoDto {
 
 export interface ProcedureDescriptionDto {
     asa?: number;
+    nasogastricTube?: boolean;
     note?: string;
+    urinaryCatheter?: boolean;
+    venousAccess?: boolean;
 }
 
 export interface ProcedureDto {

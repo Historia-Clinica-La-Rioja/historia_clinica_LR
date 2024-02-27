@@ -277,3 +277,19 @@ databaseChangeLog:
               tableName: tracheal_intubation
               validate: true
 
+    - changeSet:
+        id: addColumns-anesthetic_intrasurgical_procedures-procedure_description
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: procedure_description
+              columns:
+                - column:
+                    name: venous_access
+                    type: boolean
+                - column:
+                    name: nasogastric_tube
+                    type: boolean
+                - column:
+                    name: urinary_catheter
+                    type: boolean

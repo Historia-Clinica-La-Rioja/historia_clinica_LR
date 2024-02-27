@@ -28,6 +28,15 @@ public class DocumentProcedureDescription {
     @Column(name = "note_id")
     private Long noteId;
 
-    @Column(name = "asa", nullable = false)
+    @Column(name = "asa")
     private Short asa;
+
+    @Column(name = "venous_access")
+    private Boolean venousAccess;
+
+    @Column(name = "nasogastric_tube")
+    private Boolean nasogastricTube;
+
+    @Column(name = "urinary_catheter")
+    private Boolean urinaryCatheter;
 }

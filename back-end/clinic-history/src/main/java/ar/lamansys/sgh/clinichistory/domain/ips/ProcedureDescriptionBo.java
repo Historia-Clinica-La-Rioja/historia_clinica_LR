@@ -18,4 +18,7 @@ public class ProcedureDescriptionBo {
     private Long id;
     private String note;
     private Short asa;
+    private Boolean venousAccess;
+    private Boolean nasogastricTube;
+    private Boolean urinaryCatheter;
 }

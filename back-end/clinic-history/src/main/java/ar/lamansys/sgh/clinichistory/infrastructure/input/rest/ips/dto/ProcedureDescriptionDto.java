@@ -25,4 +25,13 @@ public class ProcedureDescriptionDto {
     @Min(1)
     @Max(5)
     private Short asa;
+
+    @Nullable
+    private Boolean venousAccess;
+
+    @Nullable
+    private Boolean nasogastricTube;
+
+    @Nullable
+    private Boolean urinaryCatheter;
 }
