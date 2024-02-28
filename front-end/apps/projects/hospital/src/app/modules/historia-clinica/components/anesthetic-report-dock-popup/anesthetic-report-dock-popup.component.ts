@@ -66,6 +66,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     formFoodIntake: FormGroup;
     endOfAnesthesiaStatusForm: FormGroup;
     vitalSignsForm: FormGroup;
+    
+    isVitalSignSectionEmpty = true;
 
     collapsedAnthropometricDataSection = true;
     collapsedClinicalEvaluationSection = true;
@@ -105,7 +107,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportIntrasurgicalAnestheticProceduresService = new AnestheticReportIntrasurgicalAnestheticProceduresService();
         this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportEndOfAnesthesiaStatusService = new AnestheticReportEndOfAnesthesiaStatusService();
-        this.anestheticReportVitalSignsService = new AnestheticReportVitalSignsService();
+        this.anestheticReportVitalSignsService = new AnestheticReportVitalSignsService(this.translateService);
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
             lastFoodIntake: new FormControl(null),
@@ -131,6 +133,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             surgeryEndTime: new FormControl(null),
         })
 
+        this.checkVitalSignSectionEmptyness();
+
         this.possibleTimesList = this.anestheticReportPremedicationAndFoodIntakeService.possibleTimesList;
     }
 
@@ -142,6 +146,30 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticPlanList$ = this.anestheticPlan.getMedication()
         this.anestheticTechniqueList$ = this.anestheticTechnique.getAnestheticTechniqueList()
         
+    }
+
+    private checkVitalSignSectionEmptyness() {
+        this.vitalSignsForm.valueChanges.subscribe(() => {
+            if (this.isVitalSignSectionEmpty){
+                this.isVitalSignSectionEmpty = this.checkVitalSignsEmptyness();
+            }
+          });
+        this.anestheticReportVitalSignsService.isEmpty$.subscribe(isEmpty => {
+            if (this.isVitalSignSectionEmpty){
+                this.isVitalSignSectionEmpty = isEmpty;
+            }
+        })
+    }
+    
+    private checkVitalSignsEmptyness(): boolean {
+        for (let controlName in this.vitalSignsForm.controls) {
+            if (this.vitalSignsForm.controls.hasOwnProperty(controlName)) {
+                if (this.vitalSignsForm.controls[controlName].value) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     save(): void {
@@ -225,22 +253,22 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             note: this.personalRecordForm.value.observation,
             asa: this.personalRecordForm.value.asa
         }
-    }    
+    }
         
     setAnesthesiaStartDate(date: Date) {
-        console.log(date);
+        this.vitalSignsForm.controls.anesthesiaStartDate.setValue(date);
     }
 
     setAnesthesiaEndDate(date: Date) {
-        console.log(date);
+        this.vitalSignsForm.controls.anesthesiaEndDate.setValue(date);
     }
 
     setSurgeryStartDate(date: Date) {
-        console.log(date);
+        this.vitalSignsForm.controls.surgeryStartDate.setValue(date);
     }
 
     setSurgeryEndDate(date: Date) {
-        console.log(date);
+        this.vitalSignsForm.controls.surgeryEndDate.setValue(date);
     }
 }
 

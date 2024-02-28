@@ -52,3 +52,18 @@ export const PREMEDICATION = {
         dosis: 0,
     }
 }
+
+export const VITAL_SIGNS = {
+    MIN: {
+        bloodPressure: 20,
+        pulse: 70,
+        saturation: 0,
+        endTidal: 0,
+    },
+    MAX: {
+        bloodPressure: 140,
+        pulse: 100,
+        saturation: 100,
+        endTidal: 240,
+    },
+}

@@ -26,4 +26,7 @@ export class AnestheticReportVitalSignsComponent implements OnInit {
         this.datePickerDate = date;
     }
 
+    registerMeasuringPoint() {
+        this.service.handleMeasuringPointRegister();
+    }
 }

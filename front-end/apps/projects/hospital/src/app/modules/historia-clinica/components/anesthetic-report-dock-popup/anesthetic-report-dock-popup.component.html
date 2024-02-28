@@ -148,14 +148,14 @@
 
         <app-new-consultation-expansion-section id="vital-signs-expansion-section"
             [title]="'internaciones.anesthesic-report.vital-signs.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="true" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="isVitalSignSectionEmpty" [hideBorder]="false">
             <app-anesthetic-report-vital-signs [service]="anestheticReportVitalSignsService">
                 <ng-container vital-signs-form>
 
 					<form [formGroup]="vitalSignsForm">                        
                         <div fxLayout="column" fxLayoutGap="8px" data-id="anesthesia-start">
                             <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.ANESTHESIA_START'"></mat-label>
-                            <div fxLayout="row" fxLayoutGap="24px">
+                            <div fxLayout="row wrap" fxLayoutGap="24px">
                                 <app-datepicker fxLayout="50%" [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setAnesthesiaStartDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
@@ -172,7 +172,7 @@
 
                         <div fxLayout="column" fxLayoutGap="8px" data-id="anesthesia-end">
                             <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.ANESTHESIA_END'"></mat-label>
-                            <div fxLayout="row" fxLayoutGap="24px">
+                            <div fxLayout="row wrap" fxLayoutGap="24px">
                                 <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setAnesthesiaEndDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
@@ -189,7 +189,7 @@
 
                         <div fxLayout="column" fxLayoutGap="8px" data-id="surgery-start">
                             <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.SURGERY_START'"></mat-label>
-                            <div fxLayout="row" fxLayoutGap="24px">
+                            <div fxLayout="row wrap" fxLayoutGap="24px">
                                 <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setSurgeryStartDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
@@ -206,7 +206,7 @@
 
                         <div fxLayout="column" fxLayoutGap="8px" data-id="surgery-end">
                             <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.SURGERY_END'"></mat-label>
-                            <div fxLayout="row" fxLayoutGap="24px">
+                            <div fxLayout="row wrap" fxLayoutGap="24px">
                                 <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setSurgeryEndDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
