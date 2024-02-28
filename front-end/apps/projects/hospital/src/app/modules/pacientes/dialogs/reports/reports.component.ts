@@ -1,9 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ActionDisplays, TableModel} from "@presentation/components/table/table.component";
-import {ConsultationsDto} from "@api-rest/api-model";
-import {PatientReportsService} from "@api-rest/services/patient-reports.service";
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { ActionDisplays, TableModel } from "@presentation/components/table/table.component";
+import { ConsultationsDto } from "@api-rest/api-model";
+import { PatientReportsService } from "@api-rest/services/patient-reports.service";
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 
 @Component({
 	selector: 'app-reports',
@@ -22,7 +23,8 @@ export class ReportsComponent implements OnInit {
 		private readonly dialogRef: MatDialogRef<ReportsComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, patientName: string },
 		private readonly patientReportsService: PatientReportsService,
-		private readonly dateFormatPipe: DateFormatPipe
+		private readonly dateFormatPipe: DateFormatPipe,
+		private readonly isoToDatePipe: IsoToDatePipe,
 	) {
 	}
 
@@ -61,7 +63,10 @@ export class ReportsComponent implements OnInit {
 				{
 					columnDef: 'date',
 					header: 'pacientes.reports.table.columns.DATE',
-					text: (row) => this.dateFormatPipe.transform(row.consultationDate, 'date')
+					text: (row) => {
+						const date: Date = this.isoToDatePipe.transform(row.consultationDate.toString());
+						return this.dateFormatPipe.transform(date, 'date')
+					}
 				},
 				{
 					columnDef: 'specialty',

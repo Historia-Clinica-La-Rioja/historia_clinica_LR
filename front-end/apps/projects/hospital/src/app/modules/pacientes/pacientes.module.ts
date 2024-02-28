@@ -56,6 +56,7 @@ import { WarningEditIdentificationNumberComponent } from './dialogs/warning-edit
 // pipes
 import { ViewNameProfessionAndSpecialtyPipe } from './pipe/view-name-profession-and-specialty.pipe';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 
 
 
@@ -133,7 +134,8 @@ import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 		ReferenceStateLabelComponent,
 	],
 	providers: [
-		DateFormatPipe
+		DateFormatPipe,
+		IsoToDatePipe
 	]
 })
 export class PacientesModule {
