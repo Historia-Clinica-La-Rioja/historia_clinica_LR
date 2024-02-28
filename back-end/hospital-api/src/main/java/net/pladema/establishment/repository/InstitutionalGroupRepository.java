@@ -45,7 +45,8 @@ public interface InstitutionalGroupRepository extends SGXAuditableEntityJPARepos
 			"JOIN InstitutionalGroupUser igu ON (igu.institutionalGroupId = ig.id) " +
 			"WHERE igu.userId = :userId " +
 			"AND ig.deleteable.deleted IS FALSE " +
-			"AND igu.deleteable.deleted IS FALSE")
+			"AND igu.deleteable.deleted IS FALSE " +
+			"ORDER BY ig.name ASC")
 	List<InstitutionalGroup> getInstitutionalGroupByUserId(@Param("userId")Integer userId);
 
 }
