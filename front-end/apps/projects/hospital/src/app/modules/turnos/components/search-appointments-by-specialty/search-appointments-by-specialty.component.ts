@@ -150,8 +150,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.form.controls.clinicalSpecialty.setValue(clinicalSpecialty);
 			this.showClinicalSpecialtyError = false;
 		} else {
-			this.emptyAppointments = [];
-			this.emptyAppointmentsFiltered = [];
+			this.emptyAppointments = null;
+			this.emptyAppointmentsFiltered = null;
 		}
 	}
 
@@ -201,8 +201,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 			if (!this.form.value.pratice && this.form.controls.practice.hasValidator(Validators.required)) {
 				this.showPracticeError = true;
-				this.emptyAppointments = [];
-				this.emptyAppointmentsFiltered = [];
+				this.emptyAppointments = null;
+				this.emptyAppointmentsFiltered = null;
 			}
 		}
 	}
@@ -240,8 +240,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.form.controls.practice.setValue(practice.id);
 		else {
 			this.form.controls.practice.setValue(null);
-			this.emptyAppointments = [];
-			this.emptyAppointmentsFiltered = [];
+			this.emptyAppointments = null;
+			this.emptyAppointmentsFiltered = null;
 		}
 		this.showPracticeError = false;
 	}
