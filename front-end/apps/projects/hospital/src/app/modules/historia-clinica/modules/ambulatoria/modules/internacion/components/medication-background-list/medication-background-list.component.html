@@ -2,7 +2,7 @@
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
         <div fxLayout="column" fxLayoutGap="5px">
             <span class="bold-text">{{ premedication.snomed.pt | titlecase }}</span>
-            <span class="italic-text" *ngIf="premedication.via">Via {{ premedication.via.description }}</span>
+            <span *ngIf="premedication.via">Via {{ premedication.via.description }}</span>
             <span *ngIf="premedication.dosis">
                 {{ 'internaciones.anesthesic-report.premedication-and-food-intake.DOSIS' | translate }} {{
                 premedication.dosis }} </span>

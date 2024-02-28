@@ -5,6 +5,8 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AnestheticDrugComponent } from '../../dialogs/anesthetic-drug/anesthetic-drug.component';
 import { MedicationService } from '../../services/medicationService';
 import { TranslateService } from '@ngx-translate/core';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'app-anesthetic-report-antibiotic-prophylaxis',
@@ -23,13 +25,14 @@ export class AnestheticReportAntibioticProphylaxisComponent implements OnInit {
         private readonly dialog: MatDialog,
         private readonly translateService: TranslateService,
         private readonly featureFlagService: FeatureFlagService,
+        readonly internacionMasterDataService: InternacionMasterDataService,
     ) { }
 
     ngOnInit(): void {
         this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
             this.searchConceptsLocallyFFIsOn = isOn;
         });
-        /* this.internacionMasterDataService.getViasPremedication().pipe(take(1)).subscribe(vias => this.viasArray = vias); */
+        this.internacionMasterDataService.getViasAntibioticProphylaxis().pipe(take(1)).subscribe(vias => this.viasArray = vias);
         this.translateService.get(['internaciones.anesthesic-report.antibiotic-prophylaxis.TITLE',
             'internaciones.anesthesic-report.antibiotic-prophylaxis.LABEL']).subscribe(
                 (msg) => {

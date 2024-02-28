@@ -104,7 +104,7 @@
             </app-anesthetic-plan>
         </app-new-consultation-expansion-section>
 
-        <app-new-consultation-expansion-section id="anesthetic-plan-expansion-section"
+        <app-new-consultation-expansion-section id="analgesic-technique-expansion-section"
             [title]="'internaciones.anesthesic-report.analgesic-technique.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="!(analgesicTechniqueList$ | async ).length" [hideBorder]="false">
             <app-analgesic-technique [service]="analgesicTechnique"></app-analgesic-technique>
@@ -120,6 +120,7 @@
             [title]="'internaciones.anesthesic-report.fluid-administration.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="!(fluidAdministrationList$ | async ).length" [hideBorder]="false">
             <app-fluid-administration [service]="fluidAdministrationService"></app-fluid-administration>
+        </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anesthetic-agents-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthetic-agents.TITLE' | translate" icon="assignment"

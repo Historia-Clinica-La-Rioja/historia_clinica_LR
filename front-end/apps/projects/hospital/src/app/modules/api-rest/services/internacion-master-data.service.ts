@@ -103,6 +103,21 @@ export class InternacionMasterDataService {
 		return this.http.get<MasterDataDto[]>(url);
 	}
 
+	getViasAnestheticAgent(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-anesthetic-agent`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getViasNonAnestheticDrug(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-non-anesthetic-drug`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getViasAntibioticProphylaxis(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/internments/masterdata/vias-antibiotic-prophylaxis`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
 	getOtherIndicationTypes(): Observable<OtherIndicationTypeDto[]> {
 		const url = `${environment.apiBase}/internments/masterdata/other-indication-type`;
 		return this.http.get<OtherIndicationTypeDto[]>(url);

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder } from '@angular/forms';
-import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, TimeDto } from '@api-rest/api-model';
+import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { scrollIntoError } from '@core/utils/form.utils';
@@ -186,16 +186,24 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             anestheticPlans: this.anestheticPlan.getAnestheticSubstanceDto(),
             analgesicTechniques: this.analgesicTechnique.getAnalgesicTechniqueDto(),
             anestheticTechniques: this.anestheticTechnique.getAnestheticTechniqueDto(),
-            fluidAdministrations: this.fluidAdministrationService.getFluidAdministrationDto()
-            /* 
-            anestheticAgents = this.anestheticReportAnestheticAgent.getAnestheticSubstanceDto(),
-            nonAnestheticDrugs = this.anestheticReportNonAnestheticDrugs.getAnestheticSubstanceDto(),
-            intrasurgicalAnestheticProcedures = this.anestheticReportIntrasurgicalAnestheticProceduresService.getIntrasurgicalAnestheticProceduresData(),
-            -- Devuelve un objeto con los valores de los 3 radiobuttons 
-            antibioticProphylaxis = this.anestheticReportAntibioticProphylaxisService.getAnestheticSubstanceDto(),
-            */
+            fluidAdministrations: this.fluidAdministrationService.getFluidAdministrationDto(),
+            anestheticAgents: this.anestheticReportAnestheticAgent.getAnestheticSubstanceDto(),
+            nonAnestheticDrugs: this.anestheticReportNonAnestheticDrugs.getAnestheticSubstanceDto(),
+            procedureDescription: this.getProcedureDescription(),
+            antibioticProphylaxis: this.anestheticReportAntibioticProphylaxisService.getAnestheticSubstanceDto(),
 		};
 	}
+
+    private getProcedureDescription(): ProcedureDescriptionDto {
+        const radioButtonsOptions = this.anestheticReportIntrasurgicalAnestheticProceduresService.getIntrasurgicalAnestheticProceduresData();
+        return {
+            nasogastricTube: radioButtonsOptions.nasogastricTube,
+            urinaryCatheter: radioButtonsOptions.urinaryCatheter,
+            venousAccess: radioButtonsOptions.venousAccess,
+            note: this.personalRecordForm.value.observation,
+            asa: this.personalRecordForm.value.asa
+        }
+    }
 }
 
 export interface FoodIntakeForm {

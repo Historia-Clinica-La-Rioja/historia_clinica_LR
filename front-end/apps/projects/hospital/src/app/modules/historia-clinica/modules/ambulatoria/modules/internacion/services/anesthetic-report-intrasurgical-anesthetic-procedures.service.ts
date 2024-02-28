@@ -30,9 +30,9 @@ export class AnestheticReportIntrasurgicalAnestheticProceduresService {
 
     getIntrasurgicalAnestheticProceduresData(): IntrasurgicalAnestheticProceduresData {
         return {
-            venousAccess: this.form.value.venousAccess,
-            nasogastricTube: this.form.value.nasogastricTube,
-            urinaryCatheter: this.form.value.urinaryCatheter
+            venousAccess: this.form.value.venousAccess === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES,
+            nasogastricTube: this.form.value.nasogastricTube === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES,
+            urinaryCatheter: this.form.value.urinaryCatheter === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES,
         }
     }
 
@@ -52,9 +52,9 @@ export interface IntrasurgicalAnestheticProceduresForm{
 }
 
 export interface IntrasurgicalAnestheticProceduresData {
-    venousAccess: INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS;
-    nasogastricTube: INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS;
-    urinaryCatheter: INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS;
+    venousAccess: boolean;
+    nasogastricTube: boolean;
+    urinaryCatheter: boolean;
 }
 
 export enum INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS {
