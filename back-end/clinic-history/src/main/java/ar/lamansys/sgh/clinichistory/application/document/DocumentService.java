@@ -11,7 +11,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
@@ -144,8 +143,6 @@ public interface DocumentService {
 	DocumentProsthesis createDocumentProsthesis(Long documentId, String description);
 
     DocumentAnestheticSubstance createDocumentAnestheticSubstance(Long documentId, Integer substanceId);
-
-    FoodIntakeBo getFoodIntakeStateFromDocument(Long documentId);
 
     AnestheticHistoryBo getAnestheticHistoryStateFromDocument(Long documentId);
 

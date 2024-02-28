@@ -38,6 +38,19 @@ public class CreateAnestheticReport {
     public Integer run(AnestheticReportBo anestheticReport) {
         log.debug("Input parameter -> anestheticReport {}", anestheticReport);
 
+        this.completeValuesAnestheticReport(anestheticReport);
+
+        anestheticReportValidator.assertContextValid(anestheticReport);
+
+        documentFactory.run(anestheticReport, false);
+
+        Integer result = anestheticStorage.save(anestheticReport);
+
+        log.debug("Output -> saved anestheticReport id {}", result);
+        return result;
+    }
+
+    private void completeValuesAnestheticReport(AnestheticReportBo anestheticReport) {
         Integer encounterId = anestheticReport.getEncounterId();
 
         internmentEpisodeService.getPatient(encounterId)
@@ -68,25 +81,16 @@ public class CreateAnestheticReport {
         this.setAnestheticSubstanceValues(anestheticReport.getNonAnestheticDrugs(), EAnestheticSubstanceType.NON_ANESTHETIC_DRUG.getId());
 
         this.setAnestheticSubstanceValues(anestheticReport.getAntibioticProphylaxis(), EAnestheticSubstanceType.ANTIBIOTIC_PROPHYLAXIS.getId());
-
-        anestheticReportValidator.assertContextValid(anestheticReport);
-
-        documentFactory.run(anestheticReport, false);
-
-        Integer result = anestheticStorage.save(anestheticReport);
-
-        log.debug("Output -> saved anestheticReport id {}", result);
-        return result;
     }
 
-    public void setTypeSurgicalProcedures(List<ProcedureBo> surgicalProcedures) {
+    private void setTypeSurgicalProcedures(List<ProcedureBo> surgicalProcedures) {
         surgicalProcedures
                 .stream()
                 .filter(Objects::nonNull)
                 .forEach(surgicalProcedure -> surgicalProcedure.setType(ProcedureTypeEnum.SURGICAL_PROCEDURE));
     }
 
-    public void setAnestheticSubstanceValues(List<? extends AnestheticSubstanceBo> substances, Short typeId) {
+    private void setAnestheticSubstanceValues(List<? extends AnestheticSubstanceBo> substances, Short typeId) {
         substances.stream()
                 .peek(substance -> substance.setTypeId(typeId))
                 .map(AnestheticSubstanceBo::getDosage)

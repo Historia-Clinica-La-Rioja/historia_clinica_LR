@@ -11,7 +11,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
@@ -29,7 +28,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAnestheticTechniqueRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentDiagnosticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentExternalCauseRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFoodInTakeRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentImmunizationRepository;
@@ -136,8 +134,6 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentAnestheticHistoryRepository documentAnestheticHistoryRepository;
     
     private final DocumentAnestheticSubstanceRepository documentAnestheticSubstanceRepository;
-
-    private final DocumentFoodInTakeRepository documentFoodIntakeRepository;
 
     private final DocumentProcedureDescriptionRepository documentProcedureDescriptionRepository;
 
@@ -582,16 +578,6 @@ public class DocumentServiceImpl implements DocumentService {
     public List<AnestheticSubstanceBo> getAnestheticSubstancesStateFromDocument(Long documentId) {
         log.debug("Input parameters -> documentId {}", documentId);
         List<AnestheticSubstanceBo> result = documentAnestheticSubstanceRepository.getAnestheticSubstancesStateFromDocument(documentId);
-        log.debug(OUTPUT, result);
-        return result;
-    }
-
-    @Override
-    public FoodIntakeBo getFoodIntakeStateFromDocument(Long documentId) {
-        log.debug("Input parameters -> documentId {}", documentId);
-        FoodIntakeBo result = documentFoodIntakeRepository.findById(documentId)
-                .map((documentFoodIntake -> new FoodIntakeBo(documentFoodIntake.getDocumentId(), documentFoodIntake.getClockTime())))
-                .orElse(null);
         log.debug(OUTPUT, result);
         return result;
     }

@@ -14,6 +14,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Snomed
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.clinichistory.hospitalization.domain.AnestheticReportBo;
 import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto.AnestheticReportDto;
+import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -21,7 +22,7 @@ import org.mapstruct.Named;
 @Mapper(uses = {LocalDateMapper.class, SnomedMapper.class, HealthConditionMapper.class, AnthropometricDataMapper.class,
         MedicationMapper.class, AnestheticSubstanceMapper.class, FoodIntakeMapper.class, RiskFactorMapper.class,
         AnestheticHistoryMapper.class, ProcedureDescriptionMapper.class, AnalgesicTechniqueMapper.class,
-        AnestheticTechniqueMapper.class})
+        AnestheticTechniqueMapper.class}, builder = @Builder(disableBuilder = true))
 public interface AnestheticReportMapper {
 
     @Named("fromAnestheticReportDto")
@@ -32,7 +33,6 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticHistory", source = "anestheticHistory", qualifiedByName = "toAnestheticHistoryBo")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationBo")
     @Mapping(target = "preMedications", source = "preMedications", qualifiedByName = "toListAnestheticSubstanceBo")
-    @Mapping(target = "foodIntake", source = "foodIntake", qualifiedByName = "toFoodIntakeBo")
     @Mapping(target = "histories", source = "histories", qualifiedByName = "toListHealthConditionBo")
     @Mapping(target = "procedureDescription", source = "procedureDescription", qualifiedByName = "toProcedureDescriptionBo")
     @Mapping(target = "anestheticPlans", source = "anestheticPlans", qualifiedByName = "toListAnestheticSubstanceBo")
@@ -42,6 +42,7 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticAgents", source = "anestheticAgents", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "nonAnestheticDrugs", source = "nonAnestheticDrugs", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "antibioticProphylaxis", source = "antibioticProphylaxis", qualifiedByName = "toListAnestheticSubstanceBo")
+    @Mapping(target = "procedureDescription.foodIntake", source = "foodIntake.clockTime")
     AnestheticReportBo fromAnestheticReportDto(AnestheticReportDto anestheticReport);
 
     @Named("fromAnestheticReportBo")
@@ -52,7 +53,7 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticHistory", source = "anestheticHistory", qualifiedByName = "toAnestheticHistoryDto")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     @Mapping(target = "preMedications", source = "preMedications", qualifiedByName = "toListAnestheticSubstanceDto")
-    @Mapping(target = "foodIntake", source = "foodIntake", qualifiedByName = "toFoodIntakeDto")
+    @Mapping(target = "foodIntake", source = "procedureDescription", qualifiedByName = "toFoodIntakeDto")
     @Mapping(target = "histories", source = "histories", qualifiedByName = "toListHealthConditionDto")
     @Mapping(target = "procedureDescription", source = "procedureDescription", qualifiedByName = "toProcedureDescriptionDto")
     @Mapping(target = "anestheticPlans", source = "anestheticPlans", qualifiedByName = "toListAnestheticSubstanceDto")

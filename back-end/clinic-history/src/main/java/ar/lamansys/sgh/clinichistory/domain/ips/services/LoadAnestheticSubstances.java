@@ -35,27 +35,33 @@ public class LoadAnestheticSubstances {
     public List<? extends AnestheticSubstanceBo> run(Long documentId, List<? extends AnestheticSubstanceBo> substances) {
         log.debug("Input parameters -> documentId {} substances {}", documentId, substances);
 
-        substances.forEach((anestheticSubstanceBo) -> {
-            if (anestheticSubstanceBo.getId() == null) {
-                Integer snomedId = snomedService.getSnomedId(anestheticSubstanceBo.getSnomed())
-                        .orElseGet(() -> snomedService.createSnomedTerm(anestheticSubstanceBo.getSnomed()));
-                Long quantityId = createQuantity(anestheticSubstanceBo.getDosage());
-                Integer dosageId = createDosage(anestheticSubstanceBo.getDosage(), quantityId);
-                Short viaId = anestheticSubstanceBo.getViaId();
-                String viaNote = anestheticSubstanceBo.getViaNote();
-                Long viaNoteId = null;
-                if (viaNote != null)
-                    viaNoteId = noteService.createNote(viaNote);
-                Short typeId = anestheticSubstanceBo.getTypeId();
-
-                AnestheticSubstance anestheticSubstance = anestheticSubstanceRepository.save(new AnestheticSubstance(null, documentId, snomedId, dosageId, viaId, viaNoteId, typeId));
-                anestheticSubstanceBo.setId(anestheticSubstance.getId());
-            }
-            documentService.createDocumentAnestheticSubstance(documentId, anestheticSubstanceBo.getId());
-        });
+        substances.forEach(anestheticSubstanceBo -> this.createAnestheticSubstance(documentId, anestheticSubstanceBo));
 
         log.debug("Output -> {}", substances);
         return substances;
+    }
+
+    private void createAnestheticSubstance(Long documentId, AnestheticSubstanceBo anestheticSubstanceBo) {
+        if (anestheticSubstanceBo.getId() == null) {
+            this.saveEntity(documentId, anestheticSubstanceBo);
+        }
+        documentService.createDocumentAnestheticSubstance(documentId, anestheticSubstanceBo.getId());
+    }
+
+    private void saveEntity(Long documentId, AnestheticSubstanceBo anestheticSubstanceBo) {
+        Integer snomedId = snomedService.getSnomedId(anestheticSubstanceBo.getSnomed())
+                .orElseGet(() -> snomedService.createSnomedTerm(anestheticSubstanceBo.getSnomed()));
+        Long quantityId = this.createQuantity(anestheticSubstanceBo.getDosage());
+        Integer dosageId = this.createDosage(anestheticSubstanceBo.getDosage(), quantityId);
+        Short viaId = anestheticSubstanceBo.getViaId();
+        String viaNote = anestheticSubstanceBo.getViaNote();
+        Long viaNoteId = null;
+        if (viaNote != null)
+            viaNoteId = noteService.createNote(viaNote);
+        Short typeId = anestheticSubstanceBo.getTypeId();
+
+        AnestheticSubstance anestheticSubstance = anestheticSubstanceRepository.save(new AnestheticSubstance(null, documentId, snomedId, dosageId, viaId, viaNoteId, typeId));
+        anestheticSubstanceBo.setId(anestheticSubstance.getId());
     }
 
     private Long createQuantity(DosageBo dosageBo) {

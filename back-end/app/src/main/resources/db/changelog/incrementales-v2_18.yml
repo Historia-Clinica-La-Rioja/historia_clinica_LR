@@ -278,7 +278,7 @@ databaseChangeLog:
               validate: true
 
     - changeSet:
-        id: addColumns-anesthetic_intrasurgical_procedures-procedure_description
+        id: addColumns-anesthetic_part3-procedure_description
         author: mromero
         changes:
           - addColumn:
@@ -293,3 +293,14 @@ databaseChangeLog:
                 - column:
                     name: urinary_catheter
                     type: boolean
+                - column:
+                    name: food_intake
+                    type: time
+
+    - changeSet:
+        id: dropTable-food_intake
+        author: mromero
+        changes:
+          - dropTable:
+              tableName: food_intake
+

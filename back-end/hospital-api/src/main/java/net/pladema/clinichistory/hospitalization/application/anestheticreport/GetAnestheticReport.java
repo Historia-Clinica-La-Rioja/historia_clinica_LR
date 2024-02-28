@@ -32,6 +32,13 @@ public class GetAnestheticReport {
                         AnestheticReportEnumException.ANESTHETIC_REPORT_NOT_FOUND,
                         "anesthetic-report.not-found"));
 
+       this.completeValuesAnestheticReportFromDocument(documentId, result);
+
+        log.debug("Output -> anestheticReport {}", result);
+        return result;
+    }
+
+    private void completeValuesAnestheticReportFromDocument(Long documentId, AnestheticReportBo result) {
         GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(documentId);
         result.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
         result.setDiagnosis(generalHealthConditionBo.getDiagnosis());
@@ -49,7 +56,6 @@ public class GetAnestheticReport {
         List<AnestheticSubstanceBo> substances = documentService.getAnestheticSubstancesStateFromDocument(documentId);
 
         result.setPreMedications(this.filterSubstanceBy(substances, EAnestheticSubstanceType.PRE_MEDICATION));
-        result.setFoodIntake(documentService.getFoodIntakeStateFromDocument(documentId));
 
         result.setHistories(generalHealthConditionBo.getOtherHistories());
         result.setProcedureDescription(documentService.getProcedureDescriptionStateFromDocument(documentId));
@@ -67,9 +73,6 @@ public class GetAnestheticReport {
         result.setNonAnestheticDrugs(this.filterSubstanceBy(substances, EAnestheticSubstanceType.NON_ANESTHETIC_DRUG));
 
         result.setAntibioticProphylaxis(this.filterSubstanceBy(substances, EAnestheticSubstanceType.ANTIBIOTIC_PROPHYLAXIS));
-
-        log.debug("Output -> anestheticReport {}", result);
-        return result;
     }
 
     private List<AnestheticSubstanceBo> filterSubstanceBy(List<AnestheticSubstanceBo> substances, EAnestheticSubstanceType type) {

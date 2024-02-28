@@ -20,15 +20,21 @@ public class LoadAnestheticHistory {
     public AnestheticHistoryBo run(Long documentId, Optional<AnestheticHistoryBo> anestheticHistory) {
         log.debug("Input parameters -> documentId {} anestheticHistory {}", documentId, anestheticHistory);
 
-        anestheticHistory.filter(anestheticHistoryBo -> nonNull(anestheticHistoryBo.getStateId()) || nonNull(anestheticHistoryBo.getZoneId()))
-                .ifPresent((anestheticHistoryBo -> {
-            Short stateId = anestheticHistoryBo.getStateId();
-            Short zoneId = anestheticHistoryBo.getZoneId();
-            DocumentAnestheticHistory saved = documentAnestheticHistoryRepository.save(new DocumentAnestheticHistory(documentId, stateId, zoneId));
-            anestheticHistoryBo.setId(saved.getDocumentId());
-        }));
+        anestheticHistory.filter(this::hasToSaveEntity)
+                .ifPresent(anestheticHistoryBo -> saveEntity(documentId, anestheticHistoryBo));
 
         log.debug("Output -> {}", anestheticHistory);
         return anestheticHistory.orElse(null);
+    }
+
+    private void saveEntity(Long documentId, AnestheticHistoryBo anestheticHistoryBo) {
+        Short stateId = anestheticHistoryBo.getStateId();
+        Short zoneId = anestheticHistoryBo.getZoneId();
+        DocumentAnestheticHistory saved = documentAnestheticHistoryRepository.save(new DocumentAnestheticHistory(documentId, stateId, zoneId));
+        anestheticHistoryBo.setId(saved.getDocumentId());
+    }
+
+    private boolean hasToSaveEntity(AnestheticHistoryBo anestheticHistoryBo) {
+        return nonNull(anestheticHistoryBo.getStateId()) || nonNull(anestheticHistoryBo.getZoneId());
     }
 }

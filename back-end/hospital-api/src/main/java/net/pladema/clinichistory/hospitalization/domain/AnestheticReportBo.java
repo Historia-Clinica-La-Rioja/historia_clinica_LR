@@ -8,7 +8,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
@@ -65,8 +64,6 @@ public class AnestheticReportBo implements IDocumentBo {
     private List<MedicationBo> medications;
 
     private List<AnestheticSubstanceBo> preMedications;
-
-    private FoodIntakeBo foodIntake;
 
     private List<HealthConditionBo> histories;
 

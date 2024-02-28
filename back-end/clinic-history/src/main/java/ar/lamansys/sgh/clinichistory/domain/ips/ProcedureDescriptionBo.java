@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,4 +22,5 @@ public class ProcedureDescriptionBo {
     private Boolean venousAccess;
     private Boolean nasogastricTube;
     private Boolean urinaryCatheter;
+    private LocalTime foodIntake;
 }

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -39,4 +40,7 @@ public class DocumentProcedureDescription {
 
     @Column(name = "urinary_catheter")
     private Boolean urinaryCatheter;
+
+    @Column(name = "food_intake")
+    private LocalTime foodIntake;
 }
