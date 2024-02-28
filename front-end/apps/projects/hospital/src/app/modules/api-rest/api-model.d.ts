@@ -2182,6 +2182,13 @@ export interface IdentifierDto extends Serializable {
     value: string;
 }
 
+export interface ImageNetworkProductivityFilterDto {
+    clinicalSpecialtyId: number;
+    from: DateDto;
+    healthcareProfessionalId: number;
+    to: DateDto;
+}
+
 export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
     billable?: boolean;
