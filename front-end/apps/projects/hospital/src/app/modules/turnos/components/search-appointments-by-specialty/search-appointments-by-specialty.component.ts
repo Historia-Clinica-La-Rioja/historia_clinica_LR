@@ -49,6 +49,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	externalInformation: SearchAppointmentInformation;
 	externalSetValueSpecialty: TypeaheadOption<string>;
 	showCareNetworkSection = false;
+	resetRegisterDemandButtonDisabled = false;
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
 		parsedDate?.setHours(0, 0, 0, 0);
@@ -192,6 +193,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 					this.paginator.pageSize = PAGE_MIN_SIZE;
 				}
 				this.showCareNetworkSection = this.externalInformation?.enableSectionToSearchAppointmentInOtherTab;
+				this.resetRegisterDemandButtonDisabled = !this.resetRegisterDemandButtonDisabled;
 			});
 		}
 		else {

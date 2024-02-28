@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 @Component({
@@ -10,8 +10,10 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 export class NoAppointmentAvailableComponent {
   @Output() preloadData = new EventEmitter<boolean>();
   @Output() registerUnsatisfiedDemand = new EventEmitter<boolean>();
+  @Input() set reset (value:boolean){
+    this.isRegisterButtonDisabled = false;
+  }
   isRegisterButtonDisabled = false;
-
   constructor(private dialog: MatDialog) { }
 
   redirectToSearchInCareNetwork() {
