@@ -485,8 +485,10 @@
 				"ANESTHESIA_END": "Fin anestesia",
 				"SURGERY_START": "Comienzo cirugía",
 				"SURGERY_END": "Fin cirugía",
+				"SUCCESS_ADD": "Punto de medición registrado correctamente",
 				"measuring-point": {
 					"ADD_MEASURING_POINT": "Agregar nuevo punto de medición",
+					"REGISTERED_MEASURING_POINTS": "Puntos de medición registrados",
 					"SURGERY_DATE": "Fecha cirugía",
 					"SURGERY_TIME": "Hora control",
 					"MAX_BLOOD_PRESSURE": "Tensión arterial Max",
@@ -494,7 +496,15 @@
 					"PULSE": "Pulso",
 					"SATURATION": "Saturación O2",
 					"END_TIDAL": "End Tidal CO2",
-					"REGISTER": "Registrar punto de medición"
+					"REGISTER": "Registrar punto de medición",
+					"MEDITION": "Medición"
+				},
+				"registered-point": {
+					"MAX_BLOOD_PRESSURE": "TA Max:",
+					"MIN_BLOOD_PRESSURE": "TA Min:",
+					"PULSE": "Pulso:",
+					"SATURATION": "Saturación O2:",
+					"END_TIDAL": "End Tidal CO2:"
 				}
 			},
 			"end-of-anesthesia-status": {

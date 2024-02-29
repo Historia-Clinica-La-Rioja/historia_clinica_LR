@@ -77,15 +77,11 @@ import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-d
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 //Porque estan aca?
-import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
-import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery/proposed-surgery.component';
-import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
 import { AnestheticReportAnestheticHistoryComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-history/anesthetic-report-anesthetic-history.component';
 import { AnestheticReportUsualMedicationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-usual-medication/anesthetic-report-usual-medication.component';
 import { AnestheticReportPremedicationAndFoodIntakeComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-premedication-and-food-intake/anesthetic-report-premedication-and-food-intake.component';
-import { MedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/medication-background-list/medication-background-list.component';
 import { AnestheticReportPersonRecordComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-person-record/anesthetic-report-person-record.component';
 import { AnestheticPlanComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-plan/anesthetic-plan.component';
 import { AnalgesicTechniqueBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/analgesic-technique-background-list/analgesic-technique-background-list.component';
@@ -104,6 +100,13 @@ import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambula
 import { AnesthesiaFormComponent } from './dialogs/anesthesia-form/anesthesia-form.component';
 import { AnestheticReportEndOfAnesthesiaStatusComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-end-of-anesthesia-status/anesthetic-report-end-of-anesthesia-status.component';
 import { AnestheticReportVitalSignsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-vital-signs/anesthetic-report-vital-signs.component';
+import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
+import { MeasuringPointComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point/measuring-point.component';
+import { MeasuringPointBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-background-list/measuring-point-background-list.component';
+import { MeasuringPointItemComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-item/measuring-point-item.component';
+import { MedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/medication-background-list/medication-background-list.component';
+import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery/proposed-surgery.component';
+import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 
 @NgModule({
 	declarations: [
@@ -154,6 +157,9 @@ import { AnestheticReportVitalSignsComponent } from './modules/ambulatoria/modul
 		AnestheticReportAntibioticProphylaxisComponent,
 		AnestheticReportEndOfAnesthesiaStatusComponent,
 		AnestheticReportVitalSignsComponent,
+		MeasuringPointComponent,
+		MeasuringPointBackgroundListComponent,
+		MeasuringPointItemComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

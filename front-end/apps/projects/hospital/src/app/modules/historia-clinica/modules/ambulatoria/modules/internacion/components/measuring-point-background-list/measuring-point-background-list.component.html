@@ -1,0 +1,21 @@
+<app-titled-content-card *ngIf="measuringPoints.length > 0" title="{{ 'internaciones.anesthesic-report.vital-signs.measuring-point.REGISTERED_MEASURING_POINTS' }}">
+    <div fxLayout="column" fxLayoutGap="16px"
+        *ngFor="let measuringPoint of measuringPoints; index as i; last as isLast">
+        <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="8px">
+
+            <app-measuring-point-item class="measuring-point" [measuringPoint]="measuringPoint" [index]="i"></app-measuring-point-item>
+
+            <div fxLayoutAlign="end start" data-id="buttons-container">
+                <button type="button" mat-icon-button color="primary">
+                    <mat-icon>edit</mat-icon>
+                </button>
+
+                <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </div>
+
+        </div>
+        <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+    </div>
+</app-titled-content-card>

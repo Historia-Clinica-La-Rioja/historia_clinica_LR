@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TimeDto } from '@api-rest/api-model';
+import { removeFrom } from '@core/utils/array.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -13,6 +15,10 @@ export class AnestheticReportVitalSignsService {
 
     private form: FormGroup;
     private measuringPoints: MeasuringPointData[] = [];
+    
+    private measuringPointsSource = new BehaviorSubject<MeasuringPointData[]>([]);
+	private _measuringPoints$ = this.measuringPointsSource.asObservable();
+
     private posibleTimes: TimeDto[] = [];
     private readonly possibleMinutes = [0,5,10,15,20,25,30,35,40,45,50,55];
     
@@ -32,6 +38,7 @@ export class AnestheticReportVitalSignsService {
 
     constructor(
 		private readonly translateService: TranslateService,
+        private readonly snackBarService: SnackBarService,
     ) { 
         this.form = new FormGroup<MeasuringPointForm>({
             measuringPointStartDate: new FormControl(null),
@@ -59,6 +66,10 @@ export class AnestheticReportVitalSignsService {
             }
 		}
 		return initializedTimes;
+	}
+
+    get measuringPoints$(): Observable<MeasuringPointData[]> {
+		return this._measuringPoints$;
 	}
     
     get bloodPressureMaxError$(): Observable<string | void> {
@@ -205,10 +216,19 @@ export class AnestheticReportVitalSignsService {
         }
     }
 
+    setStartingDate(date: Date) {
+        this.form.controls.measuringPointStartDate.setValue(date);
+    }
+
     handleMeasuringPointRegister() {
         this.registerMeasuringPoint();
         this.clearForm();
     }
+
+    remove(index: number) : void {
+		this.measuringPoints = removeFrom<MeasuringPointData>(this.measuringPoints, index);
+		this.measuringPointsSource.next(this.measuringPoints);
+	}
 
     private registerMeasuringPoint() {
         let newMeasuringPoint = {
@@ -221,7 +241,9 @@ export class AnestheticReportVitalSignsService {
             endTidal: this.form.value.endTidal,
         }
         this.measuringPoints.push(newMeasuringPoint);
+        this.measuringPointsSource.next(this.measuringPoints);
         this.isEmptySource.next(!this.measuringPoints.length);
+        this.snackBarService.showSuccess('internaciones.anesthesic-report.vital-signs.SUCCESS_ADD');
     }
 
     private clearForm() {

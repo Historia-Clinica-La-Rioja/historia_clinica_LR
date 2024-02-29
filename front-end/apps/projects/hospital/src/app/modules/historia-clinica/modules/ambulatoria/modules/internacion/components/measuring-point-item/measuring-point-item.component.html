@@ -1,0 +1,26 @@
+<div fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="column" fxLayoutGap="8px" data-id="measuring-point-register">
+        <span class="measuring-point-title" data-id="measuring-point-id">{{ 'internaciones.anesthesic-report.vital-signs.measuring-point.MEDITION' | translate }} {{ index + 1}}</span>
+        <div fxLayout="row wrap" fxLayoutGap="16px" data-id="measuring-point-info">
+            <div fxLayout="row">
+                <span>{{ 'internaciones.anesthesic-report.vital-signs.registered-point.MAX_BLOOD_PRESSURE' | translate }} {{ measuringPoint.bloodPressureMax ? measuringPoint.bloodPressureMax : "-" }}</span>
+            </div>
+            <div fxLayout="row">
+                <span>{{ 'internaciones.anesthesic-report.vital-signs.registered-point.MIN_BLOOD_PRESSURE' | translate }} {{ measuringPoint.bloodPressureMin ? measuringPoint.bloodPressureMin : "-" }}</span>
+            </div>
+            <div fxLayout="row">
+                <span>{{ 'internaciones.anesthesic-report.vital-signs.registered-point.PULSE' | translate }} {{ measuringPoint.pulse ? measuringPoint.pulse : "-" }}</span>
+            </div>
+            <div fxLayout="row">
+                <span>{{ 'internaciones.anesthesic-report.vital-signs.registered-point.SATURATION' | translate }} {{ measuringPoint.saturation ? measuringPoint.saturation : "-" }}</span>
+            </div>
+            <div fxLayout="row">
+                <span>{{ 'internaciones.anesthesic-report.vital-signs.registered-point.END_TIDAL' | translate }} {{ measuringPoint.endTidal ? measuringPoint.endTidal : "-" }}</span>
+            </div>
+        </div>
+        <div data-id="measuring-point-date">
+            <span *ngIf="measuringPoint.measuringPointStartDate">{{ measuringPoint.measuringPointStartDate | dateFormat: 'date'}} - </span>
+            <span *ngIf="measuringPoint.measuringPointStartTime">{{ measuringPoint.measuringPointStartTime | viewDateDto:'time' | dateFormat: 'time'}}</span>
+        </div>
+    </div>
+</div>

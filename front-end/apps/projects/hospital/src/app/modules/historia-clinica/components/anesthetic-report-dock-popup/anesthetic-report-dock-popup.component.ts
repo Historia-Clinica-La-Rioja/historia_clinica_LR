@@ -107,7 +107,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportIntrasurgicalAnestheticProceduresService = new AnestheticReportIntrasurgicalAnestheticProceduresService();
         this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportEndOfAnesthesiaStatusService = new AnestheticReportEndOfAnesthesiaStatusService();
-        this.anestheticReportVitalSignsService = new AnestheticReportVitalSignsService(this.translateService);
+        this.anestheticReportVitalSignsService = new AnestheticReportVitalSignsService(this.translateService, this.snackBarService);
 
         this.formFoodIntake = new FormGroup<FoodIntakeForm>({
             lastFoodIntake: new FormControl(null),
