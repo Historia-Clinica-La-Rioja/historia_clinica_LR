@@ -16,8 +16,10 @@ import net.pladema.establishment.service.domain.CareLineBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,6 +58,17 @@ public class CareLineServiceImpl implements CareLineService {
         LOG.trace(OUTPUT, careLines);
         return careLines;
     }
+
+	@Override
+	public List<CareLineBo> getAllCareLines() {
+		LOG.debug("No input parameters");
+		List<CareLineBo> careLines = careLineRepository.findAll(Sort.by(Sort.Order.asc("description")))
+				.stream()
+				.map(careLine -> new CareLineBo(careLine.getId(), careLine.getDescription()))
+				.collect(Collectors.toList());
+		LOG.trace(OUTPUT, careLines);
+		return careLines;
+	}
 
 	@Override
 	public List<CareLineBo> getCareLinesByClinicalSpecialtyAndInstitutionId(Integer institutionId, Integer clinicalSpecialtyId) {
