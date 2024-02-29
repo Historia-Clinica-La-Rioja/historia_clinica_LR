@@ -7,6 +7,7 @@ import { DownloadService } from '@core/services/download.service';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { UIComponentDto } from '@extensions/extensions-model';
 import { ReportFilters } from "../../reportes/routes/home/home.component";
+import { ImageNetworkProductivityFilterDto } from '@api-rest/api-model';
 
 @Injectable({
 	providedIn: 'root'
@@ -73,6 +74,12 @@ export class ReportsService {
 	getNominalAppointmentsDetail(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-appointment-detail`;
 		return this.getReport(params, fileName, url);
+	}
+
+	getImageNetworkProductivityReport(searchCriteria: ImageNetworkProductivityFilterDto, fileName: string){
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/report/image-network-productivity`;
+		const params = { filter: JSON.stringify(searchCriteria) };
+		return this.downloadService.downloadXlsWithRequestParams(url, fileName, params);
 	}
 
 }

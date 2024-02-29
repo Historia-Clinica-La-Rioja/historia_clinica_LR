@@ -16,7 +16,7 @@ import {
 	AppFeature,
 	ERole,
 	HierarchicalUnitDto,
-	HierarchicalUnitTypeDto, LicenseNumberTypeDto,
+	HierarchicalUnitTypeDto, ImageNetworkProductivityFilterDto, LicenseNumberTypeDto,
 	ProfessionalLicenseNumberDto, ProfessionalRegistrationNumbersDto,
 	ProfessionalsByClinicalSpecialtyDto
 } from '@api-rest/api-model';
@@ -30,6 +30,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { HierarchicalUnitsService } from "@api-rest/services/hierarchical-units.service";
 import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-unit-type.service";
 import { APPOINTMENT_STATES_DESCRIPTION, APPOINTMENT_STATES_ID, AppointmentState } from "@turnos/constants/appointment";
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 
 @Component({
 	selector: 'app-home',
@@ -305,6 +306,9 @@ export class HomeComponent implements OnInit {
 				case REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL:
 					this.reportsService.getNominalAppointmentsDetail(params, `${this.REPORT_TYPES[5].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
+				case REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING:
+					this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${this.REPORT_TYPES[6].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
+					break;
 				default:
 			}
 		}
@@ -315,6 +319,15 @@ export class HomeComponent implements OnInit {
 		this.resetForm();
 		if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
 			this.setDatesForNominalDiagnosticImaging();
+		}
+	}
+
+	prepareImageNetworkProductivityFilterDto(): ImageNetworkProductivityFilterDto{
+		return {
+			clinicalSpecialtyId: this.form.controls.specialtyId.value,
+			from: dateToDateDto(new Date(this.form.controls.startDate.value.year(),this.form.controls.startDate.value.month(),this.form.controls.startDate.value.date())),
+			healthcareProfessionalId: this.form.controls.professionalId.value,
+			to: dateToDateDto(new Date(this.form.controls.endDate.value.year(),this.form.controls.endDate.value.month(),this.form.controls.endDate.value.date())),
 		}
 	}
 
@@ -335,7 +348,6 @@ export class HomeComponent implements OnInit {
 		this.setProfessional(null);
 		this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(this.professionals);
 		this.maxEndDate= null;
-		console.log(this.form.value)
 	}
 
 	getDateWithPreviousMonth(isStartDate: boolean) {
