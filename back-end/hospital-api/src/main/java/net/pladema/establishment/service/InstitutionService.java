@@ -23,4 +23,7 @@ public interface InstitutionService {
 	List<InstitutionBasicInfoBo> getVirtualConsultationInstitutions();
 	
 	List<InstitutionBasicInfoBo> getInstitutionsByReferenceByPracticeFilter(Short departmentId, Integer practiceSnomedId, List<Integer> clinicalSpecialtyIds, Integer careLineId);
+
+	List<InstitutionBasicInfoBo> getInstitutionsByManagerUser(Integer userId);
+	
 }

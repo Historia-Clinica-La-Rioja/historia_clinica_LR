@@ -1,5 +1,6 @@
 package net.pladema.establishment.controller;
 
+import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
@@ -165,6 +166,17 @@ public class InstitutionController {
 		var institutions = institutionService.getInstitutionsByReferenceByPracticeFilter(departmentId, practiceSnomedId, clinicalSpecialtyIds, careLineId);
 		var result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
 		logger.trace("result -> {}", result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/by-manager")
+	@PreAuthorize("hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	public ResponseEntity<List<InstitutionBasicInfoDto>> getInstitutionsByManagerUser(){
+		logger.debug("Get institutions by manager user");
+		Integer userId = UserInfo.getCurrentAuditor();
+		List<InstitutionBasicInfoBo> institutions = institutionService.getInstitutionsByManagerUser(userId);
+		List<InstitutionBasicInfoDto> result = institutionMapper.fromListInstitutionBasicInfoBo(institutions);
+		logger.debug("Output -> {}", result);
 		return ResponseEntity.ok(result);
 	}
 	
