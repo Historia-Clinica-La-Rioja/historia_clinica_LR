@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
 	REPORT_TYPES_ID = REPORT_TYPES_ID;
 
 	minDate = MIN_DATE;
+	maxEndDate?: Moment;
 
 	cubeReportData: UIComponentDto;
 
@@ -312,6 +313,29 @@ export class HomeComponent implements OnInit {
 
 	resetCubeReport() {
 		this.cubeReportData = null;
+		if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
+			this.setDatesForNominalDiagnosticImaging();
+		}
+	}
+
+	setDatesForNominalDiagnosticImaging() {
+		this.form.controls.endDate.setValue(this.getDateWithPreviousMonth(false));
+		this.form.controls.startDate.setValue(this.getDateWithPreviousMonth(true));
+		this.maxEndDate = this.form.controls.endDate.value;
+	}
+
+	getDateWithPreviousMonth(isStartDate: boolean) {
+		const today = newMoment();
+		if (this.isLastDayOfTheMonth(today) && !isStartDate) {
+			return dateToMoment(new Date(today.year(), today.month(), 0));
+		}
+		return dateToMoment(new Date(today.year(), today.month() - 1, 1));
+	}
+
+	isLastDayOfTheMonth(date: Moment): boolean {
+		const proximoDia = new Date(date.year(), date.month() - 1, date.date())
+		proximoDia.setDate(proximoDia.getDate() + 1);
+		return date.month() !== proximoDia.getMonth();
 	}
 
 	clearAppointmentStateId(): void {
