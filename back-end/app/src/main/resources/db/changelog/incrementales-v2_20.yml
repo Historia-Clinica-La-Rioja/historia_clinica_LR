@@ -140,3 +140,215 @@ databaseChangeLog:
               constraintName: UQ_document_involved_professional
               tableName: document_involved_professional
 
+    - changeSet:
+        id: createTable-percentiles
+        comment: Create table percentiles
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: percentiles
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_percentiles
+                    name: id
+                    type: int
+                - column:
+                    name: x_value
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: l
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: m
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: s
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd
+                    type: float
+                - column:
+                    name: p3
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p10
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p25
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p50
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p75
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p90
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p97
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: anthropometric_graphic_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: gender_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: time_period_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: gender_id
+              baseTableName: percentiles
+              constraintName: FK_percentiles_gender_id
+              referencedColumnNames: id
+              referencedTableName: gender
+
+    - changeSet:
+        id: createTable-z_score
+        comment: Create table z_score
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: z_score
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_z_score
+                    name: id
+                    type: int
+                - column:
+                    name: x_value
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: l
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: m
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: s
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd
+                    type: float
+                - column:
+                    name: sd3_negative
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd2_negative
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd1_negative
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd0
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd1
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd2
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd3
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: anthropometric_graphic_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: gender_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: time_period_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: gender_id
+              baseTableName: z_score
+              constraintName: FK_z_score_gender_id
+              referencedColumnNames: id
+              referencedTableName: gender
+
+    - changeSet:
+        id: percentiles-load-data
+        comment: Fill table percentiles
+        author: fsimaro
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/load_percentiles.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
+    - changeSet:
+        id: z_score-load-data
+        comment: Fill table z_score
+        author: fsimaro
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/load_z_score.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
