@@ -16,7 +16,7 @@ import {
 	AppFeature,
 	ERole,
 	HierarchicalUnitDto,
-	HierarchicalUnitTypeDto, LicenseNumberTypeDto, ProfessionalDto,
+	HierarchicalUnitTypeDto, LicenseNumberTypeDto,
 	ProfessionalLicenseNumberDto, ProfessionalRegistrationNumbersDto,
 	ProfessionalsByClinicalSpecialtyDto
 } from '@api-rest/api-model';
@@ -44,7 +44,6 @@ export class HomeComponent implements OnInit {
 	public hasError = hasError;
 
 	professionalsTypeahead: TypeaheadOption<ProfessionalRegistrationNumbersDto>[];
-	professionalInitValue: TypeaheadOption<ProfessionalDto>;
 	professionals: ProfessionalRegistrationNumbersDto[] = [];
 	hierarchicalUnitTypesTypeahead: TypeaheadOption<HierarchicalUnitTypeDto>[];
 	hierarchicalUnitsTypeahead: TypeaheadOption<HierarchicalUnitDto>[];
@@ -152,7 +151,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	setSpecialty(professionalsByClinicalSpecialtyDto: ProfessionalsByClinicalSpecialtyDto) {
-		this.professionalInitValue = null;
 		this.idSpecialty = professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id;
 		this.form.controls.specialtyId.setValue(professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id);
 
@@ -167,7 +165,8 @@ export class HomeComponent implements OnInit {
 
 		if (!hierarchicalUnitTypeDto) {
 			this.form.controls.includeHierarchicalUnitDescendants.setValue(false);
-			this.form.controls.hierarchicalUnitId.setValue(null);		}
+			this.form.controls.hierarchicalUnitId.setValue(null);       
+		}
 	}
 
 	public setHierarchicalUnit(hierarchicalUnitDto: HierarchicalUnitDto) {
@@ -313,6 +312,7 @@ export class HomeComponent implements OnInit {
 
 	resetCubeReport() {
 		this.cubeReportData = null;
+		this.resetForm();
 		if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
 			this.setDatesForNominalDiagnosticImaging();
 		}
@@ -322,6 +322,20 @@ export class HomeComponent implements OnInit {
 		this.form.controls.endDate.setValue(this.getDateWithPreviousMonth(false));
 		this.form.controls.startDate.setValue(this.getDateWithPreviousMonth(true));
 		this.maxEndDate = this.form.controls.endDate.value;
+	}
+
+	resetForm(){
+		this.form.controls.endDate.setValue(this.lastDayOfThisMonth());
+		this.form.controls.startDate.setValue(this.firstDayOfThisMonth());
+		this.form.controls.professionalId.setValue(null);
+		this.clearAppointmentStateId();
+		this.setHierarchicalUnitType(null);
+		this.setHierarchicalUnit(null);
+		this.setSpecialty(null);
+		this.setProfessional(null);
+		this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(this.professionals);
+		this.maxEndDate= null;
+		console.log(this.form.value)
 	}
 
 	getDateWithPreviousMonth(isStartDate: boolean) {
