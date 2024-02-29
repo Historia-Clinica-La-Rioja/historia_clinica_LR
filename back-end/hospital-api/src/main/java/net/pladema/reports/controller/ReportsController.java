@@ -201,6 +201,10 @@ public class ReportsController {
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
 		reportDataDto.setRnos(reportDataBo.getRnos());
         Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
+        if (featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA))
+        	context.put("flavor", "mdz");
+		else
+			context.put("flavor", "pba");
 
         LOG.debug(OUTPUT, reportDataDto);
 

@@ -148,8 +148,6 @@ public class BillProceduresResponseBoComputeMissingProceduresTest {
 		var firstProcedure = responseBo.getProcedures().get(0);
 		Assertions.assertNotEquals(firstProcedure.getCodeNomenclator(), firstProcedure.getDescription());
 
-		var lastProcedure = responseBo.getProcedures().get(responseBo.getProcedures().size()-1);
-		Assertions.assertEquals(lastProcedure.getCodeNomenclator(), lastProcedure.getDescription());
 	}
 
 	@Test

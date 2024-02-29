@@ -17,7 +17,6 @@ public class BillProceduresExternalService {
 	private final BillProcedures billProcedures;
 
 	public BillProceduresResponseDto getBilledProcedures(BillProceduresRequestDto request) throws BillProceduresExternalServiceException {
-
 		try {
 			return BillProceduresResponseDto.fromBo(billProcedures.run(request.toBo()));
 		} catch (BillProceduresException e) {
