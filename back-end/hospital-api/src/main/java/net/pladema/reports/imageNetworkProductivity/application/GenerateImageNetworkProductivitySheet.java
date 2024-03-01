@@ -99,7 +99,7 @@ public class GenerateImageNetworkProductivitySheet {
 		List<CellContent> result = new ArrayList<>();
 
 		String technicianFullName = personService.getCompletePersonNameById(data.getTechnicianPersonId()).toUpperCase();
-		String informerFullName = personService.getCompletePersonNameById(data.getInformerPersonId()).toUpperCase();
+		String informerFullName = data.getInformerPersonId() != null ? personService.getCompletePersonNameById(data.getInformerPersonId()).toUpperCase() : EMPTY_CELL;
 		String requestProfessionalFullName = getRequestProfessionalFullName(data);
 
 		result.add(new CellContent(rowNumber.get(), 0,1, 1, parseNullableAttribute(institutionData.getStateName()), basicStyle));
@@ -134,7 +134,7 @@ public class GenerateImageNetworkProductivitySheet {
 	}
 
 	private String getRequestProfessionalFullName(CellDataBo data) {
-		return data.getNonTranscribedRequestProfessionalPersonId() != null ? personService.getCompletePersonNameById(data.getNonTranscribedRequestProfessionalPersonId()).toUpperCase() : data.getTranscribedRequestProfessional().toUpperCase();
+		return data.getNonTranscribedRequestProfessionalPersonId() != null ? personService.getCompletePersonNameById(data.getNonTranscribedRequestProfessionalPersonId()).toUpperCase() : data.getTranscribedRequestProfessional() != null ? data.getTranscribedRequestProfessional().toUpperCase() : EMPTY_CELL;
 	}
 
 	private String parsePhoneData(String prefix, String number) {
