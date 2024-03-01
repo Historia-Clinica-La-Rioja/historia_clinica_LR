@@ -123,8 +123,8 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
 			validDate: newDate(),
 			condition: this.prepagaForm.value.condition,
-			startDate: this.prepagaForm.value.startDate,
-			endDate: this.prepagaForm.value.endDate,
+			startDate: this.prepagaForm.value.startDate.toDate(),
+			endDate: this.prepagaForm.value.endDate.toDate(),
 			planId: this.prepagaForm.value.plan,
 			planName: this.plans.filter(data => data.id == this.prepagaForm.value.plan).map(medicalCoveragePlan => (medicalCoveragePlan.plan))[0],
 			active: true

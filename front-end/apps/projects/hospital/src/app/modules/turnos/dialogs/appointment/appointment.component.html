@@ -168,7 +168,7 @@
 					<div fxLayout="column" class="assigned-by"
 						*ngIf="data.appointmentData.professionalPersonDto else bookingAppointment">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn
+						<span>{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn.toString() | isoToDate
 							|  dateFormat: 'datetime'}}</span>
 					</div>
 					<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start">
@@ -315,7 +315,7 @@
 
 
 				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
-					<span class="mat-body-strong strong-size" 
+					<span class="mat-body-strong strong-size"
 						*ngIf="absentMotive || !hideAbsentMotiveForm">
 						{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}
 					</span>
@@ -355,10 +355,10 @@
 						</div>
 					</form>
 				</div>
-				
+
 			</section>
 
-			<section id="observation-section" class="observation-section"> 
+			<section id="observation-section" class="observation-section">
 				<div *ngIf="!observation && hideObservationForm && hideObservationTitle && !isRejectedPatient && (( hasRoleAdmin$ | async ) || agendaOwner || attachProfessional )">
 					<a class="mat-body" (click)="setHideObservationForm(false); setHideObservationTitle(false)">
 						{{'turnos.appointment.observations.ADD_OBSERVATION' | translate}}

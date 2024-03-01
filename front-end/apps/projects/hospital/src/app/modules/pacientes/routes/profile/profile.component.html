@@ -92,7 +92,7 @@
 									<div fxLayout="row" fxLayoutGap="5px">
 										<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
 										<span *ngIf="userData.lastLogin else noInformation">
-											{{userData.lastLogin | dateFormat: 'datetime'}}
+											{{userData.lastLogin.toString() | isoToDate | dateFormat: 'datetime'}}
 										</span>
 									</div>
 									<div fxLayout="row">

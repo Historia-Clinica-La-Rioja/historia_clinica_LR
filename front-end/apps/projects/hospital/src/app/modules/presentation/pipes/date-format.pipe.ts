@@ -19,14 +19,13 @@ export class DateFormatPipe implements PipeTransform {
 		if (!paramDate) {
 			return undefined;
 		}
-		const date = new Date(paramDate);
 		switch (type) {
 			case 'date':
-				return this.currentLang === 'es-AR' ? dateToViewDate(date) : this.datePipe.transform(date, DatePipeFormat.SHORT_DATE)
+				return this.currentLang === 'es-AR' ? dateToViewDate(paramDate) : this.datePipe.transform(paramDate, DatePipeFormat.SHORT_DATE)
 			case 'datetime':
-				return this.currentLang === 'es-AR' ? dateTimeToViewDateHourMinute(date) : this.datePipe.transform(date, DatePipeFormat.SHORT);
+				return this.currentLang === 'es-AR' ? dateTimeToViewDateHourMinute(paramDate) : this.datePipe.transform(paramDate, DatePipeFormat.SHORT);
 			case 'time':
-				return this.currentLang === 'es-AR' ? timeToHourMinute(date) : this.datePipe.transform(date, DatePipeFormat.SHORT_TIME);
+				return this.currentLang === 'es-AR' ? timeToHourMinute(paramDate) : this.datePipe.transform(paramDate, DatePipeFormat.SHORT_TIME);
 			default:
 				return undefined;
 		}

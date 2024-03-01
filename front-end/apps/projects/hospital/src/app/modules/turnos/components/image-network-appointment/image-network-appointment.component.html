@@ -33,7 +33,7 @@
 					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
 						<span class="mat-body subtitle-size medical-order-description" *ngIf="medicalOrder else noInfo"
 							matTooltip="{{medicalOrder.displayText | titlecase}}">
-							<a mat-button color="primary" (click)="downloadMedicalOrder(medicalOrder)" 
+							<a mat-button color="primary" (click)="downloadMedicalOrder(medicalOrder)"
 								class="download-link">{{medicalOrder.displayText | titlecase}}</a>
 						</span>
 					</div>
@@ -160,7 +160,7 @@
 						*ngIf="data.appointmentData.professionalPersonDto else bookingAppointment"
 						data-id="assignment-professional">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}
-							{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn |
+							{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn.toString() | isoToDate |
 							dateFormat:'datetime'}}</span>
 					</div>
 				</div>
@@ -220,7 +220,7 @@
 
 
 				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
-					<span class="mat-body-strong strong-size" 
+					<span class="mat-body-strong strong-size"
 						*ngIf="absentMotive || !hideAbsentMotiveForm">
 						{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}
 					</span>
