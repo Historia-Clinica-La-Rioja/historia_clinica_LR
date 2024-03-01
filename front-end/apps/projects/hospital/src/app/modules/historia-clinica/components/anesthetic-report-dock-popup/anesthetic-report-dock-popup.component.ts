@@ -68,6 +68,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     vitalSignsForm: FormGroup;
     
     isVitalSignSectionEmpty = true;
+    isMeasuringPointSectionEmpty = true;
 
     collapsedAnthropometricDataSection = true;
     collapsedClinicalEvaluationSection = true;
@@ -150,14 +151,11 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
     private checkVitalSignSectionEmptyness() {
         this.vitalSignsForm.valueChanges.subscribe(() => {
-            if (this.isVitalSignSectionEmpty){
-                this.isVitalSignSectionEmpty = this.checkVitalSignsEmptyness();
-            }
+            this.isVitalSignSectionEmpty = this.checkVitalSignsEmptyness();
+
           });
         this.anestheticReportVitalSignsService.isEmpty$.subscribe(isEmpty => {
-            if (this.isVitalSignSectionEmpty){
-                this.isVitalSignSectionEmpty = isEmpty;
-            }
+            this.isMeasuringPointSectionEmpty = isEmpty;
         })
     }
     

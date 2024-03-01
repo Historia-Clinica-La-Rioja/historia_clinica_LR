@@ -486,6 +486,7 @@
 				"SURGERY_START": "Comienzo cirugía",
 				"SURGERY_END": "Fin cirugía",
 				"SUCCESS_ADD": "Punto de medición registrado correctamente",
+				"SUCCESS_EDIT": "Punto de medición editado correctamente",
 				"measuring-point": {
 					"ADD_MEASURING_POINT": "Agregar nuevo punto de medición",
 					"REGISTERED_MEASURING_POINTS": "Puntos de medición registrados",
@@ -497,7 +498,8 @@
 					"SATURATION": "Saturación O2",
 					"END_TIDAL": "End Tidal CO2",
 					"REGISTER": "Registrar punto de medición",
-					"MEDITION": "Medición"
+					"MEDITION": "Medición",
+					"EDIT_MEASURING_POINT": "Editar punto de medición"
 				},
 				"registered-point": {
 					"MAX_BLOOD_PRESSURE": "TA Max:",

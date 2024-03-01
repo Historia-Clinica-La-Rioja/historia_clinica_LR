@@ -39,7 +39,7 @@ export class AnestheticReportVitalSignsService {
     constructor(
 		private readonly translateService: TranslateService,
         private readonly snackBarService: SnackBarService,
-    ) { 
+    ) {
         this.form = new FormGroup<MeasuringPointForm>({
             measuringPointStartDate: new FormControl(null),
             measuringPointStartTime: new FormControl(null),
@@ -51,7 +51,7 @@ export class AnestheticReportVitalSignsService {
         });
 
         this.handleFormChanges();
-        
+
         this.posibleTimes = this.generateInitialTimes();
     }
 
@@ -151,6 +151,9 @@ export class AnestheticReportVitalSignsService {
                 (errorMsg: string) => this.bloodPressureMaxSource.next(errorMsg)
             );
         }
+        else {
+            this.bloodPressureMaxSource.next();
+        }
     }
 
     private checkPulseErrors() {
@@ -228,6 +231,7 @@ export class AnestheticReportVitalSignsService {
     remove(index: number) : void {
 		this.measuringPoints = removeFrom<MeasuringPointData>(this.measuringPoints, index);
 		this.measuringPointsSource.next(this.measuringPoints);
+        this.isEmptySource.next(!this.measuringPoints.length);
 	}
 
     private registerMeasuringPoint() {
@@ -252,6 +256,12 @@ export class AnestheticReportVitalSignsService {
         this.form.controls.pulse.setValue(null);
         this.form.controls.saturation.setValue(null);
         this.form.controls.endTidal.setValue(null);
+    }
+
+    editMeasuringPoint(measuringPoint: MeasuringPointData, index: number){
+        this.measuringPoints.splice(index, 1, measuringPoint);
+        this.measuringPointsSource.next(this.measuringPoints);
+        this.snackBarService.showSuccess('internaciones.anesthesic-report.vital-signs.SUCCESS_EDIT');
     }
 
     getPossibleTimesList(): TimeDto[] {

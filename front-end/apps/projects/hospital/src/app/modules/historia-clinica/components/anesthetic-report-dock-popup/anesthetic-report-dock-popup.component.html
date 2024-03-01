@@ -148,7 +148,7 @@
 
         <app-new-consultation-expansion-section id="vital-signs-expansion-section"
             [title]="'internaciones.anesthesic-report.vital-signs.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="isVitalSignSectionEmpty" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="isVitalSignSectionEmpty && isMeasuringPointSectionEmpty" [hideBorder]="false">
             <app-anesthetic-report-vital-signs [service]="anestheticReportVitalSignsService">
                 <ng-container vital-signs-form>
 
