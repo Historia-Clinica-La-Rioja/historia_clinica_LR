@@ -113,9 +113,9 @@ databaseChangeLog:
                       nullable: false
                     name: week_day_id
                     type: smallint
-                - addPrimaryKey:
-                    clustered: true
-                    columnNames: unsatisfied_appointment_demand_id, week_day_id
-                    constraintName: PK_unsatisfied_appointment_demand_day
-                    tableName: unsatisfied_appointment_demand_day
-                    validate: true
+          - addPrimaryKey:
+              clustered: true
+              columnNames: unsatisfied_appointment_demand_id, week_day_id
+              constraintName: PK_unsatisfied_appointment_demand_day
+              tableName: unsatisfied_appointment_demand_day
+              validate: true
