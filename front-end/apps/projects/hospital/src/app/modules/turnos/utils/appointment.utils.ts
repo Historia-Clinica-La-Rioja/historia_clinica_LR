@@ -181,3 +181,17 @@ export function getHourFromString(value: string): RegExpMatchArray {
 }
 
 export const MAX_APPOINTMENT_PER_HOUR = 4;
+
+export function getStudiesNames(studies: string[] , titleOrder: string) {
+    let partialStudies = [...studies]
+    let firstElement = partialStudies.shift()
+    let firstStudiesNames = ` ${titleOrder} - ${firstElement}`
+    let studiesPartial = ''
+    if (partialStudies.length > 0) {
+        partialStudies.forEach(study => {
+            studiesPartial = studiesPartial + `, ${study} `
+        })
+    }
+    return firstStudiesNames + studiesPartial
+}
+

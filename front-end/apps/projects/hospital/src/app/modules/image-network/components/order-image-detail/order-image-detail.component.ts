@@ -39,4 +39,5 @@ export interface DetailOrderImage extends AppointmentOrderDetailImageDto {
   studyName: string,
   hasOrder: boolean,
   patient?: string
+  studiesNames?: string,
 }

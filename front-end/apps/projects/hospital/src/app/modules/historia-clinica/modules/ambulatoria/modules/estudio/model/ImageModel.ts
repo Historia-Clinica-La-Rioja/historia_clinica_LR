@@ -21,6 +21,7 @@ export interface InfoNewTypeOrderDto {
 	status?: boolean;
 	isAvailableInPACS?: boolean;
 	viewReport?: boolean;
+	associatedStudies?: string[];
 }
 
 

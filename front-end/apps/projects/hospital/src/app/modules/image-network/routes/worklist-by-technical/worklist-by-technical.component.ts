@@ -32,6 +32,7 @@ import { DownloadTranscribedOrderComponent } from '../../dialogs/download-transc
 import { ViewPdfBo } from '@presentation/dialogs/view-pdf/view-pdf.service';
 import { newDate } from '@core/utils/moment.utils';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { toStudyLabel } from '../../utils/study.utils';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -81,6 +82,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 	fetchingData = false;
 
 	readonly appointmentStatesId = APPOINTMENT_STATES_ID;
+
 
 	constructor(private readonly equipmentService: EquipmentService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -292,6 +294,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 				reportStatus: this.getReportStatus(appointment.reportStatusId),
 				patientFullName: this.patientNameService.completeName(appointment.patient.person.firstName, appointment.patient.person.nameSelfDetermination, appointment.patient.person.lastName, appointment.patient.person.middleNames, appointment.patient.person.otherLastNames),
 				canBeDerived: appointment.reportStatusId === this.reportStates.PENDING,
+				studiesFullName: toStudyLabel(appointment.studies.join(','))
 			}
 		})
 	}
@@ -320,6 +323,7 @@ export class WorklistByTechnicalComponent implements OnInit {
             isTranscribed: !appointment.serviceRequestId && !!appointment.studyName,
             hasOrder: !!appointment.serviceRequestId,
             patient: patientFullName,
+			studies: appointment.studies.join(', ')
         }
 		const dialogRef = this.dialog.open(FinishStudyComponent, {
 			width: '38%',
@@ -428,4 +432,5 @@ export interface detailedAppointment {
 	reportStatus: ReportState,
 	patientFullName: string,
 	canBeDerived: boolean,
+	studiesFullName: string,
 }

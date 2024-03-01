@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SnomedDto, SnomedECL, TranscribedServiceRequestDto } from '@api-rest/api-model';
 import { HCEHealthConditionDto } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -9,6 +9,9 @@ import { PrescripcionesService } from '@historia-clinica/modules/ambulatoria/ser
 import { TranslateService } from '@ngx-translate/core';
 import { TranscribedOrderInfoEdit } from '@turnos/components/medical-order-input/medical-order-input.component';
 import { Observable, map, of, switchMap } from 'rxjs';
+import { TranscribedStudyComponent } from '../transcribed-study/transcribed-study.component';
+import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
+import { getStudiesNames } from '@turnos/utils/appointment.utils';
 
 @Component({
     selector: 'app-equipment-transcribe-order-popup',
@@ -28,10 +31,12 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
     selectedFilesShow: any[] = [];
     filesExtension = false;
     allowedExtensions = ['jpg','jpeg','png','pdf'];
+    associatedStudies: SnomedDto[] = [];
 
     constructor(
         public dialogRef: MatDialogRef<EquipmentTranscribeOrderPopupComponent>,
         @Inject(MAT_DIALOG_DATA) public data: TranscribedOrderInfoEdit,
+        private readonly dialog: MatDialog,
         private readonly formBuilder: FormBuilder,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly prescriptionService: PrescripcionesService,
@@ -40,7 +45,6 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
     ngOnInit(): void {
         this.transcribeOrderForm = this.formBuilder.group<TranscribedFormModel>({
-            study: new FormControl (null, Validators.required),
             assosiatedProblem: new FormControl (null, Validators.required),
             professional: new FormControl (null, Validators.required),
             institution: new FormControl (null, Validators.required),
@@ -57,12 +61,12 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         this.getPatientHealthProblems();
     }
 
-    private setFormValues(order){
-        this.transcribeOrderForm.controls.study.setValue(order.study.pt)
+    private setFormValues(order:InfoTranscribeOrderPopup){
         this.transcribeOrderForm.controls.assosiatedProblem.setValue(order.problem.pt)
         this.transcribeOrderForm.controls.professional.setValue(order.professional)
         this.transcribeOrderForm.controls.institution.setValue(order.institution)
         this.transcribeOrderForm.controls.observations.setValue(order.observations)
+        this.associatedStudies = order.associatedStudies
     }
 
     private getPatientHealthProblems() {
@@ -77,6 +81,8 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 		});
     }
 
+  
+
     saveOrder() {
         let orderProfessionalName = this.transcribeOrderForm.controls.professional?.value;
         let orderInstitutionName = this.transcribeOrderForm.controls.institution?.value;
@@ -84,7 +90,7 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         this.checkForOrderDeletion();
 
         let transcribedData: TranscribedServiceRequestDto = {
-			study: this.selectedStudy,
+            diagnosticReports: this.associatedStudies,
 			healthCondition: this.selectedProblem,
 			healthcareProfessionalName: orderProfessionalName,
 			institutionName: orderInstitutionName,
@@ -100,9 +106,10 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
                     transcribeOrder: transcribedOrderContext.contextInfo,
                     order: {
                         serviceRequestId: transcribedOrderContext.contextInfo.serviceRequestId,
-                        studyName: this.selectedStudy.pt,
-                        displayText: `${transcribedOrderContext.title} - ${this.selectedStudy.pt}`,
-                        isTranscribed: true
+                        studyName: null,
+                        displayText: getStudiesNames(this.associatedStudies.map(study => study.pt), transcribedOrderContext.title),
+                        isTranscribed: true,
+                        associatedStudies: this.associatedStudies
                     }
                 })
             })
@@ -118,14 +125,14 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
             .pipe(map(translatedText => {
                 return {
                     contextInfo: {
-                        study: this.selectedStudy,
                         serviceRequestId: serviceRequestId,
                         problem: this.selectedProblem,
                         professional: orderProfessional,
                         institution: orderInstitution,
                         selectedFiles: this.selectedFiles,
                         selectedFilesShow: this.selectedFilesShow,
-                        observations: orderObservations
+                        observations: orderObservations,
+                        associatedStudies: this.associatedStudies
                     },
                     title: translatedText
                 }
@@ -156,9 +163,10 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 
 
     isFormValid(): boolean {
+        const baseValidation = this.transcribeOrderForm.valid && this.associatedStudies.length > 0
         if (this.selectedFiles.length > 0)
-            return !this.filesExtension && this.transcribeOrderForm.valid
-        return this.transcribeOrderForm.valid
+            return !this.filesExtension && baseValidation
+        return baseValidation
     }
 
     onFileSelected($event){
@@ -176,10 +184,6 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         this.checkFileExtensions();
 	}
 
-    handleStudySelected(study) {
-		this.selectedStudy = study;
-		this.transcribeOrderForm.controls.study.setValue(this.getStudyDisplayName());
-	}
 
     handleProblemSelected(problem) {
 		this.selectedProblem = problem;
@@ -194,14 +198,29 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
 		return this.selectedProblem?.pt;
 	}
 
-    resetStudySelector() {
-        this.selectedStudy = null;
-        this.transcribeOrderForm.controls.study.setValue(null);
-    }
 
     resetProblemSelector() {
         this.selectedProblem = null;
         this.transcribeOrderForm.controls.assosiatedProblem.setValue(null);
+    }
+
+    addStudy() {
+        this.dialog.open(TranscribedStudyComponent, {
+            autoFocus: false,
+            width: '30%',
+            disableClose: true,
+        }).afterClosed().subscribe(
+            snomed => {
+                if (snomed) {
+                    this.associatedStudies = pushIfNotExists<any>(this.associatedStudies, snomed,
+                        (first:SnomedDto , second: SnomedDto) => first.sctid === second.sctid );
+                }
+            }
+        )
+    }
+
+    removeStudy(index: number) {
+        this.associatedStudies = removeFrom<SnomedDto>(this.associatedStudies, index);
     }
 }
 
@@ -212,7 +231,7 @@ export interface TranscribeOrderPopupContext {
 }
 
 export interface InfoTranscribeOrderPopup {
-    study: SnomedDto
+    study?: SnomedDto
     serviceRequestId: number
     problem: SnomedDto
     professional: string
@@ -220,10 +239,10 @@ export interface InfoTranscribeOrderPopup {
     selectedFiles: File[]
     selectedFilesShow: File[]
     observations: string
+    associatedStudies?: SnomedDto[],
 }
 
 export interface TranscribedFormModel {
-    study:  FormControl<string>;
     assosiatedProblem: FormControl<string>,
     professional: FormControl<string>,
     institution:  FormControl<string>,

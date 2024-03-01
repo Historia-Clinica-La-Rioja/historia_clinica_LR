@@ -1,0 +1,12 @@
+<div *ngFor="let study of studyList; index as i; last as isLastElement">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+        <div>
+            <span>{{ study.pt | titlecase }}</span>
+        <ng-container>
+            <button mat-icon-button color="warn" (click)="executeRemove(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </ng-container>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLastElement"></mat-divider>
+</div>

@@ -21,6 +21,7 @@ import {
 	TranscribedServiceRequestSummaryDto,
 	EAppointmentModality,
 	AppFeature,
+	SnomedDto,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -48,6 +49,8 @@ import { TranscribedOrderService } from '@turnos/services/transcribed-order.serv
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.utils';
+import { toTranscribedServiceRequestSummaryDto } from '@turnos/utils/appointment-mapper';
+import { getStudiesNames } from '@turnos/utils/appointment.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -550,8 +553,8 @@ export class NewAppointmentComponent implements OnInit {
 			transcribedOrders.map(medicalOrder => {
 				this.patientMedicalOrders.push({
 					serviceRequestId: medicalOrder.serviceRequestId,
-					studyName: medicalOrder.studyName,
-					displayText: `${translatedText} - ${medicalOrder.studyName}`,
+					studyName: null,
+					displayText: getStudiesNames(medicalOrder.diagnosticReports.map(study => study.pt) , translatedText),
 					isTranscribed: true
 				})
 			}).filter(value => value !== null && value !== undefined);
@@ -623,7 +626,8 @@ export class NewAppointmentComponent implements OnInit {
 			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
 			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id,
 			...(this.data.expiredAppointment && { expiredReasonId: this.expiredAppointmentForm.value.id }),
-			...(this.data.expiredAppointment && { expiredReasonText: this.expiredAppointmentForm.value.motive })
+			...(this.data.expiredAppointment && { expiredReasonText: this.expiredAppointmentForm.value.motive }),
+			transcribedOrderData: toTranscribedServiceRequestSummaryDto(this.appointmentInfoForm.controls.medicalOrder.get('appointmentMedicalOrder').value)
 		};
 	}
 }
@@ -651,6 +655,7 @@ export interface medicalOrderInfo {
 	displayText: string,
 	isTranscribed: boolean,
 	coverageDto?: PatientMedicalCoverageDto,
+	associatedStudies?: SnomedDto[]
 }
 enum Steps {
 	MODALITY = 0,

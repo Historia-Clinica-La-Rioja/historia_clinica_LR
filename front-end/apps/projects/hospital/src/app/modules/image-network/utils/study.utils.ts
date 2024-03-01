@@ -22,3 +22,7 @@ export function mapToState(statusId: number): State {
 export function getImageSizeInMB(sizeInBytes: number): String {
 	return sizeInBytes ? (sizeInBytes / (1024 * 1024)).toFixed(2) : null
 }
+
+
+ export const toStudyLabel = (studies: string): string => studies.split(',').length > 1 ? `${ studies.split(',').at(0)} ...`
+	: `${ studies.split(',').at(0)}`

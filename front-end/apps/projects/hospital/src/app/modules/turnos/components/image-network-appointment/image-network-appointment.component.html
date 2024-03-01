@@ -34,7 +34,7 @@
 						<span class="mat-body subtitle-size medical-order-description" *ngIf="medicalOrder else noInfo"
 							matTooltip="{{medicalOrder.displayText | titlecase}}">
 							<a mat-button color="primary" (click)="downloadMedicalOrder(medicalOrder)"
-								class="download-link">{{medicalOrder.displayText | titlecase}}</a>
+								class="download-link">{{transcribedLabelOrder | titlecase}}</a>
 						</span>
 					</div>
 				</div>
@@ -71,6 +71,8 @@
 
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
+
+					
 					<app-medical-order-input [patientMedicalOrders]="patientMedicalOrders"
 						[patientId]="data.appointmentData.patient.id" [disabled]="!canOrderBeEdited"
 						(selectionChange)="setAsociatedCoverageData($event)"></app-medical-order-input>
@@ -95,6 +97,7 @@
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
+
 					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 						<mat-form-field fxFlex="30%" appearance="outline">
 							<mat-label>{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate}}</mat-label>

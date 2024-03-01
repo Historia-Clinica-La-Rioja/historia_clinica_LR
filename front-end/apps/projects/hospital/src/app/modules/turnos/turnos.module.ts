@@ -63,6 +63,8 @@ import { EquipmentAppointmentsFacadeService } from './services/equipment-appoint
 import { PracticesPipe } from './pipes/practices.pipe';
 import { ShowAppointmentOverTurnPipe } from './pipes/show-appointment-over-turn.pipe';
 import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
+import { TranscribedStudyComponent } from './dialogs/transcribed-study/transcribed-study.component';
+import { StudyListTranscribedComponent } from './components/study-list-transcribed/study-list-transcribed.component';
 
 @NgModule({
 	declarations: [
@@ -112,6 +114,8 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		PracticesPipe,
 		ShowAppointmentOverTurnPipe,
 		ShowTimeSlotDetailsPipe,
+  TranscribedStudyComponent,
+  StudyListTranscribedComponent,
 	],
 	imports: [
 		CommonModule,

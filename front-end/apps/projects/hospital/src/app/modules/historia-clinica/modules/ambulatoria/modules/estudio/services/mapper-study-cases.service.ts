@@ -24,6 +24,17 @@ constructor() { }
 		}
 	}
 
+	mapToInfoNewTypeOrderTranscribedDto(source: StudyTranscribedOrderReportInfoDto): InfoNewTypeOrderDto {
+		return {
+			imageId: source.imageId,
+			hceDocumentDataDto: source.hceDocumentDataDto,
+			status: source.status,
+			isAvailableInPACS: source.isAvailableInPACS,
+			viewReport: source.viewReport,
+			associatedStudies: source.diagnosticReports
+		}
+	}
+
 	mapToInfoStudyTypeOrderDto(source: StudyOrderReportInfoDto): InfoNewStudyOrderDto {
 		return {
 			imageId: source.imageId,
@@ -31,7 +42,7 @@ constructor() { }
 			status: source.status,
 			isAvailableInPACS: source.isAvailableInPACS,
 			viewReport: source.viewReport,
-			hasActiveAppointment: source.hasActiveAppointment
+			hasActiveAppointment: source.hasActiveAppointment,
 		}
 	}
 
@@ -52,7 +63,7 @@ constructor() { }
 			sourceId: null,
 			statusId: transcripta.status ? STUDY_STATUS.FINAL.id : STUDY_STATUS.REGISTERED.id,
 			typeOrder: E_TYPE_ORDER.TRANSCRIPTA,
-			infoOrderInstances: this.mapToInfoNewTypeOrderDto(transcripta)
+			infoOrderInstances: this.mapToInfoNewTypeOrderTranscribedDto(transcripta)
 	}})
 	}
 

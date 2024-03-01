@@ -1,5 +1,5 @@
 <div id="main-container" fxLayout="column" fxLayoutGap="15px">
-    <h2>{{detailOrder.studyName | titlecase}}</h2>
+    <h2> {{ 'image-network.worklist.details_study.DETAIL_ORDER' | translate | titlecase }}</h2>
     <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="12px">
         <span class="grey">
             {{detailOrder.patient | titlecase}}
@@ -10,7 +10,11 @@
         <app-image-order-coloredIconText-cases *ngIf="!detailOrder.hasOrder" id="colored-type-order" class="hide-overflow" [descriptionCases]="currentTypeOrder">
         </app-image-order-coloredIconText-cases>
     </div>
-    <div  *ngIf="detailOrder.healthCondition" fxLayout="column" fxLayoutGap="12px" id="order-info">
+    <div  fxLayout="column" fxLayoutGap="12px" id="order-info-studies">
+        <app-identifier-cases [position]="position" [showLegend]="false" [description]="detailOrder.studiesNames| titlecase"
+            [identifierCase]="identifierCases.PRACTICE" id="studies"></app-identifier-cases>
+    </div>
+    <div  *ngIf="detailOrder.healthCondition" fxLayout="column" fxLayoutGap="12px" id="order-info-problem">
         <app-identifier-cases [position]="position" [showLegend]="true" [description]="detailOrder.healthCondition"
             [identifierCase]="identifierCases.PROBLEM" id="problem"></app-identifier-cases>
     </div>

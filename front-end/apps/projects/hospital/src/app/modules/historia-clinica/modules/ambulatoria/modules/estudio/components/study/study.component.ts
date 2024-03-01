@@ -60,6 +60,7 @@ export class StudyComponent implements OnInit {
 
 	private sameOrderStudies: Map<Number, StudyInformation[]>;
 
+
 	constructor(
 		private readonly prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
@@ -72,6 +73,7 @@ export class StudyComponent implements OnInit {
 
 	contentBuilder(diagnosticReport: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): Content {
 		const reportImageCase = diagnosticReport as DiagnosticWithTypeReportInfoDto
+		const associatedStudiesTranscribed: string[] = reportImageCase.infoOrderInstances?.associatedStudies?.map(study => capitalize(study))
 		const prescriptionStatus =  diagnosticReport.statusId ? this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId) :
 		this.prescripcionesService.renderStatusDescriptionStudyImage(reportImageCase.infoOrderInstances.status)
 		const updateDate = diagnosticReport.creationDate;
@@ -81,7 +83,7 @@ export class StudyComponent implements OnInit {
 				description: prescriptionStatus,
 				cssClass: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? 'red' : 'blue'
 			},
-			description: capitalize(diagnosticReport.snomed.pt),
+			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(', ') : capitalize(diagnosticReport.snomed.pt),
 			extra_info: diagnosticReport.healthCondition ? [{
 				title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
 				content:  diagnosticReport.healthCondition.snomed.pt,

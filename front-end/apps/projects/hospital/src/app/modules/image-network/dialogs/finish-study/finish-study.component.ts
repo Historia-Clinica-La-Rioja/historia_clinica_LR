@@ -42,6 +42,7 @@ export class FinishStudyComponent  implements OnInit {
 			map(orderDetail =>{ return { ...orderDetail ,
 				studyName: this.data.studyName,
 				hasOrder: this.data.hasOrder,
+				studiesNames: this.data.studies,
 				creationDate:  orderDetail.creationDate ? new Date(orderDetail.creationDate) : null,
 				patient:this.data.patient
 			}}))
@@ -108,4 +109,5 @@ export interface StudyInfo {
 	appointmentId: number,
 	patientId: number,
 	patient?: string
+	studies?: string;
 }

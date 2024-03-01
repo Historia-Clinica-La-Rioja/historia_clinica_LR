@@ -47,11 +47,12 @@ import { PatientAppointmentInformation } from '@turnos/dialogs/appointment/appoi
 import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
-import { toCalendarEvent } from '../../utils/appointment.utils';
+import { getStudiesNames, toCalendarEvent } from '../../utils/appointment.utils';
 import { medicalOrderInfo } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { differenceInDays } from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
+import { toStudyLabel } from '../../../image-network/utils/study.utils';
 
 const BELL_LABEL = 'Llamar paciente'
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
@@ -59,7 +60,6 @@ const ROLES_TO_EDIT: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
 const MEDICAL_ORDER_PENDING_STATUS = '1';
 const MEDICAL_ORDER_CATEGORY_ID = '363679005'
 const ORDER_EXPIRED_DAYS = 30;
-
 @Component({
 	selector: 'app-image-network-appointment',
 	templateUrl: './image-network-appointment.component.html',
@@ -117,6 +117,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	nameSelfDeterminationFF = false;
 	patientSummary: PatientSummary;
+	transcribedLabelOrder:string
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -303,10 +304,11 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		this.translateService.get(text).subscribe(translatedText => {
 			this.medicalOrder = {
 				serviceRequestId: order.serviceRequestId,
-				studyName: order.studyName,
-				displayText: `${translatedText} - ${order.studyName}`,
+				studyName: null,
+				displayText: getStudiesNames(order.diagnosticReports.map(study => study.pt) , translatedText),
 				isTranscribed: true
 			}
+			this.transcribedLabelOrder = toStudyLabel(this.medicalOrder.displayText)
 		})
 	}
 
@@ -336,8 +338,8 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			transcribedOrders.map(medicalOrder => {
 				this.patientMedicalOrders.push({
 					serviceRequestId: medicalOrder.serviceRequestId,
-					studyName: medicalOrder.studyName,
-					displayText: `${translatedText} - ${medicalOrder.studyName}`,
+					studyName: null,
+					displayText: getStudiesNames(medicalOrder.diagnosticReports.map(study => study.pt) , translatedText),
 					isTranscribed: true
 				})
 			}).filter(value => value !== null && value !== undefined);
@@ -525,6 +527,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	private setMedicalOrder() {
 		this.medicalOrder = this.formEdit.get('medicalOrder').get('appointmentMedicalOrder').value;
+		this.transcribedLabelOrder = toStudyLabel(this.medicalOrder.displayText)
 		let parameters = {
 			appointmentId: this.data.appointmentData.appointmentId,
 			serviceRequestId: this.medicalOrder ? this.medicalOrder.serviceRequestId : null,
