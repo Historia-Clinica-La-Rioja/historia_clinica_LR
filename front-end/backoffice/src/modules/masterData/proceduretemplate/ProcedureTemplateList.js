@@ -5,8 +5,18 @@ import {
     TextField,
     NumberField,
     EditButton,
-    DeleteButton
+    SelectField,
+    useRecordContext
 } from 'react-admin';
+import UpdateStatusButton from './UpdateStatusButton';
+import { STATUS_CHOICES, procedureTemplateIsUpdateable } from './ProcedureTemplateStatus';
+
+const ConditionalEdit = props => {
+    const record = useRecordContext(props);
+    if (procedureTemplateIsUpdateable(record.statusId))
+        return <EditButton {...props}/>;
+    return null;
+}
 
 const ProcedureTemplateList = props => (
     <List 
@@ -19,8 +29,9 @@ const ProcedureTemplateList = props => (
         <Datagrid rowClick="show">
             <NumberField source="id"/>
             <TextField source="description"/>
-            <EditButton/>
-            <DeleteButton/>
+            <SelectField source="statusId" choices={STATUS_CHOICES}/>
+            <ConditionalEdit/>
+            <UpdateStatusButton/>
         </Datagrid>
     </List>
 );

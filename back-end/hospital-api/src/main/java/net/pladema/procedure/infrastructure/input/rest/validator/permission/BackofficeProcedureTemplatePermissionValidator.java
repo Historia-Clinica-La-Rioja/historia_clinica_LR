@@ -17,7 +17,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class BackofficeProcedureTemplateValidator implements BackofficePermissionValidator<ProcedureTemplate, Integer> {
+public class BackofficeProcedureTemplatePermissionValidator implements BackofficePermissionValidator<ProcedureTemplate, Integer> {
 
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 

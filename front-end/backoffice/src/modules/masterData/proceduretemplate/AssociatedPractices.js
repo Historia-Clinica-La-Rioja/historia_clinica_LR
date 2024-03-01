@@ -8,6 +8,7 @@ import {
 } from 'react-admin';
 import SectionTitle from '../../components/SectionTitle';
 import CreateRelatedButton from '../../components/CreateRelatedButton';
+import { procedureTemplateIsUpdateable } from './ProcedureTemplateStatus';
 
 const AddPractice = ({ record }) => {
     if (!record) return null;
@@ -35,7 +36,7 @@ const DeletePractice = ({procedureTemplateId, ...props}) => {
     />);
 }
 
-const AssociatedPracticesDataGrid = (props) => {
+const AssociatedPracticesDataGrid = ({canEdit, ...props}) => {
     const record = useRecordContext(props);
     if (!record) return null;
 
@@ -59,7 +60,7 @@ const AssociatedPracticesDataGrid = (props) => {
         >
             <TextField source="pt" label="Descripción"/>
             <TextField source="sctid" label="SNOMED"/>
-            <DeletePractice procedureTemplateId={record.id}/>
+            {canEdit && <DeletePractice procedureTemplateId={record.id}/>}
         </Datagrid>
     );
 }
@@ -67,16 +68,17 @@ const AssociatedPracticesDataGrid = (props) => {
 
 export const AssociatedPractices = (props) => {
     const record = useRecordContext(props);
+    const canEdit = procedureTemplateIsUpdateable(record.statusId)
     return record ?
         (
             <Fragment>
                 <SectionTitle label="resources.proceduretemplates.fields.associatedPractices"/>
-                <AddPractice {...props} />
+                {canEdit && <AddPractice {...props} />}
                 <ReferenceField
                 source="id" link={false} sortable={false}
                 reference="proceduretemplatesnomeds"
                 label="resources.proceduretemplates.fields.associatedPractices">
-                    <AssociatedPracticesDataGrid/>
+                    <AssociatedPracticesDataGrid canEdit={canEdit}/>
                 </ReferenceField>
             </Fragment>
         ) : null;

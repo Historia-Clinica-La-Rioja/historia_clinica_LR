@@ -41,9 +41,11 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 
 	@Override
 	public Page<ProcedureTemplateDto> findAll(ProcedureTemplateDto example, Pageable pageable) {
-		ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
-				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-		List<ProcedureTemplateDto> result = procedureTemplateRepository.findAll(Example.of(mapDtoToEntity(example), customExampleMatcher), PageRequest.of(0, Integer.MAX_VALUE, pageable.getSort()))
+		List<ProcedureTemplateDto> result = procedureTemplateRepository
+				.findAll(
+					getExample(example),
+					PageRequest.of(0, Integer.MAX_VALUE, pageable.getSort())
+				)
 				.stream()
 				.filter(pt -> !pt.getDeleteable().getDeleted())
 				.map(this::mapEntityToDto)
@@ -56,6 +58,17 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
 		int maxIndex = minIndex + pageable.getPageSize();
 		return new PageImpl<>(result.subList(minIndex, Math.min(maxIndex, result.size())), pageable, result.isEmpty() ? 0 : totalElements);
+	}
+
+	private Example<ProcedureTemplate> getExample(ProcedureTemplateDto example) {
+		ExampleMatcher customExampleMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+		var exampleEntity = new ProcedureTemplate(
+				example.getId(),
+				example.getUuid(),
+				example.getDescription(),
+				example.getStatusId());
+		return Example.of(exampleEntity, customExampleMatcher);
 	}
 
 	@Override
@@ -152,16 +165,11 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 	}
 
 	private ProcedureTemplateDto mapEntityToDto(ProcedureTemplate procedureTemplate) {
-		return new ProcedureTemplateDto(procedureTemplate.getId(),
+		return ProcedureTemplateDto.withoutPractices(
+				procedureTemplate.getId(),
 				procedureTemplate.getUuid(),
 				procedureTemplate.getDescription(),
-				null);
-	}
-
-	private ProcedureTemplate mapDtoToEntity(ProcedureTemplateDto procedureTemplateDto) {
-		return new ProcedureTemplate(procedureTemplateDto.getId(),
-				procedureTemplateDto.getUuid(),
-				procedureTemplateDto.getDescription());
+				procedureTemplate.getStatusId());
 	}
 
 	private SnomedPracticeDto mapSnomedPracticeVoToDto(SnomedPracticeVo snomedPracticeVo){

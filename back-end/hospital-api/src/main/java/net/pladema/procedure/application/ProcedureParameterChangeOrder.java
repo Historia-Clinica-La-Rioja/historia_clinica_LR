@@ -3,6 +3,8 @@ package net.pladema.procedure.application;
 import lombok.RequiredArgsConstructor;
 import net.pladema.procedure.application.port.ProcedureParameterStore;
 
+import net.pladema.procedure.application.port.ProcedureTemplateStore;
+
 import org.springframework.stereotype.Service;
 
 import java.util.function.Function;
@@ -11,17 +13,27 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class ProcedureParameterChangeOrder {
 
-	private final ProcedureParameterStore store;
+	private final ProcedureParameterStore parameterStore;
+	private final ProcedureTemplateStore templateStore;
 
 	private void updateOrder(Integer id, Function<Short, Short> step) {
-		store.findById(id).ifPresent(origin ->
-			store.findByProcedureTemplateIdAndOrder(origin.getProcedureTemplateId(), step.apply(origin.getOrderNumber()))
-					.ifPresent(dest -> {
-						Short tempOrder = origin.getOrderNumber();
-						store.updateOrder(origin.getId(), dest.getOrderNumber());
-						store.updateOrder(dest.getId(), tempOrder);
-					})
-		);
+		parameterStore
+		.findById(id)
+		.ifPresent(origin -> {
+
+			var templateIsUpdateable = templateStore
+			.findParameterStatus(origin.getProcedureTemplateId())
+			.map(status -> status.isUpdateable())
+			.orElseGet(() -> false);
+
+			if (templateIsUpdateable)
+				parameterStore.findByProcedureTemplateIdAndOrder(origin.getProcedureTemplateId(), step.apply(origin.getOrderNumber())).ifPresent(dest -> {
+					Short tempOrder = origin.getOrderNumber();
+					parameterStore.updateOrder(origin.getId(), dest.getOrderNumber());
+					parameterStore.updateOrder(dest.getId(), tempOrder);
+				});
+
+		});
 	}
 
 	public void increaseOrder(Integer id) {

@@ -3572,6 +3572,7 @@ export interface ProcedureTemplateDto {
     associatedPractices: SnomedPracticeDto[];
     description: string;
     id: number;
+    statusId: number;
     uuid: string;
 }
 

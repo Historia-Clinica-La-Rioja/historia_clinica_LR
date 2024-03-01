@@ -7,7 +7,7 @@ import { AssociatedParameters } from './AssociatedParameters';
 import { AssociatedPractices } from './AssociatedPractices';
 
 const ProcedureTemplateShow = props => (
-    <Show {...props}>
+    <Show {...props} hasEdit={false}>
         <SimpleShowLayout>
             <TextField source="description"/>
             <AssociatedPractices/>

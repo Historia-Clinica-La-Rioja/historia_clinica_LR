@@ -955,8 +955,16 @@ const messages = {
             fields: {
                 description: 'Nombre de estudio',
                 associatedPractices: 'Prácticas asociadas',
-                associatedParameters: 'Parámetros asociados'
+                associatedParameters: 'Parámetros asociados',
+                statusId: 'Estado'
             },
+            statusId: {
+                draft: 'Borrador',
+                active: 'Activa',
+                inactive: 'Inactiva',
+                activate: 'Activar',
+                deactivate: 'Desactivar'
+            }
         },
         proceduretemplatesnomeds: {
             name: 'Prácticas asociadas',
@@ -993,6 +1001,7 @@ const messages = {
                 unitsOfMeasureIds: 'Unidades de medida',
                 inputCount: 'Cantidad de valores a ingresar',
                 eclId: 'ECL',
+                snomedGroupId: 'ECL',
                 option: 'Opción',
                 textOptions: 'Opciones'
             },

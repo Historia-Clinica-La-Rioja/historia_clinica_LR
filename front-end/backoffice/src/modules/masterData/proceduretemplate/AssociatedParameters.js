@@ -12,11 +12,13 @@ import {
     SelectField,
     ReferenceArrayField,
     EditButton,
+    ShowButton,
 } from 'react-admin';
 import SectionTitle from '../../components/SectionTitle';
 import CreateRelatedButton from '../../components/CreateRelatedButton';
 import { TYPE_CHOICES_IDS } from '../proceduretemplateparameters/parameter-type';
 import ChangeOrderButtons from './ChangeOrderButton';
+import { procedureTemplateIsUpdateable } from './ProcedureTemplateStatus';
 
 const AddParameter = ({ record }) => {
     if (!record) return null;
@@ -44,6 +46,19 @@ const EditParameter = (props) => {
     />);
 }
 
+const ShowParameter = (props) => {
+    const record = useRecordContext(props);
+    if (!record || !record.id) return null;
+    return (<ShowButton
+        redirect={false} 
+        basePath=""
+        record={{id: record.id}}
+        resource={'proceduretemplateparameters'}
+        undoable={false}
+        confirmTitle='resources.proceduretemplateparameters.editRelated'
+    />);
+}
+
 const DeleteParameter = (props) => {
     const record = useRecordContext(props);
     if (!record || !record.id) return null;
@@ -57,7 +72,7 @@ const DeleteParameter = (props) => {
     />);
 }
 
-const AssociatedParametersDataGrid = (props) => {
+const AssociatedParametersDataGrid = ({canEdit, ...props}) => {
     return (
         <ReferenceManyField
         addLabel={false}
@@ -116,10 +131,9 @@ const AssociatedParametersDataGrid = (props) => {
                         <ChipField source="code" />
                     </SingleFieldList>
                 </ReferenceArrayField>
-                <ChangeOrderButtons/>
-                <EditParameter/>
-                <DeleteParameter/>
-
+                {canEdit && <ChangeOrderButtons/>}
+                {(canEdit && <EditParameter/>) || <ShowParameter/>}
+                {canEdit && <DeleteParameter/>}
             </Datagrid>
         </ReferenceManyField>
     );
@@ -127,11 +141,12 @@ const AssociatedParametersDataGrid = (props) => {
 }
 
 export const AssociatedParameters = (props) => {
+    const record = useRecordContext(props);
     return (
             <Fragment>
                 <SectionTitle label="resources.proceduretemplates.fields.associatedParameters"/>
-                <AddParameter {...props} />
-                <AssociatedParametersDataGrid/>
+                {record && procedureTemplateIsUpdateable(record.statusId) && <AddParameter {...props} />}
+                <AssociatedParametersDataGrid canEdit={procedureTemplateIsUpdateable(record.statusId)}/>
             </Fragment>
         );
 }

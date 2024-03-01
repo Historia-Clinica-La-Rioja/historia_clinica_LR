@@ -352,3 +352,34 @@ databaseChangeLog:
               relativeToChangelogFile: true
               splitStatements: false
 
+
+    - changeSet:
+        id: addColumn-procedure_template__status
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: procedure_template_status
+              columns:
+                - column:
+                    name: id
+                    type: smallint
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_template_status
+                - column:
+                    name: description
+                    type: text
+          - sql:
+              sql: |-
+                INSERT INTO procedure_template_status VALUES (1, 'Borrador'), (2, 'Activa'), (3, 'Inactiva');
+          - addColumn:
+              tableName: procedure_template
+              columns:
+                - column:
+                    name: status_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      references: procedure_template_status(id)
+                      foreignKeyName: FK_procedure_template_status_id
+                    defaultValueNumeric: 1

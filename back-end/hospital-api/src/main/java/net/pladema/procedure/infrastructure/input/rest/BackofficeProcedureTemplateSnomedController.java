@@ -1,6 +1,7 @@
 package net.pladema.procedure.infrastructure.input.rest;
 
 import net.pladema.procedure.infrastructure.input.rest.dto.ProcedureTemplateDto;
+import net.pladema.procedure.infrastructure.input.rest.validator.entity.BackofficeProcedureTemplateEntityValidator;
 import net.pladema.procedure.infrastructure.input.rest.validator.permission.BackofficeProcedureTemplateSnomedValidator;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BackofficeProcedureTemplateSnomedController extends AbstractBackofficeController<ProcedureTemplateDto, Integer> {
 
 	BackofficeProcedureTemplateStore procedureTemplateStore;
+	BackofficeProcedureTemplateEntityValidator procedureTemplateEntityValidator;
 
 	public BackofficeProcedureTemplateSnomedController(BackofficeProcedureTemplateStore store,
 													   BackofficeProcedureTemplateSnomedValidator procedureTemplateSnomedValidator) {
@@ -27,9 +29,13 @@ public class BackofficeProcedureTemplateSnomedController extends AbstractBackoff
 
 	@DeleteMapping("/{id}/{snomedId}")
 	@Transactional
-	public @ResponseBody BackofficeDeleteResponse<Integer> delete(@PathVariable("id") Integer id,
-																  @PathVariable("snomedId") Integer snomedId) {
-		procedureTemplateStore.deleteByProcedureTemplateIdSctid(id,snomedId);
+	public @ResponseBody BackofficeDeleteResponse<Integer> delete(
+		@PathVariable("id") Integer id,
+		@PathVariable("snomedId") Integer snomedId
+	)
+	{
+		procedureTemplateEntityValidator.assertUpdate(id);
+		procedureTemplateStore.deleteByProcedureTemplateIdSctid(id, snomedId);
 		return super.delete(id);
 	}
 

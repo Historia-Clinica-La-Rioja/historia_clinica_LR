@@ -3,8 +3,10 @@ import {
     ArrayInput,
     AutocompleteInput,
     Button,
+    FunctionField,
     maxLength,
     minLength,
+    ReferenceField,
     ReferenceInput,
     required,
     SelectInput,
@@ -182,5 +184,19 @@ export const LoincDescription = (props) => {
                 optionValue="id"
                 options={{ disabled: true }} />
         </ReferenceInput>
+    );
+}
+
+export const LoincCodeDescriptionShow = (props) => {
+    return (
+        <ReferenceField
+            source="loincId"
+            reference="loinc-codes"
+            label="resources.proceduretemplateparameters.fields.loincId"
+        >
+            <FunctionField
+                render={(x) => x?.customDisplayName || x?.displayName || x?.description || ''} 
+                label="resources.proceduretemplateparameters.fields.loincId"/>
+        </ReferenceField>
     );
 }
