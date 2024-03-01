@@ -33,10 +33,6 @@
                         [disabled]="!isEnableTelemedicina">{{'access-management.regulation_offer.PATIENT_VIRTUAL_ATTENTION'
                         |
                         translate}}</mat-radio-button>
-                    <mat-radio-button color="primary" [value]="appointmentModality.secondOpinionVirtualAttention"
-                        [disabled]="!isEnableTelemedicina">{{'access-management.regulation_offer.SECOND_OPINION_VIRTUAL_ATTENTION'
-                        |
-                        translate}}</mat-radio-button>
                 </mat-radio-group>
                 <div class="error-space">
                     <mat-error *ngIf="showModalityError">{{ 'forms.REQUIRED' | translate }}</mat-error>
