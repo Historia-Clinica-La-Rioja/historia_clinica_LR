@@ -26,6 +26,10 @@ export class InstitutionService {
 		);
 	}
 
+	getInstitutionsByManagerUser(): Observable<InstitutionBasicInfoDto[]> {
+		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/by-manager`);
+	}
+
 	public getAllInstitutions(): Observable<InstitutionBasicInfoDto[]> {
 		return this.http.get<InstitutionBasicInfoDto[]>(`${environment.apiBase}/institution/all`);
 	}
