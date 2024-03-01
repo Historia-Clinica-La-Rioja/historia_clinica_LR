@@ -182,7 +182,7 @@ public enum AppFeature implements Feature {
 
 	
 	@Label("Permite flexibilidad a la hora de manipular franjas horarias de las agendas")
-	ENABLE_DYNAMIC_DIARIES,
+	HABILITAR_AGENDA_DINAMICA,
 	;
 
 	public boolean isActive() {

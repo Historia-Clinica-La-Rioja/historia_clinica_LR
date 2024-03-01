@@ -70,7 +70,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_AUDITORIA_DE_ACCESO_EN_HC, false);
 		map.put(AppFeature.HABILITAR_MONITOREO_CIPRES, false);
 		map.put(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO, false);
-		map.put(AppFeature.ENABLE_DYNAMIC_DIARIES, false);
+		map.put(AppFeature.HABILITAR_AGENDA_DINAMICA, false);
 	}
 
 	@Override

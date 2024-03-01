@@ -48,7 +48,7 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 	@Override
 	public boolean isValid(DiaryDto diaryToUpdate, ConstraintValidatorContext context) {
 		LOG.debug("Input parameters -> diaryToUpdateId {}", diaryToUpdate);
-		if (!featureFlagsService.isOn(AppFeature.ENABLE_DYNAMIC_DIARIES))
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_AGENDA_DINAMICA))
 			return validateAppointments(diaryToUpdate, context);
 		return true;
 	}

@@ -45,7 +45,7 @@ public class GetDailyFreeAppointmentTimes {
 
 	public List<DiaryOpeningHoursFreeTimesBo> run(Integer diaryId, FreeAppointmentSearchFilterBo filter) {
 		log.debug("Input parameters -> diaryId {}, filter {}", diaryId, filter);
-		if (!featureFlagsService.isOn(AppFeature.ENABLE_DYNAMIC_DIARIES))
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_AGENDA_DINAMICA))
 			assertValidDate(diaryId, filter.getDate());
 		Short diaryAppointmentDuration = diaryRepository.getDiaryAppointmentDuration(diaryId);
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diaryId), filter.getDate(), filter.getDate());
