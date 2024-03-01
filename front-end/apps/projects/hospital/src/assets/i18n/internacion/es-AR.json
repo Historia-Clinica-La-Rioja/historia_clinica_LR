@@ -402,7 +402,7 @@
 				"OPTION_YES": "Si",
 				"OPTION_NO":"No",
 				"CATETER_LABEL": "Cateter: ",
-				"INJECTION_LABEL": "Inyección",
+				"INJECTION_LABEL": "Zona de inyección",
 				"INJECTION_ZONE": "Zona de inyección",
 				"AGENT":"Agente",
 				"CATETER_NOTE_LABEL":"Ingresar tipo de cateter"
