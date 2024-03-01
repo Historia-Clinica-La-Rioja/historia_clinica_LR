@@ -24,13 +24,6 @@ export class AnalgesicTechniquePopupComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.data.analgesicTechniqueService.getForm()
-    this.data.analgesicTechniqueService.getCateterInputStatus().subscribe
-    (
-        cateterStatus => {
-            this.cateterNoteEnable = cateterStatus === this.CATETER_OPTIONS.CATETER_ENABLED
-            this.data.analgesicTechniqueService.HandleValidatorRequiredCateterNotes(cateterStatus)
-        }
-    )
   }
 
   close(): void {
@@ -41,7 +34,7 @@ export class AnalgesicTechniquePopupComponent implements OnInit {
 addAnalgesicTechnique(): void {
     if (this.form.valid) {
         this.data.analgesicTechniqueService.addToList();
-        this.dialogRef.close();
+        this.close()
     }
 }
 

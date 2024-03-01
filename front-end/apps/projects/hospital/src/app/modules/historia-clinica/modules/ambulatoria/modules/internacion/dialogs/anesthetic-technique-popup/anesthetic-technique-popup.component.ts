@@ -77,7 +77,7 @@ export class AnestheticTechniquePopupComponent implements OnInit, OnDestroy {
   addAnestheticTechnique(): void {
     if (this.form.valid) {
       this.data.anestheticTechniqueService.addToList();
-      this.dialogRef.close();
+      this.close()
     }
   }
 

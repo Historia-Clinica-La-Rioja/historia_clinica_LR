@@ -32,7 +32,7 @@ export class AnalgesicTechniqueService {
       snomed: new FormControl(null, Validators.required),
       dosis: new FormControl(null, [Validators.required, Validators.min(PREMEDICATION.MIN.dosis)]),
       unit: new FormControl(null, Validators.required),
-      cateter: new FormControl(null, Validators.required),
+      cateter: new FormControl(Cateter_options.CATETER_DISABLED, Validators.required),
       cateterNote: new FormControl(null),
       injectionNote: new FormControl(null, Validators.required)
     });
@@ -72,23 +72,11 @@ openSearchDialog(searchValue: string): void {
   }
 }
 
-HandleValidatorRequiredCateterNotes(cateterOption:Cateter_options): void{
-  if (cateterOption === Cateter_options.CATETER_ENABLED)
-      this.getForm().get('cateterNote').setValidators(Validators.required)
-  else
-  {
-      this.getForm().get('cateterNote').clearValidators()
-      this.getForm().get('cateterNote').updateValueAndValidity()
-  }
-}
 
 getForm(): FormGroup<AnalgesicTechniqueForm> {
   return this.form;
 }
 
-getCateterInputStatus() : Observable<Cateter_options> {
-  return this.form.controls.cateter.valueChanges
-}
 
 getAnalgesicTechniqueList(): Observable<AnalgesicTechniqueData[]> {
   return this.dataEmitter.asObservable()
@@ -100,7 +88,7 @@ getECL(): SnomedECL {
 
 resetForm(): void {
   delete this.snomedConcept;
-  this.form.reset();
+  this.form.reset({cateter: Cateter_options.CATETER_DISABLED});
 }
 
 get dosisError$(): Observable<string | void> {

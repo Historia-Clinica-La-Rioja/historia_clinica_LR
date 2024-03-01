@@ -405,7 +405,7 @@
 				"INJECTION_LABEL": "Zona de inyección",
 				"INJECTION_ZONE": "Zona de inyección",
 				"AGENT":"Agente",
-				"CATETER_NOTE_LABEL":"Ingresar tipo de cateter"
+				"CATETER_NOTE_LABEL":"Observaciones"
 			},
 			"anesthetic-technique": {
 				"TITLE": "Técnica anestésica",

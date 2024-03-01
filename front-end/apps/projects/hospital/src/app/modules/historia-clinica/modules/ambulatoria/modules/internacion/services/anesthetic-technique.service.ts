@@ -53,7 +53,8 @@ export class AnestheticTechniqueService {
             technique: this.form.value.technique,
             trachealIntubation: this.form.value.trachealIntubation  === trachealIntubation_options.TRACHEAL_ENABLED ,
             trachealIntubationMethod: this.form.value.trachealIntubationMethod,
-            breathing: this.form.value.breathing
+            breathing: this.form.value.breathing,
+            trachealIntubationBothIds: this.trachealIntubationBothIds
         };
         if (this.handleAddAnestheticTechnique(newAnestheticTechnique))
             this.snackBarService.showError("Medicacion duplicada");
@@ -93,18 +94,20 @@ export class AnestheticTechniqueService {
 
   resetForm(): void {
     delete this.snomedConcept;
+    this.trachealIntubationBothIds = []
     this.form.reset();
   }
 
   getAnestheticTechniqueDto(): AnestheticTechniqueDto[] {
     return this.anestheticTechniqueList.map(anestheticTechnique => {
       return {
-        snomed: anestheticTechnique.snomed ,
-        breathingId: anestheticTechnique.breathing.id,
-        circuitId: anestheticTechnique.circuit.id,
-        techniqueId: anestheticTechnique.technique.id,
-        trachealIntubation: anestheticTechnique.trachealIntubation,
-        trachealIntubationMethodIds:  this.trachealIntubationBothIds.length > 0 ?  this.trachealIntubationBothIds : [anestheticTechnique.trachealIntubationMethod.id],
+        snomed: anestheticTechnique.snomed,
+        breathingId: anestheticTechnique.breathing ? anestheticTechnique.breathing.id : null ,
+        circuitId: anestheticTechnique.circuit ? anestheticTechnique.circuit.id : null ,
+        techniqueId: anestheticTechnique.technique ? anestheticTechnique.technique.id : null,
+        trachealIntubation: anestheticTechnique.trachealIntubation ? anestheticTechnique.trachealIntubation : null  ,
+        trachealIntubationMethodIds: anestheticTechnique.trachealIntubationBothIds.length > 0 ?  anestheticTechnique.trachealIntubationBothIds :
+        anestheticTechnique.trachealIntubationBothIds.length == 0 && anestheticTechnique.trachealIntubation ? [anestheticTechnique.trachealIntubationMethod.id]: null,
       }
     }
     )
@@ -157,7 +160,8 @@ export interface AnestheticTechniqueData {
   technique: MasterDataDto,
   trachealIntubation: boolean,
   trachealIntubationMethod: MasterDataDto,
-  breathing: MasterDataDto
+  breathing: MasterDataDto,
+  trachealIntubationBothIds: number[]
 }
 
 export enum trachealIntubation_options {
