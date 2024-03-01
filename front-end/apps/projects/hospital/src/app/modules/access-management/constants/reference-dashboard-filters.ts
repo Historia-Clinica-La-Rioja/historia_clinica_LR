@@ -17,7 +17,7 @@ export enum EDashboardFilters {
     CARE_LINE = 'careLine',
     DESTINATION_INSTITUTIONS = 'destinationInstitutions',
 	DESTINATION_DEARTAMENTS = 'destinationDepartaments',
-	DESTINATION_NETWORKING_INSTITUTIONS = 'destinationNetworkingInstitutions',
+	DESTINATION_NETWORKING_INSTITUTIONS = 'institutionalGroups',
 }
 
 export const DashboardFiltersMapping = {
@@ -29,6 +29,10 @@ export const DashboardFiltersMapping = {
     [EDashboardFilters.SPECIALTY]: 'clinicalSpecialtyId',
     [EDashboardFilters.IDENTIFICATION_NUMBER]: 'identificationNumber',
     [EDashboardFilters.REGULATION_STATES]: 'regulationStateId',
+    [EDashboardFilters.DESTINATION_INSTITUTIONS]: 'destinationInstitutionId',
+    [EDashboardFilters.CARE_LINE]: 'careLineId',
+    [EDashboardFilters.DESTINATION_DEARTAMENTS]: 'destinationDepartmentId',
+    [EDashboardFilters.DESTINATION_NETWORKING_INSTITUTIONS]: 'institutionalGroupId',
 }
 
 export const getReportFiltersForOthersRoles = (practices: SharedSnomedDto[], clinicalSpecialties: ClinicalSpecialtyDto[], careLines: CareLineDto[]): FiltersType => {

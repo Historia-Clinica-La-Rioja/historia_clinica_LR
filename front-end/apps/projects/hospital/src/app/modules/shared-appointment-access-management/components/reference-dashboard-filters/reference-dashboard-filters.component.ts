@@ -134,12 +134,12 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 		const [practices, clinicalSpecialties, careLines] = await Promise.all([
 			lastValueFrom(this.practiceService.getAll()),
 			lastValueFrom(this.clinicalSpecialtyService.getAll()),
-			lastValueFrom(this.careLineService.getCareLines())
+			lastValueFrom(this.careLineService.getAllCareLines())
 		]);
 
 		if (hasRoleOfManager) {
 			const [destinationInstitution, institutionalGroups, destinationDepartament] = await Promise.all([
-				lastValueFrom(this.institutionService.getAllInstitutions()),
+				lastValueFrom(this.institutionService.getInstitutionsByManagerUser()),
 				lastValueFrom(this.institutionalGroupsService.getCurrentUserGroups()),
 				lastValueFrom(this.addressMasterDataService.getDepartmentsByInstitutions())
 			]);

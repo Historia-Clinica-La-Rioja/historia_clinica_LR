@@ -7,7 +7,6 @@ import { AppointmentSummary } from "@access-management/components/appointment-su
 import { ContactDetails } from "@access-management/components/contact-details/contact-details.component";
 import { ReferenceCompleteData } from "@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component";
 import { AddressProjection } from "@api-rest/services/address-master-data.service";
-import { listToTypeaheadOptions } from "@presentation/utils/typeahead.mapper.utils";
 
 export const toPatientSummary = (patient: ReferencePatientDto): PatientSummary => {
     return {
@@ -74,19 +73,40 @@ export const specialtiesToTypeaheadOptions = (specialties: ClinicalSpecialtyDto[
 }
 
 export const careLinesToTypeaheadOptions = (careLines: CareLineDto[]): TypeaheadOption<CareLineDto>[] => {
-	return listToTypeaheadOptions(careLines, 'description');
+	return careLines.map(careLines => careLineToTypeaheadOption(careLines));
 }
 
 export const destinationInstitutionsToTypeaheadOptions = (destinationInstitutions: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
-	return listToTypeaheadOptions(destinationInstitutions, 'name');
+	return destinationInstitutions.map(destinationInstitution => destinationInstitutionToTypeaheadOptions(destinationInstitution));
 }
 
 export const destinationDepartamentsToTypeaheadOptions = (departaments: AddressProjection[]): TypeaheadOption<AddressProjection>[] => {
-	return listToTypeaheadOptions(departaments, 'description');
+	return departaments.map(departament => destinationDepartamentToTypeaheadOptions(departament));
 }
 
-export const institutionalGroupsToTypeaheadOptions = (destinationInstitutions: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
-	return listToTypeaheadOptions(destinationInstitutions, 'description');
+export const institutionalGroupsToTypeaheadOptions = ( institutionalGroups: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
+	return  institutionalGroups.map(institution => institutionalGroupToTypeaheadOptions(institution));
+}
+
+export const destinationInstitutionToTypeaheadOptions = (departament: InstitutionBasicInfoDto): TypeaheadOption<any> => {
+	return {
+		compareValue: departament.name,
+		value: departament.id
+	}
+}
+
+export const destinationDepartamentToTypeaheadOptions = (departament: AddressProjection): TypeaheadOption<any> => {
+	return {
+		compareValue: departament.description,
+		value: departament.id
+	}
+}
+
+export const institutionalGroupToTypeaheadOptions = (destinationInstitution: InstitutionBasicInfoDto): TypeaheadOption<any> => {
+	return {
+		compareValue: destinationInstitution.name,
+		value: destinationInstitution.id
+	}
 }
 
 export const careLineToTypeaheadOption = (careLine: CareLineDto): TypeaheadOption<any> => {
@@ -95,7 +115,6 @@ export const careLineToTypeaheadOption = (careLine: CareLineDto): TypeaheadOptio
         value: careLine.id
     }
 }
-
 
 export const specialtyToTypeaheadOption = (specialty: ClinicalSpecialtyDto): TypeaheadOption<any> => {
     return {
