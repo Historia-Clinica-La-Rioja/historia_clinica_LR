@@ -56,6 +56,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private static final Short APPOINTMENT_ABSENT_STATE = 3;
 
+	private static final Short APPOINTMENT_CANCELLED_STATE = 4;
+
 	private static final Short APPOINTMENT_SERVED_STATE = 5;
 
 	private static final Integer NO_VALUE = -1;
@@ -158,7 +160,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				.setParameter("to", filter.getTo())
 				.setParameter("userRoles", filter.getLoggedUserRoleIds());
 
-		if (filter.getAttentionStateId() != null && !filter.getAttentionStateId().equals(EReferenceAttentionState.PENDING.getId())) {
+		if (filter.getAttentionStateId() != null) {
 			List<ReferenceReportBo> result = executeQueryAndSetReferenceDetails(query);
 
 			result = result.stream()
@@ -288,6 +290,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				return EReferenceAttentionState.ABSENT;
 			if (appointmentState.equals(APPOINTMENT_SERVED_STATE))
 				return EReferenceAttentionState.SERVED;
+			if (appointmentState.equals(APPOINTMENT_CANCELLED_STATE))
+				return EReferenceAttentionState.PENDING;
 		}
 		if (regulationState.equals(EReferenceRegulationState.APPROVED))
 			return EReferenceAttentionState.PENDING;

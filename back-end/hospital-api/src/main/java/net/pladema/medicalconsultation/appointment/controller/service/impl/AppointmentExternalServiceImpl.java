@@ -274,7 +274,16 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 				.filter(a -> a.getDate().equals(LocalDate.now()) || a.getDate().isAfter(LocalDate.now()))
 				.sorted(Comparator.comparing(AppointmentSummaryBo::getDate).thenComparing(AppointmentSummaryBo::getHour))
 				.collect(Collectors.toList());
-		return !futureAppointments.isEmpty() ? Optional.of(futureAppointments.get(0)) : !appointments.isEmpty() ? Optional.of(appointments.get(0)) : Optional.empty();
+		return !futureAppointments.isEmpty() ? determineNearestAppointmentByStateId(futureAppointments) : !appointments.isEmpty() ? determineNearestAppointmentByStateId(appointments) : Optional.empty();
+	}
+
+	private Optional<AppointmentSummaryBo> determineNearestAppointmentByStateId(List<AppointmentSummaryBo> appointments) {
+		var appointmentsNonCancelled = appointments.stream()
+				.filter(a -> !a.getStateId().equals(AppointmentState.CANCELLED))
+				.collect(Collectors.toList());
+		if (!appointmentsNonCancelled.isEmpty())
+			return Optional.of(appointmentsNonCancelled.get(0));
+		return Optional.of(appointments.get(0));
 	}
 
 	private AppointmentDataDto mapFromAppointmentSummaryBo(AppointmentSummaryBo appointment) {

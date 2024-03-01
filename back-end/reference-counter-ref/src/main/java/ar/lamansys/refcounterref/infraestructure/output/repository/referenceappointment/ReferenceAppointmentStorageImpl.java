@@ -48,9 +48,18 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 	}
 
 	@Override
+	public Map<Integer, List<Integer>> getReferenceAppointmentsIdsWithoutCancelledStateId(List<Integer> referenceIds) {
+		log.debug("Fetch appointment ids without cancelled state id by reference ids");
+		List<ReferenceAppointmentBo> referenceAppointmentBos = referenceAppointmentRepository.getAppointmentIdsByReferenceIds(referenceIds, APPOINTMENT_CANCELLED_STATE);
+		return referenceAppointmentBos.stream()
+				.collect(Collectors.groupingBy(ReferenceAppointmentBo::getReferenceId,
+						Collectors.mapping(ReferenceAppointmentBo::getAppointmentId, Collectors.toList())));
+	}
+
+	@Override
 	public Map<Integer, List<Integer>> getReferenceAppointmentsIds(List<Integer> referenceIds) {
 		log.debug("Fetch appointment ids by reference ids");
-		List<ReferenceAppointmentBo> referenceAppointmentBos = referenceAppointmentRepository.getAppointmentIdsByReferenceIds(referenceIds, APPOINTMENT_CANCELLED_STATE);
+		List<ReferenceAppointmentBo> referenceAppointmentBos = referenceAppointmentRepository.getAppointmentIdsByReferenceIds(referenceIds);
 		return referenceAppointmentBos.stream()
 				.collect(Collectors.groupingBy(ReferenceAppointmentBo::getReferenceId,
 						Collectors.mapping(ReferenceAppointmentBo::getAppointmentId, Collectors.toList())));
@@ -59,7 +68,7 @@ public class ReferenceAppointmentStorageImpl implements ReferenceAppointmentStor
 	@Override
 	public Optional<ReferenceAppointmentBo> getAppointmentData(Integer referenceId) {
 		log.debug("Fetch appointment data by referenceId -> referenceId {} ", referenceId);
-		Map<Integer, List<Integer>> appointments = this.getReferenceAppointmentsIds(Collections.singletonList(referenceId));
+		Map<Integer, List<Integer>> appointments = this.getReferenceAppointmentsIdsWithoutCancelledStateId(Collections.singletonList(referenceId));
 		if (!appointments.isEmpty()) {
 			Optional<AppointmentDataDto> appointmentData = sharedAppointmentPort.getNearestAppointmentData(appointments.get(referenceId));
 			if (appointmentData.isPresent())
