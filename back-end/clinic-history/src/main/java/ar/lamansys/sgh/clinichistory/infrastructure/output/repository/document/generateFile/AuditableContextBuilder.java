@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
@@ -131,6 +132,7 @@ public class AuditableContextBuilder {
 	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId, Short documentType) {
 		var patientDto = basicDataFromPatientLoader.apply(patientId);
 		contextMap.put("patient", patientDto);
+		contextMap.put("patientAge", calculatePatientAge(patientDto));
 
 		contextMap.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		if (documentType == DocumentType.DIGITAL_RECIPE) {
@@ -304,5 +306,17 @@ public class AuditableContextBuilder {
 			throw new RuntimeException(e);
 		}
 	}
+
+	private String calculatePatientAge(BasicPatientDto patientDto) {
+		if (patientDto.getPerson() == null || patientDto.getPerson().getPersonAge() == null)
+			return "";
+		var personAge = patientDto.getPerson().getPersonAge();
+		if (personAge.getTotalDays() < 46)
+			return personAge.getTotalDays() + " días";
+		if (personAge.getYears() > 0)
+			return personAge.getYears() + (personAge.getYears() == 1 ? " año" : " años");
+		return personAge.getMonths() + (personAge.getMonths() == 1 ? " mes " : " meses ") + personAge.getDays() + (personAge.getDays() == 1 ? " día" : " días" );
+	}
+
 }
 
