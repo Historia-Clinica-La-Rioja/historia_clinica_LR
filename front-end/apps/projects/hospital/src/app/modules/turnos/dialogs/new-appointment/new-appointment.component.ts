@@ -97,8 +97,8 @@ export class NewAppointmentComponent implements OnInit {
 	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
 	viewModalityLabel$: Observable<boolean> = of(false);
 	modalitys = MODALITYS_TYPES.slice(0, 2);
-	HABILITAR_TELEMEDICINA: boolean = false;
-
+	isEnableTelemedicina: boolean = false;
+	
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
@@ -126,7 +126,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		if (this.data.modalityAttention || !this.HABILITAR_TELEMEDICINA) {
+		if (this.data.modalityAttention || !this.isEnableTelemedicina) {
 			if (!this.data.modalityAttention)
 				this.data.modalityAttention = EAppointmentModality.ON_SITE_ATTENTION;
 			this.modalitySelected = this.data.modalityAttention;
@@ -137,6 +137,11 @@ export class NewAppointmentComponent implements OnInit {
 		if(this.data.isEquipmentAppointment) {
 			this.editableStepModality = false;
 			this.initialIndex = this.indexStep.SEARCH;
+		}
+		if(!this.isEnableTelemedicina){
+			this.editableStepModality = false;
+			this.initialIndex = this.indexStep.SEARCH;
+			this.viewModalityLabel$ = of(true);
 		}
 
 		this.modalityForm = this.formBuilder.group({
@@ -310,7 +315,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private setFeatureFlags = () => {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isOn => this.HABILITAR_TELEMEDICINA = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isOn => this.isEnableTelemedicina = isOn);
 	}
 
 	private patientFound() {
