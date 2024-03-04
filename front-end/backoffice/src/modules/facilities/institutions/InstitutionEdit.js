@@ -3,17 +3,12 @@ import {
     TextInput,
     Edit,
     SimpleForm,
-    ReferenceManyField,
-    Datagrid,
-    TextField,
-    EditButton,
     ReferenceInput,
     SelectInput,
     required,
     number,
     maxLength,
     minLength,
-    ReferenceField,
     usePermissions,
 } from 'react-admin';
 import CreateRelatedButton from '../../components/CreateRelatedButton';
@@ -24,7 +19,8 @@ import {
 } from '../../roles-set';
 import {
     CreateHierarchicalUnit,
-    HierarchicalUnitTabs
+    HierarchicalUnitTabs,
+    ShowSectors
 } from './InstitutionShow';
 
 const Dependency = (sourceId) => {
@@ -68,22 +64,7 @@ const InstitutionEdit = props => {
                     refFieldName="institutionId"
                     label="resources.sectors.createRelated"
                 />
-                {/*TODO: Aislar esto en un componente. También se usa en show.js*/}
-                <ReferenceManyField
-                    addLabel={false}
-                    reference="sectors"
-                    target="institutionId"
-                    sort={{field: 'description', order: 'DESC'}}
-                    filter={{ deleted: false }}
-                >
-                    <Datagrid rowClick="show">
-                        <TextField source="description"/>
-                        <ReferenceField source="sectorTypeId" link={false} reference="sectortypes">
-                            <TextField source="description"/>
-                        </ReferenceField>
-                        <EditButton/>
-                    </Datagrid>
-                </ReferenceManyField>
+                <ShowSectors/>
                 <SectionTitle label="resources.institutions.fields.hierarchicalUnits"/>
                 <CreateHierarchicalUnit/>
                 <HierarchicalUnitTabs {...props}/>

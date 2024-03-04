@@ -12,6 +12,7 @@ import {
     usePermissions,
     Tab,
     TabbedShowLayout,
+    Pagination
 } from 'react-admin';
 import CreateRelatedButton from '../../components/CreateRelatedButton';
 import SectionTitle from '../../components/SectionTitle';
@@ -52,13 +53,15 @@ const ShowHierarchicalUnits = () => {
         addLabel={false}
         reference="hierarchicalunits"
         target="institutionId"
-        sort={{ field: 'alias', order: 'DESC' }}
+        sort={{ field: 'alias', order: 'ASC' }}
+        perPage={10}
+        pagination={<Pagination/>}
     >
         <Datagrid rowClick="show"
                   empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades jerárquicas definidas</p>}>
-            <TextField source="id" />
-            <TextField source="alias"/>
-            <ReferenceField source="typeId" reference="hierarchicalunittypes" link={false}>
+            <TextField sortable={false} source="id" />
+            <TextField sortable={false} source="alias"/>
+            <ReferenceField sortable={false} source="typeId" reference="hierarchicalunittypes" link={false}>
                 <TextField source="description" />
             </ReferenceField>
             <EditButton disabled={!UserIsInstitutionalAdmin()}/>
@@ -66,6 +69,30 @@ const ShowHierarchicalUnits = () => {
     </ReferenceManyField>
     );
 };
+
+const ShowSectors = () => {
+    return (
+        <ReferenceManyField
+            id='sectors'
+            addLabel={false}
+            reference="rootsectors"
+            target="institutionId"
+            sort={{ field: 'description', order: 'ASC' }}
+            filter={{ deleted: false }}
+            perPage={10}
+            pagination={<Pagination />}
+        >
+            <Datagrid rowClick="show"
+                              empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin unidades sectores definidos</p>}>
+                <TextField source="description" />
+                <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                    <TextField source="description" />
+                </ReferenceField>
+                <EditButton />
+            </Datagrid>
+        </ReferenceManyField>
+    );
+}
 
 const InstitutionShow = props => {
     return (
@@ -97,22 +124,7 @@ const InstitutionShow = props => {
                     refFieldName="institutionId"
                     label="resources.sectors.createRelated"
                 />
-                {/*TODO: Aislar esto en un componente. También se usa en edit.js*/}
-                <ReferenceManyField
-                    addLabel={false}
-                    reference="rootsectors"
-                    target="institutionId"
-                    sort={{ field: 'description', order: 'DESC' }}
-                    filter={{ deleted: false }}
-                >
-                    <Datagrid rowClick="show">
-                        <TextField source="description" />
-                        <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
-                            <TextField source="description" />
-                        </ReferenceField>
-                        <EditButton />
-                    </Datagrid>
-                </ReferenceManyField>
+                <ShowSectors />
                 <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
                 <CreateHierarchicalUnit />
                <HierarchicalUnitTabs {...props} />
@@ -135,4 +147,4 @@ const HierarchicalUnitTabs = (props) => (
 )
 
 export default InstitutionShow;
-export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, HierarchicalUnitTabs };
+export { CreateHierarchicalUnit, UserIsInstitutionalAdmin, HierarchicalUnitTabs, ShowSectors };
