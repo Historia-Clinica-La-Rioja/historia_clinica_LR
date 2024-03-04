@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
-import { EReferenceRegulationState, ERole, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
+import { EReferenceRegulationState, ERole, ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
@@ -8,11 +8,11 @@ import { BehaviorSubject, Observable, of, switchMap, take } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
-import { PENDING, REFERENCE_STATES } from '@access-management/constants/reference';
+import { PENDING, PENDING_ATTENTION_STATE, REFERENCE_STATES } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
-import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { PermissionsService } from '@core/services/permissions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -37,7 +37,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	reportCompleteData: ReportCompleteData;
 
 	colapseContactDetails = false;
-
+	registerEditorAppointment: RegisterEditor;
+	referenceAppointment: ReferenceAppointmentDto;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 	approvedState = EReferenceRegulationState.APPROVED;
 	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;
@@ -52,6 +53,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	hasDerivationRequest = false;
 	isRoleGestor: boolean;
 	hasAppointment = false;
+	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
+	pendingAttentionState = PENDING_ATTENTION_STATE;
 
 	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -72,6 +75,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		const referenceDetails$ = this.getObservable();
 		referenceDetails$.subscribe(
 			referenceDetails => {
+				this.setAppointment(referenceDetails.appointment);
 				this.setObservation(referenceDetails);
 				this.setDerivation(referenceDetails);
 				this.referenceCompleteData = referenceDetails;
@@ -113,15 +117,15 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	performDerivationAction (derivation: DerivationEmmiter): void {
 		this.derivation = derivation.derivation;
-		if (derivation.canEdit) 
+		if (derivation.canEdit)
 			this.editDerivation(derivation.derivation);
-		else 
+		else
 			this.addDerivation(derivation.derivation);
 	}
 
 	editDerivation(derivation: string): void {
 		this.institutionalNetworkReferenceReportService.updateDerivation(this.registerDeriveEditor$.getValue().id, derivation)
-		.subscribe(editSuccess => { 
+		.subscribe(editSuccess => {
 			if (editSuccess) {
 				this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_EDIT');
 				this.updateDerivation();
@@ -171,6 +175,14 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	private addObservationOtherRoles(observation: string) {
 		return this.institutionalReferenceReportService.addObservation(this.data.referenceId, observation);
+	}
+
+	private setAppointment(referenceDetails: ReferenceCompleteDataDto["appointment"]){
+		if(referenceDetails) {
+			const {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName} = referenceDetails;
+			this.referenceAppointment = {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName};
+			this.registerEditorAppointment = {createdBy: authorFullName, date: convertDateTimeDtoToDate(createdOn)}
+		}
 	}
 
 	private setDerivation(referenceDetails: ReferenceCompleteDataDto) {

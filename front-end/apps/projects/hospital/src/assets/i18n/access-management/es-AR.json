@@ -40,6 +40,7 @@
 				"REFERENCE_DATA": "Datos de Referencia",
 				"APPOINTMENT_DATA": "Datos del turno",
 				"ASSIGN_APPOINTMENT_IN_CARE_NETWORK": " asignar turno en red de atencion",
+				"ASSIGNED_BY": "Asignado por:",
 				"approval": {
 					"TITLE": "estado de aprobación",
 					"ENTERED_BY": "Solicitud ingresada por Regla {{rule}}",

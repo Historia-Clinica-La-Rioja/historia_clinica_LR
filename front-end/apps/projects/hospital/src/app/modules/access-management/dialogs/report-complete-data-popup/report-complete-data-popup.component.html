@@ -37,13 +37,20 @@
 				<mat-divider></mat-divider>
 				<app-appointment-summary [appointmentSummary]="reportCompleteData.appointment"></app-appointment-summary>
 			</div>
+			<div *ngIf="(registerEditorAppointment !== pendingAttentionState)" class="grey">
+				<span>{{'access-management.search_references.reference.ASSIGNED_BY' | translate }}</span>
+				<app-register-editor-info
+					[registerEditor]="registerEditorAppointment"
+					[registerEditorCase]="registerEditorCasesDateHour">
+				</app-register-editor-info>
+			</div>
 
 			<mat-divider></mat-divider>
 
 			<app-add-observations [observation]="observation" [registerEditor]="registerEditor$ | async"
 				(observationEmmiter)="addObservation($event)">
 			</app-add-observations>
-			
+
 			<div fxLayout="column" fxLayoutGap="20px"
 			*ngIf="(referenceRegulationDto.state === approvedState || referenceRegulationDto.state === waitingApprovalState) && isRoleGestor">
 				<mat-divider *ngIf="observation || derivation"></mat-divider>

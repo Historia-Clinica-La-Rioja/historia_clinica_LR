@@ -6,6 +6,8 @@ import { ReferenceApprovalState } from "./approval";
 const NO_CLOSURE = -1;
 const NO_APPOINTMENT = -1;
 
+export const PENDING_ATTENTION_STATE = undefined;
+
 export enum REFERENCE_STATES {
     PENDING = 'PENDIENTE',
     ASSIGNED = 'ASIGNADO',
