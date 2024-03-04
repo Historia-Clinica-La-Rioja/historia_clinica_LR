@@ -66,7 +66,8 @@ public interface PersonMapper {
 
 	@AfterMapping
 	default void personAgeMapping(@MappingTarget BasicDataPersonDto target, Person source){
-		target.setPersonAge(new PersonAgeDto(source.getBirthDate()));
+		if (source.getBirthDate() != null)
+			target.setPersonAge(new PersonAgeDto(source.getBirthDate()));
 	}
 
 	@Named("fromPersonalInformation")

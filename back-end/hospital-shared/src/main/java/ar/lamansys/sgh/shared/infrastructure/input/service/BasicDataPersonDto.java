@@ -114,6 +114,6 @@ public class BasicDataPersonDto implements Serializable {
 		return gender != null ? gender.getId(): null;
 	}
 
-	public Short getAge() { return this.personAge.getYears(); }
+	public Short getAge() { return this.personAge != null ? this.personAge.getYears() : null; }
 
 }
