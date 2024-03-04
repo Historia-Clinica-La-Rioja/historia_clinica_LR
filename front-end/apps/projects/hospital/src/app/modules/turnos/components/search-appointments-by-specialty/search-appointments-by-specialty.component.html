@@ -31,13 +31,13 @@
 			</div>
 		</div>
 
-		<div fxLayout="column" fxLayoutGap="16px">
+		<div fxLayout="column" fxLayoutGap="16px" *ngIf="isEnableTelemedicina">
 			<span class="category-title" [translate]="'turnos.MODALITY_ATTENTION'"></span>
 			<mat-radio-group formControlName="modality" (change)="clearSearchAppointment()">
 				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
 					translate}}</mat-radio-button>
 				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION"
-					[disabled]="!isEnableTelemedicina">{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
+					>{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
 					translate}}</mat-radio-button>
 			</mat-radio-group>
 		</div>

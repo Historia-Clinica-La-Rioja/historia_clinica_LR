@@ -22,17 +22,17 @@
 		[defaultOption]="selectedTypeAttention" [disabled]="externalInformation?.disabledInput.others"
 		(selectedOption)="setCriteria($event)"></app-search-criteria>
 
-	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column">
+	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column" *ngIf="isEnableTelemedicina">
 		<div fxLayout="column" fxLayoutGap="5px" fxFlex="100">
 			<strong [translate]="'turnos.MODALITY_ATTENTION'"></strong>
 			<mat-radio-group formControlName="modality" (change)="resetResults()">
 				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
 					translate}}</mat-radio-button>
 				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION"
-					[disabled]="!isEnableTelemedicina">{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
+					>{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
 					translate}}</mat-radio-button>
 				<mat-radio-button color="primary" [value]="MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION"
-					[disabled]="!isEnableTelemedicina">{{'turnos.SECOND_OPINION_VIRTUAL_ATTENTION' |
+					>{{'turnos.SECOND_OPINION_VIRTUAL_ATTENTION' |
 					translate}}</mat-radio-button>
 			</mat-radio-group>
 			<div class="error-space">

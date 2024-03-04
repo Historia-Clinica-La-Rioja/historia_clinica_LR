@@ -117,7 +117,7 @@ export class AgendaHorarioService {
 				},
 				maxHeight: 'fit-content',
 				autoFocus: false,
-				height: '95%'
+				height: 'max-content'
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
 			if (!dialogInfo) {

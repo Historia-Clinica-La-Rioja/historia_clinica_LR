@@ -21,7 +21,7 @@
             [searchCriteryStyle]="'bold'" [defaultOption]="selectedTypeAttention" [disabled]="externalInformation?.disabledInput.others"
             (selectedOption)="setCriteria($event)"></app-regulation-search-criteria>
 
-        <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column">
+        <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column" *ngIf="isEnableTelemedicina">
             <div fxLayout="column" fxLayoutGap="5px" fxFlex="100">
                 <strong [translate]="'access-management.regulation_offer.MODALITY_ATTENTION'"></strong>
                 <mat-radio-group formControlName="modality" (change)="resetResults()">
@@ -30,7 +30,7 @@
                         |
                         translate}}</mat-radio-button>
                     <mat-radio-button color="primary" [value]="appointmentModality.vitualAttention"
-                        [disabled]="!isEnableTelemedicina">{{'access-management.regulation_offer.PATIENT_VIRTUAL_ATTENTION'
+                        >{{'access-management.regulation_offer.PATIENT_VIRTUAL_ATTENTION'
                         |
                         translate}}</mat-radio-button>
                 </mat-radio-group>
