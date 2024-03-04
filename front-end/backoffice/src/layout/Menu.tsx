@@ -24,7 +24,7 @@ import AccountTreeIcon from '@material-ui/icons/AccountTree';
 type MenuName = 'staff' | 'facilities' | 'masterData' | 'terminology' | 'booking' | 'imageNetwork' | 'debug' | 'more';
 
 const submenu = (submenu: string) => (resource: ResourceDefinition): boolean => 
-    (!!resource.hasList && (resource.options?.submenu || '') === submenu);
+    (!!resource.hasList && (resource.options?.submenu || 'more') === submenu);
 
 const Menu = ({ dense = false }: MenuProps) => {
     const [state, setState] = useState({

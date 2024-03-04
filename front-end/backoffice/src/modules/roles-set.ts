@@ -19,8 +19,14 @@ const BASIC_BO_ROLES = [
     ADMINISTRADOR,
 ] as RoleAssignment[];
 
+const ADMIN_ROLES = [
+    ROOT,
+    ADMINISTRADOR,
+    ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+] as RoleAssignment[];
 
 export {
+    ADMIN_ROLES,
     DEFAULT_BO_ROLES,
     BASIC_BO_ROLES,
 };
