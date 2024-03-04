@@ -39,6 +39,12 @@ public class SharedLoggedUserPortImpl implements SharedLoggedUserPort {
 						ur.getRoleId() == ERole.GESTOR_DE_ACCESO_LOCAL.getId());
 	}
 
+	@Override
+	public boolean hasDomainManagerRole(Integer userId) {
+		return userRoleStorage.getRolesByUser(userId)
+				.stream()
+				.anyMatch(ur -> ur.getRoleId() == ERole.GESTOR_DE_ACCESO_DE_DOMINIO.getId());
+	}
 
 	@Override
 	public boolean hasManagerRole(Integer userId) {

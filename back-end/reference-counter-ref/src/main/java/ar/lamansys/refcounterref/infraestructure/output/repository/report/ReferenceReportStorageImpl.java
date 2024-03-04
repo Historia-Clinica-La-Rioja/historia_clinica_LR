@@ -101,7 +101,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 		condition.append("(".concat(dateFilterAndCommonData));
 		condition.append(sharedCondition);
 		if (filter.getHealthcareProfessionalId() == null)
-			condition.append("AND ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL))");
+			condition.append(" AND ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL))");
 		else {
 			condition.append(" AND oc.doctor_id = ").append(filter.getHealthcareProfessionalId());
 			condition.append(") OR ((clr.role_id IN (:userRoles) AND cl.classified IS TRUE AND clr.deleted IS FALSE) AND");
@@ -164,7 +164,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 	}
 
 	private Page<ReferenceReportBo> executeQueryAndProcessResults(String sqlQueryData, String sqlCountQuery, ReferenceReportFilterBo filter, Pageable pageable) {
-		Integer institutionId = filter.getOriginInstitutionId() != null ? filter.getOriginInstitutionId() : filter.getDestinationInstitutionId();
+		Integer institutionId = filter.getOriginInstitutionId() != null ? filter.getOriginInstitutionId() :
+				((filter.getManagerUserId() != null || filter.isDomainManager()) ? -1 : filter.getDestinationInstitutionId());
 		Integer userId = UserInfo.getCurrentAuditor();
 		filter.setLoggedUserRoleIds(sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, userId));
 		var query = entityManager.createNativeQuery(sqlQueryData)

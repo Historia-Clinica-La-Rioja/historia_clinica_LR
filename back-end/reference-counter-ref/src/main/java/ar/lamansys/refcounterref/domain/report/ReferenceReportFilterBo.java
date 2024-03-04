@@ -66,4 +66,7 @@ public class ReferenceReportFilterBo {
 	@Nullable
 	private Integer destinationDepartmentId;
 
+	@Nullable
+	private boolean domainManager;
+
 }
