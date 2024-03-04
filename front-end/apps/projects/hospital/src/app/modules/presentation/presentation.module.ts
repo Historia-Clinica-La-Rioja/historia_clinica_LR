@@ -73,6 +73,7 @@ import { TableComponent } from './components/table/table.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
+import { TitleDescriptionComponent } from './components/title-description/title-description.component';
 import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
 import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
@@ -174,6 +175,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TitledContentComponent,
 		TitledSingleContentComponent,
 		TypeaheadComponent,
+		TitleDescriptionComponent,
 		TypeaheadFilterOptionsComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
@@ -281,6 +283,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
+		TitleDescriptionComponent,
 		TitledSingleContentComponent,
 		TypeaheadComponent,
 		TypeaheadV2Component,
