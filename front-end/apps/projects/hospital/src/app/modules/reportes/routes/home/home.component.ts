@@ -43,6 +43,7 @@ export class HomeComponent implements OnInit {
 	public submitted = false;
 
 	public hasError = hasError;
+	showErrorMonth = false;
 
 	professionalsTypeahead: TypeaheadOption<ProfessionalRegistrationNumbersDto>[];
 	professionals: ProfessionalRegistrationNumbersDto[] = [];
@@ -242,12 +243,20 @@ export class HomeComponent implements OnInit {
 		// if both are present, check that the end date is not after the start date
 		if (this.form.value.startDate && this.form.value.endDate) {
 			const endDate: Moment = this.form.value.endDate;
+			const startDate: Moment = this.form.value.startDate;
 			if (endDate.isBefore(this.form.value.startDate)) {
 				this.form.controls.endDate.setErrors({ min: true });
 				this.form.controls.startDate.setErrors({ max: true });
 			} else {
 				this.form.controls.endDate.setErrors(null);
 				this.checkStartDateIsSameOrBeforeToday();
+			}
+			if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
+				if(endDate.month() !== startDate.month()){
+					this.showErrorMonth = true;
+				}else{
+					this.showErrorMonth = false;
+				}
 			}
 		} else if (this.form.value.startDate) {
 			this.checkStartDateIsSameOrBeforeToday();
