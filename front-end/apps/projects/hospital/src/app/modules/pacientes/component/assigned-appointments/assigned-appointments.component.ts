@@ -6,7 +6,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { ASSIGNED_APPOINTMENTS_SUMMARY } from '@pacientes/constants/summaries';
 import { AppointmentHistoricComponent } from '@pacientes/dialogs/appointment-historic/appointment-historic.component';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
 
 @Component({

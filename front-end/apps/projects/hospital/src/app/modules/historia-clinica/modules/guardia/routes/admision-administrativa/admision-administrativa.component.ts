@@ -13,7 +13,7 @@ import { MedicalCoverageComponent } from '@pacientes/dialogs/medical-coverage/me
 import { MapperService } from '@core/services/mapper.service';
 import { MapperService as PatientMapperService } from '@presentation/services/mapper.service';
 import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { AdministrativeAdmission } from '../../services/new-episode.service';

@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
 import {
 	BasicPatientDto,
+	BedSummaryDto,
 	CompletePatientDto,
+	HCEEvolutionSummaryDto,
+	InternmentEpisodeDto,
+	InternmentPatientDto,
 	InternmentSummaryDto,
 	PatientType,
 	PersonalInformationDto,
-	BedSummaryDto,
-	InternmentPatientDto,
-	HCEEvolutionSummaryDto,
-	InternmentEpisodeDto,
 } from '@api-rest/api-model';
-import { PatientBasicData } from '../components/patient-card/patient-card.component';
+import { DateFormat, dateToMoment, momentParseDate, momentParseDateTime, momentFormat } from '@core/utils/moment.utils';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { DateFormat, momentParseDate, momentParseDateTime, momentFormat, dateToMoment } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
-import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
+import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
 import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
+import { PatientBasicData } from '@presentation/utils/patient.utils';
+import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -74,7 +74,8 @@ export class MapperService {
 			gender: patient.person?.gender?.description,
 			age: patient.person?.age,
 			nameSelfDetermination: patient.person?.nameSelfDetermination,
-			selfPerceivedGender: patient.person?.selfPerceivedGender
+			selfPerceivedGender: patient.person?.selfPerceivedGender,
+			personAge: patient.person?.personAge
 		};
 	}
 

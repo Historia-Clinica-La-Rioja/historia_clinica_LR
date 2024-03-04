@@ -4,7 +4,7 @@ import { CompletePatientDto, ProfessionalDto, VirtualConsultationDto } from '@ap
 import { HealthcareProfessionalByInstitutionService } from '@api-rest/services/healthcare-professional-by-institution.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PatientNameService } from '@core/services/patient-name.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { MapperService } from '@presentation/services/mapper.service';
 

@@ -7,7 +7,7 @@ import { AppFeature, EMedicalCoverageTypeDto, ERole, EPatientMedicalCoverageCond
 import { EpicrisisSummaryDto, BasicPatientDto, OrganizationDto, PatientSummaryDto, PatientToMergeDto, PersonPhotoDto, InternmentEpisodeProcessDto, ExternalPatientCoverageDto, EmergencyCareEpisodeInProgressDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { InteroperabilityBusService } from '@api-rest/services/interoperability-bus.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
 import { UIPageDto } from '@extensions/extensions-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';

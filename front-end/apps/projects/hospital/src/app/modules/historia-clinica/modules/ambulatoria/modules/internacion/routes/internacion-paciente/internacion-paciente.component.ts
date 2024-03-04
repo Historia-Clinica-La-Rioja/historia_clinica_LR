@@ -8,8 +8,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PermissionsService } from '@core/services/permissions.service';
 
 import { MapperService } from '@presentation/services/mapper.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
-
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PatientService } from '@api-rest/services/patient.service';
 import {
 	BasicPatientDto,

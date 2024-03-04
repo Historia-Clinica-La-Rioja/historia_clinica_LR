@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {PersonalInformation} from '@presentation/components/personal-information/personal-information.component';
 import {PatientMedicalCoverageDto, PersonPhotoDto} from '@api-rest/api-model';
-import {PatientBasicData} from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import {MapperService} from '@presentation/services/mapper.service';
 import {PatientPortalService} from '@api-rest/services/patient-portal.service';
 

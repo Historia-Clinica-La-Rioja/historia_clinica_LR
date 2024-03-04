@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PersonPhotoDto } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { MapperService } from '@presentation/services/mapper.service';

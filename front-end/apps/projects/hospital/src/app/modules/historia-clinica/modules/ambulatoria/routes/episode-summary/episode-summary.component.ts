@@ -4,7 +4,7 @@ import { BasicPatientDto, EmergencyCareEpisodeInProgressDto, PersonPhotoDto, Res
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
 
 @Component({

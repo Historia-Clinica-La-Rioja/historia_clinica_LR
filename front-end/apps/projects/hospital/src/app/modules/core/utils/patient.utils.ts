@@ -1,4 +1,4 @@
-import {PatientBasicData} from "@presentation/components/patient-card/patient-card.component";
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 
 export const PATIENT_TYPE = {
 	PERMANENT: 1, // Paso por el servicio de Federar

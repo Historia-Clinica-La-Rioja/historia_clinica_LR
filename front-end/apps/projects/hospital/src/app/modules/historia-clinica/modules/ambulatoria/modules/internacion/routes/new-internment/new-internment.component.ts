@@ -25,7 +25,7 @@ import {
 
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { MapperService as CoreMapperService } from '@core/services/mapper.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { MapperService } from '@presentation/services/mapper.service';

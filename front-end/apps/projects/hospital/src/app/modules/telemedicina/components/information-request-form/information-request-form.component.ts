@@ -5,7 +5,7 @@ import { CareLineService } from '@api-rest/services/care-line.service';
 import { ContextService } from '@core/services/context.service';
 import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { AmbulatoryConsultationProblem } from '@historia-clinica/services/ambulatory-consultation-problems.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { Observable } from 'rxjs';
 

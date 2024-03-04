@@ -11,7 +11,8 @@
 			<span id="patient_id">{{viewIDAndIdentificationTypeAndNumber()}}</span>
 		</mat-card-title>
 		<mat-card-subtitle>
-			<span id="gender_age" [translate]=viewGenderAge()></span>
+			<span id="gender_age">{{gender | translate}} - </span>
+			<span [translate]="age" [translateParams]="{patientAge: patient.personAge}"></span>
 		</mat-card-subtitle>
 		<mat-card-subtitle *ngIf="internmentEpisodeProcess?.id && internmentEpisodeProcess?.inProgress"
 			class="label-episodes">

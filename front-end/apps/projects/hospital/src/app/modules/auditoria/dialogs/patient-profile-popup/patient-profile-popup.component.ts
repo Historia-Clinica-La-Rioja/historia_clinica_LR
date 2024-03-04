@@ -7,7 +7,7 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonService } from '@api-rest/services/person.service';
 import { MapperService } from '@presentation/services/mapper.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { AuditablePatientInfo } from '@pacientes/routes/edit-patient/edit-patient.component';
