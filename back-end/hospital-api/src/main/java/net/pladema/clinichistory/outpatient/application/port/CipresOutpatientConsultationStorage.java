@@ -4,7 +4,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.Outp
 
 import java.util.List;
 
-public interface OutpatientConsultationCipresStorage {
+public interface CipresOutpatientConsultationStorage {
 
 	List<OutpatientBasicDataBo> getOutpatientConsultationsToCipres();
 

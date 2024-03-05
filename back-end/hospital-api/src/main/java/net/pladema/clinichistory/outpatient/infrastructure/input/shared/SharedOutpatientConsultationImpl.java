@@ -5,14 +5,14 @@ import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.GenderDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.OutpatientConsultationDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.interoperability.cipres.CipresOutpatientConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAnthropometricDataDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedOutpatientConsultationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedRiskFactorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.outpatient.application.port.OutpatientConsultationCipresStorage;
+import net.pladema.clinichistory.outpatient.application.port.CipresOutpatientConsultationStorage;
 
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBasicDataBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientPatientBo;
@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 @Service
 public class SharedOutpatientConsultationImpl implements SharedOutpatientConsultationPort {
 
-	private final OutpatientConsultationCipresStorage outpatientConsultationCipresStorage;
+	private final CipresOutpatientConsultationStorage cipresOutpatientConsultationStorage;
 
 	@Override
-	public List<OutpatientConsultationDto> getOutpatientConsultationsToCipres() {
+	public List<CipresOutpatientConsultationDto> getOutpatientConsultationsToCipres() {
 		log.debug("fetch consultations to create");
-		List<OutpatientBasicDataBo> consultations = outpatientConsultationCipresStorage.getOutpatientConsultationsToCipres();
-		List<OutpatientConsultationDto> result = consultations
+		List<OutpatientBasicDataBo> consultations = cipresOutpatientConsultationStorage.getOutpatientConsultationsToCipres();
+		List<CipresOutpatientConsultationDto> result = consultations
 				.stream()
 				.map(this::mapToOutpatientConsultationDto)
 				.collect(Collectors.toList());
@@ -41,12 +41,13 @@ public class SharedOutpatientConsultationImpl implements SharedOutpatientConsult
 		return result;
 	}
 
-	public OutpatientConsultationDto mapToOutpatientConsultationDto (OutpatientBasicDataBo oc) {
-		return  OutpatientConsultationDto.builder()
+	public CipresOutpatientConsultationDto mapToOutpatientConsultationDto(OutpatientBasicDataBo oc) {
+		return  CipresOutpatientConsultationDto.builder()
 				.id(oc.getId())
 				.date(oc.getDate().toString())
 				.patient(mapToBasicPatientDto(oc.getPatient()))
 				.institutionSisaCode(oc.getInstitutionSisaCode())
+				.clinicalSpecialtyId(oc.getClinicalSpecialtyId())
 				.clinicalSpecialtySctid(oc.getClinicalSpecialtySctid())
 				.anthropometricData(mapToAnthropometricDataDto(oc.getAnthropometricData()))
 				.riskFactor(mapToSharedRiskFactorDto(oc.getRiskFactorData()))

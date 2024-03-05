@@ -1,5 +1,9 @@
-package ar.lamansys.sgh.shared.infrastructure.input.service;
+package ar.lamansys.sgh.shared.infrastructure.input.service.interoperability.cipres;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAnthropometricDataDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedRiskFactorDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,13 +15,15 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class OutpatientConsultationDto {
+public class CipresOutpatientConsultationDto {
 
 	private Integer id;
 
 	private BasicPatientDto patient;
 
 	private String date;
+
+	private Integer clinicalSpecialtyId;
 
 	private String clinicalSpecialtySctid;
 

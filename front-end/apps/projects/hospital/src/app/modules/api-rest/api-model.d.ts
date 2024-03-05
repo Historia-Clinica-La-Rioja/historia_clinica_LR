@@ -737,6 +737,20 @@ export interface ChangeStateMedicationRequestDto extends Serializable {
     observations?: string;
 }
 
+export interface CipresOutpatientConsultationDto {
+    anthropometricData: SharedAnthropometricDataDto;
+    clinicalSpecialtyId: number;
+    clinicalSpecialtySctid: string;
+    date: string;
+    id: number;
+    institutionSisaCode: string;
+    medications: SharedSnomedDto[];
+    patient: BasicPatientDto;
+    problems: SharedSnomedDto[];
+    procedures: SharedSnomedDto[];
+    riskFactor: SharedRiskFactorDto;
+}
+
 export interface CirculationDto extends Serializable {
     heartRate: NewEffectiveClinicalObservationDto;
     perfusionId: number;
@@ -2951,19 +2965,6 @@ export interface OutpatientAnthropometricDataDto extends Serializable {
     headCircumference?: ClinicalObservationDto;
     height: ClinicalObservationDto;
     weight: ClinicalObservationDto;
-}
-
-export interface OutpatientConsultationDto {
-    anthropometricData: SharedAnthropometricDataDto;
-    clinicalSpecialtySctid: string;
-    date: string;
-    id: number;
-    institutionSisaCode: string;
-    medications: SharedSnomedDto[];
-    patient: BasicPatientDto;
-    problems: SharedSnomedDto[];
-    procedures: SharedSnomedDto[];
-    riskFactor: SharedRiskFactorDto;
 }
 
 export interface OutpatientEvolutionSummaryDto extends Serializable {

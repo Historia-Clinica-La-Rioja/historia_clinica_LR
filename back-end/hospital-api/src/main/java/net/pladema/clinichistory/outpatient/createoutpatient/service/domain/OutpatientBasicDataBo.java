@@ -24,6 +24,8 @@ public class OutpatientBasicDataBo {
 
 	private OutpatientPatientBo patient;
 
+	private Integer clinicalSpecialtyId;
+
 	private String clinicalSpecialtySctid;
 
 	private String institutionSisaCode;
@@ -39,15 +41,28 @@ public class OutpatientBasicDataBo {
 	private RiskFactorBo riskFactorData;
 
 
-	public OutpatientBasicDataBo(Integer id, Long documentId, LocalDateTime date,
+	public OutpatientBasicDataBo(Integer id, Long documentId, LocalDateTime date, Integer clinicalSpecialtyId,
 								 String clinicalSpecialtySctid, String institutionSisaCode,
 								 Integer patientId, Integer personId, Short identificationType,
 								 String identificationNumber, Short genderId) {
 		this.id = id;
 		this.documentId = documentId;
 		this.date = date;
+		this.clinicalSpecialtyId = clinicalSpecialtyId;
 		this.clinicalSpecialtySctid = clinicalSpecialtySctid;
 		this.institutionSisaCode = institutionSisaCode;
 		this.patient = new OutpatientPatientBo(patientId, personId, identificationType, identificationNumber, genderId);
 	}
+
+	public OutpatientBasicDataBo(Integer id, LocalDateTime date,
+								 String clinicalSpecialtySctid, String institutionSisaCode,
+								 Integer patientId, Integer personId, Short identificationType,
+								 String identificationNumber, Short genderId) {
+		this.id = id;
+		this.date = date;
+		this.clinicalSpecialtySctid = clinicalSpecialtySctid;
+		this.institutionSisaCode = institutionSisaCode;
+		this.patient = new OutpatientPatientBo(patientId, personId, identificationType, identificationNumber, genderId);
+	}
+
 }

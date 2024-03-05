@@ -97,7 +97,7 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
 	@Transactional(readOnly = true)
 	@Override
 	public List<OutpatientBasicDataBo> getOutpatientConsultationsToCipres(Integer limit, LocalDateTime start, LocalDateTime end) {
-		String sqlString =" SELECT oc.id, d.id, oc.creationable.createdOn, cs.sctidCode, i.sisaCode, oc.patientId, pe.id, " +
+		String sqlString =" SELECT oc.id, d.id, oc.creationable.createdOn, cs.id, cs.sctidCode, i.sisaCode, oc.patientId, pe.id, " +
 				"pe.identificationTypeId, pe.identificationNumber, pe.genderId " +
 				"FROM OutpatientConsultation oc " +
 				"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
@@ -124,13 +124,14 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
 						(Integer)a[0],
 						(Long)a[1],
 						(LocalDateTime)a[2],
-						(String) a[3],
+						(Integer) a[3],
 						(String) a[4],
-						(Integer) a[5],
-						(Integer)a[6],
-						(Short)a[7],
-						(String)a[8],
-						(Short)a[9])
+						(String) a[5],
+						(Integer) a[6],
+						(Integer)a[7],
+						(Short)a[8],
+						(String)a[9],
+						(Short)a[10])
 				)
 		);
 		return result;

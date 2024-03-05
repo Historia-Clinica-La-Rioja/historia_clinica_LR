@@ -2,7 +2,7 @@ package net.pladema.cipres.application.getconsultations;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.OutpatientConsultationDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.interoperability.cipres.CipresOutpatientConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAnthropometricDataDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedOutpatientConsultationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedRiskFactorDto;
@@ -37,11 +37,12 @@ public class GetConsultations {
 		return result;
 	}
 
-	private OutpatientConsultationBo mapToOutpatientConsultationBo(OutpatientConsultationDto consultation) {
+	private OutpatientConsultationBo mapToOutpatientConsultationBo(CipresOutpatientConsultationDto consultation) {
 		 return OutpatientConsultationBo.builder()
 				 .id(consultation.getId())
 				 .date(consultation.getDate())
 				 .patient(mapToBasicPatientDataBo(consultation.getPatient()))
+				 .clinicalSpecialtyId(consultation.getClinicalSpecialtyId())
 				 .clinicalSpecialtySctid(consultation.getClinicalSpecialtySctid())
 				 .anthropometricData(mapToAnthropometricDataBo(consultation.getAnthropometricData()))
 				 .riskFactor(mapToSharedRiskFactorBo(consultation.getRiskFactor()))
