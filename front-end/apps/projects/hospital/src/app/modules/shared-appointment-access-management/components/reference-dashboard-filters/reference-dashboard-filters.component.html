@@ -3,7 +3,7 @@
 		<div date-picker fxLayout="column">
 			<div fxLayout="row" fxLayoutGap="30px" fxLayout.lt-md="column">
 
-				<mat-button-toggle-group value="{{dashboardService.dashboardView}}" *appHasRole="['ADMINISTRATIVO']"
+				<mat-button-toggle-group value="{{dashboardService.dashboardView}}" *appHasRole="['ADMINISTRATIVO','ABORDAJE_VIOLENCIAS']"
 					(change)="dashboardService.updateDashboardView($event.value)">
 					<mat-button-toggle value="{{dashboardView.RECEIVED}}"
 						[disabled]="dashboardService.disabledDashboardActions">

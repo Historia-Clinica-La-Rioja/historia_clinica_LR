@@ -20,7 +20,7 @@ const INITIAL_PAGE = 0;
 })
 export class DashboardService {
 
-	private isAdministrative = false;
+	private hasRolePermissionToReceive = false;
 	private references = new BehaviorSubject<PageDto<ReferenceReportDto>>(null);
 	readonly references$ = this.references.asObservable();
 
@@ -40,8 +40,8 @@ export class DashboardService {
 
 	initializeService() {
 		this.initializeFilters();
-		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO]).pipe(take(1)).subscribe(hasRole => {
-			this.isAdministrative = hasRole
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO,ERole.ABORDAJE_VIOLENCIAS]).pipe(take(1)).subscribe(hasRole => {
+			this.hasRolePermissionToReceive = hasRole
 			this.updateReports();
 		});
 	}
@@ -85,7 +85,7 @@ export class DashboardService {
 	}
 
 	private updateInsitutionalReferences() {
-		const methodName = this.isAdministrative && this.dashboardView == DashboardView.RECEIVED ? METHOD_NAMES.RECEIVED : METHOD_NAMES.REQUESTED;
+		const methodName = this.hasRolePermissionToReceive && this.dashboardView == DashboardView.RECEIVED ? METHOD_NAMES.RECEIVED : METHOD_NAMES.REQUESTED;
 		this.callReferenceReportService(this.institutionalReferenceReportService, methodName);
 	}
 

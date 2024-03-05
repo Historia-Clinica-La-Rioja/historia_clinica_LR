@@ -59,7 +59,7 @@ public class InstitutionalReferenceReportController {
 	private final ReferenceMapper referenceMapper;
 
 	@GetMapping("/received")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<PageDto<ReferenceReportDto>> getAllReceivedReferences(@PathVariable(name = "institutionId") Integer institutionId,
 																				 @RequestParam(name = "filter") String filter,
 																				 @RequestParam(name = "pageNumber") Integer pageNumber,
