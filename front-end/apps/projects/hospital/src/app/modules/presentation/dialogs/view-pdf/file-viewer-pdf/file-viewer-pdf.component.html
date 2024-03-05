@@ -1,0 +1,14 @@
+<mat-progress-bar
+	*ngIf="pdfIsLoading"
+	class="example-margin"
+	color="primary"
+	mode="determinate"
+	[value]="pdfProgress"
+></mat-progress-bar>
+<pdf-viewer [src]="pdfSrc"
+	[render-text]="true"
+	[original-size]="true"
+	(on-progress)="onProgress($event)"
+	(after-load-complete)="afterLoadComplete()"
+	(error)="onError.emit($event)"
+></pdf-viewer>

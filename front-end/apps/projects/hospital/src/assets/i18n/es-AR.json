@@ -58,7 +58,9 @@
 		"IMPORT":"Importar",
 		"PDF_DOWNLOAD": "DESCARGAR .PDF",
 		"SIGN": "Firmar documento",
-		"APPLY_FILTERS": "Aplicar filtros"
+		"APPLY_FILTERS": "Aplicar filtros",
+		"SHARE": "Compartir",
+		"DOWNLOAD": "Descargar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
@@ -127,6 +129,19 @@
 	"messages": {
 		"NO_DATA": "No hay información para mostrar",
 		"COPIED": "¡Copiado!"
+	},
+	"download": {
+		"TITLE": "Acceso al documento",
+		"content": {
+			"IN_PROGRESS": "Obteniendo el archivo",
+			"READY": "Se obtuvo el archivo",
+			"CANT_PREVIEW": "Se obtuvo el archivo pero no se puede previsualizar",
+
+			"GENERIC_ERROR": "Ha ocurrido un problema descargando el archivo",
+			"SAVE_IOEXCEPTION": "No se pudo obtener el archivo",
+			"NON_EXIST": "No se pudo encontrar el archivo"
+		}
+
 	},
 	"profile": {
 		"PICTURE": "Foto de perfil"

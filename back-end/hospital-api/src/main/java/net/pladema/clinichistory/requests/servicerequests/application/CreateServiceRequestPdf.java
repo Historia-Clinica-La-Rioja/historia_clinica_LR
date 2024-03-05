@@ -1,5 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.application;
 
+import static ar.lamansys.sgx.shared.files.pdf.EPDFTemplate.FORM_REPORT;
+import static ar.lamansys.sgx.shared.files.pdf.EPDFTemplate.RECIPE_ORDER_TABLE;
+
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.DocumentAuthorFinder;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
@@ -7,7 +10,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -38,7 +42,7 @@ import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNu
 import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
-import org.springframework.http.MediaType;
+
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -51,7 +55,7 @@ public class CreateServiceRequestPdf {
     private final SharedInstitutionPort sharedInstitutionPort;
     private final PatientExternalService patientExternalService;
     private final DocumentAuthorFinder documentAuthorFinder;
-	private final PdfService pdfService;
+	private final GeneratedPdfResponseService generatedPdfResponseService;
 	private final InstitutionService institutionService;
 	private final HealthcareProfessionalService healthcareProfessionalService;
 	private final GetLicenseNumberByProfessional getLicenseNumberByProfessional;
@@ -65,10 +69,10 @@ public class CreateServiceRequestPdf {
 	private final CreateDeliveryOrderFormContext createDeliveryOrderFormContext;
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
 
-    public StoredFileBo run(Integer institutionId, Integer patientId, Integer serviceRequestId) {
+    public GeneratedBlobBo run(Integer institutionId, Integer patientId, Integer serviceRequestId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
 
-        StoredFileBo storedFileBo = AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION.isActive()
+        var storedFileBo = AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION.isActive()
                     ? createDeliveryOrderForm(patientId, serviceRequestId)
                     : createRecipeOrderTable(institutionId, patientId, serviceRequestId);
 
@@ -76,18 +80,18 @@ public class CreateServiceRequestPdf {
         return storedFileBo;
     }
 
-	private StoredFileBo createDeliveryOrderForm(Integer patientId, Integer serviceRequestId) {
+	private GeneratedBlobBo createDeliveryOrderForm(Integer patientId, Integer serviceRequestId) {
 
 		ServiceRequestBo serviceRequest = getServiceRequestInfoService.run(serviceRequestId);
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
 		FormVBo baseFormV = createDeliveryOrderBaseForm.run(patientId, serviceRequest, patientDto);
 		FormVBo formV = completeFormV(baseFormV, serviceRequest);
 		Map<String, Object> context = createDeliveryOrderFormContext.run(formV, serviceRequest);
-        String template = "form_report";
 
-        return new StoredFileBo(pdfService.generate(template, context),
-                MediaType.APPLICATION_PDF_VALUE,
-				this.resolveNameFile(patientDto, serviceRequestId));
+		return generatedPdfResponseService.generatePdf(FORM_REPORT,
+				context,
+				this.resolveNameFile(patientDto, serviceRequestId)
+		);
 	}
 
 	private FormVBo completeFormV(FormVBo formV, ServiceRequestBo serviceRequest) {
@@ -202,18 +206,17 @@ public class CreateServiceRequestPdf {
 		return null;
 	}
 
-    private StoredFileBo createRecipeOrderTable(Integer institutionId, Integer patientId, Integer serviceRequestId) {
+    private GeneratedBlobBo createRecipeOrderTable(Integer institutionId, Integer patientId, Integer serviceRequestId) {
         var serviceRequestBo = getServiceRequestInfoService.run(serviceRequestId);
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         var institutionDto = sharedInstitutionPort.fetchInstitutionById(institutionId);
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(serviceRequestBo.getMedicalCoverageId());
         var context = createRecipeOrderTableContext(serviceRequestBo, patientDto, patientCoverageDto, institutionDto);
 
-        String template = "recipe_order_table";
-
-        return new StoredFileBo(pdfService.generate(template, context),
-                MediaType.APPLICATION_PDF_VALUE,
-				this.resolveNameFile(patientDto, serviceRequestId));
+		return generatedPdfResponseService.generatePdf(RECIPE_ORDER_TABLE,
+			context,
+			this.resolveNameFile(patientDto, serviceRequestId)
+		);
     }
 
     private Map<String, Object> createRecipeOrderTableContext(ServiceRequestBo serviceRequestBo,
@@ -241,6 +244,6 @@ public class CreateServiceRequestPdf {
     }
 
 	private String resolveNameFile(BasicPatientDto patientDto, Integer serviceRequestId) {
-		return String.format("%s%s.pdf", patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationNumber().concat("_") : "", serviceRequestId);
+		return String.format("%s%s", patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationNumber().concat("_") : "", serviceRequestId);
 	}
 }

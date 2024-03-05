@@ -1,7 +1,8 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
+import static ar.lamansys.sgx.shared.files.pdf.EPDFTemplate.RECIPE_ORDER_TABLE;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import java.io.IOException;
@@ -23,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -47,8 +47,9 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCom
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.BlobLazyFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -109,7 +110,7 @@ public class MedicationRequestController {
 
     private final PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
 
-    private final PdfService pdfService;
+	private final GeneratedPdfResponseService generatedPdfResponseService;
 
 	private final FeatureFlagsService featureFlagsService;
 
@@ -118,8 +119,6 @@ public class MedicationRequestController {
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 
 	private final NewMedicationRequestNotification newMedicationRequestNotification;
-
-	private final SharedDocumentPort sharedDocumentPort;
 
 	private final GetMedicationRequestByDocument getMedicationRequestByDocument;
 
@@ -140,12 +139,11 @@ public class MedicationRequestController {
 									   PatientExternalService patientExternalService,
 									   GetMedicationRequestInfoService getMedicationRequestInfoService,
 									   PatientExternalMedicalCoverageService patientExternalMedicalCoverageService,
-									   PdfService pdfService,
+									   GeneratedPdfResponseService generatedPdfResponseService,
 									   FeatureFlagsService featureFlagsService,
 									   DocumentAuthorFinder documentAuthorFinder,
 									   ValidateMedicationRequestGenerationService validateMedicationRequestGenerationService,
 									   NewMedicationRequestNotification newMedicationRequestNotification,
-									   SharedDocumentPort sharedDocumentPort,
 									   GetMedicationRequestByDocument getMedicationRequestByDocument,
 									   FetchMostFrequentPharmacos fetchMostFrequentPharmacos,
 									   CancelPrescriptionLineState cancelPrescriptionLineState,
@@ -160,12 +158,11 @@ public class MedicationRequestController {
         this.patientExternalService = patientExternalService;
         this.getMedicationRequestInfoService = getMedicationRequestInfoService;
         this.patientExternalMedicalCoverageService = patientExternalMedicalCoverageService;
-        this.pdfService = pdfService;
+        this.generatedPdfResponseService = generatedPdfResponseService;
 		this.featureFlagsService = featureFlagsService;
 		this.validateMedicationRequestGenerationService = validateMedicationRequestGenerationService;
 		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
 		this.newMedicationRequestNotification = newMedicationRequestNotification;
-		this.sharedDocumentPort = sharedDocumentPort;
 		this.getMedicationRequestByDocument = getMedicationRequestByDocument;
 		this.fetchMostFrequentPharmacos = fetchMostFrequentPharmacos;
 		this.cancelPrescriptionLineState = cancelPrescriptionLineState;
@@ -279,12 +276,10 @@ public class MedicationRequestController {
         var patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         var patientCoverageDto = patientExternalMedicalCoverageService.getCoverage(medicationRequestBo.getMedicalCoverageId());
 		Map<String, Object> context = createContext(medicationRequestBo, patientDto, patientCoverageDto);
-		String template = "recipe_order_table";
+		String filename = String.format("%s_%s", patientDto.getIdentificationNumber(), medicationRequestId);
 
-		return StoredFileResponse.sendFile(
-				pdfService.generate(template, context),
-				String.format("%s_%s.pdf", patientDto.getIdentificationNumber(), medicationRequestId),
-				MediaType.APPLICATION_PDF
+		return StoredFileResponse.sendGeneratedBlob(//MedicationRequestService.download
+				generatedPdfResponseService.generatePdf(RECIPE_ORDER_TABLE, context, filename)
 		);
     }
 

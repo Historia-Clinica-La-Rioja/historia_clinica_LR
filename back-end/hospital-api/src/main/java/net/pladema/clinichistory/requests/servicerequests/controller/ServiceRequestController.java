@@ -1,16 +1,41 @@
 package net.pladema.clinichistory.requests.servicerequests.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
+
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import ar.lamansys.sgh.clinichistory.application.fetchorderimagefile.FetchOrderImageFileById;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyOrderReportInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyWithoutOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,9 +50,9 @@ import net.pladema.clinichistory.requests.servicerequests.controller.dto.Complet
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyTranscribedOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyTranscribedOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportInfoMapper;
@@ -60,30 +85,6 @@ import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -419,9 +420,12 @@ public class ServiceRequestController {
 												@PathVariable(name = "patientId") Integer patientId,
 												@PathVariable(name = "serviceRequestId") Integer serviceRequestId) throws PDFDocumentException {
         log.trace("Input parameters -> institutionId {}, patientId {}, serviceRequestId {}", institutionId, patientId, serviceRequestId);
-		StoredFileBo result = createServiceRequestPdf.run(institutionId, patientId, serviceRequestId);
+		var result = createServiceRequestPdf.run(institutionId, patientId, serviceRequestId);
 		log.trace(OUTPUT, result);
-		return StoredFileResponse.sendFile(result);
+
+		return StoredFileResponse.sendGeneratedBlob(//ServiceRequestService.downloadPdf
+				result
+		);
     }
 
 	@GetMapping(value = "/transcribed/{transcribedServiceRequestId}/download-pdf")
@@ -431,9 +435,12 @@ public class ServiceRequestController {
 												@PathVariable(name = "transcribedServiceRequestId") Integer transcribedServiceRequestId,
 												@RequestParam(name = "appointmentId") String appointmentId) throws PDFDocumentException {
 		log.trace("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequestId {}, appointmentId {}", institutionId, patientId, transcribedServiceRequestId, appointmentId);
-		StoredFileBo result = createTranscribedServiceRequestPdf.run(institutionId, patientId, transcribedServiceRequestId, Integer.valueOf(appointmentId));
+		var result = createTranscribedServiceRequestPdf.run(institutionId, patientId, transcribedServiceRequestId, Integer.valueOf(appointmentId));
 		log.trace(OUTPUT, result);
-		return StoredFileResponse.sendFile(result);
+
+		return StoredFileResponse.sendGeneratedBlob(//ServiceRequestService.downloadTranscribedOrderPdf
+				result
+		);
 	}
 
 }

@@ -81,6 +81,9 @@ import { UserBadgeComponent } from './components/user-badge/user-badge.component
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
+import { FileDownloadComponent } from './dialogs/view-pdf/file-download/file-download.component';
+import { FileDownloadCardComponent } from './dialogs/view-pdf/file-download-card/file-download-card.component';
+import { FileViewerPdfComponent } from './dialogs/view-pdf/file-viewer-pdf/file-viewer-pdf.component';
 import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
@@ -98,7 +101,6 @@ import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
-
 
 
 @NgModule({
@@ -177,6 +179,9 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ConfirmDialogComponent,
 		DatePickerComponent,
 		DiscardWarningComponent,
+		FileDownloadComponent,
+		FileDownloadCardComponent,
+		FileViewerPdfComponent,
 		ViewPdfComponent,
 		// directives
 		CtrlTemplateDirective,

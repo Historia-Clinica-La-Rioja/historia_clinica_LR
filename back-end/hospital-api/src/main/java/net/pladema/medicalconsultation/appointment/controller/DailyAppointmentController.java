@@ -1,6 +1,9 @@
 package net.pladema.medicalconsultation.appointment.controller;
 
+import static ar.lamansys.sgx.shared.files.pdf.EPDFTemplate.DAILY_APPOINTMENTS;
+
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -18,13 +21,11 @@ import net.pladema.patient.controller.service.PatientExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,8 @@ public class DailyAppointmentController {
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
 
-    private final PdfService pdfService;
+    private final GeneratedPdfResponseService generatedPdfResponseService;
+
 
     private final FeatureFlagsService featureFlagsService;
 
@@ -66,13 +68,15 @@ public class DailyAppointmentController {
                                       LocalDateMapper localDateMapper,
                                       PatientExternalService patientExternalService,
                                       DiaryService diaryService, HealthcareProfessionalExternalService healthcareProfessionalExternalService,
-                                      PdfService pdfService, FeatureFlagsService featureFlagsService){
+                                      FeatureFlagsService featureFlagsService,
+									  GeneratedPdfResponseService generatedPdfResponseService
+	){
         this.dailyAppointmentReport = dailyAppointmentReport;
         this.localDateMapper = localDateMapper;
         this.patientExternalService = patientExternalService;
         this.diaryService = diaryService;
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
-        this.pdfService = pdfService;
+        this.generatedPdfResponseService = generatedPdfResponseService;
         this.featureFlagsService = featureFlagsService;
     }
 
@@ -90,11 +94,8 @@ public class DailyAppointmentController {
         Integer healthCareProfessionalId = diaryService.getDiary(diaryId).map(DiaryBo::getHealthcareProfessionalId).orElse(null);
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findActiveProfessionalById(healthCareProfessionalId);
         Map<String, Object> context = createContext(professionalDto, attentionTypeReportDtos, consultedDate, now);
-
-		return StoredFileResponse.sendFile(
-				pdfService.generate("daily-appointments", context),
-				createOutputFileName(professionalDto, consultedDate),
-				MediaType.APPLICATION_PDF
+		return StoredFileResponse.sendGeneratedBlob(//DailyAppointmentService.getDailyAppointmentsByDiaryIdAndDate
+				generatedPdfResponseService.generatePdf(DAILY_APPOINTMENTS, context, createOutputFileName(professionalDto, consultedDate))
 		);
     }
 
@@ -178,7 +179,7 @@ public class DailyAppointmentController {
 		}else {
 			name = professionalDto.getCompleteName(professionalDto.getFirstName());
 		}
-		String outputFileName = String.format("%s-Turnos %s.pdf", name, formattedDate);
+		String outputFileName = String.format("%s-Turnos %s", name, formattedDate);
         LOG.debug(OUTPUT, outputFileName);
         return outputFileName;
     }

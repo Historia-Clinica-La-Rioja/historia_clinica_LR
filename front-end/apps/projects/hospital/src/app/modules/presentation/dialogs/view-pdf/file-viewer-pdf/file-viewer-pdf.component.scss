@@ -1,0 +1,20 @@
+pdf-viewer {
+	display: block;
+	height: 89vh;
+
+	width: 99vw;
+	margin: 0 auto;
+}
+
+
+.error {
+	max-width: 500px;
+	margin: 100px auto;
+
+}
+
+@media only screen and (max-width: 600px) {
+	.error {
+		margin: 100px 24px;
+	}
+}

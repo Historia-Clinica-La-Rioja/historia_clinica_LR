@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DocumentTypeDto, EpisodeDocumentResponseDto, EpisodeDocumentTypeDto} from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
+import { DownloadService } from '@core/services/download.service';
 import { environment } from '@environments/environment';
-import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class InternmentEpisodeDocumentService {
 	constructor(
 		private http: HttpClient,
 		private contextService: ContextService,
-		private viewPdfService: ViewPdfService,
+		private downloadService: DownloadService,
 	) { }
 
 	saveInternmentEpisodeDocument(file, internmentEpisodeId: number, episodeDocumentTypeId: number, consentId: number): Observable<number> {
@@ -44,14 +44,14 @@ export class InternmentEpisodeDocumentService {
 		const fileName = `Consentimiento_${consentId}.pdf`;
 
 		if (procedures && professionalId) {
-			this.viewPdfService.showDialog(
+			this.downloadService.fetchFile(
 				url,
 				fileName,
 				{ procedures: `${procedures.join(',')}`, observations: observations, professionalId}
 			);
 		}
 		else {
-			this.viewPdfService.showDialog(
+			this.downloadService.fetchFile(
 				url,
 				fileName
 			);
@@ -65,7 +65,7 @@ export class InternmentEpisodeDocumentService {
 
 	download(episodeDocumentId: number, fileName: string) {
 		const url = `${this.url}/internments/episodedocuments/download/${episodeDocumentId}`;
-		this.viewPdfService.showDialog(
+		this.downloadService.fetchFile(
 			url,
 			fileName,
 		);

@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { ContextService } from '@core/services/context.service';
 import {DocumentDto, HCEDocumentDataDto} from "@api-rest/api-model";
-import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { Observable } from 'rxjs';
+import { DownloadService } from '@core/services/download.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,13 +14,13 @@ export class DocumentService {
 
 	constructor(
 		private contextService: ContextService,
-		private viewPdfService: ViewPdfService,
+		private downloadService: DownloadService,
 		private http: HttpClient
 	) { }
 
 	public downloadFile(document: HCEDocumentDataDto): void {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents/${document.id}/downloadFile`;
-		this.viewPdfService.showDialog(
+		this.downloadService.fetchFile(
 			url,
 			document.filename,
 		);

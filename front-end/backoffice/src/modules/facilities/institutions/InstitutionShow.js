@@ -41,7 +41,7 @@ const CreateHierarchicalUnit = ({ record }) => {
 
 const UserIsInstitutionalAdmin = function () {
     const { permissions } = usePermissions();
-    const userAdmin = permissions.hasAnyAssignment(ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE);
+    const userAdmin = permissions?.hasAnyAssignment(ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE);
     return userAdmin;
 }
 

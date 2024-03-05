@@ -1,0 +1,7 @@
+
+<mat-progress-bar
+		*ngIf="fileDownloadStatus.state !== 'DONE'"
+		[mode]="fileDownloadStatus.state === 'PENDING' ? 'buffer' : 'determinate'"
+		[value]="fileDownloadStatus.progress?.value"
+		[color]="fileDownloadStatus.state === 'ERROR' ? 'warn' : 'primary'">
+</mat-progress-bar>

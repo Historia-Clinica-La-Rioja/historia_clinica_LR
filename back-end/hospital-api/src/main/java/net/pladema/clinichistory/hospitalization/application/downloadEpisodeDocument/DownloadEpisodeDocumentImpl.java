@@ -1,11 +1,10 @@
 package net.pladema.clinichistory.hospitalization.application.downloadEpisodeDocument;
 
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.BlobLazyFileBo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.EpisodeDocumentStorage;
-
-
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -20,9 +19,9 @@ public class DownloadEpisodeDocumentImpl implements DownloadEpisodeDocument {
 	}
 
 	@Override
-	public StoredFileBo run(Integer episodeDocumentId) {
+	public BlobLazyFileBo run(Integer episodeDocumentId) {
 		log.debug(INPUT, episodeDocumentId);
-		StoredFileBo bo = episodeDocumentStorage.downloadEpisodeDocument(episodeDocumentId);
+		BlobLazyFileBo bo = episodeDocumentStorage.downloadEpisodeDocument(episodeDocumentId);
 		log.debug(OUTPUT, bo);
 		return bo;
 	}

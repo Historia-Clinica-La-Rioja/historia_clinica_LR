@@ -38,7 +38,8 @@ public class InternmentEpisodeDownloadController {
 		log.debug("Input parameters -> episodeDocumentId {}, institutionId {}", episodeDocumentId, institutionId);
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_DESCARGA_DOCUMENTOS_PDF))
 			return new ResponseEntity<>(null, HttpStatus.METHOD_NOT_ALLOWED);
-		return StoredFileResponse.sendFile(
+
+		return StoredFileResponse.sendStoredBlob(//InternmentEpisodeDocumentService.download
 				downloadEpisodeDocument.run(episodeDocumentId)
 		);
 	}

@@ -15,8 +15,7 @@ import {
 } from '@api-rest/api-model';
 
 import { switchMap } from 'rxjs/operators';
-import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
-import {DownloadService} from "@core/services/download.service";
+import { DownloadService } from '@core/services/download.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,7 +25,6 @@ export class ServiceRequestService {
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService,
-		private readonly viewPdfService: ViewPdfService,
 		private readonly downloadService: DownloadService,
 	) { }
 
@@ -129,12 +127,12 @@ export class ServiceRequestService {
 
 	downloadPdf(patientId: number, serviceRequestId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/${serviceRequestId}/download-pdf`;
-		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId);
+		this.downloadService.fetchFile(url, 'Orden ' + serviceRequestId);
 	}
 
 	downloadTranscribedOrderPdf(patientId: number, serviceRequestId: number, appointmentId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/service-requests/transcribed/${serviceRequestId}/download-pdf`;
-		this.viewPdfService.showDialog(url, 'Orden ' + serviceRequestId, { appointmentId: appointmentId.toString() });
+		this.downloadService.fetchFile(url, 'Orden ' + serviceRequestId, { appointmentId: appointmentId.toString() });
 	}
 
 	getStudyTranscribedOrder(patientId: number): Observable<StudyTranscribedOrderReportInfoDto[]>

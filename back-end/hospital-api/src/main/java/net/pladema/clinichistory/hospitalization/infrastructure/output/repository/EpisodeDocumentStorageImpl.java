@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.files.FileService;
+import ar.lamansys.sgx.shared.filestorage.application.FetchFileResource;
 import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.BlobLazyFileBo;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.EpisodeDocumentStorage;
 import net.pladema.clinichistory.hospitalization.infrastructure.output.entities.EpisodeDocument;
@@ -37,16 +37,21 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 
 	private final FileService fileService;
 
+	private final FetchFileResource fetchFileResource;
+
 	private static final String RELATIVE_DIRECTORY = "/internments/{internmentEpisodeId}/episodedocuments/";
 
 	private final String PDF = ".pdf";
 
-	public EpisodeDocumentStorageImpl(SavedEpisodeDocumentRepository savedEpisodeDocumentRepository, EpisodeDocumentRepository episodeDocumentRepository, LocalDateMapper localDateMapper, InternmentEpisodeDocumentTypeRepository documentTypeRepository, FileService fileService) {
+	public EpisodeDocumentStorageImpl(
+			SavedEpisodeDocumentRepository savedEpisodeDocumentRepository, EpisodeDocumentRepository episodeDocumentRepository, LocalDateMapper localDateMapper, InternmentEpisodeDocumentTypeRepository documentTypeRepository, FileService fileService,
+			FetchFileResource fetchFileResource) {
 		this.savedEpisodeDocumentRepository = savedEpisodeDocumentRepository;
 		this.episodeDocumentRepository = episodeDocumentRepository;
 		this.localDateMapper = localDateMapper;
 		this.documentTypeRepository = documentTypeRepository;
 		this.fileService = fileService;
+		this.fetchFileResource = fetchFileResource;
 	}
 
 	@Override
@@ -94,19 +99,13 @@ public class EpisodeDocumentStorageImpl implements EpisodeDocumentStorage {
 	}
 
 	@Override
-	public StoredFileBo downloadEpisodeDocument(Integer episodeDocumentId) {
+	public BlobLazyFileBo downloadEpisodeDocument(Integer episodeDocumentId) {
 		log.debug("Input parameters -> episodeDocumentId {}", episodeDocumentId);
 		Optional<EpisodeDocument> ed = this.savedEpisodeDocumentRepository.findById(episodeDocumentId);
 		if ( ! ed.isPresent()) return null;
 		var episodeDocument = ed.get();
-		var path = fileService.buildCompletePath(episodeDocument.getFilePath());
-		var bo = new StoredFileBo(
-				fileService.loadFile(path),
-				MediaType.APPLICATION_PDF.toString(),
-				episodeDocument.getFileName()
-		);
-		log.debug(OUTPUT, bo);
-		return bo;
+		return fetchFileResource.run(episodeDocument.getFilePath());
+
 	}
 
 	private EpisodeDocumentResponseBo mapEntityToBo(VEpisodeDocument entity) {

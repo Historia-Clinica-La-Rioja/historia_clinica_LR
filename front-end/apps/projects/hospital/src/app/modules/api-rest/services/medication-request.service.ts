@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
 	DocumentRequestDto,
 	MedicationInfoDto,
@@ -10,8 +10,7 @@ import {
 	SnomedDto
 } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
-import { of } from 'rxjs';
-import { ViewPdfService } from '@presentation/dialogs/view-pdf/view-pdf.service';
+import { DownloadService } from '@core/services/download.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,7 @@ export class MedicationRequestService {
 	constructor(
 		private http: HttpClient,
 		private readonly contextService: ContextService,
-		private readonly viewPdfService: ViewPdfService,
+		private readonly downloadService: DownloadService,
 	  ) { }
 
 
@@ -89,7 +88,7 @@ export class MedicationRequestService {
 
 	download(patientId: number, medicationRequestId: number) {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/medication-requests/${medicationRequestId}/download`;
-		this.viewPdfService.showDialog(url, 'Receta ' + medicationRequestId);
+		this.downloadService.fetchFile(url, 'Receta ' + medicationRequestId);
 	}
 
 	validateProfessional(patientId: number): Observable<ProfessionalLicenseNumberValidationResponseDto> {
