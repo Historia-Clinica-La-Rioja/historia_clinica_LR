@@ -132,7 +132,7 @@ public class ImageNetworkProductivityCellDataRepository {
 		result.setIdentificationNumber((String) data[4]);
 		result.setSelfDeterminationGender((String) data[5]);
 		result.setPatientStreetName((String) data[6]);
-		result.setPatientStreetName((String) data[7]);
+		result.setPatientStreetNumber((String) data[7]);
 		result.setPatientBirthDate(data[8] != null ? ((Date) data[8]).toLocalDate() : null);
 		result.setPhonePrefix((String) data[9]);
 		result.setPhoneNumber((String) data[10]);
