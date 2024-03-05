@@ -296,6 +296,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value,
 			otherLastNames: this.form.controls.otherLastNames.value,
+			personAge: null,
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,

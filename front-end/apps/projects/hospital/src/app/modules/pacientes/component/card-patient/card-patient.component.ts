@@ -177,6 +177,7 @@ export class CardPatientComponent {
 					birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 					identificationNumber: patient.person.identificationNumber,
 					identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
+					personAge: patient.person.personAge
 				}
 
 			})

@@ -332,6 +332,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			auditType: null,
 			generalPractitioner: null,
 			identityVerificationStatusId: null,
+			personAge: null,
 			pamiDoctor: null,
 			typeId: this.patientData.typeId,
 			apartment: this.person.apartment,
