@@ -2,17 +2,21 @@ package net.pladema.cipres.application.port;
 
 import ar.lamansys.sgx.shared.restclient.services.RestClient;
 import ar.lamansys.sgx.shared.restclient.services.RestClientInterface;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.cipres.infrastructure.output.repository.CipresEncounter;
 import net.pladema.cipres.infrastructure.output.repository.CipresEncounterRepository;
 import net.pladema.cipres.infrastructure.output.rest.CipresRestTemplate;
 import net.pladema.cipres.infrastructure.output.rest.CipresWSConfig;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Service
-
 public class CipresStorage {
 
 	public RestClientInterface restClient;
@@ -34,5 +38,15 @@ public class CipresStorage {
 		result.setResponseCode(responseCode.shortValue());
 		result.setDate(LocalDate.now());
 		cipresEncounterRepository.save(result);
+	}
+
+	public void handleResourceAccessException(ResourceAccessException e, Integer encounterId) {
+		String message = "Fallo en la comunicación - API SALUD";
+		saveStatusError(encounterId, message, HttpStatus.INTERNAL_SERVER_ERROR.value());
+		log.debug(message, e);
+	}
+
+	public <T> boolean isSuccessfulResponse(ResponseEntity<T[]> response) {
+		return response != null && response.getBody() != null && response.getBody().length > 0;
 	}
 }

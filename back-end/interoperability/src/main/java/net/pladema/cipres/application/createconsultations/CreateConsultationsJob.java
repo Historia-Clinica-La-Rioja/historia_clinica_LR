@@ -44,7 +44,7 @@ public class CreateConsultationsJob {
 			sentQuantity = cipresConsultationStorage.createOutpatientConsultations(consultations);
 		}
 		catch (Exception ex){
-			log.debug("Exception occurred while transmitting outpatient encounters: ", ex);
+			log.debug("Exception occurred while transmitting outpatient encounters to cipres: ", ex);
 		}
 		log.warn("Scheduled CreateConsultationsJob done, processing {} at {}", sentQuantity, new Date());
 	}

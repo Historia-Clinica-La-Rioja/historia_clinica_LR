@@ -21,4 +21,10 @@ public class CipresEncounterBo {
 	private String status;
 
 	private Short responseCode;
+
+	public CipresEncounterBo(Integer encounterId, String status, Short responseCode) {
+		this.encounterId = encounterId;
+		this.status = status;
+		this.responseCode = responseCode;
+	}
 }

@@ -32,8 +32,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class CipresConsultationStorageImpl implements CipresConsultationStorage {
 
-	private static final String ADDRESS_ERROR = "Debe completar el domicilio del paciente";
-
 	private final CipresEncounterStorage cipresEncounterStorage;
 
 	private final CipresPatientStorage cipresPatientStorage;
@@ -65,23 +63,20 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 	private Optional<Integer> createOutpatientConsultation(OutpatientConsultationBo consultation, String establishmentIRI) {
 		var clinicalSpecialtyIRI = getClinicalSpecialtyIRI(consultation.getClinicalSpecialtyId(), consultation.getClinicalSpecialtySctid(), consultation.getId());
 		if (clinicalSpecialtyIRI.isPresent()) {
-				cipresEncounterBo = cipresEncounterStorage.createOutpatientConsultation(consultation, clinicalSpecialtyIRI.get(), establishmentIRI);
+			try {
+				CipresEncounterBo cipresEncounterBo = cipresEncounterStorage.createOutpatientConsultation(consultation, clinicalSpecialtyIRI.get(), establishmentIRI);
 				return handleCipresEncounterResponse(cipresEncounterBo);
+			} catch (Exception e) {
+				String message = e.getCause() != null && e.getCause().getMessage() != null ? e.getCause().getMessage() : "Error interno en el servicio externo - API SALUD";
+				CipresEncounterBo cipresEncounterBo = new CipresEncounterBo(consultation.getId(), message, (short) HttpStatus.INTERNAL_SERVER_ERROR.value());
+				return handleCipresEncounterResponse(cipresEncounterBo);
+			}
 		}
 		return Optional.empty();
 	}
 
 	private Optional<Integer> handleCipresEncounterResponse(CipresEncounterBo cipresEncounterBo) {
-		int responseCode = cipresEncounterBo.getResponseCode();
-		if (isValidToSave(responseCode, cipresEncounterBo.getStatus()))
-			return Optional.of(cipresEncounterRepository.save(mapToEncounterApiSalud(cipresEncounterBo)).getId());
-		return Optional.empty();
-	}
-
-	private boolean isValidToSave(int responseCode, String status) {
-		return responseCode != HttpStatus.INTERNAL_SERVER_ERROR.value() &&
-				responseCode != HttpStatus.SERVICE_UNAVAILABLE.value() &&
-				!(responseCode == HttpStatus.UNPROCESSABLE_ENTITY.value() && status.contains(ADDRESS_ERROR));
+		return Optional.of(cipresEncounterRepository.save(mapToEncounterApiSalud(cipresEncounterBo)).getId());
 	}
 
 	private CipresEncounter mapToEncounterApiSalud(CipresEncounterBo cipresEncounterBo) {

@@ -74,6 +74,6 @@ public class CipresWSConfig extends WSConfig {
 
 	public String getCountryUrl() { return COUNTRY; }
 
-	public String getNacionalityUrl() { return NACIONALITY; }
+	public String getNationalityUrl() { return NACIONALITY; }
 
 }
