@@ -304,3 +304,55 @@ databaseChangeLog:
           - dropTable:
               tableName: food_intake
 
+    - changeSet:
+        id: createTable-cipres_establishment
+        comment: Create table cipres_establishment
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: cipres_establishment
+              columns:
+                - column:
+                    name: sisa_code
+                    type: varchar(15)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: cipres_establishment_id
+                    type: int
+                    constraints:
+                      nullable: false
+          - addPrimaryKey:
+              clustered: true
+              columnNames: sisa_code, cipres_establishment_id
+              constraintName: PK_cipres_establishment
+              tableName: cipres_establishment
+              validate: true
+
+    - changeSet:
+          id: createTable-cipres_clinical_specialty
+          comment: Create table cipres_clinical_specialty
+          author: bchacon
+          changes:
+            - createTable:
+                tableName: cipres_clinical_specialty
+                columns:
+                  - column:
+                      name: clinical_specialty_id
+                      type: int
+                      constraints:
+                        foreignKeyName: FK_cipres_clinical_specialty_id
+                        references: clinical_specialty(id)
+                        nullable: false
+                  - column:
+                      name: cipres_clinical_specialty_id
+                      type: int
+                      constraints:
+                        nullable: false
+            - addPrimaryKey:
+                clustered: true
+                columnNames: clinical_specialty_id, cipres_clinical_specialty_id
+                constraintName: PK_cipres_clinical_specialty
+                tableName: cipres_clinical_specialty
+                validate: true
+
