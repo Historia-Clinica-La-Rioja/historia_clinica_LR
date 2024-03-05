@@ -105,7 +105,7 @@ export class AnestheticTechniqueService {
         breathingId: anestheticTechnique.breathing ? anestheticTechnique.breathing.id : null ,
         circuitId: anestheticTechnique.circuit ? anestheticTechnique.circuit.id : null ,
         techniqueId: anestheticTechnique.technique ? anestheticTechnique.technique.id : null,
-        trachealIntubation: anestheticTechnique.trachealIntubation ? anestheticTechnique.trachealIntubation : null  ,
+        trachealIntubation: anestheticTechnique.trachealIntubation,
         trachealIntubationMethodIds: anestheticTechnique.trachealIntubationBothIds.length > 0 ?  anestheticTechnique.trachealIntubationBothIds :
         anestheticTechnique.trachealIntubationBothIds.length == 0 && anestheticTechnique.trachealIntubation ? [anestheticTechnique.trachealIntubationMethod.id]: null,
       }
