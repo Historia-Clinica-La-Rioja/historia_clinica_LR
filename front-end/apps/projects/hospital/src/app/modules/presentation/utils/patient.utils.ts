@@ -21,15 +21,13 @@ export function getAge(patient: PatientBasicData): string {
 	let age: string = 'presentation.patient.age.NO_AGE';
 	if (patient?.personAge) {
 		if (patient.personAge.years < ONE) {
-			if (patient.personAge.months < ONE){
-
-				if (patient.personAge.totalDays <= MAX_DAYS)
-					age = patient.personAge.days === ONE? 'presentation.patient.age.DAY' : 'presentation.patient.age.DAYS';
-			} else
+			if (patient.personAge.totalDays <= MAX_DAYS){
+				age = patient.personAge.days === ONE? 'presentation.patient.age.DAY' : 'presentation.patient.age.DAYS';}
+			else
 				if (patient.personAge.months <= MAX_MONTHS) {
-					if (patient.personAge.months === ONE)
+					if (patient.personAge.months === ONE){
 						age = patient.personAge.days === ONE? 'presentation.patient.age.MONTH_AND_DAY' : 'presentation.patient.age.MONTH_AND_DAYS';
-					else 
+					}else
 						age = patient.personAge.days === ONE? 'presentation.patient.age.MONTHS_AND_DAY' : 'presentation.patient.age.MONTHS_AND_DAYS';
 				}
 		}

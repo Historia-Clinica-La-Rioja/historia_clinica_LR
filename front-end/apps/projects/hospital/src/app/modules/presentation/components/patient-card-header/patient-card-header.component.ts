@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { InternmentEpisodeProcessDto, PersonPhotoDto } from '@api-rest/api-model';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { Color } from '@presentation/colored-label/colored-label.component';
@@ -15,7 +15,7 @@ const NO_DOCUMENT_TYPE = 'No posee';
 	templateUrl: './patient-card-header.component.html',
 	styleUrls: ['./patient-card-header.component.scss']
 })
-export class PatientCardHeaderComponent implements OnInit {
+export class PatientCardHeaderComponent {
 
 	@Input() patient: PatientBasicData;
 	@Input() set personPhoto(personPhotoDto: PersonPhotoDto) {
@@ -29,8 +29,6 @@ export class PatientCardHeaderComponent implements OnInit {
 	@Input() personalAdditionalInformation: AdditionalInfo[];
 
 	decodedPhoto$: Observable<string>;
-	age: string;
-	gender: string;
 
 	constructor(
 		private readonly imageDecoderService: ImageDecoderService,
@@ -40,11 +38,6 @@ export class PatientCardHeaderComponent implements OnInit {
 
 	Color = Color;
 
-	ngOnInit(): void {
-		this.setGender(this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender));
-		this.setAge(getAge(this.patient));
-	}
-
 	public viewPatientName(): string {
 		let name = this.patientNameService.getPatientName(this.patient?.firstName, this.patient?.nameSelfDetermination)
 		if (name == this.patient?.firstName && (this.patient?.middleNames !== null && this.patient?.middleNames !== undefined))
@@ -52,12 +45,14 @@ export class PatientCardHeaderComponent implements OnInit {
 		return name;
 	}
 
-	public setGender(gender: string) {
-		this.gender = gender ? gender : 'presentation.patient.gender.NO_GENDER';
+	public setGender(): string {
+		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender);
+		gender = gender ? gender : 'presentation.patient.gender.NO_GENDER';
+		return gender;
 	}
 
-	public setAge(age: string) {
-		this.age = age;
+	public getAge(): string{
+		return getAge(this.patient);
 	}
 
 	public viewIDAndIdentificationTypeAndNumber(): string {
