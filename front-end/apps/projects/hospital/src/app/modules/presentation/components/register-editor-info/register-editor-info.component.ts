@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-register-editor-info',
@@ -8,7 +7,6 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 })
 export class RegisterEditorInfoComponent {
 	readonly registerEditorCasesDate = REGISTER_EDITOR_CASES.DATE;
-	readonly dateFormats = DatePipeFormat;
 	@Input() registerEditor: RegisterEditor;
 	@Input() registerEditorCase: REGISTER_EDITOR_CASES = REGISTER_EDITOR_CASES.DATE;
 }
