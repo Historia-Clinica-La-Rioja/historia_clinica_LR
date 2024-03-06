@@ -25,6 +25,7 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
+import { DownloadButtonComponent } from './components/download-button/download-button.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
@@ -128,6 +129,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DockPopupComponent,
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
+		DownloadButtonComponent,
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
 		ExpansionSectionComponent,
@@ -242,6 +244,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DockPopupComponent,
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
+		DownloadButtonComponent,
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
 		ExpansionSectionComponent,
