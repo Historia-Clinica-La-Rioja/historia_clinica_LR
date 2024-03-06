@@ -21,8 +21,7 @@
 		<section fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
 			<app-booking-appointments
 				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-				[identificationNumber]="personalInformation?.identificationNumber"
-				(newAppointmentRequired)="newAppointment()">
+				[identificationNumber]="personalInformation?.identificationNumber">
 			</app-booking-appointments>
 			<app-assigned-appointments
 				*appHasRole="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"

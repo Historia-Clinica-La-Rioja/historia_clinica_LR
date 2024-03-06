@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { BookedAppointmentDto } from '@api-rest/api-model';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { BOOKING_APPOINTMENTS_SUMMARY } from '@pacientes/constants/summaries';
@@ -11,7 +11,6 @@ import { BOOKING_APPOINTMENTS_SUMMARY } from '@pacientes/constants/summaries';
 export class BookingAppointmentsComponent implements OnChanges {
 
 	@Input() identificationNumber: string;
-	@Output() newAppointmentRequired = new EventEmitter();
 	bookingAppointmentsSummary = BOOKING_APPOINTMENTS_SUMMARY;
 	appointmentsList: BookedAppointmentDto[] = [];
 
@@ -24,9 +23,4 @@ export class BookingAppointmentsComponent implements OnChanges {
 			);
 		}
 	}
-
-	newAppointment() {
-		this.newAppointmentRequired.emit();
-	}
-
 }

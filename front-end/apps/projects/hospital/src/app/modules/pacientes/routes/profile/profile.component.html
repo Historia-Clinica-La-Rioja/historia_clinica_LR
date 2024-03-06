@@ -196,8 +196,7 @@
 				</app-resumen-de-guardia>
 
 				<app-booking-appointments *appHasRole="['ADMINISTRATIVO']"
-					[identificationNumber]="personalInformation?.identificationNumber"
-					(newAppointmentRequired)="newAppointment()">
+					[identificationNumber]="personalInformation?.identificationNumber">
 				</app-booking-appointments>
 
 				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId"
