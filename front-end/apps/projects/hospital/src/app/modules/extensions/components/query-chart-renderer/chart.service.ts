@@ -1,5 +1,4 @@
 
-import * as moment from "moment";
 import { MONTHS_OF_YEAR } from '@core/utils/moment.utils';
 import { ChartOptions } from 'chart.js';
 import {
@@ -8,6 +7,7 @@ import {
 } from '@cubejs-client/core';
 import { UiChartDefinitionBo } from '../ui-chart/ui-chart.component';
 import { ChartDataService } from "./chart-data.service";
+import { isValid, parseISO } from 'date-fns';
 // import { extractFirstTimeDimension } from '@extensions/utils/cube-query.utils';
 
 
@@ -32,7 +32,7 @@ const parseDate = (value: string, granularity: string): string => {
 };
 
 const isDate = (value: string): boolean => {
-	return moment(value, moment.ISO_8601, true).isValid();
+	return isValid(parseISO(value))
 
 }
 
