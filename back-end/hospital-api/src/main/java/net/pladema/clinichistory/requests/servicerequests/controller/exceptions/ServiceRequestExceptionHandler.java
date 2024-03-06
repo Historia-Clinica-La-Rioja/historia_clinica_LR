@@ -23,4 +23,11 @@ public class ServiceRequestExceptionHandler {
         return new ApiErrorDto("Constraint violation", ex.getMessage());
     }
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RuntimeException.class })
+	public ApiErrorDto handleValidationExceptions(RuntimeException ex) {
+		log.error("Constraint violation -> {}", ex.getMessage());
+		return new ApiErrorDto("Constraint violation", ex.getMessage());
+	}
+
 }

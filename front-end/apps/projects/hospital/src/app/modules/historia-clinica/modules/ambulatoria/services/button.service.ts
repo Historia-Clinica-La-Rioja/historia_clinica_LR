@@ -7,7 +7,6 @@ export class ButtonService {
 
 	private formDisabled = new BehaviorSubject<boolean>(true);
 	private submitForm = new BehaviorSubject<boolean>(false);
-	private isLoading = new BehaviorSubject<boolean>(true);
 
 	formDisabled$ = this.formDisabled.asObservable();
 	submit$ = this.submitForm.asObservable();
@@ -21,7 +20,7 @@ export class ButtonService {
 		this.submitForm.next(true);
 	}
 
-	updateLoading(loading: boolean) {
-		this.isLoading.next(loading);
+	resetLoading() {
+		this.submitForm.next(false);
 	}
 }
