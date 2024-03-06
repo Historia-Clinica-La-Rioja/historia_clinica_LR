@@ -111,7 +111,7 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
 				"AND d.sourceTypeId = " + SourceType.OUTPATIENT +
 				"AND oc.id NOT IN (SELECT ce.encounterId FROM CipresEncounter ce) " +
 				"AND (oc.creationable.createdOn BETWEEN :start AND :end) " +
-				"ORDER BY oc.creationable.createdOn ";
+				"ORDER BY oc.creationable.createdOn DESC";
 
 		List<Object[]> queryResult = entityManager.createQuery(sqlString)
 				.setParameter("end", end)
