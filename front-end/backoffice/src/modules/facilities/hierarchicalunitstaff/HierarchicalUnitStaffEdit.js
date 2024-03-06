@@ -9,10 +9,15 @@ import {
 import CustomToolbar from '../../components/CustomToolbar';
 import { personInputData } from './HierarchicalUnitStaffCreate';
 
+
+const goBack = () => {
+    window.history.back();
+}
+
 const HierarchicalUnitStaffEdit = props => {
     return (
         <Edit {...props}>
-            <SimpleForm toolbar={<CustomToolbar isEdit={true}/>}>
+            <SimpleForm redirect={goBack} toolbar={<CustomToolbar isEdit={true}/>}>
                 <ReferenceInput
                     source="hierarchicalUnitId"
                     reference="hierarchicalunits"
