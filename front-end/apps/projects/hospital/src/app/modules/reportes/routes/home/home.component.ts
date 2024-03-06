@@ -102,7 +102,8 @@ export class HomeComponent implements OnInit {
 			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
 				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.MONTHLY
 					&& report.id != REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT
-					&& report.id != REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL);
+					&& report.id != REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL
+					&& report.id != REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING);
 		});
 		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
 			this.hierarchicalUnits = hierarchicalUnits;
@@ -167,7 +168,7 @@ export class HomeComponent implements OnInit {
 
 		if (!hierarchicalUnitTypeDto) {
 			this.form.controls.includeHierarchicalUnitDescendants.setValue(false);
-			this.form.controls.hierarchicalUnitId.setValue(null);       
+			this.form.controls.hierarchicalUnitId.setValue(null);
 		}
 	}
 

@@ -22,6 +22,7 @@ import net.pladema.reports.imageNetworkProductivity.infrastructure.input.mapper.
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ import static ar.lamansys.sgx.shared.files.StreamsUtils.streamException;
 @Slf4j
 @Tag(name = "ImageNetworkProductivityReportController", description = "Controller used to generate image network productivity reports")
 @AllArgsConstructor
+@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
 @RestController
 @RequestMapping("/institution/{institutionId}/report/image-network-productivity")
 public class ImageNetworkProductivityReportController {
