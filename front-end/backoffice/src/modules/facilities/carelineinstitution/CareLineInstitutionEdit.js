@@ -15,7 +15,7 @@ import {
 
 const UserDeleteToolbar = props => {
     const { permissions } = usePermissions();
-    const userIsRootOrAdmin = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
+    const userIsRootOrAdmin = permissions?.hasAnyAssignment(...BASIC_BO_ROLES);
     return(
         <Toolbar {...props} >
             <DeleteButton disabled={userIsRootOrAdmin} />

@@ -21,14 +21,12 @@ import {
     BASIC_BO_ROLES,
 } from '../../roles-set';
 
-const CareLineShowActions = ({data}) => {
-    const { permissions } = usePermissions();//BASIC_BO_ROLES
-    const userIsRootOrAdmin = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
+const CareLineShowActions = ({data, disabled}) => {
     return (!data || !data.id) ? <TopToolbar/> :
         (
             <TopToolbar>
                 <ListButton basePath="/carelines" label="Listar Líneas de cuidado"/>
-                <EditButton basePath="/carelines" record={{id: data.id}} disabled={!userIsRootOrAdmin}/>
+                <EditButton basePath="/carelines" record={{id: data.id}} disabled={disabled}/>
             </TopToolbar>
         )
 };
@@ -81,9 +79,9 @@ const ClassifiedCareLineRoles = ({record, roleCreatePermission}) => {
 
 const CareLineShow = props => {
     const { permissions } = usePermissions();
-    const userIsRootOrAdmin = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
+    const userIsRootOrAdmin = permissions?.hasAnyAssignment(...BASIC_BO_ROLES);
     return(
-        <Show {...props} actions={<CareLineShowActions/>}>
+        <Show {...props} actions={<CareLineShowActions disabled={!userIsRootOrAdmin} />}>
             <SimpleShowLayout>
                 <TextField source="description"/>
                 <BooleanField source="consultation"/>

@@ -24,6 +24,7 @@ public enum SnomedECL {
 	VIOLENCE_TYPE,
 	;
 
+
 	public static SnomedECL map(String id) {
 		try {
 			return valueOf(id);

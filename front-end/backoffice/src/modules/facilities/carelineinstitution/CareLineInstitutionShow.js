@@ -14,9 +14,6 @@ import {
 } from 'react-admin';
 import SectionTitle from '../../components/SectionTitle';
 import {
-    ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
-} from '../../roles';
-import {
     BASIC_BO_ROLES,
 } from '../../roles-set';
 
@@ -37,10 +34,9 @@ const CreateRelatedButton = ({record, reference, label, disabled}) => {
 
 const CareLineinstitutionShow = props => {
     const { permissions } = usePermissions();
-    const userIsRootOrAdmin = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
-    const userIsAdminInstitutional = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role)).length > 0;
+    const userIsRootOrAdmin = permissions?.hasAnyAssignment(...BASIC_BO_ROLES);
     return(
-        <Show {...props} hasEdit={userIsAdminInstitutional}>
+        <Show {...props}>
             <SimpleShowLayout>
 
                 <ReferenceField source="institutionId" reference="institutions">

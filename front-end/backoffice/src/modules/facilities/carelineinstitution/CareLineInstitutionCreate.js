@@ -2,19 +2,13 @@ import React from 'react';
 import {
     Create,
     SimpleForm,
-    usePermissions,
     ReferenceInput,
     AutocompleteInput,
     FormDataConsumer,
 } from 'react-admin';
 import CustomToolbar from '../../components/CustomToolbar';
-import {
-    BASIC_BO_ROLES,
-} from '../../roles-set';
 
 const CareLineSelect = ({ formData, ...rest }) => {
-    const { permissions } = usePermissions();
-    const userIsRootOrAdmin = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
     return (
         <ReferenceInput
             {...rest}
@@ -22,13 +16,11 @@ const CareLineSelect = ({ formData, ...rest }) => {
             sort={{ field: 'description', order: 'ASC' }}
             filterToQuery={searchText => ({description: searchText})}
         >
-            <AutocompleteInput optionText="description" optionValue="id" disabled={userIsRootOrAdmin} resettable isRequired={true} />
+            <AutocompleteInput optionText="description" optionValue="id" resettable isRequired={true} />
         </ReferenceInput>);
 };
 
 const InstitutionSelect = ({ formData, ...rest }) => {
-    const { permissions } = usePermissions();
-    const userIsRootOrAdmin = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
     return (
         <ReferenceInput
             {...rest}
@@ -37,7 +29,7 @@ const InstitutionSelect = ({ formData, ...rest }) => {
             filterToQuery={searchText => ({name: searchText})}
             filter={{ institutionId: formData.institutionId }}
         >
-            <AutocompleteInput optionText="name" optionValue="id" disabled={userIsRootOrAdmin} resettable isRequired={true} />
+            <AutocompleteInput optionText="name" optionValue="id" resettable isRequired={true} />
         </ReferenceInput>);
 };
 

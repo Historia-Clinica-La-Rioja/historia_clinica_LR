@@ -40,7 +40,7 @@ const Dependency = (sourceId) => {
 };
 const InstitutionEdit = props => {
     const {permissions} = usePermissions();
-    const userIsRootOrAdmin = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
+    const userIsRootOrAdmin = permissions?.hasAnyAssignment(...BASIC_BO_ROLES);
     return (
         <Edit {...props}>
             <SimpleForm redirect="show" toolbar={<CustomToolbar isEdit={userIsRootOrAdmin}/>}>
