@@ -162,14 +162,11 @@
 		</mat-card>
 	</div>
 
-	<div *ngIf="showSectionToSearchAppointmentsInInstitution" fxLayout="column" fxLayoutGap="15px">
+	<div *ngIf="showSectionToSearchAppointmentsInInstitution" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
 		<span class="category-title">{{ 'turnos.home.NOT_FOUND_APPOINTMENTS' | translate}}</span>
-
-		<div>
-			<button mat-stroked-button color="primary" (click)="searchAppointmentsInstitution()">
-				<span [translate]="'turnos.search-appointments-in-care-network.BACK_TO_INSTITUTION_TAB'"></span>
-			</button>
-		</div>
+		<button mat-button color="primary" (click)="searchAppointmentsInstitution()">
+			<span [translate]="'turnos.search-appointments-in-care-network.BACK_TO_INSTITUTION_TAB'"></span>
+		</button>
 	</div>
 
 </div>

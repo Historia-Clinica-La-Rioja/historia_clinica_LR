@@ -13,6 +13,7 @@ export class NoAppointmentAvailableComponent {
   @Input() set reset (value:boolean){
     this.isRegisterButtonDisabled = false;
   }
+  @Input() redirectionDisabled?: boolean;
   isRegisterButtonDisabled = false;
   constructor(private dialog: MatDialog) { }
 

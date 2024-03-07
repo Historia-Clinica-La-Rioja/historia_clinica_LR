@@ -48,8 +48,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	practices: SharedSnomedDto[];
 	externalInformation: SearchAppointmentInformation;
 	externalSetValueSpecialty: TypeaheadOption<string>;
-	showCareNetworkSection = false;
 	resetRegisterDemandButtonDisabled = false;
+	redirectionDisabled = false;
 	dateSearchFilter = (d: Moment): boolean => {
 		const parsedDate = d?.toDate();
 		parsedDate?.setHours(0, 0, 0, 0);
@@ -192,7 +192,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 				if (this.paginator) {
 					this.paginator.pageSize = PAGE_MIN_SIZE;
 				}
-				this.showCareNetworkSection = this.externalInformation?.enableSectionToSearchAppointmentInOtherTab;
 				this.resetRegisterDemandButtonDisabled = !this.resetRegisterDemandButtonDisabled;
 			});
 		}
@@ -228,7 +227,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.resetControls();
 		this.clearLists();
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
-		this.showCareNetworkSection = false;
 		this.setPractices();
 	}
 
@@ -260,12 +258,16 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	sendPreloadedData() {
-		const values: SearchCriteriaValues = {
-			careModality: this.form.controls.modality.value,
-			searchCriteria: this.selectedSearchCriteria,
-			startDate: this.form.controls.searchInitialDate.value,
+		if(this.externalInformation){
+			this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
+		}else{
+			const values: SearchCriteriaValues = {
+				careModality: this.form.controls.modality.value,
+				searchCriteria: this.selectedSearchCriteria,
+				startDate: this.form.controls.searchInitialDate.value,
+			}
+			this.searchAppointmentsInfoService.setSearchCriteria(values);
 		}
-		this.searchAppointmentsInfoService.setSearchCriteria(values);
 		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
 	}
 
@@ -335,6 +337,9 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		if (practice) {
 			this.practices = [practice];
 			this.setPractice(practice);
+		}
+		if(!this.externalInformation.referenceCompleteData.careLine.id){
+			this.redirectionDisabled = true;
 		}
 		this.searchAppointmentsInfoService.clearInfo();
 	}
