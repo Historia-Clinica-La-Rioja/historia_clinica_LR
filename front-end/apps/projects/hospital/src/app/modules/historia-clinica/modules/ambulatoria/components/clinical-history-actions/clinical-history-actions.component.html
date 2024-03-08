@@ -1,39 +1,39 @@
 <div fxLayout="column" fxLayoutGap="10px" fxLayout.xs="row" fxLayoutAlign="center center">
 
-    <ng-container
-        *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-        <button id="acciones" mat-flat-button color="primary" mat-button [matMenuTriggerFor]="menu"
-            *ngIf="(hasInternmentActionsToDo || enableAnestethicPart || anyEmergencyCareAction || currentUserIsAllowedToMakeBothConsultation) else showNewConsultationButton">
-            {{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
-        </button>
-    </ng-container>
+	<ng-container
+		*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD', 'ENFERMERO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+		<button id="acciones" mat-flat-button color="primary" mat-button [matMenuTriggerFor]="menu"
+			*ngIf="(hasInternmentActionsToDo || enableAnestethicPart || anyEmergencyCareAction || currentUserIsAllowedToMakeBothConsultation) else showNewConsultationButton">
+			{{ 'ambulatoria.paciente.card.buttons.actions.ACTIONS' | translate | uppercase }}
+		</button>
+	</ng-container>
 
-    <ng-template #showNewConsultationButton>
-        <ng-container *ngIf="hasNewConsultationEnabled$ | async">
-            <ng-container *appHasRole="['ENFERMERO']">
-                <div *ngTemplateOutlet="nurseConsultation"></div>
-            </ng-container>
-            <ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD']">
-                <div *ngTemplateOutlet="ambulatoryConsultation"></div>
-            </ng-container>
-        </ng-container>
-    </ng-template>
+	<ng-template #showNewConsultationButton>
+		<ng-container *ngIf="hasNewConsultationEnabled$ | async">
+			<ng-container *appHasRole="['ENFERMERO']">
+				<div *ngTemplateOutlet="nurseConsultation"></div>
+			</ng-container>
+			<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR', 'PROFESIONAL_DE_SALUD']">
+				<div *ngTemplateOutlet="ambulatoryConsultation"></div>
+			</ng-container>
+		</ng-container>
+	</ng-template>
 
 	<mat-menu #menu="matMenu">
 
-        <div *ngIf="anyEmergencyCareAction" id="emergencyCare">
-            <mat-label class="actions-labels color-grey">
-                GUARDIA
-            </mat-label>
-            <button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions"
-                >
-                {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
-            </button>
+		<div *ngIf="anyEmergencyCareAction" id="emergencyCare">
+			<mat-label class="actions-labels color-grey">
+				GUARDIA
+			</mat-label>
+			<button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions">
+				{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
+			</button>
 
-            <button *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION" mat-menu-item id="evolution_note" color="primary" (click)="openNotaDeEvolucion()" class="actions">
-                Nota de evolución
-            </button>
-        </div>
+			<button *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION" mat-menu-item
+				id="evolution_note" color="primary" (click)="openNotaDeEvolucion()" class="actions">
+				Nota de evolución
+			</button>
+		</div>
 
 		<mat-label *ngIf="(hasInternmentActionsToDo || enableAnestethicPart)" class="actions-labels color-grey">
 			{{'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}
@@ -73,17 +73,17 @@
 			</ng-container>
 			<ng-container>
 				<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions"
-				(click)="openSurgicalReport()">
-				{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}
+					(click)="openSurgicalReport()">
+					{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}
+				</button>
+			</ng-container>
+		</div>
+		<ng-container *ngIf="(hasInternmentActionsToDo || enableAnestethicPart)">
+			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
+				(click)="openAnestheticReport()">
+				{{'ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate}}
 			</button>
 		</ng-container>
-	</div>
-	<ng-container *ngIf="(hasInternmentActionsToDo || enableAnestethicPart)">
-		<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
-			(click)="openAnestheticReport()">
-			{{'ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate}}
-		</button>
-	</ng-container>
 
 		<div *ngTemplateOutlet="showBothConsultation"></div>
 

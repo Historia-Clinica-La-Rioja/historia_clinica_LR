@@ -115,8 +115,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 		private readonly featureFlagService: FeatureFlagService,
-	) { 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled => 
+	) {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled =>
 			this.isAnestheticPartEnabled = true
 		);
 	}
