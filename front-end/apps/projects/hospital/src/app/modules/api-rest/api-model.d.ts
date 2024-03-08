@@ -1459,6 +1459,18 @@ export interface EffectiveClinicalObservationDto extends ClinicalObservationDto 
     effectiveTime?: string;
 }
 
+export interface ElectronicJointSignatureInstitutionProfessionalDto {
+    completeName: string;
+    healthcareProfessionalId: number;
+    licenses: ElectronicJointSignatureLicenseDto[];
+}
+
+export interface ElectronicJointSignatureLicenseDto {
+    clinicalSpecialtyName: string;
+    number: string;
+    type: ELicenseNumberType;
+}
+
 export interface EmergencyCareDto extends Serializable {
     ambulanceCompanyId: string;
     emergencyCareType: MasterDataDto;
@@ -5160,6 +5172,11 @@ export const enum EKeeperRelationship {
     BROTHER_OR_SISTER = "BROTHER_OR_SISTER",
     RELATED = "RELATED",
     OTHER = "OTHER",
+}
+
+export const enum ELicenseNumberType {
+    NATIONAL = "NATIONAL",
+    PROVINCE = "PROVINCE",
 }
 
 export const enum ELiveTogetherStatus {

@@ -1,0 +1,22 @@
+package net.pladema.electronicjointsignature.healthcareprofessionallicense.infrastructure.output;
+
+import lombok.AllArgsConstructor;
+import net.pladema.electronicjointsignature.healthcareprofessionallicense.application.port.ElectronicJointSignatureInstitutionalProfessionalLicenseListPort;
+import net.pladema.electronicjointsignature.healthcareprofessionallicense.domain.ElectronicJointSignatureInstitutionProfessionalBo;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@AllArgsConstructor
+@Service
+public class ElectronicJointSignatureInstitutionalProfessionalLicenseListPortImpl implements ElectronicJointSignatureInstitutionalProfessionalLicenseListPort {
+
+	private ElectronicJointSignatureInstitutionalProfessionalLicenseStorage electronicJointSignatureInstitutionalProfessionalLicenseStorage;
+
+	@Override
+	public List<ElectronicJointSignatureInstitutionProfessionalBo> fetchInstitutionProfessional(Integer institutionId, Integer excludedHealthcareProfessionalId) {
+		return electronicJointSignatureInstitutionalProfessionalLicenseStorage.fetchInstitutionalProfessionalLicenseStorage(institutionId, excludedHealthcareProfessionalId);
+	}
+
+}
