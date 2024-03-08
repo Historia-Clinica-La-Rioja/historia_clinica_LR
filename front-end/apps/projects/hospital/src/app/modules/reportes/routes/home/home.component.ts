@@ -31,6 +31,8 @@ import { HierarchicalUnitsService } from "@api-rest/services/hierarchical-units.
 import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-unit-type.service";
 import { APPOINTMENT_STATES_DESCRIPTION, APPOINTMENT_STATES_ID, AppointmentState } from "@turnos/constants/appointment";
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { fixDate } from '@core/utils/date/format';
+import { isBefore, subMonths } from 'date-fns';
 
 @Component({
 	selector: 'app-home',
@@ -61,7 +63,7 @@ export class HomeComponent implements OnInit {
 	REPORT_TYPES_ID = REPORT_TYPES_ID;
 
 	minDate = MIN_DATE;
-	maxEndDate?: Moment;
+	maxEndDate?: Date;
 
 	cubeReportData: UIComponentDto;
 
@@ -243,9 +245,9 @@ export class HomeComponent implements OnInit {
 	checkValidDates() {
 		// if both are present, check that the end date is not after the start date
 		if (this.form.value.startDate && this.form.value.endDate) {
-			const endDate: Moment = this.form.value.endDate;
-			const startDate: Moment = this.form.value.startDate;
-			if (endDate.isBefore(this.form.value.startDate)) {
+			const endDate = fixDate(this.form.value.endDate);
+			const startDate = fixDate(this.form.value.startDate);
+			if (isBefore(endDate,startDate)) {
 				this.form.controls.endDate.setErrors({ min: true });
 				this.form.controls.startDate.setErrors({ max: true });
 			} else {
@@ -253,7 +255,7 @@ export class HomeComponent implements OnInit {
 				this.checkStartDateIsSameOrBeforeToday();
 			}
 			if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
-				if(endDate.month() !== startDate.month()){
+				if(endDate.getMonth() !== startDate.getMonth()){
 					this.showErrorMonth = true;
 				}else{
 					this.showErrorMonth = false;
@@ -335,16 +337,16 @@ export class HomeComponent implements OnInit {
 	prepareImageNetworkProductivityFilterDto(): ImageNetworkProductivityFilterDto{
 		return {
 			clinicalSpecialtyId: this.form.controls.specialtyId.value,
-			from: dateToDateDto(new Date(this.form.controls.startDate.value.year(),this.form.controls.startDate.value.month(),this.form.controls.startDate.value.date())),
+			from: dateToDateDto(fixDate(this.form.value.startDate)),
 			healthcareProfessionalId: this.form.controls.professionalId.value,
-			to: dateToDateDto(new Date(this.form.controls.endDate.value.year(),this.form.controls.endDate.value.month(),this.form.controls.endDate.value.date())),
+			to: dateToDateDto(fixDate(this.form.value.endDate)),
 		}
 	}
 
 	setDatesForNominalDiagnosticImaging() {
-		this.form.controls.endDate.setValue(this.getDateWithPreviousMonth(false));
-		this.form.controls.startDate.setValue(this.getDateWithPreviousMonth(true));
-		this.maxEndDate = this.form.controls.endDate.value;
+		this.form.controls.endDate.setValue(dateToMoment(this.getDateWithPreviousMonth(false)));
+		this.form.controls.startDate.setValue(dateToMoment(this.getDateWithPreviousMonth(true)));
+		this.maxEndDate = fixDate(this.form.value.endDate);
 	}
 
 	resetForm(){
@@ -360,18 +362,21 @@ export class HomeComponent implements OnInit {
 		this.maxEndDate= null;
 	}
 
-	getDateWithPreviousMonth(isStartDate: boolean) {
-		const today = newMoment();
-		if (this.isLastDayOfTheMonth(today) && !isStartDate) {
-			return dateToMoment(new Date(today.year(), today.month(), 0));
+	getDateWithPreviousMonth(isStartDate: boolean): Date {
+		const today = new Date();
+		if (isStartDate) {
+			today.setDate(1);
+			return subMonths(today, 1)
+		}else{
+			today.setDate(0);
+			return today;
 		}
-		return dateToMoment(new Date(today.year(), today.month() - 1, 1));
 	}
 
-	isLastDayOfTheMonth(date: Moment): boolean {
-		const proximoDia = new Date(date.year(), date.month() - 1, date.date())
-		proximoDia.setDate(proximoDia.getDate() + 1);
-		return date.month() !== proximoDia.getMonth();
+	isLastDayOfTheMonth(date: Date): boolean {
+		date.setDate(date.getDate() + 1);
+		const proximoDia = date;
+		return date.getMonth() !== proximoDia.getMonth();
 	}
 
 	clearAppointmentStateId(): void {
