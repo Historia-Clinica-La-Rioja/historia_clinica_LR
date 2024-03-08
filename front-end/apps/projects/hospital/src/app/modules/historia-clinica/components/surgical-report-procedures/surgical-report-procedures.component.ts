@@ -21,6 +21,14 @@ import { Moment } from 'moment';
 export class SurgicalReportProceduresComponent implements OnInit {
 
 	@Input() surgicalReport: SurgicalReportDto;
+	@Input()
+	set markAsTouched(value: boolean) {
+		if (value) {
+			this.dateForm.get('startDate')?.markAsTouched();
+			this.dateForm.get('endDate')?.markAsTouched();
+		}
+	}
+
 	@Output() validDate = new EventEmitter();
 
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
@@ -197,6 +205,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		}
 		else
 			this.dateForm.get('startTime')?.disable();
+		this.dateForm.get('startTime')?.markAsTouched();
 		this.validateDate();
 	}
 
@@ -209,6 +218,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		}
 		else
 			this.dateForm.get('endTime')?.disable();
+		this.dateForm.get('endTime')?.markAsTouched();
 		this.validateDate();
 	}
 

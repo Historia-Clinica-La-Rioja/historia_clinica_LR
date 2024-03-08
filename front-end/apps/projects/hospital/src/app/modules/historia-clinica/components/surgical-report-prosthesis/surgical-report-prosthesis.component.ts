@@ -10,13 +10,22 @@ import { SurgicalReportDto } from '@api-rest/api-model';
 export class SurgicalReportProsthesisComponent implements OnInit {
 
 	@Input() surgicalReport: SurgicalReportDto;
-	@Output() validProsthesis = new EventEmitter();
+	@Input()
+	set markAsTouched(value: boolean) {
+		if (value && this.form.get('prosthesis').value) {
+			this.form.get('description')?.markAsTouched();
+			this.collapsed = false;
+		}
+	}
 
+	@Output() validProsthesis = new EventEmitter();
 
 	form = new FormGroup({
 		prosthesis: new FormControl(),
 		description: new FormControl(),
 	});
+
+	collapsed = true;
 
 	constructor() {
 
@@ -39,6 +48,7 @@ export class SurgicalReportProsthesisComponent implements OnInit {
 		this.form.controls.prosthesis.setValue(!!this.surgicalReport.prosthesisDescription);
 
 		this.form.valueChanges.subscribe(data => {
+			this.form.get('description')?.markAsTouched();
 			this.surgicalReport.prosthesisDescription = data.prosthesis ? data.description : null;
 			this.validateForm();
 		});

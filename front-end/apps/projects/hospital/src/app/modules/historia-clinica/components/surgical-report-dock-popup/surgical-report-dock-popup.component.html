@@ -6,7 +6,8 @@
 		<app-surgical-report-professional-team [professionals]="professionals" [(surgicalReport)]="surgicalReport">
 		</app-surgical-report-professional-team>
 
-		<app-surgical-report-procedures [(surgicalReport)]="surgicalReport" (validDate)="setValidDate($event)">
+		<app-surgical-report-procedures [(surgicalReport)]="surgicalReport" (validDate)="setValidDate($event)"
+			[markAsTouched]="markAsTouched">
 		</app-surgical-report-procedures>
 
 		<app-professional-and-description [title]="'ambulatoria.paciente.surgical-report.exam.TITLE' | translate"
@@ -27,7 +28,8 @@
 			[type]="CULTURE" [(surgicalReport)]="surgicalReport">
 		</app-procedure-and-description>
 
-		<app-surgical-report-prosthesis [(surgicalReport)]="surgicalReport" (validProsthesis)="setValidProsthesis($event)">
+		<app-surgical-report-prosthesis [(surgicalReport)]="surgicalReport"
+			(validProsthesis)="setValidProsthesis($event)" [markAsTouched]="markAsTouched">
 		</app-surgical-report-prosthesis>
 
 		<app-procedure-and-description [title]="'ambulatoria.paciente.surgical-report.biopsy.TITLE' | translate"
@@ -49,7 +51,7 @@
 
 	<div actions id="buttons" fxLayoutAlign="end">
 		<app-button [color]="'primary'" [isLoading]="isLoading" [text]="'buttons.CONFIRM' | translate | uppercase"
-			[buttonType]="'mat-raised-button'" [disabled]="disabled" (clicked)="save()">
+			[buttonType]="'mat-raised-button'" (clicked)="save()">
 		</app-button>
 	</div>
 </app-dock-popup>
