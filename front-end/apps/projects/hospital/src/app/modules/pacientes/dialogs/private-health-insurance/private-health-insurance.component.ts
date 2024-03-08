@@ -14,6 +14,7 @@ import {
 import { newDate } from "@core/utils/moment.utils";
 import { MatOptionSelectionChange } from "@angular/material/core";
 import { PrivateHealthInsuranceService } from "@api-rest/services/private-health-insurance.service";
+import { fixDate } from '@core/utils/date/format';
 
 @Component({
 	selector: 'app-private-health-insurance',
@@ -123,8 +124,8 @@ export class PrivateHealthInsuranceComponent implements OnInit {
 			affiliateNumber: this.prepagaForm.value.affiliateNumber,
 			validDate: newDate(),
 			condition: this.prepagaForm.value.condition,
-			startDate: this.prepagaForm.value.startDate.toDate(),
-			endDate: this.prepagaForm.value.endDate.toDate(),
+			startDate: fixDate(this.prepagaForm.value.startDate),
+			endDate: fixDate(this.prepagaForm.value.endDate),
 			planId: this.prepagaForm.value.plan,
 			planName: this.plans.filter(data => data.id == this.prepagaForm.value.plan).map(medicalCoveragePlan => (medicalCoveragePlan.plan))[0],
 			active: true
