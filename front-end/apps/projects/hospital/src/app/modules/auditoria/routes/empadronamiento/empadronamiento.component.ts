@@ -2,16 +2,17 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { BMPersonDto, GenderDto, IdentificationTypeDto, MergedPatientSearchDto, PatientRegistrationSearchDto } from '@api-rest/api-model';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { AuditPatientService } from '@api-rest/services/audit-patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { capitalize } from '@core/utils/core.utils';
 import { MIN_DATE } from '@core/utils/date.utils';
+import { fixDate } from '@core/utils/date/format';
 import { hasError } from '@core/utils/form.utils';
-import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { newDate } from '@core/utils/moment.utils';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-empadronamiento',
@@ -25,7 +26,7 @@ export class EmpadronamientoComponent implements OnInit {
 	patientIdForm: FormGroup;
 	genders: GenderDto[];
 	identificationTypeList: IdentificationTypeDto[];
-	today: Moment = newMoment();
+	today: Date = newDate();
 	minDate = MIN_DATE;
 	patientStates: string[] = [];
 	formSubmitted: boolean = false;
@@ -125,7 +126,8 @@ export class EmpadronamientoComponent implements OnInit {
 
 	prepareSearchDto() {
 		let filterDto: any;
-		if (this.tabActiveIndex === 0)
+		if (this.tabActiveIndex === 0) {
+			const date: Date = fixDate(this.personalInformationForm.controls.birthDate.value);
 			filterDto = {
 				patientId: null,
 				lastName: this.personalInformationForm.controls.lastName.value,
@@ -135,14 +137,16 @@ export class EmpadronamientoComponent implements OnInit {
 				genderId: this.personalInformationForm.controls.genderId.value,
 				identificationTypeId: this.personalInformationForm.controls.identificationTypeId.value,
 				identificationNumber: this.personalInformationForm.controls.identificationNumber.value,
-				birthDate: this.personalInformationForm.controls.birthDate.value !== null ? momentFormat(this.personalInformationForm.controls.birthDate.value, DateFormat.API_DATE) : null,
+				birthDate: this.personalInformationForm.controls.birthDate.value !== null ? toApiFormat(date) : null,
 				toAudit: this.personalInformationForm.controls.filterAudit.value ? this.personalInformationForm.controls.filterAudit.value === 'true' : true,
 				temporary: !!this.personalInformationForm.controls.filterState.value.includes("Temporario"),
 				permanentNotValidated: !!this.personalInformationForm.controls.filterState.value.includes("Permanente no validado"),
 				validated: !!this.personalInformationForm.controls.filterState.value.includes("Validado"),
 				permanent: !!this.personalInformationForm.controls.filterState.value.includes("Permanente"),
 				rejected: !!this.personalInformationForm.controls.filterState.value.includes("Rechazado"),
-			}; else {
+			};
+		}
+		else {
 			filterDto = {
 				patientId: this.patientIdForm.controls.patientId.value,
 				lastName: null,
