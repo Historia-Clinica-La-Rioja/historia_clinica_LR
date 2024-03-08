@@ -30,11 +30,15 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 			this.professional = this.mapToDocumentHealthcareProfessionalDto(professional);
 			this.addProfessional(this.professional, this.type);
 		}
+		else
+			this.deleteProfessional(this.type);
 	}
 
 	changeDescription(description: string): void {
-		this.professional.comments = description
-		this.addProfessional(this.professional, this.type);
+		if (this.professional) {
+			this.professional.comments = description
+			this.addProfessional(this.professional, this.type);
+		}
 	}
 
 	private mapToDocumentHealthcareProfessionalDto(professional: HCEHealthcareProfessionalDto): DocumentHealthcareProfessionalDto {
@@ -59,5 +63,15 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 			if (!professional && index != -1)
 				this.surgicalReport.healthcareProfessionals.splice(index, 1);
 		}
+	}
+
+	deleteProfessional(type: EProfessionType): void {
+		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.type === type);
+		this.professional = null;
+		this.surgicalReport.healthcareProfessionals.splice(index, 1);
+	}
+
+	isEmpty(): boolean {
+		return !this.surgicalReport.healthcareProfessionals.find(p => p.type === this.type) && !this.description;
 	}
 }

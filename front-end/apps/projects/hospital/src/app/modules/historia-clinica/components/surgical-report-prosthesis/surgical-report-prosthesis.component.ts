@@ -47,4 +47,8 @@ export class SurgicalReportProsthesisComponent implements OnInit {
 	validateForm(): void {
 		this.validProsthesis.emit(this.form.valid);
 	}
+
+	isEmpty(): boolean {
+		return !this.form.get('prosthesis').value && !this.form.get('description').value;
+	}
 }

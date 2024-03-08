@@ -185,6 +185,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 
 	deleteProcedure(index: number): void {
 		this.surgicalReport.procedures = removeFrom(this.surgicalReport.surgeryProcedures, index);
+		this.procedureService.remove(index);
 	}
 
 	changeStartDate(moment: Moment): void {
@@ -214,4 +215,16 @@ export class SurgicalReportProceduresComponent implements OnInit {
 	changeDescription(description): void {
 		this.surgicalReport.description = description;
 	}
+
+	isEmpty(): boolean {
+		return (
+			!this.dateForm.get('startDate').value &&
+			!this.dateForm.get('startTime').value &&
+			!this.dateForm.get('endDate').value &&
+			!this.dateForm.get('endTime').value &&
+			!this.surgicalReport.procedures?.length &&
+			!this.surgicalReport.description &&
+			!this.surgicalReport.postoperativeDiagnosis?.length
+		)
+    }
 }

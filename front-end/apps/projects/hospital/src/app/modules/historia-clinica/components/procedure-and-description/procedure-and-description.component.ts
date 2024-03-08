@@ -26,6 +26,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 	searchConceptsLocallyFF = false;
 	procedures: HospitalizationProcedureDto[];
+	description: string;
 
 	constructor(
 		private readonly snackBarService: SnackBarService,
@@ -89,6 +90,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 
 	deleteProcedure(index: number): void {
 		this.procedures = removeFrom(this.procedures, index);
+		this.procedureService.remove(index);
 	}
 
 	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
@@ -96,5 +98,9 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 			snomed: procedure.snomed,
 			type: type
 		}
+	}
+
+	isEmpty(): boolean {
+		return !this.procedures.length && !this.description;
 	}
 }
