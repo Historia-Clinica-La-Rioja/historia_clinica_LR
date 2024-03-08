@@ -45,6 +45,7 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"AND d.id <> :excludeDiaryId " +
 			"AND dof.institutionId = :institutionId " +
 			"AND d.deleteable.deleted = false " +
+			"AND d.endDate > CURRENT_DATE " +
 			"AND NOT EXISTS (SELECT dap.id FROM DiaryAssociatedProfessional dap WHERE dap.diaryId = d.id)")
 	List<Diary> findAllOverlappingDiaryExcludingDiary(@Param("hpId") Integer healthcareProfessionalId,
 													  @Param("doId") Integer doctorsOfficeId,
