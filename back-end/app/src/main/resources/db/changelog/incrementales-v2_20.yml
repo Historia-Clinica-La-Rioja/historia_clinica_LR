@@ -106,3 +106,37 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: appointment
               validate: true
+
+    - changeSet:
+        id: createTable-document_involved_professional
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: document_involved_professional
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_involved_professional
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      references: document(id)
+                      foreignKeyName: FK_document_document_involved_professional
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_document_involved_professional
+                      nullable: false
+                    name: healthcare_professional_id
+                    type: int
+          - addUniqueConstraint:
+              columnNames: document_id, healthcare_professional_id
+              constraintName: UQ_document_involved_professional
+              tableName: document_involved_professional
+
