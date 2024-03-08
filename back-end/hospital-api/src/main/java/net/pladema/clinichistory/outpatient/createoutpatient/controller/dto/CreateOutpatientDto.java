@@ -56,4 +56,6 @@ public class CreateOutpatientDto {
 	@Nullable
 	private Integer hierarchicalUnitId;
 
+	private List<Integer> involvedHealthcareProfessionalIds;
+
 }

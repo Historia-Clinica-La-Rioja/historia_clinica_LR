@@ -1006,6 +1006,7 @@ export interface CreateOutpatientDto {
     evolutionNote?: string;
     familyHistories: OutpatientFamilyHistoryDto[];
     hierarchicalUnitId?: number;
+    involvedHealthcareProfessionalIds: number[];
     medications: OutpatientMedicationDto[];
     patientMedicalCoverageId?: number;
     personalHistories?: OutpatientPersonalHistoryDto[];

@@ -1,8 +1,10 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
+import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentExceptionEnum;
@@ -15,7 +17,7 @@ import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-
+@RequiredArgsConstructor
 @Service
 public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocumentService {
 
@@ -29,14 +31,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     private final DateTimeProvider dateTimeProvider;
 
-    public CreateOutpatientDocumentServiceImpl(DocumentFactory documentFactory,
-                                               UpdateOutpatientConsultationService updateOutpatientConsultationService,
-                                               DateTimeProvider dateTimeProvider) {
-        this.documentFactory = documentFactory;
-        this.updateOutpatientConsultationService = updateOutpatientConsultationService;
-        this.dateTimeProvider = dateTimeProvider;
-    }
-
+	private final SaveDocumentInvolvedProfessionals saveDocumentInvolvedProfessionals;
 
     @Override
     public OutpatientDocumentBo execute(OutpatientDocumentBo outpatient, Boolean createFile) {
@@ -46,6 +41,8 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 		LocalDateTime now = dateTimeProvider.nowDateTime();
 		outpatient.setPerformedDate(now);
         outpatient.setId(documentFactory.run(outpatient, createFile));
+
+		saveDocumentInvolvedProfessionals.run(outpatient.getId(), outpatient.getInvolvedHealthcareProfessionalIds());
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());
         LOG.debug(OUTPUT, outpatient);
