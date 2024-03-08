@@ -1,6 +1,8 @@
 package net.pladema.procedure.infrastructure.output.repository.entity;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -62,5 +64,15 @@ public class ProcedureTemplate extends SGXAuditableEntity<Integer> {
 
 	public static Short getStatusId(EProcedureTemplateStatusBo nextState) {
 		return nextState.getId();
+	}
+
+	public static List<Short> getStatusesOtherThanInactive() {
+		return EProcedureTemplateStatusBo
+		.getStatusesOtherThanInactive().stream().map(x -> x.getId())
+		.collect(Collectors.toList());
+	}
+
+	public static List<Short> getAllStatuses() {
+		return EProcedureTemplateStatusBo.getAllStatuses().stream().map(x->x.getId()).collect(Collectors.toList());
 	}
 }

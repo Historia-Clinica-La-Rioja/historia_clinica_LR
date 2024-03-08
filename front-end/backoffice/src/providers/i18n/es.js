@@ -960,11 +960,12 @@ const messages = {
             },
             statusId: {
                 draft: 'Borrador',
-                active: 'Activa',
-                inactive: 'Inactiva',
+                active: 'Activo',
+                inactive: 'Inactivo',
                 activate: 'Activar',
                 deactivate: 'Desactivar'
-            }
+            },
+            excludeInactive: 'Excluir inactivos'
         },
         proceduretemplatesnomeds: {
             name: 'Prácticas asociadas',

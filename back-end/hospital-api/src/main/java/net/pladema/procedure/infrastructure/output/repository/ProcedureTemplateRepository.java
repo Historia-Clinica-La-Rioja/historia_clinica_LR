@@ -3,6 +3,8 @@ package net.pladema.procedure.infrastructure.output.repository;
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureTemplate;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,4 +38,6 @@ public interface ProcedureTemplateRepository extends SGXAuditableEntityJPAReposi
 	@Modifying
 	@Query(value = "UPDATE ProcedureTemplate pt SET pt.statusId = :statusId WHERE pt.id = :procedureTemplateId")
     void updateStatus(@Param("procedureTemplateId")Integer procedureTemplateId, @Param("statusId")Short statusId);
+
+	Page<ProcedureTemplate> findByStatusIdIn(List<Short> statusIds, Pageable pageable);
 }

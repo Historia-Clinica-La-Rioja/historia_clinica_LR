@@ -3,6 +3,10 @@ package net.pladema.procedure.domain;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 public enum EProcedureTemplateStatusBo {
 	DRAFT(1, "Borrador", true),
@@ -17,6 +21,16 @@ public enum EProcedureTemplateStatusBo {
 		this.id = id.shortValue();
 		this.value = value;
 		this.allowsUpdate = allowsUpdate;
+	}
+
+	public static List<EProcedureTemplateStatusBo> getStatusesOtherThanInactive() {
+		return Arrays.stream(values())
+		.filter(x -> !x.equals(INACTIVE))
+		.collect(Collectors.toList());
+	}
+
+	public static List<EProcedureTemplateStatusBo> getAllStatuses() {
+		return Arrays.stream(values()).collect(Collectors.toList());
 	}
 
 	public EProcedureTemplateStatusBo getNextState() {

@@ -6,7 +6,9 @@ import {
     NumberField,
     EditButton,
     SelectField,
-    useRecordContext
+    useRecordContext,
+    Filter,
+    BooleanInput
 } from 'react-admin';
 import UpdateStatusButton from './UpdateStatusButton';
 import { STATUS_CHOICES, procedureTemplateIsUpdateable } from './ProcedureTemplateStatus';
@@ -18,6 +20,16 @@ const ConditionalEdit = props => {
     return null;
 }
 
+const StatusFilter = (props) => {
+    return(
+    <Filter {...props}>
+        <BooleanInput
+            source="excludeInactive"
+            label="resources.proceduretemplates.excludeInactive"
+            alwaysOn/>
+    </Filter>);
+}
+
 const ProcedureTemplateList = props => (
     <List 
         {...props}
@@ -25,6 +37,8 @@ const ProcedureTemplateList = props => (
         bulkActionButtons={false}
         sort={{ field: 'id', order: 'ASC' }}
         filter={{ deleted: false }}
+        filters={<StatusFilter/>}
+        filterDefaultValues={{excludeInactive: true}}
     >
         <Datagrid rowClick="show">
             <NumberField source="id"/>
