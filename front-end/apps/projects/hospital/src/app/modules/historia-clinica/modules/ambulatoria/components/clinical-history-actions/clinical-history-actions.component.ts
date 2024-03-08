@@ -58,7 +58,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
-	enableAnestethicPart = false
+	enableReports = false
 
 	isEmergencyCareTemporaryPatient = false;
 	isAnestheticPartEnabled: boolean;
@@ -312,7 +312,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	private hasToDoInternmentAction() {
 		if (this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
-			this.enableAnestethicPart = true
+			this.enableReports = true
 			return;
 		}
 		if (this.epicrisisDoc?.confirmed && !this.hasMedicalRole) {
