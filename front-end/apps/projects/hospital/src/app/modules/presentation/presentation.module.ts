@@ -81,6 +81,7 @@ import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
 import { TypeaheadV2Component } from './components/typeahead-v2/typeahead-v2.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
+import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
@@ -182,6 +183,9 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TypeaheadFilterOptionsComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
+  		FiltersSelectComponent,
+  		TitledSingleContentComponent,
+		ProfessionalSelectComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -294,6 +298,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TypeaheadComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
+		ProfessionalSelectComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,

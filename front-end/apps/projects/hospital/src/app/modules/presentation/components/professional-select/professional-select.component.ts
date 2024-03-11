@@ -2,8 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ProfessionalDto } from '@api-rest/api-model';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import { AgendaFilters, AgendaSearchService } from '@turnos/services/agenda-search.service';
-import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 
 @Component({
 	selector: 'app-professional-select',
@@ -12,7 +10,6 @@ import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.
 })
 export class ProfessionalSelectComponent {
 
-	filters: AgendaFilters;
 	professionalsTypeahead: TypeaheadOption<ProfessionalDto>[];
 	professionalInitValue: TypeaheadOption<ProfessionalDto>;
 
@@ -31,21 +28,15 @@ export class ProfessionalSelectComponent {
 	@Output() selectionChange = new EventEmitter();
 
 	constructor(
-		private readonly agendaSearchService: AgendaSearchService,
-		private readonly appointmentFacade: AppointmentsFacadeService,
 		private readonly patientNameService: PatientNameService
 	) { }
 
 
 	setProfesional(result: ProfessionalDto) {
 		if (!result) {
-			this.agendaSearchService.search(null);
 			this.selectionChange.emit(null);
-			this.agendaSearchService.clearAll();
 			return;
 		}
-		this.appointmentFacade.setProfessional(result);
-		this.agendaSearchService.search(result?.id);
 		this.selectionChange.next(result);
 	}
 

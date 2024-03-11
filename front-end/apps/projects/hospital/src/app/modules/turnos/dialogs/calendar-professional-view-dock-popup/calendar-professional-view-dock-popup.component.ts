@@ -87,6 +87,8 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 
 	setDiaries(professional: ProfessionalDto) {
 		if (professional) {
+			this.appointmentFacade.setProfessional(professional);
+			this.agendaSearchService.search(professional?.id);
 			this.professionalSelected = professional;
 			this.calendarProfessionalInfo.setProfessionalSelected(professional);
 			this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
@@ -96,8 +98,12 @@ export class CalendarProfessionalViewDockPopupComponent implements OnInit {
 				}
 			});
 		}
-		else
+		else{
+			this.agendaSearchService.search(null);
 			this.professionalSelected = null;
+			this.agendaSearchService.clearAll();
+		}
+			
 	}
 
 	private loadDiaries(diaries: DiaryListDto[], idDiarySelected?: number) {

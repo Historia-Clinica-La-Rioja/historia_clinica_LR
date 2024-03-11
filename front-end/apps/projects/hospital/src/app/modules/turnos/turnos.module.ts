@@ -33,7 +33,6 @@ import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.com
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
-import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
 import { SearchAppointmentsByEquipmentComponent } from './components/search-appointments-by-equipment/search-appointments-by-equipment.component';
 import { SearchAppointmentsBySpecialtyComponent } from './components/search-appointments-by-specialty/search-appointments-by-specialty.component';
@@ -87,7 +86,6 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		EquipmentTranscribeOrderPopupComponent,
 		ImageNetworkAppointmentComponent,
 		MedicalOrderInputComponent,
-		ProfessionalSelectComponent,
 		SeachAppointmentsByProfessionalComponent,
 		SearchAppointmentsByEquipmentComponent,
 		SearchAppointmentsBySpecialtyComponent,
