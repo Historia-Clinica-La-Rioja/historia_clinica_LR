@@ -4,20 +4,20 @@ import lombok.Getter;
 
 @Getter
 public class DispensedMedicationBo {
-	private String snomedId;
-	private String commercialName;
-	private String commercialPresentation;
-	private Integer soldUnits;
-	private String brand;
-	private Double price;
-	private Double affiliatePayment;
-	private Double medicalCoveragePayment;
+	private final String snomedId;
+	private final String commercialName;
+	private final String commercialPresentation;
+	private final Integer soldUnits;
+	private final String brand;
+	private final Double price;
+	private final Double affiliatePayment;
+	private final Double medicalCoveragePayment;
 
-	private String pharmacyName;
+	private final String pharmacyName;
 
-	private String pharmacistName;
+	private final String pharmacistName;
 
-	private String observations;
+	private final String observations;
 
 	public DispensedMedicationBo(String snomedId,
 								 String commercialName,

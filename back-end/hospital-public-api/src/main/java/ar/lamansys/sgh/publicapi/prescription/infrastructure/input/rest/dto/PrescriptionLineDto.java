@@ -7,7 +7,6 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Builder
 public class PrescriptionLineDto {
 	Integer prescriptionLineNumber;

@@ -18,8 +18,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PrescriptionStatusValidator implements ConstraintValidator<ValidPrescriptionStatus, ChangePrescriptionStateDto> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PrescriptionStatusValidator.class);
-
 	@Override
 	public void initialize(ValidPrescriptionStatus constraintAnnotation) {
 		// nothing to do

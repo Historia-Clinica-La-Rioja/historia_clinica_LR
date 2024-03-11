@@ -378,7 +378,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	private void assertExistsPrescriptionAndDni(List<Object[]> queryResult, String idNumber) throws PrescriptionNotFoundException {
 		if(queryResult.isEmpty() || !queryResult.get(0)[3].toString().equals(idNumber)) {
-			throw new PrescriptionNotFoundException();
+			throw new PrescriptionNotFoundException("No se encontró la receta en el dominio");
 		}
 	}
 

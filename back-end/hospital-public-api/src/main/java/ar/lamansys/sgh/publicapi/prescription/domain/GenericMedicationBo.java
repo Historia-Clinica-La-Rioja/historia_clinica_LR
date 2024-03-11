@@ -7,9 +7,7 @@ import lombok.ToString;
 
 import java.util.Objects;
 
-@NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Getter
 public class GenericMedicationBo {
 	String name;
