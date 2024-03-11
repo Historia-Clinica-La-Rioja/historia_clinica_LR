@@ -525,6 +525,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit, OnChanges {
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
+			involvedHealthcareProfessionalIds: [],
 		};
 	}
 

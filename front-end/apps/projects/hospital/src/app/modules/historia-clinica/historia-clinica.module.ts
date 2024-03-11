@@ -58,6 +58,7 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
+import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -160,6 +161,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 		MeasuringPointComponent,
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointItemComponent,
+		InterveningProfessionalsComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

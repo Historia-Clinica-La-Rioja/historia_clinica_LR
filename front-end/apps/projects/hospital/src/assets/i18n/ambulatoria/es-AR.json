@@ -257,6 +257,11 @@
                     "APPOINTMENT": " turnos disponibles para ser asignados por la institución destino en los próximos 60 días.",
 					"PRACTICE_PROCEDURE": "Práctica/procedimiento",
 					"STUDY_CATEGORY": "Categoría de estudios"
+                },
+                "intervening-professionals": {
+                    "TITLE": "Profesionales intervinientes",
+                    "PROFESSIONAL": "Profesional",
+                    "SEARCH_PROFESSIONAL": "Buscar profesional"
                 }
             },
             "reference-notification": {
