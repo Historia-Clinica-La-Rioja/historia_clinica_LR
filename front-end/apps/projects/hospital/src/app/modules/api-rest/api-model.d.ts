@@ -186,6 +186,7 @@ export interface AnestheticReportDto {
     measuringPoints?: MeasuringPointDto[];
     medications?: MedicationDto[];
     nonAnestheticDrugs?: AnestheticSubstanceDto[];
+    postAnesthesiaStatus?: PostAnesthesiaStatusDto;
     preMedications?: AnestheticSubstanceDto[];
     procedureDescription?: ProcedureDescriptionDto;
     riskFactors?: RiskFactorDto;
@@ -3359,6 +3360,22 @@ export interface PoliceInterventionDetailsDto extends Serializable {
     firstName: string;
     lastName: string;
     plateNumber: string;
+}
+
+export interface PostAnesthesiaStatusDto {
+    circulatoryDepression?: boolean;
+    cornealReflex?: boolean;
+    curated?: boolean;
+    intentionalSensitivity?: boolean;
+    internment?: boolean;
+    internmentPlace?: number;
+    note?: string;
+    obeyOrders?: boolean;
+    pharyngealCannula?: boolean;
+    respiratoryDepression?: boolean;
+    talk?: boolean;
+    trachealCannula?: boolean;
+    vomiting?: boolean;
 }
 
 export interface PracticeDto {

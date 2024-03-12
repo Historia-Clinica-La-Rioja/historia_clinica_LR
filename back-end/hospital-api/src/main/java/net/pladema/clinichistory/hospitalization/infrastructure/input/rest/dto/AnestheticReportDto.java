@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthCon
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MeasuringPointDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnestheticSubstanceDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.PostAnesthesiaStatusDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProcedureDescriptionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFactorDto;
 import java.util.ArrayList;
@@ -88,5 +89,8 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid List<MeasuringPointDto> measuringPoints = new ArrayList<>();
+
+    @Nullable
+    private @Valid PostAnesthesiaStatusDto postAnesthesiaStatus;
 
 }

@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.FoodIn
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.MeasuringPointMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.MedicationMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnestheticSubstanceMapper;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.PostAnesthesiaStatusMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.ProcedureDescriptionMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
@@ -23,7 +24,8 @@ import org.mapstruct.Named;
 @Mapper(uses = {LocalDateMapper.class, SnomedMapper.class, HealthConditionMapper.class, AnthropometricDataMapper.class,
         MedicationMapper.class, AnestheticSubstanceMapper.class, FoodIntakeMapper.class, RiskFactorMapper.class,
         AnestheticHistoryMapper.class, ProcedureDescriptionMapper.class, AnalgesicTechniqueMapper.class,
-        AnestheticTechniqueMapper.class, MeasuringPointMapper.class}, builder = @Builder(disableBuilder = true))
+        AnestheticTechniqueMapper.class, MeasuringPointMapper.class, PostAnesthesiaStatusMapper.class},
+        builder = @Builder(disableBuilder = true))
 public interface AnestheticReportMapper {
 
     @Named("fromAnestheticReportDto")
@@ -45,6 +47,7 @@ public interface AnestheticReportMapper {
     @Mapping(target = "antibioticProphylaxis", source = "antibioticProphylaxis", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "procedureDescription.foodIntake", source = "foodIntake.clockTime")
     @Mapping(target = "measuringPoints", source = "measuringPoints", qualifiedByName = "toListMeasuringPointBo")
+    @Mapping(target = "postAnesthesiaStatus", source = "postAnesthesiaStatus", qualifiedByName = "toPostAnesthesiaStatusBo")
     AnestheticReportBo fromAnestheticReportDto(AnestheticReportDto anestheticReport);
 
     @Named("fromAnestheticReportBo")
@@ -66,5 +69,6 @@ public interface AnestheticReportMapper {
     @Mapping(target = "nonAnestheticDrugs", source = "nonAnestheticDrugs", qualifiedByName = "toListAnestheticSubstanceDto")
     @Mapping(target = "antibioticProphylaxis", source = "antibioticProphylaxis", qualifiedByName = "toListAnestheticSubstanceDto")
     @Mapping(target = "measuringPoints", source = "measuringPoints", qualifiedByName = "toListMeasuringPointDto")
+    @Mapping(target = "postAnesthesiaStatus", source = "postAnesthesiaStatus", qualifiedByName = "toPostAnesthesiaStatusDto")
     AnestheticReportDto fromAnestheticReportBo(AnestheticReportBo anestheticReport);
 }

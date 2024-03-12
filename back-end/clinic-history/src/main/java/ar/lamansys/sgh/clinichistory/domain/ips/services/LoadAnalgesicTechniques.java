@@ -25,7 +25,7 @@ public class LoadAnalgesicTechniques {
 
         loadAnestheticSubstances.run(documentId, analgesicTechniques);
         analgesicTechniques.stream()
-                .filter(this::hasToSaveAnalgesicTechniqueEntity)
+                .filter(this::hasToSaveEntity)
                 .forEach(this::saveEntity);
 
         log.debug("Output -> {}", analgesicTechniques);
@@ -47,7 +47,7 @@ public class LoadAnalgesicTechniques {
         analgesicTechniqueBo.setAnalgesicTechniqueId(analgesicTechnique.getId());
     }
 
-    private boolean hasToSaveAnalgesicTechniqueEntity(AnalgesicTechniqueBo analgesicTechniqueBo) {
+    private boolean hasToSaveEntity(AnalgesicTechniqueBo analgesicTechniqueBo) {
         return nonNull(analgesicTechniqueBo.getInjectionNote())
                 || nonNull(analgesicTechniqueBo.getCatheter())
                 || nonNull(analgesicTechniqueBo.getCatheterNote());

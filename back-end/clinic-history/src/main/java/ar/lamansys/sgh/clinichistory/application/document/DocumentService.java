@@ -17,6 +17,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
@@ -161,5 +162,7 @@ public interface DocumentService {
     DocumentMeasuringPoint createDocumentMeasuringPoint(Long documentId, Integer measuringPointId);
 
     List<MeasuringPointBo> getMeasuringPointStateFromDocument(Long documentId);
+
+    PostAnesthesiaStatusBo getPostAnesthesiaStatusStateFromDocument(Long documentId);
 }
 

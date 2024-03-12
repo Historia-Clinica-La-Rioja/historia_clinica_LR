@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticHistory;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticTechniques;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticSubstances;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMeasuringPoints;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadPostAnesthesiaStatus;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedureDescription;
 import java.time.LocalDate;
 import java.time.Period;
@@ -94,6 +95,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private final LoadMeasuringPoints loadMeasuringPoints;
 
+    private final LoadPostAnesthesiaStatus loadPostAnesthesiaStatus;
+
     @Override
 	@Transactional
     public Long run(IDocumentBo documentBo, boolean createFile) {
@@ -158,6 +161,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadAnestheticSubstances.run(doc.getId(), documentBo.getNonAnestheticDrugs());
         loadAnestheticSubstances.run(doc.getId(), documentBo.getAntibioticProphylaxis());
         loadMeasuringPoints.run(doc.getId(), documentBo.getMeasuringPoints());
+        loadPostAnesthesiaStatus.run(doc.getId(), Optional.ofNullable(documentBo.getPostAnesthesiaStatus()));
 
         if (createFile)
             generateDocument(documentBo);

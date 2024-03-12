@@ -19,6 +19,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.NewbornBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
@@ -39,6 +40,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentAnestheticSubstanceRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentPostAnesthesiaStatusRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureDescriptionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProcedureRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentProsthesisRepository;
@@ -143,6 +145,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentAnestheticTechniqueRepository documentAnestheticTechniqueRepository;
 
     private final DocumentMeasuringPointRepository documentMeasuringPointRepository;
+
+    private final DocumentPostAnesthesiaStatusRepository documentPostAnesthesiaStatusRepository;
 
     @Override
     public Optional<Document> findById(Long documentId) {
@@ -645,6 +649,14 @@ public class DocumentServiceImpl implements DocumentService {
     public List<MeasuringPointBo> getMeasuringPointStateFromDocument(Long documentId) {
         log.debug("Input parameters -> documentId {}", documentId);
         List<MeasuringPointBo> result = documentMeasuringPointRepository.getMeasuringPointStateFromDocument(documentId);
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public PostAnesthesiaStatusBo getPostAnesthesiaStatusStateFromDocument(Long documentId) {
+        log.debug("Input parameters -> documentId {}", documentId);
+        PostAnesthesiaStatusBo result = documentPostAnesthesiaStatusRepository.getDocumentPostAnesthesiaStatus(documentId);
         log.debug(OUTPUT, result);
         return result;
     }

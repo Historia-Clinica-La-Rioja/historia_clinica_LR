@@ -1,5 +1,5 @@
-databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_19 
+databaseChangeLog:
+    - logicalFilePath: incrementales-v2_19
 
     - changeSet:
         id: addColumns-anesthetic_part4-procedure_description
@@ -121,4 +121,64 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: measuring_point
               validate: true
+
+    - changeSet:
+        id: createTable-post_anesthesia_status
+        author: mromero
+        changes:
+          - createTable:
+              tableName: post_anesthesia_status
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_post_anesthesia_status
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_post_anesthesia_status
+                    name: document_id
+                    type: bigint
+                - column:
+                    name: intentional_sensitivity
+                    type: boolean
+                - column:
+                    name: corneal_reflex
+                    type: boolean
+                - column:
+                    name: obey_orders
+                    type: boolean
+                - column:
+                    name: talk
+                    type: boolean
+                - column:
+                    name: respiratory_depression
+                    type: boolean
+                - column:
+                    name: circulatory_depression
+                    type: boolean
+                - column:
+                    name: vomiting
+                    type: boolean
+                - column:
+                    name: curated
+                    type: boolean
+                - column:
+                    name: tracheal_cannula
+                    type: boolean
+                - column:
+                    name: pharyngeal_cannula
+                    type: boolean
+                - column:
+                    name: internment
+                    type: boolean
+                - column:
+                    name: internment_place
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_note_id_post_anesthesia_status
+                    name: note_id
+                    type: bigint
 

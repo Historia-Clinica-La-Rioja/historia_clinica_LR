@@ -17,7 +17,7 @@ public interface DocumentProcedureDescriptionRepository extends JpaRepository<Do
             "dpd.anesthesiaStartDate, dpd.anesthesiaStartTime, dpd.anesthesiaEndDate, dpd.anesthesiaEndTime, " +
             "dpd.surgeryStartDate, dpd.surgeryStartTime, dpd.surgeryEndDate, dpd.surgeryEndTime) " +
             "FROM DocumentProcedureDescription dpd " +
-            "JOIN Note n ON (dpd.noteId = n.id) " +
+            "LEFT JOIN Note n ON (dpd.noteId = n.id) " +
             "WHERE dpd.documentId = :documentId")
     ProcedureDescriptionBo getDocumentProcedureDescription(@Param("documentId") Long documentId);
 

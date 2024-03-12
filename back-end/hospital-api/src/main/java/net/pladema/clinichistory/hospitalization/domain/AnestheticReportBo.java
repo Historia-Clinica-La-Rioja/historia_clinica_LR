@@ -11,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
@@ -85,6 +86,8 @@ public class AnestheticReportBo implements IDocumentBo {
     private List<AnestheticSubstanceBo> antibioticProphylaxis;
 
     private List<MeasuringPointBo> measuringPoints;
+
+    private PostAnesthesiaStatusBo postAnesthesiaStatus;
 
     @Override
     public Integer getPatientId() {

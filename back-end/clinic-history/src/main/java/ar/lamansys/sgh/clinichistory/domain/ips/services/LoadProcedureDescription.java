@@ -24,14 +24,14 @@ public class LoadProcedureDescription {
     public ProcedureDescriptionBo run(Long documentId, Optional<ProcedureDescriptionBo> procedureDescription) {
         log.debug("Input parameters -> documentId {} procedureDescription {}", documentId, procedureDescription);
 
-        procedureDescription.filter(this::hasToSaveAnalgesicTechniqueEntity)
-                .ifPresent(procedureDescriptionBo -> saveEntity(documentId, procedureDescriptionBo));
+        procedureDescription.filter(this::hasToSaveEntity)
+                .ifPresent(procedureDescriptionBo -> this.saveEntity(documentId, procedureDescriptionBo));
 
         log.debug("Output -> {}", procedureDescription);
         return procedureDescription.orElse(null);
     }
 
-    private boolean hasToSaveAnalgesicTechniqueEntity(ProcedureDescriptionBo procedureDescription) {
+    private boolean hasToSaveEntity(ProcedureDescriptionBo procedureDescription) {
         return nonNull(procedureDescription.getFoodIntake())
                 || nonNull(procedureDescription.getNote())
                 || nonNull(procedureDescription.getAsa())
