@@ -1,3 +1,9 @@
 <div fxLayout="column" fxLayoutGap="10px">
     <span class="title">{{ 'ambulatoria.paciente.nueva-consulta.intervening-professionals.TITLE' | translate }}</span>
+    <app-typeahead
+    id="typeahead-professional"
+    [titleInput]="'turnos.home.PROFESSIONAL_SEARCH' | translate"
+    [options]="professionals"
+    (selectionChange)="setProfessional($event)">
+</app-typeahead>
 </div>
