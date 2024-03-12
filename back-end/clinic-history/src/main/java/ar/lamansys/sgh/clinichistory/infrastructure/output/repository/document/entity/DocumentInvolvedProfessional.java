@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -34,5 +35,11 @@ public class DocumentInvolvedProfessional implements Serializable {
 
 	@Column(name = "healthcare_professional_id", nullable = false)
 	private Integer healthcareProfessionalId;
+
+	@Column(name = "signature_status_id")
+	private Short signatureStatusId;
+
+	@Column(name = "status_update_date")
+	private LocalDate statusUpdateDate;
 
 }

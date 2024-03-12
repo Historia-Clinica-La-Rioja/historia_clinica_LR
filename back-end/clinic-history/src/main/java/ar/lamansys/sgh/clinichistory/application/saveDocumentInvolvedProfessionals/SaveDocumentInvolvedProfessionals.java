@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals;
 
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EElectronicSignatureStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentInvolvedProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInvolvedProfessional;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,8 @@ public class SaveDocumentInvolvedProfessionals {
 		DocumentInvolvedProfessional result = new DocumentInvolvedProfessional();
 		result.setDocumentId(documentId);
 		result.setHealthcareProfessionalId(healthcareProfessionalId);
+		result.setStatusUpdateDate(LocalDate.now());
+		result.setSignatureStatusId(EElectronicSignatureStatus.PENDING.getId());
 		return result;
 	}
 

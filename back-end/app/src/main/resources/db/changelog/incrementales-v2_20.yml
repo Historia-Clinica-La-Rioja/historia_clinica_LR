@@ -383,3 +383,24 @@ databaseChangeLog:
                       references: procedure_template_status(id)
                       foreignKeyName: FK_procedure_template_status_id
                     defaultValueNumeric: 1
+    
+    - changeSet:
+        id: addColumns-related-to-signature-status-to-document_involved_professional
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: document_involved_professional
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: signature_status_id
+                    type: smallint
+                    defaultValue: 1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: status_update_date
+                    type: date
+                    defaultValueDate: ${date.now}
+                    
