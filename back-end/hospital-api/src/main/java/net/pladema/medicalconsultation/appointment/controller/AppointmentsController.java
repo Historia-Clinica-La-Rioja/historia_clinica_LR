@@ -1009,7 +1009,8 @@ public class AppointmentsController {
 						dto.getCreateAppointmentDto().isOverturn(),
 						dto.getCreateAppointmentDto().getPatientMedicalCoverageId(),
 						dto.getCreateAppointmentDto().getPhonePrefix(),
-						dto.getCreateAppointmentDto().getPhoneNumber()),
+						dto.getCreateAppointmentDto().getPhoneNumber(),
+						dto.getCreateAppointmentDto().getModality().getId()),
 				new CustomRecurringAppointmentBo(
 						dto.getCustomRecurringAppointmentDto().getEndDate(),
 						dto.getCustomRecurringAppointmentDto().getRepeatEvery(),

@@ -784,7 +784,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND a.hour = :hour " +
 			"AND oh.dayWeekId = :dayWeekId " +
 			"AND a.dateTypeId >= :date " +
-			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
+			"AND a.deleteable.deleted IS NOT TRUE " +
 			"AND a.id <> :appointmentId")
 	List<Appointment> getLaterAppointmentsByHourAndDate(@Param("diaryId") Integer diaryId,
 														@Param("hour") LocalTime hour,
@@ -801,7 +801,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND oh.dayWeekId = :dayWeekId " +
 			"AND a.dateTypeId > :date " +
-			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
+			"AND a.deleteable.deleted IS NOT TRUE " +
 			"AND a.parentAppointmentId = :parentAppointmentId")
 	List<Appointment> getLaterAppointmentsByDate(@Param("diaryId") Integer diaryId,
 												 @Param("date") LocalDate date,
@@ -866,6 +866,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.parentAppointmentId = :appointmentId " +
 			"AND a.appointmentStateId <> " + AppointmentState.CANCELLED)
 	Integer recurringAppointmentQuantityByParentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT a.id " +
+			"FROM Appointment a " +
+			"WHERE a.parentAppointmentId = :appointmentId " +
+			"AND a.appointmentStateId <> " + AppointmentState.CANCELLED)
+	Integer getLastAppointmentIdChildByParentId(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional
 	@Modifying

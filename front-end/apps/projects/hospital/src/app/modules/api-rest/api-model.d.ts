@@ -295,9 +295,9 @@ export interface AppointmentDto extends CreateAppointmentDto {
     associatedReferenceClosureType: EReferenceClosureType;
     callLink: string;
     diaryLabelDto?: DiaryLabelDto;
+    hasAppointmentChilds?: boolean;
     hasAssociatedReference: boolean;
     id: number;
-    hasAppointmentChilds?: boolean;
     observation?: string;
     observationBy?: string;
     parentAppointmentId?: number;
@@ -976,12 +976,12 @@ export interface CoverageDto extends Serializable {
 
 export interface CreateAppointmentDto {
     applicantHealthcareProfessionalEmail?: string;
+    appointmentOptionId?: number;
     date: string;
     diaryId: number;
     hour: string;
-    modality: EAppointmentModality;
-    appointmentOptionId?: number;
     id?: number;
+    modality: EAppointmentModality;
     openingHoursId: number;
     orderData?: DiagnosticReportInfoDto;
     overturn: boolean;
@@ -4893,7 +4893,8 @@ export interface VirtualConsultationStatusDto {
     status: EVirtualConsultationStatus;
 }
 
-export interface Watchable {}
+export interface Watchable {
+}
 
 export interface WeekDayDto {
     description: string;
@@ -4970,7 +4971,6 @@ export const enum AppFeature {
     HABILITAR_MONITOREO_CIPRES = "HABILITAR_MONITOREO_CIPRES",
     HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO = "HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO",
     HABILITAR_AGENDA_DINAMICA = "HABILITAR_AGENDA_DINAMICA",
-    HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO = "HABILITAR_UNIDADES_JERARQUICAS_EN_DESARROLLO",
     ROLES_API_PUBLICA_EN_DESARROLLO = "ROLES_API_PUBLICA_EN_DESARROLLO",
     HABILITAR_RECURRENCIA_EN_DESARROLLO = "HABILITAR_RECURRENCIA_EN_DESARROLLO",
 }

@@ -78,5 +78,6 @@ public class CreateAppointmentDto {
 	@Nullable
 	private Integer referenceId;
 
+	@Nullable
 	private Short appointmentOptionId;
 }

@@ -3,7 +3,6 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
@@ -40,7 +39,7 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 					UserInfo.getCurrentAuditor(),
 					appointment.get().getCreationable().getCreatedOn()
 			);
-			appointmentService.checkChildAppointments(appointmentId);
+			appointmentService.checkRemainingChildAppointments(appointmentId);
 			if (appointment.get().getParentAppointmentId() == null)
 				appointmentRepository.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor());
 		}
@@ -60,8 +59,7 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 
 		LocalDateTime createdOn = appointment.get().getCreationable().getCreatedOn();
 		appointmentRepository.cancelLaterRecurringAppointments(appointmentId, UserInfo.getCurrentAuditor(), createdOn);
-		appointmentService.checkChildAppointments(appointmentId);
-
+		appointmentService.checkRemainingChildAppointments(appointmentId);
 		return true;
 	}
 }

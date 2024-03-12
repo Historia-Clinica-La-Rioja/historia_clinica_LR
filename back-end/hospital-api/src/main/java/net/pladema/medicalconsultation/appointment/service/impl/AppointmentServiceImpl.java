@@ -90,6 +90,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private final static Integer NO_CHILD_APPOINTMENTS = 0;
 
+	private final static Integer ONE_APPOINTMENT_LEFT = 1;
+
 	private final AppointmentRepository appointmentRepository;
 
 	private final AppointmentObservationRepository appointmentObservationRepository;
@@ -232,7 +234,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 			Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
 
 			if (appointment.isPresent() && appointment.get().getParentAppointmentId() != null)
-				checkChildAppointments(appointment.get().getParentAppointmentId());
+				checkRemainingChildAppointments(appointment.get().getParentAppointmentId());
 		}
 
 		historicAppointmentStateRepository.save(new HistoricAppointmentState(appointmentId, appointmentStateId, reason));
@@ -728,23 +730,50 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public void checkChildAppointments(Integer appointmentId) {
-		if (appointmentRepository.recurringAppointmentQuantityByParentId(appointmentId) == NO_CHILD_APPOINTMENTS) {
-			appointmentRepository.updateRecurringType(appointmentId, RecurringAppointmentType.NO_REPEAT.getId());
-			this.deleteCustomAppointment(appointmentId);
-		}
+	public void checkRemainingChildAppointments(Integer appointmentId) {
+		appointmentRepository.findById(appointmentId).ifPresent(appointment -> {
+			if (appointment.getParentAppointmentId() == null) {
+				changeNoAppointmentsLeft(appointment);
+			}
+		});
 	}
 
 	@Override
 	public void deleteCustomAppointment(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		this.appointmentRepository.deleteCustomAppointment(appointmentId);
+		appointmentRepository.deleteCustomAppointment(appointmentId);
 	}
 
 	@Override
 	public void deleteParentId(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		this.appointmentRepository.deleteParentId(appointmentId);
+		appointmentRepository.deleteParentId(appointmentId);
+	}
+
+	private void changeLastAppointmentLeft(Integer appointmentId) {
+		Integer lastAppointmentChildId = appointmentRepository.getLastAppointmentIdChildByParentId(appointmentId);
+		appointmentRepository.updateRecurringType(lastAppointmentChildId, RecurringAppointmentType.NO_REPEAT.getId());
+		deleteCustomAppointment(lastAppointmentChildId);
+		deleteParentId(lastAppointmentChildId);
+	}
+
+	private void changeNoAppointmentsLeft(Appointment appointment) {
+		Integer appointmentsQuantity = appointmentRepository.recurringAppointmentQuantityByParentId(appointment.getId());
+		if (appointmentsQuantity.equals(NO_CHILD_APPOINTMENTS)) {
+			appointmentRepository.updateRecurringType(appointment.getId(), RecurringAppointmentType.NO_REPEAT.getId());
+			deleteCustomAppointment(appointment.getId());
+		}
+
+		if (appointmentsQuantity.equals(ONE_APPOINTMENT_LEFT) && appointment.getAppointmentStateId().equals(AppointmentState.CANCELLED)) {
+			changeLastAppointmentLeft(appointment.getId());
+		}
+	}
+
+	private short getDayOfWeek(LocalDate localDate) {
+		int dayOfWeek = DayOfWeek.from(localDate).getValue();
+		if (dayOfWeek == DayOfWeek.SUNDAY.getValue())
+			dayOfWeek = 0;
+		return (short) dayOfWeek;
 	}
 
 	private void updateRecurringAppointmentDate(AppointmentBo currentAppointment, AppointmentBo newAppointment) {
@@ -752,8 +781,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		if (parentAppointmentId == null)
 			parentAppointmentId = currentAppointment.getId();
 
-		Integer dayOfWeek = DayOfWeek.from(currentAppointment.getDate()).getValue();
-		List<Appointment> laterAppointments = appointmentRepository.getLaterAppointmentsByDate(newAppointment.getDiaryId(), currentAppointment.getDate(), dayOfWeek.shortValue(), parentAppointmentId);
+		List<Appointment> laterAppointments = appointmentRepository.getLaterAppointmentsByDate(newAppointment.getDiaryId(), currentAppointment.getDate(), getDayOfWeek(currentAppointment.getDate()), parentAppointmentId);
 		for(Appointment a : laterAppointments) {
 			updateDate(
 					a.getId(),

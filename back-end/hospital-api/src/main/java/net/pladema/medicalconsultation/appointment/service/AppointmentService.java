@@ -113,7 +113,7 @@ public interface AppointmentService {
 
 	CustomRecurringAppointmentBo getCustomAppointment(Integer appointmentId);
 
-	void checkChildAppointments(Integer appointment);
+	void checkRemainingChildAppointments(Integer appointmentId);
 
 	void deleteCustomAppointment(Integer appointmentId);
 

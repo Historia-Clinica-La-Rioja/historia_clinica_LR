@@ -193,12 +193,11 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 
 			LocalDate localDate = localDateMapper.fromStringToLocalDate(date);
 			LocalTime localTime = localDateMapper.fromStringToLocalTime(hour);
-			Integer dayOfWeek = DayOfWeek.from(localDate).getValue();
 			appointmentService.checkAppointmentEveryWeek(
 					diaryId,
 					localTime,
 					localDate,
-					dayOfWeek.shortValue(),
+					getDayOfWeek(localDate),
 					appointmentId
 			);
 		}
@@ -237,6 +236,13 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 					appointmentBo.getHour(),
 					appointmentBo.getOpeningHoursId());
 		}
+	}
+
+	private short getDayOfWeek(LocalDate localDate) {
+		int dayOfWeek = DayOfWeek.from(localDate).getValue();
+		if (dayOfWeek == DayOfWeek.SUNDAY.getValue())
+			dayOfWeek = 0;
+		return (short) dayOfWeek;
 	}
 
 	private AppointmentBo getAppointment(Integer appointmentId, RecurringAppointmentType recurringAppointmentType) {

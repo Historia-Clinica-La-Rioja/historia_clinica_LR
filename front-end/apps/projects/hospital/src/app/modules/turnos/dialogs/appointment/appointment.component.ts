@@ -81,7 +81,7 @@ import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { dateToDateDto, dateToTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, dateTimeDtoToDate, dateToDateDto, dateToTimeDto, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DiaryService } from '@api-rest/services/diary.service';
 
 import { PatientNameService } from '@core/services/patient-name.service';
@@ -89,6 +89,8 @@ import { PatientSummary } from '../../../hsi-components/patient-summary/patient-
 import { RecurringCustomizePopupComponent } from '../recurring-customize-popup/recurring-customize-popup.component';
 import { RecurringCancelPopupComponent } from '../recurring-cancel-popup/recurring-cancel-popup.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { toHourMinuteSecond } from '@core/utils/date.utils';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -502,7 +504,7 @@ export class AppointmentComponent implements OnInit {
 				disableClose: true,
 				width: '35%',
 				data: {
-					appointmentDate: this.formDate.get('hour').value,
+					appointmentDate: dateTimeDtoToDate(this.getDateNow()),
 					customAppointment: this.customRecurringAppointmentDto
 				}
 			}).afterClosed()
@@ -658,6 +660,67 @@ export class AppointmentComponent implements OnInit {
 
 	updateAppointmentDate() {
 		const previousDate = new Date(this.data.appointmentData.date);
+		const dateNow: DateTimeDto = this.getDateNow();
+		const updateAppointmentDate: UpdateAppointmentDateDto = {
+			appointmentId: this.data.appointmentData.appointmentId,
+			date: dateNow,
+			openingHoursId: this.getSelectedOpeningHourId(),
+			modality: this.formDate.controls.modality.value,
+			patientEmail: this.formDate.controls.email.value,
+		};
+
+		if (!this.isHabilitarRecurrencia)
+			this.updateDate(updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+		else {
+			updateAppointmentDate.recurringAppointmentTypeId = this.formDate.get('recurringType').value;
+			if (updateAppointmentDate.recurringAppointmentTypeId == RECURRING_APPOINTMENT_OPTIONS.NO_REPEAT) {
+				if (previousDate.getTime() === dateTimeDtoToDate(dateNow).getTime()) {
+					this.openConfirmDialog()
+						.afterClosed()
+						.subscribe((result: boolean) => {
+							if (result)
+								this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+						});
+				} else {
+					this.updateDate(updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+				}
+			} else {
+				// Date changed
+				if (previousDate.getDate() !== dateTimeDtoToDate(dateNow).getDate()) {
+					// Is recurring appointment
+					if (this.appointment.parentAppointmentId) {
+						this.updateDate(updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+					} else {
+						// The original/father appointment have recurring appointments
+						if (this.appointment.hasAppointmentChilds)
+							this.updateDate(updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+						else
+							this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+					}
+				} else {
+					// Hour or minute changed and have childs or is recurring appointment
+					if (this.isHourOrMinuteChanged(previousDate, dateTimeDtoToDate(dateNow))
+						&& (this.appointment.hasAppointmentChilds
+						|| this.appointment.parentAppointmentId)) {
+						this.openRecurringCancelPopUp('turnos.new-appointment.EDIT')
+							.afterClosed()
+							.subscribe((editOption: number) => {
+								if (editOption)
+									this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow), editOption)
+								}
+							);
+					} else {
+						if (this.appointment.parentAppointmentId || this.appointment.hasAppointmentChilds)
+							this.updateDate(updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+						else
+							this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow));
+					}
+				}
+			}
+		}
+	}
+
+	private getDateNow = (): DateTimeDto => {
 		const hour = this.formDate.get('hour').value;
 		const dateNow: DateTimeDto = {
 			date: {
@@ -671,63 +734,7 @@ export class AppointmentComponent implements OnInit {
 				seconds: hour.seconds,
 			}
 		};
-		const updateAppointmentDate: UpdateAppointmentDateDto = {
-			appointmentId: this.data.appointmentData.appointmentId,
-			date: dateNow,
-			openingHoursId: this.getSelectedOpeningHourId(),
-			modality: this.formDate.controls.modality.value,
-			patientEmail: this.formDate.controls.email.value,
-		};
-
-		if (!this.isHabilitarRecurrencia)
-			this.updateDate(updateAppointmentDate, previousDate, hour);
-		else {
-			updateAppointmentDate.recurringAppointmentTypeId = this.formDate.get('recurringType').value;
-			if (updateAppointmentDate.recurringAppointmentTypeId == RECURRING_APPOINTMENT_OPTIONS.NO_REPEAT) {
-				if (previousDate.getTime() === hour.getTime()) {
-					this.openConfirmDialog()
-						.afterClosed()
-						.subscribe((result: boolean) => {
-							if (result)
-								this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, hour);
-						});
-				} else {
-					this.updateDate(updateAppointmentDate, previousDate, hour);
-				}
-			} else {
-				// Date changed
-				if (previousDate.getDate() !== hour.getDate()) {
-					// Is recurring appointment
-					if (this.appointment.parentAppointmentId) {
-						this.updateDate(updateAppointmentDate, previousDate, hour);
-					} else {
-						// The original/father appointment have recurring appointments
-						if (this.appointment.hasAppointmentChilds)
-							this.updateDate(updateAppointmentDate, previousDate, hour);
-						else
-							this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, hour);
-					}
-				} else {
-					// Hour or minute changed and have childs or is recurring appointment
-					if (this.isHourOrMinuteChanged(previousDate, hour)
-						&& (this.appointment.hasAppointmentChilds
-						|| this.appointment.parentAppointmentId)) {
-						this.openRecurringCancelPopUp('turnos.new-appointment.EDIT')
-							.afterClosed()
-							.subscribe((editOption: number) => {
-								if (editOption)
-									this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, hour, editOption)
-								}
-							);
-					} else {
-						if (this.appointment.parentAppointmentId || this.appointment.hasAppointmentChilds)
-							this.updateDate(updateAppointmentDate, previousDate, hour);
-						else
-							this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, hour);
-					}
-				}
-			}
-		}
+		return dateNow;
 	}
 
 	private isHourOrMinuteChanged(previousDate: Date, newDate: Date) {
@@ -860,16 +867,18 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private createAppointmentDto(openingHoursId: number, appointmentId: number, editOption?: number): CreateAppointmentDto {
+		const hour = this.formDate.get('hour').value;
+		const dateNow: DateTimeDto = this.getDateNow();
 		const dto: CreateAppointmentDto = {
-			date: moment(this.formDate.get('hour').value).format(DateFormat.API_DATE),
+			date: toApiFormat(dateDtoToDate(dateNow.date)),
 			diaryId: this.data.agenda.id,
-			hour: moment(this.formDate.get('hour').value).format(DateFormat.HOUR_MINUTE_SECONDS),
+			hour: toHourMinuteSecond(timeDtoToDate(hour)),
 			openingHoursId: openingHoursId,
 			overturn: this.data.appointmentData.overturn,
 			patientId: this.data.appointmentData.patient.id,
 			id: appointmentId,
 			appointmentOptionId: editOption,
-			modality: this.selectedModality.value
+			modality: this.appointment.modality
 		}
 		return dto;
 	}

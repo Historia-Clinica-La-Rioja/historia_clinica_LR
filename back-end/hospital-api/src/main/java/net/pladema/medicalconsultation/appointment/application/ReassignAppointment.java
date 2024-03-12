@@ -36,6 +36,8 @@ public class ReassignAppointment {
 		log.debug("Input parameters -> appointmentUpdateData {}", appointmentUpdateData);
 		appointmentRepository.updateDate(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getDate(), appointmentUpdateData.getTime());
 		appointmentAssnRepository.updateOpeningHoursId(appointmentUpdateData.getOpeningHoursId(), appointmentUpdateData.getAppointmentId());
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO))
+			appointmentRepository.updateRecurringType(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getRecurringAppointmentTypeId());
 		AppointmentBo appointment = appointmentRepository.getEmailNotificationData(appointmentUpdateData.getAppointmentId());
 		updateModalityRelatedData(appointment, appointmentUpdateData);
 		if (mustSendEmail(appointmentUpdateData.getModality()))

@@ -113,7 +113,7 @@ public class AppointmentBo {
 	}
 
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Integer openingHoursId,
-						 boolean isOverturn, Integer patientMedicalCoverageId, String phonePrefix, String phoneNumber) {
+						 boolean isOverturn, Integer patientMedicalCoverageId, String phonePrefix, String phoneNumber, Short modalityId) {
 		this.diaryId = diaryId;
 		this.patientId = patientId;
 		this.date = date;
@@ -123,6 +123,7 @@ public class AppointmentBo {
 		this.patientMedicalCoverageId = patientMedicalCoverageId;
 		this.phonePrefix = phonePrefix;
 		this.phoneNumber = phoneNumber;
+		this.modalityId = modalityId;
 	}
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
