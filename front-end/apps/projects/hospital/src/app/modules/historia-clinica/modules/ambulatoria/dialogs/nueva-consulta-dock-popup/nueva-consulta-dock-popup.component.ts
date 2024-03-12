@@ -50,6 +50,7 @@ import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confir
 import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
+import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 
 const TIME_OUT = 5000;
 
@@ -90,6 +91,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	collapsedRiskFactorsSection = false;
 	collapsedReferenceRequest = true;
 	isEnablePopUpConfirm: boolean = true;
+	boxMessageInfo: BoxMessageInformation;
 
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
@@ -132,6 +134,19 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
+		this.boxMessageInfo = {
+			title: 'historia-clinica.include-previous-data-question.TITLE',
+			question: 'historia-clinica.include-previous-data-question.violence-situations.QUESTION',
+			message: '',
+			viewError: this.touchedConfirm,
+			addButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.ADD',
+			discardButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.DISCARD',
+			showButtons: true
+		}
+		this.translateService.get('historia-clinica.include-previous-data-question.violence-situations.DESCRIPTION',
+			{ problem: this.dataName }).subscribe(
+          		message => this.boxMessageInfo.message = message
+        );
 	}
 
 

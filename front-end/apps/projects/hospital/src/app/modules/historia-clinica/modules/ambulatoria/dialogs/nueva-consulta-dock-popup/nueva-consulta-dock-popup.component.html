@@ -184,17 +184,11 @@
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
 			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [(collapsed)]="collapsedReferenceRequest">
 			<div fxLayout="column" fxLayoutGap="2vh" #referenceRequest>
-				<app-include-previous-data-question *ngIf="showWarningViolenceSituation" 
-					[question]="'historia-clinica.include-previous-data-question.violence-situations.QUESTION'
-                    | translate"
-					[viewError]="touchedConfirm"
-					[message]="'historia-clinica.include-previous-data-question.violence-situations.DESCRIPTION'
-                    | translate: {problem: dataName}"
-					[addButtonLabel]="'historia-clinica.include-previous-data-question.violence-situations.ADD'"
-					[discardButtonLabel]="'historia-clinica.include-previous-data-question.violence-situations.DISCARD'"
+				<app-box-message *ngIf="showWarningViolenceSituation"
+					[boxMessageInfo]="boxMessageInfo"
 					(response)="openReferenceDialog($event)"
 					id="violence_situation_data_question">
-				</app-include-previous-data-question>
+				</app-box-message>
 
 				<app-titled-content-card *ngIf="!ambulatoryConsultationReferenceService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGISTERED_REQUEST' }}">

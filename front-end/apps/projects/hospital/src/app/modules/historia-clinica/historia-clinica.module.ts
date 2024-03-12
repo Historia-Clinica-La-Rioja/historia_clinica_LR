@@ -30,7 +30,7 @@ import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-f
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
 import { HierarchicalUnitConsultationComponent } from './components/hierarchical-unit-consultation/hierarchical-unit-consultation.component';
-import { IncludePreviousDataQuestionComponent } from './components/include-previous-data-question/include-previous-data-question.component';
+import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
@@ -117,7 +117,7 @@ import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambula
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
-		IncludePreviousDataQuestionComponent,
+		BoxMessageComponent,
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
@@ -221,7 +221,7 @@ import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambula
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		FactoresDeRiesgoFormComponent,
-		IncludePreviousDataQuestionComponent,
+		BoxMessageComponent,
 		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
