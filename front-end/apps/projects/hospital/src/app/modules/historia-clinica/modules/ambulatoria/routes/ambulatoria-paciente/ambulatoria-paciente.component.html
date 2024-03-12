@@ -178,7 +178,7 @@
 							<span>{{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress">
+							<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress" [isEmergencyCareTemporalPatient]="isEmergencyCareTemporalPatient">
 							</app-guardia>
 						</ng-template>
 					</mat-tab>

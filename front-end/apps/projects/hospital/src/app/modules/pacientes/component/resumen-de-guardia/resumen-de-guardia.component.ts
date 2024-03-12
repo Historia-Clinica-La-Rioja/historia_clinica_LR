@@ -39,6 +39,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	//En lugar de pasar el id puedo pasar el episodio entero porque ya lo voy a estar calculando desde antes en ambulatoria
 	@Input() episodeId: number;
 	@Input() showNewTriage: boolean = false;
+	@Input() isEmergencyCareTemporalPatient: boolean = false;
 
 	guardiaSummary: SummaryHeader = GUARDIA;
 	readonly STATES = EstadosEpisodio;
@@ -230,7 +231,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.availableActions = [];
 				// Following code within this function must be in this order
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote) {
+				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote && !this.isEmergencyCareTemporalPatient) {
 					let action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
 						id: 'medical_discharge',
