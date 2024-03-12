@@ -70,6 +70,7 @@ import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
+import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
 import { TitledSingleContentComponent } from './components/titled-single-content/titled-single-content.component';
@@ -134,6 +135,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FilterButtonComponent,
 		FiltersCardComponent,
 		FiltersComponent,
+		FiltersSelectComponent,
 		FiltersSelectV2Component,
 		FiltersTypeaheadComponent,
 		FloatingDivComponent,
@@ -167,14 +169,14 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
+		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
+		TitledSingleContentComponent,
 		TypeaheadComponent,
 		TypeaheadFilterOptionsComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
-  		FiltersSelectComponent,
-  		TitledSingleContentComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -276,6 +278,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
+		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
 		TitledSingleContentComponent,

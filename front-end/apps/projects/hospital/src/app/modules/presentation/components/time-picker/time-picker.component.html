@@ -1,0 +1,30 @@
+<form [formGroup]="timePickerForm">
+    <div fxLayout="column" fxLayoutGap="8px">
+        <span *ngIf="!timePickerData?.hideLabel">{{ 'presentation.time-picker.HOUR' | translate }}</span>
+        <div fxLayoutGap="8px">
+            <mat-form-field class="time-picker-input" data-id="hour-input" appearance="outline">
+                <input #matAutocompleteHour type="text" matInput formControlName="hour" 
+                    [matAutocomplete]="hour" (focusout)="handleHourSelected()">
+                <mat-autocomplete #hour="matAutocomplete">
+                    <mat-option *ngFor="let hour of hoursArray" [value]="hour">
+                        {{ hour }} hs
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <span>:</span>
+
+            <mat-form-field class="time-picker-input" data-id="minutes-input" appearance="outline">
+                <input #matAutocompleteMinutes type="text" matInput formControlName="minutes"
+                    [matAutocomplete]="minutes" (focusout)="handleMinutesSelected()">
+                <mat-autocomplete #minutes="matAutocomplete">
+                    <mat-option *ngFor="let minute of minutesArray" [value]="minute">
+                        {{ minute }} min
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <span>hs.</span>
+        </div>
+    </div>
+</form>

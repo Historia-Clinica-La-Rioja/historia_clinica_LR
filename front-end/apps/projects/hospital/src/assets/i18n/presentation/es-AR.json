@@ -35,6 +35,9 @@
             "gender": {
                 "NO_GENDER": "Sin género"
             }
+        },
+        "time-picker": {
+            "HOUR": "Hora"
         }
     }
 }

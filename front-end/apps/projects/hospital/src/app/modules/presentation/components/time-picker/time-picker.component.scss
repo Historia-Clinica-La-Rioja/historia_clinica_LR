@@ -1,0 +1,13 @@
+@import '../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
+.time-picker-input {
+    width: 55px;
+}
+
+.mat-form-field {
+    text-align: center !important;
+}
