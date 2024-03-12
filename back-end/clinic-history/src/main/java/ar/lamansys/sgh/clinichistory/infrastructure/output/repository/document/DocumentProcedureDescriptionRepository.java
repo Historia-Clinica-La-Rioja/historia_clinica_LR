@@ -13,7 +13,9 @@ public interface DocumentProcedureDescriptionRepository extends JpaRepository<Do
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT new ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo(" +
-            "dpd.documentId, n.description, dpd.asa, dpd.venousAccess, dpd.nasogastricTube, dpd.urinaryCatheter, dpd.foodIntake) " +
+            "dpd.documentId, n.description, dpd.asa, dpd.venousAccess, dpd.nasogastricTube, dpd.urinaryCatheter, dpd.foodIntake," +
+            "dpd.anesthesiaStartDate, dpd.anesthesiaStartTime, dpd.anesthesiaEndDate, dpd.anesthesiaEndTime, " +
+            "dpd.surgeryStartDate, dpd.surgeryStartTime, dpd.surgeryEndDate, dpd.surgeryEndTime) " +
             "FROM DocumentProcedureDescription dpd " +
             "JOIN Note n ON (dpd.noteId = n.id) " +
             "WHERE dpd.documentId = :documentId")

@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Anthropom
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FoodIntakeDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MeasuringPointDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnestheticSubstanceDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ProcedureDescriptionDto;
@@ -84,5 +85,8 @@ public class AnestheticReportDto {
 
     @Nullable
     private @Valid List<AnestheticSubstanceDto> antibioticProphylaxis = new ArrayList<>();
+
+    @Nullable
+    private @Valid List<MeasuringPointDto> measuringPoints = new ArrayList<>();
 
 }

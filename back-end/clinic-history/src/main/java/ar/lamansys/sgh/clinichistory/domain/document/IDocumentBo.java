@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -207,4 +208,6 @@ public interface IDocumentBo {
     default List<AnestheticSubstanceBo> getNonAnestheticDrugs() { return Collections.emptyList(); }
 
     default List<AnestheticSubstanceBo> getAntibioticProphylaxis() { return Collections.emptyList(); }
+
+    default List<MeasuringPointBo> getMeasuringPoints() { return Collections.emptyList(); }
 }

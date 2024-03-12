@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -34,4 +36,28 @@ public class ProcedureDescriptionDto {
 
     @Nullable
     private Boolean urinaryCatheter;
+
+    @Nullable
+    private DateDto anesthesiaStartDate;
+
+    @Nullable
+    private TimeDto anesthesiaStartTime;
+
+    @Nullable
+    private DateDto anesthesiaEndDate;
+
+    @Nullable
+    private TimeDto anesthesiaEndTime;
+
+    @Nullable
+    private DateDto surgeryStartDate;
+
+    @Nullable
+    private TimeDto surgeryStartTime;
+
+    @Nullable
+    private DateDto surgeryEndDate;
+
+    @Nullable
+    private TimeDto surgeryEndTime;
 }

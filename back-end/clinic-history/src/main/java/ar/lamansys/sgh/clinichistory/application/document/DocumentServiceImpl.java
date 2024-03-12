@@ -14,6 +14,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MapClinicalObservationVo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.NewbornBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
@@ -32,6 +33,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthcareProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentImmunizationRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentLabRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentMeasuringPointRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentMedicamentionStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentObstetricEventRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentOdontologyDiagnosticRepository;
@@ -54,6 +56,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthcareProfessional;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMeasuringPoint;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
@@ -138,6 +141,8 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentProcedureDescriptionRepository documentProcedureDescriptionRepository;
 
     private final DocumentAnestheticTechniqueRepository documentAnestheticTechniqueRepository;
+
+    private final DocumentMeasuringPointRepository documentMeasuringPointRepository;
 
     @Override
     public Optional<Document> findById(Long documentId) {
@@ -567,7 +572,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentAnestheticSubstance createDocumentAnestheticSubstance(Long documentId, Integer substanceId) {
-        log.debug("Input parameters -> documentId {}, preMedicationId {}", documentId, substanceId);
+        log.debug("Input parameters -> documentId {}, substanceId {}", documentId, substanceId);
         DocumentAnestheticSubstance result = new DocumentAnestheticSubstance(documentId, substanceId);
         result = documentAnestheticSubstanceRepository.save(result);
         log.debug(OUTPUT, result);
@@ -610,7 +615,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentAnestheticTechnique createDocumentAnestheticTechnique(Long documentId, Integer anestheticTechniqueId) {
-        log.debug("Input parameters -> documentId {}, preMedicationId {}", documentId, anestheticTechniqueId);
+        log.debug("Input parameters -> documentId {}, anestheticTechniqueId {}", documentId, anestheticTechniqueId);
         DocumentAnestheticTechnique result = new DocumentAnestheticTechnique(documentId, anestheticTechniqueId);
         result = documentAnestheticTechniqueRepository.save(result);
         log.debug(OUTPUT, result);
@@ -623,6 +628,23 @@ public class DocumentServiceImpl implements DocumentService {
         List<AnestheticTechniqueBo> result = documentAnestheticTechniqueRepository.getAnestheticTechniquesStateFromDocument(documentId);
         result.forEach(anestheticTechniqueBo -> anestheticTechniqueBo.setTrachealIntubationMethodIds(
                 documentAnestheticTechniqueRepository.getTrachealIntubationState(anestheticTechniqueBo.getId())));
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public DocumentMeasuringPoint createDocumentMeasuringPoint(Long documentId, Integer measuringPointId) {
+        log.debug("Input parameters -> documentId {}, measuringPointId {}", documentId, measuringPointId);
+        DocumentMeasuringPoint result = new DocumentMeasuringPoint(documentId, measuringPointId);
+        result = documentMeasuringPointRepository.save(result);
+        log.debug(OUTPUT, result);
+        return result;
+    }
+
+    @Override
+    public List<MeasuringPointBo> getMeasuringPointStateFromDocument(Long documentId) {
+        log.debug("Input parameters -> documentId {}", documentId);
+        List<MeasuringPointBo> result = documentMeasuringPointRepository.getMeasuringPointStateFromDocument(documentId);
         log.debug(OUTPUT, result);
         return result;
     }

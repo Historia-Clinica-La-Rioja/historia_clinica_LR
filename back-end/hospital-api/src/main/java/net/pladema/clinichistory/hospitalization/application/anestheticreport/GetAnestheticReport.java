@@ -73,6 +73,8 @@ public class GetAnestheticReport {
         result.setNonAnestheticDrugs(this.filterSubstanceBy(substances, EAnestheticSubstanceType.NON_ANESTHETIC_DRUG));
 
         result.setAntibioticProphylaxis(this.filterSubstanceBy(substances, EAnestheticSubstanceType.ANTIBIOTIC_PROPHYLAXIS));
+
+        result.setMeasuringPoints(documentService.getMeasuringPointStateFromDocument(documentId));
     }
 
     private List<AnestheticSubstanceBo> filterSubstanceBy(List<AnestheticSubstanceBo> substances, EAnestheticSubstanceType type) {

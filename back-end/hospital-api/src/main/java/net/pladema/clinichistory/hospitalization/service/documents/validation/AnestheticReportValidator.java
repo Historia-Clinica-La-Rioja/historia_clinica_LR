@@ -13,6 +13,8 @@ public class AnestheticReportValidator extends InternmentDocumentValidator {
     private final BloodRiskFactorsValidator bloodRiskFactorsValidator;
     private final AnestheticSubstanceValidator anestheticSubstanceValidator;
     private final AnestheticTechniqueValidator anestheticTechniqueValidator;
+    private final ProcedureDescriptionValidator procedureDescriptionValidator;
+    private final MeasuringPointValidator measuringPointValidator;
 
     public void assertContextValid(AnestheticReportBo anestheticReport) {
 
@@ -31,6 +33,8 @@ public class AnestheticReportValidator extends InternmentDocumentValidator {
         anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getAnestheticAgents());
         anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getNonAnestheticDrugs());
         anestheticSubstanceValidator.assertSnomedAndDosageAndViaFields(anestheticReport.getAntibioticProphylaxis());
+        procedureDescriptionValidator.assertStartEndDatesTimes(anestheticReport.getProcedureDescription());
+        measuringPointValidator.assertNotDuplicated(anestheticReport.getMeasuringPoints());
 
         log.trace("Output -> isValid anestheticReport {}", anestheticReport);
     }

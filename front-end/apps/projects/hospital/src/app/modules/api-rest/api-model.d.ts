@@ -183,6 +183,7 @@ export interface AnestheticReportDto {
     foodIntake?: FoodIntakeDto;
     histories?: HealthConditionDto[];
     mainDiagnosis?: DiagnosisDto;
+    measuringPoints?: MeasuringPointDto[];
     medications?: MedicationDto[];
     nonAnestheticDrugs?: AnestheticSubstanceDto[];
     preMedications?: AnestheticSubstanceDto[];
@@ -2513,6 +2514,16 @@ export interface MasterDataInterface<T> {
     id: T;
 }
 
+export interface MeasuringPointDto {
+    bloodPressureMax?: number;
+    bloodPressureMin?: number;
+    bloodPulse?: number;
+    co2EndTidal?: number;
+    date: DateDto;
+    o2Saturation?: number;
+    time: TimeDto;
+}
+
 export interface MedicalCoverageDto {
     acronym: string;
     dateQuery: string;
@@ -3413,9 +3424,17 @@ export interface ProblemInfoDto {
 }
 
 export interface ProcedureDescriptionDto {
+    anesthesiaEndDate?: DateDto;
+    anesthesiaEndTime?: TimeDto;
+    anesthesiaStartDate?: DateDto;
+    anesthesiaStartTime?: TimeDto;
     asa?: number;
     nasogastricTube?: boolean;
     note?: string;
+    surgeryEndDate?: DateDto;
+    surgeryEndTime?: TimeDto;
+    surgeryStartDate?: DateDto;
+    surgeryStartTime?: TimeDto;
     urinaryCatheter?: boolean;
     venousAccess?: boolean;
 }

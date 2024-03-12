@@ -20,4 +20,5 @@ public interface ProcedureDescriptionMapper {
 
     @Named("toProcedureDescriptionBo")
     ProcedureDescriptionBo toProcedureDescriptionBo(ProcedureDescriptionDto procedureDescriptionDto);
+
 }

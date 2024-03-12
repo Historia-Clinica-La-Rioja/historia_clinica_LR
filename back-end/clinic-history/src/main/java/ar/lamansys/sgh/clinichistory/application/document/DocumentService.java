@@ -13,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo
 import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
@@ -28,6 +29,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentHealthcareProfessional;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentInmunization;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentLab;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMeasuringPoint;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentMedicamentionStatement;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentObstetricEvent;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentOdontologyDiagnostic;
@@ -155,5 +157,9 @@ public interface DocumentService {
     DocumentAnestheticTechnique createDocumentAnestheticTechnique(Long documentId, Integer anestheticTechniqueId);
 
     List<AnestheticTechniqueBo> getAnestheticTechniquesStateFromDocument(Long documentId);
+
+    DocumentMeasuringPoint createDocumentMeasuringPoint(Long documentId, Integer measuringPointId);
+
+    List<MeasuringPointBo> getMeasuringPointStateFromDocument(Long documentId);
 }
 

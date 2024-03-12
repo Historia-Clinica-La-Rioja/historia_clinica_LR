@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,4 +44,28 @@ public class DocumentProcedureDescription {
 
     @Column(name = "food_intake")
     private LocalTime foodIntake;
+
+    @Column(name = "anesthesia_start_date")
+    private LocalDate anesthesiaStartDate;
+
+    @Column(name = "anesthesia_start_time")
+    private LocalTime anesthesiaStartTime;
+
+    @Column(name = "anesthesia_end_date")
+    private LocalDate anesthesiaEndDate;
+
+    @Column(name = "anesthesia_end_time")
+    private LocalTime anesthesiaEndTime;
+
+    @Column(name = "surgery_start_date")
+    private LocalDate surgeryStartDate;
+
+    @Column(name = "surgery_start_time")
+    private LocalTime surgeryStartTime;
+
+    @Column(name = "surgery_end_date")
+    private LocalDate surgeryEndDate;
+
+    @Column(name = "surgery_end_time")
+    private LocalTime surgeryEndTime;
 }

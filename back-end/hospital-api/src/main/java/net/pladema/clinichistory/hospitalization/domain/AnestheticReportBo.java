@@ -9,6 +9,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
@@ -82,6 +83,8 @@ public class AnestheticReportBo implements IDocumentBo {
     private List<AnestheticSubstanceBo> nonAnestheticDrugs;
 
     private List<AnestheticSubstanceBo> antibioticProphylaxis;
+
+    private List<MeasuringPointBo> measuringPoints;
 
     @Override
     public Integer getPatientId() {
