@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.outpatient.infrastructure.output;
+package net.pladema.clinichistory.cipres.infrastructure.output;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.MedicationSummaryBo;
@@ -7,8 +7,9 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.outpatient.application.port.CipresOutpatientConsultationStorage;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBasicDataBo;
+import net.pladema.clinichistory.cipres.application.port.CipresOutpatientConsultationStorage;
+import net.pladema.clinichistory.cipres.application.port.CipresOutpatientConsultationSummaryStorage;
+import net.pladema.clinichistory.cipres.domain.CipresOutpatientBasicDataBo;
 import net.pladema.clinichistory.outpatient.repository.OutpatientConsultationSummaryStorage;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -34,15 +35,17 @@ public class CipresOutpatientConsultationStorageImpl implements CipresOutpatient
 	
 	private final OutpatientConsultationSummaryStorage outpatientConsultationSummaryStorage;
 
+	private final CipresOutpatientConsultationSummaryStorage cipresOutpatientConsultationSummaryStorage;
+
 	private final DocumentService documentService;
 
 	@Override
-	public List<OutpatientBasicDataBo> getOutpatientConsultationsToCipres() {
+	public List<CipresOutpatientBasicDataBo> getOutpatientConsultations() {
 		LocalDateTime start = LocalDateTime.now().minusDays(DAYS_AGO).with(LocalTime.MIDNIGHT).plusHours(3);
 		LocalDateTime end = LocalDateTime.now().with(LocalTime.MIDNIGHT).plusHours(3);
-		List<OutpatientBasicDataBo> result = outpatientConsultationSummaryStorage.getOutpatientConsultationsToCipres(LIMIT, start, end);
+		List<CipresOutpatientBasicDataBo> result = cipresOutpatientConsultationSummaryStorage.getOutpatientConsultations(LIMIT, start, end);
 
-		List<Integer> outpatientConsultationIds = result.stream().map(OutpatientBasicDataBo::getId).collect(Collectors.toList());
+		List<Integer> outpatientConsultationIds = result.stream().map(CipresOutpatientBasicDataBo::getId).collect(Collectors.toList());
 
 		List<HealthConditionSummaryVo> healthConditions = outpatientConsultationSummaryStorage.getHealthConditionsByOutpatientIds(outpatientConsultationIds);
 		List<ProcedureSummaryBo> procedures = outpatientConsultationSummaryStorage.getProceduresByOutpatientIds(outpatientConsultationIds);
@@ -72,8 +75,7 @@ public class CipresOutpatientConsultationStorageImpl implements CipresOutpatient
 		log.debug("Output size -> {} ", result.size());
 		return result;
 	}
-
-	private void normalizeDate(OutpatientBasicDataBo consultation) {
+	private void normalizeDate(CipresOutpatientBasicDataBo consultation) {
 		LocalTime startHour = LocalTime.of(0, 0);
 		LocalTime endHour = LocalTime.of(3, 0);
 		LocalTime consultationTime = consultation.getDate().toLocalTime();

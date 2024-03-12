@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
+package net.pladema.clinichistory.cipres.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientPatientBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @ToString
 @AllArgsConstructor
-public class OutpatientBasicDataBo {
+public class CipresOutpatientBasicDataBo {
 	private Integer id;
 
 	private Long documentId;
@@ -41,25 +42,14 @@ public class OutpatientBasicDataBo {
 	private RiskFactorBo riskFactorData;
 
 
-	public OutpatientBasicDataBo(Integer id, Long documentId, LocalDateTime date, Integer clinicalSpecialtyId,
-								 String clinicalSpecialtySctid, String institutionSisaCode,
-								 Integer patientId, Integer personId, Short identificationType,
-								 String identificationNumber, Short genderId) {
+	public CipresOutpatientBasicDataBo(Integer id, Long documentId, LocalDateTime date, Integer clinicalSpecialtyId,
+									   String clinicalSpecialtySctid, String institutionSisaCode,
+									   Integer patientId, Integer personId, Short identificationType,
+									   String identificationNumber, Short genderId) {
 		this.id = id;
 		this.documentId = documentId;
 		this.date = date;
 		this.clinicalSpecialtyId = clinicalSpecialtyId;
-		this.clinicalSpecialtySctid = clinicalSpecialtySctid;
-		this.institutionSisaCode = institutionSisaCode;
-		this.patient = new OutpatientPatientBo(patientId, personId, identificationType, identificationNumber, genderId);
-	}
-
-	public OutpatientBasicDataBo(Integer id, LocalDateTime date,
-								 String clinicalSpecialtySctid, String institutionSisaCode,
-								 Integer patientId, Integer personId, Short identificationType,
-								 String identificationNumber, Short genderId) {
-		this.id = id;
-		this.date = date;
 		this.clinicalSpecialtySctid = clinicalSpecialtySctid;
 		this.institutionSisaCode = institutionSisaCode;
 		this.patient = new OutpatientPatientBo(patientId, personId, identificationType, identificationNumber, genderId);

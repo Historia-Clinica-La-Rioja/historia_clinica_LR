@@ -4,8 +4,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.interoperability.cipr
 
 import java.util.List;
 
-public interface SharedOutpatientConsultationPort {
+public interface SharedCipresOutpatientConsultationPort {
 
-	List<CipresOutpatientConsultationDto> getOutpatientConsultationsToCipres();
+	List<CipresOutpatientConsultationDto> getOutpatientConsultations();
 
 }

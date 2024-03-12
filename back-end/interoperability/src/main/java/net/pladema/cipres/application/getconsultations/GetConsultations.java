@@ -4,7 +4,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.interoperability.cipres.CipresOutpatientConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAnthropometricDataDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedOutpatientConsultationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedCipresOutpatientConsultationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedRiskFactorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GetConsultations {
 
-	private final SharedOutpatientConsultationPort sharedOutpatientConsultationPort;
+	private final SharedCipresOutpatientConsultationPort sharedCipresOutpatientConsultationPort;
 
 	public List<OutpatientConsultationBo> run() {
-		var consultations = sharedOutpatientConsultationPort.getOutpatientConsultationsToCipres();
+		var consultations = sharedCipresOutpatientConsultationPort.getOutpatientConsultations();
 		var result = consultations.stream().map(this::mapToOutpatientConsultationBo).collect(Collectors.toList());
 		log.debug("Output size {} -> ", result.size());
 		return result;
