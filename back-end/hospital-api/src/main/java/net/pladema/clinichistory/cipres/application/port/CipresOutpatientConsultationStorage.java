@@ -8,4 +8,6 @@ public interface CipresOutpatientConsultationStorage {
 
 	List<CipresOutpatientBasicDataBo> getOutpatientConsultations();
 
+	CipresOutpatientBasicDataBo getOutpatientConsultationData(Integer cipresEncounterId);
+
 }

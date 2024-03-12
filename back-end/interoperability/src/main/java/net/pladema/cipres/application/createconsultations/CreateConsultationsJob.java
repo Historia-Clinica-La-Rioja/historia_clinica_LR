@@ -41,7 +41,7 @@ public class CreateConsultationsJob {
 		int sentQuantity = 0;
 		try {
 			List<OutpatientConsultationBo> consultations = getConsultations.run();
-			sentQuantity = cipresConsultationStorage.createOutpatientConsultations(consultations);
+			sentQuantity = cipresConsultationStorage.sendOutpatientConsultations(consultations);
 		}
 		catch (Exception ex){
 			log.debug("Exception occurred while transmitting outpatient encounters to cipres: ", ex);

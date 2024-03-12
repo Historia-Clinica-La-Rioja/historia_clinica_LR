@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CipresPatientStorage {
 
-	Optional<Long> getPatientId(BasicDataPatientBo basicDataPatientBo, String establishmentId, Integer encounterId);
+	Optional<Long> getPatientId(BasicDataPatientBo basicDataPatientBo, String establishmentId, Integer encounterId, Integer cipresEncounterId);
 
 	Optional<Long> createPatient(PersonDataBo person, String establishmentId);
 

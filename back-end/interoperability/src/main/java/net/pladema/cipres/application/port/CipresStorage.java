@@ -31,8 +31,9 @@ public class CipresStorage {
 		this.cipresEncounterRepository = cipresEncounterRepository;
 	}
 
-	public void saveStatusError(Integer encounterId, String status, Integer responseCode) {
+	public void saveStatusError(Integer cipresEncounterId, Integer encounterId, String status, Integer responseCode) {
 		var result = new CipresEncounter();
+		result.setId(cipresEncounterId);
 		result.setEncounterId(encounterId);
 		result.setStatus(status);
 		result.setResponseCode(responseCode.shortValue());
@@ -40,10 +41,9 @@ public class CipresStorage {
 		cipresEncounterRepository.save(result);
 	}
 
-	public void handleResourceAccessException(ResourceAccessException e, Integer encounterId) {
-		String message = "Fallo en la comunicación - API SALUD";
-		saveStatusError(encounterId, message, HttpStatus.INTERNAL_SERVER_ERROR.value());
-		log.debug(message, e);
+	public void handleResourceAccessException(ResourceAccessException e, Integer encounterId, Integer cipresEncounterId) {
+		log.debug("Fallo en la comunicación - API SALUD", e);
+		saveStatusError(cipresEncounterId, encounterId, e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
 	}
 
 	public <T> boolean isSuccessfulResponse(ResponseEntity<T[]> response) {

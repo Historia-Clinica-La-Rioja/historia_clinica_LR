@@ -75,6 +75,30 @@ public class CipresOutpatientConsultationStorageImpl implements CipresOutpatient
 		log.debug("Output size -> {} ", result.size());
 		return result;
 	}
+
+	@Override
+	public CipresOutpatientBasicDataBo getOutpatientConsultationData(Integer cipresEncounterId) {
+		log.debug("Input parameter -> cipresEncounterId {} ", cipresEncounterId);
+
+		CipresOutpatientBasicDataBo result = this.cipresOutpatientConsultationSummaryStorage.getOutpatientConsultationByCipresEncounterId(cipresEncounterId);
+
+		List<HealthConditionSummaryVo> healthConditions = outpatientConsultationSummaryStorage.getHealthConditionsByOutpatientIds(List.of(result.getId()));
+		List<ProcedureSummaryBo> procedures = outpatientConsultationSummaryStorage.getProceduresByOutpatientIds(List.of(result.getId()));
+		List<MedicationSummaryBo> medications = outpatientConsultationSummaryStorage.getMedicationsByOutpatientIds(List.of(result.getId()));
+
+		result.setProcedures(procedures.stream().map(p -> new SnomedBo(p.getSnomedSctid(), p.getSnomedPt())).collect(Collectors.toList()));
+		result.setProblems(healthConditions.stream().map(hc -> new SnomedBo(hc.getSnomedSctid(), hc.getSnomedPt())).collect(Collectors.toList()));
+		result.setMedications(medications.stream().map(m -> new SnomedBo(m.getSnomedSctid(), m.getSnomedPt())).collect(Collectors.toList()));
+		result.setAnthropometricData(documentService.getAnthropometricDataStateFromDocument(result.getDocumentId()));
+		result.setRiskFactorData(documentService.getRiskFactorStateFromDocument(result.getDocumentId()));
+
+		normalizeDate(result);
+
+		log.debug("Output result -> {} ", result);
+
+		return result;
+	}
+
 	private void normalizeDate(CipresOutpatientBasicDataBo consultation) {
 		LocalTime startHour = LocalTime.of(0, 0);
 		LocalTime endHour = LocalTime.of(3, 0);

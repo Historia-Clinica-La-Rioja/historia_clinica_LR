@@ -89,6 +89,8 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 
 	private Integer encounterId;
 
+	private Integer cipresEncounterId;
+
 	public CipresPatientStorageImpl (CipresRestTemplate cipresRestTemplate,
 									 CipresWSConfig cipresWSConfig,
 									 CipresPersonStorage cipresPersonStorage,
@@ -100,8 +102,10 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 	}
 
 	@Override
-	public Optional<Long> getPatientId(BasicDataPatientBo patientData, String establishmentId, Integer encounterId) {
+	public Optional<Long> getPatientId(BasicDataPatientBo patientData, String establishmentId,
+									   Integer encounterId, Integer cipresEncounterId) {
 		this.encounterId = encounterId;
+		this.cipresEncounterId = cipresEncounterId;
 		var cipresPatientId = this.cipresPatientRepository.getCipresPatientId(patientData.getId());
 		return cipresPatientId.or(() -> foundPatientId(patientData, establishmentId));
 	}
@@ -117,26 +121,29 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 			} catch (RestTemplateApiException e) {
 				result = handlePatientRestTemplateApiException(e, patientData, establishmentId);
 			} catch (ResourceAccessException e) {
-				handleResourceAccessException(e, this.encounterId);
+				handleResourceAccessException(e, this.encounterId, this.cipresEncounterId);
 			}
 			result.ifPresent(cipresPatientId -> createCipresPatient(patientData.getId(), cipresPatientId));
 			return result;
 		} else
-			saveStatusError(this.encounterId, NO_IDENTIFICATION_PATIENT_DATA, HttpStatus.BAD_REQUEST.value());
+			saveStatusError(this.cipresEncounterId, this.encounterId, NO_IDENTIFICATION_PATIENT_DATA, HttpStatus.BAD_REQUEST.value());
 		return Optional.empty();
 	}
 
 	private Optional<Long> handlePatientRestTemplateApiException(RestTemplateApiException e, BasicDataPatientBo patientData,
 																 String establishmentId) {
 		var personData = patientData.getPerson();
-		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND) && validCuitIdentificationTypeData(personData)) {
-			PersonDataBo person = cipresPersonStorage.getPersonData(personData.getId());
-			if (validPatientMinimalData(person))
-				return createPatient(person, establishmentId);
-			else
-				saveStatusError(this.encounterId, MINIMAL_PATIENT_DATA, HttpStatus.BAD_REQUEST.value());
+		if (e.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+			if  (validCuitIdentificationTypeData(personData)) {
+				PersonDataBo person = cipresPersonStorage.getPersonData(personData.getId());
+				if (validPatientMinimalData(person))
+					return createPatient(person, establishmentId);
+				else
+					saveStatusError(this.cipresEncounterId, this.encounterId, MINIMAL_PATIENT_DATA, HttpStatus.BAD_REQUEST.value());
+			} else
+				saveStatusError(this.cipresEncounterId, this.encounterId, "Error en la composición numérica del CUIL del paciente", HttpStatus.BAD_REQUEST.value());
 		} else
-			saveStatusError(this.encounterId, e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
+			saveStatusError(this.cipresEncounterId, this.encounterId, e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
 		return Optional.empty();
 	}
 
@@ -153,7 +160,7 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 			if (addressId.isPresent())
 				return Optional.of(Long.parseLong(patientId));
 		} else
-			saveStatusError(this.encounterId, NO_ADDRESS_DATA, HttpStatus.BAD_REQUEST.value());
+			saveStatusError(this.cipresEncounterId, this.encounterId, NO_ADDRESS_DATA, HttpStatus.BAD_REQUEST.value());
 
 		return Optional.empty();
 	}
@@ -169,9 +176,9 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 					return Optional.ofNullable(response.getBody().getId() != null ? Integer.parseInt(response.getBody().getId()) : null);
 			} catch (RestTemplateApiException e) {
 				log.debug("Error al intentar actualizar en la api el domicilio del paciente con id: ", patientId);
-				saveStatusError(this.encounterId, e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
+				saveStatusError(this.cipresEncounterId, this.encounterId, e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
 			} catch (ResourceAccessException e) {
-				handleResourceAccessException(e, this.encounterId);
+				handleResourceAccessException(e, this.encounterId, this.cipresEncounterId);
 			}
 		}
 		return Optional.empty();
@@ -189,9 +196,9 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 					return Optional.of(Long.parseLong(response.getBody().getId()));
 			} catch (RestTemplateApiException e) {
 				log.debug("Error al intentar insertar un paciente en la api");
-				saveStatusError(this.encounterId, e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
+				saveStatusError(this.cipresEncounterId, this.encounterId, e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
 			} catch (ResourceAccessException e) {
-				handleResourceAccessException(e, this.encounterId);
+				handleResourceAccessException(e, this.encounterId, this.cipresEncounterId);
 			}
 		}
 		return Optional.empty();
@@ -258,12 +265,12 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 				var cipresCountry = Arrays.asList(response.getBody()).get(0);
 				return Optional.of(cipresWSConfig.getNationalityUrl().concat("/").concat(cipresCountry.getId()));
 			} else
-				saveStatusError(this.encounterId, NO_NATIONALITY_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
+				saveStatusError(this.cipresEncounterId, this.encounterId, NO_NATIONALITY_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
 		} catch (RestTemplateApiException e) {
 			log.debug("Error al intentar obtener la nacionalidad");
-			saveStatusError(this.encounterId, e.getMessage(), e.getStatusCode().value());
+			saveStatusError(this.cipresEncounterId, this.encounterId, e.getMessage(), e.getStatusCode().value());
 		} catch (ResourceAccessException e) {
-			handleResourceAccessException(e, this.encounterId);
+			handleResourceAccessException(e, this.encounterId, this.cipresEncounterId);
 		}
 		return Optional.empty();
 	}
@@ -288,10 +295,10 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 					return getCityIRIByCityName(city, department);
 			}
 		} catch (RestTemplateApiException e) {
-			saveStatusError(this.encounterId, e.getMessage(), e.getStatusCode().value());
+			saveStatusError(this.cipresEncounterId, this.encounterId, e.getMessage(), e.getStatusCode().value());
 			log.debug("Error al intentar obtener la localidad");
 		} catch (ResourceAccessException e) {
-			handleResourceAccessException(e, this.encounterId);
+			handleResourceAccessException(e, this.encounterId, this.cipresEncounterId);
 		}
 		return Optional.empty();
 	}
@@ -311,16 +318,16 @@ public class CipresPatientStorageImpl extends CipresStorage implements CipresPat
 				var cipresCityResponse = Arrays.asList(response.getBody());
 				var cities = cipresCityResponse.stream().filter(c -> matchesCityAndDepartment(c, city, department)).collect(Collectors.toList());
 				if (cities.isEmpty())
-					saveStatusError(this.encounterId, NO_ADDRESS_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
+					saveStatusError(this.cipresEncounterId, this.encounterId, NO_ADDRESS_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
 				else
 					return cities.stream().findFirst().map(c -> cipresWSConfig.getCitiesUrl() + "/" + c.getId());
 			} else
-				saveStatusError(this.encounterId, NO_ADDRESS_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
+				saveStatusError(this.cipresEncounterId, this.encounterId, NO_ADDRESS_MATCHING_DATA, HttpStatus.BAD_REQUEST.value());
 		} catch (RestTemplateApiException e) {
 			log.debug("Error al intentar obtener la localidad");
-			saveStatusError(this.encounterId, e.getMessage(), e.getStatusCode().value());
+			saveStatusError(this.cipresEncounterId, this.encounterId, e.getMessage(), e.getStatusCode().value());
 		} catch (ResourceAccessException e) {
-			handleResourceAccessException(e, this.encounterId);
+			handleResourceAccessException(e, this.encounterId, this.cipresEncounterId);
 		}
 		return Optional.empty();
 	}

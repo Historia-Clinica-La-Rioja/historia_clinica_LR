@@ -8,10 +8,10 @@ import java.util.Optional;
 
 public interface CipresEncounterStorage {
 
-	Optional<String> getClinicalSpecialtyBySnomedCode(String snomedCode, Integer encounterId);
+	Optional<String> getClinicalSpecialtyBySnomedCode(String snomedCode, Integer encounterId, Integer cipresEncounterId);
 
-	Optional<CipresEstablishmentResponse> getEstablishmentBySisaCode(String sisaCode, Integer encounterId);
+	Optional<CipresEstablishmentResponse> getEstablishmentBySisaCode(String sisaCode, Integer encounterId, Integer cipresEncounterId);
 
-	CipresEncounterBo createOutpatientConsultation(OutpatientConsultationBo consultation, String clinicalSpecialtyIRI, String establishmentIRI);
+	CipresEncounterBo makeAndSendOutpatientConsultation(OutpatientConsultationBo consultation, String clinicalSpecialtyIRI, String establishmentIRI);
 
 }

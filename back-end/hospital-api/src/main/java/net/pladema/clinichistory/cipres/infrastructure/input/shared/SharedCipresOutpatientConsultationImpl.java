@@ -81,7 +81,7 @@ public class SharedCipresOutpatientConsultationImpl implements SharedCipresOutpa
 					.bloodType(anthropometricDataBo.getBloodType() != null ? anthropometricDataBo.getBloodType().getValue() : null)
 					.height(anthropometricDataBo.getHeight() != null ? anthropometricDataBo.getHeight().getValue() : null)
 					.weight(anthropometricDataBo.getWeight() != null ? anthropometricDataBo.getWeight().getValue() : null)
-					.bmi(anthropometricDataBo.getBMI() != null ? anthropometricDataBo.getBMI().getValue() : null)
+					.bmi(anthropometricDataBo.getBMI() != null && !anthropometricDataBo.getBMI().getValue().equals("-") ? anthropometricDataBo.getBMI().getValue() : null)
 					.headCircumference(anthropometricDataBo.getHeadCircumference() != null ? anthropometricDataBo.getHeadCircumference().getValue() : null)
 					.build();
 		else

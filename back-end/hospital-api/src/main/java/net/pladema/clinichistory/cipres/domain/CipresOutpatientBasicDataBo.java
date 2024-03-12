@@ -17,6 +17,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 public class CipresOutpatientBasicDataBo {
+
 	private Integer id;
 
 	private Long documentId;

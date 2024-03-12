@@ -43,44 +43,59 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 	private final CipresClinicalSpecialtyRepository cipresClinicalSpecialtyRepository;
 
 	@Override
-	public Integer createOutpatientConsultations(List<OutpatientConsultationBo> consultations) {
+	public Integer sendOutpatientConsultations(List<OutpatientConsultationBo> consultations) {
 		AtomicInteger sentQuantity = new AtomicInteger();
 		consultations.forEach(c -> {
-			Optional<String> establishment = getEstablishmentId(c.getInstitutionSisaCode(), c.getId());
-			if (establishment.isPresent()) {
-				String establishmentId = establishment.get();
-				var apiPatientId = cipresPatientStorage.getPatientId(c.getPatient(), establishmentId, c.getId());
-				if (apiPatientId.isPresent()) {
-					c.setApiPatientId(apiPatientId.get());
-					Optional<Integer> consultationIdSaved = createOutpatientConsultation(c, buildEstablishmentIRI(establishmentId));
-					if (consultationIdSaved.isPresent())
-						sentQuantity.addAndGet(1);
-				}
-			}});
+			Optional<Integer> cipresEncounterId = sendOutpatientConsultation(c, null);
+			cipresEncounterId.ifPresent(id -> sentQuantity.addAndGet(1));
+		});
 		return sentQuantity.get();
 	}
 
-	private Optional<Integer> createOutpatientConsultation(OutpatientConsultationBo consultation, String establishmentIRI) {
-		var clinicalSpecialtyIRI = getClinicalSpecialtyIRI(consultation.getClinicalSpecialtyId(), consultation.getClinicalSpecialtySctid(), consultation.getId());
+	@Override
+	public void forwardOutpatientConsultation(OutpatientConsultationBo consultation, Integer cipresEncounterId) {
+		log.debug("Forward outpatient consultation with id: " , consultation.getId());
+		Optional<Integer> sentConsultationApiId = sendOutpatientConsultation(consultation, cipresEncounterId);
+		sentConsultationApiId.ifPresent(consultationApiId -> log.debug("Successfully forwarded, outpatient consultation api id: ", consultationApiId));
+	}
+
+	private Optional<Integer> sendOutpatientConsultation(OutpatientConsultationBo consultation, Integer cipresEncounterId) {
+		Optional<String> establishment = getEstablishmentId(consultation.getInstitutionSisaCode(), consultation.getId(), cipresEncounterId);
+		if (establishment.isPresent()) {
+			String establishmentId = establishment.get();
+			var apiPatientId = cipresPatientStorage.getPatientId(consultation.getPatient(), establishmentId, consultation.getId(), cipresEncounterId);
+			if (apiPatientId.isPresent()) {
+				consultation.setApiPatientId(apiPatientId.get());
+				return makeAndSendOutpatientConsultation(consultation, buildEstablishmentIRI(establishmentId), cipresEncounterId);
+			}
+		}
+		return Optional.empty();
+	}
+
+	private Optional<Integer> makeAndSendOutpatientConsultation(OutpatientConsultationBo consultation,
+														   String establishmentIRI,
+														   Integer cipresEncounterId) {
+		var clinicalSpecialtyIRI = getClinicalSpecialtyIRI(consultation.getClinicalSpecialtyId(), consultation.getClinicalSpecialtySctid(), consultation.getId(), cipresEncounterId);
 		if (clinicalSpecialtyIRI.isPresent()) {
 			try {
-				CipresEncounterBo cipresEncounterBo = cipresEncounterStorage.createOutpatientConsultation(consultation, clinicalSpecialtyIRI.get(), establishmentIRI);
+				CipresEncounterBo cipresEncounterBo = cipresEncounterStorage.makeAndSendOutpatientConsultation(consultation, clinicalSpecialtyIRI.get(), establishmentIRI);
+				if (cipresEncounterId != null)
+					cipresEncounterBo.setId(cipresEncounterId);
 				return handleCipresEncounterResponse(cipresEncounterBo);
 			} catch (Exception e) {
-				String message = e.getCause() != null && e.getCause().getMessage() != null ? e.getCause().getMessage() : "Error interno en el servicio externo - API SALUD";
-				CipresEncounterBo cipresEncounterBo = new CipresEncounterBo(consultation.getId(), message, (short) HttpStatus.INTERNAL_SERVER_ERROR.value());
-				return handleCipresEncounterResponse(cipresEncounterBo);
+				return handleCipresEncounterResponse(new CipresEncounterBo(cipresEncounterId, consultation.getId(), null, e.getMessage(), (short) HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			}
 		}
 		return Optional.empty();
 	}
 
 	private Optional<Integer> handleCipresEncounterResponse(CipresEncounterBo cipresEncounterBo) {
-		return Optional.of(cipresEncounterRepository.save(mapToEncounterApiSalud(cipresEncounterBo)).getId());
+		return Optional.ofNullable(cipresEncounterRepository.save(mapToEncounterApiSalud(cipresEncounterBo)).getEncounterApiId());
 	}
 
 	private CipresEncounter mapToEncounterApiSalud(CipresEncounterBo cipresEncounterBo) {
 		var result = new CipresEncounter();
+		result.setId(cipresEncounterBo.getId());
 		result.setEncounterId(cipresEncounterBo.getEncounterId());
 		result.setEncounterApiId(cipresEncounterBo.getEncounterApiId());
 		result.setStatus(cipresEncounterBo.getStatus());
@@ -89,11 +104,11 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 		return result;
 	}
 
-	private Optional<String> getClinicalSpecialtyIRI(Integer clinicalSpecialtyId, String snomedSctid, Integer encounterId) {
+	private Optional<String> getClinicalSpecialtyIRI(Integer clinicalSpecialtyId, String snomedSctid, Integer encounterId, Integer cipresEncounterId) {
 		Optional<String> cipresClinicalSpecialtyId = cipresClinicalSpecialtyRepository.findByClinicalSpecialtyId(clinicalSpecialtyId);
 		if (cipresClinicalSpecialtyId.isPresent())
 			return buildClinicalSpecialtyIRI(cipresClinicalSpecialtyId.get());
-		var clinicalSpecialty = cipresEncounterStorage.getClinicalSpecialtyBySnomedCode(snomedSctid, encounterId);
+		var clinicalSpecialty = cipresEncounterStorage.getClinicalSpecialtyBySnomedCode(snomedSctid, encounterId, cipresEncounterId);
 		if (clinicalSpecialty.isPresent()) {
 			String id = clinicalSpecialty.get();
 			cipresClinicalSpecialtyRepository.save(new CipresClinicalSpecialty(new CipresClinicalSpecialtyPk(clinicalSpecialtyId, Integer.parseInt(id))));
@@ -101,11 +116,11 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 		return clinicalSpecialty.flatMap(this::buildClinicalSpecialtyIRI);
 	}
 
-	private Optional<String> getEstablishmentId(String sisaCode, Integer encounterId) {
+	private Optional<String> getEstablishmentId(String sisaCode, Integer encounterId, Integer cipresEncounterId) {
 		Optional<String> establishmentId = cipresEstablishmentRepository.findBySisaCode(sisaCode);
 		if (establishmentId.isPresent())
 			return establishmentId;
-		var establishment = cipresEncounterStorage.getEstablishmentBySisaCode(sisaCode, encounterId);
+		var establishment = cipresEncounterStorage.getEstablishmentBySisaCode(sisaCode, encounterId, cipresEncounterId);
 		if (establishment.isPresent()) {
 			String id = establishment.get().getId();
 			cipresEstablishmentRepository.save(new CipresEstablishment(new CipresEstablishmentPk(sisaCode, Integer.parseInt(id))));

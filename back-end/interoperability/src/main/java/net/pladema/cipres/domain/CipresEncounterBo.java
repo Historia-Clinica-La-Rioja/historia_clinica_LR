@@ -14,6 +14,8 @@ import lombok.ToString;
 @NoArgsConstructor
 public class CipresEncounterBo {
 
+	private Integer id;
+
 	private Integer encounterId;
 
 	private Integer encounterApiId;
@@ -27,4 +29,12 @@ public class CipresEncounterBo {
 		this.status = status;
 		this.responseCode = responseCode;
 	}
+
+	public CipresEncounterBo(Integer encounterId, Integer encounterApiId, String status, Short responseCode) {
+		this.encounterId = encounterId;
+		this.encounterApiId = encounterApiId;
+		this.status = status;
+		this.responseCode = responseCode;
+	}
+
 }

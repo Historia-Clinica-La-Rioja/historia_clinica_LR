@@ -9,5 +9,6 @@ public interface CipresOutpatientConsultationSummaryStorage {
 
 	List<CipresOutpatientBasicDataBo> getOutpatientConsultations(Integer limit, LocalDateTime start, LocalDateTime end);
 
+	CipresOutpatientBasicDataBo getOutpatientConsultationByCipresEncounterId(Integer cipresEncounterId);
 
 }
