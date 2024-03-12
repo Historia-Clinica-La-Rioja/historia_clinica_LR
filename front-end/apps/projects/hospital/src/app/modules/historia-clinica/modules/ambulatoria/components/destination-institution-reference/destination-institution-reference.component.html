@@ -51,4 +51,7 @@
 		</ng-template>
 
 	</ul>
+	<div *ngIf="regulationRequired$ | async">
+		<app-box-message [boxMessageInfo]="boxMessageInfo"></app-box-message>
+	</div>
 </ng-container>

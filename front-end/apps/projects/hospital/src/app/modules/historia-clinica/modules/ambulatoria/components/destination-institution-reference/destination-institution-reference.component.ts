@@ -1,12 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AddressDto, ClinicalSpecialtyDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { ContextInstitutionService } from '@api-rest/services/context-institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
 import { DiaryAvailableAppointmentsSearchService } from '@turnos/services/diary-available-appointments-search.service';
+import { InstitutionsRulesService } from '../../services/institutions-rules.service';
+import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-destination-institution-reference',
@@ -41,12 +44,16 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	practiceOrProcedure = false;
 	practiceSnomedId;
 	clinicalSpecialties: ClinicalSpecialtyDto[];
+	regulationRequired$: Observable<boolean>;
+	boxMessageInfo: BoxMessageInformation;
 
 	constructor(
 		private readonly contextInstitutionService: ContextInstitutionService,
+		private readonly institutionsRulesService: InstitutionsRulesService,
 		private readonly adressMasterData: AddressMasterDataService,
 		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
 		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
+		private readonly translateService: TranslateService
 	) { }
 
 	ngOnInit() {
@@ -105,6 +112,14 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 			this.departmentDisable = true;
 			this.institutionsDisable = true;
 		});
+
+		this.boxMessageInfo = {
+			...this.boxMessageInfo,
+			message: '',
+			showButtons: false
+		}
+		this.translateService.get('ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGULATION_REQUIRED')
+			.subscribe( message => this.boxMessageInfo.message = message );
 	}
 
 
@@ -140,12 +155,20 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	onInstitutionSelectionChange(institutionDestinationId: number) {
 		if (institutionDestinationId) {
 			this.setAppointments(institutionDestinationId);
+			this.regulationRequired$ = this.institutionsRulesService.
+				validateRegulation(institutionDestinationId, this.getClinicalSpecialtiesIds(), this.formReference.controls.practiceOrProcedure?.value?.id);
 			this.institutionSelection = true;
 		} else {
 			this.institutionSelection = false;
 		}
 		this.institutionDestinationId = institutionDestinationId;
 		this.formReference.controls.institutionDestinationId.setValue(institutionDestinationId);
+	}
+
+	getClinicalSpecialtiesIds(): number[] {
+		let clinicalSpecialtiesIds: number[] = [];
+		this.formReference.value.clinicalSpecialties?.forEach(especialidad => clinicalSpecialtiesIds.push(especialidad.id));
+		return clinicalSpecialtiesIds;
 	}
 
 	setAppointments(institutionDestinationId: number) {

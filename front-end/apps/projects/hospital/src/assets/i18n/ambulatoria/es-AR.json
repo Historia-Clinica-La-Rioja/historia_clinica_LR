@@ -225,7 +225,8 @@
                     "TITLE": "Solicitud de referencia",
                     "ADD_REQUEST": "Agregar solicitud",
                     "REQUESTED_REFERENCE": "Referencias solicitadas",
-                    "REGISTERED_REQUEST": "Solicitudes registradas"
+                    "REGISTERED_REQUEST": "Solicitudes registradas",
+                    "REGULATION_REQUIRED": "Este tipo de solicitud pasará por un proceso de aprobación previo a ser asignado."
                 },
                 "reference-dialog": {
                     "TITLE": "Agregar solicitud de referencia",
