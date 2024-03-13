@@ -1,4 +1,4 @@
-import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn, FormControl} from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { Moment } from 'moment';
 import { momentFormat, newMoment } from './moment.utils';
@@ -192,7 +192,9 @@ export function NoWhitespaceValidator(): ValidatorFn {
 	};
 }
 
-export function includesEventCodeNumber(event: KeyboardEvent) {   
+export function includesEventCodeNumber(event: KeyboardEvent) {
 	const code = event.code;
 	return EVENT_CODE_NUMBERS.includes(code);
 }
+
+export type ToFormGroup<T> = {[P in keyof T]: FormControl<T[P]>; };

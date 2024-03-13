@@ -1,0 +1,14 @@
+<form [formGroup]="formStudyClosure" fxLayout="column">
+	<mat-form-field appearance="outline">
+		<mat-label>
+			{{'ambulatoria.reference-study-close.PLACEHOLDER_DESCRIPTION' | translate}}
+		</mat-label>
+		<textarea matInput type="text" id="description" formControlName="description"></textarea>
+		<mat-error>
+			 {{'forms.REQUIRED' | translate}}
+		 </mat-error>
+	</mat-form-field>
+</form>
+
+<app-download-button [description]="'adjuntar'" (selectedFilesEmiit)="setSelectedFilesEmiit($event)">
+</app-download-button>

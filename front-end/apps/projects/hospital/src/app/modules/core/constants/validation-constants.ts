@@ -1,3 +1,4 @@
+
 export const AMBULANCE = {
 	COMPANY_ID: {
 		max_length: 15
