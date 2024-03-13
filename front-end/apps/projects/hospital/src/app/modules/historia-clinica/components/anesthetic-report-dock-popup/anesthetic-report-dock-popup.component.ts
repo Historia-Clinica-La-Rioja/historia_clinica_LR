@@ -24,6 +24,7 @@ import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 
 const TIME_OUT = 5000;
 
@@ -239,6 +240,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             nonAnestheticDrugs: this.anestheticReportNonAnestheticDrugs.getAnestheticSubstanceDto(),
             procedureDescription: this.getProcedureDescription(),
             antibioticProphylaxis: this.anestheticReportAntibioticProphylaxisService.getAnestheticSubstanceDto(),
+            measuringPoints: this.anestheticReportVitalSignsService.getMeasuringPointsAsMeasuringPointDto(),
+            postAnesthesiaStatus: this.anestheticReportEndOfAnesthesiaStatusService.getPostAnesthesiaStatusDto(this.endOfAnesthesiaStatusForm.value.observations),
 		};
 	}
 
@@ -249,7 +252,15 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             urinaryCatheter: radioButtonsOptions.urinaryCatheter,
             venousAccess: radioButtonsOptions.venousAccess,
             note: this.personalRecordForm.value.observation,
-            asa: this.personalRecordForm.value.asa
+            asa: this.personalRecordForm.value.asa,
+            anesthesiaStartDate: dateToDateDto(this.vitalSignsForm.value.anesthesiaStartDate),
+            anesthesiaEndDate: dateToDateDto(this.vitalSignsForm.value.anesthesiaEndDate),
+            anesthesiaStartTime: this.vitalSignsForm.value.anesthesiaStartTime,    
+            anesthesiaEndTime: this.vitalSignsForm.value.anesthesiaEndTime,
+            surgeryStartDate: dateToDateDto(this.vitalSignsForm.value.surgeryStartDate),
+            surgeryEndDate: dateToDateDto(this.vitalSignsForm.value.surgeryEndDate),
+            surgeryStartTime: this.vitalSignsForm.value.surgeryStartTime,
+            surgeryEndTime: this.vitalSignsForm.value.surgeryEndTime,
         }
     }
         

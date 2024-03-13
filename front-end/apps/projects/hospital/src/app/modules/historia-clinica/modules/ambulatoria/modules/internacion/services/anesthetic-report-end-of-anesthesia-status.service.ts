@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { PostAnesthesiaStatusDto } from '@api-rest/api-model';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -29,6 +30,24 @@ export class AnestheticReportEndOfAnesthesiaStatusService {
             goesInside: new FormControl(null),
             goesInsideOptions: new FormControl(null),
         });
+    }
+
+    getPostAnesthesiaStatusDto(note?: string): PostAnesthesiaStatusDto {
+        return {
+            intentionalSensitivity: this.form.value.painfulSensitivity,
+            cornealReflex: this.form.value.cornealReflex,
+            obeyOrders: this.form.value.obeyOrders,
+            talk: this.form.value.talk,
+            respiratoryDepression: this.form.value.respiratoryDepression,
+            circulatoryDepression: this.form.value.circulatoryDepression,
+            vomiting: this.form.value.vomiting,
+            curated: this.form.value.cured,
+            trachealCannula: this.form.value.trachealCannula,
+            pharyngealCannula: this.form.value.pharyngealCannula,
+            internment: this.form.value.goesInside,
+            internmentPlace: this.form.value.goesInsideOptions,
+            note: note,
+        }
     }
 
     getGoesInside(): Observable<boolean> {

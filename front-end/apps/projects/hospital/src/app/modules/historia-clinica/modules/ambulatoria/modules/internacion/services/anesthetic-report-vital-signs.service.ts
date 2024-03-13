@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TimeDto } from '@api-rest/api-model';
+import { MeasuringPointDto, TimeDto } from '@api-rest/api-model';
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { removeFrom } from '@core/utils/array.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
@@ -67,6 +68,20 @@ export class AnestheticReportVitalSignsService {
 		}
 		return initializedTimes;
 	}
+
+    getMeasuringPointsAsMeasuringPointDto(): MeasuringPointDto[] {
+        return this.measuringPoints.map(mp => {
+            return {
+                bloodPressureMax: mp.bloodPressureMax,
+                bloodPressureMin: mp.bloodPressureMin,
+                bloodPulse: mp.pulse,
+                co2EndTidal: mp.endTidal,
+                date: dateToDateDto(mp.measuringPointStartDate),
+                o2Saturation: mp.saturation,
+                time: mp.measuringPointStartTime,
+            }}
+        )
+    }
 
     get measuringPoints$(): Observable<MeasuringPointData[]> {
 		return this._measuringPoints$;
