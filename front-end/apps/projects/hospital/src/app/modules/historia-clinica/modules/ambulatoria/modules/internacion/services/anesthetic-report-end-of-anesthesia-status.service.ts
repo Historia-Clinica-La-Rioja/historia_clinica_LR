@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { PostAnesthesiaStatusDto } from '@api-rest/api-model';
+import { EInternmentPlace, PostAnesthesiaStatusDto } from '@api-rest/api-model';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -83,8 +83,14 @@ export class AnestheticReportEndOfAnesthesiaStatusService {
             trachealCannula: this.form.value.trachealCannula,
             pharyngealCannula: this.form.value.pharyngealCannula,
             goesInside: this.form.value.goesInside,
-            goesInsideOptions: this.form.value.goesInsideOptions
+            goesInsideOptions: this.mapToEInternmentPlace(this.form.value.goesInsideOptions)
         }
+    }
+
+    private mapToEInternmentPlace(optionSelected: number): EInternmentPlace {
+        if (optionSelected === INTERNMENT_OPTIONS.FLOOR) return EInternmentPlace.FLOOR
+        if (optionSelected === INTERNMENT_OPTIONS.INTENSIVE_CARE_UNIT) return EInternmentPlace.INTENSIVE_CARE_UNIT
+        return null
     }
 
     getForm(): FormGroup {
@@ -119,7 +125,7 @@ export interface IntrasurgicalAnestheticProceduresData {
     trachealCannula: END_OF_ANESTHESIA_STATUS_OPTIONS;
     pharyngealCannula: END_OF_ANESTHESIA_STATUS_OPTIONS;
     goesInside: END_OF_ANESTHESIA_STATUS_OPTIONS;
-    goesInsideOptions: INTERNMENT_OPTIONS;
+    goesInsideOptions: EInternmentPlace;
 }
 
 export enum END_OF_ANESTHESIA_STATUS_OPTIONS {

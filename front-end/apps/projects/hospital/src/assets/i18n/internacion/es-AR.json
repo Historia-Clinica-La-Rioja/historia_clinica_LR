@@ -486,6 +486,7 @@
 				"SURGERY_START": "Comienzo cirugía",
 				"SURGERY_END": "Fin cirugía",
 				"SUCCESS_ADD": "Punto de medición registrado correctamente",
+				"ERROR_ADD": "Ya existe un punto de medición registrado en ese horario",
 				"SUCCESS_EDIT": "Punto de medición editado correctamente",
 				"measuring-point": {
 					"ADD_MEASURING_POINT": "Agregar nuevo punto de medición",

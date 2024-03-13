@@ -239,7 +239,7 @@ export class AnestheticReportVitalSignsService {
     }
 
     handleMeasuringPointRegister() {
-        this.registerMeasuringPoint();
+        this.validateAndAddMeasuringPoint();
         this.clearForm();
     }
 
@@ -249,7 +249,7 @@ export class AnestheticReportVitalSignsService {
         this.isEmptySource.next(!this.measuringPoints.length);
 	}
 
-    private registerMeasuringPoint() {
+    private validateAndAddMeasuringPoint() {
         let newMeasuringPoint = {
             measuringPointStartDate: this.form.value.measuringPointStartDate,
             measuringPointStartTime: this.form.value.measuringPointStartTime,
@@ -259,10 +259,22 @@ export class AnestheticReportVitalSignsService {
             saturation: this.form.value.saturation,
             endTidal: this.form.value.endTidal,
         }
-        this.measuringPoints.push(newMeasuringPoint);
+        if (!this.itsDuplicated(this.measuringPoints, newMeasuringPoint)) {
+            this.addAndEmitUpdatedValue(newMeasuringPoint);
+            this.snackBarService.showSuccess('internaciones.anesthesic-report.vital-signs.SUCCESS_ADD');
+        } else {
+            this.snackBarService.showError('internaciones.anesthesic-report.vital-signs.ERROR_ADD');
+        }
+    }
+
+    private addAndEmitUpdatedValue(measuringPoint: MeasuringPointData){
+        this.measuringPoints.push(measuringPoint);
         this.measuringPointsSource.next(this.measuringPoints);
         this.isEmptySource.next(!this.measuringPoints.length);
-        this.snackBarService.showSuccess('internaciones.anesthesic-report.vital-signs.SUCCESS_ADD');
+    }
+
+    private itsDuplicated(dataArray: MeasuringPointData[], measuringPoint: MeasuringPointData): boolean {
+        return !!(dataArray.filter(mp => (mp.measuringPointStartDate == measuringPoint.measuringPointStartDate && mp.measuringPointStartTime == measuringPoint.measuringPointStartTime)).length)
     }
 
     private clearForm() {
@@ -273,10 +285,19 @@ export class AnestheticReportVitalSignsService {
         this.form.controls.endTidal.setValue(null);
     }
 
-    editMeasuringPoint(measuringPoint: MeasuringPointData, index: number){
-        this.measuringPoints.splice(index, 1, measuringPoint);
-        this.measuringPointsSource.next(this.measuringPoints);
-        this.snackBarService.showSuccess('internaciones.anesthesic-report.vital-signs.SUCCESS_EDIT');
+    editMeasuringPoint(newMeasuringPoint: MeasuringPointData, index: number){
+        const arrayCopyWithoutEditingElement = this.getArrayCopyWithoutElementAtIndex(this.measuringPoints, index)
+        if (!this.itsDuplicated(arrayCopyWithoutEditingElement, newMeasuringPoint)) {
+            this.measuringPoints.splice(index, 1, newMeasuringPoint);
+            this.measuringPointsSource.next(this.measuringPoints);
+            this.snackBarService.showSuccess('internaciones.anesthesic-report.vital-signs.SUCCESS_EDIT');
+        } else {
+            this.snackBarService.showError('internaciones.anesthesic-report.vital-signs.ERROR_ADD');
+        }
+    }
+
+    private getArrayCopyWithoutElementAtIndex(arr: MeasuringPointData[], index: number): MeasuringPointData[] {
+        return arr.slice(0, index).concat(arr.slice(index + 1));
     }
 
     getPossibleTimesList(): TimeDto[] {
