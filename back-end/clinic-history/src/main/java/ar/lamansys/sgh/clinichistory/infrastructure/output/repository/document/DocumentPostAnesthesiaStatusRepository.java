@@ -15,7 +15,7 @@ public interface DocumentPostAnesthesiaStatusRepository extends JpaRepository<Do
     @Query(value = "SELECT new ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo(" +
             "dpas.documentId, dpas.intentionalSensitivity, dpas.cornealReflex, dpas.obeyOrders, dpas.talk," +
             "dpas.respiratoryDepression, dpas.circulatoryDepression, dpas.vomiting, dpas.curated, dpas.trachealCannula," +
-            "dpas.pharyngealCannula, dpas.internment, dpas.internmentPlace, n.description) " +
+            "dpas.pharyngealCannula, dpas.internment, dpas.internmentPlaceId, n.description) " +
             "FROM DocumentPostAnesthesiaStatus dpas " +
             "LEFT JOIN Note n ON (dpas.noteId = n.id) " +
             "WHERE dpas.documentId = :documentId")

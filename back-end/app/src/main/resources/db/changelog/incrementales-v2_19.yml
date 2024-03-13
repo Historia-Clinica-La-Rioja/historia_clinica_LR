@@ -123,19 +123,19 @@ databaseChangeLog:
               validate: true
 
     - changeSet:
-        id: createTable-post_anesthesia_status
+        id: createTable-document_post_anesthesia_status
         author: mromero
         changes:
           - createTable:
-              tableName: post_anesthesia_status
+              tableName: document_post_anesthesia_status
               columns:
                 - column:
                     constraints:
                       primaryKey: true
-                      primaryKeyName: PK_post_anesthesia_status
+                      primaryKeyName: PK_document_post_anesthesia_status
                       nullable: false
                       references: document(id)
-                      foreignKeyName: FK_document_id_post_anesthesia_status
+                      foreignKeyName: FK_document_id_document_post_anesthesia_status
                     name: document_id
                     type: bigint
                 - column:
@@ -172,13 +172,13 @@ databaseChangeLog:
                     name: internment
                     type: boolean
                 - column:
-                    name: internment_place
+                    name: internment_place_id
                     type: smallint
                 - column:
                     constraints:
                       nullable: true
                       references: note(id)
-                      foreignKeyName: FK_note_id_post_anesthesia_status
+                      foreignKeyName: FK_note_id_document_post_anesthesia_status
                     name: note_id
                     type: bigint
 

@@ -3368,7 +3368,7 @@ export interface PostAnesthesiaStatusDto {
     curated?: boolean;
     intentionalSensitivity?: boolean;
     internment?: boolean;
-    internmentPlace?: number;
+    internmentPlace?: EInternmentPlace;
     note?: string;
     obeyOrders?: boolean;
     pharyngealCannula?: boolean;
@@ -5095,6 +5095,11 @@ export const enum EIntermentIndicationStatus {
     YES = "YES",
     AS_PROTECTIVE_MEASURE = "AS_PROTECTIVE_MEASURE",
     NO = "NO",
+}
+
+export const enum EInternmentPlace {
+    FLOOR = "FLOOR",
+    INTENSIVE_CARE_UNIT = "INTENSIVE_CARE_UNIT",
 }
 
 export const enum EKeeperRelationship {

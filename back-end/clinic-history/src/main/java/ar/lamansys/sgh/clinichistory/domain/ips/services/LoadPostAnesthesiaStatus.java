@@ -59,11 +59,11 @@ public class LoadPostAnesthesiaStatus {
         Boolean trachealCannula = postAnesthesiaStatusBo.getTrachealCannula();
         Boolean pharyngealCannula = postAnesthesiaStatusBo.getPharyngealCannula();
         Boolean internment = postAnesthesiaStatusBo.getInternment();
-        Short internmentPlace = postAnesthesiaStatusBo.getInternmentPlace();
+        Short internmentPlaceId = postAnesthesiaStatusBo.getIntermentPlaceId();
 
         DocumentPostAnesthesiaStatus saved = documentPostAnesthesiaStatusRepository.save(new DocumentPostAnesthesiaStatus(
                 documentId, intentionalSensitivity, cornealReflex, obeyOrders, talk, respiratoryDepression,
-                circulatoryDepression, vomiting, curated, trachealCannula, pharyngealCannula, internment, internmentPlace,
+                circulatoryDepression, vomiting, curated, trachealCannula, pharyngealCannula, internment, internmentPlaceId,
                 noteId));
         postAnesthesiaStatusBo.setId(saved.getDocumentId());
     }

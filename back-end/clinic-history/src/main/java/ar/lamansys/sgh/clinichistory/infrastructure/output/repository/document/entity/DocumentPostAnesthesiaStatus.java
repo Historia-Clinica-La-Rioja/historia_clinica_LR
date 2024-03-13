@@ -17,7 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-@Table(name = "post_anesthesia_status")
+@Table(name = "document_post_anesthesia_status")
 @Entity
 public class DocumentPostAnesthesiaStatus {
 
@@ -58,8 +58,8 @@ public class DocumentPostAnesthesiaStatus {
     @Column(name = "internment")
     private Boolean internment;
 
-    @Column(name = "internment_place")
-    private Short internmentPlace;
+    @Column(name = "internment_place_id")
+    private Short internmentPlaceId;
 
     @Column(name = "note_id")
     private Long noteId;

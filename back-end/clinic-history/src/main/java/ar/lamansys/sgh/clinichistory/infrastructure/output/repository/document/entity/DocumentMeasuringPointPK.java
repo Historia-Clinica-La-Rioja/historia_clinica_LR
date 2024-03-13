@@ -17,6 +17,8 @@ import lombok.ToString;
 @Embeddable
 public class DocumentMeasuringPointPK implements Serializable {
 
+    private static final long serialVersionUID = 215351984761537837L;
+
     @Column(name = "document_id", nullable = false)
     private Long documentId;
 

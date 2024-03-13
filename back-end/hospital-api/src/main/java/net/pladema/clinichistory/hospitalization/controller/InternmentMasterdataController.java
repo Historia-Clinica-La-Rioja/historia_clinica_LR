@@ -3,7 +3,6 @@ package net.pladema.clinichistory.hospitalization.controller;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnestheticTechnique;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EBreathing;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.ECircuit;
-import ar.lamansys.sgh.clinichistory.domain.ips.enums.EIntermentPlace;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.ETrachealIntubation;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnit;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EVia;
@@ -274,14 +273,6 @@ public class InternmentMasterdataController {
     public ResponseEntity<Collection<MasterDataDto>> getCircuitTypes() {
         log.debug("{}", "All circuit types");
         var result = EnumWriter.writeList(ECircuit.getAll());
-        log.debug("Output -> {}", result);
-        return ResponseEntity.ok().body(result);
-    }
-
-    @GetMapping(value = "/internment-place")
-    public ResponseEntity<Collection<MasterDataDto>> getInternmentPlace() {
-        log.debug("{}", "All internment place types");
-        var result = EnumWriter.writeList(EIntermentPlace.getAll());
         log.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EInternmentPlace;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,7 +51,7 @@ public class PostAnesthesiaStatusDto {
     private Boolean internment;
 
     @Nullable
-    private Short internmentPlace;
+    private EInternmentPlace internmentPlace;
 
     @Nullable
     private String note;
