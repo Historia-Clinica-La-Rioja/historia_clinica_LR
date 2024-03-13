@@ -54,6 +54,7 @@ import {
 } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import {
 	catchError,
+	finalize,
 	map,
 	take,
 } from 'rxjs/operators';
@@ -90,6 +91,7 @@ import { RecurringCancelPopupComponent } from '../recurring-cancel-popup/recurri
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { toHourMinuteSecond } from '@core/utils/date.utils';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -197,6 +199,8 @@ export class AppointmentComponent implements OnInit {
 	everyWeekOption: string = "Cada semana";
 	NO_REPEAT: number = RECURRING_APPOINTMENT_OPTIONS.NO_REPEAT;
 	EVERY_WEEK: number = RECURRING_APPOINTMENT_OPTIONS.EVERY_WEEK;
+	saveButtonType = ButtonType.RAISED;
+	isSaveLoading: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -805,7 +809,11 @@ export class AppointmentComponent implements OnInit {
 				previousDate: Date,
 				newDate: Date,
 				editOption?: number) {
+		this.isSaveLoading = true;
 		this.getRecurringSave(openingHoursId, editOption)
+			.pipe(
+				finalize(() => this.isSaveLoading = false)
+			)
 			.subscribe(_ => {
 				this.setCustomAppointment();
 				this.updateDate(updateAppointmentDate, previousDate, newDate);

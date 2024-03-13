@@ -199,8 +199,7 @@
 				</button>
 			</div>
 
-			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm"
-				(ngSubmit)="updateAppointmentDate()">
+			<form [formGroup]="formDate" *ngIf="isDateFormVisible" fxLayout="column" fxLayoutGap="5px" class="dateForm">
 				<div fxLayoutGap="10px">
 					<mat-form-field appearance="outline">
 						<mat-select formControlName="modality" (selectionChange)="setModalityAndValidator(true)" [disabled]="formDate.controls.modality.value === SECOND_OPINION_VIRTUAL_ATTENTION">
@@ -278,9 +277,13 @@
 						(click)="cancelDateForm()">
 						<span>{{'turnos.appointment.CANCEL' | translate}}</span>
 					</button>
-					<button id="save-edition" mat-flat-button color="primary" [disabled]="formDate.invalid">
-						<span>{{'turnos.appointment.SAVE' | translate}}</span>
-					</button>
+					<app-button id="save-edition" 
+						[text]="'turnos.appointment.SAVE'" 
+						[buttonType]="saveButtonType"
+						[disabled]="formDate.invalid"
+						[isLoading]="isSaveLoading"
+						(clicked)="updateAppointmentDate()">
+					</app-button>
 				</div>
 			</form>
 		</section>
