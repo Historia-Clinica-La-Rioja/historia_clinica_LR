@@ -1328,6 +1328,12 @@ export interface DocumentDto {
     riskFactors: RiskFactorDto;
 }
 
+export interface DocumentElectronicSignatureProfessionalStatusDto {
+    date: DateDto;
+    professionalCompleteName: string;
+    status: EElectronicSignatureStatus;
+}
+
 export interface DocumentFileDataDto {
     filename: string;
     id: number;

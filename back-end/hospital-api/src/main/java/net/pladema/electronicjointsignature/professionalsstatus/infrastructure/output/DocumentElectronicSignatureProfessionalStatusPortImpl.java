@@ -1,0 +1,23 @@
+package net.pladema.electronicjointsignature.professionalsstatus.infrastructure.output;
+
+import lombok.AllArgsConstructor;
+import net.pladema.electronicjointsignature.professionalsstatus.application.port.DocumentElectronicSignatureProfessionalStatusPort;
+
+import net.pladema.electronicjointsignature.professionalsstatus.domain.DocumentElectronicSignatureProfessionalStatusBo;
+
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@AllArgsConstructor
+@Service
+public class DocumentElectronicSignatureProfessionalStatusPortImpl implements DocumentElectronicSignatureProfessionalStatusPort {
+
+	private DocumentElectronicSignatureProfessionalStatusStorage documentElectronicSignatureProfessionalStatusStorage;
+
+	@Override
+	public List<DocumentElectronicSignatureProfessionalStatusBo> fetch(Long documentId) {
+		return documentElectronicSignatureProfessionalStatusStorage.fetch(documentId);
+	}
+
+}
