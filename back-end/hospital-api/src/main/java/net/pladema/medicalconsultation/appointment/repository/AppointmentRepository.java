@@ -13,7 +13,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentBookingVo;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDateVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -802,8 +801,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"SET a.appointmentStateId = " + AppointmentState.CANCELLED +
 			", a.updateable.updatedOn = current_timestamp, " +
 			"a.updateable.updatedBy = :userId " +
-			"WHERE a.parentAppointmentId = :appointmentId " +
-			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
+			"WHERE a.parentAppointmentId = :appointmentId")
 	void cancelAllRecurringAppointments(@Param("appointmentId") Integer appointmentId,
 										@Param("userId") Integer userId);
 
@@ -814,8 +812,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			", a.updateable.updatedOn = current_timestamp, " +
 			"a.updateable.updatedBy = :userId " +
 			"WHERE a.parentAppointmentId = :appointmentId " +
-			"AND a.creationable.createdOn >= :createdOn " +
-			"AND a.appointmentStateId = " + AppointmentState.ASSIGNED)
+			"AND a.creationable.createdOn >= :createdOn ")
 	void cancelCurrentAndLaterRecurringAppointments(@Param("appointmentId") Integer appointmentId,
 										  @Param("userId") Integer userId,
 										  @Param("createdOn") LocalDateTime createdOn);
@@ -902,34 +899,10 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Transactional(readOnly = true)
 	@Query("SELECT a" +
 			" FROM Appointment a" +
-			" JOIN AppointmentAssn aa ON a.id = aa.pk.appointmentId" +
+			" JOIN AppointmentAssn aa ON aa.pk.appointmentId = a.id" +
 			" WHERE aa.pk.diaryId = :diaryId" +
-			" AND a.dateTypeId >= :from" +
-			" AND a.dateTypeId <= :to" +
-			" AND a.hour = :hour" +
 			" AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
-			" AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL) " +
+			" AND a.deleteable.deleted IS NOT TRUE" +
 			" ORDER BY a.id")
-	List<Appointment> getAppointmentsFromDate(@Param("diaryId") Integer diaryId,
-											  @Param("from") LocalDate from,
-											  @Param("to") LocalDate to,
-											  @Param("hour") LocalTime hour);
-
-	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDateVo(a.dateTypeId, a.hour)" +
-			" FROM Appointment a" +
-			" JOIN AppointmentAssn aa ON a.id = aa.pk.appointmentId" +
-			" WHERE aa.pk.diaryId = :diaryId" +
-			" AND a.appointmentStateId = " + AppointmentState.ASSIGNED +
-			" AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL)" +
-			" AND a.dateTypeId >= CURRENT_DATE ")
-	List<AppointmentDateVo> getAssignedAppointmentsByDiary(@Param("diaryId") Integer diaryId);
-
-	@Transactional(readOnly = true)
-	@Query("SELECT d.id" +
-			" FROM Appointment a" +
-			" JOIN AppointmentAssn aa ON a.id = aa.pk.appointmentId" +
-			" JOIN Diary d ON aa.pk.diaryId = d.id" +
-			" WHERE a.id = :appointmentId")
-	Integer getDiaryIdFromAppointment(@Param("appointmentId") Integer appointmentId);
+	List<Appointment> getAllAssignedAppointmentsFromDiary(@Param("diaryId") Integer diaryId);
 }

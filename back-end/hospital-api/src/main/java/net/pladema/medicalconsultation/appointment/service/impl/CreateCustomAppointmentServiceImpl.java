@@ -59,7 +59,7 @@ public class CreateCustomAppointmentServiceImpl implements CreateCustomAppointme
 					appointmentBo.setParentAppointmentId(appointmentBo.getId());
 					Integer appointmentId = createAppointmentService.execute(appointmentBo).getId();
 					customAppointmentSave(appointmentId, customRecurringAppointmentBo.getRepeatEvery(), customRecurringAppointmentBo.getWeekDayId(), customRecurringAppointmentBo.getEndDate());
-					appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId(), bo.getDate(), bo.getDate());
+					appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId());
 				}
 			}
 			return true;

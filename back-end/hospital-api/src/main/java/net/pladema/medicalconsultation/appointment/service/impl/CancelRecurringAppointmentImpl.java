@@ -26,7 +26,7 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 
 	private final AppointmentService appointmentService;
 
-	private final static String APPOINTMENT_NOT_FOUND = "No se ha encontrado le turno";
+	private final static String APPOINTMENT_NOT_FOUND = "No se ha encontrado el turno";
 
 	@Transactional
 	@Override
@@ -51,7 +51,7 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 				appointmentRepository.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor());
 		}
 		AppointmentBo appointmentBo = appointmentService.getAppointment(appointment.getId()).orElseThrow(() -> new RecurringAppointmentException(APPOINTMENT_NOT_FOUND));
-		appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId(), appointmentBo.getDate(), appointmentBo.getDate());
+		appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId());
 		return true;
 	}
 
@@ -72,7 +72,7 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 		appointmentService.checkRemainingChildAppointments(appointmentId);
 
 		AppointmentBo appointmentBo = appointmentService.getAppointment(appointment.getId()).orElseThrow(() -> new RecurringAppointmentException(APPOINTMENT_NOT_FOUND));
-		appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId(), appointmentBo.getDate(), appointmentBo.getDate());
+		appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId());
 
 		return true;
 	}

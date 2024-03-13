@@ -1008,13 +1008,19 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	cancelAppointment(): void {
-		(this.isHabilitarRecurrencia)
-			? this.openRecurringCancelPopUp('turnos.cancel.CANCEL')
+		if (this.isHabilitarRecurrencia) {
+			if (this.appointment?.hasAppointmentChilds || this.appointment?.parentAppointmentId) {
+				this.openRecurringCancelPopUp('turnos.cancel.CANCEL')
 				.afterClosed()
 				.subscribe((value: number) => {
 					this.cancelOptions(value);
 				})
-			: this.cancelOptions(APPOINTMENT_CANCEL_OPTIONS.CURRENT_TURN);
+			} else {
+				this.cancelOptions(APPOINTMENT_CANCEL_OPTIONS.CURRENT_TURN);
+			}
+		} else {
+			this.cancelOptions(APPOINTMENT_CANCEL_OPTIONS.CURRENT_TURN);
+		}
 	}
 
 	saveAbsent(): void {

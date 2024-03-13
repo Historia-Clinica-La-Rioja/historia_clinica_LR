@@ -121,5 +121,5 @@ public interface AppointmentService {
 
 	Boolean isAppointmentOverturn(Integer appointmentId);
 
-	void verifyRecurringAppointmentsOverturn(Integer diaryId, LocalDate from, LocalDate to);
+	void verifyRecurringAppointmentsOverturn(Integer diaryId);
 }

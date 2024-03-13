@@ -32,7 +32,6 @@ import net.pladema.medicalconsultation.appointment.infraestructure.output.reposi
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentUpdateRepository;
-import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDateVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
@@ -716,7 +715,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 			}
 			updateRecurringAppointmentDate(currentAppointment, newAppointment);
 		}
-		verifyRecurringAppointmentsOverturn(currentAppointment.getDiaryId(), newAppointment.getDate(), newAppointment.getDate());
+		verifyRecurringAppointmentsOverturn(currentAppointment.getDiaryId());
 	}
 
 	@Override
@@ -787,24 +786,25 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public void verifyRecurringAppointmentsOverturn(Integer diaryId, LocalDate from, LocalDate to) {
-		log.debug("Input parameters -> diaryId {}, from {}, to {}", diaryId, from, to);
+	public void verifyRecurringAppointmentsOverturn(Integer diaryId) {
+		log.debug("Input parameters -> diaryId {}", diaryId);
 
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
-			List<AppointmentDateVo> appointments = appointmentRepository.getAssignedAppointmentsByDiary(diaryId);
 
-			if (!appointments.isEmpty()) {
-				appointments.stream().peek(appointmentVo -> {
-					List<Appointment> appointmentsFromDate = appointmentRepository.getAppointmentsFromDate(diaryId, appointmentVo.getDate(), appointmentVo.getDate(), appointmentVo.getHour());
-					if (!appointmentsFromDate.isEmpty() && appointmentsFromDate.get(0).getIsOverturn()) {
-						Appointment firstAppointment = appointmentsFromDate.get(0);
-						updateState(firstAppointment.getId(), AppointmentState.ASSIGNED, UserInfo.getCurrentAuditor(), null);
-						firstAppointment.setIsOverturn(false);
-						firstAppointment.setHour(appointmentVo.getHour());
-						firstAppointment.setDateTypeId(appointmentVo.getDate());
-						appointmentRepository.save(firstAppointment);
-					}
-				}).collect(Collectors.toList());
+			List<Appointment> assignedAppointments = appointmentRepository.getAllAssignedAppointmentsFromDiary(diaryId);
+
+			Map<LocalDateTime, List<Appointment>> hash = assignedAppointments.stream()
+					.collect(Collectors.groupingBy(appointment -> LocalDateTime.of(appointment.getDateTypeId(), appointment.getHour())));
+
+			for (Map.Entry<LocalDateTime, List<Appointment>> entry : hash.entrySet()) {
+				List<Appointment> appointments = entry.getValue();
+				if (appointments.get(0).getIsOverturn()) {
+					Appointment firstAppointment = appointments.get(0);
+					firstAppointment.setIsOverturn(false);
+					firstAppointment.setHour(firstAppointment.getHour());
+					firstAppointment.setDateTypeId(firstAppointment.getDateTypeId());
+					appointmentRepository.save(firstAppointment);
+				}
 			}
 		}
 	}

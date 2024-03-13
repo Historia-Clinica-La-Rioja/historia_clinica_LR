@@ -85,7 +85,7 @@ public class ReassignAppointment {
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
 			appointmentRepository.updateRecurringType(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getRecurringAppointmentTypeId());
 			appointmentService.getAppointment(appointmentUpdateData.getAppointmentId())
-					.ifPresent(app -> appointmentService.verifyRecurringAppointmentsOverturn(app.getDiaryId(), appointmentUpdateData.getDate(), appointmentUpdateData.getDate()));
+					.ifPresent(app -> appointmentService.verifyRecurringAppointmentsOverturn(app.getDiaryId()));
 		}
 	}
 
