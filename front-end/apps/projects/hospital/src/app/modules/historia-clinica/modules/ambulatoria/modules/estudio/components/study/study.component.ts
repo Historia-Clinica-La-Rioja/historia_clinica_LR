@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, DoctorInfoDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
-import { CompletarEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,6 +21,7 @@ import { Color } from '@presentation/colored-label/colored-label.component';
 import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { CompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/complete-study/complete-study.component';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -149,15 +149,18 @@ export class StudyComponent implements OnInit {
 					disableClose: true,
 				});
 		} else {
-			newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
-				{
-					data: {
-						diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
-						patientId: this.patientId
-					},
-					width: '45%',
-					disableClose: true,
-				});
+				newCompleteStudy = this.dialog.open(CompleteStudyComponent,
+					{
+						data: {
+							diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
+							patientId: this.patientId,
+							order: diagnosticReport.serviceRequestId,
+							creationDate: diagnosticReport.creationDate,
+							status: this.getPrescriptionStatus(diagnosticReport.statusId)
+						},
+						width: '50%',
+						disableClose: true,
+					});
 		}
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
@@ -199,10 +202,13 @@ export class StudyComponent implements OnInit {
 			this.dialog.open(VerResultadosEstudioComponent,
 				{
 					data: {
-						diagnosticReport,
+						diagnosticReport: diagnosticReport,
 						patientId: this.patientId,
+						order: diagnosticReport.serviceRequestId,
+						creationDate: diagnosticReport.creationDate,
+						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
-					width: '35%',
+					width: '50%',
 				});
 		}
 	}
