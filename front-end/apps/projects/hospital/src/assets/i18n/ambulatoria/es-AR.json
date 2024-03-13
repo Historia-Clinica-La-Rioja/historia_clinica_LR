@@ -581,7 +581,15 @@
                     "UPLOAD_FILES": "Adjuntar archivos"
                 },
                 "show_study_results_dialog": {
-                    "TITLE": "Resultados"
+                    "TITLE": "Resultados",
+					"STUDY_RESULTS": "Resultados de estudio",
+					"OBSERVATIONS": "Observaciones"
+                },
+				"study_information": {
+                    "TITLE": "Completar estudio"
+                },
+				"complete-study-information": {
+                    "OBSERVATIONS": "Observaciones"
                 },
                 "toast_messages": {
                     "POST_MEDICATION_SUCCESS": "Medicación agregada correctamente",
@@ -868,7 +876,7 @@
                                 "QUESTION_9": "Frecuencia del maltrato",
                                 "QUESTION_10" : "¿Tiene antecedentes de incumplimiento de medidas de restricción y/o denuncias previas?",
                                 "STATE": "Estado"
-                            } 
+                            }
                         },
                         "implemented-actions": {
                             "TITLE": "Acciones implementadas",
@@ -984,7 +992,7 @@
                                 "QUESTION_9": "Frecuencia del maltrato",
                                 "QUESTION_10" : "¿Tiene antecedentes de incumplimiento de medidas de restricción y/o denuncias previas?",
                                 "STATE": "Estado"
-                            } 
+                            }
                     }
                 }
             }
