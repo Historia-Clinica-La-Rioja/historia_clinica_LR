@@ -59,6 +59,7 @@ import { ViolenceModalitiesListComponent } from './components/violence-modalitie
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
+import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -108,7 +109,8 @@ import { MeasuringPointItemComponent } from './modules/ambulatoria/modules/inter
 import { MedicationBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/medication-background-list/medication-background-list.component';
 import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery/proposed-surgery.component';
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
-
+//standalone
+import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 @NgModule({
 	declarations: [
 		// components
@@ -162,6 +164,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointItemComponent,
 		InterveningProfessionalsComponent,
+		ProfessionalListComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -220,6 +223,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 		InstitucionModule,
 		LazyMaterialModule,
 		PresentationModule,
+		IdentifierCasesComponent,
 	],
 	exports: [
 		// components
@@ -252,6 +256,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 		PersonalHistoriesSummaryComponent,
 		ViolenceSituationsListComponent,
 		ViolenceModalitiesListComponent,
+		ProfessionalListComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,

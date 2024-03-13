@@ -1,0 +1,15 @@
+<div *ngFor="let professional of service.getProfessionals(); index as i; last as isLast">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span fxFlex="35" class="name">{{ professional.completeName | titlecase }}</span>
+        <span fxFlex="20">
+            {{professional.license}}
+        </span>
+        <app-identifier-cases fxFlex="35" [identifierCase]="identiferCases.SPECIALTY" [description]="professional.speciality"
+            [position]="Position.ROW">
+        </app-identifier-cases>
+        <button type="button" mat-icon-button color="warn" (click)="service.remove(i)">
+            <mat-icon>delete_outline</mat-icon>
+        </button>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+</div>
