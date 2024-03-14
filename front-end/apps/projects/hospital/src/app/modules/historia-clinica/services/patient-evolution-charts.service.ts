@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-graphic.service';
+import { PatientEvolutionChartsPopupComponent } from '@historia-clinica/dialogs/patient-evolution-charts-popup/patient-evolution-charts-popup.component';
 import { BehaviorSubject } from 'rxjs';
+
+const WIDTH = '80vw';
+const HEIGHT = '90vh';
 
 @Injectable()
 export class PatientEvolutionChartsService {
@@ -13,6 +18,7 @@ export class PatientEvolutionChartsService {
 
 	constructor(
 		private readonly anthropometricGraphicService: AnthropometricGraphicService,
+		private readonly dialog: MatDialog,
 	) { }
 
 	setPatientEvolutionChartsData(patientId: number) {
@@ -31,6 +37,21 @@ export class PatientEvolutionChartsService {
 	checkButtonEnablement() {
 		const hasAnthropometricDataUploaded = this.hasAntropometricDataUploaded(this.anthropometricDataUploaded);
 		this.isEnabledPatientEvolutionChartsSubject.next(this.hasEvolutionToEnabledButton || hasAnthropometricDataUploaded);
+	}
+
+	openEvolutionChartDialog() {
+
+		this.dialog.open(PatientEvolutionChartsPopupComponent, {
+			width: WIDTH,
+			height: HEIGHT,
+			maxWidth: WIDTH,
+			maxHeight: HEIGHT,
+			autoFocus: false,
+			disableClose: true,
+			data: {
+				anthropometricDataUploaded: this.anthropometricDataUploaded,
+			}
+		});
 	}
 
 	private hasAntropometricDataUploaded(antropometricData: AnthropometricData): boolean {

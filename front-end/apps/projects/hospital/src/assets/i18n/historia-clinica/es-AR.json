@@ -116,6 +116,9 @@
 		},
 		"evolution-charts": {
 			"SHOW_EVOLUTION_CHART_BUTTON":" ver graficos de evoluciones"
+		},
+		"evolution-charts-popup": {
+			"TITLE": "Información antropométrica | Gráficos de evolución | {{gender}}"
 		}
 
 	}

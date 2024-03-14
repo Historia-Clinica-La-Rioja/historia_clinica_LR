@@ -76,6 +76,7 @@ import { NewConsultationAddReasonFormComponent } from './dialogs/new-consultatio
 import { NewConsultationAllergyFormComponent } from './dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from './dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from './dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { PatientEvolutionChartsPopupComponent } from './dialogs/patient-evolution-charts-popup/patient-evolution-charts-popup.component';
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
@@ -175,6 +176,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ConceptsSearchDialogComponent,
 		EffectiveTimeDialogComponent,
 		RemoveDiagnosisComponent,
+		PatientEvolutionChartsPopupComponent,
 		ProbableDischargeDialogComponent,
 		BedAssignmentComponent,
 		ConceptsTypeaheadSearchDialogComponent,
@@ -208,12 +210,12 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ProfessionalAndDescriptionComponent,
 		ProcedureAndDescriptionComponent,
 		SurgicalReportProsthesisComponent,
-  		ViolenceSituationsListComponent,
-    	ViolenceModalitiesListComponent,
-     	ViolentPersonListComponent,
-  		AuditAccessRegisterComponent,
- 		AnestheticReportDockPopupComponent,
-  		AnestheticReportDockPopupComponent,
+		ViolenceSituationsListComponent,
+		ViolenceModalitiesListComponent,
+		ViolentPersonListComponent,
+		AuditAccessRegisterComponent,
+		AnestheticReportDockPopupComponent,
+		AnestheticReportDockPopupComponent,
 		AnestheticTechniquePopupComponent,
 		AnalgesicTechniquePopupComponent,
 		FluidAdministrationPopupComponent,
