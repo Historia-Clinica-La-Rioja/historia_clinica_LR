@@ -1,19 +1,12 @@
-import { Injectable } from "@angular/core";
 import { pushIfNotExists, removeFrom } from "@core/utils/array.utils";
 import { Observable, Subject } from "rxjs";
-
-@Injectable({
-	providedIn: 'root'
-})
 
 export class ProfessionalService {
 	private professionals: Professional[] = [];
 	private readonly proffesionalsEmmiter = new Subject<Professional[]>();
 	professionals$: Observable<Professional[]> = this.proffesionalsEmmiter.asObservable();
 
-	constructor() {
-
-	}
+	constructor() {}
 
 	add(professional: Professional): boolean {
 		const currentItems = this.professionals.length;

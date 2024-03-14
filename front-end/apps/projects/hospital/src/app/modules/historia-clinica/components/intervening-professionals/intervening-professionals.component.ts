@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ELicenseNumberType, ElectronicJointSignatureInstitutionProfessionalDto } from '@api-rest/api-model';
 import { ElectronicJointSignatureInstitutionalProfessionalLicenseService } from '@api-rest/services/electronic-joint-signature-institutional-professional-license.service';
 import { Professional, ProfessionalService } from '@historia-clinica/services/professionals.service';
@@ -10,11 +10,13 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
   styleUrls: ['./intervening-professionals.component.scss']
 })
 export class InterveningProfessionalsComponent implements OnInit {
+  @Output() response = new EventEmitter<number[]>();
   professionalsTypeaheadOption: TypeaheadOption<any>[];
   professionals: ElectronicJointSignatureInstitutionProfessionalDto[];
   initValueProfessional:TypeaheadOption<any>;
-  constructor(private readonly electronicJointSignatureInstitutionalProfessionalLicenseService: ElectronicJointSignatureInstitutionalProfessionalLicenseService, public professionalsService: ProfessionalService
-  ) { }
+  professionalsService: ProfessionalService
+  constructor(private readonly electronicJointSignatureInstitutionalProfessionalLicenseService: ElectronicJointSignatureInstitutionalProfessionalLicenseService) {
+    		this.professionalsService = new ProfessionalService(); }
 
   ngOnInit(): void {
     this.electronicJointSignatureInstitutionalProfessionalLicenseService.getInstitutionalProfessionalsLicense().subscribe(professionals => {
@@ -28,6 +30,11 @@ export class InterveningProfessionalsComponent implements OnInit {
       this.professionalsService.add(this.toProfessional(this.professionals.find(p => p.healthcareProfessionalId === value)));
       this.initValueProfessional = null;
     }
+    this.emitResponse();
+    }
+
+  emitResponse(){
+    this.response.emit(this.professionalsService.getProfessionals().map(professional => professional.healthcareProfessionalId));
   }
 
   private toProfessional(professionalDto: ElectronicJointSignatureInstitutionProfessionalDto): Professional {

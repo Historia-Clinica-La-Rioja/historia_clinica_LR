@@ -51,7 +51,7 @@
 		</div>
 
 		<div id="intervening-professionals-joint-signature" *ngIf="isEnableJointSignature">
-			<app-intervening-professionals></app-intervening-professionals>
+			<app-intervening-professionals (response)="setInvolvedHealthcareProfessionals($event)"></app-intervening-professionals>
 		</div>
 
 	</mat-card-content>

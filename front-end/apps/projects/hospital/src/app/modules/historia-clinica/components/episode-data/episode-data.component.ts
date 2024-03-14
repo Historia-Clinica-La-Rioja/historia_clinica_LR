@@ -25,6 +25,7 @@ export class EpisodeDataComponent implements OnInit {
 	hierarchicalUnitId: number;
 	_patientId: number;
 	isEnableJointSignature= false;
+	involvedHealthcareProfessionalIds: number[];
 
 	private patient: ReducedPatientDto;
 	private appointmentConfirmedCoverageInfo: ExternalCoverageDto;
@@ -104,6 +105,11 @@ export class EpisodeDataComponent implements OnInit {
 		this.setEpisodeData();
 	}
 
+	setInvolvedHealthcareProfessionals(event){
+		this.involvedHealthcareProfessionalIds = event;
+		this.setEpisodeData();
+	}
+
 	private setSpecialtyFields(specialties: ClinicalSpecialtyDto[]) {
 		this.specialties = specialties;
 		const defaultSpecialty = specialties[0];
@@ -144,7 +150,8 @@ export class EpisodeDataComponent implements OnInit {
 		return {
 			medicalCoverageId: this.form.value.patientMedicalCoverage?.id,
 			clinicalSpecialtyId: this.form.value.clinicalSpecialty?.id,
-			hierarchicalUnitId: this.hierarchicalUnitId
+			hierarchicalUnitId: this.hierarchicalUnitId,
+			involvedHealthcareProfessionalIds: this.involvedHealthcareProfessionalIds,
 		}
 	}
 }
@@ -153,4 +160,5 @@ export interface EpisodeData {
 	medicalCoverageId: number;
 	clinicalSpecialtyId: number;
 	hierarchicalUnitId: number;
+	involvedHealthcareProfessionalIds: number[];
 }
