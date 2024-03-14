@@ -26,6 +26,9 @@ import { EmergencyCareEpisodeAttendService } from './services/emergency-care-epi
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { EspecialidadFormComponent } from './components/especialidad-form/especialidad-form.component';
 import { EvolucionFormComponent } from './components/evolucion-form/evolucion-form.component';
+import { EvolutionChartOptionsComponent } from './components/evolution-chart-options/evolution-chart-options.component';
+import { EvolutionChartSelectComponent } from './components/evolution-chart-select/evolution-chart-select.component';
+import { EvolutionChartTypeSelectComponent } from './components/evolution-chart-type-select/evolution-chart-type-select.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
@@ -40,6 +43,7 @@ import { MotivoFormComponent } from './components/motivo-form/motivo-form.compon
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
 import { NotaDeEvolucionDockPopupComponent } from './components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
 import { PatientEvolutionChartsButtonComponent } from './components/patient-evolution-charts-button/patient-evolution-charts-button.component';
+import { PatientEvolutionChartsComponent } from './components/patient-evolution-charts/patient-evolution-charts.component';
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
 import { PatientProblemsSummaryComponent } from './components/patient-problems-summary/patient-problems-summary.component';
@@ -125,6 +129,9 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
+		EvolutionChartSelectComponent,
+		EvolutionChartTypeSelectComponent,
+		EvolutionChartOptionsComponent,
 		HierarchicalUnitConsultationComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		MedicacionSummaryComponent,
@@ -142,8 +149,9 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		MedicationListComponent,
 		ReferenceRequestListComponent,
 		EpisodeDataComponent,
+		PatientEvolutionChartsComponent,
 		ProposedSurgeryComponent,
-		ProposedSurgeryBackgroundListComponent,
+		ProposedSurgeryBackgroundListComponent,  		
 		AnestheticReportAnthropometricDataComponent,
 		AnestheticReportClinicalEvaluationComponent,
 		AnestheticReportAnestheticHistoryComponent,

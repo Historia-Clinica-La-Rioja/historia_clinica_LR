@@ -1,5 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { EAnthropometricGraphicType, EAnthropometricGraphicOption } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -20,5 +21,16 @@ export class AnthropometricGraphicService {
 	canShowPercentilesGraphic(patientId: number): Observable<boolean> {
 		const url = `${this.prefixUrl}/${this.contextService.institutionId}${this.basicUrl}/patient/${patientId}/can-show-graphic`;
 		return this.http.get<boolean>(url);
+	}
+
+	getChartOptions(): Observable<EAnthropometricGraphicOption[]> {
+		const url = `${this.prefixUrl}/${this.contextService.institutionId}${this.basicUrl}/chart-options`;
+		return this.http.get<EAnthropometricGraphicOption[]>(url);
+	}
+
+	getAvailableGraphicTypes(chartOptionId: number, patientId: number): Observable<EAnthropometricGraphicType[]> {
+		const url = `${this.prefixUrl}/${this.contextService.institutionId}${this.basicUrl}/patient/${patientId}/available-graphics`;
+		const params = new HttpParams().append('chartOptionId', chartOptionId);
+		return this.http.get<EAnthropometricGraphicType[]>(url, { params });
 	}
 }
