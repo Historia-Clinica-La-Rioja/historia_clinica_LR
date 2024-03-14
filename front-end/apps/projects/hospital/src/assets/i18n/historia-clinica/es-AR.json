@@ -96,6 +96,11 @@
 			"OBSERVACIONES": "Observaciones",
 			"SUSPENDIDO": "Suspendido"
 		},
+		"anesthesia-form": {
+			"ADD_ANESTHESIA": "Agregar anestesia",
+			"SEARCH_PLACEHOLDER": "Buscar anestesia",
+			"ANESTHESIA": "Anestesia"
+		},
 		"hierarhical-unit-section": {
 			"TITLE": "Unidad jerárquica",
 			"IS_A_REPLACEMENT": "Es un reemplazo",

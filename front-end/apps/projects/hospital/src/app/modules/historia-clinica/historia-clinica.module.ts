@@ -101,6 +101,7 @@ import { AnestheticReportIntrasurgicalAnestheticProceduresComponent } from './mo
 import { AnestheticReportAnestheticAgentsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anesthetic-agents/anesthetic-report-anesthetic-agents.component';
 import { AnestheticReportNonAnestheticDrugsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-non-anesthetic-drugs/anesthetic-report-non-anesthetic-drugs.component';
 import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-antibiotic-prophylaxis/anesthetic-report-antibiotic-prophylaxis.component';
+import { AnesthesiaFormComponent } from './dialogs/anesthesia-form/anesthesia-form.component';
 
 @NgModule({
 	declarations: [
@@ -198,7 +199,8 @@ import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambula
   		AnestheticReportDockPopupComponent,
 		AnestheticTechniquePopupComponent,
 		AnalgesicTechniquePopupComponent,
-		FluidAdministrationPopupComponent
+		FluidAdministrationPopupComponent,
+  AnesthesiaFormComponent
 	],
 	imports: [
 		CommonModule,

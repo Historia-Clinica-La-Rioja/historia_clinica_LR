@@ -312,8 +312,10 @@
 					"SURGERY_END_DATE": "Fecha de fin de cirugía",
 					"SKIN_OPENING": "Apertura de piel",
 					"SKIN_CLOSURE": "Cierre de piel",
-					"ADD": "Agregar procedimiento",
+					"ADD_PROCEDURE": "Agregar procedimiento",
 					"REGISTERED_PROCEDURES": "Procedimientos registrados",
+					"ADD_ANESTHESIA": "Agregar anestesia",
+					"ADDED_ANESTHESIAS": "Anestesias agregadas",
 					"SURGERY_DESCRIPTION": "Descripción de cirugía realizada",
 					"ADD_DIAGNOSIS": "Agregar diagnóstico post-operatorio",
 					"DIAGNOSIS": "Diagnóstico Post-Operatorio"
