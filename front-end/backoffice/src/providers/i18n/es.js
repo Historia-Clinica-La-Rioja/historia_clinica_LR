@@ -1018,6 +1018,7 @@ const messages = {
                 encounterId: 'Id de consulta en HSI',
                 encounterApiId: 'Id de consulta en Cipres',
                 status:'Estado',
+                responseCode:'Código de respuesta',
                 date:'Fecha'
             }
         }
