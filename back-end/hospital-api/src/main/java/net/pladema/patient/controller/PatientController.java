@@ -17,7 +17,9 @@ import javax.persistence.EntityNotFoundException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EPatientType;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.PatientGenderAgeDto;
 import net.pladema.patient.controller.dto.PatientLastEditInfoDto;
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.user.application.getrolesbyuser.GetRolesByUser;
 import net.pladema.user.application.port.HospitalUserStorage;
@@ -363,6 +365,16 @@ public class PatientController {
 		ReducedPatientDto result = new ReducedPatientDto(personData, patient.getTypeId());
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/{patientId}/gender-age")
+	public ResponseEntity<PatientGenderAgeDto> getPatientGenderAge(@PathVariable(name = "patientId") Integer patientId){
+		LOG.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		PatientGenderAgeBo patientGenderAgeBo = patientService.getPatientGenderAge(patientId)
+				.orElseThrow(() -> new EntityNotFoundException(PATIENT_INVALID));
+		PatientGenderAgeDto result = patientMapper.toPatientGenderAgeDto(patientGenderAgeBo);
+		LOG.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
 	}
 
 	private AddressDto persistPatientAddress(APatientDto patientDto, Optional<Integer> idAdress) {

@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 import net.pladema.patient.domain.DocumentPatientBo;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 
@@ -80,4 +81,12 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			"LEFT JOIN Province pr ON (p.id = a.provinceId) " +
 			"WHERE p.id = :patientId")
     DocumentPatientBo getDocumentPatientData(@Param("patientId") Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.patient.service.domain.PatientGenderAgeBo(p.id, pe.genderId, pe.birthDate) " +
+			"FROM Patient p " +
+			"JOIN Person pe ON (p.personId = pe.id) " +
+			"WHERE p.id = :patientId")
+	Optional<PatientGenderAgeBo> getPatientGenderAge(@Param("patientId")Integer patientId);
+
 }

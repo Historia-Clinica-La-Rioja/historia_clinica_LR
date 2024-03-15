@@ -3208,6 +3208,12 @@ export interface PatientDto {
     nameSelfDetermination: string;
 }
 
+export interface PatientGenderAgeDto {
+    age: PersonAgeDto;
+    gender: GenderDto;
+    id: number;
+}
+
 export interface PatientInfoDto {
     age: number;
     genderId: number;
