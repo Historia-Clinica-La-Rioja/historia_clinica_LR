@@ -1,3 +1,28 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_21 
+    - logicalFilePath: incrementales-v2_21
 
+    - changeSet:
+        id: createTable-document_electronic_signature_reject_reason
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: document_electronic_signature_reject_reason
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_electronic_signature_reject_reason
+                      references: document_involved_professional(id)
+                      foreignKeyName: FK_document_involved_professional_document_involved_professional
+                    name: document_involved_professional_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: reason_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: text

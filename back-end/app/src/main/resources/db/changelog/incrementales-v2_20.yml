@@ -403,7 +403,6 @@ databaseChangeLog:
                     name: status_update_date
                     type: date
                     defaultValueDate: ${date.now}
-                    
 
     - changeSet:
         id: createTable-expired_appointment_reason
