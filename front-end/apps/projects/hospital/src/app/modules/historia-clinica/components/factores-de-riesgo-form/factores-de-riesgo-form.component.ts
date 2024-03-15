@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { isNumberOrDot } from '@core/utils/pattern.utils';
 import { FactoresDeRiesgoFormService } from '../../services/factores-de-riesgo-form.service';
 import { BoxMessageInformation } from '../box-message/box-message.component';
@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './factores-de-riesgo-form.component.html',
   styleUrls: ['./factores-de-riesgo-form.component.scss']
 })
-export class FactoresDeRiesgoFormComponent implements OnInit {
+export class FactoresDeRiesgoFormComponent implements OnChanges {
 
   @Input() factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
   @Input() showPreloadData: boolean = false;
@@ -19,20 +19,17 @@ export class FactoresDeRiesgoFormComponent implements OnInit {
   boxMessageInfo: BoxMessageInformation;
   readonly isNumberOrDot = isNumberOrDot;
 
-  constructor( private readonly translateService: TranslateService ) {
+  constructor( private readonly translateService: TranslateService ) { }
+
+  ngOnChanges() {
     this.boxMessageInfo= {
       title: "historia-clinica.include-previous-data-question.TITLE",
       question: "historia-clinica.include-previous-data-question.QUESTION",
-      message: '',
+      message: this.translateService.instant('historia-clinica.include-previous-data-question.DESCRIPTION',
+        { dataName: this.translateService.instant('historia-clinica.factores-de-riesgo-form.NAME'),
+          date: this.factoresDeRiesgoFormService.getDate() }),
       showButtons: true
     }
-  }
-
-  ngOnInit() {
-    this.translateService.get('historia-clinica.include-previous-data-question.DESCRIPTION',
-        { dataName: 'historia-clinica.factores-de-riesgo-form.NAME', date: this.factoresDeRiesgoFormService.getDate() }).subscribe(
-          message => this.boxMessageInfo.message = message
-        );
   }
 
   savePreloadData(save: boolean): void {

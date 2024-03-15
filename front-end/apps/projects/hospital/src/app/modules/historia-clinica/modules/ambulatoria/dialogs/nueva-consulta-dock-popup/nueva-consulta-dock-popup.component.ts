@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
@@ -59,7 +59,7 @@ const TIME_OUT = 5000;
 	templateUrl: './nueva-consulta-dock-popup.component.html',
 	styleUrls: ['./nueva-consulta-dock-popup.component.scss']
 })
-export class NuevaConsultaDockPopupComponent implements OnInit {
+export class NuevaConsultaDockPopupComponent implements OnInit, OnChanges {
 	showWarningViolenceSituation = false;
 	dataName: string[];
 	disableConfirmButton = false;
@@ -134,22 +134,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
-		this.boxMessageInfo = {
-			title: 'historia-clinica.include-previous-data-question.TITLE',
-			question: 'historia-clinica.include-previous-data-question.violence-situations.QUESTION',
-			message: '',
-			viewError: this.touchedConfirm,
-			addButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.ADD',
-			discardButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.DISCARD',
-			showButtons: true
-		}
-		this.translateService.get('historia-clinica.include-previous-data-question.violence-situations.DESCRIPTION',
-			{ problem: this.dataName }).subscribe(
-          		message => this.boxMessageInfo.message = message
-        );
 	}
-
-
 
 	ngOnInit(): void {
 
@@ -210,6 +195,19 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
 
 		});
+	}
+
+	ngOnChanges() {
+		this.boxMessageInfo = {
+			title: 'historia-clinica.include-previous-data-question.TITLE',
+			question: 'historia-clinica.include-previous-data-question.violence-situations.QUESTION',
+			message: this.translateService.instant('historia-clinica.include-previous-data-question.violence-situations.DESCRIPTION',
+				{ problem: this.dataName }),
+			viewError: this.touchedConfirm,
+			addButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.ADD',
+			discardButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.DISCARD',
+			showButtons: true
+		}
 	}
 
 
