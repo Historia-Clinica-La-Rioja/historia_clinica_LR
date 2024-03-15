@@ -1,6 +1,6 @@
-<div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutAlign="center start">
+<div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutAlign="space-between start">
 
-	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex.lg="25%">
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="25%">
 
 		<app-identifier-cases [identifierCase]="identiferCases.DATE"
 			[description]="availableAppointment.date | date: 'fullDate'">
@@ -12,7 +12,7 @@
 
 	</div>
 
-	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex.lg="20%">
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="20%">
 
 		<app-identifier-cases [identifierCase]="identiferCases.INSTITUTION"
 			[description]="availableAppointment.institutionName">
@@ -24,12 +24,12 @@
 
 	</div>
 
-	<div fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start center" fxFlex.lg="20%">
+	<div fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="center start" fxFlex="20%">
 		<app-identifier-cases [identifierCase]="identiferCases.PROFESSIONAL" [description]="availableAppointment.professionalFullName"></app-identifier-cases>
 		<span *ngIf="availableAppointment.jointDiary"> ({{'turnos.appointment-result-view.JOINT_DIARY' | translate}}) </span>
 	</div>
 
-	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex.lg="20%">
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="20%">
 
 		<app-identifier-cases *ngIf="availableAppointment.practiceDescription" [identifierCase]="identiferCases.PRACTICE"
 			[description]="availableAppointment.practiceDescription">
@@ -40,10 +40,10 @@
 		</app-identifier-cases>
 
 		<app-identifier-cases [identifierCase]="identiferCases.ROOM" [description]="availableAppointment.doctorOffice">
-		</app-identifier-cases>		
+		</app-identifier-cases>
 
 	</div>
-	<div fxFlex.lg="15%">
+	<div fxFlex="15%">
 		<ng-content></ng-content>
 	</div>
 
