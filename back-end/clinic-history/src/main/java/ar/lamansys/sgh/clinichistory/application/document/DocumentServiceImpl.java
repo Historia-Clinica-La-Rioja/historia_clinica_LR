@@ -661,7 +661,7 @@ public class DocumentServiceImpl implements DocumentService {
         return result;
     }
 
-    private DentalActionBo mapToOdontologyProcedure(Object[] row) {
+	private DentalActionBo mapToOdontologyProcedure(Object[] row) {
 		var result = new DentalActionBo();
 		result.setDiagnostic(false);
 		result.setSnomed(new SnomedBo((Snomed)row[1]));

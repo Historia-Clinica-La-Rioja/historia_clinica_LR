@@ -4017,6 +4017,12 @@ export interface RefreshTokenDto {
     refreshToken: string;
 }
 
+export interface RejectDocumentElectronicJointSignatureDto {
+    description: string;
+    documentIds: number[];
+    rejectReason: ERejectDocumentElectronicJointSignatureReason;
+}
+
 export interface ReportClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: Date;
 }
@@ -5395,6 +5401,11 @@ export const enum EReferenceRegulationState {
     APPROVED = "APPROVED",
     REJECTED = "REJECTED",
     SUGGESTED_REVISION = "SUGGESTED_REVISION",
+}
+
+export const enum ERejectDocumentElectronicJointSignatureReason {
+    WRONG_PROFESSIONAL = "WRONG_PROFESSIONAL",
+    OTHER = "OTHER",
 }
 
 export const enum ERelationshipLength {
