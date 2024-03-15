@@ -388,7 +388,7 @@ export class FactoresDeRiesgoFormService {
 	}
 
 	getDate(): string {
-		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+		return this.datePipe?.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
 	}
 
 	hasAtLeastOneValueLoaded(): boolean {
