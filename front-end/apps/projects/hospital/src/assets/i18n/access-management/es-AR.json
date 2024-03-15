@@ -57,6 +57,10 @@
 					"APPROVE": "aprobar"
 				},
 				"discard_popup": {
+					"approved": {
+						"TITLE": "aprobar solicitud",
+						"SUBTITLE": "se marcará la solicitud como aprobada"
+					},
 					"rejected": {
 						"TITLE": "rechazar solicitud",
 						"SUBTITLE": "se marcará la solicitud como rechazada",

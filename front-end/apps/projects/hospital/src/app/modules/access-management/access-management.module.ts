@@ -23,7 +23,7 @@ import { DestinationInstitutionInformationComponent } from './components/destina
 import { HomeComponent } from './routes/home/home.component';
 import { HomeInstitutionInformationComponent } from './components/home-institution-information/home-institution-information.component';
 import { InstitutionalActionsComponent } from './components/institutional-actions/institutional-actions.component';
-import { InstitutionalNetworkActionsComponent } from './components/institutional-network-actions/institutional-network-actions.component';
+import { InstitutionalNetworkActionsDropdownComponent } from './components/institutional-network-actions-dropdown/institutional-network-actions-dropdown.component';
 import { ObservationsComponent } from './components/observations/observations.component';
 import { PatientPhoneComponent } from './components/patient-phone/patient-phone.component';
 import { PatientProblemsComponent } from './components/patient-problems/patient-problems.component';
@@ -56,7 +56,7 @@ import { TabsService } from './services/tabs.service';
 		DeriveRequestComponent,
 		DestinationInstitutionInformationComponent,
 		InstitutionalActionsComponent,
-		InstitutionalNetworkActionsComponent,
+		InstitutionalNetworkActionsDropdownComponent,
 		HomeComponent,
 		HomeInstitutionInformationComponent,
 		ObservationsComponent,
@@ -75,7 +75,7 @@ import { TabsService } from './services/tabs.service';
 		ReasonPopUpComponent,
 		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
-		ReportCompleteDataPopupComponent,  
+		ReportCompleteDataPopupComponent,
 	],
 	providers: [
 		TabsService

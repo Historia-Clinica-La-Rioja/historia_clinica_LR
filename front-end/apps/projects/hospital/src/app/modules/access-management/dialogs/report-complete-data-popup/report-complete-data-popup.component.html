@@ -65,7 +65,7 @@
 		</div>
 	</mat-dialog-content>
 
-	<app-popup-actions actions [reportCompleteData]="referenceCompleteData" (newState)="closeDialog($event)"></app-popup-actions>
+	<app-popup-actions actions [reportCompleteData]="referenceCompleteData"></app-popup-actions>
 
 	<div *ngIf="referenceRegulationDto$ | async as referenceRegulationDto; else loading" class="assign-turn-button">
 		<button *ngIf="referenceRegulationDto.state === approvedState && isRoleGestor && !referenceCompleteData.reference.closureType && hasAppointment"
