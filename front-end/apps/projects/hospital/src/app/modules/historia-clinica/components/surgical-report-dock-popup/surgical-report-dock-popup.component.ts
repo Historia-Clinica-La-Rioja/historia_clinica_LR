@@ -134,7 +134,9 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 					this.dockPopupRef.close(this.setFieldsToUpdate());
 				},
 				error => {
-					this.snackBarService.showError(error.text)
+					this.snackBarService.showError("Error al generar parte quirúrgico. " + error.errors[0])
+					this.isLoading = false;
+					this.dockPopupRef.close();
 				}
 			);
 		}
