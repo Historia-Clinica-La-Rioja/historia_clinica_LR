@@ -48,6 +48,8 @@ const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
 const AGENDA_ESPONTANEA_CLASS = 'bg-yellow';
 const ROLES_TO_CREATE: ERole[] = [ERole.ADMINISTRATIVO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ENFERMERO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+const FIVE_MINUTES: number = 5 * 60 * 1000;
+
 @Component({
 	selector: 'app-agenda',
 	templateUrl: './agenda.component.html',
@@ -80,6 +82,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private patientId: number;
 	private loggedUserHealthcareProfessionalId: number;
 	private loggedUserRoles: string[];
+	private timer;
 	@Input() canCreateAppoinment = true;
 	idAgenda: number = null;
 	@Input()
@@ -146,11 +149,13 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.loggedUserService.assignments$.subscribe(response => {
 			 this.loggedUserRoles = response.filter(role => role.institutionId === this.contextService.institutionId)
 			 .map(role => role.role)});
+		this.loadAppointmentsEveryFiveMinutes();
 	}
 
 	ngOnDestroy() {
 		this.agendaSearchService.setAgendaSelected(null);
 		this.appointmentFacade.clear();
+		clearInterval(this.timer);
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -224,6 +229,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				firstViewDay.isSameOrBefore(endAgenda, 'days'));
 		}
 
+	}
+
+	private loadAppointmentsEveryFiveMinutes = () => {
+		this.timer = setInterval(() => this.appointmentFacade.loadAppointments(), FIVE_MINUTES);
 	}
 
 	private setDailyAmounts(daysCells: MonthViewDay[], dailyAmounts: AppointmentDailyAmountDto[]) {
