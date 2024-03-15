@@ -41,6 +41,16 @@ public class HCEClinicalObservationServiceImpl implements HCEClinicalObservation
 		return result;
 	}
 
+	@Override
+	public List<HCEAnthropometricDataBo> getLastNAnthropometricDataGeneralState(Integer patientId, int n) {
+		log.debug(LOGGING_INPUT, patientId);
+		List<Short> invalidDocumentTypes = List.of(DocumentType.ANESTHETIC_REPORT);
+		HCEMapClinicalObservationVo resultQuery = hceClinicalObservationRepository.getGeneralState(patientId, invalidDocumentTypes);
+		List<HCEAnthropometricDataBo> result = resultQuery.getLastNAnthropometricData(n);
+		log.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
     @Override
     public Last2HCERiskFactorsBo getLast2RiskFactorsGeneralState(Integer patientId) {
         log.debug(LOGGING_INPUT, patientId);

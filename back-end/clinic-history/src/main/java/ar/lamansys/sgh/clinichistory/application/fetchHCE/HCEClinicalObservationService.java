@@ -11,5 +11,7 @@ public interface HCEClinicalObservationService {
 
 	List<HCEAnthropometricDataBo> getLast2AnthropometricDataGeneralState(Integer patientId);
 
+	List<HCEAnthropometricDataBo> getLastNAnthropometricDataGeneralState(Integer patientId, int n);
+
 	Last2HCERiskFactorsBo getLast2RiskFactorsGeneralState(Integer patientId);
 }
