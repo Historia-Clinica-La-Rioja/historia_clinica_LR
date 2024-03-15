@@ -179,6 +179,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 			return ECHDocumentType.REPORTS;
 		if (row.getDocumentTypeId().equals(EDocumentType.EMERGENCY_CARE.getId()) || row.getDocumentTypeId().equals(EDocumentType.IMMUNIZATION.getId()))
 			return ECHDocumentType.OTHER;
+		if (row.getDocumentTypeId().equals(EDocumentType.SURGICAL_HOSPITALIZATION_REPORT.getId()))
+			return ECHDocumentType.NOT_SUPPORTED;
 		return ECHDocumentType.CLINICAL_NOTES;
 	}
 

@@ -4938,6 +4938,7 @@ export const enum ECHDocumentType {
     MEDICAL_PRESCRIPTIONS = "MEDICAL_PRESCRIPTIONS",
     CLINICAL_NOTES = "CLINICAL_NOTES",
     OTHER = "OTHER",
+    NOT_SUPPORTED = "NOT_SUPPORTED",
 }
 
 export const enum ECHEncounterType {

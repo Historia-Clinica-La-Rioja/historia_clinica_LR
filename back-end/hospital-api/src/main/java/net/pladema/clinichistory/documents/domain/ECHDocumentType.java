@@ -6,7 +6,9 @@ public enum ECHDocumentType {
 	REPORTS ("Informes"),
 	MEDICAL_PRESCRIPTIONS ("Prescripciones Médicas"),
 	CLINICAL_NOTES ("Notas Clínicas"),
-	OTHER ("Otro");
+	OTHER ("Otro"),
+
+	NOT_SUPPORTED("No soportado");
 
 	private String value;
 	ECHDocumentType (String value){
