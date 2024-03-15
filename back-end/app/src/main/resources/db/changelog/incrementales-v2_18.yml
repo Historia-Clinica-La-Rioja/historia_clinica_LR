@@ -356,3 +356,30 @@ databaseChangeLog:
                 tableName: cipres_clinical_specialty
                 validate: true
 
+    - changeSet:
+        id: epidemiological_week-table-add-2024-data
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  startDate DATE;
+                  endDate DATE;
+                  epidemiologicalWeekNumber SMALLINT;
+                BEGIN
+                  startDate := '2024-01-07';
+                  endDate := '2024-01-13';
+                  epidemiologicalWeekNumber := 2;
+                  FOR iteration IN 0..51 LOOP
+                      INSERT INTO epidemiological_week(start_date, end_date, epidemiological_week_number) VALUES(startDate, endDate, epidemiologicalWeekNumber);
+                      startDate := endDate + INTERVAL '1 days';
+                      endDate := startDate + INTERVAL '6 days';
+                      epidemiologicalWeekNumber := epidemiologicalWeekNumber + 1;
+                      IF (epidemiologicalWeekNumber = 53) THEN
+                      	epidemiologicalWeekNumber := 1;
+                      END IF;
+                  END LOOP;
+                END $$;
