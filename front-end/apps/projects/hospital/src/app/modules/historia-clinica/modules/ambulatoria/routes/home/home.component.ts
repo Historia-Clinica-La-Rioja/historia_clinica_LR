@@ -4,8 +4,7 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
-import { Moment } from 'moment';
-import { DateFormat, momentFormat, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
+import { dateISOParseDate, newDate, } from '@core/utils/moment.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
@@ -16,6 +15,7 @@ import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-home',
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
 	public genders: GenderDto[];
 	public identificationTypeList: IdentificationTypeDto[];
 	public hasError = hasError;
-	public today: Moment = newMoment();
+	public today = newDate();
 	public formSubmitted: boolean;
 	public requiringValues: boolean;
 	public patientResultsLength: number;
@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly patientNameService: PatientNameService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
@@ -173,7 +174,7 @@ export class HomeComponent implements OnInit {
 					{
 						columnDef: 'birthDate',
 						header: 'F. Nacimiento',
-						text: (row) => (row.person.birthDate === undefined) ? '' : momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
+						text: (row) => (row.person.birthDate === undefined) ? '' : this.dateFormatPipe.transform(dateISOParseDate(String(row.person.birthDate)), 'date')
 					},
 					{
 						columnDef: 'action',
@@ -217,7 +218,7 @@ export class HomeComponent implements OnInit {
 					{
 						columnDef: 'birthDate',
 						header: 'F. Nac',
-						text: (row) => (row.person.birthDate === undefined) ? '' : momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
+						text: (row) => (row.person.birthDate === undefined) ? '' : this.dateFormatPipe.transform(dateISOParseDate(String(row.person.birthDate)), 'date')
 					},
 					{
 						columnDef: 'gender',
