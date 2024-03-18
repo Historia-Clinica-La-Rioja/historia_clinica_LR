@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { Moment } from 'moment';
 import {
 	DocumentSearchFilterDto,
 	EDocumentSearch,
@@ -9,7 +8,7 @@ import {
 	DocumentHistoricDto,
 	MasterDataDto,
 } from '@api-rest/api-model';
-import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
+import { newDate } from '@core/utils/moment.utils';
 import { hasError } from '@core/utils/form.utils';
 import { pairwise, startWith } from 'rxjs/operators';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
@@ -17,10 +16,12 @@ import { DocumentActionsService, DocumentSearch } from "@historia-clinica/module
 import { PatientNameService } from "@core/services/patient-name.service";
 import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service';
 import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
-import { fromStringToDate } from "@core/utils/date.utils";
+import { fromStringToDate, } from "@core/utils/date.utils";
 import { InternmentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { fixDate } from '@core/utils/date/format';
 
 @Component({
 	selector: 'app-documents-summary',
@@ -39,7 +40,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	public documentTypes: MasterDataDto [] = [];
 	public documentsToShow: DocumentSearch[] = [];
 	public readonly documentsSummary = DOCUMENTS;
-	public today: Moment = newMoment();
+	public today = newDate();
 	public form: UntypedFormGroup;
 	public activeDocument: DocumentSearch;
 	public documentHistoric: DocumentHistoricDto;
@@ -112,7 +113,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 
 	private getPlainText(): string {
 		if (this.isDate(this.form.value.field))
-			return momentFormat(this.form.value.date, DateFormat.API_DATE);
+			return toApiFormat(fixDate(this.form.value.date))
 		else if (this.form.value.field === 'DOCUMENT_TYPE')
 			return this.form.value.documentType
 		return this.form.value.text
