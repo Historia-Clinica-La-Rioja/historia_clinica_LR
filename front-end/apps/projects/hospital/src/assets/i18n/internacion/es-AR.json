@@ -525,8 +525,8 @@
 					"PHARYNGEAL_CANNULA": "Cánula faringea",
 					"GOES_INSIDE": "Se interna",
 					"goes-inside-options": {
-						"FLOOR": "Se interna en piso",
-						"INTENSIVE_CARE_UNIT": "Se interna en unidad de terapia intensiva"
+						"FLOOR": "En piso",
+						"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva"
 					}
 				},
 				"OBSERVATIONS": "Observaciones: ",
