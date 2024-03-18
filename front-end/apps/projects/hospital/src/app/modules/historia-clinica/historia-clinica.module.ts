@@ -32,6 +32,7 @@ import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesg
 import { HierarchicalUnitConsultationComponent } from './components/hierarchical-unit-consultation/hierarchical-unit-consultation.component';
 import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
+import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
 import { MedicationListComponent } from './components/medication-list/medication-list.component';
@@ -46,6 +47,7 @@ import { ProcedureAndDescriptionComponent } from './components/procedure-and-des
 import { ProcedureListComponent } from './components/procedure-list/procedure-list.component';
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
+import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
@@ -58,8 +60,6 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
-import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
-import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';

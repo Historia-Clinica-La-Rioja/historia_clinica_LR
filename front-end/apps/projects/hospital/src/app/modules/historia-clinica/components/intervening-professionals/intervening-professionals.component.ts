@@ -10,10 +10,10 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
   styleUrls: ['./intervening-professionals.component.scss']
 })
 export class InterveningProfessionalsComponent implements OnInit {
-  @Output() response = new EventEmitter<number[]>();
-  professionalsTypeaheadOption: TypeaheadOption<any>[];
+  @Output() interveningProfessional = new EventEmitter<number[]>();
+  professionalsTypeaheadOption: TypeaheadOption<ElectronicJointSignatureInstitutionProfessionalDto>[];
   professionals: ElectronicJointSignatureInstitutionProfessionalDto[];
-  initValueProfessional:TypeaheadOption<any>;
+  initValueProfessional:TypeaheadOption<ElectronicJointSignatureInstitutionProfessionalDto>;
   professionalsService: ProfessionalService
   constructor(private readonly electronicJointSignatureInstitutionalProfessionalLicenseService: ElectronicJointSignatureInstitutionalProfessionalLicenseService) {
     		this.professionalsService = new ProfessionalService(); }
@@ -25,33 +25,33 @@ export class InterveningProfessionalsComponent implements OnInit {
     })
   }
 
-  setProfessional(value) {
-    if(value){
-      this.professionalsService.add(this.toProfessional(this.professionals.find(p => p.healthcareProfessionalId === value)));
+  setInterveningProfessional(healthcareProfessionalId: number) {
+    if(healthcareProfessionalId){
+      this.professionalsService.add(this.toProfessional(this.professionals.find(p => p.healthcareProfessionalId === healthcareProfessionalId)));
       this.initValueProfessional = null;
     }
-    this.emitResponse();
+    this.emitInterveningProfessional();
     }
 
-  emitResponse(){
-    this.response.emit(this.professionalsService.getProfessionals().map(professional => professional.healthcareProfessionalId));
+  private emitInterveningProfessional(){
+    this.interveningProfessional.emit(this.professionalsService.getProfessionals().map(professional => professional.healthcareProfessionalId));
   }
 
   private toProfessional(professionalDto: ElectronicJointSignatureInstitutionProfessionalDto): Professional {
-    const mas = professionalDto.licenses.length >= 2 ? ' (+' + (professionalDto.licenses.length - 1) + ' más)' : "";
+    const moreSpecialities = professionalDto.licenses.length >= 2 ? ' (+' + (professionalDto.licenses.length - 1) + ' más)' : "";
     return {
       completeName: professionalDto.completeName,
       healthcareProfessionalId: professionalDto.healthcareProfessionalId,
-      speciality: professionalDto.licenses[0].clinicalSpecialtyName + mas ,
+      speciality: professionalDto.licenses[0].clinicalSpecialtyName + moreSpecialities ,
       license: professionalDto.licenses[0].type === ELicenseNumberType.NATIONAL ? 'MN N°'+ professionalDto.licenses[0].number : 'MP N°' + professionalDto.licenses[0].number,
     };
   }
 
   private toProfessionalTypeahead(professionalDto: ElectronicJointSignatureInstitutionProfessionalDto): TypeaheadOption<any> {
     const licence = professionalDto.licenses[0].type === ELicenseNumberType.NATIONAL ? ', MN' : ', MP';
-    const mas = professionalDto.licenses.length >= 2 ? ' (+' + (professionalDto.licenses.length - 1) + ' más)' : "";
+    const moreSpecialities = professionalDto.licenses.length >= 2 ? ' (+' + (professionalDto.licenses.length - 1) + ' más)' : "";
     return {
-      compareValue: professionalDto.completeName + licence + ' ' + professionalDto.licenses[0].number + ' ' + professionalDto.licenses[0].clinicalSpecialtyName + mas,
+      compareValue: professionalDto.completeName + licence + ' ' + professionalDto.licenses[0].number + ' ' + professionalDto.licenses[0].clinicalSpecialtyName + moreSpecialities,
       value: professionalDto.healthcareProfessionalId,
     };
   }

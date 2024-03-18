@@ -65,6 +65,7 @@ import { PersonalInformationComponent } from './components/personal-information/
 import { PersonShortDescriptionComponent } from './components/person-short-description/person-short-description.component';
 import { PriorityComponent } from './components/priority/priority.component';
 import { PrioritySelectComponent } from './components/priority-select/priority-select.component';
+import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
 import { RadioGroupComponent } from './components/radio-group/radio-group.component';
 import { RegisterEditorInfoComponent } from './components/register-editor-info/register-editor-info.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
@@ -81,7 +82,6 @@ import { TypeaheadComponent } from './components/typeahead/typeahead.component';
 import { TypeaheadFilterOptionsComponent } from './components/typeahead-filter-options/typeahead-filter-options.component';
 import { TypeaheadV2Component } from './components/typeahead-v2/typeahead-v2.component';
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
-import { ProfessionalSelectComponent } from './components/professional-select/professional-select.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';

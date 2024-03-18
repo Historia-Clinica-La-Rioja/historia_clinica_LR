@@ -1,18 +1,18 @@
 import { pushIfNotExists, removeFrom } from "@core/utils/array.utils";
-import { Observable, Subject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 export class ProfessionalService {
 	private professionals: Professional[] = [];
-	private readonly proffesionalsEmmiter = new Subject<Professional[]>();
+	private readonly proffesionalsEmmiter = new BehaviorSubject<Professional[]>(this.professionals);
+	private readonly hasProfessional = new BehaviorSubject<boolean>(false);
 	professionals$: Observable<Professional[]> = this.proffesionalsEmmiter.asObservable();
+	hasProfessional$: Observable<boolean> = this.hasProfessional.asObservable();
+	constructor() { }
 
-	constructor() {}
-
-	add(professional: Professional): boolean {
-		const currentItems = this.professionals.length;
+	add(professional: Professional) {
 		this.professionals = pushIfNotExists<Professional>(this.professionals, professional, this.compareHealthcareProfessionalId);
 		this.proffesionalsEmmiter.next(this.professionals);
-		return currentItems === this.professionals.length;
+		this.hasProfessional.next(this.hasAddedProfessionals());
 	}
 
 	compareHealthcareProfessionalId(data: Professional, data1: Professional): boolean {
@@ -22,14 +22,15 @@ export class ProfessionalService {
 	remove(index: number): void {
 		this.professionals = removeFrom<Professional>(this.professionals, index);
 		this.proffesionalsEmmiter.next(this.professionals);
+		this.hasProfessional.next(this.hasAddedProfessionals());
 	}
 
 	getProfessionals(): Professional[] {
 		return this.professionals
 	}
 
-	isEmpty(): boolean {
-		return (!this.professionals || this.professionals.length === 0);
+	hasAddedProfessionals(): boolean {
+		return this.professionals.length !== 0;
 	}
 
 }
