@@ -135,7 +135,7 @@
 							</div>
 
 							<div fxLayout="row" *ngFor="let problem of (solvedProblems$ | async)">
-								<mat-list-item (click)="filterByProblemOnProblemClick(problem)" style="height: 40px;">
+								<mat-list-item (click)="filterByProblemOnProblemClick(problem)" class="problem-description">
 									<div fxFlex="35%">
 										<span mat-line class="capitalize-first-letter">
 											{{ problem.snomed.pt }}
