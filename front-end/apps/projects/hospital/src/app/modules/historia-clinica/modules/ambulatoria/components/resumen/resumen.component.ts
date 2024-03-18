@@ -12,13 +12,14 @@ import {
 	PatientSummaryDto,
 	HCEPersonalHistoryDto
 } from '@api-rest/api-model';
-import { DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate, } from '@core/utils/moment.utils';
 import { TableModel } from '@presentation/components/table/table.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ANTECEDENTES_FAMILIARES, ANTECEDENTES_PERSONALES, MEDICACION_HABITUAL, PROBLEMAS_ANTECEDENTES } from '../../../../constants/summaries';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-resumen',
@@ -49,7 +50,8 @@ export class ResumenComponent implements OnInit, OnChanges {
 	constructor(
 		private route: ActivatedRoute,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 	}
 
@@ -69,35 +71,35 @@ export class ResumenComponent implements OnInit, OnChanges {
 	}
 
 	initSummaries(): void {
-		if (this.canOnlyViewSelfAddedProblems){
+		if (this.canOnlyViewSelfAddedProblems) {
 			this.patientProblems$ = this.ambulatoriaSummaryFacadeService.patientProblemsByRole$.pipe(
-				map(this.formatProblemsDates)
-				);
+				map(p => this.formatProblemsDates(p,this.dateFormatPipe))
+			);
 		} else {
 			this.allergies$ = this.ambulatoriaSummaryFacadeService.allergies$;
 			this.personalHistories$ = this.ambulatoriaSummaryFacadeService.personalHistories$;
 			this.familyHistories$ = this.ambulatoriaSummaryFacadeService.familyHistories$;
 			this.patientProblems$ = this.ambulatoriaSummaryFacadeService.patientProblems$.pipe(
-				map(this.formatProblemsDates)
-				);
+				map(p => this.formatProblemsDates(p,this.dateFormatPipe))
+			);
 			this.medications$ = this.ambulatoriaSummaryFacadeService.medications$;
 			this.riskFactors$ = this.ambulatoriaSummaryFacadeService.riskFactors$;
 			this.anthropometricDataList$ = this.ambulatoriaSummaryFacadeService.anthropometricDataList$;
 		}
 	}
 
-	private formatProblemsDates(problemas: HCEHealthConditionDto[]) {
+	private formatProblemsDates(problemas: HCEHealthConditionDto[], dateFormatPipe: DateFormatPipe) {
 		return problemas.map((problema: HCEHealthConditionDto) => {
 			return {
 				...problema,
-				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
-				inactivationDate: problema.inactivationDate ? momentFormat(momentParseDate(problema.inactivationDate), DateFormat.VIEW_DATE) : undefined
+				startDate: problema.startDate ? dateFormatPipe.transform(dateISOParseDate(problema.startDate), 'date') : undefined,
+				inactivationDate: problema.inactivationDate ? dateFormatPipe.transform(dateISOParseDate(problema.inactivationDate), 'date') : undefined
 			};
 		});
 	}
 
 	loadExternalTables(fromInit: boolean): void {
-		if (!this.canOnlyViewSelfAddedProblems){
+		if (!this.canOnlyViewSelfAddedProblems) {
 			if (this.externalSummaryIsLoaded()) {
 				this.loadExternal = true;
 				this.healthConditionsTable = this.buildHealthConditionTable(this.patientExternalSummary.conditions);
