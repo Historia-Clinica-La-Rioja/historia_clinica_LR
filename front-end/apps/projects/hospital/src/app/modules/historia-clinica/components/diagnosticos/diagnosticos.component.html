@@ -28,9 +28,8 @@
 		<div *ngFor="let diagnosis of diagnosticos">
 			<app-elemento-diagnostico [diagnosis]="diagnosis" [isMain]="false" [type]="type"
 				(removeDiagnosis)="removeDiagnosis($event)" (checkDiagnosis)="updateAll()"></app-elemento-diagnostico>
-			<hr *ngIf="diagnosticos.length - 1 != diagnosticos.indexOf(diagnosis)">
+			<hr *ngIf="diagnosticos.length > 1">
 		</div>
-		<br>
 		<div *ngIf="mainDiagnosis && diagnosticos?.length> 1">
 			<br>
 			<mat-checkbox id="all-selected" [checked]="allChecked"
