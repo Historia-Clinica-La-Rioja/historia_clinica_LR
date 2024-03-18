@@ -164,6 +164,7 @@ export class AppointmentComponent implements OnInit {
 	selectedOpeningHourId: number;
 
 	diaryOpeningHoursFreeTimes : DiaryOpeningHoursFreeTimesDto[];
+	HABILITAR_TELEMEDICINA: boolean = false;
 
 	patientSummary: PatientSummary;
 
@@ -195,8 +196,7 @@ export class AppointmentComponent implements OnInit {
 		private readonly patientNameService: PatientNameService,
 		private readonly diaryService: DiaryService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
+		this.setFeatureFlags();
 	}
 
 	ngOnInit(): void {
@@ -267,7 +267,7 @@ export class AppointmentComponent implements OnInit {
 				this.checkInputUpdatePermissions();
 				this.selectedModality = MODALITYS_TYPES.find( m => m.value === this.appointment.modality);
 				this.modalitys.push(MODALITYS_TYPES[0]);
-				this.modalitys.push(MODALITYS_TYPES[1]);
+				this.pushPatientVirtualAttentionOption();
 				if(this.selectedModality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
 					this.modalitys.push(MODALITYS_TYPES[2])
 				}
@@ -332,6 +332,21 @@ export class AppointmentComponent implements OnInit {
 		this.formDate.controls.month.setValue(this.dateAppointment.month);
 		this.formDate.controls.year.setValue(this.dateAppointment.year);
 		this.formDate.controls.modality.setValue(this.selectedModality.value);
+	}
+
+	private pushPatientVirtualAttentionOption = () => {
+		this.modalitys.push(MODALITYS_TYPES[1]);
+		
+		if (!this.HABILITAR_TELEMEDICINA) {
+			this.formDate.controls.modality.setValue(MODALITYS_TYPES[1]);
+			this.formDate.controls.modality.disable();
+		}
+	}
+
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_INFORMES).subscribe(isOn => this.downloadReportIsEnabled = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.HABILITAR_TELEMEDICINA = isEnabled);
 	}
 
 	private checkInputUpdatePermissions() {

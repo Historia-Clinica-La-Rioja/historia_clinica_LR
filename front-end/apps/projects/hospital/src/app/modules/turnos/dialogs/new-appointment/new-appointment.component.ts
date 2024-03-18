@@ -20,6 +20,7 @@ import {
 	DiagnosticReportInfoDto,
 	TranscribedDiagnosticReportInfoDto,
 	EAppointmentModality,
+	AppFeature,
 } from '@api-rest/api-model';
 import { AppointmentsFacadeService } from '../../services/appointments-facade.service';
 import { PersonIdentification } from '@presentation/pipes/person-identification.pipe';
@@ -44,6 +45,7 @@ import { differenceInDays } from 'date-fns';
 import { SearchAppointmentCriteria } from '@turnos/components/search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -95,6 +97,7 @@ export class NewAppointmentComponent implements OnInit {
 	modalitySelected: EAppointmentModality = this.MODALITY_ON_SITE_ATTENTION;
 	viewModalityLabel$: Observable<boolean> = of(false);
 	modalitys = MODALITYS_TYPES.slice(0, 2);
+	HABILITAR_TELEMEDICINA: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
@@ -116,21 +119,26 @@ export class NewAppointmentComponent implements OnInit {
 		private prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
 		private readonly transcribedOrderService: TranscribedOrderService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
+		this.setFeatureFlags();
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
-		if (this.data.modalityAttention) {
+	}
+
+	ngOnInit(): void {
+		if (this.data.modalityAttention || !this.HABILITAR_TELEMEDICINA) {
+			if (!this.data.modalityAttention)
+				this.data.modalityAttention = EAppointmentModality.ON_SITE_ATTENTION;
 			this.modalitySelected = this.data.modalityAttention;
 			this.editableStepModality = false;
 			this.initialIndex = this.indexStep.SEARCH;
 			this.viewModalityLabel$ = of(true);
 		}
-		if(this.data.isEquipmentAppointment){
+		if(this.data.isEquipmentAppointment) {
 			this.editableStepModality = false;
 			this.initialIndex = this.indexStep.SEARCH;
 		}
-	}
 
-	ngOnInit(): void {
 		this.modalityForm = this.formBuilder.group({
 			modality: [this.modalitySelected, Validators.required],
 		})
@@ -301,6 +309,10 @@ export class NewAppointmentComponent implements OnInit {
 		};
 	}
 
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isOn => this.HABILITAR_TELEMEDICINA = isOn);
+	}
+
 	private patientFound() {
 		this.formSearch.controls.completed.setValue(true);
 		this.snackBarService.showSuccess('turnos.new-appointment.messages.SUCCESS');
@@ -365,7 +377,7 @@ export class NewAppointmentComponent implements OnInit {
 			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
 			phonePrefix:this.appointmentInfoForm.value.phonePrefix,
 			phoneNumber:  this.appointmentInfoForm.value.phoneNumber,
-			modality: this.modalitySelected,
+			modality: this.modalitySelected != null ? this.modalitySelected : MODALITYS_TYPES[0].value,
 			patientEmail: this.appointmentInfoForm.controls.patientEmail.value,
 			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
 			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id
