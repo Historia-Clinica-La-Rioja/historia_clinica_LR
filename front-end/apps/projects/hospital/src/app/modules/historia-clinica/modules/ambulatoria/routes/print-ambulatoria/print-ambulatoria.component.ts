@@ -9,9 +9,9 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import * as moment from 'moment';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { newDate } from '@core/utils/moment.utils';
+import { fixDate } from '@core/utils/date/format';
 import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, DocumentType, TableColumns } from '../../constants/print-ambulatoria-masterdata';
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
@@ -51,7 +51,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		end: string,
 	}
 
-	maxDate = moment();
+	maxDate = newDate();
 
 	dateRangeForm = new FormGroup({
 		start: new FormControl(null, Validators.required),
@@ -132,8 +132,8 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	dateRangeChange(range): void {
 		this.dateRange = {
-			start: momentFormat(range.start, DateFormat.API_DATE),
-			end: momentFormat(range.end, DateFormat.API_DATE),
+			start: toApiFormat(fixDate(range.start)),
+			end: toApiFormat(fixDate(range.end)),
 		}
 		this.hideEncounterListSection();
 	}
