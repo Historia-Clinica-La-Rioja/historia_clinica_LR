@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateTimeDto, MasterDataDto, AnestheticSubstanceDto, SnomedDto, SnomedECL, TimeDto } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
+import { NoWhitespaceValidator } from '@core/utils/form.utils';
 import { PREMEDICATION } from '@historia-clinica/constants/validation-constants';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -145,12 +146,11 @@ export class MedicationService {
 
 
     HandleValidatorRequiredViaNotes(viaData: MasterDataDto): void{
-        if (viaData?.description && viaData?.id === this.ANOTHER_VIA_ID)
-            this.getForm().get('viaNote').setValidators(Validators.required)
-        else
-        {
-            this.getForm().get('viaNote').clearValidators()
-            this.getForm().get('viaNote').updateValueAndValidity()
+        if (viaData?.description && viaData?.id === this.ANOTHER_VIA_ID) {
+            this.getForm().get('viaNote').setValidators([Validators.required, NoWhitespaceValidator()]);
+        } else {
+            this.getForm().get('viaNote').clearValidators();
+            this.getForm().get('viaNote').updateValueAndValidity();
         }
     }
 

@@ -80,7 +80,7 @@
                 <mat-form-field appearance="outline">
                     <input id="unit-input" matInput type="text" formControlName="viaNote" name="viaNote"
                         placeholder="{{ 'internaciones.anesthesic-report.drug.VIA_TEXT_PLACEHOLDER' | translate }}">
-                    <mat-error *ngIf="hasError(form, 'required', 'viaNote')">
+                    <mat-error *ngIf="!form.valid">
                         <span translate="forms.REQUIRED"></span>
                     </mat-error>
                 </mat-form-field>
