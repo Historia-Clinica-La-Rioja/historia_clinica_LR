@@ -8,7 +8,7 @@ import {
 	PatientSearchDto,
 	ReducedPatientDto,
 	PersonPhotoDto,
-	PatientPhotoDto, LimitedPatientSearchDto
+	PatientPhotoDto, LimitedPatientSearchDto, PatientGenderAgeDto
 } from '@api-rest/api-model';
 import { ContextService } from "@core/services/context.service";
 
@@ -88,6 +88,10 @@ export class PatientService {
 		return this.http.post<boolean>(url, personPhoto);
 	}
 
+	getPatientGender(patientId: number): Observable<PatientGenderAgeDto> {
+		const url = `${environment.apiBase}/patient/${patientId}/gender-age`;
+		return this.http.get<PatientGenderAgeDto>(url);
+	}
 }
 
 export class PersonInformationRequest {

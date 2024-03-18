@@ -80,6 +80,8 @@ import { PatientEvolutionChartsPopupComponent } from './dialogs/patient-evolutio
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
+//pipes
+import { ShowTitleByPatientDataPipe } from './pipes/show-title-by-patient-data.pipe';
 //Porque estan aca?
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
 import { AnestheticReportClinicalEvaluationComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-clinical-evaluation/anesthetic-report-clinical-evaluation.component';
@@ -220,6 +222,8 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnalgesicTechniquePopupComponent,
 		FluidAdministrationPopupComponent,
   		AnesthesiaFormComponent,
+		//pipes
+		ShowTitleByPatientDataPipe,
 	],
 	imports: [
 		CommonModule,
