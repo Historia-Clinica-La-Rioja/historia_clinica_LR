@@ -26,6 +26,8 @@ public class OutpatientConsultationBo {
 
 	private String clinicalSpecialtySctid;
 
+	private Integer institutionId;
+
 	private String institutionSisaCode;
 
 	private AnthropometricDataBo anthropometricData;

@@ -32,10 +32,14 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 
 	@Transactional(readOnly = true)
 	@Query("SELECT new net.pladema.address.controller.service.domain.AddressBo(a.id, a.street, a.number, a.floor, " +
-			"a.apartment, a.postcode, c.id, c.description, a.countryId, a.provinceId, c.departmentId) " +
+			"a.apartment, a.postcode, c.id, c.description, a.countryId, a.provinceId, c.departmentId," +
+			"d.description, co.description, c.bahraCode) " +
 			"FROM Institution i " +
 			"JOIN Address a ON (i.addressId = a.id)" +
 			"JOIN City c ON (a.cityId = c.id) " +
+			"JOIN Department d ON (c.departmentId = d.id) " +
+			"JOIN Province p ON (d.provinceId = p.id) " +
+			"JOIN Country co ON (p.countryId = co.id) " +
 			"WHERE i.id = :institutionId")
     Optional<AddressBo> findByInstitutionId(@Param("institutionId") Integer institutionId);
 

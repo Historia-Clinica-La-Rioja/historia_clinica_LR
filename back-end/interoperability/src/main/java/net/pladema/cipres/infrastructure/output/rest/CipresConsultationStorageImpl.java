@@ -46,8 +46,8 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 	public Integer sendOutpatientConsultations(List<OutpatientConsultationBo> consultations) {
 		AtomicInteger sentQuantity = new AtomicInteger();
 		consultations.forEach(c -> {
-			Optional<Integer> cipresEncounterId = sendOutpatientConsultation(c, null);
-			cipresEncounterId.ifPresent(id -> sentQuantity.addAndGet(1));
+			Optional<Integer> sentConsultationApiId = sendOutpatientConsultation(c, null);
+			sentConsultationApiId.ifPresent(id -> sentQuantity.addAndGet(1));
 		});
 		return sentQuantity.get();
 	}
@@ -63,7 +63,7 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 		Optional<String> establishment = getEstablishmentId(consultation.getInstitutionSisaCode(), consultation.getId(), cipresEncounterId);
 		if (establishment.isPresent()) {
 			String establishmentId = establishment.get();
-			var apiPatientId = cipresPatientStorage.getPatientId(consultation.getPatient(), establishmentId, consultation.getId(), cipresEncounterId);
+			var apiPatientId = cipresPatientStorage.getPatientId(consultation.getPatient(), establishmentId, consultation.getId(), cipresEncounterId, consultation.getInstitutionId());
 			if (apiPatientId.isPresent()) {
 				consultation.setApiPatientId(apiPatientId.get());
 				return makeAndSendOutpatientConsultation(consultation, buildEstablishmentIRI(establishmentId), cipresEncounterId);

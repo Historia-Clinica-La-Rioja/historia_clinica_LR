@@ -745,6 +745,7 @@ export interface CipresOutpatientConsultationDto {
     clinicalSpecialtySctid: string;
     date: string;
     id: number;
+    institutionId: number;
     institutionSisaCode: string;
     medications: SharedSnomedDto[];
     patient: BasicPatientDto;
@@ -4061,6 +4062,18 @@ export interface ServiceRequestCategoryDto {
 export interface SexualViolenceDto {
     implementedActions: ESexualViolenceAction[];
     wasSexualViolence: boolean;
+}
+
+export interface SharedAddressDto {
+    apartment: string;
+    bahraCode: string;
+    cityName: string;
+    countryName: string;
+    departmentName: string;
+    floor: string;
+    number: string;
+    postCode: string;
+    street: string;
 }
 
 export interface SharedAnthropometricDataDto {

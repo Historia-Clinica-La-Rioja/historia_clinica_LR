@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.domain.general.AddressBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
@@ -44,6 +45,23 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
 	@Override
 	public AddressBo fetchInstitutionAddress(Integer id){
 		return Optional.ofNullable(institutionService.getInstitutionAddress(id))
+				.orElse(null);
+	}
+
+	@Override
+	public SharedAddressDto fetchAddress(Integer institutionId) {
+		var result = Optional.ofNullable(institutionService.getAddress(institutionId));
+		return result.map(address -> SharedAddressDto.builder()
+						.street(address.getStreet())
+						.number(address.getNumber())
+						.floor(address.getFloor())
+						.apartment(address.getApartment())
+						.postCode(address.getPostcode())
+						.cityName(address.getCity().getDescription())
+						.departmentName(address.getDepartmentName())
+						.countryName(address.getCountryName())
+						.bahraCode(address.getBahraCode())
+						.build())
 				.orElse(null);
 	}
 

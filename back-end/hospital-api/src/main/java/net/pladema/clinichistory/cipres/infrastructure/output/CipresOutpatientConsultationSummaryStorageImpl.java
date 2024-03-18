@@ -26,7 +26,7 @@ public class CipresOutpatientConsultationSummaryStorageImpl implements CipresOut
 	@Override
 	public List<CipresOutpatientBasicDataBo> getOutpatientConsultations(Integer limit, LocalDateTime start, LocalDateTime end) {
 		String sqlString =" SELECT NEW net.pladema.clinichistory.cipres.domain.CipresOutpatientBasicDataBo(oc.id, d.id, oc.creationable.createdOn, " +
-				"cs.id, cs.sctidCode, i.sisaCode, oc.patientId, pe.id, pe.identificationTypeId, pe.identificationNumber, pe.genderId) " +
+				"cs.id, cs.sctidCode, i.id, i.sisaCode, oc.patientId, pe.id, pe.identificationTypeId, pe.identificationNumber, pe.genderId) " +
 				"FROM OutpatientConsultation oc " +
 				"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 				"JOIN Institution i ON (oc.institutionId = i.id) " +
@@ -51,7 +51,7 @@ public class CipresOutpatientConsultationSummaryStorageImpl implements CipresOut
 	@Override
 	public CipresOutpatientBasicDataBo getOutpatientConsultationByCipresEncounterId(Integer cipresEncounterId) {
 		String sqlString =" SELECT NEW net.pladema.clinichistory.cipres.domain.CipresOutpatientBasicDataBo(oc.id, d.id, oc.creationable.createdOn, " +
-				"cs.id, cs.sctidCode, i.sisaCode, oc.patientId, pe.id, pe.identificationTypeId, pe.identificationNumber, pe.genderId) " +
+				"cs.id, cs.sctidCode, i.id, i.sisaCode, oc.patientId, pe.id, pe.identificationTypeId, pe.identificationNumber, pe.genderId) " +
 				"FROM OutpatientConsultation oc " +
 				"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 				"JOIN Institution i ON (oc.institutionId = i.id) " +

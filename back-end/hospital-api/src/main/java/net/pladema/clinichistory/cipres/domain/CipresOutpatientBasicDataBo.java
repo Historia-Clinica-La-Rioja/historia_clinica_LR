@@ -30,6 +30,8 @@ public class CipresOutpatientBasicDataBo {
 
 	private String clinicalSpecialtySctid;
 
+	private Integer institutionId;
+
 	private String institutionSisaCode;
 
 	private List<SnomedBo> procedures;
@@ -44,7 +46,7 @@ public class CipresOutpatientBasicDataBo {
 
 
 	public CipresOutpatientBasicDataBo(Integer id, Long documentId, LocalDateTime date, Integer clinicalSpecialtyId,
-									   String clinicalSpecialtySctid, String institutionSisaCode,
+									   String clinicalSpecialtySctid, Integer institutionId, String institutionSisaCode,
 									   Integer patientId, Integer personId, Short identificationType,
 									   String identificationNumber, Short genderId) {
 		this.id = id;
@@ -52,6 +54,7 @@ public class CipresOutpatientBasicDataBo {
 		this.date = date;
 		this.clinicalSpecialtyId = clinicalSpecialtyId;
 		this.clinicalSpecialtySctid = clinicalSpecialtySctid;
+		this.institutionId = institutionId;
 		this.institutionSisaCode = institutionSisaCode;
 		this.patient = new OutpatientPatientBo(patientId, personId, identificationType, identificationNumber, genderId);
 	}

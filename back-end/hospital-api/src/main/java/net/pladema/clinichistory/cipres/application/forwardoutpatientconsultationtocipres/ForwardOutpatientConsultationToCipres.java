@@ -51,6 +51,7 @@ public class ForwardOutpatientConsultationToCipres {
 				.medications(consultation.getMedications().stream().map(m -> new SharedSnomedDto(m.getSctid(), m.getPt())).collect(Collectors.toList()))
 				.patient(mapToBasicPatientDto(consultation.getPatient()))
 				.date(consultation.getDate().toString())
+				.institutionId(consultation.getInstitutionId())
 				.institutionSisaCode(consultation.getInstitutionSisaCode())
 				.clinicalSpecialtyId(consultation.getClinicalSpecialtyId())
 				.clinicalSpecialtySctid(consultation.getClinicalSpecialtySctid())

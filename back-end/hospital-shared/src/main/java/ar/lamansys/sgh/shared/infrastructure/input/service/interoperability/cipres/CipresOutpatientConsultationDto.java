@@ -27,6 +27,8 @@ public class CipresOutpatientConsultationDto {
 
 	private String clinicalSpecialtySctid;
 
+	private Integer institutionId;
+
 	private String institutionSisaCode;
 
 	private SharedAnthropometricDataDto anthropometricData;

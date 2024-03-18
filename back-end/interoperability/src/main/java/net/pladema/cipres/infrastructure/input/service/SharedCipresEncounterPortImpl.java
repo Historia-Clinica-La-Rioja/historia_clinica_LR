@@ -49,6 +49,7 @@ public class SharedCipresEncounterPortImpl implements SharedCipresEncounterPort 
 				.problems(consultation.getProblems().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
 				.procedures(consultation.getProcedures().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
 				.medications(consultation.getMedications().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
+				.institutionId(consultation.getInstitutionId())
 				.institutionSisaCode(consultation.getInstitutionSisaCode())
 				.build();
 	}

@@ -46,6 +46,7 @@ public class SharedCipresOutpatientConsultationImpl implements SharedCipresOutpa
 				.id(oc.getId())
 				.date(oc.getDate().toString())
 				.patient(mapToBasicPatientDto(oc.getPatient()))
+				.institutionId(oc.getInstitutionId())
 				.institutionSisaCode(oc.getInstitutionSisaCode())
 				.clinicalSpecialtyId(oc.getClinicalSpecialtyId())
 				.clinicalSpecialtySctid(oc.getClinicalSpecialtySctid())
