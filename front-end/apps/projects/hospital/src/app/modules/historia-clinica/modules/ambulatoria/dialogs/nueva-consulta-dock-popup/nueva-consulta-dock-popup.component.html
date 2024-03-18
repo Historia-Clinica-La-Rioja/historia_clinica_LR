@@ -87,7 +87,7 @@
 			[hasConcepts]="!antecedentesFamiliaresNuevaConsultaService.isEmpty()"
 			[content]="familyHistoriesContent"
 			(openEmit)="checkFamilyHistoriesEvent($event)">
-			<app-background-list [service]="antecedentesFamiliaresNuevaConsultaService"></app-background-list>
+			<app-background-list [familyHistory]="antecedentesFamiliaresNuevaConsultaService.getAntecedentes()" (remove)="antecedentesFamiliaresNuevaConsultaService.remove($event)"></app-background-list>
 		</app-concepts-list>
 
 		<app-new-consultation-expansion-section id="medications"
