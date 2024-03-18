@@ -67,6 +67,7 @@
 			[(collapsed)]="collapsedAnthropometricDataSection">
 
 			<app-datos-antropometricos-nueva-consulta
+				[patientId]="data.idPaciente"
 				[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
 				[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService">
 			</app-datos-antropometricos-nueva-consulta>

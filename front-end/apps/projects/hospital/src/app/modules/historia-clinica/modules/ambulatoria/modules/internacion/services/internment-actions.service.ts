@@ -93,7 +93,8 @@ export class InternmentActionsService {
 				mainDiagnosis: this.mainDiagnosis,
 				diagnosticos: this.diagnosticos,
 				evolutionNoteId: documentId,
-				documentType: documentType
+				documentType: documentType,
+				patientId: this.patientId
 			});
 			this.popUpOpenSubject.next(true);
 			this.dialogRefSubject.next(this.dialogRef);

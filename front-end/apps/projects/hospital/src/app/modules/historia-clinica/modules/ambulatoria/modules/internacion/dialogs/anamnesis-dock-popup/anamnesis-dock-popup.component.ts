@@ -25,6 +25,7 @@ import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -61,6 +62,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
 	observationsSubject = new BehaviorSubject<boolean>(true);
 	minDate = MIN_DATE;
+	anthropometricData: AnthropometricData;
 	@ViewChild('errorsView') errorsView: ElementRef;
 
 	constructor(
@@ -111,11 +113,11 @@ export class AnamnesisDockPopupComponent implements OnInit {
 			bloodTypes$.subscribe(bloodTypes => this.bloodTypes = bloodTypes);
 		}
 
-		this.form.get('anthropometricData').valueChanges.pipe(
-			map(formData => Object.values(formData)),
-			map(formValues => formValues.every(value => value === null))
-		).subscribe(allFormValuesAreNull => {
+		this.form.get('anthropometricData').valueChanges.subscribe(formData => {
+			const formValues = Object.values(formData);
+			const allFormValuesAreNull = formValues.every(value => value === null);
 			this.anthropometricDataSubject.next(allFormValuesAreNull);
+			this.anthropometricData = formData;
 		});
 
 		this.form.get('observations').valueChanges.pipe(

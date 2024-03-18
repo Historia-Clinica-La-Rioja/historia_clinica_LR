@@ -6,6 +6,7 @@
 		[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()" collapsed="true">
 
 		<app-datos-antropometricos-nueva-consulta
+			[patientId]="patientId"
 			[showPreloadData]="datosAntropometricosNuevaConsultaService.getShowPreloadedAnthropometricData()"
 			[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService">
 		</app-datos-antropometricos-nueva-consulta>

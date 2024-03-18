@@ -22,6 +22,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -54,6 +55,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	isDisableConfirmButton = false;
 	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
 	observationsSubject = new BehaviorSubject<boolean>(true);
+	anthropometricData: AnthropometricData;
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
@@ -119,11 +121,11 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			this.observationsSubject.next(allFormValuesAreNull);
 		});
 
-		this.form.get('anthropometricData').valueChanges.pipe(
-			map(formData => Object.values(formData)),
-			map(formValues => formValues.every(value => value === null))
-		).subscribe(allFormValuesAreNull => {
+		this.form.get('anthropometricData').valueChanges.subscribe(formData => {
+			const formValues = Object.values(formData);
+			const allFormValuesAreNull = formValues.every(value => value === null);
 			this.anthropometricDataSubject.next(allFormValuesAreNull);
+			this.anthropometricData = formData;
 		});
 	}
 

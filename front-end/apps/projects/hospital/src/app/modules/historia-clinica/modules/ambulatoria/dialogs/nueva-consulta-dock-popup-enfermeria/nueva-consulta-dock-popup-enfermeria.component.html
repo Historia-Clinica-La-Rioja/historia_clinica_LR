@@ -13,6 +13,7 @@
 			[isEmpty]="!datosAntropometricosNuevaConsultaService.hasAtLeastOneValueLoaded()"
 			[(collapsed)]="collapsedAnthropometricDataSection">
 			<app-datos-antropometricos-nueva-consulta
+				[patientId]="data.idPaciente"
 				[datosAntropometricosNuevaConsultaService]="datosAntropometricosNuevaConsultaService">
 			</app-datos-antropometricos-nueva-consulta>
 		</app-new-consultation-expansion-section>
