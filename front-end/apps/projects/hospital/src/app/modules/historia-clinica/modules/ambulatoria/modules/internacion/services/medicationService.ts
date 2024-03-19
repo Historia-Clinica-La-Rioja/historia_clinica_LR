@@ -151,6 +151,7 @@ export class MedicationService {
         } else {
             this.getForm().get('viaNote').clearValidators();
             this.getForm().get('viaNote').updateValueAndValidity();
+            this.getForm().get('viaNote').setValue(null)
         }
     }
 
