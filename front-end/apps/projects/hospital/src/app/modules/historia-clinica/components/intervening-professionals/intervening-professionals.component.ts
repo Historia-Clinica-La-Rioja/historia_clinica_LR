@@ -13,10 +13,11 @@ export class InterveningProfessionalsComponent implements OnInit {
   @Output() interveningProfessional = new EventEmitter<number[]>();
   professionalsTypeaheadOption: TypeaheadOption<ElectronicJointSignatureInstitutionProfessionalDto>[];
   professionals: ElectronicJointSignatureInstitutionProfessionalDto[];
-  initValueProfessional:TypeaheadOption<ElectronicJointSignatureInstitutionProfessionalDto>;
+  initValueProfessional: TypeaheadOption<ElectronicJointSignatureInstitutionProfessionalDto>;
   professionalsService: ProfessionalService
   constructor(private readonly electronicJointSignatureInstitutionalProfessionalLicenseService: ElectronicJointSignatureInstitutionalProfessionalLicenseService) {
-    		this.professionalsService = new ProfessionalService(); }
+    this.professionalsService = new ProfessionalService();
+  }
 
   ngOnInit(): void {
     this.electronicJointSignatureInstitutionalProfessionalLicenseService.getInstitutionalProfessionalsLicense().subscribe(professionals => {
@@ -26,14 +27,18 @@ export class InterveningProfessionalsComponent implements OnInit {
   }
 
   setInterveningProfessional(healthcareProfessionalId: number) {
-    if(healthcareProfessionalId){
+    const init = {
+      compareValue: null,
+      value: null,
+    }
+    if (healthcareProfessionalId) {
       this.professionalsService.add(this.toProfessional(this.professionals.find(p => p.healthcareProfessionalId === healthcareProfessionalId)));
-      this.initValueProfessional = null;
+      this.initValueProfessional = init;
     }
     this.emitInterveningProfessional();
-    }
+  }
 
-  private emitInterveningProfessional(){
+  private emitInterveningProfessional() {
     this.interveningProfessional.emit(this.professionalsService.getProfessionals().map(professional => professional.healthcareProfessionalId));
   }
 
@@ -42,8 +47,8 @@ export class InterveningProfessionalsComponent implements OnInit {
     return {
       completeName: professionalDto.completeName,
       healthcareProfessionalId: professionalDto.healthcareProfessionalId,
-      speciality: professionalDto.licenses[0].clinicalSpecialtyName + moreSpecialities ,
-      license: professionalDto.licenses[0].type === ELicenseNumberType.NATIONAL ? 'MN N°'+ professionalDto.licenses[0].number : 'MP N°' + professionalDto.licenses[0].number,
+      speciality: professionalDto.licenses[0].clinicalSpecialtyName + moreSpecialities,
+      license: professionalDto.licenses[0].type === ELicenseNumberType.NATIONAL ? 'MN N°' + professionalDto.licenses[0].number : 'MP N°' + professionalDto.licenses[0].number,
     };
   }
 
