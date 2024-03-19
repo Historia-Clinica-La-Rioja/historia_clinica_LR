@@ -81,6 +81,15 @@ public class AnthropometricGraphicController {
 		return result;
 	}
 
+	@GetMapping("/chart-options")
+	@ResponseStatus(HttpStatus.OK)
+	public List<EAnthropometricGraphicOption> getGraphicOptions(){
+		log.debug("Get anthropometric graphics options");
+		List<EAnthropometricGraphicOption> result = EAnthropometricGraphicOption.getAll();
+		log.debug("Output -> result {}", result);
+		return result;
+	}
+
 	private EAnthropometricGraphic mapToAnthropometricGraphic(EAnthropometricGraphicOption chartOption) {
 		if (chartOption.equals(EAnthropometricGraphicOption.LENGHT_HEIGHT_FOR_AGE)) return EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE;
 		return null;
