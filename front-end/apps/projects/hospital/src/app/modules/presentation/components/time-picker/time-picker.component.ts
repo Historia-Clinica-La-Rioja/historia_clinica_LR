@@ -42,13 +42,11 @@ export class TimePickerComponent implements OnInit {
         this.initDisplayValues();
 
         this.timePickerForm = this.formBuilder.group({
-            hour: new FormControl(this.transformNumberToTwoDigitsString(this.hoursMinValue)),
-            minutes: new FormControl(this.transformNumberToTwoDigitsString(MINUTES_MIN_VALUE))
+            hour: new FormControl(''),
+            minutes: new FormControl('')
         });
 
-        this.setDefaultTime();
-
-        this.emitNewValue();
+        this.setDefaultTimeAndEmitValue();
 
         window.addEventListener('scroll', this.scrollEventForHours, true);
         window.addEventListener('scroll', this.scrollEventForMinutes, true);
@@ -72,12 +70,13 @@ export class TimePickerComponent implements OnInit {
         );
     }
 
-    private setDefaultTime() {
+    private setDefaultTimeAndEmitValue() {
         if (this.timePickerData?.defaultTime) {
             let actualTime = this.timePickerData.defaultTime;
             let hours = actualTime.hours.toString();
             let minutes = actualTime.minutes.toString();
             this.timePickerForm.setValue({ hour: this.getValueBetweenLimits(hours, this.hoursMinValue, this.hoursMaxValue), minutes })
+            this.emitNewValue();
         }
     }
 
@@ -104,15 +103,31 @@ export class TimePickerComponent implements OnInit {
     handleHourSelected(){
         let value = this.timePickerForm.value.hour;
         value = this.handleValue(value);
+        this.handleCurrentMinutesValue();
         this.timePickerForm.controls.hour.setValue(this.getValueBetweenLimits(value, this.hoursMinValue, this.hoursMaxValue));
         this.emitNewValue();
+    }
+
+    private handleCurrentMinutesValue() {
+        let currentMinutes = this.timePickerForm.value.minutes;
+        if (!currentMinutes.length) {
+            this.timePickerForm.controls.minutes.setValue(this.transformNumberToTwoDigitsString(MINUTES_MIN_VALUE));
+        }
     }
 
     handleMinutesSelected(){
         let value = this.timePickerForm.value.minutes;
         value = this.handleValue(value);
+        this.handleCurrentHoursValue();
         this.timePickerForm.controls.minutes.setValue(this.getValueBetweenLimits(value, MINUTES_MIN_VALUE, MINUTES_MAX_VALUE));
         this.emitNewValue();
+    }
+
+    private handleCurrentHoursValue() {
+        let currentHour = this.timePickerForm.value.hour;
+        if (!currentHour.length) {
+            this.timePickerForm.controls.hour.setValue(this.transformNumberToTwoDigitsString(this.hoursMinValue));
+        }
     }
 
     private getValueBetweenLimits(value: string, minValue: number, maxValue: number): string {
