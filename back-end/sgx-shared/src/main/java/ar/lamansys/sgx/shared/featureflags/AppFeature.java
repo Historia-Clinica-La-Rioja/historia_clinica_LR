@@ -186,10 +186,11 @@ public enum AppFeature implements Feature {
 	@Label("Habilita turnos recurrentes")
 	HABILITAR_RECURRENCIA_EN_DESARROLLO,
 
-
 	@Label("Habilita la firma conjunta de documentos")
-	HABILITAR_FIRMA_CONJUNTA
+	HABILITAR_FIRMA_CONJUNTA,
 	
+	@Label("Permite la actualización de la agenda cada 5 minutos")
+	HABILITAR_ACTUALIZACION_AGENDA,
 	;
 
 	public boolean isActive() {

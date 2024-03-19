@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, EAppointmentModality, ERole, MedicalCoverageDto } from '@api-rest/api-model';
+import { AppFeature, AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, EAppointmentModality, ERole, MedicalCoverageDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import {
 	buildFullDate,
@@ -43,6 +43,7 @@ import { AgendaSearchService } from '../../services/agenda-search.service';
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { MAX_APPOINTMENT_PER_HOUR, getHourFromString } from '@turnos/utils/appointment.utils';
 import { AppointmentListComponent } from '@turnos/dialogs/appointment-list/appointment-list.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -97,6 +98,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() viewDate: Date = new Date();
 	modality: EAppointmentModality = null;
 	appointmentsCopy: CalendarEvent[] = [];
+	HABILITAR_ACTUALIZACION_AGENDA: boolean = false;
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -115,7 +117,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		private readonly calendarProfessionalInfo: CalendarProfessionalInformation,
 		private readonly datePipe: DatePipe,
 		private readonly translateService: TranslateService,
+		private readonly featureFlagService: FeatureFlagService
 	) {
+		this.setFeatureFlags();
 	}
 
 	ngOnInit(): void {
@@ -231,8 +235,13 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	}
 
+	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ACTUALIZACION_AGENDA).subscribe(isOn => this.HABILITAR_ACTUALIZACION_AGENDA = isOn);
+	}
+
 	private loadAppointmentsEveryFiveMinutes = () => {
-		this.timer = setInterval(() => this.appointmentFacade.loadAppointments(), FIVE_MINUTES);
+		if (this.HABILITAR_ACTUALIZACION_AGENDA)
+			this.timer = setInterval(() => this.appointmentFacade.loadAppointments(), FIVE_MINUTES);
 	}
 
 	private setDailyAmounts(daysCells: MonthViewDay[], dailyAmounts: AppointmentDailyAmountDto[]) {
