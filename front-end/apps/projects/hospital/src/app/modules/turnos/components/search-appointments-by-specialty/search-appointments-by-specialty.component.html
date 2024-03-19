@@ -3,7 +3,7 @@
 		<span [translate]="'turnos.home.SEARCH_BY_INSTITUTION_CRITERIA'"></span>
 		<app-search-criteria [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'"
 			[defaultOption]="selectedSearchCriteria" [disabled]="externalInformation?.disabledInput.others"
-			(selectedOption)="setCriteria($event)"></app-search-criteria>
+			(selectedOption)="resetDataAndSetCriteria($event)"></app-search-criteria>
 
 		<div fxLayout="row" fxLayoutGap="32px">
 			<div fxLayout="column" fxLayoutGap="8px">

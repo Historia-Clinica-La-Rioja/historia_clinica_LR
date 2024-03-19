@@ -232,9 +232,15 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.setPractices();
 	}
 
-	setCriteria(selectedCriteria: SearchCriteria) {
+	resetDataAndSetCriteria(selectedCriteria: SearchCriteria) {
 		this.selectedSearchCriteria = selectedCriteria;
+		this.resetEmptyAppointments();
 		this.setValidators();
+	}
+
+	resetEmptyAppointments() {
+		this.emptyAppointments = null;
+		this.emptyAppointmentsFiltered = null;
 	}
 
 	setPractice(practice: SharedSnomedDto) {
@@ -291,6 +297,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.form.controls.clinicalSpecialty.updateValueAndValidity();
 			this.form.controls.practice.removeValidators(Validators.required);
 			this.form.controls.practice.updateValueAndValidity();
+			this.form.controls.practice.setValue(null);
 		}
 		else {
 			this.form.controls.practice.addValidators(Validators.required);
@@ -319,7 +326,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		const { patientId, formInformation } = this.externalInformation;
 		this.patientId = patientId;
 		const { searchCriteria, clinicalSpecialties, practice } = formInformation;
-		this.setCriteria(searchCriteria);
+		this.resetDataAndSetCriteria(searchCriteria);
 		if (clinicalSpecialties?.length) {
 			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
 			if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
