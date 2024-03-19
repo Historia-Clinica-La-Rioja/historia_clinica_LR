@@ -235,6 +235,21 @@ export interface AnthropometricDataDto extends Serializable {
     weight?: ClinicalObservationDto;
 }
 
+export interface AnthropometricGraphicDataDto {
+    datasetInfo: GraphicDatasetInfoDto[];
+    evolutionZScoreValues: string[];
+    graphicRange: EAnthropometricGraphicRange;
+    xaxisLabel: string;
+    xaxisRange: string[];
+    xaxisRangeLabels: string[];
+    yaxisLabel: string;
+}
+
+export interface AnthropometricGraphicDto {
+    anthropometricGraphicOption: EAnthropometricGraphicOption;
+    anthropometricGraphicType: EAnthropometricGraphicType;
+}
+
 export interface ApiErrorDto {
     errors: string[];
     message: string;
@@ -1425,6 +1440,21 @@ export interface DuplicatePatientDto {
     otherLastNames: string;
 }
 
+export interface EAnthropometricGraphicLabel {
+    id: number;
+    value: string;
+}
+
+export interface EAnthropometricGraphicOption {
+    id: number;
+    value: string;
+}
+
+export interface EAnthropometricGraphicType {
+    id: number;
+    value: string;
+}
+
 export interface ECAdministrativeDto extends Serializable {
     administrative: NewEmergencyCareDto;
     triage: TriageAdministrativeDto;
@@ -1900,6 +1930,16 @@ export interface GenerateApiKeyDto {
 export interface GeneratedApiKeyDto {
     apiKey: string;
     name: string;
+}
+
+export interface GraphicDatasetInfoDto {
+    intersections: GraphicDatasetIntersectionDto[];
+    label: EAnthropometricGraphicLabel;
+}
+
+export interface GraphicDatasetIntersectionDto {
+    x: string;
+    y: string;
 }
 
 export interface GroupAppointmentResponseDto {
@@ -5020,6 +5060,12 @@ export const enum EAggressorRelationship {
     NO_RELATIONSHIP = "NO_RELATIONSHIP",
     NO_INFORMATION = "NO_INFORMATION",
     DOES_NOT_ANSWER = "DOES_NOT_ANSWER",
+}
+
+export const enum EAnthropometricGraphicRange {
+    SIX_MONTHS = "SIX_MONTHS",
+    FIVE_YEARS = "FIVE_YEARS",
+    NINETEEN_YEARS = "NINETEEN_YEARS",
 }
 
 export const enum EAppointmentModality {
