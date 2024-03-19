@@ -25,7 +25,7 @@ export class EpisodeDataComponent implements OnInit {
 	hierarchicalUnitId: number;
 	_patientId: number;
 	isEnableJointSignature= false;
-	involvedHealthcareProfessionalIds: number[];
+	involvedHealthcareProfessionalIds: number[] = [];
 
 	private patient: ReducedPatientDto;
 	private appointmentConfirmedCoverageInfo: ExternalCoverageDto;
