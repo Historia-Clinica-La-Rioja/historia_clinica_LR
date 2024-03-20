@@ -8,7 +8,6 @@ import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { MIN_DATE } from "@core/utils/date.utils";
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
-import { newMoment } from "@core/utils/moment.utils";
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
@@ -73,7 +72,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	episodeData: EpisodeData;
 	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	public hasError = hasError;
-	public today = newMoment();
 	minDate = MIN_DATE;
 
 	disableConfirmButton = false;
