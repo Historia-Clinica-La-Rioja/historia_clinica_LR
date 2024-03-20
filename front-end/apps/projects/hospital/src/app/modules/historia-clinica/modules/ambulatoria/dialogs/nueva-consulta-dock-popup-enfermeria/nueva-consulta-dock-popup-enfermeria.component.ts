@@ -9,7 +9,6 @@ import { NursingPatientConsultationService } from '@api-rest/services/nursing-pa
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
-import { newMoment } from '@core/utils/moment.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -57,7 +56,6 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	readOnlyProblema = false;
 	apiErrors: string[] = [];
-	today = newMoment();
 	fixedSpecialty = true;
 	fixedProblem = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
