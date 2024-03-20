@@ -99,6 +99,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	modality: EAppointmentModality = null;
 	appointmentsCopy: CalendarEvent[] = [];
 	HABILITAR_ACTUALIZACION_AGENDA: boolean = false;
+	isEnableTelemedicina: boolean = false
 
 	constructor(
 		private readonly dialog: MatDialog,
@@ -234,6 +235,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	private setFeatureFlags = () => {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_ACTUALIZACION_AGENDA).subscribe(isOn => this.HABILITAR_ACTUALIZACION_AGENDA = isOn);
 	}
 
@@ -292,11 +294,16 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
 
 			if (diaryOpeningHourDto.secondOpinionVirtualAttentionAllowed && !diaryOpeningHourDto.patientVirtualAttentionAllowed && !diaryOpeningHourDto.onSiteAttentionAllowed) {
-				this.snackBarService.showError("La franja horaria seleccionada no admite turnos presenciales");
+				this.snackBarService.showError('turnos.home.messages.NO_ACCEPT_FACE_TO_FACE_APPOINTMMENTS');
 				return;
 			}
 
 			this.setModality(diaryOpeningHourDto);
+			if(!this.isEnableTelemedicina && this.modality !== null && this.modality !== EAppointmentModality.ON_SITE_ATTENTION){
+				this.snackBarService.showError('turnos.home.messages.NO_ACCEPT_FACE_TO_FACE_APPOINTMMENTS');
+				this.modality = null;
+				return;
+			}
 			forkJoin([
 				this.getAppointmentAt(event.date).pipe(take(1)),
 				this.allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto, clickedDate).pipe(take(1))
