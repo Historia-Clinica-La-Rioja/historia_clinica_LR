@@ -1,64 +1,46 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
+
 import { MIN_DATE } from "@core/utils/date.utils";
 
 @Component({
-  selector: 'app-probable-discharge-dialog',
-  templateUrl: './probable-discharge-dialog.component.html',
-  styleUrls: ['./probable-discharge-dialog.component.scss']
+	selector: 'app-probable-discharge-dialog',
+	templateUrl: './probable-discharge-dialog.component.html',
+	styleUrls: ['./probable-discharge-dialog.component.scss']
 })
 export class ProbableDischargeDialogComponent implements OnInit {
 
-	form: UntypedFormGroup;
 	loading = false;
 	minDate = MIN_DATE;
+	selectedDate: Date;
 
-  	constructor(
+	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { internmentEpisodeId: number, lastProbableDischargeDate: Date },
 		public dialogRef: MatDialogRef<ProbableDischargeDialogComponent>,
-		private readonly formBuilder: UntypedFormBuilder,
 		private readonly internmentEpisodeService: InternmentEpisodeService,
 		private readonly snackBarService: SnackBarService,
-  	) { }
+	) { }
 
 	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			probableDischargeDate: [this.data.lastProbableDischargeDate]
-		});
-
-		this.form.controls.probableDischargeDate.setValue(this.data.lastProbableDischargeDate);
-  	}
-
-  	chosenYearHandler(newDate: Moment) {
-		if (this.form.controls.probableDischargeDate.value !== undefined) {
-			const ctrlDate: Moment = this.form.controls.probableDischargeDate.value;
-			ctrlDate.year(newDate.year());
-			this.form.controls.probableDischargeDate.setValue(ctrlDate);
-		} else {
-			this.form.controls.probableDischargeDate.setValue(newDate);
-		}
+		this.selectedDate = this.data.lastProbableDischargeDate;
 	}
 
-	chosenMonthHandler(newDate: Moment) {
-		const ctrlDate: Moment = this.form.controls.probableDischargeDate.value;
-		ctrlDate.month(newDate.month());
-		this.form.controls.probableDischargeDate.setValue(ctrlDate);
+	dateChanged(selectedDate: Date) {
+		this.selectedDate = selectedDate
 	}
 
 	submit(): void {
-		if (this.form.controls.probableDischargeDate.value) {
+		if (this.selectedDate) {
 			this.loading = true;
-			this.internmentEpisodeService.updateProbableDischargeDate(this.form.value, this.data.internmentEpisodeId).subscribe(_ => {
-					this.snackBarService.showSuccess('internaciones.internacion-paciente.card.probable_discharge_dialog.SUCCESS');
-					this.dialogRef.close(true);
-				}, response => {
-					this.snackBarService.showError(response.errors[0]);
-					this.loading = false;
-				}
+			this.internmentEpisodeService.updateProbableDischargeDate({ probableDischargeDate: this.selectedDate.toISOString() }, this.data.internmentEpisodeId).subscribe(_ => {
+				this.snackBarService.showSuccess('internaciones.internacion-paciente.card.probable_discharge_dialog.SUCCESS');
+				this.dialogRef.close(true);
+			}, response => {
+				this.snackBarService.showError(response.errors[0]);
+				this.loading = false;
+			}
 			);
 		}
 	}

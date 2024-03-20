@@ -4,7 +4,6 @@ import { InternmentStateService } from "@api-rest/services/internment-state.serv
 import { AllergyConditionDto, AnthropometricDataDto, DocumentSearchFilterDto, HCEAllergyDto, HCEHealthConditionDto, HealthHistoryConditionDto, InternmentSummaryDto, PatientDischargeDto } from "@api-rest/api-model";
 import { DocumentSearchService } from "@api-rest/services/document-search.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
-import { momentParseDateTime } from "@core/utils/moment.utils";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 
@@ -29,7 +28,7 @@ export class InternmentSummaryFacadeService {
 	private epicrisisSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private evolutionNoteSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private hasMedicalDischargeSubject: Subject<any> = new BehaviorSubject<any>([]);
-	private lastProbableDischargeDateSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private lastProbableDischargeDateSubject: Subject<Date> = new BehaviorSubject<any>([]);
 	private hasPhysicalDischargeSubject = new BehaviorSubject<any>("");
 
 	searchFilter: DocumentSearchFilterDto;
@@ -159,8 +158,8 @@ export class InternmentSummaryFacadeService {
 			(internmentEpisode: InternmentSummaryDto) => {
 				this.anamnesisSubject.next(internmentEpisode.documents?.anamnesis);
 				this.epicrisisSubject.next(internmentEpisode.documents?.epicrisis);
-				this.evolutionNoteSubject.next(internmentEpisode.documents?.lastEvaluationNote);
-				this.lastProbableDischargeDateSubject.next(internmentEpisode.probableDischargeDate ? momentParseDateTime(internmentEpisode.probableDischargeDate) : undefined);
+				this.evolutionNoteSubject.next(internmentEpisode.documents?.lastEvaluationNote);				
+				this.lastProbableDischargeDateSubject.next(internmentEpisode.probableDischargeDate ? new Date(internmentEpisode.probableDischargeDate) : undefined);
 			});
 		this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
 			.subscribe((patientDischarge: PatientDischargeDto) => {
