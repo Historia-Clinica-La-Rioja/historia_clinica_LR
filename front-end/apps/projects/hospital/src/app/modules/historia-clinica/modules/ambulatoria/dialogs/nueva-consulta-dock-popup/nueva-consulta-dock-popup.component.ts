@@ -52,6 +52,7 @@ import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const TIME_OUT = 5000;
 
@@ -536,7 +537,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				content: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
 					return {
 						snomed: antecedente.snomed,
-						startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE) : undefined
+						startDate: antecedente.fecha ? toApiFormat(antecedente.fecha) : undefined
 					};
 				}),
 			},

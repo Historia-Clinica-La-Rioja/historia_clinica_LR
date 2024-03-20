@@ -1,7 +1,7 @@
 import { EffectiveClinicalObservationDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto } from "@api-rest/api-model";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { fixDate } from "@core/utils/date/format";
-import { dateISOParseDate, momentParseDate } from "@core/utils/moment.utils";
+import { dateISOParseDate } from "@core/utils/moment.utils";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { AntecedenteFamiliar } from "@historia-clinica/modules/ambulatoria/services/antecedentes-familiares-nueva-consulta.service";
 import { AnthropometricDataValues } from "@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service";
@@ -98,7 +98,7 @@ export const toMotives = (motives: OutpatientReasonDto[]): MotivoConsulta[] => {
 }
 
 const toFamilyHistory = (familyHistory: OutpatientFamilyHistoryDto): AntecedenteFamiliar => {
-	return { snomed: familyHistory.snomed, fecha: familyHistory.startDate ? momentParseDate(familyHistory.startDate) : null }
+	return { snomed: familyHistory.snomed, fecha: familyHistory.startDate ? dateISOParseDate(familyHistory.startDate) : null }
 }
 
 export const toFamilyHistories = (familyHistories: OutpatientFamilyHistoryDto[]): AntecedenteFamiliar[] => {
