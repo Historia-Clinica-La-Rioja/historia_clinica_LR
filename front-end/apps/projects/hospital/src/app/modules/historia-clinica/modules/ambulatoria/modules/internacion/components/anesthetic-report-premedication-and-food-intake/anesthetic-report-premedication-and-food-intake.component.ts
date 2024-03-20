@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, MasterDataDto } from '@api-rest/api-model';
+import { AppFeature, MasterDataDto, TimeDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MedicationService } from '../../services/medicationService';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,6 +21,7 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
     private label: string
 
     @Input() service: MedicationService;
+    @Output() timeSelected: EventEmitter<TimeDto> = new EventEmitter<TimeDto>();
 	searchConceptsLocallyFFIsOn = false;
 
     constructor(
@@ -60,6 +61,10 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
             width: '30%',
             disableClose: true,
         });
+    }
+
+    onTimeSelected(newTimeValue: TimeDto) {
+        this.timeSelected.emit(newTimeValue);
     }
 
 }

@@ -47,23 +47,10 @@
         <app-new-consultation-expansion-section id="premedication-and-food-intake-expansion-section"
             [title]="'internaciones.anesthesic-report.premedication-and-food-intake.TITLE' | translate"
             icon="assignment" [collapsed]="true"
-            [isEmpty]="anestheticReportPremedicationAndFoodIntakeService.isEmpty() && !formFoodIntake.value.lastFoodIntake"
+            [isEmpty]="anestheticReportPremedicationAndFoodIntakeService.isEmpty() && !lastFoodIntakeTimeSelected"
             [hideBorder]="false">
             <app-anesthetic-report-premedication-and-food-intake
-                [service]="anestheticReportPremedicationAndFoodIntakeService">
-                <ng-container food-intake-form>
-
-                    <form [formGroup]="formFoodIntake">
-                        <mat-form-field appearance="outline" data-id="food-intake-selector">
-                            <mat-select id="lastFoodIntake" formControlName="lastFoodIntake">
-                                <mat-option [value]="time" *ngFor="let time of possibleTimesList">
-                                    {{ time | viewDateDto:'time' | date:'shortTime' }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </form>
-
-                </ng-container>
+                [service]="anestheticReportPremedicationAndFoodIntakeService" (timeSelected)="onLastFoodIntakeTimeSelected($event)">
             </app-anesthetic-report-premedication-and-food-intake>
         </app-new-consultation-expansion-section>
 

@@ -64,7 +64,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     personalRecordForm: FormGroup;
     readonly ASAOptions = [1,2,3,4,5]
 
-    formFoodIntake: FormGroup;
+    lastFoodIntakeTimeSelected: TimeDto;
     endOfAnesthesiaStatusForm: FormGroup;
     vitalSignsForm: FormGroup;
     
@@ -110,10 +110,6 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticReportEndOfAnesthesiaStatusService = new AnestheticReportEndOfAnesthesiaStatusService();
         this.anestheticReportVitalSignsService = new AnestheticReportVitalSignsService(this.translateService, this.snackBarService);
-
-        this.formFoodIntake = new FormGroup<FoodIntakeForm>({
-            lastFoodIntake: new FormControl(null),
-        });
 
         this.personalRecordForm = new FormGroup<PersonalRecordForm>({
             observations: new FormControl(null),
@@ -230,7 +226,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             anestheticHistory: this.anestheticReportAnestheticHistoryService.getAnestheticHistoryData(),
             medications: this.medicacionesNuevaConsultaService.getMedicationsAsMedicationDto(),
             preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto(),
-            foodIntake: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto().length > 0 ? {clockTime: this.formFoodIntake.value.lastFoodIntake} : null,
+            foodIntake: this.lastFoodIntakeTimeSelected ? {clockTime: this.lastFoodIntakeTimeSelected} : null,
             histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
             anestheticPlans: this.anestheticPlan.getAnestheticSubstanceDto(),
             analgesicTechniques: this.analgesicTechnique.getAnalgesicTechniqueDto(),
@@ -263,7 +259,11 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             surgeryEndTime: this.vitalSignsForm.value.surgeryEndTime,
         }
     }
-        
+
+    onLastFoodIntakeTimeSelected(newLastFoodIntakeTimeSelected: TimeDto) {
+        this.lastFoodIntakeTimeSelected = newLastFoodIntakeTimeSelected;
+    }
+
     setAnesthesiaStartDate(date: Date) {
         this.vitalSignsForm.controls.anesthesiaStartDate.setValue(date);
     }
