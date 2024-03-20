@@ -191,6 +191,9 @@ public enum AppFeature implements Feature {
 	
 	@Label("Permite la actualización de la agenda cada 5 minutos")
 	HABILITAR_ACTUALIZACION_AGENDA,
+	
+	@Label("Permite el uso del Administrador de datos personales")
+	HABILITAR_ADMINISTRADOR_DATOS_PERSONALES,
 	;
 
 	public boolean isActive() {
