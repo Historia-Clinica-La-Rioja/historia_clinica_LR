@@ -5,7 +5,8 @@
 		[translate]="'access-management.search_references.reference.approval.ENTERED_BY'"
 		[translateParams]="{rule: referenceRegulationDto.ruleLevel}"></span>
 
-	<div *ngIf="referenceRegulationDto.state !== referenceApprovalState.pending; else managerOptions">
+	<div *ngIf="(!hasGestorRole && referenceRegulationDto.state === referenceApprovalState.pending) || 
+		referenceRegulationDto.state !== referenceApprovalState.pending; else managerOptions">
 		<app-colored-label [description]="regulationState.description | translate | uppercase"
 			[color]="regulationState.color" [icon]="regulationState.icon">
 		</app-colored-label>
