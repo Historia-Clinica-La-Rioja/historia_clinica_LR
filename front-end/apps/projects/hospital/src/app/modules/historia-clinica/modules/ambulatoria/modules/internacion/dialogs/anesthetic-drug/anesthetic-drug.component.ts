@@ -5,6 +5,7 @@ import { MasterDataDto, TimeDto } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { hasError } from '@core/utils/form.utils';
 import { MedicationService } from '../../services/medicationService';
+import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 
 @Component({
     selector: 'app-anesthetic-drug',
@@ -14,11 +15,13 @@ import { MedicationService } from '../../services/medicationService';
 export class AnestheticDrugComponent implements OnInit {
 
     form: FormGroup;
-    possibleTimesList: TimeDto[];
     viasArray: MasterDataDto[];
     anotherViaEnabled = false
     readonly hasError = hasError;
     private ANOTHER_VIA_ID = 7;
+    selectedMedicationTime: TimeDto;
+    timePickerData: TimePickerData;
+    submittedForm = false;
 
     constructor(
         public dialogRef: MatDialogRef<AnestheticDrugComponent>,
@@ -26,7 +29,6 @@ export class AnestheticDrugComponent implements OnInit {
         readonly internacionMasterDataService: InternacionMasterDataService,
     ) {
         this.form = this.data.premedicationService.getForm();
-        this.possibleTimesList = this.data.premedicationService.possibleTimesList;
         this.viasArray = this.data.vias
     }
 
@@ -38,6 +40,14 @@ export class AnestheticDrugComponent implements OnInit {
                     this.data.premedicationService.HandleValidatorRequiredViaNotes(via)
                 }
             )
+        this.initTimePickerData();
+    }
+
+    private initTimePickerData() {
+        this.timePickerData = {
+            hideLabel: true,
+            isRequired: true
+        }
     }
 
     close(): void {
@@ -46,10 +56,15 @@ export class AnestheticDrugComponent implements OnInit {
     }
 
     addDrug(): void {
+        this.submittedForm = true;
         if (this.form.valid) {
             this.data.premedicationService.addToList();
             this.dialogRef.close();
         }
+    }
+
+    onSelectedTime(selectedTime: TimeDto) {
+        this.form.controls.time.setValue(selectedTime);
     }
 }
 

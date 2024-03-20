@@ -9,7 +9,7 @@
             <span *ngIf="premedication.unit">
                 {{ 'internaciones.anesthesic-report.premedication-and-food-intake.UNIT' | translate }} {{
                 premedication.unit }}</span>
-            <span class="mat-caption" *ngIf="premedication.time">{{ premedication.time | viewDateDto:'time' | dateFormat:'time' }} hs.</span>
+            <span class="mat-caption" *ngIf="premedication.time">{{ premedication.time | viewDateDto:'time' | dateFormat:'time' }}</span>
         </div>
 
         <ng-container>

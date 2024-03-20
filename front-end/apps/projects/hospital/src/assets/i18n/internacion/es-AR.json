@@ -428,7 +428,7 @@
 				"AMOUNT_LABEL": "Cantidad"
 			},
 			"drug": {
-				"HOUR": "Hora",
+				"HOUR": "Hora: ",
 				"UNIT_LABEL": "Unidad: ",
 				"UNIT_PLACEHOLDER": "Ingresar unidad",
 				"VIA_LABEL": "Via: ",

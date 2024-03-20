@@ -133,7 +133,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
         this.checkVitalSignSectionEmptyness();
 
-        this.possibleTimesList = this.anestheticReportPremedicationAndFoodIntakeService.possibleTimesList;
+        this.possibleTimesList = []
     }
 
     ngOnInit(): void {

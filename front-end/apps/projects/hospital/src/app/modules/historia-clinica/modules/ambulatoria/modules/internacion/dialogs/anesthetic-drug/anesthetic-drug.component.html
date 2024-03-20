@@ -88,19 +88,7 @@
 
             <div fxLayout="column">
                 <mat-label [translate]="'internaciones.anesthesic-report.drug.HOUR'"></mat-label>
-                <div fxLayoutGap="10px">
-                    <mat-form-field appearance="outline" data-id="time_selector">
-                        <mat-select id="time" formControlName="time">
-                            <mat-option [value]="time" *ngFor="let time of possibleTimesList">
-                                {{ time | viewDateDto:'time' | date:'shortTime' }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="hasError(form, 'required', 'time')">
-                            <span translate="forms.REQUIRED"></span>
-                        </mat-error>
-                    </mat-form-field>
-                    <span>hs.</span>
-                </div>
+                <app-time-picker [timePickerData]="timePickerData" [submitted]="submittedForm" (timeSelected)="onSelectedTime($event)"></app-time-picker>
             </div>
 
             <div align="end">

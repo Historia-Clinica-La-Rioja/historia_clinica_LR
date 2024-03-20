@@ -36,7 +36,7 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
             this.searchConceptsLocallyFFIsOn = isOn;
         });
         this.internacionMasterDataService.getViasPremedication().pipe(take(1)).subscribe(vias => this.viasArray = vias);
-        this.translateService.get(['internaciones.anesthesic-report.premedication-and-food-intake.TITLE',
+        this.translateService.get(['internaciones.anesthesic-report.premedication-and-food-intake.ADD_PREMEDICATION_TITLE',
             'internaciones.anesthesic-report.premedication-and-food-intake.PREMEDICATION']).subscribe(
                 (msg) => {
                     const messagesValues: string[] = Object.values(msg);

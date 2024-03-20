@@ -18,8 +18,6 @@ export class MedicationService {
     private readonly ECL = SnomedECL.MEDICINE;
     private form: FormGroup;
 	snomedConcept: SnomedDto;
-	private posibleTimes: TimeDto[] = [];
-    private readonly possibleMinutes = [0,5,10,15,20,25,30,35,40,45,50,55];
 
     private dosisErrorSource = new Subject<string | void>();
 	private _dosisError$ = this.dosisErrorSource.asObservable();
@@ -47,8 +45,6 @@ export class MedicationService {
         this.form.controls.dosis.valueChanges.subscribe(_ => {
 			this.checkDosisError();
 		});
-
-        this.posibleTimes = this.generateInitialTimes();
     }
 
     private checkDosisError() {
@@ -178,23 +174,6 @@ export class MedicationService {
 
     get dosisError$(): Observable<string | void> {
 		return this._dosisError$;
-	}
-
-    get possibleTimesList(): TimeDto[] {
-        return this.posibleTimes;
-    }
-
-    private generateInitialTimes(): TimeDto[] {
-		const initializedTimes = [];
-		for (let currentHour = 0; currentHour < 24; currentHour++) {
-            for (let minute of this.possibleMinutes){
-                initializedTimes.push({
-                    hours: currentHour,
-                    minutes: minute
-                });
-            }
-		}
-		return initializedTimes;
 	}
 }
 
