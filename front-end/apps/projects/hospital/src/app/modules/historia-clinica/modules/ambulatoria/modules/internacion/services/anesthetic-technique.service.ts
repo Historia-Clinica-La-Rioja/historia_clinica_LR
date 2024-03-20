@@ -13,7 +13,7 @@ export class AnestheticTechniqueService {
 
   private form:FormGroup
 
-  private readonly ECL = SnomedECL.MEDICINE;
+  private readonly ECL = SnomedECL.ANESTHESIA;
   private anestheticTechniqueList: AnestheticTechniqueData[] = []
   private dataEmitter = new BehaviorSubject<AnestheticTechniqueData[]>(this.anestheticTechniqueList);
   snomedConcept: SnomedDto
