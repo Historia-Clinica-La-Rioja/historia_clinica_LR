@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 const MAX_DIGITS = 2;
@@ -17,6 +17,7 @@ const MINUTES_MAX_VALUE = 59;
 export class TimePickerComponent implements OnInit {
 
     @Input() timePickerData?: TimePickerData;
+    @Input() submitted?: boolean;
     @Output() timeSelected: EventEmitter<TimePickerDto> = new EventEmitter<TimePickerDto>();
     
     @ViewChild('matAutocompleteHour', { read: MatAutocompleteTrigger })
@@ -46,10 +47,24 @@ export class TimePickerComponent implements OnInit {
             minutes: new FormControl('')
         });
 
+        this.checkIfRequired();
         this.setDefaultTimeAndEmitValue();
 
         window.addEventListener('scroll', this.scrollEventForHours, true);
         window.addEventListener('scroll', this.scrollEventForMinutes, true);
+    }
+
+    ngOnChanges() {
+        if (this.submitted) {
+            this.touchAndValidateForm();
+        }
+    }
+
+    private touchAndValidateForm() {
+        this.timePickerForm.controls.hour.markAsTouched();
+        this.timePickerForm.controls.minutes.markAsTouched();
+        this.timePickerForm.controls.hour.updateValueAndValidity();
+        this.timePickerForm.controls.minutes.updateValueAndValidity();
     }
 
     private initDefaultValues() {
@@ -74,11 +89,18 @@ export class TimePickerComponent implements OnInit {
         if (this.timePickerData?.defaultTime) {
             let actualTime = this.timePickerData.defaultTime;
             let hours = actualTime.hours.toString();
-            let minutes = actualTime.minutes.toString();
-            this.timePickerForm.setValue({ hour: this.getValueBetweenLimits(hours, this.hoursMinValue, this.hoursMaxValue), minutes })
+            let minutes = Number(actualTime.minutes.toString());
+            this.timePickerForm.setValue({ hour: this.getValueBetweenLimits(hours, this.hoursMinValue, this.hoursMaxValue), minutes: this.transformNumberToTwoDigitsString(minutes) })
             this.emitNewValue();
         }
     }
+
+    private checkIfRequired() :void {
+		if(this.timePickerData?.isRequired){
+            this.timePickerForm.controls.hour.setValidators([Validators.required]);
+            this.timePickerForm.controls.minutes.setValidators([Validators.required]);
+		}
+	}
 
     private scrollEventForHours = (event: any): void => {
         if(this.autoCompleteHours?.panelOpen){
@@ -171,6 +193,7 @@ export interface TimePickerData {
     hoursMaxValue?: number,
     minuteStep?: number,
     hideLabel?: boolean,
+    isRequired?: boolean,
 }
 
 export interface TimePickerDto {
