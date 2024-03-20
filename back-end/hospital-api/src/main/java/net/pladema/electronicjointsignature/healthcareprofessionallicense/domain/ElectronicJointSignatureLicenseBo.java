@@ -15,6 +15,4 @@ public class ElectronicJointSignatureLicenseBo {
 
 	private Short type;
 
-	private String clinicalSpecialtyName;
-
 }

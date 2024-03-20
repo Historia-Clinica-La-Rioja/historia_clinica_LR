@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class ElectronicJointSignatureInstitutionalProfessionalLicenseStorage {
 				"SELECT DISTINCT hp.id, hp.person_id, pln.license_number, pln.type_license_number, cs.name " +
 						"FROM {h-schema}professional_professions pp " +
 						"JOIN {h-schema}healthcare_professional_specialty hps ON (hps.professional_profession_id = pp.id) " +
-						"JOIN {h-schema}professional_license_numbers pln ON (pln.professional_profession_id = pp.id) " +
+						"LEFT JOIN {h-schema}professional_license_numbers pln ON (pln.professional_profession_id = pp.id) " +
 						"JOIN {h-schema}clinical_specialty cs ON (cs.id = hps.clinical_specialty_id) " +
 						"JOIN {h-schema}healthcare_professional hp ON (hp.id = pp.healthcare_professional_id) " +
 						"WHERE pp.healthcare_professional_id IN :healthcareProfessionalIds " +
@@ -67,7 +68,9 @@ public class ElectronicJointSignatureInstitutionalProfessionalLicenseStorage {
 		ElectronicJointSignatureInstitutionProfessionalBo result = new ElectronicJointSignatureInstitutionProfessionalBo();
 		result.setPersonId((Integer) relatedLicensesData.get(0)[1]);
 		result.setHealthcareProfessionalId((Integer) relatedLicensesData.get(0)[0]);
-		result.setLicenses(relatedLicensesData.stream().map(this::parseLicense).collect(Collectors.toList()));
+		Set<String> clinicalSpecialties = relatedLicensesData.stream().map(data -> (String) data[4]).collect(Collectors.toSet());
+		result.setClinicalSpecialties(new ArrayList<>(clinicalSpecialties));
+		result.setLicense(parseLicense(relatedLicensesData.get(0)));
 		return result;
 	}
 
@@ -75,7 +78,6 @@ public class ElectronicJointSignatureInstitutionalProfessionalLicenseStorage {
 		ElectronicJointSignatureLicenseBo result = new ElectronicJointSignatureLicenseBo();
 		result.setNumber((String) licenseData[2]);
 		result.setType((Short) licenseData[3]);
-		result.setClinicalSpecialtyName((String) licenseData[4]);
 		return result;
 	}
 

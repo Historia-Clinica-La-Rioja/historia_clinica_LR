@@ -19,6 +19,4 @@ public class ElectronicJointSignatureLicenseDto {
 
 	private ELicenseNumberType type;
 
-	private String clinicalSpecialtyName;
-
 }

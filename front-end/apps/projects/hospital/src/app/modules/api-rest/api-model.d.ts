@@ -1461,13 +1461,13 @@ export interface EffectiveClinicalObservationDto extends ClinicalObservationDto 
 }
 
 export interface ElectronicJointSignatureInstitutionProfessionalDto {
+    clinicalSpecialties: string[];
     completeName: string;
     healthcareProfessionalId: number;
-    licenses: ElectronicJointSignatureLicenseDto[];
+    license: ElectronicJointSignatureLicenseDto;
 }
 
 export interface ElectronicJointSignatureLicenseDto {
-    clinicalSpecialtyName: string;
     number: string;
     type: ELicenseNumberType;
 }

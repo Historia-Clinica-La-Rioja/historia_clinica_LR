@@ -19,6 +19,8 @@ public class ElectronicJointSignatureInstitutionProfessionalBo {
 
 	private String completeName;
 
-	private List<ElectronicJointSignatureLicenseBo> licenses;
+	private ElectronicJointSignatureLicenseBo license;
+
+	private List<String> clinicalSpecialties;
 
 }

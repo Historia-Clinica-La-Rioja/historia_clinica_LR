@@ -17,6 +17,8 @@ public class ElectronicJointSignatureInstitutionProfessionalDto {
 
 	private String completeName;
 
-	private List<ElectronicJointSignatureLicenseDto> licenses;
+	private ElectronicJointSignatureLicenseDto license;
+
+	private List<String> clinicalSpecialties;
 
 }

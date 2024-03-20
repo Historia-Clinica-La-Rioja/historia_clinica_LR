@@ -43,20 +43,21 @@ export class InterveningProfessionalsComponent implements OnInit {
   }
 
   private toProfessional(professionalDto: ElectronicJointSignatureInstitutionProfessionalDto): Professional {
-    const moreSpecialities = professionalDto.licenses.length >= 2 ? ' (+' + (professionalDto.licenses.length - 1) + ' más)' : "";
+    const moreSpecialities = professionalDto.clinicalSpecialties.length >= 2 ? ' (+' + (professionalDto.clinicalSpecialties.length - 1) + ' más)' : "";
+	const license = professionalDto.license.type ? (professionalDto.license.type === ELicenseNumberType.NATIONAL ? 'MN N°'+ professionalDto.license.number : 'MP N°' + professionalDto.license.number) : '';
     return {
       completeName: professionalDto.completeName,
       healthcareProfessionalId: professionalDto.healthcareProfessionalId,
-      speciality: professionalDto.licenses[0].clinicalSpecialtyName + moreSpecialities,
-      license: professionalDto.licenses[0].type === ELicenseNumberType.NATIONAL ? 'MN N°' + professionalDto.licenses[0].number : 'MP N°' + professionalDto.licenses[0].number,
+      speciality: professionalDto.clinicalSpecialties[0] + moreSpecialities ,
+      license,
     };
   }
 
   private toProfessionalTypeahead(professionalDto: ElectronicJointSignatureInstitutionProfessionalDto): TypeaheadOption<any> {
-    const licence = professionalDto.licenses[0].type === ELicenseNumberType.NATIONAL ? ', MN' : ', MP';
-    const moreSpecialities = professionalDto.licenses.length >= 2 ? ' (+' + (professionalDto.licenses.length - 1) + ' más)' : "";
+    const licence = professionalDto.license.type ? ((professionalDto.license.type === ELicenseNumberType.NATIONAL ? ', MN' : ', MP') + ' ' + professionalDto.license.number) : '';
+    const moreSpecialities = professionalDto.clinicalSpecialties.length >= 2 ? ' (+' + (professionalDto.clinicalSpecialties.length - 1) + ' más)' : "";
     return {
-      compareValue: professionalDto.completeName + licence + ' ' + professionalDto.licenses[0].number + ' ' + professionalDto.licenses[0].clinicalSpecialtyName + moreSpecialities,
+      compareValue: professionalDto.completeName + licence + ' ' + professionalDto.clinicalSpecialties[0] + moreSpecialities,
       value: professionalDto.healthcareProfessionalId,
     };
   }
