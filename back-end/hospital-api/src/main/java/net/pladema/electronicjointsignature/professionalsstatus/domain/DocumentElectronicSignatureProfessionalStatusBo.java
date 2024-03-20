@@ -11,6 +11,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class DocumentElectronicSignatureProfessionalStatusBo {
 
+	private Integer documentInvolvedProfessionalId;
+
 	private Integer personId;
 
 	private String professionalCompleteName;
@@ -19,7 +21,8 @@ public class DocumentElectronicSignatureProfessionalStatusBo {
 
 	private LocalDate date;
 
-	public DocumentElectronicSignatureProfessionalStatusBo(Integer personId, Short statusId, LocalDate date) {
+	public DocumentElectronicSignatureProfessionalStatusBo(Integer documentInvolvedProfessionalId, Integer personId, Short statusId, LocalDate date) {
+		this.documentInvolvedProfessionalId = documentInvolvedProfessionalId;
 		this.personId = personId;
 		this.statusId = statusId;
 		this.date = date;

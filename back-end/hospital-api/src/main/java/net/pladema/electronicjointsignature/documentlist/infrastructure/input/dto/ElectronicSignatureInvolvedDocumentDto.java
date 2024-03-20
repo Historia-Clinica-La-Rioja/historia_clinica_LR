@@ -2,7 +2,6 @@ package net.pladema.electronicjointsignature.documentlist.infrastructure.input.d
 
 import ar.lamansys.sgh.clinichistory.domain.document.enums.EElectronicSignatureStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +27,6 @@ public class ElectronicSignatureInvolvedDocumentDto {
 	private DateTimeDto documentCreationDate;
 
 	private EElectronicSignatureStatus signatureStatus;
-
-	private DateDto statusDate;
 
 	private List<String> problems;
 

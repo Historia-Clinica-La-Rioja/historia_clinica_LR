@@ -18,7 +18,7 @@ public class DocumentElectronicSignatureProfessionalStatusStorage {
 	private EntityManager entityManager;
 
 	public List<DocumentElectronicSignatureProfessionalStatusBo> fetch(Long documentId) {
-		String queryString = "SELECT NEW net.pladema.electronicjointsignature.professionalsstatus.domain.DocumentElectronicSignatureProfessionalStatusBo(hp.personId, " +
+		String queryString = "SELECT NEW net.pladema.electronicjointsignature.professionalsstatus.domain.DocumentElectronicSignatureProfessionalStatusBo(dip.id, hp.personId, " +
 				"dip.signatureStatusId, dip.statusUpdateDate) " +
 				"FROM DocumentInvolvedProfessional dip " +
 				"JOIN HealthcareProfessional hp ON (hp.id = dip.healthcareProfessionalId) " +

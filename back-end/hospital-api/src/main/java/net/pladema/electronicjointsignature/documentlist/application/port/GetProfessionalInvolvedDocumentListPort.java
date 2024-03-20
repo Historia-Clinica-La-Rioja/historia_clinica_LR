@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface GetProfessionalInvolvedDocumentListPort {
 
-	List<ElectronicSignatureInvolvedDocumentBo> run(Integer institutionId, Integer healthcareProfessionalId);
+	List<ElectronicSignatureInvolvedDocumentBo> fetchProfessionalInvolvedDocuments(Integer institutionId, Integer healthcareProfessionalId);
 
 }

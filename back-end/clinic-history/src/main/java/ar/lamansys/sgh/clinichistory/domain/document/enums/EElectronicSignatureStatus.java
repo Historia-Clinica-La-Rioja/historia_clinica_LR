@@ -8,7 +8,8 @@ public enum EElectronicSignatureStatus {
 
 	PENDING(1),
 	REJECTED(2),
-	SIGNED(3);
+	SIGNED(3),
+	OUTDATED(4);
 
 	private Short id;
 

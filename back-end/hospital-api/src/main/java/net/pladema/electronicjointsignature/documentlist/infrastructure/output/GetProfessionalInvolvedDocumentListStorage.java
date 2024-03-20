@@ -20,7 +20,7 @@ public class GetProfessionalInvolvedDocumentListStorage {
 	private EntityManager entityManager;
 
 	public List<ElectronicSignatureInvolvedDocumentBo> run(Integer institutionId, Integer healthcareProfessionalId) {
-		String queryString = "SELECT NEW net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo(d.id, d.typeId, p2.personId, up.pk.personId, " +
+		String queryString = "SELECT NEW net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo(dip.id, d.id, d.typeId, p2.personId, up.pk.personId, " +
 				"d.creationable.createdOn, dip.signatureStatusId, dip.statusUpdateDate) " +
 				"FROM DocumentInvolvedProfessional dip " +
 				"JOIN Document d ON (d.id = dip.documentId) " +
@@ -50,6 +50,7 @@ public class GetProfessionalInvolvedDocumentListStorage {
 		List<ElectronicSignatureDocumentProblemsVo> documentProblems = query.getResultList();
 		documents.forEach(document -> setDocumentProblems(document, documentProblems));
 	}
+
 
 	private void setDocumentProblems(ElectronicSignatureInvolvedDocumentBo document, List<ElectronicSignatureDocumentProblemsVo> problems) {
 		List<String> documentRelatedProblems = problems.stream()

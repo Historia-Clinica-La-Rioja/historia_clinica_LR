@@ -1329,7 +1329,6 @@ export interface DocumentDto {
 }
 
 export interface DocumentElectronicSignatureProfessionalStatusDto {
-    date: DateDto;
     professionalCompleteName: string;
     status: EElectronicSignatureStatus;
 }
@@ -1537,7 +1536,6 @@ export interface ElectronicSignatureInvolvedDocumentDto {
     problems: string[];
     responsibleProfessionalCompleteName: string;
     signatureStatus: EElectronicSignatureStatus;
-    statusDate: DateDto;
 }
 
 export interface EmergencyCareDto extends Serializable {
@@ -5189,6 +5187,7 @@ export const enum EElectronicSignatureStatus {
     PENDING = "PENDING",
     REJECTED = "REJECTED",
     SIGNED = "SIGNED",
+    OUTDATED = "OUTDATED",
 }
 
 export const enum EEventLocation {

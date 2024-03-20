@@ -27,7 +27,7 @@ public class GetDocumentElectronicSignatureProfessionalStatus {
 
 	public List<DocumentElectronicSignatureProfessionalStatusBo> run(Long documentId) {
 		log.debug("Input parameters -> documentId {}", documentId);
-		List<DocumentElectronicSignatureProfessionalStatusBo> result = documentElectronicSignatureProfessionalStatusPort.fetch(documentId);
+		List<DocumentElectronicSignatureProfessionalStatusBo> result = documentElectronicSignatureProfessionalStatusPort.fetchDocumentInvolvedProfessionalStatus(documentId);
 		fetchAndSetProfessionalsCompleteName(result);
 		log.debug("Output -> {}", result);
 		return result;

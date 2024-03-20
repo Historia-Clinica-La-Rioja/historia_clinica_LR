@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface DocumentElectronicSignatureProfessionalStatusPort {
 
-	List<DocumentElectronicSignatureProfessionalStatusBo> fetch(Long documentId);
+	List<DocumentElectronicSignatureProfessionalStatusBo> fetchDocumentInvolvedProfessionalStatus(Long documentId);
 
 }

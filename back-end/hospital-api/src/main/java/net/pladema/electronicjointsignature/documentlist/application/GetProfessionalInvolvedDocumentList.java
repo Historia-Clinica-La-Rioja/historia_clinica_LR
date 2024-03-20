@@ -33,7 +33,7 @@ public class GetProfessionalInvolvedDocumentList {
 	public List<ElectronicSignatureInvolvedDocumentBo> run(Integer institutionId) {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		Integer healthcareProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		List<ElectronicSignatureInvolvedDocumentBo> result = getProfessionalInvolvedDocumentListPort.run(institutionId, healthcareProfessionalId);
+		List<ElectronicSignatureInvolvedDocumentBo> result = getProfessionalInvolvedDocumentListPort.fetchProfessionalInvolvedDocuments(institutionId, healthcareProfessionalId);
 		fetchAndSetPersonsName(result);
 		log.debug("Output -> {}", result);
 		return result;

@@ -15,6 +15,8 @@ import java.util.List;
 @ToString
 public class ElectronicSignatureInvolvedDocumentBo {
 
+	private Integer documentInvolvedProfessionalId;
+
 	private Long documentId;
 
 	private Short documentTypeId;
@@ -35,8 +37,9 @@ public class ElectronicSignatureInvolvedDocumentBo {
 
 	private List<String> problems;
 
-	public ElectronicSignatureInvolvedDocumentBo(Long documentId, Short documentTypeId, Integer patientPersonId, Integer responsibleHealthcareProfessionalPersonId,
+	public ElectronicSignatureInvolvedDocumentBo(Integer documentInvolvedProfessionalId, Long documentId, Short documentTypeId, Integer patientPersonId, Integer responsibleHealthcareProfessionalPersonId,
 												 LocalDateTime documentCreationDate, Short signatureStatusId, LocalDate statusDate) {
+		this.documentInvolvedProfessionalId = documentInvolvedProfessionalId;
 		this.documentId = documentId;
 		this.documentTypeId = documentTypeId;
 		this.patientPersonId = patientPersonId;
