@@ -113,6 +113,10 @@ export function fromStringToDateByDelimeter(date: string, delimeter: string): Da
 
 export const compare = (d1: Date, d2: Date): number => compareAsc(d1, d2); // -1 , 0 , 1
 
+export const isEqualDate = (d1: Date, d2: Date): boolean => {
+    return (compare(d1,d2) == 0)
+}
+
 const HOUR_MINUTE = 'HH:mm';
 export const toHourMinute = (date: Date): string => format(date, HOUR_MINUTE);
 

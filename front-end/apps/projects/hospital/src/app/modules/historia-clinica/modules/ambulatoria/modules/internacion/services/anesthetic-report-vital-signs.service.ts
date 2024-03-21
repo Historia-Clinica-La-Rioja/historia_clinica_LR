@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MeasuringPointDto, TimeDto } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { removeFrom } from '@core/utils/array.utils';
+import { isEqualDate } from '@core/utils/date.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
@@ -274,7 +275,11 @@ export class AnestheticReportVitalSignsService {
     }
 
     private itsDuplicated(dataArray: MeasuringPointData[], measuringPoint: MeasuringPointData): boolean {
-        return !!(dataArray.filter(mp => (mp.measuringPointStartDate == measuringPoint.measuringPointStartDate && mp.measuringPointStartTime == measuringPoint.measuringPointStartTime)).length)
+        return !!(dataArray.filter(mp => (isEqualDate(mp.measuringPointStartDate, measuringPoint.measuringPointStartDate) && this.isEqualTime(mp.measuringPointStartTime,measuringPoint.measuringPointStartTime))).length)
+    }
+
+    private isEqualTime(t1: TimeDto, t2: TimeDto): boolean {
+        return t1 == t2
     }
 
     private clearForm() {
