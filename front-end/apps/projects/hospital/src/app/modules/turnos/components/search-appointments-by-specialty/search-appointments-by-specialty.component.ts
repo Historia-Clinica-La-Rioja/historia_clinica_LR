@@ -94,7 +94,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		});
 
 		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
-
 		if (!this.externalInformation) {
 			this.setClinicalSpecialtiesTypeaheadOptions();
 			this.setPractices();
@@ -223,11 +222,12 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	clearResults() {
 		this.externalInformation = null;
-		this.externalSetValueSpecialty = null;
+		this.externalSetValueSpecialty = { compareValue: null, value: null };
 		this.resetControls();
 		this.clearLists();
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
 		this.setPractices();
+		this.setValidators();
 	}
 
 	resetDataAndSetCriteria(selectedCriteria: SearchCriteria) {
