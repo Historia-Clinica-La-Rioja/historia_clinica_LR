@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -99,10 +98,10 @@ public class CareLineServiceImpl implements CareLineService {
 	}
 
 	@Override
-	public List<CareLineBo> getByInstitutionIdAndPracticesId(Integer institutionId, List<Integer> practicesId) {
-		log.debug("Input parameters -> practicesId {}, institutionId {}", practicesId, institutionId);
+	public List<CareLineBo> getByInstitutionIdAndPracticesIdAndSpecialty(Integer institutionId, List<Integer> practicesId, Integer clinicalSpecialtyId) {
+		log.debug("Input parameters -> practicesId {}, institutionId {}, clinicalSpecialtyId {}", practicesId, institutionId, clinicalSpecialtyId);
 		List<CareLineBo> careLinesByInstitution = careLineRepository.getAllByInstitutionId(institutionId);
-		List<CareLineBo> result = this.getCareLinesWithAllPractices(careLinesByInstitution, practicesId);
+		List<CareLineBo> result = this.getCareLinesWithAllPracticesAndSpecialty(careLinesByInstitution, practicesId, clinicalSpecialtyId);
 		log.trace(OUTPUT, result);
 		return result;
 	}
@@ -136,15 +135,22 @@ public class CareLineServiceImpl implements CareLineService {
 				.collect(Collectors.toList());
 	}
 
-	public List<CareLineBo> getCareLinesWithAllPractices(List<CareLineBo> careLines, List<Integer> practicesId) {
+	public List<CareLineBo> getCareLinesWithAllPracticesAndSpecialty(List<CareLineBo> careLines, List<Integer> practicesId, Integer clinicalSpecialtyId) {
 		List<Integer> careLineIds = careLines.stream().map(CareLineBo::getId).collect(Collectors.toList());
 		Map<Integer, List<SnomedBo>> practices = careLineInstitutionPracticeStorage.fetchAllByCareLineIds(careLineIds);
 		return careLines.stream()
-				.filter(cl -> practices.get(cl.getId())
-						.stream()
-						.map(SnomedBo::getId)
-						.collect(Collectors.toSet())
-						.containsAll(practicesId))
+				.filter(cl -> filterCareLinesWithAllPracticesAndSpecialty(cl,practices,practicesId,clinicalSpecialtyId))
 				.collect(Collectors.toList());
+	}
+
+	private boolean filterCareLinesWithAllPracticesAndSpecialty(CareLineBo cl, Map<Integer, List<SnomedBo>> practices, List<Integer> practicesId, Integer clinicalSpecialtyId){
+		List<SnomedBo> clPractices = practices.get(cl.getId());
+		if (clPractices == null) return false;
+		if (!clPractices.stream().map(SnomedBo::getId).collect(Collectors.toSet()).containsAll(practicesId)) return false;
+		if (clinicalSpecialtyId != null){
+			cl.setClinicalSpecialties(careLineInstitutionSpecialtyRepository.getClinicalSpecialtiesByCareLineId(cl.getId()));
+			return cl.getClinicalSpecialties().stream().anyMatch(specialty -> specialty.getId().equals(clinicalSpecialtyId));
+		}
+		return true;
 	}
 }

@@ -361,7 +361,7 @@ export class AgendaSetupComponent implements OnInit {
 			this.showPractices = true;
 			this.practicesSelected = diary.practicesInfo.map(p => { return this.toChipsOptions(p) });
 			this.setPractices();
-			this.getCarelinesByPractices(diary.practicesInfo.map(p => { return p.id }));
+			this.getCarelinesByPracticesAndSpecialty(diary.practicesInfo.map(p => { return p.id }), diary.clinicalSpecialtyId);
 			this.validationsPractices();
 		}
 
@@ -382,6 +382,7 @@ export class AgendaSetupComponent implements OnInit {
 
 	private setSpecialityId(healthcareProfesionalId) {
 		this.specialityId = healthcareProfesionalId;
+		this.form.controls.healthcareProfessionalSpecialtyId.setValue(healthcareProfesionalId);
 	}
 
 	private setAlias(alias) {
@@ -672,8 +673,8 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setCarelinesBySpecialty() {
+		const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
 		if (this.form.controls.diaryType.value === this.CONSULTATION) {
-			const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
 			this.diaryCareLine.getPossibleCareLinesForDiary(specialtyId).subscribe(careLines => {
 				this.careLines = careLines;
 				this.checkCareLinesSelected();
@@ -683,6 +684,9 @@ export class AgendaSetupComponent implements OnInit {
 			} else {
 				this.form.controls.alias.setValue(this.alias);
 			}
+		}
+		else{
+			this.getCarelinesByPracticesAndSpecialty(this.form.value.practices,specialtyId);
 		}
 	}
 
@@ -720,12 +724,12 @@ export class AgendaSetupComponent implements OnInit {
 	setDiaryPracticesAndGetCarelines(selected: ChipsOption<SnomedDto>[]) {
 		const result: number[] = selected.map(s => s.value.id);
 		this.form.controls.practices.setValue(result);
-		this.getCarelinesByPractices(result);
+		this.getCarelinesByPracticesAndSpecialty(result, this.form.controls.healthcareProfessionalSpecialtyId.value);
 	}
 
-	getCarelinesByPractices(practicesId: number[]) {
+	getCarelinesByPracticesAndSpecialty(practicesId: number[], clinicalSpecialtyId: number) {
 		if (practicesId.length) {
-			this.diaryCareLine.getPossibleCareLinesForDiaryByPractices(practicesId).subscribe(carelines => {
+			this.diaryCareLine.getPossibleCareLinesForDiaryByPracticesAndSpecialty(practicesId, clinicalSpecialtyId).subscribe(carelines => {
 				this.careLines = carelines;
 				this.checkCareLinesSelected();
 			});

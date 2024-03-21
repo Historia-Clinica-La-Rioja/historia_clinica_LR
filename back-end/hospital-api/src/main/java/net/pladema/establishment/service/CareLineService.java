@@ -16,7 +16,7 @@ public interface CareLineService {
 
 	List<CareLineBo> getCareLinesAttachedToInstitutions(Integer institutionId, Integer loggedUserId);
 
-	List<CareLineBo> getByInstitutionIdAndPracticesId(Integer institutionId, List<Integer> practicesId);
+	List<CareLineBo> getByInstitutionIdAndPracticesIdAndSpecialty(Integer institutionId, List<Integer> practicesId, Integer clinicalSpecialtyId);
 
 	List<CareLineBo> getVirtualConsultationCareLinesByInstitutionId(Integer institutionId);
 
