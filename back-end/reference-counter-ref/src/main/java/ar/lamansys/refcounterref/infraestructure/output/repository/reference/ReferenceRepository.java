@@ -393,7 +393,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"LEFT JOIN Department d ON (d.id = c.departmentId) " +
 			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
-			"LEFT JOIN Address a2 ON (i2.addressId = a.id) " +
+			"LEFT JOIN Address a2 ON (i2.addressId = a2.id) " +
 			"LEFT JOIN City c2 ON (c2.id = a2.cityId) " +
 			"LEFT JOIN Department d2 ON (c2.departmentId = d2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
