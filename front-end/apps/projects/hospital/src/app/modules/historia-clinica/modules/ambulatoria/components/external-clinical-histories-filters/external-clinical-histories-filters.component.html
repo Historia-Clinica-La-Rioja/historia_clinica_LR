@@ -59,18 +59,10 @@
 		</button>
 	</mat-form-field>
 
-	<mat-form-field appearance="outline">
-		<mat-label>
-			{{ 'ambulatoria.paciente.problemas.external-clinical-histories-filters.CONSULTATION_DATE' | translate }}
-		</mat-label>
-		<input matInput formControlName="consultationDate" [matDatepicker]="myDatepicker"
-			(dateChange)="setConsultationDateFilter()">
-		<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-		<mat-datepicker #myDatepicker></mat-datepicker>
-		<button type="button" *ngIf="form.value.consultationDate" matSuffix color="warn" mat-icon-button
-			(click)="clear(form.controls.consultationDate, 'consultationDate'); $event.stopPropagation()">
-			<mat-icon>close</mat-icon>
-		</button>
-	</mat-form-field>
+	<app-datepicker
+	title="ambulatoria.paciente.problemas.external-clinical-histories-filters.CONSULTATION_DATE"
+	enableDelete="true"
+	(selectDate)="setConsultationDateFilter($event)"
+	></app-datepicker>
 
 </form>
