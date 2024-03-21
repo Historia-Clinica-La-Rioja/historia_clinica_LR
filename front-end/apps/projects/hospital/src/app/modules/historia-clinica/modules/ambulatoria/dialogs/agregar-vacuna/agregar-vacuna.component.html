@@ -20,21 +20,11 @@
 
 					<form [formGroup]="billableForm" (submit)="submit(vaccineInput)" id="billableForm">
 						<div fxLayout="column">
-							<mat-label>
-								{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
-								translate }}
-							</mat-label>
-							<mat-form-field appearance="outline">
-								<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-									[matDatepicker]="newVaccineDatepicker" formControlName="date" [min]=this.minDate
-									[max]="this.today" required>
-								<mat-datepicker-toggle matSuffix [for]="newVaccineDatepicker"></mat-datepicker-toggle>
-								<mat-datepicker #newVaccineDatepicker
-									(yearSelected)="chosenYearHandler($event,this.billableForm)"
-									(monthSelected)="chosenMonthHandler($event,this.billableForm)">
-								</mat-datepicker>
-								<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-							</mat-form-field>
+
+							<app-datepicker
+								title="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE"
+								[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initNewVaccineDate" (selectDate)="newDateChanged($event)"></app-datepicker>
+
 							<div #vaccineInput>
 								<div fxLayout="column" fxFlex="100%">
 									<mat-label>
@@ -198,21 +188,10 @@
 
 				<form [formGroup]="previousForm" (submit)="submitPreviousForm(previousVaccineInput)" id="previousForm">
 					<div fxLayout="column">
-						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE' |
-							translate }}
-						</mat-label>
-						<mat-form-field appearance="outline">
-							<input readonly placeholder="mm/dd/yyyy" matInput [value]="this.today"
-								[matDatepicker]="previousVaccineDatepicker" formControlName="date" [min]=this.minDate
-								[max]="this.today" required>
-							<mat-datepicker-toggle matSuffix [for]="previousVaccineDatepicker"></mat-datepicker-toggle>
-							<mat-datepicker #previousVaccineDatepicker
-								(yearSelected)="chosenYearHandler($event,this.previousForm)"
-								(monthSelected)="chosenMonthHandler($event,this.previousForm)">
-							</mat-datepicker>
-							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
-						</mat-form-field>
+						<app-datepicker
+							title="ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.ADMINISTRATION_DATE"
+							[minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initPrevVaccineDate" (selectDate)="prevDateChanged($event)">
+						</app-datepicker>
 
 						<div #previousVaccineInput>
 							<div fxLayout="column" fxFlex="100%">
@@ -263,7 +242,8 @@
 
 						<mat-label
 							[ngStyle]="{'color': this.previousForm.controls.condition.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate }}
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.CONDITION' | translate
+							}}
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<mat-select formControlName="condition"
@@ -289,7 +269,8 @@
 							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 								<mat-label
 									[ngStyle]="{'color': this.previousForm.controls.scheme.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
-									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' | translate
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.SCHEME' |
+									translate
 									}}
 								</mat-label>
 								<mat-form-field appearance="outline">
@@ -313,7 +294,8 @@
 							<div fxLayout="column" fxFlex="100" fxFlex.gt-sm="{{ HALF_COLUMN_WIDTH }}">
 								<mat-label
 									[ngStyle]="{'color': this.previousForm.controls.dose.disabled ? DISABLED_LABEL_COLOR : 'inherit'}">
-									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' | translate }}
+									{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.DOSE' |
+									translate }}
 								</mat-label>
 								<mat-form-field appearance="outline">
 									<mat-select formControlName="dose" [required]="this.previousForm.value.scheme">
@@ -343,14 +325,16 @@
 						</mat-form-field>
 
 						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.INSTITUTION' | translate }}
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.INSTITUTION' | translate
+							}}
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input matInput formControlName="institution">
 						</mat-form-field>
 
 						<mat-label>
-							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PROFESSIONAL' | translate }}
+							{{ 'ambulatoria.paciente.vacunas.agregar_vacunas.agregar_vacuna.PROFESSIONAL' |
+							translate }}
 						</mat-label>
 						<mat-form-field appearance="outline">
 							<input matInput formControlName="professional">
