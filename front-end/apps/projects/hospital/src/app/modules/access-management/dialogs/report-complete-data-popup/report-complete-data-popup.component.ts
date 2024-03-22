@@ -86,10 +86,6 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
 	}
 
-	closeDialog(event: boolean) {
-		this.dialogRef.close(event);
-	}
-
 	private getObservable(): Observable<ReferenceCompleteDataDto> {
 		return this.domainRole ?
 			this.institutionalNetworkReferenceReportService.getReferenceDetail(this.data.referenceId) :

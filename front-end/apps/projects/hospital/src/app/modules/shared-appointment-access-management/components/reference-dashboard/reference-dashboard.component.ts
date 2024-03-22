@@ -43,9 +43,8 @@ export class ReferenceDashboardComponent {
 			disableClose: true,
 			width: '60%',
 		});
-		dialogRef.afterClosed().subscribe(updated => {
-			if (updated)
-				this.dashboardService.updateReports();
+		dialogRef.afterClosed().subscribe(() => {
+			this.dashboardService.updateReports();
 		});
 	}
 
