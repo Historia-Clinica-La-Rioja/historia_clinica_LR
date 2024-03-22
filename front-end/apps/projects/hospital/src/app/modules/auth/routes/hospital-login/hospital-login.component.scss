@@ -6,9 +6,4 @@ mat-card.mat-card {
 
 .logos {
 	@include space-around;
-
-	app-logo {
-		max-width: 15rem;
-  		height: auto;
-	}
 }
