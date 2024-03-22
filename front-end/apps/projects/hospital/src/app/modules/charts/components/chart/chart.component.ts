@@ -17,6 +17,21 @@ export class ChartComponent {
 export interface Chart {
   labels: string[];
   type: ChartType;
-  dataSets: Object[];
+  dataSets: DataSet[];
   options: ChartOptions;
+}
+
+export interface DataSet {
+  label: string;
+  data: number | Intersection[];
+  borderColor?: string;
+  borderWidth?: number;
+  pointBackgroundColor?: string,
+  pointRadius?: number;
+  fill?: boolean;
+}
+
+export interface Intersection {
+  x: string;
+  y: string;
 }
