@@ -21,7 +21,9 @@
 			"TELEMEDICINE":"TeleSalud",
 			"DIGITAL_SIGNATURE": "Firma digital",
 			"ACCESS_MANAGEMENT": "Gestión de accesos",
-			"CALL_CENTER": "Centro de llamadas"
+			"CALL_CENTER": "Centro de llamadas",
+			"SIGNATURES": "Firmas",
+			"JOINT_SIGNATURE": "Firma conjunta"
 		}
 	},
 	"buttons": {

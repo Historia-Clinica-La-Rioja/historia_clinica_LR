@@ -34,7 +34,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [
 			ERole.ROOT,
 		],
-		featureFlag: AppFeature.HABILITAR_CONFIGURACION
+		featureFlag: [AppFeature.HABILITAR_CONFIGURACION]
 	},
 	{
 		text: 'app.menu.AUDIT',
@@ -44,7 +44,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [
 			ERole.AUDITOR_MPI
 		],
-		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
+		featureFlag: [AppFeature.HABILITAR_MODULO_AUDITORIA]
 	},
 	{
 		text: 'app.menu.ACCESS_MANAGEMENT',
@@ -52,7 +52,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'access-management',
 		url: '/home/gestion-de-accesos',
 		permissions: MANAGER_ROLES,
-		featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO
+		featureFlag: [AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO]
 	},
 	{
 		text: 'app.menu.CALL_CENTER',

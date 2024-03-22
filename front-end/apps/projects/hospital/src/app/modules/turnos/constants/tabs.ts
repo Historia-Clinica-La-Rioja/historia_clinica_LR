@@ -23,4 +23,4 @@ export const ALL_TABS: Tabs[] = [
 	{ rules: { roles: allowedRolesForImageNetwork, featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }, label: TabsLabel.IMAGE_NETWORK },
 ];
 
-export const FF_TABS = [{ featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }];
+export const FF_TABS = [{ featureFlag: [AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES] }];

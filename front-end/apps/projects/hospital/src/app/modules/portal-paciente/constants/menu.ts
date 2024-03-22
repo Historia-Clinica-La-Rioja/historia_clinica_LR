@@ -32,13 +32,13 @@ export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'my_hc',
 		url: `/${AppRoutes.PortalPaciente}`,
 		options: {exact: true},
-		featureFlag: AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE,
+		featureFlag: [AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE],
 	},
 	{
 		text: 'app.menu.MIS_DATOS_PERSONALES',
 		icon: 'person_outline',
 		id: 'my_personal_data',
 		url: `/${AppRoutes.PortalPaciente}/perfil`,
-		featureFlag: AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE,
+		featureFlag: [AppFeature.HABILITAR_MODULO_PORTAL_PACIENTE],
 	},
 ];
