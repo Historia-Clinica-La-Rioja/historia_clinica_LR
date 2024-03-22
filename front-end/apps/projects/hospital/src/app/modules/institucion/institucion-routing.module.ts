@@ -73,6 +73,12 @@ const routes: Routes = [
 				path: 'firma-documentos',
 				loadChildren: () => import('../documents-signature/documents-signature.module').then(m => m.DocumentsSignatureModule),
 			},
+			{
+				path: 'firma-conjunta',
+				loadChildren: () => import('../documents-signature/modules/joint-signature/joint-signature.module').then(m => m.JointSignatureModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_FIRMA_CONJUNTA }
+			},
 
 		],
 		canActivate: [RoleGuard],
