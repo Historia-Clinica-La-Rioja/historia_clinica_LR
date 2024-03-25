@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { AppFeature } from '@api-rest/api-model';
 import { AuditAccessService } from '@api-rest/services/audit-access.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -15,6 +15,7 @@ export class AuditAccessGuard implements CanActivate {
   constructor(
     private readonly auditAccessService: AuditAccessService,
     private readonly featureFlagService: FeatureFlagService,
+    private readonly router: Router,
   ){}
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -30,7 +31,7 @@ export class AuditAccessGuard implements CanActivate {
     const contextUrlParameters = this.getContextFromClinicHistoryUrl(stateUrl.url)
     return this.auditAccessService.verifyConditionToAccessToHC(contextUrlParameters).pipe(
       switchMap(accessGranted => accessGranted ?  of(accessToHC) : this.auditAccessService.getResultAccessDialogAudit(contextUrlParameters)),
-      map( result => !result ?  this.auditAccessService.redirectHomeIfNewTab() : result)
+      map( result => !result ?  this.auditAccessService.handleRedirectHomeCases(this.router.url) : result)
     )
   }
 

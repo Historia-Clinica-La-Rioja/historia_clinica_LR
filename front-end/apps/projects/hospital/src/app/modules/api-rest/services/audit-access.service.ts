@@ -15,8 +15,9 @@ export class AuditAccessService {
 
   private sourceUrl: string = this.router.url
   private NEW_TAB_ROUTE = '/'
+  private ADMINISTRATIVE_DISCHARGE = 'alta-administrativa'
   private  isValueInMyStrEnum = isValueInStringEnum(SCOPE_REQUEST_HC)
-  private isNewTabRoute = () => this.sourceUrl === this.NEW_TAB_ROUTE
+  private isNewTabRoute = (url:string) => url === this.NEW_TAB_ROUTE
   private isScopeAllowed = (valueTocheck: string) => this.isValueInMyStrEnum(valueTocheck)
   private getScopeSector = (scope: SCOPE_AUDIT_ACCESS): Number => hashMapScopeSectors.get(scope)
 
@@ -34,7 +35,7 @@ export class AuditAccessService {
 
 
   getResultAccessDialogAudit(context: ContextClinicHistoryUrl): Observable<boolean> {
-    const scope: Number = !this.isNewTabRoute() && this.isScopeAllowed(this.getScopeFromCurrentUrl())
+    const scope: Number = !this.isNewTabRoute(this.sourceUrl) && this.isScopeAllowed(this.getScopeFromCurrentUrl())
     ? this.getScopeSector(this.getScopeFromCurrentUrl() as SCOPE_AUDIT_ACCESS) : null
 
     const dialog = this.dialog.open(AuditAccessRegisterComponent,
@@ -54,8 +55,8 @@ export class AuditAccessService {
     );
   }
 
-  redirectHomeIfNewTab(): boolean {
-    if (this.isNewTabRoute()) {
+  handleRedirectHomeCases(currentRouteUrl: string): boolean {
+    if (this.isNewTabRoute(currentRouteUrl) || currentRouteUrl.split('/').includes(this.ADMINISTRATIVE_DISCHARGE)) {
       this.router.navigate(['/home'])
       return false
     }
