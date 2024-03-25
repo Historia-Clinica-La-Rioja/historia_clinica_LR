@@ -1,0 +1,16 @@
+@import '../../../../../assets/styles/mixins';
+.mat-card{
+    width: 35%;
+}
+mat-divider.mat-divider-horizontal.mat-divider-inset.separation {
+    margin: 10px 0;
+}
+
+span.mat-list-item-content{
+    display: flex;
+    justify-content: space-between;
+}
+
+.subtitle{
+	@include font-weight-bold;
+}

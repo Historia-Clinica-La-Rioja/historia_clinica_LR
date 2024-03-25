@@ -1,0 +1,8 @@
+{
+	"firmas": {
+		"TITLE":  "Firma de documentos",
+        "SUBTITLE": "Seleccione tipo de firma",
+        "DIGITAL_SIGNATURE": "Firma digital",
+        "JOINT_SIGNATURE": "Firma conjunta"
+	}
+}
