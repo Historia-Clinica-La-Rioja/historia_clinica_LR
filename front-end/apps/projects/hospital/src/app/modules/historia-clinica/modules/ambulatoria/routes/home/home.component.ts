@@ -15,6 +15,7 @@ import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
 import { PatientNameService } from '@core/services/patient-name.service';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-home',
@@ -121,8 +122,8 @@ export class HomeComponent implements OnInit {
 			this.requiringValues = false;
 			this.requiringAtLeastOneMoreValue = false;
 			this.personalInformationForm.value.identificationNumber = this.personalInformationForm.value.identificationNumber?.replace(REMOVE_SUBSTRING_DNI, '');
-			const personalInformationReq: PersonInformationRequest = this.personalInformationForm.value;
-			this.patientService.searchPatientOptionalFilters(personalInformationReq)
+			const personalInformationFilter = this.getPersonalInformationFilters();
+			this.patientService.searchPatientOptionalFilters(personalInformationFilter)
 				.subscribe((data: LimitedPatientSearchDto) => {
 					this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
 						this.ffOfCardsIsOn = isEnabled;
@@ -261,6 +262,14 @@ export class HomeComponent implements OnInit {
 		return false;
 	}
 
+	setSelectedDate(selectedDate: Date) {
+		this.personalInformationForm.controls.birthDate.setValue(selectedDate);
+	}
+
+	private getPersonalInformationFilters(): PersonInformationRequest {
+		const filters = this.personalInformationForm.value
+		return { ...filters, birthDate: toApiFormat(filters.birthDate) }
+	}
 
 
 }
