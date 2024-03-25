@@ -13,13 +13,7 @@
                 <div fxLayout="column" fxLayoutGap="10px">
                     <mat-label class="form-input-title"
                         [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_TIME'"></mat-label>
-                    <mat-form-field appearance="outline">
-                        <mat-select formControlName="measuringPointStartTime" placeholder="00:00">
-                            <mat-option [value]="time" *ngFor="let time of possibleTimesList">
-                                {{ time | viewDateDto:'time' | dateFormat:'time' }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <app-time-picker data-id="measuring-point-start-time" [timePickerData]="timePickerData" (timeSelected)="setMeasuringPointStartTime($event)"></app-time-picker>
                 </div>
             </div>
 

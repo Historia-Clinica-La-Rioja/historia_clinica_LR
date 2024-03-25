@@ -25,6 +25,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 
 const TIME_OUT = 5000;
 
@@ -38,8 +39,6 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     
     mainDiagnosis: HealthConditionDto;
 	diagnosis: DiagnosisDto[] = [];
-    
-    possibleTimesList: TimeDto[];
 
 	isLoading = false;
     
@@ -67,7 +66,10 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     lastFoodIntakeTimeSelected: TimeDto;
     endOfAnesthesiaStatusForm: FormGroup;
     vitalSignsForm: FormGroup;
-    
+    timePickerData: TimePickerData = {
+        hideLabel: true,
+    }
+
     isVitalSignSectionEmpty = true;
     isMeasuringPointSectionEmpty = true;
 
@@ -132,8 +134,6 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         })
 
         this.checkVitalSignSectionEmptyness();
-
-        this.possibleTimesList = []
     }
 
     ngOnInit(): void {
@@ -268,16 +268,32 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.vitalSignsForm.controls.anesthesiaStartDate.setValue(date);
     }
 
+    setAnesthesiaStartTime(time: TimeDto) {
+        this.vitalSignsForm.controls.anesthesiaStartTime.setValue(time);
+    }
+
     setAnesthesiaEndDate(date: Date) {
         this.vitalSignsForm.controls.anesthesiaEndDate.setValue(date);
+    }
+
+    setAnesthesiaEndTime(time: TimeDto) {
+        this.vitalSignsForm.controls.anesthesiaEndTime.setValue(time);
     }
 
     setSurgeryStartDate(date: Date) {
         this.vitalSignsForm.controls.surgeryStartDate.setValue(date);
     }
 
+    surgeryStartTime(time: TimeDto) {
+        this.vitalSignsForm.controls.surgeryStartTime.setValue(time);
+    }
+
     setSurgeryEndDate(date: Date) {
         this.vitalSignsForm.controls.surgeryEndDate.setValue(date);
+    }
+
+    surgeryEndTime(time: TimeDto) {
+        this.vitalSignsForm.controls.surgeryEndTime.setValue(time);
     }
 }
 

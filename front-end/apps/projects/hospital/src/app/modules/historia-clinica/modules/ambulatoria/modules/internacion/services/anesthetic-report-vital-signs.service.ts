@@ -7,6 +7,7 @@ import { isEqualDate } from '@core/utils/date.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
+import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 
@@ -20,9 +21,6 @@ export class AnestheticReportVitalSignsService {
     
     private measuringPointsSource = new BehaviorSubject<MeasuringPointData[]>([]);
 	private _measuringPoints$ = this.measuringPointsSource.asObservable();
-
-    private posibleTimes: TimeDto[] = [];
-    private readonly possibleMinutes = [0,5,10,15,20,25,30,35,40,45,50,55];
     
     private isEmptySource = new BehaviorSubject<boolean>(true);
 	isEmpty$ = this.isEmptySource.asObservable();
@@ -37,6 +35,10 @@ export class AnestheticReportVitalSignsService {
 	private _saturation$ = this.saturationSource.asObservable();
     private endTidalSource = new Subject<string | void>();
 	private _endTidal$ = this.endTidalSource.asObservable();
+
+    private timePickerData: TimePickerData = {
+        hideLabel: true,
+    }
 
     constructor(
 		private readonly translateService: TranslateService,
@@ -53,22 +55,11 @@ export class AnestheticReportVitalSignsService {
         });
 
         this.handleFormChanges();
-
-        this.posibleTimes = this.generateInitialTimes();
     }
 
-    private generateInitialTimes(): TimeDto[] {
-		const initializedTimes = [];
-		for (let currentHour = 0; currentHour < 24; currentHour++) {
-            for (let minute of this.possibleMinutes){
-                initializedTimes.push({
-                    hours: currentHour,
-                    minutes: minute
-                });
-            }
-		}
-		return initializedTimes;
-	}
+    getTimePickerData(): TimePickerData {
+        return this.timePickerData;
+    }
 
     getMeasuringPointsAsMeasuringPointDto(): MeasuringPointDto[] {
         return this.measuringPoints.map(mp => {
@@ -303,10 +294,6 @@ export class AnestheticReportVitalSignsService {
 
     private getArrayCopyWithoutElementAtIndex(arr: MeasuringPointData[], index: number): MeasuringPointData[] {
         return arr.slice(0, index).concat(arr.slice(index + 1));
-    }
-
-    getPossibleTimesList(): TimeDto[] {
-        return this.posibleTimes;
     }
 
     getForm(): FormGroup {

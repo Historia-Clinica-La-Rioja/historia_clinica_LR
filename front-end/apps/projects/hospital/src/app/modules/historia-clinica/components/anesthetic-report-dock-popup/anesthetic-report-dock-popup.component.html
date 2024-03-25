@@ -146,13 +146,7 @@
                                 <app-datepicker fxLayout="50%" [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setAnesthesiaStartDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <mat-form-field appearance="outline" data-id="anesthesia-start-time">
-                                        <mat-select formControlName="anesthesiaStartTime" placeholder="00:00">
-                                            <mat-option [value]="time" *ngFor="let time of possibleTimesList">
-                                                {{ time | viewDateDto:'time' | dateFormat:'time' }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    <app-time-picker data-id="anesthesia-start-time" [timePickerData]="timePickerData" (timeSelected)="setAnesthesiaStartTime($event)"></app-time-picker>
                                 </div>
                             </div>
                         </div>
@@ -163,13 +157,7 @@
                                 <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setAnesthesiaEndDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <mat-form-field appearance="outline" data-id="anesthesia-end-time">
-                                        <mat-select formControlName="anesthesiaEndTime" placeholder="00:00">
-                                            <mat-option [value]="time" *ngFor="let time of possibleTimesList">
-                                                {{ time | viewDateDto:'time' | dateFormat:'time' }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    <app-time-picker data-id="anesthesia-start-time" [timePickerData]="timePickerData" (timeSelected)="setAnesthesiaEndTime($event)"></app-time-picker>
                                 </div>
                             </div>
                         </div>
@@ -180,13 +168,7 @@
                                 <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setSurgeryStartDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <mat-form-field appearance="outline" data-id="surgery-start-time">
-                                        <mat-select formControlName="surgeryStartTime" placeholder="00:00">
-                                            <mat-option [value]="time" *ngFor="let time of possibleTimesList">
-                                                {{ time | viewDateDto:'time' | dateFormat:'time' }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    <app-time-picker data-id="surgery-start-time" [timePickerData]="timePickerData" (timeSelected)="surgeryStartTime($event)"></app-time-picker>
                                 </div>
                             </div>
                         </div>
@@ -197,13 +179,7 @@
                                 <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setSurgeryEndDate($event)"></app-datepicker>
                                 <div fxLayout="column" fxLayoutGap="10px">
                                     <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <mat-form-field appearance="outline" data-id="surgery-end-time">
-                                        <mat-select formControlName="surgeryEndTime" placeholder="00:00">
-                                            <mat-option [value]="time" *ngFor="let time of possibleTimesList">
-                                                {{ time | viewDateDto:'time' | dateFormat:'time' }}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    <app-time-picker data-id="surgery-end-time" [timePickerData]="timePickerData" (timeSelected)="surgeryEndTime($event)"></app-time-picker>
                                 </div>
                             </div>
                         </div>

@@ -6,6 +6,7 @@ import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 
 @Component({
     selector: 'app-edit-measuring-point',
@@ -15,20 +16,19 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 export class EditMeasuringPointComponent {
 
     form: FormGroup;
-    possibleTimesList: TimeDto[];
 
     bloodPressureMinError: String;
     bloodPressureMaxError: String;
     pulseError: String;
     saturationError: String;
-    endTidalError: String;
+    endTidalError: String;    
+    timePickerData: TimePickerData;
 
     constructor(
 		@Inject(MAT_DIALOG_DATA) public data: EditPointData,
         private readonly translateService: TranslateService,
 		private readonly dialog: MatDialogRef<EditMeasuringPointComponent>,
     ) {
-        this.possibleTimesList = this.data.service.getPossibleTimesList();
         this.form = new FormGroup<MeasuringPointForm>({
             measuringPointStartDate: new FormControl(null),
             measuringPointStartTime: new FormControl(null),
@@ -39,9 +39,18 @@ export class EditMeasuringPointComponent {
             endTidal: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.endTidal), Validators.max(VITAL_SIGNS.MAX.endTidal), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
         });
 
+        this.timePickerData = {
+            ...this.data.service.getTimePickerData(),
+            defaultTime: this.data.measuringPoint.measuringPointStartTime
+        }
+
         this.preloadMeasuringPoint();
 
         this.handleFormChanges();
+    }
+
+    setMeasuringPointStartTime(time: TimeDto) {
+        this.form.controls.measuringPointStartTime.setValue(time);
     }
 
     setSelectedDate(date: Date) {
