@@ -10,10 +10,9 @@ import { InstitucionesComponent } from './routes/instituciones/instituciones.com
 import { ManageKeysComponent } from './routes/manage-keys/manage-keys.component';
 import { ProfileComponent } from './routes/profile/profile.component';
 import { SETTINGS_ROUTES } from './routes/settings';
-import { UpdatePasswordComponent } from '../auth/components/update-password/update-password.component';
-import {
-	UpdatePasswordSuccessComponent
-} from '../auth/components/update-password-success/update-password-success.component';
+import { UpdatePasswordComponent } from "../auth/components/update-password/update-password.component";
+import { UpdatePasswordSuccessComponent } from "../auth/components/update-password-success/update-password-success.component";
+import { TemplateRenderComponent } from './routes/template-render/template-render.component';
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
 import { MANAGER_ROLES } from './constants/menu';
 import { RouteMenuComponent } from '@presentation/components/route-menu/route-menu.component';
@@ -42,6 +41,7 @@ const routes: Routes = [
 				component: ManageKeysComponent,
 			},
 			{ path: `${HomeRoutes.Extension}/:menuItemId`, component: SystemExtensionComponent },
+			{ path: `${HomeRoutes.Settings}/template/:templateId`, component: TemplateRenderComponent },
 			{
 				path: HomeRoutes.Settings,
 				component: RouteMenuComponent,

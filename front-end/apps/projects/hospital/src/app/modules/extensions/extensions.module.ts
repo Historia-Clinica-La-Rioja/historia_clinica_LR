@@ -83,6 +83,7 @@ import { cubejsOptions } from './extensions-cubejs';
 		PageLayoutComponent,
 		UiExternalComponentComponent,
 		UiComponentComponent,
+		JsonComponent,
 	]
 })
 export class ExtensionsModule { }
