@@ -15,7 +15,7 @@ import healthcareprofessionallicensenumbers from './healthcareprofessionallicens
 import licensenumbertypes from './licensenumbertypes';
 import healthcareprofessionalspecialtylicensenumbers from './healthcareprofessionalspecialtylicensenumbers';
 
-const resourcesStaff = (permissions: SGXPermissions) => [
+export const resourcesStaff = (permissions: SGXPermissions) => [
     <Resource name="person" {...person(permissions)} />,
     <Resource name="admin" {...admin(permissions)}/>,
     <Resource name="users" {...users}/>,
@@ -29,4 +29,8 @@ const resourcesStaff = (permissions: SGXPermissions) => [
     <Resource name="licensenumbertypes" {...licensenumbertypes} />,
 ];
 
-export default resourcesStaff;
+export const resourcesForAdministradorDeDatosPersonales = (permissions: SGXPermissions) => [
+    <Resource name="person" {...person(permissions)} />,
+    <Resource name="identificationTypes" />,
+    <Resource name="genders" />,
+];

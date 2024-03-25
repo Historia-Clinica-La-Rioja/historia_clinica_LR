@@ -34,6 +34,11 @@ class SGXPermissions {
         return this.featureFlags.find(ff => ff === featureFlag) !== undefined;
     }
 
+    hasOnlyOneAssigment(...anyAssignment: RoleAssignment[]) {
+        const oneRole = (this.roleAssignments.length === 1 && anyAssignment[0].role === this.roleAssignments[0].role);
+        return oneRole;
+    }
+
 }
   
 export default SGXPermissions;

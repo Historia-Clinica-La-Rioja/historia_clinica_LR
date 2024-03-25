@@ -16,7 +16,7 @@ import {
     SgxDateField,
     CreateRelatedButton,
 } from '../../components';
-import { ADMINISTRADOR_DE_DATOS_PERSONALES } from '../../roles';
+import { ADMINISTRADOR, ADMINISTRADOR_DE_DATOS_PERSONALES, ROOT } from '../../roles';
 import { usePermissions } from 'react-admin';
 
 const redirect = (personId) => {
@@ -53,50 +53,67 @@ const PersonShowActions = ({ data }) => {
 };
 
 const PersonShow = props =>{ 
+	const { permissions } = usePermissions();
     let personId = props.id;
     return (
     <Show actions={<PersonShowActions />} {...props}>
         <TabbedShowLayout>
-            <Tab label="resources.person.tabs.details" id="personal_information">
-                <TextField source="firstName" />
-                <TextField source="middleNames" />
-                <TextField source="lastName" />
-                <TextField source="otherLastNames" />
-                <ReferenceField source="identificationTypeId" reference="identificationTypes" link={false}>
-                    <TextField source="description" />
-                </ReferenceField>
-                <TextField source="identificationNumber" />
-                <ReferenceField source="genderId" reference="genders" link={false}>
-                    <TextField source="description" />
-                </ReferenceField>
-                <SgxDateField source="birthDate" />
-                <TextField source="email" />
-            </Tab>
+            {personalInformationTab()}
 
-            <Tab label="resources.person.tabs.users" id="users">
-                <ReferenceManyField label="resources.person.tabs.users" reference="users" target="personId">
-                    <UserTab personId={personId} />
-                </ReferenceManyField>
-            </Tab>
+			{permissions?.hasAnyAssignment(ROOT, ADMINISTRADOR) && 
+				[
+					userTab(personId),
+					professionsTab(personId)
+				]
+			}
             
-            <Tab label="resources.professionalprofessions.tab.title" id="professions">
-                <ReferenceManyField addLabel={false} reference="professionalprofessions" target="personId">
-                    <Datagrid rowClick="show">
-                        <ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" link={false}>
-                            <TextField source="description" />
-                        </ReferenceField>
-                        <DeleteButton redirect={redirect(personId)}/>
-                    </Datagrid>
-                </ReferenceManyField>
-                <CreateRelatedButton
-                customRecord={{personId: personId}}
-                reference="professionalprofessions"
-                refFieldName="personId"
-                label="resources.person.buttons.linkProfession"/>
-            </Tab>
 
         </TabbedShowLayout>
     </Show>
 )};
+
+const personalInformationTab = () => {
+    return (<Tab label="resources.person.tabs.details" id="personal_information">
+				<TextField source="firstName" />
+				<TextField source="middleNames" />
+				<TextField source="lastName" />
+				<TextField source="otherLastNames" />
+				<ReferenceField source="identificationTypeId" reference="identificationTypes" link={false}>
+					<TextField source="description" />
+				</ReferenceField>
+				<TextField source="identificationNumber" />
+				<ReferenceField source="genderId" reference="genders" link={false}>
+					<TextField source="description" />
+				</ReferenceField>
+				<SgxDateField source="birthDate" />
+				<TextField source="email" />
+			</Tab>)
+}
+
+const userTab = (personId) => {
+    return (<Tab label="resources.person.tabs.users" id="users">
+				<ReferenceManyField label="resources.person.tabs.users" reference="users" target="personId">
+					<UserTab personId={personId} />
+				</ReferenceManyField>
+			</Tab>)
+}
+
+const professionsTab = (personId) => {
+    return (<Tab label="resources.professionalprofessions.tab.title" id="professions">
+				<ReferenceManyField addLabel={false} reference="professionalprofessions" target="personId">
+					<Datagrid rowClick="show">
+						<ReferenceField source="professionalSpecialtyId" reference="professionalspecialties" link={false}>
+							<TextField source="description" />
+						</ReferenceField>
+						<DeleteButton redirect={redirect(personId)}/>
+					</Datagrid>
+				</ReferenceManyField>
+				<CreateRelatedButton
+				customRecord={{personId: personId}}
+				reference="professionalprofessions"
+				refFieldName="personId"
+				label="resources.person.buttons.linkProfession"/>
+			</Tab>)
+}
 
 export default PersonShow;
