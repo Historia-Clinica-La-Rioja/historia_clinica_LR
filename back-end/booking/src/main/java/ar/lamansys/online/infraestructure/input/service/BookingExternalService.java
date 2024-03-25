@@ -97,7 +97,7 @@ public class BookingExternalService implements SharedBookingPort {
 
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalTime appointmentTime = LocalTime.parse(bookingAppointmentDto.getHour().concat(":00"), timeFormatter);
+		LocalTime appointmentTime = LocalTime.parse(bookingAppointmentDto.getHour(), timeFormatter);
 		LocalDate appointmentDate = LocalDate.parse(bookingAppointmentDto.getDay(), dateFormatter);
 		if (appointmentDateTimeIsNotValid(appointmentTime, relatedOpeningHours.get(), appointmentDate, diary))
 			throw new RuntimeException("El horario seleccionado no es válido para la franja horaria");
