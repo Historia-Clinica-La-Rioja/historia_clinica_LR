@@ -58,6 +58,9 @@ export class HomeComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled => {
 			this.nameSelfDeterminationEnabled = isEnabled
 		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
+			this.ffOfCardsIsOn = isEnabled
+		});
 	}
 
 	ngOnInit(): void {
@@ -66,6 +69,10 @@ export class HomeComponent implements OnInit {
 
 	}
 
+	private scrollToSearchResults() {
+		let searchResult = document.getElementById("searchResults");
+		searchResult.scrollIntoView({ behavior: 'smooth' });
+	}
 
 	private initPersonalInformationForm() {
 		this.personalInformationForm = this.formBuilder.group({
@@ -125,14 +132,16 @@ export class HomeComponent implements OnInit {
 			const personalInformationFilter = this.getPersonalInformationFilters();
 			this.patientService.searchPatientOptionalFilters(personalInformationFilter)
 				.subscribe((data: LimitedPatientSearchDto) => {
-					this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
-						this.ffOfCardsIsOn = isEnabled;
-						if (this.ffOfCardsIsOn)
-							this.patientData = data.patientList;
-						else
-							this.tableModel = this.buildTable(data.patientList);
-						this.patientResultsLength = data.actualPatientSearchSize;
-					});
+					if (this.ffOfCardsIsOn) {
+						this.patientData = data.patientList;
+					}
+					else {
+						this.tableModel = this.buildTable(data.patientList);
+					}
+					this.patientResultsLength = data.actualPatientSearchSize;
+					setTimeout(() => {
+						this.scrollToSearchResults();
+					}, 500);
 				});
 		}
 	}
