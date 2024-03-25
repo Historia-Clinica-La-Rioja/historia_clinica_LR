@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DigitalSignatureDocumentDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, LoggedUserDto, MedicationDto, PageDto, PersonalHistoryDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model.d';
+import { AllergyConditionDto, AnthropometricDataDto, AppFeature, DiagnosisDto, DigitalSignatureDocumentDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, LoggedUserDto, MedicationDto, PageDto, PersonalHistoryDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model.d';
 import { DigitalSignatureService } from '@api-rest/services/digital-signature.service';
 import { ItemListCard, ItemListOption, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { DocumentService } from '@api-rest/services/document.service';
@@ -12,6 +12,8 @@ import { ContextService } from '@core/services/context.service';
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { getDocumentType } from '@core/constants/summaries';
+import { URL_DOCUMENTS_SIGNATURE } from '../../../documents-signature/routes/home/home.component';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
   selector: 'app-home',
@@ -29,13 +31,23 @@ export class HomeComponent implements OnInit {
     detailedInformation: DetailedInformation;
 	readonly PAGE_SIZE = 5;
 	elementsAmount: number;
+    buttonBack = false;
 
     constructor(private readonly digitalSignature: DigitalSignatureService,
                 private readonly documentService: DocumentService,
                 private readonly account: AccountService,
                 private readonly dialog: MatDialog,
                 private readonly router: Router,
-                private readonly contextService: ContextService) { }
+                private readonly contextService: ContextService,
+                private readonly featureFlagService: FeatureFlagService) {
+                    this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_DIGITAL).subscribe(isEnabledDigital =>{
+                        this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_CONJUNTA).subscribe(isEnabledConjunta =>{
+                          if(isEnabledConjunta && isEnabledDigital){
+                            this.buttonBack = true;
+                          }
+                        }) 
+                      })
+                }
 
     ngOnInit(): void {
         this.ROUTE_PREFIX = `institucion/${this.contextService.institutionId}/`;
@@ -103,6 +115,10 @@ export class HomeComponent implements OnInit {
         this.documentService.getDocumentInfo(ids.id)
             .subscribe((document: DocumentDto) => this.buildDetailedInformation(document));
     }
+
+    goToBackDocumentsSignature(){
+        this.router.navigate([`${this.ROUTE_PREFIX}${URL_DOCUMENTS_SIGNATURE}`]);
+      }
 
     private buildDetailedInformation(document: DocumentDto) {
         this.detailedInformation = {

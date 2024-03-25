@@ -6,6 +6,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const URL_DIGITAL_SIGNATURE = 'firma-digital/documentos';
 const URL_JOINT_SIGNATURE = 'firma-conjunta';
+export const URL_DOCUMENTS_SIGNATURE = 'firma-documentos';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -14,7 +15,7 @@ const URL_JOINT_SIGNATURE = 'firma-conjunta';
 export class HomeComponent implements OnInit {
   routePrefix: string;
   isEnabledDigitalSignature: boolean;
-  isEnabledJointSignature: boolean;
+  isEnabledJointSignature = false ;
   constructor(private readonly featureFlagService: FeatureFlagService,
     private router: Router,
     private contextService: ContextService) {
