@@ -280,8 +280,8 @@ export class HomeComponent implements OnInit {
 		if (this.form.valid) {
 			this.isLoadingRequestReport = true;
 			let params: ReportFilters = {
-				startDate: this.form.controls.startDate.value,
-				endDate: this.form.controls.endDate.value,
+				startDate: fixDate(this.form.controls.startDate.value),
+				endDate: fixDate(this.form.controls.endDate.value),
 				specialtyId: this.form.controls.specialtyId.value,
 				professionalId: this.form.controls.professionalId.value,
 				hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
@@ -425,8 +425,8 @@ interface ReportForm {
 }
 
 export interface ReportFilters {
-	startDate: Moment;
-	endDate: Moment;
+	startDate: Date;
+	endDate: Date;
 	specialtyId?: number;
 	professionalId?: number;
 	hierarchicalUnitTypeId?: number;
