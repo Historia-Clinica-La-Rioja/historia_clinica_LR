@@ -30,13 +30,9 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { ContextService } from '@core/services/context.service';
 import { DownloadService } from '@core/services/download.service';
-import {
-	DateFormat,
-	momentFormat,
-} from '@core/utils/moment.utils';
-
 import { environment } from '@environments/environment';
-import * as moment from 'moment';
+import { toFileFormat } from '@api-rest/mapper/date.mapper';
+import { fixDate } from '@core/utils/date/format';
 
 @Injectable({
 	providedIn: 'root'
@@ -275,9 +271,10 @@ export class AppointmentsService {
 	}
 
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
+		const date = fixDate(appointmentData.date);
 		const appointmentId: number = appointmentData.appointmentId;
 		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
-		const appointmentDate: string = momentFormat(moment(appointmentData.date), DateFormat.FILE_DATE);
+		const appointmentDate: string = toFileFormat(date);
 		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
 
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId });
