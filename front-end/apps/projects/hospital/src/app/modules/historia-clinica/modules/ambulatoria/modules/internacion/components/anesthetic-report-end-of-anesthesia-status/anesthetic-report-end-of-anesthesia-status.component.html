@@ -2,47 +2,47 @@
     <div fxLayout="column" fxLayoutGap="16px">
 
         <div data-id="painful-sensitivity">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.PAINFUL_SENSITIVITY" (onOptionChange)="handleOptionSelected($event, 'painfulSensitivity')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.painfulSensitivity" (onOptionChange)="handleOptionSelected($event, 'painfulSensitivity')"></app-radio-group>
         </div>
 
         <div data-id="corneal-reflex">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.CORNEAL_REFLEX" (onOptionChange)="handleOptionSelected($event, 'cornealReflex')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.cornealReflex" (onOptionChange)="handleOptionSelected($event, 'cornealReflex')"></app-radio-group>
         </div>
 
         <div data-id="obey-orders">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.OBEY_ORDERS" (onOptionChange)="handleOptionSelected($event, 'obeyOrders')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.obeyOrders" (onOptionChange)="handleOptionSelected($event, 'obeyOrders')"></app-radio-group>
         </div>
 
         <div data-id="talk">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.TALK" (onOptionChange)="handleOptionSelected($event, 'talk')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.talk" (onOptionChange)="handleOptionSelected($event, 'talk')"></app-radio-group>
         </div>
 
         <div data-id="respiratory-depression">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.RESPIRATORY_DEPRESSION" (onOptionChange)="handleOptionSelected($event, 'respiratoryDepression')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.respiratoryDepression" (onOptionChange)="handleOptionSelected($event, 'respiratoryDepression')"></app-radio-group>
         </div>
 
         <div data-id="circulatory-depression">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.CIRCULATORY_DEPRESSION" (onOptionChange)="handleOptionSelected($event, 'circulatoryDepression')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.circulatoryDepression" (onOptionChange)="handleOptionSelected($event, 'circulatoryDepression')"></app-radio-group>
         </div>
 
         <div data-id="vomiting">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.VOMITING" (onOptionChange)="handleOptionSelected($event, 'vomiting')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.vomiting" (onOptionChange)="handleOptionSelected($event, 'vomiting')"></app-radio-group>
         </div>
 
         <div data-id="cured">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.CURED" (onOptionChange)="handleOptionSelected($event, 'cured')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.cured" (onOptionChange)="handleOptionSelected($event, 'cured')"></app-radio-group>
         </div>
 
         <div data-id="tracheal-cannula">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.TRACHEAL_CANNULA" (onOptionChange)="handleOptionSelected($event, 'trachealCannula')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.trachealCannula" (onOptionChange)="handleOptionSelected($event, 'trachealCannula')"></app-radio-group>
         </div>
 
         <div data-id="pharyngeal-cannula">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.PHARYNGEAL_CANNULA" (onOptionChange)="handleOptionSelected($event, 'pharyngealCannula')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.pharyngealCannula" (onOptionChange)="handleOptionSelected($event, 'pharyngealCannula')"></app-radio-group>
         </div>
 
         <div data-id="goes-inside">
-            <app-radio-group title="internaciones.anesthesic-report.end-of-anesthesia-status.sections.GOES_INSIDE" (onOptionChange)="handleOptionSelected($event, 'goesInside')"></app-radio-group>
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.goesInside" (onOptionChange)="handleOptionSelected($event, 'goesInside')"></app-radio-group>
             
             <div *ngIf="allowOptions">
                 <mat-radio-group class="internment-options" fxLayout="column" fxLayoutGap="8px" (change)="onInternmentOptionsChange($event)">

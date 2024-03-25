@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AnestheticReportIntrasurgicalAnestheticProceduresService, INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS } from '../../services/anesthetic-report-intrasurgical-anesthetic-procedures.service';
+import { AnestheticReportIntrasurgicalAnestheticProceduresService, INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS, IntresurgicalAnestheticProceduresRadioGroups } from '../../services/anesthetic-report-intrasurgical-anesthetic-procedures.service';
 import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
@@ -14,10 +14,14 @@ export class AnestheticReportIntrasurgicalAnestheticProceduresComponent implemen
     form: FormGroup;
     intrasurgicalAnestheticProceduresOptions = INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS;
 
+    intrasurgicalAnestheticProceduresRadioGroups: IntresurgicalAnestheticProceduresRadioGroups;
+
     constructor() { }
 
     ngOnInit(): void {
         this.form = this.service.getForm();
+
+        this.intrasurgicalAnestheticProceduresRadioGroups = this.service.getIntrasurgicalAnestheticProceduresRadioGroups();
     }
 
     onVenousAccessChange($event: MatRadioChange){

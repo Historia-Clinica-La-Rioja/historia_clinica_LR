@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { EInternmentPlace, PostAnesthesiaStatusDto } from '@api-rest/api-model';
+import { RadioGroupInputData, generateRadioGroupInputData } from '@presentation/components/radio-group/radio-group.component';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
@@ -14,6 +15,20 @@ export class AnestheticReportEndOfAnesthesiaStatusService {
 
     private isEmptySource = new BehaviorSubject<boolean>(true);
 	isEmpty$ = this.isEmptySource.asObservable();
+
+    private endOfAnesthesiaRadioGroups: EndOfAnesthesiaRadioGroups = {
+        painfulSensitivity: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.PAINFUL_SENSITIVITY'),
+        cornealReflex: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.CORNEAL_REFLEX'),
+        obeyOrders: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.OBEY_ORDERS'),
+        talk: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.TALK'),
+        respiratoryDepression: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.RESPIRATORY_DEPRESSION'),
+        circulatoryDepression: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.CIRCULATORY_DEPRESSION'),
+        vomiting: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.VOMITING'),
+        cured: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.CURED'),
+        trachealCannula: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.TRACHEAL_CANNULA'),
+        pharyngealCannula: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.PHARYNGEAL_CANNULA'),
+        goesInside: generateRadioGroupInputData('internaciones.anesthesic-report.end-of-anesthesia-status.sections.GOES_INSIDE'),
+    }
 
     constructor() {
         this.form = new FormGroup<IntrasurgicalAnestheticProceduresForm>({
@@ -30,6 +45,10 @@ export class AnestheticReportEndOfAnesthesiaStatusService {
             goesInside: new FormControl(null),
             goesInsideOptions: new FormControl(null),
         });
+    }
+
+    getEndOfAnesthesiaRadioGroups(): EndOfAnesthesiaRadioGroups {
+        return this.endOfAnesthesiaRadioGroups;
     }
 
     getPostAnesthesiaStatusDto(note?: string): PostAnesthesiaStatusDto {
@@ -136,4 +155,18 @@ export enum END_OF_ANESTHESIA_STATUS_OPTIONS {
 export enum INTERNMENT_OPTIONS {
     FLOOR = 0,
     INTENSIVE_CARE_UNIT = 1,
+}
+
+export interface EndOfAnesthesiaRadioGroups {
+    painfulSensitivity: RadioGroupInputData,
+    cornealReflex: RadioGroupInputData,
+    obeyOrders: RadioGroupInputData,
+    talk: RadioGroupInputData,
+    respiratoryDepression: RadioGroupInputData,
+    circulatoryDepression: RadioGroupInputData,
+    vomiting: RadioGroupInputData,
+    cured: RadioGroupInputData,
+    trachealCannula: RadioGroupInputData,
+    pharyngealCannula: RadioGroupInputData,
+    goesInside: RadioGroupInputData,
 }

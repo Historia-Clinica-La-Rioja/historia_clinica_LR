@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { RadioGroupInputData, generateRadioGroupInputData } from '@presentation/components/radio-group/radio-group.component';
 
 @Injectable({
     providedIn: 'root'
@@ -8,12 +9,22 @@ export class AnestheticReportIntrasurgicalAnestheticProceduresService {
 
     private form: FormGroup;
 
+    private intrasurgicalAnestheticProceduresRadioGroups: IntresurgicalAnestheticProceduresRadioGroups = {
+        venousAccessRadioGroupInputData: generateRadioGroupInputData("internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.VENOUS_ACCESS", null, null, "column", "column"),
+        nasogastricTubeRadioGroupInputData: generateRadioGroupInputData("internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.NASOGASTRIC_TUBE", null, null, "column", "column"),
+        urinaryCatheterRadioGroupInputData: generateRadioGroupInputData("internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.URINARY_CATHETER", null, null, "column", "column"),
+    }
+
     constructor() {
         this.form = new FormGroup<IntrasurgicalAnestheticProceduresForm>({
             venousAccess: new FormControl(null),
             nasogastricTube: new FormControl(null),
             urinaryCatheter: new FormControl(null),
         });
+    }
+
+    getIntrasurgicalAnestheticProceduresRadioGroups(): IntresurgicalAnestheticProceduresRadioGroups {
+        return this.intrasurgicalAnestheticProceduresRadioGroups
     }
 
     setVenousAccess(venousAccess: INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS){
@@ -60,4 +71,10 @@ export interface IntrasurgicalAnestheticProceduresData {
 export enum INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS {
     YES = 1,
     NO = 2,
+}
+
+export interface IntresurgicalAnestheticProceduresRadioGroups {
+    venousAccessRadioGroupInputData: RadioGroupInputData,
+    nasogastricTubeRadioGroupInputData: RadioGroupInputData,
+    urinaryCatheterRadioGroupInputData: RadioGroupInputData,
 }

@@ -15,11 +15,20 @@ const DEFAULT_RADIO_GROUP = [
 
 export class RadioGroupComponent {
 
-    @Input() title: string;
-    @Input() position = Position.ROW;
-    @Input() optionsPosition = Position.ROW;
-    @Input() data: RadioGroupData[] = DEFAULT_RADIO_GROUP;
-	@Input() color?: ThemePalette = 'primary';
+    @Input() set radioGroupInputData(radioGroupInputData: RadioGroupInputData) {
+        this._radioGroupInputData = {
+            presentation: {
+                title: radioGroupInputData.presentation.title,
+                data: radioGroupInputData.presentation.data || DEFAULT_RADIO_GROUP,
+                color: radioGroupInputData.presentation.color || 'primary'
+            },
+            alignments: {
+                position: radioGroupInputData.alignments.position || Position.ROW,
+                optionsPosition: radioGroupInputData.alignments.optionsPosition || Position.ROW
+            }
+        }
+    };
+    _radioGroupInputData: RadioGroupInputData;
     @Output() onOptionChange: EventEmitter<RadioGroupData> = new EventEmitter<RadioGroupData>();
 
     constructor() { }
@@ -37,4 +46,30 @@ export enum Position {
 export interface RadioGroupData {
     value: number,
     description: string
+}
+
+export interface RadioGroupInputData {
+    presentation: {
+        title: string,
+        data?: RadioGroupData[],
+        color?: ThemePalette
+    },
+    alignments: {
+        position?: string,
+        optionsPosition?: string
+    }
+}
+
+export function generateRadioGroupInputData(title: string, data?: RadioGroupData[], color?: ThemePalette, position?: string, optionsPosition?: string): RadioGroupInputData {
+    return {
+        presentation: {
+            title,
+            data,
+            color,
+        },
+        alignments: {
+            position,
+            optionsPosition,
+        }
+    }
 }
