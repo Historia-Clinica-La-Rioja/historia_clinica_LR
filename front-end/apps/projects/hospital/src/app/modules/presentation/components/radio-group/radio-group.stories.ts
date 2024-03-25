@@ -5,43 +5,13 @@ const meta: Meta<RadioGroupComponent> = {
 	title: 'Presentation/RadioGroupComponent',
 	component: RadioGroupComponent,
 	tags: ['autodocs'],
-	argTypes: {
-		color: {
-			options: ['primary', 'accent', 'warn'],
-			control: {
-				type: 'select',
-			},
-            description: 'Usar ThemePallet',
-            table: {
-                defaultValue: { summary: 'primary' },
-            }
-		},
-        position: {
-            options: ['column', 'row'],
-			control: {
-                type: 'select',
-			},
-			description: 'Flex layout para el title y el contenedor de los radiobuttons',
-            table: { 
-                defaultValue: { summary: 'row' } 
-            }
-        },
-        optionsPosition: {
-            options: ['column', 'row'],
-			control: {
-				type: 'select',
-			},
-			description: 'Flex layout para los radiobuttons',
-            table: { 
-                defaultValue: { summary: 'row' } 
-            }
-        },
-        data: {
-            description: 'Objeto de tipo RadioGroupData { value: number, description: string }',
-            table: { 
-                defaultValue: { summary: '[{value: 1, description: "Si"}, {value: 2, description: "No"}]' } 
-            }
-        }
+	argTypes: { 
+		radioGroupInputData: {
+			description: '<strong>Title:</strong> string para definir el titulo del radiogroup <br> <strong>data:</strong> array de opciones. Objeto con atributos: value y description <br><strong>color:</strong> themePallete para definir el color del radiobutton <br> <strong>position:</strong> Flex layout para el title y el contenedor de los radiobuttons <br> <strong>optionsPosition:</strong> Flex layout para los radiobuttons',
+			table: { 
+				defaultValue: { summary: 'color: primary, data:[{value: 1, description: "Si"}, {value: 2, description: "No"}], position: row, optionsPosition: row' } 
+			}      
+		}
 	}
 };
 
@@ -50,52 +20,135 @@ type Story = StoryObj<RadioGroupComponent>;
 
 export const rowRowRadiobutton: Story = {
 	args: {
-		color: 'primary',
-		position: Position.ROW,
-		optionsPosition: Position.ROW,
-		title: 'Row row radiobutton',
-        data: [
-            {value: 1, description: "Si"},
-            {value: 2, description: "No"}
-        ]
+		radioGroupInputData: {
+			presentation: {
+				color: 'primary',
+				title: 'Row row radiobutton',
+				data: [
+					{value: 1, description: "Si"},
+					{value: 2, description: "No"}
+				]
+			},
+			alignments: {
+				position: Position.ROW,
+				optionsPosition: Position.ROW,
+			}        
+		}
 	},
 };
 
 export const rowColumnRadiobutton: Story = {
 	args: {
-		color: 'primary',
-		position: Position.ROW,
-		optionsPosition: Position.COLUMN,
-		title: 'Row column radiobutton',
-        data: [
-            {value: 1, description: "Si"},
-            {value: 2, description: "No"}
-        ]
+		radioGroupInputData: {
+			presentation: {
+				color: 'primary',
+				title: 'Row column radiobutton',
+				data: [
+					{value: 1, description: "Si"},
+					{value: 2, description: "No"}
+				]
+			},
+			alignments: {
+				position: Position.ROW,
+				optionsPosition: Position.COLUMN,
+			}        
+		}
 	},
 };
 
 export const columnColumnRadiobutton: Story = {
 	args: {
-		color: 'primary',
-		position: Position.COLUMN,
-		optionsPosition: Position.COLUMN,
-		title: 'Column column radiobutton',
-        data: [
-            {value: 1, description: "Si"},
-            {value: 2, description: "No"}
-        ]
+		radioGroupInputData: {
+			presentation: {
+				color: 'primary',
+				title: 'Column column radiobutton',
+				data: [
+					{value: 1, description: "Si"},
+					{value: 2, description: "No"}
+				]
+			},
+			alignments: {
+				position: Position.COLUMN,
+				optionsPosition: Position.COLUMN,
+			}        
+		}
 	},
 };
 
 export const columnRowRadiobutton: Story = {
 	args: {
-		color: 'primary',
-		position: Position.COLUMN,
-		optionsPosition: Position.ROW,
-		title: 'Column row radiobutton',
-        data: [
-            {value: 1, description: "Si"},
-            {value: 2, description: "No"}
-        ]
+		radioGroupInputData: {
+			presentation: {
+				color: 'primary',
+				title: 'Column row radiobutton',
+				data: [
+					{value: 1, description: "Si"},
+					{value: 2, description: "No"}
+				]
+			},
+			alignments: {
+				position: Position.COLUMN,
+				optionsPosition: Position.ROW,
+			}        
+		}
+	},
+};
+
+export const defaultWarnRadiobutton: Story = {
+	args: {
+		radioGroupInputData: {
+			presentation: {
+				color: 'warn',
+				title: 'Default warn radiobutton',
+				data: [
+					{value: 1, description: "Si"},
+					{value: 2, description: "No"}
+				]
+			},
+			alignments: {
+				position: Position.ROW,
+				optionsPosition: Position.ROW,
+			}        
+		}
+	},
+};
+
+export const defaultAccentRadiobutton: Story = {
+	args: {
+		radioGroupInputData: {
+			presentation: {
+				color: 'accent',
+				title: 'Default accent radiobutton',
+				data: [
+					{value: 1, description: "Si"},
+					{value: 2, description: "No"}
+				]
+			},
+			alignments: {
+				position: Position.ROW,
+				optionsPosition: Position.ROW,
+			}        
+		}
+	},
+};
+
+
+export const customOptionsRadioButton: Story = {
+	args: {
+		radioGroupInputData: {
+			presentation: {
+				color: 'primary',
+				title: 'Custom options radiobutton',
+				data: [
+					{value: 1, description: "Opcion 1"},
+					{value: 2, description: "Opcion 2"},
+					{value: 3, description: "Opcion 3"}
+				]
+			},
+			alignments: {
+				position: Position.ROW,
+				optionsPosition: Position.ROW,
+			}        
+		}
 	},
 };
