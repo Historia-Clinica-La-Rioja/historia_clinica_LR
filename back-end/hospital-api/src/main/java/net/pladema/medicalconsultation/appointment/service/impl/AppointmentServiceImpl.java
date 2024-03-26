@@ -357,8 +357,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public boolean updateMedicalCoverage(Integer appointmentId, Integer patientMedicalCoverage) {
 		appointmentRepository.findById(appointmentId).ifPresent(a -> {
 			if(a.isAssigned()) {
-				a.setPatientMedicalCoverageId(patientMedicalCoverage);
-				appointmentRepository.save(a);
+				appointmentRepository.updateMedicalCoverage(patientMedicalCoverage, appointmentId, UserInfo.getCurrentAuditor());
 			}
 		});
 		log.debug(OUTPUT, Boolean.TRUE);
@@ -527,6 +526,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 			appointment.get().setPatientId(updateAppointmentBo.getPatientId());
 			appointment.get().setPatientMedicalCoverageId(updateAppointmentBo.getPatientMedicalCoverageId());
 			appointment.get().setIsOverturn(updateAppointmentBo.isOverturn());
+			appointment.get().setPhonePrefix(updateAppointmentBo.getPhonePrefix());
 			appointment.get().setPhoneNumber(updateAppointmentBo.getPhoneNumber());
 			return AppointmentBo.newFromAppointment(appointmentRepository.save(appointment.get()));
 		}

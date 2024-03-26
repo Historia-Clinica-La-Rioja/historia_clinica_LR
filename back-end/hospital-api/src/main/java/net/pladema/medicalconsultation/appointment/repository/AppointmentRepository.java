@@ -206,7 +206,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
     @Transactional
     @Modifying
-    @Query( "UPDATE Appointment  AS a " +
+    @Query( "UPDATE Appointment AS a " +
             "SET a.phoneNumber = :phoneNumber, " +
 			"a.phonePrefix = :phonePrefix, " +
             "a.updateable.updatedOn = CURRENT_TIMESTAMP, " +
@@ -216,6 +216,17 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 						   @Param("phonePrefix") String phonePrefix,
                            @Param("phoneNumber") String phoneNumber,
                            @Param("userId") Integer userId);
+
+	@Transactional
+	@Modifying
+	@Query( "UPDATE Appointment AS a " +
+			"SET a.patientMedicalCoverageId = :patientMedicalCoverage, " +
+			"a.updateable.updatedOn = CURRENT_TIMESTAMP, " +
+			"a.updateable.updatedBy = :userId " +
+			"WHERE a.id = :appointmentId ")
+	void updateMedicalCoverage(@Param("patientMedicalCoverage") Integer patientMedicalCoverage,
+							   @Param("appointmentId") Integer appointmentId,
+							   @Param("userId") Integer userId);
 
 	@Transactional
 	@Modifying

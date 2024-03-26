@@ -4655,6 +4655,7 @@ export interface UpdateAppointmentDto {
     patientId: number;
     patientMedicalCoverageId?: number;
     phoneNumber?: string;
+    phonePrefix?: string;
 }
 
 export interface UsageReportStatusDto {

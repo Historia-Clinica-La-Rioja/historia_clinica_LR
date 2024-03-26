@@ -664,6 +664,9 @@ export class AppointmentComponent implements OnInit {
 			appointmentStateId: appointmentStateId,
 			overturn: overturn,
 			patientId: patientId,
+			phonePrefix: this.data.appointmentData.phonePrefix,
+			phoneNumber: this.data.appointmentData.phoneNumber,
+			patientMedicalCoverageId: this.appointment.patientMedicalCoverageId
 		}
 		this.appointmentFacade.updateAppointment(appointment).subscribe(() => { },
 			error => {
@@ -888,7 +891,10 @@ export class AppointmentComponent implements OnInit {
 			patientId: this.data.appointmentData.patient.id,
 			id: appointmentId,
 			appointmentOptionId: editOption,
-			modality: this.appointment.modality
+			modality: this.appointment.modality,
+			phonePrefix: this.data.appointmentData.phonePrefix,
+			phoneNumber: this.data.appointmentData.phoneNumber,
+			patientMedicalCoverageId: this.formEdit.controls.newCoverageData.value
 		}
 		return dto;
 	}
