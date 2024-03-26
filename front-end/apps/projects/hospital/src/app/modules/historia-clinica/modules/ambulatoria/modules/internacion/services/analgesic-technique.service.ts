@@ -14,7 +14,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 export class AnalgesicTechniqueService {
 
   snomedConcept:SnomedDto;
-  private form:FormGroup
+  private form:FormGroup<AnalgesicTechniqueForm>;
 
   private dosisErrorSource = new Subject<string | void>();
 	private _dosisError$ = this.dosisErrorSource.asObservable();
@@ -155,7 +155,7 @@ export interface AnalgesicTechniqueData {
 }
 
 export interface AnalgesicTechniqueForm {
-  snomed: FormControl<SnomedDto>;
+  snomed: FormControl<string>;
   dosis: FormControl<number>;
   unit: FormControl<string>;
   cateter: FormControl<Cateter_options>;

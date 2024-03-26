@@ -11,7 +11,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class AnestheticTechniqueService {
 
-  private form:FormGroup
+  private form:FormGroup<AnestheticTechniqueForm>
 
   private readonly ECL = SnomedECL.ANESTHESIA;
   private anestheticTechniqueList: AnestheticTechniqueData[] = []
@@ -146,7 +146,7 @@ export class AnestheticTechniqueService {
 }
 
 export interface AnestheticTechniqueForm {
-  snomed: FormControl<SnomedDto>,
+  snomed: FormControl<string>,
   circuit: FormControl<MasterDataDto>,
   technique: FormControl<MasterDataDto>,
   trachealIntubation: FormControl<trachealIntubation_options>,

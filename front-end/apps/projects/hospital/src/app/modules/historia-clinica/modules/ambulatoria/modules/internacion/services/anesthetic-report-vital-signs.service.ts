@@ -16,7 +16,7 @@ import { Subject, Observable, BehaviorSubject } from 'rxjs';
 })
 export class AnestheticReportVitalSignsService {
 
-    private form: FormGroup;
+    private form: FormGroup<MeasuringPointForm>;
     private measuringPoints: MeasuringPointData[] = [];
     
     private measuringPointsSource = new BehaviorSubject<MeasuringPointData[]>([]);
@@ -297,13 +297,13 @@ export class AnestheticReportVitalSignsService {
     }
 
     setMeasuringPointData(data: MeasuringPointData) {
-        data.measuringPointStartDate ? this.form.value.measuringPointStartDate.setValue(data.measuringPointStartDate) : null ;
-        data.measuringPointStartTime ? this.form.value.measuringPointStartTime.setValue(data.measuringPointStartTime) : null ;
-        data.bloodPressureMax ? this.form.value.bloodPressureMax.setValue(data.bloodPressureMax) : null ;
-        data.bloodPressureMin ? this.form.value.bloodPressureMin.setValue(data.bloodPressureMin) : null ;
-        data.pulse ? this.form.value.pulse.setValue(data.pulse) : null ;
-        data.saturation ? this.form.value.saturation.setValue(data.saturation) : null ;
-        data.endTidal ? this.form.value.endTidal.setValue(data.endTidal) : null ;
+        data.measuringPointStartDate ? this.form.controls.measuringPointStartDate.setValue(data.measuringPointStartDate) : null ;
+        data.measuringPointStartTime ? this.form.controls.measuringPointStartTime.setValue(data.measuringPointStartTime) : null ;
+        data.bloodPressureMax ? this.form.controls.bloodPressureMax.setValue(data.bloodPressureMax) : null ;
+        data.bloodPressureMin ? this.form.controls.bloodPressureMin.setValue(data.bloodPressureMin) : null ;
+        data.pulse ? this.form.controls.pulse.setValue(data.pulse) : null ;
+        data.saturation ? this.form.controls.saturation.setValue(data.saturation) : null ;
+        data.endTidal ? this.form.controls.endTidal.setValue(data.endTidal) : null ;
     }
 }
 

@@ -7,7 +7,7 @@ import { RadioGroupInputData, generateRadioGroupInputData } from '@presentation/
 })
 export class AnestheticReportIntrasurgicalAnestheticProceduresService {
 
-    private form: FormGroup;
+    private form: FormGroup<IntrasurgicalAnestheticProceduresForm>;
 
     private intrasurgicalAnestheticProceduresRadioGroups: IntresurgicalAnestheticProceduresRadioGroups = {
         venousAccessRadioGroupInputData: generateRadioGroupInputData("internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.VENOUS_ACCESS", null, null, "column", "column"),

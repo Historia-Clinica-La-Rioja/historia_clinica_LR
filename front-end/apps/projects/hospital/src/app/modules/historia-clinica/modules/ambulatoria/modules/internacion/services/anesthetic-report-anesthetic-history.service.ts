@@ -7,7 +7,7 @@ import { AnestheticHistoryDto } from '@api-rest/api-model';
 })
 export class AnestheticReportAnestheticHistoryService {
 
-    private form: FormGroup;
+    private form: FormGroup<PreviousAnesthesiaDataForm>;
     private _isEmpty: boolean = true;
 
     constructor() {

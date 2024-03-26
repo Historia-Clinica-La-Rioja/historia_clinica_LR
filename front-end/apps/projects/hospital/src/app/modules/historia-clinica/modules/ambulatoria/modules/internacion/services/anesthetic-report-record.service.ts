@@ -12,7 +12,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AnestheticReportRecordService {
 
     private readonly ECL = SnomedECL.PERSONAL_RECORD;
-    private form: FormGroup;
+    private form: FormGroup<RecordForm>;
 	snomedConcept: SnomedDto;
 
     private recordList: SnomedDto[] = [];
@@ -107,5 +107,5 @@ export class AnestheticReportRecordService {
 }
 
 export interface RecordForm {
-    snomed: FormControl<SnomedDto>;
+    snomed: FormControl<string>;
 }

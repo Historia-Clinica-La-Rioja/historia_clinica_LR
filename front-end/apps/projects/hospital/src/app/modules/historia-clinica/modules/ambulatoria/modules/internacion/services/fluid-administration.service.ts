@@ -13,7 +13,7 @@ export class FluidAdministrationService {
 
   snomedConcept: SnomedDto
   fluidAdministrationDataList: FluidAdministrationData[] = [];
-  private form: FormGroup
+  private form: FormGroup<FluidAdministrationForm>
   private readonly ECL = SnomedECL.MEDICINE;
   private dataEmitter = new BehaviorSubject<FluidAdministrationData[]>(this.fluidAdministrationDataList);
 
@@ -117,7 +117,7 @@ export class FluidAdministrationService {
 
 
 export interface FluidAdministrationForm {
-  snomed: FormControl<SnomedDto>,
+  snomed: FormControl<string>,
   amount: FormControl<number>,
 }
 

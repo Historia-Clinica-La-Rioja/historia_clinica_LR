@@ -1,17 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AnthropometricDataDto, ClinicalObservationDto, MasterDataInterface } from '@api-rest/api-model';
+import { AnthropometricDataDto, MasterDataInterface } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject } from 'rxjs';
-
-export interface DatosAntropometricos {
-	bloodType: ClinicalObservationDto;
-	height: ClinicalObservationDto;
-	weight: ClinicalObservationDto;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +13,7 @@ export interface DatosAntropometricos {
 
 export class AnestheticReportAnthropometricDataService {
 
-    private form: FormGroup;
+    private form: FormGroup<AnthropometricDataForm>;
 	private bloodTypes: MasterDataInterface<string>[];
     private heightErrorSource = new Subject<string | void>();
 	private _heightError$ = this.heightErrorSource.asObservable();
@@ -103,13 +97,13 @@ export class AnestheticReportAnthropometricDataService {
     getAnthropomethricData(): AnthropometricDataDto {
         return {
             bloodType: {
-                value:  this.form.value.bloodType?.toString() || null
+                value:  this.form.value.bloodType?.description || null
             },
             height: {
-                value: this.form.value.height?.toString() || null
+                value: this.form.value.height || null
             },
             weight: {
-                value: this.form.value.weight?.toString() || null
+                value: this.form.value.weight || null
             },
         }
     }
@@ -135,7 +129,7 @@ export class AnestheticReportAnthropometricDataService {
 }
 
 export interface AnthropometricDataForm {
-    bloodType: FormControl<ClinicalObservationDto>;
-    height: FormControl<ClinicalObservationDto>;
-    weight: FormControl<ClinicalObservationDto>;
+    bloodType: FormControl<MasterDataInterface<string>>;
+    height: FormControl<string>;
+    weight: FormControl<string>;
 }

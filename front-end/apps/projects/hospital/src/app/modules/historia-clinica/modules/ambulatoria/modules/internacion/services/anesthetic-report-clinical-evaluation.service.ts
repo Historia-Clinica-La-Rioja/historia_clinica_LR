@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ClinicalObservationDto, RiskFactorDto } from '@api-rest/api-model';
+import { RiskFactorDto } from '@api-rest/api-model';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { CLINICAL_EVALUATION } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,7 +11,7 @@ import { Observable, Subject } from 'rxjs';
 })
 export class AnestheticReportClinicalEvaluationService {
 
-    private form: FormGroup;
+    private form: FormGroup<ClinicalEvaluationDataForm>;
     private maxBloodPressureSource = new Subject<string | void>();
 	private _maxBloodPressure$ = this.maxBloodPressureSource.asObservable();
     private minBloodPressureSource = new Subject<string | void>();
@@ -131,20 +131,20 @@ export class AnestheticReportClinicalEvaluationService {
     private mapToRiskFactorDto(): RiskFactorDto {
         return {
             systolicBloodPressure: this.form.value.maxBloodPressure ? { 
-                value: this.form.value.maxBloodPressure?.toString()
+                value: this.form.value.maxBloodPressure
             } : null,
             diastolicBloodPressure: this.form.value.minBloodPressure ? {
-                value: this.form.value.minBloodPressure?.toString()
+                value: this.form.value.minBloodPressure
             } : null,
             hematocrit: this.form.value.hematocrit ? {
-                value: this.form.value.hematocrit?.toString()
+                value: this.form.value.hematocrit
             } : null,
         }
     }
 }
 
 export interface ClinicalEvaluationDataForm {
-    maxBloodPressure: FormControl<ClinicalObservationDto>;
-    minBloodPressure: FormControl<ClinicalObservationDto>;
-    hematocrit: FormControl<ClinicalObservationDto>;
+    maxBloodPressure: FormControl<string>;
+    minBloodPressure: FormControl<string>;
+    hematocrit: FormControl<string>;
 }
