@@ -4,7 +4,7 @@ import { MatRadioChange } from '@angular/material/radio';
 
 const DEFAULT_RADIO_GROUP = [
     {value: 1, description: "presentation.radio-group.YES"},
-    {value: 2, description: "presentation.radio-group.NO"}
+    {value: 0, description: "presentation.radio-group.NO"}
 ]
 
 @Component({

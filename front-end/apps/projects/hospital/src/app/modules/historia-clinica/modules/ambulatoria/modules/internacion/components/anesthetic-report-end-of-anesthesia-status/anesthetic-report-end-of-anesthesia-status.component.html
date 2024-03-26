@@ -1,8 +1,8 @@
 <form [formGroup]="form" class="intrasurgical-anesthetic-procedures-form">
     <div fxLayout="column" fxLayoutGap="16px">
 
-        <div data-id="painful-sensitivity">
-            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.painfulSensitivity" (onOptionChange)="handleOptionSelected($event, 'painfulSensitivity')"></app-radio-group>
+        <div data-id="intentional-sensitivity">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.intentionalSensitivity" (onOptionChange)="handleOptionSelected($event, 'intentionalSensitivity')"></app-radio-group>
         </div>
 
         <div data-id="corneal-reflex">
@@ -29,8 +29,8 @@
             <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.vomiting" (onOptionChange)="handleOptionSelected($event, 'vomiting')"></app-radio-group>
         </div>
 
-        <div data-id="cured">
-            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.cured" (onOptionChange)="handleOptionSelected($event, 'cured')"></app-radio-group>
+        <div data-id="curated">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.curated" (onOptionChange)="handleOptionSelected($event, 'curated')"></app-radio-group>
         </div>
 
         <div data-id="tracheal-cannula">
@@ -41,8 +41,8 @@
             <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.pharyngealCannula" (onOptionChange)="handleOptionSelected($event, 'pharyngealCannula')"></app-radio-group>
         </div>
 
-        <div data-id="goes-inside">
-            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.goesInside" (onOptionChange)="handleOptionSelected($event, 'goesInside')"></app-radio-group>
+        <div data-id="internment">
+            <app-radio-group [radioGroupInputData]="endOfAnesthesiaRadioGroups.internment" (onOptionChange)="handleOptionSelected($event, 'internment')"></app-radio-group>
             
             <div *ngIf="allowOptions">
                 <mat-radio-group class="internment-options" fxLayout="column" fxLayoutGap="8px" (change)="onInternmentOptionsChange($event)">

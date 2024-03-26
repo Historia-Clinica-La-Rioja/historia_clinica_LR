@@ -9,7 +9,7 @@ const meta: Meta<RadioGroupComponent> = {
 		radioGroupInputData: {
 			description: '<strong>Title:</strong> string para definir el titulo del radiogroup <br> <strong>data:</strong> array de opciones. Objeto con atributos: value y description <br><strong>color:</strong> themePallete para definir el color del radiobutton <br> <strong>position:</strong> Flex layout para el title y el contenedor de los radiobuttons <br> <strong>optionsPosition:</strong> Flex layout para los radiobuttons',
 			table: { 
-				defaultValue: { summary: 'color: primary, data:[{value: 1, description: "Si"}, {value: 2, description: "No"}], position: row, optionsPosition: row' } 
+				defaultValue: { summary: 'color: primary, data:[{value: 1, description: "Si"}, {value: 0, description: "No"}], position: row, optionsPosition: row' } 
 			}      
 		}
 	}
@@ -26,7 +26,7 @@ export const rowRowRadiobutton: Story = {
 				title: 'Row row radiobutton',
 				data: [
 					{value: 1, description: "Si"},
-					{value: 2, description: "No"}
+					{value: 0, description: "No"}
 				]
 			},
 			alignments: {
@@ -45,7 +45,7 @@ export const rowColumnRadiobutton: Story = {
 				title: 'Row column radiobutton',
 				data: [
 					{value: 1, description: "Si"},
-					{value: 2, description: "No"}
+					{value: 0, description: "No"}
 				]
 			},
 			alignments: {
@@ -64,7 +64,7 @@ export const columnColumnRadiobutton: Story = {
 				title: 'Column column radiobutton',
 				data: [
 					{value: 1, description: "Si"},
-					{value: 2, description: "No"}
+					{value: 0, description: "No"}
 				]
 			},
 			alignments: {
@@ -83,7 +83,7 @@ export const columnRowRadiobutton: Story = {
 				title: 'Column row radiobutton',
 				data: [
 					{value: 1, description: "Si"},
-					{value: 2, description: "No"}
+					{value: 0, description: "No"}
 				]
 			},
 			alignments: {
@@ -102,7 +102,7 @@ export const defaultWarnRadiobutton: Story = {
 				title: 'Default warn radiobutton',
 				data: [
 					{value: 1, description: "Si"},
-					{value: 2, description: "No"}
+					{value: 0, description: "No"}
 				]
 			},
 			alignments: {
@@ -121,7 +121,7 @@ export const defaultAccentRadiobutton: Story = {
 				title: 'Default accent radiobutton',
 				data: [
 					{value: 1, description: "Si"},
-					{value: 2, description: "No"}
+					{value: 0, description: "No"}
 				]
 			},
 			alignments: {
