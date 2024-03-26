@@ -42,9 +42,10 @@ public class AnestheticReportController {
         AnestheticReportBo anestheticReport = anestheticReportMapper.fromAnestheticReportDto(anestheticReportDto);
         anestheticReport.setInstitutionId(institutionId);
         anestheticReport.setEncounterId(internmentEpisodeId);
-        Integer documentId = createAnestheticReport.run(anestheticReport);
-        log.trace("Output -> {}", documentId);
-        return ResponseEntity.ok().body(documentId);
+        Integer anestheticReportId = createAnestheticReport.run(anestheticReport);
+
+        log.trace("Output -> {}", anestheticReportId);
+        return ResponseEntity.ok().body(anestheticReportId);
     }
 
     @GetMapping("/{documentId}")

@@ -89,6 +89,8 @@ public class AnestheticReportBo implements IDocumentBo {
 
     private PostAnesthesiaStatusBo postAnesthesiaStatus;
 
+    private String anestheticChart;
+
     @Override
     public Integer getPatientId() {
         return patientInfo != null ? patientInfo.getId() : patientId;

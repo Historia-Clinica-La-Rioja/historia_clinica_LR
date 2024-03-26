@@ -7,7 +7,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
@@ -29,13 +28,6 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.Code128Writer;
-import net.pladema.assets.service.AssetsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
@@ -47,6 +39,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
+import net.pladema.assets.service.AssetsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AuditableContextBuilder {
@@ -122,6 +120,11 @@ public class AuditableContextBuilder {
 		}
 		if (document.getDocumentType() == DocumentType.MEDICAL_IMAGE_REPORT) {
 			addImageReportData(contextMap, document);
+			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
+			return contextMap;
+		}
+		if (document.getDocumentType() == DocumentType.ANESTHETIC_REPORT) {
+			this.addAnestheticReportData(contextMap, document);
 			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 			return contextMap;
 		}
@@ -219,6 +222,10 @@ public class AuditableContextBuilder {
 		ctx.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		ctx.put("evolutionNote", document.getEvolutionNote());
 		ctx.put("conclusions", document.getConclusions());
+	}
+
+	private <T extends IDocumentBo> void addAnestheticReportData(Map<String, Object> ctx, T document) {
+		ctx.put("chart", document.getAnestheticChart());
 	}
 
 	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {

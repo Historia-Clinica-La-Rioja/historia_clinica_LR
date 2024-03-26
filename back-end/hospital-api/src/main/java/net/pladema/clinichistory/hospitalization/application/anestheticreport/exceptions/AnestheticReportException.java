@@ -6,6 +6,7 @@ import net.pladema.clinichistory.hospitalization.domain.exceptions.AnestheticRep
 @Getter
 public class AnestheticReportException extends RuntimeException {
 
+    private static final long serialVersionUID = 6151250753930430220L;
     private final AnestheticReportEnumException code;
 
     public AnestheticReportException(AnestheticReportEnumException code, String message) {

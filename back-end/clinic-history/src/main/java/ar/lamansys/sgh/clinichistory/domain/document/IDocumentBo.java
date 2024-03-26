@@ -213,4 +213,6 @@ public interface IDocumentBo {
     default List<MeasuringPointBo> getMeasuringPoints() { return Collections.emptyList(); }
 
     default PostAnesthesiaStatusBo getPostAnesthesiaStatus() { return null; }
+
+    default String getAnestheticChart() { return null; }
 }
