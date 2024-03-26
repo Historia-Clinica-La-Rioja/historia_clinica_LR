@@ -31,6 +31,7 @@ import { WorklistComponent } from './components/worklist/worklist.component';
 import { WorklistFiltersComponent } from './components/worklist-filters/worklist-filters.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 //pipes
 import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
 
@@ -66,7 +67,9 @@ import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
         PresentationModule,
         ImageNetworkRoutingModule,
         HistoriaClinicaModule,
-        IdentifierCasesComponent
+		//standalone
+        IdentifierCasesComponent,
+		ConceptTypeaheadSearchComponent,
     ],
     exports: [
         ViewStudyComponent,

@@ -19,7 +19,6 @@ import { AntropometricosSummaryComponent } from './components/antropometricos-su
 import { BackgroundListComponent } from './components/background-list/background-list.component';
 import { ClinicalEvaluationSummaryComponent } from './components/clinical-evaluation-summary/clinical-evaluation-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
-import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
@@ -142,6 +141,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
+import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 @NgModule({
 	declarations: [
 		// components
@@ -188,6 +188,33 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
         EvolutionNoteDocumentSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
+		BoxMessageComponent,
+		TemplateConceptTypeaheadSearchComponent,
+		NewConsultationExpansionSectionComponent,
+		ProcedureListComponent,
+		ReasonListComponent,
+		ProblemListComponent,
+		AllergyListComponent,
+		BackgroundListComponent,
+		MedicationListComponent,
+		ReferenceRequestListComponent,
+		EpisodeDataComponent,
+		PatientEvolutionChartsComponent,
+		ProposedSurgeryComponent,
+		ProposedSurgeryBackgroundListComponent,
+		AnestheticReportAnthropometricDataComponent,
+		AnestheticReportClinicalEvaluationComponent,
+		AnestheticReportAnestheticHistoryComponent,
+		AnestheticReportUsualMedicationComponent,
+		AnestheticReportPremedicationAndFoodIntakeComponent,
+		MedicationBackgroundListComponent,
+		AnestheticReportPersonRecordComponent,
+		AnestheticPlanComponent,
+		AnalgesicTechniqueBackgroundListComponent,
+		AnalgesicTechniqueComponent,
+		AnestheticTechniqueComponent,
+		AnestheticTechniqueListComponent,
+		FluidAdministrationListComponent,
 		FluidAdministrationComponent,
 		FluidAdministrationListComponent,
 		HierarchicalUnitConsultationComponent,
@@ -203,7 +230,9 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		MeasuringPointItemComponent,
 		MedicacionSummaryComponent,
 		NewConsultationExpansionSectionComponent,
-		PatientEvolutionChartsButtonComponent, 
+		PatientEvolutionChartsButtonComponent,
+		NonAnestheticDrugsSummaryComponent,
+		PatientEvolutionChartsButtonComponent,
 		PatientEvolutionChartsComponent,
 		PatientProblemsSummaryComponent,
 		PremedicationAndFoodIntakeSummaryComponent,
@@ -284,8 +313,10 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		InstitucionModule,
 		LazyMaterialModule,
 		PresentationModule,
+		//standalone
 		IdentifierCasesComponent,
 		ConceptsListComponent
+		ConceptTypeaheadSearchComponent,
 	],
 	exports: [
 		// components
@@ -301,7 +332,6 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		InternacionAntecedentesPersonalesSummaryComponent,
 		FactoresDeRiesgoFormComponent,
 		BoxMessageComponent,
-		ConceptTypeaheadSearchComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
 		ProcedureListComponent,

@@ -51,6 +51,7 @@ import { SelectMainDiagnosisComponent } from './dialogs/select-main-diagnosis/se
 //standalone
 import { SearchCasesComponent } from 'projects/hospital/src/app/modules/hsi-components/search-cases/search-cases.component';
 import { ConceptsListComponent } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { ConceptTypeaheadSearchComponent } from 'projects/hospital/src/app/modules/hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 //providers
 import { ComponentEvaluationManagerService } from '../../services/component-evaluation-manager.service';
 //review
@@ -118,8 +119,10 @@ import { EditMeasuringPointComponent } from './dialogs/edit-measuring-point/edit
 		PresentationModule,
 		LazyMaterialModule,
 		TurnosModule,
+		//standalone
 		SearchCasesComponent,
-		ConceptsListComponent
+		ConceptsListComponent,
+		ConceptTypeaheadSearchComponent,
 	],
 	providers: [
 		ComponentEvaluationManagerService,

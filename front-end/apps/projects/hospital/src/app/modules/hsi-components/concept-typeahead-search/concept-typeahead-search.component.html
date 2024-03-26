@@ -8,17 +8,17 @@
 				{{option.pt.term}}
 			</mat-option>
 		</mat-autocomplete>
-		<mat-hint>
+		<mat-hint *ngIf="snomedConcept == null">
 			{{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
 		</mat-hint>
-		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon">
+		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon  && (snomedConcept == null)">
 			<mat-icon>search</mat-icon>
 		</button>
-		<button *ngIf="clearButton" id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button
+		<button *ngIf="clearButton && (snomedConcept != null)" id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button
 			(click)="clear()">
 			<mat-icon>close</mat-icon>
-		</button><button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit" color="primary"
-			(click)="emitButton()" matSuffix>
+		</button><button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit"
+			color="primary" (click)="emitButton()" matSuffix>
 			{{buttonMessage | translate | uppercase}}
 		</button>
 	</mat-form-field>

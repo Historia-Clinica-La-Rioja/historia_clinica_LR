@@ -4,15 +4,21 @@ import { Observable, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, mergeMap, startWith } from "rxjs/operators";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
 import { SnomedECL, SnomedDto } from "@api-rest/api-model";
+import { PresentationModule } from '@presentation/presentation.module';
 
 @Component({
 	selector: 'app-concept-typeahead-search',
 	templateUrl: './concept-typeahead-search.component.html',
-	styleUrls: ['./concept-typeahead-search.component.scss']
+	styleUrls: ['./concept-typeahead-search.component.scss'],
+	standalone: true,
+	imports: [PresentationModule]
+
 })
+
+
 export class ConceptTypeaheadSearchComponent {
 
-	private snomedConcept: SnomedDto;
+	snomedConcept: SnomedDto;
 	@Input() ecl: SnomedECL;
 	@Input() placeholder = '';
 	@Input() debounceTime = 300;
@@ -21,6 +27,8 @@ export class ConceptTypeaheadSearchComponent {
 	@Input() clearButton = false;
 	@Input() buttonMessage = '';
 	@Input() showSearchIcon = false;
+	@Input() showOptionSelected = false;
+
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
 	myControl = new UntypedFormControl();
@@ -38,6 +46,7 @@ export class ConceptTypeaheadSearchComponent {
 				return this.filter(searchValue || '')
 			})
 		)
+
 	}
 
 	private filter(searchValue: string): Observable<SnomedDto[]> {
@@ -62,9 +71,10 @@ export class ConceptTypeaheadSearchComponent {
 				sctid: selectedOption.conceptId,
 				pt: selectedOption.pt.term
 			};
-			if(!this.enableSubmitButton){
+			if (!this.enableSubmitButton) {
 				this.conceptSelected.emit(this.snomedConcept);
-				this.clear();
+				if (!this.showOptionSelected)
+					this.clear();
 			}
 		}
 	}

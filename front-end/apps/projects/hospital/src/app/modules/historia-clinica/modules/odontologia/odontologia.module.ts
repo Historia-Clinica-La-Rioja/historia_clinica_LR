@@ -19,6 +19,7 @@ import { NewConsultationAddDiagnoseFormComponent } from './dialogs/new-consultat
 import { ConceptsFacadeService } from './services/concepts-facade.service';
 //standalone
 import { ConceptsListComponent } from '../../../hsi-components/concepts-list/concepts-list.component';
+import { ConceptTypeaheadSearchComponent } from '../../../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 
 @NgModule({
 	declarations: [
@@ -41,7 +42,8 @@ import { ConceptsListComponent } from '../../../hsi-components/concepts-list/con
 		HistoriaClinicaModule,
 		PresentationModule,
 		// standalone
-		ConceptsListComponent
+		ConceptsListComponent,
+		ConceptTypeaheadSearchComponent,
 	],
 	exports: [
 		ToothComponent,
