@@ -7,6 +7,7 @@ import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-edit-measuring-point',
@@ -23,6 +24,8 @@ export class EditMeasuringPointComponent {
     saturationError: String;
     endTidalError: String;    
     timePickerData: TimePickerData;
+
+    private readonly destroy$ = new Subject();
 
     constructor(
 		@Inject(MAT_DIALOG_DATA) public data: EditPointData,
@@ -47,6 +50,11 @@ export class EditMeasuringPointComponent {
         this.preloadMeasuringPoint();
 
         this.handleFormChanges();
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.unsubscribe();
     }
 
     setMeasuringPointStartTime(time: TimeDto) {
@@ -84,23 +92,23 @@ export class EditMeasuringPointComponent {
     }
 
     private handleFormChanges() {
-        this.form.controls.bloodPressureMax.valueChanges.subscribe(_ => {
+        this.form.controls.bloodPressureMax.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
 			this.checkBloodPressureMaxErrors();
 		});
 
-		this.form.controls.bloodPressureMin.valueChanges.subscribe(_ => {
+		this.form.controls.bloodPressureMin.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
 			this.checkBloodPressureMinErrors();
 		});
         
-		this.form.controls.pulse.valueChanges.subscribe(_ => {
+		this.form.controls.pulse.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
 			this.checkPulseErrors();
 		});
 
-		this.form.controls.saturation.valueChanges.subscribe(_ => {
+		this.form.controls.saturation.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
 			this.checSaturationErrors();
 		});
         
-		this.form.controls.endTidal.valueChanges.subscribe(_ => {
+		this.form.controls.endTidal.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
 			this.checkEndTidalErrors();
 		});
     }
