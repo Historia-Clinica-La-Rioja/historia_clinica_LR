@@ -39,6 +39,7 @@ export class ReportsComponent implements OnInit {
 	}
 
 	private buildTable(data: ConsultationsDto[]): TableModel<ConsultationsDto> {
+		const consultationsData = data.map(consultationDto => this.toConsultationDtoWithIsoDate(consultationDto));
 		return {
 			columns: [
 				{
@@ -64,8 +65,7 @@ export class ReportsComponent implements OnInit {
 					columnDef: 'date',
 					header: 'pacientes.reports.table.columns.DATE',
 					text: (row) => {
-						const date: Date = this.isoToDatePipe.transform(row.consultationDate.toString());
-						return this.dateFormatPipe.transform(date, 'date')
+						return this.dateFormatPipe.transform(row.consultationDate, 'date')
 					}
 				},
 				{
@@ -79,7 +79,7 @@ export class ReportsComponent implements OnInit {
 					text: (row) => row.completeProfessionalName
 				},
 			],
-			data,
+			data: consultationsData,
 			enablePagination: true
 		};
 	}
@@ -103,6 +103,13 @@ export class ReportsComponent implements OnInit {
 				this.patientReportsService.getAnnexPdf(oc, this.data.patientName).subscribe();
 			}
 		})
+	}
+
+	private toConsultationDtoWithIsoDate(consultationDto: ConsultationsDto): ConsultationsDto {
+		return {
+			...consultationDto,
+			consultationDate: this.isoToDatePipe.transform(consultationDto.consultationDate.toString())
+		}
 	}
 
 }
