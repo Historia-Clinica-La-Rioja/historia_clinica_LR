@@ -19,7 +19,7 @@ public class BloodPressureMin extends BloodPressure {
 
     @Override
     protected Shape getShape() {
-        return ShapesGenerator.createCaretUp(SHAPE_OFFSET + 4, SHAPE_OFFSET, SHAPE_SIZE, SHAPE_SIZE);
+        return ShapesGenerator.createCaretUp(SHAPE_OFFSET + POINT_PLACE_OFFSET, SHAPE_OFFSET, SHAPE_SIZE, SHAPE_SIZE);
     }
 
     @Override

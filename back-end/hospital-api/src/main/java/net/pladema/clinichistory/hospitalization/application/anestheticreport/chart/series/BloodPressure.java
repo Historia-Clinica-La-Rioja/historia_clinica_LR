@@ -6,6 +6,8 @@ import org.jfree.chart.plot.XYPlot;
 
 public abstract class BloodPressure extends Series {
 
+    protected static final int POINT_PLACE_OFFSET = 4;
+
     protected BloodPressure() {
         super.minRange = 20;
         super.maxRange = 140;

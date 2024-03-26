@@ -98,19 +98,17 @@ public class GenerateAnestheticChart {
         legend.setMargin(2, 0, 4, 0);
         legend.setItemFont(ROBOTO);
 
-        deleteDuplicatedValuesFromLegend(chart);
+        deleteDuplicatedValuesFromLegend(chart.getXYPlot());
     }
 
-    private void deleteDuplicatedValuesFromLegend(JFreeChart chart) {
-        XYPlot plot = chart.getXYPlot();
+    private void deleteDuplicatedValuesFromLegend(XYPlot plot) {
         LegendItemCollection legendItems = new LegendItemCollection();
         int a = 0;
-        for (Iterator<LegendItem> it = plot.getLegendItems().iterator(); it.hasNext(); ) {
+        Iterator<LegendItem> it = plot.getLegendItems().iterator();
+        while(a < series.size() && it.hasNext()) { // just add series from dataset1, ignore dummy dataset
             LegendItem legendItem = it.next();
-            if (a < series.size()) { // just add series from dataset1, ignore dummy dataset
-                legendItems.add(legendItem);
-                a++;
-            } else break;
+            legendItems.add(legendItem);
+            a++;
         }
         plot.setFixedLegendItems(legendItems);
     }

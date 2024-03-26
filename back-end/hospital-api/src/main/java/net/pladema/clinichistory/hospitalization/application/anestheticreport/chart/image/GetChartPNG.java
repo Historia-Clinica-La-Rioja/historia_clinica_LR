@@ -9,16 +9,14 @@ import net.pladema.clinichistory.hospitalization.application.anestheticreport.ex
 import net.pladema.clinichistory.hospitalization.domain.exceptions.AnestheticReportEnumException;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.ChartUtils;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @RequiredArgsConstructor
+@Primary
 @Component
 public class GetChartPNG implements GetChartImage {
-
-    public String getFileExtension() {
-        return ".png";
-    }
 
     public String run(JFreeChart chart, int width, int height) {
         log.debug("Input parameters -> chart {}, width {}, height {}", chart, width, height);

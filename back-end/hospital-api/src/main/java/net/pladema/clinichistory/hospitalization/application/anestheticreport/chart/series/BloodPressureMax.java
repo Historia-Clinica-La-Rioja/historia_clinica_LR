@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @NoArgsConstructor
 @Component
-public class BloodPressureMax extends BloodPressureMin {
+public class BloodPressureMax extends BloodPressure {
 
     @Override
     protected int getSerieNumber() {
@@ -19,7 +19,7 @@ public class BloodPressureMax extends BloodPressureMin {
 
     @Override
     protected Shape getShape() {
-        return ShapesGenerator.createCaretDown(SHAPE_OFFSET + 4, SHAPE_OFFSET, SHAPE_SIZE, SHAPE_SIZE);
+        return ShapesGenerator.createCaretDown(SHAPE_OFFSET + POINT_PLACE_OFFSET, SHAPE_OFFSET, SHAPE_SIZE, SHAPE_SIZE);
     }
 
     @Override

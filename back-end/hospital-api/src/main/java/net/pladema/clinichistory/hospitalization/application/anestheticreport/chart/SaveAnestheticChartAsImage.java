@@ -20,14 +20,12 @@ public class SaveAnestheticChartAsImage {
     private final GetChartImage getChartImage;
     private final ImageFileService imageFileService;
 
-    public String run(JFreeChart chart, Integer institutionId, Integer encounterId, int width, int height) {
+    public String run(JFreeChart chart, Integer institutionId, Integer encounterId, int width, int height, String extension) {
         log.debug("Input parameters -> chart {}, institutionId {}, encounterId {}, width {}, height {}",
                 chart, institutionId, encounterId, width, height);
 
         String imageData = getChartImage.run(chart, width, height);
-
         String uuid = imageFileService.createUuid();
-        String extension = getChartImage.getFileExtension();
         String relativePath = this.getRelativeDirectory()
                 .replace("{institutionId}", institutionId.toString())
                 .replace("{encounterType}", ESourceType.HOSPITALIZATION.getValue())
@@ -35,6 +33,7 @@ public class SaveAnestheticChartAsImage {
                 .replace("{documentType}", EDocumentType.ANESTHETIC_REPORT.toString())
                 .concat(uuid)
                 .concat(extension);
+
         var path = imageFileService.buildCompletePath(relativePath);
 
         boolean result = imageFileService.saveImage(path, uuid, "ANESTHETIC_CHART", imageData);

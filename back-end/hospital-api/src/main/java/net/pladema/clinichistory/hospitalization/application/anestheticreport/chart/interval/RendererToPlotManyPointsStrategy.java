@@ -8,65 +8,62 @@ import java.awt.geom.Rectangle2D;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.utils.ShapesGenerator;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
 @Component
-public class RendererToPlotManyPointsStrategy implements IntervalFormatStrategy {
+public class RendererToPlotManyPointsStrategy extends IntervalFormatStrategy {
 
-    private static final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer()
-    {
-
-        private static final long serialVersionUID = -4630680599566487174L;
-
-        @Override
-        public void drawDomainLine(Graphics2D g2, XYPlot plot, ValueAxis axis, Rectangle2D dataArea, double value, Paint paint, Stroke stroke) {
-            int minute = new Date((long) (value)).getMinutes();
-
-            if (minute == 0 || minute == 15 || minute == 30 || minute == 45)
-                super.drawDomainLine(g2, plot, axis, dataArea, value, Color.BLACK, ShapesGenerator.createDashedBoldedStroke());
-            else
-                super.drawDomainLine(g2, plot, axis, dataArea, value, paint, stroke);
-        }
-
-    };
-
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm") {
-
-        private static final long serialVersionUID = -1294574239394895774L;
-
-        @Override
-        public SimpleDateFormat clone() throws AssertionError {
-            throw new AssertionError();
-        }
-
-        @Override
-        public StringBuffer format(@NonNull Date date, @NonNull StringBuffer toAppendTo, java.text.@NonNull FieldPosition pos) {
-            StringBuffer buffer = new StringBuffer();
-            int minute = date.getMinutes();
-
-            if (minute != 0 && minute != 15 && minute != 30 && minute != 45)
-                return buffer;
-            else
-                buffer.append(super.format(date, toAppendTo, pos));
-
-            return buffer;
-        }
-    };
-
-    @Override
-    public XYLineAndShapeRenderer getRenderer() {
-        return renderer;
+    public RendererToPlotManyPointsStrategy() {
+        renderer = createRenderer();
+        dateFormat = createSimpleDateFormat();
     }
 
-    @Override
-    public SimpleDateFormat getDateFormat() {
-        return dateFormat;
+    private static SimpleDateFormat createSimpleDateFormat() {
+        return new SimpleDateFormat("HH:mm") {
+
+            private static final long serialVersionUID = -1294574239394895774L;
+
+            @Override
+            public SimpleDateFormat clone() throws AssertionError {
+                throw new AssertionError();
+            }
+
+            @Override
+            public StringBuffer format(@NonNull Date date, @NonNull StringBuffer toAppendTo, java.text.@NonNull FieldPosition pos) {
+                StringBuffer buffer = new StringBuffer();
+                int minute = date.getMinutes();
+
+                if (minute != 0 && minute != 15 && minute != 30 && minute != 45)
+                    return buffer;
+                else
+                    buffer.append(super.format(date, toAppendTo, pos));
+
+                return buffer;
+            }
+        };
+    }
+
+    private XYLineAndShapeRenderer createRenderer() {
+        return new XYLineAndShapeRenderer()
+        {
+
+            private static final long serialVersionUID = -4630680599566487174L;
+
+            @Override
+            public void drawDomainLine(Graphics2D g2, XYPlot plot, ValueAxis axis, Rectangle2D dataArea, double value, Paint paint, Stroke stroke) {
+                int minute = new Date((long) (value)).getMinutes();
+
+                if (minute == 0 || minute == 15 || minute == 30 || minute == 45)
+                    super.drawDomainLine(g2, plot, axis, dataArea, value, Color.BLACK, ShapesGenerator.createDashedBoldedStroke());
+                else
+                    super.drawDomainLine(g2, plot, axis, dataArea, value, paint, stroke);
+            }
+
+        };
     }
 
     @Override

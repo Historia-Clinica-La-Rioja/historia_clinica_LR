@@ -17,6 +17,7 @@ import net.pladema.clinichistory.hospitalization.application.anestheticreport.ch
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.ParsePointsToTimeSeries;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.SaveAnestheticChartAsImage;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.image.GetChartImage;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.image.enums.EImageFileExtension;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.domain.AnestheticReportBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
@@ -33,7 +34,8 @@ public class CreateAnestheticReport {
 
     private final int DEFAULT_WIDTH = 700;
     private final int DEFAULT_HEIGHT = 420;
-    private final boolean saveChart = false;
+    private final boolean SAVE_CHART_IMAGE = false;
+    private final EImageFileExtension IMAGE_FILE_EXTENSION = EImageFileExtension.PNG;
 
     private final GetChartImage getChartImage;
     private final PatientExternalService patientExternalService;
@@ -74,8 +76,8 @@ public class CreateAnestheticReport {
         var encodedChart = getChartImage.run(jFreechart, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         anestheticReport.setAnestheticChart(encodedChart);
 
-        if (this.saveChart)
-            saveAnestheticChartAsImage.run(jFreechart, anestheticReport.getInstitutionId(), anestheticReport.getEncounterId(), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        if (this.SAVE_CHART_IMAGE)
+            saveAnestheticChartAsImage.run(jFreechart, anestheticReport.getInstitutionId(), anestheticReport.getEncounterId(), DEFAULT_WIDTH, DEFAULT_HEIGHT, IMAGE_FILE_EXTENSION.getDescription());
     }
 
     private void completeValuesAnestheticReport(AnestheticReportBo anestheticReport) {
