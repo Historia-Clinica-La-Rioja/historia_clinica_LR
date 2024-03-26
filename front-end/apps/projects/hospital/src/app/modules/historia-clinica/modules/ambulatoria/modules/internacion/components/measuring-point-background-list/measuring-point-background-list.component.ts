@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AnestheticReportVitalSignsService, MeasuringPointData } from '../../services/anesthetic-report-vital-signs.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditMeasuringPointComponent } from '../../dialogs/edit-measuring-point/edit-measuring-point.component';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 const PAGE_SIZE_OPTIONS = [5];
 const PAGE_SIZE = 5;
@@ -62,7 +62,7 @@ export class MeasuringPointBackgroundListComponent implements OnInit {
 		});
     }
 
-    onPageChange($event: any) {
+    onPageChange($event: PageEvent) {
         const page = $event;
         this.page = page.pageIndex;
 		this.startPage = this.page * page.pageSize;
