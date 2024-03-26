@@ -28,6 +28,7 @@ export class QueryTableRendererComponent implements OnInit {
 
 	@Input('params')
 	set params({ resultSet, pivotConfig }: QueryTableParams) {
+		this.tableData = resultSet.tablePivot(pivotConfig);
 
 		this.displayedColumns = getDisplayedColumns(
 			resultSet.tableColumns(pivotConfig)
