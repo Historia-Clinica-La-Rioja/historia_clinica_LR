@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MeasuringPointDto, TimeDto } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
-import { removeFrom } from '@core/utils/array.utils';
+import { getArrayCopyWithoutElementAtIndex, removeFrom } from '@core/utils/array.utils';
 import { isEqualDate } from '@core/utils/date.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
@@ -282,7 +282,7 @@ export class AnestheticReportVitalSignsService {
     }
 
     editMeasuringPoint(newMeasuringPoint: MeasuringPointData, index: number){
-        const arrayCopyWithoutEditingElement = this.getArrayCopyWithoutElementAtIndex(this.measuringPoints, index)
+        const arrayCopyWithoutEditingElement = getArrayCopyWithoutElementAtIndex(this.measuringPoints, index)
         if (!this.itsDuplicated(arrayCopyWithoutEditingElement, newMeasuringPoint)) {
             this.measuringPoints.splice(index, 1, newMeasuringPoint);
             this.measuringPointsSource.next(this.measuringPoints);
@@ -290,10 +290,6 @@ export class AnestheticReportVitalSignsService {
         } else {
             this.snackBarService.showError('internaciones.anesthesic-report.vital-signs.ERROR_ADD');
         }
-    }
-
-    private getArrayCopyWithoutElementAtIndex(arr: MeasuringPointData[], index: number): MeasuringPointData[] {
-        return arr.slice(0, index).concat(arr.slice(index + 1));
     }
 
     getForm(): FormGroup {
