@@ -136,15 +136,13 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.appointmentFacade.clear();
 		this.loading = true;
 		this.appointmentFacade.getAppointments().subscribe(appointments => {
-			if (appointments) {
-				if (appointments.length) {
-					this.appointments = this.unifyEvents(appointments);
-				}
-				else {
-					this.appointments = appointments;
-				}
+			this.loading = false;
+			if (appointments?.length) {
+				this.appointments = this.unifyEvents(appointments);
 				this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda, this.startDate, this.endDate);
-				this.loading = false;
+			}
+			else {
+				this.appointments = appointments;
 			}
 		});
 		this.appointmentFacade.getHolidays().subscribe(holidays => this.holidays = holidays);
@@ -631,7 +629,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private getEventQuantityByDate = (unifiedEvents: CalendarEvent[]) => {
 		const eventsPerDate: Map<string, number> = new Map(); 
 		unifiedEvents.forEach((ce: CalendarEvent) => {
-			const dateString = ce.start.toISOString();
+			const dateString = ce.start?.toISOString();
 			eventsPerDate.set(dateString, (eventsPerDate.get(dateString) || 0) + 1);
 		});
 		return eventsPerDate;
