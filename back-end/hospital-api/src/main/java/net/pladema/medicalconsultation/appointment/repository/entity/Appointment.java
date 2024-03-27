@@ -13,6 +13,8 @@ import javax.persistence.Table;
 
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 
+import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+
 import org.hibernate.annotations.ColumnDefault;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
@@ -108,7 +110,7 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 				.callId(appointmentBo.getCallId())
 				.modalityId(appointmentBo.getModalityId())
 				.applicantHealthcareProfessionalEmail(appointmentBo.getApplicantHealthcareProfessionalEmail())
-				.recurringAppointmentTypeId(appointmentBo.getRecurringTypeBo().getId())
+				.recurringAppointmentTypeId(appointmentBo.getRecurringTypeBo() != null ? appointmentBo.getRecurringTypeBo().getId(): RecurringAppointmentType.NO_REPEAT.getId())
 				.parentAppointmentId(appointmentBo.getParentAppointmentId())
 				.build();
 	}
