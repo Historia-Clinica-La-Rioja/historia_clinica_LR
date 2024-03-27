@@ -102,6 +102,7 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
 			{ prefix: './assets/i18n/hsi-components/', suffix},
 			{ prefix: './assets/i18n/call-center/', suffix},
 			{ prefix: './assets/i18n/firmas/', suffix},
+			{ prefix: './assets/i18n/firma-conjunta/', suffix},
 		]
 	);
 }

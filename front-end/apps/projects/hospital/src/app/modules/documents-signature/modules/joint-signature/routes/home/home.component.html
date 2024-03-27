@@ -2,3 +2,21 @@
     <mat-icon color="primary">arrow_back</mat-icon>
     <span>{{ 'firmas.BACK_DOCUMENTS_SIGNATURE' | translate }}</span>
 </button>
+
+<app-content width="full">
+    <h2 class="page-title">{{'firmas.JOINT_SIGNATURE' | translate}}</h2>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <span>{{ 'firma-conjunta.TAB_THIRD_PARTY_DOCUMENTS' | translate | uppercase }}</span>
+            </ng-template>
+            <ng-template matTabContent>
+                <section>
+                    <header>
+                        <h2>{{'firma-conjunta.LIST_DOCUMENTS' | translate}}</h2>
+                    </header>
+                </section>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+</app-content>
