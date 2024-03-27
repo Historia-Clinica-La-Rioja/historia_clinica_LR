@@ -85,10 +85,10 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 	}
 
 	private void saveHistoricReferenceRegulation(Integer referenceId) {
-		HistoricReferenceRegulation entity = new HistoricReferenceRegulation();
-		entity.setReferenceId(referenceId);
-		entity.setStateId(EReferenceRegulationState.APPROVED.getId());
+		Short approvedStateId = EReferenceRegulationState.APPROVED.getId();
+		HistoricReferenceRegulation entity = new HistoricReferenceRegulation(referenceId, approvedStateId);
 		historicReferenceRegulationRepository.save(entity);
+		updateReferenceRegulationStateId(referenceId, approvedStateId);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		log.debug("Input parameters -> referenceId {}, stateId {} ", referenceId, stateId);
 		Reference reference = referenceRepository.getById(referenceId);
 		reference.setRegulationStateId(stateId);
-		referenceRepository.save(reference);
+		referenceRepository.saveAndFlush(reference);
 	}
 
 	private boolean validRegulationState(Optional<HistoricReferenceRegulation> hrr){
