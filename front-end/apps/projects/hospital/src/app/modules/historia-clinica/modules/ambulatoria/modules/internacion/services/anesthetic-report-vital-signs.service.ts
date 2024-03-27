@@ -270,7 +270,7 @@ export class AnestheticReportVitalSignsService {
     }
 
     private isEqualTime(t1: TimeDto, t2: TimeDto): boolean {
-        return t1 == t2
+        return t1.hours == t2.hours && t1.minutes == t2.minutes
     }
 
     private clearForm() {
