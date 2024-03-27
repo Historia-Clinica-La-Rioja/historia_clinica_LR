@@ -19,6 +19,24 @@
     </div>
 
     <div>
-        <ng-content select="[person-record-form]"></ng-content>
+        <form [formGroup]="personalRecordForm">
+            <mat-label [translate]="'internaciones.anesthesic-report.record.OBSERVATIONS'"></mat-label>
+            <mat-form-field appearance="outline" data-id="observations">
+                <textarea matInput type="text" id="observations-input" formControlName="observations"
+                    placeholder="{{'internaciones.anesthesic-report.record.ADD_OBSERVATIONS' | translate }}">
+                </textarea>
+            </mat-form-field>
+
+            <div fxLayout="column">
+                <mat-label [translate]="'internaciones.anesthesic-report.record.ASA'"></mat-label>
+                <mat-form-field appearance="outline" data-id="ASA" class="asa-data">
+                    <mat-select formControlName="asa" placeholder="Seleccionar (de 1 a 5)">
+                        <mat-option *ngFor="let option of ASAOptions" [value]="option">
+                            {{ option }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </form>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HealthConditionDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
+import { ToFormGroup } from '@core/utils/form.utils';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -13,6 +14,7 @@ export class AnestheticReportRecordService {
 
     private readonly ECL = SnomedECL.PERSONAL_RECORD;
     private form: FormGroup<RecordForm>;
+    private personalRecordForm: FormGroup<ToFormGroup<PersonalRecordData>>;
 	snomedConcept: SnomedDto;
 
     private recordList: SnomedDto[] = [];
@@ -26,6 +28,11 @@ export class AnestheticReportRecordService {
     ) { 
         this.form = new FormGroup<RecordForm>({
             snomed: new FormControl(null, Validators.required)
+        });
+
+        this.personalRecordForm = new FormGroup<ToFormGroup<PersonalRecordData>>({
+            observations: new FormControl(null),
+            asa: new FormControl(null)
         });
     }
 
@@ -96,6 +103,17 @@ export class AnestheticReportRecordService {
         return this.form;
     }
 
+    getPersonalRecordForm(): FormGroup {
+        return this.personalRecordForm;
+    }
+
+    getPersonalRecordData(): PersonalRecordData{
+        return {
+            observations: this.personalRecordForm.value.observations,
+            asa: this.personalRecordForm.value.asa
+        }
+    }
+
     resetForm(): void {
         delete this.snomedConcept;
         this.form.reset();
@@ -108,4 +126,9 @@ export class AnestheticReportRecordService {
 
 export interface RecordForm {
     snomed: FormControl<string>;
+}
+
+export interface PersonalRecordData {
+    observations: string;
+    asa: number;
 }

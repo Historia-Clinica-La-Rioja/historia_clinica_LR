@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticProcedureAttribute, AnestheticReportEndOfAnesthesiaStatusService, EndOfAnesthesiaRadioGroups, INTERNMENT_OPTIONS } from '../../services/anesthetic-report-end-of-anesthesia-status.service';
+import { AnestheticProcedureAttribute, AnestheticReportEndOfAnesthesiaStatusService, EndOfAnesthesiaRadioGroups, EndOfAnesthesiaStatusForm, INTERNMENT_OPTIONS } from '../../services/anesthetic-report-end-of-anesthesia-status.service';
 import { FormGroup } from '@angular/forms';
 import { RadioGroupData } from '@presentation/components/radio-group/radio-group.component';
 import { MatRadioChange } from '@angular/material/radio';
@@ -13,6 +13,7 @@ export class AnestheticReportEndOfAnesthesiaStatusComponent implements OnInit {
 
     @Input() service: AnestheticReportEndOfAnesthesiaStatusService;
     form: FormGroup;
+    endOfAnesthesiaStatusForm: FormGroup<EndOfAnesthesiaStatusForm>;
     allowOptions = false;
     internmentOptions = INTERNMENT_OPTIONS;
 
@@ -22,6 +23,7 @@ export class AnestheticReportEndOfAnesthesiaStatusComponent implements OnInit {
 
     ngOnInit(): void {
         this.form = this.service.getForm();
+        this.endOfAnesthesiaStatusForm = this.service.getEndOfAnesthesiaStatusForm();
         this.service.getinternment().subscribe((goesInsideOptions) => {
             this.allowOptions = goesInsideOptions;
         })

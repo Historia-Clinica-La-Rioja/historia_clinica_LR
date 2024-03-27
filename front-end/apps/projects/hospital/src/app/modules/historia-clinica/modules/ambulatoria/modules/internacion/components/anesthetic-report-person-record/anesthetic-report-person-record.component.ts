@@ -2,9 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { AnestheticReportRecordService } from '../../services/anesthetic-report-record.service';
+import { AnestheticReportRecordService, PersonalRecordData, RecordForm } from '../../services/anesthetic-report-record.service';
 import { AnestheticReportAddRecordComponent } from '../../dialogs/anesthetic-report-add-record/anesthetic-report-add-record.component';
 import { FormGroup } from '@angular/forms';
+import { ToFormGroup } from '@core/utils/form.utils';
 
 @Component({
     selector: 'app-anesthetic-report-person-record',
@@ -15,7 +16,9 @@ export class AnestheticReportPersonRecordComponent implements OnInit {
 
     @Input() service: AnestheticReportRecordService;
 	searchConceptsLocallyFFIsOn = false;
-    form: FormGroup;
+    form: FormGroup<RecordForm>;
+    personalRecordForm: FormGroup<ToFormGroup<PersonalRecordData>>;
+    readonly ASAOptions = [1,2,3,4,5]
 
     constructor(
         private readonly dialog: MatDialog,
@@ -27,6 +30,7 @@ export class AnestheticReportPersonRecordComponent implements OnInit {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
         this.form = this.service.getForm();
+        this.personalRecordForm = this.service.getPersonalRecordForm();
     }
 
     addRecord(){
@@ -39,9 +43,5 @@ export class AnestheticReportPersonRecordComponent implements OnInit {
             width: '35%',
             disableClose: true,
         });
-    }
-
-    addData(){
-
     }
 }

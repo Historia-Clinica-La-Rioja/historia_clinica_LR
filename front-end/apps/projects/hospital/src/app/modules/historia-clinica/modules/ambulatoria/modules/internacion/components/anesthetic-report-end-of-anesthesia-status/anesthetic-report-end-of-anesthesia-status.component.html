@@ -60,7 +60,14 @@
             </div>
 
             <div class="observations">
-                <ng-content select="[end-of-anesthesia-status-form]"></ng-content>
+                <form [formGroup]="endOfAnesthesiaStatusForm">
+                    <mat-label [translate]="'internaciones.anesthesic-report.end-of-anesthesia-status.OBSERVATIONS'"></mat-label>
+                    <mat-form-field appearance="outline" data-id="observations">
+                        <textarea matInput type="text" id="end-of-anesthesia-observations" formControlName="observations"
+                            placeholder="{{'internaciones.anesthesic-report.end-of-anesthesia-status.ADD_OBSERVATIONS' | translate }}">
+                        </textarea>
+                    </mat-form-field>
+                </form>
             </div>
         </div>
     </div>

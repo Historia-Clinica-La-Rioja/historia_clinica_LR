@@ -58,29 +58,6 @@
             [title]="'internaciones.anesthesic-report.record.TITLE' | translate" icon="assignment" [collapsed]="true"
             [isEmpty]="anestheticReportRecordService.isEmpty()" [hideBorder]="false">
             <app-anesthetic-report-person-record [service]="anestheticReportRecordService">
-                <ng-container person-record-form>
-
-                    <form [formGroup]="personalRecordForm">
-                        <mat-label [translate]="'internaciones.anesthesic-report.record.OBSERVATIONS'"></mat-label>
-                        <mat-form-field appearance="outline" data-id="observations">
-                            <textarea matInput type="text" id="observations-input" formControlName="observations"
-                                placeholder="{{'internaciones.anesthesic-report.record.ADD_OBSERVATIONS' | translate }}">
-                            </textarea>
-                        </mat-form-field>
-
-                        <div fxLayout="column">
-                            <mat-label [translate]="'internaciones.anesthesic-report.record.ASA'"></mat-label>
-                            <mat-form-field appearance="outline" data-id="ASA" class="asa-data">
-                                <mat-select formControlName="asa" placeholder="Seleccionar (de 1 a 5)">
-                                    <mat-option *ngFor="let option of ASAOptions" [value]="option">
-                                        {{ option }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </form>
-
-                </ng-container>
             </app-anesthetic-report-person-record>
         </app-new-consultation-expansion-section>
 
@@ -135,57 +112,8 @@
 
         <app-new-consultation-expansion-section id="vital-signs-expansion-section"
             [title]="'internaciones.anesthesic-report.vital-signs.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="isVitalSignSectionEmpty && isMeasuringPointSectionEmpty" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="anestheticReportVitalSignsService.isSectionEmpty$" [hideBorder]="false">
             <app-anesthetic-report-vital-signs [service]="anestheticReportVitalSignsService">
-                <ng-container vital-signs-form>
-
-					<form [formGroup]="vitalSignsForm">                        
-                        <div fxLayout="column" fxLayoutGap="8px" data-id="anesthesia-start">
-                            <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.ANESTHESIA_START'"></mat-label>
-                            <div fxLayout="row wrap" fxLayoutGap="24px">
-                                <app-datepicker fxLayout="50%" [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setAnesthesiaStartDate($event)"></app-datepicker>
-                                <div fxLayout="column" fxLayoutGap="10px">
-                                    <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <app-time-picker data-id="anesthesia-start-time" [timePickerData]="timePickerData" (timeSelected)="setAnesthesiaStartTime($event)"></app-time-picker>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div fxLayout="column" fxLayoutGap="8px" data-id="anesthesia-end">
-                            <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.ANESTHESIA_END'"></mat-label>
-                            <div fxLayout="row wrap" fxLayoutGap="24px">
-                                <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setAnesthesiaEndDate($event)"></app-datepicker>
-                                <div fxLayout="column" fxLayoutGap="10px">
-                                    <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <app-time-picker data-id="anesthesia-start-time" [timePickerData]="timePickerData" (timeSelected)="setAnesthesiaEndTime($event)"></app-time-picker>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div fxLayout="column" fxLayoutGap="8px" data-id="surgery-start">
-                            <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.SURGERY_START'"></mat-label>
-                            <div fxLayout="row wrap" fxLayoutGap="24px">
-                                <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setSurgeryStartDate($event)"></app-datepicker>
-                                <div fxLayout="column" fxLayoutGap="10px">
-                                    <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <app-time-picker data-id="surgery-start-time" [timePickerData]="timePickerData" (timeSelected)="surgeryStartTime($event)"></app-time-picker>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div fxLayout="column" fxLayoutGap="8px" data-id="surgery-end">
-                            <mat-label class="form-subtitle" [translate]="'internaciones.anesthesic-report.vital-signs.SURGERY_END'"></mat-label>
-                            <div fxLayout="row wrap" fxLayoutGap="24px">
-                                <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.DATE'" (selectDate)="setSurgeryEndDate($event)"></app-datepicker>
-                                <div fxLayout="column" fxLayoutGap="10px">
-                                    <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.TIME'"></mat-label>
-                                    <app-time-picker data-id="surgery-end-time" [timePickerData]="timePickerData" (timeSelected)="surgeryEndTime($event)"></app-time-picker>
-                                </div>
-                            </div>
-                        </div>
-					</form>
-
-                </ng-container>
             </app-anesthetic-report-vital-signs>
         </app-new-consultation-expansion-section>
                         
@@ -193,18 +121,6 @@
             [title]="'internaciones.anesthesic-report.end-of-anesthesia-status.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="anestheticReportEndOfAnesthesiaStatusService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-end-of-anesthesia-status [service]="anestheticReportEndOfAnesthesiaStatusService">
-                <ng-container end-of-anesthesia-status-form>
-
-					<form [formGroup]="endOfAnesthesiaStatusForm">
-						<mat-label [translate]="'internaciones.anesthesic-report.end-of-anesthesia-status.OBSERVATIONS'"></mat-label>
-                        <mat-form-field appearance="outline" data-id="observations">
-                            <textarea matInput type="text" id="end-of-anesthesia-observations" formControlName="observations"
-                                placeholder="{{'internaciones.anesthesic-report.end-of-anesthesia-status.ADD_OBSERVATIONS' | translate }}">
-                            </textarea>
-                        </mat-form-field>
-					</form>
-
-                </ng-container>
             </app-anesthetic-report-end-of-anesthesia-status>
         </app-new-consultation-expansion-section>
     </div>

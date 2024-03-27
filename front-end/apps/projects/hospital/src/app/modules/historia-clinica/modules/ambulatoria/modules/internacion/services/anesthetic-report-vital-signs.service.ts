@@ -4,6 +4,7 @@ import { MeasuringPointDto, TimeDto } from '@api-rest/api-model';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { getArrayCopyWithoutElementAtIndex, removeFrom } from '@core/utils/array.utils';
 import { isEqualDate } from '@core/utils/date.utils';
+import { ToFormGroup } from '@core/utils/form.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { VITAL_SIGNS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,13 +18,20 @@ import { Subject, Observable, BehaviorSubject } from 'rxjs';
 export class AnestheticReportVitalSignsService {
 
     private form: FormGroup<MeasuringPointForm>;
+    private vitalSignsForm: FormGroup<ToFormGroup<VitalSignsData>>;
     private measuringPoints: MeasuringPointData[] = [];
     
     private measuringPointsSource = new BehaviorSubject<MeasuringPointData[]>([]);
 	private _measuringPoints$ = this.measuringPointsSource.asObservable();
     
     private isEmptySource = new BehaviorSubject<boolean>(true);
-	isEmpty$ = this.isEmptySource.asObservable();
+	private isEmpty$ = this.isEmptySource.asObservable();
+
+    private vitalSignsIsEmptySource = new BehaviorSubject<boolean>(true);
+	private vitalSignsIsEmpty$ = this.vitalSignsIsEmptySource.asObservable();
+
+    private isSectionEmptySource = new BehaviorSubject<boolean>(true);
+	isSectionEmpty$ = this.vitalSignsIsEmptySource.asObservable();
 
     private bloodPressureMaxSource = new Subject<string | void>();
 	private _bloodPressureMax$ = this.bloodPressureMaxSource.asObservable();
@@ -54,7 +62,28 @@ export class AnestheticReportVitalSignsService {
             endTidal: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.endTidal), Validators.max(VITAL_SIGNS.MAX.endTidal), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
         });
 
+        this.vitalSignsForm = new FormGroup<ToFormGroup<VitalSignsData>>({
+            anesthesiaStartDate: new FormControl(null),
+            anesthesiaEndDate: new FormControl(null),
+            anesthesiaStartTime: new FormControl(null),
+            anesthesiaEndTime: new FormControl(null),
+            surgeryStartDate: new FormControl(null),
+            surgeryEndDate: new FormControl(null),
+            surgeryStartTime: new FormControl(null),
+            surgeryEndTime: new FormControl(null),
+        })
+
         this.handleFormChanges();
+        this.checkSectionEmptyness();
+    }
+
+    private checkSectionEmptyness() {
+        this.isEmpty$.subscribe(isEmpty => {
+            this.isSectionEmptySource.next(isEmpty);
+        });
+        this.vitalSignsIsEmpty$.subscribe(isEmpty => {
+            this.isSectionEmptySource.next(isEmpty);
+        })
     }
 
     getTimePickerData(): TimePickerData {
@@ -296,6 +325,26 @@ export class AnestheticReportVitalSignsService {
         return this.form;
     }
 
+    getVitalSignsForm(): FormGroup {
+        return this.vitalSignsForm;
+    }
+
+    getVitalSignsData(): VitalSignsData {
+        return {
+            ...this.vitalSignsForm.value
+        }
+    }
+
+    setFormDateAttributeValue(attribute: VitalSignsAttribute, date: Date) {
+        this.vitalSignsForm.get(attribute).setValue(date);
+        this.vitalSignsIsEmptySource.next(false);
+    }
+
+    setFormTimeAttributeValue(attribute: VitalSignsAttribute, time: TimeDto) {
+        this.vitalSignsForm.get(attribute).setValue(time);
+        this.vitalSignsIsEmptySource.next(false);
+    }
+
     setMeasuringPointData(data: MeasuringPointData) {
         data.measuringPointStartDate ? this.form.controls.measuringPointStartDate.setValue(data.measuringPointStartDate) : null ;
         data.measuringPointStartTime ? this.form.controls.measuringPointStartTime.setValue(data.measuringPointStartTime) : null ;
@@ -325,4 +374,17 @@ export interface MeasuringPointData {
     pulse: number;
     saturation: number;
     endTidal: number;
+}
+
+export type VitalSignsAttribute = keyof VitalSignsData;
+
+export interface VitalSignsData {
+    anesthesiaStartDate?: Date;
+    anesthesiaEndDate?: Date;
+    anesthesiaStartTime?: TimeDto;
+    anesthesiaEndTime?: TimeDto;
+    surgeryStartDate?: Date;
+    surgeryEndDate?: Date;
+    surgeryStartTime?: TimeDto;
+    surgeryEndTime?: TimeDto;
 }

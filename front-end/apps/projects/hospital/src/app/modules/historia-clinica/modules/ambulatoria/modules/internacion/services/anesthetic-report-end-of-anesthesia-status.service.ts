@@ -10,6 +10,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 export class AnestheticReportEndOfAnesthesiaStatusService {
 
     private form: FormGroup;
+    private endOfAnesthesiaStatusForm: FormGroup<EndOfAnesthesiaStatusForm>;
     private internmentSource = new Subject<boolean>();
 	private _internment$ = this.internmentSource.asObservable();
     private isEmptySource = new BehaviorSubject<boolean>(true);
@@ -44,16 +45,20 @@ export class AnestheticReportEndOfAnesthesiaStatusService {
             internment: new FormControl(null),
             internmentOptions: new FormControl(null),
         });
+
+        this.endOfAnesthesiaStatusForm = new FormGroup<EndOfAnesthesiaStatusForm>({
+            observations: new FormControl(null),
+        })
     }
 
     getEndOfAnesthesiaRadioGroups(): EndOfAnesthesiaRadioGroups {
         return this.endOfAnesthesiaRadioGroups;
     }
 
-    getPostAnesthesiaStatusDto(note?: string): PostAnesthesiaStatusDto {
+    getPostAnesthesiaStatusDto(): PostAnesthesiaStatusDto {
         return {
             internmentPlace: this.mapToEInternmentPlace(this.form.value.internmentOptions),
-            note: note,
+            note: this.endOfAnesthesiaStatusForm.value.observations,
             ...this.form.value,
         }
     }
@@ -82,7 +87,11 @@ export class AnestheticReportEndOfAnesthesiaStatusService {
 
     getForm(): FormGroup {
         return this.form;
-    }  
+    }
+
+    getEndOfAnesthesiaStatusForm(): FormGroup {
+        return this.endOfAnesthesiaStatusForm;
+    }
 }
 
 export type AnestheticProcedureAttribute = keyof IntrasurgicalAnestheticProceduresForm;
@@ -139,4 +148,8 @@ export interface EndOfAnesthesiaRadioGroups {
     trachealCannula: RadioGroupInputData,
     pharyngealCannula: RadioGroupInputData,
     internment: RadioGroupInputData,
+}
+
+export interface EndOfAnesthesiaStatusForm {
+    observations: FormControl<string>;
 }
