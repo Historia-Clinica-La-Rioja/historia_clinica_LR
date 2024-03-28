@@ -19,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
 import net.pladema.person.service.PersonService;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -65,7 +67,15 @@ public class SharedPersonImpl implements SharedPersonPort {
 		log.debug("Output -> {}", result);
 		return result;
 	}
-	
+
+	@Override
+	public List<String> getCompletePersonsNameByIds(List<Integer> personIds) {
+		log.debug("Input parameters -> personIds {}", personIds);
+		List<String> result = personService.getCompletePersonNameByIds(personIds);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	public CompletePersonDto getCompletePersonData(Integer personId) {
 		return personService.getCompletePerson(personId)
 				.map(this::mapToCompletePersonData)

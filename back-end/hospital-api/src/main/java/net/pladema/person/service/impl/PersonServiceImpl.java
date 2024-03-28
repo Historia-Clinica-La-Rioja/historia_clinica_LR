@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.PersonExtendedRepository;
@@ -146,14 +148,14 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public String getCompletePersonNameById(Integer personId) {
 		LOG.debug("Input parameters -> personId {}", personId);
-		CompletePersonNameVo personName = personRepository.getCompletePersonNameById(personId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameByIds(List.of(personId)).get(0);
 		return parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
 	}
 
 	@Override
 	public String getFormalPersonNameById(Integer personId) {
 		LOG.debug("Input parameters -> personId {}", personId);
-		CompletePersonNameVo personName = personRepository.getCompletePersonNameById(personId);
+		CompletePersonNameVo personName = personRepository.getCompletePersonNameByIds(List.of(personId)).get(0);
 		return parseFormalPersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName());
 	}
 
@@ -176,6 +178,15 @@ public class PersonServiceImpl implements PersonService {
 		LOG.debug("Input parameters -> personId {}", personId);
 		ContactInfoBo result = personExtendedRepository.getContactInfoById(personId);
 		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<String> getCompletePersonNameByIds(List<Integer> personIds) {
+		LOG.debug("Input parameters -> personIds {}", personIds);
+		List<CompletePersonNameVo> queryResult = personRepository.getCompletePersonNameByIds(personIds);
+		List<String> result = queryResult.stream().map(personName -> parseCompletePersonName(personName.getFirstName(), personName.getMiddleNames(), personName.getLastName(), personName.getOtherLastNames(), personName.getSelfDeterminateName())).collect(Collectors.toList());
+		LOG.debug("Output -> {}", result);
 		return result;
 	}
 

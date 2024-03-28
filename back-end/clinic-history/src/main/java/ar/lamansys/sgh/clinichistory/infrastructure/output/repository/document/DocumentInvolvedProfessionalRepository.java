@@ -41,4 +41,19 @@ public interface DocumentInvolvedProfessionalRepository extends JpaRepository<Do
 			"AND dip.signatureStatusId = :signatureStatusId")
 	List<Integer> getDocumentInvolvedProfessionalIdsByDocumentAndSignatureStatus(@Param("documentId") Long documentId, @Param("signatureStatusId") Short signatureStatusId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT hp.personId " +
+			"FROM DocumentInvolvedProfessional dip " +
+			"JOIN ar.lamansys.sgh.shared.infrastructure.output.entities.SharedHealthcareProfessional hp ON (hp.id = dip.healthcareProfessionalId) " +
+			"WHERE dip.documentId = :documentId " +
+			"AND dip.signatureStatusId = :signatureStatusId")
+	List<Integer> getDocumentInvolvedProfessionalPersonIdsByDocumentIdAndStatusId(@Param("documentId") Long documentId, @Param("signatureStatusId") Short signatureStatusId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT 1 " +
+			"FROM DocumentInvolvedProfessional dip " +
+			"WHERE dip.documentId = :documentId " +
+			"AND dip.signatureStatusId != :signedStatusId")
+	List<Integer> getDocumentInvolvedProfessionalAmountThatDidNotSignByDocumentId(@Param("documentId") Long documentId, @Param("signedStatusId") Short signStatusId);
+
 }

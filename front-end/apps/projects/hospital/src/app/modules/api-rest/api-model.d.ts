@@ -1538,6 +1538,11 @@ export interface ElectronicJointSignatureLicenseDto {
     type: ELicenseNumberType;
 }
 
+export interface ElectronicJointSignatureProfessionalsDto {
+    professionalsThatDidNotSignAmount: number;
+    professionalsThatSignedNames: string[];
+}
+
 export interface ElectronicSignatureInvolvedDocumentDto {
     documentCreationDate: DateTimeDto;
     documentId: number;
@@ -2051,6 +2056,7 @@ export interface HCEEvolutionSummaryDto {
     clinicalSpecialty: ClinicalSpecialtyDto;
     consultationId: number;
     document: HCEDocumentDataDto;
+    electronicJointSignatureProfessionals: ElectronicJointSignatureProfessionalsDto;
     evolutionNote: string;
     healthConditions: HCEProblemDto[];
     institutionName: string;
