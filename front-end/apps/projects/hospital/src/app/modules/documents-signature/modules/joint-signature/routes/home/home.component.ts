@@ -4,6 +4,7 @@ import { ContextService } from '@core/services/context.service';
 import { URL_DOCUMENTS_SIGNATURE } from '../../../../routes/home/home.component';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 export class HomeComponent{
   buttonBack = false;
   routePrefix: string;
+  data: Detail[] = [];
   constructor(private readonly router: Router, private readonly contextService: ContextService, 
     private readonly featureFlagService: FeatureFlagService) { 
     this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'
@@ -23,7 +25,6 @@ export class HomeComponent{
         }
       }) 
     })
-   
   }
 
   goToBackDocumentsSignature(){

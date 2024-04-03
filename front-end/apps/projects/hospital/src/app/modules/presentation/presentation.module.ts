@@ -25,6 +25,7 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
+import { DetailsSectionCustomComponent } from './components/details-section-custom/details-section-custom.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
@@ -110,7 +111,6 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 
-
 @NgModule({
 	declarations: [
 		// components
@@ -131,6 +131,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DateRangePickerComponent,
 		DetailBoxComponent,
 		DetailedInformationComponent,
+		DetailsSectionCustomComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
@@ -251,6 +252,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DateRangePickerComponent,
 		DetailBoxComponent,
 		DetailedInformationComponent,
+		DetailsSectionCustomComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
