@@ -30,12 +30,10 @@ public class RuleController {
 	@GetMapping("/validate-regulation")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Boolean> determineRegulatedReference(@PathVariable(name = "institutionId") Integer institutionId,
-															   @RequestParam("institutionIdToValidate") Integer institutionIdToValidate,
 															   @RequestParam(value = "clinicalSpecialtyIds", required = false) List<Integer> clinicalSpecialtyIds,
 															   @RequestParam(value = "practiceId", required = false) Integer practiceId) {
-		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyIds {}, practiceId {}, institutionIdToValidate {} ", institutionId, clinicalSpecialtyIds,
-				practiceId, institutionIdToValidate);
-		boolean result = determineRegulatedReference.run(institutionIdToValidate, clinicalSpecialtyIds, practiceId);
+		log.debug("Input parameters -> institutionId {}, clinicalSpecialtyIds {}, practiceId {} ", institutionId, clinicalSpecialtyIds, practiceId);
+		boolean result = determineRegulatedReference.run(institutionId, clinicalSpecialtyIds, practiceId);
 		log.debug("Output result -> {}", result);
 		return ResponseEntity.ok(result);
 	}

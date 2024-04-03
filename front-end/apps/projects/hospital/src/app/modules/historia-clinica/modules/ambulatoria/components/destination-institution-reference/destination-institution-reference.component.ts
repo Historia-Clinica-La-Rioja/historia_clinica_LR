@@ -156,7 +156,7 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		if (institutionDestinationId) {
 			this.setAppointments(institutionDestinationId);
 			this.regulationRequired$ = this.institutionsRulesService.
-				validateRegulation(institutionDestinationId, this.getClinicalSpecialtiesIds(), this.formReference.controls.practiceOrProcedure?.value?.id);
+				validateRegulation(this.getClinicalSpecialtiesIds(), this.formReference.controls.practiceOrProcedure?.value?.id);
 			this.institutionSelection = true;
 		} else {
 			this.institutionSelection = false;
