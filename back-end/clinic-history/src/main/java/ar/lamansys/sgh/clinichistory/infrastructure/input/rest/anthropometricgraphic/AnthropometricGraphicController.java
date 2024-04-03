@@ -4,10 +4,12 @@ import ar.lamansys.sgh.clinichistory.application.canshowanthropometricgraphic.Ca
 import ar.lamansys.sgh.clinichistory.application.getanthropometricgraphicdata.GetAnthropometricGraphicData;
 import ar.lamansys.sgh.clinichistory.application.getavailableanthropometricgraphictypes.GetAvailableAnthropometricGraphicTypes;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.AnthropometricGraphicDataBo;
+import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.AnthropometricGraphicEnablementBo;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.AnthropometricValueBo;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphic;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphicType;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.anthropometricgraphic.dto.AnthropometricGraphicDataDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.anthropometricgraphic.dto.AnthropometricGraphicEnablementDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.anthropometricgraphic.dto.EAnthropometricGraphicOption;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.anthropometricgraphic.mapper.AnthropometricGraphicMapper;
 
@@ -41,11 +43,12 @@ public class AnthropometricGraphicController {
 
 	@GetMapping("/patient/{patientId}/can-show-graphic")
 	@ResponseStatus(HttpStatus.OK)
-	public Boolean canShowAnthropometricGraphic (@PathVariable("institutionId")Integer institutionId,
-											  @PathVariable("patientId")Integer patientId)
+	public AnthropometricGraphicEnablementDto canShowAnthropometricGraphic (@PathVariable("institutionId")Integer institutionId,
+																			@PathVariable("patientId")Integer patientId)
 	{
 		log.debug("Input parameters -> patientId {}", patientId);
-		Boolean result = canShowAnthropometricGraphic.run(patientId);
+		AnthropometricGraphicEnablementBo enablementBo = canShowAnthropometricGraphic.run(patientId);
+		AnthropometricGraphicEnablementDto result = anthropometricGraphicMapper.toAnthropometricGraphicEnablementDto(enablementBo);
 		log.debug("Output -> result {}", result);
 		return result;
 	}

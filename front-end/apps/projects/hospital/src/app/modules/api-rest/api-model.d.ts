@@ -250,6 +250,12 @@ export interface AnthropometricGraphicDto {
     anthropometricGraphicType: EAnthropometricGraphicType;
 }
 
+export interface AnthropometricGraphicEnablementDto {
+    hasAnthropometricData: boolean;
+    hasValidAge: boolean;
+    hasValidGender: boolean;
+}
+
 export interface ApiErrorDto {
     errors: string[];
     message: string;
