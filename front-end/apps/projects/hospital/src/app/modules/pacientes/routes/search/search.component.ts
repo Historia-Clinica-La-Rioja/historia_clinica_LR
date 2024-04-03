@@ -168,7 +168,7 @@ export class SearchComponent implements OnInit {
 	private buildFormSearchWithValidations(params) {
 		this.formSearch = this.formBuilder.group({
 			identificationNumber: [params.identificationNumber, this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE ? [] :
-				[Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+				[Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [params.identificationTypeId ? Number(params.identificationTypeId) : null, Validators.required],
 			firstName: [params.firstName, Validators.required],
 			middleNames: [params.middleNames],
@@ -182,7 +182,7 @@ export class SearchComponent implements OnInit {
 
 	private buildFormSearchWithoutValidations(params) {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [params.identificationNumber != 0 ? params.identificationNumber : '', [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationNumber: [params.identificationNumber != 0 ? params.identificationNumber : '', [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [Number(params.identificationTypeId)],
 			firstName: [params.firstName],
 			middleNames: [params.middleNames],

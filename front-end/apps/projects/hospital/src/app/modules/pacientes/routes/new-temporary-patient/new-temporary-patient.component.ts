@@ -104,7 +104,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					lastName: [params.lastName],
 					otherLastNames: [params.otherLastNames],
 					identificationTypeId: [Number(params.identificationTypeId)],
-					identificationNumber: [params.identificationNumber, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)],
+					identificationNumber: [params.identificationNumber, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 					genderId: [Number(params.genderId)],
 					birthDate: [params.birthDate ? dateISOParseDate(params.birthDate) : undefined],
 
