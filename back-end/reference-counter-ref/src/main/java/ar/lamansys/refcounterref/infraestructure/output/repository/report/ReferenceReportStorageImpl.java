@@ -205,7 +205,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
-				"LEFT JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
+				"LEFT JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = i.id) " +
 				(filter.getAttentionStateId() != null ?
 						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
 				(filter.getManagerUserId() != null ?
@@ -234,7 +234,7 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				"JOIN {h-schema}patient p ON (oc.patient_id = p.id) " +
 				"JOIN {h-schema}person pe ON (p.person_id = pe.id) " +
 				"JOIN {h-schema}person_extended pex ON (pe.id = pex.person_id) " +
-				"LEFT JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = r.destination_institution_id) " +
+				"LEFT JOIN {h-schema}institutional_group_institution igi ON (igi.institution_id = i.id) " +
 
 				(filter.getAttentionStateId() != null ?
 						"LEFT JOIN {h-schema}reference_appointment ra ON (r.id = ra.reference_id) " : "") +
