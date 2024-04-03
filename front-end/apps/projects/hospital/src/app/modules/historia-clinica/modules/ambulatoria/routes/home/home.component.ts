@@ -267,8 +267,11 @@ export class HomeComponent implements OnInit {
 	}
 
 	private getPersonalInformationFilters(): PersonInformationRequest {
-		const filters = this.personalInformationForm.value
-		return { ...filters, birthDate: toApiFormat(filters.birthDate) }
+		const filters = this.personalInformationForm.value;
+		return {
+			...filters,
+			...(filters.birthDate && { birthDate: toApiFormat(filters.birthDate) })
+		}
 	}
 
 
