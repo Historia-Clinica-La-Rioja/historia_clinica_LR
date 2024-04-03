@@ -597,7 +597,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private getUniqueDates = (unifiedEvents: CalendarEvent[]): Date[] => {
 		let dates: Date[] = [];
 		unifiedEvents.map((event: CalendarEvent) => {
-			dates = pushIfNotExists<Date>(dates, event.start, this.compareAppointmentsDate);
+			if (event.start)
+				dates = pushIfNotExists<Date>(dates, event.start, this.compareAppointmentsDate);
 		});
 		return dates;
 	}
