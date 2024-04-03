@@ -39,5 +39,6 @@ public interface ProcedureTemplateRepository extends SGXAuditableEntityJPAReposi
 	@Query(value = "UPDATE ProcedureTemplate pt SET pt.statusId = :statusId WHERE pt.id = :procedureTemplateId")
     void updateStatus(@Param("procedureTemplateId")Integer procedureTemplateId, @Param("statusId")Short statusId);
 
-	Page<ProcedureTemplate> findByStatusIdIn(List<Short> statusIds, Pageable pageable);
+	@Query(value = "SELECT pt FROM ProcedureTemplate pt WHERE pt.statusId IN :statusIds AND pt.deleteable.deleted = false")
+	Page<ProcedureTemplate> findByStatusIdIn(@Param("statusIds") List<Short> statusIds, Pageable pageable);
 }
