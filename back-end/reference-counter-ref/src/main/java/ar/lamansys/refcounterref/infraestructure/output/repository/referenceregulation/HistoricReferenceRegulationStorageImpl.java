@@ -42,7 +42,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		if (reference.getStudy() != null && reference.getStudy().getPractice() != null)
 			addRegulatedRuleBySnomedAndInstitution(reference, rules);
 		else
-			rules = sharedRulePort.findRegulatedRuleByClinicalSpecialtyIdInInstitution(reference.getClinicalSpecialtyIds(), reference.getDestinationInstitutionId());
+			rules = sharedRulePort.findRegulatedRuleByClinicalSpecialtyIdInInstitution(reference.getClinicalSpecialtyIds(), reference.getInstitutionId());
 		if (rules.isEmpty())
 			return saveEmptyRegulation(referenceId);
 		rules.forEach(rule -> saveHistoricReferenceRegulation(referenceId, rule));
@@ -62,7 +62,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 	}
 
 	private void addRegulatedRuleBySnomedAndInstitution(CompleteReferenceBo reference, List<SharedRuleDto> rules) {
-        sharedRulePort.findRegulatedRuleBySnomedIdInInstitution(reference.getStudy().getPractice().getId(), reference.getDestinationInstitutionId()).ifPresent(rules::add);
+        sharedRulePort.findRegulatedRuleBySnomedIdInInstitution(reference.getStudy().getPractice().getId(), reference.getInstitutionId()).ifPresent(rules::add);
     }
 
 	@Override
