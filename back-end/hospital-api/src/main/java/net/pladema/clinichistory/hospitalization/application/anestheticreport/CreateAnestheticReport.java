@@ -71,8 +71,8 @@ public class CreateAnestheticReport {
             log.debug("Output -> empty chart");
             return;
         }
-        var dataset = parsePointsToTimeSeries.run(anestheticReport.getMeasuringPoints());
-        var jFreechart = generateAnestheticChart.run(dataset);
+        var datasets = parsePointsToTimeSeries.run(anestheticReport.getMeasuringPoints());
+        var jFreechart = generateAnestheticChart.run(datasets);
         var encodedChart = getChartImage.run(jFreechart, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         anestheticReport.setAnestheticChart(encodedChart);
 

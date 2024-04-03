@@ -4,16 +4,19 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.BloodPressure;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.interval.DefaultRendererStrategy;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.interval.IntervalFormatStrategySelector;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.interval.RendererToPlotManyPointsStrategy;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.BloodPressureMax;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.BloodPressureMin;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.EndTidal;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.O2Saturation;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.Pulse;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.bloodpressure.BloodPressureMax;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.bloodpressure.BloodPressureMin;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.EndTidal;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.O2Saturation;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.Pulse;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -23,6 +26,7 @@ import org.jfree.data.time.Minute;
 import org.jfree.data.time.RegularTimePeriod;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.xy.XYDataset;
 import org.jfree.svg.SVGGraphics2D;
 import org.jfree.svg.SVGUtils;
 import org.junit.jupiter.api.Disabled;
@@ -52,14 +56,16 @@ class GenerateAnestheticChartTest {
     static final Pulse PULSE = new Pulse();
     static final O2Saturation O_2_SATURATION = new O2Saturation();
     static final EndTidal END_TIDAL = new EndTidal();
+    static final BloodPressure BLOOD_PRESSURE = new BloodPressure(BLOOD_PRESSURE_MIN, BLOOD_PRESSURE_MAX);
+    ;
     final GenerateAnestheticChart generateAnestheticChart;
 
     GenerateAnestheticChartTest() {
         DefaultRendererStrategy defaultRendererStrategy = new DefaultRendererStrategy();
         RendererToPlotManyPointsStrategy rendererToPlotManyPointsStrategy = new RendererToPlotManyPointsStrategy();
 
-        this.generateAnestheticChart = new GenerateAnestheticChart(BLOOD_PRESSURE_MIN,
-                BLOOD_PRESSURE_MAX, PULSE, O_2_SATURATION, END_TIDAL, new IntervalFormatStrategySelector(defaultRendererStrategy, rendererToPlotManyPointsStrategy));
+        this.generateAnestheticChart = new GenerateAnestheticChart(BLOOD_PRESSURE, PULSE, O_2_SATURATION, END_TIDAL,
+                new IntervalFormatStrategySelector(defaultRendererStrategy, rendererToPlotManyPointsStrategy));
     }
 
     static TimeSeries createTimeSeriesBloodPressureMin(boolean overlimit) {
@@ -175,35 +181,55 @@ class GenerateAnestheticChartTest {
         return s;
     }
 
-    static TimeSeriesCollection createStaticDataset(boolean overlimit) {
-
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.addSeries(createTimeSeriesBloodPressureMin(overlimit));
-        dataset.addSeries(createTimeSeriesBloodPressureMax(overlimit));
-        dataset.addSeries(createTimeSeriesPulse(overlimit));
-        dataset.addSeries(createTimeSeriesO2Saturation(overlimit));
-        dataset.addSeries(createTimeSeriesEndTidal(overlimit));
-
-        return dataset;
+    static List<XYDataset> createStaticDataset(boolean overlimit) {
+        return createDatasets(createTimeSeriesBloodPressureMin(overlimit),
+                createTimeSeriesBloodPressureMax(overlimit),
+                createTimeSeriesPulse(overlimit),
+                createTimeSeriesO2Saturation(overlimit),
+                createTimeSeriesEndTidal(overlimit)
+        );
     }
 
     static Stream<Arguments> createEmptyDataset() {
         String expectedMD5 = "3a89cb95867429f3a6ae3da930165d06";
-        return Stream.of(Arguments.arguments("static_empty", new TimeSeriesCollection(), expectedMD5));
+        return Stream.of(Arguments.arguments("static_empty", createDatasets(
+                BLOOD_PRESSURE_MIN.createTimeSeries(), BLOOD_PRESSURE_MAX.createTimeSeries(), PULSE.createTimeSeries(),
+                O_2_SATURATION.createTimeSeries(), END_TIDAL.createTimeSeries()), expectedMD5));
     }
 
     static Stream<Arguments> createStaticDatasetWithoutOverlimit() {
-        String expectedMD5 = "44c617744b87aafb4b626460c33c2bd3";
+        String expectedMD5 = "ca3cbb1bb4585eebe71aa31ea6bed7f1";
         return Stream.of(Arguments.arguments("static_twelve_points", createStaticDataset(false), expectedMD5));
     }
 
     static Stream<Arguments> createStaticDatasetWithOverlimit() {
-        String expectedMD5 = "9ddf928d2de0132166fc5fcdc3320e60";
+        String expectedMD5 = "c742d6719f1ffd7e47f663dd65733707";
         return Stream.of(Arguments.arguments("static_thirteen_points", createStaticDataset(true), expectedMD5));
     }
 
-    static TimeSeriesCollection createRandomFullDataset(int minute, int hour, int day, int month, int year, int incrementMinutes, int n) {
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
+    static List<XYDataset> createDatasets(TimeSeries seriesTAMin, TimeSeries seriesTAMax, TimeSeries seriesPulso, TimeSeries seriesSaturacionO2, TimeSeries seriesEndTidal) {
+        TimeSeriesCollection datasetTA = new TimeSeriesCollection();
+        TimeSeriesCollection datasetPulso = new TimeSeriesCollection();
+        TimeSeriesCollection datasetSaturacionO2 = new TimeSeriesCollection();
+        TimeSeriesCollection datasetEndTidal = new TimeSeriesCollection();
+
+        datasetTA.addSeries(seriesTAMin);
+        datasetTA.addSeries(seriesTAMax);
+
+        datasetPulso.addSeries(seriesPulso);
+        datasetSaturacionO2.addSeries(seriesSaturacionO2);
+        datasetEndTidal.addSeries(seriesEndTidal);
+
+        List<XYDataset> datasets = new ArrayList<>();
+        datasets.add(datasetTA);
+        datasets.add(datasetPulso);
+        datasets.add(datasetSaturacionO2);
+        datasets.add(datasetEndTidal);
+
+        return datasets;
+    }
+
+    static List<XYDataset> createRandomFullDataset(int minute, int hour, int day, int month, int year, int incrementMinutes, int n) {
         TimeSeries s1 = BLOOD_PRESSURE_MIN.createTimeSeries();
         TimeSeries s2 = BLOOD_PRESSURE_MAX.createTimeSeries();
         TimeSeries s3 = PULSE.createTimeSeries();
@@ -214,8 +240,8 @@ class GenerateAnestheticChartTest {
         int i = 0;
         do {
 
-            int value1 = BLOOD_PRESSURE_MIN.getPosibleRandomValue();
-            int value2 = BLOOD_PRESSURE_MAX.getPosibleRandomValue();
+            int value1 = BLOOD_PRESSURE.getPosibleRandomValue();
+            int value2 = BLOOD_PRESSURE.getPosibleRandomValue();
             if (value1 > value2) {
                 var tmp = value1;
                 value1 = value2;
@@ -238,13 +264,7 @@ class GenerateAnestheticChartTest {
             i++;
         } while (i < n);
 
-        dataset.addSeries(s1);
-        dataset.addSeries(s2);
-        dataset.addSeries(s3);
-        dataset.addSeries(s4);
-        dataset.addSeries(s5);
-
-        return dataset;
+        return createDatasets(s1, s2, s3, s4, s5);
     }
 
     static Stream<Arguments> createThreeRandomDatasets() {
@@ -298,13 +318,13 @@ class GenerateAnestheticChartTest {
     @ParameterizedTest(name = "{index} ==> {0}")
     @MethodSource({"createEmptyDataset", "createStaticDatasetWithoutOverlimit", "createStaticDatasetWithOverlimit"})
     @Timeout(value = 3)
-    void run_static_dataset(String name, TimeSeriesCollection dataset, String expectedMD5) {
+    void run_static_dataset(String name, List<XYDataset> datasets, String expectedMD5) {
 
         // Arrange
         String pathname = pathnameResolver.apply(name);
 
         // Act
-        JFreeChart jchart = generateAnestheticChart.run(dataset);
+        JFreeChart jchart = generateAnestheticChart.run(datasets);
 
         // Assert
         this.saveImageAsPNG(jchart, pathname);
@@ -320,13 +340,13 @@ class GenerateAnestheticChartTest {
     @ParameterizedTest(name = "{index} ==> {0}")
     @MethodSource("createThreeRandomDatasets")
     @Timeout(value = 3)
-    void run_random_dataset(String name, TimeSeriesCollection dataset) {
+    void run_random_dataset(String name, List<XYDataset> datasets) {
 
         // Arrange
         String pathname = pathnameResolver.apply(name);
 
         // Act
-        JFreeChart jchart = generateAnestheticChart.run(dataset);
+        JFreeChart jchart = generateAnestheticChart.run(datasets);
 
         // Assert
         this.saveImageAsPNG(jchart, pathname);

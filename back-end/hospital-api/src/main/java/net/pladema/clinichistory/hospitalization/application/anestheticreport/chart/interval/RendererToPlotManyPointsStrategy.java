@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 public class RendererToPlotManyPointsStrategy extends IntervalFormatStrategy {
 
     public RendererToPlotManyPointsStrategy() {
-        renderer = createRenderer();
         dateFormat = createSimpleDateFormat();
     }
 
@@ -47,7 +46,7 @@ public class RendererToPlotManyPointsStrategy extends IntervalFormatStrategy {
         };
     }
 
-    private XYLineAndShapeRenderer createRenderer() {
+    public XYLineAndShapeRenderer getRenderer() {
         return new XYLineAndShapeRenderer()
         {
 

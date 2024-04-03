@@ -1,14 +1,16 @@
 package net.pladema.clinichistory.hospitalization.application.anestheticreport.chart;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.EndTidal;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.Pulse;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.O2Saturation;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.BloodPressureMax;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.BloodPressureMin;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.EndTidal;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.Pulse;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.O2Saturation;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.bloodpressure.BloodPressureMax;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.bloodpressure.BloodPressureMin;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.Hour;
 import org.jfree.data.time.Minute;
@@ -29,7 +31,7 @@ public class ParsePointsToTimeSeries {
     private final O2Saturation o2Saturation;
     private final EndTidal endTidal;
 
-    public XYDataset run(List<MeasuringPointBo> measuringPointBos) {
+    public List<XYDataset> run(List<MeasuringPointBo> measuringPointBos) {
         TimeSeries seriesTAMin = bloodPressureMin.createTimeSeries();
         TimeSeries seriesTAMax = bloodPressureMax.createTimeSeries();
         TimeSeries seriesPulso = pulse.createTimeSeries();
@@ -39,13 +41,30 @@ public class ParsePointsToTimeSeries {
         measuringPointBos.forEach(measuringPointBo ->
                 this.parsePointToTimeSeries(measuringPointBo, seriesTAMin, seriesTAMax, seriesPulso, seriesSaturacionO2, seriesEndTidal));
 
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.addSeries(seriesTAMin);
-        dataset.addSeries(seriesTAMax);
-        dataset.addSeries(seriesPulso);
-        dataset.addSeries(seriesSaturacionO2);
-        dataset.addSeries(seriesEndTidal);
-        return dataset;
+        return createDatasets(seriesTAMin, seriesTAMax, seriesPulso, seriesSaturacionO2, seriesEndTidal);
+    }
+
+    @NonNull
+    private static List<XYDataset> createDatasets(TimeSeries seriesTAMin, TimeSeries seriesTAMax, TimeSeries seriesPulso, TimeSeries seriesSaturacionO2, TimeSeries seriesEndTidal) {
+        TimeSeriesCollection datasetTA = new TimeSeriesCollection();
+        TimeSeriesCollection datasetPulso = new TimeSeriesCollection();
+        TimeSeriesCollection datasetSaturacionO2 = new TimeSeriesCollection();
+        TimeSeriesCollection datasetEndTidal = new TimeSeriesCollection();
+
+        datasetTA.addSeries(seriesTAMin);
+        datasetTA.addSeries(seriesTAMax);
+
+        datasetPulso.addSeries(seriesPulso);
+        datasetSaturacionO2.addSeries(seriesSaturacionO2);
+        datasetEndTidal.addSeries(seriesEndTidal);
+
+        List<XYDataset> datasets = new ArrayList<>();
+        datasets.add(datasetTA);
+        datasets.add(datasetPulso);
+        datasets.add(datasetSaturacionO2);
+        datasets.add(datasetEndTidal);
+
+        return datasets;
     }
 
     private void parsePointToTimeSeries(MeasuringPointBo measuringPointBo, TimeSeries seriesTAMin,

@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Map;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.BloodPressure;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.ChartDataset;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.EndTidal;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.O2Saturation;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.Pulse;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.dataset.DatasetConfigurator;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.interval.IntervalFormatStrategy;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.interval.IntervalFormatStrategySelector;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.BloodPressureMax;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.BloodPressureMin;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.EndTidal;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.O2Saturation;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.Pulse;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.series.Series;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.chart.utils.ShapesGenerator;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -45,45 +45,61 @@ import org.springframework.stereotype.Service;
 @Service
 public class GenerateAnestheticChart {
 
-    private final List<Series> series = new ArrayList<>();
+    private final List<ChartDataset> chartDatasets = new ArrayList<>();
     private final Font ROBOTO = new Font("Roboto", Font.PLAIN, 12);
     private final Integer INTERVAL_MINUTE = 5;
+    private final Integer DATASET_TO_DUMMY;
     private final IntervalFormatStrategySelector strategySelector;
 
     private IntervalFormatStrategy intervalFormatStrategy;
 
-    public GenerateAnestheticChart(BloodPressureMin bloodPressureMin, BloodPressureMax bloodPressureMax, Pulse pulse, O2Saturation o2Saturation, EndTidal endTidal, IntervalFormatStrategySelector strategySelector) {
+    public GenerateAnestheticChart(BloodPressure bloodPressure, Pulse pulse, O2Saturation o2Saturation, EndTidal endTidal, IntervalFormatStrategySelector strategySelector) {
         this.strategySelector = strategySelector;
-        series.add(bloodPressureMin);
-        series.add(bloodPressureMax);
-        series.add(pulse);
-        series.add(o2Saturation);
-        series.add(endTidal);
+        chartDatasets.add(bloodPressure);
+        chartDatasets.add(pulse);
+        chartDatasets.add(o2Saturation);
+        chartDatasets.add(endTidal);
+        DATASET_TO_DUMMY = endTidal.getIndexFromDatasetList();
     }
 
-    public JFreeChart run(@NonNull XYDataset dataset) {
-        log.debug("Input parameters -> dataset {}", dataset);
-        JFreeChart chart = createChart(dataset);
+    public JFreeChart run(@NonNull List<XYDataset> datasets) {
+        log.debug("Input parameters -> dataset {}", datasets);
+        JFreeChart chart = createChart();
 
-        if (dataset.getSeriesCount() == 0 || dataset.getItemCount(1) == 0) {
+        if (datasets.isEmpty() || datasets.get(0).getSeriesCount() == 0 || datasets.get(0).getItemCount(0) == 0) {
             log.debug("Output -> empty chart");
             return chart;
         }
 
-        setIntervalFormatStrategy(dataset);
-
         XYPlot plot = (XYPlot) setPlot(chart);
+        mapDatasetWithIndexConfiguration(datasets, plot);
+
+        setIntervalFormatStrategy(datasets);
+
         setAxisX(plot);
         setAxisY(plot);
-        setDots(plot);
+        setRendererDots(plot);
         setLegend(chart);
 
         log.debug("Output -> chart {}", chart);
         return chart;
     }
 
-    private void setIntervalFormatStrategy(XYDataset dataset) {
-        int numberOfMeasurements = dataset.getItemCount(0);
+    private Integer getTotalSeries() {
+        return chartDatasets.stream()
+                .map(DatasetConfigurator::getTotalSeries)
+                .reduce(0, Integer::sum);
+    }
+
+    private void mapDatasetWithIndexConfiguration(@NonNull List<XYDataset> datasets, XYPlot plot) {
+        chartDatasets.forEach(chartDataset -> {
+            int indexFromDataset = chartDataset.getIndexFromDatasetList();
+            plot.setDataset(indexFromDataset, datasets.get(indexFromDataset));
+        });
+    }
+
+    private void setIntervalFormatStrategy(List<XYDataset> datasets) {
+        int numberOfMeasurements = datasets.get(0).getItemCount(0);
         this.intervalFormatStrategy = strategySelector.apply(numberOfMeasurements);
     }
 
@@ -103,44 +119,57 @@ public class GenerateAnestheticChart {
 
     private void deleteDuplicatedValuesFromLegend(XYPlot plot) {
         LegendItemCollection legendItems = new LegendItemCollection();
-        int a = 0;
+        int count = 0;
         Iterator<LegendItem> it = plot.getLegendItems().iterator();
-        while(a < series.size() && it.hasNext()) { // just add series from dataset1, ignore dummy dataset
+        while (count < getTotalSeries() && it.hasNext()) { // ignore last dummy dataset
             LegendItem legendItem = it.next();
             legendItems.add(legendItem);
-            a++;
+            count++;
         }
         plot.setFixedLegendItems(legendItems);
     }
 
     private void setAxisY(XYPlot plot) {
-        series.forEach(series1 -> series1.setRange(plot));
+        chartDatasets.forEach(chartDataset -> chartDataset.setRange(plot));
+        mapDatasetWithAxisY(plot);
     }
 
-    private void setDots(XYPlot plot) {
+    private void setRendererDots(XYPlot plot) {
 
-        XYLineAndShapeRenderer renderer = intervalFormatStrategy.getRenderer();
+        chartDatasets.forEach(chartDataset -> {
+            XYLineAndShapeRenderer renderer = intervalFormatStrategy.getRenderer();
 
-        series.forEach(series -> series.setDots(renderer));
+            intervalFormatStrategy.setDotValuesLabels(renderer);
 
-        renderer.setDefaultLinesVisible(false);
+            mapDatasetWithRenderer(plot, chartDataset.getIndexFromDatasetList(), renderer);
 
-        intervalFormatStrategy.setDotValuesLabels(renderer);
+            chartDataset.setDots(renderer);
+        });
 
-        plot.setRenderer(0, renderer);
-
-        setSecondDummyDatasetInvisible(plot);
-
+        makeDummyDatasetInvisible(plot);
     }
 
-    private void setSecondDummyDatasetInvisible(XYPlot plot) {
-        plot.setRenderer(1, new XYLineAndShapeRenderer(false, false));
+    private void mapDatasetWithRenderer(XYPlot plot, int chartDatasetPosition, XYLineAndShapeRenderer renderer) {
+        plot.setRenderer(chartDatasetPosition, renderer);
     }
 
+    private void makeDummyDatasetInvisible(XYPlot plot) {
+        XYLineAndShapeRenderer noRenderer = new XYLineAndShapeRenderer(false, false);
+        mapDatasetWithRenderer(plot, getDummyDatasetPosition(), noRenderer);
+    }
+
+    private int getDummyDatasetPosition() {
+        return DATASET_TO_DUMMY + 1;
+    }
 
     private void setAxisX(XYPlot plot) {
         setMainAxisX(plot);
+        mapDatasetWithAxisX(plot);
         setSecondaryAxisX(plot);
+    }
+
+    private void mapDatasetWithAxisX(XYPlot plot) {
+        chartDatasets.forEach(dataset -> dataset.mapDatasetWithAxisX(plot));
     }
 
     private void setSecondaryAxisX(XYPlot plot) {
@@ -154,13 +183,21 @@ public class GenerateAnestheticChart {
         dayAxis.setLabelFont(ROBOTO);
         dayAxis.setTickLabelFont(ROBOTO);
 
-        // second dummy dataset configuration
-        plot.setDataset(1, plot.getDataset());
-        plot.setDomainAxis(1, dayAxis);
-        plot.mapDatasetToDomainAxis(1, 1);
+        mapDummyDatasetWithSecondaryAxisX(plot, dayAxis);
 
         increaseRangeByFewMinutes(dayAxis);
         formatFirstAndChangeDayDate(plot, dayAxis, dateFormat);
+    }
+
+    private void mapDummyDatasetWithSecondaryAxisX(XYPlot plot, DateAxis dayAxis) {
+        XYDataset dummyDataset = getDummyDataset(plot);
+        plot.setDataset(getDummyDatasetPosition(), dummyDataset);
+        plot.setDomainAxis(1, dayAxis);
+        plot.mapDatasetToDomainAxis(getDummyDatasetPosition(), 1);
+    }
+
+    private XYDataset getDummyDataset(XYPlot plot) {
+        return plot.getDataset(DATASET_TO_DUMMY);
     }
 
     private void setMainAxisX(XYPlot plot) {
@@ -173,7 +210,7 @@ public class GenerateAnestheticChart {
         rangeX.setLabelFont(ROBOTO);
         setTickLabelFont(rangeX);
 
-        plot.mapDatasetToDomainAxis(0, 0);
+        plot.setDomainAxis(0, rangeX);
 
         increaseRangeByFewMinutes(rangeX);
         rangeX.setDateFormatOverride(intervalFormatStrategy.getDateFormat());
@@ -187,8 +224,8 @@ public class GenerateAnestheticChart {
     }
 
     private void formatFirstAndChangeDayDate(XYPlot plot, DateAxis domainAxis, String hourFormat) {
-        var dataset = (TimeSeriesCollection) plot.getDataset();
-        var firstDate = dataset.getSeries(0).getTimePeriod(0).getStart();
+        var firstDataset = (TimeSeriesCollection) plot.getDataset(0);
+        var firstDate = firstDataset.getSeries(0).getTimePeriod(0).getStart();
         domainAxis.setDateFormatOverride(new SimpleDateFormat(hourFormat) {
 
             private static final long serialVersionUID = -1294574239394895774L;
@@ -217,8 +254,8 @@ public class GenerateAnestheticChart {
         rangeX.setMaximumDate(Date.from(newLastDateTime.atZone(ZoneId.systemDefault()).toInstant()));
     }
 
-    private void mapSeriesWithAxisY(XYPlot plot) {
-        series.forEach(series1 -> series1.mapSeriesWithAxis(plot));
+    private void mapDatasetWithAxisY(XYPlot plot) {
+        chartDatasets.forEach(dataset -> dataset.mapDatasetWithAxisY(plot));
     }
 
     private Plot setPlot(JFreeChart chart) {
@@ -239,17 +276,15 @@ public class GenerateAnestheticChart {
 
         plot.setAxisOffset(new RectangleInsets(10., 6., 0., 10.));
 
-        mapSeriesWithAxisY(plot);
-
         return plot;
     }
 
-    private JFreeChart createChart(XYDataset dataset) {
+    private JFreeChart createChart() {
 
         JFreeChart chart = ChartFactory.createTimeSeriesChart(null,
                 null,
                 null,
-                dataset,
+                null,
                 true,
                 false,
                 false

@@ -10,8 +10,9 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 @NoArgsConstructor
 public abstract class IntervalFormatStrategy {
 
-    protected XYLineAndShapeRenderer renderer;
     protected SimpleDateFormat dateFormat;
 
     public abstract void setDotValuesLabels(XYLineAndShapeRenderer renderer);
+
+    public abstract XYLineAndShapeRenderer getRenderer();
 }
