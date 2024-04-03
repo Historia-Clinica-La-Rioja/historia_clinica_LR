@@ -17,7 +17,8 @@ public class FreeAppointmentsUtils {
 		return ((diaryOpeningHoursBo.getOnSiteAttentionAllowed() && filter.getModality().getId().equals(EAppointmentModality.ON_SITE_ATTENTION.getId())) ||
 				(diaryOpeningHoursBo.getPatientVirtualAttentionAllowed() && filter.getModality().getId().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId())) ||
 				(diaryOpeningHoursBo.getSecondOpinionVirtualAttentionAllowed() && filter.getModality().getId().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION.getId()))) &&
-				(!filter.isMustBeProtected() || (diaryOpeningHoursBo.getProtectedAppointmentsAllowed() != null && diaryOpeningHoursBo.getProtectedAppointmentsAllowed()));
+				(!filter.isMustBeProtected() || ((diaryOpeningHoursBo.getProtectedAppointmentsAllowed() != null && diaryOpeningHoursBo.getProtectedAppointmentsAllowed()) ||
+						(diaryOpeningHoursBo.getRegulationProtectedAppointmentsAllowed() != null && diaryOpeningHoursBo.getRegulationProtectedAppointmentsAllowed())));
 	}
 
 	public int parseOpeningHoursWeekOfDay(OpeningHoursBo openingHours) {
