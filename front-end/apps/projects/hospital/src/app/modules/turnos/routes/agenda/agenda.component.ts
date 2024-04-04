@@ -38,7 +38,7 @@ import * as moment from 'moment';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
-import { APPOINTMENT_STATES_ID, COLORES, MINUTES_IN_HOUR } from '../../constants/appointment';
+import { APPOINTMENT_STATES_ID, COLORES, MINUTES_IN_HOUR, WHITE_TEXT } from '../../constants/appointment';
 import { AgendaSearchService } from '../../services/agenda-search.service';
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { MAX_APPOINTMENT_PER_HOUR, getHourFromString } from '@turnos/utils/appointment.utils';
@@ -376,6 +376,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		if (event.meta?.appointmentStateId === APPOINTMENT_STATES_ID.BLOCKED || !event.meta) {
 			return;
 		}
+
+		if (event.meta.quantity) {
+			return this.openAppointmentListDialog(event);
+		}
+
 		if (!event.meta.patient?.id) {
 			this.dialog.open(ConfirmBookingComponent, {
 				width: '30%',
@@ -409,23 +414,19 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 						});
 					});
 			} else {
-				if (!event.meta.quantity) {
-					dialogRef = this.dialog.open(AppointmentComponent, {
-						disableClose: true,
-						data: {
-							appointmentData: event.meta,
-							hasPermissionToAssignShift: this.agenda.professionalAssignShift,
-							agenda: this.agenda
-						},
-					});
-					dialogRef.afterClosed().subscribe((appointmentInformation) => {
-						this.viewDate = appointmentInformation.date;
-						this.setDateRange(this.viewDate);
-						this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
-					});
-				} else {
-					this.openAppointmentListDialog(event);
-				}
+				dialogRef = this.dialog.open(AppointmentComponent, {
+					disableClose: true,
+					data: {
+						appointmentData: event.meta,
+						hasPermissionToAssignShift: this.agenda.professionalAssignShift,
+						agenda: this.agenda
+					},
+				});
+				dialogRef.afterClosed().subscribe((appointmentInformation) => {
+					this.viewDate = appointmentInformation.date;
+					this.setDateRange(this.viewDate);
+					this.appointmentFacade.setValues(this.agenda.id, this.agenda.appointmentDuration, this.startDate, this.endDate);
+				});
 			}
 		}
 	}
@@ -613,14 +614,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			if (eventsPerDate.has(dateString) && eventsPerDate.get(dateString) >= MAX_APPOINTMENT_PER_HOUR) {
 				const firstEvent = unifiedEvents.find((ce: CalendarEvent) => this.compareAppointmentsDate(ce.start, date));
 				if (firstEvent) {
-					const hour = getHourFromString(firstEvent.title);
-					const quantity = eventsPerDate.get(dateString);
-					firstEvent.title = `${hour} ${quantity} turnos`;
-					firstEvent.meta.quantity = quantity;
-					firstEvent.color = {
-						primary: COLORES.ASSIGNED,
-						secondary: COLORES.ASSIGNED
-					}
+					this.parseNameAndCssToAppointmentGroup(firstEvent, eventsPerDate, dateString);
 					filteredUnifiedEvents.push(firstEvent);
 				}
 			} else {
@@ -649,6 +643,18 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			start: events[0]?.start,
 			end: events[events.length - 1]?.end,
 		};
+	}
+
+	private parseNameAndCssToAppointmentGroup = (firstEvent: CalendarEvent, eventsPerDate: Map<string, number>, dateString: string) => {
+		const hour = getHourFromString(firstEvent.title);
+		const quantity = eventsPerDate.get(dateString);
+		firstEvent.title = `${hour} ${quantity} turnos`;
+		firstEvent.meta.quantity = quantity;
+		firstEvent.color = {
+			primary: COLORES.ASSIGNED,
+			secondary: COLORES.ASSIGNED
+		}
+		firstEvent.cssClass = WHITE_TEXT;
 	}
 
 	private userHasValidRoles(): boolean {

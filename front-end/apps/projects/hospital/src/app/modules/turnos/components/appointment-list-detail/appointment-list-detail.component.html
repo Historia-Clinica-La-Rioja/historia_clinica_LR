@@ -4,7 +4,7 @@
 		<span *ngIf="detail.patientFullName">{{detail.patientFullName}}</span>
 		<div>
 			<span *ngIf="detail.identificationNumber" [translate]="'turnos.group-appointment.DNI'" [translateParams]="{DNI: detail.identificationNumber}"></span>
-			<span [translate]="'turnos.group-appointment.ID'" [translateParams]="{ID: detail.patientId}"></span>
+			<span *ngIf="detail.patientId" [translate]="'turnos.group-appointment.ID'" [translateParams]="{ID: detail.patientId}"></span>
 		</div>
 	</div>
 	<app-colored-label [description]="appointmentStateDescription" [color]="appointmentStateColor"></app-colored-label>

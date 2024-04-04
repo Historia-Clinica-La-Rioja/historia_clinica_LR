@@ -1313,6 +1313,7 @@ export interface PatientAppointmentInformation {
 		identificationTypeId?: number,
 		typeId: number,
 		genderId?: number,
+		email?: string,
 		names: {
 			firstName: string,
 			lastName: string,

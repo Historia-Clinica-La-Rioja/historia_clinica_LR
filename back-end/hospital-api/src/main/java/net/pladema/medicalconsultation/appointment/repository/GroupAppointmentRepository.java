@@ -18,11 +18,13 @@ import java.util.List;
 public interface GroupAppointmentRepository extends JpaRepository<Appointment, Integer> {
 
 	@Transactional
-	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.GroupAppointmentResponseBo(a.id, pe.firstName, pe.lastName, pe.identificationNumber, p.id, a.appointmentStateId)" +
+	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.GroupAppointmentResponseBo(a.id, pe.identificationNumber, p.id, a.appointmentStateId, pe.id)" +
 			" FROM Appointment a" +
 			" JOIN AppointmentAssn assn ON a.id = assn.pk.appointmentId" +
-			" JOIN Patient p ON a.patientId = p.id" +
-			" JOIN Person pe ON p.personId = pe.id" +
+			" LEFT JOIN Patient p ON a.patientId = p.id" +
+			" LEFT JOIN Person pe ON p.personId = pe.id" +
+			" LEFT JOIN BookingAppointment ba ON ba.pk.appointmentId = a.id" +
+			" LEFT JOIN BookingPerson bp ON bp.id = ba.pk.bookingPersonId" +
 			" WHERE assn.pk.diaryId = :diaryId" +
 			" AND a.dateTypeId = :date" +
 			" AND a.hour = :hour" +

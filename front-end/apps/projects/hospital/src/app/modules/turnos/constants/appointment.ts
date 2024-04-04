@@ -246,4 +246,7 @@ export const getAppointmentLabelColor = (appointmentStateId: number): string => 
 		
 	if (appointmentStateId === APPOINTMENT_STATES_ID.SERVED)
 		return Color.GREEN;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.BOOKED)
+		return Color.RED;
 }

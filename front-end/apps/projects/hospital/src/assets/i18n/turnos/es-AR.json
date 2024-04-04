@@ -345,8 +345,8 @@
 		},
 		"group-appointment": {
 			"SELECT_APPOINTMENT": "Seleccionar turno",
-			"DNI": "DNI {{DNI}} - ",
-			"ID": "ID {{ID}}",
+			"DNI": "DNI {{DNI}}",
+			"ID": " - ID {{ID}}",
 			"SEE_DETAIL": "Ver detalle"
 		}
 	}
