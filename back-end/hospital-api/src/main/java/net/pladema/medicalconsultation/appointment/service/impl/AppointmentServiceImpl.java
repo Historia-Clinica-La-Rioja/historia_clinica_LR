@@ -660,9 +660,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public Boolean openingHourAllowedProtectedAppointment(Integer appointmentId, Integer diaryId) {
-		log.debug("Input parameter -> appointmentId {}, diaryId {} ", appointmentId, diaryId);
-		Boolean result = appointmentRepository.openingHourAllowedProtectedAppointment(appointmentId, diaryId);
+	public Boolean openingHourAllowedProtectedAppointment(Integer openingHoursId, Integer diaryId) {
+		log.debug("Input parameter -> openingHoursId {}, diaryId {} ", openingHoursId, diaryId);
+		Boolean result = appointmentRepository.openingHourAllowedProtectedAppointment(openingHoursId, diaryId);
 		log.debug(OUTPUT, result);
 		return result;
 	}

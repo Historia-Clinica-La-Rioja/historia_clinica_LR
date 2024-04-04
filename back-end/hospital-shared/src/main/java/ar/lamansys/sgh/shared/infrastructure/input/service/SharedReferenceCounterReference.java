@@ -4,6 +4,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CounterReferenceSummaryDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferencePhoneDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 
@@ -37,4 +38,8 @@ public interface SharedReferenceCounterReference {
 	List<String> getReferenceClinicalSpecialtiesName(Integer referenceId);
 
 	void updateProtectedAppointment(Integer appointment);
+
+	void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, boolean isProtected);
+
+	ReferencePhoneDto getReferencePhoneData(Integer referenceId);
 }

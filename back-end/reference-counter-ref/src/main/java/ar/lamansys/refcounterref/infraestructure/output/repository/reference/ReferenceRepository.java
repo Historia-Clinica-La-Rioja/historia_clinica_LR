@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
-import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.shared.domain.reference.ReferencePhoneBo;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -423,7 +423,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Optional<ReferenceRequestBo> getReferenceByServiceRequestId(@Param("serviceRequestId") Integer serviceRequestId);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo(r.phoneNumber, r.phonePrefix) " +
+	@Query(" SELECT NEW ar.lamansys.sgh.shared.domain.reference.ReferencePhoneBo(r.phonePrefix, r.phoneNumber) " +
 			"FROM Reference r " +
 			"WHERE r.id = :referenceId")
 	ReferencePhoneBo getReferencePhoneData(@Param("referenceId") Integer referenceId);

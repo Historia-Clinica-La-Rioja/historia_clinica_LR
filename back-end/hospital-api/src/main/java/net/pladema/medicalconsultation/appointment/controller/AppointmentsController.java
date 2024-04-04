@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
@@ -174,8 +173,6 @@ public class AppointmentsController {
 
 	private final DeriveReportService deriveReportService;
 
-	private final AssociateReferenceAppointment associateReferenceAppointment;
-
 	private final LocalDateMapper localDateMapper;
 
 	private final PatientMedicalCoverageMapper patientMedicalCoverageMapper;
@@ -229,10 +226,6 @@ public class AppointmentsController {
 		newAppointmentBo.setRecurringTypeBo(new RecurringTypeBo(RecurringAppointmentType.NO_REPEAT.getId(), RecurringAppointmentType.NO_REPEAT.getValue()));
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer result = newAppointmentBo.getId();
-		if (createAppointmentDto.getReferenceId() != null) {
-			boolean alreadyHasPhone = newAppointmentBo.getPhoneNumber() != null;
-			associateReferenceAppointment.run(createAppointmentDto.getReferenceId(), result, alreadyHasPhone);
-		}
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

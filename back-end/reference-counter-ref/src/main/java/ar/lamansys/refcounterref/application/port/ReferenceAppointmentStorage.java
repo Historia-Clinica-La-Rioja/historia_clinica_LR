@@ -8,11 +8,10 @@ import java.util.Optional;
 
 public interface ReferenceAppointmentStorage {
 
-	void save(Integer referenceId, Integer appointmentId, Boolean alreadyHasPhone);
+	void save(Integer referenceId, Integer appointmentId, Boolean isProtected);
 
 	Map<Integer, List<Integer>>  getReferenceAppointmentsIdsWithoutCancelledStateId(List<Integer> referenceId);
 
 	Map<Integer, List<Integer>>  getReferenceAppointmentsIds(List<Integer> referenceId);
 
-	Optional<ReferenceAppointmentBo> getAppointmentData(Integer referenceId);
 }

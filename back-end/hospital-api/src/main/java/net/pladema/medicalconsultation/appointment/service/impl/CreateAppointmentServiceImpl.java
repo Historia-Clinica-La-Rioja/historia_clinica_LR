@@ -1,8 +1,12 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import ar.lamansys.sgh.shared.domain.reference.ReferencePhoneBo;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
+import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.medicalconsultation.appointment.application.port.AppointmentReferenceStorage;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmentEmailService;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
@@ -32,6 +36,8 @@ import java.util.regex.Pattern;
 @Service
 public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
+	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
 	private final AppointmentRepository appointmentRepository;
 
 	private final AppointmentAssnRepository appointmentAssnRepository;
@@ -42,8 +48,9 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 	private final SendVirtualAppointmentEmailService sendVirtualAppointmentEmailService;
 
-	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+	private final AppointmentService appointmentService;
 
+	private final AppointmentReferenceStorage appointmentReferenceStorage;
 
 	@Override
 	@Transactional
@@ -71,8 +78,23 @@ public class CreateAppointmentServiceImpl implements CreateAppointmentService {
 
 		if (appointmentBo.getModalityId().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.getId()) || appointmentBo.getModalityId().equals(EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION.getId()))
 			sendVirtualAppointmentEmailService.run(appointmentBo);
+
+		if (appointmentBo.getReferenceId() != null) {
+			boolean appointmentHasPhone = appointmentBo.getPhoneNumber() != null &&  appointmentBo.getPhonePrefix() != null;
+			associateReference(appointment.getId(), appointmentBo.getReferenceId(), appointmentBo.getOpeningHoursId(), appointmentBo.getDiaryId(), appointmentHasPhone);
+		}
+
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	private void associateReference(Integer appointmentId, Integer referenceId, Integer openingHoursId, Integer diaryId, boolean appointmentHasPhone) {
+		boolean isProtected = appointmentService.openingHourAllowedProtectedAppointment(openingHoursId, diaryId);
+		appointmentReferenceStorage.associateReferenceToAppointment(referenceId, appointmentId, isProtected);
+		if (!appointmentHasPhone) {
+			ReferencePhoneBo phoneReference = appointmentReferenceStorage.getReferencePhoneData(referenceId);
+			appointmentService.updatePhoneNumber(appointmentId, phoneReference.getPhonePrefix(), phoneReference.getPhoneNumber(), UserInfo.getCurrentAuditor());
+		}
 	}
 
 	private void validateAppointment(AppointmentBo appointment) {

@@ -3924,6 +3924,11 @@ export interface ReferencePatientDto {
     phonePrefix: string;
 }
 
+export interface ReferencePhoneDto {
+    phoneNumber: string;
+    phonePrefix: string;
+}
+
 export interface ReferenceProblemDto extends Serializable {
     id?: number;
     snomed: SharedSnomedDto;

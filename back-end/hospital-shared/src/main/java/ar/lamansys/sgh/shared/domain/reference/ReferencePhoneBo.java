@@ -1,4 +1,4 @@
-package ar.lamansys.refcounterref.domain.reference;
+package ar.lamansys.sgh.shared.domain.reference;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +7,12 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
+@ToString
 public class ReferencePhoneBo {
 
-	private String phoneNumber;
 	private String phonePrefix;
+
+	private String phoneNumber;
+
 }

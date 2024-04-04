@@ -3,14 +3,13 @@ package ar.lamansys.refcounterref.application.getreferencecompletedata;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataException;
 import ar.lamansys.refcounterref.application.getreferencecompletedata.exceptions.GetReferenceCompleteDataExceptionEnum;
 import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
-import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceAppointmentInfoStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceObservationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceForwardingStorage;
 import ar.lamansys.refcounterref.application.port.ReferencePatientStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.domain.reference.ReferenceCompleteDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
-import ar.lamansys.refcounterref.domain.reference.ReferenceObservationBo;
 import ar.lamansys.refcounterref.domain.reference.ReferencePatientBo;
 import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo;
 import ar.lamansys.refcounterref.domain.referenceregulation.ReferenceRegulationBo;
@@ -32,7 +31,7 @@ public class GetReferenceCompleteData {
 
 	private final ReferenceStorage referenceStorage;
 
-	private final ReferenceAppointmentStorage referenceAppointmentStorage;
+	private final ReferenceAppointmentInfoStorage referenceAppointmentInfoStorage;
 
 	private final ReferencePatientStorage referencePatientStorage;
 
@@ -51,7 +50,7 @@ public class GetReferenceCompleteData {
 				new GetReferenceCompleteDataException(GetReferenceCompleteDataExceptionEnum.INVALID_REFERENCE_ID, "El identificador de la referencia es invalido"));
 
 		ReferencePatientBo patientData = referencePatientStorage.getPatientInfo(referenceData.getPatientId());
-		Optional<ReferenceAppointmentBo> appointmentData = referenceAppointmentStorage.getAppointmentData(referenceData.getId());
+		Optional<ReferenceAppointmentBo> appointmentData = referenceAppointmentInfoStorage.getAppointmentData(referenceData.getId());
 		setContactInformation(patientData, referenceData, appointmentData);
 		Optional<ReferenceRegulationBo> referenceRegulation = historicReferenceRegulationStorage.getByReferenceId(referenceId);
 		var observation = referenceObservationStorage.getReferenceObservation(referenceId).orElse(null);

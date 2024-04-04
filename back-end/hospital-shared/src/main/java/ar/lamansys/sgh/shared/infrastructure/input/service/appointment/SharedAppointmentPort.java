@@ -49,11 +49,7 @@ public interface SharedAppointmentPort {
 
 	Optional<AppointmentDataDto> getNearestAppointmentData(List<Integer> appointments);
 
-	Boolean openingHourAllowedProtectedAppointments(Integer appointmentId, Integer diaryId);
-
 	Integer getDiaryId(Integer appointmentId);
-
-	void updateAppointmentPhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber);
 
 	Integer getInstitutionId(Integer diaryId);
 

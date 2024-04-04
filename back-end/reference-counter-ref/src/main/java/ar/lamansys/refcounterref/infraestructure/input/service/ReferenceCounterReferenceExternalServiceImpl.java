@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.input.service;
 
 import ar.lamansys.refcounterref.application.approvereferencesbyruleid.ApproveReferencesByRuleId;
+import ar.lamansys.refcounterref.application.associatereferenceappointment.AssociateReferenceAppointment;
 import ar.lamansys.refcounterref.application.createreference.CreateReference;
 import ar.lamansys.refcounterref.application.getcounterreference.GetCounterReference;
 import ar.lamansys.refcounterref.application.getreferencebyservicerequest.GetReferenceByServiceRequest;
@@ -15,7 +16,9 @@ import ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmen
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.CounterReferenceSummaryMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceMapper;
 import ar.lamansys.refcounterref.infraestructure.input.service.mapper.ReferenceProblemMapper;
+import ar.lamansys.refcounterref.infraestructure.output.repository.reference.ReferenceRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referenceappointment.ReferenceAppointmentRepository;
+import ar.lamansys.sgh.shared.domain.reference.ReferencePhoneBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referenceclinicalspecialty.ReferenceClinicalSpecialtyRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
@@ -25,6 +28,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceCounterReferenceFileDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferencePhoneDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceProblemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +53,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
     private final GetReferenceFile getReferenceFile;
     private final GetCounterReference getCounterReference;
     private final GetReferenceProblem getReferenceProblem;
+	private final AssociateReferenceAppointment associateReferenceAppointment;
     private final CounterReferenceSummaryMapper counterReferenceSummaryMapper;
     private final ReferenceMapper referenceMapper;
     private final ReferenceProblemMapper referenceProblemMapper;
@@ -58,6 +63,7 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 	private final ApproveReferencesByRuleId approveReferencesByRuleId;
 	private final UpdateRuleOnReferenceRegulation updateRuleIdOnReferences;
 	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
+	private final ReferenceRepository referenceRepository;
 
     @Override
     public List<ReferenceCounterReferenceFileDto> getReferenceFilesData(Integer referenceId) {
@@ -153,6 +159,18 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		referenceAppointmentRepository.deleteByAppointmentId(appointmentId);
 	}
 
+	@Override
+	public void associateReferenceToAppointment(Integer referenceId, Integer appointmentId, boolean isProtected) {
+		log.debug("Associate reference to appointment {}, ", appointmentId);
+		associateReferenceAppointment.run(referenceId, appointmentId, isProtected);
+	}
+
+	@Override
+	public ReferencePhoneDto getReferencePhoneData(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {} ", referenceId);
+		return mapToReferencePhoneDto(referenceRepository.getReferencePhoneData(referenceId));
+	}
+
 	private List<ReferenceCounterReferenceFileDto> mapToReferenceCounterReferenceFileDto(List<ReferenceCounterReferenceFileBo> referenceCounterReferenceFileBos) {
         List<ReferenceCounterReferenceFileDto> referenceCounterReferenceFileDtos = new ArrayList<>();
         referenceCounterReferenceFileBos.stream().forEach(referenceCounterReferenceFileBo ->
@@ -174,6 +192,10 @@ public class ReferenceCounterReferenceExternalServiceImpl implements SharedRefer
 		result.setAppointmentStateId(referenceAppointmentSummaryBo.getAppointmentStateId());
 		result.setReferenceClosureTypeId(referenceAppointmentSummaryBo.getReferenceClosureTypeId());
 		return result;
+	}
+
+	private ReferencePhoneDto mapToReferencePhoneDto(ReferencePhoneBo referencePhoneBo) {
+		return new ReferencePhoneDto(referencePhoneBo.getPhonePrefix(), referencePhoneBo.getPhoneNumber());
 	}
 
 }

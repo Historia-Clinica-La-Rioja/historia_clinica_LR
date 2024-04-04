@@ -241,23 +241,8 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	@Override
-	public Boolean openingHourAllowedProtectedAppointments(Integer appointmentId, Integer diaryId) {
-		log.debug("Input parameters -> appointmentId {}, diaryId {} ", appointmentId, diaryId);
-		Boolean result = appointmentService.openingHourAllowedProtectedAppointment(appointmentId, diaryId);
-		log.debug(OUTPUT , result);
-		return result;
-	}
-
-	@Override
 	public Integer getDiaryId(Integer appointmentId) {
 		return diaryService.getDiaryIdByAppointment(appointmentId);
-	}
-
-	@Override
-	public void updateAppointmentPhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber) {
-		log.debug("Input parameters -> appointmentId {}, phonePrefix {}, phoneNumber {}", appointmentId, phonePrefix, phoneNumber);
-		Integer loggedUserId = UserInfo.getCurrentAuditor();
-		appointmentService.updatePhoneNumber(appointmentId, phonePrefix, phoneNumber, loggedUserId);
 	}
 
 	@Override
