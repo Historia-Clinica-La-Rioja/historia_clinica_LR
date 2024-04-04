@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
+import net.pladema.medicalconsultation.appointment.application.createexpiredappointment.CreateExpiredAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
@@ -205,6 +206,8 @@ public class AppointmentsController {
 
 	private final FetchCustomAppointment fetchCustomAppointment;
 
+	private final CreateExpiredAppointment createExpiredAppointment;
+
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
 
@@ -226,6 +229,19 @@ public class AppointmentsController {
 		newAppointmentBo.setRecurringTypeBo(new RecurringTypeBo(RecurringAppointmentType.NO_REPEAT.getId(), RecurringAppointmentType.NO_REPEAT.getValue()));
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer result = newAppointmentBo.getId();
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@PostMapping("/expired")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@ValidAppointment
+	public ResponseEntity<Integer> createExpiredAppointment(@PathVariable(name = "institutionId") Integer institutionId,
+															@RequestBody @Valid CreateAppointmentDto createAppointmentDto) {
+		log.debug("Input parameters -> institutionId {}, appointmentDto {}", institutionId, createAppointmentDto);
+		AppointmentBo newAppointmentBo = appointmentMapper.toAppointmentBo(createAppointmentDto);
+		newAppointmentBo.setRecurringTypeBo(new RecurringTypeBo(RecurringAppointmentType.NO_REPEAT.getId(), RecurringAppointmentType.NO_REPEAT.getValue()));
+		Integer result = createExpiredAppointment.run(newAppointmentBo, institutionId);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

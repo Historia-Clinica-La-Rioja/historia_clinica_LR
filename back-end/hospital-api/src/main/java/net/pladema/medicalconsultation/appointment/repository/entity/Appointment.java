@@ -116,12 +116,15 @@ public class Appointment extends SGXAuditableEntity<Integer> implements SGXDocum
 	}
 
 	private static Short fromStateId(Short appointmentStateId) {
-		if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BOOKED))
-			return AppointmentState.BOOKED;
-		else if(appointmentStateId != null && appointmentStateId.equals(AppointmentState.BLOCKED))
-			return AppointmentState.BLOCKED;
-		else
-			return AppointmentState.ASSIGNED;
+		if (appointmentStateId != null) {
+			if (appointmentStateId.equals(AppointmentState.BOOKED))
+				return AppointmentState.BOOKED;
+			else if (appointmentStateId.equals(AppointmentState.BLOCKED))
+				return AppointmentState.BLOCKED;
+			else if (appointmentStateId.equals(AppointmentState.SERVED))
+				return AppointmentState.SERVED;
+		}
+		return AppointmentState.ASSIGNED;
 	}
 
 	public boolean isAssigned(){

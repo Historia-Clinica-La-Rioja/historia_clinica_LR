@@ -80,4 +80,11 @@ public class CreateAppointmentDto {
 
 	@Nullable
 	private Short appointmentOptionId;
+
+	@Nullable
+	private Short expiredReasonId;
+
+	@Nullable
+	private String expiredReasonText;
+
 }

@@ -100,6 +100,10 @@ public class AppointmentBo {
 
 	private Integer referenceId;
 
+	private Short expiredReasonId;
+
+	private String expiredReasonText;
+
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
 						String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;

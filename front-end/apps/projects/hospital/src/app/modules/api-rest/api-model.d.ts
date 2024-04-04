@@ -1015,6 +1015,8 @@ export interface CreateAppointmentDto {
     appointmentOptionId?: number;
     date: string;
     diaryId: number;
+    expiredReasonId?: number;
+    expiredReasonText?: string;
     hour: string;
     id?: number;
     modality: EAppointmentModality;
