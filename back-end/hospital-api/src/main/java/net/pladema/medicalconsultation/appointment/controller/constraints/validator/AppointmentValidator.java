@@ -1,11 +1,5 @@
 package net.pladema.medicalconsultation.appointment.controller.constraints.validator;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraintvalidation.SupportedValidationTarget;
@@ -15,11 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
-import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.controller.constraints.ValidAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateAppointmentDto;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -48,8 +40,6 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 
     private final LoggedUserExternalService loggedUserExternalService;
 
-    private final InstitutionExternalService institutionExternalService;
-
 	private final static Integer NO_INSTITUTION = -1;
 
 
@@ -67,25 +57,15 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
 		CreateAppointmentDto createAppointmentDto = (CreateAppointmentDto) parameters[1];
 		LOG.debug("Input parameters -> institutionId {}, createAppointmentDto {}", institutionId, createAppointmentDto);
 
-		ZoneId timezone;
-		if (institutionId == NO_INSTITUTION)
-			timezone = ZoneId.of("UTC-3");
-		else
-			timezone = institutionExternalService.getTimezone(institutionId);
-
 		DiaryBo diary = diaryService.getDiaryById(createAppointmentDto.getDiaryId());
-		return validAppoinment(context, createAppointmentDto, timezone)
+		return validAppointment(context, createAppointmentDto)
 				&& validDiary(context, diary)
 				&& validRole(context, institutionId, diary);
 	}
 
-	private boolean validAppoinment(ConstraintValidatorContext context, CreateAppointmentDto createAppointmentDto, ZoneId timezone) {
+	private boolean validAppointment(ConstraintValidatorContext context, CreateAppointmentDto createAppointmentDto) {
 		boolean valid = true;
-		
-		if(beforeNow(createAppointmentDto, timezone) && !disableValidation){
-            buildResponse(context, "{appointment.new.beforeToday}");
-            valid = false;
-        }
+
         if (!createAppointmentDto.isOverturn()) {
         	boolean existAppointment = appointmentService.existAppointment(createAppointmentDto.getDiaryId(),
         			createAppointmentDto.getOpeningHoursId(),
@@ -146,19 +126,6 @@ public class AppointmentValidator implements ConstraintValidator<ValidAppointmen
             }
         }
 		return valid;
-	}
-
-	private boolean beforeNow(CreateAppointmentDto createAppointmentDto, ZoneId timezone) {
-		LocalDate apmtDate = localDateMapper.fromStringToLocalDate(createAppointmentDto.getDate());
-		LocalTime apmtTime = localDateMapper.fromStringToLocalTime(createAppointmentDto.getHour());
-
-		ZonedDateTime apmtDateTime = LocalDateTime.of(apmtDate, apmtTime)
-				.atZone(timezone);
-
-		ZonedDateTime nowInTimezone = LocalDateTime.now()
-				.atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID))
-				.withZoneSameInstant(timezone);
-		return apmtDateTime.isBefore(nowInTimezone);
 	}
 
     private void buildResponse(ConstraintValidatorContext context, String message) {
