@@ -200,6 +200,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Habilita los gráficos de evoluciones antropométricas")
 	HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO,
+	
+	@Label("Permite la visualización de si un profesional cubre o no la obra social en turnos")
+	HABILITAR_VISTA_COBERTURA_TURNOS,
 	;
 
 	public boolean isActive() {

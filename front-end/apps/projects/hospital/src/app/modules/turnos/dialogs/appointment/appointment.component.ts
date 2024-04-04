@@ -39,6 +39,7 @@ import {
 	RecurringTypeDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
+	ItsCoveredResponseDto,
 } from '@api-rest/api-model.d';
 
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
@@ -102,6 +103,11 @@ const ROLES_TO_EDIT: ERole[]
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
 const ROLE_TO_MAKE_VIRTUAL_CONSULTATION: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
+
+const enum itsCovered {
+	COVERED = 1,
+	NOT_COVERED = 2
+}
 
 @Component({
 	selector: 'app-appointment',
@@ -201,6 +207,8 @@ export class AppointmentComponent implements OnInit {
 	EVERY_WEEK: number = RECURRING_APPOINTMENT_OPTIONS.EVERY_WEEK;
 	saveButtonType = ButtonType.RAISED;
 	isSaveLoading: boolean = false;
+	coverage: Coverage;
+	HABILITAR_VISTA_COBERTURA_TURNOS: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -300,6 +308,7 @@ export class AppointmentComponent implements OnInit {
 						.subscribe(coverageData => {
 							if (coverageData) {
 								this.coverageData = this.mapperService.toPatientMedicalCoverage(coverageData);
+								this.isMedicalCoverage();
 								this.updateSummaryCoverageData();
 								this.formEdit.controls.newCoverageData.setValue(coverageData.id);
 								this.firstCoverage = coverageData.id;
@@ -421,6 +430,7 @@ export class AppointmentComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.HABILITAR_TELEMEDICINA = isEnabled);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO).subscribe((isOn: boolean) => this.isHabilitarRecurrencia = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS).subscribe((isOn: boolean) => this.HABILITAR_VISTA_COBERTURA_TURNOS = isOn);
 	}
 
 	private checkInputUpdatePermissions() {
@@ -1109,6 +1119,7 @@ export class AppointmentComponent implements OnInit {
 	updateCoverageData(patientMedicalCoverageId: number) {
 		this.appointmentService.updateMedicalCoverage(this.data.appointmentData.appointmentId, patientMedicalCoverageId).subscribe(() => {
 			this.snackBarService.showSuccess('turnos.appointment.coverageData.UPDATE_SUCCESS');
+			this.isMedicalCoverage();
 		}, error => {
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		});
@@ -1304,6 +1315,22 @@ export class AppointmentComponent implements OnInit {
 			.subscribe((parentAppointment: AppointmentDto) => this.parentAppointment = parentAppointment);
 	}
 
+	private isMedicalCoverage = () => {
+		if (this.HABILITAR_VISTA_COBERTURA_TURNOS && this.coverageData?.medicalCoverage.id) {
+			this.patientMedicalCoverageService.verifyMedicalCoverage(
+				this.coverageData.medicalCoverage.id,
+				this.data.agenda.healthcareProfessionalId
+			).subscribe((response: ItsCoveredResponseDto) => this.setCoverage(response.message, response.covered === itsCovered.COVERED ? Color.GREEN : Color.RED))
+		}
+	}
+
+	private setCoverage = (description: string, color: string) => {
+		this.coverage = {
+			description,
+			color
+		}
+	}
+
 }
 
 export interface PatientAppointmentInformation {
@@ -1338,4 +1365,10 @@ export interface PatientAppointmentInformation {
 	createdOn: Date;
 	professionalPersonDto: ProfessionalPersonDto;
 }
+
 export enum DATESTYPES {DAY,MONTH,YEAR,MODALITY};
+
+interface Coverage {
+	description: string;
+	color: string
+}

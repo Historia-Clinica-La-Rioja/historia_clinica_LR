@@ -2,9 +2,11 @@ package net.pladema.patient.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
+import net.pladema.patient.controller.dto.ItsCoveredResponseDto;
 import net.pladema.patient.controller.dto.PatientMedicalCoverageDto;
 import net.pladema.patient.controller.mapper.PatientMedicalCoverageMapper;
 import net.pladema.patient.service.PatientMedicalCoverageService;
+import net.pladema.patient.service.domain.ItsCoveredResponseBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
@@ -99,5 +101,15 @@ public class PatientMedicalCoverageController {
 
 		LOG.debug("Ids results -> {}", result);
 		return ResponseEntity.created(new URI("")).body(result);
+	}
+
+	@GetMapping("/{institutionId}/{coverageId}/{healthcareProfessionalId}/its-covered")
+	public ItsCoveredResponseDto itsCovered(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "coverageId") Integer coverageId,
+			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId) {
+		LOG.debug("Input data -> institutionId {}, coverageId {}, healthcareProfessionalId {}", institutionId, coverageId, healthcareProfessionalId);
+		ItsCoveredResponseBo bo = patientMedicalCoverageService.itsCovered(institutionId, coverageId, healthcareProfessionalId);
+		return new ItsCoveredResponseDto(bo);
 	}
 }

@@ -1,12 +1,15 @@
 package net.pladema.patient.service.impl;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.booking.repository.HealthcareProfessionalHealthInsuranceRepository;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.patient.controller.dto.EItsCoveredType;
 import net.pladema.patient.repository.PatientMedicalCoverageRepository;
 import net.pladema.patient.repository.domain.PatientMedicalCoverageVo;
 import net.pladema.patient.repository.entity.MedicalCoverage;
 import net.pladema.patient.repository.entity.PatientMedicalCoverageAssn;
 import net.pladema.patient.service.PatientMedicalCoverageService;
+import net.pladema.patient.service.domain.ItsCoveredResponseBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.repository.MedicalCoverageRepository;
 import org.slf4j.Logger;
@@ -33,10 +36,13 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 
 	private final MedicalCoveragePlanRepository medicalCoveragePlanRepository;
 
-	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, MedicalCoveragePlanRepository medicalCoveragePlanRepository) {
+	private final HealthcareProfessionalHealthInsuranceRepository healthcareProfessionalHealthInsuranceRepository;
+
+	public PatientMedicalCoverageServiceImpl(PatientMedicalCoverageRepository patientMedicalCoverageRepository, MedicalCoverageRepository medicalCoverageRepository, MedicalCoveragePlanRepository medicalCoveragePlanRepository, HealthcareProfessionalHealthInsuranceRepository healthcareProfessionalHealthInsuranceRepository) {
 		this.patientMedicalCoverageRepository = patientMedicalCoverageRepository;
 		this.medicalCoverageRepository = medicalCoverageRepository;
 		this.medicalCoveragePlanRepository = medicalCoveragePlanRepository;
+		this.healthcareProfessionalHealthInsuranceRepository = healthcareProfessionalHealthInsuranceRepository;
 	}
 
 	@Override
@@ -142,5 +148,17 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 				.collect(Collectors.toList());
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public ItsCoveredResponseBo itsCovered(Integer institutionId, Integer coverageId, Integer healthcareProfessionalId) {
+		LOG.debug(INPUT_DATA, institutionId, coverageId, healthcareProfessionalId);
+		boolean existsData = healthcareProfessionalHealthInsuranceRepository.existsHealthcareProfessionalHealthInsuranceData();
+		ItsCoveredResponseBo itsCoveredResponseBo = new ItsCoveredResponseBo(EItsCoveredType.EMPTY);
+		if ( ! existsData) return itsCoveredResponseBo;
+		boolean itsCovered = healthcareProfessionalHealthInsuranceRepository.itsCovered(institutionId, coverageId, healthcareProfessionalId);
+		itsCoveredResponseBo.setItsCovered(itsCovered ? EItsCoveredType.COVERED : EItsCoveredType.NOT_COVERED);
+		LOG.debug(OUTPUT, itsCoveredResponseBo);
+		return itsCoveredResponseBo;
 	}
 }

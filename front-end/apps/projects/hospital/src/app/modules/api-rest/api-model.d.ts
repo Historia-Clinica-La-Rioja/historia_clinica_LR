@@ -2534,6 +2534,11 @@ export interface InternmentSummaryDto {
 export interface Iterable<T> {
 }
 
+export interface ItsCoveredResponseDto {
+    covered: number;
+    message: string;
+}
+
 export interface JWTokenDto {
     refreshToken: string;
     token: string;
@@ -5054,6 +5059,7 @@ export const enum AppFeature {
     HABILITAR_ADMINISTRADOR_DATOS_PERSONALES = "HABILITAR_ADMINISTRADOR_DATOS_PERSONALES",
     HABILITAR_ANEXO_II_MENDOZA = "HABILITAR_ANEXO_II_MENDOZA",
     HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO = "HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO",
+    HABILITAR_VISTA_COBERTURA_TURNOS = "HABILITAR_VISTA_COBERTURA_TURNOS",
 }
 
 export const enum EAggressorRelationship {

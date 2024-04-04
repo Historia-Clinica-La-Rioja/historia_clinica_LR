@@ -1,5 +1,6 @@
 package net.pladema.patient.service;
 
+import net.pladema.patient.service.domain.ItsCoveredResponseBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface PatientMedicalCoverageService {
     List<Integer> saveExternalCoverages(List<PatientMedicalCoverageBo> coverages, Integer patientId);
 
 	List<Integer> toModifyAppointmentCoverage(List<PatientMedicalCoverageBo> patientMedicalCoverages);
+
+	ItsCoveredResponseBo itsCovered(Integer institutionId, Integer coverageId, Integer healthcareProfessionalId);
 }

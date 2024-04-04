@@ -53,6 +53,7 @@
 							{{coverageCondition}}
 						</span>
 					</div>
+					<app-colored-label *ngIf="coverage && coverageData?.medicalCoverage" [description]="coverage.description" [color]="coverage.color"></app-colored-label>
 				</div>
 				<div fxLayout="column" fxLayoutGap="5px">
 					<span class="mat-caption normal-size">{{'turnos.appointment.phoneNumber.PHONE_NUMBER' |
