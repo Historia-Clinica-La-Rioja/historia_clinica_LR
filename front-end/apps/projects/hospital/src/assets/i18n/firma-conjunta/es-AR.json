@@ -1,8 +1,15 @@
 {
 	"firma-conjunta": {
-		"TITLE":  "Firma conjunta",
-        "TAB_THIRD_PARTY_DOCUMENTS" : "Documentos de terceros",
+		"TITLE": "Firma conjunta",
+		"TAB_THIRD_PARTY_DOCUMENTS": "Documentos de terceros",
 		"LIST_DOCUMENTS": "Listado de documentos",
-		"TITLE_HEADER": "Datos de la consulta"
+		"TITLE_HEADER": "Datos de la consulta",
+		"INTERVENING_PROFESSIONALS": "Otros profesionales intervinientes",
+		"STATE_SIGNATURE": {
+			"OUTDATED": "Vencido",
+			"PENDING" : "Pendiente",
+			"REJECTED" : "Rechazado",
+			"SIGNED" : "Firmado"
+		}
 	}
 }

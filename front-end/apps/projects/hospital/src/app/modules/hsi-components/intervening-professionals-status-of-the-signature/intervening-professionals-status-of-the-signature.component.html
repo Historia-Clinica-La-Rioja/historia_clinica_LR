@@ -1,0 +1,9 @@
+<p class="grey">{{'firma-conjunta.INTERVENING_PROFESSIONALS' | translate}}</p>
+<div fxLayout="row wrap">
+    <ng-container *ngFor="let data of datas" fxLayoutGap="10px">
+        <div fxLayout="column" fxLayoutAlign="space-between start" fxFlex="20" id="info-signature">
+            <p class="name-professional">{{data.name | titlecase}}</p>
+            <app-colored-icon-text [coloredIconText]="data.signature"></app-colored-icon-text>
+        </div>
+    </ng-container>
+</div>
