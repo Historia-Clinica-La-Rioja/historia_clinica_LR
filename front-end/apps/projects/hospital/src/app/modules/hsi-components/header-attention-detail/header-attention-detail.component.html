@@ -2,6 +2,6 @@
     <h2>{{title | translate}}</h2>
     <div fxLayout="column" fxLayoutGap="10px">
         <app-details-section-custom class="content-details" [details]="details" layout="row wrap"></app-details-section-custom>
-        <app-intervening-professionals-status-of-the-signature></app-intervening-professionals-status-of-the-signature>
+        <app-intervening-professionals-status-of-the-signature [setInterveningProfessionals]="professionalsList"></app-intervening-professionals-status-of-the-signature>
     </div>
 </section>

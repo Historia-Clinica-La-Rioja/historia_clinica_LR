@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { EElectronicSignatureStatus } from '@api-rest/api-model';
+import { Component, Input } from '@angular/core';
+import { DocumentElectronicSignatureProfessionalStatusDto, EElectronicSignatureStatus } from '@api-rest/api-model';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 import { PresentationModule } from '@presentation/presentation.module';
@@ -11,19 +11,20 @@ import { PresentationModule } from '@presentation/presentation.module';
   standalone: true,
   imports: [PresentationModule]
 })
-export class InterveningProfessionalsStatusOfTheSignatureComponent implements OnInit {
-  datas: any[] = [];
+export class InterveningProfessionalsStatusOfTheSignatureComponent {
+  @Input() set setInterveningProfessionals (interveningProfessionals: DocumentElectronicSignatureProfessionalStatusDto[]){
+    if(interveningProfessionals){
+      this.interveningProfessionals = interveningProfessionals.map(professional => this.getColoredIconText(professional));
+    }
+  };
+  interveningProfessionals :ProfessionalSignatureData[];
   constructor() { }
 
-  ngOnInit(): void {
-    this.datas = this.datas.map(data => this.getColoredIconText(data));
-  }
-
-  private getColoredIconText(data: any): SignatureData {
+  private getColoredIconText(professional: DocumentElectronicSignatureProfessionalStatusDto): ProfessionalSignatureData {
     let icon = "";
     let text = "";
     let color;
-    switch (data.state) {
+    switch (professional.status) {
       case EElectronicSignatureStatus.OUTDATED:
         text = 'firma-conjunta.STATE_SIGNATURE.OUTDATED';
         color = Color.GREY;
@@ -45,11 +46,11 @@ export class InterveningProfessionalsStatusOfTheSignatureComponent implements On
         icon = "check_circle";
         break;
     }
-    return { name: data.name, signature: { icon: icon, text: text, color: color } }
+    return { professionalCompleteName: professional.professionalCompleteName, signature: { icon: icon, text: text, color: color } }
   }
 }
 
-interface SignatureData {
-  name: string,
+interface ProfessionalSignatureData {
+  professionalCompleteName: string,
   signature: ColoredIconText
 }
