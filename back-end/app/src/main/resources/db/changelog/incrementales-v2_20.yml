@@ -404,3 +404,29 @@ databaseChangeLog:
                     type: date
                     defaultValueDate: ${date.now}
                     
+
+    - changeSet:
+        id: createTable-expired_appointment_reason
+        comment: Create table expired_appointment_reason
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: expired_appointment_reason
+              columns:
+                - column:
+                    name: appointment_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_expired_appointment_reason
+                      foreignKeyName: FK_expired_appointment_reason_appointment_id
+                      references: appointment(id)
+                - column:
+                    name: type_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: text
+                    
