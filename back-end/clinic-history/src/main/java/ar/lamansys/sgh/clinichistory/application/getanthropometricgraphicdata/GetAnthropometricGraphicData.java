@@ -31,6 +31,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -98,6 +99,7 @@ public class GetAnthropometricGraphicData {
 		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE)) {
 			evolutionValues = patientEvolution.stream().map(HCEAnthropometricDataBo::getHeadCircumference).filter(Objects::nonNull).collect(Collectors.toList());
 		}
+		evolutionValues.sort(Comparator.comparing(HCEClinicalObservationBo::getEffectiveTime));
 		List<GraphicDatasetIntersectionBo> evolutionIntersectionList = new ArrayList<>();
 		Integer maxDaysOrMonths = (graphicBo.getRange().getValues().get(graphicBo.getRange().getValues().size() - 1));
 		evolutionValues.forEach(evolution -> {
