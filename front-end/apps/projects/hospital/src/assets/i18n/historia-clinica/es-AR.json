@@ -113,6 +113,9 @@
 			"SELECT": "Seleccionar motivo",
 			"OBSERVATIONS": "Observaciones",
 			"GO_TO_PATIENT": "Ver historia clinica"
+		},
+		"evolution-charts": {
+			"SHOW_EVOLUTION_CHART_BUTTON":" ver graficos de evoluciones"
 		}
 
 	}

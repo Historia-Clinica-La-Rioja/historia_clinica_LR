@@ -39,6 +39,7 @@ import { MedicationListComponent } from './components/medication-list/medication
 import { MotivoFormComponent } from './components/motivo-form/motivo-form.component';
 import { NewConsultationExpansionSectionComponent } from './components/new-consultation-expansion-section/new-consultation-expansion-section.component';
 import { NotaDeEvolucionDockPopupComponent } from './components/nota-de-evolucion-dock-popup/nota-de-evolucion-dock-popup.component';
+import { PatientEvolutionChartsButtonComponent } from './components/patient-evolution-charts-button/patient-evolution-charts-button.component';
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
 import { PatientProblemsSummaryComponent } from './components/patient-problems-summary/patient-problems-summary.component';
@@ -165,6 +166,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		MeasuringPointItemComponent,
 		InterveningProfessionalsComponent,
 		ProfessionalListComponent,
+		PatientEvolutionChartsButtonComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -215,7 +217,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnestheticTechniquePopupComponent,
 		AnalgesicTechniquePopupComponent,
 		FluidAdministrationPopupComponent,
-  		AnesthesiaFormComponent
+  		AnesthesiaFormComponent,
 	],
 	imports: [
 		CommonModule,
@@ -257,6 +259,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ViolenceSituationsListComponent,
 		ViolenceModalitiesListComponent,
 		ProfessionalListComponent,
+		PatientEvolutionChartsButtonComponent,
 		// dialogs
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
