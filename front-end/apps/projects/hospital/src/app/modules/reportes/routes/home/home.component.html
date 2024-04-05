@@ -157,10 +157,9 @@
 			<div id="generate-report" fxLayout="row" fxLayoutAlign="space-between" class="padding-top">
 				<mat-error >
 					<span *ngIf="showErrorMonth">{{'reportes.form.errors.FECHA_MES_DISTINTOS' | translate}}</span>
-					
 				</mat-error>
 				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()"
-					[disabled]="isLoadingRequestReport">
+					[disabled]="isLoadingRequestReport || showErrorMonth ">
 					<span [translate]="'reportes.form.SUBMIT'"></span>
 				</button>
 			</div>
