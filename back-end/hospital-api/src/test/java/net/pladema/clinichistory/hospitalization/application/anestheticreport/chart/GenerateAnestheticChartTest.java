@@ -198,12 +198,12 @@ class GenerateAnestheticChartTest {
     }
 
     static Stream<Arguments> createStaticDatasetWithoutOverlimit() {
-        String expectedMD5 = "ca3cbb1bb4585eebe71aa31ea6bed7f1";
+        String expectedMD5 = "8a3b09402607fc900061061c4fca2135";
         return Stream.of(Arguments.arguments("static_twelve_points", createStaticDataset(false), expectedMD5));
     }
 
     static Stream<Arguments> createStaticDatasetWithOverlimit() {
-        String expectedMD5 = "c742d6719f1ffd7e47f663dd65733707";
+        String expectedMD5 = "ca0e580bf15f04383316797ea4203247";
         return Stream.of(Arguments.arguments("static_thirteen_points", createStaticDataset(true), expectedMD5));
     }
 

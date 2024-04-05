@@ -30,7 +30,7 @@ public class O2Saturation extends ChartDataset implements Series {
 
     @Override
     public NumberTickUnit getTickUnit() {
-        return new NumberTickUnit(3., new DecimalFormat("0"));
+        return new NumberTickUnit(5., new DecimalFormat("0"));
     }
 
     @Override
