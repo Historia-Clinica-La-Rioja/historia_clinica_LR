@@ -20,7 +20,7 @@ public class DocumentRepositoryCustomImpl implements DocumentRepositoryCustom {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends DocumentSearchQuery> List<DocumentSearchVo> historicSearch(Integer internmentEpisodeId, T structuredQuery) {
+    public <T extends DocumentSearchQuery> List<DocumentSearchVo> doHistoricSearch(Integer internmentEpisodeId, T structuredQuery) {
         QueryPart queryPart = new QueryPart(
                 "SELECT ")
                 .concatPart(structuredQuery.select())
