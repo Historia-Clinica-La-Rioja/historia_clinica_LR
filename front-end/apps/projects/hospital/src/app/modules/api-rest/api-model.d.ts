@@ -1067,6 +1067,10 @@ export interface CreationableDto extends Serializable {
     createdOn: Date;
 }
 
+export interface CustomContainer<T> {
+    content: T[];
+}
+
 export interface CustomRecurringAppointmentDto {
     endDate: Date;
     repeatEvery: number;
@@ -3869,6 +3873,11 @@ export interface RecurringTypeDto {
 export interface ReducedPatientDto {
     patientTypeId: number;
     personalDataDto: BasicPersonalDataDto;
+}
+
+export interface ReferableItemDto<T> extends CustomContainer<T> {
+    isReferred: boolean;
+    referredContent: T[];
 }
 
 export interface ReferenceAppointmentDto {
