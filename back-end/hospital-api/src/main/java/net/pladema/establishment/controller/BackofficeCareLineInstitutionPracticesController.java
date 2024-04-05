@@ -2,6 +2,8 @@ package net.pladema.establishment.controller;
 
 import javax.validation.Valid;
 
+import net.pladema.establishment.repository.CareLineInstitutionRepository;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,14 +22,20 @@ public class BackofficeCareLineInstitutionPracticesController extends AbstractBa
 
 	private final CareLineInstitutionPracticeRepository careLineInstitutionPracticeRepository;
 
+	private final CareLineInstitutionRepository careLineInstitutionRepository;
+
 	public BackofficeCareLineInstitutionPracticesController(CareLineInstitutionPracticeRepository repository,
-															CareLineInstitutionPracticeRepository careLineInstitutionPracticeRepository) {
+															CareLineInstitutionRepository careLineInstitutionRepository) {
 		super(repository);
-		this.careLineInstitutionPracticeRepository = careLineInstitutionPracticeRepository;
+		this.careLineInstitutionPracticeRepository = repository;
+		this.careLineInstitutionRepository = careLineInstitutionRepository;
 	}
 
 	@Override
 	public CareLineInstitutionPractice create(@Valid @RequestBody CareLineInstitutionPractice entity) {
+		boolean careLineAcceptPractices = careLineInstitutionRepository.careLineAcceptPractices(entity.getCareLineInstitutionId());
+		if (!careLineAcceptPractices)
+			throw new BackofficeValidationException("La línea de cuidado no abarca procedimientos");
 		if(entity.getCareLineInstitutionId() == null || entity.getSnomedRelatedGroupId() == null)
 			throw new BackofficeValidationException("Debe completar todos los campos");
 		boolean hasPersistedEntity = this.careLineInstitutionPracticeRepository.
