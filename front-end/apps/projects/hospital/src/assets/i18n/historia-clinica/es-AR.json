@@ -119,6 +119,7 @@
 		},
 		"evolution-charts-popup": {
 			"TITLE": "Información antropométrica | Gráficos de evolución {{gender}}",
+			"MESSAGE": "Seleccione un gráfico para visualizar su evolución",
 			"evolution-charts-select": {
 				"INPUT_TITLE": "Gráfico",
 				"PLACEHOLDER": "Ej: Talla para la edad"

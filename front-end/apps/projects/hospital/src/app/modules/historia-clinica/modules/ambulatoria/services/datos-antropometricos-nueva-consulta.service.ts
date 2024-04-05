@@ -12,7 +12,7 @@ import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 
-type AnthropometricDataKey = keyof AnthropometricData;
+export type AnthropometricDataKey = keyof AnthropometricData;
 export interface DatosAntropometricos {
 	bloodType?: ClinicalObservationDto;
 	bmi?: ClinicalObservationDto;

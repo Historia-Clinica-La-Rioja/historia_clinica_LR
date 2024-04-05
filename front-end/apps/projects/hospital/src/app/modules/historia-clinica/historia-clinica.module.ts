@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // deps
+import { ChartsModule } from '@charts/charts.module';
 import { InstitucionModule } from '../institucion/institucion.module';
 import { LazyMaterialModule } from '../lazy-material/lazy-material.module';
 import { PresentationModule } from '@presentation/presentation.module';
@@ -151,7 +152,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		EpisodeDataComponent,
 		PatientEvolutionChartsComponent,
 		ProposedSurgeryComponent,
-		ProposedSurgeryBackgroundListComponent,  		
+		ProposedSurgeryBackgroundListComponent,
 		AnestheticReportAnthropometricDataComponent,
 		AnestheticReportClinicalEvaluationComponent,
 		AnestheticReportAnestheticHistoryComponent,
@@ -236,6 +237,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 	imports: [
 		CommonModule,
 		// deps
+		ChartsModule,
 		InstitucionModule,
 		LazyMaterialModule,
 		PresentationModule,

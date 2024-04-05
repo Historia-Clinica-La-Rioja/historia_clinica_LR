@@ -4,7 +4,7 @@ import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-
 import { PatientEvolutionChartsData, PatientEvolutionChartsPopupComponent } from '@historia-clinica/dialogs/patient-evolution-charts-popup/patient-evolution-charts-popup.component';
 import { BehaviorSubject } from 'rxjs';
 
-const WIDTH = '80vw';
+const WIDTH = '90vw';
 const HEIGHT = '90vh';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class PatientEvolutionChartsService {
 	}
 
 	checkButtonEnablement() {
-		const hasAnthropometricDataUploaded = this.hasAntropometricDataUploaded(this.anthropometricDataUploaded);
+		const hasAnthropometricDataUploaded = this.hasAntropometricDataUploaded();
 		this.isEnabledPatientEvolutionChartsSubject.next(this.hasEvolutionToEnabledButton || hasAnthropometricDataUploaded);
 	}
 
@@ -52,13 +52,14 @@ export class PatientEvolutionChartsService {
 		});
 	}
 
-	private hasAntropometricDataUploaded(antropometricData: AnthropometricData): boolean {
-		return !!(antropometricData.headCircumference || antropometricData.height || antropometricData.weight)
+	private hasAntropometricDataUploaded(): boolean {
+		return !!(this.anthropometricDataUploaded?.headCircumference || this.anthropometricDataUploaded?.height || this.anthropometricDataUploaded?.weight)
 	}
 
 	private getDialogData(): PatientEvolutionChartsData {
+		const anthropometricDataUploaded = this.hasAntropometricDataUploaded() ? this.anthropometricDataUploaded : null
 		return {
-			anthropometricDataUploaded: this.anthropometricDataUploaded,
+			anthropometricDataUploaded,
 			patientId: this.patientId,
 		}
 	}

@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EAnthropometricGraphicType, EAnthropometricGraphicOption } from '@api-rest/api-model';
+import { EAnthropometricGraphicType, EAnthropometricGraphicOption, AnthropometricGraphicDataDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
+import { EvolutionChartOptions } from '@historia-clinica/components/evolution-chart-options/evolution-chart-options.component';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -32,5 +34,14 @@ export class AnthropometricGraphicService {
 		const url = `${this.prefixUrl}/${this.contextService.institutionId}${this.basicUrl}/patient/${patientId}/available-graphics`;
 		const params = new HttpParams().append('chartOptionId', chartOptionId);
 		return this.http.get<EAnthropometricGraphicType[]>(url, { params });
+	}
+
+	getPercentilesGraphicData(chartOption: EvolutionChartOptions, patientId: number, actualValue: AnthropometricData): Observable<AnthropometricGraphicDataDto> {
+		const url = `${this.prefixUrl}/${this.contextService.institutionId}${this.basicUrl}/patient/${patientId}/graphic-data`;
+		let params = new HttpParams().append('graphicOptionId', chartOption.chart.id);
+		params = params.append('graphicTypeId', chartOption.type.id);
+		if (actualValue)
+			params = params.append('actualValue', JSON.stringify(actualValue));
+		return this.http.get<AnthropometricGraphicDataDto>(url, { params });
 	}
 }
