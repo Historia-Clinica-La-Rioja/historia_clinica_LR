@@ -2,9 +2,13 @@ package net.pladema.electronicjointsignature.documentlist.infrastructure.output;
 
 import lombok.AllArgsConstructor;
 
+import net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureDocumentListFilterBo;
 import net.pladema.electronicjointsignature.documentlist.infrastructure.output.vo.ElectronicSignatureDocumentProblemsVo;
 import net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,7 +23,7 @@ public class GetProfessionalInvolvedDocumentListStorage {
 
 	private EntityManager entityManager;
 
-	public List<ElectronicSignatureInvolvedDocumentBo> run(Integer institutionId, Integer healthcareProfessionalId) {
+	public Page<ElectronicSignatureInvolvedDocumentBo> run(ElectronicSignatureDocumentListFilterBo filter, Pageable pageable) {
 		String queryString = "SELECT NEW net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo(dip.id, d.id, d.typeId, p2.personId, up.pk.personId, " +
 				"d.creationable.createdOn, dip.signatureStatusId, dip.statusUpdateDate) " +
 				"FROM DocumentInvolvedProfessional dip " +
@@ -28,9 +32,30 @@ public class GetProfessionalInvolvedDocumentListStorage {
 				"JOIN Patient p2 ON (p2.id = d.patientId) " +
 				"WHERE d.institutionId = :institutionId " +
 				"AND dip.healthcareProfessionalId = :healthcareProfessionalId " +
+				(filter.getSignatureStatusId() != null ? "AND dip.signatureStatusId = :signatureStatusId " : "") +
 				"ORDER BY dip.signatureStatusId, d.creationable.createdOn DESC";
-		Query query = parseDocumentQuery(institutionId, healthcareProfessionalId, queryString);
+		Query query = parseDocumentQuery(filter, queryString, pageable);
 		List<ElectronicSignatureInvolvedDocumentBo> result = getElectronicSignatureInvolvedDocumentBos(query);
+		Integer queryElementsAmount = fetchQueryResultRealAmount(filter);
+		return new PageImpl<>(result, pageable, queryElementsAmount);
+	}
+
+	private Integer fetchQueryResultRealAmount(ElectronicSignatureDocumentListFilterBo filter) {
+		String queryString = "SELECT COUNT(1) " +
+				"FROM DocumentInvolvedProfessional dip " +
+				"JOIN Document d ON (d.id = dip.documentId) " +
+				"JOIN UserPerson up ON (up.pk.userId = d.creationable.createdBy) " +
+				"JOIN Patient p2 ON (p2.id = d.patientId) " +
+				"WHERE d.institutionId = :institutionId " +
+				"AND dip.healthcareProfessionalId = :healthcareProfessionalId " +
+				(filter.getSignatureStatusId() != null ? "AND dip.signatureStatusId = :signatureStatusId" : "");
+		Query query = parseDocumentAmountQuery(filter, queryString);
+		return ((Long) query.getSingleResult()).intValue();
+	}
+
+	private Query parseDocumentAmountQuery(ElectronicSignatureDocumentListFilterBo filter, String queryString) {
+		Query result = entityManager.createQuery(queryString);
+		setQueryParameters(filter, result);
 		return result;
 	}
 
@@ -67,11 +92,19 @@ public class GetProfessionalInvolvedDocumentListStorage {
 		return result;
 	}
 
-	private Query parseDocumentQuery(Integer institutionId, Integer healthcareProfessionalId, String queryString) {
-		Query result = entityManager.createQuery(queryString);
-		result.setParameter("institutionId", institutionId);
-		result.setParameter("healthcareProfessionalId", healthcareProfessionalId);
+	private Query parseDocumentQuery(ElectronicSignatureDocumentListFilterBo filter, String queryString, Pageable pageable) {
+		Query result = entityManager.createQuery(queryString)
+				.setMaxResults(pageable.getPageSize())
+				.setFirstResult(pageable.getPageSize() * pageable.getPageNumber());
+		setQueryParameters(filter, result);
 		return result;
+	}
+
+	private void setQueryParameters(ElectronicSignatureDocumentListFilterBo filter, Query result) {
+		result.setParameter("institutionId", filter.getInstitutionId());
+		result.setParameter("healthcareProfessionalId", filter.getHealthcareProfessionalId());
+		if (filter.getSignatureStatusId() != null)
+			result.setParameter("signatureStatusId", filter.getSignatureStatusId());
 	}
 
 }

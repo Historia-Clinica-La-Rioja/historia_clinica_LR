@@ -5,12 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.electronicjointsignature.documentlist.application.port.GetProfessionalInvolvedDocumentListPort;
+import net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureDocumentListFilterBo;
 import net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo;
 
 import net.pladema.person.service.PersonService;
 
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,16 +33,21 @@ public class GetProfessionalInvolvedDocumentList {
 
 	private PersonService personService;
 
-	public List<ElectronicSignatureInvolvedDocumentBo> run(Integer institutionId) {
-		log.debug("Input parameters -> institutionId {}", institutionId);
-		Integer healthcareProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-		List<ElectronicSignatureInvolvedDocumentBo> result = getProfessionalInvolvedDocumentListPort.fetchProfessionalInvolvedDocuments(institutionId, healthcareProfessionalId);
+	public Page<ElectronicSignatureInvolvedDocumentBo> run(ElectronicSignatureDocumentListFilterBo filter, Pageable pageable) {
+		log.debug("Input parameters -> filter {}, pageable {}", filter, pageable);
+		setFilterHealthcareProfessionalId(filter);
+		Page<ElectronicSignatureInvolvedDocumentBo> result = getProfessionalInvolvedDocumentListPort.fetchProfessionalInvolvedDocuments(filter, pageable);
 		fetchAndSetPersonsName(result);
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
-	private void fetchAndSetPersonsName(List<ElectronicSignatureInvolvedDocumentBo> result) {
+	private void setFilterHealthcareProfessionalId(ElectronicSignatureDocumentListFilterBo filter) {
+		Integer healthcareProfessionalId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
+		filter.setHealthcareProfessionalId(healthcareProfessionalId);
+	}
+
+	private void fetchAndSetPersonsName(Page<ElectronicSignatureInvolvedDocumentBo> result) {
 		List<Integer> patientPersonIds = result.stream().map(ElectronicSignatureInvolvedDocumentBo::getPatientPersonId).collect(Collectors.toList());
 		HashMap<Integer, String> patientCompleteNames = getPersonCompleteNames(patientPersonIds);
 		List<Integer> professionalPersonIds = result.stream().map(ElectronicSignatureInvolvedDocumentBo::getResponsibleHealthcareProfessionalPersonId).collect(Collectors.toList());

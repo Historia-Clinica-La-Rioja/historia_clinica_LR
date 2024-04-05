@@ -5,13 +5,15 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import lombok.AllArgsConstructor;
 import net.pladema.electronicjointsignature.documentlist.application.port.GetProfessionalInvolvedDocumentListPort;
 
+import net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureDocumentListFilterBo;
 import net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -22,8 +24,8 @@ public class GetProfessionalInvolvedDocumentListPortImpl implements GetProfessio
 	private DocumentInvolvedProfessionalRepository documentInvolvedProfessionalRepository;
 
 	@Override
-	public List<ElectronicSignatureInvolvedDocumentBo> fetchProfessionalInvolvedDocuments(Integer institutionId, Integer healthcareProfessionalId) {
-		List<ElectronicSignatureInvolvedDocumentBo> result = getProfessionalInvolvedDocumentListStorage.run(institutionId, healthcareProfessionalId);
+	public Page<ElectronicSignatureInvolvedDocumentBo> fetchProfessionalInvolvedDocuments(ElectronicSignatureDocumentListFilterBo filter, Pageable pageable) {
+		Page<ElectronicSignatureInvolvedDocumentBo> result = getProfessionalInvolvedDocumentListStorage.run(filter, pageable);
 		result.forEach(this::checkAndUpdateOutdatedSignatureStatus);
 		return result;
 	}
