@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EAnthropometricGraphicType, EAnthropometricGraphicOption, AnthropometricGraphicDataDto } from '@api-rest/api-model';
+import { EAnthropometricGraphicType, EAnthropometricGraphicOption, AnthropometricGraphicDataDto, AnthropometricGraphicEnablementDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { EvolutionChartOptions } from '@historia-clinica/components/evolution-chart-options/evolution-chart-options.component';
@@ -20,9 +20,9 @@ export class AnthropometricGraphicService {
 		private readonly contextService: ContextService
 	) { }
 
-	canShowPercentilesGraphic(patientId: number): Observable<boolean> {
+	canShowPercentilesGraphic(patientId: number): Observable<AnthropometricGraphicEnablementDto> {
 		const url = `${this.prefixUrl}/${this.contextService.institutionId}${this.basicUrl}/patient/${patientId}/can-show-graphic`;
-		return this.http.get<boolean>(url);
+		return this.http.get<AnthropometricGraphicEnablementDto>(url);
 	}
 
 	getChartOptions(): Observable<EAnthropometricGraphicOption[]> {
@@ -45,3 +45,4 @@ export class AnthropometricGraphicService {
 		return this.http.get<AnthropometricGraphicDataDto>(url, { params });
 	}
 }
+

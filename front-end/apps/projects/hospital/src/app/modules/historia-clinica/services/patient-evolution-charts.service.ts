@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { AnthropometricGraphicEnablementDto } from '@api-rest/api-model';
 import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-graphic.service';
 import { PatientEvolutionChartsData, PatientEvolutionChartsPopupComponent } from '@historia-clinica/dialogs/patient-evolution-charts-popup/patient-evolution-charts-popup.component';
 import { BehaviorSubject } from 'rxjs';
@@ -12,7 +13,7 @@ export class PatientEvolutionChartsService {
 
 	private anthropometricDataUploaded: AnthropometricData;
 	private patientId: number;
-	private hasEvolutionToEnabledButton = false;
+	private anthropometricGraphicEnablement: AnthropometricGraphicEnablementDto;
 	private isEnabledPatientEvolutionChartsSubject = new BehaviorSubject<boolean>(false);
 	isEnabledPatientEvolutionCharts$ = this.isEnabledPatientEvolutionChartsSubject.asObservable();
 
@@ -23,9 +24,9 @@ export class PatientEvolutionChartsService {
 
 	setPatientEvolutionChartsData(patientId: number) {
 		this.patientId = patientId;
-		this.anthropometricGraphicService.canShowPercentilesGraphic(this.patientId).subscribe(canShowGraphic => {
-			this.hasEvolutionToEnabledButton = canShowGraphic;
-			this.isEnabledPatientEvolutionChartsSubject.next(this.hasEvolutionToEnabledButton);
+		this.anthropometricGraphicService.canShowPercentilesGraphic(this.patientId).subscribe(anthropometricGraphicEnablement => {
+			this.anthropometricGraphicEnablement = anthropometricGraphicEnablement;
+			this.checkButtonEnablement();			
 		});
 	}
 
@@ -35,8 +36,12 @@ export class PatientEvolutionChartsService {
 	}
 
 	checkButtonEnablement() {
-		const hasAnthropometricDataUploaded = this.hasAntropometricDataUploaded();
-		this.isEnabledPatientEvolutionChartsSubject.next(this.hasEvolutionToEnabledButton || hasAnthropometricDataUploaded);
+		const hasCurrentValueOfAnthropometricData = this.hasAntropometricDataUploaded();
+		const hasHistoricalAnthropometricData = this.anthropometricGraphicEnablement?.hasAnthropometricData;
+		const hasValidAge = this.anthropometricGraphicEnablement?.hasValidAge;
+		const hasValidGender = this.anthropometricGraphicEnablement?.hasValidGender;
+		
+		this.isEnabledPatientEvolutionChartsSubject.next(hasValidAge && (hasValidGender || hasCurrentValueOfAnthropometricData || hasHistoricalAnthropometricData));
 	}
 
 	openEvolutionChartDialog() {
