@@ -106,6 +106,23 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES
 	},
+
+	{
+		text: 'app.menu.RUTAS_PROVINCIALES',
+		icon: 'description',
+		id: 'rutas-larioja',
+		url: './rutas-larioja',
+		permissions: [
+			ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+			ERole.PERSONAL_DE_ESTADISTICA,
+			ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR,
+			ERole.ESPECIALISTA_MEDICO,
+			ERole.PROFESIONAL_DE_SALUD,
+			
+		],
+		
+	},
+
 	{
 		text: 'app.menu.REPORTES_PROVINCIALES',
 		icon: 'description',
