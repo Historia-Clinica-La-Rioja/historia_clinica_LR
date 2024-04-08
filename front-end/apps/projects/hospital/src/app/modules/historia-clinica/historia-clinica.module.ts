@@ -77,6 +77,7 @@ import { ViolenceModalitiesListComponent } from './components/violence-modalitie
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
 import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/audit-access-register.component';
 
+
 @NgModule({
 	declarations: [
 		// components
@@ -149,6 +150,7 @@ import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/au
     	ViolenceModalitiesListComponent,
      	ViolentPersonListComponent,
   		AuditAccessRegisterComponent,
+
 	],
 	imports: [
 		CommonModule,

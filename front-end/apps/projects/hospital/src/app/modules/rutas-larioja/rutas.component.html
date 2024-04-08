@@ -1,0 +1,57 @@
+<app-content>
+
+    <section id="title">
+        <h2 class="page-title"> </h2>
+    </section>
+
+    <mat-card id="tab_container" class="mat-typography">
+        <mat-card-content>
+            <mat-tab-group>
+                <mat-tab id="tab_programas">
+                    <ng-template mat-tab-label>
+                        <span>ASISTENCIALES</span>
+                    </ng-template>
+                    <ng-template matTabContent>
+                        <h4>Nombre</h4>
+
+                        <section>
+                            <mat-accordion>
+                                <div class="contenedor-title">
+                                </div>
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header (click)="togglePanel">
+                                        <mat-panel-title>
+                                            Hipertensión arterial
+                                            <div class="container-orden">
+                                            </div>
+                                            <div class="container-name">
+                                                <span [ngClass]="{'nombre-style': panelOpenState }"></span>
+                                            </div>
+                                            <div class="container-sexo">
+                                                <span [ngClass]="{'nombre-style': panelOpenState}"></span>
+                                            </div>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+
+                                    <div class="panel-content">
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </section>
+
+                    </ng-template>
+                </mat-tab>
+                <mat-tab id="tab_generales">
+                    <ng-template mat-tab-label>
+                        <span>PREVENTIVAS</span>
+                    </ng-template>
+                    <ng-template matTabContent>
+                    </ng-template>
+                </mat-tab>
+
+            </mat-tab-group>
+        </mat-card-content>
+    </mat-card>
+
+
+</app-content>
