@@ -1,0 +1,10 @@
+<div fxLayout="column" fxLayoutGap="2px">
+	<span class="grey">
+		{{ title | translate }}<ng-container *ngIf="colonsOnTitle">:</ng-container>
+	</span>
+	<div fxLayout="column" class="text-container">
+		<span class="text capitalize-first-letter" *ngFor="let text of description">
+			{{ text }}
+		</span>
+	</div>
+</div>
