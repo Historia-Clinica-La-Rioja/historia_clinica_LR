@@ -475,17 +475,27 @@
 				"NO_DOCUMENTS": "Aún no hay archivos adjuntos cargados",
 				"dialogs": {
 					"attach": {
-						"TITLE": "Adjuntar documento",
+						"TITLE": "Agregar documento al episodio",
 						"NO-DOCUMENTS-TYPE": "Aún no se han definido tipos de documentos",
+						"NO-PROFESSIONAL": "Aún no se ha definido el profesional cirujano",
 						"fields": {
 							"NAME": "Nombre del archivo",
 							"TYPE": "Tipo de documento",
+							"PROFESSIONAL": "Profesional cirujano",
 							"TYPE_REQUIRED": "El tipo de documento es obligatorio",
-							"FILE": "El tipo de archivo debe estar en formato PDF"
+							"PROFESSIONAL_REQUIRED": "El profesional cirujano es obligatorio",
+							"PROCEDURE_REQUIRED": "El procedimiento a realizar es obligatorio",
+							"FILE": "El tipo de archivo debe estar en formato PDF",
+							"ADDED_PROCEDURES": "Procedimientos agregados",
+							"OBSERVATIONS": "Observaciones"
 						},
 						"actions": {
+							"GENERATE_DOCUMENT": "GENERAR DOCUMENTO",
+							"ATTACH_FILE": "ADJUNTAR ARCHIVO",
 							"CANCEL": "CANCELAR",
-							"ATTACH": "ADJUNTAR"
+							"CONTINUE": "CONTINUAR",
+							"ADD_DOCUMENT": "+ Agregar documento",
+							"GENERATE": "GENERAR"
 						}
 					},
 					"delete": {
@@ -529,8 +539,8 @@
 			},
 			"risk-factors-summary": {
 				"save": {
-					"SUCCESS": "Los factores de riesgo se actualizaron exitosamente",
-					"ERROR": "Error al actualizar factores de riesgo"
+					"SUCCESS": "Los signos vitales y factores de riesgo se actualizaron exitosamente",
+					"ERROR": "Error al actualizar signos vitales y factores de riesgo"
 				}
 			}
 		},

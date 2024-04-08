@@ -4,8 +4,10 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSea
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursFreeTimesBo;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +20,7 @@ public interface DiaryService {
 	
 	Boolean deleteDiary(Integer diaryId);
 
-    List<DiaryBo> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId,
+    List<DiaryBo> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId, Integer institutionId,
                                          LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
     Collection<DiaryBo> getActiveDiariesBy(Integer associatedHealthcareProfessionalId, Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId);
@@ -29,6 +31,8 @@ public interface DiaryService {
 
 	DiaryBo getDiaryById(Integer diaryId);
 
+	Integer getDiaryIdByAppointment(Integer appointmentId);
+
 	Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId);
 	
 	Integer getInstitution(Integer diaryId);
@@ -38,5 +42,7 @@ public interface DiaryService {
 	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality);
 
 	Optional<CompleteDiaryBo> getCompleteDiaryByAppointment (Integer appointmentId);
+
+	Boolean hasPractices(Integer diaryId);
 
 }

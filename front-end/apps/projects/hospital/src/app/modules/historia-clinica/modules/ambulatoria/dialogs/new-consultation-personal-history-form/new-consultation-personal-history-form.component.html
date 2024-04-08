@@ -1,0 +1,101 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+        [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.buttons.ADD'"></span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.personalHistoryService.getSnomedConcept() else personalHistoriesForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else personalHistoriesTypeaheadSearch"
+            [label]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.PERSONAL_HISTORIES'"
+            (search)="data.personalHistoryService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #personalHistoriesTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.personalHistoryService.getECL()"
+                [placeholder]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.SEARCH_PLACEHOLDER'"
+                (conceptSelected)="data.personalHistoryService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #personalHistoriesForm>
+    <form [formGroup]="form" (ngSubmit)="addPersonalHistory()">
+        <div fxLayout="column" fxLayoutGap="10px">
+            <mat-form-field appearance="outline">
+                <mat-label
+                    [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.PERSONAL_HISTORIES'">
+                </mat-label>
+                <input data-id="personal-histories-input" matInput type="text" formControlName="snomed" readonly>
+                <button data-id="clear-history" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.personalHistoryService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div fxLayout="column" class="half-size-input">
+                <span [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.HISTORY_TYPE'"></span>
+                <mat-form-field appearance="outline">
+                    <mat-select id="historyType" formControlName="type"
+                        placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.HISTORY_TYPE' | translate}}">
+                        <mat-option *ngFor="let historyType of historyTypeList" [value]="historyType">
+                            {{historyType.description}}
+                        </mat-option>
+                    </mat-select>
+
+                    <mat-error *ngIf="hasError(form, 'required', 'type')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayoutAlign="space-between">
+                <div fxLayout="column" class="half-size-input">
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.START_DATE'"></span>
+                    <mat-form-field appearance="outline">
+                        <input matInput data-id="start-date" [matDatepicker]="historyStartDatePicker"
+                            formControlName="startDate" [min]="minDate" [max]="data.personalHistoryService.getMaxDate()"
+                            placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.START_DATE' | translate}}">
+                        <mat-datepicker-toggle matSuffix [for]="historyStartDatePicker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #historyStartDatePicker startView="multi-year"></mat-datepicker>
+
+                        <mat-error *ngIf="hasError(form, 'required', 'startDate')"
+                            [translate]="'forms.REQUIRED'"></mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" class="half-size-input">
+                    <span [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.END_DATE'"></span>
+                    <mat-form-field appearance="outline">
+                        <input matInput data-id="end-date" [matDatepicker]="historyEndDatePicker"
+                            formControlName="endDate" [min]="data.personalHistoryService.getMinDate() || minDate"
+                            [max]="data.personalHistoryService.getMaxDate()"
+                            placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.END_DATE' | translate}}">
+                        <mat-datepicker-toggle matSuffix [for]="historyEndDatePicker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #historyEndDatePicker startView="multi-year"></mat-datepicker>
+
+                        <mat-error *ngIf="hasError(form, 'matDatepickerMin', 'endDate')"
+                            [translate]="'forms.MIN_DATE'"></mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.OBSERVATIONS'"></mat-label>
+                <textarea matInput type="text" id="observations" formControlName="observations"
+                    placeholder="{{'ambulatoria.paciente.nueva-consulta.antecedentes-personales.OBSERVATIONS' | translate }}">
+                </textarea>
+            </mat-form-field>
+
+            <div align="end">
+                <button data-id="submit-personal-histories" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase"
+                        [translate]="'ambulatoria.paciente.nueva-consulta.antecedentes-personales.buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

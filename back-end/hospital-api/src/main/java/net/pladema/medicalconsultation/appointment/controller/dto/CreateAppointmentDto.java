@@ -72,4 +72,7 @@ public class CreateAppointmentDto {
 	@Nullable
 	private String applicantHealthcareProfessionalEmail;
 
+	@Nullable
+	private Integer referenceId;
+
 }

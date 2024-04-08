@@ -1,5 +1,6 @@
 package net.pladema.person.repository;
 
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import net.pladema.person.repository.domain.PersonPhotoVo;
 import net.pladema.person.repository.entity.PersonExtended;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,5 +32,15 @@ public interface PersonExtendedRepository extends JpaRepository<PersonExtended, 
 			"FROM PersonExtended as pe " +
 			"WHERE pe.id = :personId ")
 	Optional<String> getOtherSelfPerceivedGender(@Param("personId") Integer personId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW ar.lamansys.sgh.shared.domain.general.ContactInfoBo(pe.phonePrefix, pe.phoneNumber, a.street, a.number, a.floor, a.apartment, c.description," +
+			"p.description) " +
+			"FROM PersonExtended pe " +
+			"JOIN Address a ON (a.id = pe.addressId) " +
+			"LEFT JOIN City c ON (c.id = a.cityId) " +
+			"LEFT JOIN Province p ON (p.id = a.provinceId) " +
+			"WHERE pe.id = :personId")
+	ContactInfoBo getContactInfoById(@Param("personId") Integer personId);
 
 }

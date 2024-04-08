@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
+import net.pladema.medicalconsultation.diary.repository.entity.DiaryLabel;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -25,6 +26,8 @@ public class AppointmentVo {
 
 	private Integer observationBy;
 
+	private DiaryLabel diaryLabel;
+
 	public AppointmentVo(Appointment appointment) {
 		this.appointment = appointment;
 		this.medicalAttentionTypeId = null;
@@ -32,6 +35,7 @@ public class AppointmentVo {
 		this.diaryId = null;
 		this.observation = null;
 		this.observationBy = null;
+		this.diaryLabel = null;
 	}
 
 	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy) {
@@ -41,6 +45,7 @@ public class AppointmentVo {
 		this.diaryId = diaryId;
 		this.observation = observation;
 		this.observationBy = observationBy;
+		this.diaryLabel = null;
 	}
 
 	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String observation, Integer observationBy) {
@@ -50,6 +55,17 @@ public class AppointmentVo {
 		this.observation = observation;
 		this.observationBy = observationBy;
 		this.stateChangeReason = null;
+		this.diaryLabel = null;
+	}
+
+	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy, DiaryLabel diaryLabel) {
+		this.appointment = appointment;
+		this.stateChangeReason = stateChangeReason;
+		this.medicalAttentionTypeId = medicalAttentionTypeId;
+		this.diaryId = diaryId;
+		this.observation = observation;
+		this.observationBy = observationBy;
+		this.diaryLabel = diaryLabel;
 	}
 
 	public Integer getId() {
@@ -102,6 +118,12 @@ public class AppointmentVo {
 		if (appointment == null)
 			return null;
 		return appointment.getModalityId();
+	}
+
+	public String getPatientEmail() {
+		if (appointment == null)
+			return null;
+		return appointment.getPatientEmail();
 	}
 
 }

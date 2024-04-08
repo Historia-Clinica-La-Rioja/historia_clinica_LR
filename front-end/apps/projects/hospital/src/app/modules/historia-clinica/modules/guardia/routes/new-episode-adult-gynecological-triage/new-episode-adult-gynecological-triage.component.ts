@@ -16,6 +16,7 @@ import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service'
 export class NewEpisodeAdultGynecologicalTriageComponent {
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
+	NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE = true;
 
 	constructor(
 		private readonly newEpisodeService: NewEpisodeService,

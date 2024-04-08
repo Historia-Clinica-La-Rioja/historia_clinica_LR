@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +71,7 @@ public class AssetsServiceImpl implements AssetsService {
     public StoredFileBo getFile(String fileName) {
         log.debug(INPUT_LOG, fileName);
 
-        Assets newAsset = this.findByName(fileName).get();
+        Assets newAsset = this.findByName(fileName).orElseThrow(() -> new NotFoundException("asset-not-exists", String.format("El archivo %s no existe", fileName)));
         String partialPath = CUSTOM_PATH.concat(newAsset.getNameFile());
         var path = fileService.buildCompletePath(partialPath);
         

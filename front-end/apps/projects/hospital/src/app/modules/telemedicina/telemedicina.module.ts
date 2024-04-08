@@ -19,6 +19,8 @@ import { AvailableLabelComponent } from './components/available-label/available-
 import { InProgressCallComponent } from './components/in-progress-call/in-progress-call.component';
 import { VirtualConsultationsFacadeService } from './virtual-consultations-facade.service';
 import { EntryCallRendererComponent } from './components/entry-call-renderer/entry-call-renderer.component';
+import { TransferRequestComponent } from './dialogs/transfer-request/transfer-request.component';
+import { CallDetailsComponent } from './components/call-details/call-details.component';
 
 
 
@@ -35,7 +37,8 @@ import { EntryCallRendererComponent } from './components/entry-call-renderer/ent
 		RequestInfoCardComponent,
 		AvailableLabelComponent,
 		InProgressCallComponent,
-		EntryCallRendererComponent
+		EntryCallRendererComponent,
+ 		TransferRequestComponent,
 	],
 	imports: [
 		CommonModule,
@@ -45,6 +48,8 @@ import { EntryCallRendererComponent } from './components/entry-call-renderer/ent
 		PacientesModule,
 		HistoriaClinicaModule,
 		CoreModule,
+		//Standalone
+		CallDetailsComponent,
 	],
 	providers: [VirtualConsultationsFacadeService,]
 })

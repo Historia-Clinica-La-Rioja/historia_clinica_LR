@@ -1,5 +1,7 @@
 package ar.lamansys.odontology.application.createConsultation;
 
+import static ar.lamansys.odontology.domain.consultation.ConsultationInfoBo.newConsultationInfoBo;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,7 +47,6 @@ import ar.lamansys.odontology.domain.consultation.ClinicalTermsValidatorUtils;
 import ar.lamansys.odontology.domain.consultation.ConsultationBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDentalActionBo;
 import ar.lamansys.odontology.domain.consultation.ConsultationDiagnosticBo;
-import ar.lamansys.odontology.domain.consultation.ConsultationInfoBo;
 import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
@@ -137,12 +138,15 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		processDentalActions(consultationBo);
 		drawOdontogramService.run(consultationBo.getPatientId(), consultationBo.getDentalActions());
 
-		Integer medicalCoverageId = consultationBo.getPatientMedicalCoverageId();
-		if (medicalCoverageId == null)
-			medicalCoverageId = odontologyAppointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId());
+		setPatientMedicalCoverageIfEmpty(consultationBo, doctorInfoBo);
 
 		LocalDate now = dateTimeProvider.nowDate();
-		Integer encounterId = odontologyConsultationStorage.save(new ConsultationInfoBo(null, consultationBo, medicalCoverageId, doctorInfoBo.getId(), now, true, consultationBo.getHierarchicalUnitId()));
+		Integer encounterId = odontologyConsultationStorage.save(newConsultationInfoBo(
+				consultationBo,
+				doctorInfoBo.getId(),
+				now,
+				true
+		));
 
 
 		consultationBo.setConsultationId(encounterId);
@@ -155,7 +159,14 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
 		List<Integer> orderIds = new ArrayList<>();
 		if (!consultationBo.getReferences().isEmpty()) {
-			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(consultationBo.getReferences(), consultationBo.getInstitutionId(), doctorInfoBo.getId(), medicalCoverageId, consultationBo.getPatientId(), encounterId));
+			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(
+					consultationBo.getReferences(),
+					consultationBo.getInstitutionId(),
+					doctorInfoBo.getId(),
+					consultationBo.getPatientMedicalCoverageId(),
+					consultationBo.getPatientId(),
+					encounterId
+			));
 		}
 
 		publisher.run(consultationBo.getPatientId(), consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
@@ -166,7 +177,13 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 		return result;
     }
 
-    private void processDentalActions(ConsultationBo consultationBo) {
+	private void setPatientMedicalCoverageIfEmpty(ConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {
+		if (consultationBo.getPatientMedicalCoverageId() == null) {
+			consultationBo.setPatientMedicalCoverageId(odontologyAppointmentStorage.getPatientMedicalCoverageId(consultationBo.getPatientId(), doctorInfoBo.getId()));
+		}
+	}
+
+	private void processDentalActions(ConsultationBo consultationBo) {
         LOG.debug("Input parameter -> consultationBo {}", consultationBo);
         setDefaultProblem(consultationBo);
         setCpoCeoIndicesInDentalActions(consultationBo);
@@ -326,12 +343,12 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 			result.setNote(r.getNote());
 			result.setConsultation(r.getConsultation());
 			result.setCareLineId(r.getCareLineId());
-			result.setClinicalSpecialtyId(r.getClinicalSpecialtyId());
+			result.setClinicalSpecialtyIds(r.getClinicalSpecialtyIds());
 			result.setProblems(mapToReferenceProblemDtoList(r.getProblems()));
 			result.setFileIds(r.getFileIds());
 			result.setDestinationInstitutionId(r.getDestinationInstitutionId());
-			result.setPhonePrefix(r.getPhoneNumber());
 			result.setPhonePrefix(r.getPhonePrefix());
+			result.setPhoneNumber(r.getPhoneNumber());
 			result.setPriority(r.getPriority());
 			result.setStudy(r.getStudy() != null ? mapToReferenceStudyDto(r.getStudy()) : null);
 			result.setInstitutionId(institutionId);

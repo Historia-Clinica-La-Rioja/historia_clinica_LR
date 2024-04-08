@@ -98,6 +98,8 @@
 }
 
 .observation-section {
+	margin-top: 10px;
+
 	a {
 		cursor: pointer;
 	}
@@ -213,6 +215,11 @@ mat-form-field {
 
 .mat-dialog-container {
 	padding-right: 0px;
+}
+
+.download-link {
+	line-height: inherit; 
+	padding: 0;
 }
 
 @media only screen and (max-width: 426px) {

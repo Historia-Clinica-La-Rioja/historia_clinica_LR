@@ -6,8 +6,6 @@ import net.pladema.establishment.repository.HierarchicalUnitStaffRepository;
 import net.pladema.establishment.repository.entity.HierarchicalUnitStaff;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
-import net.pladema.sgx.exceptions.BackofficeValidationException;
-
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

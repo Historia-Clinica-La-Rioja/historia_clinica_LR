@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entit
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,8 +34,18 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
 
     private Integer patientId;
 
+    private String institutionName;
+
+    private Integer professionalUserId;
+
+    private LocalDateTime createdOn;
+
+    private String note;
+
     public HCEHealthConditionVo(Integer id, Snomed snomed, String statusId, boolean main, String verificationId,
-                                String problemId, String severity, LocalDate startDate, LocalDate inactivationDate, Integer patientId) {
+                                String problemId, String severity, LocalDate startDate, LocalDate inactivationDate,
+                                Integer patientId, String institutionName, Integer professionalUserId, LocalDateTime createdOn,
+                                String note) {
         super(id, snomed, statusId);
         this.main = main;
         this.verificationId = verificationId;
@@ -43,6 +54,10 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
         this.startDate = startDate;
         this.inactivationDate = inactivationDate;
         this.patientId = patientId;
+        this.institutionName = institutionName;
+        this.professionalUserId = professionalUserId;
+        this.createdOn = createdOn;
+        this.note = note;
     }
 
     public boolean isDiagnosis() {
@@ -50,11 +65,11 @@ public class HCEHealthConditionVo extends HCEClinicalTermVo {
     }
 
     public boolean isPersonalHistory() {
-        return problemId.equals(ProblemType.PROBLEM);
+        return problemId.equals(ProblemType.PERSONAL_HISTORY);
     }
 
     public boolean isFamilyHistory() {
-        return problemId.equals(ProblemType.HISTORY);
+        return problemId.equals(ProblemType.FAMILY_HISTORY);
     }
 
     public boolean isChronic() {

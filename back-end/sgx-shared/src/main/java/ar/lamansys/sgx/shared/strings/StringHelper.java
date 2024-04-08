@@ -72,4 +72,13 @@ public class StringHelper {
 	public static String toString(Object value) {
 		return value == null ? null : value.toString();
 	}
+
+	public static String reverseString(String string) {
+		String[] words = string.split(" ");
+		String[] reversedWords = new String[words.length];
+		for (int i = 0; i < words.length; i++) {
+			reversedWords[i] = words[words.length - 1 - i];
+		}
+		return String.join(" ", reversedWords);
+	}
 }

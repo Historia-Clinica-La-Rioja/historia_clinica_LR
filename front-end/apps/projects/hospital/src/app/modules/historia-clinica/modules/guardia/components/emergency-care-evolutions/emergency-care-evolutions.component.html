@@ -21,7 +21,7 @@
 								<span mat-line>{{getFullName(documentSearch.summary.createdBy.firstName,
 									documentSearch.summary.createdBy.nameSelfDetermination)}}
 									{{documentSearch.summary.createdBy.lastName}}</span>
-								<span mat-line>{{documentSearch.summary.createdOn | date : 'short'}}</span>
+								<span mat-line>{{documentSearch.summary.createdOn | dateFormat: 'datetime'}}</span>
 							</div>
 							<mat-divider></mat-divider>
 						</div>

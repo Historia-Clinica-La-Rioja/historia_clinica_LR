@@ -42,6 +42,7 @@ public class CHEpicrisisBo extends CHDocumentBo{
 	@Override
 	public List<ClinicalRecordBo> getClinicalRecords() {
 		List<String> terms = Stream.of(problems, notes, personalRecord, familyRecord, allergies, medicines, vaccines, otherCircumstances, externalCause, obstetricEvent).filter(term -> term!=null && !term.isBlank()).collect(Collectors.toList());
+		terms = terms.stream().map(term -> term.replace("&", "&#38;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "&#39;").replace("\"", "&#34;")).collect(Collectors.toList());
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		if(!terms.isEmpty()) {
 			String evolution = Joiner.on(". <br />").join(terms);

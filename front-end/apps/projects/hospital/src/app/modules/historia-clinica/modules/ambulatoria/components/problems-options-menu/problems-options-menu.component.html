@@ -1,0 +1,21 @@
+<button
+    *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"
+    mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu" data-id="menu-dialog">
+    <app-view-datails-btn [problem]="problem" (setProblemOnHistoric)="viewProblemDetails()"></app-view-datails-btn>
+    <div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+        <button *ngIf="hasNewConsultationEnabled$ | async" mat-menu-item
+            (click)="openNuevaConsulta()" data-id="new-consultation">
+            <span
+            [translate]="'ambulatoria.paciente.nueva-consulta.TITLE_MENU'"></span>
+        </button>
+        <button mat-menu-item (click)="solveProblemPopUp()" data-id="solve-problem">
+            <span [translate]="'ambulatoria.paciente.problemas.END'"></span>
+        </button>
+        <button *ngIf="problem.canBeMarkAsError" mat-menu-item (click)="amendProblem()" data-id="mark-as-error">
+            <span [translate]="'ambulatoria.paciente.problemas.amend_problems.AMEND_PROBLEM'"></span>
+        </button>
+    </div>
+</mat-menu>

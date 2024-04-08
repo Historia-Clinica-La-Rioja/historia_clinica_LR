@@ -2,20 +2,15 @@ package net.pladema.clinichistory.hospitalization.controller.mapper;
 
 import java.util.List;
 
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
-
-import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.HealthHistoryConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.Last2RiskFactorsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AllergyConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
@@ -25,6 +20,12 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHis
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Last2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
+
+import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.HospitalizationGeneralState;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AllergyConditionMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
@@ -41,17 +42,13 @@ public interface InternmentStateMapper {
     @IterableMapping(qualifiedByName = "toDiagnosisDto")
     List<DiagnosisDto> toListDiagnosisDto(List<DiagnosisBo> listDiagnosisBo);
 
-    @Named("toListHealthHistoryConditionDto")
-    @IterableMapping(qualifiedByName = "toHealthHistoryConditionDto")
-    List<HealthHistoryConditionDto> toListHealthHistoryConditionDto(List<HealthHistoryConditionBo> listHealthHistoryCondition);
-
     @Named("toListDiagnosesGeneralStateDto")
     @IterableMapping(qualifiedByName = "toDiagnosesGeneralStateDto")
     List<DiagnosesGeneralStateDto> toListDiagnosesGeneralStateDto(List<HealthConditionBo> diagnoses);
 
-    @Named("toListMedicationDto")
+    @Named("toListInternmentMedicationDto")
     @IterableMapping(qualifiedByName = "toMedicationDto")
-    List<MedicationDto> toListMedicationDto(List<MedicationBo> listMedicationBo);
+    List<MedicationDto> toListInternmentMedicationDto(List<MedicationBo> listMedicationBo);
 
     @Named("toListImmunizationDto")
     @IterableMapping(qualifiedByName = "toImmunizationDto")
@@ -63,8 +60,8 @@ public interface InternmentStateMapper {
 
     @Named("toInternmentGeneralStateDto")
     @Mapping(target = "diagnosis", source = "diagnosis", qualifiedByName = "toListDiagnosisDto")
-    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionDto")
-    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDto")
+    @Mapping(target = "personalHistories", source = "personalHistories", qualifiedByName = "toListHealthHistoryConditionDtoFromPersonalHistoryBo")
+    @Mapping(target = "familyHistories", source = "familyHistories", qualifiedByName = "toListHealthHistoryConditionDtoFromFamilyHistoryBo")
     @Mapping(target = "riskFactors", source = "riskFactors")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     InternmentGeneralStateDto toInternmentGeneralStateDto(HospitalizationGeneralState interment);
@@ -81,4 +78,12 @@ public interface InternmentStateMapper {
 
     @Named("toLast2RiskFactorDto")
 	Last2RiskFactorsDto toLast2RiskFactorDto(Last2RiskFactorsBo riskFactorBos);
+
+    @Named("toListHealthHistoryConditionDtoFromPersonalHistoryBo")
+    @IterableMapping(qualifiedByName = "toHealthHistoryConditionDto")
+    List<HealthHistoryConditionDto> toListHealthHistoryConditionDtoFromPersonalHistoryBo(List<PersonalHistoryBo> personalHistory);
+
+    @Named("toListHealthHistoryConditionDtoFromFamilyHistoryBo")
+    @IterableMapping(qualifiedByName = "toHealthHistoryConditionDto")
+    List<HealthHistoryConditionDto> toListHealthHistoryConditionDtoFromFamilyHistoryBo(List<FamilyHistoryBo> familyHistory);
 }

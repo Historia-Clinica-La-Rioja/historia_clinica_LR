@@ -1,8 +1,10 @@
 import {
 	addMinutes,
+	compareAsc,
 	differenceInHours,
 	differenceInMinutes,
 	formatISO,
+	format
 } from 'date-fns'
 
 const MIN_YEAR = 1900;
@@ -31,6 +33,12 @@ export enum DatePipeFormat {
 	LONG_TIME = 'longTime',// es-AR format: 03:24:19 GMT-3
 	FULL_TIME = 'fullTime',// es-AR format: 03:24:19 GMT-03:00
 }
+
+export const dateToViewDate = (date: Date): string => format(date, DateFormat.VIEW_DATE);
+
+export const timeToHourMinute = (time: Date): string => format(time, DateFormat.HOUR_MINUTE);
+
+export const dateTimeToViewDateHourMinute = (dateTime: Date): string => `${dateToViewDate(dateTime)} - ${timeToHourMinute(dateTime)}`;
 
 export function formatDateOnlyISO(date: Date) {
 	return formatISO(date, { representation: 'date' });
@@ -93,4 +101,28 @@ export function timeDifference(createdOn: Date) {
 		return `${mins} mins en espera`
 	}
 	return `${differenceInHours(new Date(), createdOn)}.${mins % 60} hs en espera`
+}
+
+export function fromStringToDateByDelimeter(date: string, delimeter: string): Date {
+	const dateData = date.split(delimeter);
+	const year = +dateData[0];
+	const month = +dateData[1] - 1;
+	const dayDate = +dateData[2];
+	return new Date(year, month, dayDate);
+}
+
+export const compare = (d1: Date, d2: Date): number => compareAsc(d1, d2); // -1 , 0 , 1
+
+const HOUR_MINUTE = 'HH:mm';
+export const toHourMinute = (date: Date): string => format(date, HOUR_MINUTE);
+
+const HOUR_MINUTE_SECOND = 'HH:mm:ss';
+export const toHourMinuteSecond = (date: Date): string => format(date, HOUR_MINUTE_SECOND);
+
+export function sameDayMonthAndYear(date1: Date, date2: Date): boolean {
+	return (
+		date1.getFullYear() === date2.getFullYear() &&
+		date1.getMonth() === date2.getMonth() &&
+		date1.getDate() === date2.getDate()
+	);
 }

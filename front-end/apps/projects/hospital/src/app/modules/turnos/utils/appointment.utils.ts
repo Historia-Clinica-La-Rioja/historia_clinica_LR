@@ -1,9 +1,52 @@
-import { AppointmentListDto } from "@api-rest/api-model";
-import { DateFormat, buildFullDate, momentParseDate, momentParseTime } from "@core/utils/moment.utils";
-import { APPOINTMENT_STATES_ID, BLUE_TEXT, COLORES, GREY_TEXT, PURPLE_TEXT, TEMPORARY_PATIENT, WHITE_TEXT } from "@turnos/constants/appointment";
-import { AppointmentBlockMotivesFacadeService } from "@turnos/services/appointment-block-motives-facade.service";
-import { CalendarEvent } from "angular-calendar";
-import { Moment } from "moment";
+import { CalendarEvent } from 'angular-calendar';
+import { Moment } from 'moment';
+
+import {
+	AppointmentListDto, DiaryLabelDto,
+} from '@api-rest/api-model';
+import {
+    DateFormat,
+    buildFullDate,
+    momentParseDate,
+    momentParseTime,
+} from '@core/utils/moment.utils';
+import {
+	APPOINTMENT_STATES_ID,
+	BLUE_TEXT,
+	COLOR,
+	COLORES,
+	GREY_TEXT,
+	PURPLE_TEXT,
+	TEMPORARY_PATIENT,
+	WHITE_TEXT,
+    getDiaryLabel,
+} from '@turnos/constants/appointment';
+import {
+	AppointmentBlockMotivesFacadeService,
+} from '@turnos/services/appointment-block-motives-facade.service';
+
+function setDiaryLabelColor(diaryLabelDto: DiaryLabelDto): string {
+    if (!diaryLabelDto) return '';
+
+    const color: COLOR = getDiaryLabel(diaryLabelDto.colorId);
+    return `<hr class="appointment-label" color=${color.color}>`
+}
+
+function setDiaryLabelDescription(diaryLabelDto: DiaryLabelDto): string {
+    if (!diaryLabelDto) return '';
+
+    return diaryLabelDto.description;
+}
+
+function defaultHtml(from: string, appointment: AppointmentListDto, viewName?: string): string {
+    return `<div class="appointment-description">
+                ${setDiaryLabelColor(appointment?.diaryLabelDto)}
+                <article>
+                    ${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName}.
+                    ${setDiaryLabelDescription(appointment?.diaryLabelDto)}
+                </article>
+            </div>`
+}
 
 export function toCalendarEvent(from: string, to: string, date: Moment, appointment: AppointmentListDto, viewName?: string, appointmentBlockMotivesFacadeService?: AppointmentBlockMotivesFacadeService): CalendarEvent {
     const fullName = [appointment.patient?.person.lastName, appointment.patient?.person.firstName].
@@ -32,6 +75,14 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
                 fullNameWithNameSelfDetermination: fullNameWithNameSelfDetermination,
                 identificationTypeId: appointment.patient?.person.identificationTypeId,
                 genderId: appointment.patient?.person.genderId,
+                email: appointment.patientEmail,
+				names: {
+					firstName: appointment.patient?.person.firstName,
+					lastName: appointment.patient?.person.lastName,
+					middleNames: appointment.patient?.person.middleNames,
+					nameSelfDetermination: appointment.patient?.person.nameSelfDetermination,
+					otherLastNames: appointment.patient?.person.otherLastNames,
+				}
             },
             overturn: appointment.overturn,
             appointmentId: appointment.id,
@@ -43,7 +94,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
             medicalCoverageName: appointment.medicalCoverageName,
             affiliateNumber: appointment.medicalCoverageAffiliateNumber,
             createdOn: appointment.createdOn,
-            professionalPersonDto: appointment.professionalPersonDto
+            professionalPersonDto: appointment.professionalPersonDto,
         }
     };
 
@@ -55,7 +106,8 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
         if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
             return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName ? viewName : ''} (Temporal)`;
         }
-        return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)}	 ${viewName}`;
+
+        return defaultHtml(from, appointment, viewName);
     }
 }
 
@@ -109,8 +161,8 @@ export function getSpanColor(appointment: AppointmentListDto): string {
     }
 
     if (showProtectedAppointment(appointment)) {
-		return PURPLE_TEXT;
-	}
+        return PURPLE_TEXT;
+    }
 
     return WHITE_TEXT;
 }

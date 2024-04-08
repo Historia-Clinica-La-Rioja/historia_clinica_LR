@@ -3,11 +3,15 @@ package net.pladema.clinichistory.hospitalization.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +25,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -38,7 +42,7 @@ import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
-import net.pladema.clinichistory.hospitalization.controller.dto.DocumentTypeDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;
@@ -107,12 +111,12 @@ public class InternmentEpisodeController {
 
 	private final EpisodeDocumentDtoMapper mapper;
 
-	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, BedExternalService bedExternalService, PatientDischargeMapper patientDischargeMapper, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument, CreateEpisodeDocument createEpisodeDocument, FetchDocumentType fetchDocumentType, DeleteEpisodeDocument deleteEpisodeDocument, EpisodeDocumentDtoMapper mapper) {
+	public InternmentEpisodeController(InternmentEpisodeService internmentEpisodeService, HealthcareProfessionalExternalService healthcareProfessionalExternalService, InternmentEpisodeMapper internmentEpisodeMapper, PatientDischargeMapper patientDischargeMapper, BedExternalService bedExternalService, ResponsibleContactService responsibleContactService, FeatureFlagsService featureFlagsService, PatientDischargeService patientDischargeService, ResponsibleContactMapper responsibleContactMapper, LocalDateMapper localDateMapper, HospitalApiPublisher hospitalApiPublisher, FetchEpisodeDocument fetchEpisodeDocument, CreateEpisodeDocument createEpisodeDocument, FetchDocumentType fetchDocumentType, DeleteEpisodeDocument deleteEpisodeDocument, EpisodeDocumentDtoMapper mapper) {
 		this.internmentEpisodeService = internmentEpisodeService;
 		this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
 		this.internmentEpisodeMapper = internmentEpisodeMapper;
-		this.bedExternalService = bedExternalService;
 		this.patientDischargeMapper = patientDischargeMapper;
+		this.bedExternalService = bedExternalService;
 		this.responsibleContactService = responsibleContactService;
 		this.featureFlagsService = featureFlagsService;
 		this.patientDischargeService = patientDischargeService;
@@ -126,16 +130,17 @@ public class InternmentEpisodeController {
 		this.mapper = mapper;
 	}
 
-	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "{internmentEpisodeId}/episodedocuments/{episodeDocumentTypeId}/consent/{consentId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<Integer> createEpisodeDocument(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "episodeDocumentTypeId") Integer episodeDocumentTypeId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-			@RequestPart("file") MultipartFile file) {
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}", institutionId, internmentEpisodeId, episodeDocumentTypeId, file);
-		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId);
+			@PathVariable(name = "consentId") Integer consentId,
+			@RequestPart("file") MultipartFile file) throws MoreThanOneConsentDocumentException {
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}, consentId", institutionId, internmentEpisodeId, episodeDocumentTypeId, file, consentId);
+		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId, consentId);
 		Integer result = createEpisodeDocument.run(dto);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
@@ -177,7 +182,7 @@ public class InternmentEpisodeController {
 	}
 
 	@GetMapping("/{internmentEpisodeId}/summary")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ADMINISTRADOR_DE_CAMAS, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ADMINISTRADOR_DE_CAMAS, PERSONAL_DE_IMAGENES, PERSONAL_DE_LABORATORIO, PERSONAL_DE_FARMACIA, PRESCRIPTOR, ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<InternmentSummaryDto> internmentEpisodeSummary(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
@@ -331,8 +336,20 @@ public class InternmentEpisodeController {
 		LocalDateTime result = internmentEpisodeService.updateInternmentEpisodeProbableDischargeDate(internmentEpisodeId, probableDischargeDate);
 		LOG.debug(OUTPUT, result);
 		return ResponseEntity.ok(localDateMapper.toDateTimeDto(result));
-
-
 	}
 
+	@GetMapping("/{internmentEpisodeId}/episode-document-type/{consentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO')")
+	public ResponseEntity<Resource> generateEpisodeDocumentType(
+			@RequestParam(value = "procedures", required = false) List<String> procedures,
+			@RequestParam(value = "observations", required = false) String observations,
+			@RequestParam(value = "professionalId", required = false) String professionalId,
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "consentId") Integer consentId,
+			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) throws GeneratePdfException, InternmentEpisodeNotFoundException, PersonNotFoundException, PatientNotFoundException {
+		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {}, procedures {}, observations {}, professionalId {}", institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
+		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 }

@@ -1,22 +1,24 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.reference;
 
+import ar.lamansys.refcounterref.application.port.HistoricReferenceRegulationStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceCounterReferenceFileStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
-import ar.lamansys.refcounterref.domain.file.ReferenceCounterReferenceFileBo;
+import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
-import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
-import ar.lamansys.refcounterref.domain.reference.ReferenceGetBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
-import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthCondition;
-import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionPk;
+import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceclinicalspecialty.ReferenceClinicalSpecialty;
+import ar.lamansys.refcounterref.infraestructure.output.repository.referenceclinicalspecialty.ReferenceClinicalSpecialtyRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencehealthcondition.ReferenceHealthConditionRepository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNote;
 import ar.lamansys.refcounterref.infraestructure.output.repository.referencenote.ReferenceNoteRepository;
-import ar.lamansys.sgh.clinichistory.application.healthCondition.HealthConditionStorage;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
@@ -25,14 +27,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ReferenceStorageImpl implements ReferenceStorage {
+
+	private static final Integer OUTPATIENT_SOURCE_TYPE_ID = 1;
+
+	private static final Short APPROVED_REGULATION_STATE = 1;
 
     private final ReferenceRepository referenceRepository;
 
@@ -48,74 +56,231 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 
 	private final FeatureFlagsService featureFlagsService;
 
+	private final SharedPersonPort sharedPersonPort;
+
+	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
+	
+	private final ReferenceClinicalSpecialtyRepository referenceClinicalSpecialtyRepository;
+
     @Override
 	@Transactional
     public List<Integer> save(List<CompleteReferenceBo> referenceBoList) {
-        log.debug("Input parameters -> referenceBoList {}", referenceBoList);
+		log.debug("Input parameters -> referenceBoList {}", referenceBoList);
 		List<Integer> orderIds = new ArrayList<>();
-        referenceBoList.forEach(referenceBo -> {
-            Reference ref = new Reference(referenceBo);
-            if (referenceBo.getNote() != null) {
-                Integer referenceNoteId = referenceNoteRepository.save(new ReferenceNote(referenceBo.getNote())).getId();
-                ref.setReferenceNoteId(referenceNoteId);
-            }
-            Reference reference = referenceRepository.save(ref);
-            Integer referenceId = reference.getId();
-			List<Integer> referenceHealthConditionIds = referenceHealthConditionStorage.saveProblems(referenceId, referenceBo);
-			log.debug("referenceHealthConditionIds, referenceId -> {} {}", referenceHealthConditionIds, referenceId);
-			if (referenceBo.getStudy() != null) {
-				Integer orderId = referenceStudyStorage.run(referenceBo);
-				reference.setServiceRequestId(orderId);
-				referenceRepository.save(reference);
-				orderIds.add(orderId);
-				log.debug("orderId, referenceId -> {} {}", orderId, referenceId);
-			}
-            referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
-        });
+        referenceBoList.forEach(referenceBo -> processReference(referenceBo, orderIds));
 		return orderIds;
     }
 
-    @Override
-    public List<ReferenceGetBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds) {
-        List<ReferenceGetBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds);
-        queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds));
+	private void processReference(CompleteReferenceBo referenceBo, List<Integer> orderIds) {
+		Reference ref = new Reference(referenceBo);
+		if (referenceBo.getNote() != null)
+			saveReferenceNote(referenceBo, ref);
+		Reference reference = referenceRepository.save(ref);
+		Integer referenceId = reference.getId();
+		List<Integer> referenceHealthConditionIds = referenceHealthConditionStorage.saveProblems(referenceId, referenceBo);
+		log.debug("referenceHealthConditionIds, referenceId -> {} {}", referenceHealthConditionIds, referenceId);
+		saveReferenceClinicalSpecialties(referenceId, referenceBo.getClinicalSpecialtyIds());
+		if (referenceBo.getStudy() != null)
+			saveReferenceOrder(referenceBo, orderIds, reference, referenceId);
+		saveReferenceRegulationState(reference, referenceBo);
+		referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
+	}
 
-        List<Integer> referenceIds = queryResult.stream().map(ReferenceGetBo::getId).collect(Collectors.toList());
+	private void saveReferenceRegulationState(Reference reference, CompleteReferenceBo referenceBo) {
+		var regulationStateId = historicReferenceRegulationStorage.saveReferenceRegulation(reference.getId(), referenceBo);
+		reference.setRegulationStateId(regulationStateId);
+		referenceRepository.save(reference);
+	}
 
-        Map<Integer, List<ReferenceProblemBo>> problems = referenceHealthConditionRepository.getReferencesProblems(referenceIds)
-                .stream()
-                .map(ReferenceProblemBo::new)
-                .collect(Collectors.groupingBy(ReferenceProblemBo::getReferenceId));
+	private void saveReferenceOrder(CompleteReferenceBo referenceBo, List<Integer> orderIds, Reference reference, Integer referenceId) {
+		Integer orderId = referenceStudyStorage.save(referenceBo);
+		reference.setServiceRequestId(orderId);
+		referenceRepository.save(reference);
+		orderIds.add(orderId);
+		log.debug("orderId, referenceId -> {} {}", orderId, referenceId);
+	}
 
-        queryResult = queryResult.stream().map(ref -> {
-            ref.setProblems(problems.get(ref.getId()));
-            return ref;
-        }).collect(Collectors.toList());
+	private void saveReferenceNote(CompleteReferenceBo referenceBo, Reference ref) {
+		Integer referenceNoteId = referenceNoteRepository.save(new ReferenceNote(referenceBo.getNote())).getId();
+		ref.setReferenceNoteId(referenceNoteId);
+	}
 
-        Map<Integer, List<ReferenceCounterReferenceFileBo>> files = referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdsAndType(referenceIds, EReferenceCounterReferenceType.REFERENCIA);
-        List<ReferenceGetBo> result = queryResult.stream().map(ref -> {
-            ref.setFiles(files.get(ref.getId()));
-            return ref;
-        }).collect(Collectors.toList());
+	private void saveReferenceClinicalSpecialties(Integer referenceId, List<Integer> clinicalSpecialtyIds) {
+		if (clinicalSpecialtyIds != null)
+			clinicalSpecialtyIds.forEach(clinicalSpecialty -> saveReferenceClinicalSpecialty(referenceId, clinicalSpecialty));
+	}
 
-        return result;
+	private void saveReferenceClinicalSpecialty(Integer referenceId, Integer clinicalSpecialty) {
+		ReferenceClinicalSpecialty referenceClinicalSpecialty = new ReferenceClinicalSpecialty(referenceId, clinicalSpecialty);
+		referenceClinicalSpecialtyRepository.save(referenceClinicalSpecialty);
+	}
+
+	@Override
+    public List<ReferenceDataBo> getReferences(Integer patientId, List<Integer> clinicalSpecialtyIds, List<Short> loggedUserRoleIds) {
+		log.debug("Input parameters -> patientId {}, clinicalSpecialtyIds {}, loggedUserRoleIds {}", patientId, clinicalSpecialtyIds, loggedUserRoleIds);
+		List<ReferenceDataBo> queryResult = referenceRepository.getReferencesFromOutpatientConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE);
+       	queryResult.addAll(referenceRepository.getReferencesFromOdontologyConsultation(patientId, clinicalSpecialtyIds, loggedUserRoleIds, APPROVED_REGULATION_STATE));
+		return setReferenceDetails(queryResult);
     }
 
     @Override
-    public List<ReferenceProblemBo> getReferencesProblems(Integer patientId) {
-        log.debug("Input parameters -> patientId {} ", patientId);
-        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId);
+    public List<ReferenceProblemBo> getReferencesProblems(Integer patientId, List<Short> loggedUserRoleIds) {
+        log.debug("Input parameters -> patientId {}, loggedUserRoleIds {}", patientId, loggedUserRoleIds);
+        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId, loggedUserRoleIds);
     }
 
 	@Override
-	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
-    	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, careLineId {} ", patientId, clinicalSpecialtyId, careLineId);
-		List<ReferenceSummaryBo> queryResult = referenceRepository.getReferencesSummaryFromOutpatientConsultation(patientId, clinicalSpecialtyId, careLineId);
-		queryResult.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultation(patientId, clinicalSpecialtyId, careLineId));
+	public List<ReferenceSummaryBo> getReferencesSummary(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
+    	log.debug("Input parameters -> patientId {}, clinicalSpecialtyid {}, careLineId {}, practiceId {} ", patientId, clinicalSpecialtyId, careLineId, practiceId);
+		List<ReferenceSummaryBo> queryResult = getReferencesSummaryBySearchCriteria(patientId, clinicalSpecialtyId, careLineId, practiceId);
 		boolean featureFlagNameSelfDetermination = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
-		queryResult.stream().forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
+		queryResult.forEach(r -> r.setIncludeNameSelfDetermination(featureFlagNameSelfDetermination));
 		log.debug("Output -> references {} ", queryResult);
 		return queryResult;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryBySearchCriteria(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
+		if (clinicalSpecialtyId != null && practiceId == null)
+			return getReferencesSummaryByClinicalSpecialty(patientId, clinicalSpecialtyId, careLineId);
+
+		if (clinicalSpecialtyId == null && practiceId != null)
+			return  getReferencesSummaryByPractice(patientId, practiceId, careLineId);
+
+		return getReferencesSummaryByClinicalSpecialtyAndPractice(patientId, clinicalSpecialtyId, practiceId, careLineId);
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialty(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId) {
+		List<ReferenceSummaryBo> queryResult;
+		if (careLineId != null){
+			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId);
+		} else {
+			queryResult = getReferencesSummaryByClinicalSpecialtyId(patientId, clinicalSpecialtyId);
+		}
+		return queryResult;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByPractice(Integer patientId, Integer practiceId, Integer careLineId) {
+		List<ReferenceSummaryBo> queryResult;
+		if(careLineId != null) {
+			queryResult = getReferencesSummaryByPracticeIdAndCareLineId(patientId, practiceId, careLineId);
+		} else {
+			queryResult = getReferencesSummaryByPracticeId(patientId, practiceId);
+		}
+		return queryResult;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyAndPractice(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, Integer careLineId) {
+		List<ReferenceSummaryBo> queryResult;
+		if (careLineId != null) {
+			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, practiceId, careLineId);
+		} else {
+			queryResult = getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId);
+		}
+		return queryResult;
+	}
+	
+	@Override
+	public Optional<ReferenceDataBo> getReferenceData(Integer referenceId) {
+		Integer sourceTypeId = referenceRepository.getReferenceEncounterTypeId(referenceId);
+		if (sourceTypeId == null)
+			return Optional.empty();
+		Optional<ReferenceDataBo> result = sourceTypeId.equals(OUTPATIENT_SOURCE_TYPE_ID) ? referenceRepository.getReferenceDataFromOutpatientConsultation(referenceId) :
+				referenceRepository.getReferenceDataFromOdontologyConsultation(referenceId);
+		result.ifPresent(referenceDataBo -> setReferenceDetails(Collections.singletonList(referenceDataBo)));
+		return result;
+	}
+
+	@Override
+	public void delete(Integer referenceId) {
+		referenceRepository.deleteAndUpdateStatus(referenceId, EReferenceStatus.ERROR.getId());
+	}
+
+	private List<ReferenceDataBo> setReferenceDetails(List<ReferenceDataBo> references) {
+		List<Integer> referenceIds = references.stream().map(ReferenceDataBo::getId).collect(Collectors.toList());
+		var referencesProblems = referenceHealthConditionRepository.getReferencesProblems(referenceIds);
+		var files = referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdsAndType(referenceIds, EReferenceCounterReferenceType.REFERENCIA);
+		var referencesStudiesIds = references.stream().filter(r -> r.getServiceRequestId() != null).collect(Collectors.toMap(ReferenceDataBo::getServiceRequestId, ReferenceDataBo::getId));
+		Map<Integer, SnomedBo> referencesProcedures = referenceStudyStorage.getReferencesProcedures(referencesStudiesIds);
+		return references.stream()
+				.peek(ref -> {
+					ref.setProblems(referencesProblems.stream()
+							.filter(rp -> rp.getReferenceId().equals(ref.getId()))
+							.map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
+					ref.setFiles(files.get(ref.getId()));
+					ref.setProcedure(referencesProcedures.get(ref.getId()));
+					ref.setProfessionalFullName(sharedPersonPort.getCompletePersonNameById(ref.getProfessionalPersonId()));
+					ref.setDestinationClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(ref.getId()));
+				}).collect(Collectors.toList());
+	}
+
+	@Override
+	public Optional<ReferenceRequestBo> getReferenceByServiceRequestId(Integer serviceRequestId){
+		log.debug("Input parameters -> serviceRequestId {} ", serviceRequestId);
+		Optional<ReferenceRequestBo> ref =  referenceRepository.getReferenceByServiceRequestId(serviceRequestId);
+		ref.ifPresent(r ->
+				r.setClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(r.getId())
+		));
+		return ref;
+	}
+
+	@Override
+	public Optional<Reference> findById(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {} ", referenceId);
+		return referenceRepository.findById(referenceId);
+	}
+
+	@Override
+	public Short getReferenceRegulationStateId(Integer referenceId) {
+		log.debug("Input parameters -> referenceId {} ", referenceId);
+		return referenceRepository.getReferenceRegulationStateId(referenceId).get(0);
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId){
+		List<ReferenceSummaryBo> result;
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId));
+		return result;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyId(Integer patientId, Integer clinicalSpecialtyId){
+		List<ReferenceSummaryBo> result;
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyId(patientId, clinicalSpecialtyId));
+		return result;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByPracticeIdAndCareLineId(Integer patientId, Integer practiceId, Integer careLineId){
+		List<ReferenceSummaryBo> result;
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByPracticeIdAndCareLineId(patientId, practiceId, careLineId);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByPracticeIdAndCareLineId(patientId, practiceId, careLineId));
+		return result;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByPracticeId(Integer patientId, Integer practiceId){
+		List<ReferenceSummaryBo> result;
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByPracticeId(patientId, practiceId);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByPracticeId(patientId, practiceId));
+		return result;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndPracticeIdAndCareLineId(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId, Integer careLineId){
+		List<ReferenceSummaryBo> result;
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, practiceId);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(patientId, clinicalSpecialtyId, careLineId, practiceId));
+		return result;
+	}
+
+	private List<ReferenceSummaryBo> getReferencesSummaryByClinicalSpecialtyIdAndPracticeId(Integer patientId, Integer clinicalSpecialtyId, Integer practiceId){
+		List<ReferenceSummaryBo> result;
+		result = referenceRepository.getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId);
+		result.addAll(referenceRepository.getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(patientId, clinicalSpecialtyId, practiceId));
+		return result;
+	}
+
+	@Override
+	public void deleteAndUpdateStatus(Integer referenceId, Short statusId){
+		log.debug("Input parameters -> referenceId {}, statusId {}", referenceId, statusId);
+		referenceRepository.deleteAndUpdateStatus(referenceId, statusId);
 	}
 
 }

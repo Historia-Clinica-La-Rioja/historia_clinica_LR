@@ -13,7 +13,7 @@ import net.pladema.person.repository.entity.Person;
 public class HealthcarePersonBo {
 
 	private Integer id;
-	private String licenceNumber;
+	private String licenseNumber;
 	private Integer personId;
 	private Person person;
 	private String nameSelfDetermination;

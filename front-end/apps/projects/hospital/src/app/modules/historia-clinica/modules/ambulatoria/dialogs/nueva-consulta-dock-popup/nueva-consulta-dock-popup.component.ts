@@ -48,6 +48,8 @@ import { EpisodeData } from '@historia-clinica/components/episode-data/episode-d
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '../../services/prescripciones.service';
+import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
+import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 
 const TIME_OUT = 5000;
 
@@ -66,6 +68,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
+	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	apiErrors: string[] = [];
 	public today = newMoment();
@@ -118,6 +121,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.datePipe);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
+		this.personalHistoriesNewConsultationService = new NewConsultationPersonalHistoriesService(this.snomedService, this.snackBarService);
 		this.antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
@@ -357,7 +361,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
 			return {
 				allergies: !!nuevaConsultaDto.allergies?.length,
-				personalHistories: !!nuevaConsultaDto.problems?.length,
+				personalHistories: !!nuevaConsultaDto.personalHistories?.length,
 				familyHistories: !!nuevaConsultaDto.familyHistories?.length,
 				riskFactors: !!nuevaConsultaDto.riskFactors,
 				medications: !!nuevaConsultaDto.medications?.length,
@@ -434,6 +438,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			}
 			),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
+			personalHistories: this.personalHistoriesNewConsultationService.getPersonalHistories().map((personalHistory: PersonalHistory) => {
+				return {
+					inactivationDate: personalHistory.endDate ? momentFormat(personalHistory.endDate, DateFormat.API_DATE) : null,
+					note: personalHistory.observations,
+					snomed: personalHistory.snomed,
+					startDate: momentFormat(personalHistory.startDate, DateFormat.API_DATE),
+					typeId: personalHistory.type.id,
+				}
+			}),
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(problema: Problema) => {
 					return {
@@ -508,10 +521,10 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	private mapToOutpatientProblemDto(problem: HCEPersonalHistory): OutpatientProblemDto {
 		return {
 			chronic: problem.chronic,
-			severity: problem.hcePersonalHistoryDto.severity,
-			snomed: problem.hcePersonalHistoryDto.snomed,
-			startDate: problem.hcePersonalHistoryDto.startDate,
-			statusId: problem.hcePersonalHistoryDto.statusId,
+			severity: problem.HCEHealthConditionDto.severity,
+			snomed: problem.HCEHealthConditionDto.snomed,
+			startDate: problem.HCEHealthConditionDto.startDate,
+			statusId: problem.HCEHealthConditionDto.statusId,
 		}
 	}
 
@@ -563,6 +576,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			},
 			autoFocus: false,
 			width: '35%',
+			disableClose: true,
+		});
+	}
+	
+	addPersonalHistory(): void {
+		this.dialog.open(NewConsultationPersonalHistoryFormComponent, {
+			data: {
+				personalHistoryService: this.personalHistoriesNewConsultationService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+			},
+			autoFocus: false,
+			width: '30%',
 			disableClose: true,
 		});
 	}

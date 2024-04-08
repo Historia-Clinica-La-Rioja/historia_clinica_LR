@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +32,8 @@ public class FormReportRepositoryImpl implements FormReportRepository {
         String query = "SELECT NEW net.pladema.reports.repository.entity.FormVAppointmentVo(i.name, pe.firstName, pe.middleNames, "
                 +
                 "               pe.lastName, pe.otherLastNames, g.description, pe.birthDate, it.description, " +
-                "               pe.identificationNumber, ad.street, ad.number, ci.description, mc.name, pmca.affiliateNumber, i.sisaCode) "
+                "               pe.identificationNumber, ad.street, ad.number, ci.description, mc.name, pmca.affiliateNumber, i.sisaCode, " +
+				"				CASE WHEN a.appointmentStateId = " + AppointmentState.SERVED + " THEN a.updateable.updatedOn ELSE a.dateTypeId END) "
                 +
                 "       FROM Appointment AS a " +
                 "           JOIN AppointmentAssn AS assn ON (a.id = assn.pk.appointmentId) " +

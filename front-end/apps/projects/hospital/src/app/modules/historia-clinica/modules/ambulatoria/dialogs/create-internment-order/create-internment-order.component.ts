@@ -6,7 +6,6 @@ import { SnomedECL } from "@api-rest/api-model";
 import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
 import { InternmentOrderService } from "@api-rest/services/internment-order.service";
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
-import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
 import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
@@ -21,7 +20,6 @@ import { SnackBarService } from "@presentation/services/snack-bar.service";
 export class CreateInternmentOrderComponent implements OnInit {
 
 	readonly ecl = SnomedECL.PROCEDURE;
-	public readonly TEXT_AREA_MAX_LENGTH = TEXT_AREA_MAX_LENGTH;
 	hasError = hasError;
 
 	form: UntypedFormGroup;
@@ -51,7 +49,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
 			healthProblem: [null, Validators.required],
-			notes: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]]
+			notes: [null]
 		});
 
 		this.requestMasterDataService.categories().subscribe(categories => {
@@ -138,10 +136,10 @@ export class CreateInternmentOrderComponent implements OnInit {
 		const newInternmentOrder: PrescriptionDto = {
 			medicalCoverageId: null,
 			hasRecipe: true,
+			observations: this.form.controls.notes.value,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
 					healthConditionId: this.form.controls.healthProblem.value.id,
-					observations: this.form.controls.notes.value,
 					snomed: study.snomed,
 					categoryId: this.form.controls.studyCategory.value,
 					prescriptionLineNumber: ++prescriptionLineNumberAux,

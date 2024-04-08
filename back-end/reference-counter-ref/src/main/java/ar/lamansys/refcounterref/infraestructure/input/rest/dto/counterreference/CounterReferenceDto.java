@@ -21,8 +21,8 @@ public class CounterReferenceDto implements Serializable {
     @NotNull
     private Integer referenceId;
 
-    @NotNull
-    Integer clinicalSpecialtyId;
+
+    private Integer clinicalSpecialtyId;
 
     @NotNull
     private String counterReferenceNote;

@@ -1,23 +1,44 @@
+export enum REPORT_TYPES_DESCRIPTION {
+	MONTHLY = 'Detalle Nominal de Consultorios Externos - Hoja 2',
+	OUTPATIENT_SUMMARY_REPORT = 'Resumen Mensual de Consultorios Externos - Hoja 2.1',
+	DIABETIC_PATIENTS = 'Pacientes diabéticos',
+	HYPERTENSIVE_PATIENTS = 'Pacientes hipertensos',
+	WEEKLY_EPIDEMIOLOGICAL_REPORT = 'Reporte epidemiológico semanal',
+	NOMINAL_APPOINTMENTS_DETAIL = 'Detalle Nominal de Turnos'
+}
+
+export enum REPORT_TYPES_ID {
+	MONTHLY,
+	OUTPATIENT_SUMMARY_REPORT,
+	DIABETIC_PATIENTS,
+	HYPERTENSIVE_PATIENTS,
+	WEEKLY_EPIDEMIOLOGICAL_REPORT,
+	NOMINAL_APPOINTMENTS_DETAIL
+}
 
 export const REPORT_TYPES = [
 	{
-		description: 'Detalle Nominal de Consultorios Externos - Hoja 2',
-		id: 1,
+		description: REPORT_TYPES_DESCRIPTION.MONTHLY,
+		id: REPORT_TYPES_ID.MONTHLY
 	},
 	{
-		description: 'Resumen Mensual de Consultorios Externos - Hoja 2.1',
-		id: 2,
+		description: REPORT_TYPES_DESCRIPTION.OUTPATIENT_SUMMARY_REPORT,
+		id: REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT
 	},
 	{
-		description: 'Pacientes diabéticos',
-		id: 3
+		description: REPORT_TYPES_DESCRIPTION.DIABETIC_PATIENTS,
+		id: REPORT_TYPES_ID.DIABETIC_PATIENTS
 	},
 	{
-		description: 'Pacientes hipertensos',
-		id: 4
+		description: REPORT_TYPES_DESCRIPTION.HYPERTENSIVE_PATIENTS,
+		id: REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS,
 	},
 	{
-		description: 'Reporte epidemiológico semanal',
-		id: 5
+		description: REPORT_TYPES_DESCRIPTION.WEEKLY_EPIDEMIOLOGICAL_REPORT,
+		id: REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT,
+	},
+	{
+		description: REPORT_TYPES_DESCRIPTION.NOMINAL_APPOINTMENTS_DETAIL,
+		id: REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL
 	}
 ];

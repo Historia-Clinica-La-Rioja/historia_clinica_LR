@@ -51,6 +51,9 @@ public class DiagnosticReport extends SGXAuditableEntity<Integer> implements SGX
 	@Column(name = "note_id")
 	private Long noteId;
 
+	@Column(name = "observations", columnDefinition = "TEXT")
+	private String observations;
+
 	public DiagnosticReport(Integer patientId, Integer snomedId, String cie10Codes,
 							Long noteId, Integer healthConditionId) {
 		super();

@@ -32,6 +32,8 @@ public class GenericServiceRequestBo {
 
 	private LocalDateTime requestDate = LocalDateTime.now();
 
+	private String observations;
+
 	public Integer getPatientId() {
 		if (patientInfo != null)
 			return patientInfo.getId();

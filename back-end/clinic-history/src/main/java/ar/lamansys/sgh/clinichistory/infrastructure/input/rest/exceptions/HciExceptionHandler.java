@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.exceptions.FetchDocumentFileException;
+import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileException;
+import ar.lamansys.sgh.clinichistory.application.signDocumentFile.exceptions.SignDocumentFileException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgh.clinichistory.application.calculatecie10.exceptions.HCICIE10Exception;
 import org.slf4j.Logger;
@@ -30,6 +32,20 @@ public class HciExceptionHandler {
 	@ExceptionHandler({ FetchDocumentFileException.class })
 	protected ApiErrorMessageDto handleFetchDocumentFileException(FetchDocumentFileException ex) {
 		LOG.error("FetchDocumentFileException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ SignDocumentFileException.class })
+	protected ApiErrorMessageDto handleSignDocumentFileException(SignDocumentFileException ex) {
+		LOG.error("SignDocumentFileException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RebuildFileException.class })
+	protected ApiErrorMessageDto handleRebuildFileException(RebuildFileException ex) {
+		LOG.error("RebuildFileException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 }

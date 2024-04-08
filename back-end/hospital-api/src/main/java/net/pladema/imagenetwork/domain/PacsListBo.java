@@ -16,12 +16,12 @@ import net.pladema.establishment.repository.entity.PacServer;
 @Setter
 @ToString
 public class PacsListBo {
-	private Set<URI> pacs;
+	private Set<URI> urls;
 
 	private static final String SCHEMA = "https";
 	private static final String context = "imagenetwork";
 	public PacsListBo(List<PacServer> pacServers) {
-		this.pacs = getURIs(pacServers);
+		this.urls = getURIs(pacServers);
 	}
 
 	private static Set<URI> getURIs(List<PacServer> pacs) {
@@ -33,5 +33,9 @@ public class PacsListBo {
 						.build()
 						.toUri())
 				.collect(Collectors.toSet());
+	}
+
+	public final boolean isAvailableInPACS() {
+		return !getUrls().isEmpty();
 	}
 }

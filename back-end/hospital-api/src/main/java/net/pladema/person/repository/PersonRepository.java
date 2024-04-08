@@ -3,6 +3,8 @@ package net.pladema.person.repository;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo;
+import net.pladema.address.repository.entity.Address;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -110,4 +112,10 @@ public interface PersonRepository extends JpaRepository<Person, Integer>, AuditP
 			"AND pa.typeId != 6")
 	List<Integer> findAllActive();
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW ar.lamansys.sgh.shared.infrastructure.output.CompletePersonNameVo(p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination) " +
+			"FROM Person p " +
+			"JOIN PersonExtended pe ON (pe.id = p.id) " +
+			"WHERE p.id = :personId")
+	CompletePersonNameVo getCompletePersonNameById(@Param("personId") Integer personId);
 }

@@ -2,7 +2,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.service';
 import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { newMoment } from '@core/utils/moment.utils';
+import { newMomentLocal } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { Subject } from 'rxjs';
@@ -102,7 +102,7 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 	}
 
 	getMaxFecha(): Moment {
-		return newMoment();
+		return newMomentLocal();
 	}
 
 	getECL(): SnomedECL {

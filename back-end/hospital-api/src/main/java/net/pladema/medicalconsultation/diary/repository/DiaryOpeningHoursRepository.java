@@ -38,7 +38,8 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
     @Transactional(readOnly = true)
     @Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
             "d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
-			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, doh.secondOpinionVirtualAttentionAllowed) " +
+			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, " +
+			"doh.secondOpinionVirtualAttentionAllowed, doh.regulationProtectedAppointmentsAllowed) " +
             "FROM DiaryOpeningHours AS doh " +
             "JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
             "JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
@@ -51,7 +52,7 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
 			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
 			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, " +
-			"doh.secondOpinionVirtualAttentionAllowed) " +
+			"doh.secondOpinionVirtualAttentionAllowed, doh.regulationProtectedAppointmentsAllowed) " +
 			"FROM DiaryOpeningHours AS doh " +
 			"JOIN Diary AS d ON ( doh.pk.diaryId = d.id AND doh.medicalAttentionTypeId = :medicalAttentionTypeId) " +
 			"JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +
@@ -63,7 +64,8 @@ public interface DiaryOpeningHoursRepository extends JpaRepository<DiaryOpeningH
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryOpeningHoursVo( " +
 			"d.id, oh, doh.medicalAttentionTypeId, doh.overturnCount, doh.externalAppointmentsAllowed, " +
-			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, doh.secondOpinionVirtualAttentionAllowed) " +
+			"doh.protectedAppointmentsAllowed, doh.onSiteAttentionAllowed, doh.patientVirtualAttentionAllowed, " +
+			"doh.secondOpinionVirtualAttentionAllowed, doh.regulationProtectedAppointmentsAllowed) " +
 			"FROM DiaryOpeningHours AS doh " +
 			"JOIN Diary AS d ON ( doh.pk.diaryId = d.id ) " +
 			"JOIN OpeningHours AS oh ON ( doh.pk.openingHoursId = oh.id ) " +

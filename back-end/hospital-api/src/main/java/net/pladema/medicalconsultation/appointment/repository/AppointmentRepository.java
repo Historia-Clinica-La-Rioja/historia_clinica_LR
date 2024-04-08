@@ -12,6 +12,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import net.pladema.clinichistory.requests.servicerequests.domain.WorklistBo;
 import net.pladema.establishment.repository.entity.HierarchicalUnit;
+import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentBookingVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
@@ -20,6 +21,13 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 
 import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
+
+import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -39,13 +47,14 @@ import net.pladema.medicalconsultation.appointment.repository.entity.Appointment
 public interface AppointmentRepository extends SGXAuditableEntityJPARepository<Appointment, Integer>, SGXDocumentEntityRepository<Appointment> {
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
             "LEFT JOIN HistoricAppointmentState AS has ON (a.id = has.pk.appointmentId) " +
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 			"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
+			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
             "WHERE a.id = :appointmentId " +
 			"AND doh.pk.openingHoursId = aa.pk.openingHoursId " +
 			"AND a.deleteable.deleted = FALSE " +
@@ -84,13 +93,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
             "aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
             "a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
             "JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = aa.pk.diaryId) " +
 			"JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 			"JOIN Person p ON (us.pk.personId = p.id) " +
 			"JOIN PersonExtended pex ON (p.id = pex.id) " +
+			"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
+			"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
+			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
             "WHERE aa.pk.diaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND aa.pk.openingHoursId = doh.pk.openingHoursId " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
@@ -101,13 +113,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 			"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 			"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
-			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
+			"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
 			"FROM Appointment AS a " +
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 			"JOIN EquipmentDiaryOpeningHours AS edoh ON (edoh.pk.equipmentDiaryId = eaa.pk.equipmentDiaryId) " +
 			"JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 			"JOIN Person p ON (us.pk.personId = p.id) " +
 			"JOIN PersonExtended pex ON (p.id = pex.id) " +
+			"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
+			"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
+			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
 			"WHERE eaa.pk.equipmentDiaryId = :diaryId AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR +
 			"AND eaa.pk.openingHoursId = edoh.pk.openingHoursId " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL ) " +
@@ -262,10 +277,11 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentAssignedForPatientVo(" +
-			"hp.licenseNumber, up.pk.userId, a.dateTypeId, a.hour, do.description)" +
+			"a.id, hp.licenseNumber, up.pk.userId, a.dateTypeId, a.hour, do.description, cs.name)" +
 			"FROM Appointment AS a " +
 			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
+			"JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
 			"JOIN HealthcareProfessional  AS hp ON (hp.id = d.healthcareProfessionalId) " +
 			"JOIN UserPerson AS up ON (up.pk.personId = hp.personId )" +
 			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId )" +
@@ -307,6 +323,25 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)")
 	List<Appointment> findBlockedAppointmentBy(@Param("diaryId") Integer diaryId,
 											   @Param("date") LocalDate date, @Param("hour") LocalTime hour);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentBookingVo(" +
+			"p.firstName, p.middleNames, p.lastName, p.otherLastNames, a.dateTypeId, a.hour, do.description, cs.name) " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId ) " +
+			"JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"JOIN HealthcareProfessional AS hp ON (hp.id = d.healthcareProfessionalId) " +
+			"JOIN Person p ON (hp.personId = p.id) " +
+			"JOIN UserPerson AS up ON (up.pk.personId = hp.personId ) " +
+			"JOIN DoctorsOffice do ON (do.id = d.doctorsOfficeId ) " +
+			"JOIN BookingAppointment ba ON (a.id = ba.pk.appointmentId) " +
+			"JOIN BookingPerson bp ON (ba.pk.bookingPersonId = bp.id) " +
+			"WHERE bp.identificationNumber LIKE :identificationNumber AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
+			"AND a.dateTypeId >= current_date " +
+			"AND a.appointmentStateId = " + AppointmentState.BOOKED )
+	List<AppointmentBookingVo> getCompleteBookingAppointmentInfo(@Param("identificationNumber") String identificationNumber);
+
 
 	@Transactional(readOnly = true)
 	@Query(	"SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo(" +
@@ -460,6 +495,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Person pe ON p.personId = pe.id " +
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"WHERE e.modalityId = :modalityId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND aoi.destInstitutionId = :institutionId " +
 			"AND doi.completedOn BETWEEN :startDate AND :endDate " +
 			"AND aoi.completed = true " +
@@ -492,6 +528,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Person pe ON p.personId = pe.id " +
 			"JOIN PersonExtended pex ON pe.id = pex.id " +
 			"WHERE aoi.destInstitutionId = :institutionId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND aoi.completed = true " +
 			"AND doi.completedOn BETWEEN :startDate AND :endDate " +
 			"AND a.id NOT IN ( SELECT aoi2.pk.appointmentId " +
@@ -507,15 +544,20 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 													 @Param("endDate") LocalDateTime endDate);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, pe.firstName, pe.middleNames, pe.lastName, pe.otherLastNames, pex.nameSelfDetermination)" +
-			"FROM Appointment a " +
-			"JOIN Patient p ON p.id = a.patientId " +
-			"JOIN Person pe ON p.personId = pe.id " +
-			"JOIN PersonExtended pex ON pe.id = pex.id " +
+	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, p.personId, " +
+			"doi.completedOn, doi.observations, i.id, i.name) " +
+			"FROM DetailsOrderImage doi " +
+			"JOIN EquipmentAppointmentAssn eaa ON eaa.pk.appointmentId = doi.appointmentId " +
+			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
+			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"JOIN Sector s ON s.id = e.sectorId " +
+			"JOIN Institution i ON i.id = s.institutionId " +
+			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
+			"JOIN Patient p ON a.patientId = p.id " +
 			"WHERE a.id = :appointmentId " +
 			"AND a.appointmentStateId = " + AppointmentState.SERVED + " " +
-			"AND (a.deleteable.deleted = false OR a.deleteable.deleted is null)" )
-	StudyAppointmentBo getPatientInfoByAppointmentId(@Param("appointmentId") Integer appointmentId);
+			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL)" )
+	StudyAppointmentBo getCompletionInformationAboutStudy(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT a.patientId " +
@@ -540,6 +582,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN AppointmentOrderImage aoi ON a.id = aoi.pk.appointmentId " +
 			"JOIN Document d ON aoi.documentId = d.id " +
 			"WHERE e.modalityId = :modalityId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND d.updateable.updatedOn BETWEEN :startDate AND :endDate " +
 			"AND aoi.destInstitutionId = :institutionId " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
@@ -563,6 +606,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"JOIN Document d ON aoi.documentId = d.id " +
 			"JOIN Institution i ON d.institutionId = i.id " +
 			"WHERE aoi.destInstitutionId = :institutionId " +
+			"AND aoi.reportStatusId != 4 " +
 			"AND d.updateable.updatedOn BETWEEN :startDate AND :endDate " +
 			"AND d.statusId = '" + DocumentStatus.FINAL + "'"	+ "  " +
 			"AND d.sourceTypeId =" + SourceType.MEDICAL_IMAGE + "  " +
@@ -588,4 +632,142 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"WHERE a.id = :appointmentId " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)")
 	Optional<HierarchicalUnit> findDiaryHierarchicalUnitIdByAppointment(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo(a.id, a.appointmentStateId, " +
+			"i.id, i.name, a.dateTypeId, a.hour, a.phonePrefix, a.phoneNumber, a.patientEmail, p.firstName," +
+			" p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn asn ON (a.id = asn.pk.appointmentId) " +
+			"JOIN Diary d ON (asn.pk.diaryId = d.id) " +
+			"JOIN DoctorsOffice dof ON (d.doctorsOfficeId = dof.id) " +
+			"JOIN Institution i ON (dof.institutionId = i.id) " +
+			"JOIN HealthcareProfessional hp ON(d.healthcareProfessionalId = hp.id) " +
+			"JOIN Person p ON (hp.personId = p.id) " +
+			"JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"WHERE a.id IN (:appointmentIds) " +
+			"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
+			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
+			"ORDER BY a.dateTypeId DESC, a.hour ASC")
+	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(@Param("appointmentIds") List<Integer> appointmentIds);
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT DISTINCT NEW net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo(d.id, a.dateTypeId, a.hour, i.name, c.description, hp.personId, cs.name, " +
+			"cs2.name, a.appointmentStateId) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryPractice dp ON (dp.diaryId = d.id) " +
+			"LEFT JOIN Snomed s ON (s.id = dp.snomedId) " +
+			"LEFT JOIN HierarchicalUnit hu ON (hu.id = d.hierarchicalUnitId) " +
+			"LEFT JOIN ClinicalSpecialty cs2 ON (cs2.id = hu.clinicalSpecialtyId) " +
+			"JOIN DoctorsOffice do2 ON (do2.id = d.doctorsOfficeId) " +
+			"JOIN Institution i ON (i.id = do2.institutionId) " +
+			"LEFT JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
+			"JOIN Address a2 ON (a2.id = i.addressId) " +
+			"JOIN City c ON (c.id = a2.cityId) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (a.appointmentStateId = 3 " +
+			"OR a.appointmentStateId = 4 " +
+			"OR a.appointmentStateId = 5)",
+		countQuery = " SELECT COUNT(DISTINCT a.id) " +
+				"FROM Appointment a " +
+				"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
+				"JOIN Diary d ON (d.id = aa.pk.diaryId) " +
+				"LEFT JOIN DiaryPractice dp ON (dp.diaryId = d.id) " +
+				"LEFT JOIN Snomed s ON (s.id = dp.snomedId) " +
+				"LEFT JOIN HierarchicalUnit hu ON (hu.id = d.hierarchicalUnitId) " +
+				"LEFT JOIN ClinicalSpecialty cs2 ON (cs2.id = hu.clinicalSpecialtyId) " +
+				"JOIN DoctorsOffice do2 ON (do2.id = d.doctorsOfficeId) " +
+				"JOIN Institution i ON (i.id = do2.institutionId) " +
+				"LEFT JOIN ClinicalSpecialty cs ON (cs.id = d.clinicalSpecialtyId) " +
+				"JOIN HealthcareProfessional hp ON (hp.id = d.healthcareProfessionalId) " +
+				"JOIN Address a2 ON (a2.id = i.addressId) " +
+				"JOIN City c ON (c.id = a2.cityId) " +
+				"WHERE a.patientId = :patientId " +
+				"AND (a.appointmentStateId = 3 " +
+				"OR a.appointmentStateId = 4 " +
+				"OR a.appointmentStateId = 5)")
+	Page<PatientAppointmentHistoryBo> getPatientHistory(@Param("patientId") Integer patientId, Pageable pageable);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT (CASE WHEN doh.protectedAppointmentsAllowed IS TRUE THEN TRUE" +
+			"				WHEN doh.regulationProtectedAppointmentsAllowed IS TRUE THEN TRUE " +
+			"				ELSE false END) " +
+			"FROM AppointmentAssn asn " +
+			"JOIN DiaryOpeningHours doh ON (asn.pk.openingHoursId = doh.pk.openingHoursId) " +
+			"WHERE asn.pk.appointmentId = :appointmentId " +
+			"AND doh.pk.diaryId = :diaryId")
+	Boolean openingHourAllowedProtectedAppointment(@Param("appointmentId") Integer appointmentId,
+												   @Param("diaryId") Integer diaryId);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE appointment " +
+			"SET diary_label_id = null, " +
+			"updated_on = current_timestamp " +
+			"WHERE id IN (SELECT assn.appointment_id FROM appointment_assn assn WHERE assn.diary_id = :diaryId) " +
+			"AND diary_label_id NOT IN :ids", nativeQuery = true)
+	void deleteLabelFromAppointment(@Param("diaryId") Integer diaryId,
+									@Param("ids") List<Integer> ids);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo(d.id, a.patientId, a.dateTypeId, a.hour, a.modalityId, a.patientEmail, a.callId," +
+			"a.applicantHealthcareProfessionalEmail) " +
+			"FROM Appointment a " +
+			"JOIN AppointmentAssn aa ON (aa.pk.appointmentId = a.id) " +
+			"JOIN Diary d ON (d.id = aa.pk.diaryId) " +
+			"WHERE a.id = :appointmentId")
+	AppointmentBo getEmailNotificationData(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.patientEmail = :patientEmail WHERE a.id = :appointmentId")
+	void updateAppointmentPatientEmail(@Param("appointmentId") Integer appointmentId, @Param("patientEmail") String patientEmail);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.modalityId = :modalityId WHERE a.id = :appointmentId")
+	void updateAppointmentModalityId(@Param("appointmentId") Integer appointmentId, @Param("modalityId") Short modalityId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.callId = :callId WHERE a.id = :appointmentId")
+	void updateCallId(@Param("appointmentId") Integer appointmentId, @Param("callId") String callId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Appointment a SET a.callId = NULL, a.patientEmail = NULL WHERE a.id = :appointmentId")
+	void removeVirtualAttentionAttributes(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT (CASE WHEN COUNT(a.id) > 0 THEN TRUE ELSE FALSE END) " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary AS d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthcareProfessionalId) " +
+			"AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR + " " +
+			"AND a.dateTypeId < CURRENT_DATE " +
+			"AND a.dateTypeId >= :minDateLimit")
+	Boolean hasOldAppointmentWithMinDateLimitByPatientId(@Param("patientId") Integer patientId,
+											  @Param("healthcareProfessionalId") Integer healthcareProfessionalId,
+											  @Param("minDateLimit") LocalDate minDateLimit);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT (CASE WHEN COUNT(a.id) > 0 THEN TRUE ELSE FALSE END) " +
+			"FROM Appointment AS a " +
+			"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+			"JOIN Diary AS d ON (d.id = aa.pk.diaryId) " +
+			"LEFT JOIN DiaryAssociatedProfessional AS dap ON (dap.diaryId = d.id) " +
+			"WHERE a.patientId = :patientId " +
+			"AND (d.healthcareProfessionalId = :healthcareProfessionalId " +
+			"OR dap.healthcareProfessionalId = :healthcareProfessionalId) " +
+			"AND a.appointmentStateId <> " + AppointmentState.CANCELLED_STR + " " +
+			"AND a.dateTypeId > CURRENT_DATE")
+	Boolean hasFutureAppointmentsByPatientId(@Param("patientId") Integer patientId,
+								 			 @Param("healthcareProfessionalId") Integer healthcareProfessionalId);
 }

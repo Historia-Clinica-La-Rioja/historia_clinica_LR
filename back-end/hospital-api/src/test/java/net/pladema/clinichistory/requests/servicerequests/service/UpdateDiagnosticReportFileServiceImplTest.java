@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.DiagnosticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import net.pladema.UnitRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
@@ -19,6 +21,9 @@ class UpdateDiagnosticReportFileServiceImplTest extends UnitRepository {
 
     @Autowired
     private  DiagnosticReportFileRepository diagnosticReportFileRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
     @BeforeEach
     void setUp() {

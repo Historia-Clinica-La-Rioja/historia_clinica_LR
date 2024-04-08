@@ -1,10 +1,17 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
+
+import ar.lamansys.sgh.clinichistory.domain.document.OrderImageFileReducedBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
+import net.pladema.establishment.controller.dto.OrderImageFileInfoDto;
 
 @Builder
 @ToString
@@ -40,4 +47,14 @@ public class EquipmentAppointmentListDto {
 
 	private final Integer serviceRequestId;
 
+	private final Integer transcribedServiceRequestId;
+
+	@Nullable
+	private List<OrderImageFileInfoDto> transcribedOrderAttachedFiles;
+
+	public void mapTranscribedOrderAttachedFiles(List<OrderImageFileReducedBo> transcribedOrderAttachedFiles) {
+		this.transcribedOrderAttachedFiles = transcribedOrderAttachedFiles.stream().map(files -> {
+			return new OrderImageFileInfoDto(files.getId(), files.getName());
+		}).collect(Collectors.toList());
+	}
 }

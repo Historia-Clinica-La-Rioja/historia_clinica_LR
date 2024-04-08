@@ -13,6 +13,8 @@ public class AnnexIIDto {
 
     private String completePatientName;
 
+	private String formalPatientName;
+
     private String documentType;
 
     private String documentNumber;

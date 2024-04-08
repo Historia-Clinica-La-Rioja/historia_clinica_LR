@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ExternalClinicalHistorySummaryDto } from '@api-rest/api-model';
+import { ErrorProblemDto, ExternalClinicalHistorySummaryDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -26,4 +26,8 @@ export class ExternalClinicalHistoryService {
 		return this.http.get<ExternalClinicalHistorySummaryDto[]>(url);
 	}
 
+	public markProblemAsError(patientId: number, problemDto: ErrorProblemDto): Observable<boolean>{
+		const url = `${this.URL_BASE}/${patientId}/${this.SUFFIX_URL}/markProblemAsError`;
+		return this.http.post<boolean>(url, problemDto);
+	}
 }

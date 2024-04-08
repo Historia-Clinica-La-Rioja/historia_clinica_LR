@@ -38,6 +38,7 @@ public class HCHProcedureRepository {
 		"i.status_id, " +
 		"i.performed_date, " +
 		"i.updated_on, " +
+		"i.procedure_type_id, " +
 		"row_number() over (partition by i.snomed_id, i.performed_date order by i.updated_on desc) as rw " +
 		"from {h-schema}document d " +
 		"join {h-schema}document_procedure di on (d.id = di.document_id) " +
@@ -46,7 +47,7 @@ public class HCHProcedureRepository {
 		"and d.source_type_id = " + SourceType.HOSPITALIZATION +
 		"and d.status_id IN (:documentStatusId) " +
 		") " +
-		"select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.performed_date " +
+		"select t.id as id, s.sctid as sctid, s.pt, t.status_id, t.performed_date, t.procedure_type_id " +
 		"from temporal t " +
 		"join {h-schema}snomed s on t.snomed_id = s.id " +
 		"where rw = 1 and not status_id = :procedureStatusId " +
@@ -63,7 +64,8 @@ public class HCHProcedureRepository {
 					(Integer) i[0],
 					new Snomed((String) i[1], (String) i[2], null, null),
 					(String) i[3],
-					date != null ? date.toLocalDate() : null));
+					date != null ? date.toLocalDate() : null,
+					(Short) i[5]));
 		});
 		log.debug(OUTPUT, result);
 		return result;

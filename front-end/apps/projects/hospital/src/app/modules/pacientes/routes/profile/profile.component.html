@@ -22,7 +22,7 @@
 		<div fxFlex="50" fxFlex.lt-md="100">
 			<div>
 				<app-patient-card *ngIf="personPhoto" [patient]="patientBasicData" [personPhoto]="personPhoto"
-					[internmentEpisodeProcess]="internmentEpisode"
+					[internmentEpisodeInProgress]="internmentEpisode?.id && internmentEpisode?.inProgress"
 					[emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress?.inProgress">
 					<div header class="header">
 						<app-patient-type-logo [patientTypeData]="patientTypeData"></app-patient-type-logo>
@@ -195,7 +195,13 @@
 				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId" showNewTriage="true">
 				</app-resumen-de-guardia>
 
-				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId" (newAppointmentRequired)="newAppointment()">
+				<app-booking-appointments *appHasRole="['ADMINISTRATIVO']"
+					[identificationNumber]="personalInformation?.identificationNumber"
+					(newAppointmentRequired)="newAppointment()">
+				</app-booking-appointments>
+
+				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId"
+					(newAppointmentRequired)="newAppointment()">
 				</app-assigned-appointments>
 			</div>
 		</div>

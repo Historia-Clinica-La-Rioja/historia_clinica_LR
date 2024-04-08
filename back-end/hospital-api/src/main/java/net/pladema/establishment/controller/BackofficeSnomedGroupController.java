@@ -35,7 +35,7 @@ public class BackofficeSnomedGroupController extends AbstractBackofficeControlle
 					public Example<SnomedGroup> buildExample(SnomedGroup entity) {
 						ExampleMatcher matcher = ExampleMatcher
 								.matching()
-								.withMatcher("description", ExampleMatcher.GenericPropertyMatchers.exact());
+								.withMatcher("description", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 						return Example.of(entity, matcher);
 					}
 				}

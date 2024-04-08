@@ -1,12 +1,9 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
 
-import java.io.IOException;
-
-import javax.validation.Valid;
-
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
+import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.constraints.HasAppointment;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
@@ -17,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "Outpatient consultation", description = "Outpatient consultation")
@@ -47,4 +44,5 @@ public interface OutpatientConsultationAPI {
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestBody @Valid HealthConditionNewConsultationDto solvedProblemDto) throws IOException, PDFDocumentException;
+
 }

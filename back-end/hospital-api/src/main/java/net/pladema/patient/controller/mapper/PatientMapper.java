@@ -4,7 +4,6 @@ import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.patient.controller.dto.APatientDto;
 import net.pladema.patient.controller.dto.LimitedPatientSearchDto;
 import net.pladema.patient.controller.dto.MergedPatientSearchDto;
-import net.pladema.patient.controller.dto.MergedPatientSearchFilter;
 import net.pladema.patient.controller.dto.PatientRegistrationSearchDto;
 import net.pladema.patient.controller.dto.PatientSearchDto;
 import net.pladema.patient.repository.entity.Patient;

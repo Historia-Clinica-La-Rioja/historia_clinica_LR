@@ -8,7 +8,7 @@ import {
 	HCEAnthropometricDataDto,
 	HCELast2RiskFactorsDto,
 	HCEMedicationDto,
-	HCEPersonalHistoryDto,
+	HCEHealthConditionDto,
 	PatientMedicalCoverageDto,
 	PersonalInformationDto,
 	PersonPhotoDto,
@@ -31,14 +31,14 @@ export class PatientPortalService {
 		return this.http.get<HCEAllergyDto[]>(url);
 	}
 
-	getFamilyHistories(): Observable<HCEPersonalHistoryDto[]> {
+	getFamilyHistories(): Observable<HCEHealthConditionDto[]> {
 		const url = `${this.URL_BASE}familyHistories`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
-	getPersonalHistories(): Observable<HCEPersonalHistoryDto[]> {
+	getPatientProblems(): Observable<HCEHealthConditionDto[]> {
 		const url = `${this.URL_BASE}personalHistories`;
-		return this.http.get<HCEPersonalHistoryDto[]>(url);
+		return this.http.get<HCEHealthConditionDto[]>(url);
 	}
 
 	getMedications(): Observable<HCEMedicationDto[]> {

@@ -66,7 +66,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 						"aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
+						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
 						"FROM Appointment AS a " +
 						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 						"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
@@ -75,6 +75,9 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
 						"LEFT JOIN PersonExtended pex ON (p.id = pex.id) " +
+						"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
+						"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
+						"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
 						"WHERE d.healthcareProfessionalId = :healthcareProfessionalId " +
 						"AND do.institutionId = :institutionId " +
 						"AND d.active = true " +
@@ -102,7 +105,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 						"aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames)" +
+						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl)" +
 						"FROM Appointment AS a " +
 						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 						"JOIN Diary d ON (d.id = aa.pk.diaryId ) " +
@@ -110,6 +113,9 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
 						"LEFT JOIN PersonExtended pex ON (p.id = pex.id) " +
+						"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
+						"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
+						"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
 						"WHERE aa.pk.diaryId IN (:diaryIds) AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
 						(from!=null ? "AND a.dateTypeId >= :from " : "") +
 						(to!=null ? "AND a.dateTypeId <= :to " : "") +
@@ -134,7 +140,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 						"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
-						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames)" +
+						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl)" +
 						"FROM Appointment AS a " +
 						"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 						"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId ) " +
@@ -142,6 +148,9 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 						"JOIN Person p ON (us.pk.personId = p.id) " +
 						"JOIN PersonExtended pex ON (p.id = pex.id) " +
+						"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
+						"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
+						"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
 						"WHERE eaa.pk.equipmentDiaryId = :equipmentDiaryId" +
 						" AND (ed.deleteable.deleted = false OR ed.deleteable.deleted is null ) " +
 						(from!=null ? "AND a.dateTypeId >= :from " : "") +

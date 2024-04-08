@@ -1,19 +1,22 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto;
 
-import lombok.*;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class HCEClinicalTermDto implements Serializable {
+public abstract class HCEClinicalTermDto {
 
     /**
 	 * 

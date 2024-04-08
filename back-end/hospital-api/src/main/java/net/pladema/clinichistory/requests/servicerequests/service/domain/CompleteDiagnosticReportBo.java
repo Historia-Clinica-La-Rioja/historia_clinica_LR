@@ -15,4 +15,7 @@ public class CompleteDiagnosticReportBo {
 
     @Nullable
     private String link;
+
+	@Nullable
+	private ReferenceRequestClosureBo referenceClosure;
 }

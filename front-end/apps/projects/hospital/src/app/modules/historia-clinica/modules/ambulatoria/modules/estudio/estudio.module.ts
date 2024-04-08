@@ -13,6 +13,7 @@ import { StudyListElementComponent } from './components/study-list-element/study
 import { StudyComponent } from './components/study/study.component';
 import { ImageNetworkModule } from 'projects/hospital/src/app/modules/image-network/image-network.module';
 import { StudyImagesReportsComponent } from './components/study-images-reports/study-images-reports.component';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @NgModule({
 	declarations: [
@@ -42,6 +43,9 @@ import { StudyImagesReportsComponent } from './components/study-images-reports/s
 		StudyOtherProceduresAndPracticesCardComponent,
 		StudyAdviceCardComponent,
 		StudyEducationCardComponent
+	],
+	providers: [
+		AmbulatoriaSummaryFacadeService
 	]
 })
 export class EstudioModule { }

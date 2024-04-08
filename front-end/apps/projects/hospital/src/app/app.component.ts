@@ -3,15 +3,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 import { PwaInstallService } from '@core/services/pwa-install.service';
 import { PwaUpdateService } from '@core/services/pwa-update.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-
-import { AppFeature } from '@api-rest/api-model';
-import { Theme } from '@core/components/exchangeable-theme/exchangeable-theme.component';
+import { AppThemeService } from '@core/services/app-theme.service';
 
 export const DEFAULT_LANG = 'es-AR';
 
@@ -21,8 +18,8 @@ export const DEFAULT_LANG = 'es-AR';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	selectedTheme: Theme;
 	isExchangeableTheme$: Observable<boolean>;
+	selectedThemeClass$: Observable<string>;
 	constructor(
 		translate: TranslateService,
 		titleService: Title,
@@ -31,7 +28,7 @@ export class AppComponent {
 		snackBarService: SnackBarService,
 		private matIconRegistry: MatIconRegistry,
 		private domSanitizer: DomSanitizer,
-		private readonly featureFlagService: FeatureFlagService,
+		private readonly appThemeService: AppThemeService
 	) {
 		translate.setDefaultLang(DEFAULT_LANG);
 		translate.use(DEFAULT_LANG);
@@ -121,7 +118,7 @@ export class AppComponent {
 
 		pwaUpdateService.checkForUpdate();
 
-		this.isExchangeableTheme$ = this.featureFlagService.isActive(AppFeature.HABILITAR_INTERCAMBIO_TEMAS);
+		this.selectedThemeClass$ = this.appThemeService.theme$.pipe(map(theme => theme.class));
 	}
 
 }

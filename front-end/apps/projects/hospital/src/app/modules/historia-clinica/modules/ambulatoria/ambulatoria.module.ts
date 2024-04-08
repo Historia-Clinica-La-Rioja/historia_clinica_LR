@@ -11,6 +11,7 @@ import { HistoriaClinicaModule } from '../../historia-clinica.module';
 import { PacientesModule } from '../../../pacientes/pacientes.module';
 import { OdontologiaModule } from '../odontologia/odontologia.module';
 import { AmbulatoriaRoutingModule } from './ambulatoria-routing.module';
+import { AccessManagementModule } from '@access-management/access-management.module';
 
 import { HomeComponent } from './routes/home/home.component';
 import { PatientProfileComponent } from './routes/patient-profile/patient-profile.component';
@@ -73,6 +74,29 @@ import { EmergencyCareProblemsComponent } from './components/emergency-care-prob
 import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popup/patient-validator-popup.component';
 import { PrintAmbulatoriaComponent } from './routes/print-ambulatoria/print-ambulatoria.component';
 import { SearchSnomedConceptComponent } from './dialogs/search-snomed-concept/search-snomed-concept.component';
+import { ProblemsOptionsMenuComponent } from './components/problems-options-menu/problems-options-menu.component';
+import { AmendProblemComponent } from './dialogs/amend-problem/amend-problem.component';
+import { AmendedProblemsComponent } from './components/amended-problems/amended-problems.component';
+import { ViewDatailsBtnComponent } from './components/view-datails-btn/view-datails-btn.component';
+import { AmendedProblemsInformationComponent } from './components/amended-problems-information/amended-problems-information.component';
+import { ReferenceRequestDataComponent } from './components/reference-request-data/reference-request-data.component';
+import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
+import { ReferenceStudyCloseComponent } from './components/reference-study-close/reference-study-close.component';
+import { ReferenceCompleteStudyComponent } from './components/reference-complete-study/reference-complete-study.component';
+import { ReferenceStudyClosureInformationComponent } from './components/reference-study-closure-information/reference-study-closure-information.component';
+import { ReferenceStudyComponent } from './components/reference-study/reference-study.component';
+import { NewConsultationPersonalHistoryFormComponent } from './dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
+import { PersonalHistoryViewDetailsComponent } from './dialogs/personal-history-view-details/personal-history-view-details.component';
+import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
+import { ViolenceSituationsComponent } from './components/violence-situations/violence-situations.component';
+import { ViolenceSituationDockPopupComponent } from './dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
+import { ViolenceSituationPersonInformationComponent } from './components/violence-situation-person-information/violence-situation-person-information.component';
+import { NewViolenceEpisodeSectionComponent } from './components/new-violence-episode-section/new-violence-episode-section.component';
+import { ViolenceSituationRelevantInformationSectionComponent } from './components/violence-situation-relevant-information-section/violence-situation-relevant-information-section.component';
+import { ViolenceSituationImplementedActionsComponent } from './components/violence-situation-implemented-actions/violence-situation-implemented-actions.component';
+import { ViolenceSituationViolentPersonInformationComponent } from './components/violence-situation-violent-person-information/violence-situation-violent-person-information.component';
+import { NewViolentPersonInfomationComponent } from './dialogs/new-violent-person-infomation/new-violent-person-infomation.component';
+import { ViolenceSituationListComponent } from './components/violence-situation-list/violence-situation-list.component';
 import { TablaSapComponent } from './components/tabla-sap/tabla-sap.component';
 import { AdultoMayorComponent } from '@historia-clinica/components/emergente/inicio-estudio/inicio-estudio.component';
 import { EstudiosPopupComponent } from '@historia-clinica/components/emergente/pop-up/estudios-popup.component';
@@ -137,6 +161,28 @@ import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fi
 		PatientValidatorPopupComponent,
 		PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
+		ProblemsOptionsMenuComponent,
+		AmendProblemComponent,
+		AmendedProblemsComponent,
+		ViewDatailsBtnComponent,
+		AmendedProblemsInformationComponent,
+		ReferenceRequestDataComponent,
+		ReferenceStudyCloseComponent,
+		ReferenceCompleteStudyComponent,
+		ReferenceStudyClosureInformationComponent,
+		ReferenceStudyComponent,
+		NewConsultationPersonalHistoryFormComponent,
+		PersonalHistoryViewDetailsComponent,
+		ViolenceSituationsComponent,
+		ViolenceSituationDockPopupComponent,
+		ViolenceSituationPersonInformationComponent,
+		NewViolenceEpisodeSectionComponent,
+		ViolenceSituationRelevantInformationSectionComponent,
+		ViolenceSituationImplementedActionsComponent,
+		ViolenceSituationViolentPersonInformationComponent,
+		NewViolentPersonInfomationComponent,
+		ViolenceSituationImplementedActionsComponent,
+		ViolenceSituationListComponent,
 		TablaSapComponent,
 		EstudiosPopupComponent,
 		AdultoMayorComponent,
@@ -145,7 +191,7 @@ import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fi
 		GetFrailComponent,
 		LatestStudiesComponent,
 		DesempenoFisicoComponent,
-  InputDesempenoComponent
+		InputDesempenoComponent
 
 	],
 	imports: [
@@ -157,6 +203,7 @@ import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fi
 		ExtensionsModule,
 		HistoriaClinicaModule,
 		AmbulatoriaRoutingModule,
+		AccessManagementModule,
 		PacientesModule,
 		OdontologiaModule,
 		ClipboardModule,
@@ -165,7 +212,10 @@ import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fi
 		EstudioModule,
 		TurnosModule,
 		ClapModule,
-		GuardiaModule
+		GuardiaModule,
+		//Standalone Component
+		IdentifierCasesComponent,
+		ReferenceStateLabelComponent,
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,

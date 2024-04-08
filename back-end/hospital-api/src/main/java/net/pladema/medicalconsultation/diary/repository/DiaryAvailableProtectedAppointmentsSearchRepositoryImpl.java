@@ -26,13 +26,13 @@ public class DiaryAvailableProtectedAppointmentsSearchRepositoryImpl implements 
 	@Override
 	public List<DiaryAvailableProtectedAppointmentsInfoBo> getAllDiaryProtectedAppointmentsByFilter(DiaryProtectedAppointmentsSearch diaryProtectedAppointmentsSearch) {
 		DiaryAvailableProtectedAppointmentsSearchQuery diaryProtectedAppointmentsSearchQuery = new DiaryAvailableProtectedAppointmentsSearchQuery(diaryProtectedAppointmentsSearch);
-		QueryPart queryPart = buildQuery(diaryProtectedAppointmentsSearchQuery, diaryProtectedAppointmentsSearch);
+		QueryPart queryPart = buildQuery(diaryProtectedAppointmentsSearchQuery);
 		Query query = entityManager.createNativeQuery(queryPart.toString());
 		queryPart.configParams(query);
 		return diaryProtectedAppointmentsSearchQuery.construct(query.getResultList());
 	}
 
-	private QueryPart buildQuery(DiaryAvailableProtectedAppointmentsSearchQuery appointmentsSearchQuery, DiaryProtectedAppointmentsSearch searchFilter){
+	private QueryPart buildQuery(DiaryAvailableProtectedAppointmentsSearchQuery appointmentsSearchQuery){
 		QueryPart queryPart = new QueryPart(
 				"SELECT ")
 				.concatPart(appointmentsSearchQuery.select())

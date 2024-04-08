@@ -1,19 +1,26 @@
 package net.pladema.establishment.service.impl;
 
+import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
 import net.pladema.establishment.repository.BedRepository;
 import net.pladema.establishment.repository.BedSummaryRepository;
+import net.pladema.establishment.repository.HistoricInchargeNurseBedRepository;
 import net.pladema.establishment.repository.HistoricPatientBedRelocationRepository;
 import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
+import net.pladema.establishment.repository.entity.HistoricInchargeNurseBed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
+import net.pladema.person.service.PersonService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +40,19 @@ public class BedServiceImpl implements BedService {
 
 	private final InternmentEpisodeExternalService internmentEpisodeExtService;
 
+	private final PersonService personService;
+
+	private final HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository;
+
 	public BedServiceImpl(BedRepository bedRepository, HistoricPatientBedRelocationRepository historicPatientBedRelocationRepository,
-			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository) {
+			InternmentEpisodeExternalService internmentEpisodeExtService, BedSummaryRepository bedSummaryRepository, PersonService personService,
+			HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository) {
 		this.bedRepository = bedRepository;
 		this.bedSummaryRepository = bedSummaryRepository;
 		this.historicPatientBedRelocationRepository = historicPatientBedRelocationRepository;
 		this.internmentEpisodeExtService = internmentEpisodeExtService;
+		this.personService = personService;
+		this.historicInchargeNurseBedRepository = historicInchargeNurseBedRepository;
 	}
 
 	@Override
@@ -104,6 +118,10 @@ public class BedServiceImpl implements BedService {
 	public Optional<BedInfoVo> getBedInfo(Integer bedId) {
 		LOG.debug("input parameters -> bedId {}", bedId);
 		Optional<BedInfoVo> result = bedRepository.getBedInfo(bedId).findFirst();
+		if (result.isPresent() && result.get().getBedNurse() != null) {
+			BedInfoVo r = result.get();
+			r.getBedNurse().setFullName(personService.getCompletePersonNameById(r.getBedNurse().getPersonId()));
+		}
 		LOG.debug(OUTPUT, result);
 		return result;
 	}
@@ -117,4 +135,27 @@ public class BedServiceImpl implements BedService {
 		return result;
 	}
 
+	@Override
+	public void updateBedNurse(Integer userId, Integer bedId) {
+		LOG.debug("input parameters -> userId {}, bedId {}", userId, bedId);
+		Bed bed = bedRepository.getById(bedId);
+		bed.setInchargeNurseId(userId);
+		bedRepository.save(bed);
+		updatePreviousHistoricInchargeNurseBed(bedId);
+		historicInchargeNurseBedRepository.save(
+				new HistoricInchargeNurseBed(
+						userId,
+						bedId,
+						UserInfo.getCurrentAuditor()
+				)
+		);
+	}
+
+	private void updatePreviousHistoricInchargeNurseBed(Integer bedId) {
+		List<HistoricInchargeNurseBed> historic = historicInchargeNurseBedRepository.getLatestHistoricInchargeNurseBedByBedId(bedId, PageRequest.of(0, 1));
+		if (!historic.isEmpty()) {
+			historic.get(0).setUntilDate(LocalDateTime.now());
+			historicInchargeNurseBedRepository.save(historic.get(0));
+		}
+	}
 }

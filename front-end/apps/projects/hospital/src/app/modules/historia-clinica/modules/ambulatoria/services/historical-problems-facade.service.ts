@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
 	ClinicalSpecialtyDto,
+	HCEErrorProblemDto,
 	HCEEvolutionSummaryDto,
 	HCEReferenceDto
 } from '@api-rest/api-model';
@@ -25,6 +26,8 @@ export class HistoricalProblemsFacadeService {
 	private historicalProblems$: Observable<HistoricalProblems[]>;
 	private historicalProblemsFilterSubject = new ReplaySubject<HistoricalProblemsFilter>(1);
 	private historicalProblemsFilter$: Observable<HistoricalProblemsFilter>;
+	private filterOptionsSubject = new ReplaySubject<FilterOptions>(1);
+	private filterOptions$: Observable<FilterOptions>;
 	private originalHistoricalProblems: HistoricalProblems[] = [];
 
 	constructor(
@@ -33,9 +36,11 @@ export class HistoricalProblemsFacadeService {
 	) {
 		this.historicalProblems$ = this.historicalProblemsSubject.asObservable();
 		this.historicalProblemsFilter$ = this.historicalProblemsFilterSubject.asObservable();
+		this.filterOptions$ = this.filterOptionsSubject.asObservable();
 	}
 
 	setPatientId(patientId: number): void {
+		this.resetProblemsFilter();
 		this.loadEvolutionSummaryList(patientId);
 	}
 
@@ -46,6 +51,7 @@ export class HistoricalProblemsFacadeService {
 		).subscribe(data => {
 			this.originalHistoricalProblems = data;
 			this.sendHistoricalProblems(this.originalHistoricalProblems);
+			this.updateFilterOptions();
 		});
 	}
 
@@ -93,7 +99,7 @@ export class HistoricalProblemsFacadeService {
 	private filterByReference(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
 		switch (filter.referenceStateId) {
 			case REFERENCE_STATES.WITH_REFERENCES:
-				return problem.reference !== null;
+				return ((problem.reference !== null) && (!problem.reference.filter(ref => ref.cancelled).length));
 
 			case REFERENCE_STATES.WITHOUT_REFERENCES:
 				return problem.reference === null;
@@ -112,13 +118,22 @@ export class HistoricalProblemsFacadeService {
 		}
 	}
 
-	public getFilterOptions() {
-		return {
+	public updateFilterOptions() {
+		this.filterOptionsSubject.next({
 			specialties: this.specialties,
 			professionals: this.professionals,
 			problems: this.problems,
 			referenceStates: this.referenceStates,
-		};
+		});
+	}
+
+	private resetProblemsFilter() {
+		this.historicalProblemsFilterSubject.next(null);
+		this.problems = [];
+	}
+
+	public getFilterOptions(): Observable<FilterOptions>{
+		return this.filterOptions$;
 	}
 
 	private filterOptions(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): void {
@@ -193,5 +208,14 @@ export class HistoricalProblems {
 			procedurePt: string;
 		}[];
 	reference: HCEReferenceDto[];
+	markedAsError?: boolean;
+	color?: string;
+	errorProblem?: HCEErrorProblemDto;
 }
 
+export interface FilterOptions {
+	specialties: ClinicalSpecialtyDto[],
+	professionals: Professional[],
+	problems: Problem[],
+	referenceStates: REFERENCE_STATES[],
+}

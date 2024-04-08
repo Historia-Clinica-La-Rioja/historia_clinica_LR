@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.annotation.Nullable;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,9 @@ public class DiagnosticReportInfoDto {
 	@Nullable
 	private PatientMedicalCoverageDto coverageDto;
 
+	@Nullable
+	private ReferenceRequestDto referenceRequestDto;
+
     public DiagnosticReportInfoDto( DiagnosticReportInfoDto diagnosticReportInfoDto) {
         this.snomed = diagnosticReportInfoDto.getSnomed();
         this.healthCondition = diagnosticReportInfoDto.getHealthCondition();
@@ -51,5 +55,6 @@ public class DiagnosticReportInfoDto {
         this.serviceRequestId = diagnosticReportInfoDto.getServiceRequestId();
         this.creationDate = diagnosticReportInfoDto.creationDate;
 		this.category = diagnosticReportInfoDto.getCategory();
+		this.referenceRequestDto = diagnosticReportInfoDto.getReferenceRequestDto();
     }
 }

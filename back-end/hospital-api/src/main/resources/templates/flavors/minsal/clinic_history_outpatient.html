@@ -6,24 +6,21 @@
         .bordered {
             padding: 8px;
             border: 1px solid black;
+            border-collapse: collapse;
         }
     </style>
 </head>
 
 <body>
 
+    <div th:replace="fragments/clinic_history_general.html :: header"></div>
     <div th:replace="fragments/clinic_history_general.html :: footer"></div>
 
     <table>
         <thead>
             <tr>
                 <td colspan="2">
-                    <div th:replace="fragments/clinic_history_general.html :: header"></div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div th:replace="fragments/clinic_history_general.html :: encounterData"></div>
+                    <div style="height: 290px;"></div>
                 </td>
             </tr>
             <tr>
@@ -32,21 +29,23 @@
                 </td>
             </tr>
             <tr>
-                <td style="padding-top: 10px;" colspan="2">
+                <td colspan="2">
                     <h3>Registro Clínico</h3>
                 </td>
             </tr>
         </thead>
         <tbody>
-            <tr class="bordered" th:each="record, iter: ${clinicalRecords}">
-                <td class="bordered wide_wrapped_text" style="width: 12%; text-align: center;" th:text="${record.prefix}"></td>
-                <td class="bordered wide_wrapped_text" style="width: 64%;" th:utext="${record.description}"></td>
-            </tr>
+            <div style="margin: 0; padding: 0;">
+                <tr class="bordered" th:each="record, iter: ${clinicalRecords}">
+                    <td class="bordered wide_wrapped_text" style="width: 12%; text-align: center;" th:text="${record.prefix}"></td>
+                    <td class="bordered wide_wrapped_text" style="width: 64%;" th:utext="${record.description}"></td>
+                </tr>
+            </div>
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="2">
-                    <div style="height: 25px;"></div>
+                    <div style="height: 30px;"></div>
                 </td>
             </tr>
         </tfoot>

@@ -4,7 +4,7 @@
 		"SHORT_NAME": "HSI",
 		"menu": {
 			"AMBULATORIA": "Historia Clínica",
-			"CAMAS": "Gestión de camas",
+			"CAMAS": "Camas",
 			"CONFIGURACION": "Configuración",
 			"GUARDIA": "Guardia",
 			"INSTITUCIONES": "Instituciones",
@@ -13,13 +13,15 @@
 			"MIS_DATOS_PERSONALES": "Mis Datos Personales",
 			"PACIENTES": "Pacientes",
 			"PERFIL": "Mi cuenta",
-			"TURNOS": "Gestión de turnos",
+			"TURNOS": "Turnos",
 			"LISTADO_DE_TRABAJO": "Listado de trabajo",
 			"REPORTES": "Reportes",
 			"REPORTES_PROVINCIALES": "Reportes provinciales",
 			"LOGOUT": "Cerrar sesión",
 			"AUDIT": "Auditoria",
-			"TELEMEDICINE":"TeleSalud"
+			"TELEMEDICINE":"TeleSalud",
+			"DIGITAL_SIGNATURE": "Firma digital",
+			"ACCESS_MANAGEMENT": "Gestión de accesos"
 		}
 	},
 	"buttons": {
@@ -52,7 +54,10 @@
 		"YES_CONTINUE":"Si, continuar",
 		"NO_CANCEL":"No, cancelar",
 		"FILTER":"Filtrar",
-		"IMPORT":"Importar"
+		"IMPORT":"Importar",
+		"PDF_DOWNLOAD": "DESCARGAR .PDF",
+		"SIGN": "Firmar documento",
+		"APPLY_FILTERS": "Aplicar filtros"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
@@ -68,6 +73,7 @@
 		"MAX_TIME_ERROR": "La hora debe ser anterior a la hora actual",
 		"TIME_FORMAT": "La hora debe cumplir con el formato de 24 hs y tener dos dígitos para la hora y los minutos respectivamente",
 		"MAX_DATE_TODAY": "La fecha no puede ser posterior al día de hoy",
+		"MIN_DATE": "La fecha no puede ser anterior a la fecha de inicio",
 		"REQUIRED_INIT_DATE": "Debe ingresar fecha de inicio",
 		"FORMAT_NUMERIC": "El valor debe ser numérico",
 		"FORMAT_NUMERIC_INTEGER": "El valor debe ser un número entero",

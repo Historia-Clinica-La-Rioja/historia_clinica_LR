@@ -1,5 +1,9 @@
 package net.pladema.clinichistory.hospitalization.application.createEpisodeDocument;
 
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
+import net.pladema.staff.repository.entity.EpisodeDocumentType;
+
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +23,12 @@ public class CreateEpisodeDocumentImpl implements CreateEpisodeDocument {
 
 	private final EpisodeDocumentStorage episodeDocumentStorage;
 	private final FileService fileService;
-
+	private final InternmentEpisodeService internmentEpisodeService;
 
 	@Override
-	public Integer run(EpisodeDocumentDto dto) {
+	public Integer run(EpisodeDocumentDto dto) throws MoreThanOneConsentDocumentException {
 		log.debug("Input parameters -> dto {}", dto);
+		validateConsentDocumentQuantity(dto);
 		String newFileName = fileService.createFileName(FilenameUtils.getExtension(dto.getFile().getOriginalFilename()));
 
 		var path = fileService.buildCompletePath(
@@ -48,5 +53,14 @@ public class CreateEpisodeDocumentImpl implements CreateEpisodeDocument {
 				.concat(relativeFilePath);
 		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	private void validateConsentDocumentQuantity(EpisodeDocumentDto dto) throws MoreThanOneConsentDocumentException {
+		log.debug("Input parameters -> dto {}", dto);
+		if (dto.getConsentId() == EpisodeDocumentType.ADMISSION_CONSENT
+			|| dto.getConsentId() == EpisodeDocumentType.SURGICAL_CONSENT) {
+			internmentEpisodeService.existsConsentDocumentInInternmentEpisode(dto.getInternmentEpisodeId(), dto.getConsentId());
+		}
+
 	}
 }

@@ -23,4 +23,7 @@ public class TranscribedPrescriptionDto implements Serializable {
 
 	@Nullable
 	private String institutionName;
+
+	@Nullable
+	private String observations;
 }

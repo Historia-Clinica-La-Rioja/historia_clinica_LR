@@ -1,8 +1,13 @@
 package ar.lamansys.sgh.clinichistory.application.rebuildFile;
 
+import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileEnumException;
+import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileException;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileHistoryRepository;
 
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFileHistory;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
@@ -15,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RebuildFile {
 
     private final FetchAllDocumentInfo fetchAllDocumentInfo;
@@ -22,17 +28,9 @@ public class RebuildFile {
 	private final GenerateFilePort generateFilePort;
 	private final DocumentFileHistoryRepository documentFileHistoryRepository;
 
-	public RebuildFile(FetchAllDocumentInfo fetchAllDocumentInfo,
-					   DocumentFileRepository documentFileRepository,
-					   GenerateFilePort generateFilePort, DocumentFileHistoryRepository documentFileHistoryRepository) {
-		this.fetchAllDocumentInfo = fetchAllDocumentInfo;
-		this.documentFileRepository = documentFileRepository;
-		this.generateFilePort = generateFilePort;
-		this.documentFileHistoryRepository = documentFileHistoryRepository;
-	}
-
 	public void run(Long id) {
         log.debug("FetchDocumentFile with id {}",id);
+		assertSignatureStatus(id);
 		fetchAllDocumentInfo.run(id)
 			.ifPresent(documentBo -> {
 				OnGenerateDocumentEvent event = new OnGenerateDocumentEvent(documentBo);
@@ -41,6 +39,14 @@ public class RebuildFile {
 							.save(event)
 							.ifPresent(documentFile -> update(documentFile, id));
 			});
+	}
+
+	private void assertSignatureStatus(Long id){
+		documentFileRepository.findById(id)
+				.ifPresent(file -> {
+					if(!file.getSignatureStatusId().equals(ESignatureStatus.PENDING.getId()) && !file.getSignatureStatusId().equals(ESignatureStatus.CANNOT_BE_SIGNED.getId()))
+						throw new RebuildFileException(RebuildFileEnumException.DOCUMENT_SIGNED, "No es posible regenerar debido a que el documento tiene una firma digital vigente.");
+				});
 	}
 
 	private void update(DocumentFile documentFile, Long id) {
@@ -54,6 +60,7 @@ public class RebuildFile {
 					oldDocument.setTypeId(documentFile.getTypeId());
 					oldDocument.setSourceId(documentFile.getSourceId());
 					oldDocument.setSourceTypeId(documentFile.getSourceTypeId());
+					documentFile.setSignatureStatusId(oldDocument.getSignatureStatusId());
 					return oldDocument;
 				})
 				.ifPresent(documentFileRepository::save);

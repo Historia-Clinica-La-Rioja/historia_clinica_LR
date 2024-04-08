@@ -3,6 +3,7 @@ package ar.lamansys.sgx.shared.dates.utils;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.exceptions.DateParseException;
@@ -30,4 +31,14 @@ public class DateUtils {
 			throw new DateParseException(date, e);
 		}
 	}
+
+	public static Calendar getCurrentCalendarWithNoTime() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar;
+	}
+
 }

@@ -1,13 +1,19 @@
 package net.pladema.medicalconsultation.appointment.controller.mapper;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
 import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentEquipmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentShortSummaryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.AssignedAppointmentDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.BookedAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EmptyAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppointmentListDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.PatientAppointmentHistoryDto;
+import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
+import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
@@ -15,9 +21,13 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSea
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentSearchDto;
 
 import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
 import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
+import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
+import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -33,7 +43,9 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDailyAmountBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 
-@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class})
+import java.util.List;
+
+@Mapper(uses = {LocalDateMapper.class, EAppointmentModality.class, EReferenceClosureType.class})
 public interface AppointmentMapper {
 
     @Named("toAppointmentListDto")
@@ -47,6 +59,7 @@ public interface AppointmentMapper {
 	@Mapping(target = "isProtected", source = "appointmentBo.protected")
 	@Mapping(target = "createdOn", source = "appointmentBo.createdOn")
 	@Mapping(target = "professionalPersonDto", source = "appointmentBo.professionalPersonBo")
+	@Mapping(target = "diaryLabelDto", source = "appointmentBo.diaryLabelBo")
     AppointmentListDto toAppointmentListDto(AppointmentBo appointmentBo, AppointmentBasicPatientDto patient);
 
 	@Named("toEquipmentAppointmentListDto")
@@ -67,6 +80,8 @@ public interface AppointmentMapper {
 	@Mapping(target = "transcribedOrderData", source = "appointmentBo.transcribedData")
 	@Mapping(target = "modality", source = "modalityId")
 	@Mapping(target = "callLink", source = "callId", qualifiedByName = "generateCallLink")
+	@Mapping(target = "diaryLabelDto", source = "appointmentBo.diaryLabelBo")
+	@Mapping(target = "associatedReferenceClosureType", source = "associatedReferenceClosureTypeId")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
 
 	@Named("generateCallLink")
@@ -85,7 +100,15 @@ public interface AppointmentMapper {
     AppointmentDailyAmountDto toAppointmentDailyAmountDto(AppointmentDailyAmountBo appointmentDailyAmountBo);
 
 	@Named("toAssignedAppointmentDto")
+	@Mapping(target = "associatedReferenceClosureType", source = "associatedReferenceClosureTypeId")
 	AssignedAppointmentDto toAssignedAppointmentDto(AppointmentAssignedBo appointmentAssignedBo);
+
+	@Named("toBookingAppointmentDto")
+	BookedAppointmentDto toBookingAppointmentDto(AppointmentBookingBo appointmentBookingBo);
+
+	@IterableMapping(qualifiedByName = "toBookingAppointmentDto")
+	@Named("toBookingAppointmentDtoList")
+	List<BookedAppointmentDto> toBookingAppointmentDtoList(List<AppointmentBookingBo> appointmentBookingBos);
 
 	@Named("toUpdateAppointmentBo")
 	UpdateAppointmentBo toUpdateAppointmentBo(UpdateAppointmentDto updateAppointmentDto);
@@ -104,4 +127,18 @@ public interface AppointmentMapper {
 
 	@Named("toBlockBo")
 	BlockBo toBlockBo(BlockDto appointmentSearchDto);
+
+	@Named("toPatientAppointmentHistoryDto")
+	@Mapping(source = "date", target = "dateTime.date")
+	@Mapping(source = "time", target = "dateTime.time")
+	PatientAppointmentHistoryDto toPatientAppointmentHistoryDto(PatientAppointmentHistoryBo patientAppointmentHistoryBo);
+
+	@Named("fromFreeAppointmentSearchFilterDto")
+	FreeAppointmentSearchFilterBo fromFreeAppointmentSearchFilterDto(FreeAppointmentSearchFilterDto freeAppointmentSearchFilterDto);
+
+	@Named("fromUpdateAppointmentDateDto")
+	@Mapping(target = "time", source = "date.time")
+	@Mapping(target = "date", source = "date.date")
+	UpdateAppointmentDateBo fromUpdateAppointmentDateDto(UpdateAppointmentDateDto updateAppointmentDateDto);
+
 }

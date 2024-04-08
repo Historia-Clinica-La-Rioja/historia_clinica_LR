@@ -19,6 +19,7 @@ import { FeatureSettingsComponent } from './components/feature-settings/feature-
 import { LogoSettingsComponent } from './components/logo-settings/logo-settings.component';
 import { SnomedCacheComponent } from './components/snomed-cache/snomed-cache.component';
 import { SnomedCacheFormComponent } from './components/snomed-cache-form/snomed-cache-form.component';
+import { UsageCardComponent } from './components/usage-card/usage-card.component';
 import { UserKeysComponent } from './components/user-keys/user-keys.component';
 import { UserKeysFormComponent } from './components/user-keys-form/user-keys-form.component';
 
@@ -40,12 +41,13 @@ import { SnomedTerminologyCardComponent } from './components/snomed-terminology-
 		LogoSettingsComponent,
 		SnomedCacheComponent,
 		SnomedCacheFormComponent,
+		UsageCardComponent,
 		UserKeysComponent,
 		UserKeysFormComponent,
 		// dialogs
 		ActivateTwoFactorAuthenticationComponent,
 		GenerateApiKeyFormComponent,
-  SnomedTerminologyCardComponent,
+		SnomedTerminologyCardComponent,
 	],
 	imports: [
 		CommonModule,

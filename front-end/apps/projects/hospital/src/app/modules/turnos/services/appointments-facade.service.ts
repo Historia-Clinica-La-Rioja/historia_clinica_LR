@@ -274,7 +274,7 @@ export class AppointmentsFacadeService {
 			);
 	}
 
-	verifyExistingAppointment(patientId: number, date: string, hour: string): Observable<AppointmentShortSummaryDto> {
-		return this.appointmentService.verifyExistingAppointments(patientId, date, hour);
+	verifyExistingAppointment(patientId: number, date: string, hour: string, institutionId?: number): Observable<AppointmentShortSummaryDto> {
+		return this.appointmentService.verifyExistingAppointments(patientId, date, hour, institutionId);
 	}
 }

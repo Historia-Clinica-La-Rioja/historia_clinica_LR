@@ -19,4 +19,9 @@ export class DocumentTemplateService {
     const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents/templates/${typeId}/user`;
 		return this.http.get<TemplateNamesDto[]>(url);
   }
+
+  deleteTemplatesByUserInformer(typeId: number, id: number): Observable<boolean> {
+    const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/documents/templates/${typeId}/${id}`;
+		return this.http.delete<boolean>(url);
+  }
 }

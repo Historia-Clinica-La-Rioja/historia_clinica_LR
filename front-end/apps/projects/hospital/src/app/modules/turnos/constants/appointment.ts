@@ -1,4 +1,5 @@
 import { EAppointmentModality } from "@api-rest/api-model";
+import { Color } from "@presentation/colored-label/colored-label.component";
 
 export const APPOINTMENT_DURATIONS = [
 	{
@@ -133,11 +134,91 @@ export const enum COLORES {
 	RESERVA_ALTA = '#FFFFFF',
 	RESERVA_VALIDACION = '#EB5757',
 	FUERA_DE_AGENDA = '#FF0000',
-	PROTECTED = '#AF26C5'
+	PROTECTED = '#AF26C5',
+	CANCELLED = '#F04848,'
 }
 
 export const MODALITYS = {
 		[EAppointmentModality.ON_SITE_ATTENTION]: 'turnos.ON_SITE_ATTENTION',
 		[EAppointmentModality.PATIENT_VIRTUAL_ATTENTION]: 'turnos.PATIENT_VIRTUAL_ATTENTION',
 		[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION]: 'turnos.SECOND_OPINION_VIRTUAL_ATTENTION'
+}
+
+export const stateColor = {
+    [APPOINTMENT_STATES_ID.CONFIRMED]:  Color.YELLOW,
+    [APPOINTMENT_STATES_ID.ABSENT]: Color.GREY,
+    [APPOINTMENT_STATES_ID.SERVED]: Color.GREEN,
+    [APPOINTMENT_STATES_ID.CANCELLED]: Color.RED,
+    [APPOINTMENT_STATES_ID.ASSIGNED]: Color.BLUE,
+}
+export interface modality {
+	value: EAppointmentModality;
+	description: string;
+}
+
+export const MODALITYS_TYPES : modality [] = [
+	{
+		value: EAppointmentModality.ON_SITE_ATTENTION,
+		description: MODALITYS[EAppointmentModality.ON_SITE_ATTENTION]
+	},
+	{
+		value: EAppointmentModality.PATIENT_VIRTUAL_ATTENTION,
+		description: MODALITYS[EAppointmentModality.PATIENT_VIRTUAL_ATTENTION]
+	},
+	{
+		value: EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION,
+		description: MODALITYS[EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION]
+	}
+]
+
+export const DIARY_LABEL_COLORS: COLOR[] = [
+	{
+		id: 1,
+		color: '#89ADFF'
+	},
+	{
+		id: 2,
+		color: '#D50000'
+	},
+	{
+		id: 3,
+		color: '#FFA29A'
+	},
+	{
+		id: 4,
+		color: '#F46B1E'
+	},
+	{
+		id: 5,
+		color: '#FFD55F'
+	},
+	{
+		id: 6,
+		color: '#009F4C'
+	},
+	{
+		id: 7,
+		color: '#A35AFF'
+	},
+	{
+		id: 8,
+		color: '#616161'
+	},
+	{
+		id: 9,
+		color: '#27BEFF'
+	},
+	{
+		id: 10,
+		color: '#08DDC3'
+	}
+];
+
+export function getDiaryLabel(id: number): COLOR {
+	return DIARY_LABEL_COLORS.find((diaryLabel: COLOR) => diaryLabel.id === id);
+}
+
+export interface COLOR {
+	id: number,
+	color: string,
 }

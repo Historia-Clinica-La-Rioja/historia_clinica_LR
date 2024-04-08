@@ -24,7 +24,7 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 	@Query( " SELECT sg.id " +
 			" FROM SnomedGroup sg " +
 			" WHERE sg.description = :description ")
-	Integer getIdByDescription(@Param("description") String description);
+	List<Integer> getIdByDescription(@Param("description") String description);
 
 	@Query( " SELECT NEW net.pladema.snowstorm.repository.domain.SnomedTemplateSearchVo(sg.id, sg.description, s.id, s.sctid, s.pt) " +
 			" FROM SnomedGroup sg " +
@@ -92,5 +92,12 @@ public interface SnomedGroupRepository extends JpaRepository<SnomedGroup, Intege
 			" WHERE sg.ecl = :ecl " +
 			" AND sg.groupType = :groupType" )
 	List<String> getDescriptionByParentGroupEcl(@Param("ecl") String ecl, @Param("groupType") Short groupType);
+
+	@Transactional(readOnly = true)
+	@Query( "SELECT sg.id " +
+			"FROM SnomedGroup sg " +
+			"WHERE sg.description = :description " +
+			"AND sg.institutionId = :institutionId")
+	Optional<Integer> getIdByDescriptionAndInstitutionId(@Param("description") String description, @Param("institutionId") Integer institutionId);
 
 }

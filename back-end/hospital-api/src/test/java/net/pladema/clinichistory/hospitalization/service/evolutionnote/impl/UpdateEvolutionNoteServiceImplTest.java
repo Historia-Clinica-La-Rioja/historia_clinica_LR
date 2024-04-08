@@ -4,9 +4,11 @@ import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentReduceInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
@@ -25,6 +27,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.validation.ConstraintViolationException;
 
@@ -72,6 +75,9 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 	private FetchLoggedUserRolesExternalService fetchLoggedUserRolesExternalService;
 
 	private EvolutionNoteValidator evolutionNoteValidator;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@BeforeEach
 	public void setUp() {
@@ -169,6 +175,16 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 		assertEquals(actualMessage, expectedMessage);
 	}
 
+	@Test
+	void updateDocumentWithInvalidSignatureStatus() {
+		when(evolutionNoteService.getDocument(OLD_DOCUMENT_ID)).thenReturn(validUpdateEvolutionNote(INSTITUTION_ID, INTERNMET_EPISODE_ID, OLD_DOCUMENT_ID));
+		when(sharedDocumentPort.getDocument(OLD_DOCUMENT_ID)).thenReturn(signedDocumentReduceInfoDto(-1, DOCUMENT_TYPE_ID));
+		Exception exception = Assertions.assertThrows(InternmentDocumentException.class, () -> updateEvolutionNoteService.execute(INTERNMET_EPISODE_ID, OLD_DOCUMENT_ID, validUpdateEvolutionNote(INSTITUTION_ID, INTERNMET_EPISODE_ID, null)));
+		String expectedMessage = "No es posible llevar a cabo la acción dado que el documento fue firmado digitalmente";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage, expectedMessage);
+	}
+
 	private EvolutionNoteBo basicEvolutionNoteInfo(Integer institutionId, Integer encounterId, Long id) {
 		var evolutionBo = new EvolutionNoteBo();
 		evolutionBo.setId(id);
@@ -202,6 +218,7 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 		result.setTypeId(typeId);
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
+		result.setSignatureStatus(ESignatureStatus.PENDING);
 		return result;
 	}
 
@@ -211,7 +228,19 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 		result.setTypeId(typeId);
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now().minusDays(1).minusHours(1));
+		result.setSignatureStatus(ESignatureStatus.PENDING);
 		return result;
 	}
+
+	private DocumentReduceInfoDto signedDocumentReduceInfoDto(Integer userId, Short typeId) {
+		DocumentReduceInfoDto result = new DocumentReduceInfoDto();
+		result.setSourceId(INTERNMET_EPISODE_ID);
+		result.setTypeId(typeId);
+		result.setCreatedBy(userId);
+		result.setCreatedOn(LocalDateTime.now());
+		result.setSignatureStatus(ESignatureStatus.SIGNED);
+		return result;
+	}
+
 
 }

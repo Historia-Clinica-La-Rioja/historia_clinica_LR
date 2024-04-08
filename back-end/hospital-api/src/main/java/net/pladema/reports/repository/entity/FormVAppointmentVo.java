@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 @Getter
@@ -15,13 +16,16 @@ public class FormVAppointmentVo extends FormVVo{
 
     private String affiliateNumber;
 
+	private LocalDateTime date;
+
     public FormVAppointmentVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender,
                               LocalDate patientBirthDate, String documentType, String documentNumber, String streetName,
-                              String streetNumber, String city, String medicalCoverage, String affiliateNumber, String sisaCode){
+                              String streetNumber, String city, String medicalCoverage, String affiliateNumber, String sisaCode, LocalDateTime date){
         super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType,
                 documentNumber, streetName, streetNumber, city, sisaCode);
         this.medicalCoverage = medicalCoverage;
         this.affiliateNumber = affiliateNumber;
+		this.date = date;
     }
 
     @JsonIgnore

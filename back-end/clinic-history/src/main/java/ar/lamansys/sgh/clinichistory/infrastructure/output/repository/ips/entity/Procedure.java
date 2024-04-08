@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 import lombok.*;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
@@ -47,12 +48,20 @@ public class Procedure extends SGXAuditableEntity<Integer> implements SGXDocumen
 	@Column(name = "note_id")
 	private Long noteId;
 
-	public Procedure(Integer patientId, Integer snomedId, String statusId, LocalDate performedDate) {
+	@Column(name = "procedure_type_id")
+	private Short procedureTypeId;
+
+	@Column(name = "is_primary")
+	private boolean isPrimary = Boolean.TRUE;
+
+	public Procedure(Integer patientId, Integer snomedId, String statusId, LocalDate performedDate, ProcedureTypeEnum procedureType, Boolean isPrimary) {
 		super();
 		this.patientId = patientId;
 		this.snomedId = snomedId;
 		if (statusId != null)
 			this.statusId = statusId;
 		this.performedDate = performedDate;
+		this.procedureTypeId = procedureType.getId();
+		this.isPrimary = isPrimary;
 	}
 }

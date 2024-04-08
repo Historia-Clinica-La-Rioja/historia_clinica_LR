@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEPersonalHistoryDto } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, DiagnosticReportInfoDto, EmergencyCareListDto, HCEHealthConditionDto } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { ESTUDIOS, PatientType } from '@historia-clinica/constants/summaries';
@@ -24,7 +24,7 @@ import { Observable, of } from 'rxjs';
 import { EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
-import { DiagnosticWithTypeReportInfoDto } from '../../modules/estudio/model/ImageModel';
+import { DiagnosticWithTypeReportInfoDto, IMAGE_DIAGNOSIS_CATEGORY_ID } from '../../modules/estudio/model/ImageModel';
 import { ImageOrderCasesService } from '../../modules/estudio/services/image-order-cases.service';
 
 @Component({
@@ -126,7 +126,7 @@ export class CardEstudiosComponent implements OnInit {
 			}
 		});
 
-		this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgress(this.patientId)
+		this.emergencyCareEpisodeSummaryService.getEmergencyCareEpisodeInProgressInTheInstitution(this.patientId)
 			.pipe(
 				switchMap(
 					inProgressEpisode => {
@@ -168,7 +168,7 @@ export class CardEstudiosComponent implements OnInit {
 		const isImageCategory = this.categories[0].id === updatedCategoryId
 		const sourceImageCases$ = isImageCategory ? this.imageOrderCasesService.getImageOrderCasesFiltered(this.patientId,this.formFilter.value) : of([])
 		this.resetCategoryStudyList(updatedCategoryId);
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId)
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId, IMAGE_DIAGNOSIS_CATEGORY_ID)
 		.pipe(
 			tap(response => responseUpdate = response ),
 			switchMap( _ => sourceImageCases$))
@@ -185,7 +185,7 @@ export class CardEstudiosComponent implements OnInit {
 	private getStudy(): void {
 		const value = this.formFilter.value;
 		this.clearLoadedReports();
-		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId).
+		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId, IMAGE_DIAGNOSIS_CATEGORY_ID).
 		pipe(
 			tap(response => this.response = response ),
 			switchMap( _ => this.imageOrderCasesService.getImageOrderCasesFiltered(this.patientId,this.formFilter.value))
@@ -234,10 +234,10 @@ export class CardEstudiosComponent implements OnInit {
 	}
 
 	openNewOutpatientOrderDialog() {
-		this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEPersonalHistoryDto[]) => {
+		this.hceGeneralStateService.getActiveProblems(this.patientId).subscribe((activeProblems: HCEHealthConditionDto[]) => {
 			const activeProblemsList = activeProblems.map(problem => ({ id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid }));
 
-			this.hceGeneralStateService.getChronicConditions(this.patientId).subscribe((chronicProblems: HCEPersonalHistoryDto[]) => {
+			this.hceGeneralStateService.getChronicConditions(this.patientId).subscribe((chronicProblems: HCEHealthConditionDto[]) => {
 				const chronicProblemsList = chronicProblems.map(problem => ({ id: problem.id, description: problem.snomed.pt, sctId: problem.snomed.sctid }));
 				const healthProblems = activeProblemsList.concat(chronicProblemsList);
 

@@ -14,6 +14,7 @@ const CareLineCreate = props => (
             <TextInput source="description" validate={[required()]} />
             <BooleanInput source="consultation" disabled={false} initialValue={false}/>
             <BooleanInput source="procedure" disabled={false} initialValue={false}/>
+            <BooleanInput source="classified" disabled={false} initialValue={false}/>
         </SimpleForm>
     </Create>
 );

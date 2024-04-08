@@ -2,46 +2,37 @@
 
 	<span [translate]="'turnos.search-appointments-in-care-network.SEARCH_IN_CARE_NETWORK_CRITERIA'"
 		class="bottom-separation"></span>
-
-	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
-		fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
-		<div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
-			<span>
-				<strong>
-					{{ 'turnos.search-appointments-in-care-network.CARELINE' | translate }}
-				</strong>
-			</span>
-			<app-typeahead id="careline"
-				[titleInput]="'turnos.search-appointments-in-care-network.CARELINE' | translate"
-				[options]="careLineTypeaheadOptions" (selectionChange)="setCareLine($event)">
-			</app-typeahead>
-			<div class="error-space">
-				<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
-			</div>
-		</div>
-
-		<div fxFlex="35" fxLayout="column" fxLayoutGap="5px">
-			<strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
-			<app-typeahead id="specialty"
-				[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
-				[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)">
-			</app-typeahead>
-			<div class="error-space">
-				<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
-			</div>
+	<div class="max-width" fxLayout="column" fxLayoutGap="5px">
+		<span>
+			<strong>
+				{{ 'turnos.search-appointments-in-care-network.CARELINE' | translate }}
+			</strong>
+		</span>
+		<app-typeahead id="careline" [titleInput]="'turnos.search-appointments-in-care-network.CARELINE' | translate"
+			[externalSetValue]="externalInformation?.formInformation?.careLine"
+			[disabled]="externalInformation?.disabledInput" [options]="careLineTypeaheadOptions"
+			(selectionChange)="setCareLine($event)">
+		</app-typeahead>
+		<div class="error-space">
+			<mat-error *ngIf="showCareLineError">{{ 'forms.REQUIRED' | translate }}</mat-error>
 		</div>
 	</div>
-	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column" >
+
+	<app-search-criteria class="padding-bottom" [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'"
+		[defaultOption]="selectedTypeAttention" [disabled]="externalInformation?.disabledInput.others"
+		(selectedOption)="setCriteria($event)"></app-search-criteria>
+
+	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column">
 		<div fxLayout="column" fxLayoutGap="5px" fxFlex="100">
 			<strong [translate]="'turnos.MODALITY_ATTENTION'"></strong>
 			<mat-radio-group formControlName="modality">
 				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
 					translate}}</mat-radio-button>
-				<mat-radio-button color="primary"
-					[value]="MODALITY_PATIENT_VIRTUAL_ATTENTION" [disabled]="!isEnableTelemedicina">{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
+				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION"
+					[disabled]="!isEnableTelemedicina">{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
 					translate}}</mat-radio-button>
-					<mat-radio-button color="primary"
-					[value]="MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION" [disabled]="!isEnableTelemedicina">{{'turnos.SECOND_OPINION_VIRTUAL_ATTENTION' |
+				<mat-radio-button color="primary" [value]="MODALITY_SECOND_OPINION_VIRTUAL_ATTENTION"
+					[disabled]="!isEnableTelemedicina">{{'turnos.SECOND_OPINION_VIRTUAL_ATTENTION' |
 					translate}}</mat-radio-button>
 			</mat-radio-group>
 			<div class="error-space">
@@ -49,6 +40,32 @@
 			</div>
 		</div>
 
+	</div>
+	<div fxLayout="row" fxLayoutGap="10px">
+		<div fxLayout="column" fxLayoutGap="5px">
+			<div fxLayout="row" fxLayoutGap="5px">
+				<strong>{{ 'turnos.search-appointments-in-care-network.SPECIALTY' | translate }}</strong>
+				<span *ngIf="selectedTypeAttention == searchCriteria.PRACTICES">{{ 'turnos.OPTIONAL' | translate
+					}}</span>
+			</div>
+			<app-typeahead id="specialty"
+				[titleInput]="'turnos.search-appointments-in-care-network.SPECIALTY' | translate"
+				[options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)"
+				[externalSetValue]="externalSpecialty" [disabled]="externalInformation?.disabledInput.specialty">
+			</app-typeahead>
+			<div class="error-space">
+				<mat-error *ngIf="showSpecialtyError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+			</div>
+		</div>
+		<div>
+			<app-typeahead-practices *ngIf="selectedTypeAttention == searchCriteria.PRACTICES"
+				[practices]="practices$ | async" [externalValue]="externalInformation?.formInformation?.practice"
+				[disabled]="externalInformation?.disabledInput.others" (selectedOption)="setPractice($event)">
+			</app-typeahead-practices>
+			<div class="error-space">
+				<mat-error *ngIf="showPracticeError">{{ 'forms.REQUIRED' | translate }}</mat-error>
+			</div>
+		</div>
 	</div>
 	<div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column"
 		fxLayoutAlign.lt-sm="start start" fxLayoutGap="0">
@@ -133,14 +150,26 @@
 		<mat-card>
 			<div *ngFor="let appointment of appointmentsCurrentPage; last as isLast">
 				<app-appointment-result-view [appointment]="appointment" [patientId]="patientId"
-					[careLineId]="careLineId" (resetAppointmentList)="resetResults()" [modalityAttention]="searchForm.controls.modality.value">
+					(resetInformation)="clearForm()" [modalityAttention]="searchForm.controls.modality.value"
+					[searchAppointmentCriteria]="searchAppointmentCriteria"
+					[referenceSummary]="externalInformation?.referenceSummary">
 				</app-appointment-result-view>
 				<mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
 			</div>
 			<mat-paginator [length]="protectedAvaibleAppointments?.length" [pageSizeOptions]="pageSizeOptions"
-				[pageSize]="pageSizeOptions[0]" (page)="onPageChange($event)">
+				[pageSize]="pageSize" (page)="onPageChange($event)">
 			</mat-paginator>
 		</mat-card>
+	</div>
+
+	<div *ngIf="showSectionToSearchAppointmentsInInstitution" fxLayout="column" fxLayoutGap="15px">
+		<span class="category-title">{{ 'turnos.home.NOT_FOUND_APPOINTMENTS' | translate}}</span>
+
+		<div>
+			<button mat-stroked-button color="primary" (click)="searchAppointmentsInstitution()">
+				<span [translate]="'turnos.search-appointments-in-care-network.BACK_TO_INSTITUTION_TAB'"></span>
+			</button>
+		</div>
 	</div>
 
 </div>

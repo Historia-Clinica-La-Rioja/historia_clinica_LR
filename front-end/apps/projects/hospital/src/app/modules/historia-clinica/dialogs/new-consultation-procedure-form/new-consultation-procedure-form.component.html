@@ -35,7 +35,7 @@
                 </button>
             </mat-form-field>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" *ngIf="!data.hideDate">
                 <mat-label [translate]="'historia-clinica.new-consultation-procedure-form.DATE'">
                 </mat-label>
                 <input matInput id="fecha_procedimiento" [matDatepicker]="datePicker" formControlName="performedDate"

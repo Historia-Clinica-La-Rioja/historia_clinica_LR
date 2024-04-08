@@ -9,7 +9,7 @@ import {
 	ExternalClinicalHistorySummaryDto,
 	HCEDocumentDataDto,
 	HCEHospitalizationHistoryDto,
-	HCEPersonalHistoryDto,
+	HCEHealthConditionDto,
 	InternmentEpisodeProcessDto,
 	ReferenceCounterReferenceFileDto
 } from '@api-rest/api-model';
@@ -17,16 +17,12 @@ import { AppFeature } from '@api-rest/api-model';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateFormat, dateToMoment, momentFormat, momentParseDate } from '@core/utils/moment.utils';
-import { map, take, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { SolveProblemComponent } from '../../../../dialogs/solve-problem/solve-problem.component';
 import { HistoricalProblems, HistoricalProblemsFacadeService } from '../../services/historical-problems-facade.service';
 import { ContextService } from '@core/services/context.service';
-import { NuevaConsultaDockPopupComponent } from '../../dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
-import { DockPopupService } from '@presentation/services/dock-popup.service';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ExternalClinicalHistoryFacadeService } from '../../services/external-clinical-history-facade.service';
@@ -51,33 +47,23 @@ const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
 })
 export class ProblemasComponent implements OnInit, OnDestroy {
 
-	@Input()
-	set nuevaConsultaRef(nuevaConsultaRef: DockPopupRef) {
-		this.nuevaConsultaAmbulatoriaRef = nuevaConsultaRef;
-		if (nuevaConsultaRef) {
-			this.nuevaConsultaFromProblemaRef?.close();
-			delete this.nuevaConsultaFromProblemaRef;
-		}
-	}
+	@Input() nuevaConsultaRef: DockPopupRef;
 	Color = Color;
-	public hasNewConsultationEnabled$: Observable<boolean>;
 
 	public readonly cronicos = PROBLEMAS_CRONICOS;
 	public readonly activos = PROBLEMAS_ACTIVOS;
 	public readonly resueltos = PROBLEMAS_RESUELTOS;
 	public readonly internacion = PROBLEMAS_INTERNACION;
 	private readonly routePrefix;
-	public activeProblems$: Observable<HCEPersonalHistoryDto[]>;
-	public solvedProblems$: Observable<HCEPersonalHistoryDto[]>;
-	public chronicProblems$: Observable<HCEPersonalHistoryDto[]>;
+	public activeProblems$: Observable<HCEHealthConditionDto[]>;
+	public solvedProblems$: Observable<HCEHealthConditionDto[]>;
+	public chronicProblems$: Observable<HCEHealthConditionDto[]>;
 	public hospitalizationProblems$: Observable<HCEHospitalizationHistoryDto[]>;
 	public historicalProblemsList: HistoricalProblems[];
 	public historicalProblemsAmount: number;
 	public hideFilterPanel = false;
 	private historicalProblems$: Subscription;
 	patientId: number;
-	private nuevaConsultaAmbulatoriaRef: DockPopupRef;
-	private nuevaConsultaFromProblemaRef: DockPopupRef;
 	private severityTypeMasterData: any[];
 
 	public selectedTab: number = 0;
@@ -91,7 +77,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	// Injected dependencies
 	private contextService: ContextService;
-	private dockPopupService: DockPopupService;
 	private readonly internacionMasterDataService: InternacionMasterDataService;
 	private readonly externalClinicalHistoryService: ExternalClinicalHistoryFacadeService;
 	private readonly featureFlagService: FeatureFlagService;
@@ -112,7 +97,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		private readonly patientNameService: PatientNameService,
 	) {
 		this.contextService = this.injector.get<ContextService>(ContextService);
-		this.dockPopupService = this.injector.get<DockPopupService>(DockPopupService);
 		this.internacionMasterDataService = this.injector.get<InternacionMasterDataService>(InternacionMasterDataService);
 		this.externalClinicalHistoryService = this.injector.get<ExternalClinicalHistoryFacadeService>(ExternalClinicalHistoryFacadeService);
 		this.featureFlagService = this.injector.get<FeatureFlagService>(FeatureFlagService);
@@ -127,7 +111,6 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.hasNewConsultationEnabled$ = this.ambulatoriaSummaryFacadeService.hasNewConsultationEnabled$;
 		this.setActiveProblems$();
 		this.setChronicProblems$();
 		this.setSolvedProblems$();
@@ -174,8 +157,8 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		);
 	}
 
-	private formatProblemsDates(problemas: HCEPersonalHistoryDto[]) {
-		return problemas.map((problema: HCEPersonalHistoryDto) => {
+	private formatProblemsDates(problemas: HCEHealthConditionDto[]) {
+		return problemas.map((problema: HCEHealthConditionDto) => {
 			return {
 				...problema,
 				startDate: problema.startDate ? momentFormat(momentParseDate(problema.startDate), DateFormat.VIEW_DATE) : undefined,
@@ -202,60 +185,12 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 		).subscribe(data => this.historicalProblemsList = data);
 	}
 
-	openNuevaConsulta(problema: HCEPersonalHistoryDto): void {
-		if (!this.nuevaConsultaFromProblemaRef) {
-			if (!this.nuevaConsultaAmbulatoriaRef) {
-				this.openDockPopup(problema.id);
-			} else {
-				const confirmDialog = this.dialog.open(ConfirmDialogComponent, { data: getConfirmDataDialog() });
-				confirmDialog.afterClosed().subscribe(confirmed => {
-					if (confirmed) {
-						this.openDockPopup(problema.id);
-						this.nuevaConsultaAmbulatoriaRef.close();
-					}
-				});
-			}
-		}
-
-		function getConfirmDataDialog() {
-			const keyPrefix = 'ambulatoria.paciente.problemas.nueva_opened_confirm_dialog';
-			return {
-				title: `${keyPrefix}.TITLE`,
-				content: `${keyPrefix}.CONTENT`,
-				okButtonLabel: `${keyPrefix}.OK_BUTTON`,
-				cancelButtonLabel: `${keyPrefix}.CANCEL_BUTTON`,
-			};
-		}
+	scrollToHistoric(){
+		let historic = document.getElementById("historical-problems");
+		historic.scrollIntoView({behavior: 'smooth'});
 	}
 
-	private openDockPopup(idProblema: number) {
-		this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(true);
-		const idPaciente = this.route.snapshot.paramMap.get('idPaciente');
-		this.nuevaConsultaFromProblemaRef =
-			this.dockPopupService.open(NuevaConsultaDockPopupComponent, { idPaciente, idProblema });
-		this.nuevaConsultaFromProblemaRef.afterClosed().pipe(take(1)).subscribe(fieldsToUpdate => {
-			if (fieldsToUpdate) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
-			}
-			this.ambulatoriaSummaryFacadeService.setIsNewConsultationOpen(false);
-			delete this.nuevaConsultaFromProblemaRef;
-		});
-	}
-
-	solveProblemPopUp(problema: HCEPersonalHistoryDto) {
-		this.dialog.open(SolveProblemComponent, {
-			data: {
-				problema,
-				patientId: this.patientId
-			}
-		}).afterClosed().subscribe(submitted => {
-			if (submitted) {
-				this.ambulatoriaSummaryFacadeService.setFieldsToUpdate({ problems: true, personalHistories: true });
-			}
-		});
-	}
-
-	filterByProblemOnProblemClick(problem: HCEPersonalHistoryDto) {
+	filterByProblemOnProblemClick(problem: HCEHealthConditionDto) {
 		this.historicalProblemsFacadeService.sendHistoricalProblemsFilter({
 			specialty: null,
 			professional: null,
@@ -264,6 +199,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 			referenceStateId: null,
 		});
 		this.selectedTab = 0;
+		this.scrollToHistoric()
 	}
 
 	hideFilters() {

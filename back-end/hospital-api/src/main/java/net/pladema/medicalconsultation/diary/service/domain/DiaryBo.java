@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.service.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -8,9 +9,11 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class DiaryBo {
 
     protected Integer id;
@@ -54,5 +57,23 @@ public class DiaryBo {
 	protected Integer hierarchicalUnitId;
     
 	protected List<Integer> practicesId;
+	
+	protected List<String> practices;
+
+	protected Integer institutionId;
+
+	protected Integer protectedAppointmentsPercentage;
+
+	protected List<DiaryLabelBo> diaryLabelBo;
     
+	public DiaryBo(LocalDate endDate, Short appointmentDuration) {
+		this.endDate = endDate;
+		this.appointmentDuration = appointmentDuration;
+	}
+
+	public DiaryBo(LocalDate startDate, LocalDate endDate) {
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+
 }

@@ -17,7 +17,7 @@ const searchToFilter = searchText => ({name: searchText ? searchText : -1});
 
 const ServiceField = ({formData, ...rest}) => {
     return formData.typeId !== SERVICE ? null : (
-        <ReferenceInput {...rest}
+        <ReferenceInput {...rest} sort={{ field: 'name', order: 'ASC' }}
             filterToQuery={searchToFilter}>
             <AutocompleteInput optionText="name" optionValue="id" validate={[required()]} />
         </ReferenceInput>

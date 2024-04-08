@@ -12,7 +12,7 @@
 				<div fxLayout="column" fxLayoutAlign="center start">
 					<h2>Episodio de Guardia N° {{emergencyCareEpisodeInProgress.id}}</h2>
 					<span *ngIf="responseEmergencyCareDto" class="color-disabled">Finalizado
-						{{responseEmergencyCareDto.endDate | viewDateDto: 'datetime' | date : 'short' }}</span>
+						{{responseEmergencyCareDto.endDate | viewDateDto: 'localdatetime' | date : 'short' }}</span>
 				</div>
 			</div>
 		</mat-card>

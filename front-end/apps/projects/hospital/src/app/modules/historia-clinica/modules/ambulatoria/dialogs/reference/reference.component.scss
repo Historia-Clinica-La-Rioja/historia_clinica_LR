@@ -69,8 +69,9 @@ h2 {
 }
 
 .subtitle {
-	font-weight: 500;
-	height: 30px;
+	font-size: 16px;
+	height: auto;
+	margin-bottom: 10px;
 }
 
 .circle {
@@ -89,4 +90,7 @@ h2 {
 
 .green {
 	background-color: #32C25B;
+}
+.section {
+	width: 400px;
 }

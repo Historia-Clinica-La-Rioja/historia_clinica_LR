@@ -1,33 +1,36 @@
 package ar.lamansys.odontology.infrastructure.controller.consultation.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
-
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import javax.annotation.Nullable;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.annotation.Nullable;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString
-public class OdontologyPersonalHistoryDto implements Serializable {
-
-    @Nullable
-    private String statusId;
+public class OdontologyPersonalHistoryDto {
 
     @NotNull(message = "{value.mandatory}")
     @Valid
     private SnomedDto snomed;
 
-    @Nullable
-    private String verificationId;
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+    @NotNull
+    private String startDate;
 
-	@Nullable
-    private DateDto startDate;
+    @NotNull
+    private Short typeId;
+
+    @JsonFormat(pattern = JacksonDateFormatConfig.DATE_FORMAT)
+    @Nullable
+    private String inactivationDate;
+
+    @Nullable
+    private String note;
 
 }

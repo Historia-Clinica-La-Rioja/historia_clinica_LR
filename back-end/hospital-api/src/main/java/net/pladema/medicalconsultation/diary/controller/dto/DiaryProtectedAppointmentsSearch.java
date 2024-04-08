@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,11 +22,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class DiaryProtectedAppointmentsSearch {
 
-	@NotNull
+	@Nullable
 	private Integer careLineId;
 
-	@NotNull
-	private Integer clinicalSpecialtyId;
+	@Nullable
+	private List<Integer> clinicalSpecialtyIds;
 
 	@NotNull
 	private Integer departmentId;
@@ -45,4 +46,23 @@ public class DiaryProtectedAppointmentsSearch {
 
 	private EAppointmentModality modality;
 
+	@Nullable
+	private Integer practiceId;
+
+	private Boolean regulationProtected = false;
+
+	public DiaryProtectedAppointmentsSearch(Integer careLineId, List<Integer> clinicalSpecialtyIds, Integer departmentId,
+											Integer institutionId, LocalDate initialSearchDate, LocalDate endSearchDate,
+											Boolean includeNameSelfDetermination, EAppointmentModality modality, Integer practiceId) {
+		this.careLineId = careLineId;
+		this.clinicalSpecialtyIds = clinicalSpecialtyIds;
+		this.departmentId = departmentId;
+		this.institutionId = institutionId;
+		this.initialSearchDate = initialSearchDate;
+		this.endSearchDate = endSearchDate;
+		this.includeNameSelfDetermination = includeNameSelfDetermination;
+		this.modality = modality;
+		this.practiceId = practiceId;
+	}
+	
 }

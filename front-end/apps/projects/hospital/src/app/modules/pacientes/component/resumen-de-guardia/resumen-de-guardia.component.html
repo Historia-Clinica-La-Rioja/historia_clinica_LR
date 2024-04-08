@@ -83,8 +83,7 @@
 
             <mat-divider inset></mat-divider>
 
-            <app-last-triage [triage]="lastTriage" [emergencyCareType]="emergencyCareType"
-                (triageRiskFactors)="triageRiskFactors.emit($event)">
+            <app-last-triage [triage]="lastTriage" [emergencyCareType]="emergencyCareType">
             </app-last-triage>
 
 			<div fxLayout="row" fxLayoutAlign="flex-end center" *ngIf="withoutMedicalDischarge && showNewTriage">

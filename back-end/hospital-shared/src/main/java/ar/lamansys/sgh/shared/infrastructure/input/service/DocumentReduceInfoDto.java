@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
+import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,7 @@ public class DocumentReduceInfoDto implements Serializable {
 	private Integer createdBy;
 
 	private LocalDateTime createdOn;
+
+	private ESignatureStatus signatureStatus;
 
 }

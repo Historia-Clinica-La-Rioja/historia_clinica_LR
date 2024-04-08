@@ -33,7 +33,7 @@ public interface CounterReferenceRepository extends JpaRepository<CounterReferen
             + "  AND doc.statusId = '" + DocumentStatus.FINAL + "'"
             + "  AND doc.sourceTypeId =" + SourceType.COUNTER_REFERENCE
             + "  AND doc.typeId =" + DocumentType.COUNTER_REFERENCE)
-    Optional<CounterReferenceSummaryBo> findByReferenceId(@Param("referenceId") Integer referenceId);
+    List<CounterReferenceSummaryBo> findByReferenceId(@Param("referenceId") Integer referenceId);
 
     @Query(value = "SELECT new ar.lamansys.refcounterref.domain.procedure.CounterReferenceProcedureBo("
             + " s.sctid, s.pt)"

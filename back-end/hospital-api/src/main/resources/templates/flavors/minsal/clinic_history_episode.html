@@ -6,48 +6,46 @@
         .bordered {
             padding: 8px;
             border: 1px solid black;
+            border-collapse: collapse;
         }
     </style>
 </head>
 
 <body>
 
+    <div th:replace="fragments/clinic_history_general.html :: header"></div>
     <div th:replace="fragments/clinic_history_general.html :: footer"></div>
 
     <table>
         <thead>
             <tr>
                 <td colspan="4">
-                    <div th:replace="fragments/clinic_history_general.html :: header"></div>
+                    <div style="height: 295px;"></div>
                 </td>
             </tr>
             <tr>
                 <td colspan="4">
-                    <div th:replace="fragments/clinic_history_general.html :: encounterData"></div>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding-top: 10px;" colspan="4">
                     <h3>Registro Clínico</h3>
                 </td>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="record, iter: ${clinicalRecords}">
-                <td class="bordered wide_wrapped_text" style="width: 11%; text-align: center;" th:text="${record.prefix}"></td>
-                <td class="bordered wide_wrapped_text" style="width: 42%;" th:utext="${record.description}"></td>
-                <td class="bordered wide_wrapped_text" style="width: 14%; text-align: center" th:utext="${record.professionalInfo}"></td>
-                <td class="bordered wide_wrapped_text" style="width: 9%; text-align: center" th:utext="${record.createdOn}"></td>
-            </tr>
+            <div style="margin: 0; padding: 0;">
+                <tr th:each="record, iter: ${clinicalRecords}">
+                    <td class="bordered wide_wrapped_text" style="width: 11%; text-align: center;" th:text="${record.prefix}"></td>
+                    <td class="bordered wide_wrapped_text" style="width: 42%;" th:utext="${record.description}"></td>
+                    <td class="bordered wide_wrapped_text" style="width: 14%; text-align: center" th:utext="${record.professionalInfo}"></td>
+                    <td class="bordered wide_wrapped_text" style="width: 9%; text-align: center" th:utext="${record.createdOn}"></td>
+                </tr>
+            </div>
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="4">
-                    <div style="height: 25px;"></div>
+                    <div style="height: 30px;"></div>
                 </td>
             </tr>
         </tfoot>
     </table>
-
 </body>
 </html>

@@ -1,7 +1,8 @@
 <div class="page" fxLayout="column">
 	<section>
 		<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
-					(doctorsOfficeIdChange)="setDoctorsOfficeId($event)">
+					(doctorsOfficeIdChange)="setDoctorsOfficeId($event)"
+					[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
 		</app-triage>
 	</section>
 	<div class="simple-form-field" fxLayoutGap="10px" fxLayout="row" fxLayoutAlign="flex-end">

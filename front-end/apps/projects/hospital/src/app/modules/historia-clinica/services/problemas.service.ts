@@ -3,7 +3,7 @@ import { SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { ColumnConfig } from '@presentation/components/document-section/document-section.component';
 import { SnomedSemanticSearch, SnomedService } from './snomed.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
-import { newMoment } from '@core/utils/moment.utils';
+import { newMomentLocal } from '@core/utils/moment.utils';
 import { Moment } from 'moment';
 import { hasError } from '@core/utils/form.utils';
 import { TableColumnConfig } from '@presentation/components/document-section-table/document-section-table.component';
@@ -37,7 +37,7 @@ export class ProblemasService {
 			snomed: [null, Validators.required],
 			severidad: [null],
 			cronico: [null],
-			fechaInicio: [newMoment()],
+			fechaInicio: [newMomentLocal()],
 			fechaFin: [null]
 		});
 
@@ -128,6 +128,11 @@ export class ProblemasService {
 	resetForm(): void {
 		delete this.snomedConcept;
 		this.form.reset();
+		this.resetStartDate();
+	}
+
+	resetStartDate(){
+		this.form.controls.fechaInicio.setValue(newMomentLocal());
 	}
 
 	openSearchDialog(searchValue: string): void {
@@ -142,7 +147,7 @@ export class ProblemasService {
 	}
 
 	getFechaInicioMax(): Moment {
-		return newMoment();
+		return newMomentLocal();
 	}
 
 	getForm(): UntypedFormGroup {
@@ -171,7 +176,7 @@ export class ProblemasService {
 		this.form.controls.fechaFin.setErrors(null);
 		if (this.form.value.fechaFin) {
 			if (this.form.value.fechaInicio) {
-				const today = newMoment();
+				const today = newMomentLocal();
 				const newFechaFin: Moment = this.form.value.fechaFin;
 				if (newFechaFin.isBefore(this.form.value.fechaInicio, 'day')) {
 					this.form.controls.fechaFin.setErrors({ min: true });

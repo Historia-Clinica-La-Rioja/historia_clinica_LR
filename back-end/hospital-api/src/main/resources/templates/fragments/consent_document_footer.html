@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head th:fragment="consent_document_footer_styles">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .footer-dni {
+            margin-right: 100px;
+        }
+
+        footer {
+            height: 175px;
+        }
+    </style>
+</head>
+<body th:fragment="consent_document_footer">
+    <footer class="footer header-footer-font">
+        <div>Firma del paciente</div>
+        <div>Aclaración</div>
+        <div class="bold">Para el caso de que el paciente sea menor de edad deberá suscribir el presente la madre/padre/tutor:</div>
+        <div>Firma de padre/madre/tutor</div>
+        <div>Aclaración</div>
+        <section>
+            <span class="footer-dni">DNI</span>
+            <span>Vínculo</span>
+        </section>
+    </footer>
+    <hr/>
+</body>
+
+</html>

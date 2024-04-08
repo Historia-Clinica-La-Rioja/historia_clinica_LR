@@ -12,12 +12,17 @@
       "TITLE": "Turnos asignados",
       "WITHOUT_APPOINTMENTS_MESSAGE": "Sin turnos asignados"
     },
+	"booking-appointments": {
+		"TITLE": "Reservas online",
+		"WITHOUT_APPOINTMENTS_MESSAGE": "Sin turnos reservados"
+	},
     "profile": {
       "INITIATE_INTERNMENT": "Iniciar internación",
       "PATIENT_INTERNMENT_ANOTHER_INSTITUTION": "El paciente se encuentra internado en otra institución.",
       "REPORTS": "Informes",
       "MARKED_FOR_AUDIT": "Marcado para auditar",
-      "SEE_CLINICAL_HISTORY": "Ver historia clínica"
+      "SEE_CLINICAL_HISTORY": "Ver historia clínica",
+      "VIEW_APPOINTMENT_HISTORY": "Ver historial"
     },
     "form": {
       "ADDRESS": "Domicilio",

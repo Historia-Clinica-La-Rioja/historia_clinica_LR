@@ -1,7 +1,10 @@
 package net.pladema.establishment.controller;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.SharedSnowstormSearchItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.exceptions.SnowstormPortException;
+import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,6 +13,8 @@ import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
 import net.pladema.snowstorm.controller.service.SnowstormExternalService;
 
+import net.pladema.snowstorm.repository.SnomedGroupRepository;
+import net.pladema.snowstorm.repository.SnomedRelatedGroupRepository;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
 import org.springframework.data.domain.Example;
@@ -17,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +37,8 @@ import java.util.stream.Collectors;
 public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnowstormDto, Long> {
 
 	private final SnowstormExternalService snowstormExternalService;
-	
+	private final SnomedService snomedService;
+
 	private final String SNOWSTORM_EXCEPTION = "snowstorm.port.exception";
 	
 	public Page<BackofficeSnowstormDto> findAll(BackofficeSnowstormDto example, Pageable pageable, SnomedECL ecl) {
@@ -43,7 +50,7 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 						.map(this::mapToBackofficeSnowstormDto)
 						.collect(Collectors.toList());
 				int listSize = resultSearch.size();
-				int maxIndex = pageable.getPageSize() < listSize ? (pageable.getPageSize()) : (listSize == 0 ? 0 : listSize);
+				int maxIndex = Math.min(pageable.getPageSize(), listSize);
 				return new PageImpl<>(resultSearch.subList(0, maxIndex), pageable, pageable.getPageSize());
 			} catch (SnowstormPortException e){
 				throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
@@ -107,10 +114,23 @@ public class BackofficeSnowstormStore implements BackofficeStore<BackofficeSnows
 
 	private BackofficeSnowstormDto mapToBackofficeSnowstormDto (SharedSnowstormSearchItemDto item){
 		BackofficeSnowstormDto result = new BackofficeSnowstormDto();
-		result.setId(Long.parseLong((item.getConceptId())));
+		result.setId(Long.parseLong(item.getConceptId()));
 		result.setConceptId(item.getConceptId());
 		result.setTerm(item.getPt());
 		return result;
+	}
+
+	@Transactional
+	public Integer saveSnowstormConcept(String conceptId) {
+		try {
+			String conceptPt = snowstormExternalService.getConceptById(conceptId).getPt();
+			if (conceptPt.isEmpty())
+				throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
+			var snomedBo = new SnomedBo(conceptId, conceptPt);
+			return snomedService.getSnomedId(snomedBo).orElseGet(() -> snomedService.createSnomedTerm(snomedBo));
+		} catch (SnowstormPortException e) {
+			throw new BackofficeValidationException(SNOWSTORM_EXCEPTION);
+		}
 	}
 
 }

@@ -12,6 +12,16 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.service.PersonService;
+
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,6 +66,8 @@ import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
     private CreateEvolutionNoteService createEvolutionNoteService;
@@ -94,16 +106,48 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
 	private EvolutionNoteValidator evolutionNoteValidator;
 
-    @BeforeEach
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
+
+	@Mock
+	private PdfService pdfService;
+
+	@Mock
+	private PatientService patientService;
+
+	@Mock
+	private PersonService personService;
+
+	@Mock
+	private InstitutionService institutionService;
+
+	@Mock
+	private FetchEpisodeDocumentTypeById fetchEpisodeDocumentTypeById;
+
+	@Mock
+	private HealthcareProfessionalService healthcareProfessionalService;
+
+	@Mock
+	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
+
+	@BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
                 internmentEpisodeRepository,
                 dateTimeProvider,
 				evolutionNoteDocumentRepository,
                 patientDischargeRepository,
+				medicalCoveragePlanRepository,
                 documentService,
-                medicalCoveragePlanRepository,
-                internmentEpisodeStorage, featureFlagsService);
+                internmentEpisodeStorage,
+				featureFlagsService,
+				pdfService,
+				patientService,
+				personService,
+				institutionService,
+				fetchEpisodeDocumentTypeById,
+				healthcareProfessionalService,
+				getLicenseNumberByProfessional);
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,

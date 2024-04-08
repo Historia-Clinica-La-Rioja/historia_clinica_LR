@@ -8,6 +8,7 @@ import { EvolutionNoteService } from "@api-rest/services/evolution-note.service"
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { Subject } from 'rxjs';
+import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
 
 @Injectable()
 export class DeleteDocumentActionService {
@@ -20,6 +21,7 @@ export class DeleteDocumentActionService {
 		private readonly anamnesisService: AnamnesisService,
 		private readonly epicrisisService: EpicrisisService,
 		private readonly evolutionNoteService: EvolutionNoteService,
+		private readonly surgicalReportService: SurgicalReportService,
 		private readonly snackBarService: SnackBarService
 	) { }
 
@@ -48,6 +50,9 @@ export class DeleteDocumentActionService {
 					case "Epicrisis":
 						this.deleteEpicrisis(document.id, internmentEpisodeId, reason);
 						break;
+					case "Parte quirúrgico de internación":
+						this.deleteSurgicalReport(document.id, internmentEpisodeId, reason);
+						break;
 				}
 			}
 		})
@@ -75,6 +80,15 @@ export class DeleteDocumentActionService {
 
 	private deleteEpicrisis(documentId: number, internmentEpisodeId: number, reason: string) {
 		this.epicrisisService.deleteEpicrisis(documentId, internmentEpisodeId, reason).subscribe(
+			success => {
+				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
+				this.updateFieldsSubject.next({ evolutionClinical: true, diagnosis: true, mainDiagnosis: true });
+			},
+			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
+	}
+
+	private deleteSurgicalReport(documentId: number, internmentEpisodeId: number, reason: string) {
+		this.surgicalReportService.deleteSurgicalReport(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
 				this.updateFieldsSubject.next({ evolutionClinical: true, diagnosis: true, mainDiagnosis: true });

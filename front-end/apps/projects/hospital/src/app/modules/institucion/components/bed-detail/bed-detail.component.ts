@@ -1,12 +1,13 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { BedService } from '@api-rest/services/bed.service';
-import { BedInfoDto } from '@api-rest/api-model';
+import { ApiErrorMessageDto, BedInfoDto } from '@api-rest/api-model';
 import { InternmentPatientService } from "@api-rest/services/internment-patient.service";
 import { InternacionService } from "@api-rest/services/internacion.service";
 import { ConfirmDialogComponent } from "@presentation/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { InternmentEpisodeService } from "@api-rest/services/internment-episode.service";
+import { NurseAssignComponent } from '@institucion/dialogs/nurse-assign/nurse-assign.component';
 
 @Component({
 	selector: 'app-bed-detail',
@@ -87,6 +88,32 @@ export class BedDetailComponent implements OnInit, OnChanges {
 					},
 					error => this.snackBarService.showError('internaciones.discharge.messages.PHYSICAL_DISCHARGE_ERROR')
 				);
+			}
+		})
+	}
+
+	openNurseAssign() {
+		this.dialog.open(NurseAssignComponent, {
+			data: {
+				bed: this.bedInfo
+			}
+		})
+		.afterClosed()
+		.subscribe((result: boolean) => {
+			if (result)
+				this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => this.bedInfo = bedInfo);
+		});
+	}
+
+	deleteAssignedNurse() {
+		this.bedService.updateBedNurse(this.bedInfo.bed.id)
+		.subscribe({
+			next: (_) => {
+				this.bedService.getBedInfo(this.bedId).subscribe(bedInfo => this.bedInfo = bedInfo);
+				this.snackBarService.showSuccess('gestion-camas.detail.more-actions.DELETED_NURSE');
+			},
+			error: (err: ApiErrorMessageDto) => {
+				this.snackBarService.showError(err.text);
 			}
 		})
 	}

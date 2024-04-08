@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgx.auth.user.infrastructure.output.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.user.domain.PersonDataBo;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,7 @@ import net.pladema.user.repository.UserPersonRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserRoleStorageImpl implements UserRoleStorage {
 
     private final UserRoleRepository userRoleRepository;
@@ -34,6 +39,8 @@ public class UserRoleStorageImpl implements UserRoleStorage {
 	private final ProfessionalProfessionRepository professionalProfessionRepository;
 
     private final RoleService roleService;
+
+	private final UserRepository userRepository;
 
     @Override
     public List<UserRoleBo> getRolesByUser(Integer userId) {
@@ -75,6 +82,15 @@ public class UserRoleStorageImpl implements UserRoleStorage {
 	@Override
 	public boolean hasRoleInInstitution(Integer userId, Integer institutionId) {
 		return userRoleRepository.hasRoleInInstitution(userId, institutionId);
+	}
+
+	@Override
+	public List<PersonDataBo> getUsersByRoles(Integer institutionId, List<Short> rolesId) {
+		log.debug("Input parameter -> institutionId {}, rolesId {}", institutionId, rolesId);
+		return userRoleRepository.getUsersByRoles(institutionId, rolesId)
+				.stream()
+				.filter(p -> userRepository.userIsEnabled(p.getUserId()))
+				.collect(Collectors.toList());
 	}
 
 	private List<UserRole> roleToCreate(List<UserRole> newRoles, List<UserRole> currentRoles) {

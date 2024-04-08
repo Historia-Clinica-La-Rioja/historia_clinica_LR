@@ -20,20 +20,38 @@
 
                 <div fxLayout="column" fxLayoutGap="30px" fxFlex="35">
 
-                    <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="30px">
-                        <span>{{ study.info.patientFullName }}</span>
+                    <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="16px">
+                        <div fxLayout="column">
+                            <span class="patient-name">{{ study.info.patientFullName | uppercase }}</span>
+                            <span class="grey">{{ study.info.completionInstitution.name }}</span>
+                        </div>
 
-                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="43px">
                             <app-colored-label [description]="study.state.description | translate | uppercase"
                                 [color]="study.state.color">
                             </app-colored-label>
-                            <span class="smaller-font grey"> {{ study.info.actionTime | viewDateDto: 'localdatetime' | date : 'short' }} hs</span>
+                            <span class="grey"> {{ study.info.actionTime | viewDateDto: 'localdatetime' | date: 'dd/MM/yyyy  HH:mm' }} hs. </span>
                         </div>
+
+                        <div>
+                            <div class="mat-body-strong" translate="image-network.worklist.details_study.TECHNICIAN_OBSERVATIONS"></div>
+                            <div class="mat-body capitalize-first-letter" *ngIf="study.info.technicianObservations else noInfo">{{ study.info.technicianObservations }}</div>
+                        </div>
+
+                        <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
+                            <div class="mat-body-strong" translate="image-network.worklist.details_study.IMAGE_SIZE"></div>
+                            <div *ngIf="study.imageSize else noInfo">{{ study.imageSize }} MB</div>
+                        </div>
+
+                        <ng-template #noInfo>
+                            <span class="grey">Sin información</span>
+                        </ng-template>
                     </div>
                     
-                    <div fxLayout="row" fxLayoutGap="10px">
-                        <app-view-study [appointmentId]="appointmentId"></app-view-study>
-                        <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons"
+                    <div fxLayout="row wrap" fxLayoutGap="10px">
+                        <app-view-study class="btn-margin" [appointmentId]="appointmentId" [studyAvailable]="study.info.isAvailableInPACS"></app-view-study>
+                        <app-download-study class="btn-margin" [studyAvailable]="study.info.isAvailableInPACS" [imageId]="study.info.imageId"></app-download-study>
+                        <a id="go_to_HC" mat-stroked-button color="primary" target="_blank" class="buttons btn-margin"
                             *appHasRole="['ESPECIALISTA_MEDICO']" [href]="url + study.info.patientId">
                             <span>{{'image-network.worklist.details_study.GO_TO_HC' | translate | uppercase }}</span>
                         </a>

@@ -98,6 +98,7 @@ export class CardPatientComponent {
 					ERole.PERSONAL_DE_IMAGENES,
 					ERole.PERSONAL_DE_FARMACIA,
 					ERole.PRESCRIPTOR,
+					ERole.ABORDAJE_VIOLENCIAS
 				]);
 			legalPerson = anyMatch<ERole>(userRoles, [ERole.PERSONAL_DE_LEGALES]);
 			auditor = anyMatch<ERole>(userRoles, [ERole.AUDITOR_MPI]);
@@ -116,7 +117,7 @@ export class CardPatientComponent {
 					header: header,
 					id: patient.idPatient,
 					identificationTypeId: patient.person.identificationTypeId,
-					dni: patient.person.identificationNumber || "-",
+					dni: patient.person.identificationNumber || "Sin Información",
 					gender: this.genderTableView.find(p => p?.id === patient.person.genderId)?.description,
 					date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 					ranking: patient?.ranking,
@@ -129,7 +130,7 @@ export class CardPatientComponent {
 		})
 	}
 	private getLastNames(patient: PatientSearchDto): string {
-		return patient.person?.otherLastNames ? patient.person?.lastName + ' ' + patient.person?.otherLastNames : patient.person?.lastName;
+		return patient.person?.otherLastNames ? patient.person?.lastName || '' + ' ' + patient.person?.otherLastNames : patient.person?.lastName || '';
 	}
 	onPageChange($event: any): void {
 		const page = $event;

@@ -29,7 +29,7 @@
 			</mat-form-field>
 		</div>
 	</div>
-		<div *ngIf="form.controls['reportType'].value == 1 || form.controls['reportType'].value == 2 ">
+		<div *ngIf="form.value.reportType === REPORT_TYPES_ID.MONTHLY || form.value.reportType === REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT || form.value.reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL">
 
 			<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
 				<div fxFlex="50%" fxLayoutGap="5px">
@@ -129,7 +129,29 @@
 						(selectionChange)="setProfessional($event)">
 					</app-typeahead>
 				</div>
+			</div>
 
+			<div *ngIf="form.value.reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL" fxLayout="row" fxLayoutGap="30px" class="padding-top">
+				<div id="appointment-state" fxFlex="50%" fxLayout="column">
+					<div>
+						<mat-label [translate]="'reportes.form.APPOINTMENT_STATE'"></mat-label>
+					</div>
+					<div>
+						<mat-form-field fxFlex.gt-xs="50%" appearance="outline">
+							<mat-select formControlName="appointmentStateId"
+										placeholder="{{'reportes.form.APPOINTMENT_STATE_PLACEHOLDER' | translate}}">
+								<mat-option *ngFor="let appointmentState of appointmentStates" [value]="appointmentState.id">
+									{{appointmentState.description}}
+								</mat-option>
+							</mat-select>
+							<button *ngIf="form.value.appointmentStateId" id="clear-appointment-state" type="button" mat-button
+									matSuffix color="warn"
+									mat-icon-button (click)="clearAppointmentStateId(); $event.stopPropagation()">
+								<mat-icon>close</mat-icon>
+							</button>
+						</mat-form-field>
+					</div>
+				</div>
 			</div>
 
 		</div>

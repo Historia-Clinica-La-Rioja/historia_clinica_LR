@@ -3,7 +3,15 @@
 	<div class="mat-h3" fxFlexAlign="end">{{data.date | viewDate}} {{data.hour | viewHourMinute}}</div>
 </div>
 
-<div class="mat-h3" fxFlexAlign="end">Número de teléfono: {{data.phoneNumber}}</div>
+<div class="booking-by-container">
+	<mat-icon>info_outline</mat-icon>
+	<div class="booking-by">
+		<span class="booking-by-title" [translate]= "'turnos.booking.BOOKING_BY'"></span>
+		<span>{{this.data.fullName}}</span>
+		<span [translate]="'turnos.booking.PHONE_NUMBER'" [translateParams]="{phoneNumber: data.phoneNumber}"></span>
+		<span [translate]="'turnos.booking.EMAIL'" [translateParams]="{email: data.email}"></span>
+	</div>
+</div>
 
 <div mat-dialog-content>
 

@@ -19,6 +19,14 @@ import { WorklistFiltersComponent } from './components/worklist-filters/worklist
 import { SaveTemplateComponent } from './dialogs/save-template/save-template.component';
 import { ViewInformerObservationsComponent } from './components/view-informer-observations/view-informer-observations.component';
 import { ImportTemplateComponent } from './dialogs/import-template/import-template.component';
+import { TooltipOrderComponent } from './components/tooltip-order/tooltip-order.component';
+import { DownloadTranscribedOrderComponent } from './dialogs/download-transcribed-order/download-transcribed-order.component';
+import { DeleteTemplateComponent } from './dialogs/delete-template/delete-template.component';
+import { DownloadStudyComponent } from './components/download-study/download-study.component';
+import { OrderImageDetailComponent } from './components/order-image-detail/order-image-detail.component';
+import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { ImageOrderColoredIconTextCasesComponent } from './components/image-order-identifier-cases/image-order-coloredIconText-cases.component';
+import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
 
 @NgModule({
     declarations: [
@@ -38,16 +46,27 @@ import { ImportTemplateComponent } from './dialogs/import-template/import-templa
         SaveTemplateComponent,
         ViewInformerObservationsComponent,
         ImportTemplateComponent,
+        TooltipOrderComponent,
+        DownloadTranscribedOrderComponent,
+        TooltipOrderComponent,
+        DeleteTemplateComponent,
+        DownloadStudyComponent,
+        OrderImageDetailComponent,
+        ImageOrderColoredIconTextCasesComponent,
+        ProfessionalFullNamePipe,
     ],
     imports: [
         CommonModule,
         PresentationModule,
         ImageNetworkRoutingModule,
-        HistoriaClinicaModule
+        HistoriaClinicaModule,
+        IdentifierCasesComponent
     ],
     exports: [
         ViewStudyComponent,
-        ViewReportComponent
+        ViewReportComponent,
+        TooltipOrderComponent,
+        ProfessionalFullNamePipe
     ]
 })
 

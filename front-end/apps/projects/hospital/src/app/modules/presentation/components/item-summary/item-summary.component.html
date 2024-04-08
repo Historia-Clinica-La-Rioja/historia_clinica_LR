@@ -1,0 +1,10 @@
+<div [class]="size">
+	<div class="display">
+		<img class="avatar" [src]="data.avatar" onerror="this.src='assets/images/empty-profile.png'">
+		<div class="info">
+			<span class="title"> {{data.title}} </span>
+			<span class="subtitle" *ngIf="data.subtitle">{{data.subtitle}}</span>
+			<span class="subtitle2" *ngIf="data.subtitle2">{{data.subtitle2}}</span>
+		</div>
+	</div>
+</div>

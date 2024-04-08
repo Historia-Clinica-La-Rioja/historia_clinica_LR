@@ -4,6 +4,7 @@ import { Moment } from 'moment';
 import { momentFormat, newMoment } from './moment.utils';
 import { DateFormat } from './date.utils';
 import { format } from 'date-fns';
+import { EVENT_CODE_NUMBERS } from './core.utils';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
@@ -18,6 +19,7 @@ export const VALIDATIONS = {
 export const TIME_PATTERN = '([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}';
 export const NUMBER_PATTERN = /^[0-9]\d*$/;
 export const DEFAULT_COUNTRY_ID = 14;
+export const NON_WHITESPACE_REGEX = /\S/;
 
 export function hasError(form: AbstractControl, type: string, control: string): boolean {
 	return form.get(control).hasError(type);
@@ -179,4 +181,17 @@ export function requiredFileType(type: string): ValidatorFn  {
       	}
       return null;
     };
+}
+
+export function NoWhitespaceValidator(): ValidatorFn {
+	return (control: AbstractControl): { [key: string]: any } | null => {
+	  const isWhitespace = (control.value || '').trim().length === 0;
+	  const isValid = !isWhitespace;
+	  return isValid ? null : { 'whitespace': true };
+	};
+}
+
+export function includesEventCodeNumber(event: KeyboardEvent) {   
+	const code = event.code;
+	return EVENT_CODE_NUMBERS.includes(code);
 }

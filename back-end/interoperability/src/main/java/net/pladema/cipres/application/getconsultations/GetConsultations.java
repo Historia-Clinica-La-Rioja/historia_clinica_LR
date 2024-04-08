@@ -20,9 +20,7 @@ import net.pladema.cipres.domain.SnomedBo;
 
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,15 +30,10 @@ public class GetConsultations {
 
 	private final SharedOutpatientConsultationPort sharedOutpatientConsultationPort;
 
-	public Map<Integer, List<OutpatientConsultationBo>> run() {
-		return mapToBo(sharedOutpatientConsultationPort.getOutpatientConsultationsToCipres());
-	}
-
-	private Map<Integer, List<OutpatientConsultationBo>> mapToBo(Map<Integer, List<OutpatientConsultationDto>> consultations) {
-		Map<Integer, List<OutpatientConsultationBo>> result = new HashMap<>();
-		consultations.keySet().forEach(patientId -> {
-			result.put(patientId, consultations.get(patientId).stream().map(this::mapToOutpatientConsultationBo).collect(Collectors.toList()));
-		});
+	public List<OutpatientConsultationBo> run() {
+		var consultations = sharedOutpatientConsultationPort.getOutpatientConsultationsToCipres();
+		var result = consultations.stream().map(this::mapToOutpatientConsultationBo).collect(Collectors.toList());
+		log.debug("Output size {} -> ", result.size());
 		return result;
 	}
 
@@ -54,6 +47,7 @@ public class GetConsultations {
 				 .riskFactor(mapToSharedRiskFactorBo(consultation.getRiskFactor()))
 				 .problems(consultation.getProblems().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
 				 .procedures(consultation.getProcedures().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
+				 .medications(consultation.getMedications().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
 				 .institutionSisaCode(consultation.getInstitutionSisaCode())
 				 .build();
 	}
@@ -67,11 +61,7 @@ public class GetConsultations {
 
 	private BasicDataPersonBo mapToBasicPersonDataBo(BasicDataPersonDto person) {
 		return BasicDataPersonBo.builder()
-				.firstName(person.getFirstName())
-				.middleNames(person.getMiddleNames())
-				.otherLastNames(person.getOtherLastNames())
-				.lastName(person.getLastName())
-				.birthDate(person.getBirthDate())
+				.id(person.getId())
 				.identificationNumber(person.getIdentificationNumber())
 				.identificationTypeId(person.getIdentificationTypeId())
 				.genderId(person.getGender().getId())

@@ -20,4 +20,8 @@ public class BedBo implements Serializable {
     private String bedNumber;
 
     private RoomBo room;
+
+	public String getRoomDescription() {
+		return room != null ? room.getDescription(): null;
+	}
 }

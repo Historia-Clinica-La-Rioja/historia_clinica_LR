@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.diary.repository;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import net.pladema.UnitRepository;
 import net.pladema.medicalconsultation.diary.mocks.DiaryTestMocks;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,6 +21,9 @@ class DiaryRepositoryTest extends UnitRepository {
 
 	@Autowired
 	private DiaryRepository diaryRepository;
+
+	@MockBean
+	private DocumentFileRepository documentFileRepository;
 
 	@BeforeEach
 	public void setUp() throws Exception {

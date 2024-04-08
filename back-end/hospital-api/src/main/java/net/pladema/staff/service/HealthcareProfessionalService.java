@@ -33,4 +33,6 @@ public interface HealthcareProfessionalService {
 	Optional<Integer> getProfessionalIdByPersonId(Integer personId);
 
 	List<HealthcareProfessionalBo> getVirtualConsultationProfessionalsByInstitutionId(Integer institutionId);
+
+	List<HealthcareProfessionalBo> getVirtualConsultationResponsiblesByInstitutionId(Integer institutionId);
 }

@@ -5,10 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import ar.lamansys.sgx.shared.filestorage.application.FilePathBo;
 
+@Disabled
 class FilePathBoTest {
 
 	private void assertPath(

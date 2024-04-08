@@ -26,6 +26,8 @@ public class EquipmentAppointmentVo {
 
 	private final Integer serviceRequestId;
 
+	private final Integer transcribedServiceRequestId;
+
 	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Short reportStatusId, String studyName) {
 		this.appointment = appointment;
 		this.identificationType = identificationType;
@@ -34,9 +36,11 @@ public class EquipmentAppointmentVo {
 		this.institutionBasicInfoBo = null;
 		this.studyName = studyName;
 		this.serviceRequestId = null;
+		this.transcribedServiceRequestId = null;
 	}
 
-	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName, Short reportStatusId, String studyName, Integer serviceRequestId) {
+	public EquipmentAppointmentVo(Appointment appointment, Short identificationType, String identificationnumber, Integer institutionId, String institutionName,
+								  Short reportStatusId, String studyName, Integer serviceRequestId, Integer transcribedServiceRequestId) {
 		this.appointment = appointment;
 		this.identificationType = identificationType;
 		this.identificationnumber = identificationnumber;
@@ -44,6 +48,7 @@ public class EquipmentAppointmentVo {
 		this.institutionBasicInfoBo = new InstitutionBasicInfoBo(institutionId, institutionName);
 		this.studyName = studyName;
 		this.serviceRequestId = serviceRequestId;
+		this.transcribedServiceRequestId = transcribedServiceRequestId;
 	}
 
 	public Integer getId() {

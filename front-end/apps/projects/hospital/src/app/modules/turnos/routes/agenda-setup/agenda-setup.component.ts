@@ -2,9 +2,10 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core'
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { SECTOR_AMBULATORIO } from "@historia-clinica/modules/guardia/constants/masterdata";
 import { TranslateService } from '@ngx-translate/core';
 import { DAYS_OF_WEEK } from 'angular-calendar';
-import { Observable, filter, switchMap } from 'rxjs';
+import { Observable, filter, map, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
@@ -20,15 +21,16 @@ import {
 	CompleteDiaryDto,
 	DiaryADto,
 	DiaryDto,
+	DiaryLabelDto,
 	DoctorsOfficeDto,
 	HierarchicalUnitDto,
 	OccupationDto,
-	ProfessionalDto,
+	ProfessionalDto, SectorDto,
 	SnomedDto
 } from '@api-rest/api-model';
 import { DiaryOpeningHoursService } from '@api-rest/services/diary-opening-hours.service';
 import { DiaryService } from '@api-rest/services/diary.service';
-import { APPOINTMENT_DURATIONS, MINUTES_IN_HOUR } from '../../constants/appointment';
+import { APPOINTMENT_DURATIONS, COLOR, DIARY_LABEL_COLORS, MINUTES_IN_HOUR } from '../../constants/appointment';
 import { AgendaHorarioService, EDiaryType } from '../../services/agenda-horario.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { SpecialtyService } from '@api-rest/services/specialty.service';
@@ -41,6 +43,8 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
+const MAX_INPUT = 100;
+const PATTERN = /^[0-9]\d*$/;
 
 @Component({
 	selector: 'app-agenda-setup',
@@ -61,7 +65,6 @@ export class AgendaSetupComponent implements OnInit {
 	appointmentManagement = false;
 	autoRenew = false;
 	closingTime: number;
-	defaultDoctorOffice: DoctorsOfficeDto;
 	doctorOffices: DoctorsOfficeDto[];
 	editMode = false;
 	errors: string[] = [];
@@ -71,7 +74,7 @@ export class AgendaSetupComponent implements OnInit {
 	minDate = new Date();
 	openingTime: number;
 	professionals: ProfessionalDto[];
-	sectors;
+	sectors: SectorDto[];
 	agendaHorarioService: AgendaHorarioService;
 	professionalSpecialties: any[];
 	specialityId: number;
@@ -82,7 +85,7 @@ export class AgendaSetupComponent implements OnInit {
 	careLinesSelected: CareLineDto[] = [];
 	hierarchicalUnits: HierarchicalUnitDto[] = [];
 	professionalsWithoutResponsibility = [];
-	private editingDiaryId = null;
+	editingDiaryId = null;
 	private readonly routePrefix;
 	private mappedCurrentWeek = {};
 	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
@@ -94,6 +97,9 @@ export class AgendaSetupComponent implements OnInit {
 	showPractices = false;
 	hasHealthcareProfessional = false;
 	private fieldHierarchicalUnitRequired = false;
+	colorList: COLOR[] = Object.assign([], DIARY_LABEL_COLORS);
+	diaryLabels: DiaryLabelDto[] = [];
+
 	constructor(
 		private readonly el: ElementRef,
 		private readonly sectorService: SectorService,
@@ -115,6 +121,7 @@ export class AgendaSetupComponent implements OnInit {
 		private readonly diaryCareLine: DiaryCareLineService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly practicesService: PracticesService,
+		private changeDetector: ChangeDetectorRef,
 	) {
 		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.agendaHorarioService = new AgendaHorarioService(this.dialog, this.cdr, this.TODAY, this.MONDAY, snackBarService, EDiaryType.CLASSIC);
@@ -124,7 +131,6 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-
 		currentWeek().forEach(day => {
 			this.mappedCurrentWeek[day.day()] = day;
 		});
@@ -146,7 +152,8 @@ export class AgendaSetupComponent implements OnInit {
 			otherProfessionals: new UntypedFormArray([], [this.otherPossibleProfessionals()]),
 			careLines: new UntypedFormControl([null]),
 			diaryType: new UntypedFormControl(this.CONSULTATION),
-			practices: new UntypedFormControl([])
+			practices: new UntypedFormControl([]),
+			protectedAppointmentsPercentage: new UntypedFormControl({ value: 0, disabled: true }, [Validators.pattern(PATTERN), Validators.max(MAX_INPUT)]),
 		});
 
 		if (this.fieldHierarchicalUnitRequired) {
@@ -189,13 +196,13 @@ export class AgendaSetupComponent implements OnInit {
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.diaryService.get(this.editingDiaryId).subscribe((diary: CompleteDiaryDto) => {
+						this.setHierarchicalUnitsSync(diary.healthcareProfessionalId).subscribe(response => {
+							this.hierarchicalUnits = response;
+							this.setValuesFromExistingAgenda(diary);
+						});
 						this.minDate = momentParseDate(diary.startDate).toDate();
-						this.setValuesFromExistingAgenda(diary);
 						this.disableNotEditableControls();
 						this.validateLineOfCare();
-						if (this.lineOfCareAndPercentageOfProtectedAppointmentsValid) {
-						}
-
 					});
 
 				});
@@ -231,8 +238,8 @@ export class AgendaSetupComponent implements OnInit {
 		});
 
 
-		this.sectorService.getAll().subscribe(data => {
-			this.sectors = data;
+		this.sectorService.getAllSectorByType(SECTOR_AMBULATORIO).subscribe(data => {
+			this.sectors = this.filterSectorsWithoutDoctorsOffice(data);
 		});
 
 		this.healthcareProfessionalService.getAll().subscribe(data => {
@@ -271,11 +278,11 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	private setValuesFromExistingAgenda(diary: CompleteDiaryDto): void {
-
 		if (diary.predecessorProfessionalId) {
 			this.temporary = true;
 			this.form.controls.temporaryReplacement.setValue(true);
 			this.form.controls.professionalReplacedId.setValue(diary.predecessorProfessionalId);
+			this.form.controls.hierarchicalUnitTemporary.disable();
 			this.form.get('professionalReplacedId').disable();
 		} else {
 			this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
@@ -299,8 +306,8 @@ export class AgendaSetupComponent implements OnInit {
 			this.professionals = healthcareProfessionals;
 			const healthcareProfessionalId = healthcareProfessionals.find(professional => professional.id === diary.healthcareProfessionalId);
 			this.form.controls.healthcareProfessionalId.setValue(healthcareProfessionalId.id);
-			if (!!diary?.hierarchicalUnitAlias)
-				this.setHierarchicalUnitsByName(diary?.hierarchicalUnitAlias);
+			if (!!diary?.hierarchicalUnitId)
+				this.setHierarchicalUnitsByName(diary?.hierarchicalUnitId);
 
 			this.specialtyService.getAllSpecialtyByProfessional(this.contextService.institutionId, healthcareProfessionalId.id)
 				.subscribe(response => {
@@ -360,11 +367,17 @@ export class AgendaSetupComponent implements OnInit {
 
 	}
 
-	private setHierarchicalUnitsByName(name: string) {
+	private setHierarchicalUnitsByName(hierarchicalUnitId: number) {
 		this.form.get('hierarchicalUnit').disable();
 		this.loadSavedData = true;
-		this.form.controls.hierarchicalUnit.setValue(this.hierarchicalUnits.filter(e => e.name === name));
+		if(this.hierarchicalUnits.length){
+			this.form.controls.hierarchicalUnit.setValue(hierarchicalUnitId);
+		}
 		this.form.controls.professionalReplacedId.updateValueAndValidity();
+	}
+
+	ngAfterContentChecked(): void {
+		this.changeDetector.detectChanges();
 	}
 
 	private setSpecialityId(healthcareProfesionalId) {
@@ -439,13 +452,13 @@ export class AgendaSetupComponent implements OnInit {
 				if (confirmed) {
 					this.errors = [];
 					if (this.editMode) {
-						const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto());
+						const agendaEdit: DiaryDto = this.addAgendaId(this.buildDiaryADto(this.diaryLabels));
 						this.diaryService.updateDiary(agendaEdit)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
 							}, error => processErrors(error, (msg) => this.errors.push(msg)));
 					} else {
-						const agenda: DiaryADto = this.buildDiaryADto();
+						const agenda: DiaryADto = this.buildDiaryADto(this.diaryLabels);
 						this.diaryService.addDiary(agenda)
 							.subscribe((agendaId: number) => {
 								this.processSuccess(agendaId);
@@ -487,15 +500,15 @@ export class AgendaSetupComponent implements OnInit {
 		return diary;
 	}
 
-	private buildDiaryADto(): DiaryADto {
+	private buildDiaryADto(diaryLabels: DiaryLabelDto[]): DiaryADto {
 		return {
 
 			appointmentDuration: this.form.getRawValue().appointmentDuration,
 			healthcareProfessionalId: this.form.getRawValue().healthcareProfessionalId,
 			doctorsOfficeId: this.form.getRawValue().doctorOffice.id,
 
-			predecessorProfessionalId: this.form.value?.professionalReplacedId,
-			hierarchicalUnitId: this.form.value.temporaryReplacement ? this.form.value?.hierarchicalUnitTemporary : this.form.value?.hierarchicalUnit,
+			predecessorProfessionalId: this.form.get("professionalReplacedId").value,
+			hierarchicalUnitId: this.form.get("temporaryReplacement").value ? this.form.get("hierarchicalUnitTemporary").value : this.form.get("hierarchicalUnit").value,
 
 			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
 			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
@@ -511,6 +524,8 @@ export class AgendaSetupComponent implements OnInit {
 			careLines: this.careLinesSelected.map(careLine => { return careLine.id }),
 			practicesId: this.form.controls.practices.value,
 			protectedAppointmentsPercentage: null,
+			institutionId : this.contextService.institutionId,
+			diaryLabelDto: diaryLabels
 		};
 	}
 
@@ -534,6 +549,21 @@ export class AgendaSetupComponent implements OnInit {
 					this.updateFormWithoutDiary();
 				}
 			});
+	}
+
+	setHierarchicalUnitsSync(healthcareProfessionalId: number, diary?: CompleteDiaryDto): Observable<HierarchicalUnitDto[]> {
+		return this.professionalService.geUserIdByHealthcareProfessional(healthcareProfessionalId)
+			.pipe(
+				switchMap((userId: number) => this.hierarchicalUnitsService.fetchAllByUserIdAndInstitutionId(userId))
+			)
+			.pipe(map(response => {
+				if (diary?.hierarchicalUnitId) {
+					this.updateFormWithDiary(diary);
+				} else {
+					this.updateFormWithoutDiary();
+				}
+				return response
+			}));
 	}
 
 	private updateFormWithDiary(diary: CompleteDiaryDto) {
@@ -581,6 +611,10 @@ export class AgendaSetupComponent implements OnInit {
 	addAssociatedProfessional() {
 		const currentOtherProfessionals = this.form.controls.otherProfessionals as UntypedFormArray;
 		currentOtherProfessionals.push(this.initializeAnotherProfessional());
+	}
+
+	setLabelsArray(labels: DiaryLabelDto[]) {
+		this.diaryLabels = labels;
 	}
 
 	private initializeAnotherProfessional(): UntypedFormGroup {
@@ -746,5 +780,9 @@ export class AgendaSetupComponent implements OnInit {
 		this.form.controls.practices.updateValueAndValidity();
 		this.form.controls.healthcareProfessionalSpecialtyId.removeValidators([Validators.required]);
 		this.form.controls.healthcareProfessionalSpecialtyId.updateValueAndValidity();
+	}
+
+	private filterSectorsWithoutDoctorsOffice(sectors: SectorDto[]) {
+		return sectors.filter(sector => sector.hasDoctorsOffice);
 	}
 }

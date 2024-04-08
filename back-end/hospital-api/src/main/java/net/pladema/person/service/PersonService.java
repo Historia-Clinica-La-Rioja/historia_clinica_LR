@@ -1,5 +1,6 @@
 package net.pladema.person.service;
 
+import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
 import net.pladema.person.repository.domain.CompletePersonVo;
@@ -42,5 +43,15 @@ public interface PersonService {
 	List<PersonSearchResultVo> getPatientsPersonalInfo(DuplicatePersonVo duplicatePersonVo);
 
 	Optional<CompletePersonNameBo> findByHealthcareProfessionalPersonDataByDiaryId(Integer diaryId);
+
+	String getCompletePersonNameById(Integer personId);
+
+    String getFormalPersonNameById(Integer personId);
+
+    String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
+
+    String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
+
+    ContactInfoBo getContactInfoById(Integer personId);
 
 }

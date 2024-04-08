@@ -46,4 +46,16 @@ public class PatientMedicalCoverageDto {
 
 	@Nullable
 	private String planName;
+
+	@Nullable
+	public String getConditionValue() {
+		if (condition != null)
+			return condition.getValue();
+		return null;
+	}
+
+	@Nullable
+	public String getMedicalCoverageName() {
+		return medicalCoverage.getName();
+	}
 }

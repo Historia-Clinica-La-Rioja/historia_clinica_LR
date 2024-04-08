@@ -40,6 +40,7 @@ public class VirtualConsultationSubscriber {
 		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/CHANGE-VIRTUAL-CONSULTATION-STATE", handleTopicState("virtual-consultation-state-change"));
 		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/NEW-VIRTUAL-CONSULTATION", handleTopicState("new-virtual-consultation"));
 		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/CHANGE-PROFESSIONAL-STATE", handleTopicState("virtual-consultation-professional-state-change"));
+		mqttCallExternalService.subscribe(null, "/HSI/VIRTUAL-CONSULTATION/CHANGE-RESPONSIBLE-PROFESSIONAL", handleTopicState("virtual-consultation-responsible-professional-change"));
 	}
 
 	private List<Consumer<MqttMetadataBo>> handleTopicState(String webSocketPathDestination) {

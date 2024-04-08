@@ -1,0 +1,25 @@
+<section class="label">
+    <a class="mat-body" *ngIf="!isLabelSelectorVisible" (click)="isLabelSelectorVisible = true">
+        <span>+ {{'turnos.appointment.labels.ADD_LABEL' | translate}}</span>
+    </a>
+
+    <div class="label-container" *ngIf="isLabelSelectorVisible">
+        <span [translate]="'turnos.appointment.labels.TITLE'" class="label-title"></span>
+        <span [translate]="'turnos.appointment.labels.SUBTITLE'"></span>
+        <div class="label-selector">
+            <button class="label-color" *ngIf="this.formLabel.get('color').value" mat-fab type="button" [ngStyle]="{'background': this.formLabel.get('color').value?.color}"></button>
+            <mat-form-field appearance="fill">
+                <mat-select [(value)]="selectedDiaryLabelId" placeholder="{{ 'turnos.appointment.labels.ASSOCIATE_LABEL' | translate }}">
+                    <mat-option *ngFor="let label of diaryLabels"
+                        (click)="updateLabel(label)"
+                        [value]="label.id">
+                        {{ label.description }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button class="delete-label" mat-icon-button *ngIf="this.formLabel.get('color').value" matSuffix type="button" (click)="updateLabel()">
+                <mat-icon color="warn">delete_outline</mat-icon>
+            </button>
+        </div>
+    </div>
+</section>

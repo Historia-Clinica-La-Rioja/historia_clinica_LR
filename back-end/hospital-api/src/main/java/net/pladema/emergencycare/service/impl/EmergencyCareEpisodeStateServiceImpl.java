@@ -67,7 +67,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 		if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId()))
 			freeOccupiedEmergencyCareSpace(episodeId, institutionId, emergencyCareStateId);
 		if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId())) {
-			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null, null);
 			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, null);
 		}
 		return true;
@@ -76,14 +76,14 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	private void freeOccupiedEmergencyCareSpace(Integer episodeId, Integer institutionId, Short emergencyCareStateId) {
 		Integer occupiedBedId = emergencyCareEpisodeRepository.getEmergencyCareEpisodeBedId(episodeId);
 		if (occupiedBedId != null) {
-			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null, null);
 			emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, null);
 			bedExternalService.freeBed(occupiedBedId);
 			return;
 		}
 
 		if (emergencyCareEpisodeRepository.getEmergencyCareEpisodeShockroomId(episodeId) != null) {
-			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null, null);
 			emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, null);
 			return;
 		}
@@ -101,23 +101,23 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 
 		if (bedId != null) {
 			if (emergencyCareStateId.equals(EEmergencyCareState.ATENCION.getId())) {
-				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, bedId);
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, bedId, null);
 				emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, bedId);
 				bedExternalService.updateBedStatusOccupied(bedId);
 			}
 			if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId())) {
-				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null, null);
 				emergencyCareEpisodeRepository.updateStateWithBed(episodeId, institutionId, emergencyCareStateId, null);
 				bedExternalService.freeBed(bedId);
 			}
 		}
 		if (shockroomId != null) {
 			if (emergencyCareStateId.equals(EEmergencyCareState.ATENCION.getId())) {
-				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, shockroomId);
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null, shockroomId);
 				emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, shockroomId);
 			}
 			if (emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId())) {
-				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null);
+				saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null, null);
 				emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, null);
 			}
 		}
@@ -135,11 +135,12 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 		}
 	}
 
-	private void saveHistoricEmergencyEpisode(Integer episodeId, Short emergencyCareStateId, Integer placeId) {
+	private void saveHistoricEmergencyEpisode(Integer episodeId, Short emergencyCareStateId, Integer bedId, Integer shockroomId) {
 		HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo();
 		toSave.setEmergencyCareEpisodeId(episodeId);
 		toSave.setEmergencyCareStateId(emergencyCareStateId);
-		toSave.setBedId(placeId);
+		toSave.setBedId(bedId);
+		toSave.setShockroomId(shockroomId);
 		historicEmergencyEpisodeService.saveChange(toSave);
 	}
 

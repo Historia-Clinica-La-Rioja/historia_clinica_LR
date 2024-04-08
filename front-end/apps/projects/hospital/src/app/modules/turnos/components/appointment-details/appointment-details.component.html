@@ -13,18 +13,20 @@
 			<span class="mat-body text">{{ emptyAppointment.doctorFullName}}</span>
 		</div>
 	</div>
-	<div fxFlex.lg="14%" fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="5px" *ngIf="emptyAppointment.clinicalSpecialtyName || emptyAppointment.alias">
-		<mat-icon class="icon" fontSet="material-icons-outlined"> add_box </mat-icon>
-		<div fxLayout="column">
-			<span class="mat-body text" *ngIf="emptyAppointment.alias === undefined else aliasExists">
-				{{ emptyAppointment.clinicalSpecialtyName }}
-			</span>
-			<ng-template #aliasExists>
-				<div fxLayout="row" fxLayoutGap="5px">
-					<span>{{ emptyAppointment.alias }}</span>
-					<span *ngIf="emptyAppointment.clinicalSpecialtyName"> {{" (" + emptyAppointment.clinicalSpecialtyName +") " }}</span>
-				</div>
-			</ng-template>
+	<div fxFlex.lg="14%" fxFlex.gt-xs="37%" fxFlex.xs="100%">
+		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" *ngIf="emptyAppointment.clinicalSpecialtyName || emptyAppointment.alias">
+			<mat-icon class="icon" fontSet="material-icons-outlined"> add_box </mat-icon>
+			<div fxLayout="column">
+				<span class="mat-body text" *ngIf="emptyAppointment.alias === undefined else aliasExists">
+					{{ emptyAppointment.clinicalSpecialtyName }}
+				</span>
+				<ng-template #aliasExists>
+					<div fxLayoutGap="5px">
+						<span>{{ emptyAppointment.alias }}</span>
+						<span *ngIf="emptyAppointment.clinicalSpecialtyName"> {{" (" + emptyAppointment.clinicalSpecialtyName +") " }}</span>
+					</div>
+				</ng-template>
+			</div>
 		</div>
 	</div>
 	<div fxFlex.lg="20%" fxFlex.gt-xs="100%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
@@ -32,8 +34,8 @@
 		<span class="mat-body text">{{ emptyAppointment.doctorsOfficeDescription }}</span>
 	</div>
 	<div fxFlex.lg="15%" fxFlex.gt-xs="100%" fxFlex.xs="100%">
-		<button id="assignAppointmentButton" mat-flat-button color="primary" (click)="checkAvailability()">
-			<span [translate]="'turnos.home.ASSIGN_APPOINTMENT'"></span>
+		<button id="assignAppointmentButton" mat-flat-button color="primary" (click)="assign()">
+			<span class="uppercase" [translate]="'turnos.home.ASSIGN_APPOINTMENT'"></span>
 		</button>
 	</div>
 </div>

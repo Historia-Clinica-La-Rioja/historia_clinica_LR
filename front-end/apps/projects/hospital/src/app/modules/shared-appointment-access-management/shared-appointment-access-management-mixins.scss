@@ -1,0 +1,5 @@
+@import "./components/reference-dashboard-filters/reference-dashboard-filters.component.scss-theme.scss";
+
+@mixin shared-appointment-access-management-mixins($theme) {
+    @include app-reference-dashboard-filters($theme);
+}

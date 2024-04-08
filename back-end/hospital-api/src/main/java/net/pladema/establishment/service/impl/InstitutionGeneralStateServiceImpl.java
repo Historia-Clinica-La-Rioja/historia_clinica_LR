@@ -1,6 +1,6 @@
 package net.pladema.establishment.service.impl;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.ERiskFactor;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import net.pladema.establishment.repository.VInstitutionRepository;
 import net.pladema.establishment.repository.VInstitutionRiskFactorRepository;
 import net.pladema.establishment.repository.entity.VInstitution;

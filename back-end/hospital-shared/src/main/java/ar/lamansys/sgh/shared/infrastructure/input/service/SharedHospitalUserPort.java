@@ -9,4 +9,6 @@ public interface SharedHospitalUserPort {
 	HospitalUserPersonInfoDto getUserCompleteInfo(Integer userId);
 
 	Optional<UserSharedInfoDto> fetchUserInfoFromNormalToken(String token);
+
+	Optional<String> getCuitByUserId(Integer userId);
 }

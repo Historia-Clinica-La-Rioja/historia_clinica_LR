@@ -131,6 +131,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			if (medicalDischarge)
 				this.internmentSummaryFacadeService.updateInternmentEpisode();
 		});
+
+		this.internmentActions.dialogRef$.subscribe(dialogRef => this.popUpOpen.next(dialogRef));
 	}
 
 	setInternmentInformation(internmentId: number) {
@@ -270,6 +272,14 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	openEpicrisisDraft() {
 		this.documentActions.editEpicrisisDraft(this.documentEpicrisisDraft);
+	}
+
+	openSurgicalReport() {
+		this.internmentActions.openSurgicalReport();
+		this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {
+			if (fieldsToUpdate)
+				this.updateInternmentSummary(fieldsToUpdate);
+		});
 	}
 
 	newTriage() {

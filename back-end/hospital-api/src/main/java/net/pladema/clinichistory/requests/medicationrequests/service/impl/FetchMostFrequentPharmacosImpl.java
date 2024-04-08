@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.medicationrequests.service.impl;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.snowstorm.exceptions.SnowstormPortException;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.medicationrequests.service.FetchMostFrequentPharmacos;
 
@@ -24,7 +25,7 @@ public class FetchMostFrequentPharmacosImpl implements FetchMostFrequentPharmaco
 	}
 
 	@Override
-	public List<SnomedBo> run(Integer institutionId) {
+	public List<SnomedBo> run(Integer institutionId) throws SnowstormPortException {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		List<SnomedBo> result = mostFrequentPharmacosStorage.getMostFrequentPharmacos(institutionId);
 		log.debug(OUTPUT, result);
