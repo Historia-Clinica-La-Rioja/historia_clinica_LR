@@ -111,6 +111,7 @@ import { AnestheticReportAntibioticProphylaxisComponent } from './modules/ambula
 import { AnesthesiaFormComponent } from './dialogs/anesthesia-form/anesthesia-form.component';
 import { AnestheticReportEndOfAnesthesiaStatusComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-end-of-anesthesia-status/anesthetic-report-end-of-anesthesia-status.component';
 import { AnestheticReportVitalSignsComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-vital-signs/anesthetic-report-vital-signs.component';
+import { AnestheticReportDocumentSummaryComponent } from './components/anesthetic-report-document-summary/anesthetic-report-document-summary.component';
 import { InternmentSummaryFacadeService } from './modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { MeasuringPointComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point/measuring-point.component';
 import { MeasuringPointBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/measuring-point-background-list/measuring-point-background-list.component';
@@ -156,6 +157,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnestheticReportAnthropometricDataComponent,
 		AnestheticReportClinicalEvaluationComponent,
 		AnestheticReportAnestheticHistoryComponent,
+		AnestheticReportDocumentSummaryComponent,
 		AnestheticReportUsualMedicationComponent,
 		AnestheticReportPremedicationAndFoodIntakeComponent,
 		MedicationBackgroundListComponent,
@@ -232,7 +234,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		FluidAdministrationPopupComponent,
   		AnesthesiaFormComponent,
 		//pipes
-		ShowTitleByPatientDataPipe,
+		ShowTitleByPatientDataPipe
 	],
 	imports: [
 		CommonModule,
