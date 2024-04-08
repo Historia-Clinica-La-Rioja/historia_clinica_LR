@@ -13,7 +13,7 @@ export const fetchHierarchicalUnitTypes = () => {
 }
 
 const fetchHierarchicalUnitsByInstitutionId = (id) => {
-    return sgxFetchApiWithToken(`backoffice/hierarchicalunits?institutionId=${id}`, { method: 'GET' })
+    return sgxFetchApiWithToken(`backoffice/hierarchicalunits?institutionId=${id}&size=1000`, { method: 'GET' })
 }
 
 const fetchUsersByHUId = (id) => {
