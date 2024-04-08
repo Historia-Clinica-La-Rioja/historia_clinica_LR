@@ -17,7 +17,9 @@ import java.util.stream.Stream;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EAnthropometricGraphicOption {
 
-	LENGHT_HEIGHT_FOR_AGE((short)1, "Talla para la edad");
+	LENGHT_HEIGHT_FOR_AGE((short)1, "Talla para la edad"),
+	WEIGHT_FOR_AGE((short)2, "Peso para la edad");
+
 
 	private Short id;
 	private String value;

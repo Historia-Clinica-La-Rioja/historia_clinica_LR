@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.logging.log4j.util.Strings;
-import org.fhir.ucum.Decimal;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
@@ -91,7 +90,7 @@ public class GetAnthropometricGraphicData {
 			evolutionValues = patientEvolution.stream().map(HCEAnthropometricDataBo::getHeight).filter(Objects::nonNull).collect(Collectors.toList());
 		}
 		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.WEIGHT_FOR_AGE)) {
-			evolutionValues = patientEvolution.stream().map(HCEAnthropometricDataBo::getHeight).filter(Objects::nonNull).collect(Collectors.toList());
+			evolutionValues = patientEvolution.stream().map(HCEAnthropometricDataBo::getWeight).filter(Objects::nonNull).collect(Collectors.toList());
 		}
 		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.BMI_FOR_AGE)) {
 			evolutionValues = patientEvolution.stream().map(HCEAnthropometricDataBo::getBmi).filter(Objects::nonNull).collect(Collectors.toList());
