@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AnestheticSubstanceDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { AnestheticSubstanceDto, NewDosageDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -85,9 +85,16 @@ export class FluidAdministrationService {
 
   getFluidAdministrationDto(): AnestheticSubstanceDto[] {
     return this.fluidAdministrationDataList.map(fluidAdministrationData => {
-      return {
-        snomed: fluidAdministrationData.snomed,
-        dosage: {
+          return {
+            snomed: fluidAdministrationData.snomed,
+            dosage: this.setNewDosageDto(fluidAdministrationData)
+          }
+        }
+    )
+  }
+
+  private setNewDosageDto(fluidAdministrationData: FluidAdministrationData): NewDosageDto {
+    return fluidAdministrationData.amount ? {
           chronic: null,
           diary: null,
           quantity: {
@@ -95,9 +102,7 @@ export class FluidAdministrationService {
             value: fluidAdministrationData.amount
           },
         }
-      }
-    }
-    )
+        : null;
   }
 
   private handleAddFluidAdministration(anestheticTechnique: FluidAdministrationData): boolean {

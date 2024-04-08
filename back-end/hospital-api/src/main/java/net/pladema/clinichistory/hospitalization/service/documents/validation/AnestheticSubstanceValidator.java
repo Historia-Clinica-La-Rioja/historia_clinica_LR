@@ -17,7 +17,7 @@ public class AnestheticSubstanceValidator {
 
     public void assertSnomedAndDosageAndViaFields(List<AnestheticSubstanceBo> substances) {
 
-        this.assertNotDuplicated(substances);
+        this.assertSnomed(substances);
 
         substances.stream()
                 .peek(this::assertDosageField)
@@ -26,9 +26,13 @@ public class AnestheticSubstanceValidator {
 
     public void assertSnomedAndDosageFields(List<? extends AnestheticSubstanceBo> substances) {
 
-        this.assertNotDuplicated(substances);
+        this.assertSnomed(substances);
 
         substances.forEach(this::assertDosageField);
+    }
+
+    public void assertSnomed(List<? extends AnestheticSubstanceBo> substances) {
+        this.assertNotDuplicated(substances);
     }
 
     private void assertDosageField(AnestheticSubstanceBo substance) {

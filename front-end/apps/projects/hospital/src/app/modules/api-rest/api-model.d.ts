@@ -194,7 +194,7 @@ export interface AnestheticReportDto {
 }
 
 export interface AnestheticSubstanceDto extends ClinicalTermDto {
-    dosage: NewDosageDto;
+    dosage?: NewDosageDto;
     viaId?: number;
     viaNote?: string;
 }

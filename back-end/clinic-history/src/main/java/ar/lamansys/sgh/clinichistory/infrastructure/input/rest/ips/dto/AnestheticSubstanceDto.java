@@ -3,7 +3,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
 import javax.annotation.Nullable;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,9 @@ import lombok.ToString;
 @ToString
 public class AnestheticSubstanceDto extends ClinicalTermDto {
 
-    @NotNull(message = "{value.mandatory}")
+    private static final long serialVersionUID = -6105375851400552126L;
+
+    @Nullable
     private @Valid NewDosageDto dosage;
 
     @Nullable
