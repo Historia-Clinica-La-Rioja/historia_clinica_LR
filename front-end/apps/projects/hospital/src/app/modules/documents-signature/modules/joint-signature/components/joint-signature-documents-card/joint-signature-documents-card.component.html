@@ -1,6 +1,10 @@
 <section>
 	<header>
 		<h2 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h2>
+		<div>
+			<app-button [color]="'warn'" [isLoading]="false" [text]="'firma-conjunta.REJECT_SIGNATURE.BUTTON_REJECT'"
+				[buttonType]="'mat-stroked-button'" [disabled]="false" (clicked)="openPopUpRejectSignature()"></app-button>
+		</div>
 	</header>
 	<div class="spinner" *ngIf="isLoading">
 		<mat-spinner color="primary"></mat-spinner>

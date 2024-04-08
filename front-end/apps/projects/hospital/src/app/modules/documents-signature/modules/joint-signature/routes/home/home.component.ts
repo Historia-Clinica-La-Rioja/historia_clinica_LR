@@ -11,7 +11,6 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-
 	buttonBack = false;
 	routePrefix: string;
 

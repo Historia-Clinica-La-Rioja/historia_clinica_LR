@@ -2,11 +2,14 @@ import { Component, Input, OnInit, ViewChild, } from '@angular/core';
 import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { buildHeaderInformation, buildItemListCard } from '../../mappers/joint-signature.mapper';
-import { ElectronicSignatureInvolvedDocumentDto, PageDto } from '@api-rest/api-model';
+import { ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { map, tap } from 'rxjs';
 import { INITIAL_PAGE, PAGE_SIZE, PAGE_SIZE_OPTIONS } from '../../constants/joint-signature.constants';
+import { MatDialog } from '@angular/material/dialog';
+import { RejectSignatureComponent } from '../../dialogs/reject-signature/reject-signature.component';
 import { MatPaginator } from '@angular/material/paginator';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-joint-signature-documents-card',
@@ -29,12 +32,13 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	selectedDocumentId: number;
 	elementsAmount: number;
 	pageSize = PAGE_SIZE;
+	selectedDocumentsId: number [];
 
 	readonly INITIAL_PAGE = INITIAL_PAGE;
 	readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 
-	constructor(
-		private readonly jointSignatureService: JointSignatureService,
+	constructor(private dialog: MatDialog, private readonly snackBarService: SnackBarService,
+		private readonly jointSignatureService: JointSignatureService
 	) { }
 
 	ngOnInit(): void {
@@ -72,5 +76,28 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	seeDetails(ids: SelectableCardIds): void {
 		this.selectedDocumentId = ids.id;
 		this.headerInformation = buildHeaderInformation(this.jointSignatureDocuments.find(item => item.documentId === ids.id));
+	}
+	openPopUpRejectSignature() {
+		const dialogRef = this.dialog.open(RejectSignatureComponent, {
+			width: '420px',
+			autoFocus: false,
+			disableClose: true,
+		})
+		dialogRef.afterClosed().subscribe(reason => {
+			if (reason) {
+				this.rejectSignature(reason);
+			}
+		})
+	}
+
+	rejectSignature(reasonRejection: RejectDocumentElectronicJointSignatureDto) {
+		reasonRejection.documentIds = this.selectedDocumentsId;
+		this.jointSignatureService.rejectDocumentElectronicJointSignature(reasonRejection).subscribe(res => {
+			this.snackBarService.showSuccess('firma-conjunta.REJECT_SIGNATURE.REJECT_SUCCESS');
+		})
+	}
+
+	selectedIds(ids: number[]) {
+		this.selectedDocumentsId = ids;
 	}
 }

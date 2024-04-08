@@ -22,7 +22,25 @@
 			"PENDING": "Firma pendiente",
 			"REJECTED": "Solicitud rechazada",
 			"SIGNED": "Firma completada",
-			"OUTDATED": "Firma vencida"
+			"OUTDATED": "Firma vencida",
+			"ALL": "Todas"
+		},
+		"REJECT_SIGNATURE": {
+			"BUTTON_REJECT": "Rechazar firma",
+			"REJECT_SUCCESS" : "Se rechazó la solicitud de firma conjunta",
+			"form": {
+				"TITLE": "Rechazar solicitud de firma",
+				"PLACEHOLDER_MOTIVE": "Seleccionar motivo",
+				"MOTIVE": "Motivo",
+				"ERROR_MOTIVE": "Seleccione motivo",
+				"OBSERVATIONS" : "Observaciones",
+				"PLACEHOLDER_OBSERVATIONS": "Por favor, proporcione cualquier detalle adicional necesario",
+				"ERROR_OBSERVATIONS": "Ingrese observaciones",
+				"motive-options" : {
+					"OTHER": "Otro",
+					"WRONG_PROFESSIONAL": "Usuario incorrecto"
+				}
+			}
 		}
 	}
 }

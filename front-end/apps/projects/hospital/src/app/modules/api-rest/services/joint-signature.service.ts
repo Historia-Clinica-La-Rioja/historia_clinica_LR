@@ -1,8 +1,6 @@
-
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentElectronicSignatureProfessionalStatusDto, ElectronicSignatureInvolvedDocumentDto, PageDto } from '@api-rest/api-model';
+import { DocumentElectronicSignatureProfessionalStatusDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -10,7 +8,6 @@ import { Observable } from 'rxjs';
 @Injectable({
 	providedIn: 'root'
 })
-
 export class JointSignatureService {
 
 	private readonly BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}`;
@@ -27,7 +24,12 @@ export class JointSignatureService {
 	}
 
 	getDocumentElectronicSignatureProfessionalStatus(documentId: number): Observable<DocumentElectronicSignatureProfessionalStatusDto[]> {
-		const url = `${this.BASE_URL}/document/${documentId}/electronic-joint-signature/get-professionals-status`
-		return this.http.get<DocumentElectronicSignatureProfessionalStatusDto[]>(url);
+		const URL = this.BASE_URL + `document/${documentId}/electronic-joint-signature/get-professionals-status`
+		return this.http.get<DocumentElectronicSignatureProfessionalStatusDto[]>(URL);
+	}
+
+	rejectDocumentElectronicJointSignature(rejectReason: RejectDocumentElectronicJointSignatureDto): Observable<number> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/electronic-joint-signature/reject`;
+		return this.http.put<number>(url, rejectReason);
 	}
 }

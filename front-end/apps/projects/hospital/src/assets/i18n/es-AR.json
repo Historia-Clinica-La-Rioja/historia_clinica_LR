@@ -60,7 +60,8 @@
 		"SIGN": "Firmar documento",
 		"APPLY_FILTERS": "Aplicar filtros",
 		"SHARE": "Compartir",
-		"DOWNLOAD": "Descargar"
+		"DOWNLOAD": "Descargar",
+		"REJECT": "Rechazar"
 	},
 	"forms": {
 		"REQUIRED": "El campo es requerido",
