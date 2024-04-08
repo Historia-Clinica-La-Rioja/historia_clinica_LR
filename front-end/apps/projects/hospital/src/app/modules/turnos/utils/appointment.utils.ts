@@ -104,7 +104,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
             return appointmentBlockMotivesFacadeService?.getAppointmentBlockMotiveById(appointment.appointmentBlockMotiveId);
         }
         if (appointment.patient?.typeId === TEMPORARY_PATIENT) {
-            return `${momentParseTime(from).format(DateFormat.HOUR_MINUTE)} ${viewName ? viewName : ''} (Temporal)`;
+            viewName = '(Temporal)';
         }
 
         return defaultHtml(from, appointment, viewName);
