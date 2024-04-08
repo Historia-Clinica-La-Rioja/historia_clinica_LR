@@ -22,7 +22,7 @@ export class EditMeasuringPointComponent {
     bloodPressureMaxError: String;
     pulseError: String;
     saturationError: String;
-    endTidalError: String;    
+    endTidalError: String;
     timePickerData: TimePickerData;
 
     private readonly destroy$ = new Subject();
@@ -91,133 +91,49 @@ export class EditMeasuringPointComponent {
         }
     }
 
-    private handleFormChanges() {
-        this.form.controls.bloodPressureMax.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
-			this.checkBloodPressureMaxErrors();
+	private handleFormChanges() {
+		this.handleFormControlChanges('bloodPressureMax', 'bloodPressureMaxError');
+		this.handleFormControlChanges('bloodPressureMin', 'bloodPressureMinError');
+		this.handleFormControlChanges('pulse', 'pulseError');
+		this.handleFormControlChanges('saturation', 'saturationError');
+		this.handleFormControlChanges('endTidal', 'endTidalError');
+	}
+
+	private handleFormControlChanges(controlName: string, errorProperty: string) {
+		this.form.controls[controlName].valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
+			this.checkErrors(controlName, errorProperty);
 		});
+	}
 
-		this.form.controls.bloodPressureMin.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
-			this.checkBloodPressureMinErrors();
-		});
-        
-		this.form.controls.pulse.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
-			this.checkPulseErrors();
-		});
+	private checkErrors(controlName: string, errorProperty: string) {
+		const control = this.form.controls[controlName];
+		controlName = this.isBloodPresure(controlName)
+		if (control.hasError('min')) {
+			this.translateService.get('forms.MIN_ERROR', { min: VITAL_SIGNS.MIN[controlName] }).subscribe(
+				(errorMsg: string) => { this[errorProperty] = errorMsg; }
+			);
+		}
+		else if (control.hasError('max')) {
+			this.translateService.get('forms.MAX_ERROR', { max: VITAL_SIGNS.MAX[controlName] }).subscribe(
+				(errorMsg: string) => { this[errorProperty] = errorMsg; }
+			);
+		}
+		else if (control.hasError('pattern')) {
+			this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
+				(errorMsg: string) => { this[errorProperty] = errorMsg; }
+			);
+		}
+		else {
+			this[errorProperty] = '';
+		}
+	}
 
-		this.form.controls.saturation.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
-			this.checSaturationErrors();
-		});
-        
-		this.form.controls.endTidal.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(_ => {
-			this.checkEndTidalErrors();
-		});
-    }
-
-    private checkBloodPressureMinErrors() {
-        if (this.form.controls.bloodPressureMin.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: VITAL_SIGNS.MIN.bloodPressure }).subscribe(
-                (errorMsg: string) => this.bloodPressureMinError = errorMsg
-            );
-        }
-        else if (this.form.controls.bloodPressureMin.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: VITAL_SIGNS.MAX.bloodPressure }).subscribe(
-                (errorMsg: string) => this.bloodPressureMinError = errorMsg
-            );
-        }
-        else if (this.form.controls.bloodPressureMin.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.bloodPressureMinError = errorMsg
-            );
-        }
-        else {
-            this.bloodPressureMinError = '';
-        }
-    }
-
-    private checkBloodPressureMaxErrors() {
-        if (this.form.controls.bloodPressureMax.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: VITAL_SIGNS.MIN.bloodPressure }).subscribe(
-                (errorMsg: string) => this.bloodPressureMaxError = errorMsg
-            );
-        }
-        else if (this.form.controls.bloodPressureMax.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: VITAL_SIGNS.MAX.bloodPressure }).subscribe(
-                (errorMsg: string) => this.bloodPressureMaxError = errorMsg
-            );
-        }
-        else if (this.form.controls.bloodPressureMax.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.bloodPressureMaxError = errorMsg
-            );
-        }
-        else {
-            this.bloodPressureMaxError = '';
-        }
-    }
-
-    private checkPulseErrors() {
-        if (this.form.controls.pulse.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: VITAL_SIGNS.MIN.pulse }).subscribe(
-                (errorMsg: string) => this.pulseError = errorMsg
-            );
-        }
-        else if (this.form.controls.pulse.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: VITAL_SIGNS.MAX.pulse }).subscribe(
-                (errorMsg: string) => this.pulseError = errorMsg
-            );
-        }
-        else if (this.form.controls.pulse.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.pulseError = errorMsg
-            );
-        }
-        else {
-            this.pulseError = '';
-        }
-    }
-
-    private checSaturationErrors() {
-        if (this.form.controls.saturation.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: VITAL_SIGNS.MIN.saturation }).subscribe(
-                (errorMsg: string) => this.saturationError = errorMsg
-            );
-        }
-        else if (this.form.controls.saturation.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: VITAL_SIGNS.MAX.saturation }).subscribe(
-                (errorMsg: string) => this.saturationError = errorMsg
-            );
-        }
-        else if (this.form.controls.saturation.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.saturationError = errorMsg
-            );
-        }
-        else {
-            this.saturationError = ''
-        }
-    }
-
-    private checkEndTidalErrors() {
-        if (this.form.controls.endTidal.hasError('min')) {
-            this.translateService.get('forms.MIN_ERROR', { min: VITAL_SIGNS.MIN.endTidal }).subscribe(
-                (errorMsg: string) => this.endTidalError = errorMsg
-            );
-        }
-        else if (this.form.controls.endTidal.hasError('max')) {
-            this.translateService.get('forms.MAX_ERROR', { max: VITAL_SIGNS.MAX.endTidal }).subscribe(
-                (errorMsg: string) => this.endTidalError = errorMsg
-            );
-        }
-        else if (this.form.controls.endTidal.hasError('pattern')) {
-            this.translateService.get('forms.FORMAT_NUMERIC_INTEGER').subscribe(
-                (errorMsg: string) => this.endTidalError = errorMsg
-            );
-        }
-        else {
-            this.endTidalError = ''
-        }
-    }
-
+	private isBloodPresure(controlName: string): string {
+		if (controlName === 'bloodPressureMax' || controlName === 'bloodPressureMin') {
+			return 'bloodPressure'
+		}
+		return controlName
+	}
 }
 
 export interface EditPointData {
