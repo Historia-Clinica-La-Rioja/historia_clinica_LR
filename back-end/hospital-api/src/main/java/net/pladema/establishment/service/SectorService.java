@@ -10,4 +10,6 @@ public interface SectorService {
 	List<SectorBO> getSectorOfType(Integer institutionId, Short sectorTypeId);
 
 	AttentionPlacesQuantityBo quantityAttentionPlacesBySectorType(Integer institutionId, Short sectorTypeId);
+
+	String getSectorName(Integer sectorId);
 }

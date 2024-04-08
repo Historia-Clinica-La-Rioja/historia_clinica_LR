@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.service;
 
-
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
@@ -78,5 +77,9 @@ public interface InternmentEpisodeService {
 	GeneratedBlobBo generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
 
 	void existsConsentDocumentInInternmentEpisode(Integer internmentEpisodeId, Integer consentId) throws MoreThanOneConsentDocumentException;
+    
+	Integer getInternmentEpisodeSectorId(Integer internmentEpisodeId);
+
+	Integer getInternmentEpisodeRoomId(Integer internmentEpisodeId);
 
 }

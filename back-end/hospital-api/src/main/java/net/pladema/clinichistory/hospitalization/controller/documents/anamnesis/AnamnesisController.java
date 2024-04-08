@@ -79,6 +79,9 @@ public class AnamnesisController {
         AnamnesisBo anamnesis = anamnesisMapper.fromAnamnesisDto(anamnesisDto);
         anamnesis.setEncounterId(internmentEpisodeId);
         anamnesis.setInstitutionId(institutionId);
+		anamnesis.setRoomId(internmentEpisodeService.getInternmentEpisodeRoomId(internmentEpisodeId));
+		anamnesis.setSectorId(internmentEpisodeService.getInternmentEpisodeSectorId(internmentEpisodeId));
+		internmentEpisodeService.getMedicalCoverage(internmentEpisodeId).ifPresent(medicalCoverage -> anamnesis.setMedicalCoverageId(medicalCoverage.getId()));
 
         internmentEpisodeService.getPatient(internmentEpisodeId)
                 .map(patientExternalService::getBasicDataFromPatient)

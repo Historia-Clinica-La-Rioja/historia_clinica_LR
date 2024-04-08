@@ -198,9 +198,32 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 	@Override
 	public Integer getEmergencyEpisodeEpisodeIdByDate(Integer institutionId, Integer patientId, LocalDateTime date) {
 		Page<Integer> id = emergencyCareEpisodeRepository.getInternmentEpisodeIdByDate(institutionId, patientId, date, PageRequest.of(0, 1));
-		if (!id.getContent().isEmpty())
-			return id.getContent().get(0);
+		if (!id.getContent().isEmpty()) return id.getContent().get(0);
 		return null;
+	}
+    
+    @Override
+	public Optional<Integer> getRoomId(Integer emergencyCareEpisodeId) {
+		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		Integer result = emergencyCareEpisodeRepository.getRoomId(emergencyCareEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return Optional.ofNullable(result);
+	}
+
+	@Override
+	public Optional<Integer> getDoctorsOfficeId(Integer emergencyCareEpisodeId) {
+		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		Integer result = emergencyCareEpisodeRepository.getEmergencyCareEpisodeDoctorsOfficeId(emergencyCareEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return Optional.ofNullable(result);
+	}
+
+	@Override
+	public Optional<Integer> getShockRoomId(Integer emergencyCareEpisodeId) {
+		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		Integer result = emergencyCareEpisodeRepository.getEmergencyCareEpisodeShockroomId(emergencyCareEpisodeId);
+		LOG.debug(OUTPUT, result);
+		return Optional.ofNullable(result);
 	}
 
 	private void validateUpdate(EmergencyCareEpisode persisted, EmergencyCareBo toUpdate){

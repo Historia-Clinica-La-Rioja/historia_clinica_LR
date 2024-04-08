@@ -79,4 +79,10 @@ public interface SectorRepository extends SGXAuditableEntityJPARepository<Sector
 	AttentionPlacesQuantityBo quantityAttentionPlacesBySectorType(@Param("institutionId") Integer institutionId,
 															@Param("sectorTypeId") Short sectorTypeId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT description " +
+			"FROM Sector s " +
+			"WHERE s.id = :sectorId")
+	String getSectorName(@Param("sectorId") Integer sectorId);
+
 }

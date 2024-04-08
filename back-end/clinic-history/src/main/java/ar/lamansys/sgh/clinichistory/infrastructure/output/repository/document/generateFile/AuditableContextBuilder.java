@@ -70,6 +70,14 @@ public class AuditableContextBuilder {
 
 	private final SharedPersonPort sharedPersonPort;
 
+	private final Function<Integer, String> sectorNameFunction;
+
+	private final Function<Integer, String> roomNumberFunction;
+
+	private final Function<Integer, String> doctorsOfficeDescriptionFunction;
+
+	private final Function<Integer, String> shockRoomDescriptionFunction;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -85,7 +93,11 @@ public class AuditableContextBuilder {
 			AssetsService assetsService,
 			SharedStaffPort sharedStaffPort,
 			SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder,
-			SharedPersonPort sharedPersonPort) {
+			SharedPersonPort sharedPersonPort,
+			SectorFinder sectorFinder,
+			RoomFinder roomFinder,
+			DoctorsOfficeFinder doctorsOfficeFinder,
+			ShockRoomFinder shockRoomFinder) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -93,15 +105,18 @@ public class AuditableContextBuilder {
 		this.sharedDiagnosticImagingOrder = sharedDiagnosticImagingOrder;
 		this.logger = LoggerFactory.getLogger(getClass());
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
-		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
-		this.clinicalSpecialtyDtoFunction = (Integer specialtyId) ->
-				clinicalSpecialtyFinder.getClinicalSpecialty(specialtyId);
+		this.authorFromDocumentFunction = documentAuthorFinder::getAuthor;
+		this.clinicalSpecialtyDtoFunction = clinicalSpecialtyFinder::getClinicalSpecialty;
 		this.riskFactorMapper = riskFactorMapper;
 		this.featureFlagsService = featureFlagsService;
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
 		this.assetsService = assetsService;
 		this.personContactInfoFunction = sharedPersonPort::getPersonContactInfoById;
 		this.sharedPersonPort = sharedPersonPort;
+		this.sectorNameFunction = sectorFinder::getSectorName;
+		this.roomNumberFunction = roomFinder::getRoomNumber;
+		this.doctorsOfficeDescriptionFunction = doctorsOfficeFinder::getDoctorsOfficeDescription;
+		this.shockRoomDescriptionFunction = shockRoomFinder::getShockRoomDescription;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -180,10 +195,23 @@ public class AuditableContextBuilder {
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
 		contextMap.put("otherRiskFactors", document.getOtherRiskFactors());
 		contextMap.put("notes", document.getNotes());
-		contextMap.put("author", authorFromDocumentFunction.apply(document.getId()));
+
+		var author = authorFromDocumentFunction.apply(document.getId());
+		contextMap.put("author", author);
+		contextMap.put("professions", String.join(", ", author.getProfessions().stream().map(profession -> profession.getDescription()).collect(Collectors.toList())));
+
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+		contextMap.put("encounterId", document.getEncounterId());
+		contextMap.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
+		contextMap.put("sector", sectorNameFunction.apply(document.getSectorId()));
+		contextMap.put("room", roomNumberFunction.apply(document.getRoomId()));
+		contextMap.put("doctorsOffice", doctorsOfficeDescriptionFunction.apply(document.getDoctorsOfficeId()));
+		contextMap.put("shockRoom", shockRoomDescriptionFunction.apply(document.getShockRoomId()));
+
+		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
+		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> contextMap.put("patientCoverage", sharedPatientMedicalCoverageBo));
 	}
 
 	private <T extends IDocumentBo> void addRecipeContextDocumentData(Map<String, Object> ctx, T document) {
@@ -195,9 +223,6 @@ public class AuditableContextBuilder {
 		ctx.put("professionalName", sharedPersonPort.getCompletePersonNameById(professional.getPersonId()));
 
 		ctx.put("contactInfo", personContactInfoFunction.apply(((BasicPatientDto) ctx.get("patient")).getPerson().getId()));
-
-		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
-		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));
 
 		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		ctx.put("requestDate", date);

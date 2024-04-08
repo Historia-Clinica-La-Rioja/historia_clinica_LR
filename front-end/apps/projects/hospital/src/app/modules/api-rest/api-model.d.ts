@@ -2423,6 +2423,7 @@ export interface InstitutionDto extends Serializable {
 }
 
 export interface InstitutionInfoDto extends Serializable {
+    address: string;
     email: string;
     id: number;
     name: string;

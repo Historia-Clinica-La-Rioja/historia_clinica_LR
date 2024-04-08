@@ -51,6 +51,7 @@ public class CreateCounterReference {
 		assertValidReferenceStatus(referenceData);
 
         LocalDate now = dateTimeProvider.nowDate();
+        counterReferenceBo.setPatientMedicalCoverageId(counterReferenceAppointmentStorage.getPatientMedicalCoverageId(counterReferenceBo.getPatientId(), doctorInfoBo.getId()));
 
         var encounterId = counterReferenceStorage.save(
                 new CounterReferenceInfoBo(null,

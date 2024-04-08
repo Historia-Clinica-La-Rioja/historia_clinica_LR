@@ -3,9 +3,11 @@ package net.pladema.establishment.controller.service.impl;
 import java.time.ZoneId;
 import java.util.Optional;
 
+import net.pladema.address.controller.service.domain.AddressBo;
+import net.pladema.address.service.AddressService;
+
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.shared.domain.general.AddressBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
@@ -18,8 +20,11 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
 
     private final InstitutionService institutionService;
 
-    public InstitutionExternalServiceImpl(InstitutionService institutionService) {
+	private final AddressService addressService;
+
+    public InstitutionExternalServiceImpl(InstitutionService institutionService, AddressService addressService) {
         this.institutionService = institutionService;
+		this.addressService = addressService;
     }
 
     @Override
@@ -30,8 +35,10 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
 
     @Override
     public InstitutionInfoDto fetchInstitutionById(Integer id) {
+		AddressBo addressBo = addressService.getAddressByInstitution(id);
+		String address = addressBo.getStreet() + " " + addressBo.getNumber();
         return Optional.ofNullable(institutionService.get(id))
-                .map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getSisaCode()))
+                .map(institutionBo -> new InstitutionInfoDto(institutionBo.getId(), institutionBo.getName(), institutionBo.getSisaCode(), address, institutionBo.getPhone(), institutionBo.getEmail()))
                 .orElse(null);
     }
 
@@ -43,7 +50,7 @@ public class InstitutionExternalServiceImpl implements InstitutionExternalServic
 	}
 
 	@Override
-	public AddressBo fetchInstitutionAddress(Integer id){
+	public ar.lamansys.sgh.shared.domain.general.AddressBo fetchInstitutionAddress(Integer id){
 		return Optional.ofNullable(institutionService.getInstitutionAddress(id))
 				.orElse(null);
 	}

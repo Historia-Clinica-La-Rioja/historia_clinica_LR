@@ -20,18 +20,255 @@
             text-justify: inter-word;
             white-space: pre-wrap;
         }
+
         .note {
             font-family: inherit;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+
+        /*HEADER*/
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        .header-space {
+            height: 200px;
+        }
+
+        /*FOOTER*/
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&#38;display=swap');
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @page {
+            @bottom-right {
+                content: "Página " counter(page) " de " counter(pages);
+                font-weight: 400;
+                font-family: 'Roboto', sans-serif;
+                font-size: 9.5px;
+                padding-bottom: 20px;
+            }
+        }
+
+        .line {
+            border: 0;
+            height: 1px;
+            background: #333;
+            background-image: linear-gradient(to right, #ccc, #333, #ccc);
+        }
+
+        .footer-space {
+            height: 80px;
+        }
+
+        table {
+            width: 100%;
+            -fs-table-paginate: paginate;
+        }
+
+        /*TEXT FORMAT*/
+        .data-text {
+            font-weight: 400;
+            font-family: 'Roboto', sans-serif;
+            font-size: 13.21px;
+        }
+
+        .section-title {
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            font-size: 13.21px;
+            padding-bottom: 5px;
+        }
+
+        .data-title {
+            font-weight: 400;
+            font-family: 'Roboto', sans-serif;
+            font-size: 10.57px;
+        }
+
+        .institution-data {
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            font-size: 10px;
+            padding-top: 8px;
+        }
+
+        .document-title {
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            text-transform: uppercase;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        .section-title {
+            font-weight: 500;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14.35px;
+        }
+
+        .section-data {
+            font-weight: 400;
+            font-family: 'Roboto', sans-serif;
+            font-size: 12.56px;
+        }
+
+        .row-content {
+            float: left;
+            margin-right: 30px;
+        }
 	</style>
 </head>
 <body>
 
-    <div th:fragment="header (title, subtitle)">
-        <h2 th:text="${title}"></h2>
-        <p th:text="${subtitle}"></p>
+    <div th:fragment="header">
+        <div class="header">
+            <div style="padding-bottom: 50px;">
+                <img style="width: 250px; height: 72px;" th:src="${'data:image/jpeg;charset=utf-8;base64,' + institutionLogo}" alt=""></img>
+                <div style="float: right; width: 63%;">
+                    <div class="institution-data" th:text="${institution.address}"></div>
+                    <div class="institution-data" th:text="${'Tel: ' + institution.phone}"></div>
+                    <div class="institution-data" th:text="${institution.email}"></div>
+                </div>
+            </div>
+            <div>
+                <div class="section-title">Información general</div>
+                <div>
+                    <div class="row-content">
+                        <div class="data-title">Nombre y apellido del paciente</div>
+                        <div style="float: left; margin-right: 3px;">
+                            <div class="data-text" style="text-transform: uppercase;" th:if="${!selfPerceivedFF || patient.person.nameSelfDetermination == null || patient.person.nameSelfDetermination == ''}" th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></div>
+                            <div class="data-text" style="text-transform: uppercase;" th:if="${selfPerceivedFF && patient.person.nameSelfDetermination != null && patient.person.nameSelfDetermination != ''}" th:text="${patient.person.nameSelfDetermination}"></div>
+                        </div>
+                        <div style="float: left;">
+                            <div class="data-text" style="text-transform: uppercase;" th:text="${patient.person.lastName + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></div>
+                        </div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Documento</div>
+                        <div class="data-text" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">N° HC</div>
+                        <div class="data-text" th:text="${patient.id}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">ID Encuentro</div>
+                        <div class="data-text" th:text="${encounterId}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Edad</div>
+                        <div class="data-text" th:text="${patient.person.age}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Fecha Nac.</div>
+                        <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="clear: both;">
+                <hr class="line"></hr>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos encuentro -->
+    <div th:fragment="encounterData(type)">
+        <div>
+            <div>
+                <div class="section-title">Episodio/Encuentro</div>
+                <div style="margin-bottom: 10px;">
+                    <div class="row-content">
+                        <div class="data-title">Institucion</div>
+                        <div class="data-text" th:text="${institution.name}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Sector/Servicio</div>
+                        <div class="data-text" th:if="${sector}" th:text="${sector}"></div>
+                        <div class="data-text" th:unless="${sector}">Sin información</div>
+                    </div>
+                    <div class="row-content" th:if="${doctorsOffice != null}">
+                        <div class="data-title">Consultorio</div>
+                        <div class="data-text" th:text="${doctorsOffice}"></div>
+                    </div>
+                    <div class="row-content" th:if="${room != null}">
+                        <div class="data-title">Habitación</div>
+                        <div class="data-text" th:text="${room}"></div>
+                    </div>
+                    <div class="row-content" th:if="${shockRoom != null}">
+                        <div class="data-title">Shockroom</div>
+                        <div class="data-text" th:text="${shockRoom}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Tipo</div>
+                        <div class="data-text" th:text="${type}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Fecha y Hora</div>
+                        <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy | HH:mm') + ' hs'}"></div>
+                    </div>
+                </div>
+                <div style="clear: both; margin-bottom: 10px;">
+                    <div class="row-content">
+                        <div class="data-title">Cobertura</div>
+                        <div class="data-text" th:if="${patientCoverage != null}" th:text="${patientCoverage.medicalCoverage.name}"></div>
+                        <div class="data-text" th:unless="${patientCoverage != null}">Sin información</div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">N° de credencial</div>
+                        <div class="data-text" th:if="${patientCoverage != null && patientCoverage.affiliateNumber != null}" th:text="${patientCoverage.affiliateNumber}"></div>
+                        <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.affiliateNumber != null}">Sin información</div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Plan</div>
+                        <div class="data-text" th:if="${patientCoverage != null && patientCoverage.planName != null}" th:text="${patientCoverage.planName}"></div>
+                        <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.planName != null}">Sin información</div>
+                    </div>
+                </div>
+            </div>
+            <div style="clear: both;">
+                <hr class="line"></hr>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profesional -->
+    <div th:fragment="professionalData">
+        <div>
+            <div class="section-title">Profesional responsable</div>
+            <div>
+                <div class="row-content">
+                    <div class="data-title">Nombre y apellido</div>
+                    <div class="data-text" style="text-transform: uppercase;" th:if="${nameSelfDeterminationFF}" th:text="${author.nameSelfDetermination + ' ' + author.lastName}"></div>
+                    <div class="data-text" style="text-transform: uppercase;" th:unless="${nameSelfDeterminationFF}" th:text="${author.firstName + ' ' + author.lastName}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Profesión</div>
+                    <div class="data-text" th:if="${professions != null}" th:text="${professions}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Matricula</div>
+                    <div class="data-text" th:text="${author.completeLicenseInfo}"></div>
+                </div>
+            </div>
+            <div style="clear: both;">
+                <hr class="line"></hr>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tipo Documento -->
+    <div th:fragment="documentTypeTitle(title)">
+        <div class="document-title" th:text="${title}"></div>
     </div>
 
     <!-- Datos personales -->
@@ -50,31 +287,21 @@
     </div>
 
     <!-- Especialidad clínica -->
-    <div th:fragment="clinicalSpecialty (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${clinicalSpecialty == null}">
-            <dl class="lista" >
-                <dd><p >Sin especialidad asociada</p></dd>
-            </dl>
-        </div>
-        <div th:if="${clinicalSpecialty != null}">
-            <dl>
-                <dd><p  th:text="${'- ' + clinicalSpecialty.name}"></p></dd>
+    <div th:fragment="clinicalSpecialty (message)" th:if="${clinicalSpecialty != null}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data">
+                <dd><p th:text="${'- ' + clinicalSpecialty.name}"></p></dd>
             </dl>
         </div>
     </div>
 
     <!-- Diagnóstico principal -->
-    <div th:fragment="mainDiagnosis (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${mainDiagnosis == null}">
-            <dl class="lista" >
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${mainDiagnosis != null}">
-            <dl>
-                <dd><p  th:text="${'- ' + mainDiagnosis.snomed.pt}"></p></dd>
+    <div th:fragment="mainDiagnosis (message)" th:if="${mainDiagnosis != null}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data">
+                <dd><p th:text="${'- ' + mainDiagnosis.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${mainDiagnosis.status}"></label></dd>
                     <dd><strong>Verificación: </strong><label  th:text="${mainDiagnosis.verification}"></label></dd>
@@ -84,16 +311,11 @@
     </div>
 
     <!-- Otros Diagnósticos/enfermedades -->
-    <div th:fragment="diagnosis (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${#lists.isEmpty(diagnosis)}">
-            <dl class="lista" >
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(diagnosis)}">
-            <dl th:each="diagnose,iter: ${diagnosis}">
-                <dd><p  th:text="${'- ' + diagnose.snomed.pt}"></p></dd>
+    <div th:fragment="diagnosis (message)" th:if="${not #lists.isEmpty(diagnosis)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="diagnose,iter: ${diagnosis}">
+                <dd><p th:text="${'- ' + diagnose.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${diagnose.status}"></label></dd>
                     <dd><strong>Verificación: </strong><label  th:text="${diagnose.verification}"></label></dd>
@@ -141,32 +363,22 @@
     </div>
 
     <!-- Motivos -->
-    <div th:fragment="reasons (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${#lists.isEmpty(reasons)}">
-            <dl class="lista" >
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(reasons)}">
-            <dl th:each="reason,iter: ${reasons}">
-                <dd><p  th:text="${'- ' + reason.snomed.pt}"></p></dd>
+    <div th:fragment="reasons (message)" th:if="${not #lists.isEmpty(reasons)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="reason,iter: ${reasons}">
+                <dd><p th:text="${'- ' + reason.snomed.pt}"></p></dd>
             </dl>
         </div>
     </div>
 
 
     <!-- Procedimientos -->
-    <div th:fragment="procedures (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${#lists.isEmpty(procedures)}">
-            <dl class="lista" >
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(procedures)}">
-            <dl th:each="procedure,iter: ${procedures}">
-                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+    <div th:fragment="procedures (message)" th:if="${not #lists.isEmpty(procedures)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="procedure,iter: ${procedures}">
+                <dd><p th:text="${'- ' + procedure.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${procedure.status}"></label></dd>
                     <dd th:if="${procedure.performedDate  != null}"><strong>Fecha de realización: </strong><label th:text="${#temporals.format(procedure.performedDate, 'dd/MM/yyyy')}"></label></dd>
@@ -315,17 +527,12 @@
     </div>
 
     <!-- Problems -->
-    <div th:fragment="problems (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${#lists.isEmpty(problems)}">
-            <dl class="lista" >
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(problems)}">
+    <div th:fragment="problems (message)" th:if="${not #lists.isEmpty(problems)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
             <dl th:each="problem,iter: ${problems}">
-                <dd><p  th:text="${'- ' + problem.snomed.pt}"></p></dd>
-                <dl>
+                <dd><p class="section-data" th:text="${'- ' + problem.snomed.pt}"></p></dd>
+                <dl class="section-data">
                     <dd><strong>Estado: </strong><label  th:text="${problem.status}"></label></dd>
                     <dd><strong>Verificación: </strong><label  th:text="${problem.verification}"></label></dd>
                     <dd><strong>Fecha de inicio: </strong><label th:text="${#temporals.format(problem.startDate, 'dd/MM/yyyy')}"></label></dd>
@@ -339,14 +546,9 @@
 
     <!-- Datos Antropometricos -->
 
-    <div th:fragment="antropometicData">
-    <h3>Datos antropométricos</h3>
-        <div th:if="${anthropometricData == null}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${anthropometricData  != null}">
+    <div th:fragment="antropometicData" th:if="${anthropometricData != null && anthropometricData.hasValues}">
+        <p class="section-title">Datos antropométricos</p>
+        <div class="section-data">
             - Factor sanguíneo:
             <strong>
             <label th:if="${anthropometricData.bloodType != null}">
@@ -377,21 +579,16 @@
             - Perímetro cefálico:
             <strong><label  th:if="${anthropometricData.headCircumference  != null}" th:text="${anthropometricData.headCircumference.value + 'cm'}"></label></strong>
             <strong><span  th:if="${anthropometricData.headCircumference  == null}">Sin cambios registrados</span></strong><br/>
-        </div>
+        </div><br/>
     </div>
 
     <!-- Diagnósticos dentales -->
 
-    <div th:fragment="dentalDiagnostics">
-        <h3>Diagnósticos dentales</h3>
-        <div th:if="${#lists.isEmpty(dentalDiagnostics)}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(dentalDiagnostics)}">
-            <dl th:each="diagnostic,iter: ${dentalDiagnostics}">
-                <dd><p  th:text="${'- ' + diagnostic.snomed.pt}"></p></dd>
+    <div th:fragment="dentalDiagnostics" th:if="${not #lists.isEmpty(dentalDiagnostics)}">
+        <p class="section-title">Diagnósticos dentales</p>
+        <div>
+            <dl class="section-data" th:each="diagnostic,iter: ${dentalDiagnostics}">
+                <dd><p th:text="${'- ' + diagnostic.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Pieza: </strong><label  th:text="${diagnostic.tooth.pt}"></label></dd>
                     <dd th:if="${diagnostic.surface  != null}"><strong>Cara: </strong><label  th:text="${diagnostic.surface.pt}"></label></dd>
@@ -402,16 +599,11 @@
 
     <!-- Procedimientos dentales -->
 
-    <div th:fragment="dentalProcedures">
-        <h3>Procedimientos dentales</h3>
-        <div th:if="${#lists.isEmpty(dentalProcedures)}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(dentalProcedures)}">
-            <dl th:each="procedure,iter: ${dentalProcedures}">
-                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+    <div th:fragment="dentalProcedures" th:if="${not #lists.isEmpty(dentalProcedures)}">
+        <p class="section-title">Procedimientos dentales</p>
+        <div>
+            <dl class="section-data" th:each="procedure,iter: ${dentalProcedures}">
+                <dd><p th:text="${'- ' + procedure.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Pieza: </strong><label  th:text="${procedure.tooth.pt}"></label></dd>
                     <dd th:if="${procedure.surface  != null}"><strong>Cara: </strong><label  th:text="${procedure.surface.pt}"></label></dd>
@@ -422,54 +614,33 @@
 
     <!-- Antecedentes personales -->
 
-    <div th:fragment="personalHistory">
-        <h3>Antecedentes personales</h3>
-        <div th:if="${#lists.isEmpty(personalHistories)}">
-            <dl>
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(personalHistories)}">
-            <dl th:each="personalHistory,iter: ${personalHistories}">
-                <dd><p  th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
-                <dl>
-                    <dd th:if="${personalHistory.type != null}"><strong>Tipo: </strong><label th:text="${personalHistory.type}"></label></dd>
-                    <dd th:if="${personalHistory.startDate != null}"><strong>Fecha de inicio: </strong><label th:text="${#temporals.format(personalHistory.startDate, 'dd/MM/yyyy')}"></label></dd>
-                    <dd th:if="${personalHistory.note != null && personalHistory.note != ''}"><strong>Observaciones: </strong>
-                        <p class="wide_wrapped_text" th:text="${personalHistory.note}"></p>
-                    </dd>
-                    <dd th:if="${personalHistory.inactivationDate != null}"><strong>Fecha de fin: </strong><label th:text="${#temporals.format(personalHistory.inactivationDate, 'dd/MM/yyyy')}"></label></dd>
-                </dl>
+    <div th:fragment="personalHistory" th:if="${not #lists.isEmpty(personalHistories)}">
+        <p class="section-title">Antecedentes personales</p>
+        <div>
+            <dl class="section-data" th:each="personalHistory,iter: ${personalHistories}">
+                <dd><p th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
             </dl>
         </div>
     </div>
 
     <!-- Antecedentes familiares -->
 
-    <div th:fragment="familyHistory">
-        <h3>Antecedentes familiares</h3>
-        <div th:if="${#lists.isEmpty(familyHistories)}">
-            <dd><p>Sin cambios registrados</p></dd>
-        </div>
-        <div th:if="${not #lists.isEmpty(familyHistories)}" >
-            <dl th:each="familyHistory,iter: ${familyHistories}">
-                <dd><p  th:text="${'- ' +familyHistory.snomed.pt}"></p></dd>
+    <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories)}">
+        <p class="section-title">Antecedentes familiares</p>
+        <div>
+            <dl class="section-data" th:each="familyHistory,iter: ${familyHistories}">
+                <dd><p th:text="${'- ' +familyHistory.snomed.pt}"></p></dd>
             </dl>
         </div>
     </div>
 
     <!-- Alergias -->
 
-    <div th:fragment="allergies">
-        <h3>Alergias</h3>
-        <div th:if="${#lists.isEmpty(allergies)}">
-            <dl>
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(allergies)}">
+    <div th:fragment="allergies" th:if="${not #lists.isEmpty(allergies)}">
+        <p class="section-title">Alergias</p>
+        <div class="section-data">
             <dl class="lista" th:each="allergy,iter: ${allergies}">
-                <dd><p  th:text="${'- ' + allergy.snomed.pt}"></p></dd>
+                <dd><p th:text="${'- ' + allergy.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${allergy.status}"></label></dd>
                     <dd><strong>Verificación: </strong><label  th:text="${allergy.verification}"></label></dd>
@@ -480,61 +651,48 @@
 
     <!-- Vacunas -->
 
-    <div th:fragment="immunizations">
-        <h3>Vacunas aplicadas</h3>
-        <div th:if="${#lists.isEmpty(billableImmunizations)}">
-            <dl>
-                <dd><p>Sin vacunas aplicadas</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(billableImmunizations)}">
-            <dl th:each="immunization,iter: ${billableImmunizations}">
-                <dd><strong>Vacuna</strong><p  th:text="${'- ' + immunization.snomed.pt}"></p></dd>
+    <div th:fragment="immunizations" th:if="${not #lists.isEmpty(billableImmunizations)}">
+        <p class="section-title">Vacunas aplicadas</p>
+        <div>
+            <dl class="section-data" th:each="immunization,iter: ${billableImmunizations}">
+                <dd><strong>Vacuna</strong><p th:text="${'- ' + immunization.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong th:if="${immunization.administrationDate != null}">Fecha de administración: </strong><label th:if="${immunization.administrationDate != null}" th:text="${immunization.administrationDate}"></label></dd>
                     <dd><strong th:if="${immunization.condition != null}">Condición: </strong><label th:if="${immunization.condition != null}" th:text="${immunization.condition.description}"></label></dd>
                     <dd><strong th:if="${immunization.scheme != null}">Esquema: </strong><label th:if="${immunization.scheme != null}" th:text="${immunization.scheme.description}"></label></dd>
                     <dd><strong th:if="${immunization.dose != null}">Dosis: </strong><label th:if="${immunization.dose != null}" th:text="${immunization.dose.description}"></label></dd>
                     <dd><strong th:if="${immunization.lotNumber != null}">Número de lote: </strong><label th:if="${immunization.lotNumber != null}" th:text="${immunization.lotNumber}"></label></dd>
-                    <dd><strong th:if="${immunization.note != null}">Observaciones: </strong><label th:if="${immunization.note != null}" th:text="${immunization.note}"></label></dd>
+                    <dd><strong th:if="${immunization.note != null && immunization.note != ''}">Observaciones: </strong><label th:if="${immunization.note != null && immunization.note != ''}" th:text="${immunization.note}"></label></dd>
                 </dl>
             </dl>
         </div>
-        <h3>Vacunas registradas</h3>
-        <div th:if="${#lists.isEmpty(nonBillableImmunizations)}">
-            <dl>
-                <dd><p>Sin vacunas registradas</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(nonBillableImmunizations)}">
-            <dl th:each="immunization,iter: ${nonBillableImmunizations}">
-                <dd><strong>Vacuna</strong><p  th:text="${'- ' + immunization.snomed.pt}"></p></dd>
-                <dl>
-                    <dd><strong th:if="${immunization.administrationDate != null}">Fecha de administración: </strong><label th:if="${immunization.administrationDate != null}" th:text="${immunization.administrationDate}"></label></dd>
-                    <dd><strong th:if="${immunization.condition != null}">Condición: </strong><label th:if="${immunization.condition != null}" th:text="${immunization.condition.description}"></label></dd>
-                    <dd><strong th:if="${immunization.scheme != null}">Esquema: </strong><label th:if="${immunization.scheme != null}" th:text="${immunization.scheme.description}"></label></dd>
-                    <dd><strong th:if="${immunization.dose != null}">Dosis: </strong><label th:if="${immunization.dose != null}" th:text="${immunization.dose.description}"></label></dd>
-                    <dd><strong th:if="${immunization.lotNumber != null}">Número de lote: </strong><label th:if="${immunization.lotNumber != null}" th:text="${immunization.lotNumber}"></label></dd>
-                    <dd><strong th:if="${immunization.doctorInfo != null}">Doctor: </strong><label th:if="${immunization.doctorInfo != null}" th:text="${immunization.doctorInfo}"></label></dd>
-                    <dd><strong th:if="${immunization.institutionInfo != null}">Institución: </strong><label th:if="${immunization.institutionInfo != null}" th:text="${immunization.institutionInfo}"></label></dd>
-                    <dd><strong th:if="${immunization.note != null}">Observaciones: </strong><label th:if="${immunization.note != null}" th:text="${immunization.note}"></label></dd>
+        <div  th:if="${not #lists.isEmpty(nonBillableImmunizations)}">
+            <p class="section-title">Vacunas registradas</p>
+            <div>
+                <dl class="section-data" th:each="immunization,iter: ${nonBillableImmunizations}">
+                    <dd><strong>Vacuna</strong><p th:text="${'- ' + immunization.snomed.pt}"></p></dd>
+                    <dl>
+                        <dd><strong th:if="${immunization.administrationDate != null}">Fecha de administración: </strong><label th:if="${immunization.administrationDate != null}" th:text="${immunization.administrationDate}"></label></dd>
+                        <dd><strong th:if="${immunization.condition != null}">Condición: </strong><label th:if="${immunization.condition != null}" th:text="${immunization.condition.description}"></label></dd>
+                        <dd><strong th:if="${immunization.scheme != null}">Esquema: </strong><label th:if="${immunization.scheme != null}" th:text="${immunization.scheme.description}"></label></dd>
+                        <dd><strong th:if="${immunization.dose != null}">Dosis: </strong><label th:if="${immunization.dose != null}" th:text="${immunization.dose.description}"></label></dd>
+                        <dd><strong th:if="${immunization.lotNumber != null}">Número de lote: </strong><label th:if="${immunization.lotNumber != null}" th:text="${immunization.lotNumber}"></label></dd>
+                        <dd><strong th:if="${immunization.doctorInfo != null}">Doctor: </strong><label th:if="${immunization.doctorInfo != null}" th:text="${immunization.doctorInfo}"></label></dd>
+                        <dd><strong th:if="${immunization.institutionInfo != null}">Institución: </strong><label th:if="${immunization.institutionInfo != null}" th:text="${immunization.institutionInfo}"></label></dd>
+                        <dd><strong th:if="${immunization.note != null}">Observaciones: </strong><label th:if="${immunization.note != null}" th:text="${immunization.note}"></label></dd>
+                    </dl>
                 </dl>
-            </dl>
+            </div>
         </div>
     </div>
 
     <!-- Medicación habitual -->
 
-    <div th:fragment="medications (title)">
-        <h3 th:text="${title}"></h3>
-        <div th:if="${#lists.isEmpty(medications)}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(medications)}">
-            <dl th:each="medication,iter: ${medications}">
-                <dd><p  th:text="${'- ' + medication.snomed.pt}"></p></dd>
+    <div th:fragment="medications (title)" th:if="${not #lists.isEmpty(medications)}">
+        <p class="section-title" th:text="${title}"></p>
+        <div>
+            <dl class="section-data" th:each="medication,iter: ${medications}">
+                <dd><p th:text="${'- ' + medication.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong th:if="${medication.note != null}">Observaciones: </strong><label  th:text="${medication.note}"></label></dd>
                 </dl>
@@ -544,17 +702,12 @@
 
     <!-- Otras circunstancias que prolongan la internación -->
 
-    <div th:fragment="otherProblems (title)">
+    <div th:fragment="otherProblems (title)" th:if="${not #lists.isEmpty(otherProblems)}">
         <div th:if="${cipresFieldsFF}">
-            <h3 th:text="${title}"></h3>
-            <div th:if="${#lists.isEmpty(otherProblems)}">
-                <dl>
-                    <dd><p>Sin cambios registrados</p></dd>
-                </dl>
-            </div>
-            <div th:if="${not #lists.isEmpty(otherProblems)}">
-                <dl th:each="problem,iter: ${otherProblems}">
-                    <dd><p  th:text="${'- ' + problem.snomed.pt}"></p></dd>
+            <p class="section-title" th:text="${title}"></p>
+            <div>
+                <dl class="section-data" th:each="problem,iter: ${otherProblems}">
+                    <dd><p th:text="${'- ' + problem.snomed.pt}"></p></dd>
                 </dl>
             </div>
         </div>
@@ -563,15 +716,10 @@
                 
     <!-- Causa externa de traumatismo, envenenamiento y otros efectos adversos -->
 
-    <div th:fragment="externalCause">
+    <div th:fragment="externalCause" th:if="${externalCause  != null}">
         <div th:if="${cipresFieldsFF}">
-            <h3> Causa externa de traumatismo, envenenamiento y otros efectos adversos</h3>
-                <div th:if="${externalCause == null}">
-                    <dl>
-                        <dd><p>Sin cambios registrados</p></dd>
-                    </dl>
-                </div>
-                <div th:if="${externalCause  != null}">
+            <p class="section-title"> Causa externa de traumatismo, envenenamiento y otros efectos adversos</p>
+                <div class="section-data">
                     - Producido por:
                     <strong><label  th:if="${externalCause.externalCauseType  != null}" th:text="${externalCause.externalCauseType.value}"></label></strong>
                     <strong><span  th:if="${externalCause.externalCauseType  == null}">Sin cambios registrados</span></strong><br/>
@@ -589,16 +737,10 @@
 
     <!-- Datos del evento obstetrico -->
 
-    <div th:fragment="obstetricEvent">
+    <div th:fragment="obstetricEvent" th:if="${obstetricEvent  != null}">
         <div th:if="${cipresFieldsFF}">
-            <h3> Datos del evento obstétrico </h3>
-            <div th:if="${obstetricEvent == null}">
-                <dl>
-                    <dd><p>Sin cambios registrados</p></dd>
-                </dl>
-            </div>
-            <div th:if="${obstetricEvent  != null}">
-
+            <p class="section-title"> Datos del evento obstétrico </p>
+            <div class="section-data">
                 <h4> Gestas anteriores </h4>
 
                 - Total de nacimientos anteriores al presente:
@@ -629,22 +771,15 @@
                         </dl>
                     </dl>
                 </div>
-
             </div>
         </div>
     </div>
 
     <!-- Signos vitales y factores de riesgo -->
 
-    <div th:fragment="riskFactors">
-        <h3 >Signos vitales y factores de riesgo</h3>
-        <div  th:if="${riskFactors  == null}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-
-        <div th:if="${riskFactors != null}">
+    <div th:fragment="riskFactors" th:if="${riskFactors != null && riskFactors.hasValues}">
+        <p class="section-title">Factores de riesgo</p>
+        <div class="section-data">
             - Frecuencía cardíaca:
             <strong><span  th:if="${riskFactors.heartRate  == null}">Sin cambios registrados</span></strong>
             <strong><span  th:if="${riskFactors.heartRate  != null}" th:text="${riskFactors.heartRate.value + '/min'} "></span></strong>
@@ -728,19 +863,14 @@
                     <strong><span th:text="${otherRiskFactors.perfusionDescription}"></span></strong>
                 </div>
             </div>
-        </div>
+        </div><br/>
     </div>
 
     <!-- Observaciones -->
 
-    <div th:fragment="notes-base">
-        <h3>Observaciones</h3>
-        <div th:if="${notes == null}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${notes != null}">
+    <div th:fragment="notes-base" th:if="${notes != null}">
+        <p class="section-title">Observaciones</p>
+        <div class="section-data">
             <div class="col-12" th:if="${notes.currentIllnessNote}">
                 <strong class="center-padding">Enfermedad actual</strong>
                 <p class="center-padding wide_wrapped_text" th:text="${notes.currentIllnessNote}"></p>
@@ -768,14 +898,9 @@
         </div>
     </div>
 
-    <div th:fragment="notes-epicrisis">
-        <h3>Observaciones</h3>
-        <div th:if="${notes == null}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${notes != null}">
+    <div th:fragment="notes-epicrisis" th:if="${notes != null}">
+        <p class="section-title">Observaciones</p>
+        <div class="section-data">
             <div class="col-12" th:if="${notes.evolutionNote}">
                 <strong class="center-padding">Evolución</strong>
                 <p class="center-padding wide_wrapped_text" th:text="${notes.evolutionNote}"></p>
@@ -799,14 +924,9 @@
         </div>
     </div>
 
-    <div th:fragment="notes-outpatient">
-        <h3>Observaciones</h3>
-        <div th:if="${notes == null}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${notes != null}">
+    <div th:fragment="notes-outpatient" th:if="${notes != null}">
+        <p class="section-title">Observaciones</p>
+        <div class="section-data">
             <div class="col-12" th:if="${notes.otherNote}">
                 <strong class="center-padding">Evolución</strong>
                 <p class="center-padding wide_wrapped_text" th:text="${notes.otherNote}"></p>
@@ -815,28 +935,18 @@
     </div>
 
     <!-- Nota de evolución  -->
-    <div th:fragment="evolutionNote">
-        <h3>Nota de evolución</h3>
-        <div th:if="${notes == null}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${notes != null}">
+    <div th:fragment="evolutionNote" th:if="${notes != null}">
+        <p class="section-title">Nota de evolución</p>
+        <div class="section-data">
             <div class="col-12" th:if="${notes.evolutionNote}">
                 <p class="center-padding wide_wrapped_text" th:text="${notes.evolutionNote}"></p>
             </div>
         </div>
     </div>
 
-    <div th:fragment="counterReference">
-        <h3>Contrarreferencia</h3>
-        <div th:if="${notes == null}">
-            <dl>
-                <dd><p>Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${notes != null}">
+    <div th:fragment="counterReference" th:if="${notes != null}">
+        <p class="section-title">Contrarreferencia</p>
+        <div class="section-data">
             <div class="col-12" th:if="${notes.evolutionNote}">
                 <label class="wide_wrapped_text" th:text="${notes.evolutionNote}"></label>
             </div>
@@ -874,20 +984,10 @@
     </div>
 
 </body>
-<footer class="footer-dark" th:fragment="footer" th:if="${author != null}">
-    <div style="text-align:right">
-        <br/><br/><strong>Institución: </strong><label class="center-padding" th:text="${institutionName}"></label>
-    </div>
-    <div th:if="${nameSelfDeterminationFF}">
-        <div th:replace="fragments/author.html :: author(firstName=${author.nameSelfDetermination}, lastName=${author.lastName},licenseNumber=${author.completeLicenseInfo})">
-        </div>
-    </div>
-    <div th:if="${!nameSelfDeterminationFF}">
-        <div th:replace="fragments/author.html :: author(firstName=${author.firstName}, lastName=${author.lastName},licenseNumber=${author.completeLicenseInfo})">
-        </div>
-    </div>
-    <div class="col-12">
-        <strong>Fecha consulta: </strong><label  th:text="${#temporals.format(performedDate, 'dd/MM/yyyy HH:mm') + ' hs'}"></label>
+<footer th:fragment="footer">
+    <div class="footer">
+        <hr class="line"></hr>
+        <img style="width: 118px; height: 21px;" th:src="${'data:image/jpeg;charset=utf-8;base64,' + appLogo}" alt=""></img>
     </div>
 </footer>
 </html>

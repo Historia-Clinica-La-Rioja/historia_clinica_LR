@@ -527,6 +527,22 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 			throw new MoreThanOneConsentDocumentException();
 	}
 
+	@Override
+	public Integer getInternmentEpisodeSectorId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer result = internmentEpisodeRepository.getInternmentEpisodeSectorId(internmentEpisodeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Integer getInternmentEpisodeRoomId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer result = internmentEpisodeRepository.getInternmentEpisodeRoomId(internmentEpisodeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
 	private Map<String, Object> createContext(BasicDataPersonDto personDto, ResponsibleDoctorBo doctor, String institutionName, LocalDateTime entryDate, Integer internmentEpisodeId, String richBody, Integer consentId, List<String> procedures, String observations){
 		Map<String, Object> ctx = new HashMap<>();
 		ctx.put("personDto", personDto);

@@ -19,4 +19,11 @@ public interface SharedStaffPort {
 
 	Optional<String> getProfessionalCompleteNameByUserId(Integer professionalId);
 
+	String getSectorName(Integer sectorId);
+
+	String getRoomNumber(Integer sectorId);
+
+	String getDoctorsOfficeDescription(Integer doctorsOfficeId);
+
+	String getShockRoomDescription(Integer shockRoomId);
 }

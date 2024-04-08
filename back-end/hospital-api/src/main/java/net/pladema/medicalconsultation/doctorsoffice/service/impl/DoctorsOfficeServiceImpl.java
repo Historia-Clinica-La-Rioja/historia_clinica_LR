@@ -64,4 +64,20 @@ public class DoctorsOfficeServiceImpl implements DoctorsOfficeService {
 			return result;
 		}).get();
     }
+
+	@Override
+	public String getDescription(Integer doctorsOfficeId) {
+		LOG.debug("Input parameter -> doctorsOfficeId {}", doctorsOfficeId);
+		String result = doctorsOfficeRepository.getDescription(doctorsOfficeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Integer getSectorId(Integer doctorsOfficeId) {
+		LOG.debug("Input parameter -> doctorsOfficeId {}", doctorsOfficeId);
+		Integer result = doctorsOfficeRepository.getSectorId(doctorsOfficeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
 }

@@ -244,4 +244,11 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 											   @Param("date") LocalDateTime date,
 											   Pageable pageable);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT b.roomId " +
+			"FROM EmergencyCareEpisode ece " +
+			"JOIN Bed b ON (b.id = ece.bedId) " +
+			"WHERE ece.id = :emergencyCareEpisodeId")
+	Integer getRoomId(@Param("emergencyCareEpisodeId") Integer emergencyCareEpisodeId);
+	
 }

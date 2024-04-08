@@ -5,11 +5,25 @@
 	<th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
-	<div th:replace="fragments/general.html :: header(title='Nueva consulta', subtitle='Vacunación')"></div>
-	<div th:replace="fragments/general.html :: clinicalSpecialty(message='Especialidad clínica')"></div>
-	<div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
-	<div th:replace="fragments/general.html :: immunizations"></div>
-	<div th:replace="fragments/general.html :: notes-outpatient"></div>
+    <table>
+        <thead><tr><td>
+            <div class="header-space">&nbsp;</div>
+        </td></tr></thead>
+        <tbody><tr><td>
+            <div>
+                <div th:replace="fragments/general.html :: header"></div>
+                <div th:replace="fragments/general.html :: encounterData(type='Vacunación')"></div>
+                <div th:replace="fragments/general.html :: professionalData"></div>
+                <div th:replace="fragments/general.html :: documentTypeTitle(title='Nueva consulta')"></div>
+                <div th:replace="fragments/general.html :: clinicalSpecialty(message='Especialidad clínica')"></div>
+                <div th:replace="fragments/general.html :: immunizations"></div>
+                <div th:replace="fragments/general.html :: notes-outpatient"></div>
+            </div>
+        </td></tr></tbody>
+        <tfoot><tr><td>
+            <div class="footer-space">&nbsp;</div>
+        </td></tr></tfoot>
+    </table>
 </body>
 <footer>
 	<div th:replace="fragments/general.html :: footer"></div>

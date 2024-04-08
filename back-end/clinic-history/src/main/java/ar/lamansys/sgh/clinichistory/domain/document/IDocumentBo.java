@@ -158,6 +158,13 @@ public interface IDocumentBo {
     default List<ConclusionBo> getConclusions() {
         return Collections.emptyList();
     }
+	default Integer getSectorId() { return null; }
+
+	default Integer getRoomId() { return null; }
+
+	default Integer getShockRoomId() { return null; }
+
+	default Integer getDoctorsOfficeId() { return null; }
 
 	default List<DocumentHealthcareProfessionalBo> getHealthcareProfessionals() { return Collections.emptyList(); }
 

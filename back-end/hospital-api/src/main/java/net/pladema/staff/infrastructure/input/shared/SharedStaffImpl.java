@@ -8,6 +8,12 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
+import net.pladema.establishment.service.RoomService;
+import net.pladema.establishment.service.SectorService;
+
+import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
+
+import net.pladema.medicalconsultation.shockroom.application.FetchShockRoomDescription;
 
 import org.springframework.stereotype.Service;
 
@@ -30,14 +36,30 @@ public class SharedStaffImpl implements SharedStaffPort {
     private final ClinicalSpecialtyMapper clinicalSpecialtyMapper;
 
 	private final FeatureFlagsService featureFlagsService;
+	
+	private SectorService sectorService;
+
+	private RoomService roomService;
+
+	private DoctorsOfficeService doctorsOfficeService;
+
+	private FetchShockRoomDescription fetchShockRoomDescription;
 
     public SharedStaffImpl(HealthcareProfessionalExternalService healthcareProfessionalExternalService,
                            ClinicalSpecialtyService clinicalSpecialtyService,
                            ClinicalSpecialtyMapper clinicalSpecialtyMapper,
-						   FeatureFlagsService featureFlagsService) {
+						   FeatureFlagsService featureFlagsService,
+						   SectorService sectorService,
+						   RoomService roomService,
+						   DoctorsOfficeService doctorsOfficeService,
+						   FetchShockRoomDescription fetchShockRoomDescription) {
         this.healthcareProfessionalExternalService = healthcareProfessionalExternalService;
         this.clinicalSpecialtyService = clinicalSpecialtyService;
         this.clinicalSpecialtyMapper = clinicalSpecialtyMapper;
+		this.sectorService = sectorService;
+		this.roomService = roomService;
+		this.doctorsOfficeService = doctorsOfficeService;
+		this.fetchShockRoomDescription = fetchShockRoomDescription;
 		this.featureFlagsService = featureFlagsService;
     }
 
@@ -83,10 +105,29 @@ public class SharedStaffImpl implements SharedStaffPort {
 		log.debug("Output -> result");
 		return result;
 	}
+	
+	@Override
+	public String getSectorName(Integer sectorId) {
+		return sectorService.getSectorName(sectorId);
+	}
 
-	private Optional<String> getCompleteName(ProfessionalCompleteDto professionalInfo){
-		if (professionalInfo == null)
-			return Optional.empty();
+	@Override
+	public String getRoomNumber(Integer roomId) {
+		return roomService.getRoomNumber(roomId);
+	}
+
+	@Override
+	public String getDoctorsOfficeDescription(Integer doctorsOfficeId) {
+		return doctorsOfficeService.getDescription(doctorsOfficeId);
+	}
+
+	@Override
+	public String getShockRoomDescription(Integer shockRoomId) {
+		return fetchShockRoomDescription.execute(shockRoomId);
+	}
+
+	private Optional<String> getCompleteName(ProfessionalCompleteDto professionalInfo) {
+		if (professionalInfo == null) return Optional.empty();
 		String name = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? professionalInfo.getNameSelfDetermination() : FhirString.joining(professionalInfo.getFirstName(), professionalInfo.getMiddleNames());
 		String completeName = professionalInfo.getCompleteName(name);
 		return Optional.of(completeName);
