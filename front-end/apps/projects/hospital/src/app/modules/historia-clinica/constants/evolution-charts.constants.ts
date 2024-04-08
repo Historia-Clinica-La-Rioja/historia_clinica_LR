@@ -45,5 +45,6 @@ export const CHARTS_LABELS_COLORS = {
 
 export enum EVOLUTION_CHARTS  {
 	HEIGHT_FOR_AGE = 1,
+	WEIGHT_FOR_AGE,
 }
 

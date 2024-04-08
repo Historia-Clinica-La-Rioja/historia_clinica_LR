@@ -39,7 +39,7 @@ export class PatientEvolutionChartsComponent {
 
 		const anthropometricDataByEvolutionChart: Map<number, AnthropometricDataKey[]> = this.buildAnthropometricDataByEvolutionChartMap();
 		const anthropometricDataKeys = anthropometricDataByEvolutionChart.get(chartOptionId);
-		
+
 		if (!anthropometricDataKeys)
 			return null;
 
@@ -64,5 +64,6 @@ export class PatientEvolutionChartsComponent {
 }
 
 const AnthropometricDataKeyByEvolutionChart = {
-	[EVOLUTION_CHARTS.HEIGHT_FOR_AGE]: ['height']
+	[EVOLUTION_CHARTS.HEIGHT_FOR_AGE]: ['height'],
+	[EVOLUTION_CHARTS.WEIGHT_FOR_AGE]: ['weight']
 }
