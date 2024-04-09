@@ -68,6 +68,10 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 
 	@Setter
 	@Transient
+	private Integer questionnaireTypeId;
+
+	@Setter
+	@Transient
 	private String questionnaireType;
 
 	@JsonIgnore
@@ -88,6 +92,14 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 	@JsonIgnore
 	@OneToMany(mappedBy = "questionnaireResponse", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Answer> answers = new ArrayList<>();
+
+	public Integer getQuestionnaireTypeId() {
+		if (questionnaireData != null) {
+			return questionnaireData.getId();
+		} else {
+			return null;
+		}
+	}
 
 	public String getQuestionnaireType() {
 		if (questionnaireData != null) {
