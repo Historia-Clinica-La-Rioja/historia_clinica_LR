@@ -15,6 +15,9 @@ import javax.persistence.Table;
 
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,6 +35,9 @@ import net.pladema.procedure.domain.EProcedureTemplateStatusBo;
 @EntityListeners(SGXAuditListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
+//Provisional: Otherwise, after AbstractBackoffice.save is called we get an error
+//saying that the hibernateLazyInitializer field can't be serialized
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProcedureTemplate extends SGXAuditableEntity<Integer> {
 
 	@Id
