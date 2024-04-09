@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AnestheticReportDto, DiagnosisDto } from '@api-rest/api-model';
+import { AnestheticReportDto, DiagnosisDto, HospitalizationProcedureDto } from '@api-rest/api-model';
+import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
+
+const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
+const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 
 @Injectable({
     providedIn: 'root'
@@ -8,32 +12,48 @@ import { TranslateService } from '@ngx-translate/core';
 export class AnestheticReportDocumentSummaryService {
 
     private confirmedStatus: string = '';
+    private presumptiveStatus: string = '';
 
     constructor(
 		private readonly translateService: TranslateService 
     ) { 
         this.confirmedStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.CONFIRMED')
+        this.presumptiveStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.PRESUMPTIVE')
     }
 
     getAnestheticReportAsViewFormat(anestheticReport: AnestheticReportDto): AnestheticReportViewFormat {
         return {
-            mainDiagnosis: [this.getConfirmedStatus(anestheticReport.mainDiagnosis)],
-            diagnosis: this.getDiagnosisAsStringArray(anestheticReport.diagnosis)
+            mainDiagnosis: anestheticReport.mainDiagnosis ? [this.getDescriptionAndStatus(anestheticReport.mainDiagnosis)] : null,
+            diagnosis: anestheticReport.diagnosis.length ? this.getDiagnosisAsStringArray(anestheticReport.diagnosis) : null,
+            proposedSurgeries: anestheticReport.surgeryProcedures.length ? this.getProposedSurgeriesAsStringArray(anestheticReport.surgeryProcedures) : null
         }
     }
 
     private getDiagnosisAsStringArray(diagnosis: DiagnosisDto[]): string[] {
         return diagnosis.map(diag => {
-            return this.getConfirmedStatus(diag);
+            return this.getDescriptionAndStatus(diag);
         })
     }
 
-    private getConfirmedStatus(diagnosis: DiagnosisDto): string {
-        return diagnosis.verificationId ? diagnosis.snomed.pt + ' ' + this.confirmedStatus : diagnosis.snomed.pt
+    private getDescriptionAndStatus(diagnosis: DiagnosisDto): string {
+        if (diagnosis.verificationId === CONFIRMED){
+            return diagnosis.snomed.pt + ' ' + this.confirmedStatus
+        }
+        if (diagnosis.verificationId === PRESUMPTIVE){
+            return diagnosis.snomed.pt + ' ' + this.presumptiveStatus
+        }
+        return diagnosis.snomed.pt
+    }
+
+    private getProposedSurgeriesAsStringArray(proposedSurgeries: HospitalizationProcedureDto[]): string[] {
+        return proposedSurgeries.map(proposedSurgery => {
+            return proposedSurgery.snomed.pt
+        })
     }
 }
 
 export interface AnestheticReportViewFormat {
     mainDiagnosis: string[],
     diagnosis: string[],
+    proposedSurgeries: string[],
 }

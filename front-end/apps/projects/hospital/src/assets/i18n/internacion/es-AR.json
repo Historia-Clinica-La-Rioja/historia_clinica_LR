@@ -329,7 +329,8 @@
 				"TITLE": "Diagnósticos",
 				"MAIN_DIAGNOSIS": "Diagnóstico principal",
 				"OTHER_DIAGNOSIS": "Otros diagnósticos registrados",
-				"CONFIRMED": "(Confirmado)"
+				"CONFIRMED": "(Confirmado)",
+				"PRESUMPTIVE": "(Presuntivo)"
 			},
 			"proposed-surgery": {
 				"TITLE": "Cirugía propuesta",

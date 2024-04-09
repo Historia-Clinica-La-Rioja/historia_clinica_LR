@@ -8,9 +8,17 @@ import { AnestheticReportDocumentSummaryService, AnestheticReportViewFormat } fr
     styleUrls: ['./anesthetic-report-document-summary.component.scss']
 })
 export class AnestheticReportDocumentSummaryComponent implements OnInit {
-    @Input() documentId: number;
+    @Input() set documentId (documentId: number) {
+        this._documentId = documentId;
+        if (this.internmentEpisodeId && this._documentId) {
+            this.anestheticReportService.getAnestheticReport(this._documentId, this.internmentEpisodeId).subscribe(anestheticReport => {
+                this.anestheticReport = this.anestheticReportDocumentSummaryService.getAnestheticReportAsViewFormat(anestheticReport);
+            })
+        }
+    };
     @Input() internmentEpisodeId: number;
     anestheticReport: AnestheticReportViewFormat;
+    _documentId: number
 
     constructor( 
         private readonly anestheticReportService: AnesthethicReportService,
@@ -18,7 +26,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
      ) { }
 
     ngOnInit(): void {
-        this.anestheticReportService.getAnestheticReport(this.documentId, this.internmentEpisodeId).subscribe(anestheticReport => {
+        this.anestheticReportService.getAnestheticReport(this._documentId, this.internmentEpisodeId).subscribe(anestheticReport => {
             this.anestheticReport = this.anestheticReportDocumentSummaryService.getAnestheticReportAsViewFormat(anestheticReport);
         })
     }
