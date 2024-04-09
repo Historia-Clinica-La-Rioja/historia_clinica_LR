@@ -196,6 +196,10 @@
 					"ASSIGN": "Si, asignar turno",
 					"NOT-ASSIGN": "No, cancelar"
 				}
+			},
+			"expired-appointment": {
+				"TITLE": "Registrar turno vencido",
+				"SUBTITLE": "Al registrar un turno como “Turno vencido”, el mismo se marcará en estado “Atendido” y permitirá el registro posterior de la consulta por parte del profesional médico."
 			}
 		},
 		"cancel": {

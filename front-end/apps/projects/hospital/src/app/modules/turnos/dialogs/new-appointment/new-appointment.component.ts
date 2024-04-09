@@ -46,6 +46,7 @@ import { SearchAppointmentCriteria } from '@turnos/components/search-appointment
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -98,6 +99,7 @@ export class NewAppointmentComponent implements OnInit {
 	viewModalityLabel$: Observable<boolean> = of(false);
 	modalitys = MODALITYS_TYPES.slice(0, 2);
 	isEnableTelemedicina: boolean = false;
+	boxMessageInfo: BoxMessageInformation;
 	
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
@@ -211,6 +213,10 @@ export class NewAppointmentComponent implements OnInit {
 		this.transcribedOrderService.transcribedOrder$.subscribe(transcribedOrder => {
 			this.transcribedOrder = transcribedOrder;
 		})
+
+		this.translateService.get("turnos.new-appointment.expired-appointment.SUBTITLE").subscribe(message => {
+			this.boxMessageInfo = { ...this.boxMessageInfo, message }
+		});
 	}
 
 	setModalityValidation(modality) {
@@ -604,6 +610,7 @@ export interface NewAppointmentData {
 	searchAppointmentCriteria?: SearchAppointmentCriteria,
 	referenceSummary?: ReferenceSummaryDto,
 	institutionId?: number,
+	expiredAppointment?: boolean,
 }
 
 export interface medicalOrderInfo {

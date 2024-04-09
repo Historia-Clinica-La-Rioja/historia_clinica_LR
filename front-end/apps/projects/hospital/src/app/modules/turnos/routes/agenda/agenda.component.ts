@@ -33,7 +33,7 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from 'date-fns';
+import { endOfMonth, endOfWeek, isBefore, startOfMonth, startOfWeek } from 'date-fns';
 import * as moment from 'moment';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -44,6 +44,7 @@ import { pushIfNotExists } from '@core/utils/array.utils';
 import { MAX_APPOINTMENT_PER_HOUR, getHourFromString } from '@turnos/utils/appointment.utils';
 import { AppointmentListComponent } from '@turnos/dialogs/appointment-list/appointment-list.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { fixDate } from '@core/utils/date/format';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -367,6 +368,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				overturnMode: addingOverturn,
 				patientId: this.patientId ? Number(this.patientId) : null,
 				modalityAttention: this.modality,
+				expiredAppointment: isBefore(fixDate(clickedDate), new Date())
 			}
 		});
 		dialogRef.afterClosed().subscribe(() => this.appointmentFacade.loadAppointments(), this.modality = null);

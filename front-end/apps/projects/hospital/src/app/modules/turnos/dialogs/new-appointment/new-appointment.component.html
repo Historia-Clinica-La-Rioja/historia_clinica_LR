@@ -1,7 +1,10 @@
 <div mat-dialog-title fxLayout="column" fxLayoutGap="10px">
 	<div fxLayout="row" fxLayoutAlign="space-between start">
-		<p class="mat-h2"
-			[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></p>
+		<p class="mat-h2" *ngIf="data.expiredAppointment else newAppointment">{{'turnos.new-appointment.expired-appointment.TITLE' | translate}}</p>
+		<ng-template #newAppointment>
+			<p class="mat-h2"
+				[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></p>
+		</ng-template>
 		<button id="close-dialog" mat-icon-button [mat-dialog-close]="-1" (click)="cancelBtnActions()" type="button" class="icon-close">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -22,6 +25,7 @@
 			<app-modality-label *ngIf="viewModalityLabel$ | async " [modality]="modalitySelected"></app-modality-label>
 		</div>
 	</div>
+	<app-box-message class="mat-h3" *ngIf="data.expiredAppointment" [boxMessageInfo]="boxMessageInfo"></app-box-message>
 </div>
 
 <div mat-dialog-content class="dialog-content">
