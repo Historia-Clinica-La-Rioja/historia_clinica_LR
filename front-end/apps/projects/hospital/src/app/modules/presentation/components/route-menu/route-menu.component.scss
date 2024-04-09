@@ -1,0 +1,24 @@
+.example-spacer {
+	flex: 1 1 auto;
+}
+
+.mat-card-avatar {
+	border-radius: unset;
+}
+
+.routes {
+	padding: 24px 32px;
+	max-width: 800px;
+	margin: 20px auto;
+
+	app-route-menu-item {
+		cursor: pointer;
+		display: block;
+	}
+
+	app-route-menu-item:last-child {
+		mat-divider {
+			display: none;
+		}
+	}
+}

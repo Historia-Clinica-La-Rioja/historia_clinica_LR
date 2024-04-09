@@ -1,0 +1,7 @@
+<div *ngIf="featureActive && permissionAllow">
+	<div class="row" >
+		<app-label [label]="route.data?.label"></app-label>
+		<button mat-stroked-button color="primary">Seleccionar</button>
+	</div>
+	<ng-content select="[bottom]"></ng-content>
+</div>

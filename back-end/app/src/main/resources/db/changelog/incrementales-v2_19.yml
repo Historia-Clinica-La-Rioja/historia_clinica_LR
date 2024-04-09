@@ -182,3 +182,24 @@ databaseChangeLog:
                     name: note_id
                     type: bigint
 
+    - changeSet:
+        id: snomed_cache_file-addColumn
+        comment: Add column kind to snomed_cache_file
+        author: sperruolo
+        changes:
+          - addColumn:
+              tableName: snomed_cache_file
+              columns:
+                - column:
+                    name: kind
+                    type: varchar(15)
+          - sql:
+              sql: |-
+                UPDATE snomed_cache_file
+                SET kind = 'TERMINOLOGY'
+                WHERE kind IS NULL;
+          -  addNotNullConstraint:
+               columnName: kind
+               constraintName:  NN_snomed_cache_file_kind
+               tableName: snomed_cache_file
+               validate:  true

@@ -69,6 +69,9 @@ import { ProfessionalSelectComponent } from './components/professional-select/pr
 import { RadioGroupComponent } from './components/radio-group/radio-group.component';
 import { RegisterEditorInfoComponent } from './components/register-editor-info/register-editor-info.component';
 import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
+import { RouteBackComponent } from './components/route-back/route-back.component';
+import { RouteMenuComponent } from './components/route-menu/route-menu.component';
+import { RouteMenuItemComponent } from './components/route-menu-item/route-menu-item.component';
 import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
@@ -170,6 +173,9 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PrioritySelectComponent,
 		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
+		RouteBackComponent,
+		RouteMenuComponent,
+		RouteMenuItemComponent,
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,
@@ -286,6 +292,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		RadioGroupComponent,
 		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
+		RouteBackComponent,
+		RouteMenuComponent,
 		SearchComponent,
 		SelectableCardComponent,
 		SummaryCardComponent,

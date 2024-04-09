@@ -12,18 +12,29 @@ import ar.lamansys.sgx.shared.files.FileService;
 import lombok.AllArgsConstructor;
 import net.pladema.snowstorm.services.loadCsv.UpdateConceptsResultBo;
 import net.pladema.snowstorm.services.loadCsv.UpdateSnomedConceptsByCsv;
+import net.pladema.snowstorm.services.loadCsv.UpdateSnomedConceptsSynonymsByCsv;
+import net.pladema.terminology.cache.controller.dto.ETerminologyKind;
 import net.pladema.terminology.cache.infrastructure.output.SnomedCacheFileIngestor;
 
 @Service
 @AllArgsConstructor
 public class SnomedCacheFileIngestorImpl implements SnomedCacheFileIngestor {
 	private final UpdateSnomedConceptsByCsv updateSnomedConceptsByCsv;
+	private final UpdateSnomedConceptsSynonymsByCsv updateSnomedConceptsSynonymsByCsv;
 	private final FileService fileService;
 
 	@Override
-	public UpdateConceptsResultBo run(Long fileId, String eclKey) {
+	public UpdateConceptsResultBo run(Long fileId, String eclKey, ETerminologyKind kind) {
+		var inputStreamSource = fileInputStreamSource(fileId);
+		if (ETerminologyKind.SYNONYM.equals(kind)) {
+			return updateSnomedConceptsSynonymsByCsv.updateSnomedConceptSynonyms(inputStreamSource, eclKey);
+		}
+		return updateSnomedConceptsByCsv.updateSnomedConcepts(inputStreamSource, eclKey);
+	}
+
+	private InputStreamSource fileInputStreamSource(Long fileId) {
 		var fileContent = fileService.loadFile(fileId);
-		return updateSnomedConceptsByCsv.updateSnomedConcepts(new InputStreamSource() {
+		return new InputStreamSource() {
 			private ByteArrayOutputStream byteArrayOutputStreamCache = null;
 
 			private ByteArrayOutputStream byteArrayOutputStream() throws IOException {
@@ -39,7 +50,7 @@ public class SnomedCacheFileIngestorImpl implements SnomedCacheFileIngestor {
 			public InputStream getInputStream() throws IOException {
 				return new ByteArrayInputStream(byteArrayOutputStream().toByteArray());
 			}
-		}, eclKey);
+		};
 	}
 
 }

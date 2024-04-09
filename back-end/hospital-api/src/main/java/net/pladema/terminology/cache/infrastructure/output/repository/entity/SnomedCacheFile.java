@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.terminology.cache.controller.dto.ETerminologyKind;
 
 @Getter
 @Setter
@@ -26,6 +29,10 @@ public class SnomedCacheFile {
 
 	@Column(name = "ecl", length = 128)
 	private String ecl;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "kind", length = 15)
+	private ETerminologyKind kind;
 
 	@Column(name = "url", length = 512)
 	private String url;
@@ -54,9 +61,10 @@ public class SnomedCacheFile {
 	@Column(name = "concepts_erroneous")
 	private Integer conceptsErroneous;
 
-	public SnomedCacheFile(String ecl, String url) {
+	public SnomedCacheFile(String ecl, String url, ETerminologyKind kind) {
 		this.ecl = ecl;
 		this.url = url;
+		this.kind = kind;
 		this.createdOn = LocalDateTime.now();
 	}
 }

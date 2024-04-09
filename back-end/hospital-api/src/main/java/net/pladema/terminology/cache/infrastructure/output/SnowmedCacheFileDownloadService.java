@@ -3,6 +3,7 @@ package net.pladema.terminology.cache.infrastructure.output;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class SnowmedCacheFileDownloadService {
 	}
 
 	public void downloaded(SnomedCacheFile cacheFile, String message) {
-		cacheFile.setDownloadedError(message);
+		cacheFile.setDownloadedError(StringUtils.left(message, 500));
 		saveSnomedCacheFile(cacheFile);
 	}
 

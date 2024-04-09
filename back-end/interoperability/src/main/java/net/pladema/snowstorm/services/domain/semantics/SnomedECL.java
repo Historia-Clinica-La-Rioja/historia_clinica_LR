@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 
 public enum SnomedECL {
 	ALLERGY,
+	ANESTHESIA,
 	BLOOD_TYPE,
 	CARDIOVASCULAR_DISORDER,
 	CONSULTATION_REASON,
@@ -22,7 +23,7 @@ public enum SnomedECL {
 	VIOLENCE_MODALITY,
 	VIOLENCE_PROBLEM,
 	VIOLENCE_TYPE,
-	ANESTHESIA,
+
 	;
 
 

@@ -4426,6 +4426,7 @@ export interface TemplateNamesDto {
 
 export interface TerminologyCSVDto {
     ecl: SnomedECL;
+    kind: ETerminologyKind;
     url: string;
 }
 
@@ -4610,21 +4611,6 @@ export interface UpdateAppointmentDto {
     patientId: number;
     patientMedicalCoverageId?: number;
     phoneNumber?: string;
-}
-
-export interface UpdateConceptsResultDto {
-    conceptsLoaded: number;
-    eclKey: string;
-    erroneousConcepts: number;
-    errorMessages: string[];
-}
-
-export interface UpdateConceptsSynonymsResultDto {
-    conceptsLoaded: number;
-    eclKey: string;
-    erroneousConcepts: number;
-    errorMessages: string[];
-    missingMainConcepts: number;
 }
 
 export interface UsageReportStatusDto {
@@ -5433,6 +5419,11 @@ export const enum ESurfacePositionDto {
     LEFT = "LEFT",
     RIGHT = "RIGHT",
     CENTRAL = "CENTRAL",
+}
+
+export const enum ETerminologyKind {
+    SYNONYM = "SYNONYM",
+    TERMINOLOGY = "TERMINOLOGY",
 }
 
 export const enum EVictimKeeperReportPlace {
