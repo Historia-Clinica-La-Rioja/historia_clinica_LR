@@ -63,7 +63,7 @@ export function toCalendarEvent(from: string, to: string, date: Moment, appointm
         title,
         color: {
             primary: getColor(appointment),
-            secondary: showProtectedAppointment(appointment) ? 'transparent' : getColor(appointment)
+            secondary: showTransparentAppointment(appointment) ? 'transparent' : getColor(appointment)
         },
         cssClass: getSpanColor(appointment),
         meta: {
@@ -136,7 +136,7 @@ export function getColor(appointment: AppointmentListDto): COLORES {
         return COLORES.SERVED;
     }
 
-    if (showProtectedAppointment(appointment)) {
+    if (isAProtectedAppointment(appointment)) {
         return COLORES.PROTECTED;
     }
 
@@ -160,15 +160,19 @@ export function getSpanColor(appointment: AppointmentListDto): string {
         return BLUE_TEXT;
     }
 
-    if (showProtectedAppointment(appointment)) {
+    if (isAProtectedAppointment(appointment)) {
         return PURPLE_TEXT;
     }
 
     return WHITE_TEXT;
 }
 
-function showProtectedAppointment(appointment: AppointmentListDto) {
-    return appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED && appointment.protected
+function showTransparentAppointment(appointment: AppointmentListDto): boolean {
+	return isAProtectedAppointment(appointment) || appointment.expiredRegister;
+}
+
+function isAProtectedAppointment(appointment: AppointmentListDto): boolean {
+	return appointment.appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED && appointment.protected
 }
 
 export function getHourFromString(value: string): RegExpMatchArray {
