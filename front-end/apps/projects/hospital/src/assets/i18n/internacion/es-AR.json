@@ -326,7 +326,10 @@
 		"anesthesic-report": {
 			"SUCCESS": "Parte anestésico guardado correctamente",
 			"diagnosis": {
-				"TITLE": "Diagnósticos"
+				"TITLE": "Diagnósticos",
+				"MAIN_DIAGNOSIS": "Diagnóstico principal",
+				"OTHER_DIAGNOSIS": "Otros diagnósticos registrados",
+				"CONFIRMED": "(Confirmado)"
 			},
 			"proposed-surgery": {
 				"TITLE": "Cirugía propuesta",

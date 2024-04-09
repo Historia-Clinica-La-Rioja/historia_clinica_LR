@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticReportDto } from '@api-rest/api-model';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
+import { AnestheticReportDocumentSummaryService, AnestheticReportViewFormat } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 
 @Component({
     selector: 'app-anesthetic-report-document-summary',
@@ -10,13 +10,16 @@ import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.
 export class AnestheticReportDocumentSummaryComponent implements OnInit {
     @Input() documentId: number;
     @Input() internmentEpisodeId: number;
-    anestheticReport: AnestheticReportDto;
+    anestheticReport: AnestheticReportViewFormat;
 
-    constructor( private readonly anestheticReportService: AnesthethicReportService ) { }
+    constructor( 
+        private readonly anestheticReportService: AnesthethicReportService,
+        private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
+     ) { }
 
     ngOnInit(): void {
         this.anestheticReportService.getAnestheticReport(this.documentId, this.internmentEpisodeId).subscribe(anestheticReport => {
-            this.anestheticReport = anestheticReport;
+            this.anestheticReport = this.anestheticReportDocumentSummaryService.getAnestheticReportAsViewFormat(anestheticReport);
         })
     }
 }
