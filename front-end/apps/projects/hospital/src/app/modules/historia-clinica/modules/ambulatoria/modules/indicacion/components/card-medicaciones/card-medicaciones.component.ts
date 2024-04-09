@@ -163,7 +163,7 @@ export class CardMedicacionesComponent implements OnInit {
 						eclTerm: this.isHabilitarRecetaDigitalEnabled ? SnomedECL.MEDICINE_WITH_UNIT_OF_PRESENTATION : SnomedECL.MEDICINE,
 					},
 				},
-				width: '35%',
+				width: '75%',
 			});
 
 			newMedicationDialog.afterClosed().subscribe((newPrescription: NewPrescription) => {

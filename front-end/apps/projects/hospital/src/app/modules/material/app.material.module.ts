@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatStepperModule} from '@angular/material/stepper';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -91,6 +92,7 @@ import { DEFAULT_LANG } from '../../app.component';
 		MatRadioModule,
 		MatSidenavModule,
 		MatSliderModule,
+		MatStepperModule,
 		MatSnackBarModule,
 		MatTableModule,
 		MatTabsModule,

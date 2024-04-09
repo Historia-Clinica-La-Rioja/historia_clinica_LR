@@ -2,7 +2,23 @@
     margin-bottom: 25px;
 }
 
-div h3 {
+.no-margin {
+    margin: 0;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
+
+.patientSummary {
+    margin: 24px 0;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+section {
     margin: 0;
 }
 
@@ -26,39 +42,53 @@ h3#prescriptionItemName {
     margin-bottom: 1rem;
 }
 
-.phone-container, .provinces-departments-container, .street-container, .countries-container {
+.departments-citys-container, .countries-provinces-container {
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
+.street-container, .phone-container {
+    width: 100%;
+    display: flex;
+}
+
+.province-section, .country-section, .city-section, .departament-section {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+}
+
 .phone-container {
 	.prefix {
-		width: 33%;
+		width: 130px;
+        margin-right: 23px;
 	}
 
 	.number {
-		width: 60%;
+		width: 270px;
+        min-width: 175px;
 	}
 }
 
-.street, .streetNumber {
-    width: 45%;
+.street {
+    width: 270px;
+    min-width: 175px;
+    margin-right: 23px;
 }
 
-.province, .locality, .city {
-    width: 30%;
-}
-
-.country {
-    width: 100%;
+.streetNumber {
+    width: 130px;
 }
 
 @media (max-width: 360px) {
-    .phone-container, .provinces-departments-container, .street-container, .countries-container {
+    .phone-container, .departments-citys-container, .street-container, .countries-provinces-container {
         flex-direction: column;
+        .province-section, .country-section, .city-section, .departament-section {
+            width: 100%;
+        }
 
-        .prefix, .number, .province, .locality, .city, .street, .streetNumber {
+        .prefix, .number, .province, .locality, .city, .street, .country, .streetNumber {
             width: 100%;
         }
     }

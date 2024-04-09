@@ -33,6 +33,9 @@ import {AddressMasterDataService} from "@api-rest/services/address-master-data.s
 import { PersonService } from '@api-rest/services/person.service';
 import { PharmacosFrequentComponent } from '../pharmacos-frequent/pharmacos-frequent.component';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
+import { MatStepper } from '@angular/material/stepper';
+import { PatientSummary } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+import { PatientNameService } from '@core/services/patient-name.service';
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -42,6 +45,11 @@ import { MedicationRequestService } from '@api-rest/services/medication-request.
 export class NuevaPrescripcionComponent implements OnInit {
 
 	@ViewChild('dialog') private dialogScroll: ElementRef;
+
+	indexStep = Steps;
+	initialIndex = this.indexStep.PATIENT;
+	editableStepModality = true;
+	patientSummary: PatientSummary;
 
 	prescriptionItems: NewPrescriptionItem[];
 	patientMedicalCoverages: PatientMedicalCoverage[];
@@ -81,6 +89,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		private readonly addressMasterDataService: AddressMasterDataService,
 		private readonly personService: PersonService,
 		private readonly medicationRequestService: MedicationRequestService,
+		private readonly patientNameService: PatientNameService,
 		private readonly el: ElementRef,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
@@ -95,6 +104,14 @@ export class NuevaPrescripcionComponent implements OnInit {
 		this.setMedicalCoverages();
 		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
+			this.patientSummary = {
+				fullName: this.patientNameService.completeName(this.patientData.person.firstName, this.patientData.person.nameSelfDetermination, this.patientData.person.lastName, this.patientData.person.middleNames, this.patientData.person.otherLastNames),
+				id: this.data.patientId,
+				identification: {
+					number: Number(this.patientData.person.identificationNumber),
+					type: this.patientData.person.identificationType
+				}
+			};
 		});
 
 		if (this.isHabilitarRecetaDigitalEnabled)
@@ -212,6 +229,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	closeModal(newPrescription?: NewPrescription): void {
 		this.dialogRef.close(newPrescription);
+	}
+
+	back(stepper: MatStepper) {
+		stepper.previous();
 	}
 
 	openPharmacosFrequestDialog() {
@@ -497,4 +518,10 @@ export class NewPrescription {
 	prescriptionDto: PrescriptionDto;
 	prescriptionRequestResponse: DocumentRequestDto[] | number[];
 	identificationNumber: string;
+}
+
+enum Steps {
+	PATIENT = 0,
+	RECIPE = 1,
+	MEDICATION = 2
 }

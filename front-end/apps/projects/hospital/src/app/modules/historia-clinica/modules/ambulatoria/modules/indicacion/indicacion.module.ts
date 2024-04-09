@@ -33,6 +33,8 @@ import { WarningMessageComponent } from './components/warning-message/warning-me
 import { ShowViaPipe } from './pipes/show-via.pipe';
 import { EmergencyCareIndicationsCardComponent } from './components/emergency-care-indications-card/emergency-care-indications-card.component';
 import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
+//standalone componentes
+import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
 
 @NgModule({
 	declarations: [
@@ -76,7 +78,9 @@ import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmac
 		CommonModule,
 		FormsModule,
 		PresentationModule,
-		HistoriaClinicaModule
+		HistoriaClinicaModule,
+		//Standalone Component
+		PatientSummaryComponent
 	],
 	providers: [
 		NursingRecordFacadeService
