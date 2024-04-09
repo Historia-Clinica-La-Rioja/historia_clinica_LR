@@ -9,7 +9,8 @@
     <mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
         <form [formGroup]="prescriptionForm" class="form" id="form">
             <div fxLayout="column">
-                <mat-step [stepControl]="prescriptionForm" label="Paciente" [editable]="editableStepModality">
+                <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_LABEL' | translate}}"
+                 [editable]="editableStepModality">
                     <h2 class="bold no-margin">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_DATA' | translate}}</h2>
                     <div class="patientSummary">
                         <app-patient-summary *ngIf="patientSummary" [person]="patientSummary"></app-patient-summary>
@@ -128,125 +129,133 @@
                     </section>
                 </mat-step>
 
-                <mat-step [stepControl]="prescriptionForm" label="Receta" [editable]="editableStepModality">
-                    <div *ngIf="isMedication()">
-                        <mat-checkbox formControlName="withoutRecipe">
-                            <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
-                        </mat-checkbox>
-                    </div>
-                    <mat-form-field appearance="outline" *ngIf="isHabilitarRecetaDigitalEnabled">
+                <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_LABEL' | translate}}"
+                 [editable]="editableStepModality">
+                <!-- SEGUNDO STEPPER RECETA-->
+                    <section class="prescription">
+                        <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_DATA' | translate}}</h2>
+                        <div *ngIf="isMedication()">
+                            <mat-checkbox formControlName="withoutRecipe">
+                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
+                            </mat-checkbox>
+                        </div>
                         <mat-label translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY"></mat-label>
-                        <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty"
-                            formControlName="clinicalSpecialty">
-                            <mat-option *ngFor="let clinicalSpecialty of this.specialties"
-                                [value]="clinicalSpecialty">
-                                <span class="mat-body">{{clinicalSpecialty.name}}</span>
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'clinicalSpecialty')"
-                            translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY_REQUIRED">
-                        </mat-error>
-                    </mat-form-field>
+                        <mat-form-field appearance="outline" *ngIf="isHabilitarRecetaDigitalEnabled">
+                            <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty" formControlName="clinicalSpecialty"
+                                placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_SPECIALTY' | translate}}">
+                                <mat-option *ngFor="let clinicalSpecialty of this.specialties"
+                                    [value]="clinicalSpecialty.id">
+                                    {{clinicalSpecialty.name}}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="hasError(prescriptionForm, 'required', 'clinicalSpecialty')"
+                                translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY_REQUIRED">
+                            </mat-error>
+                        </mat-form-field>
 
-                    <mat-checkbox class="mb-1"
-                        *ngIf="isHabilitarRecetaDigitalEnabled"
-                        formControlName="archived">
-                        <span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ARCHIVED"></span>
-                    </mat-checkbox>
+                        <mat-checkbox class="mb-1"
+                            *ngIf="isHabilitarRecetaDigitalEnabled"
+                            formControlName="archived">
+                            <span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ARCHIVED"></span>
+                        </mat-checkbox>
 
-                    <mat-checkbox class="mb-1"
-                        *ngIf="isHabilitarRecetaDigitalEnabled"
-                        formControlName="prolongedTreatment"
-                        (change)="setProlongedTreatment($event.checked)">
-                        <span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROLONGED_TREATMENT"></span>
-                    </mat-checkbox>
+                        <mat-checkbox class="mb-1"
+                            *ngIf="isHabilitarRecetaDigitalEnabled"
+                            formControlName="prolongedTreatment"
+                            (change)="setProlongedTreatment($event.checked)">
+                            <span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROLONGED_TREATMENT"></span>
+                        </mat-checkbox>
 
-                    <mat-form-field *ngIf="isHabilitarRecetaDigitalEnabled" appearance="outline">
-                        <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_LABEL'">
-                        </mat-label>
-                        <input formControlName="posdatadas" type="number" matInput>
-                        <mat-hint *ngIf="prescriptionForm.controls.posdatadas.value == POSDATADAS_MIN else posdatadasHintPlural"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_SINGULAR'"
-                            [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
-                        </mat-hint>
-                        <ng-template #posdatadasHintPlural>
-                            <mat-hint
-                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_PLURAL'"
+                        <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_LABEL'"></mat-label>
+                        <mat-form-field *ngIf="isHabilitarRecetaDigitalEnabled" appearance="outline">
+                            <input formControlName="posdatadas" type="number" matInput>
+                            <mat-hint *ngIf="prescriptionForm.controls.posdatadas.value == POSDATADAS_MIN else posdatadasHintPlural"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_SINGULAR'"
                                 [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
                             </mat-hint>
-                        </ng-template>
-                        <mat-error *ngIf="hasError(prescriptionForm, 'required', 'posdatadas')" translate="forms.REQUIRED"></mat-error>
-                        <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
-                            [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
-                        </mat-error>
-                        <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
-                            [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
-                        </mat-error>
-                    </mat-form-field>
+                            <ng-template #posdatadasHintPlural>
+                                <mat-hint
+                                    [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_PLURAL'"
+                                    [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
+                                </mat-hint>
+                            </ng-template>
+                            <mat-error *ngIf="hasError(prescriptionForm, 'required', 'posdatadas')" translate="forms.REQUIRED"></mat-error>
+                            <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
+                                [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
+                            </mat-error>
+                            <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
+                                [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
+                            </mat-error>
+                        </mat-form-field>
+                    </section>
                 </mat-step>
             </div>
         </form>
 
-        <div *ngFor="let prescriptionItem of prescriptionItems" class="item-container">
-            <div fxLayout="column" fxLayoutGap="10px" class="item-information">
-                <div fxLayout="row" fxLayoutAlign="space-between start">
-                    <h3 fxFlex="80%" id="prescriptionItemName" class="mat-subheading-2 capitalize-first-letter no-margin">{{prescriptionItem.snomed.pt}}</h3>
+        <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
+        <!-- TERCER STEPPER MEDICACION-->
+            <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}</h2>
 
-                    <div fxFlex="20%" fxLayoutAlign="end start">
-                        <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)" [disabled]="submitted">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)" [disabled]="submitted">
-                            <mat-icon>delete_outline</mat-icon>
-                        </button>
+            <div *ngFor="let prescriptionItem of prescriptionItems" class="item-container">
+                <div fxLayout="column" fxLayoutGap="10px" class="item-information">
+                    <div fxLayout="row" fxLayoutAlign="space-between start">
+                        <h3 fxFlex="80%" id="prescriptionItemName" class="mat-subheading-2 capitalize-first-letter no-margin">{{prescriptionItem.snomed.pt}}</h3>
+    
+                        <div fxFlex="20%" fxLayoutAlign="end start">
+                            <button mat-icon-button color="primary" (click)="openPrescriptionItemDialog(prescriptionItem)" [disabled]="submitted">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" (click)="deletePrescriptionItem(prescriptionItem)" [disabled]="submitted">
+                                <mat-icon>delete_outline</mat-icon>
+                            </button>
+                        </div>
                     </div>
+                    <section fxLayout="row" fxLayoutAlign="space-between start" class="gray">
+                        <div *ngIf="prescriptionItem.administrationTimeDays && isHabilitarRecetaDigitalEnabled" fxLayout="column" fxLayoutGap="5px">
+                            <span *ngIf="prescriptionItem.unitDose"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
+                                [translateParams]="{unitDose: prescriptionItem.unitDose}">
+                            </span>
+                            <span *ngIf="prescriptionItem.dayDose"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
+                                [translateParams]="{dayDose: prescriptionItem.dayDose}">
+                            </span>
+                            <span
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.TREATMENT_DAYS'"
+                                [translateParams]="{treatmentDays: prescriptionItem.administrationTimeDays}">
+                            </span>
+                            <span *ngIf="prescriptionItem.quantity"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.QUANTITY'"
+                                [translateParams]="{quantity: prescriptionItem.quantity.value}">
+                            </span>
+                        </div>
+                        <div fxLayout="column" fxLayoutGap="5px">
+                            <span *ngIf="prescriptionItem.healthProblem"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DIAGNOSIS'"
+                                [translateParams]="{healthProblem: prescriptionItem.healthProblem.description}">
+                            </span>
+                            <span *ngIf="prescriptionItem.intervalHours"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.INTERVAL'"
+                                [translateParams]="{interval: prescriptionItem.intervalHours}">
+                            </span>
+                            <span *ngIf=" ! prescriptionItem.intervalHours" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAILY'"></span>
+                            <span *ngIf="prescriptionItem.administrationTimeDays && ! isHabilitarRecetaDigitalEnabled"
+                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADMINISTRATION_TIME_DAYS'"
+                                [translateParams]="{days: prescriptionItem.administrationTimeDays}">
+                            </span>
+                            <span *ngIf=" ! prescriptionItem.administrationTimeDays && ! prescriptionItem.posdatadas" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.USUAL'"></span>
+                        </div>
+                    </section>
+                    <span class="gray" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
+                    <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showStudyCategory">{{prescriptionItem.studyCategory.description}}</span>
                 </div>
-                <section fxLayout="row" fxLayoutAlign="space-between start" class="gray">
-                    <div *ngIf="prescriptionItem.administrationTimeDays && isHabilitarRecetaDigitalEnabled" fxLayout="column" fxLayoutGap="5px">
-                        <span *ngIf="prescriptionItem.unitDose"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UNIT_DOSE'"
-                            [translateParams]="{unitDose: prescriptionItem.unitDose}">
-                        </span>
-                        <span *ngIf="prescriptionItem.dayDose"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAY_DOSE'"
-                            [translateParams]="{dayDose: prescriptionItem.dayDose}">
-                        </span>
-                        <span
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.TREATMENT_DAYS'"
-                            [translateParams]="{treatmentDays: prescriptionItem.administrationTimeDays}">
-                        </span>
-                        <span *ngIf="prescriptionItem.quantity"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.QUANTITY'"
-                            [translateParams]="{quantity: prescriptionItem.quantity.value}">
-                        </span>
-                    </div>
-                    <div fxLayout="column" fxLayoutGap="5px">
-                        <span *ngIf="prescriptionItem.healthProblem"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DIAGNOSIS'"
-                            [translateParams]="{healthProblem: prescriptionItem.healthProblem.description}">
-                        </span>
-                        <span *ngIf="prescriptionItem.intervalHours"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.INTERVAL'"
-                            [translateParams]="{interval: prescriptionItem.intervalHours}">
-                        </span>
-                        <span *ngIf=" ! prescriptionItem.intervalHours" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.DAILY'"></span>
-                        <span *ngIf="prescriptionItem.administrationTimeDays && ! isHabilitarRecetaDigitalEnabled"
-                            [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADMINISTRATION_TIME_DAYS'"
-                            [translateParams]="{days: prescriptionItem.administrationTimeDays}">
-                        </span>
-                        <span *ngIf=" ! prescriptionItem.administrationTimeDays && ! prescriptionItem.posdatadas" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.USUAL'"></span>
-                    </div>
-                </section>
-                <span class="gray" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
-                <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showStudyCategory">{{prescriptionItem.studyCategory.description}}</span>
+                <mat-divider></mat-divider>
             </div>
-            <mat-divider></mat-divider>
-        </div>
 
-        <mat-error class="mb-1" *ngIf="this.showAddMedicationError" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.REQUIRED_MEDICATION'"></mat-error>
-        <mat-step [stepControl]="prescriptionForm" label="Receta" [editable]="editableStepModality">
+            <mat-error class="mb-1" *ngIf="this.showAddMedicationError" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.REQUIRED_MEDICATION'"></mat-error>
+            
             <app-button id="download_study" [color]="'primary'" [isLoading]="isLoading" [text]="data.addLabel" [disabled]="submitted"
                 [buttonType]="'mat-stroked-button'" (clicked)="openPharmacosFrequestDialog()" fxFlexFill.xs>
             </app-button>

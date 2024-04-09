@@ -56,13 +56,13 @@ h3#prescriptionItemName {
 .province-section, .country-section, .city-section, .departament-section {
     display: flex;
     flex-direction: column;
-    width: 48%;
+    width: 49%;
 }
 
 .phone-container {
 	.prefix {
 		width: 130px;
-        margin-right: 23px;
+        margin-right: 16px;
 	}
 
 	.number {
@@ -74,11 +74,16 @@ h3#prescriptionItemName {
 .street {
     width: 270px;
     min-width: 175px;
-    margin-right: 23px;
+    margin-right: 16px;
 }
 
 .streetNumber {
     width: 130px;
+}
+
+.prescription {
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 360px) {
