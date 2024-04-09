@@ -430,3 +430,23 @@ databaseChangeLog:
                     name: reason
                     type: text
                     
+
+    - changeSet:
+        id: create-move-studies-view
+        comment: create view v_all_move_studies
+        author: amurrie
+        changes:
+          - createView:
+              - viewName: v_all_move_studies
+              - replaceIfExists:  true
+              - fullDefinition: false
+              - selectQuery: |-
+                  ( select ms.id as id_move, p2.first_name , p2.last_name ,p2.identification_number, ms.image_id , a.date_type_id as appoinment_date ,a.hour as appoinment_time, ms.status, ms.result, ms.institution_id, m.acronym
+                    from public.move_studies ms
+                    join public.appointment a on ms.appointment_id =a.id
+                    join public.patient p on a.patient_id = p.id
+                    join public.person p2 on p.person_id = p2.id
+                    join public.equipment_appointment_assn  ep on ep.appointment_id= a.id
+                    join public.equipment_diary   ed on ed.id = ep.equipment_diary_id
+                    join public.equipment e   on e.id = ed.equipment_id
+                    join public.modality m on m.id = e.modality_id)
