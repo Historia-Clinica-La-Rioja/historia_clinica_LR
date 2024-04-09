@@ -1,5 +1,5 @@
 <app-summary-card [header]="documentsSummary">
-	<ng-container *ngIf="this.documentHistoric?.documents.length !== 0 || searchTriggered; else noData">
+	<ng-container *ngIf="this.documentHistoric?.documents?.length !== 0 || searchTriggered; else noData">
 		<div class="search-form" id="header">
 			<form fxLayout="row" fxLayoutGap="10px" id="document-search-form" [formGroup]="form" (ngSubmit)="search()">
 				<div style="padding-left: 16px;">
@@ -120,7 +120,7 @@
 					</div>
 				</mat-list-option>
 			</mat-selection-list>
-			<ng-container *ngIf="!activeDocument?.document.anestheticReport">
+			<ng-container *ngIf="!(activeDocument?.document.documentType === 'Parte anestésico')">
 				<div *ngIf="viewEvolutionNote()" class="content" fxLayout="row" fxLayoutAlign="space-between">
 					<div fxFlex="70%">
 						<ng-container>
@@ -225,12 +225,12 @@
 					</div>
 				</div>
 			</ng-container>
-			<ng-container *ngIf="activeDocument?.document.anestheticReport">
-				<app-anesthetic-report-document-summary class="anesthetic-report" [anestheticReport]="activeDocument.document.anestheticReport"></app-anesthetic-report-document-summary>
+			<ng-container *ngIf="activeDocument?.document.documentType === 'Parte anestésico'">
+				<app-anesthetic-report-document-summary class="anesthetic-report" [documentId]="activeDocument.document.id" [internmentEpisodeId]="internmentEpisodeId"></app-anesthetic-report-document-summary>
 			</ng-container>
 		</div>
 		<div
-			*ngIf="this.documentHistoric && !this.documentHistoric.documents.length">
+			*ngIf="this.documentHistoric && !this.documentHistoric.documents?.length">
 			<div class="no-data-styles">
 				<span [translate]="'internaciones.documents-summary.NO_FILTERED_PROBLEMS'"></span>
 			</div>
