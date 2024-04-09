@@ -11,7 +11,7 @@
             <mat-list-option *ngFor="let data of dataList" id="selected-card" (click)="seeDetails(data.id, data.relatedId, $event)">
                 <header>
                     <input *ngIf="enableCheckboxes" type="checkbox" [checked]="data.checked" [value]="data.id" (change)="checkboxSelect(data.id)">
-                    <mat-icon class="title-icon" color="primary" fontSet="material-icons-outlined">{{data.icon}}</mat-icon>
+                    <mat-icon *ngIf="data.icon" class="title-icon" color="primary" fontSet="material-icons-outlined">{{data.icon}}</mat-icon>
                     <div class="title-subtitle">
                         <span class="color-primary uppercase bold">{{data.title | translate}}</span>
                         <span *ngIf="data.subtitle" class="bold">{{data.subtitle | translate}}</span>
@@ -32,6 +32,10 @@
                         <span *ngFor="let value of option.value">{{value | translate}}</span>
                     </div>
                 </mat-list-item>
+				<mat-list-item *ngIf="data.coloredIconTextOption">
+                    <span class="title" [ngClass]="data.coloredIconTextOption.isImportant ? 'important' : ''">{{data.coloredIconTextOption.title | translate}}</span>
+					<app-colored-icon-text [coloredIconText]="data.coloredIconTextOption.value"></app-colored-icon-text>
+				</mat-list-item>
             </mat-list-option>
         </div>
     </mat-selection-list>

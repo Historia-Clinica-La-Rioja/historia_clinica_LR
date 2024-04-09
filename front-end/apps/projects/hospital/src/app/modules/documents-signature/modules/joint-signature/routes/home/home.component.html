@@ -11,13 +11,24 @@
                 <span>{{ 'firma-conjunta.TAB_THIRD_PARTY_DOCUMENTS' | translate | uppercase }}</span>
             </ng-template>
             <ng-template matTabContent>
-                <section>
-                    <header>
-                        <h2>{{'firma-conjunta.LIST_DOCUMENTS' | translate}}</h2>
-                        <app-header-attention-detail [details]="data" [title]="'firma-conjunta.TITLE_HEADER'"></app-header-attention-detail>
-                    </header>
-                </section>
+				<section>
+					<header>
+						<h1 translate="digital-signature.TITLE" class="bold"></h1>
+					</header>
+					<app-selectable-card
+						*ngIf="!isLoading else loading"
+						[dataList]="documents"
+						[noDataMessage]="'digital-signature.NO_DOCUMENTS'">
+						<span translate="digital-signature.UNSELECTED_DOCUMENT" class="unselected-document-message"></span>
+					</app-selectable-card>
+				</section>
             </ng-template>
         </mat-tab>
     </mat-tab-group>
 </app-content>
+
+<ng-template #loading>
+    <div class="spinner">
+		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
+	</div>
+</ng-template>

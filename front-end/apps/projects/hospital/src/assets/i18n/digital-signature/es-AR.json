@@ -9,7 +9,8 @@
             "CREATED": "Creación",
             "PROFESSIONAL": "Profesional",
             "PATIENT": "Paciente",
-            "ATTENTION_TYPE": "Tipo de atención"
+            "ATTENTION_TYPE": "Tipo de atención",
+			"SIGN_STATUS": "Estado de firma"
         },
         "dialogs": {
             "cuil": {

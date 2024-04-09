@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DetailedInformation } from '../detailed-information/detailed-information.component';
+import { ColoredIconText } from '../colored-icon-text/colored-icon-text.component';
 
 const INPUT_NODE_NAME: string = "INPUT";
 
@@ -42,15 +43,15 @@ export class SelectableCardComponent {
 	}
 
 	checkboxSelect(id: number) {
-		(!this.selectedIds.includes(id))    
+		(!this.selectedIds.includes(id))
 		? this.selectedIds.push(id)
-		: this.selectedIds.splice(this.selectedIds.indexOf(id), 1); 
-		
+		: this.selectedIds.splice(this.selectedIds.indexOf(id), 1);
+
 		const item: ItemListCard = this.dataList.find(item => item.id === id);
 		item.checked = !item.checked;
 		this.selectedDataList.emit(this.selectedIds);
 	}
-	
+
 	download(id: number, relatedId: number) {
 		this.downloadId.emit({id, relatedId});
 	}
@@ -69,14 +70,15 @@ export class SelectableCardComponent {
 export interface ItemListCard {
 	id: number,
 	relatedId?: number,
-	icon: string,
+	icon?: string,
 	title: string,
 	options: ItemListOption[],
+	coloredIconTextOption?: ItemListOption,
 	checked?: boolean
 }
 
 export interface ItemListOption {
 	title: string,
-	value?: string[],
+	value?: string[] | ColoredIconText,
 	isImportant?: boolean
 }
