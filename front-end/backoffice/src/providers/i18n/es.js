@@ -834,6 +834,27 @@ const messages = {
                 beginOfMove: 'Fecha de inicio de movimiento'
             }
         },
+
+        allmovestudies: {
+            name: 'Lista de Estudios',
+            pending:'Pendiente',
+            moving:'Moviendo',
+            finished:'Finalizado',
+            failed:'Movimiento Fallido',
+            fields: {
+                institutionId: 'Intitución',
+                imageId: 'Id del estudio',
+                identificationNumber: 'Documento',
+                firstName: 'Nombre',
+                lastName: 'Apellido',
+                appoinmentDate: 'Fecha del turno',
+                appoinmentTime: 'Hora del turno',
+                result: 'Resultado',
+                status:'Estado',
+                acronym:'Modalidad'
+            }
+        },
+
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
             fields: {
