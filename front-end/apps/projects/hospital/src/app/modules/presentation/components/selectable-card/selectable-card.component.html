@@ -1,52 +1,66 @@
 <section class="container">
-    <mat-selection-list [multiple]="false" color="primary" id="selection-list" *ngIf="dataList.length else noData">
-        <mat-list-item class="select-all" *ngIf="enableCheckboxes">
-            <header>
-                <input type="checkbox" (click)="selectAll()" id="select-all">
-                <span translate="presentation.selectable-card.SELECT_ALL"></span>
-            </header>
-        </mat-list-item>
+	<mat-selection-list [multiple]="false" color="primary" id="selection-list" *ngIf="dataList.length else noData">
+		<mat-list-item class="select-all" *ngIf="enableCheckboxes">
+			<header>
+				<input type="checkbox" (click)="selectAll()" id="select-all">
+				<span translate="presentation.selectable-card.SELECT_ALL"></span>
+			</header>
+		</mat-list-item>
 
-        <div class="cards-container">
-            <mat-list-option *ngFor="let data of dataList" id="selected-card" (click)="seeDetails(data.id, data.relatedId, $event)">
-                <header>
-                    <input *ngIf="enableCheckboxes" type="checkbox" [checked]="data.checked" [value]="data.id" (change)="checkboxSelect(data.id)">
-                    <mat-icon *ngIf="data.icon" class="title-icon" color="primary" fontSet="material-icons-outlined">{{data.icon}}</mat-icon>
-                    <div class="title-subtitle">
-                        <span class="color-primary uppercase bold">{{data.title | translate}}</span>
-                        <span *ngIf="data.subtitle" class="bold">{{data.subtitle | translate}}</span>
-                    </div>
-                    <div *ngIf="isDownloadable" fxLayout="column" fxLayoutGap="10px" fxFlex="calc(10% - 10px)"fxFlex.lt-md="100" fxLayoutAlign="start end">
-                        <div>
-                            <button (click)="download(data.id, data.relatedId)" mat-icon-button color="primary" id="download">
-                                <mat-icon fontSet="material-icons-outlined">
-                                    download_icon
-                                </mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </header>
-                <mat-list-item *ngFor="let option of data.options">
-                    <span class="title" [ngClass]="option.isImportant ? 'important' : ''">{{option.title | translate}}</span>
-                    <div class="value-container">
-                        <span *ngFor="let value of option.value">{{value | translate}}</span>
-                    </div>
-                </mat-list-item>
+		<div class="cards-container">
+			<mat-list-option *ngFor="let data of dataList" id="selected-card"
+				(click)="seeDetails(data.id, data.relatedId, $event)">
+				<header>
+					<input *ngIf="enableCheckboxes" type="checkbox" [checked]="data.checked" [value]="data.id"
+						(change)="checkboxSelect(data.id)">
+					<mat-icon *ngIf="data.icon" class="title-icon" color="primary"
+						fontSet="material-icons-outlined">{{data.icon}}</mat-icon>
+					<div class="title-subtitle">
+						<span class="color-primary uppercase bold">{{data.title | translate}}</span>
+						<span *ngIf="data.subtitle" class="bold">{{data.subtitle | translate}}</span>
+					</div>
+					<div *ngIf="isDownloadable" fxLayout="column" fxLayoutGap="10px" fxFlex="calc(10% - 10px)"
+						fxFlex.lt-md="100" fxLayoutAlign="start end">
+						<div>
+							<button (click)="download(data.id, data.relatedId)" mat-icon-button color="primary"
+								id="download">
+								<mat-icon fontSet="material-icons-outlined">
+									download_icon
+								</mat-icon>
+							</button>
+						</div>
+					</div>
+				</header>
+				<mat-list-item *ngFor="let option of data.options">
+					<span class="title" [ngClass]="option.isImportant ? 'important' : ''">{{option.title |
+						translate}}</span>
+					<div class="value-container">
+						<span *ngFor="let value of option.value">{{value | translate}}</span>
+					</div>
+				</mat-list-item>
 				<mat-list-item *ngIf="data.coloredIconTextOption">
-                    <span class="title" [ngClass]="data.coloredIconTextOption.isImportant ? 'important' : ''">{{data.coloredIconTextOption.title | translate}}</span>
+					<span class="title"
+						[ngClass]="data.coloredIconTextOption.isImportant ? 'important' : ''">{{data.coloredIconTextOption.title
+						| translate}}</span>
 					<app-colored-icon-text [coloredIconText]="data.coloredIconTextOption.value"></app-colored-icon-text>
 				</mat-list-item>
-            </mat-list-option>
-        </div>
-    </mat-selection-list>
-    <app-detailed-information *ngIf="detailedInformation" [detailedInformation]="detailedInformation"></app-detailed-information>
-    <div class="no-detailed-information">
-        <ng-content *ngIf="!detailedInformation"></ng-content>
-    </div>
+			</mat-list-option>
+		</div>
+	</mat-selection-list>
+	<div *ngIf="detailedInformation" class="detailed-information">
+		<ng-content select=".header-information"></ng-content>
+		<mat-divider></mat-divider>
+		<app-detailed-information
+			[detailedInformation]="detailedInformation">
+		</app-detailed-information>
+	</div>
+	<div class="no-detailed-information">
+		<ng-content *ngIf="!detailedInformation"></ng-content>
+	</div>
 </section>
 
 <ng-template #noData>
-    <section class="no-information-container">
-        <h3>{{noDataMessage | translate}}</h3>
-    </section>
+	<section class="no-information-container">
+		<h3>{{noDataMessage | translate}}</h3>
+	</section>
 </ng-template>

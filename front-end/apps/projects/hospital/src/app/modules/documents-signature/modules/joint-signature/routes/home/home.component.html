@@ -1,34 +1,45 @@
 <button mat-button color="primary" *ngIf="buttonBack" (click)="goToBackDocumentsSignature()">
-    <mat-icon color="primary">arrow_back</mat-icon>
-    <span>{{ 'firmas.BACK_DOCUMENTS_SIGNATURE' | translate }}</span>
+	<mat-icon color="primary">arrow_back</mat-icon>
+	<span>{{ 'firmas.BACK_DOCUMENTS_SIGNATURE' | translate }}</span>
 </button>
 
 <app-content width="full">
-    <h2 class="page-title">{{'firmas.JOINT_SIGNATURE' | translate}}</h2>
-    <mat-tab-group>
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <span>{{ 'firma-conjunta.TAB_THIRD_PARTY_DOCUMENTS' | translate | uppercase }}</span>
-            </ng-template>
-            <ng-template matTabContent>
+	<h2 class="page-title">{{'firmas.JOINT_SIGNATURE' | translate}}</h2>
+	<mat-tab-group>
+		<mat-tab>
+			<ng-template mat-tab-label>
+				<span>{{ 'firma-conjunta.TAB_THIRD_PARTY_DOCUMENTS' | translate | uppercase }}</span>
+			</ng-template>
+			<ng-template matTabContent>
 				<section>
 					<header>
-						<h1 translate="digital-signature.TITLE" class="bold"></h1>
+						<h1 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h1>
 					</header>
-					<app-selectable-card
-						*ngIf="!isLoading else loading"
-						[dataList]="documents"
-						[noDataMessage]="'digital-signature.NO_DOCUMENTS'">
-						<span translate="digital-signature.UNSELECTED_DOCUMENT" class="unselected-document-message"></span>
+					<app-selectable-card *ngIf="!isLoading else loading" [dataList]="documents"
+						[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
+						(selectedId)="seeDetails($event)">
+						<span translate="digital-signature.UNSELECTED_DOCUMENT"
+							class="no-detailed-information">
+						</span>
+
+						<section class="header-information">
+							<header>
+								<app-header-attention-detail
+									[setDocumentId]="selectedDocumentId"
+									[details]="headerInformation"
+									[title]="'firma-conjunta.TITLE_HEADER'">
+								</app-header-attention-detail>
+							</header>
+						</section>
 					</app-selectable-card>
 				</section>
-            </ng-template>
-        </mat-tab>
-    </mat-tab-group>
+			</ng-template>
+		</mat-tab>
+	</mat-tab-group>
 </app-content>
 
 <ng-template #loading>
-    <div class="spinner">
+	<div class="spinner">
 		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
 	</div>
 </ng-template>

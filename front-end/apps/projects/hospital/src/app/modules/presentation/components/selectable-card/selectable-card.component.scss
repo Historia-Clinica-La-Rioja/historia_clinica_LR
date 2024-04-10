@@ -37,9 +37,10 @@ header {
 }
 
 .cards-container {
-    height: 40rem;
     overflow-y: auto;
     overflow-x: hidden;
+    border-right: 1px solid #d3d3d3;
+
 }
 
 mat-selection-list .mat-list-single-selected-option {
@@ -95,4 +96,8 @@ mat-list-item {
         font-weight: 500;
         color: #333;
     }
+}
+
+.detailed-information {
+	height: 40rem
 }

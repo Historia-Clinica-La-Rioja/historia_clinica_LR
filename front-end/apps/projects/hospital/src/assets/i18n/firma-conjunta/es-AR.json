@@ -10,6 +10,12 @@
 			"PENDING" : "Pendiente",
 			"REJECTED" : "Rechazado",
 			"SIGNED" : "Firmado"
+		},
+		"details": {
+			"AMBIT": "Ámbito",
+			"PATIENT": "Paciente",
+			"DATE": "Fecha",
+			"PROFESSIONAL": "Profesional"
 		}
 	}
 }

@@ -4,8 +4,9 @@ import { ContextService } from '@core/services/context.service';
 import { URL_DOCUMENTS_SIGNATURE } from '../../../../routes/home/home.component';
 import { AppFeature, EElectronicSignatureStatus, ElectronicSignatureInvolvedDocumentDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
-import { ItemListCard, ItemListOption } from '@presentation/components/selectable-card/selectable-card.component';
+import { ItemListCard, ItemListOption, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { getDocumentTypeByEnum } from '@core/constants/summaries';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
@@ -20,9 +21,11 @@ export class HomeComponent {
 
 	buttonBack = false;
 	routePrefix: string;
+	headerInformation: Detail[] = [];
 	isLoading: boolean;
 	documents: ItemListCard[] = [];
 	jointSignatureDocuments: ElectronicSignatureInvolvedDocumentDto[];
+	selectedDocumentId: number;
 
 	constructor(
 		private readonly router: Router,
@@ -130,5 +133,31 @@ export class HomeComponent {
 					icon: "check_circle"
 				}
 		}
+	}
+
+	private buildHeaderInformation(document: ElectronicSignatureInvolvedDocumentDto): Detail[] {
+		return [
+			{
+				title: 'firma-conjunta.details.AMBIT',
+				text: getDocumentTypeByEnum(document.documentType).title
+			},
+			{
+				title: 'firma-conjunta.details.PATIENT',
+				text: document.patientCompleteName
+			},
+			{
+				title: 'firma-conjunta.details.DATE',
+				text: dateTimeDtoToDate(document.documentCreationDate).toLocaleString()
+			},
+			{
+				title: 'firma-conjunta.details.PROFESSIONAL',
+				text: document.responsibleProfessionalCompleteName
+			},
+		]
+	}
+
+	seeDetails(ids: SelectableCardIds) {
+		this.selectedDocumentId = ids.id;
+		this.headerInformation = this.buildHeaderInformation(this.jointSignatureDocuments.find(item => item.documentId === ids.id));
 	}
 }
