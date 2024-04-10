@@ -30,7 +30,6 @@ export class PatientReportsService {
 	}
 
 	getOutpatientConsultationReport(url: string, consultationDto: ConsultationsDto, pdfPrefixName: string, patientName: string): Observable<any> {
-		console.log(consultationDto.consultationDate);
 		const consultationDate: string = toFileFormat(consultationDto.consultationDate);
 		const pdfName = pdfPrefixName + `_${patientName}_${consultationDate}_${consultationDto.completeProfessionalName}`;
 		const documentId = consultationDto.documentId;

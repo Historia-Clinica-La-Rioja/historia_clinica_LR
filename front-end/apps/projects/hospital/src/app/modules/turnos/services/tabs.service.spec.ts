@@ -71,7 +71,7 @@ describe('TabsService', () => {
 
 		const roles: ERole[] = [ERole.PROFESIONAL_DE_SALUD];
 		const result: TabsLabel[] = [TabsLabel.PROFESSIONAL, TabsLabel.CARE_NETWORK, TabsLabel.REQUESTS];
-		
+
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
 		featureFlagServiceMock.filterItems$.and.returnValue(of([]));
 
@@ -85,7 +85,7 @@ describe('TabsService', () => {
 
 		const roles: ERole[] = [ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 		const result: TabsLabel[] = [TabsLabel.PROFESSIONAL, TabsLabel.CARE_NETWORK, TabsLabel.REQUESTS];
-		
+
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
 		featureFlagServiceMock.filterItems$.and.returnValue(of([]));
 
@@ -98,7 +98,7 @@ describe('TabsService', () => {
 	it('should set professional and image network tabs with diary manager role and active image network feature flag', () => {
 
 		const roles: ERole[] = [ERole.ADMINISTRADOR_AGENDA];
-		const ffActives = [{ featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }];
+		const ffActives = [{ featureFlag: [AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES] }];
 		const result: TabsLabel[] = [TabsLabel.PROFESSIONAL, TabsLabel.IMAGE_NETWORK];
 
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));
@@ -127,7 +127,7 @@ describe('TabsService', () => {
 	it('should set image network tab with image network administrative role and active image network feature flag', () => {
 
 		const roles: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
-		const ffActives = [{ featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES }];
+		const ffActives = [{ featureFlag: [ AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES ]}];
 		const result: TabsLabel[] = [TabsLabel.IMAGE_NETWORK];
 
 		permissionServiceMock.contextAssignments$.and.returnValue(of(roles));

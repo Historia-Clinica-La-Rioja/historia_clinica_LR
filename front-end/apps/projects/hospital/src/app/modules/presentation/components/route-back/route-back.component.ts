@@ -26,7 +26,6 @@ export class RouteBackComponent implements OnInit {
 		if (parentRoute) {
 		  // Acceder al Data del ActivatedRoute del componente padre
 		  const parentData = parentRoute.snapshot.data;
-		  console.log('Data del router padre:', parentData);
 		  this.parentData = parentData;
 		}
 	}

@@ -25,10 +25,10 @@ import { DatepickerComponent } from './components/datepicker/datepicker.componen
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
-import { DownloadButtonComponent } from './components/download-button/download-button.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
+import { DownloadButtonComponent } from './components/download-button/download-button.component';
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
 import { ExpansionSectionComponent } from './components/expansion-section/expansion-section.component';
@@ -171,6 +171,8 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PersonShortDescriptionComponent,
 		PriorityComponent,
 		PrioritySelectComponent,
+		ProfessionalSelectComponent,
+		RadioGroupComponent,
 		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
 		RouteBackComponent,
@@ -183,15 +185,12 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,
+		TitleDescriptionComponent,
 		TitledSingleContentComponent,
 		TypeaheadComponent,
-		TitleDescriptionComponent,
 		TypeaheadFilterOptionsComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
-  		FiltersSelectComponent,
-  		TitledSingleContentComponent,
-		ProfessionalSelectComponent,
 		// dialogs
 		ConfirmDialogComponent,
 		DatePickerComponent,
@@ -216,7 +215,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ViewDateDtoPipe,
 		ViewDatePipe,
 		ViewHourMinutePipe,
-  		RadioGroupComponent,
 	],
 	imports: [
 		CommonModule,
@@ -289,6 +287,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		PersonShortDescriptionComponent,
 		PriorityComponent,
 		PrioritySelectComponent,
+		ProfessionalSelectComponent,
 		RadioGroupComponent,
 		RegisterEditorInfoComponent,
 		RichTextEditorComponent,
@@ -306,7 +305,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TypeaheadComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
-		ProfessionalSelectComponent,
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
