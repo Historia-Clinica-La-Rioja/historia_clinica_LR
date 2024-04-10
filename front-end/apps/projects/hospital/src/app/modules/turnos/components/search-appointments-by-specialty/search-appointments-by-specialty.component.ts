@@ -6,8 +6,6 @@ import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentMod
 import { DiaryService } from '@api-rest/services/diary.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
@@ -17,9 +15,11 @@ import { TabsService } from '@turnos/services/tabs.service';
 import { UnsatisfiedDemandService } from '@api-rest/services/unsatisfied-demand.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { processErrors } from '@core/utils/form.utils';
+import { datePlusDays } from '@core/utils/date.utils';
 
 const PAGE_MIN_SIZE = 5;
 const ONE_ELEMENT = 1;
+const PLUS_DAY = 21;
 
 @Component({
 	selector: 'app-search-appointments-by-specialty',
@@ -39,7 +39,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	patientId: number;
 	showClinicalSpecialtyError = false;
 	showPracticeError = false;
-	private today: Date;
+	today: Date;
 	MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 	isEnableTelemedicina: boolean;
@@ -50,11 +50,6 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	externalSetValueSpecialty: TypeaheadOption<string>;
 	resetRegisterDemandButtonDisabled = false;
 	redirectionDisabled = false;
-	dateSearchFilter = (d: Moment): boolean => {
-		const parsedDate = d?.toDate();
-		parsedDate?.setHours(0, 0, 0, 0);
-		return parsedDate >= this.today;
-	};
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -87,8 +82,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			fridayControl: [true, Validators.nullValidator],
 			saturdayControl: [false, Validators.nullValidator],
 			sundayControl: [false, Validators.nullValidator],
-			searchInitialDate: [moment(), Validators.required],
-			searchEndingDate: [{ value: moment().add(21, "days"), disabled: true }, Validators.required],
+			searchInitialDate: [this.today, Validators.required],
+			searchEndingDate: [{ value: datePlusDays(this.today, PLUS_DAY), disabled: true }, Validators.required],
 			modality: [this.MODALITY_ON_SITE_ATTENTION, Validators.required],
 			practice: [null],
 		});
@@ -155,14 +150,12 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		}
 	}
 
-	updateSearchEndingDate(changedValue) {
-		if (changedValue.value) {
-			const newInitialDate = changedValue.value.clone();
-			this.form.controls.searchEndingDate.setValue(newInitialDate.add(21, "days"));
-		}
+	updateSearchEndingDate(selectedDate: Date) {
+		this.form.controls.searchInitialDate.setValue(selectedDate);
+		this.form.controls.searchEndingDate.setValue(datePlusDays(selectedDate, PLUS_DAY));
 	}
 
-	getSelectedDaysOfWeek():number[] {
+	getSelectedDaysOfWeek(): number[] {
 		const selectedDaysOfWeek = [];
 		if (this.form.value.mondayControl)
 			selectedDaysOfWeek.push(1);
@@ -258,9 +251,9 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	sendPreloadedData() {
-		if(this.externalInformation){
+		if (this.externalInformation) {
 			this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
-		}else{
+		} else {
 			const values: SearchCriteriaValues = {
 				careModality: this.form.controls.modality.value,
 				searchCriteria: this.selectedSearchCriteria,
@@ -272,16 +265,16 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	saveRegisterUnsatisfiedDemand() {
-		this.unsatisfiedDemandService.saveUnsatisfiedAppointmentDemand(this.prepareRegisterUnsatisfiedDemand()).subscribe(res=>{
+		this.unsatisfiedDemandService.saveUnsatisfiedAppointmentDemand(this.prepareRegisterUnsatisfiedDemand()).subscribe(res => {
 			this.snackBarService.showSuccess('turnos.home.messages.SUCCESS_REGISTER_UNSATISFIED_DEMAND')
-			}, error => processErrors(error, (msg) => {
+		}, error => processErrors(error, (msg) => {
 			this.snackBarService.showError(msg);
 		}));
 	}
 
 	prepareRegisterUnsatisfiedDemand(): UnsatisfiedAppointmentDemandDto {
 		const selectedDaysOfWeek = this.getSelectedDaysOfWeek();
-		return  {
+		return {
 			aliasOrSpecialtyName: this.form.controls.clinicalSpecialty.value,
 			daysOfWeek: selectedDaysOfWeek,
 			endSearchTime: this.form.controls.endingTime.value,
@@ -338,7 +331,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.practices = [practice];
 			this.setPractice(practice);
 		}
-		if(!this.externalInformation.referenceCompleteData.careLine.id){
+		if (!this.externalInformation.referenceCompleteData.careLine.id) {
 			this.redirectionDisabled = true;
 		}
 		this.searchAppointmentsInfoService.clearInfo();
