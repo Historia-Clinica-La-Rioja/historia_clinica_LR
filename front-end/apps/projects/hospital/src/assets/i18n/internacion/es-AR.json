@@ -345,7 +345,11 @@
 				"BLOOD_TYPE": "Grupo sanguíneo",
 				"BLOOD_TYPE_PLACEHOLDER": "Tipo y factor",
 				"HEIGHT": "Talla (cm)",
-				"WEIGHT": "Peso (kg)"
+				"WEIGHT": "Peso (kg)",
+				"detail": {
+					"HEIGHT": "Talla",
+					"WEIGHT": "Peso"
+				}
 			},
 			"anesthesic-clinical-evaluation": {
 				"TITLE": "Evaluación clínica anestésica",

@@ -1,19 +1,35 @@
 <div class="anesthesic-report-content">
-    <div fxFlex="70%" FxLayoutAlign="start" fxLayoutGap="36px" *ngIf="anestheticReport">
-        <section data-id="diagnosis-section" *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis">
+    <div fxFlex="70%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px" *ngIf="anestheticReport">
+
+        <div data-id="diagnosis-section" *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.diagnosis.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.mainDiagnosis" title="internaciones.anesthesic-report.diagnosis.MAIN_DIAGNOSIS" [description]="anestheticReport.mainDiagnosis"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.diagnosis" title="internaciones.anesthesic-report.diagnosis.OTHER_DIAGNOSIS" [description]="anestheticReport.diagnosis"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.mainDiagnosis" title="internaciones.anesthesic-report.diagnosis.MAIN_DIAGNOSIS"
+                    [description]="anestheticReport.mainDiagnosis"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.diagnosis" title="internaciones.anesthesic-report.diagnosis.OTHER_DIAGNOSIS"
+                    [description]="anestheticReport.diagnosis"></app-title-description-list>
             </div>
-        </section>
+        </div>
 
-        <section data-id="proposed-surgery-section" *ngIf="anestheticReport.proposedSurgeries">
+        <div data-id="proposed-surgery-section" *ngIf="anestheticReport.proposedSurgeries">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.proposed-surgery.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list title="internaciones.anesthesic-report.proposed-surgery.REGISTERED_PROPOSED_SURGERIES" [description]="anestheticReport.proposedSurgeries"></app-title-description-list>
+                <app-title-description-list title="internaciones.anesthesic-report.proposed-surgery.REGISTERED_PROPOSED_SURGERIES"
+                    [description]="anestheticReport.proposedSurgeries"></app-title-description-list>
             </div>
-        </section>
+        </div>
+
+        <div data-id="anthropometric-data-section" *ngIf="anestheticReport.anthropometricData">
+            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anthropometric-data.TITLE"></app-iconed-titled-section>
+            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+                <app-title-description-list *ngIf="anestheticReport.anthropometricData.bloodType" title="internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE" 
+                    [description]="anestheticReport.anthropometricData.bloodType"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.anthropometricData.height" title="internaciones.anesthesic-report.anthropometric-data.detail.HEIGHT" 
+                    [description]="anestheticReport.anthropometricData.height"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.anthropometricData.weight" title="internaciones.anesthesic-report.anthropometric-data.detail.WEIGHT" 
+                    [description]="anestheticReport.anthropometricData.weight"></app-title-description-list>
+            </div>
+        </div>
 
     </div>
 </div>

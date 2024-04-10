@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnestheticReportDto, DiagnosisDto, HospitalizationProcedureDto } from '@api-rest/api-model';
+import { AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -25,7 +25,8 @@ export class AnestheticReportDocumentSummaryService {
         return {
             mainDiagnosis: anestheticReport.mainDiagnosis ? [this.getDescriptionAndStatus(anestheticReport.mainDiagnosis)] : null,
             diagnosis: anestheticReport.diagnosis.length ? this.getDiagnosisAsStringArray(anestheticReport.diagnosis) : null,
-            proposedSurgeries: anestheticReport.surgeryProcedures.length ? this.getProposedSurgeriesAsStringArray(anestheticReport.surgeryProcedures) : null
+            proposedSurgeries: anestheticReport.surgeryProcedures.length ? this.getProposedSurgeriesAsStringArray(anestheticReport.surgeryProcedures) : null,
+            anthropometricData: anestheticReport.anthropometricData ? this.getAnthropometricDataAsStrings(anestheticReport.anthropometricData) : null,
         }
     }
 
@@ -50,10 +51,25 @@ export class AnestheticReportDocumentSummaryService {
             return proposedSurgery.snomed.pt
         })
     }
+
+    private getAnthropometricDataAsStrings(data: AnthropometricDataDto): AnthropometricData {
+        return {
+            bloodType: data.bloodType ? [data.bloodType.value] : null,
+            height: data.height ? [data.height.value] : null,
+            weight: data.weight ? [data.weight.value + 'Kg'] : null,
+        }
+    }
 }
 
 export interface AnestheticReportViewFormat {
     mainDiagnosis: string[],
     diagnosis: string[],
     proposedSurgeries: string[],
+    anthropometricData: AnthropometricData,
+}
+
+interface AnthropometricData {
+    bloodType: string[],
+    height: string[],
+    weight: string[],
 }
