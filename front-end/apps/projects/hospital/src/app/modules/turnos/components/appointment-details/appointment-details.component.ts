@@ -4,7 +4,6 @@ import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-app
 import { EAppointmentModality, EmptyAppointmentDto, ReferenceSummaryDto } from '@api-rest/api-model';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
-import { Moment } from 'moment';
 import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
 
@@ -19,8 +18,6 @@ export class AppointmentDetailsComponent implements OnInit {
 	@Input() modalityAttention?: EAppointmentModality;
 	@Input() emptyAppointment: EmptyAppointmentDto;
 	@Input() patientId: number;
-	@Input() searchInitialDate: Moment;
-	@Input() searchEndingDate: Moment;
 	@Input() referenceSummary?: ReferenceSummaryDto;
 	@Output() resetInformation = new EventEmitter<void>();
 	appointmentTime: Date = new Date();

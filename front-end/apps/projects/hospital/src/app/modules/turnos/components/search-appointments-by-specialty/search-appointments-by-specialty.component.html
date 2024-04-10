@@ -118,9 +118,7 @@
 					*ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
 					<app-appointment-details (resetInformation)="clearInformation()"
 						[emptyAppointment]="emptyAppointment" [patientId]="patientId"
-						[searchInitialDate]="form.controls.searchInitialDate.value"
 						[referenceSummary]="externalInformation?.referenceSummary"
-						[searchEndingDate]="form.controls.searchEndingDate.value"
 						[modalityAttention]="form.controls.modality.value"></app-appointment-details>
 					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
 				</div>
