@@ -7,6 +7,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.HCECli
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEMapClinicalObservationVo;
 import java.util.Arrays;
 import java.util.List;
+
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hce.entity.HCEMapHistoricClinicalObservationVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,16 +43,6 @@ public class HCEClinicalObservationServiceImpl implements HCEClinicalObservation
 		return result;
 	}
 
-	@Override
-	public List<HCEAnthropometricDataBo> getLastNAnthropometricDataGeneralState(Integer patientId, int n) {
-		log.debug(LOGGING_INPUT, patientId);
-		List<Short> invalidDocumentTypes = List.of(DocumentType.ANESTHETIC_REPORT);
-		HCEMapClinicalObservationVo resultQuery = hceClinicalObservationRepository.getGeneralState(patientId, invalidDocumentTypes);
-		List<HCEAnthropometricDataBo> result = resultQuery.getLastNAnthropometricData(n);
-		log.debug(LOGGING_OUTPUT, result);
-		return result;
-	}
-
     @Override
     public Last2HCERiskFactorsBo getLast2RiskFactorsGeneralState(Integer patientId) {
         log.debug(LOGGING_INPUT, patientId);
@@ -68,4 +60,15 @@ public class HCEClinicalObservationServiceImpl implements HCEClinicalObservation
         log.debug(LOGGING_OUTPUT, result);
         return result;
     }
+
+	@Override
+	public List<HCEAnthropometricDataBo> getHistoricAnthropometricData(Integer patientId){
+		log.debug(LOGGING_INPUT, patientId);
+		List<Short> invalidDocumentTypes = List.of(DocumentType.ANESTHETIC_REPORT);
+		HCEMapHistoricClinicalObservationVo resultQuery = hceClinicalObservationRepository.getHistoricData(patientId, invalidDocumentTypes);
+		List<HCEAnthropometricDataBo> result = resultQuery.getHistoricAnthropometricData();
+		log.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
 }
