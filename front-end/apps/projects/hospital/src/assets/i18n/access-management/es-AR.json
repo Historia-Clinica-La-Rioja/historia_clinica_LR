@@ -162,6 +162,7 @@
 			"HOLIDAY_DISCLAIMER": "¿Desea asignar un turno de todos modos?",
 			"OK_BUTTON": "No, elegir otra fecha",
 			"CANCEL_BUTTON": "Si, asignar turno"
-		}
+		},
+		"REFERENCE_FORWARDING": "Derivado a gestión {{forwardingType}}"
 	}
 }

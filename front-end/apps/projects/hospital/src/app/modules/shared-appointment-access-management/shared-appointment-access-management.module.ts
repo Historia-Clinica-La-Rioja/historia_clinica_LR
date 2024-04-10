@@ -8,6 +8,7 @@ import { ModalityLabelComponent } from '@shared-appointment-access-management/co
 import { ModalityRadioButtonFormComponent } from '@shared-appointment-access-management/components/modality-radio-button-form/modality-radio-button-form.component';
 import { ReferenceDashboardComponent } from './components/reference-dashboard/reference-dashboard.component';
 import { ReferenceDashboardFiltersComponent } from './components/reference-dashboard-filters/reference-dashboard-filters.component';
+import { ReferenceForwardingLabelComponent } from '@shared-appointment-access-management/components/reference-forwarding-label/reference-forwarding-label.component';
 import { ReferenceReportComponent } from '@shared-appointment-access-management/components/reference-report/reference-report.component';
 import { ReferenceSummaryComponent } from './components/reference-summary/reference-summary.component';
 import { RegulationStateComponent } from '@shared-appointment-access-management/components/regulation-state/regulation-state.component';
@@ -30,6 +31,7 @@ import { ShowProblemsPipe } from '@shared-appointment-access-management/pipes/sh
     ModalityLabelComponent,
     ReferenceDashboardComponent,
     ReferenceDashboardFiltersComponent,
+    ReferenceForwardingLabelComponent,
     ReferenceReportComponent,
     ReferenceSummaryComponent,
     RegulationStateComponent,

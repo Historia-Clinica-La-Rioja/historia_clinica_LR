@@ -51,7 +51,10 @@
 
 	<app-reference-state-label id="closure-type" fxFlex="15%" [referenceClosureDescription]="referenceReport.dto.closureType?.description"></app-reference-state-label>
 
-	<app-regulation-state id="regulation-state" fxFlex="5%" [state]="referenceReport.dto.regulationState"></app-regulation-state>
+	<div fxLayout="column" fxLayoutGap="10px" fxFlex="5%" >
+		<app-regulation-state id="regulation-state" [state]="referenceReport.dto.regulationState"></app-regulation-state>
+		<app-reference-forwarding-label id="forwarding" *ngIf="isInDashboardManagerRole && referenceReport.dto.forwardingType" [forwardingType]="referenceReport.dto.forwardingType"></app-reference-forwarding-label>
+	</div>
 
 	<div fxFlex="10%">
 		<app-colored-label id="state" *ngIf="referenceReport.state"
