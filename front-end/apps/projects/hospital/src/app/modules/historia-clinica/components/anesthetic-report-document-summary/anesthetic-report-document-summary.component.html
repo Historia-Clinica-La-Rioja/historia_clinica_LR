@@ -31,5 +31,16 @@
             </div>
         </div>
 
+        <div data-id="anesthesic-clinical-evaluation-section" *ngIf="anestheticReport.anesthesicClinicalEvaluation">
+            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE"></app-iconed-titled-section>
+            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MAX_BLOOD_PRESSURE" 
+                   [description]="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure" colonsOnTitle="true"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MIN_BLOOD_PRESSURE" 
+                   [description]="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure" colonsOnTitle="true"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.hematocrit" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.HEMATOCRIT" 
+                    [description]="anestheticReport.anesthesicClinicalEvaluation.hematocrit"></app-title-description-list>
+            </div>
+        </div>
     </div>
 </div>

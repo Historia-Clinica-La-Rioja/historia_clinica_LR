@@ -355,7 +355,12 @@
 				"TITLE": "Evaluación clínica anestésica",
 				"MIN_BLOOD_PRESSURE": "Tensión arterial Min (mm/Hg)",
 				"MAX_BLOOD_PRESSURE": "Tensión arterial Max (mm/Hg)",
-				"HEMATOCRIT": "Hematocritos (%)"
+				"HEMATOCRIT": "Hematocritos (%)",
+				"detail": {
+					"MIN_BLOOD_PRESSURE": "Tensión arterial Min",
+					"MAX_BLOOD_PRESSURE": "Tensión arterial Max",
+					"HEMATOCRIT": "Hematocritos"
+				}
 			},
 			"anesthetic-history": {
 				"TITLE": "Antecedentes anestésicos",

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto } from '@api-rest/api-model';
+import { AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -27,6 +27,7 @@ export class AnestheticReportDocumentSummaryService {
             diagnosis: anestheticReport.diagnosis.length ? this.getDiagnosisAsStringArray(anestheticReport.diagnosis) : null,
             proposedSurgeries: anestheticReport.surgeryProcedures.length ? this.getProposedSurgeriesAsStringArray(anestheticReport.surgeryProcedures) : null,
             anthropometricData: anestheticReport.anthropometricData ? this.getAnthropometricDataAsStrings(anestheticReport.anthropometricData) : null,
+            anesthesicClinicalEvaluation: anestheticReport.riskFactors ? this.getAnesthesicClinicalEvaluationAsStrings(anestheticReport.riskFactors) : null,
         }
     }
 
@@ -59,6 +60,14 @@ export class AnestheticReportDocumentSummaryService {
             weight: data.weight ? [data.weight.value + 'Kg'] : null,
         }
     }
+
+    private getAnesthesicClinicalEvaluationAsStrings(data: RiskFactorDto): AnesthesicClinicalEvaluationData {
+        return {
+            maxBloodPressure: data.systolicBloodPressure ? [data.systolicBloodPressure.value] : null,
+            minBloodPressure: data.diastolicBloodPressure ? [data.diastolicBloodPressure.value] : null,
+            hematocrit: data.hematocrit ? [data.hematocrit.value + ' %'] : null,
+        }
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -66,10 +75,17 @@ export interface AnestheticReportViewFormat {
     diagnosis: string[],
     proposedSurgeries: string[],
     anthropometricData: AnthropometricData,
+    anesthesicClinicalEvaluation: AnesthesicClinicalEvaluationData,
 }
 
 interface AnthropometricData {
     bloodType: string[],
     height: string[],
     weight: string[],
+}
+
+interface AnesthesicClinicalEvaluationData {
+    maxBloodPressure: string[],
+    minBloodPressure: string[],
+    hematocrit: string[],
 }
