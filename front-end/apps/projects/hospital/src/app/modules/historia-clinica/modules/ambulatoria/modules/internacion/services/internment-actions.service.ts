@@ -37,6 +37,9 @@ export class InternmentActionsService {
 	surgicalReportSubject = new Subject<InternmentFields>();
 	surgicalReport$ = this.surgicalReportSubject.asObservable();
 
+	anestheticReportSubject = new Subject<InternmentFields>();
+	anestheticReport$ = this.anestheticReportSubject.asObservable();
+
 	popUpOpenSubject = new Subject<boolean>();
 	popUpOpen$ = this.popUpOpenSubject.asObservable();
 
@@ -169,9 +172,10 @@ export class InternmentActionsService {
 			});
 			this.popUpOpenSubject.next(true);
 			this.dialogRefSubject.next(this.dialogRef);
-			this.dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate) => {
 				delete this.dialogRef;
 				this.popUpOpenSubject.next(false);
+				this.anestheticReportSubject.next(fieldsToUpdate);
 				this.dialogRefSubject.next(this.dialogRef);
 			});
 		} else {

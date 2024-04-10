@@ -298,7 +298,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.internmentActions.mainDiagnosis.isAdded = true;
 			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
 			this.internmentActions.openAnestheticReport();
-			this.internmentActions.evolutionNote$.subscribe(fieldsToUpdate => {
+			this.internmentActions.anestheticReport$.subscribe(fieldsToUpdate => {
 				if (fieldsToUpdate)
 					this.updateInternmentSummary(fieldsToUpdate);
 			});

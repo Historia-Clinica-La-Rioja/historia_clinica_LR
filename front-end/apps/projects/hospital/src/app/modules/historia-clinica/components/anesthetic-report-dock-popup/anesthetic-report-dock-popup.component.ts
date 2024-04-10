@@ -146,7 +146,9 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 			next => {
                 this.snackBarService.showSuccess('internaciones.anesthesic-report.SUCCESS', { duration: TIME_OUT });
                 this.isLoading = false;
-				this.dockPopupRef.close();
+				this.dockPopupRef.close({
+                    evolutionClinical: true
+                });
 			},
 			error => {
 				this.snackBarService.showError(error.text)
