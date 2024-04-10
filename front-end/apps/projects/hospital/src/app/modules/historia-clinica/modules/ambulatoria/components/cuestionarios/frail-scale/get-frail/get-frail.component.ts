@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FrailService } from '@api-rest/services/frail.service';
+import { FrailService } from '@api-rest/services/fragility-test.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
