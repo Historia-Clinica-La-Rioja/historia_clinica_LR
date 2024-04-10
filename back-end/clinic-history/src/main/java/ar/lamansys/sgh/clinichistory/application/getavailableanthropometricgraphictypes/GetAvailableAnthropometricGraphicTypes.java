@@ -41,23 +41,10 @@ public class GetAvailableAnthropometricGraphicTypes {
 
 		boolean withoutGender = basicPatientDto.getPerson().getGenderId() == null || basicPatientDto.getPerson().getGenderId().equals(EGender.X.getId());
 
-		if (graphic.equals(EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE)){
+		if (graphic.equals(EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE) || graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE))
 			return withoutGender ? ONLY_EVOLUTION : PERCENTILES_AND_ZSCORE;
-		}
-
-		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE)){
-			return withoutGender ? ONLY_EVOLUTION : PERCENTILES_AND_ZSCORE;
-		}
-
-		if (graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE)) {
+		else
 			return withoutGender ? ONLY_EVOLUTION : ONLY_PERCENTILES;
-		}
-
-		if (graphic.equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE)) {
-			return withoutGender ? ONLY_EVOLUTION : PERCENTILES_AND_ZSCORE;
-		}
-
-		return Collections.emptyList();
 	}
 
 }

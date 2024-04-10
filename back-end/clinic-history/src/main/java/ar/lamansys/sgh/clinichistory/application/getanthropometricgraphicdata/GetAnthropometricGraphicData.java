@@ -30,6 +30,8 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -73,8 +75,7 @@ public class GetAnthropometricGraphicData {
 		result.setXAxisRange(graphicBo.getRange().getValues().stream().map(String::valueOf).collect(Collectors.toList()));
 		setGraphicAxisLabels(result, graphicBo);
 		result.setXAxisRangeLabels(getXAxisRangeLabels(graphicBo.getRange()));
-		String actualValue = getActualValue(anthropometricValueBo, graphicBo.getGraphic());
-		setEvolutionGraphicData(patient, result, graphicBo, actualValue);
+		setEvolutionGraphicData(patient, result, graphicBo, anthropometricValueBo);
 		if (graphicBo.getGraphicType().equals(EAnthropometricGraphicType.PERCENTILES))
 			setPercentilesGraphicData(result, graphicBo);
 		if (graphicBo.getGraphicType().equals(EAnthropometricGraphicType.ZSCORE))
@@ -83,8 +84,20 @@ public class GetAnthropometricGraphicData {
 
 	}
 
-	private void setEvolutionGraphicData(BasicPatientDto patient, AnthropometricGraphicDataBo graphicDataBo, AnthropometricGraphicBo graphicBo, String anthropometricValue){
-		List<HCEAnthropometricDataBo> patientEvolution = hceClinicalObservationService.getLastNAnthropometricDataGeneralState(patient.getId(), 100);
+	private void setEvolutionGraphicData(BasicPatientDto patient, AnthropometricGraphicDataBo graphicDataBo, AnthropometricGraphicBo graphicBo, AnthropometricValueBo actualValue){
+		List<GraphicDatasetIntersectionBo> evolutionIntersectionList;
+		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT) || graphicBo.getGraphic().equals(EAnthropometricGraphic.WEIGHT_FOR_LENGTH))
+			evolutionIntersectionList = getEvolutionIntersectionsByHeight(patient, graphicBo, actualValue);
+		else
+			evolutionIntersectionList = getEvolutionIntersectionsByAge(patient, graphicBo, actualValue);
+
+		if (graphicBo.getGraphicType().equals(EAnthropometricGraphicType.ZSCORE))
+            graphicDataBo.setEvolutionZScoreValues(getEvolutionZScoreValues(evolutionIntersectionList, graphicBo));
+		graphicDataBo.getDatasetInfo().add(new GraphicDatasetInfoBo(EAnthropometricGraphicLabel.EVOLUTION, evolutionIntersectionList));
+	}
+
+	private List<GraphicDatasetIntersectionBo> getEvolutionIntersectionsByAge(BasicPatientDto patient, AnthropometricGraphicBo graphicBo, AnthropometricValueBo anthropometricValue){
+		List<HCEAnthropometricDataBo> patientEvolution = hceClinicalObservationService.getHistoricAnthropometricData(patient.getId());
 		List<HCEClinicalObservationBo> evolutionValues = new ArrayList<>();
 		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE)) {
 			evolutionValues = patientEvolution.stream().map(HCEAnthropometricDataBo::getHeight).filter(Objects::nonNull).collect(Collectors.toList());
@@ -100,22 +113,42 @@ public class GetAnthropometricGraphicData {
 		}
 		evolutionValues.sort(Comparator.comparing(HCEClinicalObservationBo::getEffectiveTime));
 		List<GraphicDatasetIntersectionBo> evolutionIntersectionList = new ArrayList<>();
-		Integer maxDaysOrMonths = (graphicBo.getRange().getValues().get(graphicBo.getRange().getValues().size() - 1));
+		Integer maxWeeksOrMonths = (graphicBo.getRange().getValues().get(graphicBo.getRange().getValues().size() - 1));
 		evolutionValues.forEach(evolution -> {
 			short age = (short) ChronoUnit.YEARS.between(patient.getBirthDate(), evolution.getEffectiveTime());
 			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge()) {
-				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue(), maxDaysOrMonths);
+				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue(), maxWeeksOrMonths);
 				if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
 			}
 		});
-		if (anthropometricValue != null ){
-			GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), LocalDate.now(), patient.getBirthDate(), anthropometricValue, maxDaysOrMonths);
-			if (intersectionBo != null)
-				evolutionIntersectionList.add(intersectionBo);
+		String actualValue = getActualValue(anthropometricValue, graphicBo.getGraphic());
+		if (actualValue != null ){
+			short age = (short) ChronoUnit.YEARS.between(patient.getBirthDate(), LocalDate.now());
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge()) {
+				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), LocalDate.now(), patient.getBirthDate(), actualValue, maxWeeksOrMonths);
+				if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
+			}
 		}
-		if (graphicBo.getGraphicType().equals(EAnthropometricGraphicType.ZSCORE))
-            graphicDataBo.setEvolutionZScoreValues(getEvolutionZScoreValues(evolutionIntersectionList, graphicBo));
-		graphicDataBo.getDatasetInfo().add(new GraphicDatasetInfoBo(EAnthropometricGraphicLabel.EVOLUTION, evolutionIntersectionList));
+		return evolutionIntersectionList;
+	}
+
+	private List<GraphicDatasetIntersectionBo> getEvolutionIntersectionsByHeight(BasicPatientDto patient, AnthropometricGraphicBo graphicBo, AnthropometricValueBo actualValue){
+		List<HCEAnthropometricDataBo> patientEvolution = hceClinicalObservationService.getHistoricAnthropometricData(patient.getId()).stream()
+				.filter(evolution -> evolution.getHeight() != null && evolution.getWeight() != null).collect(Collectors.toList());
+		List<HCEClinicalObservationBo> heightEvolution = patientEvolution.stream().map(HCEAnthropometricDataBo::getHeight).sorted(Comparator.comparing(HCEClinicalObservationBo::getEffectiveTime)).collect(Collectors.toList());
+		List<HCEClinicalObservationBo> weightEvolution = patientEvolution.stream().map(HCEAnthropometricDataBo::getWeight).sorted(Comparator.comparing(HCEClinicalObservationBo::getEffectiveTime)).collect(Collectors.toList());
+		List<GraphicDatasetIntersectionBo> result = new ArrayList<>();
+		for (int i = 0; i< heightEvolution.size(); i++){
+			int age = (int) ChronoUnit.YEARS.between(patient.getBirthDate(), heightEvolution.get(i).getEffectiveTime());
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge())
+				result.add(new GraphicDatasetIntersectionBo(heightEvolution.get(i).getValue(), weightEvolution.get(i).getValue()));
+		}
+		if (actualValue.getWeight() != null && actualValue.getHeight() != null){
+			int age = (int) ChronoUnit.YEARS.between(patient.getBirthDate(), LocalDate.now());
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge())
+				result.add(new GraphicDatasetIntersectionBo(actualValue.getHeight(), actualValue.getWeight()));
+		}
+		return result;
 	}
 
 	private GraphicDatasetIntersectionBo getEvolutionIntersection(EAnthropometricGraphicRange range, LocalDate evolutionDate, LocalDate patientBirthDate, String value, Integer maxXValue){

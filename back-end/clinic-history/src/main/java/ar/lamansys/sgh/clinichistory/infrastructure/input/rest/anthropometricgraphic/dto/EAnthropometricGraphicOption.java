@@ -18,8 +18,10 @@ import java.util.stream.Stream;
 public enum EAnthropometricGraphicOption {
 
 	LENGHT_HEIGHT_FOR_AGE((short)1, "Talla para la edad"),
-	WEIGHT_FOR_AGE((short)2, "Peso para la edad");
+	WEIGHT_FOR_AGE((short)2, "Peso para la edad"),
 
+	WEIGHT_FOR_LENGTH((short)3, "Talla para peso (0-2 años)"),
+	WEIGHT_FOR_HEIGHT((short)4, "Talla para peso (2-5 años)");
 
 	private Short id;
 	private String value;

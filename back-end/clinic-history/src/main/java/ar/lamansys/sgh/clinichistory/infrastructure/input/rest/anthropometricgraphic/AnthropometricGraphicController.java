@@ -96,6 +96,8 @@ public class AnthropometricGraphicController {
 	private EAnthropometricGraphic mapToAnthropometricGraphic(EAnthropometricGraphicOption chartOption) {
 		if (chartOption.equals(EAnthropometricGraphicOption.LENGHT_HEIGHT_FOR_AGE)) return EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE;
 		if (chartOption.equals(EAnthropometricGraphicOption.WEIGHT_FOR_AGE)) return EAnthropometricGraphic.WEIGHT_FOR_AGE;
+		if (chartOption.equals(EAnthropometricGraphicOption.WEIGHT_FOR_LENGTH)) return EAnthropometricGraphic.WEIGHT_FOR_LENGTH;
+		if (chartOption.equals(EAnthropometricGraphicOption.WEIGHT_FOR_HEIGHT)) return EAnthropometricGraphic.WEIGHT_FOR_HEIGHT;
 		return null;
 	}
 
