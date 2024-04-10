@@ -31,6 +31,7 @@ import { DiaryLabelComponent } from './components/diary-label/diary-label.compon
 import { EquipmentDiaryComponent } from './components/equipment-diary/equipment-diary.component';
 import { DiaryLabelsComponent } from './components/diary-labels/diary-labels.component';
 import { EquipmentTranscribeOrderPopupComponent } from './dialogs/equipment-transcribe-order-popup/equipment-transcribe-order-popup.component';
+import { ExpiredAppointmentMotiveFormComponent } from './components/expired-appointment-motive-form/expired-appointment-motive-form.component';
 import { ImageNetworkAppointmentComponent } from './components/image-network-appointment/image-network-appointment.component';
 import { MedicalOrderInputComponent } from './components/medical-order-input/medical-order-input.component';
 import { SeachAppointmentsByProfessionalComponent } from './components/seach-appointments-by-professional/seach-appointments-by-professional.component';
@@ -84,6 +85,7 @@ import { ShowTimeSlotDetailsPipe } from './pipes/show-time-slot-details.pipe';
 		DiaryLabelsComponent,
 		EquipmentDiaryComponent,
 		EquipmentTranscribeOrderPopupComponent,
+		ExpiredAppointmentMotiveFormComponent,
 		ImageNetworkAppointmentComponent,
 		MedicalOrderInputComponent,
 		SeachAppointmentsByProfessionalComponent,

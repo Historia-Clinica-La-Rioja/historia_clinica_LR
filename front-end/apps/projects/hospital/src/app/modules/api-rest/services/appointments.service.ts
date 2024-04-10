@@ -388,4 +388,9 @@ export class AppointmentsService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/custom-appointment`;
 		return this.http.get<CustomRecurringAppointmentDto>(url);
 	}
+
+	createExpiredAppointment(createAppointmentDto: CreateAppointmentDto): Observable<number> {
+		const url = `${this.BASE_URL}/expired`;
+		return this.http.post<number>(url, createAppointmentDto);
+	}
 }

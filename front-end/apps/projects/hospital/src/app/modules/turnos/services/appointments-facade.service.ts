@@ -282,5 +282,9 @@ export class AppointmentsFacadeService {
 		return this.appointmentService.cancelRecurringAppointments(appointmentId, cancelAllAppointments);
 	}
 
+	createExpiredAppointment(newExpiredAppointment: CreateAppointmentDto): Observable<number> {
+		return this.appointmentService.createExpiredAppointment(newExpiredAppointment);
+	}
+
 	
 }

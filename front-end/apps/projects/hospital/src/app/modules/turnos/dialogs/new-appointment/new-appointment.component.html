@@ -184,7 +184,7 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.STEP_3' | translate }}"
+		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.REFERENCE_STEP_3' | translate }}"
 			*ngIf="data.protectedAppointment">
 			<mat-card>
 				<form [formGroup]="associateReferenceForm">
@@ -213,6 +213,10 @@
 				</form>
 			</mat-card>
 		</mat-step>
+
+		<mat-step *ngIf="data.expiredAppointment" [stepControl]="expiredAppointmentForm" label="{{'turnos.new-appointment.MOTIVE_STEP_3' | translate }}">
+			<app-expired-appointment-motive-form [expiredAppointmentForm]="expiredAppointmentForm"></app-expired-appointment-motive-form>
+		</mat-step>
 	</mat-stepper>
 </div>
 
@@ -237,11 +241,11 @@
 		[disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
-	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || (data.protectedAppointment && stepper.selectedIndex === indexStep.INFO) " [disabled]="stepper.selectedIndex === indexStep.INFO && !appointmentInfoForm.valid" mat-raised-button type="button" color="primary">
+	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && !data.expiredAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || ((data.protectedAppointment || data.expiredAppointment) && (stepper.selectedIndex === indexStep.INFO || stepper.selectedIndex === indexStep.MODALITY)) " [disabled]="stepper.selectedIndex === indexStep.INFO && !appointmentInfoForm.valid" mat-raised-button type="button" color="primary">
 		<span [translate]="'buttons.CONTINUE'"></span>
 	</button>
 	<button id="confirm-from-step-3" (click)="submit(true)" mat-raised-button type="button" color="primary"
-		*ngIf="data.protectedAppointment && stepper.selectedIndex === indexStep.PROTECTED" [disabled]="disableConfirmButtonStep3()">
+		*ngIf="((data.protectedAppointment || data.expiredAppointment) && stepper.selectedIndex === indexStep.PROTECTED_MOTIVE)" [disabled]="disableConfirmButtonStep3()">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>

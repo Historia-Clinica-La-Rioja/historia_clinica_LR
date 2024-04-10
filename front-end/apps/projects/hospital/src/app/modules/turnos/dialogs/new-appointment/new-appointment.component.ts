@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
-import { VALIDATIONS, processErrors, hasError, updateControlValidator } from '@core/utils/form.utils';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl, FormGroup, FormControl } from '@angular/forms';
+import { VALIDATIONS, processErrors, hasError, updateControlValidator, NON_WHITESPACE_REGEX } from '@core/utils/form.utils';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -47,6 +47,7 @@ import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
+import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -100,6 +101,7 @@ export class NewAppointmentComponent implements OnInit {
 	modalitys = MODALITYS_TYPES.slice(0, 2);
 	isEnableTelemedicina: boolean = false;
 	boxMessageInfo: BoxMessageInformation;
+	expiredAppointmentForm: FormGroup<ExpiredAppointmentForm>;
 	
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
@@ -214,8 +216,11 @@ export class NewAppointmentComponent implements OnInit {
 			this.transcribedOrder = transcribedOrder;
 		})
 
-		this.translateService.get("turnos.new-appointment.expired-appointment.SUBTITLE").subscribe(message => {
-			this.boxMessageInfo = { ...this.boxMessageInfo, message }
+		this.translateService.get("turnos.new-appointment.expired-appointment.SUBTITLE").subscribe(message => this.boxMessageInfo = { ...this.boxMessageInfo, message });
+
+		this.expiredAppointmentForm = new FormGroup<ExpiredAppointmentForm>({
+			id: new FormControl(EAppointmentExpiredReasons.OTHER, [Validators.required]),
+			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)])
 		});
 	}
 
@@ -339,6 +344,12 @@ export class NewAppointmentComponent implements OnInit {
 	submit(itComesFromStep3?: boolean): void {
 		if (this.isAppointmentFormValid()) {
 			this.isSubmitButtonDisabled = true;
+
+			if (this.data.expiredAppointment) {
+				this.createExpiredAppointment();
+				return;
+			}
+
 			this.verifyExistingAppointment().subscribe((appointmentShortSummary) => {
 				if (appointmentShortSummary) {
 					let appointmentFor = this.data.isEquipmentAppointment ? appointmentShortSummary.equipmentName : appointmentShortSummary.doctorFullName;
@@ -378,21 +389,7 @@ export class NewAppointmentComponent implements OnInit {
 
 	private createAppointment(itComesFromStep3?: boolean) {
 		this.clearQueryParams();
-		const newAppointment: CreateAppointmentDto = {
-			date: this.data.date,
-			diaryId: this.data.diaryId,
-			hour: this.data.hour,
-			openingHoursId: this.data.openingHoursId,
-			overturn: this.data.overturnMode,
-			patientId: this.patientId,
-			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
-			phonePrefix:this.appointmentInfoForm.value.phonePrefix,
-			phoneNumber:  this.appointmentInfoForm.value.phoneNumber,
-			modality: this.modalitySelected != null ? this.modalitySelected : MODALITYS_TYPES[0].value,
-			patientEmail: this.appointmentInfoForm.controls.patientEmail.value,
-			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
-			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id
-		};
+		const newAppointment: CreateAppointmentDto = this.buildCreateAppointmentDto();
 		this.addAppointment(newAppointment).subscribe((appointmentId: number) => {
 			this.lastAppointmentId = appointmentId;
 			if (itComesFromStep3) {
@@ -426,11 +423,11 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	showConfirmButton(): boolean {
-		return this.formSearch.controls.completed.value && !this.data.protectedAppointment && this.stepper.selectedIndex === this.indexStep.INFO;
+		return this.formSearch.controls.completed.value && !this.data.protectedAppointment && !this.data.expiredAppointment && this.stepper.selectedIndex === this.indexStep.INFO;
 	}
 
 	disableConfirmButtonStep3(): boolean {
-		return !(this.formSearch.controls.completed.value && this.isAppointmentFormValid() && this.data.protectedAppointment && this.associateReferenceForm.valid);
+		return !(this.formSearch.controls.completed.value && this.isAppointmentFormValid() && (this.data.protectedAppointment && this.associateReferenceForm.valid) || (this.data.expiredAppointment && this.expiredAppointmentForm.valid));
 	}
 
 	disablePreviuosStep(stepperParam: MatStepper) {
@@ -595,6 +592,40 @@ export class NewAppointmentComponent implements OnInit {
 		else
 			this.referenceService.getReferencesSummary(this.patientId, this.data.searchAppointmentCriteria).subscribe(references => this.referenceList = references);
 	}
+
+	private createExpiredAppointment() {
+		const newExpiredAppointment: CreateAppointmentDto = this.buildCreateAppointmentDto();
+		this.appointmentFacade.createExpiredAppointment(newExpiredAppointment).subscribe({
+			next: (newExpiredAppointmentId) => {
+				this.snackBarService.showSuccess("turnos.new-appointment.expired-appointment.MESSAGE_SUCCESS");
+				this.dialogRef.close({ id: newExpiredAppointmentId, email: this.appointmentInfoForm.controls.patientEmail.value });
+			},
+			error: () => {
+				this.isSubmitButtonDisabled = false;
+				this.snackBarService.showError("turnos.new-appointment.expired-appointment.MESSAGE_ERROR");
+			}
+		});
+	}
+
+	private buildCreateAppointmentDto(): CreateAppointmentDto {
+		return {
+			date: this.data.date,
+			diaryId: this.data.diaryId,
+			hour: this.data.hour,
+			openingHoursId: this.data.openingHoursId,
+			overturn: this.data.overturnMode,
+			patientId: this.patientId,
+			patientMedicalCoverageId: this.appointmentInfoForm.value.patientMedicalCoverage?.id,
+			phonePrefix: this.appointmentInfoForm.value.phonePrefix,
+			phoneNumber: this.appointmentInfoForm.value.phoneNumber,
+			modality: this.modalitySelected != null ? this.modalitySelected : MODALITYS_TYPES[0].value,
+			patientEmail: this.appointmentInfoForm.controls.patientEmail.value,
+			applicantHealthcareProfessionalEmail: this.associateReferenceForm.controls.professionalEmail.value ? this.associateReferenceForm.controls.professionalEmail.value : null,
+			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id,
+			...(this.data.expiredAppointment && { expiredReasonId: this.expiredAppointmentForm.value.id }),
+			...(this.data.expiredAppointment && { expiredReasonText: this.expiredAppointmentForm.value.motive })
+		};
+	}
 }
 
 export interface NewAppointmentData {
@@ -625,5 +656,10 @@ enum Steps {
 	MODALITY = 0,
 	SEARCH = 1,
 	INFO = 2,
-	PROTECTED = 3,
+	PROTECTED_MOTIVE = 3,
+}
+
+export interface ExpiredAppointmentForm {
+	motive: FormControl<string>;
+	id: FormControl<number>;
 }

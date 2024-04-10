@@ -162,7 +162,8 @@
 			"STEP_0": "Modalidad",
 			"STEP_1": "Búsqueda de paciente",
 			"STEP_2": "Información paciente",
-			"STEP_3": "Referencia",
+			"REFERENCE_STEP_3": "Referencia",
+			"MOTIVE_STEP_3": "Motivo",
 			"ASSOCIATED_REFERENCE": "Referencia asociada",
 			"TEMPORARY_PATIENT": "Paciente temporal",
 			"PATIENT_ID": "ID del paciente",
@@ -199,7 +200,9 @@
 			},
 			"expired-appointment": {
 				"TITLE": "Registrar turno vencido",
-				"SUBTITLE": "Al registrar un turno como “Turno vencido”, el mismo se marcará en estado “Atendido” y permitirá el registro posterior de la consulta por parte del profesional médico."
+				"SUBTITLE": "Al registrar un turno como “Turno vencido”, el mismo se marcará en estado “Atendido” y permitirá el registro posterior de la consulta por parte del profesional médico.",
+				"MESSAGE_SUCCESS": "Se registro el turno vencido correctamente.",
+				"MESSAGE_ERROR": "Hubo un error al registrar el turno vencido."
 			}
 		},
 		"cancel": {
