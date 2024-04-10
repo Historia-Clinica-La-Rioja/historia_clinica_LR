@@ -1,7 +1,7 @@
-<p class="grey">{{'firma-conjunta.INTERVENING_PROFESSIONALS' | translate}}</p>
-<div fxLayout="row wrap">
+<p class="grey subtitle">{{'firma-conjunta.INTERVENING_PROFESSIONALS' | translate}}</p>
+<div fxLayout="row wrap" fxLayoutGap="30px">
     <ng-container *ngFor="let professional of interveningProfessionals">
-        <div fxLayout="column" fxLayoutAlign="none start" fxFlex="20" id="info-signature">
+        <div fxLayout="column" fxLayoutAlign="none start" id="info-signature">
             <p class="name-professional">{{professional.professionalCompleteName | titlecase}}</p>
             <app-colored-icon-text [coloredIconText]="professional.signature"></app-colored-icon-text>
         </div>

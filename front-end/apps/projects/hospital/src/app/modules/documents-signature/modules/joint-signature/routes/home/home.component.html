@@ -13,7 +13,7 @@
 			<ng-template matTabContent>
 				<section>
 					<header>
-						<h1 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h1>
+						<h2 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h2>
 					</header>
 					<app-selectable-card *ngIf="!isLoading else loading" [dataList]="documents"
 						[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
@@ -22,15 +22,13 @@
 							class="no-detailed-information">
 						</span>
 
-						<section class="header-information">
-							<header>
-								<app-header-attention-detail
-									[setDocumentId]="selectedDocumentId"
-									[details]="headerInformation"
-									[title]="'firma-conjunta.TITLE_HEADER'">
-								</app-header-attention-detail>
-							</header>
-						</section>
+						<div class="header-information">
+							<app-header-attention-detail
+								[setDocumentId]="selectedDocumentId"
+								[details]="headerInformation"
+								[title]="'firma-conjunta.TITLE_HEADER'">
+							</app-header-attention-detail>
+						</div>
 					</app-selectable-card>
 				</section>
 			</ng-template>
