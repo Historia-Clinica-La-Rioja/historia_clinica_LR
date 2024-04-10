@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, RiskFactorDto } from '@api-rest/api-model';
+import { AnestheticHistoryDto, AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
+import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { TranslateService } from '@ngx-translate/core';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
@@ -28,6 +29,7 @@ export class AnestheticReportDocumentSummaryService {
             proposedSurgeries: anestheticReport.surgeryProcedures.length ? this.getProposedSurgeriesAsStringArray(anestheticReport.surgeryProcedures) : null,
             anthropometricData: anestheticReport.anthropometricData ? this.getAnthropometricDataAsStrings(anestheticReport.anthropometricData) : null,
             anesthesicClinicalEvaluation: anestheticReport.riskFactors ? this.getAnesthesicClinicalEvaluationAsStrings(anestheticReport.riskFactors) : null,
+            anestheticHistory: this.getAnesthesiaHistoryAsStrings(anestheticReport.anestheticHistory),
         }
     }
 
@@ -53,19 +55,46 @@ export class AnestheticReportDocumentSummaryService {
         })
     }
 
-    private getAnthropometricDataAsStrings(data: AnthropometricDataDto): AnthropometricData {
+    private getAnthropometricDataAsStrings(antropometricData: AnthropometricDataDto): AnthropometricData {
         return {
-            bloodType: data.bloodType ? [data.bloodType.value] : null,
-            height: data.height ? [data.height.value] : null,
-            weight: data.weight ? [data.weight.value + 'Kg'] : null,
+            bloodType: antropometricData.bloodType ? [antropometricData.bloodType.value] : null,
+            height: antropometricData.height ? [antropometricData.height.value] : null,
+            weight: antropometricData.weight ? [antropometricData.weight.value + 'Kg'] : null,
         }
     }
 
-    private getAnesthesicClinicalEvaluationAsStrings(data: RiskFactorDto): AnesthesicClinicalEvaluationData {
+    private getAnesthesicClinicalEvaluationAsStrings(anesthesicClinicalEvaluation: RiskFactorDto): AnesthesicClinicalEvaluationData {
         return {
-            maxBloodPressure: data.systolicBloodPressure ? [data.systolicBloodPressure.value] : null,
-            minBloodPressure: data.diastolicBloodPressure ? [data.diastolicBloodPressure.value] : null,
-            hematocrit: data.hematocrit ? [data.hematocrit.value + ' %'] : null,
+            maxBloodPressure: anesthesicClinicalEvaluation.systolicBloodPressure ? [anesthesicClinicalEvaluation.systolicBloodPressure.value] : null,
+            minBloodPressure: anesthesicClinicalEvaluation.diastolicBloodPressure ? [anesthesicClinicalEvaluation.diastolicBloodPressure.value] : null,
+            hematocrit: anesthesicClinicalEvaluation.hematocrit ? [anesthesicClinicalEvaluation.hematocrit.value + ' %'] : null,
+        }
+    }
+
+    private getAnesthesiaHistoryAsStrings(anesthesiaHistory: AnestheticHistoryDto): string[] {
+        return anesthesiaHistory?.stateId 
+            ? ( anesthesiaHistory.zoneId 
+                ? [this.getAnesthesiaStateDescription(anesthesiaHistory.stateId, anesthesiaHistory.zoneId)] 
+                : [this.getAnesthesiaStateDescription(anesthesiaHistory.stateId)]) 
+            : null
+    }
+
+    private getAnesthesiaStateDescription(stateId: number, zoneId?: number): string {
+        switch (stateId) {
+            case PREVIOUS_ANESTHESIA_STATE_ID.YES:
+                let stateDescription = this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.YES')
+                switch (zoneId) {
+                    case ANESTHESIA_ZONE_ID.REGIONAL:
+                        return stateDescription + ' ' + '(' + this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.REGIONAL') + ')'
+                    case ANESTHESIA_ZONE_ID.GENERAL:
+                        return stateDescription + ' ' + '(' + this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.GENERAL') + ')'
+                    default:
+                        return stateDescription + ' ' + '(' + this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.BOTH') + ')'
+                }
+            case PREVIOUS_ANESTHESIA_STATE_ID.NO:
+                return this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.NO')
+            default:
+                return this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.CANT_ANSWER')
         }
     }
 }
@@ -76,15 +105,16 @@ export interface AnestheticReportViewFormat {
     proposedSurgeries: string[],
     anthropometricData: AnthropometricData,
     anesthesicClinicalEvaluation: AnesthesicClinicalEvaluationData,
+    anestheticHistory: string[],
 }
 
-interface AnthropometricData {
+export interface AnthropometricData {
     bloodType: string[],
     height: string[],
     weight: string[],
 }
 
-interface AnesthesicClinicalEvaluationData {
+export interface AnesthesicClinicalEvaluationData {
     maxBloodPressure: string[],
     minBloodPressure: string[],
     hematocrit: string[],
