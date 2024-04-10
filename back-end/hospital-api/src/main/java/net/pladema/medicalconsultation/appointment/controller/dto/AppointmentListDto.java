@@ -51,4 +51,6 @@ public class AppointmentListDto {
 
 	private String patientEmail;
 
+	private boolean expiredRegister;
+
 }

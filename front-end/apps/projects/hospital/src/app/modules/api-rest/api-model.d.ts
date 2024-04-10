@@ -355,6 +355,7 @@ export interface AppointmentListDto {
     createdOn: Date;
     date: string;
     diaryLabelDto: DiaryLabelDto;
+    expiredRegister: boolean;
     healthInsuranceId: number;
     hour: string;
     id: number;

@@ -468,7 +468,8 @@ public class AppointmentsController {
 						appointmentBo.getProfessionalPersonBo().getFullName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)))
 						:  null,
 				appointmentBo.getDiaryLabelBo() != null ? new DiaryLabelDto(appointmentBo.getDiaryLabelBo()): null,
-				appointmentBo.getPatientEmail()
+				appointmentBo.getPatientEmail(),
+				appointmentBo.isExpiredRegister()
 		);
 	}
 

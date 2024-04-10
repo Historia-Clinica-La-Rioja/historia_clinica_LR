@@ -104,6 +104,8 @@ public class AppointmentBo {
 
 	private String expiredReasonText;
 
+	private boolean expiredRegister;
+
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
 						String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;
@@ -207,4 +209,9 @@ public class AppointmentBo {
 	public int hashCode() {
 		return Objects.hash(getId());
 	}
+
+	public boolean isExpiredRegister() {
+		return LocalDateTime.of(this.date, this.hour).isBefore(this.createdOn.minusHours(3));
+	}
+
 }
