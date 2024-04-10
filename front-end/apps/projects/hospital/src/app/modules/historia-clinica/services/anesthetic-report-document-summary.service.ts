@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnestheticHistoryDto, AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, RiskFactorDto } from '@api-rest/api-model';
+import { AnestheticHistoryDto, AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,6 +30,7 @@ export class AnestheticReportDocumentSummaryService {
             anthropometricData: anestheticReport.anthropometricData ? this.getAnthropometricDataAsStrings(anestheticReport.anthropometricData) : null,
             anesthesicClinicalEvaluation: anestheticReport.riskFactors ? this.getAnesthesicClinicalEvaluationAsStrings(anestheticReport.riskFactors) : null,
             anestheticHistory: this.getAnesthesiaHistoryAsStrings(anestheticReport.anestheticHistory),
+            usualMedication: anestheticReport.medications.length ? this.getMedicationsAsStringArray(anestheticReport.medications) : null,
         }
     }
 
@@ -97,6 +98,12 @@ export class AnestheticReportDocumentSummaryService {
                 return this.translateService.instant('internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.CANT_ANSWER')
         }
     }
+
+    private getMedicationsAsStringArray(medications: MedicationDto[]): string[] {
+        return medications.map(medication => {
+            return medication.note ? medication.snomed.pt + ' - ' + medication.note : medication.snomed.pt;
+        })
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -106,6 +113,7 @@ export interface AnestheticReportViewFormat {
     anthropometricData: AnthropometricData,
     anesthesicClinicalEvaluation: AnesthesicClinicalEvaluationData,
     anestheticHistory: string[],
+    usualMedication: string[],
 }
 
 export interface AnthropometricData {
