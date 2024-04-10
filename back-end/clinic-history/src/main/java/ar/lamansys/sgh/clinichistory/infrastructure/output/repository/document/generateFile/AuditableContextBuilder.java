@@ -203,6 +203,8 @@ public class AuditableContextBuilder {
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+		contextMap.put("appLogo", generatePdfImage("pdf/hsi-footer-118x21.png"));
+		contextMap.put("institutionLogo", generatePdfImage("pdf/hsi-header-250x72.png"));
 		contextMap.put("encounterId", document.getEncounterId());
 		contextMap.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
 		contextMap.put("sector", sectorNameFunction.apply(document.getSectorId()));

@@ -204,25 +204,25 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     
     @Override
 	public Optional<Integer> getRoomId(Integer emergencyCareEpisodeId) {
-		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		log.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
 		Integer result = emergencyCareEpisodeRepository.getRoomId(emergencyCareEpisodeId);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return Optional.ofNullable(result);
 	}
 
 	@Override
 	public Optional<Integer> getDoctorsOfficeId(Integer emergencyCareEpisodeId) {
-		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		log.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
 		Integer result = emergencyCareEpisodeRepository.getEmergencyCareEpisodeDoctorsOfficeId(emergencyCareEpisodeId);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return Optional.ofNullable(result);
 	}
 
 	@Override
 	public Optional<Integer> getShockRoomId(Integer emergencyCareEpisodeId) {
-		LOG.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
+		log.debug("Input parameters -> emergencyCareEpisodeId {}", emergencyCareEpisodeId);
 		Integer result = emergencyCareEpisodeRepository.getEmergencyCareEpisodeShockroomId(emergencyCareEpisodeId);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return Optional.ofNullable(result);
 	}
 
