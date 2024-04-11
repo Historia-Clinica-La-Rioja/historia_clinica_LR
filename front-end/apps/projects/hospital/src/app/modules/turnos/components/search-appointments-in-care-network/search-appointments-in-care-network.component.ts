@@ -12,7 +12,6 @@ import { datePlusDays } from '@core/utils/date.utils';
 import { DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
-import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
@@ -20,7 +19,8 @@ import { TabsService } from '@turnos/services/tabs.service';
 import { TabsLabel } from '@turnos/constants/tabs';
 import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
 import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
-import * as moment from 'moment';
+import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
@@ -154,7 +154,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 	setCareLine(careLine: CareLineDto) {
 		this.resetResults();
 		this.searchForm.controls.careLine.setValue(careLine);
-		this.showCareLineError = false; 
+		this.showCareLineError = false;
 		if (careLine) {
 			this.specialties = careLine.clinicalSpecialties;
 			if (!this.externalInformation?.formInformation?.careLine)
@@ -223,38 +223,22 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 		}
 	}
 
-	updateEndDate(initialDate: Moment) {
+	updateEndDate(selectedDate: Date) {
 		this.resetResults();
-		if (initialDate) {
-			this.searchForm.controls.endDate.setValue(datePlusDays(initialDate.toDate(), PERIOD_DAYS));
-		}
+		this.searchForm.controls.startDate.setValue(selectedDate);
+		this.searchForm.controls.endDate.setValue(datePlusDays(selectedDate, PERIOD_DAYS));
 	}
 
 	searchAppointments() {
 		if (this.searchForm.valid) {
 			this.showInvalidFormMessage = false;
 
-			const startDate = new Date(this.searchForm.controls.startDate.value);
-			const endDate = new Date(this.searchForm.controls.endDate.value);
-			const endDateString =
-				[
-					endDate.getFullYear(),
-					((endDate.getMonth() + 1) > 9 ? '' : '0') + (endDate.getMonth() + 1),
-					(endDate.getDate() > 9 ? '' : '0') + endDate.getDate()
-				].join('-');
-			const startDateString =
-				[
-					startDate.getFullYear(),
-					((startDate.getMonth() + 1) > 9 ? '' : '0') + (startDate.getMonth() + 1),
-					(startDate.getDate() > 9 ? '' : '0') + startDate.getDate()
-				].join('-');
-
 			const filters: ProtectedAppointmentsFilter = {
 				careLineId: this.searchForm.value.careLine.id,
 				clinicalSpecialtyIds: this.searchForm.value.specialty?.id ? [this.searchForm.value.specialty.id] : null,
 				departmentId: this.searchForm.value.department.id,
-				endSearchDate: endDateString,
-				initialSearchDate: startDateString,
+				endSearchDate: toApiFormat(this.searchForm.controls.endDate.value),
+				initialSearchDate: toApiFormat(this.searchForm.controls.startDate.value),
 				institutionId: this.searchForm.value.institution ? this.searchForm.value.institution.id : null,
 				modality: this.searchForm.controls.modality.value,
 				practiceId: this.searchForm.controls.practiceId.value
@@ -306,7 +290,7 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 	}
 
 	clearForm() {
-		this.externalSpecialty = null;	
+		this.externalSpecialty = null;
 		this.externalInformation = null;
 		this.patientId = null;
 		this.setAllSpecialtiesAndCareLines();
@@ -472,13 +456,14 @@ export class SearchAppointmentsInCareNetworkComponent implements OnInit {
 			this.setReferenceInformation();
 	}
 
-	private setSearchCriteriaAppointment(){
+	private setSearchCriteriaAppointment() {
 		let values = this.searchAppointmentsInfoService.getSearchCriteriaValues();
-		if(values){
+		if (values) {
 			this.setCriteria(values.searchCriteria);
 			this.searchForm.controls.modality.setValue(values.careModality);
-			this.searchForm.controls.startDate.setValue(values.startDate);
-			this.updateEndDate(moment(values.startDate));
+			const startDate = dateDtoToDate(values.startDate);
+			this.searchForm.controls.startDate.setValue(startDate);
+			this.updateEndDate(startDate);
 		}
 	}
 
