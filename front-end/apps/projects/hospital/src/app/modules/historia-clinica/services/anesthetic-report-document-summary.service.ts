@@ -19,6 +19,7 @@ export class AnestheticReportDocumentSummaryService {
     private confirmedStatus: string = '';
     private presumptiveStatus: string = '';
     private viasArray: MasterDataDto[];
+    private anestheticPlanViasArray: MasterDataDto[];
 
     constructor(
 		private readonly translateService: TranslateService,
@@ -27,6 +28,7 @@ export class AnestheticReportDocumentSummaryService {
         this.confirmedStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.CONFIRMED')
         this.presumptiveStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.PRESUMPTIVE')
         this.internacionMasterDataService.getViasPremedication().pipe(take(1)).subscribe(vias => this.viasArray = vias);
+        this.internacionMasterDataService.getViasAnestheticPlan().pipe(take(1)).subscribe(vias => this.anestheticPlanViasArray = vias);
     }
 
     getAnestheticReportAsViewFormat(anestheticReport: AnestheticReportDto): AnestheticReportViewFormat {
@@ -41,6 +43,7 @@ export class AnestheticReportDocumentSummaryService {
             premedicationList: anestheticReport.preMedications.length ? this.getPremedicationData(anestheticReport.preMedications) : null,
             lastFoodIntake: anestheticReport.foodIntake.clockTime ? timeDtoToDate(anestheticReport.foodIntake.clockTime) : null,
             histories: this.hasHistories(anestheticReport) ? this.getHistoriesAsPersonalHistoriesData(anestheticReport) : null,
+            anestheticPlanList: anestheticReport.anestheticPlans.length ? this.getAnestheticPlansData(anestheticReport.anestheticPlans) : null,
         }
     }
 
@@ -139,6 +142,19 @@ export class AnestheticReportDocumentSummaryService {
             asa: anestheticReport.procedureDescription.asa ? [anestheticReport.procedureDescription.asa.toString()] : null,
         }
     }
+
+    private getAnestheticPlansData(anestheticPlans: AnestheticSubstanceDto[]): AnestheticPlanData[] {
+        return anestheticPlans.map(anestheticPlan => {
+            return {
+                anestheticPlanDescription: anestheticPlan.snomed.pt + ' - Via ' + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + ' - Dosis: ' + anestheticPlan.dosage.quantity.value + ' - Unidad: ' + anestheticPlan.dosage.quantity.unit,
+                startDateTime: dateTimeDtoToDate(anestheticPlan.dosage.startDateTime)
+            }
+        })
+    }
+    
+    private getAnestheticPlanViaDescription(viaId: number): string {
+        return this.anestheticPlanViasArray.filter(via => via.id == viaId)[0].description;
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -152,6 +168,7 @@ export interface AnestheticReportViewFormat {
     premedicationList: PremedicationData[],
     lastFoodIntake: Date,
     histories: PersonalHistoriesData,
+    anestheticPlanList: AnestheticPlanData[],
 }
 
 export interface AnthropometricData {
@@ -175,4 +192,9 @@ export interface PersonalHistoriesData {
     recordList: string[],
     observations: string[],
     asa: string[]
+}
+
+export interface AnestheticPlanData {
+    anestheticPlanDescription: string,
+    startDateTime: Date,
 }

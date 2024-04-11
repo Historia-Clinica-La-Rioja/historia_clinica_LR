@@ -88,5 +88,17 @@
             </div>
         </div>
         
+        <div data-id="anesthetic-plan-section" *ngIf="anestheticReport.anestheticPlanList">
+            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthetic-plan.TITLE"></app-iconed-titled-section>
+            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+                <div>
+                    <app-title-description-list title="internaciones.anesthesic-report.anesthetic-plan.PLAN_RECORDS"></app-title-description-list>
+                    <div class="description-container" fxLayout="column" *ngFor="let anestheticPlan of anestheticReport.anestheticPlanList">
+                        <span class="capitalize-first-letter">{{ anestheticPlan.anestheticPlanDescription }}</span>
+                        <span class="grey date-text">{{ anestheticPlan.startDateTime | dateFormat : 'datetime' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
