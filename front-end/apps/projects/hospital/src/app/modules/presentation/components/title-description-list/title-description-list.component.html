@@ -3,8 +3,9 @@
 		{{ title | translate }}<ng-container *ngIf="colonsOnTitle">:</ng-container>
 	</span>
 	<div fxLayout="column" class="text-container" *ngIf="description">
-		<span class="text capitalize-first-letter" *ngFor="let text of description">
-			{{ text }}
-		</span>
+		<div fxLayout="row" *ngFor="let text of description">
+			<span *ngIf="description.length > 1">-</span>
+			<span class="text capitalize-first-letter">{{ text }}</span>
+		</div>
 	</div>
 </div>

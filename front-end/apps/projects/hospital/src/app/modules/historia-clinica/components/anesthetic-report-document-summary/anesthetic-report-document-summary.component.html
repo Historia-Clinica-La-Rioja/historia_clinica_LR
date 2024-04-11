@@ -1,6 +1,7 @@
 <div class="anesthesic-report-content">
     <div fxFlex="80%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px" *ngIf="anestheticReport">
 
+        <!-- Diagnosticos -->
         <div data-id="diagnosis-section" *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.diagnosis.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
@@ -11,6 +12,7 @@
             </div>
         </div>
 
+        <!-- Cirugia propuesta -->
         <div data-id="proposed-surgery-section" *ngIf="anestheticReport.proposedSurgeries">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.proposed-surgery.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
@@ -19,6 +21,7 @@
             </div>
         </div>
 
+        <!-- Datos antropometricos -->
         <div data-id="anthropometric-data-section" *ngIf="anestheticReport.anthropometricData">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anthropometric-data.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
@@ -31,6 +34,7 @@
             </div>
         </div>
 
+        <!-- Evaluacion clinica anestesica -->
         <div data-id="anesthesic-clinical-evaluation-section" *ngIf="anestheticReport.anesthesicClinicalEvaluation">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
@@ -43,6 +47,7 @@
             </div>
         </div>
         
+        <!-- Antecedentes anestesicos -->
         <div data-id="anesthetic-history-section" *ngIf="anestheticReport.anestheticHistory">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthetic-history.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
@@ -51,6 +56,7 @@
             </div>
         </div>
         
+        <!-- Medicacion habitual -->
         <div data-id="usual-medication-section" *ngIf="anestheticReport.usualMedication">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.usual-medication.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
@@ -59,13 +65,17 @@
             </div>
         </div>
         
+        <!-- Premedicacion e ingesta alimentaria -->
         <div data-id="premedication-and-food-intake-section" *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.premedication-and-food-intake.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
                 <div *ngIf="anestheticReport.premedicationList">
                     <app-title-description-list title="internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION"></app-title-description-list>
                     <div class="description-container" fxLayout="column" *ngFor="let premedication of anestheticReport.premedicationList">
-                        <span class="capitalize-first-letter">{{ premedication.premedicationDescription }}</span>
+                        <div fxLayout="row">
+                            <span *ngIf="anestheticReport.premedicationList.length > 1">-</span>
+                            <span class="capitalize-first-letter">{{ premedication.premedicationDescription }}</span>
+                        </div>
                         <span class="grey date-text">{{ premedication.startDateTime | dateFormat : 'datetime' }}</span>
                     </div>
                 </div>
@@ -76,6 +86,7 @@
             </div>
         </div>
         
+        <!-- Antecedentes -->
         <div data-id="histories-section" *ngIf="anestheticReport.histories">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.record.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
@@ -88,13 +99,17 @@
             </div>
         </div>
         
+        <!-- Plan anestesico -->
         <div data-id="anesthetic-plan-section" *ngIf="anestheticReport.anestheticPlanList">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthetic-plan.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
                 <div>
                     <app-title-description-list title="internaciones.anesthesic-report.anesthetic-plan.PLAN_RECORDS"></app-title-description-list>
                     <div class="description-container" fxLayout="column" *ngFor="let anestheticPlan of anestheticReport.anestheticPlanList">
-                        <span class="capitalize-first-letter">{{ anestheticPlan.anestheticPlanDescription }}</span>
+                        <div fxLayout="row">
+                            <span *ngIf="anestheticReport.anestheticPlanList.length > 1">-</span>
+                            <span class="capitalize-first-letter">{{ anestheticPlan.anestheticPlanDescription }}</span>
+                        </div>
                         <span class="grey date-text">{{ anestheticPlan.startDateTime | dateFormat : 'datetime' }}</span>
                     </div>
                 </div>

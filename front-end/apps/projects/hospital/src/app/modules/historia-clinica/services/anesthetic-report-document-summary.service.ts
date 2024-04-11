@@ -137,7 +137,7 @@ export class AnestheticReportDocumentSummaryService {
 
     private getHistoriesAsPersonalHistoriesData(anestheticReport: AnestheticReportDto): PersonalHistoriesData {
         return {
-            recordList: anestheticReport.histories?.map(history => { return '-' + capitalize(history.snomed.pt)}),
+            recordList: anestheticReport.histories?.map(history => { return capitalize(history.snomed.pt)}),
             observations: anestheticReport.procedureDescription.note ? [anestheticReport.procedureDescription.note] : null,
             asa: anestheticReport.procedureDescription.asa ? [anestheticReport.procedureDescription.asa.toString()] : null,
         }
