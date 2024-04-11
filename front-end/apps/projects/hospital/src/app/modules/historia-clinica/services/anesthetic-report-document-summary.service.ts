@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
+import { capitalize } from '@core/utils/core.utils';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,6 +40,7 @@ export class AnestheticReportDocumentSummaryService {
             usualMedication: anestheticReport.medications.length ? this.getMedicationsAsStringArray(anestheticReport.medications) : null,
             premedicationList: anestheticReport.preMedications.length ? this.getPremedicationData(anestheticReport.preMedications) : null,
             lastFoodIntake: anestheticReport.foodIntake.clockTime ? timeDtoToDate(anestheticReport.foodIntake.clockTime) : null,
+            histories: this.hasHistories(anestheticReport) ? this.getHistoriesAsPersonalHistoriesData(anestheticReport) : null,
         }
     }
 
@@ -125,6 +127,18 @@ export class AnestheticReportDocumentSummaryService {
     private getViaDescription(viaId: number): string {
         return this.viasArray.filter(via => via.id == viaId)[0].description;
     }
+
+    private hasHistories(anestheticReport: AnestheticReportDto): boolean {
+        return (!!anestheticReport.histories.length || !!anestheticReport.procedureDescription.note || !!anestheticReport.procedureDescription.asa)
+    }
+
+    private getHistoriesAsPersonalHistoriesData(anestheticReport: AnestheticReportDto): PersonalHistoriesData {
+        return {
+            recordList: anestheticReport.histories?.map(history => { return '-' + capitalize(history.snomed.pt)}),
+            observations: anestheticReport.procedureDescription.note ? [anestheticReport.procedureDescription.note] : null,
+            asa: anestheticReport.procedureDescription.asa ? [anestheticReport.procedureDescription.asa.toString()] : null,
+        }
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -137,6 +151,7 @@ export interface AnestheticReportViewFormat {
     usualMedication: string[],
     premedicationList: PremedicationData[],
     lastFoodIntake: Date,
+    histories: PersonalHistoriesData,
 }
 
 export interface AnthropometricData {
@@ -154,4 +169,10 @@ export interface AnesthesicClinicalEvaluationData {
 export interface PremedicationData {
     premedicationDescription: string,
     startDateTime: Date,
+}
+
+export interface PersonalHistoriesData {
+    recordList: string[],
+    observations: string[],
+    asa: string[]
 }

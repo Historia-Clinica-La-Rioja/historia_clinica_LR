@@ -1,5 +1,5 @@
 <div class="anesthesic-report-content">
-    <div fxFlex="70%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px" *ngIf="anestheticReport">
+    <div fxFlex="80%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px" *ngIf="anestheticReport">
 
         <div data-id="diagnosis-section" *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis">
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.diagnosis.TITLE"></app-iconed-titled-section>
@@ -75,5 +75,18 @@
                 </div>
             </div>
         </div>
+        
+        <div data-id="histories-section" *ngIf="anestheticReport.histories">
+            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.record.TITLE"></app-iconed-titled-section>
+            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+                <app-title-description-list *ngIf="anestheticReport.histories.recordList?.length" title="internaciones.anesthesic-report.record.REGISTERED_RECORDS" 
+                   [description]="anestheticReport.histories.recordList"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.histories.observations" title="internaciones.anesthesic-report.record.OBSERVATIONS" 
+                   [description]="anestheticReport.histories.observations"></app-title-description-list>
+                <app-title-description-list *ngIf="anestheticReport.histories.asa" title="internaciones.anesthesic-report.record.ASA" colonsOnTitle="true"
+                   [description]="anestheticReport.histories.asa"></app-title-description-list>
+            </div>
+        </div>
+        
     </div>
 </div>
