@@ -1,6 +1,7 @@
 package ar.lamansys.refcounterref.infraestructure.output.repository.report;
 
 import ar.lamansys.refcounterref.application.port.ReferenceAppointmentStorage;
+import ar.lamansys.refcounterref.application.port.ReferenceForwardingStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceReportStorage;
 
 import ar.lamansys.refcounterref.domain.enums.EReferenceAttentionState;
@@ -71,6 +72,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 
 	private final ReferenceAppointmentStorage referenceAppointmentStorage;
 
+	private final ReferenceForwardingStorage referenceForwardingStorage;
+
 	private final SharedAppointmentPort sharedAppointmentPort;
 
 	private final SharedPersonPort sharedPersonPort;
@@ -93,7 +96,6 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 				SELECT_COUNT + getOdontologyReferenceFromStatement(filter) + odontologyConsultationCondition;
 		return executeQueryAndProcessResults(sqlQueryData, sqlCountQuery, filter, pageable);
 	}
-
 
 	private String getCondition(ReferenceReportFilterBo filter, String dateFilterAndCommonData) {
 		StringBuilder condition = new StringBuilder();
@@ -297,6 +299,8 @@ public class ReferenceReportStorageImpl implements ReferenceReportStorage {
 			var appointment = referencesAppointmentStateData.get(ref.getId());
 			ref.setAttentionState(getAttentionState(ref.getClosureType() != null, appointment != null ? appointment.getAppointmentStateId() : null, ref.getRegulationState()));
 			ref.setPatientFullName(sharedPersonPort.parseCompletePersonName(ref.getPatientFirstName(), ref.getPatientMiddleNames(), ref.getPatientLastName(), ref.getPatientOtherLastNames(), ref.getPatientNameSelfDetermination()));
+			var forwarding = referenceForwardingStorage.getLastForwardingReference(ref.getId());
+			ref.setForwardingType(forwarding != null ? forwarding.getDescription() : null);
 		});
 	}
 

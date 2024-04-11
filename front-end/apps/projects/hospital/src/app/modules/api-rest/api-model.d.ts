@@ -3926,6 +3926,7 @@ export interface ReferenceReportDto {
     closureType: EReferenceClosureType;
     date: DateTimeDto;
     destinationClinicalSpecialties: string[];
+    forwardingType: string;
     id: number;
     identificationNumber: string;
     identificationType: string;
@@ -5513,6 +5514,7 @@ export const enum ProcedureTypeEnum {
 
 export const enum SnomedECL {
     ALLERGY = "ALLERGY",
+    ANESTHESIA = "ANESTHESIA",
     BLOOD_TYPE = "BLOOD_TYPE",
     CARDIOVASCULAR_DISORDER = "CARDIOVASCULAR_DISORDER",
     CONSULTATION_REASON = "CONSULTATION_REASON",
@@ -5531,5 +5533,4 @@ export const enum SnomedECL {
     VIOLENCE_MODALITY = "VIOLENCE_MODALITY",
     VIOLENCE_PROBLEM = "VIOLENCE_PROBLEM",
     VIOLENCE_TYPE = "VIOLENCE_TYPE",
-    ANESTHESIA = "ANESTHESIA",
 }

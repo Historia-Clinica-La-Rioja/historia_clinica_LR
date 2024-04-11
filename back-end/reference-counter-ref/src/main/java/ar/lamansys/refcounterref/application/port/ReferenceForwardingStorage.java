@@ -1,5 +1,6 @@
 package ar.lamansys.refcounterref.application.port;
 
+import ar.lamansys.refcounterref.domain.enums.EReferenceForwardingType;
 import ar.lamansys.refcounterref.domain.reference.ReferenceForwardingBo;
 
 public interface ReferenceForwardingStorage {
@@ -13,5 +14,7 @@ public interface ReferenceForwardingStorage {
 	ReferenceForwardingBo getForwarding(Integer forwardingId);
 
 	ReferenceForwardingBo getForwardingByReferenceId(Integer referenceId);
+
+	EReferenceForwardingType getLastForwardingReference(Integer referenceId);
 
 }
