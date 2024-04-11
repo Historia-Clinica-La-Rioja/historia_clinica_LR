@@ -179,10 +179,10 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"AND (d.alias = :aliasOrClinicalSpecialtyName " +
 			"OR cs.name = :aliasOrClinicalSpecialtyName ) " +
 			"AND d.endDate >= CURRENT_DATE " +
-			"AND d.deleteable.deleted IS FALSE OR d.deleteable.deleted IS NULL")
-	List<CompleteDiaryListVo> getActiveDiariesByAliasOrClinicalSpecialtyName(
-			@Param("institutionId") Integer institutionId,
-			@Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName);
+			"AND d.deleteable.deleted IS NOT TRUE " +
+			"AND NOT EXISTS (SELECT 1 FROM DiaryPractice dp WHERE dp.diaryId = d.id)")
+	List<CompleteDiaryListVo> getActiveDiariesByAliasOrClinicalSpecialtyName(@Param("institutionId") Integer institutionId,
+																			 @Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName);
 
 	@Transactional(readOnly = true)
 	@Query(" SELECT d " +
