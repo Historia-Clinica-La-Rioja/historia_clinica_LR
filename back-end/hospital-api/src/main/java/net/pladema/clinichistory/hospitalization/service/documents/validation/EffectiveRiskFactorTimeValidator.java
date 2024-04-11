@@ -44,6 +44,12 @@ public class EffectiveRiskFactorTimeValidator {
         validEffectiveClinicalObservation("Tensión sistólica", riskFactors.getSystolicBloodPressure(), entryDate);
 
         validEffectiveClinicalObservation("Temperatura corporal", riskFactors.getTemperature(), entryDate);
+
+		validEffectiveClinicalObservation("Glucemia", riskFactors.getBloodGlucose(), entryDate);
+
+		validEffectiveClinicalObservation("Hemoglobina glicosilada", riskFactors.getGlycosylatedHemoglobin(), entryDate);
+
+		validEffectiveClinicalObservation("Riesgo cardiovascular", riskFactors.getCardiovascularRisk(), entryDate);
     }
 
     private void validEffectiveClinicalObservation(String property, ClinicalObservationBo effectiveClinicalObservationDto, LocalDateTime entryDate){
