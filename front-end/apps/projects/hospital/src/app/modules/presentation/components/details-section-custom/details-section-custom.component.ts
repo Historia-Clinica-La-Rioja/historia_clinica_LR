@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Position } from '../identifier/identifier.component';
 
 @Component({
   selector: 'app-details-section-custom',
@@ -7,7 +8,7 @@ import { Component, Input } from '@angular/core';
 })
 export class DetailsSectionCustomComponent {
   @Input() details: Detail[];
-  @Input() layout: string;
+  @Input() layout: Position;
   constructor() { }
 
 }

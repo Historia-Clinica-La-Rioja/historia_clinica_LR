@@ -5,6 +5,7 @@ import { InterveningProfessionalsStatusOfTheSignatureComponent } from '../interv
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { DocumentElectronicSignatureProfessionalStatusDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
+import { Position } from '@presentation/components/identifier/identifier.component';
 
 @Component({
 	selector: 'app-header-attention-detail',
@@ -14,7 +15,7 @@ import { Observable } from 'rxjs';
 	imports: [PresentationModule, InterveningProfessionalsStatusOfTheSignatureComponent]
 })
 export class HeaderAttentionDetailComponent {
-
+	Position = Position;
 	@Input() set setDocumentId(documentId: number) {
 		if (documentId)
 			this.interveningProfessionalsAndStatus$ = this.documentServices.getDocumentElectronicSignatureProfessionalStatus(documentId);
