@@ -114,14 +114,14 @@ export class AnestheticReportDocumentSummaryService {
 
     private getMedicationsAsStringArray(medications: MedicationDto[]): string[] {
         return medications.map(medication => {
-            return medication.note ? medication.snomed.pt + ' - ' + medication.note : medication.snomed.pt;
+            return medication.note ? medication.snomed.pt + ' | ' + medication.note : medication.snomed.pt;
         })
     }
 
     private getPremedicationData(premedications: AnestheticSubstanceDto[]): PremedicationData[] {
         return premedications.map(premedication => {
             return {
-                premedicationDescription: premedication.snomed.pt + ' - Via ' + this.getViaDescription(premedication.viaId) + ' - Dosis: ' + premedication.dosage.quantity.value + ' - Unidad: ' + premedication.dosage.quantity.unit,
+                premedicationDescription: premedication.snomed.pt + ' | Via ' + this.getViaDescription(premedication.viaId) + ' | Dosis: ' + premedication.dosage.quantity.value + ' | Unidad: ' + premedication.dosage.quantity.unit,
                 startDateTime: dateTimeDtoToDate(premedication.dosage.startDateTime)
             }
         })
@@ -146,7 +146,7 @@ export class AnestheticReportDocumentSummaryService {
     private getAnestheticPlansData(anestheticPlans: AnestheticSubstanceDto[]): AnestheticPlanData[] {
         return anestheticPlans.map(anestheticPlan => {
             return {
-                anestheticPlanDescription: anestheticPlan.snomed.pt + ' - Via ' + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + ' - Dosis: ' + anestheticPlan.dosage.quantity.value + ' - Unidad: ' + anestheticPlan.dosage.quantity.unit,
+                anestheticPlanDescription: anestheticPlan.snomed.pt + ' | Via ' + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + ' | Dosis: ' + anestheticPlan.dosage.quantity.value + ' | Unidad: ' + anestheticPlan.dosage.quantity.unit,
                 startDateTime: dateTimeDtoToDate(anestheticPlan.dosage.startDateTime)
             }
         })
