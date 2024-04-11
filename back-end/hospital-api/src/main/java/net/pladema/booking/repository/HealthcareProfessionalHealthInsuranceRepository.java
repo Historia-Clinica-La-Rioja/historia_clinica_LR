@@ -27,8 +27,7 @@ public interface HealthcareProfessionalHealthInsuranceRepository extends JpaRepo
 	@Query("SELECT COUNT(hphi) > 0 " +
 			"FROM HealthcareProfessionalHealthInsurance hphi " +
 			"JOIN HealthcareProfessional hp ON (hphi.healthcareProfessionalId = hp.id) " +
-			"JOIN Person p ON (hp.personId = p.id) " +
-			"JOIN UserPerson us ON (p.id = us.pk.personId) " +
+			"JOIN UserPerson us ON (hp.personId = us.pk.personId) " +
 			"JOIN UserRole ur ON (us.pk.userId = ur.userId) " +
 			"WHERE ur.institutionId = :institutionId " +
 			"AND hphi.medicalCoverageId = :coverageId " +

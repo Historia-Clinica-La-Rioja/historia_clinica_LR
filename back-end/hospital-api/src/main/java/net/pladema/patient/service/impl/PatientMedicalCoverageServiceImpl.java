@@ -154,11 +154,11 @@ public class PatientMedicalCoverageServiceImpl implements PatientMedicalCoverage
 	public ItsCoveredResponseBo itsCovered(Integer institutionId, Integer coverageId, Integer healthcareProfessionalId) {
 		LOG.debug(INPUT_DATA, institutionId, coverageId, healthcareProfessionalId);
 		boolean existsData = healthcareProfessionalHealthInsuranceRepository.existsHealthcareProfessionalHealthInsuranceData();
-		ItsCoveredResponseBo itsCoveredResponseBo = new ItsCoveredResponseBo(EItsCoveredType.EMPTY);
-		if ( ! existsData) return itsCoveredResponseBo;
+		if ( ! existsData)
+			return new ItsCoveredResponseBo(EItsCoveredType.EMPTY);
 		boolean itsCovered = healthcareProfessionalHealthInsuranceRepository.itsCovered(institutionId, coverageId, healthcareProfessionalId);
-		itsCoveredResponseBo.setItsCovered(itsCovered ? EItsCoveredType.COVERED : EItsCoveredType.NOT_COVERED);
-		LOG.debug(OUTPUT, itsCoveredResponseBo);
-		return itsCoveredResponseBo;
+		if (itsCovered)
+			return new ItsCoveredResponseBo(EItsCoveredType.COVERED);
+		return new ItsCoveredResponseBo(EItsCoveredType.NOT_COVERED);
 	}
 }

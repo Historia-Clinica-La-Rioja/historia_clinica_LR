@@ -29,7 +29,7 @@ export class PatientMedicalCoverageService {
 	}
 
 	verifyMedicalCoverage(coverageId: number, healthcareProfessionalId: number): Observable<ItsCoveredResponseDto> {
-		const url = `${environment.apiBase}/patientMedicalCoverage/${this.contextService.institutionId}/${coverageId}/${healthcareProfessionalId}/its-covered`;
+		const url = `${environment.apiBase}/patientMedicalCoverage/institution/${this.contextService.institutionId}/coverage/${coverageId}/professional/${healthcareProfessionalId}/its-covered`;
 		return this.http.get<ItsCoveredResponseDto>(url);
 	}
 }

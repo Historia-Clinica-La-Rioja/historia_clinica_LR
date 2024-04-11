@@ -12,6 +12,7 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -103,13 +104,16 @@ public class PatientMedicalCoverageController {
 		return ResponseEntity.created(new URI("")).body(result);
 	}
 
-	@GetMapping("/{institutionId}/{coverageId}/{healthcareProfessionalId}/its-covered")
-	public ItsCoveredResponseDto itsCovered(
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
+	@GetMapping("/institution/{institutionId}/coverage/{coverageId}/professional/{healthcareProfessionalId}/its-covered")
+	public ResponseEntity<ItsCoveredResponseDto> itsCovered(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "coverageId") Integer coverageId,
 			@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId) {
 		LOG.debug("Input data -> institutionId {}, coverageId {}, healthcareProfessionalId {}", institutionId, coverageId, healthcareProfessionalId);
 		ItsCoveredResponseBo bo = patientMedicalCoverageService.itsCovered(institutionId, coverageId, healthcareProfessionalId);
-		return new ItsCoveredResponseDto(bo);
+		ItsCoveredResponseDto dto = new ItsCoveredResponseDto(bo);
+		LOG.debug("result -> {}", dto);
+		return ResponseEntity.ok().body(dto);
 	}
 }
