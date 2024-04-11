@@ -32,4 +32,9 @@ export class JointSignatureService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/electronic-joint-signature/reject`;
 		return this.http.put<number>(url, rejectReason);
 	}
+
+	signDocumentElectronicJointSignature(documentIds: number[]){
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/electronic-joint-signature/sign`;
+		return this.http.put<number>(url, documentIds);
+	}
 }

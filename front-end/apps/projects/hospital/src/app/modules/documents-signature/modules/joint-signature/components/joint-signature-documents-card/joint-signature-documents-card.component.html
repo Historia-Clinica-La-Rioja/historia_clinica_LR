@@ -3,7 +3,10 @@
 		<h2 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h2>
 		<div>
 			<app-button [color]="'warn'" [isLoading]="false" [text]="'firma-conjunta.REJECT_SIGNATURE.BUTTON_REJECT'"
-				[buttonType]="'mat-stroked-button'" [disabled]="false" (clicked)="openPopUpRejectSignature()"></app-button>
+				[buttonType]="'mat-stroked-button'" [disabled]="false"
+				(clicked)="openPopUpRejectSignature()"></app-button>
+			<app-button [color]="'primary'" [isLoading]="false" [text]="'firma-conjunta.BUTTON_SIGN_DOCUMENT'"
+				[buttonType]="'mat-raised-button'" [disabled]="false" (clicked)="signDocument()"></app-button>
 		</div>
 	</header>
 	<div class="spinner" *ngIf="isLoading">

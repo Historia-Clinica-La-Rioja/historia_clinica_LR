@@ -5,6 +5,8 @@
 		"LIST_DOCUMENTS": "Listado de documentos",
 		"TITLE_HEADER": "Datos de la consulta",
 		"INTERVENING_PROFESSIONALS": "Otros profesionales intervinientes",
+		"BUTTON_SIGN_DOCUMENT": "Firmar documento",
+		"SIGNATURE_SUCCESS": "Se firmó la consulta conjunta",
 		"state-signature": {
 			"OUTDATED": "Vencido",
 			"PENDING" : "Pendiente",

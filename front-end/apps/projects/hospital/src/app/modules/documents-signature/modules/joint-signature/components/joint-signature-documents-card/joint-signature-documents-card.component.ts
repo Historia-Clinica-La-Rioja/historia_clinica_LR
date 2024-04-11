@@ -97,6 +97,14 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 		})
 	}
 
+	signDocument() {
+		this.jointSignatureService.signDocumentElectronicJointSignature(this.selectedDocumentsId).subscribe(res => {
+			this.snackBarService.showSuccess('firma-conjunta.SIGNATURE_SUCCESS');
+		}, error => {
+			this.snackBarService.showError(error.text);
+		})
+	}
+
 	selectedIds(ids: number[]) {
 		this.selectedDocumentsId = ids;
 	}
