@@ -68,7 +68,7 @@ public class GetAnestheticReport {
 
         result.setFluidAdministrations(this.filterSubstanceBy(substances, EAnestheticSubstanceType.FLUID_ADMINISTRATION));
 
-        result.setAnestheticPlans(this.filterSubstanceBy(substances, EAnestheticSubstanceType.ANESTHETIC_AGENT));
+        result.setAnestheticAgents(this.filterSubstanceBy(substances, EAnestheticSubstanceType.ANESTHETIC_AGENT));
 
         result.setNonAnestheticDrugs(this.filterSubstanceBy(substances, EAnestheticSubstanceType.NON_ANESTHETIC_DRUG));
 
