@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AnestheticHistoryDto } from '@api-rest/api-model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,8 @@ import { AnestheticHistoryDto } from '@api-rest/api-model';
 export class AnestheticReportAnestheticHistoryService {
 
     private form: FormGroup<PreviousAnesthesiaDataForm>;
-    private _isEmpty: boolean = true;
+	private isEmptySource = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptySource.asObservable();
 
     constructor() {
         this.form = new FormGroup<PreviousAnesthesiaDataForm>({
@@ -29,16 +31,12 @@ export class AnestheticReportAnestheticHistoryService {
     }
 
     setPreviousAnesthesiaData(previousAnesthesiaState: PREVIOUS_ANESTHESIA_STATE_ID){
-        this._isEmpty = false;
+		this.isEmptySource.next(false)
         this.form.get("previousAnesthesiaState").setValue(previousAnesthesiaState);
     }
 
     setAnesthesiaZoneData(anesthesiaZone: ANESTHESIA_ZONE_ID){
         this.form.get("anesthesiaZone").setValue(anesthesiaZone);
-    }
-
-    isEmpty(): boolean {
-        return this._isEmpty;
     }
 }
 

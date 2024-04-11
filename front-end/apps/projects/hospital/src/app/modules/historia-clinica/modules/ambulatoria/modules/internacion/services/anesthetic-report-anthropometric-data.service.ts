@@ -5,7 +5,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/utils/pattern.utils';
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, distinctUntilChanged } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -19,6 +19,8 @@ export class AnestheticReportAnthropometricDataService {
 	private _heightError$ = this.heightErrorSource.asObservable();
     private weightErrorSource = new Subject<string | void>();
 	private _weightError$ = this.weightErrorSource.asObservable();
+	private isEmptySource = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptySource.asObservable();
 
     constructor(
 		private readonly internacionMasterDataService: InternacionMasterDataService,
@@ -29,6 +31,11 @@ export class AnestheticReportAnthropometricDataService {
             weight: new FormControl(null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.weight), Validators.max(DATOS_ANTROPOMETRICOS.MAX.weight), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]),
             height: new FormControl(null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.height), Validators.max(DATOS_ANTROPOMETRICOS.MAX.height), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
         });
+
+		this.form.valueChanges.pipe(distinctUntilChanged()
+		).subscribe(_ => {
+			this.isEmptySource.next(this.isEmpty());
+		});
 
 		this.form.controls.height.valueChanges.subscribe(_ => {
 			this.checkHeightErrors();

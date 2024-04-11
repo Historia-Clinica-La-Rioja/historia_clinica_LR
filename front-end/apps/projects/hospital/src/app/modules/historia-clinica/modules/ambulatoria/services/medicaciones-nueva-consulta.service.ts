@@ -4,7 +4,7 @@ import { SnomedSemanticSearch, SnomedService } from '../../../services/snomed.se
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 export interface Medicacion {
 	snomed: SnomedDto;
 	observaciones?: string;
@@ -21,6 +21,10 @@ export class MedicacionesNuevaConsultaService {
 
 	medicacionEmitter = new Subject()
 	medicaciones$ = this.medicacionEmitter.asObservable();
+
+	private isEmptySource = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptySource.asObservable();
+
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -52,6 +56,7 @@ export class MedicacionesNuevaConsultaService {
 		const currentItems = this.data.length;
 		this.data = pushIfNotExists<Medicacion>(this.data, medicacion, this.compareSpeciality);
 		this.medicacionEmitter.next(this.data);
+		this.isEmptySource.next(this.isEmpty());
 		return currentItems === this.data.length;
 	}
 
@@ -81,6 +86,7 @@ export class MedicacionesNuevaConsultaService {
 	remove(index: number): void {
 		this.data = removeFrom<Medicacion>(this.data, index);
 		this.medicacionEmitter.next(this.data);
+		this.isEmptySource.next(this.isEmpty());
 	}
 
 

@@ -19,6 +19,9 @@ export class AnestheticReportProposedSurgeryService {
     private dataEmitter = new BehaviorSubject<ProposedSurgery[]>(this.proposedSurgeries);
 	private data$ = this.dataEmitter.asObservable();
 
+	private isEmptySource = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptySource.asObservable();
+
     constructor(
         private readonly snomedService: SnomedService,
         private readonly snackBarService: SnackBarService,
@@ -32,6 +35,7 @@ export class AnestheticReportProposedSurgeryService {
         const currentItems = this.proposedSurgeries.length;
         this.proposedSurgeries = pushIfNotExists<any>(this.proposedSurgeries, proposedSurgery, this.compareProposedSurgeries);
         this.dataEmitter.next(this.proposedSurgeries);
+		this.isEmptySource.next(this.isEmpty());
         return currentItems === this.proposedSurgeries.length;
     }
 
@@ -58,7 +62,7 @@ export class AnestheticReportProposedSurgeryService {
     }
 
     getProposedSurgeriesList(): HospitalizationProcedureDto[] {
-        return this.proposedSurgeries.map(surgery => { 
+        return this.proposedSurgeries.map(surgery => {
             if (surgery.isAdded) {
                 return {
                     snomed: surgery.snomed,
@@ -67,16 +71,17 @@ export class AnestheticReportProposedSurgeryService {
             }
         ).filter(value => value != null)
     }
-    
+
     remove(index: number): void {
         this.proposedSurgeries = removeFrom<ProposedSurgery>(this.proposedSurgeries, index);
         this.dataEmitter.next(this.proposedSurgeries);
+		this.isEmptySource.next(this.isEmpty());
     }
-    
+
     isEmpty(): boolean {
         return (!this.proposedSurgeries || this.proposedSurgeries.length === 0);
     }
-    
+
     getForm(): FormGroup {
         return this.form;
     }

@@ -4,7 +4,7 @@ import { RiskFactorDto } from '@api-rest/api-model';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { CLINICAL_EVALUATION } from '@historia-clinica/constants/validation-constants';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, distinctUntilChanged } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -18,15 +18,22 @@ export class AnestheticReportClinicalEvaluationService {
 	private _minBloodPressure$ = this.minBloodPressureSource.asObservable();
     private hematocritSource = new Subject<string | void>();
 	private _hematocrit$ = this.hematocritSource.asObservable();
+	private isEmptySource = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptySource.asObservable();
 
     constructor(
 		private readonly translateService: TranslateService,
-    ) { 
+    ) {
         this.form = new FormGroup<ClinicalEvaluationDataForm>({
             maxBloodPressure: new FormControl(null, [Validators.min(CLINICAL_EVALUATION.MIN.bloodPressure), Validators.max(CLINICAL_EVALUATION.MAX.bloodPressure), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
             minBloodPressure: new FormControl(null, [Validators.min(CLINICAL_EVALUATION.MIN.bloodPressure), Validators.max(CLINICAL_EVALUATION.MAX.bloodPressure), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
             hematocrit: new FormControl(null, [Validators.min(CLINICAL_EVALUATION.MIN.hematocrit), Validators.max(CLINICAL_EVALUATION.MAX.hematocrit), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
         });
+
+		this.form.valueChanges.pipe(distinctUntilChanged()
+		).subscribe(_ => {
+			this.isEmptySource.next(this.isEmpty());
+		});
 
         this.form.controls.maxBloodPressure.valueChanges.subscribe(_ => {
 			this.checkMaxBloodPressureErrors();
@@ -48,7 +55,7 @@ export class AnestheticReportClinicalEvaluationService {
     get minBloodPressureError$(): Observable<string | void> {
 		return this._minBloodPressure$;
 	}
-    
+
     get hematocritError$(): Observable<string | void> {
 		return this._hematocrit$;
 	}
@@ -130,7 +137,7 @@ export class AnestheticReportClinicalEvaluationService {
 
     private mapToRiskFactorDto(): RiskFactorDto {
         return {
-            systolicBloodPressure: this.form.value.maxBloodPressure ? { 
+            systolicBloodPressure: this.form.value.maxBloodPressure ? {
                 value: this.form.value.maxBloodPressure
             } : null,
             diastolicBloodPressure: this.form.value.minBloodPressure ? {

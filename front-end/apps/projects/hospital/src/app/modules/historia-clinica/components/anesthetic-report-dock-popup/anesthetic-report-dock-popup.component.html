@@ -9,14 +9,14 @@
 
         <app-new-consultation-expansion-section id="proposed-surgery-expansion-section"
             [title]="'internaciones.anesthesic-report.proposed-surgery.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anesthesicReportProposedSurgeryService.isEmpty()" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="anesthesicReportProposedSurgeryService.isEmpty$ | async" [hideBorder]="false">
             <app-proposed-surgery [service]="anesthesicReportProposedSurgeryService"></app-proposed-surgery>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anthropometric-data-expansion-section"
             [title]="'internaciones.anesthesic-report.anthropometric-data.TITLE' | translate" icon="assignment"
             [(collapsed)]="collapsedAnthropometricDataSection"
-            [isEmpty]="anesthesicReportAnthropometricDataService.isEmpty()" [hideBorder]="false">
+            [isEmpty]="anesthesicReportAnthropometricDataService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-anthropometric-data [patientId]="data.patientId"
                 [service]="anesthesicReportAnthropometricDataService"></app-anesthetic-report-anthropometric-data>
         </app-new-consultation-expansion-section>
@@ -24,22 +24,22 @@
         <app-new-consultation-expansion-section id="anesthesic-clinical-evaluation-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE' | translate"
             icon="assignment" [(collapsed)]="collapsedClinicalEvaluationSection"
-            [isEmpty]="anestheticReportClinicalEvaluationService.isEmpty()" [hideBorder]="false">
+            [isEmpty]="anestheticReportClinicalEvaluationService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-clinical-evaluation
                 [service]="anestheticReportClinicalEvaluationService"></app-anesthetic-report-clinical-evaluation>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="anesthesic-history-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthetic-history.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticReportAnestheticHistoryService.isEmpty()" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="anestheticReportAnestheticHistoryService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-anesthetic-history
                 [service]="anestheticReportAnestheticHistoryService"></app-anesthetic-report-anesthetic-history>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="usual-medication-expansion-section"
             [title]="'internaciones.anesthesic-report.usual-medication.TITLE' | translate" icon="assignment"
-            [collapsed]="medicacionesNuevaConsultaService.isEmpty()"
-            [isEmpty]="medicacionesNuevaConsultaService.isEmpty()" [hideBorder]="false">
+            [collapsed]="medicacionesNuevaConsultaService.isEmpty$ | async"
+            [isEmpty]="medicacionesNuevaConsultaService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-usual-medication
                 [service]="medicacionesNuevaConsultaService"></app-anesthetic-report-usual-medication>
         </app-new-consultation-expansion-section>
@@ -47,7 +47,7 @@
         <app-new-consultation-expansion-section id="premedication-and-food-intake-expansion-section"
             [title]="'internaciones.anesthesic-report.premedication-and-food-intake.TITLE' | translate"
             icon="assignment" [collapsed]="true"
-            [isEmpty]="anestheticReportPremedicationAndFoodIntakeService.isEmpty() && !lastFoodIntakeTimeSelected"
+            [isEmpty]="(anestheticReportPremedicationAndFoodIntakeService.isEmpty$ | async) && !lastFoodIntakeTimeSelected"
             [hideBorder]="false">
             <app-anesthetic-report-premedication-and-food-intake
                 [service]="anestheticReportPremedicationAndFoodIntakeService" (timeSelected)="onLastFoodIntakeTimeSelected($event)">
@@ -56,7 +56,7 @@
 
         <app-new-consultation-expansion-section id="record-expansion-section"
             [title]="'internaciones.anesthesic-report.record.TITLE' | translate" icon="assignment" [collapsed]="true"
-            [isEmpty]="anestheticReportRecordService.isEmpty()" [hideBorder]="false">
+            [isEmpty]="anestheticReportRecordService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-person-record [service]="anestheticReportRecordService">
             </app-anesthetic-report-person-record>
         </app-new-consultation-expansion-section>
@@ -88,25 +88,25 @@
 
         <app-new-consultation-expansion-section id="anesthetic-agents-expansion-section"
             [title]="'internaciones.anesthesic-report.anesthetic-agents.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticReportAnestheticAgent.isEmpty()" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="anestheticReportAnestheticAgent.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-anesthetic-agents [service]="anestheticReportAnestheticAgent"></app-anesthetic-report-anesthetic-agents>
         </app-new-consultation-expansion-section>
-        
+
         <app-new-consultation-expansion-section id="non-anesthetic-drugs-expansion-section"
             [title]="'internaciones.anesthesic-report.non-anesthetic-drugs.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticReportNonAnestheticDrugs.isEmpty()" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="anestheticReportNonAnestheticDrugs.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-non-anesthetic-drugs [service]="anestheticReportNonAnestheticDrugs"></app-anesthetic-report-non-anesthetic-drugs>
         </app-new-consultation-expansion-section>
 
         <app-new-consultation-expansion-section id="intrasurgical-anesthetic-procedures-expansion-section"
             [title]="'internaciones.anesthesic-report.intrasurgical-anesthetic-procedures.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticReportIntrasurgicalAnestheticProceduresService.isEmpty()" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="anestheticReportIntrasurgicalAnestheticProceduresService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-intrasurgical-anesthetic-procedures [service]="anestheticReportIntrasurgicalAnestheticProceduresService"></app-anesthetic-report-intrasurgical-anesthetic-procedures>
         </app-new-consultation-expansion-section>
-                
+
         <app-new-consultation-expansion-section id="antibiotic-prophylaxis-expansion-section"
             [title]="'internaciones.anesthesic-report.antibiotic-prophylaxis.TITLE' | translate" icon="assignment"
-            [collapsed]="true" [isEmpty]="anestheticReportAntibioticProphylaxisService.isEmpty()" [hideBorder]="false">
+            [collapsed]="true" [isEmpty]="anestheticReportAntibioticProphylaxisService.isEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-antibiotic-prophylaxis [service]="anestheticReportAntibioticProphylaxisService"></app-anesthetic-report-antibiotic-prophylaxis>
         </app-new-consultation-expansion-section>
 
@@ -116,7 +116,7 @@
             <app-anesthetic-report-vital-signs [service]="anestheticReportVitalSignsService">
             </app-anesthetic-report-vital-signs>
         </app-new-consultation-expansion-section>
-                        
+
         <app-new-consultation-expansion-section id="end-of-anesthesia-status-expansion-section"
             [title]="'internaciones.anesthesic-report.end-of-anesthesia-status.TITLE' | translate" icon="assignment"
             [collapsed]="true" [isEmpty]="anestheticReportEndOfAnesthesiaStatusService.isEmpty$ | async" [hideBorder]="false">

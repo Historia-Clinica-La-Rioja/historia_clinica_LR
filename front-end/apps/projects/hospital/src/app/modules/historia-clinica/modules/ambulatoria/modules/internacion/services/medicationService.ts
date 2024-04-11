@@ -28,11 +28,14 @@ export class MedicationService {
 	private data$ = this.dataEmitter.asObservable();
     private ANOTHER_VIA_ID = 7;
 
+	private isEmptySource = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptySource.asObservable();
+
     constructor(
         private readonly snomedService: SnomedService,
         private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService,
-    ) { 
+    ) {
         this.form = new FormGroup<MedicationForm>({
             snomed: new FormControl(null, Validators.required),
             dosis: new FormControl(null, [Validators.required, Validators.min(PREMEDICATION.MIN.dosis)]),
@@ -59,6 +62,7 @@ export class MedicationService {
         const currentItems = this.medicationList.length;
         this.medicationList = pushIfNotExists<any>(this.medicationList, premedication, this.compareByEqualPremedication);
         this.dataEmitter.next(this.medicationList);
+		this.isEmptySource.next(this.isEmpty());
         return currentItems === this.medicationList.length;
     }
 
@@ -87,6 +91,7 @@ export class MedicationService {
     remove(index: number): void {
         this.medicationList = removeFrom<MedicationData>(this.medicationList, index);
         this.dataEmitter.next(this.medicationList);
+		this.isEmptySource.next(this.isEmpty());
     }
 
     openSearchDialog(searchValue: string): void {

@@ -22,10 +22,13 @@ export class AnestheticReportRecordService {
     private dataEmitter = new BehaviorSubject<SnomedDto[]>(this.recordList);
 	private data$ = this.dataEmitter.asObservable();
 
+	private isEmptySource = new BehaviorSubject<boolean>(true);
+	isEmpty$ = this.isEmptySource.asObservable();
+
     constructor(
         private readonly snomedService: SnomedService,
         private readonly snackBarService: SnackBarService,
-    ) { 
+    ) {
         this.form = new FormGroup<RecordForm>({
             snomed: new FormControl(null, Validators.required)
         });
@@ -40,6 +43,7 @@ export class AnestheticReportRecordService {
         const currentItems = this.recordList.length;
         this.recordList = pushIfNotExists<any>(this.recordList, record, this.compareRecord);
         this.dataEmitter.next(this.recordList);
+		this.isEmptySource.next(this.isEmpty());
         return currentItems === this.recordList.length;
     }
 
@@ -76,7 +80,8 @@ export class AnestheticReportRecordService {
 
     remove(index: number): void {
 		this.recordList = removeFrom<SnomedDto>(this.recordList, index);
-		this.dataEmitter.next(this.recordList)
+		this.dataEmitter.next(this.recordList);
+		this.isEmptySource.next(this.isEmpty());
 	}
 
     getRecord(): Observable<SnomedDto[]> {
