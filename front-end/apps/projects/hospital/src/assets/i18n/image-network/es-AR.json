@@ -50,7 +50,7 @@
                 "ATTACH_EXTERNAL_ORDER": "Adjuntar orden externa",
                 "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF",
                 "ADD_STUDY":"+ Agregar estudio",
-                "STUDY_TITLE":"Agergar estudio",
+                "STUDY_TITLE":"Agregar estudio",
                 "STUDY_RECORDS": "Estudios a solicitar"
             },
             "confirm-dialog": {
