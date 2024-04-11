@@ -2,6 +2,7 @@ package net.pladema.clinichistory.documents.infrastructure.output.repository;
 
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.nursing.SharedNursingConsultationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
@@ -9,6 +10,7 @@ import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.documents.domain.CHDocumentBo;
 
 import net.pladema.clinichistory.documents.domain.ClinicalRecordBo;
@@ -29,7 +31,8 @@ import net.pladema.staff.domain.LicenseNumberBo;
 
 import net.pladema.staff.domain.ProfessionBo;
 import net.pladema.staff.domain.ProfessionSpecialtyBo;
-import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
+import net.pladema.staff.domain.ProfessionalCompleteBo;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import net.pladema.user.service.HospitalUserService;
 
 import org.springframework.stereotype.Service;
@@ -44,6 +47,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class ClinicHistoryContextBuilder {
 
@@ -68,47 +72,6 @@ public class ClinicHistoryContextBuilder {
 	private final BedService bedService;
 	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
 	private final SectorService sectorService;
-
-	public ClinicHistoryContextBuilder(PatientExternalService patientExternalService,
-									   SharedInstitutionPort sharedInstitutionPort,
-									   HealthcareProfessionalStorage healthcareProfessionalStorage,
-									   LocalDateMapper localDateMapper,
-									   HospitalUserService hospitalUserService,
-									   OutpatientConsultationRepository outpatientConsultationRepository,
-									   ServiceRequestRepository serviceRequestRepository,
-									   CounterReferenceRepository counterReferenceRepository,
-									   MedicationRequestRepository medicationRequestRepository,
-									   PatientMedicalCoverageService patientMedicalCoverageService,
-									   DocumentAppointmentService documentAppointmentService,
-									   DiaryService diaryService,
-									   FeatureFlagsService featureFlagsService,
-									   SharedOdontologyConsultationPort sharedOdontologyConsultationPort,
-									   SharedNursingConsultationPort sharedNursingConsultationPort,
-									   InternmentEpisodeService internmentEpisodeService,
-									   BedService bedService,
-									   EmergencyCareEpisodeService emergencyCareEpisodeService,
-									   SectorService sectorService) {
-		this.patientExternalService = patientExternalService;
-		this.sharedInstitutionPort = sharedInstitutionPort;
-		this.healthcareProfessionalStorage = healthcareProfessionalStorage;
-		this.localDateMapper = localDateMapper;
-		this.hospitalUserService = hospitalUserService;
-		this.outpatientConsultationRepository = outpatientConsultationRepository;
-		this.serviceRequestRepository = serviceRequestRepository;
-		this.counterReferenceRepository = counterReferenceRepository;
-		this.medicationRequestRepository = medicationRequestRepository;
-		this.patientMedicalCoverageService = patientMedicalCoverageService;
-		this.documentAppointmentService = documentAppointmentService;
-		this.diaryService = diaryService;
-		this.featureFlagsService = featureFlagsService;
-		this.sharedOdontologyConsultationPort = sharedOdontologyConsultationPort;
-		this.sharedNursingConsultationPort = sharedNursingConsultationPort;
-		this.internmentEpisodeService = internmentEpisodeService;
-		this.bedService = bedService;
-		this.emergencyCareEpisodeService = emergencyCareEpisodeService;
-		this.sectorService = sectorService;
-	}
-
 
 	public Map<String, Object> buildOutpatientContext(CHDocumentBo document, Integer currentInstitutionId){
 		Map<String, Object> ctx = new HashMap<>();
@@ -216,21 +179,32 @@ public class ClinicHistoryContextBuilder {
 	private List<ClinicalRecordBo> getEpisodeRecords (List<CHDocumentBo> documents, boolean selfPerceived){
 		List<ClinicalRecordBo> result = new ArrayList<>();
 		for (CHDocumentBo document : documents) {
-			var professionalInfo = healthcareProfessionalStorage.fetchProfessionalByUserId(document.getCreatedBy());
-			String professional = selfPerceived  && professionalInfo.getNameSelfDetermination() != null && !professionalInfo.getNameSelfDetermination().isBlank() ? professionalInfo.getCompleteName(professionalInfo.getNameSelfDetermination()) : professionalInfo.getCompleteName(professionalInfo.getFirstName());
-			var professionalRelatedProfession = professionalInfo.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getName().equals(document.getClinicalSpecialty()))).findFirst();
-			if (professionalRelatedProfession.isPresent()) {
-				professional = professional.concat(LINE_BREAK + professionalRelatedProfession.get().getDescription() + LINE_BREAK + document.getClinicalSpecialty());
+			ProfessionalCompleteBo professionalCompleteBo = healthcareProfessionalStorage.fetchProfessionalByUserId(document.getCreatedBy());
 
-				var nationalLicenseData = professionalRelatedProfession.get().getLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.NATIONAL)).findFirst();
-				if(nationalLicenseData.isPresent())
-					professional = professional.concat(LINE_BREAK + nationalLicenseData.get().getType().getAcronym() + ": " + nationalLicenseData.get().getNumber());
+			List<String> professionalInfoList = new ArrayList<>();
 
-				var stateLicenseData = professionalRelatedProfession.get().getLicenses().stream().filter(license -> license.getType().equals(ELicenseNumberTypeBo.PROVINCE)).findFirst();
-				if (stateLicenseData.isPresent())
-					professional = professional.concat(LINE_BREAK + stateLicenseData.get().getType().getAcronym() + ": " + stateLicenseData.get().getNumber());
+			professionalInfoList.add(selfPerceived  && professionalCompleteBo.getNameSelfDetermination() != null && !professionalCompleteBo.getNameSelfDetermination().isBlank() ?
+					professionalCompleteBo.getCompleteName(professionalCompleteBo.getNameSelfDetermination()) : professionalCompleteBo.getCompleteName(professionalCompleteBo.getFirstName()));
+
+			List<ProfessionBo> professionalRelatedProfession = professionalCompleteBo.getProfessions();
+
+			if (!professionalRelatedProfession.isEmpty()) {
+				List<String> professionsInfoList = professionalRelatedProfession.stream().map(ProfessionBo::getDescription).collect(Collectors.toList());
+				List<ProfessionSpecialtyBo> professionSpecialties = new ArrayList<>();
+				List<LicenseNumberBo> licenses = new ArrayList<>();
+				professionalRelatedProfession.forEach(profession -> {
+					professionSpecialties.addAll(profession.getSpecialties());
+					licenses.addAll(profession.getLicenses());
+				});
+				professionSpecialties.forEach(specialty -> {
+					professionsInfoList.add(specialty.getSpecialty().getName());
+					licenses.addAll(specialty.getLicenses());
+				});
+				licenses.forEach(licence -> professionsInfoList.add(LINE_BREAK + licence.getType() + ": " + licence.getNumber()));
+				professionalInfoList.addAll(professionsInfoList.stream().distinct().collect(Collectors.toList()));
 			}
-			List<ClinicalRecordBo> documentRecords = completeDocumentRecords(document, professional);
+			String professionalInfo = professionalInfoList.toString().substring(1, professionalInfoList.toString().length() - 1).replace(", ", LINE_BREAK);
+			List<ClinicalRecordBo> documentRecords = completeDocumentRecords(document, professionalInfo);
 			result.addAll(documentRecords);
 		}
 		return result;
@@ -239,23 +213,37 @@ public class ClinicHistoryContextBuilder {
 	private void addOutpatientProfessionalInfo(Map<String, Object> context, CHDocumentBo document, boolean selfPerceived){
 		var professionalInformation = healthcareProfessionalStorage.fetchProfessionalByUserId(document.getCreatedBy());
 		context.put("professionalCompleteName", (selfPerceived ? professionalInformation.getNameSelfDetermination() : professionalInformation.getFirstName()) + ' ' + professionalInformation.getLastName());
-		context.put("clinicalSpecialty", document.getClinicalSpecialty());
-		var professionalRelatedProfessions = professionalInformation.getProfessions().stream()
-				.filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getName().equals(document.getClinicalSpecialty()))).collect(Collectors.toList());
+		List<ProfessionBo> professionalRelatedProfessions = professionalInformation.getProfessions();
 		if (!professionalRelatedProfessions.isEmpty()){
-			var professions = professionalRelatedProfessions.stream().map(ProfessionBo::getDescription).collect(Collectors.toList());
+			List<ProfessionSpecialtyBo> specialties = new ArrayList<>();
+			List<LicenseNumberBo> licenses = new ArrayList<>();
+			if (document.getDocumentTypeId().equals(EDocumentType.OUTPATIENT.getId()) || document.getDocumentTypeId().equals(EDocumentType.ODONTOLOGY.getId()) || document.getDocumentTypeId().equals(EDocumentType.NURSING.getId())) {
+				professionalRelatedProfessions = professionalRelatedProfessions.stream()
+						.filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getName().equals(document.getClinicalSpecialty()))).collect(Collectors.toList());
+				context.put("clinicalSpecialty", document.getClinicalSpecialty());
+				professionalRelatedProfessions.forEach(profession -> {
+					profession.getSpecialties().forEach(specialty -> {
+						if (specialty.getSpecialty().getName().equals(document.getClinicalSpecialty()))
+							licenses.addAll(specialty.getLicenses());
+					});
+				});
+			} else {
+				professionalRelatedProfessions.forEach(profession -> specialties.addAll(profession.getSpecialties()));
+				specialties.forEach(specialty -> licenses.addAll(specialty.getLicenses()));
+			}
+			List<String> professions = professionalRelatedProfessions.stream().map(ProfessionBo::getDescription).collect(Collectors.toList());
 			context.put("professionalProfessions", professions.toString().substring(1, professions.toString().length() - 1));
-			var specialties = new ArrayList<ProfessionSpecialtyBo>();
-			professionalRelatedProfessions.forEach(profession -> {
-				specialties.addAll(profession.getSpecialties().stream().filter(specialty -> specialty.getSpecialty().getName().equals(document.getClinicalSpecialty())).collect(Collectors.toList()));
-			});
-			var licenses = new ArrayList<LicenseNumberBo>();
-			specialties.forEach(specialty -> {
-				licenses.addAll(specialty.getLicenses());
-			});
-			var licensesWithType = new ArrayList<String>();
-			licenses.forEach(license -> licensesWithType.add(license.getType().getAcronym() + ": " + license.getNumber()));
-			if(!licensesWithType.isEmpty()) context.put("licenses", licensesWithType.toString().substring(1, licensesWithType.toString().length() - 1));
+			if (!specialties.isEmpty()) {
+				List<String> specialtiesString = specialties.stream().map(ProfessionSpecialtyBo::getSpecialty).map(ClinicalSpecialtyBo::getName).distinct().collect(Collectors.toList());
+				context.put("clinicalSpecialty", specialtiesString.toString().substring(1, specialtiesString.toString().length() - 1));
+			}
+			if(!licenses.isEmpty()){
+				List<String> licensesWithType = new ArrayList<>();
+				licenses.forEach(license -> licensesWithType.add(license.getType().getAcronym() + ": " + license.getNumber()));
+				context.put("licenses", licensesWithType.toString().substring(1, licensesWithType.toString().length() - 1));
+			}
+		} else {
+			context.put("clinicalSpecialty", document.getClinicalSpecialty());
 		}
 	}
 
