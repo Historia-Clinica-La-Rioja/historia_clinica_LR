@@ -144,7 +144,7 @@
 								</mat-form-field>
 							</div>
 						</div>
-						<app-patient-evolution-charts-button [patientId]="data.patientInfo.patientId" [anthropometricData]="anthropometricData"></app-patient-evolution-charts-button>
+						<app-patient-evolution-charts-button *ngIf="isEvolutionChartsFFActive" [patientId]="data.patientInfo.patientId" [anthropometricData]="anthropometricData"></app-patient-evolution-charts-button>
 					</ng-container>
 				</app-document-section>
 			</div>

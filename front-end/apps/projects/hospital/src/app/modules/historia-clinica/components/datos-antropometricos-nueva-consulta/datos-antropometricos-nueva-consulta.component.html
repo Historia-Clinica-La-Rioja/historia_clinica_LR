@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </form>
-            <app-patient-evolution-charts-button [patientId]="patientId" [anthropometricData]="anthropometricData$ | async"></app-patient-evolution-charts-button>
+            <app-patient-evolution-charts-button *ngIf="isEvolutionChartsFFActive" [patientId]="patientId" [anthropometricData]="anthropometricData$ | async"></app-patient-evolution-charts-button>
         </ng-container>
     </app-document-section>
 </div>

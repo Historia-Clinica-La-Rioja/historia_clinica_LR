@@ -5,6 +5,8 @@ import { BoxMessageInformation } from '../box-message/box-message.component';
 import { TranslateService } from '@ngx-translate/core';
 import { AnthropometricData, PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
 import { Observable } from 'rxjs/internal/Observable';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { AppFeature } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-datos-antropometricos-nueva-consulta',
@@ -17,17 +19,21 @@ export class DatosAntropometricosNuevaConsultaComponent implements OnInit, OnCha
 	readonly isNumberOrDot = isNumberOrDot;
 	boxMessageInfo: BoxMessageInformation;
 	anthropometricData$: Observable<AnthropometricData>;
+	isEvolutionChartsFFActive = false;
 
 	@Input() datosAntropometricosNuevaConsultaService: DatosAntropometricosNuevaConsultaService;
 	@Input() showPreloadData: boolean = false;
 	@Input() patientId: number;
 
 	constructor(
-		private readonly translateService: TranslateService
+		private readonly translateService: TranslateService,
+		private readonly featureFlagService: FeatureFlagService,
 	) { }
 
 	ngOnInit(): void {
 		this.anthropometricData$ = this.datosAntropometricosNuevaConsultaService.antropometricData$;
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO).subscribe(isEvolutionChartsActive => this.isEvolutionChartsFFActive = isEvolutionChartsActive);
 	}
 
 	ngOnChanges() {
