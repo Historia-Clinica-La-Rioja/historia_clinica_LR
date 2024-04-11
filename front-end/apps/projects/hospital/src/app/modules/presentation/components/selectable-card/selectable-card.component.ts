@@ -21,6 +21,7 @@ export class SelectableCardComponent {
 	@Input() noDataMessage: string = 'presentation.selectable-card.NO_DATA'
 	@Input() isDownloadable: boolean = true;
 	@Input() detailedInformation: DetailedInformation;
+	@Input() hasHeader: boolean = false;
 
 	@Output() selectedDataList: EventEmitter<number[]> = new EventEmitter();
 	@Output() downloadId: EventEmitter<SelectableCardIds> = new EventEmitter();

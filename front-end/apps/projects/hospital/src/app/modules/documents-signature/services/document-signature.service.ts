@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, MedicationDto, PersonalHistoryDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model';
+import { dateToViewDate } from '@core/utils/date.utils';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 
 @Injectable({
@@ -103,7 +104,7 @@ export class DocumentSignatureService {
 		const proceduresFiltered: string[] = [];
 		procedures.forEach(p => {
 			proceduresFiltered.push(p.snomed.pt);
-			proceduresFiltered.push(new Date(p.performedDate).toLocaleDateString());
+			proceduresFiltered.push(dateToViewDate(new Date(p.performedDate)));
 		})
 		return proceduresFiltered;
 	}
@@ -136,7 +137,7 @@ export class DocumentSignatureService {
 		const personalHistoriesFiltered: string[] = [];
 		personalHistories.forEach(ph => {
 			personalHistoriesFiltered.push(ph.snomed.pt);
-			personalHistoriesFiltered.push(`Desde ${new Date(ph.startDate).toLocaleDateString()}`);
+			personalHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(ph.startDate))}`);
 		})
 		return personalHistoriesFiltered;
 	}
@@ -173,7 +174,7 @@ export class DocumentSignatureService {
 		const familyHistoriesFiltered: string[] = [];
 		familyHistories.forEach(fh => {
 			familyHistoriesFiltered.push(fh.snomed.pt);
-			familyHistoriesFiltered.push(`Desde ${new Date(fh.startDate).toLocaleDateString()}`);
+			familyHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(fh.startDate))}`);
 		})
 		return familyHistoriesFiltered;
 	}

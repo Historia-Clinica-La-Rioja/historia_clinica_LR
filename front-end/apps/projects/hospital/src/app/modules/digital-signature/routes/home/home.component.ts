@@ -14,6 +14,7 @@ import { getDocumentType } from '@core/constants/summaries';
 import { URL_DOCUMENTS_SIGNATURE } from '../../../documents-signature/routes/home/home.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { DocumentSignatureService } from '../../../documents-signature/services/document-signature.service';
+import { dateTimeToViewDateHourMinuteSecond } from '@core/utils/date.utils';
 
 @Component({
   selector: 'app-home',
@@ -147,14 +148,14 @@ export class HomeComponent implements OnInit {
     }
 
     private buildItemListOption(document: DigitalSignatureDocumentDto): ItemListOption[] {
-        return [
+		return [
             {
                 title: 'digital-signature.card-information.PROBLEM',
                 value: document.snomedConcepts.length ? this.buildValues(document) : ['digital-signature.card-information.NO_SNOMED_CONCEPT']
             },
             {
                 title: 'digital-signature.card-information.CREATED',
-                value: [`${new Date(document.createdOn).toLocaleString()}`],
+                value: [dateTimeToViewDateHourMinuteSecond(new Date(document.createdOn))],
             },
             {
                 title: 'digital-signature.card-information.PROFESSIONAL',

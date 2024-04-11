@@ -47,10 +47,10 @@
 			</mat-list-option>
 		</div>
 	</mat-selection-list>
-	<div *ngIf="detailedInformation" class="detailed-information">
+	<div *ngIf="detailedInformation || hasHeader" class="detailed-information">
 		<ng-content select=".header-information"></ng-content>
 		<mat-divider></mat-divider>
-		<app-detailed-information
+		<app-detailed-information *ngIf="detailedInformation"
 			[detailedInformation]="detailedInformation">
 		</app-detailed-information>
 	</div>

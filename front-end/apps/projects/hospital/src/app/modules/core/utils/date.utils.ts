@@ -40,6 +40,8 @@ export const timeToHourMinute = (time: Date): string => format(time, DateFormat.
 
 export const dateTimeToViewDateHourMinute = (dateTime: Date): string => `${dateToViewDate(dateTime)} - ${timeToHourMinute(dateTime)}`;
 
+export const dateTimeToViewDateHourMinuteSecond = (dateTime: Date): string => `${dateToViewDate(dateTime)}, ${toHourMinuteSecond(dateTime)}`;
+
 export function formatDateOnlyISO(date: Date) {
 	return formatISO(date, { representation: 'date' });
 }

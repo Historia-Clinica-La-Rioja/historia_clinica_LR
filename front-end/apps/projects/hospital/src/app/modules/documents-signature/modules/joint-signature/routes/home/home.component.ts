@@ -8,9 +8,10 @@ import { Detail } from '@presentation/components/details-section-custom/details-
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { ItemListCard, ItemListOption, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { getDocumentTypeByEnum } from '@core/constants/summaries';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { dateTimeToViewDateHourMinuteSecond, dateToViewDate } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-home',
@@ -80,7 +81,7 @@ export class HomeComponent {
 			},
 			{
 				title: 'digital-signature.card-information.CREATED',
-				value: [dateTimeDtoToDate(document.documentCreationDate).toLocaleString()],
+				value: [dateTimeToViewDateHourMinuteSecond(convertDateTimeDtoToDate(document.documentCreationDate))],
 			},
 			{
 				title: 'digital-signature.card-information.PROFESSIONAL',
@@ -147,7 +148,7 @@ export class HomeComponent {
 			},
 			{
 				title: 'firma-conjunta.details.DATE',
-				text: dateTimeDtoToDate(document.documentCreationDate).toLocaleString()
+				text: dateToViewDate(convertDateTimeDtoToDate(document.documentCreationDate))
 			},
 			{
 				title: 'firma-conjunta.details.PROFESSIONAL',
