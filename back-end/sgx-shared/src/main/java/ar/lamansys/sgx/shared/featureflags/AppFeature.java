@@ -197,6 +197,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Habilita el formato Anexo II requerido para Mendoza")
 	HABILITAR_ANEXO_II_MENDOZA,
+
+	@Label("Habilita los gráficos de evoluciones antropométricas")
+	HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO,
 	;
 
 	public boolean isActive() {
