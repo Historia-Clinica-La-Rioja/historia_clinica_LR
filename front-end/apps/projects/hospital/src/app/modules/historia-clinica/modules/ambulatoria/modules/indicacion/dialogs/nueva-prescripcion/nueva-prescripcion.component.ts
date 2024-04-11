@@ -73,7 +73,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 	submitted: boolean = false;
 	showCoverageMessage: boolean = false;
 	showAddMedicationError: boolean = false;
-	isLoading = false;
+	isAddMedicationLoading = false;
+	isFinishPrescripcionLoading = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -236,9 +237,9 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	openPharmacosFrequestDialog() {
-		this.isLoading = true;
+		this.isAddMedicationLoading = true;
 		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.data.patientId).subscribe((pharmacos: SnomedDto[]) => {
-			this.isLoading = false;
+			this.isAddMedicationLoading = false;
 			this.dialog.open(PharmacosFrequentComponent, {
 				width: '50%',
 				data: { pharmacos }
@@ -288,6 +289,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	confirmPrescription(): void {
+		this.isFinishPrescripcionLoading = true;
 		this.showAddMedicationError = false;
 		if (this.prescriptionForm.invalid || this.prescriptionItems.length == 0) {
 			this.setShowAddMedicationError();
@@ -394,6 +396,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		if (prescriptionDto) {
 			this.prescripcionesService.createPrescription(this.data.prescriptionType, prescriptionDto, this.data.patientId)
 			.subscribe(prescriptionRequestResponse => {
+				this.isFinishPrescripcionLoading = false;
 				this.closeModal({prescriptionDto, prescriptionRequestResponse, identificationNumber: this.person?.identificationNumber});
 			},
 			(err: ApiErrorDto) => {

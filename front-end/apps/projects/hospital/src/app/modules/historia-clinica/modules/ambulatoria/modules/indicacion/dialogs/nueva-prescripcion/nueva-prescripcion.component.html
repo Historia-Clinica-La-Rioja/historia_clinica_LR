@@ -131,7 +131,6 @@
 
                 <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_LABEL' | translate}}"
                  [editable]="editableStepModality">
-                <!-- SEGUNDO STEPPER RECETA-->
                     <section class="prescription">
                         <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_DATA' | translate}}</h2>
                         <div *ngIf="isMedication()">
@@ -194,8 +193,7 @@
             </div>
         </form>
 
-        <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
-        <!-- TERCER STEPPER MEDICACION-->
+        <mat-step label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
             <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}</h2>
 
             <div *ngFor="let prescriptionItem of prescriptionItems" class="item-container">
@@ -256,7 +254,7 @@
 
             <mat-error class="mb-1" *ngIf="this.showAddMedicationError" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.REQUIRED_MEDICATION'"></mat-error>
             
-            <app-button id="download_study" [color]="'primary'" [isLoading]="isLoading" [text]="data.addLabel" [disabled]="submitted"
+            <app-button id="download_study" [color]="'primary'" [isLoading]="isAddMedicationLoading" [text]="data.addLabel" [disabled]="submitted"
                 [buttonType]="'mat-stroked-button'" (clicked)="openPharmacosFrequestDialog()" fxFlexFill.xs>
             </app-button>
         </mat-step>
@@ -264,17 +262,16 @@
 </div>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<button id="back" class="back-btn" *ngIf="stepper.selectedIndex > indexStep.PATIENT" mat-stroked-button color="primary"
-     (click)="back(stepper)">
-		<span [translate]="'buttons.BACK'"></span>
-	</button>
-	<button id="next" (click)="stepper.next()" *ngIf="stepper.selectedIndex < indexStep.MEDICATION" mat-raised-button type="button" color="primary">
-		<span [translate]="'buttons.NEXT'"></span>
-	</button>
-	<button mat-flat-button color="primary" *ngIf="stepper.selectedIndex === indexStep.MEDICATION" (click)="confirmPrescription()" fxFlexFill.xs [disabled]="!prescriptionForm.valid">
-        <span class="uppercase" *ngIf="isHabilitarRecetaDigitalEnabled">{{'buttons.FINISH' | translate}}</span>
-        <span class="uppercase" *ngIf="! isHabilitarRecetaDigitalEnabled">{{'buttons.CONFIRM' | translate}}</span>
-    </button>
+	<app-button id="back" [buttonType]="'mat-stroked-button'" *ngIf="stepper.selectedIndex > indexStep.PATIENT" color="primary"
+     [color]="'primary'" (clicked)="back(stepper)" [text]="'buttons.BACK' | translate"> 
+    </app-button>
+	<app-button id="next" (clicked)="stepper.next()" *ngIf="stepper.selectedIndex < indexStep.MEDICATION" mat-raised-button [color]="'primary'"
+     [buttonType]="'mat-flat-button'" [text]="'buttons.NEXT' | translate" fxFlexFill.xs>
+	</app-button>
+	<app-button [color]="'primary'" *ngIf="stepper.selectedIndex === indexStep.MEDICATION" (clicked)="confirmPrescription()" [disabled]="!prescriptionForm.valid || prescriptionItems.length === 0"
+     [text]="isHabilitarRecetaDigitalEnabled ? 'buttons.FINISH' : 'buttons.CONFIRM' | translate" [buttonType]="'mat-flat-button'" fxFlexFill.xs
+     [isLoading]="isFinishPrescripcionLoading">
+    </app-button>
 </mat-dialog-actions>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
