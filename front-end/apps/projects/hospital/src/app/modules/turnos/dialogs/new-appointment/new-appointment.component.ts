@@ -627,7 +627,8 @@ export class NewAppointmentComponent implements OnInit {
 			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id,
 			...(this.data.expiredAppointment && { expiredReasonId: this.expiredAppointmentForm.value.id }),
 			...(this.data.expiredAppointment && { expiredReasonText: this.expiredAppointmentForm.value.motive }),
-			transcribedOrderData: toTranscribedServiceRequestSummaryDto(this.appointmentInfoForm.controls.medicalOrder.get('appointmentMedicalOrder').value)
+			transcribedOrderData: this.appointmentInfoForm.controls.medicalOrder.get('appointmentMedicalOrder').value ?
+			toTranscribedServiceRequestSummaryDto(this.appointmentInfoForm.controls.medicalOrder.get('appointmentMedicalOrder').value) : null
 		};
 	}
 }
