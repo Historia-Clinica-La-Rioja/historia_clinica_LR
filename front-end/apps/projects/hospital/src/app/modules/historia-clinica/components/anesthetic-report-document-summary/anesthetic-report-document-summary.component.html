@@ -58,5 +58,22 @@
                    [description]="anestheticReport.usualMedication"></app-title-description-list>
             </div>
         </div>
+        
+        <div data-id="premedication-and-food-intake-section" *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake">
+            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.premedication-and-food-intake.TITLE"></app-iconed-titled-section>
+            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+                <div *ngIf="anestheticReport.premedicationList">
+                    <app-title-description-list title="internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION"></app-title-description-list>
+                    <div class="description-container" fxLayout="column" *ngFor="let premedication of anestheticReport.premedicationList">
+                        <span class="capitalize-first-letter">{{ premedication.premedicationDescription }}</span>
+                        <span class="grey date-text">{{ premedication.startDateTime | dateFormat : 'datetime' }}</span>
+                    </div>
+                </div>
+                <div *ngIf="anestheticReport.lastFoodIntake">
+                    <app-title-description-list title="internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE"></app-title-description-list>
+                    <div><span>{{ anestheticReport.lastFoodIntake | dateFormat : 'time' }}</span></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

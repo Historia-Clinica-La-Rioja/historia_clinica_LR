@@ -2,7 +2,7 @@
 	<span class="grey">
 		{{ title | translate }}<ng-container *ngIf="colonsOnTitle">:</ng-container>
 	</span>
-	<div fxLayout="column" class="text-container">
+	<div fxLayout="column" class="text-container" *ngIf="description">
 		<span class="text capitalize-first-letter" *ngFor="let text of description">
 			{{ text }}
 		</span>

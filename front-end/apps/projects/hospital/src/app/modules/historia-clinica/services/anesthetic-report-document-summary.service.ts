@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AnestheticHistoryDto, AnestheticReportDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
+import { AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
+import { dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { TranslateService } from '@ngx-translate/core';
+import { take } from 'rxjs';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
@@ -14,12 +17,15 @@ export class AnestheticReportDocumentSummaryService {
 
     private confirmedStatus: string = '';
     private presumptiveStatus: string = '';
+    private viasArray: MasterDataDto[];
 
     constructor(
-		private readonly translateService: TranslateService 
+		private readonly translateService: TranslateService,
+        readonly internacionMasterDataService: InternacionMasterDataService,
     ) { 
         this.confirmedStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.CONFIRMED')
         this.presumptiveStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.PRESUMPTIVE')
+        this.internacionMasterDataService.getViasPremedication().pipe(take(1)).subscribe(vias => this.viasArray = vias);
     }
 
     getAnestheticReportAsViewFormat(anestheticReport: AnestheticReportDto): AnestheticReportViewFormat {
@@ -31,6 +37,8 @@ export class AnestheticReportDocumentSummaryService {
             anesthesicClinicalEvaluation: anestheticReport.riskFactors ? this.getAnesthesicClinicalEvaluationAsStrings(anestheticReport.riskFactors) : null,
             anestheticHistory: this.getAnesthesiaHistoryAsStrings(anestheticReport.anestheticHistory),
             usualMedication: anestheticReport.medications.length ? this.getMedicationsAsStringArray(anestheticReport.medications) : null,
+            premedicationList: anestheticReport.preMedications.length ? this.getPremedicationData(anestheticReport.preMedications) : null,
+            lastFoodIntake: anestheticReport.foodIntake.clockTime ? timeDtoToDate(anestheticReport.foodIntake.clockTime) : null,
         }
     }
 
@@ -104,6 +112,19 @@ export class AnestheticReportDocumentSummaryService {
             return medication.note ? medication.snomed.pt + ' - ' + medication.note : medication.snomed.pt;
         })
     }
+
+    private getPremedicationData(premedications: AnestheticSubstanceDto[]): PremedicationData[] {
+        return premedications.map(premedication => {
+            return {
+                premedicationDescription: premedication.snomed.pt + ' - Via ' + this.getViaDescription(premedication.viaId) + ' - Dosis: ' + premedication.dosage.quantity.value + ' - Unidad: ' + premedication.dosage.quantity.unit,
+                startDateTime: dateTimeDtoToDate(premedication.dosage.startDateTime)
+            }
+        })
+    }
+
+    private getViaDescription(viaId: number): string {
+        return this.viasArray.filter(via => via.id == viaId)[0].description;
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -114,6 +135,8 @@ export interface AnestheticReportViewFormat {
     anesthesicClinicalEvaluation: AnesthesicClinicalEvaluationData,
     anestheticHistory: string[],
     usualMedication: string[],
+    premedicationList: PremedicationData[],
+    lastFoodIntake: Date,
 }
 
 export interface AnthropometricData {
@@ -126,4 +149,9 @@ export interface AnesthesicClinicalEvaluationData {
     maxBloodPressure: string[],
     minBloodPressure: string[],
     hematocrit: string[],
+}
+
+export interface PremedicationData {
+    premedicationDescription: string,
+    startDateTime: Date,
 }
