@@ -3,6 +3,7 @@ package ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
 import ar.lamansys.sgh.publicapi.digitalsignature.application.port.out.exception.DigitalSignatureCallbackException;
 
+import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnnexReportByEncounterException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
@@ -237,5 +238,15 @@ public class HospitalPublicApiExceptionHandler {
 		logger.error("DigitalSignatureCallbackException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
-	
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ FetchAnnexReportByEncounterException.class })
+	protected ApiErrorMessageDto handleUpdateResultException(FetchAnnexReportByEncounterException ex) {
+		logger.debug("FetchAnnexReportByEncounterException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto(
+				"fetch-annex-report-by-encounter-" + ex.getCode(),
+				ex.getMessage()
+		);
+	}
+
 }

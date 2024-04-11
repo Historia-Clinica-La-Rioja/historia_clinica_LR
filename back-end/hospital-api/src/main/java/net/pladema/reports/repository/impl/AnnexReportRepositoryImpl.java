@@ -130,15 +130,15 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "               GROUP BY proced, dp.document_id " +
                 "           ) pr ON (t.doc_id = pr.document_id) " +
                 "           LEFT JOIN ( " +
-                "           SELECT dhc.document_id, STRING_AGG(( " +
-                "               CASE WHEN hc.cie10_codes IS NULL THEN sno.pt ELSE CONCAT(sno.pt, ' (',hc.cie10_codes, ')') END), '| '" +
-                "           ) as descriptions  " +
-                "           FROM {h-schema}document_health_condition dhc " +
-                "           JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
-                "           JOIN {h-schema}snomed sno ON (hc.snomed_id = sno.id) " +
-                "           WHERE hc.problem_id IN (:problemTypes) " +
-                "           GROUP BY dhc.document_id " +
-                "           ) prob ON (t.doc_id = prob.document_id) ";
+					"           SELECT dhc.document_id, STRING_AGG(( " +
+					"               CASE WHEN hc.cie10_codes IS NULL THEN sno.pt ELSE CONCAT(sno.pt, ' (',hc.cie10_codes, ')') END), '| '" +
+					"           ) as descriptions  " +
+					"           FROM {h-schema}document_health_condition dhc " +
+					"           JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
+					"           JOIN {h-schema}snomed sno ON (hc.snomed_id = sno.id) " +
+					"           WHERE hc.problem_id IN (:problemTypes) " +
+					"           GROUP BY dhc.document_id " +
+					"           ) prob ON (t.doc_id = prob.document_id) ";
         Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
                 .setParameter("documentId", documentId)
                 .setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC))
