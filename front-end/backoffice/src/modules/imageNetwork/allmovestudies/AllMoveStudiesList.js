@@ -8,8 +8,7 @@ import {
     DateField,
     TextInput,
     Filter,
-    SelectInput,
-    DateInput
+    SelectInput
 } from 'react-admin';
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
 const StudyFilter = props =>(

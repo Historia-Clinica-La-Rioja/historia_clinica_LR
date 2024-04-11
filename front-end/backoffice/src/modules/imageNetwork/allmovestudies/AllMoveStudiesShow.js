@@ -2,7 +2,6 @@ import React from 'react';
 import {
     Show,
     TextField,
-    NumberField,
     TopToolbar,
     EditButton,
     Button,

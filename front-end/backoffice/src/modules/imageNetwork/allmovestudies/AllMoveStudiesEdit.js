@@ -5,14 +5,10 @@ import {
     ReferenceInput,
     SimpleForm,
     TextInput,
-    NumberInput,
-    DateInput,
-    required,
-    regex
+    DateInput
 } from 'react-admin';
 import CustomToolbar from '../../components/CustomToolbar';
 
-const validatePriority =regex(/^[01]$/,'resources.movestudies.errorPriority');
 const MoveStudiesEdit = props => {
 
     return (

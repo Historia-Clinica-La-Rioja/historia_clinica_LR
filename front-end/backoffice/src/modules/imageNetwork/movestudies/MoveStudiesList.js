@@ -7,10 +7,9 @@ import {
     SelectField,
     DateField,
     TextInput,
-    Filter,
-    SelectInput
+    Filter
 } from 'react-admin';
-import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
+
 const StudyFilter = props =>(
     <Filter {...props}>
         <TextInput source="imageId" />

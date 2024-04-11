@@ -822,7 +822,7 @@ const messages = {
             failed:'Movimiento Fallido',
             errorPriority:'La prioridad puede ser 0 o 1',
             fields: {
-                institutionId: 'Intitución',
+                institutionId: 'Institución',
                 imageId: 'Id del estudio',
                 sizeImage: 'Tamaño en bytes del estudio',
                 orchestratorId: 'Orquestador asociado',
@@ -842,7 +842,7 @@ const messages = {
             finished:'Finalizado',
             failed:'Movimiento Fallido',
             fields: {
-                institutionId: 'Intitución',
+                institutionId: 'Institución',
                 imageId: 'Id del estudio',
                 identificationNumber: 'Documento',
                 firstName: 'Nombre',
