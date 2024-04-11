@@ -17,4 +17,5 @@ public interface AnnexReportService {
     Map<String, Object> createConsultationContext(AnnexIIDto reportDataDto);
 
     String createConsultationFileName(Long documentId, ZonedDateTime consultedDate);
+
 }

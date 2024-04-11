@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportService;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
@@ -87,13 +89,16 @@ public class ReportsController {
 
 	private final FetchNominalAppointmentDetail fetchNominalAppointmentDetail;
 
+	private final SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService;
+
     public ReportsController(NominalDetailExcelService nominalDetailExcelService, ConsultationSummaryReport consultationSummaryReport,
 							 QueryFactory queryFactory, LocalDateMapper localDateMapper,
 							 PdfService pdfService, AnnexReportService annexReportService,
 							 FormReportService formReportService, ReportsMapper reportsMapper,
 							 FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService,
 							 FetchNominalConsultationDetail fetchNominalConsultationDetail,
-							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail){
+							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail,
+							 SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService){
         this.nominalDetailExcelService = nominalDetailExcelService;
         this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
@@ -106,6 +111,7 @@ public class ReportsController {
 		this.featureFlagsService = featureFlagsService;
 		this.fetchNominalAppointmentDetail = fetchNominalAppointmentDetail;
 		this.fetchNominalConsultationDetail = fetchNominalConsultationDetail;
+		this.sharedAppointmentAnnexPdfReportService = sharedAppointmentAnnexPdfReportService;
 	}
 
     @GetMapping(value = "/{institutionId}/monthly")
@@ -205,9 +211,10 @@ public class ReportsController {
 
 		LOG.debug(OUTPUT, reportDataDto);
 
+		var report = sharedAppointmentAnnexPdfReportService.run(appointmentId) ;
 		return StoredFileResponse.sendFile(
-				pdfService.generate("annex_report", context),
-				annexReportService.createConsultationFileName(appointmentId.longValue(), now),
+				report.getPdf(),
+				report.getFilename(),
 				MediaType.APPLICATION_PDF
 		);
     }
