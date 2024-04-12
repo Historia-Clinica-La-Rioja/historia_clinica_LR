@@ -18,7 +18,7 @@ public class ElectronicSignatureInvolvedDocumentDto {
 
 	private Long documentId;
 
-	private EDocumentType documentType;
+	private Short documentTypeId;
 
 	private String patientCompleteName;
 

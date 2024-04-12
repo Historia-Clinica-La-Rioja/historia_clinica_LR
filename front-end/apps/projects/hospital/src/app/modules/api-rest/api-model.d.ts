@@ -1531,7 +1531,7 @@ export interface ElectronicJointSignatureLicenseDto {
 export interface ElectronicSignatureInvolvedDocumentDto {
     documentCreationDate: DateTimeDto;
     documentId: number;
-    documentType: EDocumentType;
+    documentTypeId: number;
     patientCompleteName: string;
     problems: string[];
     responsibleProfessionalCompleteName: string;
@@ -5159,28 +5159,6 @@ export const enum EDocumentSearch {
     DOCTOR = "DOCTOR",
     CREATED_ON = "CREATED_ON",
     DOCUMENT_TYPE = "DOCUMENT_TYPE",
-}
-
-export const enum EDocumentType {
-    ANAMNESIS = "ANAMNESIS",
-    EVALUATION_NOTE = "EVALUATION_NOTE",
-    EPICRISIS = "EPICRISIS",
-    OUTPATIENT = "OUTPATIENT",
-    RECIPE = "RECIPE",
-    ORDER = "ORDER",
-    EMERGENCY_CARE = "EMERGENCY_CARE",
-    IMMUNIZATION = "IMMUNIZATION",
-    ODONTOLOGY = "ODONTOLOGY",
-    NURSING = "NURSING",
-    COUNTER_REFERENCE = "COUNTER_REFERENCE",
-    INDICATION = "INDICATION",
-    NURSING_EVOLUTION_NOTE = "NURSING_EVOLUTION_NOTE",
-    DIGITAL_RECIPE = "DIGITAL_RECIPE",
-    TRIAGE = "TRIAGE",
-    EMERGENCY_CARE_EVOLUTION = "EMERGENCY_CARE_EVOLUTION",
-    MEDICAL_IMAGE_REPORT = "MEDICAL_IMAGE_REPORT",
-    SURGICAL_HOSPITALIZATION_REPORT = "SURGICAL_HOSPITALIZATION_REPORT",
-    ANESTHETIC_REPORT = "ANESTHETIC_REPORT",
 }
 
 export const enum EElectronicSignatureStatus {
