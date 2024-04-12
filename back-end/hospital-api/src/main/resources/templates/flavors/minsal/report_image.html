@@ -27,10 +27,6 @@
 
         .wide_wrapped_text {
             word-wrap: break-word;
-            text-align: justify;
-            text-justify: inter-word;
-            white-space: pre-wrap;
-            font-size: 13.21px;
         }
 
         @page {
@@ -204,7 +200,7 @@
                     <div th:if="${not #lists.isEmpty(diagnosticReportList)}">
                         <div class="comma-list">
                           <span  th:each="diagnosticReport,iter: ${diagnosticReportList}">
-                            <span class="data-text" th:text="${diagnosticReport.snomed.pt}"></span>
+                            <span class="data-text wide_wrapped_text" th:text="${diagnosticReport.snomed.pt}"></span>
                          </span>
                         </div>
                     </div>
