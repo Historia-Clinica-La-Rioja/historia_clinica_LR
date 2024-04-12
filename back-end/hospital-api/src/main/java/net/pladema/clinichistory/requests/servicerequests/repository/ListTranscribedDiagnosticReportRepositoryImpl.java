@@ -2,6 +2,7 @@ package net.pladema.clinichistory.requests.servicerequests.repository;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
     }
 
     @Transactional(readOnly = true)
-    public List<Integer> getByAppointmentId(Integer appointmentId) {
+    public Integer getByAppointmentId(Integer appointmentId) {
         log.debug("Input parameters -> appointmentId {}", appointmentId);
 
         String sqlString = "SELECT tsr.id " +
@@ -47,8 +48,11 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
 
         Query query = entityManager.createNativeQuery(sqlString);
         query.setParameter("appointmentId", appointmentId);
-        List<Integer> result = query.getResultList();
-        return result;
+        try {
+            return (Integer) query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Transactional(readOnly = true)

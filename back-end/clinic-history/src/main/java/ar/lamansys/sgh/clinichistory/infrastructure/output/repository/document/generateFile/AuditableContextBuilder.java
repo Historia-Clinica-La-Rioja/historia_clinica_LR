@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
@@ -36,7 +37,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
@@ -205,22 +205,35 @@ public class AuditableContextBuilder {
 	}
 
 	private <T extends IDocumentBo> void addImageReportData(Map<String, Object> ctx, T document) {
+
 		ctx.put("diagnosticReportList", document.getDiagnosticReports());
 		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionDataById(document.getInstitutionId()));
 		ctx.put("institutionAddress",sharedInstitutionPort.fetchInstitutionAddress(document.getInstitutionId()));
 		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
 
-		Optional.ofNullable(document.getDiagnosticReports())
-				.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingOrderAuthorId(document.getEncounterId()))
-				.ifPresent(professionalId -> ctx.put("authorOrder", sharedStaffPort.getProfessionalComplete(professionalId)));
-
-		Optional.ofNullable(document.getDiagnosticReports().get(0).getEncounterId())
-				.flatMap(sharedDiagnosticImagingOrder::getDiagnosticImagingTranscribedOrderAuthor)
-				.ifPresent(professional -> ctx.put("authorTranscribedOrder", professional));
+		setAuthorOrder(ctx, document);
 
 		ctx.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		ctx.put("evolutionNote", document.getEvolutionNote());
 		ctx.put("conclusions", document.getConclusions());
+	}
+
+	private <T extends IDocumentBo> void setAuthorOrder(Map<String, Object> ctx, T document) {
+		var diagnosticReports = document.getDiagnosticReports();
+		if (!diagnosticReports.isEmpty()) {
+			document.getDiagnosticReports()
+					.stream()
+					.findFirst()
+					.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingOrderAuthorId(document.getEncounterId()))
+					.ifPresent(professionalId -> ctx.put("authorOrder", sharedStaffPort.getProfessionalComplete(professionalId)));
+
+			document.getDiagnosticReports()
+					.stream()
+					.findFirst()
+					.map(DiagnosticReportBo::getEncounterId)
+					.flatMap(sharedDiagnosticImagingOrder::getDiagnosticImagingTranscribedOrderAuthor)
+					.ifPresent(professionalName -> ctx.put("authorTranscribedOrder", professionalName));
+		}
 	}
 
 	private <T extends IDocumentBo> void addAnestheticReportData(Map<String, Object> ctx, T document) {

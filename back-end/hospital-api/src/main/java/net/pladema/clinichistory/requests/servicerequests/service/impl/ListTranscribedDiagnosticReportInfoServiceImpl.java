@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoB
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,18 +36,12 @@ public class ListTranscribedDiagnosticReportInfoServiceImpl implements ListTrans
     }
 
     @Override
-    public TranscribedServiceRequestBo getByAppointmentId(Integer appointmentId) {
+    public Optional<TranscribedServiceRequestBo> getByAppointmentId(Integer appointmentId) {
         log.debug("Input -> appointmentId {}", appointmentId);
-        List<Integer> queryResult = listTranscribedDiagnosticReportRepository.getByAppointmentId(appointmentId);
-        List<TranscribedServiceRequestBo> result;
-        if (!queryResult.isEmpty()) {
-            result = queryResult.stream()
-                    .map(this::buildBasicTranscribedServiceRequestBo)
-                    .collect(Collectors.toList());
-            log.debug("Output -> {}", result);
-            return result.get(0);
-        }
-        return null;
+        Integer queryResult = listTranscribedDiagnosticReportRepository.getByAppointmentId(appointmentId);
+        var result = queryResult != null ? this.buildBasicTranscribedServiceRequestBo(queryResult) : null;
+        log.debug("Output -> {}", result);
+        return Optional.ofNullable(result);
     }
 
     @Override

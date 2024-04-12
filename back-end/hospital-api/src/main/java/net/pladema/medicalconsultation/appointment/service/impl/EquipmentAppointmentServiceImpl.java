@@ -73,7 +73,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 					Integer diaryId = appointmentBo.getDiaryId();
 					setIsAppointmentProtected(appointmentBo, diaryId);
 					appointmentBo.setOrderData(diagnosticReportInfoService.getByAppointmentId(appointmentId));
-					appointmentBo.setTranscribedOrderData(listTranscribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
+					appointmentBo.setTranscribedOrderData(listTranscribedDiagnosticReportInfoService.getByAppointmentId(appointmentId).orElse(null));
                     return appointmentBo;
                 })
 				.orElse(null);

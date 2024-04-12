@@ -13,6 +13,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentReportSnomedConcept;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.StudyAppointmentReportStorage;
@@ -21,6 +24,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmen
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
@@ -31,10 +35,6 @@ import net.pladema.person.service.PersonService;
 import net.pladema.user.repository.UserPersonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -215,8 +215,10 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		if (diagnosticReportFromOrder != null)
 			return List.of(diagnosticReportFromOrder);
 
-		List<DiagnosticReportBo> transcribedDiagnosticReports = transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId).getDiagnosticReports();
-		if (transcribedDiagnosticReports != null && !transcribedDiagnosticReports.isEmpty())
+		List<DiagnosticReportBo> transcribedDiagnosticReports = transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId)
+				.map(TranscribedServiceRequestBo::getDiagnosticReports)
+				.orElse(List.of());
+		if (!transcribedDiagnosticReports.isEmpty())
 			return transcribedDiagnosticReports;
 
 		return List.of();
