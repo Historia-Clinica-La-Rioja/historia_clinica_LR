@@ -5105,6 +5105,7 @@ export const enum EAggressorRelationship {
 export const enum EAnthropometricGraphicRange {
     SIX_MONTHS = "SIX_MONTHS",
     FIVE_YEARS = "FIVE_YEARS",
+    TEN_YEARS = "TEN_YEARS",
     NINETEEN_YEARS = "NINETEEN_YEARS",
 }
 
