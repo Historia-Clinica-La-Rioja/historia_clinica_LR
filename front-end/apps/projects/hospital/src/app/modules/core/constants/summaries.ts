@@ -9,7 +9,7 @@ export const DOCUMENT_TYPE: DocumentType[] = [
 	{
 		title: "Nota de evolución",
 		id: 2,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Epicrisis",
@@ -24,12 +24,12 @@ export const DOCUMENT_TYPE: DocumentType[] = [
 	{
 		title: "Receta",
 		id: 5,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Orden",
 		id: 6,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Guardia",
@@ -44,12 +44,12 @@ export const DOCUMENT_TYPE: DocumentType[] = [
 	{
 		title: "Odontología",
 		id: 9,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Enfermería",
 		id: 10,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Contrarreferencia",
@@ -59,17 +59,17 @@ export const DOCUMENT_TYPE: DocumentType[] = [
 	{
 		title: "Indicación",
 		id: 12,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Nota de evolución de enfermería",
 		id: 13,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Receta digital",
 		id: 14,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Triage",
@@ -79,12 +79,12 @@ export const DOCUMENT_TYPE: DocumentType[] = [
 	{
 		title: "Nota de evolución de guardia",
 		id: 16,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 	{
 		title: "Reporte de imagen médica",
 		id: 17,
-		icon: 'assignment' //default
+		icon: 'assignment'
 	},
 ];
 
@@ -148,17 +148,6 @@ export const getDocumentTypeByEnum = (type: string): DocumentType => {
 	}
 	return documentType;
 }
-
-// export const getDocumentTypeByEnum = (enum: string): DocumentType => {
-// 	let documentType: DocumentType;
-//     switch (enum) {
-// 		case EDocumentType.ANAMNESIS:
-// 			documentType = DOCUMENT_TYPE.find(item => item.id == 1);
-// 			break;
-// 	}
-// 	return documentType;
-
-// }
 
 export interface DocumentType {
 	title: string,

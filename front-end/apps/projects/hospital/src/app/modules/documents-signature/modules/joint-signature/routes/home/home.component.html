@@ -11,26 +11,12 @@
 				<span>{{ 'firma-conjunta.TAB_THIRD_PARTY_DOCUMENTS' | translate | uppercase }}</span>
 			</ng-template>
 			<ng-template matTabContent>
-				<section>
-					<header>
-						<h2 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h2>
-					</header>
-					<app-selectable-card *ngIf="!isLoading else loading" [dataList]="documents"
-						[noDataMessage]="'digital-signature.NO_DOCUMENTS'" [hasHeader]="selectedDocumentId"
-						(selectedId)="seeDetails($event)">
-						<span translate="digital-signature.UNSELECTED_DOCUMENT" *ngIf="!selectedDocumentId"
-							class="no-detailed-information">
-						</span>
-
-						<div class="header-information" *ngIf="selectedDocumentId">
-							<app-header-attention-detail
-								[setDocumentId]="selectedDocumentId"
-								[details]="headerInformation"
-								[title]="'firma-conjunta.TITLE_HEADER'">
-							</app-header-attention-detail>
-						</div>
-					</app-selectable-card>
-				</section>
+				<app-joint-signature-documents-card *ngIf="!isLoading else loading"
+					[itemList]="documents"
+					[documentId]="selectedDocumentId"
+					[headerInformation]="headerInformation"
+					[documents]="jointSignatureDocuments">
+				</app-joint-signature-documents-card>
 			</ng-template>
 		</mat-tab>
 	</mat-tab-group>
@@ -38,6 +24,6 @@
 
 <ng-template #loading>
 	<div class="spinner">
-		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
+		<mat-spinner color="primary" class="spinner"></mat-spinner>
 	</div>
 </ng-template>

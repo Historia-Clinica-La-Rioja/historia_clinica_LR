@@ -13,18 +13,18 @@ import { Observable } from 'rxjs';
 
 export class JointSignatureService {
 
-	private readonly BASE_URL: string = `${environment.apiBase}/institution/${this.contextService.institutionId}/`;
+	private readonly BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}`;
 
 	constructor(private readonly http: HttpClient,
 		private readonly contextService: ContextService) { }
 
 	getProfessionalInvolvedDocumentListPort(): Observable<ElectronicSignatureInvolvedDocumentDto[]> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/electronic-joint-signature/get-involved-document-list`;
+		const url = `${this.BASE_URL}/electronic-joint-signature/get-involved-document-list`;
         return this.http.get<ElectronicSignatureInvolvedDocumentDto[]>(url);
 	}
 
-	getDocumentElectronicSignatureProfessionalStatusController(documentId: number): Observable<DocumentElectronicSignatureProfessionalStatusDto[]> {
-		const URL = this.BASE_URL + `document/${documentId}/electronic-joint-signature/get-professionals-status`
-		return this.http.get<DocumentElectronicSignatureProfessionalStatusDto[]>(URL);
+	getDocumentElectronicSignatureProfessionalStatus(documentId: number): Observable<DocumentElectronicSignatureProfessionalStatusDto[]> {
+		const url = `${this.BASE_URL}/document/${documentId}/electronic-joint-signature/get-professionals-status`
+		return this.http.get<DocumentElectronicSignatureProfessionalStatusDto[]>(url);
 	}
 }

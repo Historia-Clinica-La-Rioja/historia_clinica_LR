@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { DocumentElectronicSignatureProfessionalStatusDto, EElectronicSignatureStatus } from '@api-rest/api-model';
-import { Color } from '@presentation/colored-label/colored-label.component';
+import { DocumentElectronicSignatureProfessionalStatusDto } from '@api-rest/api-model';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 import { PresentationModule } from '@presentation/presentation.module';
+import { signatureStatusOptions } from '../../documents-signature/modules/joint-signature/mappers/joint-signature.mapper';
 
 @Component({
 	selector: 'app-intervening-professionals-status-of-the-signature',
@@ -18,35 +18,14 @@ export class InterveningProfessionalsStatusOfTheSignatureComponent {
 		}
 	};
 	interveningProfessionals: ProfessionalSignatureData[];
+
 	constructor() { }
 
 	private getColoredIconText(professional: DocumentElectronicSignatureProfessionalStatusDto): ProfessionalSignatureData {
-		let icon = "";
-		let text = "";
-		let color;
-		switch (professional.status) {
-			case EElectronicSignatureStatus.OUTDATED:
-				text = 'firma-conjunta.STATE_SIGNATURE.OUTDATED';
-				color = Color.GREY;
-				icon = "cancel";
-				break;
-			case EElectronicSignatureStatus.PENDING:
-				text = 'firma-conjunta.STATE_SIGNATURE.PENDING';
-				color = Color.YELLOW;
-				icon = "timer";
-				break;
-			case EElectronicSignatureStatus.REJECTED:
-				text = 'firma-conjunta.STATE_SIGNATURE.REJECTED';
-				color = Color.RED;
-				icon = "cancel";
-				break;
-			case EElectronicSignatureStatus.SIGNED:
-				text = 'firma-conjunta.STATE_SIGNATURE.SIGNED';
-				color = Color.GREEN;
-				icon = "check_circle";
-				break;
+		return {
+			professionalCompleteName: professional.professionalCompleteName,
+			signature: signatureStatusOptions[professional.status]
 		}
-		return { professionalCompleteName: professional.professionalCompleteName, signature: { icon: icon, text: text, color: color } }
 	}
 }
 
