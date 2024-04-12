@@ -1,6 +1,6 @@
 import { EElectronicSignatureStatus, ElectronicSignatureInvolvedDocumentDto } from "@api-rest/api-model"
 import { convertDateTimeDtoToDate } from "@api-rest/mapper/date-dto.mapper"
-import { getDocumentTypeByEnum } from "@core/constants/summaries"
+import { getDocumentType } from "@core/constants/summaries"
 import { dateTimeToViewDateHourMinuteSecond, dateToViewDate } from "@core/utils/date.utils"
 import { ColoredIconText } from "@presentation/components/colored-icon-text/colored-icon-text.component"
 import { Detail } from "@presentation/components/details-section-custom/details-section-custom.component"
@@ -12,8 +12,8 @@ export const buildItemListCard = (documents: ElectronicSignatureInvolvedDocument
 	return documents.map(document => {
 		return {
 			id: document.documentId,
-			icon: getDocumentTypeByEnum(document.documentType).icon,
-			title: getDocumentTypeByEnum(document.documentType).title,
+			icon: getDocumentType(document.documentTypeId).icon,
+			title: getDocumentType(document.documentTypeId).title,
 			options: buildItemListOption(document),
 			coloredIconTextOption: buildSignatureStatusOption(document.signatureStatus)
 		}
@@ -64,7 +64,7 @@ export const buildHeaderInformation = (document: ElectronicSignatureInvolvedDocu
 	return [
 		{
 			title: 'firma-conjunta.details.AMBIT',
-			text: getDocumentTypeByEnum(document.documentType).title
+			text: getDocumentType(document.documentTypeId).title
 		},
 		{
 			title: 'firma-conjunta.details.PATIENT',

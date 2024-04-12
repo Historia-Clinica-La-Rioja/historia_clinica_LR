@@ -1,5 +1,3 @@
-import { EDocumentType } from "@api-rest/api-model";
-
 export const DOCUMENT_TYPE: DocumentType[] = [
 	{
 		title: "Anamnesis",
@@ -91,64 +89,6 @@ export const DOCUMENT_TYPE: DocumentType[] = [
 export const getDocumentType = (id: number): DocumentType => {
 	return DOCUMENT_TYPE.find(item => item.id == id);
 }
-
-export const getDocumentTypeByEnum = (type: string): DocumentType => {
-	let documentType: DocumentType;
-	switch (type) {
-		case EDocumentType.ANAMNESIS:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 1);
-			break;
-		case EDocumentType.EVALUATION_NOTE:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 2);
-			break;
-		case EDocumentType.EPICRISIS:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 3);
-			break;
-		case EDocumentType.OUTPATIENT:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 4);
-			break;
-		case EDocumentType.RECIPE:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 5);
-			break;
-		case EDocumentType.ORDER:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 6);
-			break;
-		case EDocumentType.EMERGENCY_CARE:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 7);
-			break;
-		case EDocumentType.IMMUNIZATION:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 8);
-			break;
-		case EDocumentType.ODONTOLOGY:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 9);
-			break;
-		case EDocumentType.NURSING:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 10);
-			break;
-		case EDocumentType.COUNTER_REFERENCE:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 11);
-			break;
-		case EDocumentType.INDICATION:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 12);
-			break;
-		case EDocumentType.NURSING_EVOLUTION_NOTE:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 13);
-			break;
-		case EDocumentType.DIGITAL_RECIPE:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 14);
-			break;
-		case EDocumentType.TRIAGE:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 15);
-			break;
-		case EDocumentType.EMERGENCY_CARE_EVOLUTION:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 16);
-			break;
-		case EDocumentType.MEDICAL_IMAGE_REPORT:
-			documentType = DOCUMENT_TYPE.find(item => item.id == 17);
-	}
-	return documentType;
-}
-
 export interface DocumentType {
 	title: string,
 	id: number,
