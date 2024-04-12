@@ -1,0 +1,78 @@
+.column-name-title {
+	margin-left: 17%;
+	font-weight: normal;
+	font-size: medium;
+}
+
+.nombre-style {
+	color: black;
+}
+
+.miniature {
+	width: 265px;
+	height: 175px;
+}
+
+.icon {
+	width: 20px;
+	height: 20px;
+
+}
+
+.button {
+	background-color: transparent;
+	border: transparent;
+	display: inline;
+	margin: 10px;
+}
+
+.panel-content .button img.icon {
+	display: block;
+	margin-top: 20px;
+	text-align: left;
+}
+
+.panel-content {
+	display: flex;
+	margin-top: 10px;
+	text-align: left;
+}
+
+
+.button-text {
+	text-align: left;
+	color: #2687c5;
+}
+
+.button-text-inactive {
+	text-align: left;
+	color: #AFAFAF;
+}
+
+.panel-content .button .button-text,
+.panel-content .button .button-text-inactive {
+	display: inline-block;
+	//margin-left: 10px;
+	vertical-align: left;
+}
+
+
+::ng-deep .mat-tab-labels {
+	display: flex;
+	justify-content: space-around;
+}
+
+h4 {
+	padding: 1%;
+	background-color: #E0EEF7;
+	color: #2687c5;
+}
+
+h2 {
+	margin: 1%;
+}
+
+
+.mat-tab-group.mat-primary .mat-tab-nav-bar .mat-ink-bar {
+	width: 100px;
+}
