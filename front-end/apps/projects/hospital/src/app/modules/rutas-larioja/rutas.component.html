@@ -6,14 +6,59 @@
 
     <mat-card id="tab_container" class="mat-typography">
         <mat-card-content>
-            <mat-tab-group>
+            <mat-tab-group  class="mat-primary" animationDuration="1000ms">
                 <mat-tab id="tab_programas">
                     <ng-template mat-tab-label>
                         <span>ASISTENCIALES</span>
                     </ng-template>
                     <ng-template matTabContent>
+                        <h2>Rutas asistenciales</h2>
                         <h4>Nombre</h4>
+                        <section>
+                            <mat-accordion>
+                                <div class="contenedor-title"></div>
+                                <ng-container *ngFor="let element of data">
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header (click)="togglePanel">
+                                            <mat-panel-title>
+                                                <div class="container-orden">
+                                                    {{ element.Orden }}.
+                                                </div>
+                                                <div class="container-name">
+                                                    <span
+                                                        [ngClass]="{'nombre-style': panelOpenState === element.Orden}">
+                                                        {{element.Nombre}}.
+                                                    </span>
+                                                </div>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <div class="panel-content">
+                                            <button class="button" onclick="window.open('ruta-al-pdf')">
+                                                <img class="miniature" [src]="getImagePath(element.Miniature1)" alt="miniatura diagrama de ruta">
+                                               
+                                                    <img class="icon" [src]="getImagePath(element.IconDR)" alt="diagrama de ruta">
+                                                    <span class="button-text">Diagrama de ruta</span>
+                                                
+                                            </button>
+                                            <button class="button" onclick="window.open('ruta-al-pdf')">
+                                                <img class="miniature" [src]="getImagePath(element.Miniature2)" alt="miniatura documento técnico">
+                                                <img class="icon" [src]="getImagePath(element.IconDT)" alt="documento técnico">
+                                                <span class="button-text-inactive">Documento técnico</span>
+                                            </button>
+                                        </div>
+                                    </mat-expansion-panel>
 
+                                </ng-container>
+                            </mat-accordion>
+                        </section>
+
+                    </ng-template>
+                </mat-tab>
+                <mat-tab id="tab_generales">
+                    <ng-template mat-tab-label>
+                        <span>PREVENTIVAS</span>
+                    </ng-template>
+                    <ng-template matTabContent>
                         <section>
                             <mat-accordion>
                                 <div class="contenedor-title">
@@ -21,7 +66,7 @@
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header (click)="togglePanel">
                                         <mat-panel-title>
-                                            Hipertensión arterial
+                                            Adulto mayor
                                             <div class="container-orden">
                                             </div>
                                             <div class="container-name">
@@ -38,14 +83,6 @@
                                 </mat-expansion-panel>
                             </mat-accordion>
                         </section>
-
-                    </ng-template>
-                </mat-tab>
-                <mat-tab id="tab_generales">
-                    <ng-template mat-tab-label>
-                        <span>PREVENTIVAS</span>
-                    </ng-template>
-                    <ng-template matTabContent>
                     </ng-template>
                 </mat-tab>
 
