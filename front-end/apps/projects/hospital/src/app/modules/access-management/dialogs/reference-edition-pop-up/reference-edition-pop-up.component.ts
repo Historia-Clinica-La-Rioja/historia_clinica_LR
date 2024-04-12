@@ -10,14 +10,12 @@ import { ReferenceCounterReferenceFileDto, ReferenceDataDto, ReferenceDto, Refer
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { switchMap } from 'rxjs';
-import { UploadReferenceFilesService } from '@access-management/services/upload-reference-files.service';
+import { switchMap, tap } from 'rxjs';
 
 @Component({
 	selector: 'app-reference-edition-pop-up',
 	templateUrl: './reference-edition-pop-up.component.html',
-	styleUrls: ['./reference-edition-pop-up.component.scss'],
-	providers: [UploadReferenceFilesService]
+	styleUrls: ['./reference-edition-pop-up.component.scss']
 })
 export class ReferenceEditionPopUpComponent implements OnInit {
 
@@ -32,7 +30,6 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private dialogRef: MatDialogRef<ReferenceEditionPopUpComponent>,
 		private readonly referenceFileService: ReferenceFileService,
-		private readonly uploadReferenceFilesService: UploadReferenceFilesService
 	) { }
 
 	ngOnInit() {
@@ -84,24 +81,32 @@ export class ReferenceEditionPopUpComponent implements OnInit {
 	}
 
 	private loadFilesAndModifyReference() {
-		let filesIds: number[];
-		this.uploadReferenceFilesService.loadReferenceFilesAndGetIds(this.referenceFiles.newFiles, this.data.referencePatientDto.patientId)
-		.pipe(switchMap(newFileIds => {
-			filesIds = newFileIds
-			const allReferenceFiles = this.concatOldAndNewFiles(this.referenceFiles.oldFiles, newFileIds);
-			this.newReferenceInfo = { ...this.newReferenceInfo, fileIds: allReferenceFiles };
-			return this.institutionalReferenceReportService.modifyReference(this.data.referenceDataDto.id, this.newReferenceInfo);
-		}))
-		.subscribe({
+		let filesIds: number[] = [];
+		const patientId = this.data.referencePatientDto.patientId;
+
+		const uploadObservables = this.referenceFileService.uploadReferenceFiles(patientId, this.referenceFiles.newFiles)
+			.pipe(
+				tap(newFileIds => {
+						filesIds = newFileIds;
+					}
+				)
+			);
+
+		uploadObservables.pipe(
+			switchMap(() => {
+				const allReferenceFiles = this.concatOldAndNewFiles(this.referenceFiles.oldFiles, filesIds);
+				this.newReferenceInfo = { ...this.newReferenceInfo, fileIds: allReferenceFiles };
+				return this.institutionalReferenceReportService.modifyReference(this.data.referenceDataDto.id, this.newReferenceInfo);
+			})
+		).subscribe({
 			next: () => this.referenceEditionSuccess(),
 			error: () => this.referenceEditionError(filesIds)
 		});
-
-	}	
+	}
 
 	private concatOldAndNewFiles(oldFiles: ReferenceCounterReferenceFileDto[], newFileIds: number[]): number[] {
 		const oldFilesId = oldFiles?.map(files => files.fileId) || [];
-		return [...oldFilesId, ...newFileIds];
+		return [...oldFilesId, ...newFileIds].flat();
 	}
 
 	private referenceEditionSuccess() {

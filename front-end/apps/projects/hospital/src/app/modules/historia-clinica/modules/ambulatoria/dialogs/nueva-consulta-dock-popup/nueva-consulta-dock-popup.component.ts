@@ -51,6 +51,7 @@ import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
+import * as _ from 'lodash';
 
 const TIME_OUT = 5000;
 
@@ -259,7 +260,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit, OnChanges {
 			this.save();
 		}
 	}
-	
+
 	save(): void {
 		this.previousDataIsConfirmed().subscribe((answerPreviousData: boolean) => {
 
@@ -337,36 +338,43 @@ export class NuevaConsultaDockPopupComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		const filesToUpdate: Observable<number>[] = [];
+		const referencesToUpdate: Observable<number[]>[] = [];
 
 		references.forEach(reference => {
-			reference.referenceFiles.forEach(file => {
-				const obs = this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file);
-				filesToUpdate.push(obs);
-			})
+			if (reference.referenceFiles.length > 0) {
+				const obs = this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, reference.referenceFiles);
+				referencesToUpdate.push(obs);
+			}
 		});
 
-		if (filesToUpdate.length) {
-
-			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
-				let indexRefFilesIds = 0;
-				references.forEach(
-					(reference: ReferenceInformation, index: number) => {
-						const filesAmount = reference.referenceFiles.length;
-						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
-							this.ambulatoryConsultationReferenceService.addFileIdAt(index, referenceFileId[i]);
+		if (referencesToUpdate.length) {
+			forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
+				let hasError = false;
+				referenceFileIds.forEach((fileIds, index) => {
+					const reference = references[index];
+					const filesAmount = reference.referenceFiles.length;
+					for (let i = 0; i < filesAmount; i++) {
+						if (fileIds[i] === undefined || fileIds[i] === null) {
+							hasError = true;
+							break;
 						}
-						indexRefFilesIds += filesAmount;
+						this.ambulatoryConsultationReferenceService.addFileIdAt(index, fileIds[i]);
 					}
-				);
-				this.goToCreateConsultation(nuevaConsulta);
+				});
+				if (!hasError) {
+					this.goToCreateConsultation(nuevaConsulta);
+				} else {
+					this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPLOAD_FILES');
+					this.errorToUploadReferenceFiles();
+					hasError = false;
+				}
 			}, _ => {
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPLOAD_FILES');
 				this.errorToUploadReferenceFiles();
 			});
-		}
-		else
+		} else {
 			this.goToCreateConsultation(nuevaConsulta);
+		}
 	}
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
