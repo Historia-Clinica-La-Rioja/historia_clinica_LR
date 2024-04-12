@@ -56,16 +56,31 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			" LEFT JOIN Shockroom s ON (s.id = ece.shockroomId)" +
 			" LEFT JOIN Bed b ON (ece.bedId = b.id) " +
 			" LEFT JOIN Room r ON b.roomId = r.id" +
-			" WHERE ece.id = :episodeId "+
-			" AND ece.institutionId = :institutionId ")
-	Optional<EmergencyCareVo> getEpisode(@Param("episodeId") Integer episodeId, @Param("institutionId") Integer institutionId);
+			" WHERE ece.id = :episodeId ")
+	Optional<EmergencyCareVo> getEpisode(@Param("episodeId") Integer episodeId);
 
 	@Transactional(readOnly = true)
-	@Query(value =" SELECT ece.emergency_care_state_id " +
-			" FROM emergency_care_episode ece "+
-			" WHERE ece.id = :episodeId "+
-			" AND ece.institution_id = :institutionId ", nativeQuery = true)
-	Optional<Short> getState(@Param("episodeId") Integer episodeId, @Param("institutionId") Integer institutionId);
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso.description, tc, pi, s.description, b, ecd.administrativeDischargeOn, r) "+
+			" FROM EmergencyCareEpisode ece "+
+			" LEFT JOIN EmergencyCareDischarge ecd ON (ecd.emergencyCareEpisodeId = ece.id) " +
+			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
+			" LEFT JOIN Person pe ON (pe.id = pa.personId) " +
+			" LEFT JOIN PersonExtended petd ON (pe.id = petd.id) "+
+			" LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) "+
+			" LEFT JOIN PoliceInterventionDetails pi ON (pi.id = ece.id) "+
+			" JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId)" +
+			" LEFT JOIN Shockroom s ON (s.id = ece.shockroomId)" +
+			" LEFT JOIN Bed b ON (ece.bedId = b.id) " +
+			" LEFT JOIN Room r ON b.roomId = r.id" +
+			" WHERE ece.id = :episodeId " +
+			" AND ece.institutionId = :institutionId ")
+	Optional<EmergencyCareVo> getEpisodeByEpisodeAndInstitutionId(@Param("episodeId") Integer episodeId, @Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query(value =" SELECT ece.emergencyCareStateId " +
+			" FROM EmergencyCareEpisode ece "+
+			" WHERE ece.id = :episodeId ")
+	Optional<Short> getState(@Param("episodeId") Integer episodeId);
 
 	@Transactional
 	@Modifying
