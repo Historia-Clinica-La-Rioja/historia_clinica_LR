@@ -6,6 +6,9 @@ import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { AnthropometricDataDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
+import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
 
 @Component({
 	selector: 'app-antropometricos-summary',
@@ -31,10 +34,16 @@ export class AntropometricosSummaryComponent implements OnInit {
 	constructor(
 		public dialog: MatDialog,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
+		private readonly patientEvolutionChartService: PatientEvolutionChartsService,
+		private readonly activatedRoute: ActivatedRoute,
 	) { }
 
 	ngOnInit(): void {
-		this.anthropometricDataList$.subscribe(list => this.updateAnthropometricData(list));
+		this.patientEvolutionChartService.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
+		this.anthropometricDataList$.subscribe(list => {
+			this.updateAnthropometricData(list);
+			this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
+		});
 	}
 
 	openDialog(): void {
@@ -48,7 +57,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(fieldsToUpdate => {
 			if (fieldsToUpdate) {
-				this.internmentSummaryFacadeService.setFieldsToUpdate({ heightAndWeight: fieldsToUpdate.heightAndWeight,
+				this.internmentSummaryFacadeService.setFieldsToUpdate({
+					heightAndWeight: fieldsToUpdate.heightAndWeight,
 					bloodType: fieldsToUpdate.bloodType,
 					evolutionClinical: true
 				});
@@ -122,7 +132,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 			);
 
 			this.details = details;
-		}else{
+		} else {
 			this.details = [];
 		}
 	}

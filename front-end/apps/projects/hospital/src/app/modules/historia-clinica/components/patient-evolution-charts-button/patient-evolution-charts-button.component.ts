@@ -4,14 +4,14 @@ import { AnthropometricData, PatientEvolutionChartsService } from '@historia-cli
 @Component({
 	selector: 'app-patient-evolution-charts-button',
 	templateUrl: './patient-evolution-charts-button.component.html',
-	styleUrls: ['./patient-evolution-charts-button.component.scss'],
-	providers: [PatientEvolutionChartsService]
+	styleUrls: ['./patient-evolution-charts-button.component.scss']
 })
 export class PatientEvolutionChartsButtonComponent {
 
 	@Input()
 	set patientId(patientId: number) {
-		this.patientEvolutionChartsService.setPatientEvolutionChartsData(patientId);
+		this.patientEvolutionChartsService.patientId = patientId;
+		this.patientEvolutionChartsService.updateButtonEnablementByPatientInfo();
 	};
 
 	@Input() set anthropometricData(anthropometricData: AnthropometricData) {

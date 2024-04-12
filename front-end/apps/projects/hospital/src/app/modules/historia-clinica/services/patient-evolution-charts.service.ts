@@ -8,13 +8,15 @@ import { BehaviorSubject } from 'rxjs';
 const WIDTH = '90vw';
 const HEIGHT = '90vh';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class PatientEvolutionChartsService {
 
 	private anthropometricDataUploaded: AnthropometricData;
-	private patientId: number;
 	private anthropometricGraphicEnablement: AnthropometricGraphicEnablementDto;
 	private isEnabledPatientEvolutionChartsSubject = new BehaviorSubject<boolean>(false);
+	patientId: number;
 	isEnabledPatientEvolutionCharts$ = this.isEnabledPatientEvolutionChartsSubject.asObservable();
 
 	constructor(
@@ -22,25 +24,24 @@ export class PatientEvolutionChartsService {
 		private readonly dialog: MatDialog,
 	) { }
 
-	setPatientEvolutionChartsData(patientId: number) {
-		this.patientId = patientId;
-		this.anthropometricGraphicService.canShowPercentilesGraphic(this.patientId).subscribe(anthropometricGraphicEnablement => {
-			this.anthropometricGraphicEnablement = anthropometricGraphicEnablement;
-			this.checkButtonEnablement();			
-		});
-	}
-
 	setAntropometricDataUploaded(anthropometricDataUploaded: AnthropometricData) {
 		this.anthropometricDataUploaded = anthropometricDataUploaded;
 		this.checkButtonEnablement();
 	}
 
-	checkButtonEnablement() {
+	updateButtonEnablementByPatientInfo() {
+		this.anthropometricGraphicService.canShowPercentilesGraphic(this.patientId).subscribe(anthropometricGraphicEnablement => {
+			this.anthropometricGraphicEnablement = anthropometricGraphicEnablement;
+			this.checkButtonEnablement();
+		});
+	}
+
+	private checkButtonEnablement() {
 		const hasCurrentValueOfAnthropometricData = this.hasAntropometricDataUploaded();
 		const hasHistoricalAnthropometricData = this.anthropometricGraphicEnablement?.hasAnthropometricData;
 		const hasValidAge = this.anthropometricGraphicEnablement?.hasValidAge;
 		const hasValidGender = this.anthropometricGraphicEnablement?.hasValidGender;
-		
+
 		this.isEnabledPatientEvolutionChartsSubject.next(hasValidAge && (hasValidGender || hasCurrentValueOfAnthropometricData || hasHistoricalAnthropometricData));
 	}
 
