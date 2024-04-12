@@ -13,17 +13,21 @@ import java.util.stream.Stream;
 @Getter
 public enum EAnthropometricGraphic {
 
-	LENGTH_HEIGHT_FOR_AGE((short)1),
-	WEIGHT_FOR_AGE((short)2),
-	BMI_FOR_AGE((short)3),
-	HEAD_CIRCUMFERENCE((short)4),
-	WEIGHT_FOR_LENGTH((short)5),
-	WEIGHT_FOR_HEIGHT((short)6);
+	LENGTH_HEIGHT_FOR_AGE((short)1, (short)0, (short)19),
+	WEIGHT_FOR_AGE((short)2, (short)0, (short)10),
+	BMI_FOR_AGE((short)3, (short)0, (short)19),
+	HEAD_CIRCUMFERENCE((short)4, (short)0, (short)5),
+	WEIGHT_FOR_LENGTH((short)5, (short)0, (short)2),
+	WEIGHT_FOR_HEIGHT((short)6, (short)2, (short)5);
 
 	private Short id;
+	private Short minAge;
+	private Short maxAge;
 
-	EAnthropometricGraphic(Number id){
+	EAnthropometricGraphic(Number id, Short minAge, Short maxAge){
 		this.id = id.shortValue();
+		this.minAge = minAge;
+		this.maxAge = maxAge;
 	}
 
 	@JsonCreator

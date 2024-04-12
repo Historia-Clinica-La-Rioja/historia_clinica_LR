@@ -51,7 +51,7 @@ public class GetAnthropometricGraphicData {
 	public AnthropometricGraphicDataBo run (Integer patientId, EAnthropometricGraphic graphic, EAnthropometricGraphicType graphicType, AnthropometricValueBo anthropometricActualValue){
 		BasicPatientDto basicDataPatient = sharedPatientPort.getBasicDataFromPatient(patientId);
 		EGender gender = null;
-		EAnthropometricGraphicRange graphicRange = getGraphicRange(basicDataPatient);
+		EAnthropometricGraphicRange graphicRange = getGraphicRange(basicDataPatient, graphic);
 		if (graphicRange == null)
 			return new AnthropometricGraphicDataBo();
 
@@ -102,9 +102,11 @@ public class GetAnthropometricGraphicData {
 		List<GraphicDatasetIntersectionBo> evolutionIntersectionList = new ArrayList<>();
 		Integer maxDaysOrMonths = (graphicBo.getRange().getValues().get(graphicBo.getRange().getValues().size() - 1));
 		evolutionValues.forEach(evolution -> {
-			GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue(), maxDaysOrMonths);
-			if (intersectionBo != null)
-				evolutionIntersectionList.add(intersectionBo);
+			short age = (short) ChronoUnit.YEARS.between(patient.getBirthDate(), evolution.getEffectiveTime());
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge()) {
+				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue(), maxDaysOrMonths);
+				if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
+			}
 		});
 		if (anthropometricValue != null ){
 			GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), LocalDate.now(), patient.getBirthDate(), anthropometricValue, maxDaysOrMonths);
@@ -205,12 +207,14 @@ public class GetAnthropometricGraphicData {
 		return x + 1;
 	}
 
-	private EAnthropometricGraphicRange getGraphicRange(BasicPatientDto basicPatientDto){
+	private EAnthropometricGraphicRange getGraphicRange(BasicPatientDto basicPatientDto, EAnthropometricGraphic graphic){
 		PersonAgeDto personAge = basicPatientDto.getPerson().getPersonAge();
 		if (personAge == null || personAge.getYears() > 18)
 			return null;
-		if (personAge.getYears() > 4)
+		if (personAge.getYears() > 4){
+			if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE)) return EAnthropometricGraphicRange.TEN_YEARS;
 			return EAnthropometricGraphicRange.NINETEEN_YEARS;
+		}
 		if (personAge.getYears() < 1 && personAge.getMonths() < 6)
 			return EAnthropometricGraphicRange.SIX_MONTHS;
 		return EAnthropometricGraphicRange.FIVE_YEARS;
@@ -242,7 +246,7 @@ public class GetAnthropometricGraphicData {
 		if (graphicRange.equals(EAnthropometricGraphicRange.FIVE_YEARS)){
 			xAxisRange.forEach(x -> xAxisRangeLabels.add(getFiveYearsLabel(x)));
 		}
-		if (graphicRange.equals(EAnthropometricGraphicRange.NINETEEN_YEARS)) {
+		if (graphicRange.equals(EAnthropometricGraphicRange.NINETEEN_YEARS) || graphicRange.equals(EAnthropometricGraphicRange.TEN_YEARS)) {
 			xAxisRange.forEach(x -> xAxisRangeLabels.add(getNineteenYearsLabel(x)));
 		}
 		return xAxisRangeLabels;
