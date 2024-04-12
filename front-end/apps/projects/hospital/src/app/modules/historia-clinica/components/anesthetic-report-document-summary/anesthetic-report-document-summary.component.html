@@ -1,5 +1,5 @@
 <div class="anesthesic-report-content">
-    <div fxFlex="80%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px" *ngIf="anestheticReport">
+    <div *ngIf="(anestheticReport$ | async) && !isLoading, else loader" fxFlex="80%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
 
         <!-- Diagnosticos -->
         <div data-id="diagnosis-section" *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis">
@@ -39,9 +39,9 @@
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
                 <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MAX_BLOOD_PRESSURE" 
-                   [description]="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure" colonsOnTitle="true"></app-title-description-list>
+                    [description]="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure" colonsOnTitle="true"></app-title-description-list>
                 <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MIN_BLOOD_PRESSURE" 
-                   [description]="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure" colonsOnTitle="true"></app-title-description-list>
+                    [description]="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure" colonsOnTitle="true"></app-title-description-list>
                 <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.hematocrit" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.HEMATOCRIT" 
                     [description]="anestheticReport.anesthesicClinicalEvaluation.hematocrit"></app-title-description-list>
             </div>
@@ -52,7 +52,7 @@
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthetic-history.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
                 <app-title-description-list title="internaciones.anesthesic-report.anesthetic-history.PREVIOUS_ANESTHESIA" 
-                   [description]="anestheticReport.anestheticHistory"></app-title-description-list>
+                    [description]="anestheticReport.anestheticHistory"></app-title-description-list>
             </div>
         </div>
         
@@ -61,7 +61,7 @@
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.usual-medication.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
                 <app-title-description-list title="internaciones.anesthesic-report.usual-medication.REGISTERED_USUAL_MEDICATION" 
-                   [description]="anestheticReport.usualMedication"></app-title-description-list>
+                    [description]="anestheticReport.usualMedication"></app-title-description-list>
             </div>
         </div>
         
@@ -91,11 +91,11 @@
             <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.record.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
                 <app-title-description-list *ngIf="anestheticReport.histories.recordList?.length" title="internaciones.anesthesic-report.record.REGISTERED_RECORDS" 
-                   [description]="anestheticReport.histories.recordList"></app-title-description-list>
+                    [description]="anestheticReport.histories.recordList"></app-title-description-list>
                 <app-title-description-list *ngIf="anestheticReport.histories.observations" title="internaciones.anesthesic-report.record.OBSERVATIONS" 
-                   [description]="anestheticReport.histories.observations"></app-title-description-list>
+                    [description]="anestheticReport.histories.observations"></app-title-description-list>
                 <app-title-description-list *ngIf="anestheticReport.histories.asa" title="internaciones.anesthesic-report.record.ASA" colonsOnTitle="true"
-                   [description]="anestheticReport.histories.asa"></app-title-description-list>
+                    [description]="anestheticReport.histories.asa"></app-title-description-list>
             </div>
         </div>
         
@@ -116,4 +116,7 @@
             </div>
         </div>
     </div>
+    <ng-template #loader>
+		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
+	</ng-template>
 </div>
