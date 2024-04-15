@@ -47,10 +47,12 @@ export class FileFetchService {
 }
 
 const extractFileName = (contentDisposition: string): string => {
-	if (!contentDisposition) return undefined;
-	const regex = /filename="([^"]+)"/;
+	if (!contentDisposition) {
+		return null;
+	}
+	const regex = /filename\*?=UTF-8''([^']+)|filename="([^"]+)"/;
 	const match = contentDisposition.match(regex);
-	return match ? match[1] : null;
+	return match ? decodeURIComponent(match[1]): null;
 };
 
 const fileResponseHeaders = (event: HttpHeaderResponse): FileResponse => {
