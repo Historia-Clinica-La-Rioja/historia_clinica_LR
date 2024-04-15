@@ -296,6 +296,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				coverageDto: order.coverageDto,
 			}
 		})
+		this.transcribedLabelOrder = toStudyLabel(this.medicalOrder.displayText)
 	}
 
 	private mapTranscribedOrderToMedicalOrderInfo(order: TranscribedServiceRequestSummaryDto) {
@@ -333,7 +334,6 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	private mapTranscribeOrderToMedicalOrderInfo(transcribedOrders: TranscribedServiceRequestSummaryDto[]) {
 		let text = 'image-network.appointments.medical-order.TRANSCRIBED_ORDER';
-
 		this.translateService.get(text).subscribe(translatedText => {
 			transcribedOrders.map(medicalOrder => {
 				this.patientMedicalOrders.push({
