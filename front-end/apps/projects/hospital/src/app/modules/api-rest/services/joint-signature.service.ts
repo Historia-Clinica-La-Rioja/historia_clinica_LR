@@ -1,8 +1,8 @@
 
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentElectronicSignatureProfessionalStatusDto, ElectronicSignatureInvolvedDocumentDto } from '@api-rest/api-model';
+import { DocumentElectronicSignatureProfessionalStatusDto, ElectronicSignatureInvolvedDocumentDto, PageDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -18,9 +18,10 @@ export class JointSignatureService {
 	constructor(private readonly http: HttpClient,
 		private readonly contextService: ContextService) { }
 
-	getProfessionalInvolvedDocumentListPort(): Observable<ElectronicSignatureInvolvedDocumentDto[]> {
+	getProfessionalInvolvedDocumentList(pageSize: number, pageNumber: number): Observable<PageDto<ElectronicSignatureInvolvedDocumentDto>> {
 		const url = `${this.BASE_URL}/electronic-joint-signature/get-involved-document-list`;
-        return this.http.get<ElectronicSignatureInvolvedDocumentDto[]>(url);
+		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize);
+		return this.http.get<PageDto<ElectronicSignatureInvolvedDocumentDto>>(url, { params: queryParam });
 	}
 
 	getDocumentElectronicSignatureProfessionalStatus(documentId: number): Observable<DocumentElectronicSignatureProfessionalStatusDto[]> {

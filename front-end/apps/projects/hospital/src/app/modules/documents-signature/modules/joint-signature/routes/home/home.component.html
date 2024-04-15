@@ -11,11 +11,7 @@
 				<span>{{ 'firma-conjunta.TAB_THIRD_PARTY_DOCUMENTS' | translate | uppercase }}</span>
 			</ng-template>
 			<ng-template matTabContent>
-				<app-joint-signature-documents-card *ngIf="!isLoading else loading"
-					[itemList]="documents"
-					[documentId]="selectedDocumentId"
-					[headerInformation]="headerInformation"
-					[documents]="jointSignatureDocuments">
+				<app-joint-signature-documents-card>
 				</app-joint-signature-documents-card>
 			</ng-template>
 		</mat-tab>

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { DocumentElectronicSignatureProfessionalStatusDto } from '@api-rest/api-model';
 import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 import { PresentationModule } from '@presentation/presentation.module';
-import { signatureStatusOptions } from '../../documents-signature/modules/joint-signature/mappers/joint-signature.mapper';
+import { SIGNATURE_STATUS_OPTION } from '../../documents-signature/modules/joint-signature/constants/joint-signature.constants';
 
 @Component({
 	selector: 'app-intervening-professionals-status-of-the-signature',
@@ -24,7 +24,7 @@ export class InterveningProfessionalsStatusOfTheSignatureComponent {
 	private getColoredIconText(professional: DocumentElectronicSignatureProfessionalStatusDto): ProfessionalSignatureData {
 		return {
 			professionalCompleteName: professional.professionalCompleteName,
-			signature: signatureStatusOptions[professional.status]
+			signature: SIGNATURE_STATUS_OPTION[professional.status]
 		}
 	}
 }

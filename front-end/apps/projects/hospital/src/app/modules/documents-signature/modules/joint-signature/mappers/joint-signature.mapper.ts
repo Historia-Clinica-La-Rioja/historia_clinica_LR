@@ -6,7 +6,7 @@ import { ColoredIconText } from "@presentation/components/colored-icon-text/colo
 import { Detail } from "@presentation/components/details-section-custom/details-section-custom.component"
 import { ItemListCard, ItemListOption } from "@presentation/components/selectable-card/selectable-card.component"
 import { ShowMoreConceptsPipe } from "@presentation/pipes/show-more-concepts.pipe"
-import { SIGNATURE_STATUS_OUDATED, SIGNATURE_STATUS_PENDING, SIGNATURE_STATUS_REJECTED, SIGNATURE_STATUS_SIGNED } from "../constants/joint-signature.constants"
+import { SIGNATURE_STATUS_OPTION } from "../constants/joint-signature.constants"
 
 export const buildItemListCard = (documents: ElectronicSignatureInvolvedDocumentDto[]): ItemListCard[] => {
 	return documents.map(document => {
@@ -49,15 +49,8 @@ const buildSignatureStatusOption = (status: EElectronicSignatureStatus): ItemLis
 	}
 }
 
-export const signatureStatusOptions = {
-	[EElectronicSignatureStatus.OUTDATED]: SIGNATURE_STATUS_OUDATED,
-	[EElectronicSignatureStatus.PENDING]: SIGNATURE_STATUS_PENDING,
-	[EElectronicSignatureStatus.REJECTED]: SIGNATURE_STATUS_REJECTED,
-	[EElectronicSignatureStatus.SIGNED]: SIGNATURE_STATUS_SIGNED
-};
-
 const buildSignatureStatusValue = (status: EElectronicSignatureStatus): ColoredIconText => {
-	return signatureStatusOptions[status];
+	return SIGNATURE_STATUS_OPTION[status];
 };
 
 export const buildHeaderInformation = (document: ElectronicSignatureInvolvedDocumentDto): Detail[] => {
