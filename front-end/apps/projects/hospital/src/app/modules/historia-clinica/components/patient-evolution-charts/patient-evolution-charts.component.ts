@@ -68,4 +68,5 @@ const AnthropometricDataKeyByEvolutionChart = {
 	[EVOLUTION_CHARTS.WEIGHT_FOR_AGE]: ['weight'],
 	[EVOLUTION_CHARTS.WEIGHT_FOR_LENGTH]: ['height', 'weight'],
 	[EVOLUTION_CHARTS.WEIGHT_FOR_HEIGHT]: ['height', 'weight'],
+	[EVOLUTION_CHARTS.HEAD_CIRCUMFERENCE]: ['headCircumference']
 }
