@@ -28,12 +28,15 @@ public class GetReferenceSummary {
 	private final SharedLoggedUserPort sharedLoggedUserPort;
 	private final SharedInstitutionalGroupPort sharedInstitutionalGroupPort;
 
-	public List<ReferenceSummaryBo> run(Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
+	public List<ReferenceSummaryBo> run(Integer institutionId, Integer patientId, Integer clinicalSpecialtyId, Integer careLineId, Integer practiceId) {
 		assertContextValid(patientId, clinicalSpecialtyId, practiceId);
 		log.debug("Input parameters -> patientId {}, clinicalSpecialtyId {}, careLineId {}, practiceId {}", patientId, clinicalSpecialtyId, careLineId, practiceId);
-		List<ReferenceSummaryBo> result = referenceStorage.getReferencesSummary(patientId, clinicalSpecialtyId, careLineId, practiceId);
+		Integer userId = UserInfo.getCurrentAuditor();
+		List<Short> userRoleIds = sharedLoggedUserPort.getLoggedUserRoleIds(-1, userId);
+		userRoleIds.addAll(sharedLoggedUserPort.getLoggedUserRoleIds(institutionId, userId));
+		List<ReferenceSummaryBo> result = referenceStorage.getReferencesSummary(patientId, clinicalSpecialtyId, careLineId, practiceId, userRoleIds);
 		addRegulationStateToReferences(result);
-		result = filterByPermissions(result, UserInfo.getCurrentAuditor());
+		result = filterByPermissions(result, userId);
 		log.debug("OUTPUT -> {}", result);
 		return result;
 	}

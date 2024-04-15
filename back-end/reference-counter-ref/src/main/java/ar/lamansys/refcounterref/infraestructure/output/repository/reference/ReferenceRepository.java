@@ -77,20 +77,24 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId, r.destinationInstitutionId) " +
 			"FROM Reference r " +
 			"LEFT JOIN ReferenceClinicalSpecialty rcs ON (rcs.pk.referenceId = r.id) " +
-			"JOIN OutpatientConsultation oc ON r.encounterId = oc.id " +
-			"JOIN Institution i ON oc.institutionId = i.id " +
-			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
-			"JOIN Person p ON p.id = hp.personId " +
-			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
+			"JOIN Institution i ON (oc.institutionId = i.id) " +
+			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
+			"JOIN Person p ON (p.id = hp.personId) " +
+			"JOIN PersonExtended pe ON (p.id = pe.id) " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
-			"AND r.serviceRequestId IS NULL ")
+			"AND r.serviceRequestId IS NULL " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndCareLineId(@Param("patientId") Integer patientId,
-																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																								 @Param("careLineId") Integer careLineId);
+																											  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																											  @Param("careLineId") Integer careLineId,
+																											  @Param("userRoleIds") List<Short> userRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -102,12 +106,17 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
 			"JOIN Person p ON p.id = hp.personId " +
 			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
-			"AND r.serviceRequestId IS NULL ")
-	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyId(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+			"AND r.serviceRequestId IS NULL " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyId(@Param("patientId") Integer patientId,
+																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																								 @Param("userRoleIds") List<Short> userRoleIds);
 	
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -119,15 +128,19 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
 			"JOIN Person p ON p.id = hp.personId " +
 			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.careLineId = :careLineId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
-			"AND r.serviceRequestId IS NULL")
+			"AND r.serviceRequestId IS NULL " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndCareLineId(@Param("patientId") Integer patientId,
-																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																								 @Param("careLineId") Integer careLineId);
+																											  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																											  @Param("careLineId") Integer careLineId,
+																											  @Param("userRoleIds") List<Short> userRoles);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -139,12 +152,17 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN HealthcareProfessional hp ON hp.id = oc.doctorId " +
 			"JOIN Person p ON p.id = hp.personId " +
 			"JOIN PersonExtended pe ON p.id = pe.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
-			"AND r.serviceRequestId IS NULL")
-	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyId(@Param("patientId") Integer patientId, @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+			"AND r.serviceRequestId IS NULL " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyId(@Param("patientId") Integer patientId,
+																								 @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																								 @Param("userRoleIds") List<Short> userRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -159,6 +177,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.careLineId = :careLineId " +
@@ -166,10 +186,12 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByPracticeIdAndCareLineId(@Param("patientId") Integer patientId,
-																						@Param("practiceId") Integer practiceId,
-																						@Param("careLineId") Integer careLineId);
+																									 @Param("practiceId") Integer practiceId,
+																									 @Param("careLineId") Integer careLineId,
+																									 @Param("userRoleIds") List<Short> userRoleIds);
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId, r.destinationInstitutionId) " +
@@ -183,14 +205,19 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
-	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByPracticeId(@Param("patientId") Integer patientId, @Param("practiceId") Integer practiceId);
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByPracticeId(@Param("patientId") Integer patientId,
+																						@Param("practiceId") Integer practiceId,
+																						@Param("userRoleIds") List<Short> userRoleIds);
 																						
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -205,6 +232,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND r.careLineId = :careLineId " +
@@ -212,10 +241,12 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByPracticeIdAndCareLineId(@Param("patientId") Integer patientId,
-																						@Param("practiceId") Integer practiceId,
-																						@Param("careLineId") Integer careLineId);
+																									 @Param("practiceId") Integer practiceId,
+																									 @Param("careLineId") Integer careLineId,
+																									 @Param("userRoleIds") List<Short> userRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -230,14 +261,19 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND dr.snomedId = :practiceId " +
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
-	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByPracticeId(@Param("patientId") Integer patientId, @Param("practiceId") Integer practiceId);
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
+	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByPracticeId(@Param("patientId") Integer patientId,
+																						@Param("practiceId") Integer practiceId,
+																						@Param("userRoleIds") List<Short> userRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -253,6 +289,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId " +
@@ -262,11 +300,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)" +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(@Param("patientId") Integer patientId,
-																											  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																											  @Param("careLineId") Integer careLineId,
-																											  @Param("practiceId") Integer practiceId);
+																														   @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																														   @Param("careLineId") Integer careLineId,
+																														   @Param("practiceId") Integer practiceId,
+																														   @Param("userRoleIds") List<Short> userRoleIds);
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
 			"oc.startDate, p.firstName, p.middleNames, p.lastName, p.otherLastNames, pe.nameSelfDetermination, r.careLineId, r.destinationInstitutionId) " +
@@ -281,6 +321,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId OR NOT EXISTS (SELECT 1 from ReferenceClinicalSpecialty rcs2 WHERE rcs2.pk.referenceId = r.id)) " +
@@ -288,10 +330,12 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId)" +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOutpatientConsultationByClinicalSpecialtyIdAndPracticeId(@Param("patientId") Integer patientId,
 																											  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																											  @Param("practiceId") Integer practiceId);
+																											  @Param("practiceId") Integer practiceId,
+																											  @Param("userRoleIds") List<Short> userRoleIds);
 																											  
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -307,6 +351,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId OR NOT EXISTS (SELECT 1 from ReferenceClinicalSpecialty rcs2 WHERE rcs2.pk.referenceId = r.id)) " +
@@ -315,11 +361,13 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeIdAndCareLineId(@Param("patientId") Integer patientId,
-																								 			  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																											  @Param("careLineId") Integer careLineId,
-																								 			  @Param("practiceId") Integer practiceId);
+																														   @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																														   @Param("careLineId") Integer careLineId,
+																														   @Param("practiceId") Integer practiceId,
+																														   @Param("userRoleIds") List<Short> userRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo(r.id, i.name, " +
@@ -335,6 +383,8 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"JOIN Document d ON sr.id = d.sourceId " +
 			"JOIN DocumentDiagnosticReport ddr ON d.id = ddr.pk.documentId " +
 			"JOIN DiagnosticReport dr ON ddr.pk.diagnosticReportId = dr.id " +
+			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
+			"LEFT JOIN CareLineRole clr ON (clr.careLineId = cl.id) " +
 			"WHERE oc.patientId = :patientId " +
 			"AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
 			"AND (rcs.pk.clinicalSpecialtyId = :clinicalSpecialtyId OR NOT EXISTS (SELECT 1 from ReferenceClinicalSpecialty rcs2 WHERE rcs2.pk.referenceId = r.id)) " +
@@ -342,10 +392,12 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			"AND r.id NOT IN (SELECT cr.referenceId  FROM CounterReference cr WHERE cr.patientId = :patientId) " +
 			"AND (d.deleteable.deleted = false OR d.deleteable.deleted is null)" +
 			"AND (dr.deleteable.deleted = false OR dr.deleteable.deleted is null) " +
-			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null)")
+			"AND (sr.deleteable.deleted = false OR sr.deleteable.deleted is null) " +
+			"AND ((clr.roleId IN (:userRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE) OR cl.classified IS FALSE OR cl.classified IS NULL)")
 	List<ReferenceSummaryBo> getReferencesSummaryFromOdontologyConsultationByClinicalSpecialtyIdAndPracticeId(@Param("patientId") Integer patientId,
-																														   @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
-																														   @Param("practiceId") Integer practiceId);
+																											  @Param("clinicalSpecialtyId") Integer clinicalSpecialtyId,
+																											  @Param("practiceId") Integer practiceId,
+																											  @Param("userRoleIds") List<Short> userRoleIds);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT r.sourceTypeId FROM Reference r WHERE r.id = :referenceId")
