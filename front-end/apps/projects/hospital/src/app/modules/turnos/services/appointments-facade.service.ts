@@ -15,7 +15,7 @@ import {
 import {
 	momentParseTime,
 	DateFormat,
-	momentParseDate,
+	dateISOParseDate,
 } from '@core/utils/moment.utils';
 import { map, first } from 'rxjs/operators';
 import { CANCEL_STATE_ID, APPOINTMENT_STATES_ID } from '../constants/appointment';
@@ -121,7 +121,7 @@ export class AppointmentsFacadeService {
 							to = momentParseTime(from).set({hour: 23, minute: 59}).format(DateFormat.HOUR_MINUTE);
 						}
 						const viewName = this.getViewName(appointment.patient?.person);
-						const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
+						const calendarEvent = toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 						return calendarEvent;
 					});
 				const holidaysCalendarEvents = result[1].map(holiday => {

@@ -33,7 +33,6 @@ import {
 	ERole,
 	FreeAppointmentSearchFilterDto,
 	PatientMedicalCoverageDto,
-	PersonPhotoDto,
 	ProfessionalPersonDto,
 	TimeDto,
 	RecurringTypeDto,
@@ -69,15 +68,12 @@ import {
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
-import { PatientService } from '@api-rest/services/patient.service';
-import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { CalendarEvent } from 'angular-calendar';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
-import * as moment from 'moment';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { toCalendarEvent } from '@turnos/utils/appointment.utils';
+import { getAppointmentEnd, getAppointmentStart, toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { JitsiCallService } from '../../../jitsi/jitsi-call.service';
 import { Router } from '@angular/router';
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
@@ -102,7 +98,7 @@ const ROLES_TO_EDIT: ERole[]
 	= [ERole.ADMINISTRATIVO];
 const ROLE_TO_DOWNDLOAD_REPORTS: ERole[] = [ERole.ADMINISTRATIVO];
 const ROLE_TO_MAKE_VIRTUAL_CONSULTATION: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
-const MONTHS = [1,2,3,4,5,6,7,8,9,10,11,12];
+const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 const enum itsCovered {
 	COVERED = 1,
@@ -120,15 +116,11 @@ export class AppointmentComponent implements OnInit {
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
 	readonly Color = Color;
-	modalitys : modality [] = [];
+	modalitys: modality[] = [];
 	datestypes = DATESTYPES;
 	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;
-	medicalCoverageId: number;
-
-	personPhoto: PersonPhotoDto;
-	decodedPhoto$: Observable<string>;
 
 	appointment: AppointmentDto;
 	parentAppointment: AppointmentDto;
@@ -149,8 +141,8 @@ export class AppointmentComponent implements OnInit {
 	hasRoleAdmin$: Observable<boolean>;
 	hasRoleToDownloadReports$: Observable<boolean>;
 	hasRoleToAddObservations$: Observable<boolean>;
-	agendaOwner : boolean;
-	attachProfessional : boolean;
+	agendaOwner: boolean;
+	attachProfessional: boolean;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 
 	hideFilterPanel = false;
@@ -158,13 +150,11 @@ export class AppointmentComponent implements OnInit {
 	isDateFormVisible = false;
 	startAgenda = dateToDateDto(new Date(this.data.agenda.startDate));
 	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate)).year;
-	availableDays: number[]= [];
+	availableDays: number[] = [];
 	availableMonths: number[] = [];
 	availableYears: number[] = [];
 	possibleScheduleHours: TimeDto[] = [];
-	selectedDate = new Date(this.data.appointmentData.date); 
-	disableDays: Date[] = [];
-	openingDateForm = false;
+	selectedDate = new Date(this.data.appointmentData.date);
 	recurringTypes: RecurringTypeDto[] = [];
 
 	isCheckedDownloadAnexo = false;
@@ -185,11 +175,11 @@ export class AppointmentComponent implements OnInit {
 	selectedModality: modality;
 	isVirtualConsultationModality: boolean = false;
 	canDownloadReport = false;
-	dateAppointment : DateDto;
+	dateAppointment: DateDto;
 	viewInputEmail = false;
 	selectedOpeningHourId: number;
 
-	diaryOpeningHoursFreeTimes : DiaryOpeningHoursFreeTimesDto[];
+	diaryOpeningHoursFreeTimes: DiaryOpeningHoursFreeTimesDto[];
 	HABILITAR_TELEMEDICINA: boolean = false;
 
 	patientSummary: PatientSummary;
@@ -229,8 +219,6 @@ export class AppointmentComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly personMasterDataService: PersonMasterDataService,
-		private readonly patientService: PatientService,
-		private readonly imageDecoderService: ImageDecoderService,
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private readonly jitsiCallService: JitsiCallService,
 		private readonly router: Router,
@@ -261,9 +249,9 @@ export class AppointmentComponent implements OnInit {
 		this.formDate = this.formBuilder.group({
 			hour: ['', [Validators.required]],
 			day: ['', Validators.required],
-			month: ['',Validators.required],
-			year: ['',Validators.required],
-			modality: ['',[Validators.required]],
+			month: ['', Validators.required],
+			year: ['', Validators.required],
+			modality: ['', [Validators.required]],
 			email: [''],
 			recurringType: ['']
 		});
@@ -317,20 +305,20 @@ export class AppointmentComponent implements OnInit {
 				}
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
-				this.selectedModality = MODALITYS_TYPES.find( m => m.value === this.appointment.modality);
+				this.selectedModality = MODALITYS_TYPES.find(m => m.value === this.appointment.modality);
 				this.modalitys.push(MODALITYS_TYPES[0]);
 				this.pushPatientVirtualAttentionOption();
-				if(this.selectedModality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION){
+				if (this.selectedModality.value === this.SECOND_OPINION_VIRTUAL_ATTENTION) {
 					this.modalitys.push(MODALITYS_TYPES[2])
 				}
-				if(this.selectedModality.value ===  this.SECOND_OPINION_VIRTUAL_ATTENTION || this.selectedModality.value === EAppointmentModality.PATIENT_VIRTUAL_ATTENTION){
+				if (this.selectedModality.value === this.SECOND_OPINION_VIRTUAL_ATTENTION || this.selectedModality.value === EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) {
 					this.isVirtualConsultationModality = true;
 				}
 				this.checkDownloadReportAvailability();
 				this.initializeFormDate();
-				this.loadAvailableDays(this.dateAppointment,true);
+				this.loadAvailableDays(this.dateAppointment, true);
 				this.setAvailableMonths();
-				this.loadAppointmentsHours(dateToDateDto(this.selectedDate),true);
+				this.loadAppointmentsHours(dateToDateDto(this.selectedDate), true);
 				this.setAvailableYears();
 				this.setModalityAndValidator(false);
 			});
@@ -346,7 +334,7 @@ export class AppointmentComponent implements OnInit {
 
 		combineLatest([loggedUserHealthcareProfessionalId$, loggedUserHasRoleToMakeVirtualConsultation$]).subscribe(([healthcareProfessionalId, hasRole]) => {
 			this.agendaOwner = (this.data.agenda.healthcareProfessionalId === healthcareProfessionalId) && hasRole;
-			this.attachProfessional= (this.data.agenda.associatedProfessionalsInfo.find(professional => professional.id === healthcareProfessionalId) && hasRole) 
+			this.attachProfessional = (this.data.agenda.associatedProfessionalsInfo.find(professional => professional.id === healthcareProfessionalId) && hasRole)
 		});
 
 		this.personMasterDataService.getIdentificationTypes()
@@ -359,14 +347,6 @@ export class AppointmentComponent implements OnInit {
 						number: Number(this.data.appointmentData.patient.identificationNumber),
 						type: identificationType.description
 					}
-				}
-			});
-
-		this.patientService.getPatientPhoto(this.data.appointmentData.patient.id)
-			.subscribe((personPhotoDto: PersonPhotoDto) => {
-				this.personPhoto = personPhotoDto;
-				if (personPhotoDto?.imageData) {
-					this.decodedPhoto$ = this.imageDecoderService.decode(personPhotoDto.imageData);
 				}
 			});
 
@@ -400,13 +380,13 @@ export class AppointmentComponent implements OnInit {
 			});
 	}
 
-	initializeFormDate(){
+	initializeFormDate() {
 		const date = new Date(this.appointment.date)
 		date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
 		this.dateAppointment = dateToDateDto(date)
-		if(this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year && this.dateAppointment.day > this.today.day){
+		if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year && this.dateAppointment.day > this.today.day) {
 			this.dateAppointment.day = this.today.day;
-		}else{
+		} else {
 			this.calculateSetAppointmentDay();
 		}
 		this.formDate.controls.day.setValue(this.selectedDate.getUTCDate());
@@ -417,7 +397,7 @@ export class AppointmentComponent implements OnInit {
 
 	private pushPatientVirtualAttentionOption = () => {
 		this.modalitys.push(MODALITYS_TYPES[1]);
-		
+
 		if (!this.HABILITAR_TELEMEDICINA) {
 			this.formDate.controls.modality.setValue(MODALITYS_TYPES[1]);
 			this.formDate.controls.modality.disable();
@@ -469,17 +449,17 @@ export class AppointmentComponent implements OnInit {
 		this.dateFormToggle();
 	}
 
-	isToday():boolean{
-		return (this.today.year === this.dateAppointment.year && this.today.month === this.dateAppointment.month && this.today.day === this.dateAppointment.day )
+	isToday(): boolean {
+		return (this.today.year === this.dateAppointment.year && this.today.month === this.dateAppointment.month && this.today.day === this.dateAppointment.day)
 	}
 
 	selectDate(dateType: DATESTYPES) {
-		switch (dateType){
-			case DATESTYPES.DAY :
+		switch (dateType) {
+			case DATESTYPES.DAY:
 				this.dateAppointment.day = this.formDate.controls.day.value;
 				this.loadAppointmentsHours(this.dateAppointment);
 				break;
-			case DATESTYPES.MONTH :
+			case DATESTYPES.MONTH:
 				this.dateAppointment.month = this.formDate.controls.month.value;
 				this.calculateSetAppointmentDay();
 				this.loadAvailableDays(this.dateAppointment);
@@ -487,13 +467,13 @@ export class AppointmentComponent implements OnInit {
 				this.formDate.controls.day.setValue(null);
 				this.formDate.controls.hour.setValue(null);
 				break;
-			case DATESTYPES.YEAR : 
+			case DATESTYPES.YEAR:
 				this.dateAppointment.year = this.formDate.controls.year.value;
 				this.startAgenda.year = this.dateAppointment.year;
 				const now = dateToDateDto(new Date());
-				if(now.year === this.dateAppointment.year){
+				if (now.year === this.dateAppointment.year) {
 					this.dateAppointment.month = now.month;
-				}else{
+				} else {
 					this.dateAppointment.month = 1;
 				}
 				this.setAvailableMonths();
@@ -511,7 +491,7 @@ export class AppointmentComponent implements OnInit {
 			|| (this.appointment.recurringTypeDto.id == RECURRING_APPOINTMENT_OPTIONS.NO_REPEAT
 				&& !this.appointment.parentAppointmentId
 				|| this.parentAppointment?.recurringTypeDto.id == RECURRING_APPOINTMENT_OPTIONS.CUSTOM)
-			) {
+		) {
 			this.dialog.open(RecurringCustomizePopupComponent, {
 				disableClose: true,
 				width: '35%',
@@ -524,71 +504,71 @@ export class AppointmentComponent implements OnInit {
 					this.customRecurringAppointmentDto = data
 
 					if (!this.customRecurringAppointmentDto)
-						this.formDate.controls.recurringType.setErrors({invalid: 'Faltan completar datos de Personalizar'});
+						this.formDate.controls.recurringType.setErrors({ invalid: 'Faltan completar datos de Personalizar' });
 					else
 						this.formDate.controls.recurringType.setErrors(null);
 				});
 		}
 	}
 
-	calculateSetAppointmentDay(){
-		if(this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < this.today.day)){
+	calculateSetAppointmentDay() {
+		if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < this.today.day)) {
 			this.dateAppointment.day = this.startAgenda.day;
-		} else if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && this.startAgenda.day < this.today.day){
+		} else if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && this.startAgenda.day < this.today.day) {
 			this.dateAppointment.day = this.today.day;
-		}else{
-			if(this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year){
+		} else {
+			if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year) {
 				this.dateAppointment.day = this.today.day;
-			}else{
+			} else {
 				this.dateAppointment.day = 1;
 			}
 		}
 	}
 
-	setAvailableDays(dates: DateDto[], isInitial?:boolean) {
+	setAvailableDays(dates: DateDto[], isInitial?: boolean) {
 		this.availableDays = [];
 		dates.forEach(element => {
 			if (!this.availableDays.includes(element.day))
 				this.availableDays.push(element.day);
 		});
-		if(isInitial && !this.availableDays.includes(this.selectedDate.getUTCDate())){
+		if (isInitial && !this.availableDays.includes(this.selectedDate.getUTCDate())) {
 			this.availableDays.push(this.selectedDate.getUTCDate());
 		}
 		this.availableDays.sort((a, b) => a - b);
 	}
 
-	setAvailableMonths(){
+	setAvailableMonths() {
 		this.availableMonths = MONTHS.filter(month => month >= this.today.month);
 	}
 
-	setAvailableYears(){
-		 for (var i = this.startAgenda.year; i <= this.endAgenda; i++) {
+	setAvailableYears() {
+		for (var i = this.startAgenda.year; i <= this.endAgenda; i++) {
 			this.availableYears.push(i);
-	  	 }
+		}
 	}
 
-	setModalityAndValidator(change:boolean){
+	setModalityAndValidator(change: boolean) {
 		switch (this.formDate.controls.modality.value) {
-			case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION : 
+			case EAppointmentModality.PATIENT_VIRTUAL_ATTENTION:
 				updateControlValidator(this.formDate, 'email', [Validators.required, Validators.email]);
 				this.viewInputEmail = true;
-				if(this.appointment.patientEmail){
+				if (this.appointment.patientEmail) {
 					this.formDate.controls.email.setValue(this.appointment.patientEmail);
 				}
 				break;
-			case EAppointmentModality.ON_SITE_ATTENTION : 
+			case EAppointmentModality.ON_SITE_ATTENTION:
 				updateControlValidator(this.formDate, 'email', []);
 				this.formDate.controls.email.setValue(null);
-				this.viewInputEmail = false;		
+				this.viewInputEmail = false;
 				break;
 		}
-		if(change){
+		if (change) {
 			this.selectDate(DATESTYPES.MONTH);
 		}
 	}
 
-	setDefaultAppointmentHour(){
-		let appointmentHour: TimeDto = dateToTimeDto(new Date()) ;
+	setDefaultAppointmentHour() {
+		let appointmentHour: TimeDto = dateToTimeDto(new Date());
 		let partes = this.appointment.hour.split(':');
 		appointmentHour.hours = parseInt(partes[0]);
 		appointmentHour.minutes = parseInt(partes[1]);
@@ -598,40 +578,41 @@ export class AppointmentComponent implements OnInit {
 		this.formDate.controls.hour.setValue(appointmentHour);
 	}
 
-	loadAppointmentsHours(date: DateDto,isInitial?:boolean) {
+	loadAppointmentsHours(date: DateDto, isInitial?: boolean) {
 		this.possibleScheduleHours = [];
 		this.selectedOpeningHourId = null;
 		const searchCriteria = this.prepareSearchCriteria(date);
-	 	this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id,searchCriteria).subscribe(( diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) => {
-			if(diaryOpeningHours.length){
+		this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id, searchCriteria).subscribe((diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) => {
+			if (diaryOpeningHours.length) {
 				this.filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours)
-				if(isInitial){
+				if (isInitial) {
 					this.setDefaultAppointmentHour();
-				}}
+				}
+			}
 		})
 	}
 
-	filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]){
-		diaryOpeningHours.forEach(times =>{
-			times.freeTimes.forEach(time =>{
-				if(this.isToday()){
+	filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) {
+		diaryOpeningHours.forEach(times => {
+			times.freeTimes.forEach(time => {
+				if (this.isToday()) {
 					const now = new Date();
-					if(time.hours > now.getHours() || (time.hours === now.getHours() && time.minutes > now.getMinutes())){
+					if (time.hours > now.getHours() || (time.hours === now.getHours() && time.minutes > now.getMinutes())) {
 						this.possibleScheduleHours.push(time);
 					}
-				}else{
+				} else {
 					this.possibleScheduleHours.push(time);
 				}
 			})
 		})
 		this.diaryOpeningHoursFreeTimes = diaryOpeningHours;
 	}
-	
-	getSelectedOpeningHourId(): number{
+
+	getSelectedOpeningHourId(): number {
 		let timeSelected = this.formDate.controls.hour.value;
 		let openingHoursId = null;
-		this.diaryOpeningHoursFreeTimes.forEach(times =>{
-			if(times.freeTimes.find(t => t = timeSelected)){
+		this.diaryOpeningHoursFreeTimes.forEach(times => {
+			if (times.freeTimes.find(t => t = timeSelected)) {
 				openingHoursId = times.openingHoursId
 			}
 		})
@@ -647,12 +628,12 @@ export class AppointmentComponent implements OnInit {
 		return searchCriteria;
 	}
 
-	loadAvailableDays(date: DateDto, isInitial?:boolean) {
+	loadAvailableDays(date: DateDto, isInitial?: boolean) {
 		const searchCriteria = this.prepareSearchCriteria(date);
-		this.diaryService.getMonthlyFreeAppointmentDates(this.data.agenda.id, searchCriteria).subscribe((dates : DateDto[]) => {
-			this.setAvailableDays(dates,isInitial);
-		},error => {
-			this.availableDays= [];
+		this.diaryService.getMonthlyFreeAppointmentDates(this.data.agenda.id, searchCriteria).subscribe((dates: DateDto[]) => {
+			this.setAvailableDays(dates, isInitial);
+		}, error => {
+			this.availableDays = [];
 			processErrors(error, (msg) => this.snackBarService.showError(msg));
 		})
 	}
@@ -716,13 +697,13 @@ export class AppointmentComponent implements OnInit {
 					// Hour or minute changed and have childs or is recurring appointment
 					if (this.isHourOrMinuteChanged(previousDate, dateTimeDtoToDate(dateNow))
 						&& (this.appointment.hasAppointmentChilds
-						|| this.appointment.parentAppointmentId)) {
+							|| this.appointment.parentAppointmentId)) {
 						this.openRecurringCancelPopUp('turnos.new-appointment.EDIT')
 							.afterClosed()
 							.subscribe((editOption: number) => {
 								if (editOption)
 									this.save(updateAppointmentDate.openingHoursId, updateAppointmentDate, previousDate, dateTimeDtoToDate(dateNow), editOption)
-								}
+							}
 							);
 					} else {
 						if (this.appointment.parentAppointmentId || this.appointment.hasAppointmentChilds)
@@ -754,7 +735,7 @@ export class AppointmentComponent implements OnInit {
 
 	private isHourOrMinuteChanged(previousDate: Date, newDate: Date) {
 		return (previousDate.getHours() !== newDate.getHours()
-				|| previousDate.getMinutes() !== newDate.getMinutes());
+			|| previousDate.getMinutes() !== newDate.getMinutes());
 	}
 
 	private openRecurringCancelPopUp(translate: string): MatDialogRef<RecurringCancelPopupComponent> {
@@ -767,7 +748,7 @@ export class AppointmentComponent implements OnInit {
 
 	private updateDate(updateAppointmentDate: UpdateAppointmentDateDto, previousDate: Date, newDate: Date) {
 		this.appointmentFacade.updateDate(updateAppointmentDate).subscribe(() => {
-			const date = momentFormat(moment(previousDate), DateFormat.API_DATE);
+			const date = toApiFormat(previousDate);
 			this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
 				.subscribe((appointments: AppointmentListDto[]) => {
 					this.appointmentFacade.loadAppointments();
@@ -784,7 +765,7 @@ export class AppointmentComponent implements OnInit {
 					}
 					this.snackBarService.showSuccess('turnos.appointment.date.UPDATE_SUCCESS');
 					this.data.appointmentData.date = this.selectedDate;
-					this.selectedModality = this.modalitys.find( m => m.value === updateAppointmentDate.modality);
+					this.selectedModality = this.modalitys.find(m => m.value === updateAppointmentDate.modality);
 					this.selectedDate = newDate;
 					this.data.appointmentData.date = newDate;
 					const appointmentUpdate = appointments.find(a => a.id = this.data.appointmentData.appointmentId);
@@ -806,22 +787,22 @@ export class AppointmentComponent implements OnInit {
 		if (appointment.recurringTypeDto.id === RECURRING_APPOINTMENT_OPTIONS.EVERY_WEEK
 			|| this.formDate.get('recurringType').value === RECURRING_APPOINTMENT_OPTIONS.EVERY_WEEK) {
 			this.recurringTypeSelected.value = this.everyWeekOption;
-			this.recurringTypeSelected.value += ` el ${new Date(this.data.appointmentData.date).toLocaleString('es-AR', {weekday:'long'})}`;
+			this.recurringTypeSelected.value += ` el ${new Date(this.data.appointmentData.date).toLocaleString('es-AR', { weekday: 'long' })}`;
 		}
 	}
 
 	private changeRecurringTypeSelector(date: Date) {
 		if (this.isHabilitarRecurrencia) {
 			this.recurringTypes[1].value = this.everyWeekOption;
-			this.recurringTypes[1].value += ` el ${date.toLocaleString('es-AR', {weekday:'long'})}`;
+			this.recurringTypes[1].value += ` el ${date.toLocaleString('es-AR', { weekday: 'long' })}`;
 		}
 	}
 
 	private save(openingHoursId: number,
-				updateAppointmentDate: UpdateAppointmentDateDto,
-				previousDate: Date,
-				newDate: Date,
-				editOption?: number) {
+		updateAppointmentDate: UpdateAppointmentDateDto,
+		previousDate: Date,
+		newDate: Date,
+		editOption?: number) {
 		this.isSaveLoading = true;
 		this.getRecurringSave(openingHoursId, editOption)
 			.pipe(
@@ -831,7 +812,7 @@ export class AppointmentComponent implements OnInit {
 				this.setCustomAppointment();
 				this.updateDate(updateAppointmentDate, previousDate, newDate);
 			}, (error: ApiErrorMessageDto) => {
-				this.formDate.controls.recurringType.setErrors({invalid: error.text});
+				this.formDate.controls.recurringType.setErrors({ invalid: error.text });
 			})
 	}
 
@@ -1012,7 +993,7 @@ export class AppointmentComponent implements OnInit {
 			});
 			dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 				if (canceledAppointment) {
-					const date = momentFormat(moment(this.data.appointmentData.date), DateFormat.API_DATE);
+					const date = toApiFormat(this.data.appointmentData.date);
 					this.appointmentService.getList([this.data.agenda.id], this.data.agenda.healthcareProfessionalId, date, date)
 						.subscribe((appointments: AppointmentListDto[]) => {
 							const appointmentsInDate = this.generateEventsFromAppointments(appointments)
@@ -1037,10 +1018,10 @@ export class AppointmentComponent implements OnInit {
 		if (this.isHabilitarRecurrencia) {
 			if (this.appointment?.hasAppointmentChilds || this.appointment?.parentAppointmentId) {
 				this.openRecurringCancelPopUp('turnos.cancel.CANCEL')
-				.afterClosed()
-				.subscribe((value: number) => {
-					this.cancelOptions(value);
-				})
+					.afterClosed()
+					.subscribe((value: number) => {
+						this.cancelOptions(value);
+					})
 			} else {
 				this.cancelOptions(APPOINTMENT_CANCEL_OPTIONS.CURRENT_TURN);
 			}
@@ -1178,13 +1159,13 @@ export class AppointmentComponent implements OnInit {
 
 	callPatient() {
 		this.appointmentService.mqttCall(this.data.appointmentData.appointmentId)
-		.pipe(
-			catchError((error: ApiErrorMessageDto) => {
-                this.snackBarService.showError(error.text);
-                return EMPTY;
-            })
-		)
-		.subscribe();
+			.pipe(
+				catchError((error: ApiErrorMessageDto) => {
+					this.snackBarService.showError(error.text);
+					return EMPTY;
+				})
+			)
+			.subscribe();
 	}
 
 	hideFilters(): void {
@@ -1303,13 +1284,9 @@ export class AppointmentComponent implements OnInit {
 
 	private generateEventsFromAppointments(appointments: AppointmentListDto[]): CalendarEvent[] {
 		return appointments.map(appointment => {
-			const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-			let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-			if (from > to) {
-				to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
-			}
-			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
-			return calendarEvent;
+			const from = getAppointmentStart(appointment.hour);
+			const to = getAppointmentEnd(appointment.hour, this.data.agenda.appointmentDuration);
+			return toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment);
 		});
 	}
 
@@ -1372,9 +1349,9 @@ export interface PatientAppointmentInformation {
 	professionalPersonDto: ProfessionalPersonDto;
 }
 
-export enum DATESTYPES {DAY,MONTH,YEAR,MODALITY};
-
 interface Coverage {
 	description: string;
 	color: string
 }
+
+export enum DATESTYPES { DAY, MONTH, YEAR, MODALITY };

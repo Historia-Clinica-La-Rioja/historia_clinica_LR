@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DateFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
+import { DateFormat, dateISOParseDate, momentParseTime } from '@core/utils/moment.utils';
 import { CalendarEvent } from 'angular-calendar';
 import { toCalendarEvent } from '../utils/appointment.utils';
 import { CreateAppointmentDto, BasicPersonalDataDto, AppointmentShortSummaryDto, AppointmentListDto, HolidayDto, UpdateAppointmentDto } from '@api-rest/api-model';
@@ -179,7 +179,7 @@ export class EquipmentAppointmentsFacadeService {
 				to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
 			}
 			const viewName = this.getViewName(appointment.patient?.person);
-			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment, viewName);
+			const calendarEvent = toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment, viewName);
 			return calendarEvent;
 		});
 	}

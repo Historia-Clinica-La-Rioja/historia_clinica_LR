@@ -2,9 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AppointmentsService } from '@api-rest/services/appointments.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ContextService } from '@core/services/context.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto, PersonPhotoDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto, DiagnosticReportInfoDto, TranscribedServiceRequestSummaryDto, ApiErrorMessageDto } from '@api-rest/api-model.d';
+import { AppFeature, AppointmentDto, ERole, PatientMedicalCoverageDto, CompleteEquipmentDiaryDto, UpdateAppointmentDto, AppointmentListDto, DiagnosticReportInfoDto, ApiErrorMessageDto, TranscribedServiceRequestSummaryDto } from '@api-rest/api-model.d';
 import { VALIDATIONS, getError, hasError, processErrors, updateControlValidator } from '@core/utils/form.utils';
 import { MapperService } from '@core/services/mapper.service';
 import {
@@ -17,7 +16,6 @@ import {
 import {
 	catchError,
 	map,
-	switchMap,
 	take,
 } from 'rxjs/operators';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
@@ -26,19 +24,14 @@ import {
 	EMPTY,
 	Observable,
 	forkJoin,
-	of,
 } from 'rxjs';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
 import { PersonMasterDataService } from "@api-rest/services/person-master-data.service";
 import { SummaryCoverageInformation } from '@historia-clinica/modules/ambulatoria/components/medical-coverage-summary-view/medical-coverage-summary-view.component';
-import { PatientService } from '@api-rest/services/patient.service';
-import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { CalendarEvent } from 'angular-calendar';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
-import { DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
-import * as moment from 'moment';
-import { Color } from '@presentation/colored-label/colored-label.component';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { MedicalCoverageInfoService } from '@historia-clinica/modules/ambulatoria/services/medical-coverage-info.service';
 import { APPOINTMENT_STATES_ID, getAppointmentState, MAX_LENGTH_MOTIVE } from '@turnos/constants/appointment';
@@ -47,12 +40,13 @@ import { PatientAppointmentInformation } from '@turnos/dialogs/appointment/appoi
 import { EquipmentAppointmentsFacadeService } from '../../services/equipment-appointments-facade.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { CancelAppointmentComponent } from '@turnos/dialogs/cancel-appointment/cancel-appointment.component';
-import { getStudiesNames, toCalendarEvent } from '../../utils/appointment.utils';
+import { getAppointmentEnd, getAppointmentStart, getStudiesNames, toCalendarEvent } from '../../utils/appointment.utils';
 import { medicalOrderInfo } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { differenceInDays } from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 import { toStudyLabel } from '../../../image-network/utils/study.utils';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const BELL_LABEL = 'Llamar paciente'
 const ROLES_TO_CHANGE_STATE: ERole[] = [ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
@@ -68,21 +62,15 @@ const ORDER_EXPIRED_DAYS = 30;
 export class ImageNetworkAppointmentComponent implements OnInit {
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
 	readonly BELL_LABEL = BELL_LABEL;
-	readonly Color = Color;
 	getAppointmentState = getAppointmentState;
 	getError = getError;
 	hasError = hasError;
-	medicalCoverageId: number;
-
-	personPhoto: PersonPhotoDto;
-	decodedPhoto$: Observable<string>;
 
 	appointment: AppointmentDto;
 	appointments: CalendarEvent[];
 	selectedState: APPOINTMENT_STATES_ID;
 	formMotive: UntypedFormGroup;
 	formEdit: UntypedFormGroup;
-	institutionId = this.contextService.institutionId;
 	coverageText: string;
 	coverageNumber: any;
 	coverageCondition: string;
@@ -103,19 +91,11 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	absentMotive: string;
 	absentAppointment = false;
 
-	isDateFormVisible = false;
-	startAgenda = moment();
-	endAgenda = momentParseDate(this.data.agenda.endDate);
-	availableDays: number[] = [];
-	disableDays: Date[] = [];
-	openingDateForm = false;
-	possibleScheduleHours: Date[] = [];
 	selectedDate = new Date(this.data.appointmentData.date);
 
 	isMqttCallEnabled = false;
 	firstCoverage: number;
 
-	nameSelfDeterminationFF = false;
 	patientSummary: PatientSummary;
 	transcribedLabelOrder:string
 
@@ -129,7 +109,6 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly appointmentService: AppointmentsService,
 		private readonly snackBarService: SnackBarService,
-		private readonly contextService: ContextService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly equipmentAppointmensFacade: EquipmentAppointmentsFacadeService,
 		private readonly mapperService: MapperService,
@@ -137,15 +116,12 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly personMasterDataService: PersonMasterDataService,
-		private readonly patientService: PatientService,
-		private readonly imageDecoderService: ImageDecoderService,
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
 		private readonly patientNameService: PatientNameService
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
-		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => this.nameSelfDeterminationFF = isOn);
 	}
 
 	ngOnInit(): void {
@@ -171,12 +147,6 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			updateControlValidator(this.formEdit, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
 			updateControlValidator(this.formEdit, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		}
-
-		this.data.agenda.equipmentDiaryOpeningHours.forEach(DOH => {
-			let day = DOH.openingHours.dayWeekId;
-			if (!this.availableDays.includes(day))
-				this.availableDays.push(day);
-		});
 
 		this.appointmentService.getAppointmentEquipment(this.data.appointmentData.appointmentId)
 			.subscribe(appointment => {
@@ -228,8 +198,6 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 				}
 			});
 
-		this.decodedPhoto$ = this.patientService.getPatientPhoto(this.data.appointmentData.patient.id).pipe(
-			switchMap((personPhotoDto: PersonPhotoDto) => personPhotoDto?.imageData ? this.imageDecoderService.decode(personPhotoDto.imageData) : of('')))
 	}
 
 	private hasMedicalOrder(appointment: AppointmentDto): boolean {
@@ -437,7 +405,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		});
 		dialogRefCancelAppointment.afterClosed().subscribe(canceledAppointment => {
 			if (canceledAppointment) {
-				const date = momentFormat(moment(this.data.appointmentData.date), DateFormat.API_DATE);
+				const date = toApiFormat(this.data.appointmentData.date);
 				this.appointmentService.getList([this.data.agenda.id], this.data.agenda.equipmentId, date, date)
 					.subscribe((appointments: AppointmentListDto[]) => {
 						const appointmentsInDate = this.generateEventsFromAppointments(appointments)
@@ -667,13 +635,10 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	private generateEventsFromAppointments(appointments: AppointmentListDto[]): CalendarEvent[] {
 		return appointments.map(appointment => {
-			const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-			let to = momentParseTime(from).add(this.data.agenda.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-			if (from > to) {
-				to = momentParseTime(from).set({ hour: 23, minute: 59 }).format(DateFormat.HOUR_MINUTE);
-			}
-			const calendarEvent = toCalendarEvent(from, to, momentParseDate(appointment.date), appointment);
-			return calendarEvent;
+			const from = getAppointmentStart(appointment.hour);
+			const to = getAppointmentEnd(appointment.hour, this.data.agenda.appointmentDuration);
+			
+			return toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment);
 		});
 	}
 
