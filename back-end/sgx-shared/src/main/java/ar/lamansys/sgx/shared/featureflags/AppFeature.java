@@ -203,6 +203,9 @@ public enum AppFeature implements Feature {
 	
 	@Label("Permite la visualización de si un profesional cubre o no la obra social en turnos")
 	HABILITAR_VISTA_COBERTURA_TURNOS,
+	
+	@Label("Habilita el límite de 1 turno por profesional por persona en reserva online")
+	HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL,
 	;
 
 	public boolean isActive() {

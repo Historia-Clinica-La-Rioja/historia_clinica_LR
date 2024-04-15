@@ -78,6 +78,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_ANEXO_II_MENDOZA, false);
 		map.put(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO, false);
 		map.put(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS, false);
+		map.put(AppFeature.HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL, false);
 	}
 
 	@Override

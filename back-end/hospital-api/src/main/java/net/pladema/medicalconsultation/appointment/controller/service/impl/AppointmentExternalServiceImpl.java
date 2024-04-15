@@ -21,6 +21,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institution.Instituti
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceAppointmentStateDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.medicalconsultation.appointment.repository.entity.BookingPerson;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
@@ -87,12 +89,13 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final LocalDateMapper localDateMapper;
 	private final SharedPersonPort sharedPersonPort;
 	private final PersonService personService;
+	private final FeatureFlagsService featureFlagsService;
 
 	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService,
 										  CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService,
 										  CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService,
 										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper,
-										  SharedPersonPort sharedPersonPort, DiaryService diaryService, PersonService personService) {
+										  SharedPersonPort sharedPersonPort, DiaryService diaryService, PersonService personService, FeatureFlagsService featureFlagsService) {
 		this.appointmentService = appointmentService;
 		this.appointmentValidatorService = appointmentValidatorService;
 		this.createAppointmentService = createAppointmentService;
@@ -104,6 +107,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		this.sharedPersonPort = sharedPersonPort;
 		this.diaryService = diaryService;
 		this.personService = personService;
+		this.featureFlagsService = featureFlagsService;
 	}
 
 	@Override
@@ -182,14 +186,16 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	}
 
 	private void assertProfessionalNotAlreadyBooked(BookingPerson bookingPerson, BookingAppointmentDto bookingAppointmentDto) throws ProfessionalAlreadyBookedException {
-		Optional<CompletePersonNameBo> completePersonNameBo = personService.findByHealthcareProfessionalPersonDataByDiaryId(bookingAppointmentDto.getDiaryId());
-		if (completePersonNameBo.isPresent()) {
-			Collection<AppointmentBo> appointments = appointmentService.hasAppointment(
-					bookingPerson.getIdentificationNumber(),
-					completePersonNameBo.get().getHealthcareProfessionalId()
-			);
-			if ( ! appointments.isEmpty())
-				throw new ProfessionalAlreadyBookedException();
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL)) {
+			Optional<CompletePersonNameBo> completePersonNameBo = personService.findByHealthcareProfessionalPersonDataByDiaryId(bookingAppointmentDto.getDiaryId());
+			if (completePersonNameBo.isPresent()) {
+				Collection<AppointmentBo> appointments = appointmentService.hasAppointment(
+						bookingPerson.getIdentificationNumber(),
+						completePersonNameBo.get().getHealthcareProfessionalId()
+				);
+				if ( ! appointments.isEmpty())
+					throw new ProfessionalAlreadyBookedException();
+			}
 		}
 	}
 
