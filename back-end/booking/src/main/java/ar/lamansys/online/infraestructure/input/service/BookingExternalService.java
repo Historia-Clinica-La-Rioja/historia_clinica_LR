@@ -47,6 +47,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBooking
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -176,6 +178,26 @@ public class BookingExternalService implements SharedBookingPort {
 		Integer professionalId,
 		Integer clinicalSpecialtyId,
 		Integer practiceId
+	) {
+		var professionalAvailabilityBo = fetchAvailabilityByPracticeAndProfessional.run(
+				institutionId,
+				professionalId,
+				clinicalSpecialtyId,
+				practiceId
+		);
+		var result = buildProfessionalAvailabilityDto(professionalAvailabilityBo);
+		log.debug("Get availability by professionalId {} and practiceId{} => {}", professionalId, practiceId, result);
+		return result;
+	}
+
+	@Override
+	public ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(
+			Integer institutionId,
+			Integer professionalId,
+			Integer clinicalSpecialtyId,
+			Integer practiceId,
+			Integer medicalCoverageId,
+			String maxDate
 	) {
 		var professionalAvailabilityBo = fetchAvailabilityByPracticeAndProfessional.run(
 				institutionId,

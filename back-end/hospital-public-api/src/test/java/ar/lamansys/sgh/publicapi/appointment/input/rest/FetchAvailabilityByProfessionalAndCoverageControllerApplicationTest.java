@@ -13,20 +13,22 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import ar.lamansys.sgh.publicapi.TestUtils;
-import ar.lamansys.sgh.publicapi.appointment.application.FetchAvailabilityByProfessional;
+import ar.lamansys.sgh.publicapi.appointment.application.FetchAvailabilityByProfessionalAndCoverage;
 import ar.lamansys.sgh.publicapi.appointment.application.exception.AppointmentAvailabilityAccessDeniedException;
-import ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest.FetchAvailabilityByProfessionalController;
+import ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest.FetchAvailabilityByProfessionalAndCoverageController;
 import ar.lamansys.sgh.publicapi.appointment.infrastructure.input.service.AppointmentAvailabilityPublicApiPermissions;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingProfessionalDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 
 @ExtendWith(MockitoExtension.class)
-public class FetchAvailabilityByProfessionalControllerApplicationTest {
+public class FetchAvailabilityByProfessionalAndCoverageControllerApplicationTest {
+
 	private static final Integer INSTITUTION_ID = 1;
 	private static final Integer PROFESSIONAL_ID = 1;
 	private static final Integer CLINICAL_SPECIALTY_ID = 1;
 	private static final Integer PRACTICE_ID = 1;
+	private static final Integer COVERAGE_ID = 1;
 
 	@Mock
 	private AppointmentAvailabilityPublicApiPermissions appointmentAvailabilityPublicApiPermissions;
@@ -34,24 +36,26 @@ public class FetchAvailabilityByProfessionalControllerApplicationTest {
 	@Mock
 	private SharedBookingPort sharedBookingPort;
 
-	private FetchAvailabilityByProfessionalController fetchAvailabilityByProfessionalController;
+	private FetchAvailabilityByProfessionalAndCoverageController fetchAvailabilityByProfessionalAndCoverageController;
 
 
 	@BeforeEach
 	public void setup() {
-		FetchAvailabilityByProfessional fetchAvailabilityByProfessional = new FetchAvailabilityByProfessional(sharedBookingPort,
-				appointmentAvailabilityPublicApiPermissions);
-		this.fetchAvailabilityByProfessionalController = new FetchAvailabilityByProfessionalController(fetchAvailabilityByProfessional);
+		FetchAvailabilityByProfessionalAndCoverage fetchAvailabilityByProfessionalAndCoverage =
+				new FetchAvailabilityByProfessionalAndCoverage(sharedBookingPort, appointmentAvailabilityPublicApiPermissions);
+		this.fetchAvailabilityByProfessionalAndCoverageController = new FetchAvailabilityByProfessionalAndCoverageController(fetchAvailabilityByProfessionalAndCoverage);
 	}
 
 	@Test
 	void failFetchFetchAvailabilityByProfessionalAccessDeniedException() {
 		allowAccessPermission(false);
 		TestUtils.shouldThrow(AppointmentAvailabilityAccessDeniedException.class,
-				() -> fetchAvailabilityByProfessionalController.getProfessionalAvailability(INSTITUTION_ID,
+				() -> fetchAvailabilityByProfessionalAndCoverageController.getProfessionalAvailability(INSTITUTION_ID,
 						PROFESSIONAL_ID,
 						CLINICAL_SPECIALTY_ID,
-						PRACTICE_ID
+						PRACTICE_ID,
+						COVERAGE_ID,
+						"2024-12-12"
 				));
 	}
 
@@ -63,11 +67,13 @@ public class FetchAvailabilityByProfessionalControllerApplicationTest {
 
 	private void assertAvailability() {
 		mockSomeValidEmptyAvailability();
-		var response = fetchAvailabilityByProfessionalController.getProfessionalAvailability(
+		var response = fetchAvailabilityByProfessionalAndCoverageController.getProfessionalAvailability(
 				INSTITUTION_ID,
 				PROFESSIONAL_ID,
 				CLINICAL_SPECIALTY_ID,
-				PRACTICE_ID
+				PRACTICE_ID,
+				COVERAGE_ID,
+				"2024-12-12"
 		);
 
 		Assertions.assertTrue(response.hasBody());
@@ -86,7 +92,9 @@ public class FetchAvailabilityByProfessionalControllerApplicationTest {
 		when(sharedBookingPort.fetchAvailabilityByPracticeAndProfessional(INSTITUTION_ID,
 				PROFESSIONAL_ID,
 				CLINICAL_SPECIALTY_ID,
-				PRACTICE_ID
+				PRACTICE_ID,
+				COVERAGE_ID,
+				"2024-12-12"
 		)).thenReturn(mockedEmptyAvailability);
 	}
 

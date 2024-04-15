@@ -32,6 +32,15 @@ public interface SharedBookingPort {
 			Integer practiceId
 	);
 
+	ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(
+			Integer institutionId,
+			Integer professionalId,
+			Integer clinicalSpecialtyId,
+			Integer practiceId,
+			Integer coverageId,
+			String maxDate
+	);
+
 	List<ProfessionalAvailabilityDto> fetchAvailabilityByPractice(Integer institutionId,  Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId);
 
 }
