@@ -125,7 +125,8 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		if (row.getDocumentTypeId().equals(EDocumentType.OUTPATIENT.getId())) return new CHOutpatientBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.ODONTOLOGY.getId())) return new CHOdontologyBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.COUNTER_REFERENCE.getId())) return new CHCounterReferenceBo(row, encounterType, documentType);
-		if (row.getDocumentTypeId().equals(EDocumentType.RECIPE.getId())) return new CHMedicationRequestBo(row, encounterType, documentType);
+		if (row.getDocumentTypeId().equals(EDocumentType.RECIPE.getId()) || row.getDocumentTypeId().equals(EDocumentType.DIGITAL_RECIPE.getId()))
+			return new CHMedicationRequestBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.NURSING.getId())) return new CHNursingConsultationBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.ANAMNESIS.getId())) return new CHAnamnesisBo(row, encounterType, documentType);
 		if (row.getDocumentTypeId().equals(EDocumentType.EVALUATION_NOTE.getId()) ||
