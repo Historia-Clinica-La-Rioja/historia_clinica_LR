@@ -13,8 +13,6 @@ import {
 	HolidayDto,
 } from '@api-rest/api-model';
 import {
-	momentParseTime,
-	DateFormat,
 	dateISOParseDate,
 } from '@core/utils/moment.utils';
 import { map, first } from 'rxjs/operators';
@@ -23,10 +21,10 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { AppointmentBlockMotivesFacadeService } from './appointment-block-motives-facade.service';
 import { HolidaysService } from '@api-rest/services/holidays.service';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { getAppointmentEnd, getAppointmentStart, toCalendarEvent } from '@turnos/utils/appointment.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
-import { toCalendarEvent } from '@turnos/utils/appointment.utils';
 
 const enum COLORES {
 	ASSIGNED = '#4187FF',
@@ -76,7 +74,7 @@ export class AppointmentsFacadeService {
 		private readonly appointmentBlockMotivesFacadeService: AppointmentBlockMotivesFacadeService,
 		private readonly holidayService: HolidaysService,
 		private readonly translateService: TranslateService,
-		private readonly datePipe: DatePipe
+		private readonly datePipe: DatePipe,
 
 	) {
 		this.appointments$ = this.appointmenstEmitter.asObservable();
@@ -115,14 +113,10 @@ export class AppointmentsFacadeService {
 					this.holidayService.getHolidays(this.startDate, this.endDate)]).subscribe((result) => {
 				const appointmentsCalendarEvents: CalendarEvent[] = result[0]
 					.map(appointment => {
-						const from = momentParseTime(appointment.hour).format(DateFormat.HOUR_MINUTE);
-						let to = momentParseTime(from).add(this.appointmentDuration, 'minutes').format(DateFormat.HOUR_MINUTE);
-						if (from > to) {
-							to = momentParseTime(from).set({hour: 23, minute: 59}).format(DateFormat.HOUR_MINUTE);
-						}
+						const from = getAppointmentStart(appointment.hour);
+						const to = getAppointmentEnd(appointment.hour, this.appointmentDuration);						
 						const viewName = this.getViewName(appointment.patient?.person);
-						const calendarEvent = toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
-						return calendarEvent;
+						return toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment, viewName, this.appointmentBlockMotivesFacadeService);
 					});
 				const holidaysCalendarEvents = result[1].map(holiday => {
 					return {
