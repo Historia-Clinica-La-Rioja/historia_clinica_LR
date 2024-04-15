@@ -44,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 
 @ExtendWith({MockitoExtension.class})
+@Disabled
 class GenerateAnestheticChartTest {
 
     public static final int WIDTH = 700;

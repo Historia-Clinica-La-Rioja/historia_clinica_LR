@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CancelPrescriptionLineState;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +68,9 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
     @MockBean
     private PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
+
+	@MockBean
+	private GeneratedPdfResponseService generatedPdfResponseService;
 
     @MockBean
     private PdfService pdfService;
