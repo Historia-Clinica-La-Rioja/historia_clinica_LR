@@ -256,7 +256,7 @@ public class GetAnthropometricGraphicData {
 			return EAnthropometricGraphicRange.WEIGHT_FOR_LENGTH;
 		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT))
 			return EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT;
-		if (personAge.getYears() > 4){
+		if (personAge.getYears() > 4 && !graphic.equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE)){
 			if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE)) return EAnthropometricGraphicRange.TEN_YEARS;
 			return EAnthropometricGraphicRange.NINETEEN_YEARS;
 		}
