@@ -138,14 +138,18 @@ public class GetAnthropometricGraphicData {
 		List<HCEClinicalObservationBo> heightEvolution = patientEvolution.stream().map(HCEAnthropometricDataBo::getHeight).sorted(Comparator.comparing(HCEClinicalObservationBo::getEffectiveTime)).collect(Collectors.toList());
 		List<HCEClinicalObservationBo> weightEvolution = patientEvolution.stream().map(HCEAnthropometricDataBo::getWeight).sorted(Comparator.comparing(HCEClinicalObservationBo::getEffectiveTime)).collect(Collectors.toList());
 		List<GraphicDatasetIntersectionBo> result = new ArrayList<>();
+		Integer minHeightValue = graphicBo.getRange().getValues().get(0);
+		Integer maxHeightValue = graphicBo.getRange().getValues().get(graphicBo.getRange().getValues().size() - 1);
 		for (int i = 0; i< heightEvolution.size(); i++){
 			int age = (int) ChronoUnit.YEARS.between(patient.getBirthDate(), heightEvolution.get(i).getEffectiveTime());
-			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge())
+			int heightValue = Integer.parseInt(heightEvolution.get(i).getValue());
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() && heightValue >= minHeightValue && heightValue <= maxHeightValue)
 				result.add(new GraphicDatasetIntersectionBo(heightEvolution.get(i).getValue(), weightEvolution.get(i).getValue()));
 		}
 		if (actualValue.getWeight() != null && actualValue.getHeight() != null){
 			int age = (int) ChronoUnit.YEARS.between(patient.getBirthDate(), LocalDate.now());
-			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge())
+			int heightValue = Integer.parseInt(actualValue.getHeight());
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() && heightValue >= minHeightValue && heightValue <= maxHeightValue)
 				result.add(new GraphicDatasetIntersectionBo(actualValue.getHeight(), actualValue.getWeight()));
 		}
 		return result;
@@ -178,7 +182,9 @@ public class GetAnthropometricGraphicData {
 		boolean inWeeks = graphicBo.getRange().equals(EAnthropometricGraphicRange.SIX_MONTHS);
 		List<Integer> rangeValues = graphicBo.getRange().getValues();
 		percentilesList.forEach(percentile -> {
-			int x = (int) (inWeeks ? percentile.getXValue() * WEEKS_IN_MONTH : percentile.getXValue());
+			if (percentile.getXValue() % 1 != 0)
+				return;
+			Integer x = (int) (inWeeks ? percentile.getXValue() * WEEKS_IN_MONTH : percentile.getXValue());
 			if (!rangeValues.contains(x))
 				return;
 			String xValue = String.valueOf(x);
@@ -211,6 +217,8 @@ public class GetAnthropometricGraphicData {
 		boolean inWeeks = graphicBo.getRange().equals(EAnthropometricGraphicRange.SIX_MONTHS);
 		List<Integer> rangeValues = graphicBo.getRange().getValues();
 		zScoreList.forEach(z -> {
+			if (z.getXValue() % 1 != 0)
+				return;
 			Integer x = (int) (inWeeks ? z.getXValue() * WEEKS_IN_MONTH : z.getXValue());
 			if (!rangeValues.contains(x))
 				return;
@@ -244,6 +252,10 @@ public class GetAnthropometricGraphicData {
 		PersonAgeDto personAge = basicPatientDto.getPerson().getPersonAge();
 		if (personAge == null || personAge.getYears() > 18)
 			return null;
+		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_LENGTH))
+			return EAnthropometricGraphicRange.WEIGHT_FOR_LENGTH;
+		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT))
+			return EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT;
 		if (personAge.getYears() > 4){
 			if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE)) return EAnthropometricGraphicRange.TEN_YEARS;
 			return EAnthropometricGraphicRange.NINETEEN_YEARS;
@@ -254,18 +266,18 @@ public class GetAnthropometricGraphicData {
 	}
 
 	private void setGraphicAxisLabels(AnthropometricGraphicDataBo anthropometricGraphicDataBo, AnthropometricGraphicBo graphicBo){
-		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT) || graphicBo.getGraphic().equals(EAnthropometricGraphic.WEIGHT_FOR_LENGTH))
+		EAnthropometricGraphic graphic = graphicBo.getGraphic();
+		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT) || graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_LENGTH))
 			anthropometricGraphicDataBo.setXAxisLabel("Talla (cm)");
 		else
 			anthropometricGraphicDataBo.setXAxisLabel(graphicBo.getRange().equals(EAnthropometricGraphicRange.SIX_MONTHS) ? "Edad (en semanas y meses cumplidos)" : "Edad (en meses y años cumplidos)");
-
-		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE))
+		if (graphic.equals(EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE))
 			anthropometricGraphicDataBo.setYAxisLabel("Talla (cm)");
-		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.WEIGHT_FOR_AGE))
-			anthropometricGraphicDataBo.setYAxisLabel("Peso(kg)");
-		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.BMI_FOR_AGE))
+		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE) || graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_LENGTH) || graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT))
+			anthropometricGraphicDataBo.setYAxisLabel("Peso (kg)");
+		if (graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
 			anthropometricGraphicDataBo.setYAxisLabel("IMC");
-		if (graphicBo.getGraphic().equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE))
+		if (graphic.equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE))
 			anthropometricGraphicDataBo.setYAxisLabel("Perímetro cefálico");
 	}
 
@@ -281,6 +293,9 @@ public class GetAnthropometricGraphicData {
 		}
 		if (graphicRange.equals(EAnthropometricGraphicRange.NINETEEN_YEARS) || graphicRange.equals(EAnthropometricGraphicRange.TEN_YEARS)) {
 			xAxisRange.forEach(x -> xAxisRangeLabels.add(getNineteenYearsLabel(x)));
+		}
+		if (graphicRange.equals(EAnthropometricGraphicRange.WEIGHT_FOR_LENGTH) || graphicRange.equals(EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT)){
+			xAxisRange.forEach(x -> xAxisRangeLabels.add(x % 5 == 0 ? x.toString() : ""));
 		}
 		return xAxisRangeLabels;
 	}
