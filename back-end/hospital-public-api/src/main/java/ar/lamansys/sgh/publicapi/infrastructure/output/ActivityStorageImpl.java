@@ -54,7 +54,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
-	private static final String JOIN_EMERGENCY_CARE = "LEFT JOIN {h-schema}emergency_care_evolution_note event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+	private static final String JOIN_EMERGENCY_CARE = "LEFT JOIN {h-schema}emergency_care_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 
 	private static final Integer HOSPITALIZATION = 0;
 	private static final Integer OUTPATIENT_CONSULTATION = 1;
@@ -62,12 +62,14 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private static final Integer EMERGENCY_CARE = 4;
 
 	private static final String JOIN_ANY_EVENT = "LEFT JOIN {h-schema}internment_episode ie ON ie.id = va.encounter_id AND va.scope_id =" + HOSPITALIZATION + " " +
-			"LEFT JOIN {h-schema}outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
-			"LEFT JOIN {h-schema}odontology_consultation odc ON odc.id = va.encounter_id and va.scope_id = " + ODONTOLOGY + " " +
-			"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (" +
+			"LEFT JOIN {h-schema} outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
+			"LEFT JOIN {h-schema} odontology_consultation odc ON odc.id = va.encounter_id and va.scope_id = " + ODONTOLOGY + " " +
+			"LEFT JOIN {h-schema} emergency_care_episode ece ON ece.id = va.encounter_id and va.scope_id = " + EMERGENCY_CARE + " " +
+			"LEFT JOIN {h-schema} patient_medical_coverage pmc ON (" +
 			"(ie.id IS NOT NULL AND pmc.id = ie.patient_medical_coverage_id) " +
 			"OR (oc.id IS NOT NULL AND pmc.id = oc.patient_medical_coverage_id) " +
-			"OR (odc.id  IS NOT NULL AND pmc.id = odc.patient_medical_coverage_id)" +
+			"OR (odc.id IS NOT NULL AND pmc.id = odc.patient_medical_coverage_id) " +
+			"OR (ece.id IS NOT NULL AND pmc.id = ece.patient_medical_coverage_id) " +
 			")";
 
 	private static final String SQL_STRING =
