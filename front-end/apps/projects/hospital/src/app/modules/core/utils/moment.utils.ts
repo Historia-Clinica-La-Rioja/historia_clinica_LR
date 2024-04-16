@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { DEFAULT_LANG } from '../../../app.component';
 import { DateDto } from '@api-rest/api-model';
-import { isAfter, isSameDay, parseISO } from 'date-fns';
+import { isAfter, isSameDay, isWithinInterval, parseISO } from 'date-fns';
 import { addDays, eachDayOfInterval, parse, set, startOfWeek } from 'date-fns';
 
 moment.locale(DEFAULT_LANG);
@@ -156,4 +156,22 @@ export const momentToDateDto = (momentDate: Moment): DateDto => {
 
 export const isSameOrAfter = (date: Date, dateToCompare): boolean => {
 	return isSameDay(date, dateToCompare) || isAfter(date, dateToCompare);
+}
+
+type Inclusivity = "()" | "[)" | "(]" | "[]";
+
+export const isBetweenDates = (date: Date, start: Date, end: Date, inclusivity?: Inclusivity): boolean => {
+	if (!inclusivity)
+		return isWithinInterval(date, { start, end });
+
+	let adjustedStartDate = start;
+	let adjustedEndDate = end;
+
+	if (inclusivity[0] === '(')
+		adjustedStartDate = new Date(start.getTime() + 1);
+
+	if (inclusivity[1] === ')')
+		adjustedEndDate = new Date(end.getTime() - 1);
+
+	return isWithinInterval(date, { start: adjustedStartDate, end: adjustedEndDate });
 }
