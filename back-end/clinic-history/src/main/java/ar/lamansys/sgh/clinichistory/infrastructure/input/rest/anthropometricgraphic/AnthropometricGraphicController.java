@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.anthropometricgr
 
 import ar.lamansys.sgh.clinichistory.application.canshowanthropometricgraphic.CanShowAnthropometricGraphic;
 import ar.lamansys.sgh.clinichistory.application.getanthropometricgraphicdata.GetAnthropometricGraphicData;
+import ar.lamansys.sgh.clinichistory.application.getanthropometricgraphicoptions.GetAnthropometricGraphicOptions;
 import ar.lamansys.sgh.clinichistory.application.getavailableanthropometricgraphictypes.GetAvailableAnthropometricGraphicTypes;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.AnthropometricGraphicDataBo;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.AnthropometricGraphicEnablementBo;
@@ -40,6 +41,7 @@ public class AnthropometricGraphicController {
 	private final GetAnthropometricGraphicData getAnthropometricGraphicData;
 	private final AnthropometricGraphicMapper anthropometricGraphicMapper;
 	private final ObjectMapper jackson;
+	private final GetAnthropometricGraphicOptions getAnthropometricGraphicOptions;
 
 	@GetMapping("/patient/{patientId}/can-show-graphic")
 	@ResponseStatus(HttpStatus.OK)
@@ -86,9 +88,9 @@ public class AnthropometricGraphicController {
 
 	@GetMapping("/chart-options")
 	@ResponseStatus(HttpStatus.OK)
-	public List<EAnthropometricGraphicOption> getGraphicOptions(){
-		log.debug("Get anthropometric graphics options");
-		List<EAnthropometricGraphicOption> result = EAnthropometricGraphicOption.getAll();
+	public List<EAnthropometricGraphicOption> getGraphicOptions(@RequestParam("patientId") Integer patientId){
+		log.debug("Get anthropometric graphics options for patient with id {}", patientId);
+		List<EAnthropometricGraphicOption> result = getAnthropometricGraphicOptions.run(patientId);
 		log.debug("Output -> result {}", result);
 		return result;
 	}
