@@ -340,6 +340,7 @@ export interface AppointmentDto extends CreateAppointmentDto {
     protected: boolean;
     recurringTypeDto: RecurringTypeDto;
     stateChangeReason?: string;
+    transcribedOrderData?: TranscribedServiceRequestSummaryDto;
 }
 
 export interface AppointmentEquipmentShortSummaryDto {
@@ -1030,7 +1031,6 @@ export interface CreateAppointmentDto {
     phoneNumber?: string;
     phonePrefix?: string;
     referenceId?: number;
-    transcribedOrderData?: TranscribedServiceRequestSummaryDto;
 }
 
 export interface CreateCustomAppointmentDto {

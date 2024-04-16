@@ -1,14 +1,15 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
 
-import javax.annotation.Nullable;
 import ar.lamansys.refcounterref.domain.enums.EReferenceClosureType;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedServiceRequestSummaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
 
 @Getter
@@ -51,4 +52,7 @@ public class AppointmentDto extends CreateAppointmentDto {
 
 	@Nullable
 	private Integer parentAppointmentId;
+
+	@Nullable
+	private TranscribedServiceRequestSummaryDto transcribedOrderData;
 }
