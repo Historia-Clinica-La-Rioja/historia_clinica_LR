@@ -1,0 +1,279 @@
+<div class="container">
+    <form (ngSubmit)="submitForm()" #form="ngForm">
+
+        <div class="box">
+            <h2 class="title1">Prueba corta de desempeño fisico</h2>
+
+            <div class="tipos">
+                <h3>ANTES DE EMPEZAR</h3>
+                <div class="intro">
+                    Para la correcta realización de esta prueba es necesario contar con los siguientes elementos:
+                    <div class="intro-requeriments">
+                        <p>- Silla sin descansa brazo y con respaldo recto.</p>
+                        <p>- Distancia de 4 metros delimitada, puede encontrarse señalada con una cinta en el suelo.</p>
+                        <p>- Cronómetro o teléfono celular para llevar registro del tiempo en segundos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="requeriment">
+                Se recomienda posicionarse al lado del paciente al momento de comenzar cada una de las pruebas para
+                evitar
+                posibles caídas durante su ejecución.
+            </div>
+
+            <!-- PRIMERA SECCION -->
+
+            <h3 class="title-test">PRUEBA DE BALANCE</h3>
+
+            <!-- PRIMERA CONSULTA -->
+
+            <div>
+
+                <h3 class="title-consignas">A. Pararse con los pies uno al lado del otro.</h3>
+
+            </div>
+            <div class="slogans">
+
+                <img class="icon" src="assets/icons/icon-06.png" alt="icon1">
+
+                ¿Mantuvo la posición al menos por 10 segundos?
+                Si el participante no logró completarlo, finaliza la prueba de balance.
+
+            </div>
+            <mat-radio-group id="72" name="balance1" [(ngModel)]="selectedoptionA" (change)="calculePoints()">
+                <div class="radio">
+                    <mat-radio-button value="1A" color="primary">Si</mat-radio-button>
+                    <mat-radio-button value="2A" color="primary">No</mat-radio-button>
+                    <mat-radio-button value="3A" color="primary">Se rehúsa</mat-radio-button>
+                </div>
+            </mat-radio-group>
+
+
+            <!-- CONTADOR DESDE INPUT-DESEMPENO.COMPONENT -->
+
+            <app-input-desempeno *ngIf="!isCounterDisabled()" class="counter" [(ngModel)]="selectedoptionA"
+                [(counterValue)]="counterA1" (optionChange)="onInputDesempenoChange($event, counterA1, 'A')"
+                (counterChange)="onInputDesempenoChange(selectedoptionA, $event, 'A')"></app-input-desempeno>
+
+            <!-- SEGUNDA CONSULTA -->
+
+            <div>
+
+                <h3 class="title-consignas">B. Pararse en posición semi-tándem.</h3>
+            </div>
+            <div class="slogans">
+
+
+                <img class="icon" [src]="iconImageSource" alt="iconActive">
+
+                ¿Mantuvo la posición al menos por 10 segundos?
+                Si el participante no logró completarlo, finaliza la prueba de balance.
+
+            </div>
+
+            <mat-radio-group id="74" name="balance2" [disabled]="isSubmitDisabled()" [(ngModel)]="selectedoptionB"
+                (change)="calculePoints()">
+                <div class="radio">
+                    <mat-radio-button value="1B" color="primary">Si</mat-radio-button>
+                    <mat-radio-button value="2B" color="primary">No</mat-radio-button>
+                    <mat-radio-button value="3B" color="primary">Se rehúsa</mat-radio-button>
+                </div>
+            </mat-radio-group>
+
+
+            <div class="counter" id="CT2" *ngIf="!isCounterDisabled2()">
+                <label for="75">Tiempo en segundos:</label>
+                <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" value="B2" min="0" class="chart" />
+            </div>
+
+            <!-- TERCERA CONSULTA -->
+
+            <div>
+                <h3 class="title-consignas">C. Pararse en posición tándem</h3>
+
+            </div>
+
+            <div class="slogans">
+
+                <img class="icon" [src]="iconImageSource2" alt="iconActive">
+
+                Si el participante no se rehusa a realizar la prueba,
+                complete la siguiente casilla con el tiempo que obtuvo la medición
+
+            </div>
+
+
+            <div class="counter2" id="CT3" name="counter3"
+                *ngIf="!isCounterDisabled3() && !isCounterDisabledCounterC()">
+                <label for="number">Tiempo en segundos:</label>
+                <input id="77" type="number" [(ngModel)]="counterB2" value="4C" (change)="calculePoints()" class="chart"
+                    name="Num" min="0" value="B2" />(Máx.15)
+
+            </div>
+
+            <mat-radio-group id="76" name="balance3" [disabled]="isSubmitDisabled3()" [(ngModel)]="selectedoptionB2"
+                (change)="calculePoints()">
+                <div class="radio2">
+                    <mat-radio-button value="2C" color="primary">Accede a la prueba</mat-radio-button>
+                    <mat-radio-button value="1C" color="primary">Se rehúsa</mat-radio-button>
+                </div>
+            </mat-radio-group>
+
+
+            <!-- SEGUNDA SECCION -->
+
+            <div>
+                <h3 class="title-test">VELOCIDAD DE MARCHA - RECORRIDO DE 4 METROS</h3>
+            </div>
+
+            <div>
+                <h3 class="title-consignas">A. Primera medición.</h3>
+
+            </div>
+
+
+            <!-- CUARTA CONSULTA -->
+
+            <div class="slogans2">
+
+                Tiempo requerido para recorrer la distancia.
+                <br>Si el participante no logró completarlo, finaliza la prueba de velocidad de marcha.<br />
+
+            </div>
+
+            <div class="counter3" id="CT4" name="counter4" *ngIf="!isCounterDisabled4()">
+                <label for="number">Tiempo en segundos:</label>
+                <input type="number" [(ngModel)]="counterC2" (change)="calculePoints()" class="chart" name="Num" id="80"
+                    value="D4" min="0" />(Máx.15)
+            </div>
+
+            <mat-radio-group id="79" name="marcha1" [(ngModel)]="selectedoptionC">
+                <div class="radio3">
+                    <mat-radio-button value="D1" color="primary">Accede a la prueba</mat-radio-button>
+                    <mat-radio-button value="D3" color="primary">Se rehúsa</mat-radio-button>
+                </div>
+            </mat-radio-group>
+
+            <!-- QUINTA CONSULTA -->
+
+            <div>
+                <h3 class="title-consignas">B. Segunda medición.</h3>
+
+            </div>
+
+
+            <div class="slogans2">
+
+                Tiempo requerido para recorrer la distancia.
+
+            </div>
+
+
+            <div class="counter3" id="CT5" name="counter5" *ngIf="!isCounterDisabled4() && !isCounterDisabled5() ">
+                <label for="number">Tiempo en segundos:</label>
+                <input id="82" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" class="chart" name="Num"
+                    min="0" value="E4" />(Máx.15)
+
+            </div>
+
+            <mat-radio-group id="81" name="marcha2" [(ngModel)]="selectedoptionD" [disabled]="isSubmitDisabled4()"
+                (change)="calculePoints()">
+                <div class="radio3">
+                    <mat-radio-button value="E1" color="primary">Accede a la prueba</mat-radio-button>
+                    <mat-radio-button value="E3" color="primary">Se rehúsa</mat-radio-button>
+                </div>
+            </mat-radio-group>
+
+
+
+            <!-- TERCERA SECCION -->
+
+            <div>
+                <h3 class="title-test">LEVANTARSE DE UNA SILLA</h3>
+            </div>
+
+            <!-- SEXTA CONSULTA -->
+
+            <div>
+
+                <!--// NO SE CALIFICA-->
+
+                <h3 class="title-consignas">A. Prueba previa.</h3>
+            </div>
+
+            <div class="slogans">
+                <img class="icon" src="assets/icons/icon-13.png" alt="icon4">
+
+                ¿El paciente se levanta sin apoyarse en los brazos?
+                <br>Si el participante no logró completarlo, finaliza la prueba.<br />
+
+            </div>
+
+            <mat-radio-group id="84" name="marcha3" [(ngModel)]="selectedoptionE" (change)="calculePoints()">
+                <div class="radio">
+                    <mat-radio-button value="1D" color="primary">Si</mat-radio-button>
+                    <mat-radio-button value="2D" color="primary">No</mat-radio-button>
+                    <mat-radio-button value="3D" color="primary">Se rehúsa</mat-radio-button>
+
+                </div>
+
+            </mat-radio-group>
+
+            <div>
+                <h3 class="title-consignas">B. Prueba repetida de levantarse de una silla (5 veces).</h3>
+            </div>
+
+            <!-- SEPTIMA CONSULTA -->
+
+            <div class="slogans">
+                <img class="icon" src="assets/icons/icon-12.png" alt="icon5">
+
+                ¿El paciente puede levantarse 5 veces de la <br> silla sin usar sus brazos?<br />
+
+            </div>
+            <mat-radio-group id="85" name="marcha4" [disabled]="isSubmitDisabled5()" [(ngModel)]="selectedoptionE2"
+                (change)="calculePoints()">
+                <div class="radio">
+                    <mat-radio-button value="1FINAL" color="primary">Si</mat-radio-button>
+                    <mat-radio-button value="2FINAL" color="primary">No</mat-radio-button>
+                    <mat-radio-button value="3FINAL" color="primary">Se rehúsa</mat-radio-button>
+
+                </div>
+
+            </mat-radio-group>
+
+
+            <div class="counter4" id="CT6" name="counter6" *ngIf="!isCounterDisabled6() && !isCounterDisabled7()">
+                <label for="number">Tiempo en segundos:</label>
+                <input id="86" type="number"  value="F4" [(ngModel)]="counterE1" (change)="onInputDesempenoChange2($event)" class="chart" />
+             </div>
+
+            <!-- RESULTADO FINAL -->
+
+            <div id="contenidoData">
+                <!-- <h3 class="title-final">RESULTADOS</h3> -->
+            </div>
+
+            <div class="options">
+
+                <div class="result-details" *ngIf="finalScore > 0">
+                    <span [style.color]="finalScore >= 8 ? '#2ba05a' : '#ff6054'">
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- SUBMIT  -->
+
+            <button mat-raised-button color="primary" type="submit">Enviar Formulario</button>
+        </div>
+
+        <div>
+            <!-- Salto de linea -->
+            <br>
+        </div>
+    </form>
+
+</div>

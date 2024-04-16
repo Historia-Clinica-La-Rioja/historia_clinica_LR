@@ -104,6 +104,8 @@ import { FrailScaleComponent } from './components/cuestionarios/frail-scale/frai
 import { EdmontonComponent } from './components/cuestionarios/edmonton/edmonton.component';
 import { GetFrailComponent } from './components/cuestionarios/frail-scale/get-frail/get-frail.component';
 import { LatestStudiesComponent } from '@historia-clinica/components/emergente/pop-up/latest-studies/latest-studies.component';
+import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-fisico/desempeno-fisico.component';
+import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fisico/input-desempeno/input-desempeno.component';
 
 @NgModule({
 	declarations: [
@@ -159,35 +161,38 @@ import { LatestStudiesComponent } from '@historia-clinica/components/emergente/p
 		PatientValidatorPopupComponent,
 		PrintAmbulatoriaComponent,
 		SearchSnomedConceptComponent,
-  		ProblemsOptionsMenuComponent,
-  		AmendProblemComponent,
+		ProblemsOptionsMenuComponent,
+		AmendProblemComponent,
 		AmendedProblemsComponent,
-  		ViewDatailsBtnComponent,
-    	AmendedProblemsInformationComponent,
- 		ReferenceRequestDataComponent,
-   		ReferenceStudyCloseComponent,
-    	ReferenceCompleteStudyComponent,
-     	ReferenceStudyClosureInformationComponent,
-      	ReferenceStudyComponent,
-       	NewConsultationPersonalHistoryFormComponent,
-       	PersonalHistoryViewDetailsComponent,
-       	ViolenceSituationsComponent,
+		ViewDatailsBtnComponent,
+		AmendedProblemsInformationComponent,
+		ReferenceRequestDataComponent,
+		ReferenceStudyCloseComponent,
+		ReferenceCompleteStudyComponent,
+		ReferenceStudyClosureInformationComponent,
+		ReferenceStudyComponent,
+		NewConsultationPersonalHistoryFormComponent,
+		PersonalHistoryViewDetailsComponent,
+		ViolenceSituationsComponent,
 		ViolenceSituationDockPopupComponent,
-  		ViolenceSituationPersonInformationComponent,
-    	NewViolenceEpisodeSectionComponent,
-     	ViolenceSituationRelevantInformationSectionComponent,
-     	ViolenceSituationImplementedActionsComponent,
+		ViolenceSituationPersonInformationComponent,
+		NewViolenceEpisodeSectionComponent,
+		ViolenceSituationRelevantInformationSectionComponent,
+		ViolenceSituationImplementedActionsComponent,
 		ViolenceSituationViolentPersonInformationComponent,
-  		NewViolentPersonInfomationComponent,
-      	ViolenceSituationImplementedActionsComponent,
-      	ViolenceSituationListComponent,
+		NewViolentPersonInfomationComponent,
+		ViolenceSituationImplementedActionsComponent,
+		ViolenceSituationListComponent,
 		TablaSapComponent,
-		AdultoMayorComponent,
 		EstudiosPopupComponent,
-		FrailScaleComponent,
+		AdultoMayorComponent,
 		EdmontonComponent,
+		FrailScaleComponent,
 		GetFrailComponent,
-		LatestStudiesComponent
+		LatestStudiesComponent,
+		DesempenoFisicoComponent,
+		InputDesempenoComponent
+
 	],
 	imports: [
 		CommonModule,
