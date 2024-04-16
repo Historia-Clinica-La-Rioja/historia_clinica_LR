@@ -49,7 +49,6 @@ import { TranscribedOrderService } from '@turnos/services/transcribed-order.serv
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.utils';
-import { toTranscribedServiceRequestSummaryDto } from '@turnos/utils/appointment-mapper';
 import { getStudiesNames } from '@turnos/utils/appointment.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
@@ -627,8 +626,6 @@ export class NewAppointmentComponent implements OnInit {
 			referenceId: this.associateReferenceForm?.controls?.reference?.value?.id,
 			...(this.data.expiredAppointment && { expiredReasonId: this.expiredAppointmentForm.value.id }),
 			...(this.data.expiredAppointment && { expiredReasonText: this.expiredAppointmentForm.value.motive }),
-			transcribedOrderData: this.appointmentInfoForm.controls.medicalOrder.get('appointmentMedicalOrder').value ?
-			toTranscribedServiceRequestSummaryDto(this.appointmentInfoForm.controls.medicalOrder.get('appointmentMedicalOrder').value) : null
 		};
 	}
 }
