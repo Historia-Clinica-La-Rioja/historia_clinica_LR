@@ -18,64 +18,7 @@
 
                 <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_LABEL' | translate}}"
                  [editable]="editableStepModality">
-                    <section class="prescription">
-                        <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_DATA' | translate}}</h2>
-                        <div *ngIf="isMedication()">
-                            <mat-checkbox formControlName="withoutRecipe">
-                                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
-                            </mat-checkbox>
-                        </div>
-                        <mat-label translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY"></mat-label>
-                        <mat-form-field appearance="outline" *ngIf="isHabilitarRecetaDigitalEnabled">
-                            <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty" formControlName="clinicalSpecialty"
-                                placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_SPECIALTY' | translate}}">
-                                <mat-option *ngFor="let clinicalSpecialty of this.specialties"
-                                    [value]="clinicalSpecialty.id">
-                                    {{clinicalSpecialty.name}}
-                                </mat-option>
-                            </mat-select>
-                            <mat-error *ngIf="hasError(prescriptionForm, 'required', 'clinicalSpecialty')"
-                                translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY_REQUIRED">
-                            </mat-error>
-                        </mat-form-field>
-
-                        <mat-checkbox class="mb-1"
-                            *ngIf="isHabilitarRecetaDigitalEnabled"
-                            formControlName="archived">
-                            <span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ARCHIVED"></span>
-                        </mat-checkbox>
-
-                        <mat-checkbox class="mb-1"
-                            *ngIf="isHabilitarRecetaDigitalEnabled"
-                            formControlName="prolongedTreatment"
-                            (change)="setProlongedTreatment($event.checked)">
-                            <span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROLONGED_TREATMENT"></span>
-                        </mat-checkbox>
-
-                        <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_LABEL'"></mat-label>
-                        <mat-form-field *ngIf="isHabilitarRecetaDigitalEnabled" appearance="outline">
-                            <input formControlName="posdatadas" type="number" matInput>
-                            <mat-hint *ngIf="prescriptionForm.controls.posdatadas.value == POSDATADAS_MIN else posdatadasHintPlural"
-                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_SINGULAR'"
-                                [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
-                            </mat-hint>
-                            <ng-template #posdatadasHintPlural>
-                                <mat-hint
-                                    [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_HINT_PLURAL'"
-                                    [translateParams]="{posdatadas: prescriptionForm.controls.posdatadas.value}">
-                                </mat-hint>
-                            </ng-template>
-                            <mat-error *ngIf="hasError(prescriptionForm, 'required', 'posdatadas')" translate="forms.REQUIRED"></mat-error>
-                            <mat-error *ngIf="hasError(prescriptionForm, 'min', 'posdatadas')"
-                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
-                                [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
-                            </mat-error>
-                            <mat-error *ngIf="hasError(prescriptionForm, 'max', 'posdatadas')"
-                                [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_ERROR'"
-                                [translateParams]="{min: POSDATADAS_MIN, max: POSDATADAS_MAX}">
-                            </mat-error>
-                        </mat-form-field>
-                    </section>
+                    <app-prescription-information [data]="data" [prescriptionForm]="prescriptionForm" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"></app-prescription-information>
                 </mat-step>
             </div>
         </form>

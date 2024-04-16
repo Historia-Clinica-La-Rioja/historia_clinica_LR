@@ -1,30 +1,32 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatStepper } from '@angular/material/stepper';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-
+import { PatientService } from '@api-rest/services/patient.service';
+import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import {
 	APatientDto,
 	ApiErrorDto,
 	AppFeature,
 	BMPersonDto,
 	BasicPatientDto,
-	ClinicalSpecialtyDto,
 	DocumentRequestDto,
 	PrescriptionDto,
 	SnomedDto
 } from '@api-rest/api-model.d';
-import { PatientService } from '@api-rest/services/patient.service';
-
-import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
-import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
-import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import {hasError, NUMBER_PATTERN, scrollIntoError} from '@core/utils/form.utils';
+import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { PharmacosFrequentComponent } from '../pharmacos-frequent/pharmacos-frequent.component';
-import { MedicationRequestService } from '@api-rest/services/medication-request.service';
-import { MatStepper } from '@angular/material/stepper';
 import { mapToAPatientDto, mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
+
+const POSDATADAS_DEFAULT = 0;
+const POSDATADAS_MIN = 1;
+const POSDATADAS_MAX = 11;
+const MAX_PHONE_PREFIX: number = 10;
+const MAX_PHONE_NUMBER: number = 15;
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -43,15 +45,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	prescriptionItems: NewPrescriptionItem[];
 	prescriptionForm: UntypedFormGroup;
-	specialties: ClinicalSpecialtyDto[];
 	itemCount = 0;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
-	POSDATADAS_DEFAULT = 0;
-	POSDATADAS_MIN = 1;
-	POSDATADAS_MAX = 11;
+	
 	hasError = hasError;
-	maxPhonePrefix: number = 10;
-	maxPhoneNumber: number = 15;
 	submitted: boolean = false;
 	showAddMedicationError: boolean = false;
 	isAddMedicationLoading = false;
@@ -64,7 +61,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		private readonly patientService: PatientService,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
-		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly medicationRequestService: MedicationRequestService,
 		private readonly el: ElementRef,
@@ -74,7 +70,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		}
 
 	ngOnInit(): void {
-		this.setProfessionalSpecialties();
 		this.formConfiguration();
 
 		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
@@ -92,7 +87,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			evolucion: [],
 			clinicalSpecialty: [null, [Validators.required]],
 			prolongedTreatment: [false],
-			posdatadas: [{value: this.POSDATADAS_DEFAULT, disabled: true}, [Validators.min(this.POSDATADAS_MIN), Validators.max(this.POSDATADAS_MAX)]],
+			posdatadas: [{value: POSDATADAS_DEFAULT, disabled: true}, [Validators.min(POSDATADAS_MIN), Validators.max(POSDATADAS_MAX)]],
 			archived: [false],
 			patientData: this.setPatientDataGroup(),
 		});
@@ -101,9 +96,9 @@ export class NuevaPrescripcionComponent implements OnInit {
 	private setPatientDataGroup(): FormGroup | null {
 		return (this.isHabilitarRecetaDigitalEnabled)
 			? this.formBuilder.group({
-				phonePrefix: [null, [Validators.required, Validators.maxLength(this.maxPhonePrefix), Validators.pattern(NUMBER_PATTERN)]],
+				phonePrefix: [null, [Validators.required, Validators.maxLength(MAX_PHONE_PREFIX), Validators.pattern(NUMBER_PATTERN)]],
 				country: [{value: null, disabled: true}, [Validators.required]],
-				phoneNumber: [null, [Validators.required, Validators.maxLength(this.maxPhoneNumber), Validators.pattern(NUMBER_PATTERN)]],
+				phoneNumber: [null, [Validators.required, Validators.maxLength(MAX_PHONE_NUMBER), Validators.pattern(NUMBER_PATTERN)]],
 				province: [null, Validators.required],
 				locality: [null, Validators.required],
 				city: [null, Validators.required],
@@ -113,41 +108,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 			: null;
 	}
 
-	setProlongedTreatment(isOn: boolean) {
-		this.prescriptionForm.controls.prolongedTreatment.setValue(isOn);
-		const posdatadas = this.prescriptionForm.controls.posdatadas;
-		if (isOn) {
-			posdatadas.enable()
-			posdatadas.addValidators(Validators.required);
-			this.prescriptionForm.controls.posdatadas.setValue(1);
-		} else {
-			this.prescriptionForm.controls.posdatadas.setValue(0);
-			this.disablePosdatadas(posdatadas)
-		}
-	}
-
-	disablePosdatadas(posdatadas: AbstractControl) {
-		posdatadas.disable();
-		posdatadas.setValue(this.POSDATADAS_DEFAULT);
-	}
-
-	setProfessionalSpecialties() {
-		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties().subscribe(specialties => {
-			this.setSpecialtyFields(specialties);
-		});
-	}
-
 	setPerson(person: BMPersonDto) {
 		this.person = person;
-	}
-
-	setSpecialtyFields(specialtyArray) {
-		this.specialties = specialtyArray;
-		const clinicalSpecialty = this.prescriptionForm.get('clinicalSpecialty');
-		clinicalSpecialty.setValue(specialtyArray[0]);
-		if (this.specialties.length === 1)
-			clinicalSpecialty.disable();
-		this.prescriptionForm.controls['clinicalSpecialty'].markAsTouched();
 	}
 
 	closeModal(newPrescription?: NewPrescription): void {

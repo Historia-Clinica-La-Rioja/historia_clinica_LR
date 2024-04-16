@@ -1,9 +1,12 @@
+//imports
 import { NursingRecordFacadeService } from './services/nursing-record-facade.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
-
+//standalone componentes
+import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+//components
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
 import { CardPharmacoComponent } from './components/card-pharmaco/card-pharmaco.component';
 import { DayDisplayComponent } from './components/day-display/day-display.component';
@@ -33,9 +36,8 @@ import { WarningMessageComponent } from './components/warning-message/warning-me
 import { ShowViaPipe } from './pipes/show-via.pipe';
 import { EmergencyCareIndicationsCardComponent } from './components/emergency-care-indications-card/emergency-care-indications-card.component';
 import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
-//standalone componentes
-import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
 import { PatientInformationComponent } from './components/patient-information/patient-information.component';
+import { PrescriptionInformationComponent } from './components/prescription-information/prescription-information.component';
 
 @NgModule({
 	declarations: [
@@ -68,6 +70,7 @@ import { PatientInformationComponent } from './components/patient-information/pa
 		WarningMessageComponent,
 		EmergencyCareIndicationsCardComponent,
 		PatientInformationComponent,
+  PrescriptionInformationComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
