@@ -85,6 +85,13 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 			entity.setInstitutionId(-1);
 
 		try {
+			Optional<UserRole> userRoleAlreadyExist = userRoleRepository.findByRoleInstitutionAndUserId(
+					entity.getUserId(),
+					entity.getRoleId(),
+					entity.getInstitutionId()
+			);
+			if (userRoleAlreadyExist.isPresent())
+				throw new DataIntegrityViolationException("El usuario ya cuenta con ese rol en la institución");
 			return userRoleRepository
 					.getUserRoleIfIsDeleted(entity.getUserId(), entity.getRoleId(), entity.getInstitutionId())
 					.map(userRoleRepository::reactivate)
