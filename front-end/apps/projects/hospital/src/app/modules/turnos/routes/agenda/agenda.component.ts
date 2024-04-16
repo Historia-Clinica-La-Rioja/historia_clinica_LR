@@ -4,18 +4,15 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AppFeature, AppointmentDailyAmountDto, CompleteDiaryDto, DiaryOpeningHoursDto, EAppointmentModality, ERole, MedicalCoverageDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import {
-	buildFullDate,
-	DateFormat,
-	dateToMoment,
-	dateToMomentTimeZone,
-	momentFormat,
-	momentParseDate,
-	momentParseTime
+	buildFullDateFromDate,
+	dateISOParseDate,
+	dateParseTime,
+	isBetweenDates,
+	isSameOrBefore,
 } from '@core/utils/moment.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { CalendarMonthViewBeforeRenderEvent, CalendarView, CalendarWeekViewBeforeRenderEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { CalendarEvent, MonthViewDay, WeekViewHourSegment } from 'calendar-utils';
-import { Moment } from 'moment';
 import { MEDICAL_ATTENTION } from '../../constants/descriptions';
 import { AppointmentComponent } from '../../dialogs/appointment/appointment.component';
 import { NewAppointmentComponent } from '../../dialogs/new-appointment/new-appointment.component';
@@ -29,12 +26,11 @@ import { HealthInsuranceService } from '@api-rest/services/health-insurance.serv
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipeFormat, toHourMinuteSecond } from '@core/utils/date.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ConfirmBookingComponent } from '@turnos/dialogs/confirm-booking/confirm-booking.component';
-import { endOfMonth, endOfWeek, isBefore, startOfMonth, startOfWeek } from 'date-fns';
-import * as moment from 'moment';
+import { endOfMonth, endOfWeek, isBefore, isSameDay, startOfMonth, startOfWeek } from 'date-fns';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { LoggedUserService } from '../../../auth/services/logged-user.service';
@@ -45,6 +41,7 @@ import { MAX_APPOINTMENT_PER_HOUR, getHourFromString } from '@turnos/utils/appoi
 import { AppointmentListComponent } from '@turnos/dialogs/appointment-list/appointment-list.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { fixDate } from '@core/utils/date/format';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const ASIGNABLE_CLASS = 'cursor-pointer';
 const AGENDA_PROGRAMADA_CLASS = 'bg-green';
@@ -151,8 +148,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		this.permissionsService.hasContextAssignments$(ROLES_TO_CREATE).subscribe(hasRole => this.hasRoleToCreate = hasRole);
 		this.healthcareProfessionalService.getHealthcareProfessionalByUserId().subscribe(healthcareProfessionalId => this.loggedUserHealthcareProfessionalId = healthcareProfessionalId);
 		this.loggedUserService.assignments$.subscribe(response => {
-			 this.loggedUserRoles = response.filter(role => role.institutionId === this.contextService.institutionId)
-			 .map(role => role.role)});
+			this.loggedUserRoles = response.filter(role => role.institutionId === this.contextService.institutionId)
+				.map(role => role.role)
+		});
 		this.loadAppointmentsEveryFiveMinutes();
 	}
 
@@ -163,7 +161,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		if (changes.idAgenda?.currentValue) 
+		if (changes.idAgenda?.currentValue)
 			this.getAgenda();
 	}
 
@@ -183,8 +181,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					hourColumn.hours.forEach((hour) => {
 						hour.segments.forEach((segment) => {
 							openingHours.forEach(openingHour => {
-								const from: Moment = momentParseTime(openingHour.openingHours.from);
-								const to: Moment = momentParseTime(openingHour.openingHours.to);
+								const from = dateParseTime(openingHour.openingHours.from);
+								const to = dateParseTime(openingHour.openingHours.to);
 								if (isBetween(segment, from, to)) {
 									segment.cssClass = this.getOpeningHoursCssClass(openingHour);
 								}
@@ -194,18 +192,18 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			});
 
-		function isBetween(segment: WeekViewHourSegment, from: Moment, to: Moment) {
-			return ((segment.date.getHours() > from.hours()) ||
-				(segment.date.getHours() === from.hours() && segment.date.getMinutes() >= from.minutes()))
-				&& ((segment.date.getHours() < to.hours()) ||
-					(segment.date.getHours() === to.hours() && segment.date.getMinutes() < to.minutes()));
+		function isBetween(segment: WeekViewHourSegment, from: Date, to: Date) {
+			return ((segment.date.getHours() > from.getHours()) ||
+				(segment.date.getHours() === from.getHours() && segment.date.getMinutes() >= from.getMinutes()))
+				&& ((segment.date.getHours() < to.getHours()) ||
+					(segment.date.getHours() === to.getHours() && segment.date.getMinutes() < to.getMinutes()));
 		}
 	}
 
 	loadDailyAmounts(calendarMonthViewBeforeRenderEvent: CalendarMonthViewBeforeRenderEvent): void {
-		const from = this.datePipe.transform(calendarMonthViewBeforeRenderEvent.period.start, 'YYYY-MM-dd');
-		const to = this.datePipe.transform(calendarMonthViewBeforeRenderEvent.period.end, 'YYYY-MM-dd');
-		if(this.view === CalendarView.Month){
+		const from = toApiFormat(calendarMonthViewBeforeRenderEvent.period.start);
+		const to = toApiFormat(calendarMonthViewBeforeRenderEvent.period.end);
+		if (this.view === CalendarView.Month) {
 			this.dailyAmounts$ = this.appointmentsService.getDailyAmounts(this.idAgenda, from, to);
 		}
 		const daysCells: MonthViewDay[] = calendarMonthViewBeforeRenderEvent.body;
@@ -223,14 +221,10 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 		function agendaOverlapsWithViewRange(start: string, end: string): boolean {
 			const viewPeriod = calendarMonthViewBeforeRenderEvent.period;
-			const startAgenda = momentParseDate(start);
-			const endAgenda = momentParseDate(end);
+			const startAgenda = dateISOParseDate(start);
+			const endAgenda = dateISOParseDate(end);
 
-			const firstViewDay = dateToMomentTimeZone(viewPeriod.start);
-			const lastViewDay = dateToMomentTimeZone(viewPeriod.end);
-
-			return (startAgenda.isSameOrBefore(lastViewDay, 'days') ||
-				firstViewDay.isSameOrBefore(endAgenda, 'days'));
+			return (isSameOrBefore(startAgenda, viewPeriod.end) || isSameOrBefore(viewPeriod.start, endAgenda));
 		}
 
 	}
@@ -257,7 +251,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			function getAmount(date: Date): AppointmentDailyAmountDto {
 				return dailyAmounts
 					.find(dailyAmount => {
-						return dateToMoment(date).isSame(momentParseDate(dailyAmount.date), 'days');
+						return isSameDay(date, dateISOParseDate(dailyAmount.date));
 					});
 			}
 		});
@@ -273,14 +267,14 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		});
 	}
 
-	setModality(diaryOpeningHour: DiaryOpeningHoursDto){
-		if (diaryOpeningHour.onSiteAttentionAllowed){
-			this.modality= EAppointmentModality.ON_SITE_ATTENTION;
+	setModality(diaryOpeningHour: DiaryOpeningHoursDto) {
+		if (diaryOpeningHour.onSiteAttentionAllowed) {
+			this.modality = EAppointmentModality.ON_SITE_ATTENTION;
 		}
-		if(diaryOpeningHour.patientVirtualAttentionAllowed){
-			if(this.modality === null){
+		if (diaryOpeningHour.patientVirtualAttentionAllowed) {
+			if (this.modality === null) {
 				this.modality = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
-			}else{
+			} else {
 				this.modality = null;
 			}
 		}
@@ -289,7 +283,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	onClickedSegment(event) {
 		if (this.getOpeningHoursId(event.date) && this.enableAppointmentScheduling) {
 
-			const clickedDate: Moment = dateToMomentTimeZone(event.date);
+			const clickedDate = fixDate(event.date);
 			const openingHourId: number = this.getOpeningHoursId(event.date);
 			const diaryOpeningHourDto: DiaryOpeningHoursDto =
 				this.diaryOpeningHours.find(diaryOpeningHour => diaryOpeningHour.openingHours.id === openingHourId);
@@ -300,7 +294,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			}
 
 			this.setModality(diaryOpeningHourDto);
-			if(!this.isEnableTelemedicina && this.modality !== null && this.modality !== EAppointmentModality.ON_SITE_ATTENTION){
+			if (!this.isEnableTelemedicina && this.modality !== null && this.modality !== EAppointmentModality.ON_SITE_ATTENTION) {
 				this.snackBarService.showError('turnos.home.messages.NO_ACCEPT_FACE_TO_FACE_APPOINTMMENTS');
 				this.modality = null;
 				return;
@@ -327,12 +321,12 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					this.snackBarService.showError('turnos.new-appointment.messages.NOT_RESPONSIBLE');
 					return;
 				} else {
-					if (!this.holidays?.find(holiday => holiday.start.getDate() === clickedDate.toDate().getDate())) {
+					if (!this.holidays?.find(holiday => holiday.start.getDate() === clickedDate.getDate())) {
 						this.openNewAppointmentDialog(clickedDate, openingHourId, addingOverturn);
 					}
 					else {
 						const holidayText = this.translateService.instant('turnos.holiday.HOLIDAY_RELATED');
-						const holidayDateText = this.datePipe.transform(clickedDate.toDate(), DatePipeFormat.FULL_DATE);
+						const holidayDateText = this.datePipe.transform(clickedDate, DatePipeFormat.FULL_DATE);
 						const dialogRef = this.dialog.open(DiscardWarningComponent, {
 							data: {
 								title: 'turnos.holiday.TITLE',
@@ -356,19 +350,19 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		}
 	}
 
-	private openNewAppointmentDialog(clickedDate: Moment, openingHourId: number, addingOverturn: boolean) {
+	private openNewAppointmentDialog(clickedDate: Date, openingHourId: number, addingOverturn: boolean) {
 		const dialogRef = this.dialog.open(NewAppointmentComponent, {
 			width: '43%',
 			disableClose: true,
 			data: {
-				date: clickedDate.format(DateFormat.API_DATE),
+				date: toApiFormat(clickedDate),
 				diaryId: this.agenda.id,
-				hour: clickedDate.format(DateFormat.HOUR_MINUTE_SECONDS),
+				hour: toHourMinuteSecond(clickedDate),
 				openingHoursId: openingHourId,
 				overturnMode: addingOverturn,
 				patientId: this.patientId ? Number(this.patientId) : null,
 				modalityAttention: this.modality,
-				expiredAppointment: isBefore(fixDate(clickedDate), new Date())
+				expiredAppointment: isBefore(clickedDate, new Date())
 			}
 		});
 		dialogRef.afterClosed().subscribe(() => this.appointmentFacade.loadAppointments(), this.modality = null);
@@ -387,9 +381,9 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.dialog.open(ConfirmBookingComponent, {
 				width: '30%',
 				data: {
-					date: event.meta.date.format(DateFormat.API_DATE),
+					date: toApiFormat(event.meta.date),
 					diaryId: this.agenda.id,
-					hour: event.meta.date.format(DateFormat.HOUR_MINUTE_SECONDS),
+					hour: toHourMinuteSecond(event.meta.date),
 					openingHoursId: this.getOpeningHoursId(event.meta.date.toDate()),
 					overturnMode: false,
 					identificationTypeId: event.meta.patient.typeId ? event.meta.patient.typeId : 1,
@@ -470,11 +464,11 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private setDayStartHourAndEndHour(openingHours: DiaryOpeningHoursDto[]) {
 		openingHours.forEach(oh => {
-			const from = momentParseTime(oh.openingHours.from).hour();
+			const from = dateParseTime(oh.openingHours.from).getHours();
 			if (this.dayStartHour === undefined || from <= this.dayStartHour) {
 				this.dayStartHour = (from > 0) ? from - 1 : from;
 			}
-			const to = momentParseTime(oh.openingHours.to).hour();
+			const to = dateParseTime(oh.openingHours.to).getHours();
 			if (this.dayEndHour === undefined || to >= this.dayEndHour) {
 				this.dayEndHour = (to < 23) ? to + 1 : to;
 			}
@@ -486,28 +480,28 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	 *
 	 */
 	private _getViewDate(): Date {
-		const momentStartDate = momentParseDate(this.agenda.startDate);
-		const momentEndDate = momentParseDate(this.agenda.endDate);
-		const lastSelectedDate = moment(this.viewDate);
+		const startDate = dateISOParseDate(this.agenda.startDate);
+		const endDate = dateISOParseDate(this.agenda.endDate);
+		const lastSelectedDate = this.viewDate;
 
-		if (lastSelectedDate.isBetween(momentStartDate, momentEndDate)) {
+		if (isBetweenDates(lastSelectedDate, startDate, endDate)) {
 			return this.viewDate;
 		}
-		if (lastSelectedDate.isSameOrBefore(momentStartDate)) {
-			return momentStartDate.toDate();
+		if (isSameOrBefore(lastSelectedDate, startDate)) {
+			return startDate;
 		}
-		return momentEndDate.toDate();
+		return endDate;
 	}
 
 	private getOpeningHoursId(date: Date): number {
 		const openingHoursSelectedDay = this._getOpeningHoursFor(date);
 
 		const selectedOpeningHour = openingHoursSelectedDay.find(oh => {
-			const hourFrom = momentParseTime(oh.openingHours.from);
-			const hourTo = momentParseTime(oh.openingHours.to);
-			const selectedHour = dateToMomentTimeZone(date).format(DateFormat.HOUR_MINUTE_SECONDS);
+			const hourFrom = dateParseTime(oh.openingHours.from);
+			const hourTo = dateParseTime(oh.openingHours.to);
+			const selectedHour = toHourMinuteSecond(date);
 
-			return momentParseTime(selectedHour).isBetween(hourFrom, hourTo, null, '[)');
+			return isBetweenDates(dateParseTime(selectedHour), hourFrom, hourTo, '[)');
 		});
 
 		return selectedOpeningHour?.openingHours.id;
@@ -521,29 +515,26 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 		);
 	}
 
-	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Moment): Observable<number> {
+	private allOverturnsAssignedForDiaryOpeningHour(diaryOpeningHourDto: DiaryOpeningHoursDto, clickedDate: Date): Observable<number> {
 
-		const openingHourStart = buildFullDate(diaryOpeningHourDto.openingHours.from, clickedDate);
-		const openingHourEnd = buildFullDate(diaryOpeningHourDto.openingHours.to, clickedDate);
+		const openingHourStart = buildFullDateFromDate(diaryOpeningHourDto.openingHours.from, clickedDate);
+		const openingHourEnd = buildFullDateFromDate(diaryOpeningHourDto.openingHours.to, clickedDate);
 
 		return this.appointmentFacade.getAppointments().pipe(
 			map((array: CalendarEvent[]) =>
 				array.filter(event =>
-					event.meta?.overturn && dateToMoment(event.start).isBetween(openingHourStart, openingHourEnd, null, '[)')
+					event.meta?.overturn && isBetweenDates(event.start, openingHourStart, openingHourEnd, '[)')
 				).length
 			)
 		);
 	}
 
 	private _getOpeningHoursFor(date: Date): DiaryOpeningHoursDto[] {
-		const dateMoment = dateToMoment(date);
-		const start = momentParseDate(this.agenda.startDate);
-		const end = momentParseDate(this.agenda.endDate);
+		const start = dateISOParseDate(this.agenda.startDate);
+		const end = dateISOParseDate(this.agenda.endDate);
 
-		if (dateMoment.isBetween(start, end, 'date', '[]')) {
-			return this.diaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay());
-		}
-		return [];
+		return isBetweenDates(date, start, end, '[]') ?
+			this.diaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay()) : [];
 	}
 
 	private setEnableAppointmentScheduling(): void {
@@ -631,7 +622,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	private getEventQuantityByDate = (unifiedEvents: CalendarEvent[]) => {
-		const eventsPerDate: Map<string, number> = new Map(); 
+		const eventsPerDate: Map<string, number> = new Map();
 		unifiedEvents.forEach((ce: CalendarEvent) => {
 			const dateString = ce.start?.toISOString();
 			eventsPerDate.set(dateString, (eventsPerDate.get(dateString) || 0) + 1);
@@ -665,23 +656,22 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 
 	private setDateRange(date: Date) {
 		if (CalendarView.Day === this.view) {
-			const d = moment(date);
-			this.startDate = momentFormat(d, DateFormat.API_DATE);
-			this.endDate = momentFormat(d, DateFormat.API_DATE);
+			this.startDate = toApiFormat(date);
+			this.endDate = toApiFormat(date);
 			return;
 		}
 		if (CalendarView.Month === this.view) {
 			const from = startOfMonth(date);
 			const to = endOfMonth(date);
-			this.startDate = momentFormat(moment(from), DateFormat.API_DATE);
-			this.endDate = momentFormat(moment(to), DateFormat.API_DATE);
+			this.startDate = toApiFormat(from);
+			this.endDate = toApiFormat(to);
 			return;
 		}
 		const start = startOfWeek(date, { weekStartsOn: 1 });
-		this.startDate = momentFormat(moment(start), DateFormat.API_DATE);
+		this.startDate = toApiFormat(start);
 
 		const end = endOfWeek(date, { weekStartsOn: 1 });
-		this.endDate = momentFormat(moment(end), DateFormat.API_DATE);
+		this.endDate = toApiFormat(end);
 	}
 
 
