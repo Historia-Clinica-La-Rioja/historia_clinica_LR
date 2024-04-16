@@ -35,6 +35,7 @@ import { EmergencyCareIndicationsCardComponent } from './components/emergency-ca
 import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
 //standalone componentes
 import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+import { PatientInformationComponent } from './components/patient-information/patient-information.component';
 
 @NgModule({
 	declarations: [
@@ -66,6 +67,7 @@ import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-c
 		PrescripcionValidatorPopupComponent,
 		WarningMessageComponent,
 		EmergencyCareIndicationsCardComponent,
+		PatientInformationComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,

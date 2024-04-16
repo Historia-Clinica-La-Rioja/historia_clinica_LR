@@ -1,0 +1,118 @@
+<div [formGroup]="prescriptionForm">
+    <h2 class="bold no-margin">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_DATA' | translate}}</h2>
+    <div class="patient-summary">
+        <app-patient-summary *ngIf="patientSummary" [person]="patientSummary"></app-patient-summary>
+    </div>
+    <div>
+        <mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICAL_COVERAGE_LABEL' | translate}}</mat-label>
+        <mat-form-field appearance="outline" class="no-margin my-form-field fullWidth">
+            <mat-select formControlName="patientMedicalCoverage" placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_MEDICAL_COVERAGE' | translate}}">
+                <mat-option (click)="selectPatientMedicalCoverage(patientMedicalCoverage)"
+                    id="medicalCoverage"
+                    name="medicalCoverage"
+                    *ngFor="let patientMedicalCoverage of patientMedicalCoverages" [value]="patientMedicalCoverage">
+                    {{ patientMedicalCoverage | fullMedicalCoverage }}
+                </mat-option>
+                <mat-divider></mat-divider>
+                <mat-option (click)="openMedicalCoverageDialog()">
+                    <span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
+                </mat-option>
+            </mat-select>
+            <button id="clear_medical_coverage" type="button" mat-button *ngIf="prescriptionForm.value.patientMedicalCoverage" matSuffix
+                color="warn" mat-icon-button (click)="clear(prescriptionForm.controls.patientMedicalCoverage); $event.stopPropagation()">
+                <mat-icon>close</mat-icon>
+            </button>
+            <mat-hint *ngIf="this.showCoverageMessage"
+                translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICAL_COVERAGE_SUGGESTION">
+            </mat-hint>
+        </mat-form-field>
+    </div>
+    
+    <section formGroupName="patientData" *ngIf="isHabilitarRecetaDigitalEnabled">
+        <div class="margin-top-10">
+            <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE'"></mat-label>
+            <section class="phone-container">
+                <mat-form-field appearance="outline" class="prefix">
+                    <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_PREFIX'| translate}}"
+                    matInput formControlName="phonePrefix" type="text">
+                    <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.phonePrefix')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="number">
+                    <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PHONE_NUMBER' | translate}}"
+                    matInput formControlName="phoneNumber" type="text">
+                    <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.phoneNumber')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </section>
+        </div>
+    
+        <section class="countries-provinces-container margin-top-10">
+            <div class="country-section">
+                <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.COUNTRY'"></mat-label>
+                <mat-form-field appearance="outline" class="country">
+                    <mat-select id="country" name="country" formControlName="country"
+                                placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT' | translate}}">
+                        <mat-option *ngFor="let country of countries$ | async" [value]="country.id">
+                            {{country.description}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="province-section">
+                <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROVINCE'"></mat-label>
+                <mat-form-field appearance="outline" class="province">
+                    <mat-select id="province" name="province" formControlName="province" (selectionChange)="setDepartments($event.value)"
+                                placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT' | translate}}">
+                        <mat-option *ngFor="let province of provinces$ | async" [value]="province.id">
+                            {{province.description}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.province')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+        </section>
+    
+        <section class="departments-citys-container margin-top-10">
+            <div class="departament-section">
+                <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.LOCALITY'"></mat-label>
+                <mat-form-field appearance="outline" class="locality">
+                    <mat-select id="locality" name="locality" formControlName="locality" (selectionChange)="setCities($event.value)"
+                                placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT' | translate}}">
+                        <mat-option *ngFor="let department of departments$ | async" [value]="department.id">
+                            {{department.description}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.locality')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+            <div class="city-section">
+                <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.CITY'"></mat-label>
+                <mat-form-field appearance="outline" class="city">
+                    <mat-select id="city" name="city" formControlName="city"
+                                placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT' | translate}}">
+                        <mat-option *ngFor="let city of cities$ | async" [value]="city.id">
+                            {{city.description}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.city')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+        </section>
+    
+        <section class="margin-top-10">
+            <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.ADDRESS'"></mat-label>
+            <div class="street-container">
+                <mat-form-field appearance="outline" class="street">
+                    <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET' | translate}}"
+                    matInput formControlName="street" type="text">
+                    <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.street')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+    
+                <mat-form-field appearance="outline" class="streetNumber">
+                    <input placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.STREET_NUMBER' | translate}}"
+                    matInput formControlName="streetNumber" type="text">
+                    <mat-error *ngIf="hasError(prescriptionForm, 'required', 'patientData.streetNumber')" [translate]="'forms.REQUIRED'"></mat-error>
+                </mat-form-field>
+            </div>
+        </section>
+    </section>
+</div>

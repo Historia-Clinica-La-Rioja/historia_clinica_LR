@@ -10,10 +10,6 @@
     margin-top: 10px;
 }
 
-.patientSummary {
-    margin: 24px 0;
-}
-
 .fullWidth {
     width: 100%;
 }
@@ -42,59 +38,7 @@ h3#prescriptionItemName {
     margin-bottom: 1rem;
 }
 
-.departments-citys-container, .countries-provinces-container {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
-
-.street-container, .phone-container {
-    width: 100%;
-    display: flex;
-}
-
-.province-section, .country-section, .city-section, .departament-section {
-    display: flex;
-    flex-direction: column;
-    width: 49%;
-}
-
-.phone-container {
-	.prefix {
-		width: 130px;
-        margin-right: 16px;
-	}
-
-	.number {
-		width: 270px;
-        min-width: 175px;
-	}
-}
-
-.street {
-    width: 270px;
-    min-width: 175px;
-    margin-right: 16px;
-}
-
-.streetNumber {
-    width: 130px;
-}
-
 .prescription {
     display: flex;
     flex-direction: column;
-}
-
-@media (max-width: 360px) {
-    .phone-container, .departments-citys-container, .street-container, .countries-provinces-container {
-        flex-direction: column;
-        .province-section, .country-section, .city-section, .departament-section {
-            width: 100%;
-        }
-
-        .prefix, .number, .province, .locality, .city, .street, .country, .streetNumber {
-            width: 100%;
-        }
-    }
 }
