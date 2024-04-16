@@ -26,6 +26,9 @@
         }
 
         .wide_wrapped_text {
+  /*          max-width: 90%;
+            display: flex;*/
+            /*margin-left: 3px;*/
             word-wrap: break-word;
         }
 
@@ -157,6 +160,10 @@
             width: 100%;
             word-wrap: break-word;
         }
+
+        .width-row {
+            width: 80%;
+        }
     </style>
 </head>
 
@@ -195,13 +202,13 @@
                     <div class="data-title">Fecha :</div>
                     <div class="data-text" th:text="${#temporals.format(performedDate, 'dd-MM-yyyy HH:mm')}"></div>
                 </div>
-                <div class="row-content">
+                <div class="row-content width-row">
                     <div class="data-title-span">Estudios :</div>
                     <div th:if="${not #lists.isEmpty(diagnosticReportList)}">
-                        <div class="comma-list">
-                          <span  th:each="diagnosticReport,iter: ${diagnosticReportList}">
-                            <span class="data-text wide_wrapped_text" th:text="${diagnosticReport.snomed.pt}"></span>
-                         </span>
+                        <div class="comma-list width-row">
+                              <span  th:each="diagnosticReport,iter: ${diagnosticReportList}">
+                                <span class="data-text wide_wrapped_text" th:text="${diagnosticReport.snomed.pt}"></span>
+                             </span>
                         </div>
                     </div>
                     <div th:if="${#lists.isEmpty(diagnosticReportList)}">
