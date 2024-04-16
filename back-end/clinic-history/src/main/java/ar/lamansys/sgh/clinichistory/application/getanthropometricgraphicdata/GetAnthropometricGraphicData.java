@@ -146,7 +146,7 @@ public class GetAnthropometricGraphicData {
 			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() && heightValue >= minHeightValue && heightValue <= maxHeightValue)
 				result.add(new GraphicDatasetIntersectionBo(heightEvolution.get(i).getValue(), weightEvolution.get(i).getValue()));
 		}
-		if (actualValue.getWeight() != null && actualValue.getHeight() != null){
+		if (actualValue != null && actualValue.getWeight() != null && actualValue.getHeight() != null){
 			int age = (int) ChronoUnit.YEARS.between(patient.getBirthDate(), LocalDate.now());
 			int heightValue = Integer.parseInt(actualValue.getHeight());
 			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() && heightValue >= minHeightValue && heightValue <= maxHeightValue)
