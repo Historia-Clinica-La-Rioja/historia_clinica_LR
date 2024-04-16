@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { PhysicalPerformanceService } from '@api-rest/services/physical-performance.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-desempeno-fisico',
   templateUrl: './desempeno-fisico.component.html',
@@ -222,15 +223,6 @@ export class DesempenoFisicoComponent implements OnInit {
 
     let totalScore = balance1 + balance2 + counterB2Points+ counterA1NoPoints + counterA2NoPoints + counterC2NoPoints
       + counterC3Points + counterE1Points;
-
-    // console.log("balance1: ", balance1)
-    // console.log("balance2: ", balance2)
-    // console.log("silla1: ", sillaTest1)
-    // console.log("counterB2Points: ", counterB2Points)
-    // console.log("counterC2Points: ")
-    // console.log("counterC3Points: ", counterC3Points)
-    // console.log("counterE1Points: ", counterE1Points)
-    // console.log("Trae: ", totalScore)
 
     this.finalScore = totalScore;
 
@@ -494,15 +486,3 @@ export class DesempenoFisicoComponent implements OnInit {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
