@@ -2,7 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EAnthropometricGraphicOption, EAnthropometricGraphicType } from '@api-rest/api-model';
 import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-graphic.service';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+
+const ONE_ELEMENT = 1;
 
 @Component({
 	selector: 'app-evolution-chart-type-select',
@@ -32,7 +34,8 @@ export class EvolutionChartTypeSelectComponent implements OnInit {
 	}
 
 	private setEvolutionChartTypesOptions(selectedChart: EAnthropometricGraphicOption) {
-		this.evolutionChartTypes$ = this.anthropometricGraphicService.getAvailableGraphicTypes(selectedChart.id, this.patientId);
+		this.evolutionChartTypes$ = this.anthropometricGraphicService.getAvailableGraphicTypes(selectedChart.id, this.patientId)
+			.pipe(tap((availableGraphicTypes: EAnthropometricGraphicType[]) => this.setFirstAvailableGraphicType(availableGraphicTypes)));
 	}
 
 	private createForm() {
@@ -43,6 +46,11 @@ export class EvolutionChartTypeSelectComponent implements OnInit {
 
 	private subscribeToFormChangesAndEmit() {
 		this.form.controls.type.valueChanges.subscribe(chartTypeValue => this.selectedTypeChart.emit(chartTypeValue));
+	}
+
+	private setFirstAvailableGraphicType(availableGraphicTypes: EAnthropometricGraphicType[]) {
+		if (availableGraphicTypes.length === ONE_ELEMENT)
+			this.form.controls.type.setValue(availableGraphicTypes[0]);
 	}
 
 }

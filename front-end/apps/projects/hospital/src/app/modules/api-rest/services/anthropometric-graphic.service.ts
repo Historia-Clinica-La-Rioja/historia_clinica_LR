@@ -25,9 +25,10 @@ export class AnthropometricGraphicService {
 		return this.http.get<AnthropometricGraphicEnablementDto>(url);
 	}
 
-	getChartOptions(): Observable<EAnthropometricGraphicOption[]> {
+	getChartOptions(patientId: number): Observable<EAnthropometricGraphicOption[]> {
 		const url = `${this.prefixUrl}/${this.contextService.institutionId}${this.basicUrl}/chart-options`;
-		return this.http.get<EAnthropometricGraphicOption[]>(url);
+		const params = new HttpParams().append('patientId', patientId);
+		return this.http.get<EAnthropometricGraphicOption[]>(url, { params });
 	}
 
 	getAvailableGraphicTypes(chartOptionId: number, patientId: number): Observable<EAnthropometricGraphicType[]> {

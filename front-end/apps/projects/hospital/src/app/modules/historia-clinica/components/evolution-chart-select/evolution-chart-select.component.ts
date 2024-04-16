@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { EAnthropometricGraphicOption } from '@api-rest/api-model';
 import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-graphic.service';
@@ -13,6 +13,10 @@ export class EvolutionChartSelectComponent implements OnInit {
 
 	form: FormGroup<EvolutionChartSelectForm>;
 	evolutionCharts$: Observable<EAnthropometricGraphicOption[]>;
+	@Input() set patientId(patientId: number) {
+		if (patientId)
+			this.setChartOptions(patientId);
+	};
 	@Output() selectedChart = new EventEmitter<EAnthropometricGraphicOption>();
 
 	constructor(
@@ -21,7 +25,6 @@ export class EvolutionChartSelectComponent implements OnInit {
 
 	ngOnInit() {
 		this.createForm();
-		this.setChartOptions();
 		this.subscribeToFormChangesAndEmit();
 	}
 
@@ -31,8 +34,8 @@ export class EvolutionChartSelectComponent implements OnInit {
 		});
 	}
 
-	private setChartOptions() {
-		this.evolutionCharts$ = this.percentilesService.getChartOptions();
+	private setChartOptions(patientId: number) {
+		this.evolutionCharts$ = this.percentilesService.getChartOptions(patientId);
 	}
 
 	private subscribeToFormChangesAndEmit() {

@@ -38,10 +38,16 @@ const toScaleY = (title: string): Object => {
 	return { title: toTitle(title) }
 }
 
+const isNotAChartWithRangeAge = (scale: EAnthropometricGraphicRange): boolean => {
+	return scale === EAnthropometricGraphicRange.WEIGHT_FOR_LENGTH || scale === EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT;
+}
+
 const getColorByLabelAndScale = (label: string, scale: EAnthropometricGraphicRange): string => {
-	const isBold = label !== "";
+	if (isNotAChartWithRangeAge)
+		return GRID_STYLE;
+
 	if (scale === EAnthropometricGraphicRange.NINETEEN_YEARS)
-		return isBold ? GRID_STYLE_BOLD : GRID_STYLE;
+		return label !== "" ? GRID_STYLE_BOLD : GRID_STYLE;
 
 	if (scale === EAnthropometricGraphicRange.FIVE_YEARS)
 		return label.includes(YEAR) ? GRID_STYLE_BOLD : GRID_STYLE;
@@ -50,9 +56,11 @@ const getColorByLabelAndScale = (label: string, scale: EAnthropometricGraphicRan
 };
 
 const getWidthByLabelAndScale = (label: string, scale: EAnthropometricGraphicRange): number => {
-	const isBold = label !== "";
+	if (isNotAChartWithRangeAge(scale))
+		return LINE_WIDTH;
+
 	if (scale === EAnthropometricGraphicRange.NINETEEN_YEARS)
-		return isBold ? LINE_WIDTH_BOLD : LINE_WIDTH;
+		return label !== "" ? LINE_WIDTH_BOLD : LINE_WIDTH;
 
 	if (scale === EAnthropometricGraphicRange.FIVE_YEARS)
 		return label.includes(YEAR) ? LINE_WIDTH_BOLD : LINE_WIDTH;
