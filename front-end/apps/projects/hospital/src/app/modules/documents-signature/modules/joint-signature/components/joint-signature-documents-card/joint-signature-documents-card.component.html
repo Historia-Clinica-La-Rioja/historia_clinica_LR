@@ -16,7 +16,8 @@
 		[dataList]="documents"
 		[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
 		[hasHeader]="!!selectedDocumentId"
-		(selectedId)="seeDetails($event)">
+		(selectedId)="seeDetails($event)"
+		(selectedDataList)="selectedIds($event)">
 		<span translate="digital-signature.UNSELECTED_DOCUMENT" *ngIf="!selectedDocumentId"	class="no-detailed-information"></span>
 		<div class="header-information" *ngIf="!!selectedDocumentId">
 			<app-header-attention-detail

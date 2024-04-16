@@ -10,7 +10,7 @@
 			"TITLE": "¿Firmar solicitud de firma conjunta?",
 			"TITLE2": "¿Firmar {{param}} solicitudes de firma conjunta?",
 			"BUTTON_SIGN":"Firmar",
-			"SIGNATURE_SUCCESS": "Se firmó la consulta conjunta",
+			"SIGNATURE_SUCCESS": "Se firmó la solicitud seleccionada",
 			"SIGNATURES_SUCCESS": "Se firmaron todas las solicitudes seleccionadas"
 		},
 		"state-signature": {

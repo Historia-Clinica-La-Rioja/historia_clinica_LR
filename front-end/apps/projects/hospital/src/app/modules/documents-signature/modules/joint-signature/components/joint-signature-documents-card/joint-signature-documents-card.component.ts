@@ -96,7 +96,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	}
 
 	rejectSignature(reasonRejection: RejectDocumentElectronicJointSignatureDto) {
-		let message = " ";
+		let message:string;
 		reasonRejection.documentIds = this.selectedDocumentsId;
 		this.jointSignatureService.rejectDocumentElectronicJointSignature(reasonRejection).subscribe(res => {
 			if (this.selectedDocumentsId.length > 1) {
@@ -104,18 +104,22 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 			} else {
 				message = 'firma-conjunta.reject-signature.REJECT_SUCCESS';
 			}
+			this.setDocuments(INITIAL_PAGE);
 			this.snackBarService.showSuccess(message);
+		}, error => {
+			this.snackBarService.showError(error.text);
 		})
 	}
 
 	signDocument() {
-		let message = " ";
+		let message: string;
 		this.jointSignatureService.signDocumentElectronicJointSignature(this.selectedDocumentsId).subscribe(res => {
 			if (this.selectedDocumentsId.length > 1) {
 				message = 'firma-conjunta.sign-document.SIGNATURES_SUCCESS';
 			} else {
 				message = 'firma-conjunta.sign-document.SIGNATURE_SUCCESS';
 			}
+			this.setDocuments(INITIAL_PAGE);
 			this.snackBarService.showSuccess(message);
 		}, error => {
 			this.snackBarService.showError(error.text);
@@ -137,7 +141,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 				});
 			warnignComponent.afterClosed().subscribe(confirmed => {
 				if (confirmed) {
-					this.signDocument()
+					this.signDocument();
 				}
 			});
 		}

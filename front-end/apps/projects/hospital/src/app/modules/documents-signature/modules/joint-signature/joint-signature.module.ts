@@ -7,11 +7,13 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { ShowMoreConceptsPipe } from '@presentation/pipes/show-more-concepts.pipe';
 import { JointSignatureDocumentsCardComponent } from './components/joint-signature-documents-card/joint-signature-documents-card.component';
 import { RejectSignatureComponent } from './dialogs/reject-signature/reject-signature.component';
+import { JointSignatureDocumentsComponent } from './components/joint-signature-documents/joint-signature-documents.component';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
 		JointSignatureDocumentsCardComponent,
+		JointSignatureDocumentsComponent,
 		RejectSignatureComponent,
 	],
 	imports: [
