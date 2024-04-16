@@ -24,7 +24,7 @@ export class JointSignatureService {
 	}
 
 	getDocumentElectronicSignatureProfessionalStatus(documentId: number): Observable<DocumentElectronicSignatureProfessionalStatusDto[]> {
-		const URL = this.BASE_URL + `document/${documentId}/electronic-joint-signature/get-professionals-status`
+		const URL = this.BASE_URL + `/document/${documentId}/electronic-joint-signature/get-professionals-status`
 		return this.http.get<DocumentElectronicSignatureProfessionalStatusDto[]>(URL);
 	}
 

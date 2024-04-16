@@ -24,6 +24,7 @@ export class DiscardWarningComponent implements OnInit {
 			buttonClose?: boolean,
 			errorMode?: boolean,
 			color?: string,
+			paramTranslate?: any, 
 		}
 	) {
 	}

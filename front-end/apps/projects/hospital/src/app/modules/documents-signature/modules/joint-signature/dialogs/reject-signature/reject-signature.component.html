@@ -1,6 +1,11 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
     <div mat-dialog-title>
-        <h2 class="mat-h2 page-title"> {{'firma-conjunta.REJECT_SIGNATURE.form.TITLE' | translate}}</h2>
+        <ng-container *ngIf="data.amountSignatures === 1 ; else many">
+            <h2 class="mat-h2 page-title"> {{'firma-conjunta.reject-signature.form.TITLE' | translate}}</h2>
+        </ng-container>
+        <ng-template #many>
+            <h2 class="mat-h2 page-title" translate="firma-conjunta.reject-signature.form.TITLE2" [translateParams]="{amount: data.amountSignatures}"> </h2>
+        </ng-template>   
     </div>
 
     <button mat-icon-button mat-dialog-close>
@@ -9,21 +14,21 @@
 </div>
 <div mat-dialog-content>
     <div fxLayout="column" [formGroup]="rejectForm">
-        <mat-label class="mat-body">{{'firma-conjunta.REJECT_SIGNATURE.form.MOTIVE' | translate}}*</mat-label>
+        <mat-label class="mat-body">{{'firma-conjunta.reject-signature.form.MOTIVE' | translate}}*</mat-label>
         <mat-form-field appearance="outline" fxFlex>
             <mat-select id="motive" name="motive" formControlName="motive"
-                placeholder="{{'firma-conjunta.REJECT_SIGNATURE.form.PLACEHOLDER_MOTIVE' | translate}}">
+                placeholder="{{'firma-conjunta.reject-signature.form.PLACEHOLDER_MOTIVE' | translate}}">
                 <mat-option *ngFor="let motive of motives" [value]="motive.id">
                     <span class="mat-body">{{motive.text | translate}}</span>
                 </mat-option>
             </mat-select>
-            <mat-error [translate]="'firma-conjunta.REJECT_SIGNATURE.form.ERROR_MOTIVE'"></mat-error>
+            <mat-error [translate]="'firma-conjunta.reject-signature.form.ERROR_MOTIVE'"></mat-error>
         </mat-form-field>
-        <mat-label class="mat-body">{{'firma-conjunta.REJECT_SIGNATURE.form.OBSERVATIONS' | translate}}*</mat-label>
+        <mat-label class="mat-body">{{'firma-conjunta.reject-signature.form.OBSERVATIONS' | translate}}*</mat-label>
         <mat-form-field appearance="outline">
             <textarea matInput name="observations" formControlName="observations" id="observations" type="text"
-                placeholder="{{'firma-conjunta.REJECT_SIGNATURE.form.PLACEHOLDER_OBSERVATIONS' | translate}}"></textarea>
-            <mat-error [translate]="'firma-conjunta.REJECT_SIGNATURE.form.ERROR_OBSERVATIONS'"></mat-error>
+                placeholder="{{'firma-conjunta.reject-signature.form.PLACEHOLDER_OBSERVATIONS' | translate}}"></textarea>
+            <mat-error [translate]="'firma-conjunta.reject-signature.form.ERROR_OBSERVATIONS'"></mat-error>
         </mat-form-field>
     </div>
 </div>

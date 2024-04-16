@@ -6,7 +6,13 @@
 		"TITLE_HEADER": "Datos de la consulta",
 		"INTERVENING_PROFESSIONALS": "Otros profesionales intervinientes",
 		"BUTTON_SIGN_DOCUMENT": "Firmar documento",
-		"SIGNATURE_SUCCESS": "Se firmó la consulta conjunta",
+		"sign-document":{
+			"TITLE": "¿Firmar solicitud de firma conjunta?",
+			"TITLE2": "¿Firmar {{param}} solicitudes de firma conjunta?",
+			"BUTTON_SIGN":"Firmar",
+			"SIGNATURE_SUCCESS": "Se firmó la consulta conjunta",
+			"SIGNATURES_SUCCESS": "Se firmaron todas las solicitudes seleccionadas"
+		},
 		"state-signature": {
 			"OUTDATED": "Vencido",
 			"PENDING" : "Pendiente",
@@ -27,11 +33,13 @@
 			"OUTDATED": "Firma vencida",
 			"ALL": "Todas"
 		},
-		"REJECT_SIGNATURE": {
+		"reject-signature": {
 			"BUTTON_REJECT": "Rechazar firma",
 			"REJECT_SUCCESS" : "Se rechazó la solicitud de firma conjunta",
+			"REJECTS_SUCCESS" : "Se rechazaron todas las solicitudes seleccionadas",
 			"form": {
 				"TITLE": "Rechazar solicitud de firma",
+				"TITLE2": "Rechazar {{amount}} solicitudes de firma",
 				"PLACEHOLDER_MOTIVE": "Seleccionar motivo",
 				"MOTIVE": "Motivo",
 				"ERROR_MOTIVE": "Seleccione motivo",

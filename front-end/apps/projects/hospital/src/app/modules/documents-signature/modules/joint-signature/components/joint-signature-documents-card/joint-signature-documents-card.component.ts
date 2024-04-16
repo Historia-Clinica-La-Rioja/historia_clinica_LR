@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RejectSignatureComponent } from '../../dialogs/reject-signature/reject-signature.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
 	selector: 'app-joint-signature-documents-card',
@@ -32,7 +33,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	selectedDocumentId: number;
 	elementsAmount: number;
 	pageSize = PAGE_SIZE;
-	selectedDocumentsId: number [];
+	selectedDocumentsId: number[] = [];
 
 	readonly INITIAL_PAGE = INITIAL_PAGE;
 	readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
@@ -77,8 +78,12 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 		this.selectedDocumentId = ids.id;
 		this.headerInformation = buildHeaderInformation(this.jointSignatureDocuments.find(item => item.documentId === ids.id));
 	}
+
 	openPopUpRejectSignature() {
 		const dialogRef = this.dialog.open(RejectSignatureComponent, {
+			data: {
+				amountSignatures: this.selectedDocumentsId.length,
+			},
 			width: '420px',
 			autoFocus: false,
 			disableClose: true,
@@ -91,18 +96,51 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	}
 
 	rejectSignature(reasonRejection: RejectDocumentElectronicJointSignatureDto) {
+		let message = " ";
 		reasonRejection.documentIds = this.selectedDocumentsId;
 		this.jointSignatureService.rejectDocumentElectronicJointSignature(reasonRejection).subscribe(res => {
-			this.snackBarService.showSuccess('firma-conjunta.REJECT_SIGNATURE.REJECT_SUCCESS');
+			if (this.selectedDocumentsId.length > 1) {
+				message = 'firma-conjunta.reject-signature.REJECTS_SUCCESS';
+			} else {
+				message = 'firma-conjunta.reject-signature.REJECT_SUCCESS';
+			}
+			this.snackBarService.showSuccess(message);
 		})
 	}
 
 	signDocument() {
+		let message = " ";
 		this.jointSignatureService.signDocumentElectronicJointSignature(this.selectedDocumentsId).subscribe(res => {
-			this.snackBarService.showSuccess('firma-conjunta.SIGNATURE_SUCCESS');
+			if (this.selectedDocumentsId.length > 1) {
+				message = 'firma-conjunta.sign-document.SIGNATURES_SUCCESS';
+			} else {
+				message = 'firma-conjunta.sign-document.SIGNATURE_SUCCESS';
+			}
+			this.snackBarService.showSuccess(message);
 		}, error => {
 			this.snackBarService.showError(error.text);
 		})
+	}
+
+	openSingDocument() {
+		if (this.selectedDocumentsId.length > 0) {
+			let title = this.selectedDocumentsId?.length > 1 ? 'firma-conjunta.sign-document.TITLE2' : 'firma-conjunta.sign-document.TITLE'
+			let param = this.selectedDocumentsId?.length > 1 ? this.selectedDocumentsId.length : null;
+			const warnignComponent = this.dialog.open(DiscardWarningComponent,
+				{
+					disableClose: true,
+					data: {
+						title: title,
+						okButtonLabel: 'firma-conjunta.sign-document.BUTTON_SIGN',
+						paramTranslate: param,
+					},
+				});
+			warnignComponent.afterClosed().subscribe(confirmed => {
+				if (confirmed) {
+					this.signDocument()
+				}
+			});
+		}
 	}
 
 	selectedIds(ids: number[]) {
