@@ -4,20 +4,9 @@
 		<span [translate]="'internaciones.discharge.DISCHARGE_DATE'"></span> *
 		<section>
 			<div class="form-row" fxLayoutGap="5px">
-				<mat-form-field appearance="outline">
-					<input formControlName="date" id="date" matInput [matDatepicker]="datePicker"
-						[value]="todayDate" [max]="todayDate" [min]="minMedicalDischargeDate"
-						placeholder="{{'internaciones.discharge.DATE' | translate}}">
 
-					<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-					<mat-datepicker #datePicker></mat-datepicker>
-
-					<mat-error *ngIf="hasError(dischargeForm, 'required', 'date') else invalidDate"
-						translate="internaciones.discharge.REQUIRED"></mat-error>
-					<ng-template #invalidDate>
-						<mat-error translate="internaciones.discharge.INVALID_DATE"></mat-error>
-					</ng-template>
-				</mat-form-field>
+				<app-datepicker [maxDate]="todayDate" [minDate]="minMedicalDischargeDate"
+					[dateToSetInDatepicker]="todayDate" (selectDate)="selectedDate($event)"></app-datepicker>
 
 				<mat-form-field appearance="outline">
 					<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
@@ -62,6 +51,3 @@
 		</mat-dialog-actions>
 	</form>
 </div>
-
-
-

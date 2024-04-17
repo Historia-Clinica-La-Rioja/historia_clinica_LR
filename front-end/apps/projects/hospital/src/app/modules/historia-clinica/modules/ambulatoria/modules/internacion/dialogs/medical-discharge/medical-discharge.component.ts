@@ -1,9 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { DateTimeDto } from '@api-rest/api-model';
 import { Validators, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
-import * as moment from 'moment';
 import { beforeTimeDateValidation, futureTimeValidation, hasError, TIME_PATTERN } from '@core/utils/form.utils';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { InternmentEpisodeService } from '@api-rest/services/internment-episode.service';
@@ -13,6 +10,7 @@ import { dateTimeDtoToStringDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipe } from '@angular/common';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { isSameDay } from 'date-fns';
 
 
 @Component({
@@ -46,7 +44,7 @@ export class MedicalDischargeComponent implements OnInit {
 			.subscribe(dischargeTypes => this.dischargeTypes = dischargeTypes);
 
 		this.dischargeForm = this.formBuilder.group({
-			date: [moment(), [Validators.required]],
+			date: [this.todayDate, [Validators.required]],
 			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME)],
 			dischargeTypeId: [null, [Validators.required]]
 		});
@@ -61,8 +59,8 @@ export class MedicalDischargeComponent implements OnInit {
 			});
 
 
-		this.dischargeForm.get('date').valueChanges.subscribe((value: Moment) => {
-			if (value?.isSame(newMoment(), 'day')) {
+		this.dischargeForm.get('date').valueChanges.subscribe((value: Date) => {
+			if (isSameDay(value, this.todayDate)) {
 				if (this.minDate === (this.datePipe.transform(new Date(), DatePipeFormat.SHORT_DATE))) {
 					this.dischargeForm.get('time').setValidators([Validators.required, beforeTimeDateValidation(this.minTime), futureTimeValidation, Validators.pattern(TIME_PATTERN)])
 				} else {
@@ -73,6 +71,10 @@ export class MedicalDischargeComponent implements OnInit {
 			}
 			this.dischargeForm.get('time').updateValueAndValidity();
 		});
+	}
+
+	selectedDate(date:Date) {
+		this.dischargeForm.controls.date.setValue(date)
 	}
 
 	setValidators(): void {
