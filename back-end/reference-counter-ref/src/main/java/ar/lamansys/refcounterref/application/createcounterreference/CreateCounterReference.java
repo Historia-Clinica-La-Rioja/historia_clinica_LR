@@ -18,6 +18,7 @@ import ar.lamansys.refcounterref.infraestructure.output.repository.reference.Ref
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hl7.fhir.r4.model.Count;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,13 +41,15 @@ public class CreateCounterReference {
 
         log.debug("Input parameters -> counterReferenceBo {}", counterReferenceBo);
 
-		var referenceData = referenceStorage.findById(counterReferenceBo.getReferenceId()).orElseThrow(() ->
-				new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE, "El identificador de la referencia es invalido"));
-		
-        var doctorInfoBo = counterReferenceDoctorStorage.getDoctorInfo().orElseThrow(() ->
-                new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es invalido"));
+		boolean referenceIsClosed= counterReferenceStorage.existsCounterReference(counterReferenceBo.getReferenceId());
 
-        assertContextValid(counterReferenceBo, doctorInfoBo, referenceData.getConsultation());
+		assertValidCounterReference(referenceIsClosed);
+
+		var referenceData = referenceStorage.findById(counterReferenceBo.getReferenceId()).orElseThrow(() -> new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE, "El identificador de la referencia es invalido"));
+
+		var doctorInfoBo = counterReferenceDoctorStorage.getDoctorInfo().orElseThrow(() -> new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es invalido"));
+
+		assertContextValid(counterReferenceBo, doctorInfoBo, referenceData.getConsultation());
 
 		assertValidReferenceStatus(referenceData);
 
@@ -67,9 +70,9 @@ public class CreateCounterReference {
 						counterReferenceBo.getClosureTypeId(),
 						counterReferenceBo.getHierarchicalUnitId()));
 
-        counterReferenceDocumentStorage.save(new CounterReferenceDocumentBo(null, counterReferenceBo, encounterId, doctorInfoBo.getId(), now));
+		counterReferenceDocumentStorage.save(new CounterReferenceDocumentBo(null, counterReferenceBo, encounterId, doctorInfoBo.getId(), now));
 
-        counterReferenceAppointmentStorage.run(counterReferenceBo.getPatientId(), doctorInfoBo.getId(), now);
+		counterReferenceAppointmentStorage.run(counterReferenceBo.getPatientId(), doctorInfoBo.getId(), now);
     }
 
     private void assertContextValid(CounterReferenceBo counterReferenceBo, CounterReferenceDoctorInfoBo doctorInfoBo, boolean consultation) {
@@ -105,6 +108,12 @@ public class CreateCounterReference {
 			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE_STATUS, "La referencia debe estar activa");
 		if (!reference.getRegulationStateId().equals(EReferenceRegulationState.APPROVED.getId()))
 			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE_REGULATION_STATE, "La referencia debe haber sido aprobada previamente");
+	}
+
+	private void assertValidCounterReference(boolean referenceIsClosed){
+		if (referenceIsClosed){
+			throw new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.CLOSED_REFERENCE, "La referencia ya posee un cierre");
+		}
 	}
     
 }
