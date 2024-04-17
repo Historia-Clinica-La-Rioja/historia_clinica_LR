@@ -21,8 +21,8 @@ public enum EAnthropometricGraphicOption {
 	WEIGHT_FOR_AGE((short)2, "Peso para la edad"),
 	WEIGHT_FOR_LENGTH((short)3, "Peso para talla (0-2 años)"),
 	WEIGHT_FOR_HEIGHT((short)4, "Peso para talla (2-5 años)"),
-	HEAD_CIRCUMFERENCE((short)5, "Perímetro cefálico");
-	;
+	HEAD_CIRCUMFERENCE((short)5, "Perímetro cefálico"),
+	BMI_FOR_AGE((short)6, "IMC para la edad");
 
 	private Short id;
 	private String value;

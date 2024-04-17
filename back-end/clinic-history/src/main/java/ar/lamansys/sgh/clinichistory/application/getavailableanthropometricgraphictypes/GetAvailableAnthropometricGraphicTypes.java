@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.getavailableanthropometricgrap
 
 import ar.lamansys.sgh.clinichistory.application.fetchHCE.HCEClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphic;
+import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphicRange;
 import ar.lamansys.sgh.clinichistory.domain.anthropometricgraphic.enums.EAnthropometricGraphicType;
 import ar.lamansys.sgh.clinichistory.domain.hce.HCEAnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
@@ -35,16 +36,28 @@ public class GetAvailableAnthropometricGraphicTypes {
 
 	private List<EAnthropometricGraphicType> getAvailableGraphicTypes(Integer patientId, EAnthropometricGraphic graphic){
 		BasicPatientDto basicPatientDto = sharedPatientPort.getBasicDataFromPatient(patientId);
-		
-		if (basicPatientDto.getPerson().getPersonAge() == null || basicPatientDto.getPerson().getPersonAge().getYears() > 18)
+
+		if (basicPatientDto.getPerson().getPersonAge() == null || basicPatientDto.getPerson().getPersonAge().getYears() > 18 || graphic == null)
 			return Collections.emptyList();
+
+		short years = basicPatientDto.getPerson().getPersonAge().getYears();
 
 		boolean withoutGender = basicPatientDto.getPerson().getGenderId() == null || basicPatientDto.getPerson().getGenderId().equals(EGender.X.getId());
 
+		if (graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
+			return (withoutGender || years < 2) ? ONLY_EVOLUTION : ONLY_PERCENTILES;
+
+		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT)){
+			if (years < 2)
+				return Collections.emptyList();
+			else
+				return withoutGender ? ONLY_EVOLUTION : ONLY_PERCENTILES;
+		}
+
 		if (graphic.equals(EAnthropometricGraphic.LENGTH_HEIGHT_FOR_AGE) || graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE))
 			return withoutGender ? ONLY_EVOLUTION : PERCENTILES_AND_ZSCORE;
-		else
-			return withoutGender ? ONLY_EVOLUTION : ONLY_PERCENTILES;
+
+		return withoutGender ? ONLY_EVOLUTION : ONLY_PERCENTILES;
 	}
 
 }

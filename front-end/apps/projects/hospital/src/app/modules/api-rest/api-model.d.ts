@@ -5137,6 +5137,9 @@ export const enum EAnthropometricGraphicRange {
     NINETEEN_YEARS = "NINETEEN_YEARS",
     WEIGHT_FOR_LENGTH = "WEIGHT_FOR_LENGTH",
     WEIGHT_FOR_HEIGHT = "WEIGHT_FOR_HEIGHT",
+    TWO_TO_FIVE_YEARS = "TWO_TO_FIVE_YEARS",
+    TWO_TO_NINETEEN_YEARS = "TWO_TO_NINETEEN_YEARS",
+    TWO_YEARS = "TWO_YEARS",
 }
 
 export const enum EAppointmentModality {

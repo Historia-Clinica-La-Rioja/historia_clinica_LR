@@ -30,8 +30,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -116,16 +114,16 @@ public class GetAnthropometricGraphicData {
 		Integer maxWeeksOrMonths = (graphicBo.getRange().getValues().get(graphicBo.getRange().getValues().size() - 1));
 		evolutionValues.forEach(evolution -> {
 			short age = (short) ChronoUnit.YEARS.between(patient.getBirthDate(), evolution.getEffectiveTime());
-			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge()) {
-				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue(), maxWeeksOrMonths);
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() || (graphicBo.getRange().equals(EAnthropometricGraphicRange.TWO_YEARS) && age < 2)) {
+				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue().replace(',', '.'), maxWeeksOrMonths);
 				if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
 			}
 		});
 		String actualValue = getActualValue(anthropometricValue, graphicBo.getGraphic());
 		if (actualValue != null ){
 			short age = (short) ChronoUnit.YEARS.between(patient.getBirthDate(), LocalDate.now());
-			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge()) {
-				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), LocalDate.now(), patient.getBirthDate(), actualValue, maxWeeksOrMonths);
+			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() || (graphicBo.getRange().equals(EAnthropometricGraphicRange.TWO_YEARS) && age < 2)) {
+				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), LocalDate.now(), patient.getBirthDate(), actualValue.replace(',', '.'), maxWeeksOrMonths);
 				if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
 			}
 		}
@@ -258,8 +256,13 @@ public class GetAnthropometricGraphicData {
 			return EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT;
 		if (personAge.getYears() > 4 && !graphic.equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE)){
 			if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE)) return EAnthropometricGraphicRange.TEN_YEARS;
+			if (graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE)) return EAnthropometricGraphicRange.TWO_TO_NINETEEN_YEARS;
 			return EAnthropometricGraphicRange.NINETEEN_YEARS;
 		}
+		if (personAge.getYears() > 1 && graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
+			return EAnthropometricGraphicRange.TWO_TO_FIVE_YEARS;
+		if (personAge.getYears() < 2 && graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
+			return EAnthropometricGraphicRange.TWO_YEARS;
 		if (personAge.getYears() < 1 && personAge.getMonths() < 6)
 			return EAnthropometricGraphicRange.SIX_MONTHS;
 		return EAnthropometricGraphicRange.FIVE_YEARS;
@@ -276,9 +279,9 @@ public class GetAnthropometricGraphicData {
 		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE) || graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_LENGTH) || graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_HEIGHT))
 			anthropometricGraphicDataBo.setYAxisLabel("Peso (kg)");
 		if (graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
-			anthropometricGraphicDataBo.setYAxisLabel("IMC");
+			anthropometricGraphicDataBo.setYAxisLabel("IMC (kg/m²)");
 		if (graphic.equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE))
-			anthropometricGraphicDataBo.setYAxisLabel("Perímetro cefálico");
+			anthropometricGraphicDataBo.setYAxisLabel("Perímetro cefálico (cm)");
 	}
 
 
@@ -288,10 +291,13 @@ public class GetAnthropometricGraphicData {
 		if (graphicRange.equals(EAnthropometricGraphicRange.SIX_MONTHS)){
 			xAxisRange.forEach(x -> xAxisRangeLabels.add(getSixMonthsLabel(x)));
 		}
-		if (graphicRange.equals(EAnthropometricGraphicRange.FIVE_YEARS)){
+		if (graphicRange.equals(EAnthropometricGraphicRange.TWO_YEARS)){
+			xAxisRange.forEach(x -> xAxisRangeLabels.add(getTwoYearsLabel(x)));
+		}
+		if (graphicRange.equals(EAnthropometricGraphicRange.FIVE_YEARS) || graphicRange.equals(EAnthropometricGraphicRange.TWO_TO_FIVE_YEARS)){
 			xAxisRange.forEach(x -> xAxisRangeLabels.add(getFiveYearsLabel(x)));
 		}
-		if (graphicRange.equals(EAnthropometricGraphicRange.NINETEEN_YEARS) || graphicRange.equals(EAnthropometricGraphicRange.TEN_YEARS)) {
+		if (graphicRange.equals(EAnthropometricGraphicRange.NINETEEN_YEARS) || graphicRange.equals(EAnthropometricGraphicRange.TEN_YEARS) || graphicRange.equals(EAnthropometricGraphicRange.TWO_TO_NINETEEN_YEARS)) {
 			xAxisRange.forEach(x -> xAxisRangeLabels.add(getNineteenYearsLabel(x)));
 		}
 		if (graphicRange.equals(EAnthropometricGraphicRange.WEIGHT_FOR_LENGTH) || graphicRange.equals(EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT)){
@@ -308,6 +314,17 @@ public class GetAnthropometricGraphicData {
 				 return String.valueOf(x/WEEKS_IN_MONTH).concat(x/WEEKS_IN_MONTH == 1 ? " mes" : " meses");
 			else
 				return x.toString().concat(x == 1 ? " semana" : " semanas");
+		}
+	}
+
+	private String getTwoYearsLabel(Integer x){
+		if (x == 0)
+			return "Nacimiento";
+		else {
+			if (x % MONTHS_IN_YEAR == 0)
+				return String.valueOf(x/MONTHS_IN_YEAR).concat(x/MONTHS_IN_YEAR == 1 ? " año" : " años");
+			else
+				return x.toString().concat(x == 1 ? " mes" : " meses");
 		}
 	}
 

@@ -15,7 +15,7 @@ public enum EAnthropometricGraphic {
 
 	LENGTH_HEIGHT_FOR_AGE((short)1, (short)0, (short)19),
 	WEIGHT_FOR_AGE((short)2, (short)0, (short)10),
-	BMI_FOR_AGE((short)3, (short)0, (short)19),
+	BMI_FOR_AGE((short)3, (short)2, (short)19),
 	HEAD_CIRCUMFERENCE((short)4, (short)0, (short)5),
 	WEIGHT_FOR_LENGTH((short)5, (short)0, (short)2),
 	WEIGHT_FOR_HEIGHT((short)6, (short)2, (short)5);

@@ -101,6 +101,7 @@ public class AnthropometricGraphicController {
 		if (chartOption.equals(EAnthropometricGraphicOption.WEIGHT_FOR_LENGTH)) return EAnthropometricGraphic.WEIGHT_FOR_LENGTH;
 		if (chartOption.equals(EAnthropometricGraphicOption.WEIGHT_FOR_HEIGHT)) return EAnthropometricGraphic.WEIGHT_FOR_HEIGHT;
 		if (chartOption.equals(EAnthropometricGraphicOption.HEAD_CIRCUMFERENCE)) return EAnthropometricGraphic.HEAD_CIRCUMFERENCE;
+		if (chartOption.equals(EAnthropometricGraphicOption.BMI_FOR_AGE)) return EAnthropometricGraphic.BMI_FOR_AGE;
 		return null;
 	}
 
