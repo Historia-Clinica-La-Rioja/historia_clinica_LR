@@ -8,7 +8,6 @@ import { Detail } from '@presentation/components/details-section-custom/details-
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { ItemListCard } from '@presentation/components/selectable-card/selectable-card.component';
 import { buildItemListCard } from '../../mappers/joint-signature.mapper';
-import { forkJoin, take } from 'rxjs';
 
 @Component({
 	selector: 'app-home',
@@ -32,12 +31,13 @@ export class HomeComponent {
 		private readonly jointSignatureService: JointSignatureService
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/'
-		const enabledDigital$ = this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_DIGITAL);
-		const enabledConjunta$ = this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_CONJUNTA);
-		forkJoin([enabledDigital$, enabledConjunta$]).pipe(take(1)).subscribe(([isEnableDigital, isEnabledContunta]) => {
-			if (isEnableDigital && isEnabledContunta)
+		this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_DIGITAL).subscribe(isEnabledDigital =>{
+			this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_CONJUNTA).subscribe(isEnabledConjunta =>{
+			  if(isEnabledConjunta && isEnabledDigital){
 				this.buttonBack = true;
-		});
+			  }
+			})
+		  })
 	}
 
 	ngOnInit(): void {
