@@ -10,21 +10,8 @@
 					<div class="form-row" fxLayoutGap="5px" formGroupName="dateTime">
 						<span translate="internaciones.new-internment.DATE_TIME"></span>
 
-						<mat-form-field class="date" appearance="outline">
-
-							<input formControlName="date" id="date" matInput [matDatepicker]="datePicker"
-								[value]="today" [min]="validPreviousDays" [max]="today"
-								placeholder="{{'internaciones.new-internment.DATE' | translate}}">
-
-							<mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-							<mat-datepicker #datePicker></mat-datepicker>
-
-							<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'date') else invalidDate"
-								translate="internaciones.new-internment.REQUIRED"></mat-error>
-							<ng-template #invalidDate>
-								<mat-error translate="internaciones.new-internment.INVALID_DATE"></mat-error>
-							</ng-template>
-						</mat-form-field>
+						<app-datepicker [maxDate]="today" [minDate]="validPreviousDays"
+							[dateToSetInDatepicker]="today" (selectDate)="selectedDate($event)"></app-datepicker>
 
 						<mat-form-field appearance="outline">
 							<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
@@ -46,13 +33,14 @@
 					<div class="form-row">
 						<span translate="internaciones.new-internment.MEDICAL_CONVERGE"></span>
 						<mat-form-field appearance="outline">
-							<mat-select formControlName="patientMedicalCoverage" placeholder="{{'internaciones.new-internment.NO_MEDICAL_CONVERGE' | translate}}">
+							<mat-select formControlName="patientMedicalCoverage"
+								placeholder="{{'internaciones.new-internment.NO_MEDICAL_CONVERGE' | translate}}">
 								<mat-option id="medicalConverge"
 									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"
 									[value]="patientMedicalCoverage">
 									{{ patientMedicalCoverage | fullMedicalCoverage }}
 								</mat-option>
-								<mat-option [value]="'null'" >{{'internaciones.new-internment.NO_MEDICAL_CONVERGE'
+								<mat-option [value]="'null'">{{'internaciones.new-internment.NO_MEDICAL_CONVERGE'
 									|translate}}</mat-option>
 								<mat-divider></mat-divider>
 								<mat-option (click)="openMedicalCoverageDialog()">
@@ -67,10 +55,12 @@
 				<section>
 					<h2 [translate]="'internaciones.new-internment.SECTION_BED'"></h2>
 					<div class="bed-assignment">
-						<h4 class="page-title" *ngIf="!selectedBedInfo" [translate]="'internaciones.new-internment.BED_ASSIGNMENT'"></h4>
+						<h4 class="page-title" *ngIf="!selectedBedInfo"
+							[translate]="'internaciones.new-internment.BED_ASSIGNMENT'"></h4>
 						<mat-list content *ngIf="selectedBedInfo">
 							<mat-list-item>
-								<h2 [translate]="'gestion-camas.detail.BED_TITLE'" [translateParams]="{ bedNumber: selectedBedInfo.bed.bedNumber }"></h2>
+								<h2 [translate]="'gestion-camas.detail.BED_TITLE'"
+									[translateParams]="{ bedNumber: selectedBedInfo.bed.bedNumber }"></h2>
 							</mat-list-item>
 							<mat-list-item>
 								<div fxLayout="column wrap">
@@ -90,10 +80,12 @@
 							</mat-list-item>
 						</mat-list>
 						<div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-							<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="selectedBedInfo">
+							<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()"
+								*ngIf="selectedBedInfo">
 								{{'buttons.EDIT' | translate | uppercase }}
 							</button>
-							<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()" *ngIf="!selectedBedInfo">
+							<button mat-raised-button color="primary" type="button" (click)="openBedAssignmentDialog()"
+								*ngIf="!selectedBedInfo">
 								<span [translate]="'internaciones.new-internment.BED_ASSIGNMENT_BUTTON'"></span>
 							</button>
 						</div>
@@ -107,10 +99,12 @@
 					<div class="form-row">
 						<div fxFlex="100%">
 							<app-typeahead id="doctorId" [options]="doctorsTypehead"
-								[placeholder]="'internaciones.new-internment.DOCTOR_NAME' | translate" (selectionChange)="setDoctor($event)" [required]=true>
+								[placeholder]="'internaciones.new-internment.DOCTOR_NAME' | translate"
+								(selectionChange)="setDoctor($event)" [required]=true>
 							</app-typeahead>
 						</div>
-						<mat-error class="error-message" *ngIf="!form.value.doctorId && submitForm" [translate]="'pacientes.form.REQUIRED'"></mat-error>
+						<mat-error class="error-message" *ngIf="!form.value.doctorId && submitForm"
+							[translate]="'pacientes.form.REQUIRED'"></mat-error>
 					</div>
 				</section>
 
@@ -119,40 +113,29 @@
 					<span [translate]="'Nombre y apellido'"></span>
 					<div class="form-row">
 						<mat-form-field appearance="outline">
-							<input id="contactName"
-							       name="contactName"
-							       formControlName="contactName"
-							       placeholder="Nombre y apellido"
-							       maxlength="40"
-							       matInput>
+							<input id="contactName" name="contactName" formControlName="contactName"
+								placeholder="Nombre y apellido" maxlength="40" matInput>
 						</mat-form-field>
 					</div>
 					<span [translate]="'Teléfono'"></span>
 					<div class="form-row">
 						<mat-form-field appearance="outline">
-							<input id="contactPhoneNumber"
-							       name="contactPhoneNumber"
-							       formControlName="contactPhoneNumber"
-							       placeholder="Teléfono"
-							       maxlength="20"
-							       matInput>
+							<input id="contactPhoneNumber" name="contactPhoneNumber"
+								formControlName="contactPhoneNumber" placeholder="Teléfono" maxlength="20" matInput>
 						</mat-form-field>
 					</div>
 					<span [translate]="'Parentesco'"></span>
 					<div class="form-row">
 						<mat-form-field appearance="outline">
-							<input id="contactRelationship"
-							       name="contactRelationship"
-							       formControlName="contactRelationship"
-							       placeholder="Parentesco"
-							       maxlength="20"
-							       matInput>
+							<input id="contactRelationship" name="contactRelationship"
+								formControlName="contactRelationship" placeholder="Parentesco" maxlength="20" matInput>
 						</mat-form-field>
 					</div>
 				</section>
 
 				<section>
-					<button *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']" mat-raised-button color="primary" type="submit">
+					<button *appHasRole="['ADMINISTRATIVO', 'ADMINISTRATIVO_RED_DE_IMAGENES']" mat-raised-button
+						color="primary" type="submit">
 						<span [translate]="'buttons.CONTINUE'"></span>
 					</button>
 				</section>
@@ -167,7 +150,7 @@
 					</div>
 					<div content>
 						<app-personal-information [personalInformation]="personalInformation"
-						                          [patientMedicalCoverage]="patientMedicalCoverage">
+							[patientMedicalCoverage]="patientMedicalCoverage">
 						</app-personal-information>
 					</div>
 				</app-patient-card>

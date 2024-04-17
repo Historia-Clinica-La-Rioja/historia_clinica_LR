@@ -34,14 +34,12 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DatePipe } from '@angular/common';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { DatePipeFormat } from '@core/utils/date.utils';
-import { newMoment } from '@core/utils/moment.utils';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 import { map } from 'rxjs/operators';
 import { INTERNMENT_SECTOR } from '@historia-clinica/modules/guardia/constants/masterdata';
+import { isSameDay } from 'date-fns';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 
@@ -123,7 +121,7 @@ export class NewInternmentComponent implements OnInit {
 
 		this.form = this.formBuilder.group({
 			dateTime: this.formBuilder.group({
-				date: [moment(), [Validators.required]],
+				date: [this.today, [Validators.required]],
 				time: [this.datePipe.transform(this.today, DatePipeFormat.SHORT_TIME), [Validators.required, futureTimeValidation,
 				Validators.pattern(TIME_PATTERN)]]
 			}),
@@ -134,8 +132,8 @@ export class NewInternmentComponent implements OnInit {
 			contactRelationship: [null],
 		});
 
-		this.form.controls.dateTime.get('date').valueChanges.subscribe((value: Moment) => {
-			if (value?.isSame(newMoment(), 'day')) {
+		this.form.controls.dateTime.get('date').valueChanges.subscribe((value: Date) => {
+			if (isSameDay(value, new Date())) {
 				this.form.controls.dateTime.get('time').setValidators([Validators.required, futureTimeValidation,
 				Validators.pattern(TIME_PATTERN)]);
 			} else {
@@ -159,6 +157,10 @@ export class NewInternmentComponent implements OnInit {
 		this.patientService.getPatientBasicData(Number(this.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
 		});
+	}
+
+	selectedDate(date: Date) {
+		this.form.controls.dateTime.get('date').setValue(date);
 	}
 
 	save(): void {

@@ -815,7 +815,6 @@
 			}
 		},
 		"new-internment": {
-			"DATE": "Fecha",
 			"DATE_TIME": "Fecha y hora de ingreso",
 			"TITLE": "Nueva internación",
 			"SUBTITLE": "Complete los siguientes datos",
