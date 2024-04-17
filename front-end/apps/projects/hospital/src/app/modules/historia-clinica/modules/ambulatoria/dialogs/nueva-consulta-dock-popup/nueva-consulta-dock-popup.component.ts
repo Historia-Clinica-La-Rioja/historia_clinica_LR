@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
@@ -60,7 +60,7 @@ const TIME_OUT = 5000;
 	templateUrl: './nueva-consulta-dock-popup.component.html',
 	styleUrls: ['./nueva-consulta-dock-popup.component.scss']
 })
-export class NuevaConsultaDockPopupComponent implements OnInit, OnChanges {
+export class NuevaConsultaDockPopupComponent implements OnInit {
 	showWarningViolenceSituation = false;
 	dataName: string[];
 	disableConfirmButton = false;
@@ -198,7 +198,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit, OnChanges {
 		});
 	}
 
-	ngOnChanges() {
+	setBoxMessageInfo() {
 		this.boxMessageInfo = {
 			title: 'historia-clinica.include-previous-data-question.TITLE',
 			question: 'historia-clinica.include-previous-data-question.violence-situations.QUESTION',
@@ -242,6 +242,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit, OnChanges {
 					this.dataName = res.map(p=> ` "${p.pt}"`);
 					this.showWarningViolenceSituation = true;
 					this.collapsedReferenceRequest = false;
+					this.setBoxMessageInfo();
 					setTimeout(() => {
 						this.sectionReference.nativeElement.scrollIntoView({ behavior: 'smooth' });
 					}, 200);
