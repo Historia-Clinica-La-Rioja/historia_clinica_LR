@@ -26,6 +26,7 @@ import { DateRangePickerComponent } from './components/date-range-picker/date-ra
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
 import { DetailsSectionCustomComponent } from './components/details-section-custom/details-section-custom.component';
+import { DescriptionItemComponent } from './components/description-item/description-item.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
 import { DocumentSectionTableComponent } from './components/document-section-table/document-section-table.component';
@@ -131,6 +132,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ContentTitleComponent,
 		DatepickerComponent,
 		DateRangePickerComponent,
+    	DescriptionItemComponent,
 		DetailBoxComponent,
 		DetailedInformationComponent,
 		DetailsSectionCustomComponent,
@@ -258,6 +260,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		DetailBoxComponent,
 		DetailedInformationComponent,
 		DetailsSectionCustomComponent,
+    	DescriptionItemComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,
 		DocumentSectionTableComponent,
