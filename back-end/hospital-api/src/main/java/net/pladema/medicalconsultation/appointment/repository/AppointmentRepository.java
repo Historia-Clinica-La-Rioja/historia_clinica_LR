@@ -179,12 +179,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
     @Modifying
     @Query( "UPDATE Appointment  AS a " +
             "SET a.appointmentStateId = :appointmentStateId, " +
-            "a.updateable.updatedOn = CURRENT_TIMESTAMP, " +
+            "a.updateable.updatedOn = :currentTimestamp, " +
             "a.updateable.updatedBy = :userId " +
             "WHERE a.id = :appointmentId ")
     void updateState(@Param("appointmentId") Integer appointmentId,
                      @Param("appointmentStateId") short appointmentStateId,
-                     @Param("userId") Integer userId);
+                     @Param("userId") Integer userId,
+					 @Param("currentTimestamp") LocalDateTime currentTimestamp);
 
     @Transactional(readOnly = true)
     @Query( "SELECT DISTINCT a.id, a.hour " +

@@ -233,7 +233,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Transactional
 	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
-		appointmentRepository.updateState(appointmentId, appointmentStateId, userId);
+		appointmentRepository.updateState(appointmentId, appointmentStateId, userId, LocalDateTime.now());
 		if(appointmentStateId == 4 || appointmentStateId == 3) //si se cambia a "Ausente" o "Cancelado", se borra la asociacion turno-orden medica
 			appointmentOrderImageRepository.deleteByAppointment(appointmentId);
 

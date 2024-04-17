@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -95,7 +96,8 @@ public class BookingPersonServiceImpl implements BookingPersonService {
 					appointmentRepository.updateState(
                         id,
                         AppointmentState.CANCELLED,
-                        UserInfo.getCurrentAuditor()
+                        UserInfo.getCurrentAuditor(),
+						LocalDateTime.now()
                 );
 				historicAppointmentStateRepository.save(new HistoricAppointmentState(id, AppointmentState.CANCELLED, CANCEL_BOOKING_REASON));
 				}

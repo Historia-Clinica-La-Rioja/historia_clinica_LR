@@ -39,7 +39,7 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 
 		if (cancelAllAppointments) {
 			appointmentRepository.cancelAllRecurringAppointments(appointmentId, UserInfo.getCurrentAuditor());
-			appointmentRepository.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor());
+			appointmentRepository.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor(), LocalDateTime.now());
 		} else {
 			appointmentRepository.cancelCurrentAndLaterRecurringAppointments(
 					appointmentId,
@@ -48,7 +48,7 @@ public class CancelRecurringAppointmentImpl implements CancelRecurringAppointmen
 			);
 			appointmentService.checkRemainingChildAppointments(appointmentId);
 			if (appointment.getParentAppointmentId() == null)
-				appointmentRepository.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor());
+				appointmentRepository.updateState(appointmentId, AppointmentState.CANCELLED, UserInfo.getCurrentAuditor(), LocalDateTime.now());
 		}
 		AppointmentBo appointmentBo = appointmentService.getAppointment(appointment.getId()).orElseThrow(() -> new RecurringAppointmentException(APPOINTMENT_NOT_FOUND));
 		appointmentService.verifyRecurringAppointmentsOverturn(appointmentBo.getDiaryId());
