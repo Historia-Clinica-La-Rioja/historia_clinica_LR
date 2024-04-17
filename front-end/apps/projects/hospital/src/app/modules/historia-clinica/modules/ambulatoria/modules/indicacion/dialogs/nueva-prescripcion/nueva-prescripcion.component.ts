@@ -1,10 +1,9 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { PatientService } from '@api-rest/services/patient.service';
-import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import {
 	APatientDto,
 	ApiErrorDto,
@@ -13,14 +12,12 @@ import {
 	BasicPatientDto,
 	DocumentRequestDto,
 	PrescriptionDto,
-	SnomedDto
 } from '@api-rest/api-model.d';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import {hasError, NUMBER_PATTERN, scrollIntoError} from '@core/utils/form.utils';
-import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
+import { NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
-import { PharmacosFrequentComponent } from '../pharmacos-frequent/pharmacos-frequent.component';
-import { mapToAPatientDto, mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
+import { mapToAPatientDto } from '../../utils/prescripcion-mapper';
 
 const POSDATADAS_DEFAULT = 0;
 const POSDATADAS_MIN = 1;
@@ -45,24 +42,20 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	prescriptionItems: NewPrescriptionItem[];
 	prescriptionForm: UntypedFormGroup;
-	itemCount = 0;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
 	
 	hasError = hasError;
 	submitted: boolean = false;
 	showAddMedicationError: boolean = false;
-	isAddMedicationLoading = false;
 	isFinishPrescripcionLoading = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly dialog: MatDialog,
 		private readonly snackBarService: SnackBarService,
 		private readonly patientService: PatientService,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly medicationRequestService: MedicationRequestService,
 		private readonly el: ElementRef,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
@@ -75,8 +68,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
 		});
-
-		this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
 		
 	}
 
@@ -120,52 +111,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 		stepper.previous();
 	}
 
-	openPharmacosFrequestDialog() {
-		this.isAddMedicationLoading = true;
-		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.data.patientId).subscribe((pharmacos: SnomedDto[]) => {
-			this.isAddMedicationLoading = false;
-			this.dialog.open(PharmacosFrequentComponent, {
-				width: '50%',
-				data: { pharmacos }
-			}).afterClosed().subscribe(result => {
-				if (!result || !result.openFormPharmaco) return;
-				if (!result.pharmaco && result.openFormPharmaco) return this.openPrescriptionItemDialog();
-
-				this.openPrescriptionItemDialog(mapToNewPrescriptionItem(result.pharmaco));
-			});
-		})
-	}
-
-	openPrescriptionItemDialog(item?: NewPrescriptionItem): void {
-		const newPrescriptionItemDialog = this.dialog.open(AgregarPrescripcionItemComponent,
-		{
-			data: {
-				patientId: this.data.patientId,
-				titleLabel: this.data.addPrescriptionItemDialogData.titleLabel,
-				searchSnomedLabel: this.data.addPrescriptionItemDialogData.searchSnomedLabel,
-				showDosage: this.data.addPrescriptionItemDialogData.showDosage,
-				showStudyCategory: this.data.addPrescriptionItemDialogData.showStudyCategory,
-				eclTerm: this.data.addPrescriptionItemDialogData.eclTerm,
-				item,
-			},
-			width: '35%',
-		});
-
-		newPrescriptionItemDialog.afterClosed().subscribe((prescriptionItem: NewPrescriptionItem) => {
-			if (prescriptionItem) {
-				if (!prescriptionItem.id) {
-					prescriptionItem.id = ++this.itemCount;
-					this.prescriptionItems.push(prescriptionItem);
-					this.setShowAddMedicationError();
-				} else {
-					this.editPrescriptionItem(prescriptionItem);
-				}
-			}
-		});
-	}
-
-	private setShowAddMedicationError() {
-		this.showAddMedicationError = this.prescriptionItems.length == 0;
+	updateMedicationErrorState(showAddMedicationError: boolean) {
+		this.showAddMedicationError = showAddMedicationError;
 	}
 
 	private scrollToBottom() {
@@ -174,9 +121,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	confirmPrescription(): void {
 		this.isFinishPrescripcionLoading = true;
-		this.showAddMedicationError = false;
 		if (this.prescriptionForm.invalid || this.prescriptionItems.length == 0) {
-			this.setShowAddMedicationError();
 			(this.prescriptionForm.invalid)
 				? scrollIntoError(this.prescriptionForm, this.el)
 				: this.scrollToBottom()
@@ -184,6 +129,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 		}
 
 		this.submitted = true;
+		this.showAddMedicationError = false;
 		let prescriptionLineNumberAux = 0;
 		const newPrescription: PrescriptionDto = {
 			hasRecipe: this.isMedication ? !this.prescriptionForm.controls.withoutRecipe.value : true,
@@ -232,11 +178,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		}
 	}
 
-	deletePrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
-		this.prescriptionItems.splice(this.prescriptionItems.findIndex(item => item.id === prescriptionItem.id), 1);
-		this.setShowAddMedicationError();
-	}
-
 	getDosage(prescriptionItem: NewPrescriptionItem): string {
 		const intervalText = prescriptionItem.isDailyInterval ? 'Diario' :
 			prescriptionItem.intervalHours ? `Cada ${prescriptionItem.intervalHours} hs` : null;
@@ -258,22 +199,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	clear(control: AbstractControl) {
 		control.reset();
-	}
-
-	private editPrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
-		const editPrescriptionItem = this.prescriptionItems.find(pi => pi.id === prescriptionItem.id);
-
-		editPrescriptionItem.snomed = prescriptionItem.snomed;
-		editPrescriptionItem.healthProblem = prescriptionItem.healthProblem;
-		editPrescriptionItem.unitDose = prescriptionItem.unitDose;
-		editPrescriptionItem.dayDose = prescriptionItem.dayDose;
-		editPrescriptionItem.quantity = prescriptionItem.quantity;
-		editPrescriptionItem.administrationTimeDays = prescriptionItem.administrationTimeDays;
-		editPrescriptionItem.isChronicAdministrationTime = prescriptionItem.isChronicAdministrationTime;
-		editPrescriptionItem.intervalHours = prescriptionItem.intervalHours;
-		editPrescriptionItem.isDailyInterval = prescriptionItem.isDailyInterval;
-		editPrescriptionItem.studyCategory = prescriptionItem.studyCategory;
-		editPrescriptionItem.observations = prescriptionItem.observations;
 	}
 
 }

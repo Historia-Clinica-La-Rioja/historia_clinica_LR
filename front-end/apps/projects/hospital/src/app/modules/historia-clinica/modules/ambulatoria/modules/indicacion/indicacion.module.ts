@@ -38,6 +38,7 @@ import { EmergencyCareIndicationsCardComponent } from './components/emergency-ca
 import { PharmacosFrequentComponent } from './dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { PatientInformationComponent } from './components/patient-information/patient-information.component';
 import { PrescriptionInformationComponent } from './components/prescription-information/prescription-information.component';
+import { MedicationInformationComponent } from './components/medication-information/medication-information.component';
 
 @NgModule({
 	declarations: [
@@ -71,6 +72,7 @@ import { PrescriptionInformationComponent } from './components/prescription-info
 		EmergencyCareIndicationsCardComponent,
 		PatientInformationComponent,
   PrescriptionInformationComponent,
+  MedicationInformationComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
