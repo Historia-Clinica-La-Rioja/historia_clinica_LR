@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { DescriptionItemData } from '../description-item/description-item.component';
 
 @Component({
     selector: 'app-title-description-list',
@@ -8,6 +9,5 @@ import { Component, Input } from '@angular/core';
 export class TitleDescriptionListComponent {
 
     @Input() title: string;
-    @Input() description?: string[];
-    @Input() colonsOnTitle?: boolean;
+    @Input() descriptionData?: DescriptionItemData[];
 }
