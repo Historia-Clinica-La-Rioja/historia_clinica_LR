@@ -55,6 +55,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	hasInternmentEpisodeInThisInstitution = false;
 	hasMedicalRole = false;
+	hasNurseRoleEvolutionNoteEnabled = false;
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
 	documentEpicrisisDraft: DocumentSearchDto;
@@ -62,6 +63,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 	isEmergencyCareTemporaryPatient = false;
 	isAnestheticPartEnabled: boolean;
+	isEvolutionNoteEnabled: boolean;
+
 	@Input() patientId: number;
 	@Input()
 	set internmentEpisodeProcess(episode: InternmentEpisodeProcessDto) {
@@ -117,7 +120,10 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled =>
-			this.isAnestheticPartEnabled = true
+			this.isAnestheticPartEnabled = isEnabled
+		);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO).subscribe(isEnabled =>
+			this.hasNurseRoleEvolutionNoteEnabled = isEnabled
 		);
 	}
 
@@ -129,6 +135,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 
 		const refNotificationInfo = { patientId: this.patientId, consultationType: REFERENCE_CONSULTATION_TYPE.AMBULATORY };
 		this.referenceNotificationService = new ReferenceNotificationService(refNotificationInfo, this.referenceService, this.dialog, this.clinicalSpecialtyService, this.medicacionesService, this.ambulatoriaSummaryFacadeService, this.dockPopupService);
+
+		this.checkEvolutionNotePermission()
 
 		this.referenceNotificationService.getOpenConsultation().subscribe(type => {
 			if (type === REFERENCE_CONSULTATION_TYPE.AMBULATORY)
@@ -354,4 +362,18 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.documentEpicrisisDraft = documentHistoric.documents.find(document => document.documentType === "Epicrisis" && !document.confirmed);
 		});
 	}
+
+	private checkEvolutionNotePermission(): void {
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			const hasProfessionalRole = (anyMatch<ERole>(userRoles, [
+				ERole.ESPECIALISTA_MEDICO,
+				ERole.PROFESIONAL_DE_SALUD,
+				ERole.ESPECIALISTA_EN_ODONTOLOGIA]))
+			const hasNurseRole = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]))
+
+			hasProfessionalRole ? this.isEvolutionNoteEnabled = true :
+				hasNurseRole ? this.isEvolutionNoteEnabled = this.hasNurseRoleEvolutionNoteEnabled : false
+		});
+	}
+
 }

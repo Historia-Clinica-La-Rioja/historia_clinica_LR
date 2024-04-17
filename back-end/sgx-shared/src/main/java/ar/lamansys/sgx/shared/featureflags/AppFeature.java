@@ -206,6 +206,9 @@ public enum AppFeature implements Feature {
 	
 	@Label("Habilita el límite de 1 turno por profesional por persona en reserva online")
 	HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL,
+	
+	@Label("Indica si se muestra el botón 'Agregar nota de Evolución' para el rol ENFERMERO en las acciones de guardia")
+	HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,
 	;
 
 	public boolean isActive() {

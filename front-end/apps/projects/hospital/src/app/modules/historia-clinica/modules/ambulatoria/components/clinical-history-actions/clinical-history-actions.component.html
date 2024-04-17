@@ -29,7 +29,7 @@
 				{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
 			</button>
 
-			<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+			<ng-container *ngIf="isEvolutionNoteEnabled">
 				<button *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION" mat-menu-item
 					id="evolution_note" color="primary" (click)="openNotaDeEvolucion()" class="actions">
 					Nota de evolución
