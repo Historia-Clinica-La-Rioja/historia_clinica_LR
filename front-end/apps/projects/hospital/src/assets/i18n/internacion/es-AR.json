@@ -396,7 +396,7 @@
 				"UNIT_PLACEHOLDER": "Ingresar unidad",
 				"VIA": "Via: ",
 				"VIA_PLACEHOLDER": "Ingresar via",
-				"LAST_FOOD_INTAKE": "Última ingesta de comida:"
+				"LAST_FOOD_INTAKE": "Última ingesta de comida"
 			},
 			"anesthetic-plan": {
 				"TITLE": "Plan anestésico",

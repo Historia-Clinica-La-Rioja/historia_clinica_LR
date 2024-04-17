@@ -6,6 +6,7 @@ import { capitalize } from '@core/utils/core.utils';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { TranslateService } from '@ngx-translate/core';
+import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { take } from 'rxjs';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
@@ -33,7 +34,7 @@ export class AnestheticReportDocumentSummaryService {
 
     getAnestheticReportAsViewFormat(anestheticReport: AnestheticReportDto): AnestheticReportViewFormat {
         return {
-            mainDiagnosis: anestheticReport.mainDiagnosis ? [this.getDescriptionAndStatus(anestheticReport.mainDiagnosis)] : null,
+            mainDiagnosis: anestheticReport.mainDiagnosis ? [{ description: this.getDescriptionAndStatus(anestheticReport.mainDiagnosis) }] : null,
             diagnosis: anestheticReport.diagnosis.length ? this.getDiagnosisAsStringArray(anestheticReport.diagnosis) : null,
             proposedSurgeries: anestheticReport.surgeryProcedures.length ? this.getProposedSurgeriesAsStringArray(anestheticReport.surgeryProcedures) : null,
             anthropometricData: anestheticReport.anthropometricData ? this.getAnthropometricDataAsStrings(anestheticReport.anthropometricData) : null,
@@ -47,9 +48,9 @@ export class AnestheticReportDocumentSummaryService {
         }
     }
 
-    private getDiagnosisAsStringArray(diagnosis: DiagnosisDto[]): string[] {
+    private getDiagnosisAsStringArray(diagnosis: DiagnosisDto[]): DescriptionItemData[] {
         return diagnosis.map(diag => {
-            return this.getDescriptionAndStatus(diag);
+            return { description: this.getDescriptionAndStatus(diag) };
         })
     }
 
@@ -63,33 +64,33 @@ export class AnestheticReportDocumentSummaryService {
         return diagnosis.snomed.pt
     }
 
-    private getProposedSurgeriesAsStringArray(proposedSurgeries: HospitalizationProcedureDto[]): string[] {
+    private getProposedSurgeriesAsStringArray(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
         return proposedSurgeries.map(proposedSurgery => {
-            return proposedSurgery.snomed.pt
+            return { description: proposedSurgery.snomed.pt }
         })
     }
 
     private getAnthropometricDataAsStrings(antropometricData: AnthropometricDataDto): AnthropometricData {
         return {
-            bloodType: antropometricData.bloodType ? [antropometricData.bloodType.value] : null,
-            height: antropometricData.height ? [antropometricData.height.value] : null,
-            weight: antropometricData.weight ? [antropometricData.weight.value + 'Kg'] : null,
+            bloodType: antropometricData.bloodType ? [{ description: antropometricData.bloodType.value }] : null,
+            height: antropometricData.height ? [{ description: antropometricData.height.value }] : null,
+            weight: antropometricData.weight ? [{ description: antropometricData.weight.value + 'Kg' }] : null,
         }
     }
 
     private getAnesthesicClinicalEvaluationAsStrings(anesthesicClinicalEvaluation: RiskFactorDto): AnesthesicClinicalEvaluationData {
         return {
-            maxBloodPressure: anesthesicClinicalEvaluation.systolicBloodPressure ? [anesthesicClinicalEvaluation.systolicBloodPressure.value] : null,
-            minBloodPressure: anesthesicClinicalEvaluation.diastolicBloodPressure ? [anesthesicClinicalEvaluation.diastolicBloodPressure.value] : null,
-            hematocrit: anesthesicClinicalEvaluation.hematocrit ? [anesthesicClinicalEvaluation.hematocrit.value + ' %'] : null,
+            maxBloodPressure: anesthesicClinicalEvaluation.systolicBloodPressure ? [{ description: anesthesicClinicalEvaluation.systolicBloodPressure.value }] : null,
+            minBloodPressure: anesthesicClinicalEvaluation.diastolicBloodPressure ? [{ description: anesthesicClinicalEvaluation.diastolicBloodPressure.value }] : null,
+            hematocrit: anesthesicClinicalEvaluation.hematocrit ? [{ description: anesthesicClinicalEvaluation.hematocrit.value + ' %' }] : null,
         }
     }
 
-    private getAnesthesiaHistoryAsStrings(anesthesiaHistory: AnestheticHistoryDto): string[] {
+    private getAnesthesiaHistoryAsStrings(anesthesiaHistory: AnestheticHistoryDto): DescriptionItemData[] {
         return anesthesiaHistory?.stateId 
             ? ( anesthesiaHistory.zoneId 
-                ? [this.getAnesthesiaStateDescription(anesthesiaHistory.stateId, anesthesiaHistory.zoneId)] 
-                : [this.getAnesthesiaStateDescription(anesthesiaHistory.stateId)]) 
+                ? [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId, anesthesiaHistory.zoneId) }] 
+                : [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId) }]) 
             : null
     }
 
@@ -112,17 +113,17 @@ export class AnestheticReportDocumentSummaryService {
         }
     }
 
-    private getMedicationsAsStringArray(medications: MedicationDto[]): string[] {
+    private getMedicationsAsStringArray(medications: MedicationDto[]): DescriptionItemData[] {
         return medications.map(medication => {
-            return medication.note ? medication.snomed.pt + ' | ' + medication.note : medication.snomed.pt;
+            return { description: medication.note ? medication.snomed.pt + ' | ' + medication.note : medication.snomed.pt };
         })
     }
 
-    private getPremedicationData(premedications: AnestheticSubstanceDto[]): PremedicationData[] {
+    private getPremedicationData(premedications: AnestheticSubstanceDto[]): DescriptionItemData[] {
         return premedications.map(premedication => {
             return {
-                premedicationDescription: premedication.snomed.pt + ' | Via ' + this.getViaDescription(premedication.viaId) + ' | Dosis: ' + premedication.dosage.quantity.value + ' | Unidad: ' + premedication.dosage.quantity.unit,
-                startDateTime: dateTimeDtoToDate(premedication.dosage.startDateTime)
+                description: premedication.snomed.pt + ' | Via ' + this.getViaDescription(premedication.viaId) + ' | Dosis: ' + premedication.dosage.quantity.value + ' | Unidad: ' + premedication.dosage.quantity.unit,
+                dateOrTime: { dateTime: dateTimeDtoToDate(premedication.dosage.startDateTime) }
             }
         })
     }
@@ -137,17 +138,17 @@ export class AnestheticReportDocumentSummaryService {
 
     private getHistoriesAsPersonalHistoriesData(anestheticReport: AnestheticReportDto): PersonalHistoriesData {
         return {
-            recordList: anestheticReport.histories?.map(history => { return capitalize(history.snomed.pt)}),
-            observations: anestheticReport.procedureDescription.note ? [anestheticReport.procedureDescription.note] : null,
-            asa: anestheticReport.procedureDescription.asa ? [anestheticReport.procedureDescription.asa.toString()] : null,
+            recordList: anestheticReport.histories?.map(history => { return { description: capitalize(history.snomed.pt) }}),
+            observations: anestheticReport.procedureDescription.note ? [{ description: anestheticReport.procedureDescription.note }] : null,
+            asa: anestheticReport.procedureDescription.asa ? [{ description: anestheticReport.procedureDescription.asa.toString() }] : null,
         }
     }
 
-    private getAnestheticPlansData(anestheticPlans: AnestheticSubstanceDto[]): AnestheticPlanData[] {
+    private getAnestheticPlansData(anestheticPlans: AnestheticSubstanceDto[]): DescriptionItemData[] {
         return anestheticPlans.map(anestheticPlan => {
             return {
-                anestheticPlanDescription: anestheticPlan.snomed.pt + ' | Via ' + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + ' | Dosis: ' + anestheticPlan.dosage.quantity.value + ' | Unidad: ' + anestheticPlan.dosage.quantity.unit,
-                startDateTime: dateTimeDtoToDate(anestheticPlan.dosage.startDateTime)
+                description: anestheticPlan.snomed.pt + ' | Via ' + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + ' | Dosis: ' + anestheticPlan.dosage.quantity.value + ' | Unidad: ' + anestheticPlan.dosage.quantity.unit,
+                dateOrTime: { dateTime: dateTimeDtoToDate(anestheticPlan.dosage.startDateTime) }
             }
         })
     }
@@ -158,43 +159,33 @@ export class AnestheticReportDocumentSummaryService {
 }
 
 export interface AnestheticReportViewFormat {
-    mainDiagnosis: string[],
-    diagnosis: string[],
-    proposedSurgeries: string[],
+    mainDiagnosis: DescriptionItemData[],
+    diagnosis: DescriptionItemData[],
+    proposedSurgeries: DescriptionItemData[],
     anthropometricData: AnthropometricData,
     anesthesicClinicalEvaluation: AnesthesicClinicalEvaluationData,
-    anestheticHistory: string[],
-    usualMedication: string[],
-    premedicationList: PremedicationData[],
+    anestheticHistory: DescriptionItemData[],
+    usualMedication: DescriptionItemData[],
+    premedicationList: DescriptionItemData[],
     lastFoodIntake: Date,
     histories: PersonalHistoriesData,
-    anestheticPlanList: AnestheticPlanData[],
+    anestheticPlanList: DescriptionItemData[],
 }
 
 export interface AnthropometricData {
-    bloodType: string[],
-    height: string[],
-    weight: string[],
+    bloodType: DescriptionItemData[],
+    height: DescriptionItemData[],
+    weight: DescriptionItemData[],
 }
 
 export interface AnesthesicClinicalEvaluationData {
-    maxBloodPressure: string[],
-    minBloodPressure: string[],
-    hematocrit: string[],
-}
-
-export interface PremedicationData {
-    premedicationDescription: string,
-    startDateTime: Date,
+    maxBloodPressure: DescriptionItemData[],
+    minBloodPressure: DescriptionItemData[],
+    hematocrit: DescriptionItemData[],
 }
 
 export interface PersonalHistoriesData {
-    recordList: string[],
-    observations: string[],
-    asa: string[]
-}
-
-export interface AnestheticPlanData {
-    anestheticPlanDescription: string,
-    startDateTime: Date,
+    recordList: DescriptionItemData[],
+    observations: DescriptionItemData[],
+    asa: DescriptionItemData[]
 }
