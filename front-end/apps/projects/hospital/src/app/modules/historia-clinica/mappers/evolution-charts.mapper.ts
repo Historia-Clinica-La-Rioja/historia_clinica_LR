@@ -42,14 +42,22 @@ const isNotAChartWithRangeAge = (scale: EAnthropometricGraphicRange): boolean =>
 	return scale === EAnthropometricGraphicRange.WEIGHT_FOR_LENGTH || scale === EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT;
 }
 
+const isAChartThatReachesUpTo19Years = (scale: EAnthropometricGraphicRange): boolean => {
+	return scale === EAnthropometricGraphicRange.NINETEEN_YEARS || scale === EAnthropometricGraphicRange.TWO_TO_NINETEEN_YEARS;
+}
+
+const isAChartThatReachesUpTo5Years = (scale: EAnthropometricGraphicRange): boolean => {
+	return scale === EAnthropometricGraphicRange.FIVE_YEARS || scale === EAnthropometricGraphicRange.TWO_TO_FIVE_YEARS;
+}
+
 const getColorByLabelAndScale = (label: string, scale: EAnthropometricGraphicRange): string => {
-	if (isNotAChartWithRangeAge)
+	if (isNotAChartWithRangeAge(scale))
 		return GRID_STYLE;
 
-	if (scale === EAnthropometricGraphicRange.NINETEEN_YEARS)
+	if (isAChartThatReachesUpTo19Years(scale))
 		return label !== "" ? GRID_STYLE_BOLD : GRID_STYLE;
 
-	if (scale === EAnthropometricGraphicRange.FIVE_YEARS)
+	if (isAChartThatReachesUpTo5Years(scale))
 		return label.includes(YEAR) ? GRID_STYLE_BOLD : GRID_STYLE;
 
 	return label.includes(MONTH) ? GRID_STYLE_BOLD : GRID_STYLE;
@@ -59,10 +67,10 @@ const getWidthByLabelAndScale = (label: string, scale: EAnthropometricGraphicRan
 	if (isNotAChartWithRangeAge(scale))
 		return LINE_WIDTH;
 
-	if (scale === EAnthropometricGraphicRange.NINETEEN_YEARS)
+	if (isAChartThatReachesUpTo19Years(scale))
 		return label !== "" ? LINE_WIDTH_BOLD : LINE_WIDTH;
 
-	if (scale === EAnthropometricGraphicRange.FIVE_YEARS)
+	if (isAChartThatReachesUpTo5Years(scale))
 		return label.includes(YEAR) ? LINE_WIDTH_BOLD : LINE_WIDTH;
 
 	return label.includes(MONTH) ? LINE_WIDTH_BOLD : LINE_WIDTH;
