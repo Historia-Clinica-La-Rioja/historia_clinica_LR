@@ -221,110 +221,109 @@ public class OdontologicalReportExcelServiceImpl implements OdontologicalReportE
 	private void fillRowContent(IRow row, OdontologicalProceduresConsultationDetail content, ICellStyle style) {
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(content.getProfessionalName());
+		cell.setCellStyle(style);
+
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getProfessionalName());
+		cell2.setCellValue(content.getProfessionalIdentificationNumber());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(content.getProfessionalIdentificationNumber());
+		cell3.setCellValue(content.getProfessionalLicenseNumber());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
-		cell4.setCellValue(content.getProfessionalLicenseNumber());
+		cell4.setCellValue(content.getAttentionDate());
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(content.getAttentionDate());
+		cell5.setCellValue(content.getAttentionHour());
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getAttentionHour());
+		cell6.setCellValue(content.getPatientNames());
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
-		cell7.setCellValue(content.getPatientNames());
+		cell7.setCellValue(content.getPatientIdentificationNumber());
 		cell7.setCellStyle(style);
 
-
 		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
-		cell8.setCellValue(content.getPatientIdentificationNumber());
+		cell8.setCellValue(content.getPatientGender());
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getPatientGender());
+		cell9.setCellValue(content.getPatientSelfPerceivedGender());
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getPatientSelfPerceivedGender());
+		cell10.setCellValue(content.getPatientSelfPerceivedName());
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(content.getPatientSelfPerceivedName());
+		cell11.setCellValue(content.getPatientBirthDate());
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
-		cell12.setCellValue(content.getPatientBirthDate());
+		cell12.setCellValue(content.getPatientAgeTurn());
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(content.getPatientAgeTurn());
+		cell13.setCellValue(content.getPatientAgeToday());
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
-		cell14.setCellValue(content.getPatientAgeToday());
+		cell14.setCellValue(content.getPatientMedicalCoverage());
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getPatientMedicalCoverage());
+		cell15.setCellValue(content.getPatientAddress());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getPatientAddress());
+		cell16.setCellValue(content.getPatientLocation());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getPatientLocation());
+		cell17.setCellValue(content.getPatientPermanentCPO());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getPatientPermanentCPO());
+		cell18.setCellValue(content.getPatientTemporaryCEO());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getPatientTemporaryCEO());
+		cell19.setCellValue(content.getReasons());
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
-		cell20.setCellValue(content.getReasons());
+		cell20.setCellValue(content.getOtherDiagnoses());
 		cell20.setCellStyle(style);
 
 		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
-		cell21.setCellValue(content.getOtherDiagnoses());
+		cell21.setCellValue(content.getOtherProcedures());
 		cell21.setCellStyle(style);
 
 		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
-		cell22.setCellValue(content.getOtherProcedures());
+		cell22.setCellValue(content.getAllergies());
 		cell22.setCellStyle(style);
 
 		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
-		cell23.setCellValue(content.getAllergies());
+		cell23.setCellValue(content.getUsualMedication());
 		cell23.setCellStyle(style);
 
 		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
-		cell24.setCellValue(content.getUsualMedication());
+		cell24.setCellValue(content.getDentalDiagnoses());
 		cell24.setCellStyle(style);
 
 		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
-		cell25.setCellValue(content.getDentalDiagnoses());
+		cell25.setCellValue(content.getDentalProcedures());
 		cell25.setCellStyle(style);
 
 		ICell cell26 = row.createCell(rowNumber.getAndIncrement());
-		cell26.setCellValue(content.getDentalProcedures());
+		cell26.setCellValue(content.getEvolution());
 		cell26.setCellStyle(style);
-
-		ICell cell27 = row.createCell(rowNumber.getAndIncrement());
-		cell27.setCellValue(content.getEvolution());
-		cell27.setCellStyle(style);
 
 	}
 
