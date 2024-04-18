@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
-import { FrailService } from '@api-rest/services/frail.service';
+import { FrailService } from '@api-rest/services/fragility-test.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -118,35 +118,36 @@ export class FrailScaleComponent implements OnInit {
   construirDatos() {
     const totalScore = this.calculateTotal();
     const datos = {
-      "questionnaire": [  
+      "questionnaireId": 3,
+      "answers": [
         {
-          questionId: 60,
-          answerId: this.mappingFatibility(),
+          itemId: 60,
+          optionId: this.mappingFatibility(),
           value: "",
         },
         {
-          questionId: 62,
-          answerId: this.mappingEndurance(),
+          itemId: 62,
+          optionId: this.mappingEndurance(),
           value: "",
         },
         {
-          questionId: 64,
-          answerId: this.mappingAmbulation(),
+          itemId: 64,
+          optionId: this.mappingAmbulation(),
           value: "",
         },
         {
-          questionId: 66,
-          answerId: this.mappingComorbidity(),
+          itemId: 66,
+          optionId: this.mappingComorbidity(),
           value: "",
         },
         {
-          questionId: 68,
-          answerId: this.mappingWeightloss(),
+          itemId: 68,
+          optionId: this.mappingWeightloss(),
           value: "",
         },
         {
-          questionId: 70,
-          answerId: totalScore,
+          itemId: 70,
+          optionId: totalScore,
           value: "",
         },
       ],

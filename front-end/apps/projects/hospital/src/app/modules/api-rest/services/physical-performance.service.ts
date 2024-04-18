@@ -8,15 +8,15 @@ import { ContextService } from '@core/services/context.service';
 @Injectable({
   providedIn: 'root'
 })
-export class FrailService {  
+export class PhysicalPerformanceService {  
 
   constructor(
     private contextService: ContextService,
     private readonly http: HttpClient  ) {}
 
-  createFrail(patientId: number, frailData: any): Observable<boolean> {
-    const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/patient/${patientId}/hce/general-state/frail`; 
-    return this.http.post<boolean>(url, frailData);
+  createPhysical(patientId: number, physicalData: any): Observable<boolean> {
+    const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/patient/${patientId}/questionnaire/create`; 
+    return this.http.post<boolean>(url, physicalData);
   }
 
   getFrailSummary(institutionId: number, patientId: number, questionnaireId: number): Observable<FrailSummary> {

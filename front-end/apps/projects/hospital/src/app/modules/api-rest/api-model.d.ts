@@ -1293,6 +1293,22 @@ export interface FrailSummary{
     frailId: number;
 }
 
+export interface QuestionnairesResponses {
+    id: number;
+    statusId: number;
+    createdByFullName: string;
+    createdByLicenseNumber: string;
+    updatedByFullName: string;
+    updatedByLicenseNumber: string;
+    questionnaireTypeId: number;
+    questionnaireType: string;
+    deleted: boolean;
+    updatedOn: string;
+    createdOn: string;
+    deletedOn: string;
+    deletedBy: number;
+}
+
 export interface DocumentRequestDto {
     documentId: number;
     requestId: number;
