@@ -1,0 +1,17 @@
+<app-hide-show-toggle
+    [header]="content.header">
+    <app-titled-content-card *ngIf="hasConcepts"
+		[title]="content.titleList">
+		<ng-content></ng-content>
+	</app-titled-content-card>
+
+	<article>
+		<button
+			(click)="open()"
+			[disabled]="checkboxOn"
+			mat-button type="button" color="primary">
+			{{content.actions.button | translate}}
+		</button>
+		<mat-checkbox color="primary" *ngIf="content.actions.checkbox" (change)="toggleCheckbox()" [disabled]="hasConcepts">{{content.actions.checkbox | translate}}</mat-checkbox>
+	</article>
+</app-hide-show-toggle>

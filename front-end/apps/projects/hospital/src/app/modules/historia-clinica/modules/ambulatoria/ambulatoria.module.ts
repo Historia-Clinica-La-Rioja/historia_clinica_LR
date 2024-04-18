@@ -67,6 +67,7 @@ import { ViolenceSituationViolentPersonInformationComponent } from './components
 //standalone componentes
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
+import { ConceptsListComponent } from '../../../hsi-components/concepts-list/concepts-list.component';
 //dialog
 import { AgregarPrescripcionItemComponent } from './dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { AgregarVacunaComponent } from './dialogs/agregar-vacuna/agregar-vacuna.component';
@@ -187,7 +188,7 @@ import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatori
   		NewViolentPersonInfomationComponent,
       	ViolenceSituationImplementedActionsComponent,
       	ViolenceSituationListComponent,
-       ViolenceSituationHistoryFiltersComponent
+       	ViolenceSituationHistoryFiltersComponent
 	],
 	imports: [
 		CommonModule,
@@ -211,6 +212,7 @@ import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatori
 		//Standalone Component
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
+		ConceptsListComponent
 	],
 	providers: [
 		AmbulatoriaSummaryFacadeService,
