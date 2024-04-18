@@ -44,6 +44,7 @@ import { FiltersSelectV2Component } from './components/filters-select-v2/filters
 import { FiltersTypeaheadComponent } from '../presentation/components/filters-typeahead/filters-typeahead.component';
 import { FloatingDivComponent } from './components/floating-div/floating-div.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { HideShowToggleComponent } from './components/hide-show-toggle/hide-show-toggle.component';
 import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
 import { IconedTitledSectionComponent } from './components/iconed-titled-section/iconed-titled-section.component';
 import { IdentifierComponent } from './components/identifier/identifier.component';
@@ -154,6 +155,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FiltersTypeaheadComponent,
 		FloatingDivComponent,
 		FooterComponent,
+		HideShowToggleComponent,
 		IconedTextComponent,
 		IconedTitledSectionComponent,
 		IdentifierComponent,
@@ -278,6 +280,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FiltersSelectComponent,
 		FiltersSelectV2Component,
 		FloatingDivComponent,
+		HideShowToggleComponent,
 		IconedTextComponent,
 		IconedTitledSectionComponent,
 		IdentifierComponent,

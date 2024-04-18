@@ -1,0 +1,12 @@
+<div class="container" [ngClass]="{'unselected': !show, 'selected': show}">
+	<article (click)="toggle()">
+		<header>
+			<mat-icon>{{header.icon}}</mat-icon>
+			<span>{{header.text | translate}}</span>
+		</header>
+		<mat-icon>{{rightIcon}}</mat-icon>
+	</article>
+	<div class="content" *ngIf="show">
+		<ng-content></ng-content>
+	</div>
+</div>
