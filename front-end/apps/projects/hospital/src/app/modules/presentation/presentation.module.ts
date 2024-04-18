@@ -215,7 +215,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
 		ViewDatePipe,
-		ViewHourMinutePipe,
+		ViewHourMinutePipe
 	],
 	imports: [
 		CommonModule,
@@ -266,6 +266,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		FiltersCardComponent,
 		FiltersComponent,
 		FiltersSelectComponent,
+		FiltersSelectV2Component,
 		FloatingDivComponent,
 		IconedTextComponent,
 		IdentifierComponent,

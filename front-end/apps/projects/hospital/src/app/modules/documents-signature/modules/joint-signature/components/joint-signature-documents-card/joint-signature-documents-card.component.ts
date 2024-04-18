@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, } from '@angular/core';
 import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { buildHeaderInformation, buildItemListCard } from '../../mappers/joint-signature.mapper';
@@ -16,6 +16,12 @@ import { MatPaginator } from '@angular/material/paginator';
 export class JointSignatureDocumentsCardComponent implements OnInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 
+	@Input() set setFilter(filter: string) {
+		this.filter = filter;
+		this.setDocuments(this.INITIAL_PAGE);
+	};
+
+	filter: string;
 	headerInformation: Detail[] = [];
 	isLoading: boolean;
 	documents: ItemListCard[] = [];
@@ -40,7 +46,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 		this.selectedDocumentId = undefined;
 		this.headerInformation = [];
 		this.setPageInfo(pageIndex);
-		this.jointSignatureService.getProfessionalInvolvedDocumentList(this.pageSize, pageIndex)
+		this.jointSignatureService.getProfessionalInvolvedDocumentList(this.pageSize, pageIndex, this.filter)
 			.pipe(
 				tap(result => this.elementsAmount = result.totalElementsAmount),
 				map((documents: PageDto<ElectronicSignatureInvolvedDocumentDto>) => documents.content)

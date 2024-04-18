@@ -18,9 +18,11 @@ export class JointSignatureService {
 	constructor(private readonly http: HttpClient,
 		private readonly contextService: ContextService) { }
 
-	getProfessionalInvolvedDocumentList(pageSize: number, pageNumber: number): Observable<PageDto<ElectronicSignatureInvolvedDocumentDto>> {
+	getProfessionalInvolvedDocumentList(pageSize: number, pageNumber: number, filter?: string): Observable<PageDto<ElectronicSignatureInvolvedDocumentDto>> {
 		const url = `${this.BASE_URL}/electronic-joint-signature/get-involved-document-list`;
 		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize);
+		if (filter)
+			queryParam = queryParam.append('filter', filter);
 		return this.http.get<PageDto<ElectronicSignatureInvolvedDocumentDto>>(url, { params: queryParam });
 	}
 

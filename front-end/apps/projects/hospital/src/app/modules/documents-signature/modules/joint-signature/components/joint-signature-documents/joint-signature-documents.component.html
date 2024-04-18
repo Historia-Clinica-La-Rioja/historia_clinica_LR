@@ -1,0 +1,7 @@
+<app-filters-select-v2 class="filter"
+	[setFilters]="filter"
+	(selectedFilters)="handleFilterChange($event)">
+</app-filters-select-v2>
+<app-joint-signature-documents-card
+	[setFilter]="selectedFilterOption">
+</app-joint-signature-documents-card>

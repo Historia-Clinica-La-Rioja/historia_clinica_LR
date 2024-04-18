@@ -2,13 +2,16 @@
 	<header>
 		<h2 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h2>
 	</header>
+	<div class="spinner" *ngIf="isLoading">
+		<mat-spinner color="primary"></mat-spinner>
+	</div>
 	<app-selectable-card *ngIf="!isLoading"
 		[dataList]="documents"
 		[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
-		[hasHeader]="selectedDocumentId"
+		[hasHeader]="!!selectedDocumentId"
 		(selectedId)="seeDetails($event)">
 		<span translate="digital-signature.UNSELECTED_DOCUMENT" *ngIf="!selectedDocumentId"	class="no-detailed-information"></span>
-		<div class="header-information" *ngIf="selectedDocumentId">
+		<div class="header-information" *ngIf="!!selectedDocumentId">
 			<app-header-attention-detail
 				[setDocumentId]="selectedDocumentId"
 				[details]="headerInformation"

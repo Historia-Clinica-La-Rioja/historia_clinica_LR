@@ -6,11 +6,13 @@ import { JointSignatureRoutingModule } from './joint-signature-routing.module';
 import { PresentationModule } from '@presentation/presentation.module';
 import { ShowMoreConceptsPipe } from '@presentation/pipes/show-more-concepts.pipe';
 import { JointSignatureDocumentsCardComponent } from './components/joint-signature-documents-card/joint-signature-documents-card.component';
+import { JointSignatureDocumentsComponent } from './components/joint-signature-documents/joint-signature-documents.component';
 
 @NgModule({
 	declarations: [
 		HomeComponent,
-  JointSignatureDocumentsCardComponent
+		JointSignatureDocumentsCardComponent,
+  JointSignatureDocumentsComponent,
 	],
 	imports: [
 		CommonModule,

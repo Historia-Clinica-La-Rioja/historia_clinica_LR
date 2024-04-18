@@ -5,7 +5,7 @@
 		"LIST_DOCUMENTS": "Listado de documentos",
 		"TITLE_HEADER": "Datos de la consulta",
 		"INTERVENING_PROFESSIONALS": "Otros profesionales intervinientes",
-		"STATE_SIGNATURE": {
+		"state-signature": {
 			"OUTDATED": "Vencido",
 			"PENDING" : "Pendiente",
 			"REJECTED" : "Rechazado",
@@ -16,6 +16,13 @@
 			"PATIENT": "Paciente",
 			"DATE": "Fecha",
 			"PROFESSIONAL": "Profesional"
+		},
+		"signature-status-filter": {
+			"LABEL": "Filtrar por estado de firma",
+			"PENDING": "Firma pendiente",
+			"REJECTED": "Solicitud rechazada",
+			"SIGNED": "Firma completada",
+			"OUTDATED": "Firma vencida"
 		}
 	}
 }
