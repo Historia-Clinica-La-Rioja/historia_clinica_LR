@@ -89,7 +89,7 @@
 				</div>
 
 				<div>
-					<app-carelines-and-specialties-reference [formReference]="formReference" [submitForm]="submitForm"
+					<app-carelines-and-specialties-reference [formReference]="formReference" [submitForm]="submitForm" (regulationRequiredChange)="onRegulationRequiredChange($event)"
 						[updateFormFields]="referenceProblemsService.getProblems()|async"
 						(resetControls)="resetControls()"
 						(updateDepartamentsAndInstitution)="activateSpecialtiesAndCarelineFields()">
@@ -102,6 +102,10 @@
 						[updateFormFields]="updateDepartamentsAndInstitution"
 						(provinceSelected)="onProvinceSelectionChange($event)">
 					</app-destination-institution-reference>
+
+					<div *ngIf="regulationRequired">
+						<app-box-message [boxMessageInfo]="boxMessageInfo"></app-box-message>
+					</div>
 				</div>
 			</div>
 
