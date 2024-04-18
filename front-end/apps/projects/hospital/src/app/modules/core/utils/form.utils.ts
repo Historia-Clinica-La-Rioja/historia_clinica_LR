@@ -2,7 +2,7 @@ import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl,
 import { ElementRef } from '@angular/core';
 import { Moment } from 'moment';
 import { momentFormat, newMoment } from './moment.utils';
-import { DateFormat } from './date.utils';
+import { DateFormat, toHourMinute } from './date.utils';
 import { format } from 'date-fns';
 import { EVENT_CODE_NUMBERS } from './core.utils';
 
@@ -119,12 +119,12 @@ function isValidTime(time: string) {
 }
 
 export class MinTimeValidator {
-	constructor(private readonly minDateTime: Moment) { }
+	constructor(private readonly minDateTime: Date) { }
 
 	minTimeValidation(control: UntypedFormControl): ValidationErrors | null {
 		const time: string = control.value;
 		if (isValidTime(time)) {
-			if (time <= momentFormat(this.minDateTime, DateFormat.HOUR_MINUTE)) {
+			if (time <= toHourMinute(this.minDateTime)) {
 				return {
 					previousTime: true
 				};
