@@ -5,7 +5,9 @@ import {
 	currentDateWeek, currentWeek, dateParse,
 	dateParseTime,
 	momentFormat, dateISOParseDate, momentFormatDate, momentParse, momentParseDate, momentParseDateTime, momentParseTime, newDate, newDateLocal, newMoment, newMomentLocal,
-	isSameOrAfter
+	isSameOrAfter,
+	isSameOrBefore,
+	isBetweenDates
 } from "./moment.utils";
 import * as moment from "moment";
 import { isAfter } from "date-fns";
@@ -60,6 +62,10 @@ const yesterday = new Date();
 yesterday.setDate(today.getDate() - 1);
 const tomorrow = new Date();
 tomorrow.setDate(today.getDate() + 1);
+const includeExtremes = '[]';
+const includeOnlyLeftExtreme = '[)';
+const includeOnlyRightExtreme = '(]';
+const notIncludeExtremes = '()';
 
 function differenceBetween(num1: number, num2: number) {
 	return Math.abs(num1 - num2);
@@ -451,4 +457,104 @@ describe('isSameOrAfter', () => {
 		const result = isSameOrAfter(yesterday, today);
 		expect(result).toEqual(false);
 	});
+});
+
+describe('isSameOrBefore', () => {
+
+	it(`should return true if the date is same to the date to compare`, () => {
+		const result = isSameOrBefore(today, today);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return true if the date is before to the date to compare`, () => {
+		const result = isSameOrBefore(yesterday, today);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return false if the date is after to the date to compare`, () => {
+		const result = isSameOrBefore(tomorrow, today);
+		expect(result).toEqual(false);
+	});
+});
+
+describe('isBetweenDates', () => {
+
+	it(`should return true if the date is in the interval with inclusivity []`, () => {
+		const inclusivity = includeExtremes;
+		const result = isBetweenDates(today, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return true if the date is in the interval with inclusivity []`, () => {
+		const inclusivity = includeExtremes;
+		const result = isBetweenDates(yesterday, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return true if the date is in the interval with inclusivity []`, () => {
+		const inclusivity = includeExtremes;
+		const result = isBetweenDates(tomorrow, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return false if the date isn't in the interval with inclusivity []`, () => {
+		const inclusivity = includeExtremes;
+		const result = isBetweenDates(tomorrow, yesterday, today, inclusivity);
+		expect(result).toEqual(false);
+	});
+
+	it(`should return true if the date is in the interval with inclusivity (]`, () => {
+		const inclusivity = includeOnlyRightExtreme;
+		const result = isBetweenDates(today, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return false if the date isn't in the interval with inclusivity (]`, () => {
+		const inclusivity = includeOnlyRightExtreme;
+		const result = isBetweenDates(yesterday, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(false);
+	});
+
+	it(`should return true if the date is in the interval with inclusivity (]`, () => {
+		const inclusivity = includeOnlyRightExtreme;
+		const result = isBetweenDates(tomorrow, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return true if the date is in the interval with inclusivity [)`, () => {
+		const inclusivity = includeOnlyLeftExtreme;
+		const result = isBetweenDates(today, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return true if the date is in the interval with inclusivity [)`, () => {
+		const inclusivity = includeOnlyLeftExtreme;
+		const result = isBetweenDates(yesterday, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return false if the date isn't in the interval with inclusivity [)`, () => {
+		const inclusivity = includeOnlyLeftExtreme;
+		const result = isBetweenDates(tomorrow, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(false);
+	});
+
+	it(`should return true if the date is in the interval with inclusivity ()`, () => {
+		const inclusivity = notIncludeExtremes;
+		const result = isBetweenDates(today, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return false if the date isn't in the interval with inclusivity ()`, () => {
+		const inclusivity = notIncludeExtremes;
+		const result = isBetweenDates(yesterday, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(false);
+	});
+
+	it(`should return false if the date isn't in the interval with inclusivity ()`, () => {
+		const inclusivity = notIncludeExtremes;
+		const result = isBetweenDates(tomorrow, yesterday, tomorrow, inclusivity);
+		expect(result).toEqual(false);
+	});
+
 });
