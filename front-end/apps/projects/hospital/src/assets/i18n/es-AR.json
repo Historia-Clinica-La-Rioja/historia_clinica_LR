@@ -27,6 +27,7 @@
 	"buttons": {
 		"ADD": "Agregar",
 		"NEXT": "Siguiente",
+		"PREVIOUS": "Anterior",
 		"BACK": "Volver",
 		"BACK_AND_COMPLETE": "Regresar y completar",
 		"CANCEL": "Cancelar",

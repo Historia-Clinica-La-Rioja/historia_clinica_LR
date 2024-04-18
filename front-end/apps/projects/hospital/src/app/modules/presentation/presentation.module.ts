@@ -47,6 +47,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { IconedTextComponent } from './components/iconed-text/iconed-text.component';
 import { IconedTitledSectionComponent } from './components/iconed-titled-section/iconed-titled-section.component';
 import { IdentifierComponent } from './components/identifier/identifier.component';
+import { ImgCarouselComponent } from './components/img-carousel/img-carousel.component';
 import { ImgUploaderComponent } from './components/img-uploader/img-uploader.component';
 import { IndicationComponent } from './components/indication/indication.component';
 import { ItemSummaryComponent } from './components/item-summary/item-summary.component';
@@ -156,6 +157,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		IconedTextComponent,
 		IconedTitledSectionComponent,
 		IdentifierComponent,
+		ImgCarouselComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		ItemSummaryComponent,
@@ -279,6 +281,7 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		IconedTextComponent,
 		IconedTitledSectionComponent,
 		IdentifierComponent,
+		ImgCarouselComponent,
 		ImgUploaderComponent,
 		IndicationComponent,
 		ItemSummaryComponent,
