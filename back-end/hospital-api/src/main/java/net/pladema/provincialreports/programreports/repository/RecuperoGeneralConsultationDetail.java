@@ -13,11 +13,11 @@ public class RecuperoGeneralConsultationDetail {
 
 	private String institution;
 
-	private String clinicalSpecialty;
+	private String operativeUnit;
 
-	private String provider;
+	private String lender;
 
-	private String providerDni;
+	private String lenderDni;
 
 	private String attentionDate;
 

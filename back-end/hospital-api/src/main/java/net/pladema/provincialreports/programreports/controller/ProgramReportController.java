@@ -174,6 +174,11 @@ public class ProgramReportController {
 		response.flushBuffer();
 	}
 
+	String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "Hora",
+			"DNI Paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Obra/s social/es",
+			"Domicilio", "Localidad", "Indice CPO - Permanentes", "Indice CEO - Temporarios", "Motivos", "Procedimientos",
+			"Procedimientos de Odontología", "Problemas", "Diagnósticos de Odontología"};
+
 	@GetMapping(value = "/{institutionId}/sumar-odontologico")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
@@ -187,19 +192,14 @@ public class ProgramReportController {
 		LOG.debug("Inputs parameters -> institutionID {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte de Sumar - Odontológico";
-		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de atencion", "N° Consulta",
-				"DNI Paciente", "Nombre Paciente", "Sexo", "Genero", "Nombre con el que se identifica", "Fecha de nacimiento",
-				"Edad a fecha del turno", "Edad a Hoy", "Etnia", "Obra/s social/es", "Indice CPO - Permanentes", "Indice CEO - Temporarios",
-				"Dientes Permanentes Presentes", "Dientes Temporales Presentes", "Domicilio", "Localidad", "Nivel de Instruccion",
-				"Situacion laboral", "Motivos", "Procedimientos", "problemas", "Medicacion", "Evolucion"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelSumarOdontologico(title, headers, this.programReportQueryFactory.querySumarOdontologico(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontological(title, headers, this.programReportQueryFactory.querySumarOdontologico(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
-		response.addHeader("Content-disposition", "attachment;filename= " + filename);
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
 		response.setContentType(wb.getContentType());
 
 		OutputStream out = response.getOutputStream();
@@ -222,18 +222,14 @@ public class ProgramReportController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte de Recupero Odontológico - Obras Sociales";
-		String[] headers = new String[]{"Institucion", "Unidad Operativa", "Prestador", "DNI", "Fecha de Atencion", "Hora",
-				"DNI paciente", "Nombre Paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha de turno", "Obra social",
-				"Domicilio", "Localidad", "CPO permanentes", "CEO permanentes", "Motivos", "procedimientos",
-				"Procedimientos de odontologia", "Problemas", "Diagnosticos de odontologia"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelRecuperoOdontologico(title, headers, this.programReportQueryFactory.queryRecuperoOdontologico(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontological(title, headers, this.programReportQueryFactory.queryRecuperoOdontologico(institutionId, startDate, endDate));
 
 		String filename = title + "." + wb.getExtension();
-		response.addHeader("Content-disposition", "attachment;filename= " + filename);
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
 		response.setContentType(wb.getContentType());
 
 		OutputStream out = response.getOutputStream();

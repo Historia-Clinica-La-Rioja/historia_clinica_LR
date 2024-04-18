@@ -9,19 +9,19 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class SumarOdontologicoConsultationDetail {
+public class OdontologicalConsultationDetail {
 
 	private String institution;
 
 	private String operativeUnit;
 
-	private String provider;
+	private String lender;
 
-	private String providerDni;
+	private String lenderDni;
 
 	private String attentionDate;
 
-	private String consultationNumber;
+	private String attentionHour;
 
 	private String patientDni;
 
@@ -29,44 +29,28 @@ public class SumarOdontologicoConsultationDetail {
 
 	private String gender;
 
-	private String selfPerceivedGender;
-
-	private String selfPerceivedName;
-
 	private String birthDate;
 
 	private String ageTurn;
 
-	private String ageToday;
-
-	private String ethnicity;
-
 	private String medicalCoverage;
+
+	private String direction;
+
+	private String location;
 
 	private String indexCpo;
 
 	private String indexCeo;
 
-	private String permanentTeethPresent;
-
-	private String temporaryTeethPresent;
-
-	private String address;
-
-	private String location;
-
-	private String educationLevel;
-
-	private String occupation;
-
 	private String reasons;
 
 	private String procedures;
 
+	private String dentalProcedures;
+
 	private String problems;
 
-	private String medication;
-
-	private String evolution;
+	private String dentistryDiagnostics;
 
 }

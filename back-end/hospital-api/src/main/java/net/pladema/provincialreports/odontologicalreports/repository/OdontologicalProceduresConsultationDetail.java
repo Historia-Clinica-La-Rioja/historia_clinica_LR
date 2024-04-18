@@ -13,35 +13,33 @@ import lombok.ToString;
 @ToString
 public class OdontologicalProceduresConsultationDetail {
 
-	private String institution;
-
 	private String professionalName;
 
-	private String professionalId;
+	private String professionalIdentificationNumber;
 
-	private String professionalRegistrationNumber;
+	private String professionalLicenseNumber;
 
 	private String attentionDate;
 
 	private String attentionHour;
 
-	private String patientName;
+	private String patientNames;
 
-	private String patientId;
-
-	private String patientSex;
+	private String patientIdentificationNumber;
 
 	private String patientGender;
+
+	private String patientSelfPerceivedGender;
 
 	private String patientSelfPerceivedName;
 
 	private String patientBirthDate;
 
-	private String patientAgeWhenAttended;
+	private String patientAgeTurn;
 
-	private String patientAge;
+	private String patientAgeToday;
 
-	private String patientSocialCoverage;
+	private String patientMedicalCoverage;
 
 	private String patientAddress;
 
@@ -59,7 +57,7 @@ public class OdontologicalProceduresConsultationDetail {
 
 	private String allergies;
 
-	private String commonMedication;
+	private String usualMedication;
 
 	private String dentalDiagnoses;
 
