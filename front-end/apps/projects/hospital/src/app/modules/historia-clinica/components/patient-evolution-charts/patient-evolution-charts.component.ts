@@ -6,6 +6,7 @@ import { EvolutionChartOptions } from '../evolution-chart-options/evolution-char
 import { AnthropometricGraphicService } from '@api-rest/services/anthropometric-graphic.service';
 import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 import { AnthropometricDataKey } from '@historia-clinica/modules/ambulatoria/services/datos-antropometricos-nueva-consulta.service';
+import { getValuesOfEnum } from '@core/utils/core.utils';
 
 @Component({
 	selector: 'app-patient-evolution-charts',
@@ -53,8 +54,7 @@ export class PatientEvolutionChartsComponent {
 
 	private buildAnthropometricDataByEvolutionChartMap(): Map<number, AnthropometricDataKey[]> {
 		const anthropometricDataByEvolutionChartMap = new Map<number, AnthropometricDataKey[]>();
-		const evolutionChartKeys: string[] = Object.keys(EVOLUTION_CHARTS).filter(key => isNaN(Number(key)));
-		const evolutionChartsId: number[] = evolutionChartKeys.map(key => EVOLUTION_CHARTS[key]);
+		const evolutionChartsId = getValuesOfEnum(EVOLUTION_CHARTS);
 		evolutionChartsId.forEach(evolutionChartId => {
 			anthropometricDataByEvolutionChartMap.set(evolutionChartId, AnthropometricDataKeyByEvolutionChart[evolutionChartId])
 		});

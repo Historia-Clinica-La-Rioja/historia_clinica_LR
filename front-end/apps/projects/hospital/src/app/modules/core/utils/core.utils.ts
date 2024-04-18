@@ -71,3 +71,8 @@ export const EVENT_CODE_NUMBERS: string[] = [ENumbersEventCode.DIGIT_0, ENumbers
 										ENumbersEventCode.NUMPAD_2, ENumbersEventCode.NUMPAD_3, ENumbersEventCode.NUMPAD_4, 
 										ENumbersEventCode.NUMPAD_5, ENumbersEventCode.NUMPAD_6, ENumbersEventCode.NUMPAD_7, 
 										ENumbersEventCode.NUMPAD_8, ENumbersEventCode.NUMPAD_9]
+
+export function getValuesOfEnum<T>(enumeration: T): number[] {
+	const enumKeys: string[] = Object.keys(enumeration).filter(key => isNaN(Number(key)));
+	return enumKeys.map(key => enumeration[key]);
+}
