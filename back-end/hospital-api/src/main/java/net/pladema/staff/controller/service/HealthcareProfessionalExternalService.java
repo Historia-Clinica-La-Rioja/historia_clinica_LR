@@ -4,6 +4,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCom
 import net.pladema.clinichistory.hospitalization.controller.dto.HealthCareProfessionalGroupDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 
+import java.util.List;
+
 public interface HealthcareProfessionalExternalService {
 
     HealthCareProfessionalGroupDto addHealthcareProfessionalGroup(Integer internmentEpisodeId, Integer healthcareProfessionalId);
@@ -19,4 +21,6 @@ public interface HealthcareProfessionalExternalService {
 	ProfessionalCompleteDto getProfessionalCompleteInfoByUser(Integer userId);
 
 	ProfessionalCompleteDto getProfessionalCompleteInfoById(Integer professionalId);
+
+	List<ProfessionalCompleteDto> getProfessionalsCompleteInfoByIds(List<Integer> professionalIds);
 }

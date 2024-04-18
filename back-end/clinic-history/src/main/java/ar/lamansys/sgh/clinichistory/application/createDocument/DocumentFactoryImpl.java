@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.createDocument;
 
+import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnalgesicTechniques;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticHistory;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticTechniques;
@@ -97,6 +98,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
     private final LoadPostAnesthesiaStatus loadPostAnesthesiaStatus;
 
+	private final SaveDocumentInvolvedProfessionals saveDocumentInvolvedProfessionals;
+
     @Override
 	@Transactional
     public Long run(IDocumentBo documentBo, boolean createFile) {
@@ -162,6 +165,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
         loadAnestheticSubstances.run(doc.getId(), documentBo.getAntibioticProphylaxis());
         loadMeasuringPoints.run(doc.getId(), documentBo.getMeasuringPoints());
         loadPostAnesthesiaStatus.run(doc.getId(), Optional.ofNullable(documentBo.getPostAnesthesiaStatus()));
+
+		saveDocumentInvolvedProfessionals.run(doc.getId(), documentBo.getInvolvedHealthcareProfessionalIds());
 
         if (createFile)
             generateDocument(documentBo);

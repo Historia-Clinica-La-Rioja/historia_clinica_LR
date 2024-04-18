@@ -3654,6 +3654,7 @@ export interface ProfessionalCompleteDto {
     otherLastNames: string;
     personId: number;
     professions: ProfessionCompleteDto[];
+    professionsAsString: string;
 }
 
 export interface ProfessionalDto {

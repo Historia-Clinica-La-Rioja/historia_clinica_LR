@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalTermsValidatorUtils;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,6 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 
     private final DateTimeProvider dateTimeProvider;
 
-	private final SaveDocumentInvolvedProfessionals saveDocumentInvolvedProfessionals;
-
     @Override
     public OutpatientDocumentBo execute(OutpatientDocumentBo outpatient, Boolean createFile) {
         LOG.debug("Input parameters -> outpatient {}", outpatient);
@@ -41,8 +38,6 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
 		LocalDateTime now = dateTimeProvider.nowDateTime();
 		outpatient.setPerformedDate(now);
         outpatient.setId(documentFactory.run(outpatient, createFile));
-
-		saveDocumentInvolvedProfessionals.run(outpatient.getId(), outpatient.getInvolvedHealthcareProfessionalIds());
 
         updateOutpatientConsultationService.updateOutpatientDocId(outpatient.getEncounterId(), outpatient.getId());
         LOG.debug(OUTPUT, outpatient);

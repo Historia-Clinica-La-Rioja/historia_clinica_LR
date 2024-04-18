@@ -1,5 +1,6 @@
 package net.pladema.staff.infrastructure.input.shared;
 
+import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
@@ -95,6 +96,11 @@ public class SharedStaffImpl implements SharedStaffPort {
 	@Override
 	public ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId) {
 		return healthcareProfessionalExternalService.getProfessionalCompleteInfoById(professionalId);
+	}
+
+	@Override
+	public List<ProfessionalCompleteDto> getProfessionalsCompleteByIds(List<Integer> professionalIds) {
+		return healthcareProfessionalExternalService.getProfessionalsCompleteInfoByIds(professionalIds);
 	}
 
 	@Override

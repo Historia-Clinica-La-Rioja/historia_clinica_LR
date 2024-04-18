@@ -253,11 +253,38 @@
                 </div>
                 <div class="row-content">
                     <div class="data-title">Profesión</div>
-                    <div class="data-text" th:if="${professions != null}" th:text="${professions}"></div>
+                    <div class="data-text" th:if="${author.professions != null}" th:text="${author.getProfessionsAsString()}"></div>
                 </div>
                 <div class="row-content">
                     <div class="data-title">Matricula</div>
                     <div class="data-text" th:text="${author.completeLicenseInfo}"></div>
+                </div>
+            </div>
+            <div style="clear: both;">
+                <hr class="line"></hr>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profesionales intervinientes -->
+    <div th:fragment="involvedProfessionalsData">
+        <div th:if="${involvedProfessionals != null && !involvedProfessionals.isEmpty()}">
+            <div>
+                <div class="section-title">Profesionales intervinientes</div>
+                <div th:each="involvedProfessional, iter: ${involvedProfessionals}">
+                    <div class="row-content">
+                        <div class="data-title">Nombre y apellido</div>
+                        <div class="data-text" style="text-transform: uppercase;" th:if="${nameSelfDeterminationFF}" th:text="${involvedProfessional.nameSelfDetermination + ' ' + involvedProfessional.lastName}"></div>
+                        <div class="data-text" style="text-transform: uppercase;" th:unless="${nameSelfDeterminationFF}" th:text="${involvedProfessional.firstName + ' ' + involvedProfessional.lastName}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Profesión</div>
+                        <div class="data-text" th:if="${involvedProfessional.professions != null && !involvedProfessional.professions.isEmpty()}" th:text="${involvedProfessional.getProfessionsAsString()}"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Matricula</div>
+                        <div class="data-text" th:text="${involvedProfessional.completeLicenseInfo.isEmpty() ? '-' : involvedProfessional.completeLicenseInfo}"></div>
+                    </div>
                 </div>
             </div>
             <div style="clear: both;">
@@ -868,7 +895,7 @@
 
     <!-- Observaciones -->
 
-    <div th:fragment="notes-base" th:if="${notes != null}">
+    <div th:fragment="notes-base" th:if="${notes != null && !notes.isEmpty()}">
         <p class="section-title">Observaciones</p>
         <div class="section-data">
             <div class="col-12" th:if="${notes.currentIllnessNote}">
@@ -898,7 +925,7 @@
         </div>
     </div>
 
-    <div th:fragment="notes-epicrisis" th:if="${notes != null}">
+    <div th:fragment="notes-epicrisis" th:if="${notes != null && !notes.isEmpty()}">
         <p class="section-title">Observaciones</p>
         <div class="section-data">
             <div class="col-12" th:if="${notes.evolutionNote}">
@@ -924,7 +951,7 @@
         </div>
     </div>
 
-    <div th:fragment="notes-outpatient" th:if="${notes != null}">
+    <div th:fragment="notes-outpatient" th:if="${notes != null && !notes.isEmpty()}">
         <p class="section-title">Observaciones</p>
         <div class="section-data">
             <div class="col-12" th:if="${notes.otherNote}">
@@ -935,7 +962,7 @@
     </div>
 
     <!-- Nota de evolución  -->
-    <div th:fragment="evolutionNote" th:if="${notes != null}">
+    <div th:fragment="evolutionNote" th:if="${notes != null && !notes.isEmpty()}">
         <p class="section-title">Nota de evolución</p>
         <div class="section-data">
             <div class="col-12" th:if="${notes.evolutionNote}">
@@ -944,7 +971,7 @@
         </div>
     </div>
 
-    <div th:fragment="counterReference" th:if="${notes != null}">
+    <div th:fragment="counterReference" th:if="${notes != null && !notes.isEmpty()}">
         <p class="section-title">Contrarreferencia</p>
         <div class="section-data">
             <div class="col-12" th:if="${notes.evolutionNote}">

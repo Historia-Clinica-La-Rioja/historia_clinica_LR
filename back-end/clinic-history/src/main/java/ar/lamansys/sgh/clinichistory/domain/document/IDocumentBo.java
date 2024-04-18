@@ -217,4 +217,7 @@ public interface IDocumentBo {
     default PostAnesthesiaStatusBo getPostAnesthesiaStatus() { return null; }
 
     default String getAnestheticChart() { return null; }
+	
+	default List<Integer> getInvolvedHealthcareProfessionalIds() { return Collections.emptyList(); }
+
 }

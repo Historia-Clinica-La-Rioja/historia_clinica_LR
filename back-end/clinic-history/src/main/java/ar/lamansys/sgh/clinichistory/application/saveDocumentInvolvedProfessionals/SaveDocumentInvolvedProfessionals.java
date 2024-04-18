@@ -28,7 +28,12 @@ public class SaveDocumentInvolvedProfessionals {
 	private void saveDocumentInvolvedProfessionals(Long documentId, List<Integer> healthcareProfessionalIds) {
 		List<DocumentInvolvedProfessional> entities = healthcareProfessionalIds.stream().map(healthcareProfessionalId -> parseDocumentInvolvedProfessional(documentId, healthcareProfessionalId)).collect(Collectors.toList());
 		if (!entities.isEmpty())
-			documentInvolvedProfessionalRepository.saveAll(entities);
+			saveDocumentInvolvedProfessionals(healthcareProfessionalIds, entities);
+	}
+
+	private void saveDocumentInvolvedProfessionals(List<Integer> healthcareProfessionalIds, List<DocumentInvolvedProfessional> entities) {
+		documentInvolvedProfessionalRepository.saveAll(entities);
+		healthcareProfessionalIds.clear();
 	}
 
 	private DocumentInvolvedProfessional parseDocumentInvolvedProfessional(Long documentId, Integer healthcareProfessionalId) {

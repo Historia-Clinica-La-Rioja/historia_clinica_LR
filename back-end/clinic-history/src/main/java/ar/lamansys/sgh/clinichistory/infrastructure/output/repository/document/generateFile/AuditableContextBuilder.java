@@ -77,6 +77,8 @@ public class AuditableContextBuilder {
 	private final Function<Integer, String> doctorsOfficeDescriptionFunction;
 
 	private final Function<Integer, String> shockRoomDescriptionFunction;
+	
+	private final DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder;
 
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
@@ -97,7 +99,8 @@ public class AuditableContextBuilder {
 			SectorFinder sectorFinder,
 			RoomFinder roomFinder,
 			DoctorsOfficeFinder doctorsOfficeFinder,
-			ShockRoomFinder shockRoomFinder) {
+			ShockRoomFinder shockRoomFinder,
+			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -117,6 +120,7 @@ public class AuditableContextBuilder {
 		this.roomNumberFunction = roomFinder::getRoomNumber;
 		this.doctorsOfficeDescriptionFunction = doctorsOfficeFinder::getDoctorsOfficeDescription;
 		this.shockRoomDescriptionFunction = shockRoomFinder::getShockRoomDescription;
+		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -198,7 +202,9 @@ public class AuditableContextBuilder {
 
 		var author = authorFromDocumentFunction.apply(document.getId());
 		contextMap.put("author", author);
-		contextMap.put("professions", String.join(", ", author.getProfessions().stream().map(profession -> profession.getDescription()).collect(Collectors.toList())));
+
+		var involvedProfessionals = documentInvolvedProfessionalFinder.find(document.getInvolvedHealthcareProfessionalIds());
+		contextMap.put("involvedProfessionals", involvedProfessionals);
 
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));

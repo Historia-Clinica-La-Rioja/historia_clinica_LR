@@ -2,6 +2,9 @@ package ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo;
 
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo.port.DocumentInvolvedProfessionalStorage;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
@@ -12,8 +15,9 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
+@RequiredArgsConstructor
+@Service
 public class FetchAllDocumentInfo {
 
     private final DocumentService documentService;
@@ -22,14 +26,7 @@ public class FetchAllDocumentInfo {
 
 	private final ReasonService reasonService;
 
-
-    public FetchAllDocumentInfo(DocumentService documentService,
-								NoteService noteService,
-								ReasonService reasonService) {
-		this.documentService = documentService;
-		this.noteService = noteService;
-		this.reasonService = reasonService;
-	}
+	private final DocumentInvolvedProfessionalStorage documentInvolvedProfessionalStorage;
 
     public Optional<DocumentBo> run(Long id) {
         log.debug("FetchDocumentFile with id {}",id);
@@ -68,6 +65,7 @@ public class FetchAllDocumentInfo {
 		result.setObstetricEvent(documentService.getObstetricEventFromDocument(document.getId()));
 		result.setOtherRiskFactors(documentService.getOtherRiskFactors(document.getId()));
 		result.setConclusions(documentService.getConclusionsFromDocument(document.getId()));
+		result.setInvolvedHealthcareProfessionalIds(documentInvolvedProfessionalStorage.fetchSignerInvolvedProfessionalIdsByDocumentId(document.getId()));
 		return result;
 	}
 

@@ -33,4 +33,12 @@ public interface DocumentInvolvedProfessionalRepository extends JpaRepository<Do
 	@Query("UPDATE DocumentInvolvedProfessional dip SET dip.signatureStatusId = :signatureStatusId, dip.statusUpdateDate = :currentDate WHERE dip.documentId IN :documentIds AND dip.healthcareProfessionalId = :healthcareProfessionalId")
 	void updateSignatureStatusByDocumentAndHealthcareProfessionalId(@Param("documentIds") List<Long> documentIds, @Param("healthcareProfessionalId") Integer healthcareProfessionalId,
 																	@Param("signatureStatusId") Short signatureStatusId, @Param("currentDate") LocalDate currentDate);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT dip.healthcareProfessionalId " +
+			"FROM DocumentInvolvedProfessional dip " +
+			"WHERE dip.documentId = :documentId " +
+			"AND dip.signatureStatusId = :signatureStatusId")
+	List<Integer> getDocumentInvolvedProfessionalIdsByDocumentAndSignatureStatus(@Param("documentId") Long documentId, @Param("signatureStatusId") Short signatureStatusId);
+
 }

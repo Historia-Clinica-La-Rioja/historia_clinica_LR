@@ -60,12 +60,16 @@ public interface HealthcareProfessionalMapper {
 	@Mapping(target = "person.lastName", source = "lastName")
 	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);
 
-	@Name("fromProfessionalCompleteBo")
+	@Named("fromProfessionalCompleteBo")
 	default ProfessionalCompleteDto fromProfessionalCompleteBo(ProfessionalCompleteBo professionalCompleteBo) {
 		return new ProfessionalCompleteDto(professionalCompleteBo.getId(), professionalCompleteBo.getPersonId(), professionalCompleteBo.getFirstName(), professionalCompleteBo.getMiddleNames(),
 				professionalCompleteBo.getLastName(), professionalCompleteBo.getNameSelfDetermination(),
 				mapProfessions(professionalCompleteBo.getProfessions()), professionalCompleteBo.getOtherLastNames());
 	}
+
+	@Named("fromProfessionalCompleteBoList")
+	@IterableMapping(qualifiedByName = "fromProfessionalCompleteBo")
+	List<ProfessionalCompleteDto> fromProfessionalCompleteBoList(List<ProfessionalCompleteBo> professionalCompleteBos);
 
 	private List<ProfessionCompleteDto> mapProfessions(List<ProfessionBo> professions) {
 		return professions.stream()

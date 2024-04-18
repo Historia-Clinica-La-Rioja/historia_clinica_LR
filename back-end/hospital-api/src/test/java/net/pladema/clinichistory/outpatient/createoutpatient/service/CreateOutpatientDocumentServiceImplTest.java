@@ -1,7 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
@@ -40,9 +39,6 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
     @Mock
     private DateTimeProvider dateTimeProvider;
 
-	@Mock
-	private SaveDocumentInvolvedProfessionals saveDocumentInvolvedProfessionals;
-
 	@MockBean
 	private DocumentFileRepository documentFileRepository;
 
@@ -50,7 +46,7 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
     public void setUp() {
         var updateOutpatientConsultationService = new UpdateOutpatientDocumentServiceImpl(outpatientConsultationRepository);
         createOutpatientDocumentService =
-                new CreateOutpatientDocumentServiceImpl(documentFactory, updateOutpatientConsultationService, dateTimeProvider, saveDocumentInvolvedProfessionals);
+                new CreateOutpatientDocumentServiceImpl(documentFactory, updateOutpatientConsultationService, dateTimeProvider);
     }
 
     @Test
