@@ -1,20 +1,23 @@
 package net.pladema.clinichistory.requests.servicerequests.service.domain;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.util.Strings;
+
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
-import java.time.LocalDate;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequestBo;
 
@@ -90,7 +93,13 @@ public class ServiceRequestBo implements IDocumentBo, IServiceRequestBo {
 
     @Override
     public List<String> getCie10Codes() {
-        return List.of(getDiagnosticReports().get(0).getHealthCondition().getCie10codes());
+		String cie10Codes = getDiagnosticReports()
+				.stream()
+				.findFirst()
+				.map(DiagnosticReportBo::getHealthCondition)
+				.map(HealthConditionBo::getCie10codes)
+				.orElse(Strings.EMPTY);
+        return List.of(cie10Codes);
     }
 
     @Override
