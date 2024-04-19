@@ -121,6 +121,7 @@ import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internac
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
 @NgModule({
 	declarations: [
 		// components
@@ -234,7 +235,8 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		FluidAdministrationPopupComponent,
   		AnesthesiaFormComponent,
 		//pipes
-		ShowTitleByPatientDataPipe
+		ShowTitleByPatientDataPipe,
+  AnalgesicTechniqueSummaryComponent
 	],
 	imports: [
 		CommonModule,

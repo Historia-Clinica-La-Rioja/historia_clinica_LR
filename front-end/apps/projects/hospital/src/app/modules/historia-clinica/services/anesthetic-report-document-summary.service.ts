@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
+import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { capitalize } from '@core/utils/core.utils';
@@ -45,6 +45,7 @@ export class AnestheticReportDocumentSummaryService {
             lastFoodIntake: anestheticReport.foodIntake.clockTime ? timeDtoToDate(anestheticReport.foodIntake.clockTime) : null,
             histories: this.hasHistories(anestheticReport) ? this.getHistoriesAsPersonalHistoriesData(anestheticReport) : null,
             anestheticPlanList: anestheticReport.anestheticPlans.length ? this.getAnestheticPlansData(anestheticReport.anestheticPlans) : null,
+            analgesicTechniques: anestheticReport.analgesicTechniques.length ? this.getAnalgesicTechniques(anestheticReport.analgesicTechniques) : null,
         }
     }
 
@@ -156,6 +157,19 @@ export class AnestheticReportDocumentSummaryService {
     private getAnestheticPlanViaDescription(viaId: number): string {
         return this.anestheticPlanViasArray.filter(via => via.id == viaId)[0].description;
     }
+
+    private getAnalgesicTechniques(analgesicTechniques: AnalgesicTechniqueDto[]): DescriptionItemData[] {
+        return analgesicTechniques.map(analgesicTechnique => {
+            return {
+                description: analgesicTechnique.snomed.pt + ' | ' + analgesicTechnique.injectionNote + ' | Dosis: ' + analgesicTechnique.dosage.quantity.value + ' | Unidad: ' 
+                    + this.getCatetherValue(analgesicTechnique.catheter),
+            }
+        })
+    }
+
+    private getCatetherValue(catether: boolean): string {
+        return catether ? 'Si' : 'No';
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -170,6 +184,7 @@ export interface AnestheticReportViewFormat {
     lastFoodIntake: Date,
     histories: PersonalHistoriesData,
     anestheticPlanList: DescriptionItemData[],
+    analgesicTechniques: DescriptionItemData[],
 }
 
 export interface AnthropometricData {

@@ -99,6 +99,8 @@
                     [descriptionData]="anestheticReport.anestheticPlanList"></app-title-description-list>
             </div>
         </div>
+
+        <app-analgesic-technique-summary [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
     </div>
     <ng-template #loader>
 		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
