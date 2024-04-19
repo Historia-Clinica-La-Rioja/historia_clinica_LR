@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -108,6 +109,10 @@ public class Document extends SGXAuditableEntity<Long> {
 
 	public boolean hasStatus(String statusId){
 		return this.statusId.equals(statusId);
+	}
+
+	public boolean isConfirmed() {
+		return statusId != null && statusId.equals(DocumentStatus.FINAL);
 	}
 
 	@Override

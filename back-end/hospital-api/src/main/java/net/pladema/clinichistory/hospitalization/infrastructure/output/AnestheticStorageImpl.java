@@ -51,6 +51,7 @@ public class AnestheticStorageImpl implements AnestheticStorage {
 
     private AnestheticReport mapToEntity(AnestheticReportBo anestheticReport) {
         return AnestheticReport.builder()
+                .id(anestheticReport.getAnestheticReportId())
                 .institutionId(anestheticReport.getInstitutionId())
                 .patientId(anestheticReport.getPatientId())
                 .documentId(anestheticReport.getId())
@@ -61,13 +62,16 @@ public class AnestheticStorageImpl implements AnestheticStorage {
     }
 
     private AnestheticReportBo mapToBo(Document document) {
+        Integer anestheticReportId = anestheticReportRepository.getAnestheticReportIdByDocumentId(document.getId()).orElse(null);
         return AnestheticReportBo.builder()
+                .anestheticReportId(anestheticReportId)
                 .id(document.getId())
                 .encounterId(document.getSourceId())
                 .institutionId(document.getInstitutionId())
                 .patientId(document.getPatientId())
                 .performedDate(document.getCreatedOn())
                 .anestheticChart(this.getAntestheticChart(document))
+                .confirmed(document.isConfirmed())
                 .build();
     }
 

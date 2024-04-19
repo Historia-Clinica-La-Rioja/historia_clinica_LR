@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class CreateAnestheticReport {
+public class CreateAnestheticReportDocument {
 
     private final int DEFAULT_WIDTH = 700;
     private final int DEFAULT_HEIGHT = 420;
@@ -57,7 +57,7 @@ public class CreateAnestheticReport {
 
         this.generateChart(anestheticReport);
 
-        documentFactory.run(anestheticReport, true);
+        documentFactory.run(anestheticReport, anestheticReport.isConfirmed());
 
         Integer result = anestheticStorage.save(anestheticReport);
 
@@ -67,6 +67,12 @@ public class CreateAnestheticReport {
 
     private void generateChart(AnestheticReportBo anestheticReport) {
         var points = anestheticReport.getMeasuringPoints();
+
+        if (!anestheticReport.isConfirmed()) {
+            log.debug("Output -> chart not generated because document is not confirmed");
+            return;
+        }
+
         if (points.isEmpty()) {
             log.debug("Output -> empty chart");
             return;
