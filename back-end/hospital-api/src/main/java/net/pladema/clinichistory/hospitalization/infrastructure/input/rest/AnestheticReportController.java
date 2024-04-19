@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.CreateAnestheticReport;
+import net.pladema.clinichistory.hospitalization.application.anestheticreport.GenerateAnestheticReport;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.GetAnestheticReport;
 import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.domain.AnestheticReportBo;
@@ -26,29 +26,49 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Validated
 @Slf4j
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
 @RestController
 public class AnestheticReportController {
 
     private final AnestheticReportMapper anestheticReportMapper;
-    private final CreateAnestheticReport createAnestheticReport;
+    private final GenerateAnestheticReport generateAnestheticReport;
     private final GetAnestheticReport getAnestheticReport;
 
-    @PostMapping
-    public ResponseEntity<Integer> create(@PathVariable(name = "institutionId") Integer institutionId,
-                                          @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
-                                          @Valid @RequestBody AnestheticReportDto anestheticReportDto) {
+    @PostMapping("/close")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    public ResponseEntity<Integer> close(@PathVariable(name = "institutionId") Integer institutionId,
+                                         @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+                                         @Valid @RequestBody AnestheticReportDto anestheticReportDto) {
         log.trace("Input parameters -> institutionId {}, internmentEpisodeId {}, anestheticReport {}", institutionId, internmentEpisodeId, anestheticReportDto);
+
         AnestheticReportBo anestheticReport = anestheticReportMapper.fromAnestheticReportDto(anestheticReportDto);
         anestheticReport.setInstitutionId(institutionId);
         anestheticReport.setEncounterId(internmentEpisodeId);
-        Integer anestheticReportId = createAnestheticReport.run(anestheticReport);
+        anestheticReport.setConfirmed(true);
+        Integer anestheticReportId = generateAnestheticReport.run(anestheticReport);
+
+        log.trace("Output -> {}", anestheticReportId);
+        return ResponseEntity.ok().body(anestheticReportId);
+    }
+
+    @PostMapping("/draft")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    public ResponseEntity<Integer> createDraft(@PathVariable(name = "institutionId") Integer institutionId,
+                                               @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
+                                               @Valid @RequestBody AnestheticReportDto anestheticReportDto) {
+        log.trace("Input parameters -> institutionId {}, internmentEpisodeId {}, anestheticReport {}", institutionId, internmentEpisodeId, anestheticReportDto);
+
+        AnestheticReportBo anestheticReport = anestheticReportMapper.fromAnestheticReportDto(anestheticReportDto);
+        anestheticReport.setInstitutionId(institutionId);
+        anestheticReport.setEncounterId(internmentEpisodeId);
+        anestheticReport.setConfirmed(false);
+        Integer anestheticReportId = generateAnestheticReport.run(anestheticReport);
 
         log.trace("Output -> {}", anestheticReportId);
         return ResponseEntity.ok().body(anestheticReportId);
     }
 
     @GetMapping("/{documentId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
     @DocumentValid(isConfirmed = true, documentType = DocumentType.ANESTHETIC_REPORT)
     public ResponseEntity<AnestheticReportDto> getById(
             @PathVariable(name = "institutionId") Integer institutionId,
