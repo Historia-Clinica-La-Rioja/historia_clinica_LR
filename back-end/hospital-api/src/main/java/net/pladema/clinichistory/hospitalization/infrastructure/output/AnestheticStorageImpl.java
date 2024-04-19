@@ -49,6 +49,12 @@ public class AnestheticStorageImpl implements AnestheticStorage {
                 .map(this::mapToBo);
     }
 
+    @Override
+    public Long getDocumentIdFromLastAnestheticReportDraft(Integer internmentEpisodeId) {
+        return anestheticReportRepository.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId)
+                .orElse(null);
+    }
+
     private AnestheticReport mapToEntity(AnestheticReportBo anestheticReport) {
         return AnestheticReport.builder()
                 .id(anestheticReport.getAnestheticReportId())

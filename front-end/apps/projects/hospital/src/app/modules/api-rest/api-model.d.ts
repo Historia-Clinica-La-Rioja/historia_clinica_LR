@@ -194,6 +194,9 @@ export interface AnestheticReportDto {
     surgeryProcedures?: HospitalizationProcedureDto[];
 }
 
+export interface AnestheticReportSummaryDto extends DocumentSummaryDto {
+}
+
 export interface AnestheticSubstanceDto extends ClinicalTermDto {
     dosage?: NewDosageDto;
     viaId?: number;
@@ -1440,6 +1443,7 @@ export interface DocumentTypeDto {
 export interface DocumentsSummaryDto extends Serializable {
     anamnesis: AnamnesisSummaryDto;
     epicrisis: EpicrisisSummaryDto;
+    lastAnestheticReport: AnestheticReportSummaryDto;
     lastEvaluationNote: EvaluationNoteSummaryDto;
 }
 

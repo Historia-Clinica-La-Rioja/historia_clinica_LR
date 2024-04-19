@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.hospitalization.repository.domain.summary;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,13 +11,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class DocumentsSummaryVo {
+public class AnestheticReportSummaryVo extends DocumentSummaryVo {
 
-    private AnamnesisSummaryVo anamnesis;
-
-    private EpicrisisSummaryVo epicrisis;
-
-    private EvaluationNoteSummaryVo lastEvaluationNote;
-
-    private AnestheticReportSummaryVo lastAnestheticReport;
+    public AnestheticReportSummaryVo(Long id, String statusId) {
+        super(id, statusId);
+    }
 }

@@ -1,5 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +20,13 @@ public interface AnestheticReportRepository extends JpaRepository<AnestheticRepo
     @Query("SELECT ar.id " +
             "FROM AnestheticReport ar WHERE ar.documentId = :documentId ")
     Optional<Integer> getAnestheticReportIdByDocumentId(@Param("documentId") Long documentId);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT d.id " +
+            "FROM Document d " +
+            "WHERE d.sourceId = :internmentEpisodeId " +
+            "AND d.sourceTypeId = '" + SourceType.HOSPITALIZATION + "' " +
+            "AND d.typeId = '" + DocumentType.ANESTHETIC_REPORT + "' " +
+            "AND d.statusId = '" + DocumentStatus.DRAFT + "' ")
+    Optional<Long> getDocumentIdFromLastAnestheticReportDraft(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 }
