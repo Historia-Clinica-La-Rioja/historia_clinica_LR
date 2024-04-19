@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, MedicationDto, PersonalHistoryDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model';
+import { getDocumentType } from '@core/constants/summaries';
 import { dateToViewDate } from '@core/utils/date.utils';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
+import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,8 +12,9 @@ export class DocumentSignatureService {
 
 	constructor() { }
 
-	buildDetailedInformation(document: DocumentDto) {
+	buildDetailedInformation(document: DocumentDto): DetailedInformation {
         return {
+			title: getDocumentType(document.documentType).title.toLocaleUpperCase(),
             id: document.id,
             oneColumn: [
                 {
@@ -77,7 +80,7 @@ export class DocumentSignatureService {
         }
     }
 
-	private buildRiskFactors(riskFactors: RiskFactorDto) {
+	private buildRiskFactors(riskFactors: RiskFactorDto): string[] {
 		const riskFactorsFiltered: string[] = [];
 		if (riskFactors?.bloodGlucose)
 			riskFactorsFiltered.push(`Glucemia: ${riskFactors.bloodGlucose.value}mg/dl`);
@@ -129,8 +132,7 @@ export class DocumentSignatureService {
 	}
 
 	private buildReasons(reasons: ReasonDto[]): string[] {
-		const reasonsFiltered: string[] = reasons.map(r => r.snomed.pt);
-		return reasonsFiltered;
+		return reasons.map(r => r.snomed.pt);
 	}
 
 	private buildPersonalHistories(personalHistories: PersonalHistoryDto[]): string[] {
@@ -142,7 +144,7 @@ export class DocumentSignatureService {
 		return personalHistoriesFiltered;
 	}
 
-	private buildObservations(observation: DocumentObservationsDto) {
+	private buildObservations(observation: DocumentObservationsDto): string[] {
 		const observationsFiltered: string[] = [];
 		if (observation?.clinicalImpressionNote)
 			observationsFiltered.push(`Impresión clínica y plan: ${observation.clinicalImpressionNote}`);
@@ -191,7 +193,6 @@ export class DocumentSignatureService {
 	}
 
 	private buildAllergies(allergies: AllergyConditionDto[]): string[] {
-		const allergiesFiltered: string[] = allergies.map(data => data.snomed.pt);
-		return allergiesFiltered;
+		return allergies.map(data => data.snomed.pt);
 	}
 }
