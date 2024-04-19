@@ -100,7 +100,9 @@
             </div>
         </div>
 
-        <app-analgesic-technique-summary [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
+        <app-analgesic-technique-summary *ngIf="anestheticReport.analgesicTechniques" [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
+
+        <app-anesthetic-technique-summary *ngIf="anestheticReport.anestheticTechniques" [anestheticTechnique]="anestheticReport.anestheticTechniques"></app-anesthetic-technique-summary>
     </div>
     <ng-template #loader>
 		<mat-spinner color="primary" style="margin: auto"></mat-spinner>

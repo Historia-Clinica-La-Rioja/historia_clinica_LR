@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
+import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { capitalize } from '@core/utils/core.utils';
@@ -21,6 +21,10 @@ export class AnestheticReportDocumentSummaryService {
     private presumptiveStatus: string = '';
     private viasArray: MasterDataDto[];
     private anestheticPlanViasArray: MasterDataDto[];
+    private anestheticTechniquesTypes: MasterDataDto[];
+    private trachealIncubationTypes: MasterDataDto[];
+    private breathingTypes: MasterDataDto[];
+    private circuitTypes: MasterDataDto[];
 
     constructor(
 		private readonly translateService: TranslateService,
@@ -28,8 +32,16 @@ export class AnestheticReportDocumentSummaryService {
     ) { 
         this.confirmedStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.CONFIRMED')
         this.presumptiveStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.PRESUMPTIVE')
+        this.loadMasterData();
+    }
+
+    private loadMasterData() {
         this.internacionMasterDataService.getViasPremedication().pipe(take(1)).subscribe(vias => this.viasArray = vias);
         this.internacionMasterDataService.getViasAnestheticPlan().pipe(take(1)).subscribe(vias => this.anestheticPlanViasArray = vias);
+        this.internacionMasterDataService.getAnestheticTechniqueTypes().pipe(take(1)).subscribe(anestheticTechniquesTypes => this.anestheticTechniquesTypes = anestheticTechniquesTypes);
+        this.internacionMasterDataService.getTrachealIntubationTypes().pipe(take(1)).subscribe(trachealIncubationTypes => this.trachealIncubationTypes = trachealIncubationTypes);
+        this.internacionMasterDataService.getBreathingTypes().pipe(take(1)).subscribe(breathingTypes => this.breathingTypes = breathingTypes);
+        this.internacionMasterDataService.getCircuitTypes().pipe(take(1)).subscribe(circuitTypes => this.circuitTypes = circuitTypes);
     }
 
     getAnestheticReportAsViewFormat(anestheticReport: AnestheticReportDto): AnestheticReportViewFormat {
@@ -46,6 +58,7 @@ export class AnestheticReportDocumentSummaryService {
             histories: this.hasHistories(anestheticReport) ? this.getHistoriesAsPersonalHistoriesData(anestheticReport) : null,
             anestheticPlanList: anestheticReport.anestheticPlans.length ? this.getAnestheticPlansData(anestheticReport.anestheticPlans) : null,
             analgesicTechniques: anestheticReport.analgesicTechniques.length ? this.getAnalgesicTechniques(anestheticReport.analgesicTechniques) : null,
+            anestheticTechniques: anestheticReport.anestheticTechniques.length ? this.getAnestheticTechniques(anestheticReport.anestheticTechniques) : null,
         }
     }
 
@@ -170,6 +183,48 @@ export class AnestheticReportDocumentSummaryService {
     private getCatetherValue(catether: boolean): string {
         return catether ? 'Si' : 'No';
     }
+
+    private getAnestheticTechniques(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemData[] {
+        return anestheticTechniques.map(anestheticTechnique => {
+            return {
+                description: anestheticTechnique.snomed.pt 
+                + this.getAnestheticTechniqueDescription(anestheticTechnique.techniqueId, ' | Técnica: ', this.anestheticTechniquesTypes)
+                + this.getTrachealIntubationDescription(anestheticTechnique)
+                + this.getAnestheticTechniqueDescription(anestheticTechnique.breathingId, ' | Respiración: ', this.breathingTypes)
+                + this.getAnestheticTechniqueDescription(anestheticTechnique.circuitId, ' | Circuito: ', this.circuitTypes)
+            }
+        })
+    }
+
+    private mapToMasterData(typesData: MasterDataDto[], itemId: number): string {
+        return typesData.filter(item => item.id == itemId)[0].description;
+    }
+
+    private getAnestheticTechniqueDescription(attributeId: number, prefix: string, types: MasterDataDto[]): string {
+        let description = '';
+        if (attributeId) {
+            description = prefix + this.mapToMasterData(types, attributeId);
+        }
+        return description
+    }
+
+    private getTrachealIntubationDescription(anestheticTechnique: AnestheticTechniqueDto): string {
+        let description = '';
+        if (anestheticTechnique.trachealIntubation) {
+            description = ' | Intubación traqueal: ' + this.getTrachealIntubationIdsDescription(anestheticTechnique.trachealIntubationMethodIds);
+        } 
+        return description
+    }
+
+    private getTrachealIntubationIdsDescription(trachealIntubationIds: number[]): string {
+        let description = '';
+        trachealIntubationIds.map(id => {
+            description = description.length ? 
+                description + ', ' + this.mapToMasterData(this.trachealIncubationTypes, id) 
+                : this.mapToMasterData(this.trachealIncubationTypes, id);
+        })
+        return description;
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -185,6 +240,7 @@ export interface AnestheticReportViewFormat {
     histories: PersonalHistoriesData,
     anestheticPlanList: DescriptionItemData[],
     analgesicTechniques: DescriptionItemData[],
+    anestheticTechniques: DescriptionItemData[],
 }
 
 export interface AnthropometricData {

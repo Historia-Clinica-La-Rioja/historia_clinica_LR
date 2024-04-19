@@ -122,6 +122,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
+import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
 @NgModule({
 	declarations: [
 		// components
@@ -236,7 +237,8 @@ import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-techn
   		AnesthesiaFormComponent,
 		//pipes
 		ShowTitleByPatientDataPipe,
-  AnalgesicTechniqueSummaryComponent
+  AnalgesicTechniqueSummaryComponent,
+  AnestheticTechniqueSummaryComponent
 	],
 	imports: [
 		CommonModule,
