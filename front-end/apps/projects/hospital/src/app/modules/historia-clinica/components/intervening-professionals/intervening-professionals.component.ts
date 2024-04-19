@@ -20,6 +20,9 @@ export class InterveningProfessionalsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.professionalsService.professionals$.subscribe(professionals =>{
+      this.interveningProfessional.emit(professionals.map(professional => professional.healthcareProfessionalId));
+    });
     this.electronicJointSignatureInstitutionalProfessionalLicenseService.getInstitutionalProfessionalsLicense().subscribe(professionals => {
       this.professionals = professionals;
       this.professionalsTypeaheadOption = this.professionals.map(d => this.toProfessionalTypeahead(d));
@@ -35,11 +38,6 @@ export class InterveningProfessionalsComponent implements OnInit {
       this.professionalsService.add(this.toProfessional(this.professionals.find(p => p.healthcareProfessionalId === healthcareProfessionalId)));
       this.initValueProfessional = init;
     }
-    this.emitInterveningProfessional();
-  }
-
-  private emitInterveningProfessional() {
-    this.interveningProfessional.emit(this.professionalsService.getProfessionals().map(professional => professional.healthcareProfessionalId));
   }
 
   private toProfessional(professionalDto: ElectronicJointSignatureInstitutionProfessionalDto): Professional {
