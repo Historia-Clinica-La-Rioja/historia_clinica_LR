@@ -1,13 +1,11 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.input.rest;
 
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.GenerateAnestheticReport;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.GetAnestheticReport;
-import net.pladema.clinichistory.hospitalization.controller.constraints.DocumentValid;
 import net.pladema.clinichistory.hospitalization.domain.AnestheticReportBo;
 import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto.AnestheticReportDto;
 import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.AnestheticReportMapper;
@@ -69,7 +67,6 @@ public class AnestheticReportController {
 
     @GetMapping("/{documentId}")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
-    @DocumentValid(isConfirmed = true, documentType = DocumentType.ANESTHETIC_REPORT)
     public ResponseEntity<AnestheticReportDto> getById(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
