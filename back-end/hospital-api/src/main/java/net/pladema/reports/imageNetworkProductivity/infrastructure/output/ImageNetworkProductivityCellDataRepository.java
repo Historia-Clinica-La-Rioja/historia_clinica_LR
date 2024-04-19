@@ -35,11 +35,12 @@ public class ImageNetworkProductivityCellDataRepository {
 				"JOIN {h-schema}appointment a ON (a.id = aoi.appointment_id) " +
 				"), " +
 				"transcribed_practices AS (" +
-				"SELECT DISTINCT a.id, s.pt AS concept_term " +
+				"SELECT DISTINCT ON (a.id) a.id, s.pt AS concept_term " +
 				"FROM {h-schema}appointment a " +
 				"JOIN {h-schema}appointment_order_image aoi ON (aoi.appointment_id = a.id) " +
 				"JOIN {h-schema}transcribed_service_request tsr ON (tsr.id = aoi.transcribed_order_id) " +
-				"JOIN {h-schema}diagnostic_report dr ON (dr.id = tsr.study_id) " +
+				"JOIN {h-schema}transcribed_service_request_diagnostic_report tsrdr ON (tsrdr.transcribed_service_request_id = tsr.id) " +
+				"JOIN {h-schema}diagnostic_report dr ON (dr.id = tsrdr.diagnostic_report_id) " +
 				"JOIN {h-schema}snomed s ON (s.id = dr.snomed_id) " +
 				"), " +
 				"non_transcribed_problems AS (" +
@@ -51,11 +52,12 @@ public class ImageNetworkProductivityCellDataRepository {
 				"JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
 				"), " +
 				"transcribed_problems AS (" +
-				"SELECT DISTINCT a.id, s.pt AS concept_term " +
+				"SELECT DISTINCT ON (a.id) a.id, s.pt AS concept_term " +
 				"FROM {h-schema}appointment a " +
 				"JOIN {h-schema}appointment_order_image aoi ON (aoi.appointment_id = a.id) " +
 				"JOIN {h-schema}transcribed_service_request tsr ON (tsr.id = aoi.transcribed_order_id) " +
-				"JOIN {h-schema}diagnostic_report dr ON (dr.id = tsr.study_id) " +
+				"JOIN {h-schema}transcribed_service_request_diagnostic_report tsrdr ON (tsrdr.transcribed_service_request_id = tsr.id) " +
+				"JOIN {h-schema}diagnostic_report dr ON (dr.id = tsrdr.diagnostic_report_id) " +
 				"JOIN {h-schema}health_condition hc ON (hc.id = dr.health_condition_id) " +
 				"JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
 				") " +
