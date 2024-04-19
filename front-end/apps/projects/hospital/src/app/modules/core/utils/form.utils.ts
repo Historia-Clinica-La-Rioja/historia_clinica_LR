@@ -75,11 +75,11 @@ export function futureTimeValidationDate(control: UntypedFormControl): Validatio
 	return null;
 }
 
-export function beforeTimeValidation(moment: Moment) {
+export function beforeTimeValidation(date: Date) {
 	return (control: UntypedFormControl): ValidationErrors | null => {
 		const time: string = control.value;
 		if (isValidTime(time)) {
-			if (time < momentFormat(moment, DateFormat.HOUR_MINUTE)) {
+			if (time < toHourMinute(date)) {
 				return {
 					beforeTime: true
 				};

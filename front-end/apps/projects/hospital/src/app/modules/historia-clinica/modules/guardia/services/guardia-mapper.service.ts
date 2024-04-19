@@ -191,7 +191,7 @@ export class GuardiaMapperService {
 		};
 
 		function getDateTime(dateTime): Date {
-			const date: Date = dateTime.date.toDate();
+			const date: Date = dateTime.date
 			const time = dateTime.time.split(":");
 			date.setHours(+time[0], +time[1]);
 			return date;

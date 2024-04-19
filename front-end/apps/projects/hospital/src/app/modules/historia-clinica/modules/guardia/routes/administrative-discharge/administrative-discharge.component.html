@@ -43,13 +43,9 @@
 
 	<form [formGroup]="form" (submit)="confirm()">
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
-			<mat-form-field appearance="outline">
-				<input formControlName="date" id="date" matInput [matDatepicker]="initPicker"
-					placeholder="{{'guardia.episode.administrative_discharge.form.DATE' | translate}}" [min]="medicalDischargeOn" [max]="today">
-				<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
-				<mat-datepicker #initPicker></mat-datepicker>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED"></mat-error>
-			</mat-form-field>
+			<app-datepicker [minDate]="medicalDischargeOn" [maxDate]="today" [dateToSetInDatepicker]="today"
+				(selectDate)="dateChanged($event)">
+			</app-datepicker>
 
 
 			<mat-form-field appearance="outline">
