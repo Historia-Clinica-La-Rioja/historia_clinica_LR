@@ -10,20 +10,22 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EdmontonComponent {
 
-  selectedCognitiveOption: number;
-  selectedHealthStatusOption: number;
-  selectedHealthStatusOptionDos: number;
-  selectedFunctionIndOption: number;
-  selectedSupportSocOption: number;
-  selectedMedicationOption: number;
-  selectedMedicationOptionDos: number;
-  selectedNutritionOption: number;
-  selectedAnimoOption: number;
-  selectedContingenciaOption: number;
-  selectedRendimientoFuncOption: number;
+  selectedCognitiveOption: string = '';
+  selectedHealthStatusOption: string = '';
+  selectedHealthStatusOptionDos: string = '';
+  selectedFunctionIndOption: string = '';
+  selectedSupportSocOption: string = '';
+  selectedMedicationOption: string = '';
+  selectedMedicationOptionDos: string = '';
+  selectedNutritionOption: string = '';
+  selectedAnimoOption: string = '';
+  selectedContingenciaOption: string = '';
+  selectedRendimientoFuncOption: string = '';
   patientId: number;
   routePrefix: number;
   submitted: boolean = false;
+  calificationTotal: any;
+  scoreTotal: number;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -45,59 +47,58 @@ export class EdmontonComponent {
     selectedContingenciaOption: any,
     selectedRendimientoFuncOption: any
   ): number {
+    let scoreFinal =
+      (selectedCognitiveOption === 'A' ? 0 : selectedCognitiveOption === 'B' ? 1 : selectedCognitiveOption === 'C' ? 2 : 0) +
+      (selectedHealthStatusOption === 'D' ? 0 : selectedHealthStatusOption === 'F' ? 1 : selectedHealthStatusOption === 'G' ? 2 : 0) +
+      (selectedHealthStatusOptionDos === 'H' ? 0 : selectedHealthStatusOptionDos === 'I' ? 1 : selectedHealthStatusOptionDos === 'J' ? 2 : 0) +
+      (selectedFunctionIndOption === 'K' ? 0 : selectedFunctionIndOption === 'L' ? 1 : selectedFunctionIndOption === 'M' ? 2 : 0) +
+      (selectedSupportSocOption === 'N' ? 0 : selectedSupportSocOption === 'N2' ? 1 : selectedSupportSocOption === 'O' ? 2 : 0) +
+      (selectedMedicationOption === 'P' ? 1 : selectedMedicationOption === 'Q' ? 0 : 0) +
+      (selectedMedicationOptionDos === 'R' ? 1 : selectedMedicationOptionDos === 'S' ? 0 : 0) +
+      (selectedNutritionOption === 'T' ? 1 : selectedNutritionOption === 'U' ? 0 : 0) +
+      (selectedAnimoOption === 'V' ? 1 : selectedAnimoOption === 'W' ? 0 : 0) +
+      (selectedContingenciaOption === 'X' ? 1 : selectedContingenciaOption === 'Y' ? 0 : 0) +
+      (selectedRendimientoFuncOption === 'Z' ? 0 : selectedRendimientoFuncOption === 'Z2' ? 1 : selectedRendimientoFuncOption === 'Z3' ? 2 : 0);
 
-    let cognitiveScore = 0;
+    this.scoreTotal = scoreFinal;
 
-    switch (true) {
-      case selectedCognitiveOption === 'A':
-      case selectedHealthStatusOption === 'D':
-      case selectedHealthStatusOptionDos === 'H':
-      case selectedFunctionIndOption === 'K':
-      case selectedSupportSocOption === 'N':
-      case selectedMedicationOption === 'Q':
-      case selectedMedicationOptionDos === 'S':
-      case selectedNutritionOption === 'U':
-      case selectedAnimoOption === 'W':
-      case selectedRendimientoFuncOption === 'Z':
-      case selectedContingenciaOption === 'Y':
-        cognitiveScore = 0;
-        break;
-
-      case selectedCognitiveOption === 'B':
-      case selectedHealthStatusOption === 'F':
-      case selectedHealthStatusOptionDos === 'I':
-      case selectedFunctionIndOption === 'L':
-      case selectedSupportSocOption === 'N2':
-      case selectedMedicationOption === 'P':
-      case selectedMedicationOptionDos === 'R':
-      case selectedNutritionOption === 'T':
-      case selectedAnimoOption === 'V':
-      case selectedContingenciaOption === 'X':
-      case selectedRendimientoFuncOption === 'Z2':
-        cognitiveScore = 1;
-        break;
-
-      case selectedCognitiveOption === 'C':
-      case selectedHealthStatusOption === 'G':
-      case selectedHealthStatusOptionDos === 'J':
-      case selectedFunctionIndOption === 'M':
-      case selectedSupportSocOption === 'O':
-      case selectedRendimientoFuncOption === 'Z3':
-        cognitiveScore = 2;
-        break;
-
-      default:
-        break;
+    if (scoreFinal <= 4) {
+      this.calificationTotal = 'A1';
+    } else if (scoreFinal >= 5 && scoreFinal <= 6) {
+      this.calificationTotal = 'A2';
+    } else if (scoreFinal >= 7 && scoreFinal <= 8) {
+      this.calificationTotal = 'A3';
+    } else if (scoreFinal >= 9 && scoreFinal <= 10) {
+      this.calificationTotal = 'A4';
+    } else if (scoreFinal >= 11) {
+      this.calificationTotal = 'A5';
     }
 
-    console.log("puntaje:", cognitiveScore);
-    return cognitiveScore;
+    console.log("puntaje:", scoreFinal);
+    return scoreFinal;
   }
 
+  parametersOptions(): void {
+    this.calculateTotal(
+      this.selectedCognitiveOption,
+      this.selectedHealthStatusOption,
+      this.selectedHealthStatusOptionDos,
+      this.selectedFunctionIndOption,
+      this.selectedSupportSocOption,
+      this.selectedMedicationOption,
+      this.selectedMedicationOptionDos,
+      this.selectedNutritionOption,
+      this.selectedAnimoOption,
+      this.selectedContingenciaOption,
+      this.selectedRendimientoFuncOption
+    );
+  }
 }
-  
 
-   //hay valores donde SI se imprimen en 0 en vez de mandarse 1. corroborar motivo.
+
+
+
+
 
 
 
@@ -131,14 +132,6 @@ export class EdmontonComponent {
 //     this.selectedContingenciaOption
 //   );
 // }
-
-
-
-
-
-
-
-
 
 // construirDatos() {
 //   const questionnaireAnswers = {
