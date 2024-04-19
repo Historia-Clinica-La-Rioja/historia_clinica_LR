@@ -197,7 +197,7 @@ databaseChangeLog:
               constraintName: PK_diagnostic_report_fhir_observation_group
               tableName: diagnostic_report_fhir_observation_group
               validate: true
-              
+
     - changeSet:
         id: createView-v_user_person_complete_data
         comment: Create view v_user_person_complete_data
@@ -225,7 +225,7 @@ databaseChangeLog:
                 LEFT JOIN identification_type it ON (p.identification_type_id = it.id)
                 LEFT JOIN gender g ON (p.gender_id = g.id)
                 LEFT JOIN self_perceived_gender spg ON (pe.gender_self_determination = spg.id)
-                
+
     - changeSet:
         id: dropView-v_clinic_history_11
         author: fsimaro
@@ -704,3 +704,13 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
+
+    - changeSet:
+        id: update-document_status-metadata2
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO document_status VALUES ('260385009', 'Informe borrador descartado');
+
