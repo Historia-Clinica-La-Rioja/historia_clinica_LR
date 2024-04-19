@@ -17,13 +17,12 @@ export class DatepickerComponent implements OnInit {
 	});
 
 	@Input() enableDelete = false;
-	@Input() title: string;
+	@Input() title?: string;
 	@Input() maxDate: Date;
 	@Input() minDate: Date;
 	@Input() availableDays: number[] = [];
 	@Input() disableDays: Date[] = [];
 	@Input() set dateToSetInDatepicker(dateToSet: Date) {
-		if (dateToSet)
 			this.form.controls.selectedDate.setValue(dateToSet);
 	};
 	@Output() selectDate: EventEmitter<Date> = new EventEmitter();
