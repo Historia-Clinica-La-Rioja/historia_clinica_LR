@@ -95,6 +95,8 @@ public class AnestheticReportBo implements IDocumentBo {
 
     private boolean confirmed = false;
 
+    private Long previousDocumentId;
+
     @Override
     public Integer getPatientId() {
         return patientInfo != null ? patientInfo.getId() : patientId;
