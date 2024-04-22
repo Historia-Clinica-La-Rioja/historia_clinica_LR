@@ -103,18 +103,36 @@ public class FetchAnnexReportByEncounterTest {
 	public void scope_is_not_supported(){
 		Integer encounterId = 1;
 		Short sourceTypeId = 1;
-		String scope = "INVALID";
+		String invalidScope = "INVALID";
+		String validScope = "AMBULATORIA";
 		String refsetCode = "refset";
 		Integer institutionId = 1;
 
+		/**
+		 * Case 1: invalid scope
+		 */
+
 		when(annexReportByEncounterPublicApiPermissionsPort.canAccess(any())).thenReturn(true);
 		when(annexReportByEncounterPublicApiPermissionsPort.findInstitutionId(any())).thenReturn(Optional.of(institutionId));
+		when(sharedEncounterToAppointmentService.sourceTypeSupported(any())).thenReturn(true);
 
 		assertThrows(
 				FetchAnnexReportByEncounterException.class,
-				() ->fetchAnnexReportByEncounter.run(refsetCode,encounterId,scope)
+				() ->fetchAnnexReportByEncounter.run(refsetCode, encounterId, invalidScope)
+		);
+
+
+		/**
+		* Case 2: valid scope but corresponding source type not supported
+		*/
+		when(sharedEncounterToAppointmentService.sourceTypeSupported(any())).thenReturn(false);
+
+		assertThrows(
+			FetchAnnexReportByEncounterException.class,
+			() ->fetchAnnexReportByEncounter.run(refsetCode, encounterId, validScope)
 		);
 	}
+
 	@Test
 	public void report_generation_fails_and_exception_is_translated(){
 		Integer encounterId = 1;

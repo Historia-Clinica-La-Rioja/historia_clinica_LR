@@ -72,7 +72,7 @@ public class FetchAnnexReportByEncounter {
 	private void assertCanAccessInstitution(String refsetCode) {
 		var canAccess = annexReportByEncounterPublicApiPermissionsPort
 				.findInstitutionId(refsetCode)
-				.map(institutionId -> annexReportByEncounterPublicApiPermissionsPort.canAccess(institutionId))
+				.map(annexReportByEncounterPublicApiPermissionsPort::canAccess)
 				.orElse(false);
 		if (!canAccess)
 			throw new FetchAnnexReportByEncounterAccessDeniedException();
