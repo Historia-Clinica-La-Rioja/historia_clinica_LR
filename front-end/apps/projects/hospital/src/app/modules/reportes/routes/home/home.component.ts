@@ -246,7 +246,7 @@ export class HomeComponent implements OnInit {
 		this.form.controls.endDate.setValue(fixEndDate);
 		// if both are present, check that the end date is not after the start date
 		if (this.form.value.startDate && this.form.value.endDate) {
-			if (isBefore(fixStartDate, fixEndDate)) {
+			if (isBefore(fixEndDate, fixStartDate)) {
 				this.form.controls.endDate.setErrors({ min: true });
 				this.form.controls.startDate.setErrors({ max: true });
 			} else {
