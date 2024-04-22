@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class DenguePatientControl {
+public class DenguePatientControlConsultationDetail {
 
 	private String isFalsePositive;
 
