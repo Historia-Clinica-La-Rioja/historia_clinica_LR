@@ -878,7 +878,11 @@
 			ec_dis.administrative_discharge_on as dateDischarge,
 			ec_dis.ambulance_company_id AS ambulanceDischarge,
 			dis.description as typeDischarge,
-			dis_out.description as patientExit
+			dis_out.description as patientExit,
+			(SELECT string_agg(concat(mot.description), ', ') FROM emergency_care_episode_reason ecer LEFT JOIN reasons mot ON ecer.reason_id=mot.id WHERE ecer.emergency_care_episode_id=ece.id) as reasons,
+			(select string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date, ' - Tipo: ', pt.description,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			from document_health_condition dhc inner join health_condition hc on dhc.health_condition_id=hc.id inner join problem_type pt on hc.problem_id=pt.id inner join snomed s_prob on hc.snomed_id=s_prob.id inner join condition_clinical_status ccs on hc.status_id=ccs.id inner join condition_verification_status cvs on hc.verification_status_id=cvs.id where dhc.document_id=d.id and hc.problem_id&lt;>'57177007') as problems,
+			ev.description AS evolution
 			FROM emergency_care_episode ece
 			INNER JOIN institution ins ON ece.institution_id = ins.id
 			INNER JOIN emergency_care_state ec_st ON ece.emergency_care_state_id = ec_st.id
@@ -896,8 +900,10 @@
 			LEFT JOIN doctors_office d_of ON ece.doctors_office_id=d_of.id
 			LEFT JOIN clinical_specialty_sector css ON d_of.sector_id=css.id
 			LEFT JOIN triage_category tr_cat  ON ece.triage_category_id=tr_cat.id
+			LEFT JOIN document d ON d.source_id=ece.id AND d.source_type_id=4
+			LEFT JOIN note ev ON d.other_note_id=ev.id
 			WHERE ece.created_on BETWEEN :startDate AND :endDate
-			AND ins.id = :institutionId
+			AND ins.id= :institutionId
 		</query>
 	</named-native-query>
 	
@@ -2233,6 +2239,9 @@
 			<column name="ambulanceDischarge" class="java.lang.String"/>
 			<column name="typeDischarge" class="java.lang.String"/>
 			<column name="patientExit" class="java.lang.String"/>
+			<column name="reasons" class="java.lang.String"/>
+			<column name="problems" class="java.lang.String"/>
+			<column name="evolution" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 	<sql-result-set-mapping name="GeneralReports.DiabeticsConsultationDetailResult">
