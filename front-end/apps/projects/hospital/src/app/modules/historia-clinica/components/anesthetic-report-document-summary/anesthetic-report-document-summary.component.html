@@ -105,6 +105,8 @@
         <app-anesthetic-technique-summary *ngIf="anestheticReport.anestheticTechniques" [anestheticTechnique]="anestheticReport.anestheticTechniques"></app-anesthetic-technique-summary>
 
         <app-fluid-administration-summary *ngIf="anestheticReport.fluidAdministrations" [fluidAdministration]="anestheticReport.fluidAdministrations"></app-fluid-administration-summary>
+
+        <app-anesthetic-agents-summary *ngIf="anestheticReport.anestheticAgents" [anestheticAgents]="anestheticReport.anestheticAgents"></app-anesthetic-agents-summary>
     </div>
     <ng-template #loader>
 		<mat-spinner color="primary" style="margin: auto"></mat-spinner>

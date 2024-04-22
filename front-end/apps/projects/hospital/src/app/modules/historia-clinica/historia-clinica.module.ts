@@ -11,6 +11,7 @@ import { AlergiasSummaryComponent } from './components/alergias-summary/alergias
 import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
 import { AnestheticReportDockPopupComponent } from './components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
 import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
+import { AnestheticAgentsSummaryComponent } from './components/anesthetic-agents-summary/anesthetic-agents-summary.component';
 import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
 import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-familiares-form/antecedentes-familiares-form.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
@@ -187,6 +188,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnalgesicTechniqueSummaryComponent,
 		AnestheticTechniqueSummaryComponent,
 		FluidAdministrationSummaryComponent,
+		AnestheticAgentsSummaryComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,

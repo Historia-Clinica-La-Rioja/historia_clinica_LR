@@ -22,6 +22,7 @@ export class AnestheticReportDocumentSummaryService {
     private presumptiveStatus: string = '';
     private viasArray: MasterDataDto[];
     private anestheticPlanViasArray: MasterDataDto[];
+    private anestheticAgentViasArray: MasterDataDto[];
     private anestheticTechniquesTypes: MasterDataDto[];
     private trachealIncubationTypes: MasterDataDto[];
     private breathingTypes: MasterDataDto[];
@@ -39,6 +40,7 @@ export class AnestheticReportDocumentSummaryService {
     private loadMasterData() {
         this.internacionMasterDataService.getViasPremedication().pipe(take(1)).subscribe(vias => this.viasArray = vias);
         this.internacionMasterDataService.getViasAnestheticPlan().pipe(take(1)).subscribe(vias => this.anestheticPlanViasArray = vias);
+        this.internacionMasterDataService.getViasAnestheticAgent().pipe(take(1)).subscribe(vias => this.anestheticAgentViasArray = vias);
         this.internacionMasterDataService.getAnestheticTechniqueTypes().pipe(take(1)).subscribe(anestheticTechniquesTypes => this.anestheticTechniquesTypes = anestheticTechniquesTypes);
         this.internacionMasterDataService.getTrachealIntubationTypes().pipe(take(1)).subscribe(trachealIncubationTypes => this.trachealIncubationTypes = trachealIncubationTypes);
         this.internacionMasterDataService.getBreathingTypes().pipe(take(1)).subscribe(breathingTypes => this.breathingTypes = breathingTypes);
@@ -61,6 +63,7 @@ export class AnestheticReportDocumentSummaryService {
             analgesicTechniques: anestheticReport.analgesicTechniques.length ? this.getAnalgesicTechniques(anestheticReport.analgesicTechniques) : null,
             anestheticTechniques: anestheticReport.anestheticTechniques.length ? this.getAnestheticTechniques(anestheticReport.anestheticTechniques) : null,
             fluidAdministrations: anestheticReport.fluidAdministrations.length ? this.getFluidAdministrations(anestheticReport.fluidAdministrations) : null,
+            anestheticAgents: anestheticReport.anestheticAgents.length ? this.getAnestheticAgents(anestheticReport.anestheticAgents) : null,
         }
     }
 
@@ -175,14 +178,14 @@ export class AnestheticReportDocumentSummaryService {
     private getAnestheticPlansData(anestheticPlans: AnestheticSubstanceDto[]): DescriptionItemData[] {
         return anestheticPlans.map(anestheticPlan => {
             return {
-                description: anestheticPlan.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + INFO_DIVIDER + this.getDoseTranslate() + anestheticPlan.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + anestheticPlan.dosage.quantity.unit,
+                description: anestheticPlan.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticReportViaDescription(this.anestheticPlanViasArray, anestheticPlan.viaId) + INFO_DIVIDER + this.getDoseTranslate() + anestheticPlan.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + anestheticPlan.dosage.quantity.unit,
                 dateOrTime: { dateTime: dateTimeDtoToDate(anestheticPlan.dosage.startDateTime) }
             }
         })
     }
 
-    private getAnestheticPlanViaDescription(viaId: number): string {
-        return this.anestheticPlanViasArray.filter(via => via.id == viaId)[0].description;
+    private getAnestheticReportViaDescription(viasArray: MasterDataDto[], viaId: number): string {
+        return viasArray.filter(via => via.id == viaId)[0].description;
     }
 
     private getAnalgesicTechniques(analgesicTechniques: AnalgesicTechniqueDto[]): DescriptionItemData[] {
@@ -249,6 +252,15 @@ export class AnestheticReportDocumentSummaryService {
             }
         })
     }
+
+    private getAnestheticAgents(anestheticAgents: AnestheticSubstanceDto[]): DescriptionItemData[] {
+        return anestheticAgents.map(anestheticAgent => {
+            return {
+                description: anestheticAgent.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticReportViaDescription(this.anestheticAgentViasArray ,anestheticAgent.viaId) + INFO_DIVIDER + this.getDoseTranslate() + anestheticAgent.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + anestheticAgent.dosage.quantity.unit,
+                dateOrTime: { dateTime: dateTimeDtoToDate(anestheticAgent.dosage.startDateTime) }
+            }
+        })
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -266,6 +278,7 @@ export interface AnestheticReportViewFormat {
     analgesicTechniques: DescriptionItemData[],
     anestheticTechniques: DescriptionItemData[],
     fluidAdministrations: DescriptionItemData[],
+    anestheticAgents: DescriptionItemData[],
 }
 
 export interface AnthropometricData {
