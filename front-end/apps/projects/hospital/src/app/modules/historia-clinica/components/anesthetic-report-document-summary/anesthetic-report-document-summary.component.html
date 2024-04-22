@@ -107,6 +107,8 @@
         <app-fluid-administration-summary *ngIf="anestheticReport.fluidAdministrations" [fluidAdministration]="anestheticReport.fluidAdministrations"></app-fluid-administration-summary>
 
         <app-anesthetic-agents-summary *ngIf="anestheticReport.anestheticAgents" [anestheticAgents]="anestheticReport.anestheticAgents"></app-anesthetic-agents-summary>
+
+        <app-non-anesthetic-drugs-summary *ngIf="anestheticReport.nonAnestheticDrugs" [nonAnestheticDrugs]="anestheticReport.nonAnestheticDrugs"></app-non-anesthetic-drugs-summary>
     </div>
     <ng-template #loader>
 		<mat-spinner color="primary" style="margin: auto"></mat-spinner>

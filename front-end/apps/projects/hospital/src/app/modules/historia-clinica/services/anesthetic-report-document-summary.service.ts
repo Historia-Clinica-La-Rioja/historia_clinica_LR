@@ -23,6 +23,7 @@ export class AnestheticReportDocumentSummaryService {
     private viasArray: MasterDataDto[];
     private anestheticPlanViasArray: MasterDataDto[];
     private anestheticAgentViasArray: MasterDataDto[];
+    private nonAnestheticDrugsViasArray: MasterDataDto[];
     private anestheticTechniquesTypes: MasterDataDto[];
     private trachealIncubationTypes: MasterDataDto[];
     private breathingTypes: MasterDataDto[];
@@ -41,6 +42,7 @@ export class AnestheticReportDocumentSummaryService {
         this.internacionMasterDataService.getViasPremedication().pipe(take(1)).subscribe(vias => this.viasArray = vias);
         this.internacionMasterDataService.getViasAnestheticPlan().pipe(take(1)).subscribe(vias => this.anestheticPlanViasArray = vias);
         this.internacionMasterDataService.getViasAnestheticAgent().pipe(take(1)).subscribe(vias => this.anestheticAgentViasArray = vias);
+        this.internacionMasterDataService.getViasNonAnestheticDrug().pipe(take(1)).subscribe(vias => this.nonAnestheticDrugsViasArray = vias);
         this.internacionMasterDataService.getAnestheticTechniqueTypes().pipe(take(1)).subscribe(anestheticTechniquesTypes => this.anestheticTechniquesTypes = anestheticTechniquesTypes);
         this.internacionMasterDataService.getTrachealIntubationTypes().pipe(take(1)).subscribe(trachealIncubationTypes => this.trachealIncubationTypes = trachealIncubationTypes);
         this.internacionMasterDataService.getBreathingTypes().pipe(take(1)).subscribe(breathingTypes => this.breathingTypes = breathingTypes);
@@ -64,6 +66,7 @@ export class AnestheticReportDocumentSummaryService {
             anestheticTechniques: anestheticReport.anestheticTechniques.length ? this.getAnestheticTechniques(anestheticReport.anestheticTechniques) : null,
             fluidAdministrations: anestheticReport.fluidAdministrations.length ? this.getFluidAdministrations(anestheticReport.fluidAdministrations) : null,
             anestheticAgents: anestheticReport.anestheticAgents.length ? this.getAnestheticAgents(anestheticReport.anestheticAgents) : null,
+            nonAnestheticDrugs: anestheticReport.nonAnestheticDrugs.length ? this.getNonAnestheticDrugs(anestheticReport.nonAnestheticDrugs) : null,
         }
     }
 
@@ -256,8 +259,17 @@ export class AnestheticReportDocumentSummaryService {
     private getAnestheticAgents(anestheticAgents: AnestheticSubstanceDto[]): DescriptionItemData[] {
         return anestheticAgents.map(anestheticAgent => {
             return {
-                description: anestheticAgent.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticReportViaDescription(this.anestheticAgentViasArray ,anestheticAgent.viaId) + INFO_DIVIDER + this.getDoseTranslate() + anestheticAgent.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + anestheticAgent.dosage.quantity.unit,
+                description: anestheticAgent.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticReportViaDescription(this.anestheticAgentViasArray, anestheticAgent.viaId) + INFO_DIVIDER + this.getDoseTranslate() + anestheticAgent.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + anestheticAgent.dosage.quantity.unit,
                 dateOrTime: { dateTime: dateTimeDtoToDate(anestheticAgent.dosage.startDateTime) }
+            }
+        })
+    }
+
+    private getNonAnestheticDrugs(nonAnestheticDrugs: AnestheticSubstanceDto[]): DescriptionItemData[] {
+        return nonAnestheticDrugs.map(nonAnestheticDrug => {
+            return {
+                description: nonAnestheticDrug.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticReportViaDescription(this.nonAnestheticDrugsViasArray, nonAnestheticDrug.viaId) + INFO_DIVIDER + this.getDoseTranslate() + nonAnestheticDrug.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + nonAnestheticDrug.dosage.quantity.unit,
+                dateOrTime: { dateTime: dateTimeDtoToDate(nonAnestheticDrug.dosage.startDateTime) }
             }
         })
     }
@@ -279,6 +291,7 @@ export interface AnestheticReportViewFormat {
     anestheticTechniques: DescriptionItemData[],
     fluidAdministrations: DescriptionItemData[],
     anestheticAgents: DescriptionItemData[],
+    nonAnestheticDrugs: DescriptionItemData[],
 }
 
 export interface AnthropometricData {
