@@ -39,10 +39,7 @@ public class AppointmentAnnexPdfReportServiceImpl implements SharedAppointmentAn
 		AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
 		reportDataDto.setRnos(reportDataBo.getRnos());
 		Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA))
-			context.put("flavor", "mdz");
-		else
-			context.put("flavor", "pba");
+		setFlavor(context);
 
 		log.debug("Output -> {}", reportDataDto);
 
@@ -50,5 +47,12 @@ public class AppointmentAnnexPdfReportServiceImpl implements SharedAppointmentAn
 		var filename = annexReportService.createConsultationFileName(appointmentId.longValue(), now);
 
 		return new AppointmentAnnexPdfReportVo(pdf, filename);
+	}
+
+	private void setFlavor(Map<String, Object> context) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA))
+			context.put("flavor", "mdz");
+		else
+			context.put("flavor", "pba");
 	}
 }

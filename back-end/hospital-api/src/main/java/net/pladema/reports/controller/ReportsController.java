@@ -201,16 +201,6 @@ public class ReportsController {
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
-        AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
-		reportDataDto.setRnos(reportDataBo.getRnos());
-        Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
-		setFlavor(context);
-
-		LOG.debug(OUTPUT, reportDataDto);
-
 		var report = sharedAppointmentAnnexPdfReportService.run(appointmentId) ;
 		return StoredFileResponse.sendFile(
 				report.getPdf(),
