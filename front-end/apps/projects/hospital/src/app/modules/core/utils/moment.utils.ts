@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { DEFAULT_LANG } from '../../../app.component';
 import { DateDto } from '@api-rest/api-model';
-import { parseISO } from 'date-fns';
+import { isAfter, isSameDay, parseISO } from 'date-fns';
 import { addDays, eachDayOfInterval, parse, set, startOfWeek } from 'date-fns';
 
 moment.locale(DEFAULT_LANG);
@@ -152,4 +152,8 @@ export const momentToDateDto = (momentDate: Moment): DateDto => {
 		month: momentDate.month() + 1,
 		year: momentDate.year(),
 	};
+}
+
+export const isSameOrAfter = (date: Date, dateToCompare): boolean => {
+	return isSameDay(date, dateToCompare) || isAfter(date, dateToCompare);
 }

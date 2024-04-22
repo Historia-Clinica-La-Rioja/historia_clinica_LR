@@ -4,7 +4,8 @@ import {
 	DateFormat, buildFullDate, buildFullDateFromDate, buildFullDateV2,
 	currentDateWeek, currentWeek, dateParse,
 	dateParseTime,
-	momentFormat, dateISOParseDate, momentFormatDate, momentParse, momentParseDate, momentParseDateTime, momentParseTime, newDate, newDateLocal, newMoment, newMomentLocal
+	momentFormat, dateISOParseDate, momentFormatDate, momentParse, momentParseDate, momentParseDateTime, momentParseTime, newDate, newDateLocal, newMoment, newMomentLocal,
+	isSameOrAfter
 } from "./moment.utils";
 import * as moment from "moment";
 import { isAfter } from "date-fns";
@@ -53,6 +54,12 @@ const SATURDAY = 6;
 const SUNDAY = 0;
 
 const UMBRAL = 9;
+
+const today = new Date();
+const yesterday = new Date();
+yesterday.setDate(today.getDate() - 1);
+const tomorrow = new Date();
+tomorrow.setDate(today.getDate() + 1);
 
 function differenceBetween(num1: number, num2: number) {
 	return Math.abs(num1 - num2);
@@ -428,3 +435,20 @@ describe('currentDateWeek', () => {
 
 });
 
+describe('isSameOrAfter', () => {
+
+	it(`should return true if the date is same to the date to compare`, () => {
+		const result = isSameOrAfter(today, today);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return true if the date is after to the date to compare`, () => {
+		const result = isSameOrAfter(tomorrow, today);
+		expect(result).toEqual(true);
+	});
+
+	it(`should return false if the date is before to the date to compare`, () => {
+		const result = isSameOrAfter(yesterday, today);
+		expect(result).toEqual(false);
+	});
+});
