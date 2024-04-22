@@ -51,4 +51,10 @@ public class EmergencyConsultationDetail {
 
 	private String patientExit;
 
+	private String reasons;
+
+	private String problems;
+
+	private String evolution;
+
 }
