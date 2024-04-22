@@ -1,120 +1,144 @@
 <div class="anesthesic-report-content">
-    <div *ngIf="(anestheticReport$ | async) && !isLoading, else loader" fxFlex="80%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+    <div *ngIf="(anestheticReport$ | async) && !isLoading, else loader" fxFlex="80%" FxLayoutAlign="start"
+        fxLayout="column" fxLayoutGap="36px">
 
-        <!-- Diagnosticos -->
-        <div data-id="diagnosis-section" *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.diagnosis.TITLE"></app-iconed-titled-section>
-            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.mainDiagnosis" title="internaciones.anesthesic-report.diagnosis.MAIN_DIAGNOSIS"
-                    [descriptionData]="anestheticReport.mainDiagnosis"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.diagnosis" title="internaciones.anesthesic-report.diagnosis.OTHER_DIAGNOSIS"
-                    [descriptionData]="anestheticReport.diagnosis"></app-title-description-list>
-            </div>
-        </div>
+        <app-diagnosis-summary *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis"
+            [diagnosis]="anestheticReport.diagnosis"
+            [mainDiagnosis]="anestheticReport.mainDiagnosis"></app-diagnosis-summary>
 
         <!-- Cirugia propuesta -->
         <div data-id="proposed-surgery-section" *ngIf="anestheticReport.proposedSurgeries">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.proposed-surgery.TITLE"></app-iconed-titled-section>
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.proposed-surgery.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list title="internaciones.anesthesic-report.proposed-surgery.REGISTERED_PROPOSED_SURGERIES"
+                <app-title-description-list
+                    title="internaciones.anesthesic-report.proposed-surgery.REGISTERED_PROPOSED_SURGERIES"
                     [descriptionData]="anestheticReport.proposedSurgeries"></app-title-description-list>
             </div>
         </div>
 
         <!-- Datos antropometricos -->
         <div data-id="anthropometric-data-section" *ngIf="anestheticReport.anthropometricData">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anthropometric-data.TITLE"></app-iconed-titled-section>
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.anthropometric-data.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.anthropometricData.bloodType" title="internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE" 
+                <app-title-description-list *ngIf="anestheticReport.anthropometricData.bloodType"
+                    title="internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE"
                     [descriptionData]="anestheticReport.anthropometricData.bloodType"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.anthropometricData.height" title="internaciones.anesthesic-report.anthropometric-data.detail.HEIGHT" 
+                <app-title-description-list *ngIf="anestheticReport.anthropometricData.height"
+                    title="internaciones.anesthesic-report.anthropometric-data.detail.HEIGHT"
                     [descriptionData]="anestheticReport.anthropometricData.height"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.anthropometricData.weight" title="internaciones.anesthesic-report.anthropometric-data.detail.WEIGHT" 
+                <app-title-description-list *ngIf="anestheticReport.anthropometricData.weight"
+                    title="internaciones.anesthesic-report.anthropometric-data.detail.WEIGHT"
                     [descriptionData]="anestheticReport.anthropometricData.weight"></app-title-description-list>
             </div>
         </div>
 
         <!-- Evaluacion clinica anestesica -->
         <div data-id="anesthesic-clinical-evaluation-section" *ngIf="anestheticReport.anesthesicClinicalEvaluation">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE"></app-iconed-titled-section>
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MAX_BLOOD_PRESSURE" 
+                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure"
+                    title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MAX_BLOOD_PRESSURE"
                     [descriptionData]="anestheticReport.anesthesicClinicalEvaluation.maxBloodPressure"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MIN_BLOOD_PRESSURE" 
+                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure"
+                    title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.MIN_BLOOD_PRESSURE"
                     [descriptionData]="anestheticReport.anesthesicClinicalEvaluation.minBloodPressure"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.hematocrit" title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.HEMATOCRIT" 
+                <app-title-description-list *ngIf="anestheticReport.anesthesicClinicalEvaluation.hematocrit"
+                    title="internaciones.anesthesic-report.anesthesic-clinical-evaluation.detail.HEMATOCRIT"
                     [descriptionData]="anestheticReport.anesthesicClinicalEvaluation.hematocrit"></app-title-description-list>
             </div>
         </div>
-        
+
         <!-- Antecedentes anestesicos -->
         <div data-id="anesthetic-history-section" *ngIf="anestheticReport.anestheticHistory">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthetic-history.TITLE"></app-iconed-titled-section>
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.anesthetic-history.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list title="internaciones.anesthesic-report.anesthetic-history.PREVIOUS_ANESTHESIA" 
+                <app-title-description-list
+                    title="internaciones.anesthesic-report.anesthetic-history.PREVIOUS_ANESTHESIA"
                     [descriptionData]="anestheticReport.anestheticHistory"></app-title-description-list>
             </div>
         </div>
-        
+
         <!-- Medicacion habitual -->
         <div data-id="usual-medication-section" *ngIf="anestheticReport.usualMedication">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.usual-medication.TITLE"></app-iconed-titled-section>
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.usual-medication.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list title="internaciones.anesthesic-report.usual-medication.REGISTERED_USUAL_MEDICATION" 
+                <app-title-description-list
+                    title="internaciones.anesthesic-report.usual-medication.REGISTERED_USUAL_MEDICATION"
                     [descriptionData]="anestheticReport.usualMedication"></app-title-description-list>
             </div>
         </div>
-        
+
         <!-- Premedicacion e ingesta alimentaria -->
-        <div data-id="premedication-and-food-intake-section" *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.premedication-and-food-intake.TITLE"></app-iconed-titled-section>
+        <div data-id="premedication-and-food-intake-section"
+            *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake">
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.premedication-and-food-intake.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.premedicationList?.length" title="internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION" 
+                <app-title-description-list *ngIf="anestheticReport.premedicationList?.length"
+                    title="internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION"
                     [descriptionData]="anestheticReport.premedicationList"></app-title-description-list>
                 <div *ngIf="anestheticReport.lastFoodIntake">
-                    <app-title-description-list title="internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE"></app-title-description-list>
+                    <app-title-description-list
+                        title="internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE"></app-title-description-list>
                     <div><span>{{ anestheticReport.lastFoodIntake | dateFormat : 'time' }}</span></div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Antecedentes -->
         <div data-id="histories-section" *ngIf="anestheticReport.histories">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.record.TITLE"></app-iconed-titled-section>
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.record.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.histories.recordList?.length" title="internaciones.anesthesic-report.record.REGISTERED_RECORDS" 
+                <app-title-description-list *ngIf="anestheticReport.histories.recordList?.length"
+                    title="internaciones.anesthesic-report.record.REGISTERED_RECORDS"
                     [descriptionData]="anestheticReport.histories.recordList"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.histories.observations" title="internaciones.anesthesic-report.record.OBSERVATIONS" 
+                <app-title-description-list *ngIf="anestheticReport.histories.observations"
+                    title="internaciones.anesthesic-report.record.OBSERVATIONS"
                     [descriptionData]="anestheticReport.histories.observations"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.histories.asa" title="internaciones.anesthesic-report.record.ASA"
+                <app-title-description-list *ngIf="anestheticReport.histories.asa"
+                    title="internaciones.anesthesic-report.record.ASA"
                     [descriptionData]="anestheticReport.histories.asa"></app-title-description-list>
             </div>
         </div>
-        
+
         <!-- Plan anestesico -->
         <div data-id="anesthetic-plan-section" *ngIf="anestheticReport.anestheticPlanList">
-            <app-iconed-titled-section icon="assignment" title="internaciones.anesthesic-report.anesthetic-plan.TITLE"></app-iconed-titled-section>
+            <app-iconed-titled-section icon="assignment"
+                title="internaciones.anesthesic-report.anesthetic-plan.TITLE"></app-iconed-titled-section>
             <div fxLayout="column" fxLayoutGap="8px" class="section-description">
                 <app-title-description-list title="internaciones.anesthesic-report.anesthetic-plan.PLAN_RECORDS"
                     [descriptionData]="anestheticReport.anestheticPlanList"></app-title-description-list>
             </div>
         </div>
 
-        <app-analgesic-technique-summary *ngIf="anestheticReport.analgesicTechniques" [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
+        <app-analgesic-technique-summary *ngIf="anestheticReport.analgesicTechniques"
+            [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
 
-        <app-anesthetic-technique-summary *ngIf="anestheticReport.anestheticTechniques" [anestheticTechnique]="anestheticReport.anestheticTechniques"></app-anesthetic-technique-summary>
+        <app-anesthetic-technique-summary *ngIf="anestheticReport.anestheticTechniques"
+            [anestheticTechnique]="anestheticReport.anestheticTechniques"></app-anesthetic-technique-summary>
 
-        <app-fluid-administration-summary *ngIf="anestheticReport.fluidAdministrations" [fluidAdministration]="anestheticReport.fluidAdministrations"></app-fluid-administration-summary>
+        <app-fluid-administration-summary *ngIf="anestheticReport.fluidAdministrations"
+            [fluidAdministration]="anestheticReport.fluidAdministrations"></app-fluid-administration-summary>
 
-        <app-anesthetic-agents-summary *ngIf="anestheticReport.anestheticAgents" [anestheticAgents]="anestheticReport.anestheticAgents"></app-anesthetic-agents-summary>
+        <app-anesthetic-agents-summary *ngIf="anestheticReport.anestheticAgents"
+            [anestheticAgents]="anestheticReport.anestheticAgents"></app-anesthetic-agents-summary>
 
-        <app-non-anesthetic-drugs-summary *ngIf="anestheticReport.nonAnestheticDrugs" [nonAnestheticDrugs]="anestheticReport.nonAnestheticDrugs"></app-non-anesthetic-drugs-summary>
+        <app-non-anesthetic-drugs-summary *ngIf="anestheticReport.nonAnestheticDrugs"
+            [nonAnestheticDrugs]="anestheticReport.nonAnestheticDrugs"></app-non-anesthetic-drugs-summary>
 
-        <app-intrasurgical-anesthetic-procedures-summary [procedures]="anestheticReport.intrasurgicalAnestheticProcedures"></app-intrasurgical-anesthetic-procedures-summary>
+        <app-intrasurgical-anesthetic-procedures-summary
+            [procedures]="anestheticReport.intrasurgicalAnestheticProcedures"></app-intrasurgical-anesthetic-procedures-summary>
 
-        <app-antibiotic-prophylaxis-summary *ngIf="anestheticReport.antibioticProphylaxis" [antibioticProphylaxis]="anestheticReport.antibioticProphylaxis"></app-antibiotic-prophylaxis-summary>
+        <app-antibiotic-prophylaxis-summary *ngIf="anestheticReport.antibioticProphylaxis"
+            [antibioticProphylaxis]="anestheticReport.antibioticProphylaxis"></app-antibiotic-prophylaxis-summary>
     </div>
     <ng-template #loader>
-		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
-	</ng-template>
+        <mat-spinner color="primary" style="margin: auto"></mat-spinner>
+    </ng-template>
 </div>

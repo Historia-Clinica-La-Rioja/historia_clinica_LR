@@ -24,6 +24,7 @@ import { DatosAntropometricosFormComponent } from './components/datos-antropomet
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
+import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
@@ -161,6 +162,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		BoxMessageComponent,
 		ConceptsSearchComponent,
 		ConceptTypeaheadSearchComponent,
+		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
 		EpisodeDataComponent,
