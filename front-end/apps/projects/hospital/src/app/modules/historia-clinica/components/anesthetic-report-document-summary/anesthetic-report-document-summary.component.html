@@ -111,6 +111,8 @@
         <app-non-anesthetic-drugs-summary *ngIf="anestheticReport.nonAnestheticDrugs" [nonAnestheticDrugs]="anestheticReport.nonAnestheticDrugs"></app-non-anesthetic-drugs-summary>
 
         <app-intrasurgical-anesthetic-procedures-summary [procedures]="anestheticReport.intrasurgicalAnestheticProcedures"></app-intrasurgical-anesthetic-procedures-summary>
+
+        <app-antibiotic-prophylaxis-summary *ngIf="anestheticReport.antibioticProphylaxis" [antibioticProphylaxis]="anestheticReport.antibioticProphylaxis"></app-antibiotic-prophylaxis-summary>
     </div>
     <ng-template #loader>
 		<mat-spinner color="primary" style="margin: auto"></mat-spinner>
