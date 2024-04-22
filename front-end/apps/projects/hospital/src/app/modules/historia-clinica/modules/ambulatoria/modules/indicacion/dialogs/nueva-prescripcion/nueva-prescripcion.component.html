@@ -23,7 +23,7 @@
 
         <mat-step label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
             <app-medication-information [data]="data" [prescriptionForm]="prescriptionForm" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
-             [submitted]="submitted" (showMedicationErrorEmitter)="updateMedicationErrorState($event)">
+             [submitted]="submitted" (showMedicationErrorEmitter)="updateMedicationErrorState($event)" (prescriptionItemsEmmiter)="updatePrescriptionItemState($event)">
             </app-medication-information>
         </mat-step>
     </mat-stepper>

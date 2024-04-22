@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { SnomedDto } from '@api-rest/api-model';
-import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
+import { NewPrescriptionData, PrescriptionForm } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
@@ -16,11 +16,12 @@ import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
 export class MedicationInformationComponent implements OnInit {
 
     @Input() data: NewPrescriptionData;
-    @Input() prescriptionForm: UntypedFormGroup;
+    @Input() prescriptionForm: FormGroup<PrescriptionForm>;
     @Input() isHabilitarRecetaDigitalEnabled: boolean;
     @Input() submitted: boolean;
 
     @Output() showMedicationErrorEmitter = new EventEmitter<boolean>();
+	@Output() prescriptionItemsEmmiter = new EventEmitter<NewPrescriptionItem[]>();
 
     prescriptionItems: NewPrescriptionItem[];
     itemCount = 0;
@@ -34,6 +35,7 @@ export class MedicationInformationComponent implements OnInit {
 
     ngOnInit(): void {
         this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
+		this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
     }
 
     openPrescriptionItemDialog(item?: NewPrescriptionItem): void {
@@ -56,6 +58,7 @@ export class MedicationInformationComponent implements OnInit {
 				if (!prescriptionItem.id) {
 					prescriptionItem.id = ++this.itemCount;
 					this.prescriptionItems.push(prescriptionItem);
+					this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
 					this.setShowAddMedicationError();
 				} else {
 					this.editPrescriptionItem(prescriptionItem);
@@ -66,6 +69,7 @@ export class MedicationInformationComponent implements OnInit {
 
     deletePrescriptionItem(prescriptionItem: NewPrescriptionItem): void {
 		this.prescriptionItems.splice(this.prescriptionItems.findIndex(item => item.id === prescriptionItem.id), 1);
+		this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
 		this.setShowAddMedicationError();
 	}
 

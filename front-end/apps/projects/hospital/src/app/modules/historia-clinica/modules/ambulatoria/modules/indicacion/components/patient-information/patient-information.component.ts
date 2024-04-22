@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BMPersonDto, BasicPatientDto, PatientMedicalCoverageDto } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
@@ -11,7 +11,7 @@ import { MapperService } from '@core/services/mapper.service';
 import {hasError} from '@core/utils/form.utils';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
+import { NewPrescriptionData, PrescriptionForm } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
 import { PatientSummary } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
 import { Observable, map } from 'rxjs';
 
@@ -26,7 +26,7 @@ const ARGENTINA_ID: number = 14;
 export class PatientInformationComponent implements OnInit {
 
     @Input() data: NewPrescriptionData;
-    @Input() prescriptionForm: UntypedFormGroup;
+    @Input() prescriptionForm: FormGroup<PrescriptionForm>;
     @Input() isHabilitarRecetaDigitalEnabled: boolean;
 
 	@Output() personEmmiter = new EventEmitter<BMPersonDto>();

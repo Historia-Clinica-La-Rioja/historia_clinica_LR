@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormGroup, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -10,6 +10,7 @@ import {
 	AppFeature,
 	BMPersonDto,
 	BasicPatientDto,
+	ClinicalSpecialtyDto,
 	DocumentRequestDto,
 	PrescriptionDto,
 } from '@api-rest/api-model.d';
@@ -18,6 +19,7 @@ import {hasError, NUMBER_PATTERN, scrollIntoError} from '@core/utils/form.utils'
 import { NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { mapToAPatientDto } from '../../utils/prescripcion-mapper';
+import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 
 const POSDATADAS_DEFAULT = 0;
 const POSDATADAS_MIN = 1;
@@ -41,7 +43,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	person: BMPersonDto;
 
 	prescriptionItems: NewPrescriptionItem[];
-	prescriptionForm: UntypedFormGroup;
+	prescriptionForm: FormGroup<PrescriptionForm>;
 	isHabilitarRecetaDigitalEnabled: boolean = false;
 	
 	hasError = hasError;
@@ -113,6 +115,10 @@ export class NuevaPrescripcionComponent implements OnInit {
 
 	updateMedicationErrorState(showAddMedicationError: boolean) {
 		this.showAddMedicationError = showAddMedicationError;
+	}
+
+	updatePrescriptionItemState(prescriptionItems: NewPrescriptionItem[]) {
+		this.prescriptionItems = prescriptionItems;
 	}
 
 	private scrollToBottom() {
@@ -201,6 +207,39 @@ export class NuevaPrescripcionComponent implements OnInit {
 		control.reset();
 	}
 
+}
+
+export interface PrescriptionForm {
+	patientMedicalCoverage: FormControl<PatientMedicalCoverage>,
+	withoutRecipe: FormControl<boolean>,
+	evolucion: FormControl<[]>,
+	clinicalSpecialty: FormControl<ClinicalSpecialtyDto>,
+	prolongedTreatment: FormControl<boolean>,
+	posdatadas: FormControl<number>,
+	archived: FormControl<boolean>,
+	patientData: FormControl<PatientData>,
+}
+
+export interface Prescription {
+	patientMedicalCoverage: PatientMedicalCoverage,
+	withoutRecipe: boolean,
+	evolucion: [],
+	clinicalSpecialty: ClinicalSpecialtyDto,
+	prolongedTreatment: boolean,
+	posdatadas: number,
+	archived: boolean,
+	patientData: PatientData,
+}
+
+export interface PatientData {
+	phonePrefix: string,
+	country: number,
+	phoneNumber: string,
+	province: number,
+	locality: number,
+	city: number,
+	street: string,
+	streetNumber: string
 }
 
 export class NewPrescriptionData {

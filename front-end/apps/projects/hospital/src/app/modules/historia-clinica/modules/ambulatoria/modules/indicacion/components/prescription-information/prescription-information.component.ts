@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import {hasError} from '@core/utils/form.utils';
 import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
-import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
+import { NewPrescriptionData, PrescriptionForm } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
 
 const POSDATADAS_DEFAULT = 0;
 
@@ -16,7 +16,7 @@ const POSDATADAS_DEFAULT = 0;
 export class PrescriptionInformationComponent implements OnInit {
 
     @Input() data: NewPrescriptionData;
-    @Input() prescriptionForm: UntypedFormGroup;
+    @Input() prescriptionForm: FormGroup<PrescriptionForm>;
     @Input() isHabilitarRecetaDigitalEnabled: boolean;
 
     specialties: ClinicalSpecialtyDto[];
