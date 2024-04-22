@@ -38,11 +38,7 @@
 				<ng-template #evolutionNote>
 					<app-emergency-care-evolution-note [content]="activeDocument.content"></app-emergency-care-evolution-note>
 				</ng-template>
-				<button mat-icon-button color="primary" id="download_document" name="download_document"
-					(click)="downloadDocument()">
-					<mat-icon fontSet="material-icons-outlined">
-						download_icon</mat-icon>
-				</button>
+				<app-document-actions [document]="activeDocument" [episodeId]="emergencyCareId"></app-document-actions>
 			</div>
 
 		</div>

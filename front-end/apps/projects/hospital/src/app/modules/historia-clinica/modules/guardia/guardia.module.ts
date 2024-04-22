@@ -19,6 +19,7 @@ import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatr
 // components
 import { AdministrativeTriageComponent } from './components/administrative-triage/administrative-triage.component';
 import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
+import { DocumentActionsComponent } from './components/document-actions/document-actions.component';
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
@@ -41,6 +42,7 @@ import { NewEpisodeService } from './services/new-episode.service';
 		// routing
 		AdministrativeDischargeComponent,
 		AdmisionAdministrativaComponent,
+		DocumentActionsComponent,
 		EditEmergencyCareEpisodeComponent,
 		HomeComponent,
 		MedicalDischargeComponent,
