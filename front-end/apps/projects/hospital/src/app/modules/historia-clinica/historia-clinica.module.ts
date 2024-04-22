@@ -16,8 +16,9 @@ import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-tec
 import { AntibioticProphylaxisSummaryComponent } from './components/antibiotic-prophylaxis-summary/antibiotic-prophylaxis-summary.component';
 import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-familiares-form/antecedentes-familiares-form.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
-import { BackgroundListComponent } from './components/background-list/background-list.component';
+import { AnthropometricDataSummaryComponent } from './components/anthropometric-data-summary/anthropometric-data-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
+import { BackgroundListComponent } from './components/background-list/background-list.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
@@ -158,6 +159,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnestheticTechniqueSummaryComponent,
 		AntibioticProphylaxisSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
+		AnthropometricDataSummaryComponent,
 		AntropometricosSummaryComponent,
 		BackgroundListComponent,
 		BoxMessageComponent,
