@@ -10,6 +10,8 @@ import { AlergiasFormComponent } from './components/alergias-form/alergias-form.
 import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
 import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
 import { AnestheticReportDockPopupComponent } from './components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
+import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
+import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
 import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-familiares-form/antecedentes-familiares-form.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
 import { BackgroundListComponent } from './components/background-list/background-list.component';
@@ -33,6 +35,7 @@ import { EvolutionChartTypeSelectComponent } from './components/evolution-chart-
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
+import { FluidAdministrationSummaryComponent } from './components/fluid-administration-summary/fluid-administration-summary.component';
 import { HierarchicalUnitConsultationComponent } from './components/hierarchical-unit-consultation/hierarchical-unit-consultation.component';
 import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
@@ -121,8 +124,6 @@ import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internac
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
-import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
-import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
 @NgModule({
 	declarations: [
 		// components
@@ -182,7 +183,10 @@ import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-tec
 		MeasuringPointItemComponent,
 		InterveningProfessionalsComponent,
 		ProfessionalListComponent,
-		PatientEvolutionChartsButtonComponent,
+		PatientEvolutionChartsButtonComponent, 
+		AnalgesicTechniqueSummaryComponent,
+		AnestheticTechniqueSummaryComponent,
+		FluidAdministrationSummaryComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -237,8 +241,6 @@ import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-tec
   		AnesthesiaFormComponent,
 		//pipes
 		ShowTitleByPatientDataPipe,
-  AnalgesicTechniqueSummaryComponent,
-  AnestheticTechniqueSummaryComponent
 	],
 	imports: [
 		CommonModule,

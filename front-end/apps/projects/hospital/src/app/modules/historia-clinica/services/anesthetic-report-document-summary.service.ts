@@ -11,6 +11,7 @@ import { take } from 'rxjs';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
+const INFO_DIVIDER = ' | ';
 
 @Injectable({
     providedIn: 'root'
@@ -27,9 +28,9 @@ export class AnestheticReportDocumentSummaryService {
     private circuitTypes: MasterDataDto[];
 
     constructor(
-		private readonly translateService: TranslateService,
+        private readonly translateService: TranslateService,
         readonly internacionMasterDataService: InternacionMasterDataService,
-    ) { 
+    ) {
         this.confirmedStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.CONFIRMED')
         this.presumptiveStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.PRESUMPTIVE')
         this.loadMasterData();
@@ -59,6 +60,7 @@ export class AnestheticReportDocumentSummaryService {
             anestheticPlanList: anestheticReport.anestheticPlans.length ? this.getAnestheticPlansData(anestheticReport.anestheticPlans) : null,
             analgesicTechniques: anestheticReport.analgesicTechniques.length ? this.getAnalgesicTechniques(anestheticReport.analgesicTechniques) : null,
             anestheticTechniques: anestheticReport.anestheticTechniques.length ? this.getAnestheticTechniques(anestheticReport.anestheticTechniques) : null,
+            fluidAdministrations: anestheticReport.fluidAdministrations.length ? this.getFluidAdministrations(anestheticReport.fluidAdministrations) : null,
         }
     }
 
@@ -69,10 +71,10 @@ export class AnestheticReportDocumentSummaryService {
     }
 
     private getDescriptionAndStatus(diagnosis: DiagnosisDto): string {
-        if (diagnosis.verificationId === CONFIRMED){
+        if (diagnosis.verificationId === CONFIRMED) {
             return diagnosis.snomed.pt + ' ' + this.confirmedStatus
         }
-        if (diagnosis.verificationId === PRESUMPTIVE){
+        if (diagnosis.verificationId === PRESUMPTIVE) {
             return diagnosis.snomed.pt + ' ' + this.presumptiveStatus
         }
         return diagnosis.snomed.pt
@@ -101,10 +103,10 @@ export class AnestheticReportDocumentSummaryService {
     }
 
     private getAnesthesiaHistoryAsStrings(anesthesiaHistory: AnestheticHistoryDto): DescriptionItemData[] {
-        return anesthesiaHistory?.stateId 
-            ? ( anesthesiaHistory.zoneId 
-                ? [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId, anesthesiaHistory.zoneId) }] 
-                : [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId) }]) 
+        return anesthesiaHistory?.stateId
+            ? (anesthesiaHistory.zoneId
+                ? [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId, anesthesiaHistory.zoneId) }]
+                : [{ description: this.getAnesthesiaStateDescription(anesthesiaHistory.stateId) }])
             : null
     }
 
@@ -129,17 +131,29 @@ export class AnestheticReportDocumentSummaryService {
 
     private getMedicationsAsStringArray(medications: MedicationDto[]): DescriptionItemData[] {
         return medications.map(medication => {
-            return { description: medication.note ? medication.snomed.pt + ' | ' + medication.note : medication.snomed.pt };
+            return { description: medication.note ? medication.snomed.pt + INFO_DIVIDER + medication.note : medication.snomed.pt };
         })
     }
 
     private getPremedicationData(premedications: AnestheticSubstanceDto[]): DescriptionItemData[] {
         return premedications.map(premedication => {
             return {
-                description: premedication.snomed.pt + ' | Via ' + this.getViaDescription(premedication.viaId) + ' | Dosis: ' + premedication.dosage.quantity.value + ' | Unidad: ' + premedication.dosage.quantity.unit,
+                description: premedication.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getViaDescription(premedication.viaId) + INFO_DIVIDER + this.getDoseTranslate() + premedication.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + premedication.dosage.quantity.unit,
                 dateOrTime: { dateTime: dateTimeDtoToDate(premedication.dosage.startDateTime) }
             }
         })
+    }
+
+    private getViaTranslate(): string {
+        return this.translateService.instant('historia-clinica.anesthetic-report.summary.VIA');
+    }
+
+    private getUnitTranslate(): string {
+        return this.translateService.instant('historia-clinica.anesthetic-report.summary.UNIT');
+    }
+
+    private getDoseTranslate(): string {
+        return this.translateService.instant('historia-clinica.anesthetic-report.summary.DOSE');
     }
 
     private getViaDescription(viaId: number): string {
@@ -152,7 +166,7 @@ export class AnestheticReportDocumentSummaryService {
 
     private getHistoriesAsPersonalHistoriesData(anestheticReport: AnestheticReportDto): PersonalHistoriesData {
         return {
-            recordList: anestheticReport.histories?.map(history => { return { description: capitalize(history.snomed.pt) }}),
+            recordList: anestheticReport.histories?.map(history => { return { description: capitalize(history.snomed.pt) } }),
             observations: anestheticReport.procedureDescription.note ? [{ description: anestheticReport.procedureDescription.note }] : null,
             asa: anestheticReport.procedureDescription.asa ? [{ description: anestheticReport.procedureDescription.asa.toString() }] : null,
         }
@@ -161,12 +175,12 @@ export class AnestheticReportDocumentSummaryService {
     private getAnestheticPlansData(anestheticPlans: AnestheticSubstanceDto[]): DescriptionItemData[] {
         return anestheticPlans.map(anestheticPlan => {
             return {
-                description: anestheticPlan.snomed.pt + ' | Via ' + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + ' | Dosis: ' + anestheticPlan.dosage.quantity.value + ' | Unidad: ' + anestheticPlan.dosage.quantity.unit,
+                description: anestheticPlan.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticPlanViaDescription(anestheticPlan.viaId) + INFO_DIVIDER + this.getDoseTranslate() + anestheticPlan.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + anestheticPlan.dosage.quantity.unit,
                 dateOrTime: { dateTime: dateTimeDtoToDate(anestheticPlan.dosage.startDateTime) }
             }
         })
     }
-    
+
     private getAnestheticPlanViaDescription(viaId: number): string {
         return this.anestheticPlanViasArray.filter(via => via.id == viaId)[0].description;
     }
@@ -174,7 +188,7 @@ export class AnestheticReportDocumentSummaryService {
     private getAnalgesicTechniques(analgesicTechniques: AnalgesicTechniqueDto[]): DescriptionItemData[] {
         return analgesicTechniques.map(analgesicTechnique => {
             return {
-                description: analgesicTechnique.snomed.pt + ' | ' + analgesicTechnique.injectionNote + ' | Dosis: ' + analgesicTechnique.dosage.quantity.value + ' | Unidad: ' 
+                description: analgesicTechnique.snomed.pt + INFO_DIVIDER + analgesicTechnique.injectionNote + INFO_DIVIDER + this.getDoseTranslate() + analgesicTechnique.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate()
                     + this.getCatetherValue(analgesicTechnique.catheter),
             }
         })
@@ -187,11 +201,11 @@ export class AnestheticReportDocumentSummaryService {
     private getAnestheticTechniques(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemData[] {
         return anestheticTechniques.map(anestheticTechnique => {
             return {
-                description: anestheticTechnique.snomed.pt 
-                + this.getAnestheticTechniqueDescription(anestheticTechnique.techniqueId, ' | Técnica: ', this.anestheticTechniquesTypes)
-                + this.getTrachealIntubationDescription(anestheticTechnique)
-                + this.getAnestheticTechniqueDescription(anestheticTechnique.breathingId, ' | Respiración: ', this.breathingTypes)
-                + this.getAnestheticTechniqueDescription(anestheticTechnique.circuitId, ' | Circuito: ', this.circuitTypes)
+                description: anestheticTechnique.snomed.pt
+                    + this.getAnestheticTechniqueDescription(anestheticTechnique.techniqueId, this.translateService.instant('historia-clinica.anesthetic-report.summary.TECHNIQUE') , this.anestheticTechniquesTypes)
+                    + this.getTrachealIntubationDescription(anestheticTechnique)
+                    + this.getAnestheticTechniqueDescription(anestheticTechnique.breathingId, this.translateService.instant('historia-clinica.anesthetic-report.summary.BREATHING'), this.breathingTypes)
+                    + this.getAnestheticTechniqueDescription(anestheticTechnique.circuitId, this.translateService.instant('historia-clinica.anesthetic-report.summary.CIRCUIT'), this.circuitTypes)
             }
         })
     }
@@ -203,7 +217,7 @@ export class AnestheticReportDocumentSummaryService {
     private getAnestheticTechniqueDescription(attributeId: number, prefix: string, types: MasterDataDto[]): string {
         let description = '';
         if (attributeId) {
-            description = prefix + this.mapToMasterData(types, attributeId);
+            description = INFO_DIVIDER + prefix + this.mapToMasterData(types, attributeId);
         }
         return description
     }
@@ -211,19 +225,29 @@ export class AnestheticReportDocumentSummaryService {
     private getTrachealIntubationDescription(anestheticTechnique: AnestheticTechniqueDto): string {
         let description = '';
         if (anestheticTechnique.trachealIntubation) {
-            description = ' | Intubación traqueal: ' + this.getTrachealIntubationIdsDescription(anestheticTechnique.trachealIntubationMethodIds);
-        } 
+            description = INFO_DIVIDER + this.translateService.instant('historia-clinica.anesthetic-report.summary.TRACHEAL_INTUBATION') + this.getTrachealIntubationIdsDescription(anestheticTechnique.trachealIntubationMethodIds);
+        }
         return description
     }
 
     private getTrachealIntubationIdsDescription(trachealIntubationIds: number[]): string {
         let description = '';
         trachealIntubationIds.map(id => {
-            description = description.length ? 
-                description + ', ' + this.mapToMasterData(this.trachealIncubationTypes, id) 
+            description = description.length ?
+                description + ', ' + this.mapToMasterData(this.trachealIncubationTypes, id)
                 : this.mapToMasterData(this.trachealIncubationTypes, id);
         })
         return description;
+    }
+
+    private getFluidAdministrations(fluidAdministrations: AnestheticSubstanceDto[]): DescriptionItemData[] {
+        return fluidAdministrations.map(fluidAdministration => {
+            return {
+                description: fluidAdministration.dosage.quantity.value ?
+                    fluidAdministration.snomed.pt + INFO_DIVIDER + this.translateService.instant('historia-clinica.anesthetic-report.summary.QUANTITY_USED') + fluidAdministration.dosage.quantity.value + fluidAdministration.dosage.quantity.unit
+                    : fluidAdministration.snomed.pt,
+            }
+        })
     }
 }
 
@@ -241,6 +265,7 @@ export interface AnestheticReportViewFormat {
     anestheticPlanList: DescriptionItemData[],
     analgesicTechniques: DescriptionItemData[],
     anestheticTechniques: DescriptionItemData[],
+    fluidAdministrations: DescriptionItemData[],
 }
 
 export interface AnthropometricData {
