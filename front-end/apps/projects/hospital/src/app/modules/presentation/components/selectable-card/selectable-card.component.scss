@@ -17,7 +17,9 @@ header {
     margin: 0;
     display: grid;
     grid-template-columns: 1fr 2fr;
-    border: 1px solid #d3d3d3;
+    border-top: 1px solid #d3d3d3;
+    border-left: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
 }
 
 .no-information-container {
@@ -25,6 +27,8 @@ header {
     display: grid;
     place-items: center;
     text-align: center;
+    border-bottom: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
 
     h3 {
         color: #9A9A9A;
@@ -34,31 +38,25 @@ header {
 .no-detailed-information {
     display: grid;
     place-items: center;
+    border-bottom: 1px solid #d3d3d3;
 }
 
 .cards-container {
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+mat-selection-list {
     border-right: 1px solid #d3d3d3;
 
-}
+	mat-list-option {
+		height: auto;
+		border-bottom: 1px solid #d3d3d3;
+	}
 
-mat-selection-list .mat-list-single-selected-option {
-    background-color: #E9F3F9;
-}
-
-mat-selection-list mat-list-option {
-    height: auto;
-    border-right: 1px solid #d3d3d3;
-    border-bottom: 1px solid #d3d3d3;
-
-    &:last-child {
-        border-bottom: 0;
-    }
-}
-
-.select-all {
-    border-right: 1px solid #d3d3d3;;
+	.mat-list-single-selected-option {
+		background-color: #E9F3F9;
+	}
 }
 
 ::ng-deep .mat-list-item-content {
@@ -99,5 +97,9 @@ mat-list-item {
 }
 
 .detailed-information {
-	height: 40rem
+    border-bottom: 1px solid #d3d3d3;
+}
+
+mat-divider {
+	margin: 0 2rem;
 }

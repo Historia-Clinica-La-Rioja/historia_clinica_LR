@@ -16,6 +16,8 @@
 		[dataList]="documents"
 		[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
 		[hasHeader]="!!selectedDocumentId"
+		[isDownloadable]="false"
+        [detailedInformation]="detailedInformation"
 		(selectedId)="seeDetails($event)"
 		(selectedDataList)="selectedIds($event)">
 		<span translate="digital-signature.UNSELECTED_DOCUMENT" *ngIf="!selectedDocumentId"	class="no-detailed-information"></span>

@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild, } from '@angular/core';
 import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { buildHeaderInformation, buildItemListCard } from '../../mappers/joint-signature.mapper';
-import { ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { DocumentDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { map, tap } from 'rxjs';
 import { INITIAL_PAGE, PAGE_SIZE, PAGE_SIZE_OPTIONS } from '../../constants/joint-signature.constants';
@@ -11,6 +11,9 @@ import { RejectSignatureComponent } from '../../dialogs/reject-signature/reject-
 import { MatPaginator } from '@angular/material/paginator';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
+import { DocumentService } from '@api-rest/services/document.service';
+import { DocumentSignatureService } from '../../../../services/document-signature.service';
 
 @Component({
 	selector: 'app-joint-signature-documents-card',
@@ -34,12 +37,17 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	elementsAmount: number;
 	pageSize = PAGE_SIZE;
 	selectedDocumentsId: number[] = [];
+	detailedInformation: DetailedInformation;
 
 	readonly INITIAL_PAGE = INITIAL_PAGE;
 	readonly PAGE_SIZE_OPTIONS = PAGE_SIZE_OPTIONS;
 
-	constructor(private dialog: MatDialog, private readonly snackBarService: SnackBarService,
-		private readonly jointSignatureService: JointSignatureService
+	constructor(
+		private dialog: MatDialog,
+		private readonly snackBarService: SnackBarService,
+		private readonly jointSignatureService: JointSignatureService,
+		private readonly documentService: DocumentService,
+		private readonly documentSignatureService: DocumentSignatureService
 	) { }
 
 	ngOnInit(): void {
@@ -48,8 +56,9 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 
 	setDocuments(pageIndex: number): void {
 		this.isLoading = true;
-		this.selectedDocumentId = undefined;
+		this.selectedDocumentId = null;
 		this.headerInformation = [];
+		this.detailedInformation = null;
 		this.setPageInfo(pageIndex);
 		this.jointSignatureService.getProfessionalInvolvedDocumentList(this.pageSize, pageIndex, this.filter)
 			.pipe(
@@ -69,15 +78,21 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 
 	setPageInfo(pageNumber: number) {
 		if (this.paginator) {
-        	this.paginator.pageIndex = pageNumber;
+			this.paginator.pageIndex = pageNumber;
 			this.pageSize = this.paginator.pageSize;
 		}
-    }
+	}
 
 	seeDetails(ids: SelectableCardIds): void {
-		this.selectedDocumentId = ids.id;
-		this.headerInformation = buildHeaderInformation(this.jointSignatureDocuments.find(item => item.documentId === ids.id));
+		this.documentService.getDocumentInfo(ids.id)
+			.subscribe((document: DocumentDto) => {
+				this.selectedDocumentId = ids.id;
+				const jointSignatureDocument = this.jointSignatureDocuments.find(item => item.documentId === ids.id);
+				this.headerInformation = buildHeaderInformation(jointSignatureDocument);
+				this.detailedInformation = this.documentSignatureService.buildDetailedInformation(document);
+			});
 	}
+
 
 	openPopUpRejectSignature() {
 		const dialogRef = this.dialog.open(RejectSignatureComponent, {
@@ -96,7 +111,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 	}
 
 	rejectSignature(reasonRejection: RejectDocumentElectronicJointSignatureDto) {
-		let message:string;
+		let message: string;
 		reasonRejection.documentIds = this.selectedDocumentsId;
 		this.jointSignatureService.rejectDocumentElectronicJointSignature(reasonRejection).subscribe(res => {
 			if (this.selectedDocumentsId.length > 1) {

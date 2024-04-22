@@ -107,7 +107,8 @@ export class DocumentSignatureService {
 		const proceduresFiltered: string[] = [];
 		procedures.forEach(p => {
 			proceduresFiltered.push(p.snomed.pt);
-			proceduresFiltered.push(dateToViewDate(new Date(p.performedDate)));
+			if (p.performedDate)
+				proceduresFiltered.push(dateToViewDate(new Date(p.performedDate)));
 		})
 		return proceduresFiltered;
 	}
@@ -139,7 +140,8 @@ export class DocumentSignatureService {
 		const personalHistoriesFiltered: string[] = [];
 		personalHistories.forEach(ph => {
 			personalHistoriesFiltered.push(ph.snomed.pt);
-			personalHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(ph.startDate))}`);
+			if (ph.startDate)
+				personalHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(ph.startDate))}`);
 		})
 		return personalHistoriesFiltered;
 	}
@@ -176,7 +178,8 @@ export class DocumentSignatureService {
 		const familyHistoriesFiltered: string[] = [];
 		familyHistories.forEach(fh => {
 			familyHistoriesFiltered.push(fh.snomed.pt);
-			familyHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(fh.startDate))}`);
+			if (fh.startDate)
+				familyHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(fh.startDate))}`);
 		})
 		return familyHistoriesFiltered;
 	}
