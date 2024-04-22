@@ -230,7 +230,7 @@ export class GuardiaMapperService {
 		const callTime = dto.policeInterventionDetails?.callTime ? timeDtoToDate(dto.policeInterventionDetails.callTime) : null;
 		return {
 			ambulanceCompanyId: dto.ambulanceCompanyId ? dto.ambulanceCompanyId : null,
-			callDate: callDate ? dateToMoment(callDate) : null,
+			callDate,
 			callTime: callTime ? momentFormat(dateToMoment(callTime), DateFormat.HOUR_MINUTE) : null,
 			doctorsOfficeId: dto.doctorsOffice ? dto.doctorsOffice.id : null,
 			emergencyCareEntranceTypeId: dto.entranceType?.id ? dto.entranceType.id : null,
@@ -269,7 +269,7 @@ export class GuardiaMapperService {
 				firstName: administrativeAdmission.firstName,
 				lastName: administrativeAdmission.lastName,
 				plateNumber: administrativeAdmission.plateNumber,
-				callDate: administrativeAdmission.callDate ? dateToDateDto(administrativeAdmission.callDate.toDate()) : null,
+				callDate: administrativeAdmission.callDate ? dateToDateDto(administrativeAdmission.callDate) : null,
 				callTime: administrativeAdmission.callTime ? dateToTimeDto(parse(administrativeAdmission.callTime, 'HH:mm', new Date())) : null,
 			} : null;
 		}

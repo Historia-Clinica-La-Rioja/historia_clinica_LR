@@ -136,13 +136,9 @@
 		<span translate="guardia.administrative_admision.form.police_intervention.CALL_DETAIL"></span>
 
 		<div fxLayout="row" fxLayoutGap="5px">
-			<mat-form-field appearance="outline">
-				<input formControlName="callDate" id="callDate" matInput [matDatepicker]="initPicker" [min]="minDate" [max]="today"
-					placeholder="{{'guardia.administrative_admision.form.police_intervention.DATE' | translate}}">
-				<mat-datepicker-toggle matSuffix [for]="initPicker"></mat-datepicker-toggle>
-				<mat-datepicker #initPicker></mat-datepicker>
-			</mat-form-field>
-
+			<app-datepicker id="callDate" [minDate]="minDate"
+				[maxDate]="today" (selectDate)="dateChanged($event)">
+			</app-datepicker>
 
 			<mat-form-field appearance="outline">
 				<input matInput id="time" type="text" formControlName="callTime" pattern="{{TIME_PATTERN}}"

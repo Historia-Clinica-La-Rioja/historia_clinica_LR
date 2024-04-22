@@ -109,6 +109,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		this.setExistingInfo();
 	}
 
+	dateChanged(date:Date) {
+		this.form.controls.callDate.setValue(date);
+	}
+
 	searchPatient(): void {
 		const dialogRef = this.dialog.open(SearchPatientDialogComponent);
 

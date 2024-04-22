@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { NewEmergencyCareDto } from '@api-rest/api-model';
-import { Moment } from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { MotivoConsulta } from '../../ambulatoria/services/motivo-nueva-consulta.service';
 import { GuardiaMapperService } from './guardia-mapper.service';
@@ -48,7 +47,7 @@ export interface AdministrativeAdmission {
 	emergencyCareEntranceTypeId: number;
 	ambulanceCompanyId: string;
 	hasPoliceIntervention: boolean;
-	callDate: Moment;
+	callDate: Date;
 	callTime: string;
 	plateNumber: string;
 	firstName: string;

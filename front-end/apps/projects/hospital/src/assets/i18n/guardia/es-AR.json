@@ -58,7 +58,6 @@
 				},
 				"police_intervention": {
 					"CALL_DETAIL": "Detalle del llamado",
-					"DATE": "Fecha",
 					"TIME": "Hora",
 					"police_officer": {
 						"TITLE": "Detalle del oficial policial",
