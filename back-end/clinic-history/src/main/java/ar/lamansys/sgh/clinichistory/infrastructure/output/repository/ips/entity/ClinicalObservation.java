@@ -1,13 +1,20 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
-import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
-import lombok.*;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
-
-import javax.persistence.*;
+import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @MappedSuperclass
 @Getter
@@ -16,6 +23,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class ClinicalObservation extends SGXAuditableEntity<Integer> implements SGXDocumentEntity {
+
+    private static final long serialVersionUID = -3877133949925317197L;
 
     @Id
     @Column(name = "id")
@@ -47,7 +56,7 @@ public abstract class ClinicalObservation extends SGXAuditableEntity<Integer> im
     private Long noteId;
 
     public ClinicalObservation(Integer patientId, String value, Integer snomedId, String cie10Codes, String categoryId,
-                               LocalDateTime effectiveTime) {
+                               LocalDateTime effectiveTime, String statusId) {
         super();
         this.patientId = patientId;
         this.categoryId = categoryId;
@@ -55,17 +64,21 @@ public abstract class ClinicalObservation extends SGXAuditableEntity<Integer> im
         this.snomedId = snomedId;
         this.cie10Codes = cie10Codes;
         this.effectiveTime = effectiveTime;
+        if (statusId != null)
+            this.statusId = statusId;
     }
 
-	public ClinicalObservation(Integer patientId, String value, Integer snomedId, String categoryId,
-							   LocalDateTime effectiveTime) {
-		super();
-		this.patientId = patientId;
-		this.categoryId = categoryId;
-		this.value = value;
-		this.snomedId = snomedId;
-		this.effectiveTime = effectiveTime;
-	}
+    public ClinicalObservation(Integer patientId, String value, Integer snomedId, String categoryId,
+                               LocalDateTime effectiveTime, String statusId) {
+        super();
+        this.patientId = patientId;
+        this.categoryId = categoryId;
+        this.value = value;
+        this.snomedId = snomedId;
+        this.effectiveTime = effectiveTime;
+        if (statusId != null)
+            this.statusId = statusId;
+    }
 
     public boolean isDeleted() {
         return this.statusId.equals(ObservationStatus.ERROR);

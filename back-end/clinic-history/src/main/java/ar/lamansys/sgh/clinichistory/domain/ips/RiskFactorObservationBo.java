@@ -25,7 +25,8 @@ public class RiskFactorObservationBo {
         this.loincCode = observationRiskFactor.getLoincCode();
         this.riskFactor = new ClinicalObservationBo(observationRiskFactor.getId(),
                 observationRiskFactor.getValue(),
-                observationRiskFactor.getEffectiveTime());
+                observationRiskFactor.getEffectiveTime(),
+                observationRiskFactor.getStatusId());
     }
 
 }

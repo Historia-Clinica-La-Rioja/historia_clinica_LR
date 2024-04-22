@@ -25,8 +25,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.service.PersonService;
@@ -119,6 +119,9 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
+	@Mock
+	private AnestheticStorage anestheticStorage;
+
 	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -136,7 +139,8 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 				institutionService,
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
-				getLicenseNumberByProfessional);
+				getLicenseNumberByProfessional,
+				anestheticStorage);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
 						new AnamnesisValidator(featureFlagsService));
@@ -469,14 +473,14 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 
 	private RiskFactorBo newRiskFactors(String value, LocalDateTime time) {
 		var vs = new RiskFactorBo();
-		vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time));
+		vs.setBloodOxygenSaturation(new ClinicalObservationBo(null, value, time, null));
 		return vs;
 	}
 
 	private AnthropometricDataBo newAnthropometricData(String value, LocalDateTime time) {
 		var adb = new AnthropometricDataBo();
-		adb.setBloodType(new ClinicalObservationBo(null, value, time));
-		adb.setWeight(new ClinicalObservationBo(null, value, time));
+		adb.setBloodType(new ClinicalObservationBo(null, value, time, null));
+		adb.setWeight(new ClinicalObservationBo(null, value, time, null));
 		return adb;
 	}
 

@@ -706,11 +706,15 @@ databaseChangeLog:
                 where d.deleted=false and d.status_id = '445665009';
 
     - changeSet:
-        id: update-document_status-metadata2
+        id: update_metadata-draft_states
         author: mromero
         context: "!schema-only"
         changes:
           - sql:
               sql: |-
                 INSERT INTO document_status VALUES ('260385009', 'Informe borrador descartado');
+                INSERT INTO medication_statement_status VALUES ('260385009', 'Descartado (borrador)');
+                INSERT INTO procedures_status VALUES ('260385009', 'Descartado (borrador)');
+                INSERT INTO condition_clinical_status VALUES ('260385009', 'Descartado (borrador)');
+                INSERT INTO observation_status VALUES ('260385009', 'Descartado (borrador)');
 

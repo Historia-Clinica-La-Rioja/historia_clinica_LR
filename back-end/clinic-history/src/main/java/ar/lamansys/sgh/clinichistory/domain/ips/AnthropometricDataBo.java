@@ -40,9 +40,9 @@ public class AnthropometricDataBo extends SelfValidating<AnthropometricDataBo> {
             return null;
 		Float convertedHeight = Float.parseFloat(height.getValue());
 		if (convertedHeight == 0f){
-			return new ClinicalObservationBo(null, "-", weight.getEffectiveTime());
+			return new ClinicalObservationBo(null, "-", weight.getEffectiveTime(), null);
 		}
         Double bmi = Float.parseFloat(weight.getValue()) / Math.pow((convertedHeight/100),2);
-        return new ClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime());
+        return new ClinicalObservationBo(null, String.format("%.02f", bmi), weight.getEffectiveTime(), null);
     }
 }
