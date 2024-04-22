@@ -62,6 +62,7 @@ import { ProcedureListComponent } from './components/procedure-list/procedure-li
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
 import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
+import { ProposedSurgerySummaryComponent } from './components/proposed-surgery-summary/proposed-surgery-summary.component';
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
@@ -193,6 +194,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ProcedureListComponent,
 		ProposedSurgeryBackgroundListComponent,
 		ProposedSurgeryComponent,
+		ProposedSurgerySummaryComponent,
 		ProfessionalListComponent,
 		ReasonListComponent,
 		ReferenceRequestListComponent,
