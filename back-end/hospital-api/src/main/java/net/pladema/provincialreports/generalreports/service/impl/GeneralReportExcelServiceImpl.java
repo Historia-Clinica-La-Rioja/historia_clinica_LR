@@ -297,6 +297,18 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell20.setCellValue(content.getPatientExit());
 		cell20.setCellStyle(style);
 
+		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
+		cell21.setCellValue(content.getReasons());
+		cell21.setCellStyle(style);
+
+		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
+		cell22.setCellValue(content.getProblems());
+		cell22.setCellStyle(style);
+
+		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
+		cell23.setCellValue(content.getEvolution());
+		cell23.setCellStyle(style);
+
 	}
 
 	private void fillRowContent(IRow row, DiabeticHypertensionConsultationDetail content, ICellStyle style) {
