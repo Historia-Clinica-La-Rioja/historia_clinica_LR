@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
+import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, ProcedureDescriptionDto, RiskFactorDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { capitalize } from '@core/utils/core.utils';
@@ -59,7 +59,7 @@ export class AnestheticReportDocumentSummaryService {
             anestheticHistory: this.getAnesthesiaHistoryAsStrings(anestheticReport.anestheticHistory),
             usualMedication: anestheticReport.medications.length ? this.getMedicationsAsStringArray(anestheticReport.medications) : null,
             premedicationList: anestheticReport.preMedications.length ? this.getPremedicationData(anestheticReport.preMedications) : null,
-            lastFoodIntake: anestheticReport.foodIntake.clockTime ? timeDtoToDate(anestheticReport.foodIntake.clockTime) : null,
+            lastFoodIntake: anestheticReport.foodIntake?.clockTime ? timeDtoToDate(anestheticReport.foodIntake.clockTime) : null,
             histories: this.hasHistories(anestheticReport) ? this.getHistoriesAsPersonalHistoriesData(anestheticReport) : null,
             anestheticPlanList: anestheticReport.anestheticPlans.length ? this.getAnestheticPlansData(anestheticReport.anestheticPlans) : null,
             analgesicTechniques: anestheticReport.analgesicTechniques.length ? this.getAnalgesicTechniques(anestheticReport.analgesicTechniques) : null,
@@ -67,6 +67,7 @@ export class AnestheticReportDocumentSummaryService {
             fluidAdministrations: anestheticReport.fluidAdministrations.length ? this.getFluidAdministrations(anestheticReport.fluidAdministrations) : null,
             anestheticAgents: anestheticReport.anestheticAgents.length ? this.getAnestheticAgents(anestheticReport.anestheticAgents) : null,
             nonAnestheticDrugs: anestheticReport.nonAnestheticDrugs.length ? this.getNonAnestheticDrugs(anestheticReport.nonAnestheticDrugs) : null,
+            intrasurgicalAnestheticProcedures: this.getIntrasurgicalAnestheticProcedures(anestheticReport.procedureDescription),
         }
     }
 
@@ -167,7 +168,7 @@ export class AnestheticReportDocumentSummaryService {
     }
 
     private hasHistories(anestheticReport: AnestheticReportDto): boolean {
-        return (!!anestheticReport.histories.length || !!anestheticReport.procedureDescription.note || !!anestheticReport.procedureDescription.asa)
+        return (!!anestheticReport.histories.length || !!anestheticReport.procedureDescription?.note || !!anestheticReport.procedureDescription?.asa)
     }
 
     private getHistoriesAsPersonalHistoriesData(anestheticReport: AnestheticReportDto): PersonalHistoriesData {
@@ -201,7 +202,7 @@ export class AnestheticReportDocumentSummaryService {
     }
 
     private getCatetherValue(catether: boolean): string {
-        return catether ? 'Si' : 'No';
+        return catether ? this.translateService.instant('historia-clinica.anesthetic-report.summary.YES') : this.translateService.instant('historia-clinica.anesthetic-report.summary.NO');
     }
 
     private getAnestheticTechniques(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemData[] {
@@ -273,6 +274,22 @@ export class AnestheticReportDocumentSummaryService {
             }
         })
     }
+
+    private getIntrasurgicalAnestheticProcedures(procedures: ProcedureDescriptionDto): IntrasurgicalAnestheticProceduresData {
+        return {
+            venousAccess: procedures ? this.getProcedureValue(procedures.venousAccess) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            nasogastricTube: procedures ? this.getProcedureValue(procedures.nasogastricTube) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            urinaryCatheter: procedures ? this.getProcedureValue(procedures.urinaryCatheter) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+        }
+    }
+
+    private getProcedureValue(procedure: boolean): DescriptionItemData[]{
+        return procedure != undefined ? 
+                (procedure ? 
+                    [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.YES') }] 
+                    : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO') }])
+                : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }]
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -292,6 +309,7 @@ export interface AnestheticReportViewFormat {
     fluidAdministrations: DescriptionItemData[],
     anestheticAgents: DescriptionItemData[],
     nonAnestheticDrugs: DescriptionItemData[],
+    intrasurgicalAnestheticProcedures: IntrasurgicalAnestheticProceduresData,
 }
 
 export interface AnthropometricData {
@@ -310,4 +328,10 @@ export interface PersonalHistoriesData {
     recordList: DescriptionItemData[],
     observations: DescriptionItemData[],
     asa: DescriptionItemData[]
+}
+
+export interface IntrasurgicalAnestheticProceduresData {
+    venousAccess: DescriptionItemData[],
+    nasogastricTube: DescriptionItemData[],
+    urinaryCatheter: DescriptionItemData[],
 }

@@ -41,6 +41,7 @@ import { HierarchicalUnitConsultationComponent } from './components/hierarchical
 import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
+import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
 import { MedicationListComponent } from './components/medication-list/medication-list.component';
@@ -172,6 +173,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		HierarchicalUnitConsultationComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		InterveningProfessionalsComponent,
+		IntrasurgicalAnestheticProceduresSummaryComponent,
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointComponent,
 		MedicationBackgroundListComponent,

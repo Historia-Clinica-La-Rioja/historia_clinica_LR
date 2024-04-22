@@ -138,7 +138,10 @@
 				"BREATHING": "Respiración: ",
 				"CIRCUIT": "Circuito: ",
 				"TRACHEAL_INTUBATION": "Intubación traqueal: ",
-				"QUANTITY_USED": "Cantidad utilizada: "
+				"QUANTITY_USED": "Cantidad utilizada: ",
+				"NO_INFORMATION": "Sin información",
+				"YES": "Si",
+				"NO": "No"
 			}
 		}
 

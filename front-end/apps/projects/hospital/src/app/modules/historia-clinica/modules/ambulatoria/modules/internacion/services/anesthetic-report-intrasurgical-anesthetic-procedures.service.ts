@@ -47,9 +47,9 @@ export class AnestheticReportIntrasurgicalAnestheticProceduresService {
 
     getIntrasurgicalAnestheticProceduresData(): IntrasurgicalAnestheticProceduresData {
         return {
-            venousAccess: this.form.value.venousAccess === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES,
-            nasogastricTube: this.form.value.nasogastricTube === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES,
-            urinaryCatheter: this.form.value.urinaryCatheter === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES,
+            venousAccess: this.form.value.venousAccess ? this.form.value.venousAccess === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
+            nasogastricTube: this.form.value.nasogastricTube ? this.form.value.nasogastricTube === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
+            urinaryCatheter: this.form.value.urinaryCatheter ? this.form.value.urinaryCatheter === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
         }
     }
 
