@@ -527,7 +527,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 
 	private setMedicalOrder() {
 		this.medicalOrder = this.formEdit.get('medicalOrder').get('appointmentMedicalOrder').value;
-		this.transcribedLabelOrder = toStudyLabel(this.medicalOrder.displayText)
+		this.transcribedLabelOrder = this.medicalOrder ? toStudyLabel(this.medicalOrder.displayText) : null;
 		let parameters = {
 			appointmentId: this.data.appointmentData.appointmentId,
 			serviceRequestId: this.medicalOrder ? this.medicalOrder.serviceRequestId : null,
