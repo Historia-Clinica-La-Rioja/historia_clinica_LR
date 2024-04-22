@@ -56,7 +56,7 @@ public class GeneralReportController {
 		String[] headers = new String[]{"Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial",
 				"Fecha de atención", "Hora de atención", "Identificación", "Apellidos", "Nombres", "Obra social",
 				"Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de Alta",
-				"Ambulancia de Alta", "Tipo de Alta", "Salida"};
+				"Ambulancia de Alta", "Tipo de Alta", "Salida", "Motivos", "Problemas", "Evolución"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
