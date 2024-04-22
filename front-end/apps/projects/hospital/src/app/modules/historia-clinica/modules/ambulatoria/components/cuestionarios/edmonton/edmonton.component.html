@@ -1,191 +1,165 @@
-<div class="container"> 
-    <form action="formulario">
-      <h2 class="title1">Escala de Edmonton</h2>
-      <h3 class="tipos"><mat-list-item>Cognitivo</mat-list-item></h3>
-      <div class="text">
-        <p>Por favor imagina que este círculo pre-dibujado es un reloj. Me gustaría que pusiera los
-          números en las posiciones correctas y luego poner las manilas o manecillas para indicar la
-          hora “Las once con diez minutos”
-        </p>
-        <fieldset>
-        <mat-radio-group name="cognitiveOptions" [(ngModel)]="selectedCognitiveOption" (change)="parametersOptions()">
-          <mat-radio-button color="primary" value="A">Sin errores</mat-radio-button>
-          <mat-radio-button color="primary" value="B">Errores mínimos de espaciado</mat-radio-button>
-          <mat-radio-button color="primary" value="C">Otros errores</mat-radio-button>
-        </mat-radio-group>
-      </fieldset>
+<div class="container">
+  <form (ngSubmit)="onSubmit()" #formulario="ngForm">
 
-      </div><br>
-      
-      <div class="text">
-        <h3 class="tipos"><mat-list-item>Estado de salud general</mat-list-item></h3>
-        <p>
-          En el último año, ¿Cuántas veces ha sido hospitalizado?
-        </p>
-        <fieldset>
-        <mat-radio-group name="selectedHealthStatusOption" [(ngModel)]="selectedHealthStatusOption" (change)="parametersOptions()" >
-          <mat-radio-button color="primary" value="D">0</mat-radio-button>
-          <mat-radio-button color="primary" value="F">1 o 2</mat-radio-button>
-          <mat-radio-button color="primary" value="G">Mayor o igual a 3</mat-radio-button>
-        </mat-radio-group>
-      </fieldset>
-      </div><br>
-      <div class="text">
-        <p>
-          En general, ¿cómo describiría su salud?
-        </p>
-        <fieldset>
-        <mat-radio-group name="HealthStatusOptionDos" [(ngModel)]="selectedHealthStatusOptionDos" (change)="parametersOptions()">
-          <mat-radio-button color="primary" value="H">Excelente</mat-radio-button>
-          <mat-radio-button color="primary" value="I">Razonable</mat-radio-button>
-          <mat-radio-button color="primary" value="J">Mala</mat-radio-button>
-        </mat-radio-group>
-      </fieldset>
-      </div><br>
-      <div class="text">
-        <h3 class="tipos"><mat-list-item>Independencia funcional</mat-list-item></h3>
-        <p>
-          ¿Con cuántas de las siguientes actividades necesita ayuda? (preparar la comida, compras, transporte, comunicación telefónica, cuidado del hogar,
-          manejo de dinero, tomar medicamentos).
+    <h2 class="title1">Escala de Edmonton</h2>
+    <h3 class="tipos" id="1"><mat-list-item>Cognitivo</mat-list-item></h3>
+    <div class="text">
+      <p>Por favor imagina que este círculo pre-dibujado es un reloj. Me gustaría que pusiera los
+        números en las posiciones correctas y luego poner las manilas o manecillas para indicar la
+        hora “Las once con diez minutos”
+      </p>
+      <mat-radio-group name="cognitiveOptions" id="2" [(ngModel)]="selectedCognitiveOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="A">Sin errores</mat-radio-button>
+        <mat-radio-button color="primary" value="B">Errores mínimos de espaciado</mat-radio-button>
+        <mat-radio-button color="primary" value="C">Otros errores</mat-radio-button>
+      </mat-radio-group>
 
-        </p>
-        <fieldset>
-        <mat-radio-group name="FunctionIndOption" [(ngModel)]="selectedFunctionIndOption" (change)="parametersOptions()">
-          <mat-radio-button color="primary" value="K">0 a 1 </mat-radio-button>
-          <mat-radio-button color="primary" value="L">2 - 4</mat-radio-button>
-          <mat-radio-button color="primary" value="M">Mayor o igual a 4</mat-radio-button>
+    </div><br>
 
-        </mat-radio-group>
-      </fieldset>
-      </div>
-  
-      <div class="text">
-        <h3 class="tipos"><mat-list-item>Soporte Social</mat-list-item></h3>
-        <p>Cuando Ud. necesita ayuda,
-          ¿puede contar con alguien que esté dispuesto y disponible para atender sus necesidades o problemas?</p>
-          <fieldset>
-          <mat-radio-group name="SupportSocOption"  [(ngModel)]="selectedSupportSocOption" (change)="parametersOptions()">
-            <mat-radio-button color="primary" value="N">Siempre</mat-radio-button>
-            <mat-radio-button color="primary" value="N2">A veces</mat-radio-button>
-            <mat-radio-button color="primary" value="O">Nunca</mat-radio-button>
-          </mat-radio-group>
-        </fieldset>
-      </div> 
+    <div class="text">
+      <h3 class="tipos" id="3"><mat-list-item>Estado de salud general</mat-list-item></h3>
+      <p>
+        En el último año, ¿Cuántas veces ha sido hospitalizado?
+      </p>
+      <mat-radio-group id="4" name="selectedHealthStatusOption" [(ngModel)]="selectedHealthStatusOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="D">0</mat-radio-button>
+        <mat-radio-button color="primary" value="F">1 o 2</mat-radio-button>
+        <mat-radio-button color="primary" value="G">Mayor o igual a 3</mat-radio-button>
+      </mat-radio-group>
+    </div><br>
+    <div class="text">
+      <p>
+        En general, ¿cómo describiría su salud?
+      </p>
+      <mat-radio-group id="5" name="HealthStatusOptionDos" [(ngModel)]="selectedHealthStatusOptionDos"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="H">Excelente</mat-radio-button>
+        <mat-radio-button color="primary" value="I">Razonable</mat-radio-button>
+        <mat-radio-button color="primary" value="J">Mala</mat-radio-button>
+      </mat-radio-group>
+    </div><br>
 
-     <div class="text">
-        <h3 class="tipos"><mat-list-item>Uso de medicamentos</mat-list-item></h3>
-        <p>¿Usa 5 o más medicamentos en el día a día?</p>
-        <fieldset>
-        <mat-radio-group name="MedicationOption" [(ngModel)]="selectedMedicationOption" (change)="parametersOptions()">
-            <mat-radio-button color="primary" value="P" >Si</mat-radio-button>
-            <mat-radio-button color="primary" value="Q" >No</mat-radio-button>
-          </mat-radio-group>   
-        </fieldset>   
-        
-      </div> 
-  
-     <div class="text">
-        <p>En ocasiones, ¿se le olvida tomarse los medicamentos?</p>
-        <fieldset>
-        <mat-radio-group name="MedicationOptionDos" [(ngModel)]="selectedMedicationOptionDos" (change)="parametersOptions()">
-          <mat-radio-button color="primary" value="R" >Si</mat-radio-button>
-          <mat-radio-button color="primary" value="S" >No</mat-radio-button>
-        </mat-radio-group>
-      </fieldset>
-      </div>
-      
-      
-      <div class="text">
-        <h3 class="tipos"><mat-list-item>Nutrición</mat-list-item></h3>
-        <p>Recientemente, ¿ha perdido peso como para que su ropa le quede suelta? </p>
-        <fieldset>
-        <mat-radio-group name="NutritionOption" [(ngModel)]="selectedNutritionOption" (change)="parametersOptions()">
-            <mat-radio-button color="primary" value="T" >Si</mat-radio-button>
-            <mat-radio-button color="primary" value="U" >No</mat-radio-button>
-          </mat-radio-group>
-        </fieldset>
-      </div>
-    
-      <div class="text">
-        <h3 class="tipos"><mat-list-item>Animo</mat-list-item></h3>
-        <p>¿Se siente con frecuencia triste o deprimido? </p>
-        <fieldset>
-        <mat-radio-group name="AnimoOption" [(ngModel)]="selectedAnimoOption" (change)="parametersOptions()">
-            <mat-radio-button color="primary" value="V" >Si</mat-radio-button>
-            <mat-radio-button color="primary" value="W" >No</mat-radio-button>
-  
-        </mat-radio-group>
-      </fieldset>
-      </div>
-  
-        <div class="text">
-        <h3 class="tipos"><mat-list-item>Contingencia</mat-list-item></h3>
-        <p>¿Tiene algún problema con el control para orinar, es decir puede contener la orina si así lo desea?</p>
-        <fieldset>
-        <mat-radio-group name="ContingenciaOption" [(ngModel)]="selectedContingenciaOption" (change)="parametersOptions()">
-            <mat-radio-button color="primary" value="X" >Si</mat-radio-button>
-            <mat-radio-button color="primary" value="Y" >No</mat-radio-button>
-  
-        </mat-radio-group>
-      </fieldset>
-      </div> 
+    <div class="text">
+      <h3 class="tipos" id="8"><mat-list-item>Independencia funcional</mat-list-item></h3>
+      <p>
+        ¿Con cuántas de las siguientes actividades necesita ayuda? (preparar la comida, compras, transporte,
+        comunicación telefónica, cuidado del hogar,
+        manejo de dinero, tomar medicamentos).
 
-      <div class="text">
-        <h3 class="tipos"><mat-list-item>Rendimiento funcional</mat-list-item></h3>
-        <p>
-          Me gustaria que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando yo diga "YA", por favor párese
-          y camine a un ritmo cómodo y seguro a la marca del suelo (aproximadamente a 3 metors de distancia), regrese a su silla y se sienta.
-        </p>
-        <fieldset>
-        <mat-radio-group name="RendimientoFuncOption" [(ngModel)]="selectedRendimientoFuncOption" (change)="parametersOptions()">
-          <mat-radio-button color="primary" value="Z">0 a 10 segundos</mat-radio-button>
-          <mat-radio-button color="primary" value="Z2">11 a 20 segundos </mat-radio-button>
-          <mat-radio-button color="primary" value="Z3">Más de 20 segundos, paciente no quiere o requiere ayuda</mat-radio-button>
-        </mat-radio-group>
-      </fieldset>
-      </div>
+      </p>
+      <mat-radio-group name="FunctionIndOption" id="9" [(ngModel)]="selectedFunctionIndOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="K">0 a 1 </mat-radio-button>
+        <mat-radio-button color="primary" value="L">2 - 4</mat-radio-button>
+        <mat-radio-button color="primary" value="M">Mayor o igual a 4</mat-radio-button>
 
-  
-         <!-- PUNTAJE -->
-           <div class="text">
-          <h3 class="tipos" id="69">Interpretación de puntaje</h3>
-          <p id="70">La sumatoria da como resultado:</p>
-          <mat-radio-group id="puntaje" name="points" [(ngModel)]="calificationTotal">
-            <p color="primary" [style.color]="(calificationTotal === 'A1') ?  '#2687c5':  'inherit'"  >- Se considera INDIVIDUO SANO</p>
-            <p color="primary" [style.color]="(calificationTotal === 'A2') ?  '#2687c5':  'inherit'"  >- Se considera INDIVIDUO VULNERABLE</p>
-            <p color="primary" [style.color]="(calificationTotal === 'A3') ?  '#2687c5':  'inherit'"  >- Se considera PERSONA CON FRAGILIDAD LEVE</p>
-            <p color="primary" [style.color]="(calificationTotal === 'A4') ?  '#2687c5':  'inherit'"  >- Se considera PERSONA CON FRAGILIDAD MODERADA</p>
-            <p color="primary" [style.color]="(calificationTotal === 'A5') ?  '#ff0000':  'inherit'"  >- Se considera PERSONA CON FRAGILIDAD SEVERA</p>
-          </mat-radio-group>
-          
-          <button mat-raised-button color="primary"  type="submit">Enviar Formulario</button>
-        </div>  
-<!-- 
-      <div class="resultados-container">
-        <div class="resultados-titulo">
-          Resultados
-        </div>
-        <div *ngIf="sumaAcumulada === 21" class="sano">
-          <p>Individuo sano</p>
-        </div>
-        <div *ngIf="sumaAcumulada === 22" class="sano">
-          <p>Vulnerable</p>
-        </div>
-        <div *ngIf="sumaAcumulada === 23" class="sano">
-          <p>Fragilidad leve</p>
-        </div>
-        <div *ngIf="sumaAcumulada === 24" class="sano">
-          <p>Fragilidad moderada</p>
-        </div>
-        <div *ngIf="sumaAcumulada >= 25" class="preocupante">
-          <p>Fragilidad severa</p>
-        </div>
-      </div>
-       -->
+      </mat-radio-group>
+    </div>
+
+    <div class="text">
+      <h3 class="tipos" id="10"><mat-list-item>Soporte Social</mat-list-item></h3>
+      <p>Cuando Ud. necesita ayuda,
+        ¿puede contar con alguien que esté dispuesto y disponible para atender sus necesidades o problemas?</p>
+      <mat-radio-group id="11" name="SupportSocOption" [(ngModel)]="selectedSupportSocOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="N">Siempre</mat-radio-button>
+        <mat-radio-button color="primary" value="N2">A veces</mat-radio-button>
+        <mat-radio-button color="primary" value="O">Nunca</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="text">
+      <h3 class="tipos" id="12"><mat-list-item>Uso de medicamentos</mat-list-item></h3>
+      <p>¿Usa 5 o más medicamentos en el día a día?</p>
+      <mat-radio-group id="13" name="MedicationOption" [(ngModel)]="selectedMedicationOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="P">Si</mat-radio-button>
+        <mat-radio-button color="primary" value="Q">No</mat-radio-button>
+      </mat-radio-group>
+
+    </div>
+
+    <div class="text">
+      <p>En ocasiones, ¿se le olvida tomarse los medicamentos?</p>
+      <mat-radio-group id="14" name="MedicationOptionDos" [(ngModel)]="selectedMedicationOptionDos"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="R">Si</mat-radio-button>
+        <mat-radio-button color="primary" value="S">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
 
 
-      <!-- <div class="btn">
-        <button id="submit-btn" mat-raised-button color="primary" type="submit" (click)="enviarFormulario()">Enviar formulario</button>
-      </div>
-    </form>
-  </div> -->
+    <div class="text">
+      <h3 class="tipos" id="15"><mat-list-item>Nutrición</mat-list-item></h3>
+      <p>Recientemente, ¿ha perdido peso como para que su ropa le quede suelta? </p>
+      <mat-radio-group id="16" name="NutritionOption" [(ngModel)]="selectedNutritionOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="T">Si</mat-radio-button>
+        <mat-radio-button color="primary" value="U">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="text">
+      <h3 class="tipos" id="17"><mat-list-item>Animo</mat-list-item></h3>
+      <p>¿Se siente con frecuencia triste o deprimido? </p>
+      <mat-radio-group id="18" name="AnimoOption" [(ngModel)]="selectedAnimoOption" (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="V">Si</mat-radio-button>
+        <mat-radio-button color="primary" value="W">No</mat-radio-button>
+
+      </mat-radio-group>
+    </div>
+
+    <div class="text">
+      <h3 class="tipos" id="19"><mat-list-item>Contingencia</mat-list-item></h3>
+      <p>¿Tiene algún problema con el control para orinar, es decir puede contener la orina si así lo desea?</p>
+      <mat-radio-group id="20" name="ContingenciaOption" [(ngModel)]="selectedContingenciaOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="X">Si</mat-radio-button>
+        <mat-radio-button color="primary" value="Y">No</mat-radio-button>
+
+      </mat-radio-group>
+    </div>
+
+    <div class="text">
+      <h3 class="tipos" id="6"><mat-list-item>Rendimiento funcional</mat-list-item></h3>
+      <p>
+        Me gustaria que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando yo diga "YA", por
+        favor párese
+        y camine a un ritmo cómodo y seguro a la marca del suelo (aproximadamente a 3 metors de distancia), regrese a su
+        silla y se sienta.
+      </p>
+      <mat-radio-group id="7" name="RendimientoFuncOption" [(ngModel)]="selectedRendimientoFuncOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="Z">0 a 10 segundos</mat-radio-button>
+        <mat-radio-button color="primary" value="Z2">11 a 20 segundos </mat-radio-button>
+        <mat-radio-button color="primary" value="Z3">Más de 20 segundos, paciente no quiere o requiere
+          ayuda</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+
+    <!-- PUNTAJE -->
+    <div class="text">
+      <h3 class="tipos" id="69">Interpretación de puntaje</h3>
+      <p id="70">La sumatoria da como resultado:</p>
+      <mat-radio-group class="points" id="puntaje" name="points" [(ngModel)]="calificationTotal">
+        <p id="21" [style.color]="(calificationTotal === 'A1') ? '#2687c5' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A1') ? '550' : 'normal'">- Se considera INDIVIDUO SANO</p>
+        <p id="22" [style.color]="(calificationTotal === 'A2') ? '#2687c5' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A2') ? '550' : 'normal'">- Se considera INDIVIDUO VULNERABLE</p>
+        <p id="23" [style.color]="(calificationTotal === 'A3') ? '#2687c5' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A3') ? '550' : 'normal'">- Se considera PERSONA CON FRAGILIDAD LEVE</p>
+        <p id="24" [style.color]="(calificationTotal === 'A4') ? '#2687c5' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A4') ? '550' : 'normal'">- Se considera PERSONA CON FRAGILIDAD MODERADA</p>
+        <p id="25" [style.color]="(calificationTotal === 'A5') ? '#ff0000' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A5') ? '550' : 'normal'">- Se considera PERSONA CON FRAGILIDAD SEVERA</p>
+      </mat-radio-group>
+
+      <button mat-raised-button color="primary" [disabled]="isSubmitDisabled()" type="submit">Enviar Formulario</button>
+
+    </div>
+  </form>
+</div>
+
+<!-- SALTO DE LINEA PARA EXTENDER FORMULARIO, ESTO NO ES LLM -->
+
+<div>
+  <br>
+</div>
