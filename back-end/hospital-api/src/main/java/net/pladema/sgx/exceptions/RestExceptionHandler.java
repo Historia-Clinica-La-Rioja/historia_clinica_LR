@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.tomcat.util.http.fileupload.impl.IOFileUploadException;
@@ -214,6 +215,13 @@ public class RestExceptionHandler {
 	public ApiErrorMessageDto handleIOException(IOException ex) {
 		LOG.error("IOException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto("IOException", ex.getMessage());
+	}
+
+	@ExceptionHandler(ClientAbortException.class)
+	protected ResponseEntity<Object> handleClientAbortException(ClientAbortException ex, WebRequest request) {
+		var requestDescription = request.getDescription(false);
+	 	LOG.warn("ClientAbortException occurred: {}", requestDescription);
+		return ResponseEntity.noContent().build();
 	}
 
 	@ExceptionHandler({ FileServiceException.class })
