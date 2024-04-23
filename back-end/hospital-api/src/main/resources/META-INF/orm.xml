@@ -1983,6 +1983,109 @@
 		</query>
 	</named-native-query>
 
+	<named-native-query name="EpidemiologyReports.CompleteDengueConsultationDetail" result-set-mapping="EpidemiologyReports.CompleteDengueConsultationDetailResult">
+		<query>
+			<!-- versión alfa -->
+			WITH documents_filtered AS (
+			SELECT d.id, d.source_id, d.source_type_id, st.description as origin, d.created_on, d.created_by, d.updated_on, d.updated_by, d.deleted,
+			(row_number() over(partition by d.patient_id order by d.patient_id)) AS nro_rep, CAST(concat(EXTRACT('HOUR' FROM d.created_on AT TIME ZONE 'UTC-3'), ':', EXTRACT('MINUTE' FROM d.created_on)) AS TIME) as hora,
+			d.deleted_on, d.deleted_by, d.patient_id, d.institution_id, d.clinical_specialty_id, d.other_note_id, ev.description as evolution
+			FROM document d INNER JOIN source_type st ON d.source_type_id=st.id LEFT JOIN note ev on d.other_note_id=ev.id
+			WHERE (d.created_on >= (CURRENT_DATE + INTERVAL '3 hours') AND d.created_on &lt; (CURRENT_DATE + INTERVAL '1 day' + INTERVAL '3 hours'))
+			AND d.institution_id= :institutionId
+			ORDER BY d.created_on
+			), base AS (
+			SELECT r.id as code, r.description as term, d.* FROM reasons r INNER JOIN outpatient_consultation_reasons ocr ON ocr.reason_id=r.id INNER JOIN outpatient_consultation oc ON oc.id=ocr.outpatient_consultation_id INNER JOIN documents_filtered d ON d.id=oc.document_id LEFT JOIN note n ON d.other_note_id=n.id
+			UNION ALL
+			SELECT r.id as code, r.description as term, d.* FROM reasons r INNER JOIN emergency_care_episode_reason ecer ON ecer.reason_id=r.id INNER JOIN emergency_care_episode ece ON ece.id=ecer.emergency_care_episode_id INNER JOIN documents_filtered d ON ece.id=d.source_id AND d.source_type_id=4 LEFT JOIN note n ON d.other_note_id=n.id
+			UNION ALL
+			SELECT s.sctid as code, s.pt as term, d.* FROM documents_filtered d INNER JOIN document_procedure dp ON d.id=dp.document_id INNER JOIN procedures pr ON pr.id=dp.procedure_id INNER JOIN snomed s ON s.id=pr.snomed_id LEFT JOIN note n ON d.other_note_id=n.id
+			UNION ALL
+			SELECT s.sctid as code, s.pt as term, d.* FROM documents_filtered d INNER JOIN document_health_condition dhc ON d.id=dhc.document_id INNER JOIN health_condition hc ON hc.id=dhc.health_condition_id INNER JOIN snomed s ON s.id=hc.snomed_id LEFT JOIN note n ON d.other_note_id=n.id
+			UNION ALL
+			SELECT concat('') as code, concat('') as term, d.* FROM documents_filtered d WHERE d.evolution is not null
+			), base_filtered AS (
+			SELECT b.id, b.source_id, b.source_type_id, b.origin, b.created_on, b.created_by, b.updated_on, b.updated_by, b.deleted,
+			b.deleted_on, b.deleted_by, b.patient_id, nro_rep, hora,
+			b.institution_id, b.clinical_specialty_id, b.other_note_id, b.evolution
+			FROM base b
+			WHERE (b.code IN ('866057003', '722863008', '722862003', '409679007', '409678004', '409677009', '409676000', '409671005', '38362002', '20927009',
+			'418429061000132101', '698613000', '122176006', '122326000', '827179001', '409694006', '315113001', '121993008', '409693000', '399302007', '1163101003',
+			'409695007', '409693000', '409692005', '409691003', '409689006', '398560008', '315112006', '121992003', '121990006', '121989002', '121988005', '118026001',
+			'1163097007', '122255006', '111865007', '409679007', '409678004', '409677009', '409676000', '20927009', '425732004')
+			OR lower(b.evolution) LIKE '%dengue%')
+			), base_join AS (
+			SELECT b.*, ie.patient_medical_coverage_id FROM base_filtered b INNER JOIN internment_episode ie ON ie.id=b.source_id AND b.source_type_id=0 <!-- Internación -->
+			UNION ALL
+			SELECT b.*, oc.patient_medical_coverage_id FROM base_filtered b INNER JOIN outpatient_consultation oc ON oc.document_id=b.id <!-- Ambulatoria -->
+			UNION ALL
+			SELECT b.*, mr.medical_coverage_id as patient_medical_coverage_id FROM base_filtered b INNER JOIN medication_request mr ON mr.id=b.source_id AND b.source_type_id=2 <!-- Receta -->
+			UNION ALL
+			SELECT b.*, sr.medical_coverage_id as patient_medical_coverage_id FROM base_filtered b INNER JOIN service_request sr ON sr.id=b.source_id AND b.source_type_id=3 <!-- Orden -->
+			UNION ALL
+			SELECT b.*, ece.patient_medical_coverage_id FROM base_filtered b INNER JOIN emergency_care_episode ece ON ece.id=b.source_id AND b.source_type_id=4 <!-- Guardia -->
+			UNION ALL
+			SELECT b.*, vc.patient_medical_coverage_id FROM base_filtered b INNER JOIN vaccine_consultation vc ON vc.id=b.source_id AND b.source_type_id=5 <!-- Inmunización -->
+			UNION ALL
+			SELECT b.*, oc.patient_medical_coverage_id FROM base_filtered b INNER JOIN odontology_consultation oc ON oc.id=b.source_id AND b.source_type_id=6 <!-- Odontología -->
+			UNION ALL
+			SELECT b.*, nc.patient_medical_coverage_id FROM base_filtered b INNER JOIN nursing_consultation nc ON nc.id=b.source_id AND b.source_type_id=7 <!-- Enfermería -->
+			UNION ALL
+			SELECT b.*, null AS patient_medical_coverage_id FROM base_filtered b WHERE b.source_type_id IN (8, 9) <!-- Contrarreferencia / Imagen medica -->
+			), base_reduced AS (
+			SELECT DISTINCT id, source_type_id, origin, source_id, hora, created_on, created_by, patient_id, patient_medical_coverage_id, institution_id, clinical_specialty_id, evolution FROM base_join
+			)
+
+			SELECT CASE
+			WHEN b.evolution LIKE '%dengue%' THEN 'Si'
+			ELSE 'No'
+			END AS isFalsePositive,
+			b.origin as origin,
+			cs.name as operativeUnit,
+			it.description as patientIdentificationType,
+			pe.identification_number as patientIdentificationNumber,
+			concat(pe.last_name, ' ', pe.other_last_names) as patientLastName,
+			concat(pe.first_name, ' ', pe.middle_names) as patientFirstName,
+			g.description as patientSex,
+			pe.birth_date as patientBirthDate,
+			case
+			when (EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pe.birth_date)) &lt; 0 then
+			concat((EXTRACT(YEAR FROM b.created_on) - EXTRACT(YEAR FROM pe.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
+			else concat((EXTRACT(YEAR FROM b.created_on) - EXTRACT(YEAR FROM pe.birth_date)), ' Años, ', (EXTRACT(MONTH FROM b.created_on) - EXTRACT(MONTH FROM pe.birth_date)), ' Meses')
+			end as patientAge,
+			b.hora AS attentionHour,
+			concat(mc.name, '(RNOS: ', hi.rnos, ')') as medicalCoverage,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=1) as systolicPressure,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=2) as diastolicPressure,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=3) as meanArterialPressure,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=4) as temperature,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=5) as heartRate,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=6) as respiratoryRate,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=7) as bloodOxygenSaturation,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=8) as height,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=9) as weight,
+			(select ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id inner join snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=b.id and s_vs.id=10) as bmi,
+			CASE
+			WHEN b.source_type_id=1 THEN (select string_agg(r.description, ', ') from outpatient_consultation oc INNER JOIN outpatient_consultation_reasons ocr ON oc.id=ocr.outpatient_consultation_id inner join reasons r on ocr.reason_id=r.id where oc.document_id=b.id)
+			WHEN b.source_type_id=4 THEN (select string_agg(r.description, ', ') from emergency_care_episode ece INNER JOIN emergency_care_episode_reason ecer ON ecer.emergency_care_episode_id=ece.id inner join reasons r on ecer.reason_id=r.id where ece.id=b.source_id AND b.source_type_id=4)
+			END AS reason,
+			(select string_agg(concat(s_prob.pt,' (',ccs.description,' &amp; ',cvs.description,' - Fecha: ',hc.start_date, ' - Tipo: ', pt.description,')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			from document_health_condition dhc inner join health_condition hc on dhc.health_condition_id=hc.id inner join problem_type pt on hc.problem_id=pt.id inner join snomed s_prob on hc.snomed_id=s_prob.id inner join condition_clinical_status ccs on hc.status_id=ccs.id inner join condition_verification_status cvs on hc.verification_status_id=cvs.id where dhc.document_id=b.id and hc.problem_id&lt;>'57177007') as problems,
+			(select string_agg(concat(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ') from document_procedure dp inner join procedures proc on dp.procedure_id=proc.id inner join procedures_status ps on proc.status_id=ps.id inner join snomed s_proc on proc.snomed_id=s_proc.id where dp.document_id=b.id) as procedures,
+			b.evolution as evolution
+			FROM base_reduced b
+			LEFT JOIN clinical_specialty cs ON cs.id=b.clinical_specialty_id
+			INNER JOIN patient pa ON b.patient_id=pa.id
+			INNER JOIN person pe ON pa.person_id=pe.id
+			INNER JOIN identification_type it ON pe.identification_type_id=it.id
+			INNER JOIN gender g ON pe.gender_id=g.id
+			LEFT JOIN patient_medical_coverage pmc ON pmc.id=b.patient_medical_coverage_id
+			LEFT JOIN medical_coverage mc on pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi on hi.id=mc.id
+			ORDER BY b.hora
+		</query>
+	</named-native-query>
+
 	<!-- ========================================== -->
     <!-- ============== Appointment =============== -->
     <!-- ========================================== -->
@@ -2695,6 +2798,35 @@
 			<column name="patientAddress" class="java.lang.String"/>
 			<column name="patientPhoneNumber" class="java.lang.String"/>
 			<column name="patientLocation" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="EpidemiologyReports.CompleteDengueConsultationDetailResult">
+		<constructor-result target-class="net.pladema.provincialreports.epidemiologyreports.repository.CompleteDengueConsultationDetail">
+			<column name="isFalsePositive" class="java.lang.String"/>
+			<column name="origin" class="java.lang.String"/>
+			<column name="operativeUnit" class="java.lang.String"/>
+			<column name="patientIdentificationNumber" class="java.lang.String"/>
+			<column name="patientLastName" class="java.lang.String"/>
+			<column name="patientFirstName" class="java.lang.String"/>
+			<column name="patientSex" class="java.lang.String"/>
+			<column name="patientBirthDate" class="java.lang.String"/>
+			<column name="patientAge" class="java.lang.String"/>
+			<column name="attentionHour" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="systolicPressure" class="java.lang.String"/>
+			<column name="diastolicPressure" class="java.lang.String"/>
+			<column name="meanArterialPressure" class="java.lang.String"/>
+			<column name="temperature" class="java.lang.String"/>
+			<column name="heartRate" class="java.lang.String"/>
+			<column name="respiratoryRate" class="java.lang.String"/>
+			<column name="bloodOxygenSaturation" class="java.lang.String"/>
+			<column name="height" class="java.lang.String"/>
+			<column name="weight" class="java.lang.String"/>
+			<column name="bmi" class="java.lang.String"/>
+			<column name="reason" class="java.lang.String"/>
+			<column name="problems" class="java.lang.String"/>
+			<column name="procedures" class="java.lang.String"/>
+			<column name="evolution" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 
