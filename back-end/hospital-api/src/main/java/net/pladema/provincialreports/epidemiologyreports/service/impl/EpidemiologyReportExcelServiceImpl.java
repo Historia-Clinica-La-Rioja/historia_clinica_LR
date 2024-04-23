@@ -7,6 +7,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.provincialreports.epidemiologyreports.repository.CompleteDengueConsultationDetail;
 import net.pladema.provincialreports.epidemiologyreports.repository.DenguePatientControlConsultationDetail;
 import net.pladema.provincialreports.epidemiologyreports.service.EpidemiologyReportExcelService;
 
@@ -28,6 +29,28 @@ public class EpidemiologyReportExcelServiceImpl implements EpidemiologyReportExc
 
 	@Override
 	public IWorkbook buildExcelDenguePatientControl(String title, String[] headers, List<DenguePatientControlConsultationDetail> result, String institutionName, String observations) {
+		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
+		createCellStyle(wb);
+
+		ISheet sheet = wb.createSheet(title);
+
+		fillRow(sheet, getHeaderData(headers, title, institutionName, observations));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle styleDataRow = createDataRowStyle(wb);
+
+		result.forEach(resultData -> {
+			IRow newDataRow = sheet.createRow(rowNumber.getAndIncrement());
+			fillRowContent(newDataRow, resultData, styleDataRow);
+		});
+
+		setDimensions(sheet);
+		return wb;
+	}
+
+	@Override
+	public IWorkbook buildExcelCompleteDengue(String title, String[] headers, List<CompleteDengueConsultationDetail> result, String institutionName, String observations) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -204,6 +227,110 @@ public class EpidemiologyReportExcelServiceImpl implements EpidemiologyReportExc
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
 		cell10.setCellValue(content.getPatientLocation());
 		cell10.setCellStyle(style);
+	}
+
+	private void fillRowContent(IRow row, CompleteDengueConsultationDetail content, ICellStyle style) {
+		AtomicInteger rowNumber = new AtomicInteger(0);
+
+		ICell cell = row.createCell(rowNumber.getAndIncrement());
+		cell.setCellValue(content.getIsFalsePositive());
+		cell.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getOrigin());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(content.getOperativeUnit());
+		cell3.setCellStyle(style);
+
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(content.getPatientIdentificationNumber());
+		cell4.setCellStyle(style);
+
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(content.getPatientLastName());
+		cell5.setCellStyle(style);
+
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(content.getPatientFirstName());
+		cell6.setCellStyle(style);
+
+		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
+		cell7.setCellValue(content.getPatientSex());
+		cell7.setCellStyle(style);
+
+		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
+		cell8.setCellValue(content.getPatientBirthDate());
+		cell8.setCellStyle(style);
+
+		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
+		cell9.setCellValue(content.getPatientAge());
+		cell9.setCellStyle(style);
+
+		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
+		cell10.setCellValue(content.getAttentionHour());
+		cell10.setCellStyle(style);
+
+		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
+		cell11.setCellValue(content.getMedicalCoverage());
+		cell11.setCellStyle(style);
+
+		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
+		cell12.setCellValue(content.getSystolicPressure());
+		cell12.setCellStyle(style);
+
+		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
+		cell13.setCellValue(content.getDiastolicPressure());
+		cell13.setCellStyle(style);
+
+		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
+		cell14.setCellValue(content.getMeanArterialPressure());
+		cell14.setCellStyle(style);
+
+		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
+		cell15.setCellValue(content.getTemperature());
+		cell15.setCellStyle(style);
+
+		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
+		cell16.setCellValue(content.getHeartRate());
+		cell16.setCellStyle(style);
+
+		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
+		cell17.setCellValue(content.getRespiratoryRate());
+		cell17.setCellStyle(style);
+
+		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
+		cell18.setCellValue(content.getBloodOxygenSaturation());
+		cell18.setCellStyle(style);
+
+		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
+		cell19.setCellValue(content.getHeight());
+		cell19.setCellStyle(style);
+
+		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
+		cell20.setCellValue(content.getWeight());
+		cell20.setCellStyle(style);
+
+		ICell cell21 = row.createCell(rowNumber.getAndIncrement());
+		cell21.setCellValue(content.getBmi());
+		cell21.setCellStyle(style);
+
+		ICell cell22 = row.createCell(rowNumber.getAndIncrement());
+		cell22.setCellValue(content.getReason());
+		cell22.setCellStyle(style);
+
+		ICell cell23 = row.createCell(rowNumber.getAndIncrement());
+		cell23.setCellValue(content.getProblems());
+		cell23.setCellStyle(style);
+
+		ICell cell24 = row.createCell(rowNumber.getAndIncrement());
+		cell24.setCellValue(content.getProcedures());
+		cell24.setCellStyle(style);
+
+		ICell cell25 = row.createCell(rowNumber.getAndIncrement());
+		cell25.setCellValue(content.getEvolution());
+		cell25.setCellStyle(style);
 	}
 
 }
