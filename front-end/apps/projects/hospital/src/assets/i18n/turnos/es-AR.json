@@ -202,7 +202,7 @@
 				"TITLE": "Registrar turno vencido",
 				"SUBTITLE": "Al registrar un turno como “Turno vencido”, el mismo se marcará en estado “Atendido” y permitirá el registro posterior de la consulta por parte del profesional médico.",
 				"MESSAGE_SUCCESS": "Se registro el turno vencido correctamente.",
-				"MESSAGE_ERROR": "Hubo un error al registrar el turno vencido."
+				"MESSAGE_ERROR": "No se permiten nuevos sobreturnos"
 			}
 		},
 		"cancel": {
