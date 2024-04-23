@@ -754,9 +754,9 @@ const messages = {
             }
         },
         pacservers: {
-            name: 'PAC Global',
+            name: 'PACS Global',
             fields: {
-                name: 'Nombre de servidor PAC',
+                name: 'Nombre de servidor PACS',
                 aetitle: 'AETITLE',
                 domain: 'Dominio',
                 pacServerType: 'Tipo de Servidor',
@@ -770,15 +770,15 @@ const messages = {
             },
         },
         pacserversimagelvl: {
-            name: 'Servidor PAC a nivel servicio',
+            name: 'Servidor PACS a nivel servicio',
             fields: {
-                name: 'Nombre de servidor PAC',
+                name: 'Nombre de servidor PACS',
                 aetitle: 'AETITLE',
                 domain: 'Dominio',
                 port: 'Puerto',
                 sectorId: 'Sector',
             },
-            createRelated: 'Crear Servidor PAC'
+            createRelated: 'Crear Servidor PACS'
         },
         orchestrator: {
             name: 'Orquestador',
@@ -807,7 +807,7 @@ const messages = {
                 aeTitle: 'AE Title',
                 orchestratorId: 'Orquestador asociado',
                 sectorId: 'Sector',
-                pacServerId: 'Nombre del servidor PAC',
+                pacServerId: 'Nombre del servidor PACS',
                 modalityId: 'Modalidad',
                 createId:'El equipo genera el ID del estudio'
             },
@@ -827,7 +827,7 @@ const messages = {
                 sizeImage: 'Tamaño en bytes del estudio',
                 orchestratorId: 'Orquestador asociado',
                 attempsNumber: 'Número de fallos',
-                pacServerId: 'PAC Destino',
+                pacServerId: 'PACS Destino',
                 result: 'Resultado',
                 status:'Estado',
                 priorityMax:'Prioridad Máxima',
