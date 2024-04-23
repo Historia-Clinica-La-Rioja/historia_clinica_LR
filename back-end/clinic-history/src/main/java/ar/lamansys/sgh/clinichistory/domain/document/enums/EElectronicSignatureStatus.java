@@ -7,8 +7,8 @@ import lombok.Getter;
 public enum EElectronicSignatureStatus {
 
 	PENDING(1),
-	REJECTED(2),
-	SIGNED(3),
+	SIGNED(2),
+	REJECTED(3),
 	OUTDATED(4);
 
 	private Short id;

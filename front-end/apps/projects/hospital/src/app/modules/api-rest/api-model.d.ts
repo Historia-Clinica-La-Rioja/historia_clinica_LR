@@ -5186,8 +5186,8 @@ export const enum EDocumentSearch {
 
 export const enum EElectronicSignatureStatus {
     PENDING = "PENDING",
-    REJECTED = "REJECTED",
     SIGNED = "SIGNED",
+    REJECTED = "REJECTED",
     OUTDATED = "OUTDATED",
 }
 

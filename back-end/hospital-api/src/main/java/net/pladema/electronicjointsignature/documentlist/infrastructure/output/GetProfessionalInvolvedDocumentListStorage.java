@@ -27,7 +27,8 @@ public class GetProfessionalInvolvedDocumentListStorage {
 				"JOIN UserPerson up ON (up.pk.userId = d.creationable.createdBy) " +
 				"JOIN Patient p2 ON (p2.id = d.patientId) " +
 				"WHERE d.institutionId = :institutionId " +
-				"AND dip.healthcareProfessionalId = :healthcareProfessionalId";
+				"AND dip.healthcareProfessionalId = :healthcareProfessionalId " +
+				"ORDER BY dip.signatureStatusId, d.creationable.createdOn DESC";
 		Query query = parseDocumentQuery(institutionId, healthcareProfessionalId, queryString);
 		List<ElectronicSignatureInvolvedDocumentBo> result = getElectronicSignatureInvolvedDocumentBos(query);
 		return result;
