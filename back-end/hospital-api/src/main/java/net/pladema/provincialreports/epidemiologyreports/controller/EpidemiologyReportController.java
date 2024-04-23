@@ -82,4 +82,41 @@ public class EpidemiologyReportController {
 		response.flushBuffer();
 	}
 
+	@GetMapping(value = "/{institutionId}/complete-dengue")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody
+	void getCompleteDengueExcelReport(
+			@PathVariable Integer institutionId,
+			HttpServletResponse response
+	) throws Exception {
+		LOG.debug("Se creará el excel {}", institutionId);
+		LOG.debug("Inputs parameters -> institutionId {}", institutionId);
+
+		Institution institution = institutionRepository.getById(institutionId);
+		String institutionName = (institution != null) ? institution.getName() : "";
+
+		String observations = "Este reporte presenta los posibles casos de dengue registrados entre las 00:00 y las 23:59 del día actual. " +
+				"Brinda información sobre motivos, problemas, procedimientos, evoluciones de las consultas y datos de signos vitales de pacientes " +
+				"relacionados con dengue, flavivirus y fiebre hemorrágica. \n" +
+				"Para una visión integral, consulte el reporte \"Atenciones Relacionadas al Dengue: Control de Pacientes.\"";
+
+		String title = "Atenciones Relacionadas al Dengue: Consultas Completas";
+		String[] headers = {"Posible falso positivo", "Origen", "Unidad operativa", "DNI del paciente", "Apellido", "Nombre", "Sexo", "Fecha de nacimiento", "Edad",
+				"Hora de atención", "Obra/s social/es", "Presión sistólica [mmHg]", "Presión diastólica [mmHg]", "Presión arterial media [mmHg]", "Temperatura [°C]",
+				"Frecuencia cardiaca [bpm]", "Frecuencia respiratoria [rpm]", "Saturación de hemoglobina con oxígeno [%]", "Altura [cm]", "Peso [Kg]",
+				"Índice de masa corporal [Kg/m²]", "Motivos de la atención", "Problemas", "Procedimientos", "Evolución"};
+
+		IWorkbook wb = this.excelService.buildExcelCompleteDengue(title, headers, this.queryFactory.queryCompleteDengue(institutionId), institutionName, observations);
+
+		String filename = title + "." + wb.getExtension();
+		response.addHeader("Content-disposition", "attachment;filename=" + filename);
+		response.setContentType(wb.getContentType());
+
+		OutputStream out = response.getOutputStream();
+		wb.write(out);
+		out.close();
+		out.flush();
+		response.flushBuffer();
+	}
+
 }
