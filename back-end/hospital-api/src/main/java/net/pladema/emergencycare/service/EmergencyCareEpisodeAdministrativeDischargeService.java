@@ -6,4 +6,6 @@ public interface EmergencyCareEpisodeAdministrativeDischargeService {
 
     boolean newAdministrativeDischarge(AdministrativeDischargeBo administrativeDischargeBo, Integer institutionId);
 
+	boolean hasAdministrativeDischarge(Integer episodeId);
+
 }

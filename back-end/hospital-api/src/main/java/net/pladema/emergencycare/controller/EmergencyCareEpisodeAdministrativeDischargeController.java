@@ -1,6 +1,8 @@
 package net.pladema.emergencycare.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import net.pladema.emergencycare.application.hasepisodeadministrativedischarge.HasEpisodeAdministrativeDischarge;
 import net.pladema.emergencycare.controller.dto.AdministrativeDischargeDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareDischargeMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeAdministrativeDischargeService;
@@ -12,9 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/administrative-discharge")
+@RequiredArgsConstructor
 @Tag(name = "Emergency care episodes administrative discharge", description = "Emergency care episodes administrative discharge")
+@RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/administrative-discharge")
+@RestController
 public class EmergencyCareEpisodeAdministrativeDischargeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeMedicalDischargeController.class);
@@ -22,13 +25,7 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
     private final InstitutionExternalService institutionExternalService;
     private final EmergencyCareDischargeMapper emergencyCareDischargeMapper;
     private final EmergencyCareEpisodeAdministrativeDischargeService emergencyCareEpisodeAdministrativeDischargeService;
-
-    public EmergencyCareEpisodeAdministrativeDischargeController(InstitutionExternalService institutionExternalService, EmergencyCareDischargeMapper emergencyCareDischargeMapper, EmergencyCareEpisodeAdministrativeDischargeService emergencyCareEpisodeAdministrativeDischargeService) {
-        this.institutionExternalService = institutionExternalService;
-        this.emergencyCareDischargeMapper = emergencyCareDischargeMapper;
-        this.emergencyCareEpisodeAdministrativeDischargeService = emergencyCareEpisodeAdministrativeDischargeService;
-    }
-
+	private final HasEpisodeAdministrativeDischarge hasEpisodeAdministrativeDischarge;
 
     @PostMapping
     public ResponseEntity<Boolean> newAdministrativeDischarge(
@@ -42,5 +39,15 @@ public class EmergencyCareEpisodeAdministrativeDischargeController {
         LOG.debug("Output -> {}", saved);
         return ResponseEntity.ok().body(saved);
     }
+
+	@GetMapping
+	public ResponseEntity<Boolean> hasAdministrativeDischarge(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeId") Integer episodeId) {
+		LOG.debug("Exists administrative discharge -> institutionId {}, episodeId {}", institutionId, episodeId);
+		Boolean result = hasEpisodeAdministrativeDischarge.run(episodeId);
+		LOG.debug("Output -> result {}", result);
+		return ResponseEntity.ok(result);
+	}
 
 }
