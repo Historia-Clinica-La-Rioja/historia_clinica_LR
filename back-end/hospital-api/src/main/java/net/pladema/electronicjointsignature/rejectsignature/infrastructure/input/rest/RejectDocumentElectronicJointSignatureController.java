@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "RejectElectronicJointSignatureController", description = "This controller is designed to reject a professional's electronic signature on a document")
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR, ENFERMERO')")
 @RequestMapping("/institution/{institutionId}/electronic-joint-signature/reject")
 @RestController
 public class RejectDocumentElectronicJointSignatureController {

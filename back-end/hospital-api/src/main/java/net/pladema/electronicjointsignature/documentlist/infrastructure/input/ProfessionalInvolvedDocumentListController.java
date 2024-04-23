@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "Get joint signature professional involved documents", description = "This controller is designed for obtaining documents that the professional can electronically sign")
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR, ENFERMERO')")
 @RequestMapping("/institution/{institutionId}/electronic-joint-signature/get-involved-document-list")
 @RestController
 public class ProfessionalInvolvedDocumentListController {
