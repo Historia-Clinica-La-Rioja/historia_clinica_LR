@@ -23,6 +23,7 @@ import { SearchEquipmentDiaryService } from '../../services/search-equipment-dia
 import { ImageNetworkAppointmentComponent } from '../image-network-appointment/image-network-appointment.component';
 import { fixDate } from '@core/utils/date/format';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
 
 @Component({
 	selector: 'app-equipment-diary',
@@ -69,6 +70,7 @@ export class EquipmentDiaryComponent implements OnInit {
 		private readonly equipmentAppointmentsFacade: EquipmentAppointmentsFacadeService,
 		private readonly translateService: TranslateService,
 		private readonly datePipe: DatePipe,
+		private readonly transcribedOrderService: TranscribedOrderService
 	) { }
 
 	ngOnInit() {
@@ -236,6 +238,7 @@ export class EquipmentDiaryComponent implements OnInit {
 				});
 			}
 			dialogRef.afterClosed().subscribe((appointmentInformation) => {
+				this.transcribedOrderService.resetTranscribedOrder()
 				this.viewDate = appointmentInformation.date;
 				this.setDateRange(this.viewDate);
 				this.equipmentAppointmentsFacade.setValues(this.diary.id, this.diary.appointmentDuration, this.startDate, this.endDate);

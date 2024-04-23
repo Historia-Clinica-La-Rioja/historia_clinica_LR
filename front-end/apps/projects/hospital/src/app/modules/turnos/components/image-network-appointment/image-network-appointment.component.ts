@@ -119,7 +119,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		private readonly medicalCoverageInfo: MedicalCoverageInfoService,
 		private prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
-		private readonly patientNameService: PatientNameService
+		private readonly patientNameService: PatientNameService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_LLAMADO).subscribe(isEnabled => this.isMqttCallEnabled = isEnabled);
 	}
