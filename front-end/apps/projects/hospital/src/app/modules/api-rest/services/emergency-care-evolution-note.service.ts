@@ -16,7 +16,7 @@ export class EmergencyCareEvolutionNoteService {
 	) { }
 
 	saveEmergencyCareEvolutionNote(episodeId: number, dto: EmergencyCareEvolutionNoteDto): Observable<boolean> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/emergency-care/episodes/${episodeId}/create-evolution-note`;
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/emergency-care/episodes/${episodeId}/evolution-note`;
 		return this.http.post<boolean>(url, dto);
 	}
 }

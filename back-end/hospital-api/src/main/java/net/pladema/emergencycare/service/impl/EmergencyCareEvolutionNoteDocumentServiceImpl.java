@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,6 +60,16 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		return result;
 	}
 
+	@Override
+	public Optional<EmergencyCareEvolutionNoteDocumentBo> getByDocumentId(Long documentId) {
+		LOG.debug("Input parameters -> documentId {}", documentId);
+		Optional<EmergencyCareEvolutionNoteDocumentBo> result = emergencyCareEvolutionNoteRepository.findByDocumentId(documentId)
+				.map(this::toEmergencyCareEvolutionNoteBo)
+				.map(this::getEmergencyCareEvolutionNoteDocumentRelatedData);
+		LOG.debug("Output -> result {}", result);
+		return result;
+	}
+
 	private EmergencyCareEvolutionNoteBo toEmergencyCareEvolutionNoteBo(EmergencyCareEvolutionNote evolutionNote) {
 		EmergencyCareEvolutionNoteBo result = new EmergencyCareEvolutionNoteBo();
 		result.setId(evolutionNote.getId());
@@ -66,12 +77,17 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		result.setDoctorId(evolutionNote.getDoctorId());
 		result.setClinicalSpecialtyId(evolutionNote.getClinicalSpecialtyId());
 		result.setPerformedDate(evolutionNote.getCreatedOn());
+		result.setPatientId(evolutionNote.getPatientId());
+		result.setInstitutionId(evolutionNote.getInstitutionId());
+		result.setPatientMedicalCoverageId(evolutionNote.getPatientMedicalCoverageId());
 		return result;
 	}
 
 	private EmergencyCareEvolutionNoteDocumentBo getEmergencyCareEvolutionNoteDocumentRelatedData(EmergencyCareEvolutionNoteBo evolutionNote) {
 		EmergencyCareEvolutionNoteDocumentBo evolutionNoteBo = new EmergencyCareEvolutionNoteDocumentBo();
 		GeneralHealthConditionBo healthCondition = documentService.getHealthConditionFromDocument(evolutionNote.getDocumentId());
+		evolutionNoteBo.setPatientId(evolutionNote.getPatientId());
+		evolutionNoteBo.setClinicalSpecialtyId(evolutionNote.getClinicalSpecialtyId());
 		evolutionNoteBo.setMainDiagnosis(healthCondition.getMainDiagnosis());
 		evolutionNoteBo.setDiagnosis(healthCondition.getDiagnosis());
 		evolutionNoteBo.setFamilyHistories(healthCondition.getFamilyHistories());

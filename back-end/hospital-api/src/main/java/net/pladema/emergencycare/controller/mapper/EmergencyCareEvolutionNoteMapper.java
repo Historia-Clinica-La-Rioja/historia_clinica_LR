@@ -38,4 +38,6 @@ public interface EmergencyCareEvolutionNoteMapper {
 	@IterableMapping(qualifiedByName = "toEmergencyCareEvolutionNoteDto")
 	List<EmergencyCareEvolutionNoteDocumentDto> toEmergencyCareEvolutionNoteDocumentListDto(List<EmergencyCareEvolutionNoteDocumentBo> emergencyCareEvolutionNotes);
 
+	@Named("toEmergencyCareEvolutionNoteDto")
+	EmergencyCareEvolutionNoteDto toEmergencyCareEvolutionNoteDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocumentBo);
 }

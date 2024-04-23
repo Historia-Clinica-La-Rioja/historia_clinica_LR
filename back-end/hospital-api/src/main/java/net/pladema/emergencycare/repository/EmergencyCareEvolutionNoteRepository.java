@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmergencyCareEvolutionNoteRepository extends SGXAuditableEntityJPARepository<EmergencyCareEvolutionNote, Integer> {
@@ -21,5 +22,11 @@ public interface EmergencyCareEvolutionNoteRepository extends SGXAuditableEntity
 			"WHERE d.typeId = " + DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE + " " +
 			"AND d.sourceId = :episodeId")
 	List<EmergencyCareEvolutionNote> findAllByEpisodeId(@Param("episodeId") Integer episodeId);
+
+	@Transactional(readOnly = true)
+	@Query("SElEcT ecen " +
+			"FROM EmergencyCareEvolutionNote ecen " +
+			"WHERE ecen.documentId = :documentId")
+	Optional<EmergencyCareEvolutionNote> findByDocumentId(@Param("documentId") Long documentId);
 
 }

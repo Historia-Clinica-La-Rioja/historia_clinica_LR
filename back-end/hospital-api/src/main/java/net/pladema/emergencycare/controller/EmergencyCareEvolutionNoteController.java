@@ -8,11 +8,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
+import net.pladema.emergencycare.application.getevolutionnotebydocumentid.GetEvolutionNoteByDocumentId;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareEvolutionNoteMapper;
 import net.pladema.emergencycare.service.CreateEmergencyCareEvolutionNoteDocumentService;
 import net.pladema.emergencycare.service.CreateEmergencyCareEvolutionNoteService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
+import net.pladema.emergencycare.service.EmergencyCareEvolutionNoteDocumentService;
 import net.pladema.emergencycare.service.EmergencyCareEvolutionNoteReasonService;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocumentBo;
@@ -29,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,11 +40,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/create-evolution-note")
 @Tag(name = "Emergency care evolution notes", description = "Emergency care evolution notes")
 @Validated
 @AllArgsConstructor
+@RequestMapping("/institution/{institutionId}/emergency-care/episodes/{episodeId}/evolution-note")
+@RestController
 public class EmergencyCareEvolutionNoteController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEvolutionNoteController.class);
@@ -67,6 +70,9 @@ public class EmergencyCareEvolutionNoteController {
 	private final DoctorsOfficeService doctorsOfficeService;
 
 	private final FetchShockRoomSectorId fetchShockRoomSectorId;
+	
+	private final GetEvolutionNoteByDocumentId getEvolutionNoteByDocumentId;
+
 
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -102,6 +108,19 @@ public class EmergencyCareEvolutionNoteController {
 		createEmergencyCareEvolutionNoteDocumentService.execute(emergencyCareEvolutionNoteDocument, emergencyCareEvolutionNoteBo.getId());
 
 		return ResponseEntity.ok().body(true);
+	}
+
+	@GetMapping("/by-document/{documentId}")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<EmergencyCareEvolutionNoteDto> getByDocumentId(@PathVariable(name = "institutionId") Integer institutionId,
+																		 @PathVariable(name = "episodeId") Integer episodeId,
+																		 @PathVariable(name = "documentId") Long documentId)
+	{
+		LOG.debug("Input parameters -> institutionId {}, episodeId{}, documentId{}", institutionId, episodeId, documentId);
+		EmergencyCareEvolutionNoteDocumentBo evolutionNoteBo = getEvolutionNoteByDocumentId.run(documentId);
+		EmergencyCareEvolutionNoteDto result = emergencyCareEvolutionNoteMapper.toEmergencyCareEvolutionNoteDto(evolutionNoteBo);
+		LOG.debug("Output -> result {}", result);
+		return ResponseEntity.ok(result);
 	}
 
 	private void assertValidEmergencyCareEvolutionNote(EmergencyCareEvolutionNoteDto evolutionNote) {
