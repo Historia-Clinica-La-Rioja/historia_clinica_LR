@@ -177,8 +177,10 @@ export class AnestheticReportVitalSignsService {
     }
 
     handleMeasuringPointRegister() {
-        this.validateAndAddMeasuringPoint();
-        this.clearForm();
+        if (this.form.valid){
+            this.validateAndAddMeasuringPoint();
+            this.clearForm();
+        }
     }
 
     remove(index: number) : void {

@@ -1,3 +1,9 @@
+@import '../../../../../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
 .measuring-point-container {
     margin-top: 24px;
 }
