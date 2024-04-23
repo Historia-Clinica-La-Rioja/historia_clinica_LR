@@ -65,7 +65,7 @@ public class EpidemiologyReportController {
 				"Incluye aquellos que mencionan \"Dengue\", \"flavivirus\" o \"fiebre hemorrágica\" y sus códigos asociados. " +
 				"Se recomienda revisar el reporte \"Atenciones Relacionadas al Dengue: Consultas Completas\" para confirmar o descartar casos marcados como \"posibles falsos positivos\"";
 
-		String title = "Atenciones Relacionadas al Dengue: Control de Pacientes";
+		String title = "Atenciones Relacionadas al Dengue - Control de Pacientes";
 		String[] headers = {"Posible falso positivo", "DNI del paciente", "Apellido", "Nombre", "Sexo", "Fecha de nacimiento", "Edad", "Domicilio",
 				"Teléfono", "Localidad"};
 
@@ -100,7 +100,7 @@ public class EpidemiologyReportController {
 				"relacionados con dengue, flavivirus y fiebre hemorrágica. \n" +
 				"Para una visión integral, consulte el reporte \"Atenciones Relacionadas al Dengue: Control de Pacientes.\"";
 
-		String title = "Atenciones Relacionadas al Dengue: Consultas Completas";
+		String title = "Atenciones Relacionadas al Dengue - Consultas Completas";
 		String[] headers = {"Posible falso positivo", "Origen", "Unidad operativa", "DNI del paciente", "Apellido", "Nombre", "Sexo", "Fecha de nacimiento", "Edad",
 				"Hora de atención", "Obra/s social/es", "Presión sistólica [mmHg]", "Presión diastólica [mmHg]", "Presión arterial media [mmHg]", "Temperatura [°C]",
 				"Frecuencia cardiaca [bpm]", "Frecuencia respiratoria [rpm]", "Saturación de hemoglobina con oxígeno [%]", "Altura [cm]", "Peso [Kg]",
