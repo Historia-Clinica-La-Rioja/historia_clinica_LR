@@ -273,11 +273,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(reformatdate.ReformatDateThree(content.getAttentionDate()));
+		cell5.setCellValue(reformatdate.reformatDateThree(content.getAttentionDate()));
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
-		cell6.setCellValue(content.getHour());
+		cell6.setCellValue(content.getAttentionHour());
 		cell6.setCellStyle(style);
 
 		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
@@ -297,7 +297,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
-		cell11.setCellValue(reformatdate.ReformatDateFive(content.getBirthDate()));
+		cell11.setCellValue(reformatdate.reformatDateFive(content.getBirthDate()));
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
@@ -313,11 +313,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getAddress());
+		cell15.setCellValue(content.getDirection());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getLocationPatient());
+		cell16.setCellValue(content.getPatientLocation());
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
@@ -338,11 +338,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
-		cell1.setCellValue(content.getLastName());
+		cell1.setCellValue(content.getPatientLastNames());
 		cell1.setCellStyle(style);
 
 		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
-		cell2.setCellValue(content.getName());
+		cell2.setCellValue(content.getPatientNames());
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
@@ -354,7 +354,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(reformatdate.ReformatDateThree(content.getBirthDate()));
+		cell5.setCellValue(reformatdate.reformatDateThree(content.getBirthDate()));
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
@@ -370,11 +370,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(reformatdate.ReformatDateTwo(content.getEntrance()));
+		cell9.setCellValue(reformatdate.reformatDateTwo(content.getEntryDate()));
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
-		cell10.setCellValue(content.getProbableEnablement());
+		cell10.setCellValue(content.getProbableDischargeDate());
 		cell10.setCellStyle(style);
 
 		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
@@ -394,11 +394,11 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getMedicalClearance());
+		cell15.setCellValue(content.getDischargeDate());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
-		cell16.setCellValue(content.getProblem());
+		cell16.setCellValue(content.getProblems());
 		cell16.setCellStyle(style);
 
 	}
@@ -459,7 +459,7 @@ public class OlderAdultsReportExcelServiceImpl implements OlderAdultsReportExcel
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
-		cell13.setCellValue(reformatdate.ReformatDateFour(content.getStartDate()));
+		cell13.setCellValue(reformatdate.reformatDateFour(content.getStartDate()));
 		cell13.setCellStyle(style);
 
 		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
