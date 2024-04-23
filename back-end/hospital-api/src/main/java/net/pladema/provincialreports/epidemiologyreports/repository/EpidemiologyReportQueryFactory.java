@@ -28,4 +28,14 @@ public class EpidemiologyReportQueryFactory {
 
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<CompleteDengueConsultationDetail> queryCompleteDengue(Integer institutionId) {
+
+		Query query = entityManager.createNamedQuery("EpidemiologyReports.CompleteDengueConsultationDetail");
+		query.setParameter("institutionId", institutionId);
+		List<CompleteDengueConsultationDetail> data = query.getResultList();
+		return data;
+
+	}
+
 }
