@@ -46,6 +46,7 @@ import { BoxMessageComponent } from './components/box-message/box-message.compon
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
+import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
 import { MedicationListComponent } from './components/medication-list/medication-list.component';
@@ -77,6 +78,7 @@ import { TemplateConceptTypeaheadSearchComponent } from './components/template-c
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
+import { VitalSignsSummaryComponent } from './components/vital-signs-summary/vital-signs-summary.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
@@ -96,6 +98,7 @@ import { PatientEvolutionChartsPopupComponent } from './dialogs/patient-evolutio
 import { ProbableDischargeDialogComponent } from './dialogs/probable-discharge-dialog/probable-discharge-dialog.component';
 import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-search-dialog/problem-concept-search-dialog.component';
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
+import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-popup/vital-signs-chart-popup.component';
 //pipes
 import { ShowTitleByPatientDataPipe } from './pipes/show-title-by-patient-data.pipe';
 //Porque estan aca?
@@ -185,6 +188,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		IntrasurgicalAnestheticProceduresSummaryComponent,
 		MeasuringPointBackgroundListComponent,
 		MeasuringPointComponent,
+		MeasuringPointSummaryComponent,
 		MedicationBackgroundListComponent,
 		MedicationListComponent,
 		MeasuringPointItemComponent,
@@ -203,6 +207,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ReasonListComponent,
 		ReferenceRequestListComponent,
 		TemplateConceptTypeaheadSearchComponent,
+		VitalSignsSummaryComponent,
 		// dialogs
 		AddAllergyComponent,
 		AddAnthropometricComponent,
@@ -255,6 +260,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnalgesicTechniquePopupComponent,
 		FluidAdministrationPopupComponent,
   		AnesthesiaFormComponent,
+		VitalSignsChartPopupComponent,
 		//pipes
 		ShowTitleByPatientDataPipe,
 	],

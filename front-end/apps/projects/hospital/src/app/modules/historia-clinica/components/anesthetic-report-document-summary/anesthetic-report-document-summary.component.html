@@ -101,6 +101,9 @@
 
         <app-antibiotic-prophylaxis-summary *ngIf="anestheticReport.antibioticProphylaxis"
             [antibioticProphylaxis]="anestheticReport.antibioticProphylaxis"></app-antibiotic-prophylaxis-summary>
+
+        <app-vital-signs-summary *ngIf="anestheticReport.vitalSigns"
+            [vitalSigns]="anestheticReport.vitalSigns"></app-vital-signs-summary>
     </div>
     <ng-template #loader>
         <mat-spinner color="primary" style="margin: auto"></mat-spinner>

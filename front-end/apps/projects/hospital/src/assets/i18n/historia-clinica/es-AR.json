@@ -141,7 +141,12 @@
 				"QUANTITY_USED": "Cantidad utilizada: ",
 				"NO_INFORMATION": "Sin información",
 				"YES": "Si",
-				"NO": "No"
+				"NO": "No",
+				"SEE_CHARTS": "Ver gráficos",
+				"ANESTHESIA_START": "Comienzo Anestesia",
+				"ANESTHESIA_END": "Fin Anestesia",
+				"SURGERY_START": "Comienzo Cirugía",
+				"SURGERY_END": "Fin Cirugía"
 			}
 		}
 

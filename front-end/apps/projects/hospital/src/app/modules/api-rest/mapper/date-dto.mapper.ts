@@ -21,6 +21,16 @@ export const dateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 	return dateTimeMapped;
 };
 
+export const dateDtoAndTimeDtoToDate = (date: DateDto, time: TimeDto): Date => {
+	const timeMapped: Date = timeDtoToDate(time);
+	const dateMapped: Date = dateDtoToDate(date);
+	const dateTimeMapped: Date = dateMapped;
+	dateTimeMapped.setHours(timeMapped.getHours());
+	dateTimeMapped.setMinutes(timeMapped.getMinutes());
+	dateTimeMapped.setSeconds(timeMapped.getSeconds());
+	return dateTimeMapped;
+};
+
 export const convertDateTimeDtoToDate = (dateTimeDto: DateTimeDto): Date => {
 	const { day, month, year } = dateTimeDto.date;
 	const { hours, minutes = 0, seconds = 0 } = dateTimeDto.time;

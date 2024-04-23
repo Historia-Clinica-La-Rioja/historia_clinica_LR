@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MedicationDto, ProcedureDescriptionDto, RiskFactorDto } from '@api-rest/api-model';
-import { dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MeasuringPointDto, MedicationDto, ProcedureDescriptionDto, RiskFactorDto } from '@api-rest/api-model';
+import { dateDtoAndTimeDtoToDate, dateDtoToDate, dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { capitalize } from '@core/utils/core.utils';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
@@ -71,6 +71,7 @@ export class AnestheticReportDocumentSummaryService {
             nonAnestheticDrugs: anestheticReport.nonAnestheticDrugs.length ? this.getAnestheticSubstanceDescription(anestheticReport.nonAnestheticDrugs, this.nonAnestheticDrugsViasArray) : null,
             intrasurgicalAnestheticProcedures: this.getIntrasurgicalAnestheticProcedures(anestheticReport.procedureDescription),
             antibioticProphylaxis: anestheticReport.antibioticProphylaxis.length ? this.getAnestheticSubstanceDescription(anestheticReport.antibioticProphylaxis, this.antibioticProphylaxisViasArray) : null,
+            vitalSigns: this.isVitalSignsEmpty(anestheticReport) ? this.getVitalSignsData(anestheticReport.procedureDescription, anestheticReport.measuringPoints, anestheticReport.anestheticChart) : null,
         }
     }
 
@@ -262,6 +263,51 @@ export class AnestheticReportDocumentSummaryService {
             }
         })
     }
+
+    private isVitalSignsEmpty(anestheticReport: AnestheticReportDto): boolean {
+        return !!anestheticReport.measuringPoints?.length || !!anestheticReport.procedureDescription
+    }
+
+    private getVitalSignsData(procedureDescription: ProcedureDescriptionDto, measuringPoints: MeasuringPointDto[], chart: string): VitalSignsData {
+        return {
+            startAndEndProceduresDateTime: this.hasStartAndEndDateTimes(procedureDescription) ? this.getDateTimes(procedureDescription) : null,
+            chart: chart ? [chart] : null,
+            measuringPoints: this.mapToMeasuringPointData(measuringPoints),
+        }
+    }
+
+    private hasStartAndEndDateTimes(procedureDescription: ProcedureDescriptionDto): boolean {
+        return !!procedureDescription?.anesthesiaEndDate 
+            || !!procedureDescription?.anesthesiaEndTime 
+            || !!procedureDescription?.anesthesiaStartDate 
+            || !!procedureDescription?.anesthesiaStartTime 
+            || !!procedureDescription?.surgeryEndDate 
+            || !!procedureDescription?.surgeryEndTime 
+            || !!procedureDescription?.surgeryStartDate 
+            || !!procedureDescription?.surgeryStartTime 
+    }
+
+    private getDateTimes(procedureDescription: ProcedureDescriptionDto): StartAndEndProceduresDateTimeData {
+        return {
+            anesthesiaEndDate: procedureDescription?.anesthesiaEndDate ? dateDtoToDate(procedureDescription.anesthesiaEndDate) : null,
+            anesthesiaEndTime: procedureDescription?.anesthesiaEndTime ? timeDtoToDate(procedureDescription.anesthesiaEndTime) : null,
+            anesthesiaStartDate: procedureDescription?.anesthesiaStartDate ? dateDtoToDate(procedureDescription.anesthesiaStartDate) : null,
+            anesthesiaStartTime: procedureDescription?.anesthesiaStartTime ? timeDtoToDate(procedureDescription.anesthesiaStartTime) : null,
+            surgeryEndDate: procedureDescription?.surgeryEndDate ? dateDtoToDate(procedureDescription.surgeryEndDate) : null,
+            surgeryEndTime: procedureDescription?.surgeryEndTime ? timeDtoToDate(procedureDescription.surgeryEndTime) : null,
+            surgeryStartDate: procedureDescription?.surgeryStartDate ? dateDtoToDate(procedureDescription.surgeryStartDate) : null,
+            surgeryStartTime: procedureDescription?.surgeryStartTime ? timeDtoToDate(procedureDescription.surgeryStartTime) : null,
+        }
+    }
+
+    private mapToMeasuringPointData(measuringPoints: MeasuringPointDto[]): MeasuringPointData[] {
+        return measuringPoints.map(measuringPoint => {
+            return {
+                dateTime: dateDtoAndTimeDtoToDate(measuringPoint.date, measuringPoint.time),
+                ...measuringPoint
+            }
+        })
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -283,6 +329,7 @@ export interface AnestheticReportViewFormat {
     nonAnestheticDrugs: DescriptionItemData[],
     intrasurgicalAnestheticProcedures: IntrasurgicalAnestheticProceduresData,
     antibioticProphylaxis: DescriptionItemData[],
+    vitalSigns: VitalSignsData,
 }
 
 export interface AnthropometricData {
@@ -307,4 +354,30 @@ export interface IntrasurgicalAnestheticProceduresData {
     venousAccess: DescriptionItemData[],
     nasogastricTube: DescriptionItemData[],
     urinaryCatheter: DescriptionItemData[],
+}
+
+export interface VitalSignsData {
+    startAndEndProceduresDateTime: StartAndEndProceduresDateTimeData,
+    chart: string[],
+    measuringPoints: MeasuringPointData[],
+}
+
+export interface StartAndEndProceduresDateTimeData {
+    anesthesiaEndDate?: Date;
+    anesthesiaEndTime?: Date;
+    anesthesiaStartDate?: Date;
+    anesthesiaStartTime?: Date;
+    surgeryEndDate?: Date;
+    surgeryEndTime?: Date;
+    surgeryStartDate?: Date;
+    surgeryStartTime?: Date;
+}
+
+export interface MeasuringPointData {
+    bloodPressureMax?: number;
+    bloodPressureMin?: number;
+    bloodPulse?: number;
+    co2EndTidal?: number;
+    dateTime: Date;
+    o2Saturation?: number;
 }
