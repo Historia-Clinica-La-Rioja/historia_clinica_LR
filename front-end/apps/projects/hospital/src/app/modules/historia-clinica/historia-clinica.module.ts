@@ -11,6 +11,7 @@ import { AlergiasSummaryComponent } from './components/alergias-summary/alergias
 import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
 import { AnestheticReportDockPopupComponent } from './components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
 import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
+import { AnesthesicClinicalEvaluationSummaryComponent } from './components/anesthesic-clinical-evaluation-summary/anesthesic-clinical-evaluation-summary.component';
 import { AnestheticAgentsSummaryComponent } from './components/anesthetic-agents-summary/anesthetic-agents-summary.component';
 import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
 import { AntibioticProphylaxisSummaryComponent } from './components/antibiotic-prophylaxis-summary/antibiotic-prophylaxis-summary.component';
@@ -139,6 +140,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnalgesicTechniqueBackgroundListComponent,
 		AnalgesicTechniqueComponent,
 		AnalgesicTechniqueSummaryComponent,
+		AnesthesicClinicalEvaluationSummaryComponent,
 		AnestheticAgentsSummaryComponent,
 		AnestheticPlanComponent,
 		AnestheticReportAnestheticAgentsComponent,
