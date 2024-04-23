@@ -135,7 +135,7 @@ public class InternmentMasterdataController {
 				.map(eDocumentType -> {
 					MasterDataDto result = new MasterDataDto();
 					result.setId(eDocumentType.getId());
-					result.setDescription(getDocumentTypeDescription(eDocumentType.getValue()));
+					result.setDescription(eDocumentType.getDescription());
 					return result;
 				})
 				.collect(Collectors.toList());
@@ -276,22 +276,4 @@ public class InternmentMasterdataController {
         log.debug("Output -> {}", result);
         return ResponseEntity.ok().body(result);
     }
-
-	private String getDocumentTypeDescription(String despcription) {
-		String result = null;
-		switch(despcription) {
-			case "evolutionNote":
-				result = "Nota de evolución";
-				break;
-			case "anamnesis":
-				result = "Evaluación de ingreso";
-				break;
-			case "nursingEvolutionNote":
-				result = "Nota de evolución de enfermería";
-				break;
-			default:
-				result = "Epicrisis";
-		}
-		return result;
-	}
 }
