@@ -146,7 +146,11 @@
 				"ANESTHESIA_START": "Comienzo Anestesia",
 				"ANESTHESIA_END": "Fin Anestesia",
 				"SURGERY_START": "Comienzo Cirugía",
-				"SURGERY_END": "Fin Cirugía"
+				"SURGERY_END": "Fin Cirugía",
+				"FLOOR": "En piso",
+				"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva",
+				"WHERE": "Donde se internó?",
+				"OBSERVATIONS": "Observaciones"
 			}
 		}
 

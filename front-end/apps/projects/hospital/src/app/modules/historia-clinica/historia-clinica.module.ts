@@ -31,6 +31,7 @@ import { DocumentsSummaryComponent } from './components/documents-summary/docume
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
+import { EndOfAnesthesiaStatusSummaryComponent } from './components/end-of-anesthesia-status-summary/end-of-anesthesia-status-summary.component';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { EspecialidadFormComponent } from './components/especialidad-form/especialidad-form.component';
 import { EvolucionFormComponent } from './components/evolucion-form/evolucion-form.component';
@@ -173,6 +174,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
+		EndOfAnesthesiaStatusSummaryComponent,
 		EpisodeDataComponent,
 		EvolutionChartSelectComponent,
 		EvolutionChartTypeSelectComponent,

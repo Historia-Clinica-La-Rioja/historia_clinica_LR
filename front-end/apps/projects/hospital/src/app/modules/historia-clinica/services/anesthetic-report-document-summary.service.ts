@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, HospitalizationProcedureDto, MasterDataDto, MeasuringPointDto, MedicationDto, ProcedureDescriptionDto, RiskFactorDto } from '@api-rest/api-model';
+import { AnalgesicTechniqueDto, AnestheticHistoryDto, AnestheticReportDto, AnestheticSubstanceDto, AnestheticTechniqueDto, AnthropometricDataDto, DiagnosisDto, EInternmentPlace, HospitalizationProcedureDto, MasterDataDto, MeasuringPointDto, MedicationDto, PostAnesthesiaStatusDto, ProcedureDescriptionDto, RiskFactorDto } from '@api-rest/api-model';
 import { dateDtoAndTimeDtoToDate, dateDtoToDate, dateTimeDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { capitalize } from '@core/utils/core.utils';
@@ -71,7 +71,8 @@ export class AnestheticReportDocumentSummaryService {
             nonAnestheticDrugs: anestheticReport.nonAnestheticDrugs.length ? this.getAnestheticSubstanceDescription(anestheticReport.nonAnestheticDrugs, this.nonAnestheticDrugsViasArray) : null,
             intrasurgicalAnestheticProcedures: this.getIntrasurgicalAnestheticProcedures(anestheticReport.procedureDescription),
             antibioticProphylaxis: anestheticReport.antibioticProphylaxis.length ? this.getAnestheticSubstanceDescription(anestheticReport.antibioticProphylaxis, this.antibioticProphylaxisViasArray) : null,
-            vitalSigns: this.isVitalSignsEmpty(anestheticReport) ? this.getVitalSignsData(anestheticReport.procedureDescription, anestheticReport.measuringPoints, anestheticReport.anestheticChart) : null,
+            vitalSigns: !this.isVitalSignsEmpty(anestheticReport) ? this.getVitalSignsData(anestheticReport.procedureDescription, anestheticReport.measuringPoints, anestheticReport.anestheticChart) : null,
+            endOfAnesthesiaStatus: this.getEndOfAnesthesiaStatusDescription(anestheticReport.postAnesthesiaStatus),
         }
     }
 
@@ -265,7 +266,7 @@ export class AnestheticReportDocumentSummaryService {
     }
 
     private isVitalSignsEmpty(anestheticReport: AnestheticReportDto): boolean {
-        return !!anestheticReport.measuringPoints?.length || !!anestheticReport.procedureDescription
+        return !(!!anestheticReport.measuringPoints?.length || this.hasStartAndEndDateTimes(anestheticReport.procedureDescription))
     }
 
     private getVitalSignsData(procedureDescription: ProcedureDescriptionDto, measuringPoints: MeasuringPointDto[], chart: string): VitalSignsData {
@@ -308,6 +309,36 @@ export class AnestheticReportDocumentSummaryService {
             }
         })
     }
+
+    private getEndOfAnesthesiaStatusDescription(postAnesthesiaStatus: PostAnesthesiaStatusDto): EndOfAnesthesiaStatusData {
+        return {
+            intentionalSensitivity: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.intentionalSensitivity) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            cornealReflex: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.cornealReflex) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            obeyOrders: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.obeyOrders) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            talk: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.talk) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            respiratoryDepression: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.respiratoryDepression) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            circulatoryDepression: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.circulatoryDepression) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            vomiting: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.vomiting) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            curated: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.curated) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            trachealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.trachealCannula) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            pharyngealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.pharyngealCannula) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            internment: postAnesthesiaStatus ? this.getIntermentDescription(postAnesthesiaStatus.internment, postAnesthesiaStatus.internmentPlace) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            note: postAnesthesiaStatus ? [{ description: postAnesthesiaStatus.note }] : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+        }
+    }
+
+    private getIntermentDescription(interment: boolean, internmentPlace: EInternmentPlace): DescriptionItemData[] {
+        let intermentPlaceDescription = interment ? ' - ' + this.getInternmentPlaceDescription(internmentPlace) : '';
+        return [{
+            description: this.getProcedureValue(interment)[0].description + intermentPlaceDescription
+        }]
+    }
+
+    private getInternmentPlaceDescription(internmentPlace: EInternmentPlace): string {
+        if (internmentPlace === EInternmentPlace.FLOOR) return this.translateService.instant('historia-clinica.anesthetic-report.summary.FLOOR')
+        if (internmentPlace === EInternmentPlace.INTENSIVE_CARE_UNIT) return this.translateService.instant('historia-clinica.anesthetic-report.summary.INTENSIVE_CARE_UNIT')
+        return this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION')
+    }
 }
 
 export interface AnestheticReportViewFormat {
@@ -330,6 +361,7 @@ export interface AnestheticReportViewFormat {
     intrasurgicalAnestheticProcedures: IntrasurgicalAnestheticProceduresData,
     antibioticProphylaxis: DescriptionItemData[],
     vitalSigns: VitalSignsData,
+    endOfAnesthesiaStatus: EndOfAnesthesiaStatusData, 
 }
 
 export interface AnthropometricData {
@@ -380,4 +412,19 @@ export interface MeasuringPointData {
     co2EndTidal?: number;
     dateTime: Date;
     o2Saturation?: number;
+}
+
+export interface EndOfAnesthesiaStatusData {
+    intentionalSensitivity?: DescriptionItemData[];
+    cornealReflex?: DescriptionItemData[];
+    obeyOrders?: DescriptionItemData[];
+    talk?: DescriptionItemData[];
+    respiratoryDepression?: DescriptionItemData[];
+    circulatoryDepression?: DescriptionItemData[];
+    vomiting?: DescriptionItemData[];
+    curated?: DescriptionItemData[];
+    trachealCannula?: DescriptionItemData[];
+    pharyngealCannula?: DescriptionItemData[];
+    internment?: DescriptionItemData[];
+    note?: DescriptionItemData[];
 }

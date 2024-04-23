@@ -104,6 +104,9 @@
 
         <app-vital-signs-summary *ngIf="anestheticReport.vitalSigns"
             [vitalSigns]="anestheticReport.vitalSigns"></app-vital-signs-summary>
+
+        <app-end-of-anesthesia-status-summary
+            [endOfAnesthesiaStatus]="anestheticReport.endOfAnesthesiaStatus"></app-end-of-anesthesia-status-summary>
     </div>
     <ng-template #loader>
         <mat-spinner color="primary" style="margin: auto"></mat-spinner>
