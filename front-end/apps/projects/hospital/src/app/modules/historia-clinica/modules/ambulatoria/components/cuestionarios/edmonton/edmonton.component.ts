@@ -1,6 +1,6 @@
 import { Inject, Component } from '@angular/core';
 import { EdmontonService } from '@api-rest/services/edmonton.service';
- import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -26,7 +26,7 @@ export class EdmontonComponent {
   submitted: boolean = false;
   calificationTotal: any;
   scoreTotal: number;
- 
+
   constructor(
     private edmontonService: EdmontonService,
 
@@ -47,7 +47,10 @@ export class EdmontonComponent {
     selectedNutritionOption: any,
     selectedAnimoOption: any,
     selectedContingenciaOption: any,
-    selectedRendimientoFuncOption: any
+    selectedRendimientoFuncOption: any,
+    calificationTotal: any,
+
+
   ): number {
     let scoreFinal =
       (selectedCognitiveOption === 'A' ? 0 : selectedCognitiveOption === 'B' ? 1 : selectedCognitiveOption === 'C' ? 2 : 0) +
@@ -61,6 +64,7 @@ export class EdmontonComponent {
       (selectedAnimoOption === 'V' ? 1 : selectedAnimoOption === 'W' ? 0 : 0) +
       (selectedContingenciaOption === 'X' ? 1 : selectedContingenciaOption === 'Y' ? 0 : 0) +
       (selectedRendimientoFuncOption === 'Z' ? 0 : selectedRendimientoFuncOption === 'Z2' ? 1 : selectedRendimientoFuncOption === 'Z3' ? 2 : 0);
+
 
     this.scoreTotal = scoreFinal;
 
@@ -92,7 +96,8 @@ export class EdmontonComponent {
       this.selectedNutritionOption,
       this.selectedAnimoOption,
       this.selectedContingenciaOption,
-      this.selectedRendimientoFuncOption
+      this.selectedRendimientoFuncOption,
+      this.calificationTotal
     );
   }
 
@@ -116,23 +121,27 @@ export class EdmontonComponent {
 
   }
 
-
   mappingCognitive() {
     const cognitiveMap = {
-      'A': 0,
-      'B': 1,
-      'C': 2
+      'A': 1,
+      'B': 2,
+      'C': 3
     };
+
+    console.log(this.mappingCognitive, "mapeado de consigna 1")
 
     return cognitiveMap[this.selectedCognitiveOption] || undefined;
   }
 
   mappingHealhtStatus() {
     const healthMapping = {
-      'D': 0,
-      'F': 1,
-      'G': 2
+      'D': 4,
+      'F': 5,
+      'G': 6
     };
+
+    console.log(this.mappingHealhtStatus, "mapeado de consigna 2")
+
 
     return healthMapping[this.selectedHealthStatusOption] || undefined;
 
@@ -140,40 +149,58 @@ export class EdmontonComponent {
 
   mappingHealthStatusDos() {
     const healthDosMapping = {
-      'H': 0,
-      'I': 1,
-      'J': 2
+      'H': 7,
+      'I': 8,
+      'J': 9
     };
+
+    console.log(this.mappingHealthStatusDos, "mapeado de consigna 2.5")
+
 
     return healthDosMapping[this.selectedHealthStatusOptionDos] || undefined;
 
   }
 
+  mappingRendFunctional() {
+    const rendimientoMapping = {
+      'Z': 10,
+      'Z2': 11,
+      'Z3': 12
+    };
+
+    return rendimientoMapping[this.selectedRendimientoFuncOption] || undefined;
+  }
+
+
   mappingIndFunction() {
     const indepFunctionMapping = {
 
-      'K': 0,
-      'L': 1,
-      'M': 2
+      'K': 13,
+      'L': 14,
+      'M': 15
     };
+
+    console.log(this.mappingIndFunction, "mapeado de consigna 3")
 
     return indepFunctionMapping[this.selectedFunctionIndOption] || undefined;
   }
 
   mappingSupportSocial() {
     const suppSocialMapping = {
-      'N': 0,
-      'N2': 1,
-      'O': 2
+      'N': 16,
+      'N2': 17,
+      'O': 18
     };
+
+    console.log(this.mappingSupportSocial, "mapeado de consigna 4")
 
     return suppSocialMapping[this.selectedSupportSocOption] || undefined;
   }
 
   mappingMedication() {
     const medicationMapping = {
-      'P': 0,
-      'Q': 1
+      'P': 19,
+      'Q': 20
     };
 
     return medicationMapping[this.selectedMedicationOption] || undefined;
@@ -181,8 +208,8 @@ export class EdmontonComponent {
 
   mappingMedicationDos() {
     const medicationMappingDos = {
-      'R': 0,
-      'S': 1
+      'R': 19,
+      'S': 20
     };
 
     return medicationMappingDos[this.selectedMedicationOptionDos] || undefined;
@@ -191,8 +218,8 @@ export class EdmontonComponent {
 
   mappingNutrition() {
     const nutritionMapping = {
-      'T': 0,
-      'U': 1
+      'T': 19,
+      'U': 20
     };
 
     return nutritionMapping[this.selectedNutritionOption] || undefined;
@@ -201,8 +228,8 @@ export class EdmontonComponent {
 
   mappingAnimo() {
     const animoMapping = {
-      'V': 0,
-      'W': 1,
+      'V': 19,
+      'W': 20,
 
     }
 
@@ -212,8 +239,8 @@ export class EdmontonComponent {
 
   mappingContingencia() {
     const contingenciaMapping = {
-      'X': 0,
-      'Y': 1,
+      'X': 19,
+      'Y': 20,
 
     }
 
@@ -221,140 +248,152 @@ export class EdmontonComponent {
 
   }
 
-  mappingRendFunctional() {
-    const rendimientoMapping = {
-      'Z': 0,
-      'Z2': 1,
-      'Z3': 2
-    };
-
-    return rendimientoMapping[this.selectedRendimientoFuncOption] || undefined;
-  }
-
-
-
   construirDatos() {
-    const totalScore = this.parametersOptions();
-    const questionnaireAnswers = {
+       const scoreTotal = this.calculateTotal(
+        this.selectedCognitiveOption,
+        this.selectedHealthStatusOption,
+        this.selectedHealthStatusOptionDos,
+        this.selectedFunctionIndOption,
+        this.selectedSupportSocOption,
+        this.selectedMedicationOption,
+        this.selectedMedicationOptionDos,
+        this.selectedNutritionOption,
+        this.selectedAnimoOption,
+        this.selectedContingenciaOption,
+        this.selectedRendimientoFuncOption,
+        this.calificationTotal
+      );
+
+     const datos = {
       "questionnaireId": 1,
       "answers": [
 
         {
-          itemId: 2,
-          optionId: this.mappingCognitive(),
-          value: "",
+          "itemId": 2,
+          "optionId": this.mappingCognitive(),
+          "value": "",
         },
         {
-          itemId: 4,
-          optionId: this.mappingHealhtStatus(),
-          value: "",
+          "itemId": 4,
+          "optionId": this.mappingHealhtStatus(),
+          "value": "",
         },
         {
-          itemId: 5,
-          optionId: this.mappingHealthStatusDos(),
-          value: "",
+          "itemId": 5,
+          "optionId": this.mappingHealthStatusDos(),
+          "value": "",
         },
         {
-          itemId: 7,
-          optionId: this.mappingRendFunctional(),
-          value: "",
+          "itemId": 7,
+          "optionId": this.mappingRendFunctional(),
+          "value": "",
         },
         {
-          itemId: 9,
-          optionId: this.mappingIndFunction(),
-          value: "",
+          "itemId": 9,
+          "optionId": this.mappingIndFunction(),
+          "value": "",
         },
         {
-          itemId: 11,
-          optionId: this.mappingSupportSocial(),
-          value: "",
+          "itemId": 11,
+          "optionId": this.mappingSupportSocial(),
+          "value": "",
         },
         {
-          itemId: 13,
-          optionId: this.mappingMedication(),
-          value: "",
-        },
-        {
-          itemId: 14,
-          optionId: this.mappingMedicationDos(),
-          value: "",
-        },
-        {
-          itemId: 16,
-          optionId: this.mappingNutrition(),
-          value: "",
-        },
-        {
-          itemId: 18,
-          optionId: this.mappingAnimo(),
-          value: "",
-        },
-        {
-          itemId: 20,
-          optionId: this.mappingContingencia(),
-          value: "",
+          "itemId": 13,
+          "optionId": this.mappingMedication(),
+          "value": "",
         },
 
         {
-          itemId: 70,
-          optionId: 0,
-          value: totalScore,
+          "itemId": 14,
+          "optionId": this.mappingMedicationDos(),
+          "value": "",
+        },
+        {
+          "itemId": 16,
+          "optionId": this.mappingNutrition(),
+          "value": "",
+        },
+
+        {
+          "itemId": 18,
+          "optionId": this.mappingAnimo(),
+          "value": "",
+        },
+
+        {
+          "itemId": 20,
+          "optionId": this.mappingContingencia(),
+          "value": "",
+        },
+
+        {
+          "itemId": 70,
+          "optionId": null,
+          "value": scoreTotal,
         },
       ]
     }
 
-    return questionnaireAnswers;
+    return datos;
 
   }
 
+  onSubmit(): void {
 
-onSubmit(): void {
- 
-  Swal.fire({
-    icon: 'question',
-    iconColor: '#2687c5',
-    title: '¿Está seguro de enviar el formulario?',
-    text: 'Por favor, revise las opciones marcadas antes de presionar Enviar',
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: 'Enviar',
-    confirmButtonColor: '#2687c5',
-    denyButtonText: 'No enviar',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire({
-        icon: 'info',
-        iconColor: '#2687c5',
-        title: 'Enviando...',
-        text: 'Por favor, espere un momento.',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-          setTimeout(() => {
-            Swal.close();
-            this.enviarFormulario();
-          }, 2000);
-        },
-      });
-    } else if (result.isDenied) {
-      Swal.fire({
-        icon: 'warning',
-        iconColor: '#ff0000',
-        title: 'Formulario cancelado',
-        text: 'El formulario no ha sido enviado.',
-        confirmButtonColor: '#2687c5',
-        confirmButtonText: 'Aceptar',
-      });
-    }
-  });
-}
+    Swal.fire({
+      icon: 'question',
+      iconColor: '#2687c5',
+      title: '¿Está seguro de enviar el formulario?',
+      text: 'Por favor, revise las opciones marcadas antes de presionar Enviar',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Enviar',
+      confirmButtonColor: '#2687c5',
+      denyButtonText: 'No enviar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'info',
+          iconColor: '#2687c5',
+          title: 'Enviando...',
+          text: 'Por favor, espere un momento.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+            setTimeout(() => {
+              Swal.close();
+              this.enviarFormulario();
+              Swal.fire({
+                icon: 'success',
+                iconColor: '#2687c5',
+                title: 'Enviado con éxito',
+                text: 'El formulario ha sido enviado correctamente.',
+                confirmButtonColor: '#2687c5',
+                confirmButtonText: 'Aceptar',
+              });
+            }, 2000);
+          },
+        });
+      } else if (result.isDenied) {
+        Swal.fire({
+          icon: 'warning',
+          iconColor: '#ff0000',
+          title: 'Formulario cancelado',
+          text: 'El formulario no ha sido enviado.',
+          confirmButtonColor: '#2687c5',
+          confirmButtonText: 'Aceptar',
+        });
+      }
+    });
+  }
 
-enviarFormulario(): void {
-  const questionnaireData = this.construirDatos();
-  this.edmontonService.createEdmonton(this.patientId, questionnaireData).subscribe();
+  enviarFormulario(): void {
+    const questionnaireData = this.construirDatos();
+    this.edmontonService.createEdmonton(this.patientId, questionnaireData).subscribe();
 
-  console.log(this.enviarFormulario, this.edmontonService, questionnaireData)
-}
+    console.log(this.enviarFormulario, this.edmontonService, questionnaireData)
+  }
 
 
 
