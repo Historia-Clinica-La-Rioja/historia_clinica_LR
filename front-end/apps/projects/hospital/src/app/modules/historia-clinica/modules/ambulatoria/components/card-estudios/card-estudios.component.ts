@@ -26,6 +26,7 @@ import { EmergencyCareStateService } from '@api-rest/services/emergency-care-sta
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 import { DiagnosticWithTypeReportInfoDto, IMAGE_DIAGNOSIS_CATEGORY_ID } from '../../modules/estudio/model/ImageModel';
 import { ImageOrderCasesService } from '../../modules/estudio/services/image-order-cases.service';
+import { StudyResultsService } from '../../services/study-results.service';
 
 @Component({
 	selector: 'app-card-estudios',
@@ -97,7 +98,9 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly emergencyCareEpisodeSummaryService: EmergencyCareEpisodeSummaryService,
 		private readonly emergencyCareStateService: EmergencyCareStateService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
-		private readonly imageOrderCasesService: ImageOrderCasesService
+		private readonly imageOrderCasesService: ImageOrderCasesService,
+		private studyResultsService: StudyResultsService,
+
 	) { }
 
 	ngOnInit(): void {
@@ -170,7 +173,11 @@ export class CardEstudiosComponent implements OnInit {
 		this.resetCategoryStudyList(updatedCategoryId);
 		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, null, null, null, null, updatedCategoryId, IMAGE_DIAGNOSIS_CATEGORY_ID)
 		.pipe(
-			tap(response => responseUpdate = response ),
+			tap(response =>{
+				let studies = JSON.parse(JSON.stringify(response));
+				this.studyResultsService.setResultStudy(studies);
+				responseUpdate = response
+			} ),
 			switchMap( _ => sourceImageCases$))
 			.subscribe((responseImageCases: DiagnosticWithTypeReportInfoDto[]) => {
 				responseUpdate.forEach(report => {
@@ -187,7 +194,11 @@ export class CardEstudiosComponent implements OnInit {
 		this.clearLoadedReports();
 		this.prescripcionesService.getPrescription(PrescriptionTypes.STUDY, this.patientId, value.statusId, null, value.healthCondition, value.study, value.categoryId, IMAGE_DIAGNOSIS_CATEGORY_ID).
 		pipe(
-			tap(response => this.response = response ),
+			tap(response =>{
+				let studies = JSON.parse(JSON.stringify(response));
+				this.studyResultsService.setResultStudy(studies);
+				this.response = response;
+			}),
 			switchMap( _ => this.imageOrderCasesService.getImageOrderCasesFiltered(this.patientId,this.formFilter.value))
 		)
 		.subscribe((responseImageCases: DiagnosticWithTypeReportInfoDto[]) => {

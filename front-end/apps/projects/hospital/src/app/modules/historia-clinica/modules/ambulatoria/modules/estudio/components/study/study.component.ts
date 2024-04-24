@@ -22,6 +22,7 @@ import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/compon
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { CompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/complete-study/complete-study.component';
+import { StudyInfo, StudyResultsService } from '@historia-clinica/modules/ambulatoria/services/study-results.service';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -68,6 +69,7 @@ export class StudyComponent implements OnInit {
 		private snackBarService: SnackBarService,
 		private featureFlagService: FeatureFlagService,
 		private readonly ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
+		private studyResultsService: StudyResultsService,
 
 	) { }
 
@@ -135,6 +137,8 @@ export class StudyComponent implements OnInit {
 	completeStudy(diagnosticReport: DiagnosticReportInfoDto) {
 		let reportOrder = diagnosticReport.serviceRequestId;
 		let newCompleteStudy;
+		let idOrder: number = diagnosticReport.serviceRequestId;
+		let studiesService: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
 		if (diagnosticReport?.referenceRequestDto) {
 
 			newCompleteStudy = this.dialog.open(ReferenceCompleteStudyComponent,
@@ -151,18 +155,19 @@ export class StudyComponent implements OnInit {
 					disableClose: true,
 				});
 		} else {
-				newCompleteStudy = this.dialog.open(CompleteStudyComponent,
-					{
-						data: {
-							diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
-							patientId: this.patientId,
-							order: diagnosticReport.serviceRequestId,
-							creationDate: diagnosticReport.creationDate,
-							status: this.getPrescriptionStatus(diagnosticReport.statusId)
-						},
-						width: '50%',
-						disableClose: true,
-					});
+			newCompleteStudy = this.dialog.open(CompleteStudyComponent,
+				{
+					data: {
+						diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
+						patientId: this.patientId,
+						order: diagnosticReport.serviceRequestId,
+						studies: studiesService,
+						creationDate: diagnosticReport.creationDate,
+						status: this.getPrescriptionStatus(diagnosticReport.statusId)
+					},
+					width: '90%',
+					disableClose: true,
+				});
 		}
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
@@ -185,6 +190,10 @@ export class StudyComponent implements OnInit {
 	}
 
 	showStudyResults(diagnosticReport: DiagnosticReportInfoDto): void {
+
+		let idOrder: number = diagnosticReport.serviceRequestId;
+		let studiesService: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
+
 		if (diagnosticReport?.referenceRequestDto) {
 			this.dialog.open(ReferenceCompleteStudyComponent,
 				{
@@ -205,6 +214,7 @@ export class StudyComponent implements OnInit {
 				{
 					data: {
 						diagnosticReport: diagnosticReport,
+						studies: studiesService,
 						patientId: this.patientId,
 						order: diagnosticReport.serviceRequestId,
 						creationDate: diagnosticReport.creationDate,
