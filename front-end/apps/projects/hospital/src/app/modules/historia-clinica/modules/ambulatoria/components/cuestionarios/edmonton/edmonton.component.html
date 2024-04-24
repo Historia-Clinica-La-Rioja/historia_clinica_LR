@@ -29,6 +29,7 @@
         <mat-radio-button color="primary" value="G">Mayor o igual a 3</mat-radio-button>
       </mat-radio-group>
     </div><br>
+    
     <div class="text">
       <p>
         En general, ¿cómo describiría su salud?
@@ -41,6 +42,24 @@
       </mat-radio-group>
     </div><br>
 
+    <div class="text">
+      <h3 class="tipos" id="6"><mat-list-item>Rendimiento funcional</mat-list-item></h3>
+      <p>
+        Me gustaria que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando yo diga "YA", por
+        favor párese
+        y camine a un ritmo cómodo y seguro a la marca del suelo (aproximadamente a 3 metors de distancia), regrese a su
+        silla y se sienta.
+      </p>
+      <mat-radio-group id="7" name="RendimientoFuncOption" [(ngModel)]="selectedRendimientoFuncOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="Z">0 a 10 segundos</mat-radio-button>
+        <mat-radio-button color="primary" value="Z2">11 a 20 segundos </mat-radio-button>
+        <mat-radio-button color="primary" value="Z3">Más de 20 segundos, paciente no quiere o requiere
+          ayuda</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    
     <div class="text">
       <h3 class="tipos" id="8"><mat-list-item>Independencia funcional</mat-list-item></h3>
       <p>
@@ -75,8 +94,8 @@
       <p>¿Usa 5 o más medicamentos en el día a día?</p>
       <mat-radio-group id="13" name="MedicationOption" [(ngModel)]="selectedMedicationOption"
         (change)="parametersOptions()">
-        <mat-radio-button color="primary" value="P">Si</mat-radio-button>
-        <mat-radio-button color="primary" value="Q">No</mat-radio-button>
+        <mat-radio-button color="primary" value="P">No</mat-radio-button>
+        <mat-radio-button color="primary" value="Q">Si</mat-radio-button>
       </mat-radio-group>
 
     </div>
@@ -85,8 +104,8 @@
       <p>En ocasiones, ¿se le olvida tomarse los medicamentos?</p>
       <mat-radio-group id="14" name="MedicationOptionDos" [(ngModel)]="selectedMedicationOptionDos"
         (change)="parametersOptions()">
-        <mat-radio-button color="primary" value="R">Si</mat-radio-button>
-        <mat-radio-button color="primary" value="S">No</mat-radio-button>
+        <mat-radio-button color="primary" value="R">No</mat-radio-button>
+        <mat-radio-button color="primary" value="S">Si</mat-radio-button>
       </mat-radio-group>
     </div>
 
@@ -96,8 +115,8 @@
       <p>Recientemente, ¿ha perdido peso como para que su ropa le quede suelta? </p>
       <mat-radio-group id="16" name="NutritionOption" [(ngModel)]="selectedNutritionOption"
         (change)="parametersOptions()">
-        <mat-radio-button color="primary" value="T">Si</mat-radio-button>
-        <mat-radio-button color="primary" value="U">No</mat-radio-button>
+        <mat-radio-button color="primary" value="T">No</mat-radio-button>
+        <mat-radio-button color="primary" value="U">Si</mat-radio-button>
       </mat-radio-group>
     </div>
 
@@ -105,8 +124,8 @@
       <h3 class="tipos" id="17"><mat-list-item>Animo</mat-list-item></h3>
       <p>¿Se siente con frecuencia triste o deprimido? </p>
       <mat-radio-group id="18" name="AnimoOption" [(ngModel)]="selectedAnimoOption" (change)="parametersOptions()">
-        <mat-radio-button color="primary" value="V">Si</mat-radio-button>
-        <mat-radio-button color="primary" value="W">No</mat-radio-button>
+        <mat-radio-button color="primary" value="V">No</mat-radio-button>
+        <mat-radio-button color="primary" value="W">Si</mat-radio-button>
 
       </mat-radio-group>
     </div>
@@ -116,28 +135,13 @@
       <p>¿Tiene algún problema con el control para orinar, es decir puede contener la orina si así lo desea?</p>
       <mat-radio-group id="20" name="ContingenciaOption" [(ngModel)]="selectedContingenciaOption"
         (change)="parametersOptions()">
-        <mat-radio-button color="primary" value="X">Si</mat-radio-button>
-        <mat-radio-button color="primary" value="Y">No</mat-radio-button>
+        <mat-radio-button color="primary" value="X">No</mat-radio-button>
+        <mat-radio-button color="primary" value="Y">Si</mat-radio-button>
 
       </mat-radio-group>
     </div>
 
-    <div class="text">
-      <h3 class="tipos" id="6"><mat-list-item>Rendimiento funcional</mat-list-item></h3>
-      <p>
-        Me gustaria que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando yo diga "YA", por
-        favor párese
-        y camine a un ritmo cómodo y seguro a la marca del suelo (aproximadamente a 3 metors de distancia), regrese a su
-        silla y se sienta.
-      </p>
-      <mat-radio-group id="7" name="RendimientoFuncOption" [(ngModel)]="selectedRendimientoFuncOption"
-        (change)="parametersOptions()">
-        <mat-radio-button color="primary" value="Z">0 a 10 segundos</mat-radio-button>
-        <mat-radio-button color="primary" value="Z2">11 a 20 segundos </mat-radio-button>
-        <mat-radio-button color="primary" value="Z3">Más de 20 segundos, paciente no quiere o requiere
-          ayuda</mat-radio-button>
-      </mat-radio-group>
-    </div>
+    
 
 
     <!-- PUNTAJE -->
