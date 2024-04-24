@@ -77,6 +77,7 @@ import { SurgicalReportProfessionalInfoComponent } from './components/surgical-r
 import { SurgicalReportProfessionalTeamComponent } from './components/surgical-report-professional-team/surgical-report-professional-team.component';
 import { SurgicalReportProsthesisComponent } from './components/surgical-report-prosthesis/surgical-report-prosthesis.component';
 import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
+import { UsualMedicationSummaryComponent } from './components/usual-medication-summary/usual-medication-summary.component';
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
@@ -211,6 +212,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		ReasonListComponent,
 		ReferenceRequestListComponent,
 		TemplateConceptTypeaheadSearchComponent,
+		UsualMedicationSummaryComponent,
 		VitalSignsSummaryComponent,
 		// dialogs
 		AddAllergyComponent,

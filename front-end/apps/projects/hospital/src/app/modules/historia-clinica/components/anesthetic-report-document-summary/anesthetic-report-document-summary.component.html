@@ -18,16 +18,8 @@
         <app-anesthetic-history-summary *ngIf="anestheticReport.anestheticHistory"
             [anestheticHistory]="anestheticReport.anestheticHistory"></app-anesthetic-history-summary>
 
-        <!-- Medicacion habitual -->
-        <div data-id="usual-medication-section" *ngIf="anestheticReport.usualMedication">
-            <app-iconed-titled-section icon="assignment"
-                title="internaciones.anesthesic-report.usual-medication.TITLE"></app-iconed-titled-section>
-            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list
-                    title="internaciones.anesthesic-report.usual-medication.REGISTERED_USUAL_MEDICATION"
-                    [descriptionData]="anestheticReport.usualMedication"></app-title-description-list>
-            </div>
-        </div>
+        <app-usual-medication-summary *ngIf="anestheticReport.usualMedication"
+            [usualMedication]="anestheticReport.usualMedication"></app-usual-medication-summary>
 
         <!-- Premedicacion e ingesta alimentaria -->
         <div data-id="premedication-and-food-intake-section"
