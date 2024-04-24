@@ -34,6 +34,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 //pipes
 import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
+import { TechnicalWorklistHomeComponent } from './routes/technical-worklist-home/technical-worklist-home.component';
 
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
         OrderImageDetailComponent,
         ImageOrderColoredIconTextCasesComponent,
         ProfessionalFullNamePipe,
+        TechnicalWorklistHomeComponent,
     ],
     imports: [
         CommonModule,
