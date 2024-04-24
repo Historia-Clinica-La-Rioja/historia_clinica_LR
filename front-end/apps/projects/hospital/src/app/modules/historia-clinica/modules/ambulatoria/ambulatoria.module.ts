@@ -102,12 +102,13 @@ import { VaccineSearchComponent } from './dialogs/vaccine-search/vaccine-search.
 import { VerResultadosEstudioComponent } from './dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { ViolenceSituationDockPopupComponent } from './dialogs/violence-situation-dock-popup/violence-situation-dock-popup.component';
 //providers
-import { AmbulatoriaSummaryFacadeService } from './services/ambulatoria-summary-facade.service';
 import { HistoricalProblemsFacadeService } from './services/historical-problems-facade.service';
 //review
 import { ExternalSummaryCardComponent } from '@presentation/components/external-summary-card/external-summary-card.component';
 import { InternacionPacienteComponent } from './modules/internacion/routes/internacion-paciente/internacion-paciente.component';
 import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatoria/modules/internacion/routes/internment-summary/internment-summary.component";
+import { LoincFormModule } from '../../../hsi-components/loinc-form/loinc-form.module';
+import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms-template/show-closed-forms-template.component';
 
 @NgModule({
 	declarations: [
@@ -189,7 +190,8 @@ import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatori
   		NewViolentPersonInfomationComponent,
       	ViolenceSituationImplementedActionsComponent,
       	ViolenceSituationListComponent,
-       	ViolenceSituationHistoryFiltersComponent
+		ViolenceSituationHistoryFiltersComponent,
+		ShowClosedFormsTemplateComponent
 	],
 	imports: [
 		CommonModule,
@@ -210,10 +212,13 @@ import { InternmentSummaryComponent } from "@historia-clinica/modules/ambulatori
 		TurnosModule,
 		ClapModule,
 		GuardiaModule,
+		LoincFormModule,
 		//Standalone Component
 		IdentifierCasesComponent,
 		ReferenceStateLabelComponent,
 		ConceptsListComponent,
+		ConceptTypeaheadSearchComponent,
+	],
 	providers: [
 		HistoricalProblemsFacadeService
 	]

@@ -174,7 +174,6 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		BoxMessageComponent,
         ClinicalEvaluationSummaryComponent,
 		ConceptsSearchComponent,
-		ConceptTypeaheadSearchComponent,
         DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
@@ -231,7 +230,6 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		MedicacionSummaryComponent,
 		NewConsultationExpansionSectionComponent,
 		PatientEvolutionChartsButtonComponent,
-		NonAnestheticDrugsSummaryComponent,
 		PatientEvolutionChartsButtonComponent,
 		PatientEvolutionChartsComponent,
 		PatientProblemsSummaryComponent,
@@ -315,8 +313,8 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		PresentationModule,
 		//standalone
 		IdentifierCasesComponent,
-		ConceptsListComponent
 		ConceptTypeaheadSearchComponent,
+		ConceptsListComponent
 	],
 	exports: [
 		// components
