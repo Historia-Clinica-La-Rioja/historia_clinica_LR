@@ -26,22 +26,8 @@
             [premedicationList]="anestheticReport.premedicationList"
             [lastFoodIntake]="anestheticReport.lastFoodIntake"></app-premedication-and-food-intake-summary>
 
-        <!-- Antecedentes -->
-        <div data-id="histories-section" *ngIf="anestheticReport.histories">
-            <app-iconed-titled-section icon="assignment"
-                title="internaciones.anesthesic-report.record.TITLE"></app-iconed-titled-section>
-            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.histories.recordList?.length"
-                    title="internaciones.anesthesic-report.record.REGISTERED_RECORDS"
-                    [descriptionData]="anestheticReport.histories.recordList"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.histories.observations"
-                    title="internaciones.anesthesic-report.record.OBSERVATIONS"
-                    [descriptionData]="anestheticReport.histories.observations"></app-title-description-list>
-                <app-title-description-list *ngIf="anestheticReport.histories.asa"
-                    title="internaciones.anesthesic-report.record.ASA"
-                    [descriptionData]="anestheticReport.histories.asa"></app-title-description-list>
-            </div>
-        </div>
+        <app-histories-summary *ngIf="anestheticReport.histories"
+            [histories]="anestheticReport.histories"></app-histories-summary>
 
         <!-- Plan anestesico -->
         <div data-id="anesthetic-plan-section" *ngIf="anestheticReport.anestheticPlanList">
