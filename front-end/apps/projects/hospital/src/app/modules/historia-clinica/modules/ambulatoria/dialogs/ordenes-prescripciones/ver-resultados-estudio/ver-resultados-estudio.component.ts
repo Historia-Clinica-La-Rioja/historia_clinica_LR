@@ -1,12 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, DoctorInfoDto, FileDto } from '@api-rest/api-model';
+import { DiagnosticReportInfoDto, DiagnosticReportInfoWithFilesDto, DoctorInfoDto, FileDto, GetDiagnosticReportObservationDto, GetDiagnosticReportObservationGroupDto } from '@api-rest/api-model';
 import { PrescripcionesService, PrescriptionTypes } from '../../../services/prescripciones.service';
 import { CompletarEstudioComponent } from '../completar-estudio/completar-estudio.component';
 import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
 import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { StudyData } from '@historia-clinica/modules/ambulatoria/components/complete-study-information/complete-study-information.component';
+import { StudyInfo } from '@historia-clinica/modules/ambulatoria/services/study-results.service';
+import { StudyResults } from '@historia-clinica/modules/ambulatoria/components/show-closed-forms-template/show-closed-forms-template.component';
 
 const OBSERVATIONS = 'ambulatoria.paciente.ordenes_prescripciones.show_study_results_dialog.OBSERVATIONS';
 
@@ -24,6 +26,7 @@ export class VerResultadosEstudioComponent implements OnInit {
 	order: number;
 	status: PrescriptionStatus;
 	patientId: number;
+	resultsPractices: ResultPractice[] = [];
 
 	constructor(
 		public dialogRef: MatDialogRef<CompletarEstudioComponent>,
@@ -32,6 +35,7 @@ export class VerResultadosEstudioComponent implements OnInit {
 
 		@Inject(MAT_DIALOG_DATA) public data: {
 			diagnosticReport: DiagnosticReportInfoDto,
+			studies: StudyInfo[],
 			patientId: number,
 			creationDate: Date,
 			order: number,
@@ -48,6 +52,7 @@ export class VerResultadosEstudioComponent implements OnInit {
 			this.observations = diagnosticReport.observations;
 		});
 
+		this.setTemplates();
 		this.setValues();
 	}
 
@@ -57,6 +62,36 @@ export class VerResultadosEstudioComponent implements OnInit {
 
 	download(file: FileDto) {
 		this.prescripcionesService.downloadStudyFile(this.data.patientId, file.fileId, file.fileName);
+	}
+
+	private setTemplates() {
+		let array = [];
+
+		this.data.studies.forEach((studie: StudyInfo) => {
+
+			this.prescripcionesService.showStudyResultsWithFormTempalte(this.data.patientId, studie.idDiagnostic).subscribe((diagnostic: GetDiagnosticReportObservationGroupDto) => {
+
+				const studyResults: StudyResults[] = [];
+				diagnostic.observations.forEach((elem: GetDiagnosticReportObservationDto) => {
+					const result: StudyResults = {
+						procedureParameterId: elem.procedureParameterId,
+						description: elem.representation.description,
+						value:  elem.representation.value || elem?.value
+					}
+					studyResults.push(result);
+				});
+
+				const result: ResultPractice = {
+					practice: studie.snomed.pt,
+					templateResult: studyResults
+				}
+				array.push(result);
+			}
+
+			);
+		});
+
+		this.resultsPractices = array;
 	}
 
 	private mapRegisterEditor(doctor: DoctorInfoDto, creationDate: Date): RegisterEditor {
@@ -85,4 +120,9 @@ export class VerResultadosEstudioComponent implements OnInit {
 			registerEditor: this.mapRegisterEditor(diagnosticReport.doctor, this.data.creationDate)
 		};
 	}
+}
+
+export interface ResultPractice {
+	practice: string;
+	templateResult: StudyResults[];
 }
