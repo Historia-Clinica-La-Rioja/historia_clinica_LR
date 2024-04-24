@@ -61,6 +61,7 @@ import { PatientEvolutionChartsComponent } from './components/patient-evolution-
 import { PersonalHistoriesBackgroundListComponent } from './components/personal-histories-background-list/personal-histories-background-list.component';
 import { PersonalHistoriesSummaryComponent } from './components/personal-histories-summary/personal-histories-summary.component';
 import { PatientProblemsSummaryComponent } from './components/patient-problems-summary/patient-problems-summary.component';
+import { PremedicationAndFoodIntakeSummaryComponent } from './components/premedication-and-food-intake-summary/premedication-and-food-intake-summary.component';
 import { ProblemListComponent } from './components/problem-list/problem-list.component';
 import { ProcedureAndDescriptionComponent } from './components/procedure-and-description/procedure-and-description.component';
 import { ProcedureListComponent } from './components/procedure-list/procedure-list.component';
@@ -203,6 +204,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		PatientEvolutionChartsButtonComponent, 
 		PatientEvolutionChartsComponent,
 		PatientProblemsSummaryComponent,
+		PremedicationAndFoodIntakeSummaryComponent,
 		ProblemListComponent,
 		ProcedureListComponent,
 		ProposedSurgeryBackgroundListComponent,

@@ -21,22 +21,10 @@
         <app-usual-medication-summary *ngIf="anestheticReport.usualMedication"
             [usualMedication]="anestheticReport.usualMedication"></app-usual-medication-summary>
 
-        <!-- Premedicacion e ingesta alimentaria -->
-        <div data-id="premedication-and-food-intake-section"
-            *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake">
-            <app-iconed-titled-section icon="assignment"
-                title="internaciones.anesthesic-report.premedication-and-food-intake.TITLE"></app-iconed-titled-section>
-            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list *ngIf="anestheticReport.premedicationList?.length"
-                    title="internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION"
-                    [descriptionData]="anestheticReport.premedicationList"></app-title-description-list>
-                <div *ngIf="anestheticReport.lastFoodIntake">
-                    <app-title-description-list
-                        title="internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE"></app-title-description-list>
-                    <div><span>{{ anestheticReport.lastFoodIntake | dateFormat : 'time' }}</span></div>
-                </div>
-            </div>
-        </div>
+        <app-premedication-and-food-intake-summary
+            *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake"
+            [premedicationList]="anestheticReport.premedicationList"
+            [lastFoodIntake]="anestheticReport.lastFoodIntake"></app-premedication-and-food-intake-summary>
 
         <!-- Antecedentes -->
         <div data-id="histories-section" *ngIf="anestheticReport.histories">
