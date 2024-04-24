@@ -13,6 +13,7 @@ import { AnestheticReportDockPopupComponent } from './components/anesthetic-repo
 import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
 import { AnesthesicClinicalEvaluationSummaryComponent } from './components/anesthesic-clinical-evaluation-summary/anesthesic-clinical-evaluation-summary.component';
 import { AnestheticAgentsSummaryComponent } from './components/anesthetic-agents-summary/anesthetic-agents-summary.component';
+import { AnestheticHistorySummaryComponent } from './components/anesthetic-history-summary/anesthetic-history-summary.component';
 import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
 import { AntibioticProphylaxisSummaryComponent } from './components/antibiotic-prophylaxis-summary/antibiotic-prophylaxis-summary.component';
 import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-familiares-form/antecedentes-familiares-form.component';
@@ -146,6 +147,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnalgesicTechniqueSummaryComponent,
 		AnesthesicClinicalEvaluationSummaryComponent,
 		AnestheticAgentsSummaryComponent,
+		AnestheticHistorySummaryComponent,
 		AnestheticPlanComponent,
 		AnestheticReportAnestheticAgentsComponent,
 		AnestheticReportAnestheticHistoryComponent,
