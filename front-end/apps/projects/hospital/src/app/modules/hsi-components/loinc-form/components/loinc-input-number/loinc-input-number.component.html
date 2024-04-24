@@ -1,0 +1,12 @@
+<div [formGroup]="form">
+	<h3>{{loincInput?.label | translate}}</h3>
+
+	<div fxLayoutGap="8px" fxLayout="row" fxLayoutAlign="none center">
+		<mat-form-field appearance="outline">
+			<input [id]="loincInput.key" matInput [type]="loincInput.type" [formControlName]="loincInput.key">
+		</mat-form-field>
+		<app-observation-input-unit class="observation-input-unit" matSuffix [value]="unitOfMeasure"
+			[list]="loincInput.param.unitsOfMeasure" (valueSelected)="valueSelected.emit($event)">
+		</app-observation-input-unit>
+	</div>
+</div>
