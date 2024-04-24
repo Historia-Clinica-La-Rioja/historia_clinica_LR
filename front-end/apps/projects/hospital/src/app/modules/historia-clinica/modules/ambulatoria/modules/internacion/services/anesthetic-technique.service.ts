@@ -82,7 +82,7 @@ export class AnestheticTechniqueService {
     this.form.controls.trachealIntubationMethod.setValue(null)
   }
 
-  HandleValidatorTrachealIntubationMethod(trachealOption:trachealIntubation_options): void {
+  handleValidatorTrachealIntubationMethod(trachealOption:trachealIntubation_options): void {
     if (trachealOption === trachealIntubation_options.TRACHEAL_ENABLED)
         this.getForm().get('trachealIntubationMethod').setValidators(Validators.required)
     else
@@ -106,8 +106,8 @@ export class AnestheticTechniqueService {
         circuitId: anestheticTechnique.circuit ? anestheticTechnique.circuit.id : null ,
         techniqueId: anestheticTechnique.technique ? anestheticTechnique.technique.id : null,
         trachealIntubation: anestheticTechnique.trachealIntubation,
-        trachealIntubationMethodIds: anestheticTechnique.trachealIntubationBothIds.length > 0 ?  anestheticTechnique.trachealIntubationBothIds :
-        anestheticTechnique.trachealIntubationBothIds.length == 0 && anestheticTechnique.trachealIntubation ? [anestheticTechnique.trachealIntubationMethod.id]: null,
+        trachealIntubationMethodIds: anestheticTechnique?.trachealIntubationBothIds?.length > 0 ?  anestheticTechnique.trachealIntubationBothIds :
+        anestheticTechnique?.trachealIntubationBothIds?.length == 0 && anestheticTechnique.trachealIntubation ? [anestheticTechnique.trachealIntubationMethod.id]: null,
       }
     }
     )
@@ -132,7 +132,7 @@ export class AnestheticTechniqueService {
   }
 
   setTrachealIntubationMethodIds(TrachealMethods: MasterDataDto[]): void {
-    this.trachealIntubationBothIds = TrachealMethods.map(tracheal => tracheal.id)
+    this.trachealIntubationBothIds = TrachealMethods ? TrachealMethods.map(tracheal => tracheal.id) : null
   }
 
   private handleAddAnestheticTechnique(anestheticTechnique: AnestheticTechniqueData): boolean {

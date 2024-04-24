@@ -56,7 +56,7 @@ export class AnestheticTechniquePopupComponent implements OnInit, OnDestroy {
         if (!this.enableTrachealIntubationOptions){
           this.data.anestheticTechniqueService.resetTrachealIntubationMethod()
         }
-        this.data.anestheticTechniqueService.HandleValidatorTrachealIntubationMethod(status)
+        this.data.anestheticTechniqueService.handleValidatorTrachealIntubationMethod(status)
       }
     )
 
@@ -65,6 +65,8 @@ export class AnestheticTechniquePopupComponent implements OnInit, OnDestroy {
         if (trachealMethod?.description === this.BOTH_OPTION.description)
           this.data.anestheticTechniqueService.setTrachealIntubationMethodIds(this.trachealIntubations
             .filter(tracheal => tracheal.description !== this.BOTH_OPTION.description))
+        if (trachealMethod == null)
+          this.data.anestheticTechniqueService.setTrachealIntubationMethodIds(null)
       }
     )
   }
