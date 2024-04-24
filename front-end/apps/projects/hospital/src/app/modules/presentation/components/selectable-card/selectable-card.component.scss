@@ -78,12 +78,12 @@ mat-list-item {
     .title {
         min-width: 12rem;
         color: rgba(0, 0, 0, 0.54);
-        margin-right: 1rem;
     }
 
     .value-container {
         display: flex;
         flex-direction: column;
+        min-width: 8rem;
     }
 
     &:last-child {
