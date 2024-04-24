@@ -56,9 +56,7 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 
 	setDocuments(pageIndex: number): void {
 		this.isLoading = true;
-		this.selectedDocumentId = null;
-		this.headerInformation = [];
-		this.detailedInformation = null;
+		this.resetData();
 		this.setPageInfo(pageIndex);
 		this.jointSignatureService.getProfessionalInvolvedDocumentList(this.pageSize, pageIndex, this.filter)
 			.pipe(
@@ -70,6 +68,13 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 				this.documents = buildItemListCard(this.jointSignatureDocuments);
 				this.isLoading = false;
 			}, _ => this.isLoading = false);
+	}
+
+	resetData(): void {
+		this.selectedDocumentId = null;
+		this.selectedDocumentsId = [];
+		this.headerInformation = [];
+		this.detailedInformation = null;
 	}
 
 	handlePageEvent(event) {
