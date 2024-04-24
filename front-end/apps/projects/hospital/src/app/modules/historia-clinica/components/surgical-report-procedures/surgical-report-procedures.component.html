@@ -5,18 +5,11 @@
 
 	<form [formGroup]="dateForm">
 		<div fxLayout="row" fxLayoutGap="20px">
-			<mat-form-field appearance="outline">
-				<mat-label
-					[translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE'"></mat-label>
-				<input matInput id="start" [matDatepicker]="startDatePicker" formControlName="startDate" [max]="maxDate"
-					(dateChange)="changeStartDate($event.value)">
-				<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-				<mat-datepicker #startDatePicker></mat-datepicker>
-				<mat-error *ngIf="dateForm.get('startDate').hasError('required')">Fecha requerida</mat-error>
-			</mat-form-field>
 
+			<app-datepicker id="start" [maxDate]="maxDate" title="ambulatoria.paciente.surgical-report.procedures.SURGERY_START_DATE" [dateToSetInDatepicker]="startDate"
+                [maxDate]="maxDate" (selectDate)="changeStartDate($event)" [requiredText]="dateErrorText" [markAsTouched]="datesTouched" ></app-datepicker>
 
-			<mat-form-field appearance="outline">
+			<mat-form-field appearance="outline" style="padding-top: 2em;">
 				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_OPENING'"></mat-label>
 				<input matInput formControlName="startTime">
 				<mat-icon matSuffix>schedule</mat-icon>
@@ -27,16 +20,11 @@
 		</div>
 
 		<div fxLayout="row" fxLayoutGap="20px">
-			<mat-form-field appearance="outline">
-				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE'"></mat-label>
-				<input matInput id="end" [matDatepicker]="endDatePicker" formControlName="endDate" [min]="minDate"
-					(dateChange)="changeEndDate($event.value)">
-				<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-				<mat-datepicker #endDatePicker></mat-datepicker>
-				<mat-error *ngIf="dateForm.get('endDate').hasError('required')">Fecha requerida</mat-error>
-			</mat-form-field>
 
-			<mat-form-field appearance="outline">
+			<app-datepicker id="end" [minDate]="minDate" title="ambulatoria.paciente.surgical-report.procedures.SURGERY_END_DATE" [dateToSetInDatepicker]="endDate"
+                (selectDate)="changeEndDate($event)" [requiredText]="dateErrorText" [markAsTouched]="datesTouched"></app-datepicker>
+
+			<mat-form-field appearance="outline" style="padding-top: 2em;">
 				<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SKIN_CLOSURE'"></mat-label>
 				<input matInput formControlName="endTime">
 				<mat-icon matSuffix>schedule</mat-icon>

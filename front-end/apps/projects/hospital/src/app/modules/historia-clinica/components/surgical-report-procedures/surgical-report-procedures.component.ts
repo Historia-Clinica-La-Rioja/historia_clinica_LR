@@ -13,7 +13,6 @@ import { ProcedimientosService } from '@historia-clinica/services/procedimientos
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
 @Component({
 	selector: 'app-surgical-report-procedures',
 	templateUrl: './surgical-report-procedures.component.html',
@@ -26,11 +25,13 @@ export class SurgicalReportProceduresComponent implements OnInit {
 	@Input()
 	set markAsTouched(value: boolean) {
 		if (value) {
-			this.dateForm.get('startDate')?.markAsTouched();
-			this.dateForm.get('endDate')?.markAsTouched();
+			this.datesTouched = true
 		}
-	}
+	}	
 
+	readonly dateErrorText = 'Fecha requerida';
+	
+	datesTouched = false;
 	@Output() validDate = new EventEmitter();
 
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
@@ -48,6 +49,9 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		endDate: new FormControl(null, [Validators.required]),
 		endTime: new FormControl({ value: null, disabled: true }, [Validators.required, this.timeFormatValidator]),
 	});
+
+	startDate: Date
+	endDate: Date
 
 	constructor(
 		private readonly snackBarService: SnackBarService,
@@ -85,10 +89,12 @@ export class SurgicalReportProceduresComponent implements OnInit {
 			const startDate = dateTimeDtoToDate(this.surgicalReport.startDateTime);
 			const endDate = dateTimeDtoToDate(this.surgicalReport.endDateTime)
 			this.dateForm.controls.startDate.setValue(startDate);
+			this.startDate = startDate;
 			this.minDate = startDate;
 			this.dateForm.controls.startTime.setValue(timeDtotoString(this.surgicalReport.startDateTime.time));
 			this.dateForm.get('startTime')?.enable();
 			this.dateForm.controls.endDate.setValue(endDate);
+			this.endDate = endDate;
 			this.maxDate = endDate;
 			this.dateForm.controls.endTime.setValue(timeDtotoString(this.surgicalReport.endDateTime.time));
 			this.dateForm.get('endTime')?.enable();
@@ -225,8 +231,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		this.anesthesiaService.remove(index);
 	}
 
-	changeStartDate(moment: Moment): void {
-		const date = moment?.toDate();
+	changeStartDate(date: Date): void {
+		this.dateForm.controls.startDate.setValue(date);
 		if (date) {
 			this.surgicalReport.startDateTime.date = dateToDateDto(date);
 			this.minDate = date;
@@ -238,8 +244,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		this.validateDate();
 	}
 
-	changeEndDate(moment: Moment): void {
-		const date = moment?.toDate();
+	changeEndDate(date: Date): void {
+		this.dateForm.controls.endDate.setValue(date)
 		if (date) {
 			this.surgicalReport.endDateTime.date = dateToDateDto(date);
 			this.maxDate = date;
@@ -265,5 +271,5 @@ export class SurgicalReportProceduresComponent implements OnInit {
 			!this.surgicalReport.description &&
 			!this.surgicalReport.postoperativeDiagnosis?.length
 		)
-    }
+	}
 }
