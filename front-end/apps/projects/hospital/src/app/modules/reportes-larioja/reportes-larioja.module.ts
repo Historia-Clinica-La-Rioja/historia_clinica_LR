@@ -14,7 +14,7 @@ import { ReportesAdultomayorComponent } from './reportes-adultomayor/reportes-ad
 import { ReportesPersonagestanteComponent } from './reportes-personagestante/reportes-personagestante.component';
 import { ReporteDengueComponent } from './reporte-dengue/reporte-dengue.component';
 
-@@NgModule({
+@NgModule({
   declarations: [
     ReportesLariojaComponent,
     ReportesProgramasComponent,

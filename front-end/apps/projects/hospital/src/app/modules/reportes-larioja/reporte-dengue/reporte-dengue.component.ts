@@ -9,6 +9,7 @@ import { DengueReportsService } from '@api-rest/services/dengue-reports.service'
   templateUrl: './reporte-dengue.component.html',
   styleUrls: ['./reporte-dengue.component.scss']
 })
+
 export class ReporteDengueComponent implements OnInit {
 
     form: UntypedFormGroup;
