@@ -1,12 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-import { PrescripcionesService } from '../../services/prescripciones.service';
-import { CompleteRequestDto, DiagnosticReportInfoDto } from '@api-rest/api-model';
+import { BehaviorSubject, Subject, forkJoin, switchMap } from 'rxjs';
+import { AddDiagnosticReportObservationsCommandDto, CompleteRequestDto, DiagnosticReportInfoDto, ProcedureTemplateFullSummaryDto, ProcedureTemplateShortSummaryDto } from '@api-rest/api-model';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ButtonService } from '../../services/button.service';
 import { StudyInformation } from '../../modules/estudio/components/study/study.component';
 import { ToFormGroup } from '@core/utils/form.utils';
+import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
+import { PrescripcionesService } from '../../services/prescripciones.service';
+import { StudyInfo } from '../../services/study-results.service';
+import { LoincObservationValue } from 'projects/hospital/src/app/modules/hsi-components/loinc-form/loinc-input.model';
 
 @Component({
 	selector: 'app-complete-info',
@@ -16,12 +19,19 @@ import { ToFormGroup } from '@core/utils/form.utils';
 export class CompleteInfoComponent implements OnInit {
 	selectedFiles: File[] = [];
 	formStudyClosure;
+	selectedTemplate$: BehaviorSubject<ProcedureTemplateFullSummaryDto[]> = new BehaviorSubject<ProcedureTemplateFullSummaryDto[]>([]);
+	arrayIdTemplatesProcedures = [];
+	formSet$ = new Subject<any | null>();
+	formTemplateValues: ValueMap = {};
 	@Input() patientId: number;
 	@Input() diagnosticReport: DiagnosticReportInfoDto[] | StudyInformation[];
+	@Input() studies: StudyInfo[];
 	constructor(
 		public dialogRef: MatDialogRef<CompleteInfoComponent>,
 		private prescripcionesService: PrescripcionesService,
 		readonly buttonService: ButtonService,
+		private procedureTemplatesService: ProcedureTemplatesService,
+
 	) { }
 
 	ngOnInit() {
@@ -38,10 +48,47 @@ export class CompleteInfoComponent implements OnInit {
 			if (submit)
 				this.completeStudy();
 		});
+
+		let currentFormSet = [];
+
+		this.studies.forEach((e: StudyInfo) => {
+			this.getProcedureTemplatesService(e.idDiagnostic).subscribe(
+				(procedureTemplates: any) => {
+					currentFormSet.push({
+						name: e.snomed.pt,
+						id: e.idDiagnostic,
+						form: procedureTemplates
+					});
+					this.formSet$.next(currentFormSet);
+				}
+			);
+		});
+
 	}
 
 	setSelectedFilesEmiit($event: File[]) {
 		this.selectedFiles = $event;
+	}
+
+	changeValues($event, idDiagnostic: number) {
+		if ($event?.values) {
+			this.formTemplateValues[idDiagnostic] = $event.values;
+		}
+	}
+
+	onSelect(selectedProcedureTemplate: any, index: number, diagnosticId:number) {
+
+		this.arrayIdTemplatesProcedures.push({ diagnosticId: diagnosticId, selectedrocedureTemplateId: selectedProcedureTemplate.id });
+
+		const selectedTemplates = this.selectedTemplate$.value.slice();
+
+		this.selectedTemplate$.next(null);
+
+		selectedTemplates[index] = selectedProcedureTemplate;
+
+		setTimeout(() => {
+			this.selectedTemplate$.next(selectedTemplates);
+		});
 	}
 
 	private completeStudy() {
@@ -49,24 +96,74 @@ export class CompleteInfoComponent implements OnInit {
 			observations: this.formStudyClosure.controls.description.value,
 		};
 
-		forkJoin(this.diagnosticReport.map(report => {
-			const reportInfo: DiagnosticReportInfoDto = report?.diagnosticInformation ? report.diagnosticInformation : report;
-			return this.prescripcionesService.completeStudy(this.patientId, reportInfo.id, completeRequest, this.selectedFiles)
-		}
-		)).subscribe(
-			() => {
-				this.closeModal(false, true);
-			}, _ => {
-				this.closeModal(false, false);
-			});
+		forkJoin(
+			this.diagnosticReport.map(report => {
+
+				const reportInfo: DiagnosticReportInfoDto = report?.diagnosticInformation ? report.diagnosticInformation : report;
+				if (Object.keys(this.formTemplateValues).length === 0) {
+					return this.prescripcionesService.completeStudy(this.patientId, reportInfo.id, completeRequest, this.selectedFiles)
+				}
+				else {
+					const reportObservations: AddDiagnosticReportObservationsCommandDto = this.buildProcedureTemplateFullSummaryDto(reportInfo.id);
+					return this.prescripcionesService.completeStudyTemplateWhithForm(this.patientId,
+						reportInfo.id, completeRequest, this.selectedFiles, reportObservations)
+				}
+
+			}
+
+			)).subscribe(
+				() => {
+					this.closeModal(false, true);
+				}, _ => {
+					this.closeModal(false, false);
+				});
 	}
 
 	private closeModal(simpleClose: boolean, completed?: boolean): void {
 		this.dialogRef.close(simpleClose ? null : { completed });
 	}
 
+	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number): AddDiagnosticReportObservationsCommandDto {
+		return {
+			isPartialUpload: false,
+			procedureTemplateId: this.getProcedureTemplateId(idDiagnostic),
+			values: this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic)
+		}
+	}
+
+	private getProcedureTemplateId(selectedProcedureTemplate: number): number {
+		return this.arrayIdTemplatesProcedures.filter(a => a.diagnosticId === selectedProcedureTemplate)[0].selectedrocedureTemplateId
+	}
+
+	private buildAddDiagnosticReportObservationsCommandDto(idDiagnostic: number): any {
+		let procedure = this.formTemplateValues[idDiagnostic];
+		return this.cleanProcedureParameterIds(procedure);
+	}
+
+	cleanProcedureParameterIds(data): AddDiagnosticReportObservationsCommandDto {
+		return data.map((item) => {
+			if (typeof item.procedureParameterId === 'string' && item.procedureParameterId.includes('_')) {
+				item.procedureParameterId = item.procedureParameterId.split('_')[0];
+			}
+			return item;
+		});
+	}
+
+	private getProcedureTemplatesService(idDiagnostic: number): any {
+		return this.procedureTemplatesService.findByDiagnosticReportId(idDiagnostic).pipe(
+			switchMap((practiceTemplates: ProcedureTemplateShortSummaryDto[]) => {
+				let observables = practiceTemplates.map(t => this.procedureTemplatesService.findById(t.id));
+				return forkJoin(observables);
+			})
+		);
+	}
+
 }
 
 interface FormStudyClosure {
 	description: string;
+}
+
+interface ValueMap {
+	[idDiagnostic: string]: LoincObservationValue;
 }
