@@ -62,7 +62,7 @@ public class DocumentFileDownloadController {
 
 
 	@GetMapping(value = "/{id}/info")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR, ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<DocumentDto> getInfo(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "id") Long id)

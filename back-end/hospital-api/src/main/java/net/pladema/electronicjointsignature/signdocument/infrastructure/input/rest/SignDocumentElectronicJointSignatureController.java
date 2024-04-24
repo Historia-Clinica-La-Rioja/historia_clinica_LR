@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @Tag(name = "RejectElectronicJointSignatureController", description = "This controller is designed to sign a professional's electronic signature on a document")
-@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR, ENFERMERO')")
+@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR, ENFERMERO, ABORDAJE_VIOLENCIAS')")
 @RequestMapping("/institution/{institutionId}/electronic-joint-signature/sign")
 @RestController
 public class SignDocumentElectronicJointSignatureController {
