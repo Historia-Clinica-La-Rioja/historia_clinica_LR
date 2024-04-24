@@ -15,6 +15,7 @@ import { AnesthesicClinicalEvaluationSummaryComponent } from './components/anest
 import { AnestheticAgentsSummaryComponent } from './components/anesthetic-agents-summary/anesthetic-agents-summary.component';
 import { AnestheticHistorySummaryComponent } from './components/anesthetic-history-summary/anesthetic-history-summary.component';
 import { AnestheticTechniqueSummaryComponent } from './components/anesthetic-technique-summary/anesthetic-technique-summary.component';
+import { AnestheticPlanSummaryComponent } from './components/anesthetic-plan-summary/anesthetic-plan-summary.component';
 import { AntibioticProphylaxisSummaryComponent } from './components/antibiotic-prophylaxis-summary/antibiotic-prophylaxis-summary.component';
 import { AntecedentesFamiliaresFormComponent } from './components/antecedentes-familiares-form/antecedentes-familiares-form.component';
 import { AntecedentesFamiliaresSummaryComponent } from './components/antecedentes-familiares-summary/antecedentes-familiares-summary.component';
@@ -168,6 +169,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		AnestheticTechniqueComponent,
 		AnestheticTechniqueListComponent,
 		AnestheticTechniqueSummaryComponent,
+		AnestheticPlanSummaryComponent,
 		AntibioticProphylaxisSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
 		AnthropometricDataSummaryComponent,

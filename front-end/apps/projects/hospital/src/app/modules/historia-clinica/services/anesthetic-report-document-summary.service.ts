@@ -323,7 +323,7 @@ export class AnestheticReportDocumentSummaryService {
             trachealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.trachealCannula) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
             pharyngealCannula: postAnesthesiaStatus ? this.getProcedureValue(postAnesthesiaStatus.pharyngealCannula) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
             internment: postAnesthesiaStatus ? this.getIntermentDescription(postAnesthesiaStatus.internment, postAnesthesiaStatus.internmentPlace) : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
-            note: postAnesthesiaStatus ? [{ description: postAnesthesiaStatus.note }] : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
+            note: postAnesthesiaStatus && postAnesthesiaStatus.note ? [{ description: postAnesthesiaStatus.note }] : [{ description: this.translateService.instant('historia-clinica.anesthetic-report.summary.NO_INFORMATION') }],
         }
     }
 

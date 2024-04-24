@@ -29,15 +29,8 @@
         <app-histories-summary *ngIf="anestheticReport.histories"
             [histories]="anestheticReport.histories"></app-histories-summary>
 
-        <!-- Plan anestesico -->
-        <div data-id="anesthetic-plan-section" *ngIf="anestheticReport.anestheticPlanList">
-            <app-iconed-titled-section icon="assignment"
-                title="internaciones.anesthesic-report.anesthetic-plan.TITLE"></app-iconed-titled-section>
-            <div fxLayout="column" fxLayoutGap="8px" class="section-description">
-                <app-title-description-list title="internaciones.anesthesic-report.anesthetic-plan.PLAN_RECORDS"
-                    [descriptionData]="anestheticReport.anestheticPlanList"></app-title-description-list>
-            </div>
-        </div>
+        <app-anesthetic-plan-summary *ngIf="anestheticReport.anestheticPlanList"
+            [anestheticPlanList]="anestheticReport.anestheticPlanList"></app-anesthetic-plan-summary>
 
         <app-analgesic-technique-summary *ngIf="anestheticReport.analgesicTechniques"
             [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
