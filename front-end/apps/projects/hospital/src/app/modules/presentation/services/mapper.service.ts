@@ -18,6 +18,7 @@ import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulat
 import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
 import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Injectable({
 	providedIn: 'root'
@@ -220,7 +221,7 @@ export class MapperService {
 		return hceEvolutionSummaryDto.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
 			currentOutpatientEvolutionSummary.healthConditions.length ?
 				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
-					consultationDate: currentOutpatientEvolutionSummary.startDate,
+					consultationDate: currentOutpatientEvolutionSummary.startDate ? dateTimeDtoToDate(currentOutpatientEvolutionSummary.startDate) : null,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
@@ -240,7 +241,7 @@ export class MapperService {
 					professionalsThatDidNotSignAmount: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatDidNotSignAmount,
 					professionalsThatSignedNames: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatSignedNames,
 				}))] : historicalProblemsList = [...historicalProblemsList, {
-					consultationDate: currentOutpatientEvolutionSummary.startDate,
+					consultationDate: currentOutpatientEvolutionSummary.startDate ? dateTimeDtoToDate(currentOutpatientEvolutionSummary.startDate) : null,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,

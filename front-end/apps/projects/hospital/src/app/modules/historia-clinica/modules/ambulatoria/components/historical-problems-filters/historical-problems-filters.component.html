@@ -40,18 +40,8 @@
 		</button>
 	</mat-form-field>
 
-	<mat-form-field appearance="outline">
-		<mat-label [translate]="'ambulatoria.paciente.problemas.historical-problems-filters.CONSULTATION_DATE'">
-		</mat-label>
-		<input matInput id="date" [matDatepicker]="myDatepicker" formControlName="consultationDate"
-			(dateChange)="sendAllFiltersOnFilterChange()">
-		<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-		<mat-datepicker #myDatepicker></mat-datepicker>
-		<button id="clear_consultationDate" type="button" mat-button *ngIf="form.controls.consultationDate.value" matSuffix
-			color="warn" mat-icon-button (click)="clear(form.controls.consultationDate); $event.stopPropagation()">
-			<mat-icon>close</mat-icon>
-		</button>
-	</mat-form-field>
+	<app-datepicker id="date" (selectDate)="dateChanged($event)" enableDelete="true">
+	</app-datepicker>
 
 	<mat-form-field appearance="outline">
 		<mat-label [translate]="'ambulatoria.paciente.problemas.historical-problems-filters.REFERENCE_STATE'"></mat-label>

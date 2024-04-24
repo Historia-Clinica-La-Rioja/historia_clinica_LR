@@ -1,5 +1,5 @@
 <div fxLayout="column" fxLayoutGap="10px">
-	<span class="title">{{title | translate}}</span>
+	<span *ngIf="title" class="title">{{title | translate}}</span>
 	<form [formGroup]="form">
 		<mat-form-field appearance="outline">
 			<input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="datepicker" placeholder="dd/mm/aaaa" [matDatepickerFilter]="dateFilter"
