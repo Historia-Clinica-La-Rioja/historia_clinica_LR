@@ -21,12 +21,12 @@ export class DengueReportsService {
   }
 
   getDengueAttentionsReport(params: any, fileName: string): Observable<any> {
-    const url = `${environment.apiBase}/epidemiologyreports/${this.contextService.institutionId}/complete-dengue`;
+    const url = `${environment.apiBase}/epidemiologyreports/${this.contextService.institutionId}/dengue-patient-control`;
     return this.getDengueReport(params, fileName, url);
   }
 
   getDengueControlsReport(params: any, fileName: string): Observable<any> {
-    const url = `${environment.apiBase}/epidemiologyreports/${this.contextService.institutionId}/dengue-patient-control`;
+    const url = `${environment.apiBase}/epidemiologyreports/${this.contextService.institutionId}/complete-dengue`;
     return this.getDengueReport(params, fileName, url);
   }
 
