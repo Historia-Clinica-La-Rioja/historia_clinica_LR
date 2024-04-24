@@ -76,8 +76,8 @@ export const careLinesToTypeaheadOptions = (careLines: CareLineDto[]): Typeahead
 	return careLines.map(careLines => careLineToTypeaheadOption(careLines));
 }
 
-export const destinationInstitutionsToTypeaheadOptions = (destinationInstitutions: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
-	return destinationInstitutions.map(destinationInstitution => destinationInstitutionToTypeaheadOptions(destinationInstitution));
+export const institutionsToTypeaheadOptions = (institutions: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
+	return institutions.map(originInstitution => institutionToTypeaheadOptions(originInstitution));
 }
 
 export const destinationDepartamentsToTypeaheadOptions = (departaments: AddressProjection[]): TypeaheadOption<AddressProjection>[] => {
@@ -88,10 +88,10 @@ export const institutionalGroupsToTypeaheadOptions = ( institutionalGroups: Inst
 	return  institutionalGroups.map(institution => institutionalGroupToTypeaheadOptions(institution));
 }
 
-export const destinationInstitutionToTypeaheadOptions = (departament: InstitutionBasicInfoDto): TypeaheadOption<any> => {
+export const institutionToTypeaheadOptions = (institution: InstitutionBasicInfoDto): TypeaheadOption<any> => {
 	return {
-		compareValue: departament.name,
-		value: departament.id
+		compareValue: institution.name,
+		value: institution.id
 	}
 }
 

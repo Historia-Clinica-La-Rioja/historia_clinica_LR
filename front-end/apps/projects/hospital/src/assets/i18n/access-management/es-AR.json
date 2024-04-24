@@ -9,6 +9,7 @@
 		},
 		"search_references": {
 			"CARE_LINE": "Línea de cuidado",
+			"ORIGIN_INSTITUTION": "Institución origen",
 			"DESTINATION_INSTITUTION": "Institución destino",
 			"INSTITUTION_NETWORK": "Red de institución",
 			"DEPARTMENT_DESTINATION": "Partido destino",

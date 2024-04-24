@@ -13,7 +13,6 @@ import { dateMinusDays } from '@core/utils/date.utils';
 import { CareLineService } from '@api-rest/services/care-line.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { InstitutionalGroupsService } from '@api-rest/services/institutional-groups.service';
-import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { MANAGER_ROLES } from '../../../home/constants/menu';
 import { PermissionsService } from '@core/services/permissions.service';
 
@@ -40,7 +39,6 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 		private readonly careLineService: CareLineService,
 		private readonly institutionService: InstitutionService,
 		private readonly institutionalGroupsService: InstitutionalGroupsService,
-		private readonly addressMasterDataService: AddressMasterDataService,
 		private readonly permissionService: PermissionsService,
 
 	) { }
@@ -138,13 +136,12 @@ export class ReferenceDashboardFiltersComponent implements OnInit {
 		]);
 
 		if (hasRoleOfManager) {
-			const [destinationInstitution, institutionalGroups, destinationDepartament] = await Promise.all([
+			const [originInstitution, institutionalGroups] = await Promise.all([
 				lastValueFrom(this.institutionService.getInstitutionsByManagerUser()),
-				lastValueFrom(this.institutionalGroupsService.getCurrentUserGroups()),
-				lastValueFrom(this.addressMasterDataService.getDepartmentsByInstitutions())
+				lastValueFrom(this.institutionalGroupsService.getCurrentUserGroups())
 			]);
 
-			this.filters = getReportFiltersForManagers(practices, clinicalSpecialties, careLines, destinationInstitution, institutionalGroups, destinationDepartament);
+			this.filters = getReportFiltersForManagers(practices, clinicalSpecialties, careLines, originInstitution, institutionalGroups);
 		} else {
 			this.filters = getReportFiltersForOthersRoles(practices, clinicalSpecialties, careLines);
 		}

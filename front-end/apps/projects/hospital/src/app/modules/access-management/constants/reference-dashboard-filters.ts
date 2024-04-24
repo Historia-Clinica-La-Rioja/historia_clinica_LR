@@ -1,9 +1,9 @@
 import { SharedSnomedDto, ClinicalSpecialtyDto, CareLineDto, InstitutionBasicInfoDto, InstitutionalGroupDto } from "@api-rest/api-model";
 import { filter } from "@presentation/components/filters-select/filters-select.component";
 import { FilterTypeahead, FiltersType } from "@presentation/components/filters/filters.component";
-import { careLinesToTypeaheadOptions, destinationDepartamentsToTypeaheadOptions, destinationInstitutionsToTypeaheadOptions, institutionalGroupsToTypeaheadOptions, practicesToTypeaheadOptions, specialtiesToTypeaheadOptions } from "@access-management/utils/mapper.utils";
+import { careLinesToTypeaheadOptions, institutionalGroupsToTypeaheadOptions, institutionsToTypeaheadOptions, practicesToTypeaheadOptions, specialtiesToTypeaheadOptions } from "@access-management/utils/mapper.utils";
 import { ATTENTION_STATE, CLOSURE_OPTIONS, PRIORITY_OPTIONS, REGULATION_OPTIONS } from "@access-management/constants/reference";
-import { AddressProjection } from "@api-rest/services/address-master-data.service";
+
 
 export enum EDashboardFilters {
     CLOSURE_TYPE = 'closureType',
@@ -15,8 +15,7 @@ export enum EDashboardFilters {
     IDENTIFICATION_NUMBER = 'identificationNumber',
     REGULATION_STATES = 'regulationState',
     CARE_LINE = 'careLine',
-    DESTINATION_INSTITUTIONS = 'destinationInstitutions',
-	DESTINATION_DEARTAMENTS = 'destinationDepartaments',
+    ORIGIN_INSTITUTIONS = 'originInstitutions',
 	DESTINATION_NETWORKING_INSTITUTIONS = 'institutionalGroups',
 }
 
@@ -29,14 +28,12 @@ export const DashboardFiltersMapping = {
     [EDashboardFilters.SPECIALTY]: 'clinicalSpecialtyId',
     [EDashboardFilters.IDENTIFICATION_NUMBER]: 'identificationNumber',
     [EDashboardFilters.REGULATION_STATES]: 'regulationStateId',
-    [EDashboardFilters.DESTINATION_INSTITUTIONS]: 'destinationInstitutionId',
+    [EDashboardFilters.ORIGIN_INSTITUTIONS]: 'originInstitutionId',
     [EDashboardFilters.CARE_LINE]: 'careLineId',
-    [EDashboardFilters.DESTINATION_DEARTAMENTS]: 'destinationDepartmentId',
     [EDashboardFilters.DESTINATION_NETWORKING_INSTITUTIONS]: 'institutionalGroupId',
 }
 
 export const getReportFiltersForOthersRoles = (practices: SharedSnomedDto[], clinicalSpecialties: ClinicalSpecialtyDto[], careLines: CareLineDto[]): FiltersType => {
-
 	const filterTypeahead: FilterTypeahead[] = [
 		{
 			name: "access-management.search_references.PRACTICE",
@@ -68,8 +65,8 @@ export const getReportFiltersForOthersRoles = (practices: SharedSnomedDto[], cli
 };
 
 
-export const getReportFiltersForManagers = (practices: SharedSnomedDto[], clinicalSpecialties: ClinicalSpecialtyDto[], careLines: CareLineDto[], destinationInstitutions: InstitutionBasicInfoDto[],
-	institutionalGroups: InstitutionalGroupDto[], destinationDepartaments: AddressProjection[]): FiltersType => {
+export const getReportFiltersForManagers = (practices: SharedSnomedDto[], clinicalSpecialties: ClinicalSpecialtyDto[], careLines: CareLineDto[], originInstitutions: InstitutionBasicInfoDto[],
+	institutionalGroups: InstitutionalGroupDto[]): FiltersType => {
 
 	const filterTypeahead: FilterTypeahead[] = [
 		{
@@ -94,10 +91,10 @@ export const getReportFiltersForManagers = (practices: SharedSnomedDto[], clinic
 			}
 		},
 		{
-			name: "access-management.search_references.DESTINATION_INSTITUTION",
+			name: "access-management.search_references.ORIGIN_INSTITUTION",
 			typeaheadOption: {
-				key: EDashboardFilters.DESTINATION_INSTITUTIONS,
-				options: destinationInstitutionsToTypeaheadOptions(destinationInstitutions)
+				key: EDashboardFilters.ORIGIN_INSTITUTIONS,
+				options: institutionsToTypeaheadOptions(originInstitutions)
 			}
 		},
 		{
@@ -106,15 +103,7 @@ export const getReportFiltersForManagers = (practices: SharedSnomedDto[], clinic
 				key: EDashboardFilters.DESTINATION_NETWORKING_INSTITUTIONS,
 				options: institutionalGroupsToTypeaheadOptions(institutionalGroups)
 			}
-		},
-		{
-			name: "access-management.search_references.DEPARTMENT_DESTINATION",
-			typeaheadOption: {
-				key: EDashboardFilters.DESTINATION_DEARTAMENTS,
-				options: destinationDepartamentsToTypeaheadOptions(destinationDepartaments)
-			}
 		}
-
 	];
 
 	return {
