@@ -60,7 +60,7 @@ public class BillProceduresResponseItemBo {
 	}
 
 	public BillProceduresResponseItemBo clearPrice() {
-		return new BillProceduresResponseItemBo(codeNomenclator, description, descriptionNomenclator, null, date, null, null, null, null, null, practiceType);
+		return new BillProceduresResponseItemBo(codeNomenclator, descriptionNomenclator, description, null, date, null, null, null, null, null, practiceType);
 	}
 
 }
