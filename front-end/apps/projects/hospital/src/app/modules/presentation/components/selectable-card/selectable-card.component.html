@@ -16,8 +16,8 @@
 					<mat-icon *ngIf="data.icon" class="title-icon" color="primary"
 						fontSet="material-icons-outlined">{{data.icon}}</mat-icon>
 					<div class="title-subtitle">
-						<span class="color-primary uppercase bold">{{data.title | translate}}</span>
-						<span *ngIf="data.subtitle" class="bold">{{data.subtitle | translate}}</span>
+						<span class="color-primary uppercase bold capitalize-first-letter">{{data.title | translate}}</span>
+						<span *ngIf="data.subtitle" class="bold capitalize-first-letter">{{data.subtitle | translate}}</span>
 					</div>
 					<div *ngIf="isDownloadable" fxLayout="column" fxLayoutGap="10px" fxFlex="calc(10% - 10px)"
 						fxFlex.lt-md="100" fxLayoutAlign="start end">
@@ -32,10 +32,10 @@
 					</div>
 				</header>
 				<mat-list-item *ngFor="let option of data.options">
-					<span class="title" [ngClass]="option.isImportant ? 'important' : ''">{{option.title |
+					<span class="title capitalize-first-letter" [ngClass]="option.isImportant ? 'important' : ''">{{option.title |
 						translate}}</span>
 					<div class="value-container">
-						<span *ngFor="let value of option.value">{{value | translate}}</span>
+						<span *ngFor="let value of option.value" class="capitalize-first-letter">{{value | translate}}</span>
 					</div>
 				</mat-list-item>
 				<mat-list-item *ngIf="data.coloredIconTextOption">

@@ -1,3 +1,4 @@
+import { capitalizeSentence } from "@core/utils/core.utils"
 import { DateFormat } from "@core/utils/date.utils"
 import { HistoricalProblems } from "@historia-clinica/modules/ambulatoria/services/historical-problems-facade.service"
 import { Detail } from "@presentation/components/details-section-custom/details-section-custom.component"
@@ -11,7 +12,7 @@ export const buildProblemHeaderInformation = (problem: HistoricalProblems): Deta
 		},
 		{
 			title: 'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL',
-			text: problem.professionalFullName
+			text: capitalizeSentence(problem.professionalFullName)
 		},
 		{
 			title: 'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_INSTITUTION',
@@ -21,7 +22,7 @@ export const buildProblemHeaderInformation = (problem: HistoricalProblems): Deta
 	if (problem.professionalsThatSignedNames?.length > 0) {
 		let signedNames = {
 			title: 'ambulatoria.paciente.problemas.historical-problems.SIGNING_PROFESSIONALS',
-			text: problem.professionalsThatSignedNames.join(", "),
+			text: capitalizeSentence(problem.professionalsThatSignedNames.join(", ")),
 		}
 		result.push(signedNames);
 	}
@@ -33,4 +34,4 @@ export const buildProblemHeaderInformation = (problem: HistoricalProblems): Deta
 		result.push(notSignAmount);
 	}
 	return result;
-}					
+}

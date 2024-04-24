@@ -7,6 +7,7 @@ import { Detail } from "@presentation/components/details-section-custom/details-
 import { ItemListCard, ItemListOption } from "@presentation/components/selectable-card/selectable-card.component"
 import { ShowMoreConceptsPipe } from "@presentation/pipes/show-more-concepts.pipe"
 import { SIGNATURE_STATUS_OPTION } from "../constants/joint-signature.constants"
+import { capitalizeSentence } from "@core/utils/core.utils"
 
 export const buildItemListCard = (documents: ElectronicSignatureInvolvedDocumentDto[]): ItemListCard[] => {
 	return documents.map(document => {
@@ -33,11 +34,11 @@ const buildItemListOption = (document: ElectronicSignatureInvolvedDocumentDto): 
 		},
 		{
 			title: 'digital-signature.card-information.PROFESSIONAL',
-			value: [document.responsibleProfessionalCompleteName]
+			value: [capitalizeSentence(document.responsibleProfessionalCompleteName)]
 		},
 		{
 			title: 'digital-signature.card-information.PATIENT',
-			value: [document.patientCompleteName],
+			value: [capitalizeSentence(document.patientCompleteName)],
 		}
 	]
 }
@@ -61,7 +62,7 @@ export const buildHeaderInformation = (document: ElectronicSignatureInvolvedDocu
 		},
 		{
 			title: 'firma-conjunta.details.PATIENT',
-			text: document.patientCompleteName
+			text: capitalizeSentence(document.patientCompleteName)
 		},
 		{
 			title: 'firma-conjunta.details.DATE',
@@ -69,7 +70,7 @@ export const buildHeaderInformation = (document: ElectronicSignatureInvolvedDocu
 		},
 		{
 			title: 'firma-conjunta.details.PROFESSIONAL',
-			text: document.responsibleProfessionalCompleteName
+			text: capitalizeSentence(document.responsibleProfessionalCompleteName)
 		},
 	]
 }
