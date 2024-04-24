@@ -132,7 +132,7 @@
 
     <div th:fragment="header">
         <div class="header">
-            <div style="padding-bottom: 50px;">
+            <div style="padding-bottom: 20px;">
                 <img style="width: 250px; height: 72px;" th:src="${'data:image/jpeg;charset=utf-8;base64,' + institutionLogo}" alt=""></img>
                 <div style="float: right; width: 63%;">
                     <div class="institution-data" th:text="${institution.address}"></div>
@@ -165,13 +165,17 @@
                         <div class="data-title">ID Encuentro</div>
                         <div class="data-text" th:text="${encounterId}"></div>
                     </div>
-                    <div class="row-content">
-                        <div class="data-title">Edad</div>
-                        <div class="data-text" th:text="${patient.person.age}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Fecha Nac.</div>
-                        <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
+                </div>
+                <div>
+                    <div style="clear: both;">
+                        <div class="row-content">
+                            <div class="data-title">Edad</div>
+                            <div class="data-text" th:text="${patient.person.age}"></div>
+                        </div>
+                        <div class="row-content">
+                            <div class="data-title">Fecha Nac.</div>
+                            <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
+                        </div>
                     </div>
                 </div>
             </div>
