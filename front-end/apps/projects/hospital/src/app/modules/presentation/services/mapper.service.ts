@@ -217,7 +217,6 @@ export class MapperService {
 	}
 
 	private static _toHistoricalProblems(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): HistoricalProblems[] {
-
 		return hceEvolutionSummaryDto.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
 			currentOutpatientEvolutionSummary.healthConditions.length ?
 				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
@@ -237,8 +236,9 @@ export class MapperService {
 					reference: problem.references?.length > 0 ? problem.references : null,
 					markedAsError: problem.isMarkedAsError,
 					color: problem.isMarkedAsError ? 'grey-text' : 'primary',
-					errorProblem: problem.errorProblem
-
+					errorProblem: problem.errorProblem,
+					professionalsThatDidNotSignAmount: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatDidNotSignAmount,
+					professionalsThatSignedNames: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatSignedNames,
 				}))] : historicalProblemsList = [...historicalProblemsList, {
 					consultationDate: currentOutpatientEvolutionSummary.startDate,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
@@ -255,6 +255,8 @@ export class MapperService {
 					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
 					reference: null,
 					color: 'primary',
+					professionalsThatDidNotSignAmount: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatDidNotSignAmount,
+					professionalsThatSignedNames: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatSignedNames,
 				}];
 			return historicalProblemsList;
 		}, []);

@@ -398,7 +398,9 @@
                     "PROCEDURE": "Procedimientos:",
                     "REFERENCE_CLOSURE": "Cierre de referencia",
                     "CONSULTATION_INSTITUTION": "Institución",
-					"REFERENCE_DESTINATION_INSTITUTION": "Institución destino"
+					"REFERENCE_DESTINATION_INSTITUTION": "Institución destino",
+                    "SIGNING_PROFESSIONALS" : "Profesionales firmantes",
+                    "PROFESSIONALS_PENDING_SIGNATURE" : "Profesionales pendientes de firma"
                 },
                 "historical-problems-filters": {
                     "SPECIALTY": "Especialidad",

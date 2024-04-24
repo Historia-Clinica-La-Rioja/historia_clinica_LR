@@ -35,6 +35,8 @@ import { DocumentService } from "@api-rest/services/document.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
+import { Position } from '@presentation/components/identifier/identifier.component';
+import { buildProblemHeaderInformation } from '@historia-clinica/mappers/problems.mapper';
 
 const ROUTE_INTERNMENT_EPISODE_PREFIX = 'internaciones/internacion/';
 const ROUTE_INTERNMENT_EPISODE_SUFIX = '/paciente/';
@@ -49,7 +51,7 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 
 	@Input() nuevaConsultaRef: DockPopupRef;
 	Color = Color;
-
+	Position = Position;
 	public readonly cronicos = PROBLEMAS_CRONICOS;
 	public readonly activos = PROBLEMAS_ACTIVOS;
 	public readonly resueltos = PROBLEMAS_RESUELTOS;
@@ -182,12 +184,17 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	loadHistoricalProblems() {
 		this.historicalProblems$ = this.historicalProblemsFacadeService.getHistoricalProblems().pipe(
 			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
-		).subscribe(data => this.historicalProblemsList = data);
+		).subscribe(data => {
+			this.historicalProblemsList = data.map(problem => {
+				problem.headerInfoDetails = buildProblemHeaderInformation(problem);
+				return problem;
+			})
+		})
 	}
 
-	scrollToHistoric(){
+	scrollToHistoric() {
 		let historic = document.getElementById("historical-problems");
-		historic.scrollIntoView({behavior: 'smooth'});
+		historic.scrollIntoView({ behavior: 'smooth' });
 	}
 
 	filterByProblemOnProblemClick(problem: HCEHealthConditionDto) {

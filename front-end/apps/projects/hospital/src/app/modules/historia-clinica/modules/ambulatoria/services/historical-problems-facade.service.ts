@@ -13,6 +13,7 @@ import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { REFERENCE_STATES } from '../constants/reference-masterdata';
 import { MapperService } from './../../../../presentation/services/mapper.service';
+import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 
 @Injectable({providedIn: 'root'})
 export class HistoricalProblemsFacadeService {
@@ -211,6 +212,9 @@ export class HistoricalProblems {
 	markedAsError?: boolean;
 	color?: string;
 	errorProblem?: HCEErrorProblemDto;
+	headerInfoDetails?: Detail[];
+	professionalsThatDidNotSignAmount: number;
+	professionalsThatSignedNames: string[];
 }
 
 export interface FilterOptions {
