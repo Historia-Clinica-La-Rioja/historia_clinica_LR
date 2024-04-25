@@ -179,7 +179,7 @@ export interface AnestheticReportDto {
     anestheticTechniques?: AnestheticTechniqueDto[];
     anthropometricData?: AnthropometricDataDto;
     antibioticProphylaxis?: AnestheticSubstanceDto[];
-    confirmed?: boolean;
+    confirmed: boolean;
     diagnosis?: DiagnosisDto[];
     fluidAdministrations?: AnestheticSubstanceDto[];
     foodIntake?: FoodIntakeDto;
@@ -190,7 +190,6 @@ export interface AnestheticReportDto {
     nonAnestheticDrugs?: AnestheticSubstanceDto[];
     postAnesthesiaStatus?: PostAnesthesiaStatusDto;
     preMedications?: AnestheticSubstanceDto[];
-    previousDocumentId?: number;
     procedureDescription?: ProcedureDescriptionDto;
     riskFactors?: RiskFactorDto;
     surgeryProcedures?: HospitalizationProcedureDto[];

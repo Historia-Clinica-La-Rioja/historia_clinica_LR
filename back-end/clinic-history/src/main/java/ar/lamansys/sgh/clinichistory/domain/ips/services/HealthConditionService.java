@@ -136,18 +136,17 @@ public class HealthConditionService {
         return healthCondition;
     }
 
-    private <T extends HealthConditionBo> HealthCondition updateStatusAndVerification(HealthCondition healthCondition, T newDiagnosis) {
-        if (newDiagnosis.isError()) {
+    private <T extends HealthConditionBo> void updateStatusAndVerification(HealthCondition healthCondition, T newHealthCondition) {
+        if (newHealthCondition.isError()) {
             healthCondition.setStatusId(ConditionClinicalStatus.INACTIVE);
-            healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+            healthCondition.setVerificationStatusId(newHealthCondition.getVerificationId());
             healthCondition.setInactivationDate(dateTimeProvider.nowDate());
         }
-        if (newDiagnosis.isDiscarded()) {
-            healthCondition.setStatusId(newDiagnosis.getStatusId());
-            healthCondition.setVerificationStatusId(newDiagnosis.getVerificationId());
+        if (newHealthCondition.isDiscarded()) {
+            healthCondition.setStatusId(newHealthCondition.getStatusId());
+            healthCondition.setVerificationStatusId(newHealthCondition.getVerificationId());
             healthCondition.setInactivationDate(dateTimeProvider.nowDate());
         }
-        return healthCondition;
     }
 
     public List<PersonalHistoryBo> loadPersonalHistories(PatientInfoBo patientInfo, Long documentId, List<PersonalHistoryBo> personalHistories) {
@@ -237,8 +236,9 @@ public class HealthConditionService {
 
 	private HealthCondition buildOtherProblem (PatientInfoBo patientInfo, HealthConditionBo info){
 		log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
-		HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
+		HealthCondition healthCondition = this.buildBasicHealthCondition(patientInfo, info);
 		healthCondition.setProblemId(ProblemType.OTHER);
+        this.updateStatusAndVerification(healthCondition, info);
 		log.debug(OUTPUT, healthCondition);
 		return healthCondition;
 	}

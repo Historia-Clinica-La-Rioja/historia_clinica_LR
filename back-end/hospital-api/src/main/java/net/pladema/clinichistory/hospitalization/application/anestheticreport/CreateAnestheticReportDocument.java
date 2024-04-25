@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.hospitalization.application.anestheticreport;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnestheticSubstanceType;
@@ -21,6 +23,8 @@ import net.pladema.clinichistory.hospitalization.application.port.AnestheticStor
 import net.pladema.clinichistory.hospitalization.domain.AnestheticReportBo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.AnestheticReportValidator;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.patient.controller.service.PatientExternalService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +39,7 @@ public class CreateAnestheticReportDocument {
     private final EImageFileExtension IMAGE_FILE_EXTENSION = EImageFileExtension.PNG;
 
     private final GetChartImage getChartImage;
+    private final PatientExternalService patientExternalService;
     private final InternmentEpisodeService internmentEpisodeService;
     private final AnestheticReportValidator anestheticReportValidator;
     private final DocumentFactory documentFactory;
@@ -44,7 +49,8 @@ public class CreateAnestheticReportDocument {
     private final SaveAnestheticChartAsImage saveAnestheticChartAsImage;
 
     @Transactional
-    public Integer run(AnestheticReportBo anestheticReport) {
+    public Integer run(IDocumentBo document) {
+        AnestheticReportBo anestheticReport = (AnestheticReportBo) document;
         log.debug("Input parameter -> anestheticReport {}", anestheticReport);
 
         this.completeValuesAnestheticReport(anestheticReport);
@@ -84,6 +90,14 @@ public class CreateAnestheticReportDocument {
 
     private void completeValuesAnestheticReport(AnestheticReportBo anestheticReport) {
         Integer encounterId = anestheticReport.getEncounterId();
+
+        internmentEpisodeService.getPatient(encounterId)
+                .map(patientExternalService::getBasicDataFromPatient)
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .ifPresentOrElse(patientInfo -> {
+                    anestheticReport.setPatientInfo(patientInfo);
+                    anestheticReport.setPatientId(patientInfo.getId());
+                }, PatientNotFoundException::new);
 
         LocalDate entryDate = internmentEpisodeService.getEntryDate(encounterId).toLocalDate();
         anestheticReport.setPatientInternmentAge(entryDate);

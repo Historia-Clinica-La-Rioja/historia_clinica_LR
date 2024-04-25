@@ -26,8 +26,8 @@ public class GetAnestheticReport {
     private final AnestheticStorage anestheticStorage;
     private final DocumentService documentService;
 
-    public AnestheticReportBo run(Long documentId, Integer internmentEpisodeId) {
-        log.debug("Input parameters -> documentId {} internmentEpisodeId {}", documentId, internmentEpisodeId);
+    public AnestheticReportBo run(Long documentId) {
+        log.debug("Input parameters -> documentId {}", documentId);
 
         AnestheticReportBo result = anestheticStorage.get(documentId)
                 .orElseThrow(() -> new AnestheticReportException(

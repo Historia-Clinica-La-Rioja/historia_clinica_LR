@@ -4,11 +4,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.hospitalization.application.anestheticreport.GenerateAnestheticReport;
+import ar.lamansys.sgh.clinichistory.application.document.draft.CreateDocumentWithDraftSupport;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.GetAnestheticReport;
 import net.pladema.clinichistory.hospitalization.domain.AnestheticReportBo;
 import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto.AnestheticReportDto;
 import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.AnestheticReportMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -21,14 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Anesthetic Report", description = "Anesthetic Report")
 @RequestMapping("/institutions/{institutionId}/internments/{internmentEpisodeId}/anesthetic-report")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Validated
 @Slf4j
 @RestController
 public class AnestheticReportController {
 
     private final AnestheticReportMapper anestheticReportMapper;
-    private final GenerateAnestheticReport generateAnestheticReport;
+    @Qualifier("anesthetic_report")
+    private final CreateDocumentWithDraftSupport createDocumentWithDraftSupport;
     private final GetAnestheticReport getAnestheticReport;
 
     @PostMapping("/close")
@@ -42,7 +45,7 @@ public class AnestheticReportController {
         anestheticReport.setInstitutionId(institutionId);
         anestheticReport.setEncounterId(internmentEpisodeId);
         anestheticReport.setConfirmed(true);
-        Integer anestheticReportId = generateAnestheticReport.run(anestheticReport);
+        Integer anestheticReportId = createDocumentWithDraftSupport.run(anestheticReport);
 
         log.trace("Output -> {}", anestheticReportId);
         return ResponseEntity.ok().body(anestheticReportId);
@@ -59,7 +62,7 @@ public class AnestheticReportController {
         anestheticReport.setInstitutionId(institutionId);
         anestheticReport.setEncounterId(internmentEpisodeId);
         anestheticReport.setConfirmed(false);
-        Integer anestheticReportId = generateAnestheticReport.run(anestheticReport);
+        Integer anestheticReportId = createDocumentWithDraftSupport.run(anestheticReport);
 
         log.trace("Output -> {}", anestheticReportId);
         return ResponseEntity.ok().body(anestheticReportId);
@@ -73,7 +76,7 @@ public class AnestheticReportController {
             @PathVariable(name = "documentId") Long documentId) {
         log.trace("Input parameters -> institutionId {}, internmentEpisodeId {}, documentId {}",
                 institutionId, internmentEpisodeId, documentId);
-        AnestheticReportBo anestheticReport = getAnestheticReport.run(documentId, internmentEpisodeId);
+        AnestheticReportBo anestheticReport = getAnestheticReport.run(documentId);
         AnestheticReportDto result = anestheticReportMapper.fromAnestheticReportBo(anestheticReport);
         log.trace("Output -> {}", result);
         return ResponseEntity.ok().body(result);

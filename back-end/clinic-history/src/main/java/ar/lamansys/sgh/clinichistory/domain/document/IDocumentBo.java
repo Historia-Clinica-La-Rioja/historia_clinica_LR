@@ -223,4 +223,9 @@ public interface IDocumentBo {
 
 	default UUID getUuid() {return null;}
 
+    default Long getPreviousDocumentId() { return null; }
+
+    default void setInitialDocumentId(Long initialDocumentId) {}
+
+    default void setPreviousDocumentId(Long lastDocumentId) {}
 }
