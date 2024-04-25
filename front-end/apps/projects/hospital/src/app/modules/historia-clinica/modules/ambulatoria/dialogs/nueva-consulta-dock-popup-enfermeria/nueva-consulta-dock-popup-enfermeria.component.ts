@@ -26,6 +26,8 @@ import { NewNurseConsultationSuggestedFieldsService } from '../../services/new-n
 import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -88,12 +90,13 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
 		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
@@ -280,7 +283,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			problem: this.formEvolucion.value?.clinicalProblem,
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: toApiFormat(p.performedDate)}}),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,

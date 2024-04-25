@@ -6,6 +6,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subscription } from 'rxjs';
 
@@ -27,13 +28,14 @@ export class ProcedimientosFormComponent implements ControlValueAccessor {
 	onChangeSub: Subscription;
 	searchConceptsLocallyFFIsOn = false;
 
-	procedimientoNuevaConsultaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	procedimientoNuevaConsultaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly formBuilder: FormBuilder,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly featureFlagService: FeatureFlagService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFFIsOn = isOn;

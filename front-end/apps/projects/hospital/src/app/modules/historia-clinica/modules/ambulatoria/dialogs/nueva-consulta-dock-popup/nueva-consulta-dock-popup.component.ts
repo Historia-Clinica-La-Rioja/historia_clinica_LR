@@ -53,6 +53,7 @@ import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const TIME_OUT = 5000;
 
@@ -159,11 +160,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
 		private readonly snowstormService: SnowstormService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService, this.datePipe);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService, this.hceGeneralStateService, this.data.idPaciente, this.datePipe);
@@ -573,7 +575,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					};
 				}
 			),
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos(),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: toApiFormat(p.performedDate)}}),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,

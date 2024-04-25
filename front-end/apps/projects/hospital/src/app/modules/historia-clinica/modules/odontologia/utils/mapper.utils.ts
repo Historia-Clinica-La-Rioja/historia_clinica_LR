@@ -1,6 +1,6 @@
 import { OdontologyAllergyConditionDto, OdontologyConceptDto, OdontologyDentalActionDto, OdontologyDiagnosticDto, OdontologyMedicationDto, OdontologyPersonalHistoryDto, OdontologyProcedureDto } from "@api-rest/api-model";
 import { dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
-import { DateFormat, momentFormat, momentParse } from "@core/utils/moment.utils";
+import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { Medicacion } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { Problema } from "@historia-clinica/services/problemas.service";
@@ -50,7 +50,7 @@ export const toOdontologyDiagnosticDto = (problema: Problema): OdontologyDiagnos
 
 export const toOdontologyProcedureDto = (procedimiento: Procedimiento): OdontologyProcedureDto => {
 	return {
-		performedDate: procedimiento.performedDate ? dateToDateDto((momentParse(procedimiento.performedDate, DateFormat.API_DATE)).toDate()) : undefined,
+		performedDate: procedimiento.performedDate ? dateToDateDto(procedimiento.performedDate) : undefined,
 		snomed: procedimiento.snomed
 	};
 

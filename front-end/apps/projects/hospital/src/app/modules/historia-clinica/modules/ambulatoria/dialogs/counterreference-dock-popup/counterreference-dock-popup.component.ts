@@ -27,6 +27,8 @@ import { EpisodeData } from '@historia-clinica/components/episode-data/episode-d
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 @Component({
 	selector: 'app-counterreference-dock-popup',
 	templateUrl: './counterreference-dock-popup.component.html',
@@ -79,10 +81,11 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		private readonly referenceMasterDataService: ReferenceMasterDataService,
 		private readonly el: ElementRef,
 		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
-		private readonly clinicalSpecialtyService: ClinicalSpecialtyService
+		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService);
+		this.procedimientoNuevaConsultaService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 	}
 
@@ -250,18 +253,8 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		};
 	}
 
-	private buildDateDto(date: string): DateDto {
-		if (date) {
-			const dateSplit = date.split("-");
-			return (
-				{
-					year: Number(dateSplit[0]),
-					month: Number(dateSplit[1]),
-					day: Number(dateSplit[2]),
-				}
-			)
-		}
-		return null;
+	private buildDateDto(date: Date): DateDto {
+		return date ? dateToDateDto(date) : null
 	}
 
 	private createCounterreference(counterreference: CounterReferenceDto): void {

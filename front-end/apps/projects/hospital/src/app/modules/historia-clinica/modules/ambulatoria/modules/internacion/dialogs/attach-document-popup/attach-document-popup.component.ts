@@ -13,6 +13,7 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.pdf'];
 const REGULAR_DOCUMENT: number = 1;
@@ -41,7 +42,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	showSurgicalInfo = false;
 	isAdministrative: boolean = false;
 	hasConsentDocumentError: string;
-	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	searchConceptsLocallyFF = false;
 	isLoading = false;
 
@@ -55,6 +56,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly permissionService: PermissionsService,
 		private readonly dialog: MatDialog,
+		private readonly dateFormatPipe: DateFormatPipe,
 		@Inject(MAT_DIALOG_DATA) public data
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {

@@ -8,6 +8,7 @@ import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs
 import { DiagnosisCreationEditionComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -20,7 +21,7 @@ export class SurgicalReportDiagnosisComponent {
 	@Input() diagnosis: DiagnosisDto[];
 	@Input() surgicalReport: SurgicalReportDto;
 
-	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService,this.dateFormatPipe);
 	searchConceptsLocallyFF = false;
 
 	constructor(
@@ -28,7 +29,8 @@ export class SurgicalReportDiagnosisComponent {
 		public dialog: MatDialog,
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFF = isOn;

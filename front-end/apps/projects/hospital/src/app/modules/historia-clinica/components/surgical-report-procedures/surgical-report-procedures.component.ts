@@ -11,6 +11,7 @@ import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs
 import { DiagnosisCreationEditionComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Moment } from 'moment';
 @Component({
@@ -32,8 +33,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 
 	@Output() validDate = new EventEmitter();
 
-	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
-	anesthesiaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
+	anesthesiaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	searchConceptsLocallyFF = false;
 	diagnosis: DiagnosisDto[] = [];
 	description: string;
@@ -53,7 +54,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialog: MatDialog,
-		private readonly featureFlagService: FeatureFlagService
+		private readonly featureFlagService: FeatureFlagService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFF = isOn;
