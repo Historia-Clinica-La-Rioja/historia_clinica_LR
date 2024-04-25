@@ -1,27 +1,129 @@
 import { Component, OnInit } from '@angular/core';
- 
-const IMAGE_ITEM ="../../../assets/rutas-lr/";
+import { Router } from '@angular/router'; 
+
+const IMAGE_ITEM = "../../../assets/rutas-lr/miniatures/";
 const ICON = "../../../assets/icons/";
+const PDF_BASE_PATH = '../../../assets/rutas-lr/'; 
 
 export interface RutasPeriodic {
+  routerLink?: string | null;
   Miniature1: string;
-  Miniature2: String;
+  Miniature2: string;
   IconDR: string;
   IconDT: string;
   Orden: number;
   Nombre: string;
+  pdfDR?: string | null;
+  pdfDT?: string | null;
   PanelAbierto?: boolean; // Propiedad para controlar el estado del panel
 }
 
 const ELEMENT_DATA: RutasPeriodic[] = [
-  { Miniature1: IMAGE_ITEM + "DR1.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-active-icon.png", IconDT: ICON + "DT-inactive-icon.png",  Orden: 1, Nombre: " "+"Hipertensión arterial"},
-  { Miniature1: IMAGE_ITEM + "DR2.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-inactive-icon.png", IconDT: ICON + "DT-active-icon.png", Orden: 2, Nombre: "Diabetes"},
-  { Miniature1: IMAGE_ITEM + "DR2.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-inactive-icon.png", IconDT: ICON + "DT-active-icon.png", Orden: 3, Nombre: "IAM"},
-  { Miniature1: IMAGE_ITEM + "DR2.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-inactive-icon.png", IconDT: ICON + "DT-active-icon.png", Orden: 4, Nombre: "Cáncer colorrectal"},
-  { Miniature1: IMAGE_ITEM + "DR2.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-inactive-icon.png", IconDT: ICON + "DT-active-icon.png", Orden: 5, Nombre: "Actividad física"},
-  { Miniature1: IMAGE_ITEM + "DR2.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-inactive-icon.png", IconDT: ICON + "DT-active-icon.png", Orden: 6, Nombre: "Sonríe"},
-  { Miniature1: IMAGE_ITEM + "DR2.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-inactive-icon.png", IconDT: ICON + "DT-active-icon.png", Orden: 7, Nombre: "Celiaquía"},
-  { Miniature1: IMAGE_ITEM + "DR2.jpg", Miniature2: IMAGE_ITEM + "DT2.jpg",IconDR: ICON + "DR-inactive-icon.png", IconDT: ICON + "DT-active-icon.png", Orden: 8, Nombre: "Persona gestante"},
+  {
+    //ITEMS RUTAS ASISTENCIALES
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 1,
+    Nombre: "Hipertensión arterial",
+    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Hipertensión-RutaAsistencial.pdf",        // Ruta al DR
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,                                                                           // Ruta al DT
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 2,
+    Nombre: " Diabetes",
+    pdfDR: null,
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 3,
+    Nombre: " IAM",
+    pdfDR: null,
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null, 
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 4,
+    Nombre: " Cáncer colorrectal",
+    pdfDR: null,
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 5,
+    Nombre: " Actividad física",
+    pdfDR: null,
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 6,
+    Nombre: " Sonríe",
+    pdfDR: null,
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 7,
+    Nombre: " Celiaquía",
+    pdfDR: null,
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,
+  },
+  {
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 8,
+    Nombre: " Persona gestante",
+    pdfDR: null,
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,
+  },
+
+];
+
+const ELEMENT_DATA_PREV: RutasPeriodic[] = [
+  {
+    //ITEMS RUTAS PREVENTIVAS
+    Miniature1: IMAGE_ITEM + "DR1.jpg",
+    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 1,
+    Nombre: "Adulto mayor",
+    pdfDR: null,        // Ruta al DR
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: null,                                                                           // Ruta al DT
+  },
 
 ];
 
@@ -31,28 +133,45 @@ const ELEMENT_DATA: RutasPeriodic[] = [
   styleUrls: ['./rutas.component.scss']
 })
 export class RutasComponent implements OnInit {
-  
-  data: RutasPeriodic[] = ELEMENT_DATA;
 
-  displayedColumns: string[] = ['Miniature1', 'Miniature2', 'IconDR','IconDT','Orden', 'Nombre'];
+  data: RutasPeriodic[] = ELEMENT_DATA;
+  dataP: RutasPeriodic[]= ELEMENT_DATA_PREV;
+
+  displayedColumns: string[] = ['Miniature1', 'Miniature2', 'IconDR', 'IconDT', 'Orden', 'Nombre', 'pdfDR', 'pdfDT'];
   columnsToDisplay: string[] = this.displayedColumns.slice();
   panelOpenState: number | null = null;
 
+  constructor(private router: Router) {} 
 
-  ngOnInit(): void {
-  }
- 
+  ngOnInit(): void {}
+
   togglePanel(orden: number): void {
-    if (this.panelOpenState === orden) {
-      this.panelOpenState = null; // Cierra el panel
-    } else {
-      this.panelOpenState = orden; // Abre el panel
-    }
   }
-
 
   getImagePath(fileName: string): string {
     return IMAGE_ITEM + fileName;
   }
-   
+
+  handleClickDR(index: number) {
+    const element = this.data[index];
+
+    if (element.pdfDR) { 
+      window.open(element.pdfDR, '_blank'); 
+    } else if (element.routerLink) {
+      this.router.navigate([element.routerLink]); 
+    } 
+  }
+
+  handleClickDT(index: number) {
+    const element = this.data[index];
+
+    if (element.pdfDT) { 
+      window.open(element.pdfDT, '_blank'); 
+    } else if (element.routerLink) {
+      this.router.navigate([element.routerLink]); 
+    } 
+  }
+    
+
+
 }

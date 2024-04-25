@@ -13,7 +13,7 @@
                     </ng-template>
                     <ng-template matTabContent>
                         <h2>Rutas asistenciales</h2>
-                        <h4>Nombre</h4>
+                        
                         <section>
                             <mat-accordion>
                                 <div class="contenedor-title"></div>
@@ -33,25 +33,25 @@
                                             </mat-panel-title>
                                         </mat-expansion-panel-header>
                                         <div class="panel-content">
-                                            <button class="button" onclick="window.open('ruta-al-pdf')">
+                                            <button class="button" *ngIf="element.pdfDR" (click)="handleClickDR(i)">
                                                 <img class="miniature" [src]="getImagePath(element.Miniature1)"
                                                     alt="miniatura diagrama de ruta">
                                                 <div class="container-imgIcon">
                                                     <img class="icon" [src]="getImagePath(element.IconDR)"
                                                         alt="diagrama de ruta">
-                                                    <span class="button-text" *ngIf="i === 0">Diagrama de ruta</span>
-                                                    <span class="button-text-inactive" *ngIf="i !== 0">Diagrama de ruta</span>
+                                                    <span class="button-text" >Diagrama de ruta</span>
                                                 </div>
                                             </button>
-                                            <button class="button" onclick="window.open('ruta-al-pdf')">
+                                            <button class="button" *ngIf="element.pdfDT" (click)="handleClickDT(i)">
                                                 <img class="miniature" [src]="getImagePath(element.Miniature2)"
                                                     alt="miniatura documento técnico">
                                                 <div class="container-imgIcon">
                                                     <img class="icon" [src]="getImagePath(element.IconDT)"
                                                         alt="documento técnico">
-                                                    <span class="button-text-inactive">Documento técnico</span>
+                                                    <span class="button-text">Documento técnico</span>
                                                 </div>
                                             </button>
+                                            <span class="unavailable-items" *ngIf="!element.pdfDT && !element.pdfDR"> Sin información </span>
                                         </div>
                                     </mat-expansion-panel>
 
@@ -68,26 +68,46 @@
                     <ng-template matTabContent>
                         <section>
                             <mat-accordion>
-                                <div class="contenedor-title">
-                                </div>
-                                <mat-expansion-panel>
-                                    <mat-expansion-panel-header (click)="togglePanel">
-                                        <mat-panel-title>
-                                            Adulto mayor
-                                            <div class="container-orden">
-                                            </div>
-                                            <div class="container-name">
-                                                <span [ngClass]="{'nombre-style': panelOpenState }"></span>
-                                            </div>
-                                            <div class="container-sexo">
-                                                <span [ngClass]="{'nombre-style': panelOpenState}"></span>
-                                            </div>
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
+                                <div class="contenedor-title"></div>
+                                <ng-container *ngFor="let element of dataP; let i = index">
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header (click)="togglePanel">
+                                            <mat-panel-title>
+                                                <div class="container-orden">
+                                                    {{element.Orden}}.
+                                                </div>
+                                                <div class="container-name">
+                                                    <span
+                                                        [ngClass]="{'nombre-style': panelOpenState === element.Orden}">
+                                                        {{ element.Nombre }}
+                                                    </span>
+                                                </div>
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <div class="panel-content">
+                                            <button class="button" *ngIf="element.pdfDR" (click)="handleClickDR(i)">
+                                                <img class="miniature" [src]="getImagePath(element.Miniature1)"
+                                                    alt="miniatura diagrama de ruta">
+                                                <div class="container-imgIcon">
+                                                    <img class="icon" [src]="getImagePath(element.IconDR)"
+                                                        alt="diagrama de ruta">
+                                                    <span class="button-text" >Diagrama de ruta</span>
+                                                </div>
+                                            </button>
+                                            <button class="button" *ngIf="element.pdfDT" (click)="handleClickDT(i)">
+                                                <img class="miniature" [src]="getImagePath(element.Miniature2)"
+                                                    alt="miniatura documento técnico">
+                                                <div class="container-imgIcon">
+                                                    <img class="icon" [src]="getImagePath(element.IconDT)"
+                                                        alt="documento técnico">
+                                                    <span class="button-text">Documento técnico</span>
+                                                </div>
+                                            </button>
+                                            <span class="unavailable-items" *ngIf="!element.pdfDT && !element.pdfDR"> Sin información </span>
+                                        </div>
+                                    </mat-expansion-panel>
 
-                                    <div class="panel-content">
-                                    </div>
-                                </mat-expansion-panel>
+                                </ng-container>
                             </mat-accordion>
                         </section>
                     </ng-template>
