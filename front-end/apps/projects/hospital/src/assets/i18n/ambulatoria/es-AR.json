@@ -209,6 +209,7 @@
                     "ADD": "Agregar alergia",
                     "ALLERGY": "Alergia",
                     "CRITICALITY": "Criticidad",
+                    "NO_REFER": "No refiere",
                     "form": {
                         "REGISTRY_DATE": "Fecha registro"
                     },

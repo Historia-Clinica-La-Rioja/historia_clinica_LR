@@ -39,6 +39,9 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		allergies: []
 	});
 
+	diagnosis;
+	isAllergyNoRefer: boolean = true;
+
 	constructor(
 		public dockPopupRef: DockPopupRef,
 		private formBuilder: FormBuilder,
@@ -97,7 +100,10 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 			procedures: value.procedures?.data || [],
 			medications,
 			riskFactors,
-			allergies: value.allergies?.data || [],
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && (value.allergies?.data || []).length === 0) ? null: this.isAllergyNoRefer,
+				content: value.allergies?.data || []
+			},
 			patientId: this.data.patientId,
 		}
 	}
@@ -117,6 +123,10 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 				this.disableConfirmButton = false;
 			}
 		);
+	}
+
+	setIsAllergyNoRefer = ($event) => {
+		this.isAllergyNoRefer = $event;
 	}
 
 	private getDiagnosis(diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } {

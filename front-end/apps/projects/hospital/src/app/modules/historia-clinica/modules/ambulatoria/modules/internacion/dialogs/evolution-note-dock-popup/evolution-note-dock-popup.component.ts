@@ -52,6 +52,8 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
 	observationsSubject = new BehaviorSubject<boolean>(true);
 	anthropometricData: AnthropometricData;
+	isEvolutionChartsFFActive = false;
+	isAllergyNoRefer: boolean = true;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -166,7 +168,10 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		const formValues = this.form.value;
 		return {
 			confirmed: true,
-			allergies: this.allergies,
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.allergies.length === 0) ? null: this.isAllergyNoRefer,
+				content: this.allergies
+			},
 			anthropometricData: isNull(formValues.anthropometricData) ? undefined : {
 				bloodType: formValues.anthropometricData.bloodType ? {
 					id: this.evolutionNote ?
@@ -215,13 +220,17 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		}
 	}
 
+	setIsAllergyNoRefer = ($event) => {
+		this.isAllergyNoRefer = $event;
+	}
+
 	clearBloodType(control): void {
 		control.controls.bloodType.reset();
 	}
 
 	loadEvolutionNoteInfo() {
 		this.componentEvaluationManagerService.evolutionNote = this.evolutionNote;
-		this.allergies = this.evolutionNote.allergies;
+		this.allergies = this.evolutionNote.allergies.content;
 
 		let evolutionNoteDiagnosis = this.evolutionNote.diagnosis;
 		evolutionNoteDiagnosis?.forEach(d => d.isAdded = true);

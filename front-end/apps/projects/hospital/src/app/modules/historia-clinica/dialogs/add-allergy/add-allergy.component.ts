@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AllergyConditionDto, EvolutionNoteDto, SnomedDto } from '@api-rest/api-model';
+import { AllergyConditionDto, EvolutionNoteDto, ReferableItemDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL} from '@api-rest/api-model';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
@@ -110,21 +110,25 @@ export class AddAllergyComponent implements OnInit {
 		}
 
 		function buildEvolutionNote(allergy: SnomedDto): EvolutionNoteDto {
-			const allergyDto: AllergyConditionDto = {
-				categoryId: null,
-				date: null,
-				criticalityId: null,
-				verificationId: null,
-				id: null,
-				snomed: allergy,
-				statusId: null
+			const allergyDto: ReferableItemDto<AllergyConditionDto> = {
+				isReferred: null,
+				content: [{
+					categoryId: null,
+					date: null,
+					criticalityId: null,
+					verificationId: null,
+					id: null,
+					snomed: allergy,
+					statusId: null,
+				}],
 			};
-
-			return {
+		
+			const evolutionNote: EvolutionNoteDto = {
 				confirmed: true,
-				allergies: [allergyDto]
+				allergies: allergyDto
 			};
-
+		
+			return evolutionNote;
 		}
 	}
 

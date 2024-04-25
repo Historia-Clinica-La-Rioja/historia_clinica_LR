@@ -26,6 +26,7 @@ import { ReferenceMasterDataService } from '@api-rest/services/reference-master-
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
+import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 @Component({
 	selector: 'app-counterreference-dock-popup',
 	templateUrl: './counterreference-dock-popup.component.html',
@@ -50,6 +51,18 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 	disableConfirmButton = false;
 	episodeData: EpisodeData;
 	professionalSpecialties: ClinicalSpecialtyDto[] = [];
+	isAllergyNoRefer: boolean = true;
+	allergyContent: ConceptsList = {
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
+			icon: 'cancel'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.alergias.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: CounterreferenceData,
@@ -180,6 +193,13 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 		});
 	}
 
+	checkAllergyEvent($event) {
+		if ($event.addPressed) {
+			this.addAllergy();
+		}
+		this.isAllergyNoRefer = !$event.checkboxSelected;
+	}
+
 	private setProfessionalSpecialties() {
 		this.clinicalSpecialtyService.getLoggedInProfessionalClinicalSpecialties()
 			.subscribe((specialties: ClinicalSpecialtyDto[]) => {
@@ -194,16 +214,19 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 		return {
 			referenceId: this.data.reference.id,
-			allergies: this.alergiasNuevaConsultaService.getAlergias().map((allergy: Alergia) => {
-				return {
-					categoryId: null,
-					criticalityId: allergy.criticalityId,
-					snomed: allergy.snomed,
-					startDate: null,
-					statusId: null,
-					verificationId: null,
-				};
-			}),
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.alergiasNuevaConsultaService.getAlergias().length === 0) ? null: this.isAllergyNoRefer,
+				content: this.alergiasNuevaConsultaService.getAlergias().map((allergy: Alergia) => {
+					return {
+						categoryId: null,
+						criticalityId: allergy.criticalityId,
+						snomed: allergy.snomed,
+						startDate: null,
+						statusId: null,
+						verificationId: null,
+					};
+				}),
+			},
 			clinicalSpecialtyId: this.formReferenceClosure.controls.specialty.value.id,
 			counterReferenceNote: this.formReferenceClosure.value.description,
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
@@ -256,7 +279,7 @@ export class CounterreferenceDockPopupComponent implements OnInit {
 
 		function mapToFieldsToUpdate() {
 			return {
-				allergies: !!counterreference.allergies?.length,
+				allergies: !!counterreference.allergies?.content.length,
 				medications: !!counterreference.medications?.length,
 				procedures: !!counterreference.procedures?.length,
 				problems: !!hasProblems,

@@ -52,6 +52,7 @@ import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import * as _ from 'lodash';
+import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 
 const TIME_OUT = 5000;
 
@@ -99,6 +100,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	episodeData: EpisodeData;
 	touchedConfirm = false;
 	referenceSituationViolence = null;
+	allergyContent: ConceptsList = {
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
+			icon: 'cancel'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.alergias.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isAllergyNoRefer: boolean = true;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -430,7 +443,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
 			return {
-				allergies: !!nuevaConsultaDto.allergies?.length,
+				allergies: !!nuevaConsultaDto.allergies?.content.length,
 				personalHistories: !!nuevaConsultaDto.personalHistories?.length,
 				familyHistories: !!nuevaConsultaDto.familyHistories?.length,
 				riskFactors: !!nuevaConsultaDto.riskFactors,
@@ -481,16 +494,19 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 	private buildCreateOutpatientDto(): CreateOutpatientDto {
 		return {
-			allergies: this.alergiasNuevaConsultaService.getAlergias().map((alergia: Alergia) => {
-				return {
-					categoryId: null,
-					snomed: alergia.snomed,
-					startDate: null,
-					statusId: null,
-					verificationId: null,
-					criticalityId: alergia.criticalityId,
-				};
-			}),
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.alergiasNuevaConsultaService.getAlergias().length === 0) ? null: this.isAllergyNoRefer,
+				content: this.alergiasNuevaConsultaService.getAlergias().map((alergia: Alergia) => {
+					return {
+						categoryId: null,
+						snomed: alergia.snomed,
+						startDate: null,
+						statusId: null,
+						verificationId: null,
+						criticalityId: alergia.criticalityId,
+					};
+				}),
+			},
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
@@ -708,6 +724,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
+	}
+
+	checkAllergyEvent($event) {
+		if ($event.addPressed) {
+			this.addAllergy();
+		}
+		this.isAllergyNoRefer = !$event.checkboxSelected;
 	}
 
 }

@@ -1,18 +1,6 @@
-<app-new-consultation-expansion-section id="alergias"
-	[title]="'ambulatoria.paciente.nueva-consulta.alergias.TITLE' | translate" icon="cancel"
-	[isEmpty]="alergiasNuevaConsultaService.isEmpty()">
-	<div fxLayout="column" fxLayoutGap="2vh">
-
-		<app-titled-content-card *ngIf="!alergiasNuevaConsultaService.isEmpty()"
-			title="{{ 'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE' }}">
-			<app-allergy-list [service]="alergiasNuevaConsultaService"></app-allergy-list>
-		</app-titled-content-card>
-
-		<div>
-			<button mat-button type="button" id="add-allergies-button" color="primary" class="add-button"
-				(click)="addAllergy()">
-				+ {{ 'ambulatoria.paciente.nueva-consulta.alergias.ADD' | translate }}
-			</button>
-		</div>
-	</div>
-</app-new-consultation-expansion-section>
+<app-concepts-list
+	[hasConcepts]="!alergiasNuevaConsultaService.isEmpty()"
+	[content]="allergyContent"
+	(openEmit)="checkAllergyEvent($event)">
+	<app-allergy-list [service]="alergiasNuevaConsultaService"></app-allergy-list>
+</app-concepts-list>

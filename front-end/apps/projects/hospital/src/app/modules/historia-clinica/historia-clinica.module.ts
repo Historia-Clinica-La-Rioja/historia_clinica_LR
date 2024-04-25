@@ -141,6 +141,7 @@ import { ProposedSurgeryComponent } from './modules/ambulatoria/modules/internac
 import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/modules/internacion/components/proposed-surgery-background-list/proposed-surgery-background-list.component';
 //standalone
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
+import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
 @NgModule({
 	declarations: [
 		// components
@@ -284,6 +285,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 		LazyMaterialModule,
 		PresentationModule,
 		IdentifierCasesComponent,
+		ConceptsListComponent
 	],
 	exports: [
 		// components

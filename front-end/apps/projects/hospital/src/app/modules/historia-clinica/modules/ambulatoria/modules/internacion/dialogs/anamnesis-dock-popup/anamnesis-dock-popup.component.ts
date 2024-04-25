@@ -25,6 +25,8 @@ import { map } from 'rxjs/internal/operators/map';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
+import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service';
+import { SnomedService } from '@historia-clinica/services/snomed.service';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -63,6 +65,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	minDate = MIN_DATE;
 	anthropometricData: AnthropometricData;
 	@ViewChild('errorsView') errorsView: ElementRef;
+	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
+	isAllergyNoRefer: boolean = true;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -73,13 +77,15 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly anamnesisService: AnamnesisService,
 		private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService,
-		private readonly dialog: MatDialog
+		private readonly dialog: MatDialog,
+		private readonly snomedService: SnomedService,
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
 		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosticos;
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
+		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 	}
 
 	ngOnInit(): void {
@@ -175,7 +181,10 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		const formValues = this.form.value;
 		return {
 			confirmed: true,
-			allergies: this.allergies,
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.allergies.length === 0) ? null: this.isAllergyNoRefer,
+				content: this.allergies
+			},
 			anthropometricData: isNull(formValues.anthropometricData) ? undefined : {
 				bloodType: formValues.anthropometricData.bloodType ? {
 					id: this.anamnesis ?
@@ -244,7 +253,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 
 	private loadAnamnesisInformation() {
 		this.componentEvaluationManagerService.anamnesis = this.anamnesis;
-		this.allergies = this.anamnesis.allergies;
+		this.allergies = this.anamnesis.allergies.content;
 		this.diagnosticos = this.anamnesis.diagnosis;
 		this.diagnosticos.forEach(d => d.isAdded = true);
 		this.familyHistories = this.anamnesis.familyHistories;
@@ -320,5 +329,9 @@ export class AnamnesisDockPopupComponent implements OnInit {
 
 	getObservations(): Observable<boolean> {
 		return this.observationsSubject.asObservable();
+	}
+
+	setIsAllergyNoRefer = ($event) => {
+		this.isAllergyNoRefer = $event;
 	}
 }

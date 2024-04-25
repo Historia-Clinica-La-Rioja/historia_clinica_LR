@@ -174,7 +174,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		}];
 
 		const createOutpatientDto: CreateOutpatientDto = {
-			allergies: [],
+			allergies: {
+				isReferred: null,
+				content: []
+			},
 			anthropometricData: null,
 			clinicalSpecialtyId: null,
 			evolutionNote: null,

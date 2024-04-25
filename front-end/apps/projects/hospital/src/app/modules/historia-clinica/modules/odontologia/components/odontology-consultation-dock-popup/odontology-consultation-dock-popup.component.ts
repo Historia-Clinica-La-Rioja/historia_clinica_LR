@@ -43,6 +43,7 @@ import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical
 import { ConfirmarPrescripcionComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { NewConsultationPersonalHistoryFormComponent } from '@historia-clinica/modules/ambulatoria/dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
+import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -76,6 +77,19 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	minDate = MIN_DATE;
 
 	disableConfirmButton = false;
+
+	isAllergyNoRefer: boolean = true;
+	allergyContent: ConceptsList = {
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
+			icon: 'cancel'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.alergias.table.TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.alergias.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
@@ -237,6 +251,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		});
 	}
 
+	checkAllergyEvent($event) {
+		if ($event.addPressed) {
+			this.addAllergy();
+		}
+		this.isAllergyNoRefer = !$event.checkboxSelected;
+	}
+
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {
 		const dialogRef = this.dialog.open(SuggestedFieldsPopupComponent, {
 			data: { nonCompletedFields, presentFields }
@@ -296,7 +317,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 
 		return {
-			allergies: !!odontologyDto.allergies?.length,
+			allergies: !!odontologyDto.allergies?.content.length,
 			personalHistories: !!odontologyDto.personalHistories?.length,
 			medications: !!odontologyDto.medications?.length,
 			problems: problemsToUpdate,
@@ -309,7 +330,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.odontogramService.actionedTeeth.forEach((a: ActionedTooth) => dentalActions = dentalActions.concat(toDentalAction(a, allConcepts)));
 
 		return {
-			allergies: this.allergiesNewConsultationService.getAlergias().map(toOdontologyAllergyConditionDto),
+			allergies: {
+				isReferred: (this.isAllergyNoRefer && this.allergiesNewConsultationService.getAlergias().length === 0) ? null: this.isAllergyNoRefer,
+				content: this.allergiesNewConsultationService.getAlergias().map(toOdontologyAllergyConditionDto)
+			},
 			evolutionNote: this.form.value.evolution,
 			medications: this.medicationsNewConsultationService.getMedicaciones().map(toOdontologyMedicationDto),
 			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
