@@ -13,7 +13,7 @@ const routes: Routes = [
         canActivate: [RoleGuard],
         data: {
             allowedRoles: [
-                ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
+            ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE,
 			ERole.ENFERMERO,
 			ERole.ADMINISTRADOR,
 			ERole.ESPECIALISTA_MEDICO,
