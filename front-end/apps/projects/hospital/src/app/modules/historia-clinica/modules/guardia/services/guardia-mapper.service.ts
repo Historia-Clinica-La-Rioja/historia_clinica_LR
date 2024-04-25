@@ -13,12 +13,13 @@ import {
 } from '@api-rest/api-model';
 import { parse } from 'date-fns';
 import { Problema } from '../../../services/problemas.service';
-import { DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 import { AdministrativeAdmission } from './new-episode.service';
 import { EffectiveObservation, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TriageReduced } from '@pacientes/component/resumen-de-guardia/resumen-de-guardia.component';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { toHourMinute } from '@core/utils/date.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -163,9 +164,9 @@ export class GuardiaMapperService {
 					return {
 						severity: problema.codigoSeveridad,
 						chronic: problema.cronico,
-						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
+						endDate: problema.fechaFin ? toApiFormat(problema.fechaFin) : undefined,
 						snomed: problema.snomed,
-						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
+						startDate: problema.fechaInicio ? toApiFormat(problema.fechaInicio) : undefined
 					};
 				}
 			),
@@ -231,7 +232,7 @@ export class GuardiaMapperService {
 		return {
 			ambulanceCompanyId: dto.ambulanceCompanyId ? dto.ambulanceCompanyId : null,
 			callDate,
-			callTime: callTime ? momentFormat(dateToMoment(callTime), DateFormat.HOUR_MINUTE) : null,
+			callTime: callTime ? toHourMinute(callTime) : null,
 			doctorsOfficeId: dto.doctorsOffice ? dto.doctorsOffice.id : null,
 			emergencyCareEntranceTypeId: dto.entranceType?.id ? dto.entranceType.id : null,
 			emergencyCareTypeId: dto.emergencyCareType?.id ? dto.emergencyCareType.id : null,

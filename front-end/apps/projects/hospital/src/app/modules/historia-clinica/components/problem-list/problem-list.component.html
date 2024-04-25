@@ -18,12 +18,12 @@
                 <span *ngIf="problema.fechaInicio" class="mat-caption gray-caption">
                     {{ 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO_PREFIJO' |
                     translate }}
-                    {{ momentFormat(problema.fechaInicio, DateFormat.VIEW_DATE) }}
+                    {{ problema.fechaInicio | dateFormat: 'date' }}
                 </span>
                 <span *ngIf="problema.fechaFin" class="mat-caption gray-caption">
                     {{ 'ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN_PREFIJO' |
                     translate }}
-                    {{ momentFormat(problema.fechaFin, DateFormat.VIEW_DATE) }}
+                    {{ problema.fechaFin| dateFormat: 'date' }}
                 </span>
             </div>
             <div *ngIf="problema.isReportable">

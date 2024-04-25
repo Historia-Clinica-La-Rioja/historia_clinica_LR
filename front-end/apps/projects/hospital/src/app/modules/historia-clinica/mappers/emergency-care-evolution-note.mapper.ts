@@ -74,7 +74,7 @@ export const toAllergies = (allergies: OutpatientAllergyConditionDto[]): Alergia
 }
 
 const toProcedure = (procedure: OutpatientProcedureDto): Procedimiento => {
-	return { snomed: procedure.snomed, ...(procedure.performedDate && { performedDate: procedure.performedDate }) }
+	return { snomed: procedure.snomed, ...(procedure.performedDate && { performedDate: dateISOParseDate(procedure.performedDate) }) }
 }
 
 export const toProcedures = (procedures: OutpatientProcedureDto[]): Procedimiento[] => {

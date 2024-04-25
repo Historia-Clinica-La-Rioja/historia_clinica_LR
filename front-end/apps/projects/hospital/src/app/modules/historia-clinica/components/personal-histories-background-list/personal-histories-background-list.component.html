@@ -9,12 +9,12 @@
                 <span *ngIf="personalHistories?.startDate">
                     {{ 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.FROM_DATE_PREFIX' |
                     translate }}
-                    {{ momentFormat(personalHistories.startDate, DateFormat.VIEW_DATE) }}
+                    {{ personalHistories.startDate| dateFormat: 'date' }}
                 </span>
                 <span *ngIf="personalHistories?.endDate">
                     {{ 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.TO_DATE_PREFIX' |
                     translate }}
-                    {{ momentFormat(personalHistories.endDate, DateFormat.VIEW_DATE) }}
+                    {{ personalHistories.endDate | dateFormat: 'date' }}
                 </span>
             </div>
 

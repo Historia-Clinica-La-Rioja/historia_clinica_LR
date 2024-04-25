@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { fixDate } from '@core/utils/date/format';
 import * as moment from 'moment';
 import { Moment } from "moment";
@@ -26,6 +26,18 @@ export class DatepickerComponent implements OnInit {
 			this.form.controls.selectedDate.setValue(dateToSet);
 	};
 	@Output() selectDate: EventEmitter<Date> = new EventEmitter();
+	@Input() set requiredText(text: string) {
+		this._requiredText = text;
+		text ? this.form.controls.selectedDate.addValidators(Validators.required) : this.form.controls.selectedDate.removeValidators(Validators.required)
+	}
+	@Input()
+	set markAsTouched(value: boolean) {
+		if (value) {
+			this.form.controls.selectedDate.markAsTouched();
+		}
+	}
+
+	_requiredText: string;
 
 	constructor() { }
 

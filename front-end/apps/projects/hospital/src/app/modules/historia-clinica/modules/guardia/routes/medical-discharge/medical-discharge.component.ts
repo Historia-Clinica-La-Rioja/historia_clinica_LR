@@ -97,6 +97,18 @@ export class MedicalDischargeComponent implements OnInit {
 		});
 	}
 
+	dischargedDateChanged(date: Date) {
+		this.form.controls.dateTime.get('date').setValue(date);
+	}
+
+	problemStartDateChanged(date: Date) {
+		this.problemasService.getForm().controls.fechaInicio.setValue(date);
+	}
+
+	problemEndDateChanged(date: Date) {
+		this.problemasService.getForm().controls.fechaFin.setValue(date);
+	}
+
 	confirm(): void {
 		this.formSubmited = true;
 		if (this.form.valid && this.problemasService.getProblemas().length) {

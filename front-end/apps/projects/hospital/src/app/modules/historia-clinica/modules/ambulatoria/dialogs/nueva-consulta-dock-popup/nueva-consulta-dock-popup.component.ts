@@ -7,7 +7,6 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
-import { DateFormat, dateToMomentTimeZone, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService, SEVERITY_CODES } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { TranslateService } from '@ngx-translate/core';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -77,13 +76,11 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	apiErrors: string[] = [];
-	public today = newMoment();
+	public today = new Date();
 	fixedSpecialty = true;
 	defaultSpecialty: ClinicalSpecialtyDto;
 	specialties: ClinicalSpecialtyDto[];
 	public hasError = hasError;
-	momentFormat = momentFormat;
-	DateFormat = DateFormat;
 	severityTypes: any[];
 	criticalityTypes: any[];
 	public reportFFIsOn: boolean;
@@ -506,13 +503,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		return true;
 	}
 
-	private buildProblema(p: HealthConditionNewConsultationDto) {
+	private buildProblema(p: HealthConditionNewConsultationDto): Problema {
 		const problema: Problema = {
 			snomed: p.snomed,
 			codigoSeveridad: p.severity,
 			cronico: p.isChronic,
-			fechaInicio: p.startDate ? dateToMomentTimeZone(p.startDate) : newMoment(),
-			fechaFin: p.inactivationDate ? dateToMomentTimeZone(p.inactivationDate) : undefined
+			fechaInicio: p.startDate || new Date(),
+			fechaFin: p.inactivationDate || undefined
 		};
 		return problema;
 	}
@@ -556,22 +553,22 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				isReferred: (this.isPersonalHistoriesNoRefer && this.personalHistoriesNewConsultationService.getPersonalHistories().length === 0) ? null: this.isPersonalHistoriesNoRefer,
 				content: this.personalHistoriesNewConsultationService.getPersonalHistories().map((personalHistory: PersonalHistory) => {
 					return {
-						inactivationDate: personalHistory.endDate ? momentFormat(personalHistory.endDate, DateFormat.API_DATE) : null,
+						inactivationDate: personalHistory.endDate ? toApiFormat(personalHistory.endDate) : null,
 						note: personalHistory.observations,
 						snomed: personalHistory.snomed,
-						startDate: momentFormat(personalHistory.startDate, DateFormat.API_DATE),
+						startDate: toApiFormat(personalHistory.startDate),
 						typeId: personalHistory.type.id,
 					}
 				}),
 			},
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
-				(problema: Problema) => {
+				(problema: AmbulatoryConsultationProblem) => {
 					return {
 						severity: problema.codigoSeveridad,
 						chronic: problema.cronico,
-						endDate: problema.fechaFin ? momentFormat(problema.fechaFin, DateFormat.API_DATE) : undefined,
+						endDate: problema.fechaFin ? toApiFormat(problema.fechaFin) : undefined,
 						snomed: problema.snomed,
-						startDate: problema.fechaInicio ? momentFormat(problema.fechaInicio, DateFormat.API_DATE) : undefined
+						startDate: problema.fechaInicio ? toApiFormat(problema.fechaInicio) : undefined
 					};
 				}
 			),
@@ -704,7 +701,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
-			width: '30%',
+			width: '40',
 			disableClose: true,
 		});
 	}

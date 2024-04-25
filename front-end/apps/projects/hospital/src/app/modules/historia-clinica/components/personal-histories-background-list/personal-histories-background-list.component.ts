@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
 import { NewConsultationPersonalHistoriesService } from '@historia-clinica/modules/ambulatoria/services/new-consultation-personal-histories.service';
 
 @Component({
@@ -9,10 +8,7 @@ import { NewConsultationPersonalHistoriesService } from '@historia-clinica/modul
 })
 export class PersonalHistoriesBackgroundListComponent {
     
-    @Input() service: NewConsultationPersonalHistoriesService;
-    momentFormat = momentFormat;
-    readonly DateFormat = DateFormat;
-    
+    @Input() service: NewConsultationPersonalHistoriesService;    
     constructor() { }
 
 }

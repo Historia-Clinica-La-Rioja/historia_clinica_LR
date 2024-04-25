@@ -1,6 +1,5 @@
 import { OdontologyAllergyConditionDto, OdontologyConceptDto, OdontologyDentalActionDto, OdontologyDiagnosticDto, OdontologyMedicationDto, OdontologyPersonalHistoryDto, OdontologyProcedureDto } from "@api-rest/api-model";
 import { dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
-import { DateFormat, momentFormat } from "@core/utils/moment.utils";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { Medicacion } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { Problema } from "@historia-clinica/services/problemas.service";
@@ -9,6 +8,7 @@ import { ActionType, ToothAction } from "../services/actions.service";
 import { ActionedTooth } from "../services/odontogram.service";
 import { ESurfacePositionDtoValues } from "./surfaces";
 import { PersonalHistory } from "@historia-clinica/modules/ambulatoria/services/new-consultation-personal-histories.service";
+import { toApiFormat } from "@api-rest/mapper/date.mapper";
 
 export const toOdontologyAllergyConditionDto = (alergia: Alergia): OdontologyAllergyConditionDto => {
 	return {
@@ -29,10 +29,10 @@ export const toOdontologyMedicationDto = (medicacion: Medicacion): OdontologyMed
 
 export const toOdontologyPersonalHistoryDto = (personalHistory: PersonalHistory): OdontologyPersonalHistoryDto => {
 	return {
-		inactivationDate: personalHistory.endDate ? momentFormat(personalHistory.endDate, DateFormat.API_DATE) : null,
+		inactivationDate: personalHistory.endDate ? toApiFormat(personalHistory.endDate) : null,
 		note: personalHistory.observations,
 		snomed: personalHistory.snomed,
-		startDate: momentFormat(personalHistory.startDate, DateFormat.API_DATE),
+		startDate: toApiFormat(personalHistory.startDate),
 		typeId: personalHistory.type.id,
 	}
 }
@@ -41,9 +41,9 @@ export const toOdontologyDiagnosticDto = (problema: Problema): OdontologyDiagnos
 	return {
 		severity: problema.codigoSeveridad,
 		chronic: problema.cronico,
-		endDate: problema.fechaFin ? dateToDateDto(problema.fechaFin.toDate()) : undefined,
+		endDate: problema.fechaFin ? dateToDateDto(problema.fechaFin) : undefined,
 		snomed: problema.snomed,
-		startDate: problema.fechaInicio ? dateToDateDto(problema.fechaInicio.toDate()) : undefined
+		startDate: problema.fechaInicio ? dateToDateDto(problema.fechaInicio) : undefined
 	};
 
 }

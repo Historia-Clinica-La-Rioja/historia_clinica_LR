@@ -222,7 +222,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				severityTypes: this.severityTypes
 			},
 			autoFocus: false,
-			width: '35%',
+			width: '40%',
 			disableClose: true,
 		});
 	}
@@ -246,7 +246,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
-			width: '30%',
+			width: '40',
 			disableClose: true,
 		});
 	}
