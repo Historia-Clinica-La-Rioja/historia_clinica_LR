@@ -11,19 +11,26 @@
 .miniature {
 	width: 265px;
 	height: 175px;
+	cursor: pointer;
 }
 
-.icon {
+img.icon {
 	width: 20px;
 	height: 20px;
-
 }
 
 .button {
 	background-color: transparent;
 	border: transparent;
+	padding: 19px;
 	display: inline;
-	margin: 10px;
+	margin: 6px;
+}
+
+.button:hover {
+	background-color: #F7FAFD;
+    border-radius: 5px;
+	cursor: pointer;
 }
 
 .panel-content .button img.icon {
@@ -38,41 +45,43 @@
 	text-align: left;
 }
 
-
 .button-text {
+	display: inline-block;
+	vertical-align: left;
 	text-align: left;
 	color: #2687c5;
+	position: relative;
+	top: 21px;
+	margin-left: 5px;	
 }
 
-.button-text-inactive {
-	text-align: left;
-	color: #AFAFAF;
+.unavailable-items {
+	color: #A8A8A8;
+    line-height: 20px;
+    font-size: 14px;
 }
-
-.panel-content .button .button-text,
-.panel-content .button .button-text-inactive {
-	display: inline-block;
-	//margin-left: 10px;
-	vertical-align: left;
-}
-
 
 ::ng-deep .mat-tab-labels {
 	display: flex;
 	justify-content: space-around;
 }
 
-h4 {
-	padding: 1%;
-	background-color: #E0EEF7;
-	color: #2687c5;
-}
-
 h2 {
 	margin: 1%;
+	margin-top: 5px;
 }
-
 
 .mat-tab-group.mat-primary .mat-tab-nav-bar .mat-ink-bar {
 	width: 100px;
+}
+
+.container-name {
+
+	margin-left:10px;
+}
+
+.container-imgIcon {
+
+	display: flex;
+	flex-direction: row;
 }

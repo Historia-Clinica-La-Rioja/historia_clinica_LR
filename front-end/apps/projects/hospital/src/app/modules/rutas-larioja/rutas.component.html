@@ -1,7 +1,7 @@
 <app-content>
 
     <section id="title">
-        <h2 class="page-title"> </h2>
+        <h2 class="page-title">  Rutas provinciales</h2>
     </section>
 
     <mat-card id="tab_container" class="mat-typography">
@@ -12,9 +12,7 @@
                         <span>ASISTENCIALES</span>
                     </ng-template>
                     <ng-template matTabContent>
-                        <h2>Rutas asistenciales</h2>
-                        
-                        <section>
+                         <section>
                             <mat-accordion>
                                 <div class="contenedor-title"></div>
                                 <ng-container *ngFor="let element of data; let i = index">
@@ -58,7 +56,6 @@
                                 </ng-container>
                             </mat-accordion>
                         </section>
-
                     </ng-template>
                 </mat-tab>
                 <mat-tab id="tab_generales">
