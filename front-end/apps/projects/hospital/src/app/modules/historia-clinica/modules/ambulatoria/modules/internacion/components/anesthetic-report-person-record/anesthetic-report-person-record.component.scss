@@ -1,3 +1,9 @@
+@import '../../../../../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
 .record-button {
     font-size: 16px;
 }

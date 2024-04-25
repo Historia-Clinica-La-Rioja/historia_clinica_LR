@@ -1,3 +1,9 @@
+@import '../../../../../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
 .internment-options{
     margin-left: 30%;
     margin-top: 16px;
