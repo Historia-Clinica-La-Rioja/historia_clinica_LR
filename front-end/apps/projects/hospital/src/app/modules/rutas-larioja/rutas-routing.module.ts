@@ -3,6 +3,8 @@ import { RutasComponent } from "./rutas.component";
 import { NgModule } from "@angular/core";
 import { RoleGuard } from "@core/guards/RoleGuard";
 import { ERole } from "@api-rest/api-model";
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 const routes: Routes = [
     {
@@ -40,7 +42,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
+    imports: [RouterModule.forChild(routes), MatTooltipModule],
     exports: [RouterModule]
 })
 export class RutasRoutingModule { }
