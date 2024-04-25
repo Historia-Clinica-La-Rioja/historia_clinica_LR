@@ -1,0 +1,74 @@
+<div class="container">
+    <form>
+      <h2 class="title1" id="3">Antecedentes Familiares</h2>
+  
+      <div class="full" _ngcontent-rsa-c295="">
+        <mat-card _ngcontent-kda-c377="" class="mat-card mat-focus-indicator box">
+          <mat-card-header _ngcontent-kda-c377="" class="mat-card-header">
+            <div class="mat-card-header-text">
+              <mat-card-title _ngcontent-kda-c377="" class="mat-card-title">
+                <div _ngcontent-kda-c377="" fxlayout="row" fxlayoutalign="center center" fxlayoutgap="16px" ng-reflect-fx-layout="row" ng-reflect-fx-layout-align="center center" ng-reflect-fx-layout-gap="16px" style="flex-direction: row; box-sizing: border-box; display: flex; place-content: center; align-items: center;">
+                  <mat-icon _ngcontent-kda-c377="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate material-icons-outlined mat-icon-no-color" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" style="margin-right: 16px;" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined">
+                    medical_services
+                  </mat-icon>
+                  <span _ngcontent-kda-c377="">
+                    Cuestionario de antecedentes familiares
+                  </span>
+                </div>
+              </mat-card-title>
+            </div>
+          </mat-card-header>
+          <mat-menu _ngcontent-kda-c621="" class="ng-tns-c107-64 ng-star-inserted"></mat-menu>
+          <div _ngcontent-kda-c621="" fxlayout="row" fxlayoutgap="15px" class="header-filters ng-star-inserted" ng-reflect-fx-layout="row" ng-reflect-fx-layout-gap="15px" style="flex-direction: row; box-sizing: border-box; display: flex;"></div>
+          <mat-divider _ngcontent-kda-c621="" role="separator" class="mat-divider mat-divider-horizontal" aria-orientation="horizontal"></mat-divider>
+          <mat-divider _ngcontent-kda-c621="" role="separator" class="mat-divider mat-divider-horizontal ng-star-inserted" aria-orientation="horizontal"></mat-divider>
+  
+          <div _ngcontent-yer-c638="" _ngcontent-dtl-c638="" _ngcontent-dbc-c621="" fxlayout="column" ng-reflect-fx-layout="column" class="ng-star-inserted" style="flex-direction: column; box-sizing: border-box; display: flex;">
+            <app-content _ngcontent-yer-c613="" width="full" _nghost-yer-c295="" ng-reflect-width="full">
+              <div _ngcontent-yer-c295="" class="full">
+                <div _ngcontent-yer-c612="" fxlayout="column" fxlayoutgap="30px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="30px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                  <div _ngcontent-yvu-c347="" id="title" fxlayoutgap="10px" fxlayoutalign="start center" ng-reflect-fx-layout-gap="10px" ng-reflect-fx-layout-align="start center" style="place-content: center flex-start; align-items: center; flex-direction: row; box-sizing: border-box; display: flex;">
+                    <div _ngcontent-yvu-c347="" fxlayout="row" fxflex="20px" ng-reflect-fx-layout="row" ng-reflect-fx-flex="20px" style="margin-right: 10px; flex-direction: row; box-sizing: border-box; display: flex; flex: 1 1 20px; max-width: 20px; min-width: 20px;">
+                      <mat-icon _ngcontent-yvu-c347="" role="img" fontset="material-icons-outlined" class="mat-icon notranslate color-primary material-icons-outlined mat-icon-no-color ng-star-inserted" aria-hidden="true" ng-reflect-font-set="material-icons-outlined" data-mat-icon-type="font" data-mat-icon-namespace="material-icons-outlined"> 
+                        group
+                      </mat-icon>
+                    </div>
+                    <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                      FAMILIA
+                    </span>
+                    <mat-divider _ngcontent-yvu-c347="" role="separator" inset="" class="mat-divider mat-divider-horizontal mat-divider-inset" ng-reflect-inset="" aria-orientation="horizontal"></mat-divider>
+                  </div>
+                  <div _ngcontent-yer-c612="" id="content" fxlayout="column" fxlayoutgap="50px" ng-reflect-fx-layout="column" ng-reflect-fx-layout-gap="50px" style="flex-direction: column; box-sizing: border-box; display: flex;">
+                    <table>
+                      <tr>
+                        <th>CONVIVE CON</th>
+                        <th>No</th>
+                        <th>En la casa</th>
+                        <th>En el cuarto</th>
+                      </tr>
+                      <tr *ngFor="let pregunta of preguntasFamilia">
+                        <td>{{ pregunta.texto }}</td>
+                        <td><input type="checkbox" [checked]="pregunta.respuesta === 1" (change)="cambiarRespuesta(pregunta, 1)"></td>
+                        <td><input type="checkbox" [checked]="pregunta.respuesta === 2" (change)="cambiarRespuesta(pregunta, 2)"></td>
+                        <td><input type="checkbox" [checked]="pregunta.respuesta === 3" [value]="pregunta.value" (change)="cambiarRespuesta(pregunta, 3)" [class]="getCheckboxClass(pregunta.value)"></td>
+                      </tr>
+                    </table>
+                    <div *ngIf="viveConOtros()">
+                      <mat-form-field class="example-form-field">
+                        <mat-label>¿Quiénes?</mat-label>
+                        <input matInput type="text" [(ngModel)]="otrosFamiliares">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </app-content>
+          </div>
+        </mat-card>
+      </div>
+    </form>
+    <div>
+      <br>
+    </div>
+  </div>
+  
