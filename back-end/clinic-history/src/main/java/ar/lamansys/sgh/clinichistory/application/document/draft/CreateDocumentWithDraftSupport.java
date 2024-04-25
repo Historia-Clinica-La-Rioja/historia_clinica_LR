@@ -15,6 +15,7 @@ public class CreateDocumentWithDraftSupport {
     private final DiscardPreviousDocument discardPreviousDocument;
     private final SetNullIdsDocumentElements setNullIdsDocumentElements;
     private final Function<IDocumentBo, Integer> createNewDocument;
+    private final Function<IDocumentBo, Boolean> setPatientInfo;
 
     @Transactional
     public Integer run(IDocumentBo newDocument) {
@@ -38,6 +39,7 @@ public class CreateDocumentWithDraftSupport {
         Long previousDocumentId = newDocument.getPreviousDocumentId();
         if (previousDocumentId != null) {
             IDocumentBo previousDocument = getLastDraftDocument.apply(newDocument.getPreviousDocumentId());
+            setPatientInfo.apply(previousDocument);
             setInitialDocument(newDocument, previousDocument);
             discardPreviousDocument.run(previousDocument);
         }

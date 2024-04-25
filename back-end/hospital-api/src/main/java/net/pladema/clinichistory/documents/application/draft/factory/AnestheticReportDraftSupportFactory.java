@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.CreateAnestheticReportDocument;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.GetAnestheticReport;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.setpatientfrominternmenteposiode.SetPatientFromInternmentEpisode;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -19,12 +20,14 @@ public class AnestheticReportDraftSupportFactory implements DraftSupportFactory 
     private final GetAnestheticReport getAnestheticReport;
     private final AnestheticStorage anestheticStorage;
     private final CreateAnestheticReportDocument createAnestheticReportDocument;
+    private final SetPatientFromInternmentEpisode setPatientFromInternmentEpisode;
 
     public CreateDocumentWithDraftSupport build() {
         return new CreateDocumentWithDraftSupport(anestheticStorage::getDocumentIdFromLastAnestheticReportDraft,
                 getAnestheticReport::run,
                 discardPreviousDocument,
                 setNullIdsDocumentElements,
-                createAnestheticReportDocument::run);
+                createAnestheticReportDocument::run,
+                setPatientFromInternmentEpisode::run);
     }
 }

@@ -228,4 +228,8 @@ public interface IDocumentBo {
     default void setInitialDocumentId(Long initialDocumentId) {}
 
     default void setPreviousDocumentId(Long lastDocumentId) {}
+
+    default void setPatientInfo(PatientInfoBo patientInfo) {};
+
+    default void setPatientId(Integer patientId) {};
 }
