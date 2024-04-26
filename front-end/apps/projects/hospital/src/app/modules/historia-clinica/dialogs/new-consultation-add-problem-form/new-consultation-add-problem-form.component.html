@@ -67,7 +67,7 @@
             <app-datepicker *ngIf="!this.data.isFromRecetaDigital"
                 title="ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN" id="fecha_fin"
                 [minDate]="data.ambulatoryConsultationProblemsService.getForm().value.fechaInicio" [maxDate]="today"
-                (selectDate)="fechaFinChanged($event)">
+                (selectDate)="fechaFinChanged($event)" enableDelete="true">
             </app-datepicker>
 
 
