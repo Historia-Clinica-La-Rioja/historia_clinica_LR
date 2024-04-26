@@ -24,8 +24,7 @@
 			"errors": {
 				"FECHA_INICIO_POSTERIOR_FECHA_FIN": "La fecha de inicio debe ser menor o igual a la fecha de fin",
 				"FECHA_INICIO_POSTERIOR_HOY": "La fecha de inicio debe ser anterior o igual a la fecha actual",
-				"FECHA_FIN_MIN": "La fecha de fin debe ser posterior o igual a la fecha de inicio",
-				"FECHA_MES_DISTINTOS":"El mes de ambas fechas de búsqueda no coinciden"
+				"FECHA_FIN_MIN": "La fecha de fin debe ser posterior o igual a la fecha de inicio"
 			}
 		}
 	}

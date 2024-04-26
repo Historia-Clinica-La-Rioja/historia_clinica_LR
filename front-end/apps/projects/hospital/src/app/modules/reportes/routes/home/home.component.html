@@ -70,7 +70,7 @@
 							<input formControlName="startDate" id="startDatePicker" matInput
 								[matDatepicker]="startDatePicker"
 								placeholder="{{'reportes.form.START_DATE_PLACEHOLDER' | translate}}" [min]="minDate"
-								[max]="maxStartDate(this.form.controls.endDate.value)" (dateChange)="checkValidDates()">
+								[max]="maxStartDate(this.form.controls.endDate.value)" (dateChange)="checkValidDates(true)">
 							<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #startDatePicker></mat-datepicker>
 							<mat-error *ngIf="this.form.controls.startDate.hasError('required')"
@@ -93,7 +93,7 @@
 						<mat-form-field appearance="outline">
 							<input formControlName="endDate" id="endDatePicker" matInput [matDatepicker]="endDatePicker"
 								placeholder="{{'reportes.form.END_DATE_PLACEHOLDER' | translate}}"
-								(dateChange)="checkValidDates()" [max]="maxEndDate">
+								(dateChange)="checkValidDates(false)" [max]="maxEndDate" [min]="minEndDate">
 							<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
 							<mat-datepicker #endDatePicker></mat-datepicker>
 							<mat-error *ngIf="this.form.controls.endDate.hasError('required')"
@@ -155,11 +155,8 @@
 				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
 			</div>
 			<div id="generate-report" fxLayout="row" fxLayoutAlign="space-between" class="padding-top">
-				<mat-error >
-					<span *ngIf="showErrorMonth">{{'reportes.form.errors.FECHA_MES_DISTINTOS' | translate}}</span>
-				</mat-error>
 				<button class="uppercase" mat-raised-button color="primary" (click)="generateReport()"
-					[disabled]="isLoadingRequestReport || showErrorMonth ">
+					[disabled]="isLoadingRequestReport">
 					<span [translate]="'reportes.form.SUBMIT'"></span>
 				</button>
 			</div>

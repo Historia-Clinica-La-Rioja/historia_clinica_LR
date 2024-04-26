@@ -44,7 +44,6 @@ export class HomeComponent implements OnInit {
 	public submitted = false;
 
 	public hasError = hasError;
-	showErrorMonth = false;
 
 	professionalsTypeahead: TypeaheadOption<ProfessionalRegistrationNumbersDto>[];
 	professionals: ProfessionalRegistrationNumbersDto[] = [];
@@ -63,6 +62,7 @@ export class HomeComponent implements OnInit {
 
 	minDate = MIN_DATE;
 	maxEndDate: Date;
+	minEndDate: Date;
 
 	cubeReportData: UIComponentDto;
 
@@ -238,7 +238,7 @@ export class HomeComponent implements OnInit {
 			.join(' - ')}`;
 	}
 
-	checkValidDates() {
+	checkValidDates(isStartDateChange: boolean) {
 		const fixStartDate = fixDate(this.form.value.startDate);
 		const fixEndDate = fixDate(this.form.value.endDate);
 
@@ -253,8 +253,10 @@ export class HomeComponent implements OnInit {
 				this.form.controls.endDate.setErrors(null);
 				this.checkStartDateIsSameOrBeforeToday();
 			}
-			if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
-				this.showErrorMonth = fixEndDate.getMonth() !== fixStartDate.getMonth()
+			if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING && isStartDateChange ) {
+					this.form.controls.endDate.setValue(null);
+					this.maxEndDate = new Date(fixStartDate.getUTCFullYear(), fixStartDate.getUTCMonth() + 1, 0);
+					this.minEndDate = fixStartDate;
 			}
 		} else if (fixStartDate) {
 			this.checkStartDateIsSameOrBeforeToday();
@@ -347,6 +349,7 @@ export class HomeComponent implements OnInit {
 		this.setProfessional(null);
 		this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(this.professionals);
 		this.maxEndDate = null;
+		this.minEndDate = null;
 	}
 
 	getDateWithPreviousMonth(isStartDate: boolean): Date {
