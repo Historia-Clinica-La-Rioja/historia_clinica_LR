@@ -1,5 +1,6 @@
+import { PrescriptionForm, StatePrescripcionService } from './../../services/state-prescripcion.service';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -10,22 +11,14 @@ import {
 	AppFeature,
 	BMPersonDto,
 	BasicPatientDto,
-	ClinicalSpecialtyDto,
 	DocumentRequestDto,
 	PrescriptionDto,
 } from '@api-rest/api-model.d';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import {hasError, NUMBER_PATTERN, scrollIntoError} from '@core/utils/form.utils';
+import {hasError, scrollIntoError} from '@core/utils/form.utils';
 import { NewPrescriptionItem } from '../../../../dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PrescripcionesService, PrescriptionTypes } from '../../../../services/prescripciones.service';
 import { mapToAPatientDto } from '../../utils/prescripcion-mapper';
-import { PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-
-const POSDATADAS_DEFAULT = 0;
-const POSDATADAS_MIN = 1;
-const POSDATADAS_MAX = 11;
-const MAX_PHONE_PREFIX: number = 10;
-const MAX_PHONE_NUMBER: number = 15;
 
 @Component({
 	selector: 'app-nueva-prescripcion',
@@ -42,8 +35,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 	patientData: BasicPatientDto;
 	person: BMPersonDto;
 
-	prescriptionItems: NewPrescriptionItem[];
 	prescriptionForm: FormGroup<PrescriptionForm>;
+	prescriptionItems: NewPrescriptionItem[];
 	isHabilitarRecetaDigitalEnabled: boolean = false;
 	
 	hasError = hasError;
@@ -52,53 +45,23 @@ export class NuevaPrescripcionComponent implements OnInit {
 	isFinishPrescripcionLoading = false;
 
 	constructor(
-		private readonly formBuilder: UntypedFormBuilder,
 		private readonly snackBarService: SnackBarService,
 		private readonly patientService: PatientService,
 		private prescripcionesService: PrescripcionesService,
 		public dialogRef: MatDialogRef<NuevaPrescripcionComponent>,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
-		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionData) {
+		private statePrescripcionService: StatePrescripcionService,
+		@Inject(MAT_DIALOG_DATA) public prescriptionData: NewPrescriptionData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 				.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
 		}
 
 	ngOnInit(): void {
-		this.formConfiguration();
-
-		this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
+		this.prescriptionForm = this.statePrescripcionService.getForm();
+		this.patientService.getPatientBasicData(Number(this.prescriptionData.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
 		});
-		
-	}
-
-	private formConfiguration() {
-		this.prescriptionForm = this.formBuilder.group({
-			patientMedicalCoverage: [null],
-			withoutRecipe: [false],
-			evolucion: [],
-			clinicalSpecialty: [null, [Validators.required]],
-			prolongedTreatment: [false],
-			posdatadas: [{value: POSDATADAS_DEFAULT, disabled: true}, [Validators.min(POSDATADAS_MIN), Validators.max(POSDATADAS_MAX)]],
-			archived: [false],
-			patientData: this.setPatientDataGroup(),
-		});
-	}
-
-	private setPatientDataGroup(): FormGroup | null {
-		return (this.isHabilitarRecetaDigitalEnabled)
-			? this.formBuilder.group({
-				phonePrefix: [null, [Validators.required, Validators.maxLength(MAX_PHONE_PREFIX), Validators.pattern(NUMBER_PATTERN)]],
-				country: [{value: null, disabled: true}, [Validators.required]],
-				phoneNumber: [null, [Validators.required, Validators.maxLength(MAX_PHONE_NUMBER), Validators.pattern(NUMBER_PATTERN)]],
-				province: [null, Validators.required],
-				locality: [null, Validators.required],
-				city: [null, Validators.required],
-				street: [null, Validators.required],
-				streetNumber: [null, Validators.required]
-			})
-			: null;
 	}
 
 	setPerson(person: BMPersonDto) {
@@ -106,6 +69,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	closeModal(newPrescription?: NewPrescription): void {
+		this.statePrescripcionService.resetForm();
 		this.dialogRef.close(newPrescription);
 	}
 
@@ -166,13 +130,14 @@ export class NuevaPrescripcionComponent implements OnInit {
 		this.savePrescription(newPrescription);
 		if (this.isHabilitarRecetaDigitalEnabled) {
 			const patientDto: APatientDto = mapToAPatientDto(this.patientData, this.person, this.prescriptionForm);
-			this.patientService.editPatient(patientDto, this.data.patientId).subscribe();
+			this.patientService.editPatient(patientDto, this.prescriptionData.patientId).subscribe();
 		}
+		this.statePrescripcionService.resetForm();
 	}
 
 	savePrescription(prescriptionDto: PrescriptionDto) {
 		if (prescriptionDto) {
-			this.prescripcionesService.createPrescription(this.data.prescriptionType, prescriptionDto, this.data.patientId)
+			this.prescripcionesService.createPrescription(this.prescriptionData.prescriptionType, prescriptionDto, this.prescriptionData.patientId)
 			.subscribe(prescriptionRequestResponse => {
 				this.isFinishPrescripcionLoading = false;
 				this.closeModal({prescriptionDto, prescriptionRequestResponse, identificationNumber: this.person?.identificationNumber});
@@ -196,7 +161,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 	}
 
 	isMedication(): boolean {
-		return this.data.prescriptionType === PrescriptionTypes.MEDICATION && ! this.isHabilitarRecetaDigitalEnabled;
+		return this.prescriptionData.prescriptionType === PrescriptionTypes.MEDICATION && ! this.isHabilitarRecetaDigitalEnabled;
 	}
 
 	isDailyMedication(prescriptionItem: NewPrescriptionItem): boolean {
@@ -207,39 +172,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 		control.reset();
 	}
 
-}
-
-export interface PrescriptionForm {
-	patientMedicalCoverage: FormControl<PatientMedicalCoverage>,
-	withoutRecipe: FormControl<boolean>,
-	evolucion: FormControl<[]>,
-	clinicalSpecialty: FormControl<ClinicalSpecialtyDto>,
-	prolongedTreatment: FormControl<boolean>,
-	posdatadas: FormControl<number>,
-	archived: FormControl<boolean>,
-	patientData: FormControl<PatientData>,
-}
-
-export interface Prescription {
-	patientMedicalCoverage: PatientMedicalCoverage,
-	withoutRecipe: boolean,
-	evolucion: [],
-	clinicalSpecialty: ClinicalSpecialtyDto,
-	prolongedTreatment: boolean,
-	posdatadas: number,
-	archived: boolean,
-	patientData: PatientData,
-}
-
-export interface PatientData {
-	phonePrefix: string,
-	country: number,
-	phoneNumber: string,
-	province: number,
-	locality: number,
-	city: number,
-	street: string,
-	streetNumber: string
 }
 
 export class NewPrescriptionData {

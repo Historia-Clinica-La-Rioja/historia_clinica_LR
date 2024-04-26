@@ -3,10 +3,11 @@ import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicationRequestService } from '@api-rest/services/medication-request.service';
 import { SnomedDto } from '@api-rest/api-model';
-import { NewPrescriptionData, PrescriptionForm } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
+import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
 import { AgregarPrescripcionItemComponent, NewPrescriptionItem } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/agregar-prescripcion-item/agregar-prescripcion-item.component';
 import { PharmacosFrequentComponent } from '../../dialogs/pharmacos-frequent/pharmacos-frequent.component';
 import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
+import { PrescriptionForm, StatePrescripcionService } from '../../services/state-prescripcion.service';
 
 @Component({
     selector: 'app-medication-information',
@@ -15,14 +16,14 @@ import { mapToNewPrescriptionItem } from '../../utils/prescripcion-mapper';
 })
 export class MedicationInformationComponent implements OnInit {
 
-    @Input() data: NewPrescriptionData;
-    @Input() prescriptionForm: FormGroup<PrescriptionForm>;
+    @Input() prescriptionData: NewPrescriptionData;
     @Input() isHabilitarRecetaDigitalEnabled: boolean;
     @Input() submitted: boolean;
 
     @Output() showMedicationErrorEmitter = new EventEmitter<boolean>();
 	@Output() prescriptionItemsEmmiter = new EventEmitter<NewPrescriptionItem[]>();
 
+	prescriptionForm: FormGroup<PrescriptionForm>;
     prescriptionItems: NewPrescriptionItem[];
     itemCount = 0;
     showAddMedicationError = false;
@@ -31,10 +32,12 @@ export class MedicationInformationComponent implements OnInit {
     constructor(
         private readonly dialog: MatDialog,
         private readonly medicationRequestService: MedicationRequestService,
+		private statePrescripcionService: StatePrescripcionService,
     ) { }
 
     ngOnInit(): void {
-        this.prescriptionItems = this.data.prescriptionItemList ? this.data.prescriptionItemList : [];
+		this.prescriptionForm = this.statePrescripcionService.getForm();
+        this.prescriptionItems = this.prescriptionData.prescriptionItemList ? this.prescriptionData.prescriptionItemList : [];
 		this.prescriptionItemsEmmiter.emit(this.prescriptionItems);
     }
 
@@ -42,12 +45,12 @@ export class MedicationInformationComponent implements OnInit {
 		const newPrescriptionItemDialog = this.dialog.open(AgregarPrescripcionItemComponent,
 		{
 			data: {
-				patientId: this.data.patientId,
-				titleLabel: this.data.addPrescriptionItemDialogData.titleLabel,
-				searchSnomedLabel: this.data.addPrescriptionItemDialogData.searchSnomedLabel,
-				showDosage: this.data.addPrescriptionItemDialogData.showDosage,
-				showStudyCategory: this.data.addPrescriptionItemDialogData.showStudyCategory,
-				eclTerm: this.data.addPrescriptionItemDialogData.eclTerm,
+				patientId: this.prescriptionData.patientId,
+				titleLabel: this.prescriptionData.addPrescriptionItemDialogData.titleLabel,
+				searchSnomedLabel: this.prescriptionData.addPrescriptionItemDialogData.searchSnomedLabel,
+				showDosage: this.prescriptionData.addPrescriptionItemDialogData.showDosage,
+				showStudyCategory: this.prescriptionData.addPrescriptionItemDialogData.showStudyCategory,
+				eclTerm: this.prescriptionData.addPrescriptionItemDialogData.eclTerm,
 				item,
 			},
 			width: '35%',
@@ -75,7 +78,7 @@ export class MedicationInformationComponent implements OnInit {
 
     openPharmacosFrequestDialog() {
 		this.isAddMedicationLoading = true;
-		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.data.patientId).subscribe((pharmacos: SnomedDto[]) => {
+		this.medicationRequestService.mostFrequentPharmacosPreinscription(this.prescriptionData.patientId).subscribe((pharmacos: SnomedDto[]) => {
 			this.isAddMedicationLoading = false;
 			this.dialog.open(PharmacosFrequentComponent, {
 				width: '50%',

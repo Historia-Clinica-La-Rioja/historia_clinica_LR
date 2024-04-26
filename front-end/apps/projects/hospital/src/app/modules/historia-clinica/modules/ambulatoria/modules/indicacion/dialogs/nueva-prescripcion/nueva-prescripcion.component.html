@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="space-between start">
-    <h1 mat-dialog-title>{{ data.titleLabel | translate}}</h1>
+    <h1 mat-dialog-title>{{ prescriptionData.titleLabel | translate}}</h1>
     <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal()">
         <mat-icon>close</mat-icon>
     </button>
@@ -10,19 +10,19 @@
         <form [formGroup]="prescriptionForm" class="form" id="form">
             <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_LABEL' | translate}}"
                 [editable]="editableStepModality">
-                <app-patient-information [data]="data" [prescriptionForm]="prescriptionForm" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
+                <app-patient-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
                     (personEmmiter)="setPerson($event)" (clearControls)="clear($event)">
                 </app-patient-information>
             </mat-step>
 
             <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_LABEL' | translate}}"
                 [editable]="editableStepModality">
-                <app-prescription-information [data]="data" [prescriptionForm]="prescriptionForm" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"></app-prescription-information>
+                <app-prescription-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"></app-prescription-information>
             </mat-step>
         </form>
 
         <mat-step label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
-            <app-medication-information [data]="data" [prescriptionForm]="prescriptionForm" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
+            <app-medication-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
              [submitted]="submitted" (showMedicationErrorEmitter)="updateMedicationErrorState($event)" (prescriptionItemsEmmiter)="updatePrescriptionItemState($event)">
             </app-medication-information>
         </mat-step>
@@ -40,8 +40,4 @@
      [text]="isHabilitarRecetaDigitalEnabled ? 'buttons.FINISH' : 'buttons.CONFIRM' | translate" [buttonType]="'mat-flat-button'" fxFlexFill.xs
      [isLoading]="isFinishPrescripcionLoading">
     </app-button>
-</mat-dialog-actions>
-
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
-    
 </mat-dialog-actions>

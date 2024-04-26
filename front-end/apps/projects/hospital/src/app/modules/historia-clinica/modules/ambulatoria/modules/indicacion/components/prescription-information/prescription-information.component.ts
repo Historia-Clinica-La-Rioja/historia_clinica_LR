@@ -4,7 +4,8 @@ import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import {hasError} from '@core/utils/form.utils';
 import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
-import { NewPrescriptionData, PrescriptionForm } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
+import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
+import { PrescriptionForm, StatePrescripcionService } from '../../services/state-prescripcion.service';
 
 const POSDATADAS_DEFAULT = 0;
 
@@ -15,10 +16,10 @@ const POSDATADAS_DEFAULT = 0;
 })
 export class PrescriptionInformationComponent implements OnInit {
 
-    @Input() data: NewPrescriptionData;
-    @Input() prescriptionForm: FormGroup<PrescriptionForm>;
+    @Input() prescriptionData: NewPrescriptionData;
     @Input() isHabilitarRecetaDigitalEnabled: boolean;
 
+	prescriptionForm: FormGroup<PrescriptionForm>;
     specialties: ClinicalSpecialtyDto[];
     hasError = hasError;
     POSDATADAS_MIN = 1;
@@ -26,9 +27,11 @@ export class PrescriptionInformationComponent implements OnInit {
 
     constructor(
         private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
+		private statePrescripcionService: StatePrescripcionService,
     ) { }
 
     ngOnInit(): void {
+		this.prescriptionForm = this.statePrescripcionService.getForm();
         this.setProfessionalSpecialties();
     }
 
@@ -45,6 +48,7 @@ export class PrescriptionInformationComponent implements OnInit {
 		if (this.specialties.length === 1)
 			clinicalSpecialty.disable();
 		this.prescriptionForm.controls['clinicalSpecialty'].markAsTouched();
+		this.statePrescripcionService.updateForm(this.prescriptionForm);
 	}
 
     setProlongedTreatment(isOn: boolean) {
@@ -58,6 +62,7 @@ export class PrescriptionInformationComponent implements OnInit {
 			this.prescriptionForm.controls.posdatadas.setValue(0);
 			this.disablePosdatadas(posdatadas)
 		}
+		this.statePrescripcionService.updateForm(this.prescriptionForm);
 	}
 
     disablePosdatadas(posdatadas: AbstractControl) {
@@ -66,7 +71,7 @@ export class PrescriptionInformationComponent implements OnInit {
 	}
 
     isMedication(): boolean {
-        return this.data.prescriptionType === PrescriptionTypes.MEDICATION && ! this.isHabilitarRecetaDigitalEnabled;
+        return this.prescriptionData.prescriptionType === PrescriptionTypes.MEDICATION && ! this.isHabilitarRecetaDigitalEnabled;
     }
 
 }

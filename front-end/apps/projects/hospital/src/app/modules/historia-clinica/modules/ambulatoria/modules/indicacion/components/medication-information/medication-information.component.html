@@ -52,14 +52,14 @@
                 </div>
             </section>
             <span class="gray" *ngIf="prescriptionItem.observations">{{prescriptionItem.observations}}</span>
-            <span class="mat-body-1" *ngIf="data.addPrescriptionItemDialogData.showStudyCategory">{{prescriptionItem.studyCategory.description}}</span>
+            <span class="mat-body-1" *ngIf="prescriptionData.addPrescriptionItemDialogData.showStudyCategory">{{prescriptionItem.studyCategory.description}}</span>
         </div>
         <mat-divider></mat-divider>
     </div>
 
     <mat-error class="mb-1" *ngIf="this.showAddMedicationError" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.REQUIRED_MEDICATION'"></mat-error>
     
-    <app-button id="download_study" [color]="'primary'" [isLoading]="isAddMedicationLoading" [text]="data.addLabel" [disabled]="submitted"
+    <app-button id="download_study" [color]="'primary'" [isLoading]="isAddMedicationLoading" [text]="prescriptionData.addLabel" [disabled]="submitted"
         [buttonType]="'mat-stroked-button'" (clicked)="openPharmacosFrequestDialog()" fxFlexFill.xs>
     </app-button>
 </div>

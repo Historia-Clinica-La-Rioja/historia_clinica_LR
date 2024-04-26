@@ -11,9 +11,10 @@ import { MapperService } from '@core/services/mapper.service';
 import {hasError} from '@core/utils/form.utils';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { NewPrescriptionData, PrescriptionForm } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
+import { NewPrescriptionData } from '../../dialogs/nueva-prescripcion/nueva-prescripcion.component';
 import { PatientSummary } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
 import { Observable, map } from 'rxjs';
+import { PrescriptionForm, StatePrescripcionService } from '../../services/state-prescripcion.service';
 
 const ARGENTINA_ID: number = 14;
 
@@ -25,13 +26,13 @@ const ARGENTINA_ID: number = 14;
 
 export class PatientInformationComponent implements OnInit {
 
-    @Input() data: NewPrescriptionData;
-    @Input() prescriptionForm: FormGroup<PrescriptionForm>;
+    @Input() prescriptionData: NewPrescriptionData;
     @Input() isHabilitarRecetaDigitalEnabled: boolean;
 
 	@Output() personEmmiter = new EventEmitter<BMPersonDto>();
 	@Output() clearControls = new EventEmitter<AbstractControl>();
 
+	prescriptionForm: FormGroup<PrescriptionForm>;
     patientData: BasicPatientDto;
     patientSummary: PatientSummary;
     person: BMPersonDto;
@@ -55,15 +56,17 @@ export class PatientInformationComponent implements OnInit {
         private readonly dialog: MatDialog,
         private readonly mapperService: MapperService,
         private readonly snackBarService: SnackBarService,
+		private statePrescripcionService: StatePrescripcionService,
     ) { }
 
     ngOnInit(): void {
+		this.prescriptionForm = this.statePrescripcionService.getForm();
         this.setMedicalCoverages();
-        this.patientService.getPatientBasicData(Number(this.data.patientId)).subscribe((basicData: BasicPatientDto) => {
+        this.patientService.getPatientBasicData(Number(this.prescriptionData.patientId)).subscribe((basicData: BasicPatientDto) => {
 			this.patientData = basicData;
 			this.patientSummary = {
 				fullName: this.patientNameService.completeName(this.patientData.person.firstName, this.patientData.person.nameSelfDetermination, this.patientData.person.lastName, this.patientData.person.middleNames, this.patientData.person.otherLastNames),
-				id: this.data.patientId,
+				id: this.prescriptionData.patientId,
 				identification: {
 					number: Number(this.patientData.person.identificationNumber),
 					type: this.patientData.person.identificationType
@@ -97,7 +100,7 @@ export class PatientInformationComponent implements OnInit {
 					const patientCoverages: PatientMedicalCoverageDto[] =
 						values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
 
-					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.data.patientId), patientCoverages).subscribe(
+					this.patientMedicalCoverageService.addPatientMedicalCoverages(Number(this.prescriptionData.patientId), patientCoverages).subscribe(
 						_ => {
 							this.setMedicalCoverages();
 							this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_UPDATE_COVERAGE_SUCCESS');
@@ -125,11 +128,12 @@ export class PatientInformationComponent implements OnInit {
 			this.prescriptionForm.get('patientData.locality').setValue(null);
 			this.prescriptionForm.get('patientData.city').setValue(null);
 			this.cities$ = null;
+			this.statePrescripcionService.updateForm(this.prescriptionForm);
 		}
 	}
 
     private setMedicalCoverages(): void {
-		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.data.patientId))
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(Number(this.prescriptionData.patientId))
 			.pipe(
 				map(
 					patientMedicalCoveragesDto =>
@@ -169,10 +173,11 @@ export class PatientInformationComponent implements OnInit {
 		this.prescriptionForm.get('patientData.streetNumber').setValue(person.number);
 		this.prescriptionForm.get('patientData.phonePrefix').setValue(person.phonePrefix);
 		this.prescriptionForm.get('patientData.phoneNumber').setValue(person.phoneNumber);
+		this.statePrescripcionService.updateForm(this.prescriptionForm);
 	}
 
 	private getCompletePerson(): Observable<BMPersonDto> {
-		return this.personService.getCompletePerson<BMPersonDto>(this.data.personId);
+		return this.personService.getCompletePerson<BMPersonDto>(this.prescriptionData.personId);
 	}
 
 }
