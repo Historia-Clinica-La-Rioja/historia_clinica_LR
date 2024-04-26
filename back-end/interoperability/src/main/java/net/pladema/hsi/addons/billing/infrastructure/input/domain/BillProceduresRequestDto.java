@@ -16,11 +16,13 @@ public class BillProceduresRequestDto {
 	private final LocalDateTime date;
 	private Set<BillProceduresRequestItemDto> procedures;
 	private Optional<Integer> encounterId;
-	public BillProceduresRequestDto(String medicalCoverageCuit, LocalDateTime date, Optional<Integer> encounterId) {
+	private String sisaCode;
+	public BillProceduresRequestDto(String medicalCoverageCuit, LocalDateTime date, Optional<Integer> encounterId, String sisaCode) {
 		this.medicalCoverageCuit = medicalCoverageCuit;
 		this.date = date;
 		this.procedures = new HashSet<>();
 		this.encounterId = encounterId;
+		this.sisaCode = sisaCode;
 	}
 
 	public void addProcedure(String sctid, String pt) {
@@ -28,7 +30,7 @@ public class BillProceduresRequestDto {
 	}
 
     public BillProceduresRequestBo toBo() {
-    	return new BillProceduresRequestBo(this.medicalCoverageCuit, this.date, proceduresToBo(), this.encounterId);
+    	return new BillProceduresRequestBo(this.medicalCoverageCuit, this.date, proceduresToBo(), this.encounterId, this.sisaCode);
     }
 
 	private List<BillProceduresRequestItemBo> proceduresToBo() {

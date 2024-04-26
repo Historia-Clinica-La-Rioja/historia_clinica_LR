@@ -262,7 +262,8 @@ public class BillProceduresResponseBoComputeMissingProceduresTest {
 				medicalCoverageCuit,
 				LocalDateTime.now(),
 				procedures,
-				Optional.empty()
+				Optional.empty(),
+				"sisaCode"
 		);
 		return request;
 	}

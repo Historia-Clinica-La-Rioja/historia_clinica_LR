@@ -16,6 +16,7 @@ public class BillProceduresRequestDto {
 	private String medicalCoverageCuit;
 	@JsonFormat(pattern = JacksonDateFormatConfig.DATE_TIME_FORMAT)
 	private LocalDateTime date;
+	private String sisaCode;
 
 	@AllArgsConstructor
 	@Getter

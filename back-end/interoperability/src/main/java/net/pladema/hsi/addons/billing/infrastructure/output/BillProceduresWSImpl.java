@@ -140,7 +140,8 @@ public class BillProceduresWSImpl implements BillProceduresPort {
 				.map(p -> new BillProceduresRequestDto.BillProceduresRequestItemDto(p.getSctid(), p.getPt()))
 				.collect(Collectors.toList()),
 			request.getMedicalCoverageCuit(),
-			request.getDate()
+			request.getDate(),
+			request.getSisaCode()
 		);
 	}
 }

@@ -12,4 +12,5 @@ public class BillProceduresRequestBo {
 	LocalDateTime date;
 	List<BillProceduresRequestItemBo> procedures;
 	Optional<Integer> encounterId;
+	String sisaCode;
 }

@@ -94,7 +94,8 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 							outpatientconsultationData.getMedicalCoverageCuit(),
 							outpatientconsultationData.getConsultationDate().atStartOfDay(),
 							documentService.getProcedureStateFromDocument(documentId),
-							encounterId
+							encounterId,
+							outpatientconsultationData.getSisaCode()
 						);
 						result.setShowProcedures(billedProcedures.isEnabled());
 						if (billedProcedures.isEnabled()) {
@@ -159,13 +160,14 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 	}
 
 	private BillProceduresResponseDto getBilledProcedures(
-		String medicalCoverageCuit,
-		LocalDateTime date,
-		List<ProcedureBo> procedures,
-		Optional<Integer> encounterId)
+			String medicalCoverageCuit,
+			LocalDateTime date,
+			List<ProcedureBo> procedures,
+			Optional<Integer> encounterId,
+			String sisaCode)
 	{
 		try {
-			BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date, encounterId);
+			BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date, encounterId, sisaCode);
 			procedures.stream().forEach(p -> request.addProcedure(p.getSnomed().getSctid(), p.getSnomed().getPt()));
 			return billProcedureExternalService.getBilledProcedures(request);
 		} catch (BillProceduresExternalServiceException e) {
