@@ -10,7 +10,7 @@
         <app-image-order-coloredIconText-cases *ngIf="!detailOrder.hasOrder" id="colored-type-order" class="hide-overflow" [descriptionCases]="currentTypeOrder">
         </app-image-order-coloredIconText-cases>
     </div>
-    <div  fxLayout="column" fxLayoutGap="12px" id="order-info-studies">
+    <div *ngIf="this.detailOrder.idServiceRequest && this.detailOrder.studiesNames.length > 0" fxLayout="column" fxLayoutGap="12px" id="order-info-studies">
         <app-identifier-cases [position]="position" [showLegend]="false" [description]="detailOrder.studiesNames| titlecase"
             [identifierCase]="identifierCases.PRACTICE" id="studies"></app-identifier-cases>
     </div>
