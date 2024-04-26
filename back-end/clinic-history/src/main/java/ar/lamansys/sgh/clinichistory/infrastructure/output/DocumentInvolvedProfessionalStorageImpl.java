@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
@@ -19,6 +20,16 @@ public class DocumentInvolvedProfessionalStorageImpl implements DocumentInvolved
 	@Override
 	public List<Integer> fetchSignerInvolvedProfessionalIdsByDocumentId(Long documentId) {
 		return documentInvolvedProfessionalRepository.getDocumentInvolvedProfessionalIdsByDocumentAndSignatureStatus(documentId, EElectronicSignatureStatus.SIGNED.getId());
+	}
+
+	@Override
+	public List<Integer> getDocumentInvolvedProfessionalPersonIdsByDocumentIdAndStatusId(Long documentId, Short id) {
+		return documentInvolvedProfessionalRepository.getDocumentInvolvedProfessionalPersonIdsByDocumentIdAndStatusId(documentId, id);
+	}
+
+	@Override
+	public Integer getDocumentInvolvedProfessionalAmountThatDidNotSignByDocumentId(Long documentId, Short pendingStatusId) {
+		return documentInvolvedProfessionalRepository.getDocumentInvolvedProfessionalAmountThatDidNotSignByDocumentId(documentId, pendingStatusId).size();
 	}
 
 }

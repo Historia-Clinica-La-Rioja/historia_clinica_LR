@@ -53,7 +53,7 @@ public interface DocumentInvolvedProfessionalRepository extends JpaRepository<Do
 	@Query("SELECT 1 " +
 			"FROM DocumentInvolvedProfessional dip " +
 			"WHERE dip.documentId = :documentId " +
-			"AND dip.signatureStatusId != :signedStatusId")
-	List<Integer> getDocumentInvolvedProfessionalAmountThatDidNotSignByDocumentId(@Param("documentId") Long documentId, @Param("signedStatusId") Short signStatusId);
+			"AND dip.signatureStatusId = :pendingStatusId")
+	List<Integer> getDocumentInvolvedProfessionalAmountThatDidNotSignByDocumentId(@Param("documentId") Long documentId, @Param("pendingStatusId") Short pendingStatusId);
 
 }

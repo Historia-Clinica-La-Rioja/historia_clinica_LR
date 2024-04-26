@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.fetchSummaryClinicHistory;
 
+import ar.lamansys.sgh.clinichistory.application.fetchAllDocumentInfo.port.DocumentInvolvedProfessionalStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.HCEOutpatientConsultationSummaryStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.HCEReferenceCounterReferenceStorage;
 import ar.lamansys.sgh.clinichistory.application.ports.NursingConsultationSummaryStorage;
@@ -19,7 +20,6 @@ import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceCounterReferenc
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ReferenceSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentInvolvedProfessionalRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedLoggedUserPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
@@ -57,7 +57,7 @@ public class FetchSummaryClinicHistory {
 
 	private final SharedLoggedUserPort sharedLoggedUserPort;
 
-	private final DocumentInvolvedProfessionalRepository documentInvolvedProfessionalRepository;
+	private final DocumentInvolvedProfessionalStorage documentInvolvedProfessionalStorage;
 
 	private final SharedPersonPort sharedPersonPort;
 
@@ -112,9 +112,9 @@ public class FetchSummaryClinicHistory {
 
 	private ElectronicJointSignatureProfessionalsBo fetchElectronicJointSignatureProfessionals(Long documentId) {
 		ElectronicJointSignatureProfessionalsBo result = new ElectronicJointSignatureProfessionalsBo();
-		List<Integer> professionalsThatSignedPersonIds = documentInvolvedProfessionalRepository.getDocumentInvolvedProfessionalPersonIdsByDocumentIdAndStatusId(documentId, EElectronicSignatureStatus.SIGNED.getId());
+		List<Integer> professionalsThatSignedPersonIds = documentInvolvedProfessionalStorage.getDocumentInvolvedProfessionalPersonIdsByDocumentIdAndStatusId(documentId, EElectronicSignatureStatus.SIGNED.getId());
 		result.setProfessionalsThatSignedNames(sharedPersonPort.getCompletePersonsNameByIds(professionalsThatSignedPersonIds));
-		result.setProfessionalsThatDidNotSignAmount(documentInvolvedProfessionalRepository.getDocumentInvolvedProfessionalAmountThatDidNotSignByDocumentId(documentId, EElectronicSignatureStatus.SIGNED.getId()).size());
+		result.setProfessionalsThatDidNotSignAmount(documentInvolvedProfessionalStorage.getDocumentInvolvedProfessionalAmountThatDidNotSignByDocumentId(documentId, EElectronicSignatureStatus.PENDING.getId()));
 		return result;
 	}
 
