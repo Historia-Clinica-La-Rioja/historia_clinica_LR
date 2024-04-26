@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -95,6 +96,21 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 		log.debug("Input parameters -> documentId {}",documentId);
 		return documentFileStorage.findById(documentId).map(DocumentFileBo::getDigitalSignatureHash)
 				.orElseThrow(()-> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
+	}
+
+	@Override
+	public Optional<Long> getInitialDocumentId(Long documentId) {
+		log.debug("Input parameters -> documentId {}",documentId);
+		return documentService.findById(documentId).map(Document::getInitialDocumentId);
+	}
+
+	@Override
+	public void updateInitialDocumentId(Long documentId, Long initialDocumentId) {
+		log.debug("Input parameters -> documentId {}, initialDocumentId {}", documentId, initialDocumentId);
+		documentService.findById(documentId).ifPresent(document -> {
+			document.setInitialDocumentId(initialDocumentId);
+			documentService.save(document);
+		});
 	}
 
 	private DigitalSignatureCallbackBo mapToDigitalSignatureBo(DigitalSignatureCallbackRequestDto dto){

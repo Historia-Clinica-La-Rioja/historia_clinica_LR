@@ -11,4 +11,6 @@ public interface EmergencyCareEvolutionNoteDocumentService {
 
 	Optional<EmergencyCareEvolutionNoteDocumentBo> getByDocumentId(Long documentId);
 
+	void deleteByDocumentId(Long documentId);
+
 }

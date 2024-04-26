@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Snomed
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDocumentDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDto;
+import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocumentBo;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 
@@ -40,4 +41,5 @@ public interface EmergencyCareEvolutionNoteMapper {
 
 	@Named("toEmergencyCareEvolutionNoteDto")
 	EmergencyCareEvolutionNoteDto toEmergencyCareEvolutionNoteDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocumentBo);
+
 }

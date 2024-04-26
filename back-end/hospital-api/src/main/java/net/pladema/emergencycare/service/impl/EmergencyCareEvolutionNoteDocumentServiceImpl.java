@@ -18,7 +18,10 @@ import net.pladema.staff.service.HealthcareProfessionalService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +72,13 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		LOG.debug("Output -> result {}", result);
 		return result;
 	}
+
+	@Override
+	public void deleteByDocumentId(Long documentId){
+		LOG.debug("Input parameters -> documentId {}", documentId);
+		emergencyCareEvolutionNoteRepository.deleteByDocumentId(documentId);
+	}
+
 
 	private EmergencyCareEvolutionNoteBo toEmergencyCareEvolutionNoteBo(EmergencyCareEvolutionNote evolutionNote) {
 		EmergencyCareEvolutionNoteBo result = new EmergencyCareEvolutionNoteBo();

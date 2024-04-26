@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEvolutionNote;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,8 @@ public interface EmergencyCareEvolutionNoteRepository extends SGXAuditableEntity
 			"FROM EmergencyCareEvolutionNote ecen " +
 			"JOIN Document d ON (d.id = ecen.documentId) " +
 			"WHERE d.typeId = " + DocumentType.EMERGENCY_CARE_EVOLUTION_NOTE + " " +
-			"AND d.sourceId = :episodeId")
+			"AND d.sourceId = :episodeId " +
+			"AND d.deleteable.deleted IS FALSE")
 	List<EmergencyCareEvolutionNote> findAllByEpisodeId(@Param("episodeId") Integer episodeId);
 
 	@Transactional(readOnly = true)
@@ -28,5 +30,14 @@ public interface EmergencyCareEvolutionNoteRepository extends SGXAuditableEntity
 			"FROM EmergencyCareEvolutionNote ecen " +
 			"WHERE ecen.documentId = :documentId")
 	Optional<EmergencyCareEvolutionNote> findByDocumentId(@Param("documentId") Long documentId);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE EmergencyCareEvolutionNote ecen " +
+			"SET ecen.deleteable.deleted = true, " +
+			"ecen.deleteable.deletedOn = CURRENT_TIMESTAMP, " +
+			"ecen.deleteable.deletedBy = ?#{ principal.userId } " +
+			"WHERE ecen.documentId = :documentId")
+	void deleteByDocumentId(Long documentId);
 
 }
