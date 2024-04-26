@@ -718,3 +718,33 @@ databaseChangeLog:
                 INSERT INTO condition_clinical_status VALUES ('260385009', 'Descartado (borrador)');
                 INSERT INTO observation_status VALUES ('260385009', 'Descartado (borrador)');
 
+    - changeSet:
+        id: createTable-document_referable_concept
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: document_referable_concept
+              columns:
+                - column:
+                    constraints:
+                      references: document(id)
+                      foreignKeyName: FK_document_document_involved_professional
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: referable_concept_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: is_referred
+                    type: boolean
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, referable_concept_id
+              constraintName: PK_document_referable_concept
+              tableName: document_referable_concept
+              validate: true
