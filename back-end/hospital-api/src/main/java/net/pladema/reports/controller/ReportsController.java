@@ -2,6 +2,7 @@ package net.pladema.reports.controller;
 
 import static ar.lamansys.sgx.shared.files.StreamsUtils.streamException;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -13,16 +14,17 @@ import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportS
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
 import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 
 import net.pladema.reports.application.fetchnominalconsultationdetail.FetchNominalConsultationDetail;
 import net.pladema.reports.application.fetchnominalappointmentdetail.FetchNominalAppointmentDetail;
 
-import net.pladema.reports.domain.NominalAppointmentDetailFiterlBo;
+import net.pladema.reports.domain.ReportSearchFilterBo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +51,6 @@ import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
 import net.pladema.reports.repository.QueryFactory;
 import net.pladema.reports.service.AnnexReportService;
-import net.pladema.reports.service.NominalDetailExcelService;
 import net.pladema.reports.service.FetchConsultations;
 import net.pladema.reports.service.FormReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
@@ -57,11 +58,10 @@ import net.pladema.reports.service.domain.ConsultationSummaryReport;
 import net.pladema.reports.service.domain.ConsultationsBo;
 import net.pladema.reports.service.domain.FormVBo;
 
-@RestController
+@Slf4j
 @RequestMapping("reports")
+@RestController
 public class ReportsController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ReportsController.class);
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -125,8 +125,8 @@ public class ReportsController {
 			@RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
 			@RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants
     ) throws Exception {
-        LOG.debug("Se creará el excel {}", institutionId);
-        LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, includeHierarchicalUnitDescendants {}" ,
+        log.debug("Se creará el excel {}", institutionId);
+		log.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, includeHierarchicalUnitDescendants {}" ,
 				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
 
         String title = "DNCE-Hoja 2";
@@ -140,7 +140,7 @@ public class ReportsController {
 
         // obtengo el workbook en base a la query pasada como parametro
         IWorkbook wb = fetchNominalConsultationDetail.run(title, headers, this.queryFactory.query(institutionId, startDate, endDate,
-				clinicalSpecialtyId, doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants));
+				clinicalSpecialtyId, doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants), institutionId);
 
         // armo la respuesta con el workbook obtenido
         String filename = title + "." + wb.getExtension();
@@ -164,8 +164,8 @@ public class ReportsController {
 			@RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
 			@RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants
 		) {
-        LOG.debug("Outpatient summary Report");
-        LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, clinicalSpecialtyId {}, " +
+		log.debug("Outpatient summary Report");
+		log.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, clinicalSpecialtyId {}, " +
 				"doctorId {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, includeHierarchicalUnitDescendants {}",
 				institutionId, fromDate, toDate, clinicalSpecialtyId, doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
 
@@ -215,12 +215,12 @@ public class ReportsController {
             @PathVariable Integer institutionId,
             @RequestParam(name = "documentId") Long documentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameter -> documentId {}", documentId);
+		log.debug("Input parameter -> documentId {}", documentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
         AnnexIIBo reportDataBo = annexReportService.getConsultationData(documentId);
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
         Map<String, Object> context = annexReportService.createConsultationContext(reportDataDto);
-        LOG.debug(OUTPUT, reportDataDto);
+		log.debug(OUTPUT, reportDataDto);
 
 		setFlavor(context);
 
@@ -244,13 +244,13 @@ public class ReportsController {
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
+		log.debug("Input parameter -> appointmentId {}", appointmentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
         FormVBo reportDataBo = formReportService.getAppointmentData(appointmentId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
         Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
 
-        LOG.debug(OUTPUT, reportDataDto);
+		log.debug(OUTPUT, reportDataDto);
 
 		return StoredFileResponse.sendFile(
 				pdfService.generate("form_report", context),
@@ -266,7 +266,7 @@ public class ReportsController {
             @PathVariable Integer institutionId,
             @RequestParam(name = "documentId") Long documentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameter -> documentId {}", documentId);
+		log.debug("Input parameter -> documentId {}", documentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
         FormVBo reportDataBo = formReportService.getConsultationData(documentId);
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
@@ -286,7 +286,7 @@ public class ReportsController {
     public ResponseEntity<List<ConsultationsDto>> getConsultations(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId){
-        LOG.debug("Input parameter -> patientId {}", patientId);
+		log.debug("Input parameter -> patientId {}", patientId);
         List<ConsultationsBo> consultations = fetchConsultations.run(patientId);
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)){
 			consultations.stream().map(consultationsBo -> {
@@ -302,7 +302,7 @@ public class ReportsController {
 	@GetMapping("/institution/{institutionId}/diabetes")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ResponseEntity<UIComponentDto> getDiabetesReport(@PathVariable(name = "institutionId") Integer institutionId){
- 		LOG.debug("Input parameter -> institutionId {}", institutionId);
+		log.debug("Input parameter -> institutionId {}", institutionId);
 		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/diabetesReport.json",
 				new TypeReference<>() {},
 				null
@@ -313,7 +313,7 @@ public class ReportsController {
 	@GetMapping("/institution/{institutionId}/hypertension")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ResponseEntity<UIComponentDto> getHypertensionReport(@PathVariable(name = "institutionId") Integer institutionId){
-		LOG.debug("Input parameter -> institutionId {}", institutionId);
+		log.debug("Input parameter -> institutionId {}", institutionId);
 		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/hypertensionReport.json",
 				new TypeReference<>() {},
 				null
@@ -324,7 +324,7 @@ public class ReportsController {
 	@GetMapping("/institution/{institutionId}/epidemiological_week")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PERSONAL_DE_ESTADISTICA, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ResponseEntity<UIComponentDto> getEpidemiologicalWeekReport(@PathVariable(name = "institutionId") Integer institutionId){
-		LOG.debug("Input parameter -> institutionId {}", institutionId);
+		log.debug("Input parameter -> institutionId {}", institutionId);
 		UIComponentDto result = JsonResourceUtils.readJson("extension/reports/epidemiologicalWeekReport.json",
 				new TypeReference<>() {},
 				null
@@ -343,7 +343,7 @@ public class ReportsController {
 																	  @RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
 																	  @RequestParam(value="appointmentStateId", required = false) Short appointmentStateId,
 																	  @RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants) throws Exception {
-		LOG.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, appointmentStateId {}, includeHierarchicalUnitDescendants {}" ,
+		log.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, appointmentStateId {}, includeHierarchicalUnitDescendants {}" ,
 				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants);
 
 		String title = "DNT";
@@ -351,7 +351,7 @@ public class ReportsController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = fetchNominalAppointmentDetail.run(title, new NominalAppointmentDetailFiterlBo(institutionId, startDate, endDate, clinicalSpecialtyId,
+		IWorkbook wb = fetchNominalAppointmentDetail.run(title, new ReportSearchFilterBo(startDate, endDate, institutionId, clinicalSpecialtyId,
 				doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants));
 
 		String filename = title + "." + wb.getExtension();

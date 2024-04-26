@@ -18,8 +18,8 @@ public class FetchNominalConsultationDetail {
 
 	private final NominalConsultationDetailStorage nominalConsultationDetailStorage;
 
-	public IWorkbook run(String title, String[] headers, List<ConsultationDetail> consultationDetails){
+	public IWorkbook run(String title, String[] headers, List<ConsultationDetail> consultationDetails, Integer institutionId){
 		log.debug("Build Nominal Consultation Detail Report - Hoja 2");
-		return nominalConsultationDetailStorage.buildNominalExternalConsultationDetailReport(title, headers, consultationDetails);
+		return nominalConsultationDetailStorage.buildNominalExternalConsultationDetailReport(title, headers, consultationDetails, institutionId);
 	}
 }

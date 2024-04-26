@@ -2,20 +2,25 @@ package net.pladema.reports.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
 
-@ToString
+
 @Getter
+@Setter
 @AllArgsConstructor
-public class NominalAppointmentDetailFiterlBo {
+@NoArgsConstructor
+@ToString
+public class ReportSearchFilterBo {
+
+	private LocalDate fromDate;
+
+	private LocalDate toDate;
 
 	private Integer institutionId;
-
-	private LocalDate startDate;
-
-	private LocalDate endDate;
 
 	private Integer clinicalSpecialtyId;
 

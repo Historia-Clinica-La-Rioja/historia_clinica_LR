@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.reports.application.ports.NominalAppointmentDetailStorage;
-import net.pladema.reports.domain.NominalAppointmentDetailFiterlBo;
+
+import net.pladema.reports.domain.ReportSearchFilterBo;
 
 import org.springframework.stereotype.Service;
 
@@ -16,10 +17,9 @@ public class FetchNominalAppointmentDetail {
 
 	private final NominalAppointmentDetailStorage nominalAppointmentDetailStorage;
 
-	public IWorkbook run(String title, NominalAppointmentDetailFiterlBo filter){
+	public IWorkbook run(String title, ReportSearchFilterBo filter){
 		log.debug("Fetch Nominal Appointments Detail Report by filter {} ", filter);
-		var result = nominalAppointmentDetailStorage.buildNominalAppointmentsDetailExcelReport(title, filter);
-		return result;
+		return nominalAppointmentDetailStorage.buildNominalAppointmentsDetailExcelReport(title, filter);
 	}
 
 }
