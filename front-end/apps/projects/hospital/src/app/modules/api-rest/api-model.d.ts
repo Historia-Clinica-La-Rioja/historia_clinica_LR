@@ -4557,6 +4557,7 @@ export interface TranscribedServiceRequestDto {
     healthcareProfessionalName: string;
     institutionName: string;
     observations?: string;
+    oldTranscribedOrderId?: number;
 }
 
 export interface TranscribedServiceRequestSummaryDto {

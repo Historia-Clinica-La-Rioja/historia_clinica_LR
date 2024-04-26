@@ -32,4 +32,7 @@ public class TranscribedServiceRequestDto {
 
     @Nullable
     private String observations;
+
+    @Nullable
+    private Integer oldTranscribedOrderId;
 }

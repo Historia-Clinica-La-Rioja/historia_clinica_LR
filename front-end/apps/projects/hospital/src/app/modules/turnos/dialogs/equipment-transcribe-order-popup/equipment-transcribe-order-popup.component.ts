@@ -87,14 +87,13 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         let orderProfessionalName = this.transcribeOrderForm.controls.professional?.value;
         let orderInstitutionName = this.transcribeOrderForm.controls.institution?.value;
 
-        this.checkForOrderDeletion();
-
         let transcribedData: TranscribedServiceRequestDto = {
             diagnosticReports: this.associatedStudies,
 			healthCondition: this.selectedProblem,
 			healthcareProfessionalName: orderProfessionalName,
 			institutionName: orderInstitutionName,
-            observations:  this.transcribeOrderForm.controls.observations.value
+            observations:  this.transcribeOrderForm.controls.observations.value,
+            oldTranscribedOrderId: this.data.transcribedOrder?.serviceRequestId ?? null,
 		}
 
         this.prescriptionService.createTranscribedOrder(this.data.patientId, transcribedData)
@@ -143,13 +142,6 @@ export class EquipmentTranscribeOrderPopupComponent implements OnInit {
         const sourceExistsAttachedFiles$: Observable<number> = this.prescriptionService.saveAttachedFiles(this.data.patientId, serviceRequestId, this.selectedFiles).pipe(map( _ => serviceRequestId ))
         const source$ = this.selectedFiles.length > 0 ?  sourceExistsAttachedFiles$ : of(serviceRequestId)
         return source$
-    }
-
-    checkForOrderDeletion(){
-        if (this.data.transcribedOrder){
-            let serviceRequestId = this.data.transcribedOrder.serviceRequestId;
-            this.prescriptionService.deleteTranscribedOrder(this.data.patientId, serviceRequestId).subscribe();
-        }
     }
 
     private checkFileExtensions(){

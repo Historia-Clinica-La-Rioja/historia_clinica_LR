@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.controller.dto.TranscribedServiceRequestDto;
+import net.pladema.clinichistory.requests.servicerequests.application.CreateAndReplaceTranscribedOrder;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateServiceRequestPdf;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateTranscribedServiceRequestPdf;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.CompleteRequestDto;
@@ -43,7 +45,6 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Tran
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
-import net.pladema.clinichistory.requests.servicerequests.service.CreateTranscribedServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteTranscribedOrderService;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
@@ -95,7 +96,6 @@ public class ServiceRequestController {
 
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
     private final CreateServiceRequestService createServiceRequestService;
-	private final CreateTranscribedServiceRequestService createTranscribedServiceRequestService;
     private final CreateServiceRequestMapper createServiceRequestMapper;
     private final PatientExternalService patientExternalService;
     private final StudyMapper studyMapper;
@@ -124,6 +124,7 @@ public class ServiceRequestController {
 	private final CreateServiceRequestPdf createServiceRequestPdf;
 	private final SharedReferenceCounterReference sharedReferenceCounterReference;
 	private final CreateTranscribedServiceRequestPdf createTranscribedServiceRequestPdf;
+	private final CreateAndReplaceTranscribedOrder createAndReplaceTranscribedOrder;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -162,7 +163,6 @@ public class ServiceRequestController {
 
 	@PostMapping("/transcribed")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	@Transactional
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ADMINISTRATIVO_RED_DE_IMAGENES')")
 	public Integer createTranscribed(@PathVariable(name = "institutionId") Integer institutionId,
 									 @PathVariable(name = "patientId") Integer patientId,
@@ -173,7 +173,7 @@ public class ServiceRequestController {
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
 		PatientInfoBo patientInfoBo = new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge());
 		transcribedServiceRequestBo.setPatientInfo(patientInfoBo);
-		Integer serviceRequestId = createTranscribedServiceRequestService.execute(transcribedServiceRequestBo);
+		Integer serviceRequestId = createAndReplaceTranscribedOrder.run(transcribedServiceRequestBo, Optional.ofNullable(transcribedServiceRequest.getOldTranscribedOrderId()));
 
 		log.debug(OUTPUT, serviceRequestId);
 		return serviceRequestId;
