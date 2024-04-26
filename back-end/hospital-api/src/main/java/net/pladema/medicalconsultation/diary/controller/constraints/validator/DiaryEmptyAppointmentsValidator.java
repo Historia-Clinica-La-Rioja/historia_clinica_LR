@@ -14,6 +14,7 @@ import javax.validation.ConstraintValidatorContext;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 
+import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -71,7 +72,8 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 		LocalDate newStartDate = localDateMapper.fromStringToLocalDate(diaryToUpdate.getStartDate());
 		LocalDate newEndDate = localDateMapper.fromStringToLocalDate(diaryToUpdate.getEndDate());
 
-		Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), null, null);
+		Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), null, null).stream()
+				.filter(a -> !a.getAppointmentStateId().equals(AppointmentState.BLOCKED)).collect(Collectors.toList());
 
 		HashMap<Short, List<DiaryOpeningHoursDto>> appointmentsByWeekday = diaryToUpdate.getDiaryOpeningHours().stream()
 				.collect(groupingBy(doh -> doh.getOpeningHours().getDayWeekId(),
