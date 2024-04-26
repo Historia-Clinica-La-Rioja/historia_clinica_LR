@@ -109,7 +109,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 
 	{
 		text: 'app.menu.RUTAS_PROVINCIALES',
-		icon: 'description',
+		icon: 'swap_calls',
 		id: 'rutas-larioja',
 		url: './rutas-larioja',
 		permissions: [
