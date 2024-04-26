@@ -159,9 +159,11 @@ public class DiaryEmptyAppointmentsValidator implements ConstraintValidator<Diar
 	}
 
 	private boolean hasChangeInOpeningHours(DiaryDto diaryToUpdate) {
-		boolean hasChange = false;
 		List<DiaryOpeningHoursBo> diaryOpeningHoursBos = new ArrayList<>(diaryOpeningHoursService.getDiaryOpeningHours(diaryToUpdate.getId()));
 		List<DiaryOpeningHoursDto> diaryOpeningHoursDtos = diaryToUpdate.getDiaryOpeningHours();
+		if (diaryOpeningHoursBos.size() != diaryOpeningHoursDtos.size())
+			return true;
+		boolean hasChange = false;
 		for (DiaryOpeningHoursDto diaryOpeningHoursDto: diaryOpeningHoursDtos){
 			OpeningHoursDto ohDto = diaryOpeningHoursDto.getOpeningHours();
 			OpeningHoursBo ohBo = mapToOpeningHoursBo(ohDto);
