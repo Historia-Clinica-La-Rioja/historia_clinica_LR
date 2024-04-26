@@ -7,6 +7,11 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursDto;
 import net.pladema.medicalconsultation.diary.controller.dto.OpeningHoursDto;
+import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
+import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.sgx.validation.ValidationContextSetup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,10 +43,16 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 	@Mock
 	private FeatureFlagsService featureFlagsService;
 
+	@Mock
+	private DiaryService diaryService;
+
+	@Mock
+	private DiaryOpeningHoursService diaryOpeningHoursService;
+
 
 	@BeforeEach
 	void setUp() {
-		diaryEmptyAppointmentsValidator = new DiaryEmptyAppointmentsValidator(appointmentService, localDateMapper, featureFlagsService);
+		diaryEmptyAppointmentsValidator = new DiaryEmptyAppointmentsValidator(appointmentService, localDateMapper, featureFlagsService, diaryService, diaryOpeningHoursService);
 		when(localDateMapper.fromStringToLocalDate("2020-08-01")).thenReturn(LocalDate.parse("2020-08-01"));
 		when(localDateMapper.fromStringToLocalDate("2020-08-31")).thenReturn(LocalDate.parse("2020-08-31"));
 		when(localDateMapper.fromStringToLocalTime("10:00:00")).thenReturn(LocalTime.parse("10:00:00"));
@@ -65,7 +76,8 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 				.build();
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
 		when(appointmentService.getAppointmentsByDiaries(any(), any(), any())).thenReturn(returnFutureAppmets);
-
+		DiaryBo diaryBo = getDiaryBo();
+		when(diaryService.getDiaryById(any())).thenReturn(diaryBo);
 	}
 
 	private void setupContextInvalid() {
@@ -81,7 +93,8 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 				.build();
 		List<AppointmentBo> returnFutureAppmets = Stream.of(apb1).collect(Collectors.toList());
 		when(appointmentService.getAppointmentsByDiaries(any(), any(), any())).thenReturn(returnFutureAppmets);
-
+		DiaryBo diaryBo = getDiaryBo();
+		when(diaryService.getDiaryById(any())).thenReturn(diaryBo);
 	}
 
 	private DiaryDto getDiaryDto() {
@@ -101,6 +114,28 @@ class DiaryEmptyAppointmentsValidatorTest extends ValidationContextSetup {
 		diary.setDoctorsOfficeId(1);
 		diary.setStartDate("2020-08-01");
 		diary.setEndDate("2020-08-31");
+		diary.setAutomaticRenewal(true);
+		diary.setId(1);
+		return diary;
+	}
+
+	private DiaryBo getDiaryBo() {
+		DiaryBo diary = new DiaryBo();
+		diary.setAppointmentDuration((short) 20);
+		diary.setAutomaticRenewal(false);
+		DiaryOpeningHoursBo doh = new DiaryOpeningHoursBo();
+		doh.setMedicalAttentionTypeId((short) 1);
+		doh.setOverturnCount((short) 2);
+		OpeningHoursBo oh = new OpeningHoursBo();
+		oh.setDayWeekId((short) 3);
+		oh.setFrom(LocalTime.parse("10:00:00"));
+		oh.setTo(LocalTime.parse("12:00:00"));
+		doh.setOpeningHours(oh);
+		diary.setDiaryOpeningHours(Stream.of(doh).collect(Collectors.toList()));
+		diary.setHealthcareProfessionalId(1);
+		diary.setDoctorsOfficeId(1);
+		diary.setStartDate(LocalDate.parse("2020-08-01"));
+		diary.setEndDate(LocalDate.parse("2020-08-29"));
 		diary.setAutomaticRenewal(true);
 		diary.setId(1);
 		return diary;
