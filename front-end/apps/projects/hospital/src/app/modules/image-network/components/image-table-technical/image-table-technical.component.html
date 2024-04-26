@@ -1,0 +1,44 @@
+<mat-card class="image-list-card">
+    <mat-list>
+        <ng-container *ngFor="let image of imageList$ | async">
+            <mat-list-item class="item-content">
+                <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="25px" fxFlex="100">
+                    <app-patient-summary [person]="image.person" [size]="size"></app-patient-summary>
+                    <div fxFlex.gt-sm="3">
+                        <ng-container *ngIf="!image.serviceRequestId">
+                            <app-tooltip-order
+                                [typeOrder]="!image.studies ? 'sin orden' : 'transcripta'"></app-tooltip-order>
+                        </ng-container>
+                    </div>
+                    <span *ngIf="image.studies; else noStudy" class="study-name"
+                        fxFlex.gt-sm="23">{{image.studies}}</span>
+                    <ng-template #noStudy><span fxFlex.gt-sm="23"
+                            class="study-name grey">{{'image-network.worklist.details_study.PENDING_ORDER' |
+                            translate}}</span></ng-template>
+                    <app-colored-label class="personalized-label capitalize" fxFlex.xl="7" fxFlex.lg="9"
+                        fxFlex.gt-sm="13" description={{image.status.description}} color="{{image.status.color}}"
+                        [icon]="image.status.icon"></app-colored-label>
+                    <div fxFlex.gt-sm="8" class="time-size">
+                        <span>
+                            {{ image.date | dateFormat: 'datetime' }}
+                        </span>
+                    </div>
+                    <div fxFlex.gt-sm="20" fxFlex.gt-md="25" fxLayout="row" fxLayoutGap="6px"
+                        fxLayoutAlign="center baseline">
+                        <app-button class="loading-button" fxFlex="70" [buttonType]="ButtonType.RAISED"
+                            [text]="'image-network.queue_list.TRY_AGAIN'" [disabled]="false" [isLoading]="isLoading"
+                            (clicked)="tryAgain()">
+                        </app-button>
+                        <app-button fxFlex="70" [buttonType]="ButtonType.RAISED"
+                            [text]="'image-network.queue_list.INDEX'" [disabled]="true" (clicked)="doIndex()">
+                        </app-button>
+                    </div>
+                </div>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </ng-container>
+        <mat-paginator #paginator (page)="onPageChange($event)" [length]="10" [pageSize]="PAGE_SIZE"
+            [hidePageSize]="true" [showFirstLastButtons]="true">
+        </mat-paginator>
+    </mat-list>
+</mat-card>

@@ -64,6 +64,10 @@
             "WORKLIST":"Lista de trabajo",
             "QUEUE_IMAGE": "Cola de imágenes"
         },
+        "queue_list": {
+        "TRY_AGAIN": "Reeintentar",
+        "INDEX": "Indexar"
+        },
         "worklist": {
             "status": {
                 "PENDING": "pendiente",

@@ -5,21 +5,8 @@
 				<app-worklist-by-technical></app-worklist-by-technical>
 			</mat-tab>
 			<mat-tab label="{{ 'image-network.technical-section.QUEUE_IMAGE' | translate }}">
+				<app-queue-image-technical></app-queue-image-technical>
 			</mat-tab>
 		</mat-tab-group>
 	</div>
 </app-content>
-
-
-
-<!-- <app-content width="full">
-
-	<mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="tabsService.selectedIndex">
-		<mat-tab *ngFor="let tab of tabsService.availableTabs" [label]="tab">
-			<ng-template matTabContent>
-				<app-appointment-tabs [tabLabel]="tab"></app-appointment-tabs>
-			</ng-template>
-		</mat-tab>
-	</mat-tab-group>
-
-</app-content> -->

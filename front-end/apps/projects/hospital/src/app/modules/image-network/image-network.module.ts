@@ -35,6 +35,9 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 //pipes
 import { ProfessionalFullNamePipe } from './pipes/professional-full-name.pipe';
 import { TechnicalWorklistHomeComponent } from './routes/technical-worklist-home/technical-worklist-home.component';
+import { QueueImageTechnicalComponent } from './components/queue-image-technical/queue-image-technical.component';
+import { ImageTableTechnicalComponent } from './components/image-table-technical/image-table-technical.component';
+import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
 
 @NgModule({
     declarations: [
@@ -63,6 +66,8 @@ import { TechnicalWorklistHomeComponent } from './routes/technical-worklist-home
         ImageOrderColoredIconTextCasesComponent,
         ProfessionalFullNamePipe,
         TechnicalWorklistHomeComponent,
+        QueueImageTechnicalComponent,
+        ImageTableTechnicalComponent,
     ],
     imports: [
         CommonModule,
@@ -72,6 +77,7 @@ import { TechnicalWorklistHomeComponent } from './routes/technical-worklist-home
 		//standalone
         IdentifierCasesComponent,
 		ConceptTypeaheadSearchComponent,
+        PatientSummaryComponent
     ],
     exports: [
         ViewStudyComponent,
