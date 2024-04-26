@@ -198,3 +198,31 @@ databaseChangeLog:
               tableName: diagnostic_report_fhir_observation_group
               validate: true
               
+    - changeSet:
+        id: createView-v_user_person_complete_data
+        comment: Create view v_user_person_complete_data
+        author: bchacon
+        changes:
+          - createView:
+              viewName: v_user_person_complete_data
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT 
+                p.id AS person_id,
+                up.user_id AS user_id,
+                CASE WHEN p.middle_names IS NOT NULL THEN CONCAT(p.first_name, ' ', p.middle_names) ELSE p.first_name END AS given_name,
+                CASE WHEN p.other_last_names IS NOT NULL THEN CONCAT(p.last_name, ' ', p.other_last_names) ELSE p.last_name END AS family_names,
+                it.description AS identification_type,
+                p.identification_number AS identification_number,
+                g.description AS gender,
+                pe.name_self_determination AS name_self_determination,
+                spg.description AS self_perceived_gender,
+                p.birth_date AS birth_date
+                FROM person p
+                LEFT JOIN user_person up ON (p.id = up.person_id )
+                LEFT JOIN person_extended pe ON (p.id = pe.person_id)
+                LEFT JOIN identification_type it ON (p.identification_type_id = it.id)
+                LEFT JOIN gender g ON (p.gender_id = g.id)
+                LEFT JOIN self_perceived_gender spg ON (pe.gender_self_determination = spg.id)
+                
