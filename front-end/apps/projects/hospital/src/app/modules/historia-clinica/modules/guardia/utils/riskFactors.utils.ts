@@ -1,5 +1,6 @@
 import { RiskFactorDto } from "@api-rest/api-model";
 import { RiskFactorFull } from "../components/triage-details/triage-details.component";
+import { dateISOParseDate } from "@core/utils/moment.utils";
 
 export const LABELS_RISK_FACTORS_PEDIATRIC = {
 	respiratoryRate: { description: 'Frecuencia respiratoria', id: 'respiratory_rate' },
@@ -22,18 +23,16 @@ export const LABELS_RISK_FACTORS = {
 export function mapToRiskFactorFull(riskDto: RiskFactorDto): RiskFactorFull[] {
 	const labels = LABELS_RISK_FACTORS;
 
-	const riskFactors = Object.keys(labels).map(key => {
+	const riskFactors: RiskFactorFull[] = Object.keys(labels).map(key => {
 		const riskFactor = riskDto ? riskDto[key] : null;
-
 		return {
 			description: labels[key].description,
 			id: labels[key].id,
 			value: {
 				value: riskFactor?.value || undefined,
-				effectiveTime: riskFactor?.effectiveTime || undefined
+				effectiveTime: dateISOParseDate(riskFactor?.effectiveTime) || undefined
 			}
 		};
 	});
-
 	return riskFactors;
 }

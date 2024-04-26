@@ -12,7 +12,6 @@ import { PermissionsService } from "@core/services/permissions.service";
 import { anyMatch } from "@core/utils/array.utils";
 import { MIN_DATE } from "@core/utils/date.utils";
 import { getError, hasError } from '@core/utils/form.utils';
-import { dateToMoment } from "@core/utils/moment.utils";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -255,7 +254,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				if (this.evolutionNote.riskFactors[key].value != undefined) {
 					this.form.controls.riskFactors.patchValue({ [key]: { value: this.evolutionNote.riskFactors[key].value } });
 					const date: Date = new Date(this.evolutionNote.riskFactors[key].effectiveTime);
-					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: dateToMoment(date) } });
+					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: date } });
 				}
 			});
 		}

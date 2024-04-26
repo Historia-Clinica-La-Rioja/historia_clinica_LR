@@ -14,7 +14,6 @@ import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { getError, hasError } from '@core/utils/form.utils';
-import { dateToMoment } from "@core/utils/moment.utils";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -274,7 +273,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 				if (this.anamnesis.riskFactors[key].value != undefined) {
 					this.form.controls.riskFactors.patchValue({ [key]: { value: this.anamnesis.riskFactors[key].value } });
 					const date: Date = new Date(this.anamnesis.riskFactors[key].effectiveTime);
-					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: dateToMoment(date) } });
+					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: date } });
 				}
 			});
 		}

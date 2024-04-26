@@ -18,6 +18,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHis
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Last2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -33,7 +35,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFa
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
 
 @Mapper(uses = {HealthConditionMapper.class, RiskFactorMapper.class, AnthropometricDataMapper.class,
-        MedicationMapper.class, ImmunizationMapper.class, AllergyConditionMapper.class})
+        MedicationMapper.class, ImmunizationMapper.class, AllergyConditionMapper.class, LocalDateMapper.class})
 public interface InternmentStateMapper {
 
     @Named("toListDiagnosesGeneralStateDto")
