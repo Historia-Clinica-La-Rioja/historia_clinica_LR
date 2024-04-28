@@ -15,6 +15,8 @@ export class EmergencyCareEvolutionNoteComponent {
 			c => {
 				this.criticalityTypes = c;
 				this.alergiasContent = this.toAlergias(newContent.emergencyCareEvolutionNoteClinicalData.allergies);
+				if (newContent.emergencyCareEvolutionNoteClinicalData.allergies.isReferred === false)
+					this.alergiasContent = ['No refiere alergias'];
 			}
 		)
 		this.especialidadContent = [newContent.clinicalSpecialtyName];
@@ -134,7 +136,7 @@ export class EmergencyCareEvolutionNoteComponent {
 	}
 
 	private toAlergias(allergies): string[] {
-		return allergies.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
+		return allergies.referredContent.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
 	}
 
 	private toDiagnostico(mainDiagnosis, otherDiagnosis): string[] {
