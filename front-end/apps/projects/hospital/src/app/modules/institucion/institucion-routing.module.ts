@@ -3,12 +3,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { RoleGuard } from '@core/guards/RoleGuard';
 import { InstitutionExtensionComponent } from '@extensions/routes/extension/extension.component';
+
 import { InstitucionComponent } from './institucion.component';
 import { HomeComponent } from './routes/home/home.component';
 import { FeatureFlagGuard } from '@core/guards/FeatureFlagGuard';
 import { InstitutionRoutedExternalComponent } from '@extensions/institution-routed-external/institution-routed-external.component';
 
- const routes: Routes = [
+const routes: Routes = [
 	{
 		path: ':id',
 		component: InstitucionComponent,
@@ -44,12 +45,10 @@ import { InstitutionRoutedExternalComponent } from '@extensions/institution-rout
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
-
 			{
 				path: 'rutas-larioja',
 				loadChildren: () => import('../rutas-larioja/rutas.module').then(m => m.RutasModule),
  			},
-
 			{
 				path: 'reportes-larioja',
 				loadChildren: () => import('../reportes-larioja/reportes-larioja.module').then(m => m.ReportesLariojaModule),
