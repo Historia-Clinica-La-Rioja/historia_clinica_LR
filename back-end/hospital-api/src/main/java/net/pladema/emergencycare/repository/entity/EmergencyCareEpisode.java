@@ -102,5 +102,15 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 			this.emergencyCareStateId = EmergencyCareState.EN_ESPERA;
 		}
 	}
+
+	public String getMinimalInformationToLog() {
+        return "EmergencyCareEpisode{" + "id=" + id +
+                ", patientId=" + patientId +
+                ", emergencyCareTypeId=" + emergencyCareTypeId +
+                ", emergencyCareStateId=" + emergencyCareStateId +
+                ", emergencyCareEntranceTypeId=" + emergencyCareEntranceTypeId +
+                ", institutionId=" + institutionId +
+                '}';
+	}
 }
 
