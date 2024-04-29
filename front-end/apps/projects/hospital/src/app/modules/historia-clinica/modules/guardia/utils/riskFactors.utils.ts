@@ -30,7 +30,7 @@ export function mapToRiskFactorFull(riskDto: RiskFactorDto): RiskFactorFull[] {
 			id: labels[key].id,
 			value: {
 				value: riskFactor?.value || undefined,
-				effectiveTime: dateISOParseDate(riskFactor?.effectiveTime) || undefined
+				effectiveTime: riskFactor?.effectiveTime ? dateISOParseDate(riskFactor.effectiveTime) : undefined
 			}
 		};
 	});
