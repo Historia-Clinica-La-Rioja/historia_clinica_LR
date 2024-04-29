@@ -93,4 +93,6 @@ public class AnestheticReportDto {
     @Nullable
     private @Valid PostAnesthesiaStatusDto postAnesthesiaStatus;
 
+    @Nullable
+    private String anestheticChart;
 }

@@ -1,20 +1,22 @@
 package net.pladema.clinichistory.hospitalization.application.anestheticreport;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnestheticSubstanceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.anestheticreport.exceptions.AnestheticReportException;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.domain.AnestheticReportBo;
 import net.pladema.clinichistory.hospitalization.domain.exceptions.AnestheticReportEnumException;
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @RequiredArgsConstructor

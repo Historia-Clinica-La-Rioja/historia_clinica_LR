@@ -173,6 +173,7 @@ export interface AnestheticHistoryDto {
 export interface AnestheticReportDto {
     analgesicTechniques?: AnalgesicTechniqueDto[];
     anestheticAgents?: AnestheticSubstanceDto[];
+    anestheticChart?: string;
     anestheticHistory?: AnestheticHistoryDto;
     anestheticPlans?: AnestheticSubstanceDto[];
     anestheticTechniques?: AnestheticTechniqueDto[];

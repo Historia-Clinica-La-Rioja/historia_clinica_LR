@@ -26,3 +26,17 @@ databaseChangeLog:
                       nullable: false
                     name: description
                     type: text
+
+    - changeSet:
+          id: addColumn-anesthetic_chart-to-anesthetic_report
+          author: fzudaire
+          changes:
+              - addColumn:
+                    tableName: anesthetic_report
+                    columns:
+                        - column:
+                              name: anesthetic_chart
+                              type: text
+                              constraints:
+                                  nullable: true
+

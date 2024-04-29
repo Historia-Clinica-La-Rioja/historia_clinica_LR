@@ -56,4 +56,7 @@ public class AnestheticReport extends SGXAuditableEntity<Integer> implements SGX
     @Column(name = "patient_medical_coverage_id")
     private Integer patientMedicalCoverageId;
 
+    @Column(name = "anesthetic_chart")
+    private String anestheticChart;
+
 }
