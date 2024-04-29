@@ -4067,6 +4067,7 @@ export interface ResponseEmergencyCareDto extends EmergencyCareDto {
     emergencyCareState: MasterDataDto;
     endDate: DateTimeDto;
     id: number;
+    institutionName: string;
     shockroom: ShockroomDto;
 }
 

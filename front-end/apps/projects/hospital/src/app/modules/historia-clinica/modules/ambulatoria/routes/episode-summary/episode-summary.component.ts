@@ -6,6 +6,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
+import { IDENTIFIER_CASES } from 'projects/hospital/src/app/modules/hsi-components/identifier-cases/identifier-cases.component';
 
 @Component({
 	selector: 'app-episode-summary',
@@ -15,7 +16,8 @@ import { MapperService } from '@presentation/services/mapper.service';
 export class EpisodeSummaryComponent implements OnInit {
 
 	responseEmergencyCareDto: ResponseEmergencyCareDto;
-
+	identiferCases = IDENTIFIER_CASES;
+	
 	readonly filterBy = {
 		source: 'Guardia',
 		id: null

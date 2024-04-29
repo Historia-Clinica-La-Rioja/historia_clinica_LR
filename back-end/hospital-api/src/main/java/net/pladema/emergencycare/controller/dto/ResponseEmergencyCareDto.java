@@ -35,6 +35,8 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
 	
 	private DateTimeDto endDate;
 
+	private String institutionName;
+
     public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
                                     MasterDataDto entranceType, Boolean hasPoliceIntervention, PoliceInterventionDetailsDto policeIntervention,
                                     String ambulanceCompanyId, EmergencyCarePatientDto patient,
