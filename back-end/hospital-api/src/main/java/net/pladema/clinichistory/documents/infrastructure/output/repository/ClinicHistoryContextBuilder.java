@@ -200,7 +200,7 @@ public class ClinicHistoryContextBuilder {
 					professionsInfoList.add(specialty.getSpecialty().getName());
 					licenses.addAll(specialty.getLicenses());
 				});
-				licenses.forEach(licence -> professionsInfoList.add(LINE_BREAK + licence.getType() + ": " + licence.getNumber()));
+				licenses.forEach(licence -> professionsInfoList.add(licence.getType().getAcronym()+ ": " + licence.getNumber()));
 				professionalInfoList.addAll(professionsInfoList.stream().distinct().collect(Collectors.toList()));
 			}
 			String professionalInfo = professionalInfoList.toString().substring(1, professionalInfoList.toString().length() - 1).replace(", ", LINE_BREAK);
