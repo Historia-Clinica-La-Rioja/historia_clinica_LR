@@ -525,7 +525,8 @@
                     "PROFESSIONAL_DATA_DESCRIPTION": "Para recetar necesita tener su mail y teléfono cargados en el sistema, comuniquese con un administrador insitucional para que actualice los mismos."
                 },
                 "new_prescription_dialog": {
-                    "MEDICATION_TITLE": "Crear receta electrónica",
+                    "MEDICATION_TITLE": "Nueva medicación",
+                    "MEDICATION_TITLE_FF": "Crear receta electrónica",
                     "PATIENT_LABEL": "Paciente",
                     "PRESCRIPTION_LABEL": "Receta",
                     "MEDICATION_LABEL": "Medicación",

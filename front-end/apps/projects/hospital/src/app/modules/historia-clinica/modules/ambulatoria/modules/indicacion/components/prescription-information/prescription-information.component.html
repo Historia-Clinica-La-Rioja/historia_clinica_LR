@@ -1,11 +1,13 @@
 <section class="prescription" [formGroup]="prescriptionForm">
-    <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_DATA' | translate}}</h2>
+    <div *ngIf="isHabilitarRecetaDigitalEnabled">
+        <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_DATA' | translate}}</h2>
+    </div>  
     <div *ngIf="isMedication()">
         <mat-checkbox formControlName="withoutRecipe">
             <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.WITHOUT_RECIPE'"></span>
         </mat-checkbox>
     </div>
-    <mat-label translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY"></mat-label>
+    <mat-label *ngIf="isHabilitarRecetaDigitalEnabled" translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SPECIALTY"></mat-label>
     <mat-form-field appearance="outline" *ngIf="isHabilitarRecetaDigitalEnabled">
         <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty" formControlName="clinicalSpecialty"
             placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_SPECIALTY' | translate}}">
@@ -32,7 +34,7 @@
         <span translate="ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PROLONGED_TREATMENT"></span>
     </mat-checkbox>
 
-    <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_LABEL'"></mat-label>
+    <mat-label *ngIf="isHabilitarRecetaDigitalEnabled" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.POSDATADAS_LABEL'"></mat-label>
     <mat-form-field *ngIf="isHabilitarRecetaDigitalEnabled" appearance="outline">
         <input formControlName="posdatadas" type="number" matInput>
         <mat-hint *ngIf="prescriptionForm.controls.posdatadas.value == POSDATADAS_MIN else posdatadasHintPlural"

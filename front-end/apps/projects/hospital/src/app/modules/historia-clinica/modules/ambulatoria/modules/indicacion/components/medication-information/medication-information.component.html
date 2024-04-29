@@ -1,6 +1,7 @@
 <div [formGroup]="prescriptionForm">
-    <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}</h2>
-
+    <div *ngIf="isHabilitarRecetaDigitalEnabled">
+        <h2 class="bold">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}</h2>
+    </div>  
     <div *ngFor="let prescriptionItem of prescriptionItems" class="item-container">
         <div fxLayout="column" fxLayoutGap="10px" class="item-information">
             <div fxLayout="row" fxLayoutAlign="space-between start">

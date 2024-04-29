@@ -1,6 +1,8 @@
 <div [formGroup]="prescriptionForm">
-    <h2 class="bold no-margin">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_DATA' | translate}}</h2>
-    <div class="patient-summary">
+    <div *ngIf="isHabilitarRecetaDigitalEnabled">
+        <h2 class="bold no-margin">{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_DATA' | translate}}</h2>
+    </div>    
+    <div class="patient-summary" *ngIf="isHabilitarRecetaDigitalEnabled">
         <app-patient-summary *ngIf="patientSummary" [person]="patientSummary"></app-patient-summary>
     </div>
     <div>

@@ -4,40 +4,63 @@
         <mat-icon>close</mat-icon>
     </button>
 </div>
+<div *ngIf="isHabilitarRecetaDigitalEnabled else habilitarRecetaDigitalDisabled">
+    <div mat-dialog-content #dialog>
+        <mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
+            <form [formGroup]="prescriptionForm" class="form" id="form">
+                <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_LABEL' | translate}}"
+                    [editable]="editableStepModality">
+                    <app-patient-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
+                        (personEmmiter)="setPerson($event)" (clearControls)="clear($event)">
+                    </app-patient-information>
+                </mat-step>
 
-<div mat-dialog-content #dialog>
-    <mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
-        <form [formGroup]="prescriptionForm" class="form" id="form">
-            <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_LABEL' | translate}}"
-                [editable]="editableStepModality">
+                <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_LABEL' | translate}}"
+                    [editable]="editableStepModality">
+                    <app-prescription-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"></app-prescription-information>
+                </mat-step>
+            </form>
+
+            <mat-step label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
+                <app-medication-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
+                [submitted]="submitted" (showMedicationErrorEmitter)="updateMedicationErrorState($event)" (prescriptionItemsEmmiter)="updatePrescriptionItemState($event)">
+                </app-medication-information>
+            </mat-step>
+        </mat-stepper>
+    </div>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+        <app-button id="back" [buttonType]="'mat-stroked-button'" *ngIf="stepper.selectedIndex > indexStep.PATIENT" color="primary"
+        [color]="'primary'" (clicked)="back(stepper)" [text]="'buttons.BACK' | translate"> 
+        </app-button>
+        <app-button id="next" (clicked)="stepper.next()" *ngIf="stepper.selectedIndex < indexStep.MEDICATION" mat-raised-button [color]="'primary'"
+        [buttonType]="'mat-flat-button'" [text]="'buttons.NEXT' | translate" fxFlexFill.xs>
+        </app-button>
+        <app-button [color]="'primary'" *ngIf="stepper.selectedIndex === indexStep.MEDICATION" (clicked)="confirmPrescription()" [disabled]="!prescriptionForm.valid || prescriptionItems.length === 0"
+        [text]="isHabilitarRecetaDigitalEnabled ? 'buttons.FINISH' : 'buttons.CONFIRM' | translate" [buttonType]="'mat-flat-button'" fxFlexFill.xs
+        [isLoading]="isFinishPrescripcionLoading">
+        </app-button>
+    </mat-dialog-actions>
+</div>
+
+<ng-template #habilitarRecetaDigitalDisabled>
+    <div mat-dialog-content #dialog>
+            <form [formGroup]="prescriptionForm" class="form" id="form">
                 <app-patient-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
                     (personEmmiter)="setPerson($event)" (clearControls)="clear($event)">
                 </app-patient-information>
-            </mat-step>
 
-            <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PRESCRIPTION_LABEL' | translate}}"
-                [editable]="editableStepModality">
                 <app-prescription-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"></app-prescription-information>
-            </mat-step>
-        </form>
+            </form>
 
-        <mat-step label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.MEDICATION_LABEL' | translate}}" [editable]="editableStepModality">
             <app-medication-information [prescriptionData]="prescriptionData" [isHabilitarRecetaDigitalEnabled]="isHabilitarRecetaDigitalEnabled"
-             [submitted]="submitted" (showMedicationErrorEmitter)="updateMedicationErrorState($event)" (prescriptionItemsEmmiter)="updatePrescriptionItemState($event)">
+                [submitted]="submitted" (showMedicationErrorEmitter)="updateMedicationErrorState($event)" (prescriptionItemsEmmiter)="updatePrescriptionItemState($event)">
             </app-medication-information>
-        </mat-step>
-    </mat-stepper>
-</div>
+    </div>
 
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
-	<app-button id="back" [buttonType]="'mat-stroked-button'" *ngIf="stepper.selectedIndex > indexStep.PATIENT" color="primary"
-     [color]="'primary'" (clicked)="back(stepper)" [text]="'buttons.BACK' | translate"> 
-    </app-button>
-	<app-button id="next" (clicked)="stepper.next()" *ngIf="stepper.selectedIndex < indexStep.MEDICATION" mat-raised-button [color]="'primary'"
-     [buttonType]="'mat-flat-button'" [text]="'buttons.NEXT' | translate" fxFlexFill.xs>
-	</app-button>
-	<app-button [color]="'primary'" *ngIf="stepper.selectedIndex === indexStep.MEDICATION" (clicked)="confirmPrescription()" [disabled]="!prescriptionForm.valid || prescriptionItems.length === 0"
-     [text]="isHabilitarRecetaDigitalEnabled ? 'buttons.FINISH' : 'buttons.CONFIRM' | translate" [buttonType]="'mat-flat-button'" fxFlexFill.xs
-     [isLoading]="isFinishPrescripcionLoading">
-    </app-button>
-</mat-dialog-actions>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10px">
+        <app-button [color]="'primary'" (clicked)="confirmPrescription()" [disabled]="!prescriptionForm.valid || prescriptionItems.length === 0"
+        [text]="'buttons.CONFIRM' | translate" [buttonType]="'mat-flat-button'" fxFlexFill.xs [isLoading]="isFinishPrescripcionLoading">
+        </app-button>
+    </mat-dialog-actions>
+</ng-template>

@@ -125,7 +125,7 @@ export class NuevaPrescripcionComponent implements OnInit {
 			repetitions: this.prescriptionForm.controls.posdatadas.value,
 			isPostDated: this.prescriptionForm.controls.prolongedTreatment.value,
 			clinicalSpecialtyId: this.prescriptionForm.controls.clinicalSpecialty.value.id,
-			isArchived: this.prescriptionForm.controls.archived.value,
+			isArchived: this.prescriptionForm.controls.archived.value ? this.prescriptionForm.controls.archived.value : false,
 		};
 		this.savePrescription(newPrescription);
 		if (this.isHabilitarRecetaDigitalEnabled) {
@@ -149,23 +149,8 @@ export class NuevaPrescripcionComponent implements OnInit {
 		}
 	}
 
-	getDosage(prescriptionItem: NewPrescriptionItem): string {
-		const intervalText = prescriptionItem.isDailyInterval ? 'Diario' :
-			prescriptionItem.intervalHours ? `Cada ${prescriptionItem.intervalHours} hs` : null;
-
-		const administrationTimeText = prescriptionItem.isChronicAdministrationTime ? 'Habitual'
-			: prescriptionItem.administrationTimeDays ? `Durante ${prescriptionItem.administrationTimeDays} días` : null;
-
-		return intervalText && administrationTimeText ? (intervalText + ' - ' + administrationTimeText)
-			: intervalText ? intervalText : administrationTimeText ? administrationTimeText : '';
-	}
-
 	isMedication(): boolean {
 		return this.prescriptionData.prescriptionType === PrescriptionTypes.MEDICATION && ! this.isHabilitarRecetaDigitalEnabled;
-	}
-
-	isDailyMedication(prescriptionItem: NewPrescriptionItem): boolean {
-		return (prescriptionItem.intervalHours !== null || prescriptionItem.administrationTimeDays !== null);
 	}
 
 	clear(control: AbstractControl) {
