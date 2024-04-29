@@ -106,7 +106,6 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		],
 		featureFlag: AppFeature.HABILITAR_REPORTES
 	},
-
 	{
 		text: 'app.menu.RUTAS_PROVINCIALES',
 		icon: 'swap_calls',
@@ -133,12 +132,9 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.TECNICO,
 			ERole.VIRTUAL_CONSULTATION_PROFESSIONAL,
 			ERole.VIRTUAL_CONSULTATION_RESPONSIBLE,
-			ERole.ABORDAJE_VIOLENCIAS
-			
+			ERole.ABORDAJE_VIOLENCIAS,
 		],
-		
 	},
-
 	{
 		text: 'app.menu.REPORTES_PROVINCIALES',
 		icon: 'description',
