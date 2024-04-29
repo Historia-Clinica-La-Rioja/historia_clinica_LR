@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ANTROPOMETRICOS } from '../../constants/summaries';
 import { DetailBox } from '@presentation/components/detail-box/detail-box.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { AnthropometricDataDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
@@ -15,7 +15,7 @@ import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/
 	templateUrl: './antropometricos-summary.component.html',
 	styleUrls: ['./antropometricos-summary.component.scss']
 })
-export class AntropometricosSummaryComponent implements OnInit {
+export class AntropometricosSummaryComponent implements OnInit, OnDestroy {
 
 	@Input() internmentEpisodeId: number;
 	@Input() anthropometricDataList$: Observable<HCEAnthropometricDataDto[]> | Observable<AnthropometricDataDto[]>;
@@ -23,6 +23,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	details: DetailBoxExtended[] = [];
 	readonly antropometricosSummary = ANTROPOMETRICOS;
+	subscriptionAnthropometricData: Subscription;
 
 	private readonly LABELS = {
 		height: 'Talla (cm)',
@@ -38,9 +39,13 @@ export class AntropometricosSummaryComponent implements OnInit {
 		private readonly activatedRoute: ActivatedRoute
 	) { }
 
+	ngOnDestroy(): void {
+		this.subscriptionAnthropometricData.unsubscribe();
+	}
+
 	ngOnInit(): void {
 		this.patientEvolutionChartService.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
-		this.anthropometricDataList$.subscribe(list => {
+		this.subscriptionAnthropometricData = this.anthropometricDataList$.subscribe(list => {
 			this.updateAnthropometricData(list);
 			this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
 		});
