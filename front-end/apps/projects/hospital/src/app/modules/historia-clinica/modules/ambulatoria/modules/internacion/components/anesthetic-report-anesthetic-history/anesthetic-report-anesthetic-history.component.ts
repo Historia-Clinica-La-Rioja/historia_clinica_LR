@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ANESTHESIA_ZONE_ID, AnestheticReportAnestheticHistoryService, PREVIOUS_ANESTHESIA_STATE_ID } from '../../services/anesthetic-report-anesthetic-history.service';
+import { Component, OnInit } from '@angular/core';
+import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '../../services/anesthetic-report-anesthetic-history.service';
 import { FormGroup } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-anesthetic-report-anesthetic-history',
@@ -11,26 +12,27 @@ import { MatRadioChange } from '@angular/material/radio';
 
 export class AnestheticReportAnestheticHistoryComponent implements OnInit {
 
-    @Input() service: AnestheticReportAnestheticHistoryService;
     form: FormGroup;
     viewZoneOptions = false;
     previousAnesthesiaStates = PREVIOUS_ANESTHESIA_STATE_ID;
     anesthesiaZone = ANESTHESIA_ZONE_ID;
 
-    constructor() { }
+    constructor(
+        private readonly service: AnestheticReportService,
+    ) { }
 
     ngOnInit(): void {
-        this.form = this.service.getForm();
+        this.form = this.service.anestheticReportAnestheticHistoryService.getForm();
     }
 
     onPreviousAnesthesiaStateSelected($event: MatRadioChange){
         $event.value === PREVIOUS_ANESTHESIA_STATE_ID.YES ? 
             this.viewZoneOptions = true : this.viewZoneOptions = false;
-        this.service.setPreviousAnesthesiaData($event.value)
+        this.service.anestheticReportAnestheticHistoryService.setPreviousAnesthesiaData($event.value)
     }
 
     onAnesthesiaZoneSelected($event: MatRadioChange){
-        this.service.setAnesthesiaZoneData($event.value)
+        this.service.anestheticReportAnestheticHistoryService.setAnesthesiaZoneData($event.value)
     }
 
 }

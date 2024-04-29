@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature, MasterDataDto, TimeDto } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { MedicationService } from '../../services/medicationService';
 import { TranslateService } from '@ngx-translate/core';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { take } from 'rxjs';
 import { AnestheticDrugComponent } from '../../dialogs/anesthetic-drug/anesthetic-drug.component';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 
 @Component({
@@ -20,7 +20,6 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
     private title: string
     private label: string
 
-    @Input() service: MedicationService;
     @Output() timeSelected: EventEmitter<TimeDto> = new EventEmitter<TimeDto>();
 	searchConceptsLocallyFFIsOn = false;
 
@@ -28,6 +27,7 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService,
         private readonly translateService: TranslateService,
+        readonly service: AnestheticReportService,
         readonly internacionMasterDataService: InternacionMasterDataService,
     ) { }
 
@@ -49,7 +49,7 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
     addPremedication(){
         this.dialog.open(AnestheticDrugComponent, {
             data: {
-                premedicationService: this.service,
+                premedicationService: this.service.anestheticReportPremedicationAndFoodIntakeService,
                 searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
                 vias: this.viasArray,
                 presentationConfig: {

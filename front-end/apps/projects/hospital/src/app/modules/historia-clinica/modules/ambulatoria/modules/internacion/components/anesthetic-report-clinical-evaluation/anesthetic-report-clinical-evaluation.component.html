@@ -6,7 +6,7 @@
                 </mat-label>
                 <mat-form-field appearance="outline">
                     <input id="maxBloodPressure" formControlName="maxBloodPressure" placeholder="00" type="number" matInput>
-                    <mat-error> {{ service.maxBloodPressureError$ | async }} </mat-error>
+                    <mat-error> {{ service.anestheticReportClinicalEvaluationService.maxBloodPressureError$ | async }} </mat-error>
                 </mat-form-field>
             </div>
             <div fxLayout="column" fxLayoutAlign="space-between start">
@@ -14,7 +14,7 @@
                 </mat-label>
                 <mat-form-field appearance="outline">
                     <input id="maxBloodPressure" formControlName="minBloodPressure" placeholder="00" type="number" matInput>
-                    <mat-error> {{ service.minBloodPressureError$ | async }} </mat-error>
+                    <mat-error> {{ service.anestheticReportClinicalEvaluationService.minBloodPressureError$ | async }} </mat-error>
                 </mat-form-field>
             </div>
         </div>
@@ -23,7 +23,7 @@
             </mat-label>
             <mat-form-field appearance="outline">
                 <input id="hematocrit" formControlName="hematocrit" placeholder="00" type="number" matInput>
-                <mat-error> {{ service.hematocritError$ | async }} </mat-error>
+                <mat-error> {{ service.anestheticReportClinicalEvaluationService.hematocritError$ | async }} </mat-error>
             </mat-form-field>
         </div>
     </div>

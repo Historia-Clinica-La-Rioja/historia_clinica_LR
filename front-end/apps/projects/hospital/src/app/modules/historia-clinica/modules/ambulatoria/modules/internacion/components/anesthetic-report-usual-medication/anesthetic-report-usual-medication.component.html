@@ -1,8 +1,8 @@
 <div fxLayout="column" fxLayoutGap="2vh">
 
-    <app-titled-content-card *ngIf="!service.isEmpty()"
+    <app-titled-content-card *ngIf="!service.medicacionesNuevaConsultaService.isEmpty()"
         title="{{ 'internaciones.anesthesic-report.usual-medication.REGISTERED_USUAL_MEDICATION' }}">
-        <app-medication-list [service]="service"></app-medication-list>
+        <app-medication-list [service]="service.medicacionesNuevaConsultaService"></app-medication-list>
     </app-titled-content-card>
 
     <div>

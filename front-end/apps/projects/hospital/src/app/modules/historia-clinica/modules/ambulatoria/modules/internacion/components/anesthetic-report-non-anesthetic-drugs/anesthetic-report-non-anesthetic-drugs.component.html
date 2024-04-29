@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutGap="2vh">
-    <app-titled-content-card *ngIf="!service.isEmpty()"
+    <app-titled-content-card *ngIf="!(service.anestheticReportNonAnestheticDrugsService.isEmpty$ | async)"
         title="{{ 'internaciones.anesthesic-report.non-anesthetic-drugs.REGISTERED_NON_ANESTHETIC_DRUGS' }}">
-        <app-medication-background-list [service]="service"></app-medication-background-list>
+        <app-medication-background-list [service]="service.anestheticReportNonAnestheticDrugsService"></app-medication-background-list>
     </app-titled-content-card>
 
     <div>

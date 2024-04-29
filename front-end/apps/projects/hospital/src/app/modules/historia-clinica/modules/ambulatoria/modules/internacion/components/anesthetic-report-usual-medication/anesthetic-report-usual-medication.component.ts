@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
-import { MedicacionesNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-anesthetic-report-usual-medication',
@@ -12,12 +12,12 @@ import { MedicacionesNuevaConsultaService } from '@historia-clinica/modules/ambu
 })
 export class AnestheticReportUsualMedicationComponent implements OnInit {
 
-    @Input() service: MedicacionesNuevaConsultaService;
 	searchConceptsLocallyFFIsOn = false;
 
     constructor(
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService,
+		readonly service: AnestheticReportService,
     ) { }
 
     ngOnInit(): void {
@@ -29,7 +29,7 @@ export class AnestheticReportUsualMedicationComponent implements OnInit {
     addUsualMedication(): void {
 		this.dialog.open(NewConsultationMedicationFormComponent, {
 			data: {
-				medicationService: this.service,
+				medicationService: this.service.medicacionesNuevaConsultaService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,

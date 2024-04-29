@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { AnestheticReportIntrasurgicalAnestheticProceduresService, INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS, IntresurgicalAnestheticProceduresRadioGroups } from '../../services/anesthetic-report-intrasurgical-anesthetic-procedures.service';
+import { INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS, IntresurgicalAnestheticProceduresRadioGroups } from '../../services/anesthetic-report-intrasurgical-anesthetic-procedures.service';
 import { MatRadioChange } from '@angular/material/radio';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-anesthetic-report-intrasurgical-anesthetic-procedures',
@@ -10,29 +11,30 @@ import { MatRadioChange } from '@angular/material/radio';
 })
 export class AnestheticReportIntrasurgicalAnestheticProceduresComponent implements OnInit {
 
-    @Input() service: AnestheticReportIntrasurgicalAnestheticProceduresService;
     form: FormGroup;
     intrasurgicalAnestheticProceduresOptions = INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS;
 
     intrasurgicalAnestheticProceduresRadioGroups: IntresurgicalAnestheticProceduresRadioGroups;
 
-    constructor() { }
+    constructor(
+        private readonly service: AnestheticReportService,
+    ) { }
 
     ngOnInit(): void {
-        this.form = this.service.getForm();
+        this.form = this.service.anestheticReportIntrasurgicalAnestheticProceduresService.getForm();
 
-        this.intrasurgicalAnestheticProceduresRadioGroups = this.service.getIntrasurgicalAnestheticProceduresRadioGroups();
+        this.intrasurgicalAnestheticProceduresRadioGroups = this.service.anestheticReportIntrasurgicalAnestheticProceduresService.getIntrasurgicalAnestheticProceduresRadioGroups();
     }
 
     onVenousAccessChange($event: MatRadioChange){
-        this.service.setVenousAccess($event.value)
+        this.service.anestheticReportIntrasurgicalAnestheticProceduresService.setVenousAccess($event.value)
     }
 
     onNasogastricTubeChange($event: MatRadioChange){
-        this.service.setNasogastricTube($event.value)
+        this.service.anestheticReportIntrasurgicalAnestheticProceduresService.setNasogastricTube($event.value)
     }
 
     onUrinaryCatheterChange($event: MatRadioChange){
-        this.service.setUrinaryCatheter($event.value)
+        this.service.anestheticReportIntrasurgicalAnestheticProceduresService.setUrinaryCatheter($event.value)
     }
 }

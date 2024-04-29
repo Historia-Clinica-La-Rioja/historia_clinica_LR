@@ -5,7 +5,7 @@
         <mat-form-field appearance="outline">
             <mat-select placeholder="{{'internaciones.anesthesic-report.anthropometric-data.BLOOD_TYPE_PLACEHOLDER' | translate }}" formControlName="bloodType">
                 <mat-option
-                    *ngFor="let bloodType of service.getBloodTypes()"
+                    *ngFor="let bloodType of service.anesthesicReportAnthropometricDataService.getBloodTypes()"
                     [value]="bloodType">
                     {{ bloodType.description }}
                 </mat-option>
@@ -24,7 +24,7 @@
         <mat-form-field appearance="outline">
             <input id="height" formControlName="height" placeholder="Ej: 180" type="number" matInput
                 (keypress)="isNumberOrDot($event.key)">
-            <mat-error> {{ service.heightError$ | async }} </mat-error>
+            <mat-error> {{ service.anesthesicReportAnthropometricDataService.heightError$ | async }} </mat-error>
         </mat-form-field>
     </div>
     <div fxLayout="column" fxLayoutAlign="space-between start">
@@ -33,7 +33,7 @@
         <mat-form-field appearance="outline">
             <input id="weight" formControlName="weight" placeholder="Ej: 70" type="number" matInput
                 (keypress)="isNumberOrDot($event.key)">
-            <mat-error> {{ service.weightError$ | async }} </mat-error>
+            <mat-error> {{ service.anesthesicReportAnthropometricDataService.weightError$ | async }} </mat-error>
         </mat-form-field>
     </div>
 </form>

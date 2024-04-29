@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AnestheticProcedureAttribute, AnestheticReportEndOfAnesthesiaStatusService, EndOfAnesthesiaRadioGroups, EndOfAnesthesiaStatusForm, INTERNMENT_OPTIONS } from '../../services/anesthetic-report-end-of-anesthesia-status.service';
+import { Component, OnInit } from '@angular/core';
+import { AnestheticProcedureAttribute, EndOfAnesthesiaRadioGroups, EndOfAnesthesiaStatusForm, INTERNMENT_OPTIONS } from '../../services/anesthetic-report-end-of-anesthesia-status.service';
 import { FormGroup } from '@angular/forms';
 import { RadioGroupData } from '@presentation/components/radio-group/radio-group.component';
 import { MatRadioChange } from '@angular/material/radio';
+import { AnestheticReportService } from '../../services/anesthetic-report.service';
 
 @Component({
     selector: 'app-anesthetic-report-end-of-anesthesia-status',
@@ -11,7 +12,6 @@ import { MatRadioChange } from '@angular/material/radio';
 })
 export class AnestheticReportEndOfAnesthesiaStatusComponent implements OnInit {
 
-    @Input() service: AnestheticReportEndOfAnesthesiaStatusService;
     form: FormGroup;
     endOfAnesthesiaStatusForm: FormGroup<EndOfAnesthesiaStatusForm>;
     allowOptions = false;
@@ -19,23 +19,25 @@ export class AnestheticReportEndOfAnesthesiaStatusComponent implements OnInit {
 
     endOfAnesthesiaRadioGroups: EndOfAnesthesiaRadioGroups;
 
-    constructor() { }
+    constructor(
+        private readonly service: AnestheticReportService,
+    ) { }
 
     ngOnInit(): void {
-        this.form = this.service.getForm();
-        this.endOfAnesthesiaStatusForm = this.service.getEndOfAnesthesiaStatusForm();
-        this.service.getinternment().subscribe((goesInsideOptions) => {
+        this.form = this.service.anestheticReportEndOfAnesthesiaStatusService.getForm();
+        this.endOfAnesthesiaStatusForm = this.service.anestheticReportEndOfAnesthesiaStatusService.getEndOfAnesthesiaStatusForm();
+        this.service.anestheticReportEndOfAnesthesiaStatusService.getinternment().subscribe((goesInsideOptions) => {
             this.allowOptions = goesInsideOptions;
         })
 
-        this.endOfAnesthesiaRadioGroups = this.service.getEndOfAnesthesiaRadioGroups();
+        this.endOfAnesthesiaRadioGroups = this.service.anestheticReportEndOfAnesthesiaStatusService.getEndOfAnesthesiaRadioGroups();
     }
 
     handleOptionSelected(optionSelected: RadioGroupData, attributeName: AnestheticProcedureAttribute) {
-        this.service.setFormAttributeValue(attributeName, optionSelected.value);
+        this.service.anestheticReportEndOfAnesthesiaStatusService.setFormAttributeValue(attributeName, optionSelected.value);
     }
 
     onInternmentOptionsChange(event: MatRadioChange) {
-        this.service.setinternmentOptions(event.value)
+        this.service.anestheticReportEndOfAnesthesiaStatusService.setinternmentOptions(event.value)
     }
 }
