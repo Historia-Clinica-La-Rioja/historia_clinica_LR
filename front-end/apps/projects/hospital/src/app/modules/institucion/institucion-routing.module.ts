@@ -46,6 +46,10 @@ const routes: Routes = [
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
 			{
+				path: 'rutas-larioja',
+				loadChildren: () => import('../rutas-larioja/rutas.module').then(m => m.RutasModule),
+ 			},
+			{
 				path: 'reportes-larioja',
 				loadChildren: () => import('../reportes-larioja/reportes-larioja.module').then(m => m.ReportesLariojaModule),
 			},

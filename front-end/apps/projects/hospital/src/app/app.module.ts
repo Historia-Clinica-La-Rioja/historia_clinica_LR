@@ -26,6 +26,7 @@ import { OAuthModule } from "angular-oauth2-oidc";
 import { StompService } from './stomp.service';
 import { stompServiceFactory } from './stomp-factory';
 import { ApiOverlayDelayComponent } from './api-overlay-delay/api-overlay-delay.component';
+import { MatIconModule } from '@angular/material/icon';
 
 registerLocaleData(localeEsAr, localeEsArExtras);
 
@@ -40,6 +41,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		BrowserModule,
 		FormsModule,
 		HttpClientModule,
+		MatIconModule,
 		RouterModule,
 		TranslateModule.forRoot({
 			loader: {
