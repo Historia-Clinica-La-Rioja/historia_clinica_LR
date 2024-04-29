@@ -201,12 +201,9 @@ public class ReportsController {
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
 		reportDataDto.setRnos(reportDataBo.getRnos());
         Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
-        if (featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA))
-        	context.put("flavor", "mdz");
-		else
-			context.put("flavor", "pba");
+		setFlavor(context);
 
-        LOG.debug(OUTPUT, reportDataDto);
+		LOG.debug(OUTPUT, reportDataDto);
 
 		return StoredFileResponse.sendFile(
 				pdfService.generate("annex_report", context),
@@ -228,6 +225,8 @@ public class ReportsController {
         Map<String, Object> context = annexReportService.createConsultationContext(reportDataDto);
         LOG.debug(OUTPUT, reportDataDto);
 
+		setFlavor(context);
+
 		return StoredFileResponse.sendFile(
 				pdfService.generate("annex_report", context),
 				annexReportService.createConsultationFileName(documentId, now),
@@ -235,7 +234,14 @@ public class ReportsController {
 		);
     }
 
-    @GetMapping("/{institutionId}/appointment-formv")
+	private void setFlavor(Map<String, Object> context) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA))
+			context.put("flavor", "mdz");
+		else
+			context.put("flavor", "pba");
+	}
+
+	@GetMapping("/{institutionId}/appointment-formv")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Resource> getFormVAppointmentReport(
             @PathVariable Integer institutionId,
