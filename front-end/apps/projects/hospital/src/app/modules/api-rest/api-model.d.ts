@@ -1269,13 +1269,13 @@ export interface CreateQuestionnaireDTO {
 	questionnaire: QuestionnaireAnswerDTO[];
 }
 
-export interface EdMontonAnswers {
+export interface EdmontonAnswers {
 	id: number;
 	idQuestion: number;
 	idAnswer: number;
 }
 
-export interface EdMontonSummary {
+export interface EdmontonSummary {
 	institutionId: number;
 	patientId: number;
 	edMontonId: number;
