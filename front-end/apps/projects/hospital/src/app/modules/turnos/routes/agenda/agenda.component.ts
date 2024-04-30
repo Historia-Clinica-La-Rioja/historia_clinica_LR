@@ -384,7 +384,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					date: toApiFormat(event.meta.date),
 					diaryId: this.agenda.id,
 					hour: toHourMinuteSecond(event.meta.date),
-					openingHoursId: this.getOpeningHoursId(event.meta.date.toDate()),
+					openingHoursId: this.getOpeningHoursId(event.meta.date),
 					overturnMode: false,
 					identificationTypeId: event.meta.patient.typeId ? event.meta.patient.typeId : 1,
 					idNumber: event.meta.patient.identificationNumber,
