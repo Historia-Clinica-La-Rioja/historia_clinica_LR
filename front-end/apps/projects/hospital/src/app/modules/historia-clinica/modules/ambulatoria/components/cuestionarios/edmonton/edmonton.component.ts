@@ -29,7 +29,7 @@ export class EdmontonComponent {
 
   constructor(
     private edmontonService: EdmontonService,
- 
+
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
 
@@ -233,21 +233,21 @@ export class EdmontonComponent {
   }
 
   construirDatos() {
-       const scoreTotal = this.calculateTotal(
-        this.selectedCognitiveOption,
-        this.selectedHealthStatusOption,
-        this.selectedHealthStatusOptionDos,
-        this.selectedFunctionIndOption,
-        this.selectedSupportSocOption,
-        this.selectedMedicationOption,
-        this.selectedMedicationOptionDos,
-        this.selectedNutritionOption,
-        this.selectedAnimoOption,
-        this.selectedContingenciaOption,
-        this.selectedRendimientoFuncOption,
-      );
+    const scoreTotal = this.calculateTotal(
+      this.selectedCognitiveOption,
+      this.selectedHealthStatusOption,
+      this.selectedHealthStatusOptionDos,
+      this.selectedFunctionIndOption,
+      this.selectedSupportSocOption,
+      this.selectedMedicationOption,
+      this.selectedMedicationOptionDos,
+      this.selectedNutritionOption,
+      this.selectedAnimoOption,
+      this.selectedContingenciaOption,
+      this.selectedRendimientoFuncOption,
+    );
 
-     const datos = {
+    const datos = {
       "questionnaireId": 1,
       "answers": [
 
@@ -340,6 +340,8 @@ export class EdmontonComponent {
         confirmButtonText: 'Enviar',
         confirmButtonColor: '#2687c5',
         denyButtonText: 'No enviar',
+        allowOutsideClick: false,
+
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire({
@@ -360,6 +362,8 @@ export class EdmontonComponent {
                   text: 'El formulario ha sido enviado correctamente.',
                   confirmButtonColor: '#2687c5',
                   confirmButtonText: 'Aceptar',
+                  allowOutsideClick: false,
+
                 });
               }, 2000);
             },
@@ -372,12 +376,22 @@ export class EdmontonComponent {
             text: 'El formulario no ha sido enviado.',
             confirmButtonColor: '#2687c5',
             confirmButtonText: 'Aceptar',
+            allowOutsideClick: false,
+
           });
         }
       });
     } else {
       this.goOffline();
-      Swal.fire('Error', 'No se detectó conexión a internet. Por favor, revise su conexión e inténtelo de nuevo.', 'error');
+      Swal.fire({
+        icon: 'error',
+        iconColor: '#ff0000',
+        title: 'ERROR',
+        text: 'No se detectó conexión a internet. Por favor, revise su conexión e inténtelo de nuevo.',
+        confirmButtonColor: '#2687c5',
+        allowOutsideClick: false,
+
+      });
     }
   }
 
@@ -395,9 +409,6 @@ export class EdmontonComponent {
   enviarFormulario(): void {
     const questionnaireData = this.construirDatos();
     this.edmontonService.createEdmonton(this.patientId, questionnaireData).subscribe();
-
-    console.log(this.enviarFormulario, this.edmontonService, questionnaireData)
   }
-
 }
 
