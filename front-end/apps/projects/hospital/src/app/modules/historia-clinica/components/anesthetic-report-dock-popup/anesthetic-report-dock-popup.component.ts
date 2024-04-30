@@ -6,9 +6,9 @@ import { ComponentEvaluationManagerService } from '@historia-clinica/modules/amb
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 @Component({
-    selector: 'app-anesthetic-report-dock-popup',
-    templateUrl: './anesthetic-report-dock-popup.component.html',
-    styleUrls: ['./anesthetic-report-dock-popup.component.scss'],
+	selector: 'app-anesthetic-report-dock-popup',
+	templateUrl: './anesthetic-report-dock-popup.component.html',
+	styleUrls: ['./anesthetic-report-dock-popup.component.scss'],
 	providers: [ComponentEvaluationManagerService]
 })
 export class AnestheticReportDockPopupComponent implements OnInit {
@@ -19,8 +19,8 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     isLoading = false;
 	isLoadingDraft = false;
 
-    constructor(
-        @Inject(OVERLAY_DATA) public data: any,
+	constructor(
+		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
 		private readonly el: ElementRef,
         readonly anesthethicReportHandlerService: AnestheticReportService,
@@ -44,7 +44,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     }
 
     save(isDraft: boolean): void {
-		this.isLoading = true;
+		this.isLoading = !isDraft;
 		this.isLoadingDraft = isDraft;
 
         const newAnestheticReport: AnestheticReportDto = this.anesthethicReportHandlerService.buildAnestheticReportDto(this.mainDiagnosis, this.diagnosis, isDraft);

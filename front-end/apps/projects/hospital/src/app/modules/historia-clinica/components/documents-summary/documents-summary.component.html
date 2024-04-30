@@ -99,10 +99,8 @@
 								<ng-container *ngIf="documentSearch.document.documentType === 'Anamnesis'">
 									Evaluación de ingreso
 								</ng-container>
-								<ng-container *ngIf="documentSearch.document.documentType === 'Epicrisis' && !documentSearch.document.confirmed">
-									<span class="elements-draft">{{documentSearch.document.documentType}} (Borrador) </span>
-								</ng-container>
-								<ng-container *ngIf="documentSearch.document.documentType === 'Parte anestésico' && !documentSearch.document.confirmed">
+								<ng-container
+									*ngIf="(documentSearch.document.documentType == 'Epicrisis' || documentSearch.document.documentType == 'Parte anestésico') && !documentSearch.document.confirmed">
 									<span class="elements-draft">{{documentSearch.document.documentType}} (Borrador) </span>
 								</ng-container>
 								<ng-container *ngIf="documentSearch.document.documentType !== 'Anamnesis' && documentSearch.document.confirmed">

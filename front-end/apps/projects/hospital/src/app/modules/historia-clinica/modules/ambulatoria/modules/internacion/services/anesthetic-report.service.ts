@@ -163,14 +163,14 @@ export class AnestheticReportService {
             this.collapsedAnthropometricDataSectionSource.next(false);
             setTimeout(() => {
                 scrollIntoError(this.anesthesicReportAnthropometricDataService.getForm(), elementRef)
-                this.setIsLoading(isDraft)
+                this.setIsLoading(false)
             }, 300);
         }
         else if (this.anestheticReportClinicalEvaluationService.getForm().invalid) {
             this.collapsedClinicalEvaluationSectionSource.next(false);
             setTimeout(() => {
                 scrollIntoError(this.anestheticReportClinicalEvaluationService.getForm(), elementRef)
-                this.setIsLoading(isDraft)
+                this.setIsLoading(false)
             }, 300);
         }
     }
@@ -184,14 +184,14 @@ export class AnestheticReportService {
         service.subscribe({
 			next: () => {
                 this.snackBarService.showSuccess(successMessage, { duration: TIME_OUT });
-                this.setIsLoading(isDraft)
+                this.setIsLoading(false)
 				dockPopupRef.close({
                     evolutionClinical: true
                 });
 			},
 			error: (error) => {
 				this.snackBarService.showError(error.text)
-                this.setIsLoading(isDraft)
+                this.setIsLoading(false)
 			},
             complete: () => {
                 this.resetValues();
@@ -268,7 +268,8 @@ export class AnestheticReportService {
         this.setLastFoodIntakeTime(null);
     }
 
-	private setIsLoading(isDraft: boolean): void {
-		isDraft ? this.isAnestheticReportLoadingDraftSource.next(false) : this.isAnestheticReportLoadingSource.next(false)
+	private setIsLoading(loading: boolean): void {
+		this.isAnestheticReportLoadingDraftSource.next(loading)
+		this.isAnestheticReportLoadingSource.next(loading)
 	}
 }
