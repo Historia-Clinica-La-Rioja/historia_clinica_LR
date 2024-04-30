@@ -49,7 +49,7 @@ public class CreateCustomAppointmentServiceImpl implements CreateCustomAppointme
 
 		if (currentAppointment.isPresent()) {
 			if (appointmentBo.getAppointmentOptionId() != null) {
-				appointmentService.checkUpdateType(currentAppointment.get(), appointmentBo);
+				appointmentService.updateAppointmentByOptionId(currentAppointment.get(), appointmentBo);
 			} else {
 				customAppointmentSave(currentAppointment.get().getId(), customRecurringAppointmentBo.getRepeatEvery(), customRecurringAppointmentBo.getWeekDayId(), customRecurringAppointmentBo.getEndDate());
 				for (LocalDate initDate = appointmentBo.getDate().plusDays(WEEK_DAYS * repeatEvery); !initDate.isAfter(customRecurringAppointmentBo.getEndDate()); initDate = initDate.plusDays(WEEK_DAYS * repeatEvery)) {

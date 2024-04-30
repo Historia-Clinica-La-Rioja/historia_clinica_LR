@@ -1,48 +1,45 @@
 package net.pladema.medicalconsultation.diary.service;
 
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursFreeTimesBo;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 public interface DiaryService {
 
-	Integer addDiary(DiaryBo diaryToSave);
+    Integer addDiary(DiaryBo diaryToSave);
 
-	Integer updateDiary(DiaryBo diaryToSave);
-	
-	Boolean deleteDiary(Integer diaryId);
+    Integer updateDiary(DiaryBo diaryToSave);
+
+    Boolean deleteDiary(Integer diaryId);
 
     List<DiaryBo> getAllOverlappingDiary(Integer healthcareProfessionalId, Integer doctorsOfficeId, Integer institutionId,
                                          LocalDate newDiaryStart, LocalDate newDiaryEnd, Optional<Integer> excludeDiaryId);
 
     Collection<DiaryBo> getActiveDiariesBy(Integer associatedHealthcareProfessionalId, Integer healthcareProfessionalId, Integer specialtyId, Integer institutionId);
 
-	Optional<CompleteDiaryBo> getDiary(Integer diaryId);
-	
-	Optional<DiaryBo> getDiaryByAppointment(Integer appointmentId);
+    Optional<CompleteDiaryBo> getDiary(Integer diaryId);
 
-	DiaryBo getDiaryById(Integer diaryId);
+    Optional<DiaryBo> getDiaryByAppointment(Integer appointmentId);
 
-	Integer getDiaryIdByAppointment(Integer appointmentId);
+    DiaryBo getDiaryById(Integer diaryId);
 
-	Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId);
-	
-	Integer getInstitution(Integer diaryId);
+    Integer getDiaryIdByAppointment(Integer appointmentId);
 
-	List<String> getActiveDiariesAliases(Integer institutionId);
+    Boolean hasActiveDiariesInInstitution(Integer healthcareProfessionalId, Integer institutionId);
 
-	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality);
+    Integer getInstitution(Integer diaryId);
 
-	Optional<CompleteDiaryBo> getCompleteDiaryByAppointment (Integer appointmentId);
+    List<String> getActiveDiariesAliases(Integer institutionId);
 
-	Boolean hasPractices(Integer diaryId);
+    List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality);
+
+    Optional<CompleteDiaryBo> getCompleteDiaryByAppointment(Integer appointmentId);
+
+    Boolean hasPractices(Integer diaryId);
 
 }

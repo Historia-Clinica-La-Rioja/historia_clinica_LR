@@ -2,14 +2,18 @@ package net.pladema.medicalconsultation.diary.service.domain;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.diary.domain.IDiaryOpeningHoursBo;
+import net.pladema.medicalconsultation.diary.domain.IOpeningHoursBo;
 
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"diaryId", "overturnCount"})
 @ToString
-public class DiaryOpeningHoursBo {
+@NoArgsConstructor
+public class DiaryOpeningHoursBo implements IDiaryOpeningHoursBo {
 
     private Integer diaryId;
 
@@ -31,8 +35,8 @@ public class DiaryOpeningHoursBo {
 
 	private Boolean regulationProtectedAppointmentsAllowed;
 
-	public boolean overlap(DiaryOpeningHoursBo other) {
-        return openingHours.overlap(other.getOpeningHours());
+    @Override
+    public IOpeningHoursBo getIOpeningHours() {
+        return openingHours;
     }
-
 }
