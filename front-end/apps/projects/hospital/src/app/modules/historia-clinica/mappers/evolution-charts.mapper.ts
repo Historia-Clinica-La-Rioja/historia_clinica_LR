@@ -96,7 +96,7 @@ const toTooltip = (chartDefinition: AnthropometricGraphicDataDto): Object => {
 		callbacks: {
 			title: function (tooltipItems) {
 				const indexOfRangeLabel = tooltipItems[0].parsed.x;
-				return `${chartDefinition.xaxisRangeLabels[indexOfRangeLabel]}`;
+				return chartDefinition.xaxisRangeLabels[indexOfRangeLabel] !== '' ? `${chartDefinition.xaxisLabel}: ${chartDefinition.xaxisRangeLabels[indexOfRangeLabel]}` : `${chartDefinition.xaxisRangeLabels[indexOfRangeLabel]}`
 			},
 			label: function (context) {
 				const labelWithValue = `${context.dataset.label}: ${context.formattedValue}`;
