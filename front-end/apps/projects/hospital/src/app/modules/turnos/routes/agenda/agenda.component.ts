@@ -381,9 +381,8 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 			this.dialog.open(ConfirmBookingComponent, {
 				width: '30%',
 				data: {
-					date: toApiFormat(event.meta.date),
+					date: event.meta.date,
 					diaryId: this.agenda.id,
-					hour: toHourMinuteSecond(event.meta.date),
 					openingHoursId: this.getOpeningHoursId(event.meta.date),
 					overturnMode: false,
 					identificationTypeId: event.meta.patient.typeId ? event.meta.patient.typeId : 1,

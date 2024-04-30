@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CompleteDiaryDto, GroupAppointmentResponseDto } from '@api-rest/api-model';
-import { dateToTimeDto, timeDtotoString } from '@api-rest/mapper/date-dto.mapper';
-import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { GroupAppointmentFacadeService } from '@api-rest/services/group-appointment-facade.service';
 import { APPOINTMENT_STATES_ID, getAppointmentLabelColor, getAppointmentState } from '@turnos/constants/appointment';
 import { AppointmentComponent, PatientAppointmentInformation } from '@turnos/dialogs/appointment/appointment.component';
@@ -58,9 +56,8 @@ export class AppointmentListDetailComponent implements OnInit {
 		this.dialog.open(ConfirmBookingComponent, {
 			width: '30%',
 			data: {
-				date: toApiFormat(new Date(this.date)),
+				date: this.date,
 				diaryId: this.diary.id,
-				hour: timeDtotoString(dateToTimeDto(new Date(this.date))),
 				openingHoursId: this.diary.diaryOpeningHours,
 				overturnMode: false,
 				identificationTypeId: appointmentData.patient.typeId ? appointmentData.patient.typeId : 1,

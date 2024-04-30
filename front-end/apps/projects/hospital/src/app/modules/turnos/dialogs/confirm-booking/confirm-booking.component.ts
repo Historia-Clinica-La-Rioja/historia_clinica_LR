@@ -56,7 +56,7 @@ export class ConfirmBookingComponent implements OnInit {
 	VALIDATIONS = VALIDATIONS;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
-			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean,
+			date: Date, diaryId: number, openingHoursId: number, overturnMode: boolean,
 			identificationTypeId: number, idNumber: string, appointmentId: number, phoneNumber: string,
 			fullName: string, email: string, phonePrefix: string
 		},

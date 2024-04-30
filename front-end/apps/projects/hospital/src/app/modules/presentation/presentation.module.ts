@@ -113,7 +113,6 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
-import { ViewDatePipe } from './pipes/view-date.pipe';
 import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 
 @NgModule({
@@ -225,7 +224,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
-		ViewDatePipe,
 		ViewHourMinutePipe
 	],
 	imports: [
@@ -339,7 +337,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
-		ViewDatePipe,
 		ViewHourMinutePipe,
 	],
 	entryComponents: [
