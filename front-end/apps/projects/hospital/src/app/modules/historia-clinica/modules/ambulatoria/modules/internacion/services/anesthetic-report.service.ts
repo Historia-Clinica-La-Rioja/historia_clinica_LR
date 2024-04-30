@@ -53,13 +53,15 @@ export class AnestheticReportService {
     anestheticPlanList$: Observable<MedicationData[]>
     analgesicTechniqueList$: Observable<AnalgesicTechniqueData[]>
     anestheticTechniqueList$: Observable<AnestheticTechniqueData[]>
-    
+
     private collapsedAnthropometricDataSectionSource = new BehaviorSubject<boolean>(true);
     collapsedAnthropometricDataSection$: Observable<boolean> = this.collapsedAnthropometricDataSectionSource.asObservable();
     private collapsedClinicalEvaluationSectionSource = new BehaviorSubject<boolean>(true);
     collapsedClinicalEvaluationSection$: Observable<boolean> = this.collapsedClinicalEvaluationSectionSource.asObservable();
     private isAnestheticReportLoadingSource = new BehaviorSubject<boolean>(false);
 	isAnestheticReportLoading$: Observable<boolean> = this.isAnestheticReportLoadingSource.asObservable();
+	private isAnestheticReportLoadingDraftSource = new BehaviorSubject<boolean>(false);
+	isAnestheticReportLoadingDraft$: Observable<boolean> = this.isAnestheticReportLoadingDraftSource.asObservable();
 
     lastFoodIntakeTimeSelected: TimeDto;
 
@@ -97,7 +99,7 @@ export class AnestheticReportService {
 	isVitalSignsEmpty$ = this.isVitalSignsEmptySource.asObservable();
     private isEndOfAnesthesiaStatusEmptySource = new BehaviorSubject<boolean>(true);
 	isEndOfAnesthesiaStatusEmpty$ = this.isEndOfAnesthesiaStatusEmptySource.asObservable();
-    
+
     constructor(
         private readonly snomedService: SnomedService,
 		private readonly formBuilder: UntypedFormBuilder,
@@ -156,35 +158,40 @@ export class AnestheticReportService {
         this.anestheticTechniqueList$ = this.anestheticTechniqueService.getAnestheticTechniqueList();
     }
 
-    checkFormErrors(elementRef: ElementRef) {
+    checkFormErrors(elementRef: ElementRef, isDraft: boolean) {
         if (this.anesthesicReportAnthropometricDataService.getForm().invalid) {
             this.collapsedAnthropometricDataSectionSource.next(false);
             setTimeout(() => {
                 scrollIntoError(this.anesthesicReportAnthropometricDataService.getForm(), elementRef)
-                this.isAnestheticReportLoadingSource.next(false);
+                this.setIsLoading(isDraft)
             }, 300);
         }
         else if (this.anestheticReportClinicalEvaluationService.getForm().invalid) {
             this.collapsedClinicalEvaluationSectionSource.next(false);
             setTimeout(() => {
                 scrollIntoError(this.anestheticReportClinicalEvaluationService.getForm(), elementRef)
-                this.isAnestheticReportLoadingSource.next(false);
+                this.setIsLoading(isDraft)
             }, 300);
         }
     }
 
-    createAnestheticReport(newAnestheticReport: AnestheticReportDto, internmentEpisodeId: number, dockPopupRef: DockPopupRef) {
-        this.anesthethicReportService.createAnestheticReport(newAnestheticReport, internmentEpisodeId).subscribe({
+    createAnestheticReport(newAnestheticReport: AnestheticReportDto, internmentEpisodeId: number, dockPopupRef: DockPopupRef, isDraft: boolean) {
+		const service = isDraft ?
+			this.anesthethicReportService.createAnestheticReportDraft(newAnestheticReport, internmentEpisodeId) :
+			this.anesthethicReportService.createAnestheticReport(newAnestheticReport, internmentEpisodeId)
+		const successMessage = isDraft ? 'internaciones.anesthesic-report.SUCCESS_DRAFT' : 'internaciones.anesthesic-report.SUCCESS';
+
+        service.subscribe({
 			next: () => {
-                this.snackBarService.showSuccess('internaciones.anesthesic-report.SUCCESS', { duration: TIME_OUT });
-                this.isAnestheticReportLoadingSource.next(false);
+                this.snackBarService.showSuccess(successMessage, { duration: TIME_OUT });
+                this.setIsLoading(isDraft)
 				dockPopupRef.close({
                     evolutionClinical: true
                 });
 			},
 			error: (error) => {
 				this.snackBarService.showError(error.text)
-                this.isAnestheticReportLoadingSource.next(false);
+                this.setIsLoading(isDraft)
 			},
             complete: () => {
                 this.resetValues();
@@ -196,13 +203,17 @@ export class AnestheticReportService {
         return this.isAnestheticReportLoading$;
     }
 
+	getIsAnestheticReportLoadingDraft(): Observable<boolean> {
+        return this.isAnestheticReportLoadingDraft$;
+    }
+
     isValidConsultation(): boolean {
         if (this.anesthesicReportAnthropometricDataService.getForm().invalid || this.anestheticReportClinicalEvaluationService.getForm().invalid)
 			return false;
 		return true;
     }
 
-    buildAnestheticReportDto(mainDiagnosis: HealthConditionDto, diagnosis: DiagnosisDto[]): AnestheticReportDto {
+    buildAnestheticReportDto(mainDiagnosis: HealthConditionDto, diagnosis: DiagnosisDto[], isDraft: boolean): AnestheticReportDto {
         return {
             mainDiagnosis: mainDiagnosis,
             diagnosis: diagnosis,
@@ -224,6 +235,7 @@ export class AnestheticReportService {
             antibioticProphylaxis: this.anestheticReportAntibioticProphylaxisService.getAnestheticSubstanceDto(),
             measuringPoints: this.anestheticReportVitalSignsService.getMeasuringPointsAsMeasuringPointDto(),
             postAnesthesiaStatus: this.anestheticReportEndOfAnesthesiaStatusService.getPostAnesthesiaStatusDto(),
+			confirmed: !isDraft,
 		};
 	}
 
@@ -239,7 +251,7 @@ export class AnestheticReportService {
             asa: personRecordForm.asa,
             anesthesiaStartDate: vitalSignsForm.anesthesiaStartDate ? dateToDateDto(vitalSignsForm.anesthesiaStartDate) : null,
             anesthesiaEndDate: vitalSignsForm.anesthesiaEndDate ? dateToDateDto(vitalSignsForm.anesthesiaEndDate) : null,
-            anesthesiaStartTime: vitalSignsForm.anesthesiaStartTime,    
+            anesthesiaStartTime: vitalSignsForm.anesthesiaStartTime,
             anesthesiaEndTime: vitalSignsForm.anesthesiaEndTime,
             surgeryStartDate: vitalSignsForm.surgeryStartDate ? dateToDateDto(vitalSignsForm.surgeryStartDate) : null,
             surgeryEndDate: vitalSignsForm.surgeryEndDate ? dateToDateDto(vitalSignsForm.surgeryEndDate) : null,
@@ -255,4 +267,8 @@ export class AnestheticReportService {
     private resetValues() {
         this.setLastFoodIntakeTime(null);
     }
+
+	private setIsLoading(isDraft: boolean): void {
+		isDraft ? this.isAnestheticReportLoadingDraftSource.next(false) : this.isAnestheticReportLoadingSource.next(false)
+	}
 }

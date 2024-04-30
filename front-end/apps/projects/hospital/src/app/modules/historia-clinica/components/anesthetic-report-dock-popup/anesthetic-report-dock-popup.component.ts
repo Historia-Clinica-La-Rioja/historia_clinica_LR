@@ -12,11 +12,12 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 	providers: [ComponentEvaluationManagerService]
 })
 export class AnestheticReportDockPopupComponent implements OnInit {
-    
+
     mainDiagnosis: HealthConditionDto;
 	diagnosis: DiagnosisDto[] = [];
 
     isLoading = false;
+	isLoadingDraft = false;
 
     constructor(
         @Inject(OVERLAY_DATA) public data: any,
@@ -27,7 +28,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
     ) {
         this.mainDiagnosis = data.mainDiagnosis;
         this.diagnosis = data.diagnosis;
-        
+
         this.anesthethicReportHandlerService.createAnestheticReportServiceInstances();
     }
 
@@ -37,17 +38,21 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.anesthethicReportHandlerService.getIsAnestheticReportLoading().subscribe(isLoading=> {
             this.isLoading = isLoading;
         })
+		this.anesthethicReportHandlerService.getIsAnestheticReportLoadingDraft().subscribe(isLoadingDraft => {
+            this.isLoadingDraft = isLoadingDraft;
+        })
     }
 
-    save(): void {
+    save(isDraft: boolean): void {
 		this.isLoading = true;
+		this.isLoadingDraft = isDraft;
 
-        const newAnestheticReport: AnestheticReportDto = this.anesthethicReportHandlerService.buildAnestheticReportDto(this.mainDiagnosis, this.diagnosis);
+        const newAnestheticReport: AnestheticReportDto = this.anesthethicReportHandlerService.buildAnestheticReportDto(this.mainDiagnosis, this.diagnosis, isDraft);
 
         if (this.anesthethicReportHandlerService.isValidConsultation()) {
-            this.anesthethicReportHandlerService.createAnestheticReport(newAnestheticReport, this.data.internmentEpisodeId, this.dockPopupRef);
+            this.anesthethicReportHandlerService.createAnestheticReport(newAnestheticReport, this.data.internmentEpisodeId, this.dockPopupRef, isDraft);
         } else {
-            this.anesthethicReportHandlerService.checkFormErrors(this.el);
+            this.anesthethicReportHandlerService.checkFormErrors(this.el, isDraft);
         }
 	}
 

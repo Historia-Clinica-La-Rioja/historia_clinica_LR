@@ -325,6 +325,7 @@
 		},
 		"anesthesic-report": {
 			"SUCCESS": "Parte anestésico guardado correctamente",
+			"SUCCESS_DRAFT": "Borrador parte anestésico guardado correctamente",
 			"diagnosis": {
 				"TITLE": "Diagnósticos",
 				"MAIN_DIAGNOSIS": "Diagnóstico principal",
@@ -543,6 +544,10 @@
 				},
 				"OBSERVATIONS": "Observaciones: ",
 				"ADD_OBSERVATIONS": "Agregar observaciones"
+			},
+			"buttons": {
+				"SAVE_DRAFT": "Guardar borrador",
+				"CONFIRM": "Confirmar"
 			}
 		},
 		"clinical-assessment-diagnosis": {

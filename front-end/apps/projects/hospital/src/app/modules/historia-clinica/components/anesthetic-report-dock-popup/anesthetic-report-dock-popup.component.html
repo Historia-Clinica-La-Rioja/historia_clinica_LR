@@ -132,9 +132,15 @@
         </app-new-consultation-expansion-section>
     </div>
 
-    <div actions id="buttons" fxLayoutAlign="end">
-        <app-button [color]="'primary'" [isLoading]="isLoading" [text]="'buttons.CONFIRM' | translate | uppercase"
-            [buttonType]="'mat-raised-button'" (clicked)="save()">
-        </app-button>
-    </div>
+
+	<div actions id="buttons" fxLayoutGap="10px" fxLayoutAlign="end">
+		<app-button [color]="'primary'" [isLoading]="isLoadingDraft" [disabled]="isLoading"
+			[text]="'internaciones.anesthesic-report.buttons.SAVE_DRAFT' | translate | uppercase"
+			[buttonType]="'mat-stroked-button'" (clicked)="save(true)">
+		</app-button>
+		<app-button [color]="'primary'" [isLoading]="isLoading" [disabled]="isLoadingDraft"
+			[text]="'internaciones.anesthesic-report.buttons.CONFIRM' | translate | uppercase"
+			[buttonType]="'mat-raised-button'" (clicked)="save(false)">
+		</app-button>
+	</div>
 </app-dock-popup>

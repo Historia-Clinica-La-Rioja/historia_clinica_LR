@@ -22,6 +22,11 @@ export class AnesthethicReportService {
         return this.http.post<AnestheticReportDto>(url, anesthethicReport);
     }
 
+	createAnestheticReportDraft(anesthethicReportDraft: AnestheticReportDto, internmentEpisodeId: number): Observable<AnestheticReportDto> {
+		const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/draft`;
+		return this.http.post<AnestheticReportDto>(url, anesthethicReportDraft);
+	}
+
     getAnestheticReport(documentId: number, internmentEpisodeId: number): Observable<AnestheticReportDto> {
         const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/${documentId}`;
         return this.http.get<AnestheticReportDto>(url)
