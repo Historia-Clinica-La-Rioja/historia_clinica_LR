@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentDto, DocumentObservationsDto, HealthConditionDto, HealthHistoryConditionDto, MedicationDto, PersonalHistoryDto, ProcedureDto, ReasonDto, RiskFactorDto } from '@api-rest/api-model';
+import { mapDateWithHypenToDateWithSlash } from '@api-rest/mapper/date-dto.mapper';
 import { getDocumentType } from '@core/constants/summaries';
-import { dateToViewDate } from '@core/utils/date.utils';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
 
@@ -36,18 +36,28 @@ export class DocumentSignatureService {
                     icon: 'error_outlined',
                     title: 'digital-signature.detailed-documents.DIAGNOSIS',
                     value: this.buildDiagnosis(document.diagnosis, document.mainDiagnosis)
-                }
-            ],
-            twoColumns: [
-                {
+                },
+				{
                     icon: 'cancel',
                     title: 'digital-signature.detailed-documents.ALLERGIES',
                     value: this.buildAllergies(document.allergies)
                 },
+				{
+                    icon: 'favorite_outlined',
+                    title: 'digital-signature.detailed-documents.RISK_FACTORS',
+                    value: this.buildRiskFactors(document.riskFactors)
+                },
+				{
+                    icon: 'accessibility',
+                    title: 'digital-signature.detailed-documents.ANTHROPOMETRIC_DATA',
+                    value: this.buildAnthropometricData(document.anthropometricData)
+                }
+            ],
+            twoColumns: [
                 {
                     icon: 'report',
                     title: 'digital-signature.detailed-documents.FAMILY_HISTORIES',
-                    value: this.buildFamilyHistories(document.familyHistories)
+                    value: this.buildDataWithDate(document.familyHistories)
                 },
                 {
                     icon: 'event_available',
@@ -57,24 +67,12 @@ export class DocumentSignatureService {
                 {
                     icon: 'report_outlined',
                     title: 'digital-signature.detailed-documents.PERSONAL_HISTORIES',
-                    value: this.buildPersonalHistories(document.personalHistories)
+                    value: this.buildDataWithDate(document.personalHistories)
                 },
                 {
                     icon: 'library_add',
                     title: 'digital-signature.detailed-documents.PROCEDURES',
                     value: this.buildProcedures(document.procedures)
-                },
-                {
-                    icon: 'favorite_outlined',
-                    title: 'digital-signature.detailed-documents.RISK_FACTORS',
-                    value: this.buildRiskFactors(document.riskFactors)
-                },
-            ],
-            threeColumns: [
-                {
-                    icon: 'accessibility',
-                    title: 'digital-signature.detailed-documents.ANTHROPOMETRIC_DATA',
-                    value: this.buildAnthropometricData(document.anthropometricData)
                 }
             ]
         }
@@ -107,8 +105,8 @@ export class DocumentSignatureService {
 		const proceduresFiltered: string[] = [];
 		procedures.forEach(p => {
 			proceduresFiltered.push(p.snomed.pt);
-			if (p.performedDate)
-				proceduresFiltered.push(dateToViewDate(new Date(p.performedDate)));
+			const date = p.performedDate ? mapDateWithHypenToDateWithSlash(p.performedDate) : null;
+			proceduresFiltered.push(date);
 		})
 		return proceduresFiltered;
 	}
@@ -134,16 +132,6 @@ export class DocumentSignatureService {
 
 	private buildReasons(reasons: ReasonDto[]): string[] {
 		return reasons.map(r => r.snomed.pt);
-	}
-
-	private buildPersonalHistories(personalHistories: PersonalHistoryDto[]): string[] {
-		const personalHistoriesFiltered: string[] = [];
-		personalHistories.forEach(ph => {
-			personalHistoriesFiltered.push(ph.snomed.pt);
-			if (ph.startDate)
-				personalHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(ph.startDate))}`);
-		})
-		return personalHistoriesFiltered;
 	}
 
 	private buildObservations(observation: DocumentObservationsDto): string[] {
@@ -174,16 +162,6 @@ export class DocumentSignatureService {
 		return medicationsFiltered;
 	}
 
-	private buildFamilyHistories(familyHistories: HealthHistoryConditionDto[]): string[] {
-		const familyHistoriesFiltered: string[] = [];
-		familyHistories.forEach(fh => {
-			familyHistoriesFiltered.push(fh.snomed.pt);
-			if (fh.startDate)
-				familyHistoriesFiltered.push(`Desde ${dateToViewDate(new Date(fh.startDate))}`);
-		})
-		return familyHistoriesFiltered;
-	}
-
 	private buildAnthropometricData(anthropometricData: AnthropometricDataDto): string[] {
 		const anthropometricDataFiltered: string[] = [];
 		if (anthropometricData?.bloodType)
@@ -197,5 +175,15 @@ export class DocumentSignatureService {
 
 	private buildAllergies(allergies: AllergyConditionDto[]): string[] {
 		return allergies.map(data => data.snomed.pt);
+	}
+
+	private buildDataWithDate(data: HealthHistoryConditionDto[] | PersonalHistoryDto[]): string [] {
+		const dataFiltered: string[] = [];
+		data.forEach(d => {
+			dataFiltered.push(d.snomed.pt);
+			const date = d.startDate ? `Desde ${mapDateWithHypenToDateWithSlash(d.startDate)}` : null;
+			dataFiltered.push(date);
+		})
+		return dataFiltered;
 	}
 }
