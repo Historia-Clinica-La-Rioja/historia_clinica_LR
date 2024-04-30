@@ -111,21 +111,16 @@ public class GetAnthropometricGraphicData {
 		}
 		evolutionValues.sort(Comparator.comparing(HCEClinicalObservationBo::getEffectiveTime));
 		List<GraphicDatasetIntersectionBo> evolutionIntersectionList = new ArrayList<>();
+		Integer minWeeksOrMonths = (graphicBo.getRange().getValues().get(0));
 		Integer maxWeeksOrMonths = (graphicBo.getRange().getValues().get(graphicBo.getRange().getValues().size() - 1));
 		evolutionValues.forEach(evolution -> {
-			short age = (short) ChronoUnit.YEARS.between(patient.getBirthDate(), evolution.getEffectiveTime());
-			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() || (graphicBo.getRange().equals(EAnthropometricGraphicRange.TWO_YEARS) && age < 2)) {
-				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue().replace(',', '.'), maxWeeksOrMonths);
-				if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
-			}
+			GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), evolution.getEffectiveTime().toLocalDate(), patient.getBirthDate(), evolution.getValue().replace(',', '.'), minWeeksOrMonths, maxWeeksOrMonths);
+			if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
 		});
 		String actualValue = getActualValue(anthropometricValue, graphicBo.getGraphic());
 		if (actualValue != null ){
-			short age = (short) ChronoUnit.YEARS.between(patient.getBirthDate(), LocalDate.now());
-			if (age >= graphicBo.getGraphic().getMinAge() && age < graphicBo.getGraphic().getMaxAge() || (graphicBo.getRange().equals(EAnthropometricGraphicRange.TWO_YEARS) && age < 2)) {
-				GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), LocalDate.now(), patient.getBirthDate(), actualValue.replace(',', '.'), maxWeeksOrMonths);
-				if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
-			}
+			GraphicDatasetIntersectionBo intersectionBo = getEvolutionIntersection(graphicBo.getRange(), LocalDate.now(), patient.getBirthDate(), actualValue.replace(',', '.'), minWeeksOrMonths, maxWeeksOrMonths);
+			if (intersectionBo != null) evolutionIntersectionList.add(intersectionBo);
 		}
 		return evolutionIntersectionList;
 	}
@@ -153,7 +148,7 @@ public class GetAnthropometricGraphicData {
 		return result;
 	}
 
-	private GraphicDatasetIntersectionBo getEvolutionIntersection(EAnthropometricGraphicRange range, LocalDate evolutionDate, LocalDate patientBirthDate, String value, Integer maxXValue){
+	private GraphicDatasetIntersectionBo getEvolutionIntersection(EAnthropometricGraphicRange range, LocalDate evolutionDate, LocalDate patientBirthDate, String value, Integer minXValue, Integer maxXValue){
 		int x;
 		if (range.equals(EAnthropometricGraphicRange.SIX_MONTHS)){
 			x = (int) ChronoUnit.WEEKS.between(patientBirthDate, evolutionDate);
@@ -161,7 +156,7 @@ public class GetAnthropometricGraphicData {
 		else {
 			x = (int) ChronoUnit.MONTHS.between(patientBirthDate, evolutionDate);
 		}
-		if (x <= maxXValue){
+		if (x >= minXValue && x <= maxXValue){
 			x = getClosestXValue(range.getValues(), x);
 			return new GraphicDatasetIntersectionBo(String.valueOf(x), value);
 		}
@@ -248,6 +243,7 @@ public class GetAnthropometricGraphicData {
 
 	private EAnthropometricGraphicRange getGraphicRange(BasicPatientDto basicPatientDto, EAnthropometricGraphic graphic){
 		PersonAgeDto personAge = basicPatientDto.getPerson().getPersonAge();
+		boolean hasGender = basicPatientDto.getGender() != null && !basicPatientDto.getGender().getId().equals(EGender.X.getId());
 		if (personAge == null || personAge.getYears() > 18)
 			return null;
 		if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_LENGTH))
@@ -256,15 +252,15 @@ public class GetAnthropometricGraphicData {
 			return EAnthropometricGraphicRange.WEIGHT_FOR_HEIGHT;
 		if (personAge.getYears() > 4 && !graphic.equals(EAnthropometricGraphic.HEAD_CIRCUMFERENCE)){
 			if (graphic.equals(EAnthropometricGraphic.WEIGHT_FOR_AGE)) return EAnthropometricGraphicRange.TEN_YEARS;
-			if (graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE)) return EAnthropometricGraphicRange.TWO_TO_NINETEEN_YEARS;
+			if (graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE) && hasGender) return EAnthropometricGraphicRange.TWO_TO_NINETEEN_YEARS;
 			return EAnthropometricGraphicRange.NINETEEN_YEARS;
 		}
-		if (personAge.getYears() > 1 && graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
-			return EAnthropometricGraphicRange.TWO_TO_FIVE_YEARS;
+		if (personAge.getYears() < 1 && personAge.getMonths() < 6 && !graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
+			return EAnthropometricGraphicRange.SIX_MONTHS;
 		if (personAge.getYears() < 2 && graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE))
 			return EAnthropometricGraphicRange.TWO_YEARS;
-		if (personAge.getYears() < 1 && personAge.getMonths() < 6)
-			return EAnthropometricGraphicRange.SIX_MONTHS;
+		if (personAge.getYears() > 1 && graphic.equals(EAnthropometricGraphic.BMI_FOR_AGE) && hasGender)
+			return EAnthropometricGraphicRange.TWO_TO_FIVE_YEARS;
 		return EAnthropometricGraphicRange.FIVE_YEARS;
 	}
 
