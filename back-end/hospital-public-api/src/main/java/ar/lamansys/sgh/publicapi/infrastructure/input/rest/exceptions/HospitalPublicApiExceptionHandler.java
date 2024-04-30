@@ -7,6 +7,8 @@ import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnne
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -256,4 +258,12 @@ public class HospitalPublicApiExceptionHandler {
 		logger.debug("DateTimeParseException -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto("El formato de la fecha es invalido", ex.getMessage());
 	}
+	
+	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ExceptionHandler({ SaveExternalBookingException.class })
+	protected ApiErrorMessageDto handleSaveExternalBookingException(SaveExternalBookingException ex) {
+		logger.error("DigitalSignatureCallbackException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+	
 }

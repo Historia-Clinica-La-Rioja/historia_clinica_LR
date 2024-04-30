@@ -23,6 +23,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingA
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.RequiredArgsConstructor;
 import net.pladema.medicalconsultation.appointment.repository.entity.BookingPerson;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
@@ -71,6 +72,7 @@ import net.pladema.medicalconsultation.appointment.service.fetchappointments.dom
 import net.pladema.medicalconsultation.appointment.service.fetchappointments.domain.PatientBo;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class AppointmentExternalServiceImpl implements AppointmentExternalService, SharedAppointmentPort {
 
@@ -90,25 +92,6 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 	private final SharedPersonPort sharedPersonPort;
 	private final PersonService personService;
 	private final FeatureFlagsService featureFlagsService;
-
-	public AppointmentExternalServiceImpl(AppointmentService appointmentService, AppointmentValidatorService appointmentValidatorService,
-										  CreateAppointmentService createAppointmentService, BookingPersonService bookingPersonService,
-										  CreateBookingAppointmentService createBookingAppointmentService, DocumentAppointmentService documentAppointmentService,
-										  FetchAppointments fetchAppointments, LocalDateMapper localDateMapper,
-										  SharedPersonPort sharedPersonPort, DiaryService diaryService, PersonService personService, FeatureFlagsService featureFlagsService) {
-		this.appointmentService = appointmentService;
-		this.appointmentValidatorService = appointmentValidatorService;
-		this.createAppointmentService = createAppointmentService;
-		this.bookingPersonService = bookingPersonService;
-		this.createBookingAppointmentService = createBookingAppointmentService;
-		this.documentAppointmentService = documentAppointmentService;
-		this.fetchAppointments = fetchAppointments;
-		this.localDateMapper = localDateMapper;
-		this.sharedPersonPort = sharedPersonPort;
-		this.diaryService = diaryService;
-		this.personService = personService;
-		this.featureFlagsService = featureFlagsService;
-	}
 
 	@Override
 	public boolean hasCurrentAppointment(Integer patientId, Integer healthProfessionalId, LocalDate date) {
@@ -286,6 +269,14 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		log.debug("Input parameters -> diaryId {}", diaryId);
 		Integer result = diaryService.getInstitution(diaryId);
 		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public boolean appointmentDateAndTimeAlreadyUsed(Integer diaryId, Integer openingHoursId, LocalDate appointmentDate, LocalTime appointmentTime) {
+		log.debug("Input parameters -> diaryId {}, openingHoursId {}, appointmentDate {}, appointmentTime {}", diaryId, openingHoursId, appointmentDate, appointmentTime);
+		boolean result = appointmentService.existAppointment(diaryId, openingHoursId, appointmentDate, appointmentTime);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
