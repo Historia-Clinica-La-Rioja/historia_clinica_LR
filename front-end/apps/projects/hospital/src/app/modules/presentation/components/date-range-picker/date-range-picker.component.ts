@@ -17,6 +17,7 @@ export class DateRangePickerComponent implements OnInit {
 	@Input() min?: Date = null;
 	@Input() max?: Date = null;
 	@Input() dateRange: DateRange;
+	@Input() fixedRangeDays?: number;
 
 	@Input()
 	set disabled(disableForm: boolean) {
@@ -37,7 +38,14 @@ export class DateRangePickerComponent implements OnInit {
 				end: this.dateRangeForm.value.end
 			});
 		}
+	}
 
+	setAndEmitRangeForFixedDates(){
+		let endDate = new Date(this.dateRangeForm.controls.start.value);
+		endDate.setDate(endDate.getDate() + this.fixedRangeDays);
+
+		this.dateRangeForm.controls.end.setValue(endDate);
+		this.emitChange();
 	}
 
 	emitChange() {
@@ -58,3 +66,6 @@ export interface DateRange {
 	start: Date;
 	end: Date;
 }
+
+//Se podria incorporar a futuro la previsualizacion del fixedRange como el ejemplo de "Date range picker with custom a selection strategy":
+//https://material.angular.io/components/datepicker/examples
