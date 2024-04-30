@@ -22,21 +22,13 @@
 					</mat-form-field>
 				</div>
 				<div style="width: 35%">
-					<mat-form-field class="input" appearance="outline" *ngIf="form.value.field === 'CREATED_ON'">
-						<mat-label>Fecha</mat-label>
-						<input matInput
-							   id="date"
-							   formControlName="date"
-							   [matDatepicker]="myDatepicker"
-							   [max]="this.today"
-							   [min]="this.minDate"
-						>
-						<mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-						<mat-datepicker #myDatepicker></mat-datepicker>
-						<mat-error
-							[translate]="'historia-clinica.summary-card.evolution-notes-filter.generalDateError'">
-						</mat-error>
-					</mat-form-field>
+
+					<app-datepicker  *ngIf="form.value.field === 'CREATED_ON'"
+						id="date"
+						[minDate]="minDate" [maxDate]="today"
+						(selectDate)="dateChanged($event)">
+					</app-datepicker>
+
 					<mat-form-field class="input" appearance="outline" *ngIf="form.value.field === 'DOCUMENT_TYPE'">
 						<mat-label>{{'internaciones.documents-summary.search-fields.DOCUMENT_TYPE' | translate}}</mat-label>
 						<mat-select id="document_type" name="documentType" formControlName="documentType">

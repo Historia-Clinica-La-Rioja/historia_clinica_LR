@@ -148,6 +148,11 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		}
 	}
 
+	dateChanged(date: Date) {
+		this.form.controls.date.setValue(date);
+		this.search()
+	}
+
 	showDocumentsWithoutDiagnosis() {
 		this.form.patchValue({ mainDiagnosisOnly: false })
 		this.activeDocument = null;
