@@ -1,14 +1,14 @@
 import { capitalizeSentence } from "@core/utils/core.utils"
-import { DateFormat } from "@core/utils/date.utils"
+import { dateToViewDate } from "@core/utils/date.utils"
 import { HistoricalProblems } from "@historia-clinica/modules/ambulatoria/services/historical-problems-facade.service"
 import { Detail } from "@presentation/components/details-section-custom/details-section-custom.component"
-import { format } from "date-fns"
+
 
 export const buildProblemHeaderInformation = (problem: HistoricalProblems): Detail[] => {
-	let result = [
+	const result = [
 		{
 			title: 'ambulatoria.paciente.problemas.historical-problems.CONSULTATION_DATE',
-			text: format(problem.consultationDate, DateFormat.VIEW_DATE)
+			text: dateToViewDate(problem.consultationDate)
 		},
 		{
 			title: 'ambulatoria.paciente.problemas.historical-problems.PROFESSIONAL',
@@ -19,15 +19,15 @@ export const buildProblemHeaderInformation = (problem: HistoricalProblems): Deta
 			text: problem.institutionName
 		},
 	]
-	if (problem.professionalsThatSignedNames?.length > 0) {
-		let signedNames = {
+	if (problem.professionalsThatSignedNames?.length) {
+		const signedNames = {
 			title: 'ambulatoria.paciente.problemas.historical-problems.SIGNING_PROFESSIONALS',
 			text: capitalizeSentence(problem.professionalsThatSignedNames.join(", ")),
 		}
 		result.push(signedNames);
 	}
-	if (problem.professionalsThatDidNotSignAmount > 0) {
-		let notSignAmount = {
+	if (problem.professionalsThatDidNotSignAmount) {
+		const notSignAmount = {
 			title: 'ambulatoria.paciente.problemas.historical-problems.PROFESSIONALS_PENDING_SIGNATURE',
 			text: problem.professionalsThatDidNotSignAmount.toString()
 		}
