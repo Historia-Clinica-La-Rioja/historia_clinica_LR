@@ -17,7 +17,7 @@
 			</div>
 			<div fxLayout="row" fxLayoutAlign="start center">
 				<span class="appointment-title-dot">●</span>
-				<span>{{data.hour | viewHourMinute}}hs</span>
+				{{fullDate | dateFormat: 'time'}}
 			</div>
 		</div>
 

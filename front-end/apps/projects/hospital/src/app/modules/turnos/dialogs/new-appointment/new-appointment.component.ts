@@ -50,6 +50,7 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.utils';
 import { getStudiesNames } from '@turnos/utils/appointment.utils';
+import { buildFullDateFromDate, dateISOParseDate } from '@core/utils/moment.utils';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;
@@ -104,6 +105,7 @@ export class NewAppointmentComponent implements OnInit {
 	isEnableTelemedicina: boolean = false;
 	boxMessageInfo: BoxMessageInformation;
 	expiredAppointmentForm: FormGroup<ExpiredAppointmentForm>;
+	fullDate: Date
 	
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
@@ -224,6 +226,8 @@ export class NewAppointmentComponent implements OnInit {
 			id: new FormControl(EAppointmentExpiredReasons.OTHER, [Validators.required]),
 			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)])
 		});
+
+		this.fullDate = buildFullDateFromDate(this.data.hour,dateISOParseDate(this.data.date))
 	}
 
 	setModalityValidation(modality) {

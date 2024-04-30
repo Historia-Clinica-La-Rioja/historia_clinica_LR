@@ -113,7 +113,6 @@ import { PersonIdentificationPipe } from './pipes/person-identification.pipe';
 import { ShowMoreConceptsPipe } from './pipes/show-more-concepts.pipe';
 import { TimeDtoToLocalTimePipe } from './pipes/time-dto-to-local-time.pipe';
 import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
-import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 
 @NgModule({
 	declarations: [
@@ -224,7 +223,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
-		ViewHourMinutePipe
 	],
 	imports: [
 		CommonModule,
@@ -337,7 +335,6 @@ import { ViewHourMinutePipe } from './pipes/view-hour-minute.pipe';
 		ShowMoreConceptsPipe,
 		TimeDtoToLocalTimePipe,
 		ViewDateDtoPipe,
-		ViewHourMinutePipe,
 	],
 	entryComponents: [
 		DockPopupComponent,
