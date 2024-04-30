@@ -38,6 +38,6 @@ public interface EmergencyCareEvolutionNoteRepository extends SGXAuditableEntity
 			"ecen.deleteable.deletedOn = CURRENT_TIMESTAMP, " +
 			"ecen.deleteable.deletedBy = ?#{ principal.userId } " +
 			"WHERE ecen.documentId = :documentId")
-	void deleteByDocumentId(Long documentId);
+	void deleteByDocumentId(@Param("documentId") Long documentId);
 
 }
