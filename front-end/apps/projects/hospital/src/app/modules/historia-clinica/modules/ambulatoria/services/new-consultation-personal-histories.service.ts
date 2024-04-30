@@ -57,7 +57,7 @@ export class NewConsultationPersonalHistoriesService {
         this.form.controls.snomed.setValue(pt);
     }
 
-    private add(personalHistory: PersonalHistory): boolean {
+    add(personalHistory: PersonalHistory): boolean {
         const currentItems = this.data.length;
         this.data = pushIfNotExists<any>(this.data, personalHistory, this.comparePersonalHistory);
         this.dataEmitter.next(this.data);

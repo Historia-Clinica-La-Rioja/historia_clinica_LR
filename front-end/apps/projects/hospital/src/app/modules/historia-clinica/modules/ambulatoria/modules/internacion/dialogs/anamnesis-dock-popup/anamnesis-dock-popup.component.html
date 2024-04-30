@@ -161,7 +161,7 @@
 
 		<app-vacunas id="immunizations" [(immunizations)]="immunizations"></app-vacunas>
 
-		<app-antecedentes-personales id="personal-histories" [(personalHistories)]="personalHistories"></app-antecedentes-personales>
+		<app-antecedentes-personales id="personal-histories" [(personalHistories)]="personalHistories" (isPersonalHistoriesNoRefer)="setIsPersonalHistoriesNoRefer($event)"></app-antecedentes-personales>
 
 		<app-antecedentes-familiares id="family-histories" [(familyHistories)]="familyHistories"></app-antecedentes-familiares>
 

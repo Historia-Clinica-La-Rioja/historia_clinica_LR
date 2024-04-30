@@ -90,6 +90,18 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
 		}
 	}
+	personalHistoriesContent: ConceptsList = {
+		header: {
+			text: 'odontologia.odontology-consultation-dock-popup.PERSONAL_HISTORY',
+			icon: 'cancel'
+		},
+		titleList: 'odontologia.odontology-consultation-dock-popup.REGISTERED_PERSONAL_HISTORY',
+		actions: {
+			button: 'odontologia.odontology-consultation-dock-popup.ADD_PERSONAL_HISTORY',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isPersonalHistories: boolean = true;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: OdontologyConsultationData,
@@ -256,6 +268,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			this.addAllergy();
 		}
 		this.isAllergyNoRefer = !$event.checkboxSelected;
+	}
+
+	checkPersonalHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addPersonalHistory();
+		}
+		this.isPersonalHistories = !$event.checkboxSelected;
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {

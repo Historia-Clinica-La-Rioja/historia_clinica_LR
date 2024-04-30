@@ -87,24 +87,12 @@
 			<app-allergy-list [service]="allergiesNewConsultationService"></app-allergy-list>
 		</app-concepts-list>
 
-		<app-new-consultation-expansion-section id="personal_histories"
-			[title]="'odontologia.odontology-consultation-dock-popup.PERSONAL_HISTORY' | translate" icon="report"
-			[isEmpty]="personalHistoriesNewConsultationService.isEmpty()">
-			<div fxLayout="column" fxLayoutGap="2vh">
-
-				<app-titled-content-card *ngIf="!personalHistoriesNewConsultationService.isEmpty()"
-					title="{{ 'odontologia.odontology-consultation-dock-popup.REGISTERED_PERSONAL_HISTORY' }}">
-					<app-personal-histories-background-list [service]="personalHistoriesNewConsultationService"></app-personal-histories-background-list>
-				</app-titled-content-card>
-
-				<div>
-					<button mat-button type="button" id="add-personal-history-button" color="primary" class="add-button"
-						(click)="addPersonalHistory()">
-						+ {{ 'odontologia.odontology-consultation-dock-popup.ADD_PERSONAL_HISTORY' | translate }}
-					</button>
-				</div>
-			</div>
-		</app-new-consultation-expansion-section>
+		<app-concepts-list
+			[hasConcepts]="!personalHistoriesNewConsultationService.isEmpty()"
+			[content]="personalHistoriesContent"
+			(openEmit)="checkPersonalHistoriesEvent($event)">
+			<app-personal-histories-background-list [service]="personalHistoriesNewConsultationService"></app-personal-histories-background-list>
+		</app-concepts-list>
 
 		<app-new-consultation-expansion-section id="medications"
 			[title]="'odontologia.odontology-consultation-dock-popup.USUAL_MEDICATION' | translate"

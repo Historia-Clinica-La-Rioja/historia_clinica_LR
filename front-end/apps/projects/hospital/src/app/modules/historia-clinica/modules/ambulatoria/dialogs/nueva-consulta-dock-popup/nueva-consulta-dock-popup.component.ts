@@ -111,6 +111,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 	}
 	isAllergyNoRefer: boolean = true;
+	personalHistoriesContent: ConceptsList = {
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.TITLE',
+			icon: 'report'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.REGISTERED_PERSONAL_HISTORIES',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.buttons.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isPersonalHistoriesNoRefer: boolean = true;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -279,7 +291,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 
 			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
 			const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
-
 			this.apiErrors = [];
 
 			if (answerPreviousData) {
@@ -730,6 +741,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.addAllergy();
 		}
 		this.isAllergyNoRefer = !$event.checkboxSelected;
+	}
+
+	checkPersonalHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addPersonalHistory();
+		}
+		this.isPersonalHistoriesNoRefer = !$event.checkboxSelected;
 	}
 
 }

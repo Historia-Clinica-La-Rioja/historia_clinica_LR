@@ -2,11 +2,11 @@
     <div fxLayout="row" fxLayoutAlign="space-between center">
         <div fxLayout="column" fxLayoutGap="10px">
             <span class="bold-text">{{ personalHistories.snomed.pt | titlecase}}</span>
-            <span class="italic-text">{{ personalHistories.type.description }}</span>
+            <span class="italic-text" *ngIf="personalHistories.type?.description">{{ personalHistories.type.description }}</span>
             <div *ngIf="personalHistories?.observations"><pre class="observations">{{ personalHistories.observations }}</pre></div>
             
-            <div data-id="personal-history-dates" fxLayout="row" fxLayoutGap="30px" class="mat-caption gray-caption">
-                <span>
+            <div data-id="personal-history-dates" fxLayout="row" fxLayoutGap="30px" class="mat-caption gray-caption"> 
+                <span *ngIf="personalHistories?.startDate">
                     {{ 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.FROM_DATE_PREFIX' |
                     translate }}
                     {{ momentFormat(personalHistories.startDate, DateFormat.VIEW_DATE) }}
