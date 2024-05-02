@@ -16,7 +16,6 @@ import { DocumentActionsService, DocumentSearch } from "@historia-clinica/module
 import { PatientNameService } from "@core/services/patient-name.service";
 import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service';
 import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
-import { fromStringToDate, } from "@core/utils/date.utils";
 import { InternmentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-actions.service';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
 import { InternacionMasterDataService } from "@api-rest/services/internacion-master-data.service";
@@ -34,7 +33,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	@Input() internmentEpisodeId: number;
 	@Input() clinicalEvaluation: DocumentHistoricDto;
 	@Input() patientId: number;
-	@Input() internmentEpisodeAdmissionDatetime: string;
+	@Input() internmentEpisodeAdmissionDatetime: Date;
 
 	public searchFields: SearchField[] = DOCUMENTS_SEARCH_FIELDS;
 	public documentTypes: MasterDataDto [] = [];
@@ -85,8 +84,8 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	ngOnInit(): void {
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
 		this.setInputResetBehaviour();
-		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);
-		this.minDate = fromStringToDate(this.internmentEpisodeAdmissionDatetime);
+		this.documentActions.setInformation(this.patientId, this.internmentEpisodeId);		
+		this.minDate = this.internmentEpisodeAdmissionDatetime;
 	}
 
 	search(): void {

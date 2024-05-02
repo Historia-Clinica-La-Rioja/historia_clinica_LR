@@ -3,10 +3,10 @@
 		<div class="flex-container">
 			<mat-icon color="primary" mat-list-icon fontSet="material-icons-outlined" [inline]="true">meeting_room
 			</mat-icon>
-			<span class="mat-body-2" *ngIf="!physicalDischargeDate else noInfo">{{internmentEpisode?.roomNumber}}</span>
+			<span class="mat-body-2" *ngIf="!physicalDischargeDate else noInfo">{{_internmentEpisode?.roomNumber}}</span>
 			<mat-icon color="primary" mat-list-icon [inline]="true">single_bed</mat-icon>
-			<span class="mat-body-2" *ngIf="!physicalDischargeDate else noInfo">{{internmentEpisode?.bedNumber}}</span>
-			<span class="mat-body-2" *ngIf="!physicalDischargeDate">{{internmentEpisode?.sectorDescription}}</span>
+			<span class="mat-body-2" *ngIf="!physicalDischargeDate else noInfo">{{_internmentEpisode?.bedNumber}}</span>
+			<span class="mat-body-2" *ngIf="!physicalDischargeDate">{{_internmentEpisode?.sectorDescription}}</span>
 			<div *ngIf="physicalDischargeDate" fxLayoutAlign="start center" fxLayout.xs="column" fxLayoutGap="10px" fxLayoutGap.xs="2px">
 				<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center">
 					<mat-icon class="green">check_circle_outline</mat-icon>
@@ -34,10 +34,10 @@
 	</div>
 	<mat-divider inset></mat-divider>
 
-	<mat-list-item id="doctor" *ngIf="internmentEpisode?.doctor">
+	<mat-list-item id="doctor" *ngIf="_internmentEpisode?.doctor">
 		<mat-icon color="primary" mat-list-icon>medical_services</mat-icon>
 		<span class="mat-body-2">
-			{{internmentEpisode?.doctor.firstName}} {{internmentEpisode?.doctor.lastName}}
+			{{_internmentEpisode?.doctor.firstName}} {{_internmentEpisode?.doctor.lastName}}
 		</span>
 	</mat-list-item>
 
@@ -91,24 +91,24 @@
 
 	<mat-list-item id="days">
 		<div mat-line>
-			<span *ngIf="internmentEpisode?.totalInternmentDays === 1 else multipleDays" class="mat-body-2"
+			<span *ngIf="_internmentEpisode?.totalInternmentDays === 1 else multipleDays" class="mat-body-2"
 				  [translate]="'internaciones.internacion-paciente.card.ONE_DAY'">
 			</span>
 			<ng-template #multipleDays>
 				<span class="mat-body-2"
 					  [translate]="'internaciones.internacion-paciente.card.DAYS_INTERNED'"
-					  [translateParams]="{ days: internmentEpisode?.totalInternmentDays }">
+					  [translateParams]="{ days: _internmentEpisode?.totalInternmentDays }">
 				</span>
 			</ng-template>
 		</div>
 		<div mat-line>
 			<span 	[translate]="'internaciones.internacion-paciente.card.ADMISSION'"
-					 [translateParams]="{ datetime: internmentEpisode?.admissionDatetime }">
+					 [translateParams]="{ datetime: _internmentEpisode?.admissionDatetime | dateFormat: 'datetime' }">
 			</span>
 		</div>
 		<div mat-line *ngIf="canLoadProbableDischargeDate">
 			<span 	[translate]="'internaciones.internacion-paciente.card.PROBABLE_DISCHARGE'"
-					 [translateParams]="{ datetime: internmentEpisode?.probableDischargeDate }">
+					 [translateParams]="{ datetime: probableDischargeDate  }">
 			</span>
 			<ng-container *ngIf="showChangeDate">
 				<button id="change_date_button" class="change_date_button" color="primary" *appHasRole="['ESPECIALISTA_MEDICO']"
@@ -119,13 +119,13 @@
 		</div>
 	</mat-list-item>
 
-	<div *ngIf="internmentEpisode?.responsibleContact">
+	<div *ngIf="_internmentEpisode?.responsibleContact">
 		<mat-divider inset></mat-divider>
 		<mat-list-item id="responsibleContact">
 			<mat-icon color="primary" mat-list-icon [inline]="true" >supervised_user_circle</mat-icon>
-			<span>{{internmentEpisode?.responsibleContact?.fullName || '' }}
-				{{internmentEpisode?.responsibleContact?.relationship ? '(' + internmentEpisode.responsibleContact.relationship + ')' : '' }}
-				{{internmentEpisode?.responsibleContact?.phoneNumber ? ' - ' + internmentEpisode.responsibleContact.phoneNumber : '' }}
+			<span>{{_internmentEpisode?.responsibleContact?.fullName || '' }}
+				{{_internmentEpisode?.responsibleContact?.relationship ? '(' + _internmentEpisode.responsibleContact.relationship + ')' : '' }}
+				{{_internmentEpisode?.responsibleContact?.phoneNumber ? ' - ' + _internmentEpisode.responsibleContact.phoneNumber : '' }}
 			</span>
 		</mat-list-item>
 	</div>
@@ -142,7 +142,7 @@
 	<app-interment-document-episode
 		*appHasRole="ROLES_FOR_ACCESS_EPISODE_DOCUMENTS"
 		[documents]="documents"
-		[internmentEpisodeId]="this.internmentEpisode.id"
+		[internmentEpisodeId]="_internmentEpisode.id"
 		(updateDocuments)="setDocuments()"
 		[disabled]="hasMedicalDischarge"
 		>

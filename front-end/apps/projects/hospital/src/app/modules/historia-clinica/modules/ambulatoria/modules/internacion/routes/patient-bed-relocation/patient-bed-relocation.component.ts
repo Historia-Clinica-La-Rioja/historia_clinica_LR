@@ -28,7 +28,6 @@ import { newDate, dateISOParseDate, buildFullDateFromDate } from '@core/utils/mo
 import { PersonService } from '@api-rest/services/person.service';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
-import { InternmentEpisodeSummary } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component";
 import { INTERNMENT_SECTOR } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { toHourMinute } from '@core/utils/date.utils';
@@ -44,7 +43,6 @@ const ROUTE_PROFILE = 'pacientes/profile/';
 export class PatientBedRelocationComponent implements OnInit {
 
 	public patient$: Observable<PatientBasicData>;
-	public internmentEpisodeSummary$: Observable<InternmentEpisodeSummary>;
 	hasError = hasError;
 	public minTimeStr;
 	public minDate: Date;

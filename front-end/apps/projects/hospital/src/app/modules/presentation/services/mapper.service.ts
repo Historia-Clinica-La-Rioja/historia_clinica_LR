@@ -10,7 +10,7 @@ import {
 	PatientType,
 	PersonalInformationDto,
 } from '@api-rest/api-model';
-import { DateFormat, dateToMoment, momentParseDate, momentParseDateTime, momentFormat } from '@core/utils/moment.utils';
+import { DateFormat, momentParseDate } from '@core/utils/moment.utils';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { BedManagement } from '../../camas/routes/home/home.component';
@@ -19,6 +19,7 @@ import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatori
 import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -44,8 +45,8 @@ export class MapperService {
 			sectorDescription: internmentSummary.bed.room.sector.description,
 			totalInternmentDays: internmentSummary.totalInternmentDays,
 			doctor: null,
-			admissionDatetime: momentFormat(dateToMoment(internmentSummary.entryDate),DateFormat.VIEW_DATE),
-			probableDischargeDate: internmentSummary.probableDischargeDate ? momentParseDateTime(String(internmentSummary.probableDischargeDate)).format(DateFormat.VIEW_DATE) : 'Sin fecha definida',
+			admissionDatetime: dateISOParseDate(internmentSummary.entryDate.toString()),
+			probableDischargeDate: internmentSummary.probableDischargeDate ? dateISOParseDate(internmentSummary.probableDischargeDate.toString()) : null,
 			responsibleContact: null
 		};
 		if (internmentSummary.doctor) {
