@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 
 interface Pregunta {
   texto: string;
-  respuesta: number;
-  value: number;
-  amarillo: boolean;
+  
 }
 
 @Component({
@@ -14,15 +12,15 @@ interface Pregunta {
 })
 export class AntecedentesFamiliaresComponent {
   preguntasFamilia: Pregunta[] = [
-    { texto: 'Madre', respuesta: 0, value: 1, amarillo: true },
-    { texto: 'Padre', respuesta: 0, value: 2, amarillo: true },
-    { texto: 'Madrastra', respuesta: 0, value: 3, amarillo: true },
-    { texto: 'Padrastro', respuesta: 0, value: 4, amarillo: true },
-    { texto: 'Hermanos', respuesta: 0, value: 5, amarillo: false },
-    { texto: 'Pareja', respuesta: 0, value: 6, amarillo: false },
-    { texto: 'Hijos', respuesta: 0, value: 7, amarillo: true },
-    { texto: 'Abuelos', respuesta: 0, value: 8, amarillo: true },
-    { texto: 'Otros', respuesta: 0, value: 9, amarillo: true }
+    { texto: 'Madre'},
+    { texto: 'Padre',  },
+    { texto: 'Madrastra', },
+    { texto: 'Padrastro', },
+    { texto: 'Hermanos', },
+    { texto: 'Pareja',  },
+    { texto: 'Hijos',  },
+    { texto: 'Abuelos',  },
+    { texto: 'Otros',  }
   ];
 
   otrosFamiliares: string = ''; // Propiedad para almacenar los otros familiares
@@ -32,8 +30,8 @@ export class AntecedentesFamiliaresComponent {
   }
 
   getCheckboxClass(value: any) {
-    // Lógica para obtener la clase del checkbox según el valor
-  }
+    // Lógica para obtener la clase del checkbox según  valor
+  }el
 
   viveConOtros(): boolean {
     // Lógica para determinar si vive con otros familiares
