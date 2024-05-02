@@ -1,7 +1,5 @@
 import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl, ValidationErrors, ValidatorFn, FormControl} from '@angular/forms';
 import { ElementRef } from '@angular/core';
-import { Moment } from 'moment';
-import { momentFormat, newMoment } from './moment.utils';
 import { DateFormat, toHourMinute } from './date.utils';
 import { format } from 'date-fns';
 import { EVENT_CODE_NUMBERS } from './core.utils';
@@ -54,9 +52,9 @@ export function atLeastOneValueInFormGroup(form: UntypedFormGroup): boolean {
 
 export function futureTimeValidation(control: UntypedFormControl): ValidationErrors | null {
 	const time: string = control.value;
-	const today: Moment = newMoment();
+	const today: Date = new Date();
 	if (isValidTime(time)) {
-		if (time > momentFormat(today, DateFormat.HOUR_MINUTE)) {
+		if (time > toHourMinute(today)) {
 			return {
 				futureTime: true
 			};
