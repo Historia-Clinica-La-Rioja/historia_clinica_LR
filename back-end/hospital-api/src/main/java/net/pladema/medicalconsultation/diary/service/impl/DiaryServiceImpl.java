@@ -26,13 +26,13 @@ import net.pladema.medicalconsultation.diary.service.DiaryPracticeService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OpeningHoursBo;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryEnumException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryException;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHoursException;
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
@@ -166,6 +166,7 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 
 		validateDiary(diaryToUpdate);
+		validateOverlapWithOcupation(diaryToUpdate);
 
 		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
 			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
@@ -610,6 +611,30 @@ public class DiaryServiceImpl implements DiaryService {
 				.getDiariesOpeningHoursByMedicalAttentionType(Stream.of(completeDiary.getId()).collect(toList()), medicalAttentionTypeId);
 		completeDiary.setDiaryOpeningHours(new ArrayList<>(diaryOpeningHours));
 		return completeDiary;
+	}
+
+	private void validateOverlapWithOcupation(DiaryBo diaryBo) {
+		if (foundOverlapWithOcupation(diaryBo))
+			throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, "Superposición de rango horario en consultorio");
+	}
+
+	private Boolean foundOverlapWithOcupation(DiaryBo diaryBo) {
+		return diaryBo.getDiaryOpeningHours()
+				.stream()
+				.map(DiaryOpeningHoursBo::getOpeningHours)
+				.flatMap(doh -> {
+					try {
+						return diaryOpeningHoursService.findAllWeeklyDoctorsOfficeOccupation(diaryBo.getDoctorsOfficeId(), diaryBo.getStartDate(), diaryBo.getEndDate(), null)
+								.stream()
+								.flatMap(occupationBo -> occupationBo.getTimeRanges()
+										.stream()
+										.map(timeRangeBo -> new OpeningHoursBo(occupationBo.getId(), timeRangeBo)))
+								.filter(doh::overlap);
+					} catch (DiaryOpeningHoursException e) {
+						throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, e.getMessage());
+					}
+				})
+				.findAny().isPresent();
 	}
 
 }

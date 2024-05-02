@@ -24,10 +24,15 @@ public class OpeningHoursBo extends TimeRangeBo {
         this.id = openingHours.getId();
     }
 
-    public boolean overlap(OpeningHoursBo other){
+	public boolean overlap(OpeningHoursBo other){
         return dayWeekId.equals(other.getDayWeekId()) &&
                 getFrom().compareTo(other.getTo()) < 0 &&
                 getTo().compareTo(other.getFrom()) > 0;
 
     }
+
+	public OpeningHoursBo(Short dayWeekId, TimeRangeBo timeRange) {
+		super(timeRange.getFrom(), timeRange.getTo());
+		this.dayWeekId = dayWeekId;
+	}
 }
