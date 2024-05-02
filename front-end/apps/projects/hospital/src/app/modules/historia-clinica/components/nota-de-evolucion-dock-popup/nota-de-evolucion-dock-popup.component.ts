@@ -41,6 +41,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 
 	diagnosis;
 	isAllergyNoRefer: boolean = true;
+	isFamilyHistoriesNoRefer: boolean = true;
 
 	constructor(
 		public dockPopupRef: DockPopupRef,
@@ -127,6 +128,10 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 
 	setIsAllergyNoRefer = ($event) => {
 		this.isAllergyNoRefer = $event;
+	}
+
+	setIsFamilyHistoriesNoRefer = ($event) => {
+		this.isFamilyHistoriesNoRefer = $event;
 	}
 
 	private getDiagnosis(diagnosisFormValue): { diagnosis: DiagnosisDto[], mainDiagnosis: HealthConditionDto } {

@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, EventEmitter, Output } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
@@ -8,6 +8,7 @@ import { AntecedentesFamiliaresNuevaConsultaService } from '@historia-clinica/mo
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Subscription } from 'rxjs';
+import { ConceptsList } from '../../../hsi-components/concepts-list/concepts-list.component';
 
 @Component({
 	selector: 'app-antecedentes-familiares-form',
@@ -30,6 +31,18 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 	});
 	searchConceptsLocallyFFIsOn = false;
 	onChangeSub: Subscription;
+	familyHistoriesContent: ConceptsList = {
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE',
+			icon: 'report'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.LIST_CARD_TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	@Output() isFamilyHistoriesNoRefer = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly formBuilder: FormBuilder,
@@ -87,6 +100,13 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 
 	ngOnDestroy(): void {
 		this.onChangeSub.unsubscribe();
+	}
+
+	checkFamilyHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addFamilyHistory();
+		}
+		this.isFamilyHistoriesNoRefer.emit(!$event.checkboxSelected);
 	}
 
 }

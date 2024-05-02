@@ -68,6 +68,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
 	isAllergyNoRefer: boolean = true;
 	isPersonalHistoriesNoRefer: boolean = true;
+	isFamilyHistoriesNoRefer: boolean = true;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
@@ -338,5 +339,9 @@ export class AnamnesisDockPopupComponent implements OnInit {
 
 	setIsPersonalHistoriesNoRefer = ($event) => {
 		this.isPersonalHistoriesNoRefer = $event;
+	}
+
+	setIsFamilyHistoriesNoRefer = ($event) => {
+		this.isFamilyHistoriesNoRefer = $event;
 	}
 }

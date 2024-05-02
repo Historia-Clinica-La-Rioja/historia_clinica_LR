@@ -1,32 +1,6 @@
-<div fxLayoutGap="2vh">
-	<app-new-consultation-expansion-section id="vacunas"
-		[title]="'internaciones.anamnesis.antecedentes-familiares.TITLE' | translate" icon="library_add"
-		[isEmpty]="familyHistories?.length === 0" [collapsed]="!familyHistories?.length" [hideBorder]="false" [isToAddSnomedConcepts]="true"
-		(click)="familyHistories?.length === 0 ? addFamilyHistories():''">
-		<app-titled-content-card *ngIf="familyHistories?.length"
-			title="{{ 'internaciones.anamnesis.antecedentes-familiares.LIST_CARD_TITLE' | translate}}">
-			<div fxLayout="column" fxLayoutGap="10px"
-				*ngFor="let familyHistorie of familyHistories; index as i; last as isLast">
-				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<div fxLayout="column" fxLayoutGap="6px">
-						<span>{{ familyHistorie.snomed.pt | titlecase}}</span>
-					</div>
-					<button id="delete" type="button" mat-icon-button color="warn" (click)="remove(i); $event.stopPropagation()">
-						<mat-icon>delete_outline</mat-icon>
-					</button>
-				</div>
-				<em *ngIf="familyHistorie?.observaciones" class="mat-caption gray-caption">
-					{{ familyHistorie.observaciones }}
-				</em>
-				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
-			</div>
-		</app-titled-content-card>
-
-		<div *ngIf="familyHistories?.length > 0">
-			<button mat-button type="button" id="add-family-histories-button" color="primary" class="add-button"
-				(click)="addFamilyHistories()">
-				+ {{ 'internaciones.anamnesis.antecedentes-familiares.ADD' | translate }}
-			</button>
-		</div>
-	</app-new-consultation-expansion-section>
-</div>
+<app-concepts-list
+	[hasConcepts]="!antecedentesFamiliaresNuevaConsultaService.isEmpty()"
+	[content]="familyHistoriesContent"
+	(openEmit)="checkFamilyHistoriesEvent($event)">
+	<app-background-list [service]="antecedentesFamiliaresNuevaConsultaService"></app-background-list>
+</app-concepts-list>

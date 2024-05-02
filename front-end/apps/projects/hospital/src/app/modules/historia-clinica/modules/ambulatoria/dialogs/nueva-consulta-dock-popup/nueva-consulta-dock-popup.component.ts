@@ -123,6 +123,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 	}
 	isPersonalHistoriesNoRefer: boolean = true;
+	familyHistoriesContent: ConceptsList = {
+		header: {
+			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE',
+			icon: 'report'
+		},
+		titleList: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.LIST_CARD_TITLE',
+		actions: {
+			button: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.buttons.ADD',
+			checkbox: 'ambulatoria.paciente.nueva-consulta.alergias.NO_REFER',
+		}
+	}
+	isFamilyHistoriesNoRefer: boolean = true;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -748,6 +760,13 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.addPersonalHistory();
 		}
 		this.isPersonalHistoriesNoRefer = !$event.checkboxSelected;
+	}
+
+	checkFamilyHistoriesEvent = ($event) => {
+		if ($event.addPressed) {
+			this.addFamilyHistory();
+		}
+		this.isFamilyHistoriesNoRefer = !$event.checkboxSelected;
 	}
 
 }
