@@ -4,6 +4,7 @@ import ar.lamansys.odontology.domain.OdontologySnomedBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.DocumentDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.service.dto.ReferableItemDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -34,7 +35,7 @@ public interface OdontologyDocumentMapper {
         if (target.getPersonalHistories() == null)
             target.setPersonalHistories(new ArrayList<>());
         if (target.getAllergies() == null)
-            target.setAllergies(new ArrayList<>());
+            target.setAllergies(new ReferableItemDto<>());
     }
 
     @Named("fromOdontologySnomedBo")

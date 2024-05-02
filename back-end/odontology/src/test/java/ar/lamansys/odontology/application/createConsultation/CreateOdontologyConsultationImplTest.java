@@ -24,6 +24,7 @@ import ar.lamansys.odontology.domain.consultation.DoctorInfoBo;
 import ar.lamansys.odontology.domain.consultation.OdontologyAppointmentStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyConsultationStorage;
 import ar.lamansys.odontology.domain.consultation.OdontologyDoctorStorage;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -593,7 +594,9 @@ class CreateOdontologyConsultationImplTest {
         allergy3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         allergies.add(allergy3);
 
-        consultation.setAllergies(allergies);
+		ReferableItemBo<ConsultationAllergyBo> referableItemBo = new ReferableItemBo<>(allergies, false);
+
+        consultation.setAllergies(referableItemBo);
 
         CreateConsultationException exception = Assertions.assertThrows(CreateConsultationException.class, () ->
                 createOdontologyConsultation.run(consultation));
@@ -725,7 +728,10 @@ class CreateOdontologyConsultationImplTest {
         ConsultationAllergyBo allergy2 = new ConsultationAllergyBo();
         allergy2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
         allergies.add(allergy2);
-        consultation.setAllergies(allergies);
+
+		ReferableItemBo<ConsultationAllergyBo> referableItemBo = new ReferableItemBo<>(allergies, false);
+
+        consultation.setAllergies(referableItemBo);
 
         List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
         ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));

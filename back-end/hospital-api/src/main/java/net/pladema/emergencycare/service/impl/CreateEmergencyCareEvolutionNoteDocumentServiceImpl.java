@@ -60,7 +60,7 @@ public class CreateEmergencyCareEvolutionNoteDocumentServiceImpl implements Crea
 		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getFamilyHistories()))
 			repeatedErrors.addError("Antecedentes familiares repetidos");
 
-		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getAllergies()))
+		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getAllergies().getContent()))
 			repeatedErrors.addError("Alergias repetidas");
 
 		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(emergencyCareEvolutionNoteDocument.getProcedures()))

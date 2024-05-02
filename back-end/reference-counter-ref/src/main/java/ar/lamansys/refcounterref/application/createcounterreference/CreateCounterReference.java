@@ -96,7 +96,7 @@ public class CreateCounterReference {
             exception.addError("Procedimientos repetidos");
         if (CounterReferenceClinicalTermsValidatorUtils.repeatedClinicalTerms(counterReferenceBo.getMedications()))
             exception.addError("Medicaciones repetidas");
-        if (CounterReferenceClinicalTermsValidatorUtils.repeatedClinicalTerms(counterReferenceBo.getAllergies()))
+        if (CounterReferenceClinicalTermsValidatorUtils.repeatedClinicalTerms(counterReferenceBo.getAllergies().getContent()))
             exception.addError("Alergias repetidas");
 
         if (exception.hasErrors())

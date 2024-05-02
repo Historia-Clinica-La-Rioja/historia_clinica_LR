@@ -1,6 +1,7 @@
 package ar.lamansys.odontology.domain.consultation;
 
 import ar.lamansys.odontology.domain.consultation.reference.ReferenceBo;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ public class ConsultationBo {
 
     private List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
 
-    private List<ConsultationAllergyBo> allergies = new ArrayList<>();
+    private ReferableItemBo<ConsultationAllergyBo> allergies = new ReferableItemBo<>();
 
     private List<ConsultationMedicationBo> medications = new ArrayList<>();
 

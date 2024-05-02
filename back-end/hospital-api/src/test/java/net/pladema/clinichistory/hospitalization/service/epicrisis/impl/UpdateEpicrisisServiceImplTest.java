@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 
 import ar.lamansys.sgh.shared.infrastructure.output.entities.ESignatureStatus;
@@ -177,7 +178,7 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		epicrisisBo.setFamilyHistories(Collections.emptyList());
 		epicrisisBo.setPersonalHistories(Collections.emptyList());
 		epicrisisBo.setMedications(Collections.emptyList());
-		epicrisisBo.setAllergies(Collections.emptyList());
+		epicrisisBo.setAllergies(new ReferableItemBo<>());
 		return epicrisisBo;
 	}
 

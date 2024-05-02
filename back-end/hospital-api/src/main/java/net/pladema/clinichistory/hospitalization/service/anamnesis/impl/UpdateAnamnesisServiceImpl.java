@@ -64,7 +64,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newAnamnesis.getFamilyHistories().addAll(getDischargedConcepts(newAnamnesis.getFamilyHistories(), oldAnamnesis.getFamilyHistories(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
-		newAnamnesis.getAllergies().addAll(getDischargedConcepts(newAnamnesis.getAllergies(), oldAnamnesis.getAllergies(), AllergyIntoleranceClinicalStatus.INACTIVE)
+		newAnamnesis.getAllergies().getContent().addAll(getDischargedConcepts(newAnamnesis.getAllergies().getContent(), oldAnamnesis.getAllergies().getContent(), AllergyIntoleranceClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(AllergyIntoleranceVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newAnamnesis.getImmunizations().addAll(getDischargedConcepts(newAnamnesis.getImmunizations(), oldAnamnesis.getImmunizations(), InmunizationStatus.ERROR));
 		newAnamnesis.getMedications().addAll(getDischargedConcepts(newAnamnesis.getMedications(), oldAnamnesis.getMedications(), MedicationStatementStatus.ERROR));

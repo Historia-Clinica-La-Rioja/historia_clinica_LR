@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
@@ -70,7 +71,7 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
     private List<@Valid ImmunizationBo> immunizations;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid AllergyConditionBo> allergies;
+    private ReferableItemBo<@Valid AllergyConditionBo> allergies;
 
 	private List<@Valid HealthConditionBo> otherProblems;
 

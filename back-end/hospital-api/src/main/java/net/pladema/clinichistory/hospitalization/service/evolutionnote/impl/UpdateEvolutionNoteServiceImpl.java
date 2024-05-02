@@ -69,7 +69,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newEvolution.getFamilyHistories().addAll(getDischargedConcepts(newEvolution.getFamilyHistories(), oldEvolution.getFamilyHistories(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId( ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
-		newEvolution.getAllergies().addAll(getDischargedConcepts(newEvolution.getAllergies(), oldEvolution.getAllergies(), AllergyIntoleranceClinicalStatus.INACTIVE)
+		newEvolution.getAllergies().getContent().addAll(getDischargedConcepts(newEvolution.getAllergies().getContent(), oldEvolution.getAllergies().getContent(), AllergyIntoleranceClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(AllergyIntoleranceVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newEvolution.getImmunizations().addAll(getDischargedConcepts(newEvolution.getImmunizations(), oldEvolution.getImmunizations(), InmunizationStatus.ERROR));
 

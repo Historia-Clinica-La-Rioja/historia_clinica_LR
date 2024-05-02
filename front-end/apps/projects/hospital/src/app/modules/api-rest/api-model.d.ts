@@ -147,7 +147,7 @@ export interface AnalgesicTechniqueDto extends AnestheticSubstanceDto {
 }
 
 export interface AnamnesisDto extends Serializable {
-    allergies: AllergyConditionDto[];
+    allergies: ReferableItemDto<AllergyConditionDto>;
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
@@ -971,7 +971,7 @@ export interface CounterReferenceAllergyDto extends Serializable {
 }
 
 export interface CounterReferenceDto extends Serializable {
-    allergies: CounterReferenceAllergyDto[];
+    allergies: ReferableItemDto<CounterReferenceAllergyDto>;
     clinicalSpecialtyId: number;
     closureTypeId: number;
     counterReferenceNote: string;
@@ -1046,7 +1046,7 @@ export interface CreateCustomAppointmentDto {
 }
 
 export interface CreateOutpatientDto {
-    allergies: OutpatientAllergyConditionDto[];
+    allergies: ReferableItemDto<OutpatientAllergyConditionDto>;
     anthropometricData?: OutpatientAnthropometricDataDto;
     clinicalSpecialtyId?: number;
     evolutionNote?: string;
@@ -1319,7 +1319,7 @@ export interface DocumentAppointmentDto {
 }
 
 export interface DocumentDto {
-    allergies: AllergyConditionDto[];
+    allergies: ReferableItemDto<AllergyConditionDto>;
     anthropometricData: AnthropometricDataDto;
     clinicalSpecialtyId: number;
     clinicalSpecialtyName: string;
@@ -1605,7 +1605,7 @@ export interface EmergencyCareEpisodeNotificationDto {
 }
 
 export interface EmergencyCareEvolutionNoteClinicalData {
-    allergies: OutpatientAllergyConditionDto[];
+    allergies: ReferableItemDto<OutpatientAllergyConditionDto>;
     anthropometricData: OutpatientAnthropometricDataDto;
     diagnosis: DiagnosisDto[];
     evolutionNote: string;
@@ -1627,7 +1627,7 @@ export interface EmergencyCareEvolutionNoteDocumentDto {
 }
 
 export interface EmergencyCareEvolutionNoteDto {
-    allergies: OutpatientAllergyConditionDto[];
+    allergies: ReferableItemDto<OutpatientAllergyConditionDto>;
     anthropometricData: OutpatientAnthropometricDataDto;
     clinicalSpecialtyId: number;
     diagnosis: DiagnosisDto[];
@@ -1832,7 +1832,7 @@ export interface EvolutionDiagnosisDto extends Serializable {
 }
 
 export interface EvolutionNoteDto extends Serializable {
-    allergies?: AllergyConditionDto[];
+    allergies?: ReferableItemDto<AllergyConditionDto>;
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis?: DiagnosisDto[];
@@ -3009,7 +3009,7 @@ export interface OdontologyConceptDto extends Serializable {
 }
 
 export interface OdontologyConsultationDto {
-    allergies?: OdontologyAllergyConditionDto[];
+    allergies?: ReferableItemDto<OdontologyAllergyConditionDto>;
     clinicalSpecialtyId: number;
     dentalActions?: OdontologyDentalActionDto[];
     diagnostics?: OdontologyDiagnosticDto[];
@@ -3877,7 +3877,6 @@ export interface ReducedPatientDto {
 
 export interface ReferableItemDto<T> extends CustomContainer<T> {
     isReferred: boolean;
-    referredContent: T[];
 }
 
 export interface ReferenceAppointmentDto {

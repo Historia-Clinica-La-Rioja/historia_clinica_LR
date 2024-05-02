@@ -10,6 +10,7 @@ import java.util.Collections;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 
@@ -192,7 +193,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setFamilyHistories(Collections.emptyList());
 		anamnesis.setMedications(Collections.emptyList());
 		anamnesis.setImmunizations(Collections.emptyList());
-		anamnesis.setAllergies(Collections.emptyList());
+		anamnesis.setAllergies(new ReferableItemBo<>());
 		return anamnesis;
 	}
 

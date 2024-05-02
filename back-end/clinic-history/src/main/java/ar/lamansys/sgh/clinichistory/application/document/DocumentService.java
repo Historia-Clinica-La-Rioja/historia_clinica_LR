@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentDownloadDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
@@ -75,7 +76,7 @@ public interface DocumentService {
 
     List<ImmunizationBo> getImmunizationStateFromDocument(Long documentId);
 
-    List<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId);
+    ReferableItemBo<AllergyConditionBo> getAllergyIntoleranceStateFromDocument(Long documentId);
 
     List<MedicationBo> getMedicationStateFromDocument(Long documentId);
 
@@ -164,5 +165,8 @@ public interface DocumentService {
     List<MeasuringPointBo> getMeasuringPointStateFromDocument(Long documentId);
 
     PostAnesthesiaStatusBo getPostAnesthesiaStatusStateFromDocument(Long documentId);
+
+	void createDocumentRefersAllergy(Long documentId, Boolean refersAllergy);
+
 }
 

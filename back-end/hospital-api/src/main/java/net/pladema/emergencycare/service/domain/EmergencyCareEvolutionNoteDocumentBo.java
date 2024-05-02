@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
@@ -57,7 +58,7 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 
 	private List<FamilyHistoryBo> familyHistories;
 
-	private List<AllergyConditionBo> allergies;
+	private ReferableItemBo<AllergyConditionBo> allergies;
 
 	private List<ProcedureBo> procedures;
 

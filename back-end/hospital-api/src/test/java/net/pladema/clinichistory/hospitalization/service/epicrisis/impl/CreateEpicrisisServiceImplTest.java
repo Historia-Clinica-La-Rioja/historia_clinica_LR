@@ -2,6 +2,17 @@ package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
@@ -407,7 +418,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         result.setDiagnosis(Collections.emptyList());
 		result.setProcedures(Collections.emptyList());
         result.setImmunizations(Collections.emptyList());
-        result.setAllergies(Collections.emptyList());
+        result.setAllergies(new ReferableItemBo<>());
         return result;
     }
 

@@ -62,7 +62,7 @@ public class DocumentDto {
 
     private List<ImmunizationDto> immunizations= new ArrayList<>();
 
-    private List<AllergyConditionDto> allergies = new ArrayList<>();
+    private ReferableItemDto<AllergyConditionDto> allergies;
 
     private List<DiagnosticReportDto>  diagnosticReports = new ArrayList<>();
 

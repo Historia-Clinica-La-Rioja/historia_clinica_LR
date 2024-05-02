@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
@@ -60,7 +61,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private List<ImmunizationBo> immunizations = new ArrayList<>();
 
-    private List<AllergyConditionBo> allergies = new ArrayList<>();
+    private ReferableItemBo<AllergyConditionBo> allergies;
 
     private AnthropometricDataBo anthropometricData ;
 

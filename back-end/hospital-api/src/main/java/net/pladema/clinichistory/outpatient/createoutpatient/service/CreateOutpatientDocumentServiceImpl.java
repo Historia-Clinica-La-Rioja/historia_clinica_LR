@@ -61,7 +61,7 @@ public class CreateOutpatientDocumentServiceImpl implements CreateOutpatientDocu
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getFamilyHistories()))
             repeatedErrors.addError("Antecedentes familiares repetidos");
 
-        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getAllergies()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getAllergies().getContent()))
             repeatedErrors.addError("Alergias repetidas");
 
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(outpatient.getProcedures()))

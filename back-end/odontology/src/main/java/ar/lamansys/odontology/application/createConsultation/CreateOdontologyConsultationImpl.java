@@ -280,7 +280,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
             exception.addError("Motivos repetidos");
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getPersonalHistories()))
             exception.addError("Antecedentes personales repetidos");
-        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getAllergies()))
+        if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getAllergies().getContent()))
             exception.addError("Alergias repetidas");
         if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(consultationBo.getDiagnostics()))
             exception.addError("Diagnósticos repetidos");

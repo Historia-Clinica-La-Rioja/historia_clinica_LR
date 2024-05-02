@@ -1,5 +1,37 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
+import ar.lamansys.sgx.shared.files.pdf.PdfService;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.patient.service.PatientService;
+import net.pladema.person.service.PersonService;
+
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.service.HealthcareProfessionalService;
+
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
@@ -407,7 +439,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         result.setDiagnosis(Lists.emptyList());
         result.setImmunizations(Lists.emptyList());
-        result.setAllergies(Lists.emptyList());
+        result.setAllergies(new ReferableItemBo<>());
         return result;
     }
 

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
@@ -80,8 +81,8 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-    default List<AllergyConditionBo> getAllergies() {
-        return Collections.emptyList();
+    default ReferableItemBo<AllergyConditionBo> getAllergies() {
+        return new ReferableItemBo<>();
     }
 
     default List<ImmunizationBo> getImmunizations() {

@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
@@ -193,7 +194,7 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 		evolutionBo.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		evolutionBo.setDiagnosis(Collections.emptyList());
 		evolutionBo.setImmunizations(Collections.emptyList());
-		evolutionBo.setAllergies(Collections.emptyList());
+		evolutionBo.setAllergies(new ReferableItemBo<>());
 		evolutionBo.setIsNursingEvolutionNote(false);
 		return evolutionBo;
 	}

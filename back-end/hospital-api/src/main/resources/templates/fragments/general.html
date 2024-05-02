@@ -667,10 +667,10 @@
 
     <!-- Alergias -->
 
-    <div th:fragment="allergies" th:if="${not #lists.isEmpty(allergies)}">
+    <div th:fragment="allergies" th:if="${not #lists.isEmpty(allergies.referredContent)}">
         <p class="section-title">Alergias</p>
         <div class="section-data">
-            <dl class="lista" th:each="allergy,iter: ${allergies}">
+            <dl class="lista" th:each="allergy,iter: ${allergies.referredContent}">
                 <dd><p th:text="${'- ' + allergy.snomed.pt}"></p></dd>
                 <dl>
                     <dd><strong>Estado: </strong><label  th:text="${allergy.status}"></label></dd>

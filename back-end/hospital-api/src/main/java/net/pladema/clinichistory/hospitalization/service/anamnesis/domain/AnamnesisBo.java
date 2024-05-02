@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
@@ -66,7 +67,7 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
     private List<@Valid ImmunizationBo> immunizations;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid AllergyConditionBo> allergies;
+    private ReferableItemBo<@Valid AllergyConditionBo> allergies;
 
     @Valid
     private AnthropometricDataBo anthropometricData;
