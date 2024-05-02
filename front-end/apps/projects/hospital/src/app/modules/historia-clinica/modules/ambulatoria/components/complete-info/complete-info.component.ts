@@ -76,7 +76,7 @@ export class CompleteInfoComponent implements OnInit {
 		}
 	}
 
-	onSelect(selectedProcedureTemplate: any, index: number, diagnosticId:number) {
+	onSelect(selectedProcedureTemplate: any, index: number, diagnosticId: number) {
 
 		this.arrayIdTemplatesProcedures.push({ diagnosticId: diagnosticId, selectedrocedureTemplateId: selectedProcedureTemplate.id });
 
@@ -99,19 +99,20 @@ export class CompleteInfoComponent implements OnInit {
 		forkJoin(
 			this.diagnosticReport.map(report => {
 
-				const reportInfo: DiagnosticReportInfoDto = report?.diagnosticInformation ? report.diagnosticInformation : report;
-				if (Object.keys(this.formTemplateValues).length === 0) {
-					return this.prescripcionesService.completeStudy(this.patientId, reportInfo.id, completeRequest, this.selectedFiles)
-				}
-				else {
-					const reportObservations: AddDiagnosticReportObservationsCommandDto = this.buildProcedureTemplateFullSummaryDto(reportInfo.id);
+				const reportInfo: DiagnosticReportInfoDto = report?.diagnosticInformation || report;
+
+				let template = this.getProcedureTemplateId(reportInfo.id);
+				let reportObservations: AddDiagnosticReportObservationsCommandDto = this.buildProcedureTemplateFullSummaryDto(reportInfo.id, template);
+
+				if (reportObservations?.procedureTemplateId && reportObservations?.values?.length > 0) {
 					return this.prescripcionesService.completeStudyTemplateWhithForm(this.patientId,
 						reportInfo.id, completeRequest, this.selectedFiles, reportObservations)
 				}
+				else {
+					return this.prescripcionesService.completeStudy(this.patientId, reportInfo.id, completeRequest, this.selectedFiles)
+				}
 
-			}
-
-			)).subscribe(
+			})).subscribe(
 				() => {
 					this.closeModal(false, true);
 				}, _ => {
@@ -123,16 +124,17 @@ export class CompleteInfoComponent implements OnInit {
 		this.dialogRef.close(simpleClose ? null : { completed });
 	}
 
-	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number): AddDiagnosticReportObservationsCommandDto {
+	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number, template): AddDiagnosticReportObservationsCommandDto {
 		return {
 			isPartialUpload: false,
-			procedureTemplateId: this.getProcedureTemplateId(idDiagnostic),
-			values: this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic)
+			procedureTemplateId: template,
+			values: Object.keys(this.formTemplateValues).length > 0 ? this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic) : [],
 		}
 	}
 
 	private getProcedureTemplateId(selectedProcedureTemplate: number): number {
-		return this.arrayIdTemplatesProcedures.filter(a => a.diagnosticId === selectedProcedureTemplate)[0].selectedrocedureTemplateId
+		let a = this.arrayIdTemplatesProcedures.filter(a => a.diagnosticId === selectedProcedureTemplate);
+		return a.length ? a[0].selectedrocedureTemplateId : null
 	}
 
 	private buildAddDiagnosticReportObservationsCommandDto(idDiagnostic: number): any {

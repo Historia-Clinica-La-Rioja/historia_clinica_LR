@@ -16,22 +16,19 @@
 	<mat-divider [vertical]="true"></mat-divider>
 
 	<div fxLayout="column" fxLayoutGap="15px">
+		<mat-divider></mat-divider>
+
 		<h2>
 			{{ 'ambulatoria.paciente.ordenes_prescripciones.show_study_results_dialog.STUDY_RESULTS' | translate}}
 		</h2>
 
-		<div *ngFor="let dr of diagnosisResultArr" fxLayoutGap="10px">
-			<mat-divider></mat-divider>
-
-			<h3 class="title capitalize-first-letter">
-				{{dr.descriptionTemplate }}
-			</h3>
+		<div *ngFor="let rp of resultsPractices" fxLayoutGap="10px">
 
 			<app-show-closed-forms-template [result]="rp">
 			</app-show-closed-forms-template>
-		</div>
 
-		<mat-divider></mat-divider>
+			<mat-divider></mat-divider>
+		</div>
 
 		<app-title-description [title]="observationsConst" [text]="observations">
 		</app-title-description>
