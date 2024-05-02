@@ -1,6 +1,6 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Quirúrgico'} ">
 	<div body fxLayout="column" fxLayoutGap="20px" *ngIf="!loadingReport">
-		<app-surgical-report-diagnosis [diagnosis]="diagnosis" [(surgicalReport)]="surgicalReport">
+		<app-surgical-report-diagnosis [diagnosis]="diagnosis" [mainDiagnosis]="mainDiagnosis" [(surgicalReport)]="surgicalReport">
 		</app-surgical-report-diagnosis>
 
 		<app-surgical-report-professional-team [professionals]="professionals" [(surgicalReport)]="surgicalReport">

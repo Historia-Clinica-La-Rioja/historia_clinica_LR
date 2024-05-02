@@ -1,12 +1,12 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosisDto, EProfessionType, ProcedureTypeEnum, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { DiagnosisDto, EProfessionType, HealthConditionDto, ProcedureTypeEnum, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
-import { InternmentStateService } from '@api-rest/services/internment-state.service';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
 import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
 import { InternmentFields } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
+import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -15,9 +15,10 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 	selector: 'app-surgical-report-dock-popup',
 	templateUrl: './surgical-report-dock-popup.component.html',
 	styleUrls: ['./surgical-report-dock-popup.component.scss'],
+	providers: [ComponentEvaluationManagerService]
 })
-export class SurgicalReportDockPopupComponent implements OnInit {
-
+export class SurgicalReportDockPopupComponent {
+	mainDiagnosis: HealthConditionDto;
 	diagnosis: DiagnosisDto[];
 	professionals: ProfessionalDto[];
 	isLoading = false;
@@ -74,17 +75,16 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
-		private readonly internmentStateService: InternmentStateService,
 		private readonly healthcareProfessionalService: HealthcareProfessionalService,
 		private readonly surgicalReportService: SurgicalReportService,
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
+		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
 	) {
-		this.internmentStateService.getDiagnosesGeneralState(this.data.internmentEpisodeId).subscribe(response => {
-			if (response)
-				this.diagnosis = response;
-		});
-
+		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
+		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
+		this.diagnosis = data.diagnosis;
+		this.mainDiagnosis = data.mainDiagnosis;
 		this.healthcareProfessionalService.getAllProfessionalsAndTechnicians().subscribe(response => {
 			if (response)
 				this.professionals = response;
@@ -99,9 +99,6 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 					this.disabled = false;
 			})
 		}
-	}
-
-	ngOnInit(): void {
 	}
 
 	setDisabled(): void {

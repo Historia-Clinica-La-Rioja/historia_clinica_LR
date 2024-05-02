@@ -306,19 +306,26 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	}
 
 	openSurgicalReport() {
-		this.internmentActions.openSurgicalReport();
-		this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {
-			if (fieldsToUpdate)
-				this.updateInternmentSummary(fieldsToUpdate);
-		});
+		this.internmentStateService.getDiagnosesGeneralState(this.internmentEpisode.id).subscribe(diagnoses => {
+			diagnoses.forEach(modifiedDiagnosis => modifiedDiagnosis.presumptive = modifiedDiagnosis.verificationId === this.PRESUMPTIVE);
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+			this.internmentActions.diagnosticos = diagnoses.filter(diagnosis => !diagnosis.main);
+			this.internmentActions.openSurgicalReport();
+			this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => {
+				if (fieldsToUpdate)
+					this.updateInternmentSummary(fieldsToUpdate);
+			});
+		})
 	}
 
 	newTriage() {
-		this.dialog.open(this.triageComponent, { data: this.episode.id })
-	}
+			this.dialog.open(this.triageComponent, { data: this.episode.id })
+		}
 
 	private hasToDoInternmentAction() {
-		if (this.hasMedicalDischarge) {
+			if(this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
 			this.enableReports = true
 			return;

@@ -193,6 +193,8 @@ export class InternmentActionsService {
 				surgicalReportId: id,
 				autoFocus: false,
 				disableClose: true,
+				mainDiagnosis: this.mainDiagnosis,
+				diagnosis: this.diagnosticos,
 			});
 			this.popUpOpenSubject.next(true);
 			this.dialogRefSubject.next(this.dialogRef);

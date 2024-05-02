@@ -2,7 +2,7 @@
 	<div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="5px">
 		<div class="diagnosis-text" fxLayout="row" fxLayoutGap="10px">
 			<mat-checkbox id="{{ diagnosis.snomed.pt }}" [(ngModel)]="isMain || diagnosis.isAdded" [disabled]="isMain"
-				(change)="diagnosis.isAdded = $event.checked; updateChecked() "></mat-checkbox>
+				(change)="diagnosis.isAdded = $event.checked; updateChecked() " color="primary"></mat-checkbox>
 			<strong [ngClass]="{'capitalize title': type === 'EPICRISIS', 'capitalize': type !== 'EPICRISIS'}">{{
 				diagnosis.snomed.pt }}</strong>
 		</div>
