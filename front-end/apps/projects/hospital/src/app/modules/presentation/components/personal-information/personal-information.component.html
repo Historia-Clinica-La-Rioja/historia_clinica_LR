@@ -43,7 +43,7 @@
 	<div fxFlex="50%">
 		<span class="info-title">Fecha de Nacimiento</span>
 		<span *ngIf="personalInformation?.birthDate; else noInformation"
-			class="info-content">{{personalInformation?.birthDate}}</span>
+			class="info-content">{{personalInformation?.birthDate | dateFormat: 'date'}}</span>
 	</div>
 </div>
 <mat-divider inset></mat-divider>
