@@ -37,6 +37,7 @@ const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="rules" {...rules(permissions)} />,
     <Resource name="proceduretemplates" {...procedureTemplates(permissions)}/>,
     <Resource name="proceduretemplatesnomeds" {...procedureTemplateSnomeds(permissions)}/>,
+    <Resource name="proceduretemplatesnomedgroup"/>,
     <Resource name="units-of-measure" {...unitsOfMeasure(permissions)} />,
     <Resource name="proceduretemplateparameters" {...procedureTemplateParameters(permissions)} />,
     <Resource name="institutionpractices" {...institutionpractices(permissions)} />,
