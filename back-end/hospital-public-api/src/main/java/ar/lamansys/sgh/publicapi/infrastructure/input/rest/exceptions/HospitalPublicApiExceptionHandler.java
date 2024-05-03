@@ -35,6 +35,8 @@ import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionRequ
 import ar.lamansys.sgx.shared.auth.user.SecurityContextUtils;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 
+import java.time.format.DateTimeParseException;
+
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice(basePackages = "ar.lamansys.sgh.publicapi")
 public class HospitalPublicApiExceptionHandler {
@@ -249,4 +251,9 @@ public class HospitalPublicApiExceptionHandler {
 		);
 	}
 
+	@ExceptionHandler({ DateTimeParseException.class })
+	protected ApiErrorMessageDto handleDateTimeParseException(DateTimeParseException ex) {
+		logger.debug("DateTimeParseException -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto("El formato de la fecha es invalido", ex.getMessage());
+	}
 }
