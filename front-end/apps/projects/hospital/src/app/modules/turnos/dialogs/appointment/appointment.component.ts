@@ -389,7 +389,7 @@ export class AppointmentComponent implements OnInit {
 		} else {
 			this.calculateSetAppointmentDay();
 		}
-		this.formDate.controls.day.setValue(this.selectedDate.getUTCDate());
+		this.formDate.controls.day.setValue(this.selectedDate.getDate());
 		this.formDate.controls.month.setValue(this.dateAppointment.month);
 		this.formDate.controls.year.setValue(this.dateAppointment.year);
 		this.formDate.controls.modality.setValue(this.selectedModality.value);
@@ -449,8 +449,8 @@ export class AppointmentComponent implements OnInit {
 		this.dateFormToggle();
 	}
 
-	isToday(): boolean {
-		return (this.today.year === this.dateAppointment.year && this.today.month === this.dateAppointment.month && this.today.day === this.dateAppointment.day)
+	isToday(date: DateDto): boolean {
+		return (this.today.year === date.year && this.today.month === date.month && this.today.day === date.day)
 	}
 
 	selectDate(dateType: DATESTYPES) {
@@ -531,8 +531,9 @@ export class AppointmentComponent implements OnInit {
 			if (!this.availableDays.includes(element.day))
 				this.availableDays.push(element.day);
 		});
-		if (isInitial && !this.availableDays.includes(this.selectedDate.getUTCDate())) {
-			this.availableDays.push(this.selectedDate.getUTCDate());
+		const appointmentSelectedDate = this.selectedDate.getDate();
+		if (isInitial && !this.availableDays.includes(appointmentSelectedDate)) {
+			this.availableDays.push(appointmentSelectedDate);
 		}
 		this.availableDays.sort((a, b) => a - b);
 	}
@@ -584,7 +585,7 @@ export class AppointmentComponent implements OnInit {
 		const searchCriteria = this.prepareSearchCriteria(date);
 		this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id, searchCriteria).subscribe((diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) => {
 			if (diaryOpeningHours.length) {
-				this.filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours)
+				this.filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours, date);
 				if (isInitial) {
 					this.setDefaultAppointmentHour();
 				}
@@ -592,10 +593,10 @@ export class AppointmentComponent implements OnInit {
 		})
 	}
 
-	filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) {
+	filterAndUpdateDiaryOpeningHoursFreeTimes(diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[], date: DateDto) {
 		diaryOpeningHours.forEach(times => {
 			times.freeTimes.forEach(time => {
-				if (this.isToday()) {
+				if (this.isToday(date)) {
 					const now = new Date();
 					if (time.hours > now.getHours() || (time.hours === now.getHours() && time.minutes > now.getMinutes())) {
 						this.possibleScheduleHours.push(time);
