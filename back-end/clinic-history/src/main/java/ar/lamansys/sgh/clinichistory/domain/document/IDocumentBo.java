@@ -69,8 +69,8 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-    default List<PersonalHistoryBo> getPersonalHistories() {
-        return Collections.emptyList();
+    default ReferableItemBo<PersonalHistoryBo> getPersonalHistories() {
+        return new ReferableItemBo<>();
     }
 
     default List<FamilyHistoryBo> getFamilyHistories() {

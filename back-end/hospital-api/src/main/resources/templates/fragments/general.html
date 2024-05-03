@@ -643,10 +643,13 @@
 
     <!-- Antecedentes personales -->
 
-    <div th:fragment="personalHistory" th:if="${not #lists.isEmpty(personalHistories)}">
+    <div th:fragment="personalHistory" th:if="${not #lists.isEmpty(personalHistories.content) || personalHistories.isReferred != null}">
         <p class="section-title">Antecedentes personales</p>
-        <div>
-            <dl class="section-data" th:each="personalHistory,iter: ${personalHistories}">
+        <div th:if="${!personalHistories.isReferred}">
+            <p>No refiere</p>
+        </div>
+        <div th:if="${personalHistories.isReferred}">
+            <dl class="section-data" th:each="personalHistory,iter: ${personalHistories.content}">
                 <dd><p th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
             </dl>
         </div>

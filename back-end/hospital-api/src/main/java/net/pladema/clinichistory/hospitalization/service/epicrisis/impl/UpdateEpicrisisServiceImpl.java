@@ -47,7 +47,7 @@ public class UpdateEpicrisisServiceImpl implements UpdateEpicrisisService {
 
 		newEpicrisis.getMainDiagnosis().setId(null);
 		Optional.ofNullable(newEpicrisis.getDiagnosis()).ifPresent(list->list.forEach(d->d.setId(null)));
-		Optional.ofNullable(newEpicrisis.getPersonalHistories()).ifPresent(list->list.forEach(d->d.setId(null)));
+		Optional.ofNullable(newEpicrisis.getPersonalHistories().getContent()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(newEpicrisis.getFamilyHistories()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(newEpicrisis.getAllergies().getContent()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(newEpicrisis.getImmunizations()).ifPresent(list->list.forEach(d->d.setId(null)));

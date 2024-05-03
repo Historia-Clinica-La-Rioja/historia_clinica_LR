@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 public enum EReferableConcept {
 
-	ALLERGY(1);
+	ALLERGY(1),
+	PERSONAL_HISTORY(2);
 
 	private final Short id;
 

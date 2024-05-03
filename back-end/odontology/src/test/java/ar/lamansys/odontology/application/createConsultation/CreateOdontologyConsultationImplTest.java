@@ -552,19 +552,19 @@ class CreateOdontologyConsultationImplTest {
     void shouldThrowErrorWhenThereAreRepeatedPersonalHistories() {
         ConsultationBo consultation = mockBasicConsultation();
 
-        List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
+        ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories = new ReferableItemBo<>();
 
         ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory1);
+        personalHistories.getContent().add(personalHistory1);
 
         ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 2", "PT 2"));
-        personalHistories.add(personalHistory2);
+        personalHistories.getContent().add(personalHistory2);
 
         ConsultationPersonalHistoryBo personalHistory3 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory3.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory3);
+        personalHistories.getContent().add(personalHistory3);
 
         consultation.setPersonalHistories(personalHistories);
 
@@ -733,13 +733,13 @@ class CreateOdontologyConsultationImplTest {
 
         consultation.setAllergies(referableItemBo);
 
-        List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
+        ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories = new ReferableItemBo<>();
         ConsultationPersonalHistoryBo personalHistory1 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory1.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory1);
+        personalHistories.getContent().add(personalHistory1);
         ConsultationPersonalHistoryBo personalHistory2 = new ConsultationPersonalHistoryBo(LocalDate.of(2022, 1,1));
         personalHistory2.setSnomed(new OdontologySnomedBo("SCTID 1", "PT 1"));
-        personalHistories.add(personalHistory2);
+        personalHistories.getContent().add(personalHistory2);
         consultation.setPersonalHistories(personalHistories);
 
         List<ConsultationReasonBo> reasons = new ArrayList<>();

@@ -53,7 +53,7 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
     private List<@Valid DiagnosisBo> diagnosis;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid PersonalHistoryBo> personalHistories;
+    private ReferableItemBo<@Valid PersonalHistoryBo> personalHistories;
 
     private List<@Valid ProcedureBo> procedures;
 

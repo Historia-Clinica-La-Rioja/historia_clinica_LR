@@ -80,7 +80,7 @@ public class FetchHospitalizationHealthConditionState {
         log.debug(LOGGING_INTERNMENT_EPISODE, internmentEpisodeId);
         List<HealthConditionVo> data = getGeneralStateData(internmentEpisodeId);
         GeneralHealthConditionBo generalHealthConditionBo = new GeneralHealthConditionBo(data);
-        List<PersonalHistoryBo> result = generalHealthConditionBo.getPersonalHistories();
+        List<PersonalHistoryBo> result = generalHealthConditionBo.getPersonalHistories().getContent();
         log.debug(OUTPUT, result);
         return result;
     }

@@ -60,7 +60,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
 			newAnamnesis.getMainDiagnosis().setId(null);
 		setOtherDiagnostics(newAnamnesis, oldAnamnesis);
 		newAnamnesis.getProcedures().addAll(getDischargedConcepts(newAnamnesis.getProcedures(), oldAnamnesis.getProcedures(), ProceduresStatus.ERROR));
-		newAnamnesis.getPersonalHistories().addAll(getDischargedConcepts(newAnamnesis.getPersonalHistories(), oldAnamnesis.getPersonalHistories(), ConditionClinicalStatus.INACTIVE)
+		newAnamnesis.getPersonalHistories().getContent().addAll(getDischargedConcepts(newAnamnesis.getPersonalHistories().getContent(), oldAnamnesis.getPersonalHistories().getContent(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newAnamnesis.getFamilyHistories().addAll(getDischargedConcepts(newAnamnesis.getFamilyHistories(), oldAnamnesis.getFamilyHistories(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));

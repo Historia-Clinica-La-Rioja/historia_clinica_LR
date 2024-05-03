@@ -176,7 +176,7 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 		epicrisisBo.setDiagnosis(Collections.emptyList());
 		epicrisisBo.setImmunizations(Collections.emptyList());
 		epicrisisBo.setFamilyHistories(Collections.emptyList());
-		epicrisisBo.setPersonalHistories(Collections.emptyList());
+		epicrisisBo.setPersonalHistories(new ReferableItemBo<>());
 		epicrisisBo.setMedications(Collections.emptyList());
 		epicrisisBo.setAllergies(new ReferableItemBo<>());
 		return epicrisisBo;

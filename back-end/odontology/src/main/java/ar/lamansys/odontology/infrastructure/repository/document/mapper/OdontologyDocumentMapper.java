@@ -33,7 +33,7 @@ public interface OdontologyDocumentMapper {
         if (target.getProcedures() == null)
             target.setProcedures(new ArrayList<>());
         if (target.getPersonalHistories() == null)
-            target.setPersonalHistories(new ArrayList<>());
+            target.setPersonalHistories(new ReferableItemDto<>());
         if (target.getAllergies() == null)
             target.setAllergies(new ReferableItemDto<>());
     }

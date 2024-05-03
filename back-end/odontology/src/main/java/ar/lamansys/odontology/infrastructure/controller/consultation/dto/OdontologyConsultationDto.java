@@ -42,7 +42,7 @@ public class OdontologyConsultationDto {
     private List<@Valid OdontologyProcedureDto> procedures = new ArrayList<>();
 
     @Nullable
-    private List<@Valid OdontologyPersonalHistoryDto> personalHistories = new ArrayList<>();
+    private ReferableItemDto<@Valid OdontologyPersonalHistoryDto> personalHistories;
 
     @Nullable
     private List<@Valid OdontologyMedicationDto> medications = new ArrayList<>();

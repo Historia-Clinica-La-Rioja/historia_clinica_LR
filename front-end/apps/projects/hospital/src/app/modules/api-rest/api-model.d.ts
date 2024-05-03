@@ -157,7 +157,7 @@ export interface AnamnesisDto extends Serializable {
     medications: MedicationDto[];
     modificationReason?: string;
     notes?: DocumentObservationsDto;
-    personalHistories: HealthHistoryConditionDto[];
+    personalHistories: ReferableItemDto<HealthHistoryConditionDto>;
     procedures?: HospitalizationProcedureDto[];
     riskFactors?: RiskFactorDto;
 }
@@ -1055,7 +1055,7 @@ export interface CreateOutpatientDto {
     involvedHealthcareProfessionalIds: number[];
     medications: OutpatientMedicationDto[];
     patientMedicalCoverageId?: number;
-    personalHistories?: OutpatientPersonalHistoryDto[];
+    personalHistories?: ReferableItemDto<OutpatientPersonalHistoryDto>;
     problems: OutpatientProblemDto[];
     procedures: OutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
@@ -1340,7 +1340,7 @@ export interface DocumentDto {
     notes: DocumentObservationsDto;
     patientId: number;
     performedDate: DateDto;
-    personalHistories: PersonalHistoryDto[];
+    personalHistories: ReferableItemDto<PersonalHistoryDto>;
     problems: ProblemDto[];
     procedures: ProcedureDto[];
     reasons: ReasonDto[];
@@ -3018,7 +3018,7 @@ export interface OdontologyConsultationDto {
     medications?: OdontologyMedicationDto[];
     patientMedicalCoverageId?: number;
     permanentTeethPresent?: number;
-    personalHistories?: OdontologyPersonalHistoryDto[];
+    personalHistories?: ReferableItemDto<OdontologyPersonalHistoryDto>;
     procedures?: OdontologyProcedureDto[];
     reasons?: OdontologyReasonDto[];
     references?: ReferenceDto[];

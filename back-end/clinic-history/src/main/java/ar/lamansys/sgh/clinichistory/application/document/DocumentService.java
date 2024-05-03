@@ -168,5 +168,7 @@ public interface DocumentService {
 
 	void createDocumentRefersAllergy(Long documentId, Boolean refersAllergy);
 
+	void createDocumentRefersPersonalHistory(Long documentId, Boolean refersPersonalHistory);
+
 }
 

@@ -65,7 +65,7 @@ public class UpdateEvolutionNoteServiceImpl implements UpdateEvolutionNoteServic
 
 		setOtherDiagnostics(newEvolution, oldEvolution);
 		newEvolution.getProcedures().addAll(getDischargedConcepts(newEvolution.getProcedures(), oldEvolution.getProcedures(), ProceduresStatus.ERROR));
-		newEvolution.getPersonalHistories().addAll(getDischargedConcepts(newEvolution.getPersonalHistories(), oldEvolution.getPersonalHistories(), ConditionClinicalStatus.INACTIVE)
+		newEvolution.getPersonalHistories().getContent().addAll(getDischargedConcepts(newEvolution.getPersonalHistories().getContent(), oldEvolution.getPersonalHistories().getContent(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newEvolution.getFamilyHistories().addAll(getDischargedConcepts(newEvolution.getFamilyHistories(), oldEvolution.getFamilyHistories(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId( ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));

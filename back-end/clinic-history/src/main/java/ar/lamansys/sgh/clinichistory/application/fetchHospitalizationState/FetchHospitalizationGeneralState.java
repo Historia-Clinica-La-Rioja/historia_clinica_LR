@@ -62,7 +62,7 @@ public class FetchHospitalizationGeneralState {
         GeneralHealthConditionBo generalHealthCondition = fetchHospitalizationHealthConditionState.getGeneralState(internmentEpisodeId);
         hospitalizationGeneralState.setMainDiagnosis(generalHealthCondition.getMainDiagnosis());
         hospitalizationGeneralState.setDiagnosis(generalHealthCondition.getDiagnosis());
-        hospitalizationGeneralState.setPersonalHistories(generalHealthCondition.getPersonalHistories());
+        hospitalizationGeneralState.setPersonalHistories(generalHealthCondition.getPersonalHistories().getContent());
         hospitalizationGeneralState.setFamilyHistories(generalHealthCondition.getFamilyHistories());
 		hospitalizationGeneralState.setOtherProblems(generalHealthCondition.getOtherProblems());
 		hospitalizationGeneralState.setProcedures(getProceduresState(internmentEpisodeId));

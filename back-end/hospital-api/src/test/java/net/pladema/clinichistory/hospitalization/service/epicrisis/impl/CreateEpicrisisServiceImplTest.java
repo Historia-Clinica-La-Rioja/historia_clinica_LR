@@ -334,18 +334,18 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         );
         Assertions.assertTrue(exception.getMessage().contains("personalHistories: {value.mandatory}"));
 
-        epicrisis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("", ""))));
+        epicrisis.setPersonalHistories(new ReferableItemBo<>(List.of(new PersonalHistoryBo(new SnomedBo("", ""))), true));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo(null, null))));
+        epicrisis.setPersonalHistories(new ReferableItemBo<>(List.of(new PersonalHistoryBo(new SnomedBo(null, null))), true));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setPersonalHistories(List.of(new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
-                new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
+        epicrisis.setPersonalHistories(new ReferableItemBo<>(List.of(new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+                new PersonalHistoryBo(new SnomedBo("REPEATED", "REPEATED"))), true));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
@@ -412,7 +412,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         result.setInstitutionId(institutionId);
         result.setEncounterId(encounterId);
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
-        result.setPersonalHistories(Collections.emptyList());
+        result.setPersonalHistories(new ReferableItemBo<>());
         result.setFamilyHistories(Collections.emptyList());
         result.setMedications(Collections.emptyList());
         result.setDiagnosis(Collections.emptyList());

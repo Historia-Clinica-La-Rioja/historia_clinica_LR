@@ -189,7 +189,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setEncounterId(encounterId);
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		anamnesis.setDiagnosis(Collections.emptyList());
-		anamnesis.setPersonalHistories(Collections.emptyList());
+		anamnesis.setPersonalHistories(new ReferableItemBo<>());
 		anamnesis.setFamilyHistories(Collections.emptyList());
 		anamnesis.setMedications(Collections.emptyList());
 		anamnesis.setImmunizations(Collections.emptyList());

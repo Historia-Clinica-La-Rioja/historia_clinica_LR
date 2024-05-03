@@ -51,6 +51,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentTriageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.domain.ReferableConceptVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAllergyIntolerance;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentAnestheticTechnique;
@@ -266,7 +267,8 @@ public class DocumentServiceImpl implements DocumentService {
     public GeneralHealthConditionBo getHealthConditionFromDocument(Long documentId) {
         log.debug(LOGGING_DOCUMENT_ID, documentId);
         List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(documentId);
-        GeneralHealthConditionBo result = new GeneralHealthConditionBo(resultQuery);
+		List<ReferableConceptVo> referredConcepts = documentReferableConceptRepository.fetchDocumentReferredConcepts(documentId);
+        GeneralHealthConditionBo result = new GeneralHealthConditionBo(resultQuery, referredConcepts);
         log.debug(OUTPUT, result);
         return result;
     }
@@ -677,9 +679,20 @@ public class DocumentServiceImpl implements DocumentService {
 	@Override
 	public void createDocumentRefersAllergy(Long documentId, Boolean refersAllergy) {
 		log.debug("Input parameters -> documentId {}, refersAllergy {}", documentId, refersAllergy);
-		if (refersAllergy != null)
-			documentReferableConceptRepository.save(parseDocumentReferableConcept(documentId, EReferableConcept.ALLERGY.getId(), refersAllergy));
+		saveReferableConcept(documentId, refersAllergy, EReferableConcept.ALLERGY.getId());
 		log.debug("Output -> Value saved successfully");
+	}
+
+	@Override
+	public void createDocumentRefersPersonalHistory(Long documentId, Boolean refersPersonalHistory) {
+		log.debug("Input parameters -> documentId {}, refersPersonalHistory {}", documentId, refersPersonalHistory);
+		saveReferableConcept(documentId, refersPersonalHistory, EReferableConcept.PERSONAL_HISTORY.getId());
+		log.debug("Output -> Value saved successfully");
+	}
+
+	private void saveReferableConcept(Long documentId, Boolean isReferred, Short referableConceptId) {
+		if (isReferred != null)
+			documentReferableConceptRepository.save(parseDocumentReferableConcept(documentId, referableConceptId, isReferred));
 	}
 
 	private DocumentReferableConcept parseDocumentReferableConcept(Long documentId, Short referableConceptId, boolean isReferred) {

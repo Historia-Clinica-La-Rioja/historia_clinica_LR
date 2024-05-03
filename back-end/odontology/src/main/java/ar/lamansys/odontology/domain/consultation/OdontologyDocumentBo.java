@@ -35,7 +35,7 @@ public class OdontologyDocumentBo {
 
     private List<ConsultationProcedureBo> procedures;
 
-    private List<ConsultationPersonalHistoryBo> personalHistories;
+    private ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories;
 
     private ReferableItemBo<ConsultationAllergyBo> allergies;
 

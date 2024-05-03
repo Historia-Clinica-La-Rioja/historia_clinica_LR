@@ -34,7 +34,7 @@ public class ConsultationBo {
 
     private List<ConsultationProcedureBo> procedures = new ArrayList<>();
 
-    private List<ConsultationPersonalHistoryBo> personalHistories = new ArrayList<>();
+    private ReferableItemBo<ConsultationPersonalHistoryBo> personalHistories = new ReferableItemBo<>();
 
     private ReferableItemBo<ConsultationAllergyBo> allergies = new ReferableItemBo<>();
 

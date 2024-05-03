@@ -50,7 +50,7 @@ public class DocumentDto {
 
     private List<DiagnosisDto> diagnosis = new ArrayList<>();
 
-    private List<PersonalHistoryDto> personalHistories = new ArrayList<>();
+    private ReferableItemDto<PersonalHistoryDto> personalHistories;
 
     private List<ProblemDto> problems = new ArrayList<>();
 

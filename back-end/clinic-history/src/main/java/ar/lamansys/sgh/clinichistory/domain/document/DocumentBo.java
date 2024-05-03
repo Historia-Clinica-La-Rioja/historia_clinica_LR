@@ -62,7 +62,7 @@ public class DocumentBo implements IDocumentBo {
 
     private List<ProcedureBo> procedures = new ArrayList<>();
 
-    private List<PersonalHistoryBo> personalHistories = new ArrayList<>();
+    private ReferableItemBo<PersonalHistoryBo> personalHistories;
 
     private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
 

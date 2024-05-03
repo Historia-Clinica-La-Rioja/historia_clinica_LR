@@ -16,10 +16,12 @@ import org.mapstruct.Named;
 @Mapper(uses = {RiskFactorMapper.class, AnthropometricDataMapper.class, LocalDateMapper.class, SnomedMapper.class})
 public interface EpicrisisMapper {
 
+	@Mapping(target = "personalHistories.content", source = "personalHistories")
 	@Mapping(target = "allergies.content", source = "allergies")
     @Named("fromEpicrisisDto")
     EpicrisisBo fromEpicrisisDto(EpicrisisDto epicrisisDto);
 
+	@Mapping(target = "personalHistories", source = "personalHistories.content")
 	@Mapping(target = "allergies", source = "allergies.content")
     @Named("fromEpicrisis")
     ResponseEpicrisisDto fromEpicrisis(EpicrisisBo epicrisisBo);
