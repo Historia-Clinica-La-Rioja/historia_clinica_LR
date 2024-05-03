@@ -170,5 +170,7 @@ public interface DocumentService {
 
 	void createDocumentRefersPersonalHistory(Long documentId, Boolean refersPersonalHistory);
 
+	void createDocumentRefersFamilyHistory(Long documentId, Boolean refersFamilyHistory);
+
 }
 

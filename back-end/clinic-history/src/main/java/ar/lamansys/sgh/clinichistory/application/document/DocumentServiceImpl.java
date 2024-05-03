@@ -690,6 +690,13 @@ public class DocumentServiceImpl implements DocumentService {
 		log.debug("Output -> Value saved successfully");
 	}
 
+	@Override
+	public void createDocumentRefersFamilyHistory(Long documentId, Boolean refersFamilyHistory) {
+		log.debug("Input parameters -> documentId {}, refersPersonalHistory {}", documentId, refersFamilyHistory);
+		saveReferableConcept(documentId, refersFamilyHistory, EReferableConcept.FAMILY_HISTORY.getId());
+		log.debug("Output -> Value saved successfully");
+	}
+
 	private void saveReferableConcept(Long documentId, Boolean isReferred, Short referableConceptId) {
 		if (isReferred != null)
 			documentReferableConceptRepository.save(parseDocumentReferableConcept(documentId, referableConceptId, isReferred));

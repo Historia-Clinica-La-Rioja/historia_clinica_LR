@@ -56,7 +56,7 @@ public class DocumentDto {
 
     private List<ProcedureDto> procedures = new ArrayList<>();
 
-    private List<HealthHistoryConditionDto> familyHistories = new ArrayList<>();
+    private ReferableItemDto<HealthHistoryConditionDto> familyHistories;
 
     private  List<MedicationDto> medications = new ArrayList<>();
 

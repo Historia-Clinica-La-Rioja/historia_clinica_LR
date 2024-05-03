@@ -29,7 +29,7 @@ public class CreateOutpatientDto {
     @Nullable
     private ReferableItemDto<@Valid OutpatientPersonalHistoryDto> personalHistories;
 
-    private List<@Valid OutpatientFamilyHistoryDto> familyHistories = new ArrayList<>();
+    private ReferableItemDto<@Valid OutpatientFamilyHistoryDto> familyHistories;
 
     private  List<@Valid OutpatientMedicationDto> medications = new ArrayList<>();
 

@@ -200,27 +200,36 @@ public class HealthConditionService {
         return healthCondition;
     }
 
-    public List<FamilyHistoryBo> loadFamilyHistories(PatientInfoBo patientInfo, Long documentId, List<FamilyHistoryBo> familyHistories) {
+    public List<FamilyHistoryBo> loadFamilyHistories(PatientInfoBo patientInfo, Long documentId, ReferableItemBo<FamilyHistoryBo> familyHistories) {
         log.debug("Input parameters -> patientInfo {}, documentId {}, familyHistories {}", patientInfo, documentId, familyHistories);
-        familyHistories.forEach(ph -> {
-            HealthCondition healthCondition = buildFamilyHistory(patientInfo, ph);
-			if(ph.getId()==null)
-	            healthCondition = healthConditionRepository.save(healthCondition);
-
-            ph.setId(healthCondition.getId());
-            ph.setVerificationId(healthCondition.getVerificationStatusId());
-            ph.setVerification(getVerification(ph.getVerificationId()));
-            ph.setStatusId(healthCondition.getStatusId());
-            ph.setStatus(getStatus(ph.getStatusId()));
-
-            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
-        });
-
-        log.debug(OUTPUT, familyHistories);
-        return familyHistories;
+		if (familyHistories != null)
+			return getFamilyHistory(patientInfo, documentId, familyHistories);
+		return new ArrayList<>();
     }
 
-    private HealthCondition buildFamilyHistory(PatientInfoBo patientInfo, FamilyHistoryBo info) {
+	private List<@Valid FamilyHistoryBo> getFamilyHistory(PatientInfoBo patientInfo, Long documentId, ReferableItemBo<FamilyHistoryBo> familyHistories) {
+		documentService.createDocumentRefersFamilyHistory(documentId, familyHistories.getIsReferred());
+		if (familyHistories.getContent() != null)
+			familyHistories.getContent().forEach(ph -> processFamilyHistory(patientInfo, documentId, ph));
+		log.debug(OUTPUT, familyHistories);
+		return familyHistories.getContent();
+	}
+
+	private void processFamilyHistory(PatientInfoBo patientInfo, Long documentId, FamilyHistoryBo ph) {
+		HealthCondition healthCondition = buildFamilyHistory(patientInfo, ph);
+		if(ph.getId()==null)
+			healthCondition = healthConditionRepository.save(healthCondition);
+
+		ph.setId(healthCondition.getId());
+		ph.setVerificationId(healthCondition.getVerificationStatusId());
+		ph.setVerification(getVerification(ph.getVerificationId()));
+		ph.setStatusId(healthCondition.getStatusId());
+		ph.setStatus(getStatus(ph.getStatusId()));
+
+		documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+	}
+
+	private HealthCondition buildFamilyHistory(PatientInfoBo patientInfo, FamilyHistoryBo info) {
         log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
         HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
         healthCondition.setProblemId(ProblemType.FAMILY_HISTORY);

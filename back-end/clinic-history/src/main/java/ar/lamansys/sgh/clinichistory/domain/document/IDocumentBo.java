@@ -73,8 +73,8 @@ public interface IDocumentBo {
         return new ReferableItemBo<>();
     }
 
-    default List<FamilyHistoryBo> getFamilyHistories() {
-        return Collections.emptyList();
+    default ReferableItemBo<FamilyHistoryBo> getFamilyHistories() {
+        return new ReferableItemBo<>();
     }
 
     default List<MedicationBo> getMedications() {

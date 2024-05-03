@@ -56,7 +56,7 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 
 	private RiskFactorBo riskFactors;
 
-	private List<FamilyHistoryBo> familyHistories;
+	private ReferableItemBo<FamilyHistoryBo> familyHistories;
 
 	private ReferableItemBo<AllergyConditionBo> allergies;
 

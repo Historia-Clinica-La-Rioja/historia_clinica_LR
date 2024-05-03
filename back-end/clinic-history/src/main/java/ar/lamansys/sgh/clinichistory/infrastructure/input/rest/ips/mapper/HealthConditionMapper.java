@@ -97,4 +97,10 @@ public interface HealthConditionMapper {
 	@Named("toReferablePersonalHistoryDto")
 	ReferableItemDto<PersonalHistoryDto> toReferablePersonalHistoryDto(ReferableItemBo<PersonalHistoryBo> personalHistory);
 
+	@Named("toReferableFamilyHistoryBoFromHealthHistory")
+	ReferableItemBo<FamilyHistoryBo> toReferableFamilyHistoryBoFromHealthHistory(ReferableItemDto<HealthHistoryConditionDto> healthHistoryConditionDto);
+
+	@Named("toReferableFamilyHistoryConditionDto")
+	ReferableItemDto<HealthHistoryConditionDto> toReferableFamilyHistoryConditionDto(ReferableItemBo<FamilyHistoryBo> familyHistory);
+
 }

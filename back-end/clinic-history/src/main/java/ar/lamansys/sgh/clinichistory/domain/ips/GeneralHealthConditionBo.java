@@ -43,7 +43,7 @@ public class GeneralHealthConditionBo implements Serializable {
 
     private ReferableItemBo<PersonalHistoryBo> personalHistories;
 
-    private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
+    private ReferableItemBo<FamilyHistoryBo> familyHistories;
 
 	private List<ProblemBo> problems = new ArrayList<>();
 
@@ -74,9 +74,11 @@ public class GeneralHealthConditionBo implements Serializable {
 				this::mapPersonalHistoryBo, referredConcepts,
 				EReferableConcept.PERSONAL_HISTORY.getId())
 		);
-		setFamilyHistories(buildGeneralState(healthConditionVos,
+		setFamilyHistories(buildReferableGeneralState(healthConditionVos,
 				HealthConditionVo::isFamilyHistory,
-				this::mapFamilyHistoryBo));
+				this::mapFamilyHistoryBo,
+				referredConcepts,
+				EReferableConcept.FAMILY_HISTORY.getId()));
 		setProblems(buildGeneralState(healthConditionVos,
 				HealthConditionVo::isProblem,
 				this::buildProblem));

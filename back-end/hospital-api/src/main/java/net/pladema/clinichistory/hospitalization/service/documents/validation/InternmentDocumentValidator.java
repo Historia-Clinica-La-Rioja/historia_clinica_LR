@@ -44,7 +44,7 @@ public class InternmentDocumentValidator {
 			throw new ConstraintViolationException("Diagnósticos secundarios repetidos", Collections.emptySet());
 		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(documentBo.getPersonalHistories().getContent()))
 			throw new ConstraintViolationException("Antecedentes personales repetidos", Collections.emptySet());
-		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(documentBo.getFamilyHistories()))
+		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(documentBo.getFamilyHistories().getContent()))
 			throw new ConstraintViolationException("Antecedentes familiares repetidos", Collections.emptySet());
 		if (ClinicalTermsValidatorUtils.repeatedClinicalTerms(documentBo.getProcedures()))
 			throw new ConstraintViolationException("Procedimientos repetidos", Collections.emptySet());

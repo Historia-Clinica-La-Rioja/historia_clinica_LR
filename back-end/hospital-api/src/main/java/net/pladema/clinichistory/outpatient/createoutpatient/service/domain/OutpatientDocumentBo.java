@@ -55,7 +55,7 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private ReferableItemBo<PersonalHistoryBo> personalHistories;
 
-    private List<FamilyHistoryBo> familyHistories = new ArrayList<>();
+    private ReferableItemBo<FamilyHistoryBo> familyHistories;
 
     private List<MedicationBo> medications = new ArrayList<>();
 

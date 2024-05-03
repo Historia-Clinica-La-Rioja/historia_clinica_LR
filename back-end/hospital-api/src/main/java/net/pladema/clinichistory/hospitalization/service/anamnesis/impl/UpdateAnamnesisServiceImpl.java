@@ -62,7 +62,7 @@ public class UpdateAnamnesisServiceImpl implements UpdateAnamnesisService {
 		newAnamnesis.getProcedures().addAll(getDischargedConcepts(newAnamnesis.getProcedures(), oldAnamnesis.getProcedures(), ProceduresStatus.ERROR));
 		newAnamnesis.getPersonalHistories().getContent().addAll(getDischargedConcepts(newAnamnesis.getPersonalHistories().getContent(), oldAnamnesis.getPersonalHistories().getContent(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
-		newAnamnesis.getFamilyHistories().addAll(getDischargedConcepts(newAnamnesis.getFamilyHistories(), oldAnamnesis.getFamilyHistories(), ConditionClinicalStatus.INACTIVE)
+		newAnamnesis.getFamilyHistories().getContent().addAll(getDischargedConcepts(newAnamnesis.getFamilyHistories().getContent(), oldAnamnesis.getFamilyHistories().getContent(), ConditionClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(ConditionVerificationStatus.ERROR)).collect(Collectors.toList()));
 		newAnamnesis.getAllergies().getContent().addAll(getDischargedConcepts(newAnamnesis.getAllergies().getContent(), oldAnamnesis.getAllergies().getContent(), AllergyIntoleranceClinicalStatus.INACTIVE)
 				.stream().peek(a -> a.setVerificationId(AllergyIntoleranceVerificationStatus.ERROR)).collect(Collectors.toList()));

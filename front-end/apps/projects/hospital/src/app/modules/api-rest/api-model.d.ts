@@ -151,7 +151,7 @@ export interface AnamnesisDto extends Serializable {
     anthropometricData?: AnthropometricDataDto;
     confirmed: boolean;
     diagnosis: DiagnosisDto[];
-    familyHistories: HealthHistoryConditionDto[];
+    familyHistories: ReferableItemDto<HealthHistoryConditionDto>;
     immunizations: ImmunizationDto[];
     mainDiagnosis: HealthConditionDto;
     medications: MedicationDto[];
@@ -1050,7 +1050,7 @@ export interface CreateOutpatientDto {
     anthropometricData?: OutpatientAnthropometricDataDto;
     clinicalSpecialtyId?: number;
     evolutionNote?: string;
-    familyHistories: OutpatientFamilyHistoryDto[];
+    familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>;
     hierarchicalUnitId?: number;
     involvedHealthcareProfessionalIds: number[];
     medications: OutpatientMedicationDto[];
@@ -1329,7 +1329,7 @@ export interface DocumentDto {
     documentSource: number;
     documentType: number;
     encounterId: number;
-    familyHistories: HealthHistoryConditionDto[];
+    familyHistories: ReferableItemDto<HealthHistoryConditionDto>;
     healthcareProfessionals: DocumentHealthcareProfessionalDto[];
     id: number;
     immunizations: ImmunizationDto[];
@@ -1609,7 +1609,7 @@ export interface EmergencyCareEvolutionNoteClinicalData {
     anthropometricData: OutpatientAnthropometricDataDto;
     diagnosis: DiagnosisDto[];
     evolutionNote: string;
-    familyHistories: OutpatientFamilyHistoryDto[];
+    familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>;
     mainDiagnosis: HealthConditionDto;
     medications: OutpatientMedicationDto[];
     procedures: OutpatientProcedureDto[];
@@ -1632,7 +1632,7 @@ export interface EmergencyCareEvolutionNoteDto {
     clinicalSpecialtyId: number;
     diagnosis: DiagnosisDto[];
     evolutionNote: string;
-    familyHistories: OutpatientFamilyHistoryDto[];
+    familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>;
     mainDiagnosis: HealthConditionDto;
     medications: OutpatientMedicationDto[];
     patientId: number;

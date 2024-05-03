@@ -62,7 +62,7 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 	private List<@Valid ProcedureBo> procedures;
 
     @NotNull(message = "{value.mandatory}")
-    private List<@Valid FamilyHistoryBo> familyHistories;
+    private ReferableItemBo<@Valid FamilyHistoryBo> familyHistories;
 
     @NotNull(message = "{value.mandatory}")
     private List<@Valid MedicationBo> medications;

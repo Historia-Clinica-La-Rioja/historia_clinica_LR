@@ -74,7 +74,7 @@ class CreateOutpatientDocumentServiceImplTest extends UnitRepository {
         var outpatientDocumentBo = validOutpatientConsultation(8, 5);
         outpatientDocumentBo.setReasons(List.of(new ReasonBo(new SnomedBo("SCTID", "PT")), new ReasonBo(new SnomedBo("SCTID", "PT"))));
         outpatientDocumentBo.setProblems(List.of(new ProblemBo(new SnomedBo("SCTID", "PT")), new ProblemBo(new SnomedBo("SCTID", "PT"))));
-        outpatientDocumentBo.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("SCTID", "PT")), new FamilyHistoryBo(new SnomedBo("SCTID", "PT"))));
+        outpatientDocumentBo.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("SCTID", "PT")), new FamilyHistoryBo(new SnomedBo("SCTID", "PT"))), true));
 		ReferableItemBo<AllergyConditionBo> referableAllergies = getAllergyConditionBoReferableItemBo();
 		outpatientDocumentBo.setAllergies(referableAllergies);
         outpatientDocumentBo.setProcedures(List.of(new ProcedureBo(new SnomedBo("SCTID", "PT")), new ProcedureBo(new SnomedBo("SCTID", "PT"))));

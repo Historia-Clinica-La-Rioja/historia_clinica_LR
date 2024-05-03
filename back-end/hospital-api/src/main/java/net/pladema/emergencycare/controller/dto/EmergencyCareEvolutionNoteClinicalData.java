@@ -31,7 +31,7 @@ public class EmergencyCareEvolutionNoteClinicalData {
 
 	private OutpatientRiskFactorDto riskFactors;
 
-	private List<OutpatientFamilyHistoryDto> familyHistories;
+	private ReferableItemDto<OutpatientFamilyHistoryDto> familyHistories;
 
 	private List<OutpatientMedicationDto> medications;
 

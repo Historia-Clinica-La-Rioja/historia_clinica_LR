@@ -366,18 +366,18 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         );
         Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
-        epicrisis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("", ""))));
+        epicrisis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("", ""))), true));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo(null, null))));
+        epicrisis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo(null, null))), true));
         Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
 
-        epicrisis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
-                new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
+        epicrisis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+                new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))), true));
         exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
                 createEpicrisisService.execute(epicrisis, draft)
         );
@@ -413,7 +413,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
         result.setEncounterId(encounterId);
         result.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
         result.setPersonalHistories(new ReferableItemBo<>());
-        result.setFamilyHistories(Collections.emptyList());
+        result.setFamilyHistories(new ReferableItemBo<>());
         result.setMedications(Collections.emptyList());
         result.setDiagnosis(Collections.emptyList());
 		result.setProcedures(Collections.emptyList());

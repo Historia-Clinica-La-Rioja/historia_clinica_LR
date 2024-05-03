@@ -53,7 +53,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 		epicrisis.getMainDiagnosis().setId(null);
 		Optional.ofNullable(epicrisis.getDiagnosis()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(epicrisis.getPersonalHistories().getContent()).ifPresent(list->list.forEach(d->d.setId(null)));
-		Optional.ofNullable(epicrisis.getFamilyHistories()).ifPresent(list->list.forEach(d->d.setId(null)));
+		Optional.ofNullable(epicrisis.getFamilyHistories().getContent()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(epicrisis.getAllergies().getContent()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(epicrisis.getProcedures()).ifPresent(list->list.forEach(d->d.setId(null)));
 		Optional.ofNullable(epicrisis.getImmunizations()).ifPresent(list->list.forEach(d->d.setId(null)));

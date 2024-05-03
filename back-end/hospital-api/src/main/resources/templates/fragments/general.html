@@ -657,10 +657,13 @@
 
     <!-- Antecedentes familiares -->
 
-    <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories)}">
+    <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories.content) || familyHistories.isReferred != null}">
         <p class="section-title">Antecedentes familiares</p>
-        <div>
-            <dl class="section-data" th:each="familyHistory,iter: ${familyHistories}">
+        <div th:if="${!familyHistories.isReferred}">
+            <p>No refiere</p>
+        </div>
+        <div th:if="${familyHistories.isReferred}">
+            <dl class="section-data" th:each="familyHistory,iter: ${familyHistories.content}">
                 <dd><p th:text="${'- ' +familyHistory.snomed.pt}"></p></dd>
             </dl>
         </div>

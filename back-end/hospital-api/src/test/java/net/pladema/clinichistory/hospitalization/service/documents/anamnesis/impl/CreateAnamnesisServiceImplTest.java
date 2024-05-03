@@ -313,18 +313,18 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		);
 		Assertions.assertTrue(exception.getMessage().contains("familyHistories: {value.mandatory}"));
 
-		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("", ""))));
+		anamnesis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("", ""))), true));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo(null, null))));
+		anamnesis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo(null, null))), true));
 		Assertions.assertThrows(ConstraintViolationException.class, () ->
 			createAnamnesisServiceImpl.execute(anamnesis)
 		);
 
-		anamnesis.setFamilyHistories(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
-				new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))));
+		anamnesis.setFamilyHistories(new ReferableItemBo<>(List.of(new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED")),
+				new FamilyHistoryBo(new SnomedBo("REPEATED", "REPEATED"))), true));
 		exception = Assertions.assertThrows(ConstraintViolationException.class, () ->
 				createAnamnesisServiceImpl.execute(anamnesis)
 		);
@@ -465,7 +465,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 		anamnesis.setMainDiagnosis(new HealthConditionBo(new SnomedBo("MAIN", "MAIN")));
 		anamnesis.setDiagnosis(Collections.emptyList());
 		anamnesis.setPersonalHistories(new ReferableItemBo<>());
-		anamnesis.setFamilyHistories(Collections.emptyList());
+		anamnesis.setFamilyHistories(new ReferableItemBo<>());
 		anamnesis.setMedications(Collections.emptyList());
 		anamnesis.setImmunizations(Collections.emptyList());
 		anamnesis.setAllergies(new ReferableItemBo<>());

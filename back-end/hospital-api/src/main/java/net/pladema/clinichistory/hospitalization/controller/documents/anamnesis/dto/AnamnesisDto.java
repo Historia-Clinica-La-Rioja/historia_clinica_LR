@@ -40,7 +40,7 @@ public class AnamnesisDto implements Serializable {
     private List<@Valid HospitalizationProcedureDto> procedures = new ArrayList<>();
 
     @NotNull
-    private List<@Valid HealthHistoryConditionDto> familyHistories = new ArrayList<>();
+    private ReferableItemDto<@Valid HealthHistoryConditionDto> familyHistories;
 
     @NotNull
     private  List<@Valid MedicationDto> medications = new ArrayList<>();
