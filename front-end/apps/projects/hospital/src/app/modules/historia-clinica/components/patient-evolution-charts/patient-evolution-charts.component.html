@@ -1,5 +1,7 @@
 <app-evolution-chart-options [patientId]="patientId" (selectedEvolutionChartOptions)="buildChart($event)"></app-evolution-chart-options>
 
+<app-box-message [boxMessageInfo]="boxMessageInfo"></app-box-message>
+
 <div *ngIf="chart else loadingInfo">
     <app-chart  [chart]="chart"></app-chart>
 </div>
