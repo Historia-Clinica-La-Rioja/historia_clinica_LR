@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { DOCUMENTS, DOCUMENTS_SEARCH_FIELDS } from '../../constants/summaries';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import {
@@ -28,10 +28,18 @@ import { fixDate } from '@core/utils/date/format';
 	styleUrls: ['./documents-summary.component.scss'],
 	providers: [DocumentActionsService, DeleteDocumentActionService, EditDocumentActionService]
 })
-export class DocumentsSummaryComponent implements OnInit, OnChanges {
+export class DocumentsSummaryComponent implements OnInit {
 
 	@Input() internmentEpisodeId: number;
-	@Input() clinicalEvaluation: DocumentHistoricDto;
+	@Input() set clinicalEvaluation(ce: DocumentHistoricDto) {
+		this.documentHistoric = ce;
+		if (this.documentHistoric) {
+			this.updateDocuments();
+		}
+		this.activeDocument = undefined;
+		this.internmentActions.popUpOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
+		this.ambulatoriaSummaryFacadeService.isNewConsultationOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
+	}
 	@Input() patientId: number;
 	@Input() internmentEpisodeAdmissionDatetime: Date;
 
@@ -71,15 +79,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		this.internacionMasterDataService.getDocumentTypes().subscribe(dt => this.documentTypes = dt);
 	}
 
-	ngOnChanges() {
-		this.documentHistoric = this.clinicalEvaluation;
-		if (this.documentHistoric) {
-			this.updateDocuments();
-		}
-		this.activeDocument = undefined;
-		this.internmentActions.popUpOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
-		this.ambulatoriaSummaryFacadeService.isNewConsultationOpen$.subscribe(isOpened => this.isPopUpOpen = isOpened);
-	}
+
 
 	ngOnInit(): void {
 		this.internmentSummaryFacadeService.initializeEvolutionNoteFilterResult(this.internmentEpisodeId);
@@ -135,7 +135,7 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	updateDocuments() {
 		this.form.patchValue({ documentsWithoutDiagnosis: false })
 		this.activeDocument = null;
-		const documents = this.documentHistoric.documents?.filter(document => {
+		const documents = this.documentHistoric?.documents?.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
 		});
 		if (documents){
