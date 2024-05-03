@@ -33,11 +33,12 @@ public class CipresOutpatientConsultationSummaryStorageImpl implements CipresOut
 				"JOIN Document d ON (oc.id = d.sourceId) " +
 				"JOIN Patient p ON (oc.patientId = p.id) " +
 				"JOIN Person pe ON (p.personId = pe.id) " +
+				"LEFT JOIN CipresEncounter ce ON (oc.id = ce.encounterId) " +
 				"WHERE oc.billable = TRUE " +
 				"AND d.statusId = '" + DocumentStatus.FINAL + "' " +
 				"AND d.typeId = " + DocumentType.OUTPATIENT +
 				"AND d.sourceTypeId = " + SourceType.OUTPATIENT +
-				"AND oc.id NOT IN (SELECT ce.encounterId FROM CipresEncounter ce) " +
+				"AND ce.encounterId IS NULL " +
 				"AND (oc.creationable.createdOn BETWEEN :start AND :end) " +
 				"ORDER BY oc.creationable.createdOn DESC";
 
