@@ -40,3 +40,38 @@ databaseChangeLog:
                               constraints:
                                   nullable: true
 
+    - changeSet:
+        id: createIndexClinicalSpecialtyId-outpatient_consultation
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_clinical_specialty_id" ON outpatient_consultation(clinical_specialty_id);
+
+    - changeSet:
+        id: createIndexCreatedOn-outpatient_consultation
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_created_on" ON outpatient_consultation(created_on);          
+
+    - changeSet:
+        id: createIndexEncounterId-cipres_encounter
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_cipres_encounter_encounter_id" ON cipres_encounter(encounter_id);
+
+    - changeSet:
+        id: createIndexPersonId-patient
+        author: bchacon
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_patient_person_id" ON patient(person_id);
