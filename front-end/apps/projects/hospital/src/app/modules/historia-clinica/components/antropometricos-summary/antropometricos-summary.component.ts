@@ -4,12 +4,11 @@ import { DetailBox } from '@presentation/components/detail-box/detail-box.compon
 import { MatDialog } from '@angular/material/dialog';
 import { AddAnthropometricComponent } from '../../dialogs/add-anthropometric/add-anthropometric.component';
 import { InternmentSummaryFacadeService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
-import { AnthropometricDataDto, AppFeature, HCEAnthropometricDataDto } from '@api-rest/api-model';
+import { AnthropometricDataDto, HCEAnthropometricDataDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { PatientEvolutionChartsService } from '@historia-clinica/services/patient-evolution-charts.service';
 import { getParam } from '@historia-clinica/modules/ambulatoria/modules/estudio/utils/utils';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-antropometricos-summary',
@@ -23,7 +22,6 @@ export class AntropometricosSummaryComponent implements OnInit {
 	@Input() editable = false;
 
 	details: DetailBoxExtended[] = [];
-	isEvolutionChartsFFActive = false;
 	readonly antropometricosSummary = ANTROPOMETRICOS;
 
 	private readonly LABELS = {
@@ -37,8 +35,7 @@ export class AntropometricosSummaryComponent implements OnInit {
 		public dialog: MatDialog,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly patientEvolutionChartService: PatientEvolutionChartsService,
-		private readonly activatedRoute: ActivatedRoute,
-		private readonly featureFlagService: FeatureFlagService,
+		private readonly activatedRoute: ActivatedRoute
 	) { }
 
 	ngOnInit(): void {
@@ -47,10 +44,6 @@ export class AntropometricosSummaryComponent implements OnInit {
 			this.updateAnthropometricData(list);
 			this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
 		});
-
-		this.featureFlagService.isActive(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO).subscribe(
-			isEvolutionChartsFFActive => this.isEvolutionChartsFFActive = isEvolutionChartsFFActive
-		);
 	}
 
 	openDialog(): void {
