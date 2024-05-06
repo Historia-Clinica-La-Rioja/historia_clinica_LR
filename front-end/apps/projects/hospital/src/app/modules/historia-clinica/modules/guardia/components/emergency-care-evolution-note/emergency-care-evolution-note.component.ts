@@ -11,6 +11,7 @@ export class EmergencyCareEvolutionNoteComponent {
 
 
 	@Input() set content(newContent: EmergencyCareEvolutionNoteDocumentDto) {
+		console.log(newContent);
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(
 			c => {
 				this.criticalityTypes = c;
@@ -48,7 +49,9 @@ export class EmergencyCareEvolutionNoteComponent {
 	) { }
 
 	private toAntecedentesFamiliares(familyHistories): string[] {
-		return familyHistories.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
+		if (familyHistories.isReferred === false)
+			this.antecedentesFamiliaresContent = ['No refiere antecedentes familiares'];
+		return familyHistories.referredContent.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
 
 		function map(m: OutpatientFamilyHistoryDto): string[] {
 			return [m.snomed.pt, m.startDate ? `Desde ${m.startDate}`: null]
