@@ -2,6 +2,8 @@
 	<div body fxLayout="column" fxLayoutGap="20px" *ngIf="!loadingReport">
 		<app-surgical-report-diagnosis [diagnosis]="diagnosis" [mainDiagnosis]="mainDiagnosis" [(surgicalReport)]="surgicalReport">
 		</app-surgical-report-diagnosis>
+		
+		<app-surgical-report-surgery-procedures [(surgicalReport)]="surgicalReport"></app-surgical-report-surgery-procedures>
 
 		<app-surgical-report-professional-team [professionals]="professionals" [(surgicalReport)]="surgicalReport">
 		</app-surgical-report-professional-team>

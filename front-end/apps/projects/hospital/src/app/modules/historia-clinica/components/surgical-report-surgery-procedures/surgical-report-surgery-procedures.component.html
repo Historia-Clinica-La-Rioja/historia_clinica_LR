@@ -1,0 +1,27 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+	[title]="'ambulatoria.paciente.surgical-report.diagnosis.SURGERY' | translate" icon="assignment"
+	[collapsed]="false" [hideBorder]="true" [isEmpty]="isEmpty()">
+
+    <div fxLayout="column" fxLayoutGap="20px">
+		<app-titled-content-card *ngIf="!procedureService.isEmpty()"
+			[title]="'ambulatoria.paciente.surgical-report.diagnosis.SURGERY'">
+			<div *ngFor="let proposedSurgery of surgicalReport.surgeryProcedures; index as i; last as isLast">
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<div class="proposed-surgery-text">
+						<strong>{{ proposedSurgery.snomed.pt | titlecase }}</strong>
+					</div> 
+					<button type="button" mat-icon-button color="warn" (click)="deleteProcedure(i)">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</div>
+				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+			</div>
+		</app-titled-content-card>
+        <div>
+			<button mat-button type="button" id="add-procedure-button" color="primary" (click)="addProcedure()">
+				+ {{ 'ambulatoria.paciente.surgical-report.diagnosis.ADD_SURGERY' | translate }}
+			</button>
+		</div>
+	</div>
+</app-new-consultation-expansion-section>

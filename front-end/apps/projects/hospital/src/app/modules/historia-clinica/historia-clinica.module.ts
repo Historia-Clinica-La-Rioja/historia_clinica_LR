@@ -74,6 +74,7 @@ import { SurgicalReportProceduresComponent } from './components/surgical-report-
 import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
 import { SurgicalReportProfessionalTeamComponent } from './components/surgical-report-professional-team/surgical-report-professional-team.component';
 import { SurgicalReportProsthesisComponent } from './components/surgical-report-prosthesis/surgical-report-prosthesis.component';
+import { SurgicalReportSurgeryProceduresComponent } from './components/surgical-report-surgery-procedures/surgical-report-surgery-procedures.component';
 import { TemplateConceptTypeaheadSearchComponent } from './components/template-concept-typeahead-search/template-concept-typeahead-search.component';
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
@@ -252,6 +253,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		SurgicalReportProfessionalTeamComponent,
 		SurgicalReportProfessionalInfoComponent,
 		SurgicalReportProceduresComponent,
+		SurgicalReportSurgeryProceduresComponent,
 		ProfessionalAndDescriptionComponent,
 		ProcedureAndDescriptionComponent,
 		SurgicalReportProsthesisComponent,
@@ -288,7 +290,6 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		ConceptsSearchComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
-
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
