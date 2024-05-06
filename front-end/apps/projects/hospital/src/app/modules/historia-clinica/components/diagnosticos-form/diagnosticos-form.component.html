@@ -5,7 +5,7 @@
 		[isEmpty]="componentEvaluationManagerService.isEmptyDiagnosis()  | async" [hideBorder]="true">
 
 		<app-diagnosticos (mainDiagnosisChange)="mainDiagnosisChange($event)"
-			(diagnosisChange)="diagnosisChange($event)" type="'ANAMNESIS'" [mainDiagnosis]="formDiagnosticos.value.mainDiagnostico"
+			(diagnosisChange)="diagnosisChange($event)" type="ANAMNESIS" [mainDiagnosis]="formDiagnosticos.value.mainDiagnostico"
 			[listDiagnosis]="formDiagnosticos.value.otrosDiagnosticos">
 		</app-diagnosticos>
 	</app-new-consultation-expansion-section>
