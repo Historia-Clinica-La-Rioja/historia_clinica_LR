@@ -9,8 +9,9 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { AlergiasFormComponent } from './components/alergias-form/alergias-form.component';
 import { AlergiasSummaryComponent } from './components/alergias-summary/alergias-summary.component';
 import { AllergyListComponent } from './components/allergy-list/allergy-list.component';
-import { AnestheticReportDockPopupComponent } from './components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
 import { AnalgesicTechniqueSummaryComponent } from './components/analgesic-technique-summary/analgesic-technique-summary.component';
+import { AnamnesisDocumentSummaryComponent } from './components/anamnesis-document-summary/anamnesis-document-summary.component';
+import { AnestheticReportDockPopupComponent } from './components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
 import { AnesthesicClinicalEvaluationSummaryComponent } from './components/anesthesic-clinical-evaluation-summary/anesthesic-clinical-evaluation-summary.component';
 import { AnestheticAgentsSummaryComponent } from './components/anesthetic-agents-summary/anesthetic-agents-summary.component';
 import { AnestheticHistorySummaryComponent } from './components/anesthetic-history-summary/anesthetic-history-summary.component';
@@ -150,6 +151,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		AnalgesicTechniqueBackgroundListComponent,
 		AnalgesicTechniqueComponent,
 		AnalgesicTechniqueSummaryComponent,
+		AnamnesisDocumentSummaryComponent,
 		AnesthesicClinicalEvaluationSummaryComponent,
 		AnestheticAgentsSummaryComponent,
 		AnestheticHistorySummaryComponent,
