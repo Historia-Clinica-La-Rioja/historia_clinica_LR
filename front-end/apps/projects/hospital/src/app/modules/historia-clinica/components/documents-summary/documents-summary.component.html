@@ -238,7 +238,7 @@
 				<app-anesthetic-report-document-summary class="document-summary" [documentId]="activeDocument.document.id" [internmentEpisodeId]="internmentEpisodeId"></app-anesthetic-report-document-summary>
 			</ng-container>
 			<ng-container *ngIf="activeDocument?.document.documentType === 'Anamnesis'">
-				<app-anamnesis-document-summary class="document-summary"></app-anamnesis-document-summary>
+				<app-anamnesis-document-summary [isPopUpOpen]="isPopUpOpen" class="document-summary"></app-anamnesis-document-summary>
 			</ng-container>
 		</div>
 		<div

@@ -31,6 +31,7 @@ import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.co
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
 import { DocumentsSummaryComponent } from './components/documents-summary/documents-summary.component';
+import { DocumentSummaryHeaderComponent } from './components/document-summary-header/document-summary-header.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
@@ -183,6 +184,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		ConceptTypeaheadSearchComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
+		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
 		EndOfAnesthesiaStatusSummaryComponent,
 		EpisodeDataComponent,

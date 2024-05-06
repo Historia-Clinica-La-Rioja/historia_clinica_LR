@@ -1,0 +1,18 @@
+.header-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    align-content: center;
+}
+
+.data-description {
+    margin-top: 24px;
+}
+
+.identifier-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 190px);
+}
+
+app-identifier-cases {
+    margin-bottom: 10px;
+}

@@ -241,3 +241,51 @@ export const hierarchicalUnitFull: Story = {
 		position: Position.COLUMN
 	}
 };
+
+export const bedMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.BED,
+		description: "Ejemplo cama",
+	}
+};
+
+export const bedFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.BED,
+		showLegend: true,
+		description: "Ejemplo cama",
+		position: Position.COLUMN
+	}
+};
+
+export const scopeMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.SCOPE,
+		description: "Ejemplo ambito",
+	}
+};
+
+export const scopeFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.SCOPE,
+		showLegend: true,
+		description: "Ejemplo ambito",
+		position: Position.COLUMN
+	}
+};
+
+export const patientMin: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.PATIENT,
+		description: "Ejemplo paciente",
+	}
+};
+
+export const patientFull: Story = {
+	args: {
+		identifierCase: IDENTIFIER_CASES.PATIENT,
+		showLegend: true,
+		description: "Ejemplo paciente",
+		position: Position.COLUMN
+	}
+};
