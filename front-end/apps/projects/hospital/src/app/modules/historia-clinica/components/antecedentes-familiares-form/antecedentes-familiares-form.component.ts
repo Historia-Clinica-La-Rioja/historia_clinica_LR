@@ -1,5 +1,5 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -21,12 +21,12 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class AntecedentesFamiliaresFormComponent {
+export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor {
 
 
 	antecedentesFamiliaresNuevaConsultaService = new AntecedentesFamiliaresNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService);
 	antecedentesFamiliares = this.formBuilder.group({
-		data: [[]]
+		data: []
 	});
 	searchConceptsLocallyFFIsOn = false;
 	onChangeSub: Subscription;
@@ -42,7 +42,9 @@ export class AntecedentesFamiliaresFormComponent {
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
-		this.antecedentesFamiliaresNuevaConsultaService.data$.subscribe(r => { this.writeValue({ data: r }) })
+		this.antecedentesFamiliaresNuevaConsultaService.data$.subscribe(antecedentesFamiliares =>
+			this.antecedentesFamiliares.controls.data.setValue(antecedentesFamiliares)
+		);
 
 	}
 
@@ -61,8 +63,10 @@ export class AntecedentesFamiliaresFormComponent {
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.antecedentesFamiliares.setValue(obj);
+			this.antecedentesFamiliaresNuevaConsultaService.setFamilyHistories(obj.data);
+		}
 	}
 
 	registerOnChange(fn: any): void {

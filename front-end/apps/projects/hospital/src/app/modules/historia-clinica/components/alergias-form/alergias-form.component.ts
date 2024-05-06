@@ -1,5 +1,5 @@
 import { Component, OnInit, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class AlergiasFormComponent implements OnInit {
+export class AlergiasFormComponent implements OnInit, ControlValueAccessor {
 
 
 	alergias = this.formBuilder.group({ data: [] });
@@ -36,7 +36,7 @@ export class AlergiasFormComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 	) {
 
-		this.alergiasNuevaConsultaService.alergias$.subscribe(r => this.writeValue({ data: r }))
+		this.alergiasNuevaConsultaService.alergias$.subscribe(alergias => this.alergias.controls.data.setValue(alergias));
 	}
 
 	ngOnInit(): void {
@@ -57,8 +57,10 @@ export class AlergiasFormComponent implements OnInit {
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.alergias.setValue(obj);
+			this.alergiasNuevaConsultaService.setAllergies(obj.data);
+		}
 	}
 
 	registerOnChange(fn: any): void {

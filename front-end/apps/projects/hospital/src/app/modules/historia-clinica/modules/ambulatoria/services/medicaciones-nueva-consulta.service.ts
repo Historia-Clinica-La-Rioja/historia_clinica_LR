@@ -138,4 +138,13 @@ export class MedicacionesNuevaConsultaService {
 	isEmpty(): boolean {
 		return (!this.data || this.data.length === 0);
 	}
+
+	setMedications(medications: Medicacion[]) {
+		medications.forEach(medication => {
+			this.setConcept(medication.snomed);
+			this.form.controls.observaciones.setValue(medication.observaciones);
+			this.form.controls.suspendido.setValue(medication.suspendido);
+			this.addToList();
+		});
+	}
 }

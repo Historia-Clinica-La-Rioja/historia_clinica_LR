@@ -26,7 +26,8 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 
 	readonly HEADER: SummaryHeader = { matIcon: 'assignment', title: 'Evoluciones de guardia' }
 
-	@Input('emergencyCareId') emergencyCareId: number
+	@Input('emergencyCareId') emergencyCareId: number;
+	@Input() patientId: number;
 
 	documentHistoric: Item[];
 	selectedTriage;

@@ -113,4 +113,12 @@ export class AntecedentesFamiliaresNuevaConsultaService {
 		return (!this.data || this.data.length === 0);
 	}
 
+	setFamilyHistories(familyHistories: AntecedenteFamiliar[]){
+		familyHistories.forEach(familyHistory => {
+			this.form.controls.fecha.setValue(familyHistory.fecha);
+			this.setConcept(familyHistory.snomed);
+			this.addToList();
+		});
+	}
+
 }

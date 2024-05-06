@@ -1,5 +1,5 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
@@ -21,9 +21,9 @@ import { Subscription } from 'rxjs';
 		}
 	]
 })
-export class ProcedimientosFormComponent{
+export class ProcedimientosFormComponent implements ControlValueAccessor {
 
-	procedimientos = this.formBuilder.group({data: []});
+	procedimientos = this.formBuilder.group({ data: [] });
 	onChangeSub: Subscription;
 	searchConceptsLocallyFFIsOn = false;
 
@@ -39,7 +39,7 @@ export class ProcedimientosFormComponent{
 			this.searchConceptsLocallyFFIsOn = isOn;
 		});
 
-		this.procedimientoNuevaConsultaService.procedimientos$.subscribe(r => this.writeValue({data: r}))
+		this.procedimientoNuevaConsultaService.procedimientos$.subscribe(procedimientos => this.procedimientos.controls.data.setValue(procedimientos));
 	}
 
 	addProcedure(): void {
@@ -58,8 +58,10 @@ export class ProcedimientosFormComponent{
 	onTouched = () => { };
 
 	writeValue(obj: any): void {
-		if (obj)
+		if (obj) {
 			this.procedimientos.setValue(obj);
+			this.procedimientoNuevaConsultaService.setProcedures(obj.data);
+		}
 	}
 
 	registerOnChange(fn: any): void {

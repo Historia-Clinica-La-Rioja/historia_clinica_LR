@@ -138,4 +138,11 @@ export class MotivoNuevaConsultaService {
 	isEmpty(): boolean {
 		return (!this.motivoConsulta || this.motivoConsulta.length === 0);
 	}
+
+	setMotives(motives: MotivoConsulta[]) {
+		motives.forEach(motive => {
+			this.setConcept(motive.snomed);
+			this.addToList();
+		});
+	}
 }

@@ -1,5 +1,6 @@
 <div fxLayout="row" fxLayoutGap="10px">
-    <button mat-icon-button color="primary" id="edit_document" *ngIf="!(hasAdministrativeDischarge$ | async) && document.summary.title !== TRIAGE">
+    <button mat-icon-button color="primary" id="edit_document" *ngIf="!(hasAdministrativeDischarge$ | async) && document.summary.title !== TRIAGE"
+        (click)="editDocument()">
         <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
     </button>
 

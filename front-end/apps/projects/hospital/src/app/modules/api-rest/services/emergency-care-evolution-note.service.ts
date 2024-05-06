@@ -10,13 +10,26 @@ import { Observable } from 'rxjs';
 })
 export class EmergencyCareEvolutionNoteService {
 
+	readonly PREFIX_URL = `${environment.apiBase}/institution/`;
+	readonly BASIC_URL = `emergency-care/episodes/`;
+
 	constructor(
 		private readonly http: HttpClient,
 		private readonly contextService: ContextService
 	) { }
 
 	saveEmergencyCareEvolutionNote(episodeId: number, dto: EmergencyCareEvolutionNoteDto): Observable<boolean> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/emergency-care/episodes/${episodeId}/evolution-note`;
+		const url = `${this.PREFIX_URL}${this.contextService.institutionId}/${this.BASIC_URL}${episodeId}/evolution-note`;
 		return this.http.post<boolean>(url, dto);
+	}
+
+	updateEmergencyCareEvolutionNote(episodeId: number, oldDocumentId: number, dto: EmergencyCareEvolutionNoteDto): Observable<boolean> {
+		const url = `${this.PREFIX_URL}${this.contextService.institutionId}/${this.BASIC_URL}${episodeId}/evolution-note/edit-by-document/${oldDocumentId}`;
+		return this.http.post<boolean>(url, dto);
+	}
+
+	getByDocumentId(episodeId: number, documentId: number): Observable<EmergencyCareEvolutionNoteDto> {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/emergency-care/episodes/${episodeId}/evolution-note/by-document/${documentId}`;
+		return this.http.get<EmergencyCareEvolutionNoteDto>(url);
 	}
 }

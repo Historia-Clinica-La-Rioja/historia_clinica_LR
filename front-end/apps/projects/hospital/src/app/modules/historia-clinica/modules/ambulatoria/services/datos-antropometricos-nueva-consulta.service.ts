@@ -21,10 +21,18 @@ export interface DatosAntropometricos {
 	headCircumference?: ClinicalObservationDto;
 }
 
+export interface AnthropometricDataValues {
+	bloodType?: string;
+	bmi?: string;
+	height: string;
+	weight: string;
+	headCircumference?: string;
+}
+
 export class DatosAntropometricosNuevaConsultaService {
 
 	form: UntypedFormGroup;
-	private bloodTypes: MasterDataInterface<string>[];
+	private bloodTypes: MasterDataInterface<string>[] = [];
 	private heightErrorSource = new Subject<string | void>();
 	private _heightError$ = this.heightErrorSource.asObservable();
 	private weightErrorSource = new Subject<string | void>();
@@ -38,6 +46,7 @@ export class DatosAntropometricosNuevaConsultaService {
 	private antropometricDataSubject = new Subject<AnthropometricData>();
 	antropometricData$ = this.antropometricDataSubject.asObservable();
 	antropometricData: AnthropometricData;
+	preloadedBloodType: string;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -122,6 +131,8 @@ export class DatosAntropometricosNuevaConsultaService {
 
 		this.internacionMasterDataService.getBloodTypes().subscribe(bloodTypes => {
 			this.bloodTypes = bloodTypes;
+			if (this.preloadedBloodType)
+				this.setBloodType()
 		});
 	}
 
@@ -163,7 +174,7 @@ export class DatosAntropometricosNuevaConsultaService {
 				(anthropometricData: HCEAnthropometricDataDto) => {
 					this.notShowPreloadedAnthropometricData = anthropometricData ? true : false;
 					if (anthropometricData) {
-						this.setAnthropometric(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
+						this.setAnthropometricAndDisabledForm(anthropometricData.weight?.value, anthropometricData.height?.value, anthropometricData.bloodType?.value, anthropometricData.headCircumference?.value);
 						Object.keys(anthropometricData).forEach((key: string) => {
 							if (anthropometricData[key].effectiveTime) {
 								this.dateList.push(anthropometricData[key].effectiveTime);
@@ -175,13 +186,13 @@ export class DatosAntropometricosNuevaConsultaService {
 		}
 	}
 
-	setAnthropometric(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string): void {
-		this.form.get('weight').setValue(weight);
-		this.form.get('height').setValue(height);
-		this.form.get('headCircumference').setValue(headCircumference);
-		if (bloodDescription != null)
-			this.form.get('bloodType').setValue(this.bloodTypes.find(b => b.description === bloodDescription));
+	setAnthropometricAndDisabledForm(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string): void {
+		this.setForm(weight, height, bloodDescription, headCircumference);
 		this.form.disable();
+	}
+
+	setAnthropometricData(preloadAnthropometricData: AnthropometricDataValues) {
+		this.setForm(preloadAnthropometricData.weight, preloadAnthropometricData.height, preloadAnthropometricData.bloodType, preloadAnthropometricData.headCircumference);
 	}
 
 	discardPreloadedAnthropometricData() {
@@ -211,4 +222,20 @@ export class DatosAntropometricosNuevaConsultaService {
 		this.antropometricData = { ...this.antropometricData, [fieldName]: value };
 		this.antropometricDataSubject.next(this.antropometricData);
 	}
+
+	private setForm(weight?: string, height?: string, bloodDescription?: string, headCircumference?: string) {
+		this.form.get('weight').setValue(weight);
+		this.form.get('height').setValue(height);
+		this.form.get('headCircumference').setValue(headCircumference);
+		if (bloodDescription) {
+			this.preloadedBloodType = bloodDescription;
+			this.setBloodType();
+		}
+	}
+
+	private setBloodType() {
+		const bloodType = this.bloodTypes.find(b => b.description === this.preloadedBloodType);
+		this.form.get('bloodType').setValue(bloodType || null);
+	}
+
 }

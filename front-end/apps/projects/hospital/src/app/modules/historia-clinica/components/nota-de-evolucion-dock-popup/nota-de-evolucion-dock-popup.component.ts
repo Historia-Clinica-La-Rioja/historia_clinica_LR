@@ -9,12 +9,14 @@ import { DockPopUpHeader } from '@presentation/components/dock-popup/dock-popup.
 import { OVERLAY_DATA } from '@presentation/presentation-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { mapMedications, mapAnthropometricData, mapFamilyHistories, toRiskFactors } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
+import { toOutpatientMedicationDto, toOutpatientAnthropometricDataDto, toOutpatientFamilyHistoryDto, toOutpatientRiskFactorDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
+import { EvolutionNoteEditionService } from '@historia-clinica/modules/guardia/services/evolution-note-edition.service';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
 	templateUrl: './nota-de-evolucion-dock-popup.component.html',
-	styleUrls: ['./nota-de-evolucion-dock-popup.component.scss']
+	styleUrls: ['./nota-de-evolucion-dock-popup.component.scss'],
+	providers: [EvolutionNoteEditionService]
 })
 
 export class NotaDeEvolucionDockPopupComponent implements OnInit {
@@ -47,9 +49,15 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		private changeDetectorRef: ChangeDetectorRef,
 		private readonly newRiskFactorsService: NewRiskFactorsService,
+		private readonly evolutionNoteEditionService: EvolutionNoteEditionService,
 	) { }
 
 	ngOnInit(): void {
+		if (this.data.editMode) {
+			this.setEvolutionNoteDataToEdit();
+			return;
+		}
+
 		this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.data.episodeId).subscribe(
 			diagnoses => {
 				if (diagnoses.length) {
@@ -73,10 +81,10 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	private buildEmergencyCareEvolutionNoteDto(): EmergencyCareEvolutionNoteDto {
 		const value = this.form.value;
 		const allDiagnosis = this.getDiagnosis(value.diagnosis);
-		const medications = mapMedications(value.medications?.data);
-		const anthropometricData = mapAnthropometricData(value.anthropometricData);
-		const familyHistories = mapFamilyHistories(value.familyHistories?.data);
-		const riskFactors = toRiskFactors(value.riskFactors);
+		const medications = toOutpatientMedicationDto(value.medications?.data);
+		const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
+		const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
+		const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
 
 		return {
 			clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
@@ -95,7 +103,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	}
 
 	private persist(emergencyCareEvolutionNoteDto: EmergencyCareEvolutionNoteDto) {
-		this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.data.episodeId, emergencyCareEvolutionNoteDto).subscribe(
+		const saveEmergencyCareEvolutionNote$ = this.data.editMode ? this.emergencyCareEvolutionNoteService.updateEmergencyCareEvolutionNote(this.data.episodeId, this.data.documentId, emergencyCareEvolutionNoteDto) : this.emergencyCareEvolutionNoteService.saveEmergencyCareEvolutionNote(this.data.episodeId, emergencyCareEvolutionNoteDto)
+		saveEmergencyCareEvolutionNote$.subscribe(
 			saved => {
 				this.snackBarService.showSuccess('Nota de evolución guardada correctamente');
 				this.newEmergencyCareEvolutionNoteService.newEvolutionNote();
@@ -121,9 +130,19 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		mainDiagnosis.isAdded = !!mainDiagnosis;
 		this.form.controls.diagnosis.setValue({ mainDiagnostico: mainDiagnosis, otrosDiagnosticos: otherDiagnoses });
 	}
+
+	private setEvolutionNoteDataToEdit() {
+		const evolutionNoteData = this.data.emergencyCareEvolutionNote;
+		this.setDiagnosis(evolutionNoteData.mainDiagnosis, evolutionNoteData.diagnosis);
+		this.evolutionNoteEditionService.loadFormByEvolutionNoteData(this.form, evolutionNoteData);
+	}
+
 }
 
 export interface NotaDeEvolucionData {
 	patientId: number,
 	episodeId: number,
+	editMode: boolean,
+	emergencyCareEvolutionNote: EmergencyCareEvolutionNoteDto,
+	documentId: number,
 }

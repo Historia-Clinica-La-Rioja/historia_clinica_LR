@@ -205,4 +205,11 @@ export class ProcedimientosService {
 		return this.hasProcedure.asObservable();
 	}
 
+	setProcedures(procedures: Procedimiento[]) {
+		procedures.forEach(procedure => {
+			this.form.controls.performedDate.setValue(procedure.performedDate);
+			this.setAndAddConcept(procedure.snomed);
+		});
+	}
+
 }

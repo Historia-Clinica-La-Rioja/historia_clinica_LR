@@ -38,7 +38,7 @@
 				<ng-template #evolutionNote>
 					<app-emergency-care-evolution-note [content]="activeDocument.content"></app-emergency-care-evolution-note>
 				</ng-template>
-				<app-document-actions [document]="activeDocument" [episodeId]="emergencyCareId"></app-document-actions>
+				<app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId"></app-document-actions>
 			</div>
 
 		</div>
