@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import {
 	AllergyConditionDto,
 	AnamnesisDto,
-	AppFeature,
 	DiagnosisDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto,
 	MasterDataInterface,
 	MedicationDto,
@@ -26,7 +25,6 @@ import { map } from 'rxjs/internal/operators/map';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
 import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -64,7 +62,6 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	observationsSubject = new BehaviorSubject<boolean>(true);
 	minDate = MIN_DATE;
 	anthropometricData: AnthropometricData;
-	isEvolutionChartsFFActive = false;
 	@ViewChild('errorsView') errorsView: ElementRef;
 
 	constructor(
@@ -76,8 +73,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly anamnesisService: AnamnesisService,
 		private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService,
-		private readonly dialog: MatDialog,
-		private readonly featureFlagService: FeatureFlagService,
+		private readonly dialog: MatDialog
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
@@ -129,8 +125,6 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		).subscribe(allFormValuesAreNull => {
 			this.observationsSubject.next(allFormValuesAreNull);
 		});
-
-		this.featureFlagService.isActive(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO).subscribe(isEvolutionChartsActive => this.isEvolutionChartsFFActive = isEvolutionChartsActive);
 	}
 
 	save(): void {
