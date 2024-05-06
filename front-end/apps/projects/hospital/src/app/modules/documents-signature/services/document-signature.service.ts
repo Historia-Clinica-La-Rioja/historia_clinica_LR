@@ -57,7 +57,7 @@ export class DocumentSignatureService {
                 {
                     icon: 'report',
                     title: 'digital-signature.detailed-documents.FAMILY_HISTORIES',
-                    value: this.buildDataWithDate(document.familyHistories)
+                    value: this.buildDataWithDate(document.familyHistories.content)
                 },
                 {
                     icon: 'event_available',
@@ -67,7 +67,7 @@ export class DocumentSignatureService {
                 {
                     icon: 'report_outlined',
                     title: 'digital-signature.detailed-documents.PERSONAL_HISTORIES',
-                    value: this.buildDataWithDate(document.personalHistories)
+                    value: this.buildDataWithDate(document.personalHistories.content)
                 },
                 {
                     icon: 'library_add',

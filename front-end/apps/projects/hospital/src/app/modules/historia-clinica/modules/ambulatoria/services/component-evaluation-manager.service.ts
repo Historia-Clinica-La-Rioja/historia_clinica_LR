@@ -21,8 +21,8 @@ export class ComponentEvaluationManagerService {
 		this.diagnosis = anamnesis.diagnosis;
 		this.hospitalizationProcedures = anamnesis?.procedures;
 		this.allergies = anamnesis.allergies.content;
-		this.familyHistories = anamnesis.familyHistories;
-		this.personalHistories = anamnesis.personalHistories;
+		this.familyHistories = anamnesis.familyHistories.content;
+		this.personalHistories = anamnesis.personalHistories.content;
 		this.vaccines = anamnesis.immunizations;
 		this.medications = anamnesis.medications;
 	}

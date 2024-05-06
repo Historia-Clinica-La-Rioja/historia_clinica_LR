@@ -97,7 +97,10 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 			mainDiagnosis: allDiagnosis.mainDiagnosis,
 			evolutionNote: value.evolutionNote?.evolucion,
 			anthropometricData,
-			familyHistories,
+			familyHistories: {
+				isReferred: (this.isFamilyHistoriesNoRefer && (value.familyHistories?.data || []).length === 0) ? null: this.isFamilyHistoriesNoRefer,
+				content: familyHistories,
+			},
 			procedures: value.procedures?.data || [],
 			medications,
 			riskFactors,

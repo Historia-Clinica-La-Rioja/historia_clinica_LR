@@ -466,8 +466,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		function mapToFieldsToUpdate(nuevaConsultaDto: CreateOutpatientDto) {
 			return {
 				allergies: !!nuevaConsultaDto.allergies?.content.length,
-				personalHistories: !!nuevaConsultaDto.personalHistories?.length,
-				familyHistories: !!nuevaConsultaDto.familyHistories?.length,
+				personalHistories: !!nuevaConsultaDto.personalHistories?.content.length,
+				familyHistories: !!nuevaConsultaDto.familyHistories?.content.length,
 				riskFactors: !!nuevaConsultaDto.riskFactors,
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
@@ -531,12 +531,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			},
 			anthropometricData: this.datosAntropometricosNuevaConsultaService.getDatosAntropometricos(),
 			evolutionNote: this.formEvolucion.value?.evolucion,
-			familyHistories: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
-				return {
-					snomed: antecedente.snomed,
-					startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE) : undefined
-				};
-			}),
+			familyHistories: {
+				isReferred: (this.isFamilyHistoriesNoRefer && this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().length === 0) ? null: this.isFamilyHistoriesNoRefer,
+				content: this.antecedentesFamiliaresNuevaConsultaService.getAntecedentes().map((antecedente: AntecedenteFamiliar) => {
+					return {
+						snomed: antecedente.snomed,
+						startDate: antecedente.fecha ? momentFormat(antecedente.fecha, DateFormat.API_DATE) : undefined
+					};
+				}),
+			},
 			medications: this.medicacionesNuevaConsultaService.getMedicaciones().map((medicacion: Medicacion) => {
 				return {
 					note: medicacion.observaciones,
@@ -546,15 +549,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			}
 			),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
-			personalHistories: this.personalHistoriesNewConsultationService.getPersonalHistories().map((personalHistory: PersonalHistory) => {
-				return {
-					inactivationDate: personalHistory.endDate ? momentFormat(personalHistory.endDate, DateFormat.API_DATE) : null,
-					note: personalHistory.observations,
-					snomed: personalHistory.snomed,
-					startDate: momentFormat(personalHistory.startDate, DateFormat.API_DATE),
-					typeId: personalHistory.type.id,
-				}
-			}),
+			personalHistories: {
+				isReferred: (this.isPersonalHistoriesNoRefer && this.personalHistoriesNewConsultationService.getPersonalHistories().length === 0) ? null: this.isPersonalHistoriesNoRefer,
+				content: this.personalHistoriesNewConsultationService.getPersonalHistories().map((personalHistory: PersonalHistory) => {
+					return {
+						inactivationDate: personalHistory.endDate ? momentFormat(personalHistory.endDate, DateFormat.API_DATE) : null,
+						note: personalHistory.observations,
+						snomed: personalHistory.snomed,
+						startDate: momentFormat(personalHistory.startDate, DateFormat.API_DATE),
+						typeId: personalHistory.type.id,
+					}
+				}),
+			},
 			problems: this.ambulatoryConsultationProblemsService.getProblemas().map(
 				(problema: Problema) => {
 					return {

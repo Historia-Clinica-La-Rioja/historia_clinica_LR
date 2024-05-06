@@ -209,11 +209,17 @@ export class AnamnesisDockPopupComponent implements OnInit {
 			},
 			mainDiagnosis: this.mainDiagnosis?.isAdded ? this.mainDiagnosis : null,
 			diagnosis: this.diagnosticos.filter(diagnosis => diagnosis.isAdded),
-			familyHistories: this.familyHistories,
+			familyHistories: {
+				isReferred: (this.isFamilyHistoriesNoRefer && this.familyHistories.length === 0) ? null: this.isFamilyHistoriesNoRefer,
+				content: this.familyHistories
+			},
 			immunizations: this.immunizations,
 			medications: this.medications,
 			notes: isNull(formValues.observations) ? undefined : formValues.observations,
-			personalHistories: this.personalHistories,
+			personalHistories: {
+				isReferred: (this.isPersonalHistoriesNoRefer && this.personalHistories.length === 0) ? null: this.isPersonalHistoriesNoRefer,
+				content: this.personalHistories
+			},
 			riskFactors: isNull(formValues.riskFactors) ? undefined : {
 				bloodOxygenSaturation: this.getEffectiveValue(formValues.riskFactors.bloodOxygenSaturation),
 				diastolicBloodPressure: this.getEffectiveValue(formValues.riskFactors.diastolicBloodPressure),
@@ -258,10 +264,10 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		this.allergies = this.anamnesis.allergies.content;
 		this.diagnosticos = this.anamnesis.diagnosis;
 		this.diagnosticos.forEach(d => d.isAdded = true);
-		this.familyHistories = this.anamnesis.familyHistories;
+		this.familyHistories = this.anamnesis.familyHistories.content;
 		this.immunizations = this.anamnesis.immunizations;
 		this.medications = this.anamnesis.medications;
-		this.personalHistories = this.anamnesis.personalHistories;
+		this.personalHistories = this.anamnesis.personalHistories.content;
 		this.procedures = this.anamnesis?.procedures || null;
 		this.mainDiagnosis = this.anamnesis.mainDiagnosis;
 		this.mainDiagnosis.isAdded = true;

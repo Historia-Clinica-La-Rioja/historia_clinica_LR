@@ -329,7 +329,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	private mapFieldsToUpdate(odontologyDto: OdontologyConsultationDto): FieldsToUpdate {
 
-		let problemsToUpdate = !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions.length || !!odontologyDto.personalHistories.length;
+		let problemsToUpdate = !!odontologyDto.diagnostics?.length || !!odontologyDto.dentalActions.length || !!odontologyDto.personalHistories.content.length;
 
 		if (odontologyDto.references.length) {
 			problemsToUpdate = !!this.problemsToUpdate(odontologyDto).length || !!odontologyDto.dentalActions.length;
@@ -337,7 +337,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 		return {
 			allergies: !!odontologyDto.allergies?.content.length,
-			personalHistories: !!odontologyDto.personalHistories?.length,
+			personalHistories: !!odontologyDto.personalHistories?.content.length,
 			medications: !!odontologyDto.medications?.length,
 			problems: problemsToUpdate,
 		};
@@ -360,7 +360,10 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			dentalActions,
-			personalHistories: this.personalHistoriesNewConsultationService.getPersonalHistories().map(toOdontologyPersonalHistoryDto),
+			personalHistories: {
+				isReferred: (this.isPersonalHistories && this.personalHistoriesNewConsultationService.getPersonalHistories().length === 0) ? null: this.isPersonalHistories,
+				content: this.personalHistoriesNewConsultationService.getPersonalHistories().map(toOdontologyPersonalHistoryDto),
+			},
 			permanentTeethPresent: this.form.value.permanentTeethPresent,
 			temporaryTeethPresent: this.form.value.temporaryTeethPresent,
 			references: this.odontologyReferenceService.getOdontologyReferences(),

@@ -136,7 +136,7 @@ export class EmergencyCareEvolutionNoteComponent {
 	}
 
 	private toAlergias(allergies): string[] {
-		return allergies.referredContent.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
+		return allergies.content.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
 	}
 
 	private toDiagnostico(mainDiagnosis, otherDiagnosis): string[] {
