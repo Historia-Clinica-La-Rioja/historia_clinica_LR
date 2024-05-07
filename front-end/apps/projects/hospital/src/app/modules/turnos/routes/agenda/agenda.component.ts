@@ -392,6 +392,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 					phoneNumber: event.meta.phoneNumber,
 					fullName: event.meta.patient.fullName,
 					email: event.meta.patient.email,
+					phonePrefix: event.meta.phonePrefix
 				}
 			});
 		} else {

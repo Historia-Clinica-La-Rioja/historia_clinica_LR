@@ -169,8 +169,8 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 		BookingPerson bookingPerson = getBookingPerson(bookingPersonDto, email);
 		assertProfessionalNotAlreadyBooked(bookingPerson, bookingAppointmentDto);
 		AppointmentBo newAppointmentBo = mapTo(bookingAppointmentDto);
-		newAppointmentBo.setPhoneNumber(bookingPerson.getPhoneNumber());
-		newAppointmentBo.setPhonePrefix(bookingPerson.getPhonePrefix());
+		newAppointmentBo.setPhoneNumber(bookingAppointmentDto.getPhoneNumber());
+		newAppointmentBo.setPhonePrefix(bookingAppointmentDto.getPhonePrefix());
 
 		newAppointmentBo = createAppointmentService.execute(newAppointmentBo);
 		Integer appointmentId = newAppointmentBo.getId();

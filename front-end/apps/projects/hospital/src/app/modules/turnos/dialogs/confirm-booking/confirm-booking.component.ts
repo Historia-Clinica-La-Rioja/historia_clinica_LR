@@ -58,7 +58,7 @@ export class ConfirmBookingComponent implements OnInit {
 		@Inject(MAT_DIALOG_DATA) public data: {
 			date: string, diaryId: number, hour: string, openingHoursId: number, overturnMode: boolean,
 			identificationTypeId: number, idNumber: string, appointmentId: number, phoneNumber: string,
-			fullName: string, email: string
+			fullName: string, email: string, phonePrefix: string
 		},
 		public dialogRef: MatDialogRef<ConfirmBookingComponent>,
 		private readonly formBuilder: UntypedFormBuilder,

@@ -8,7 +8,7 @@
 	<div class="booking-by">
 		<span class="booking-by-title" [translate]= "'turnos.booking.BOOKING_BY'"></span>
 		<span>{{data.fullName}}</span>
-		<span [translate]="'turnos.booking.PHONE_NUMBER'" [translateParams]="{phoneNumber: data.phoneNumber}"></span>
+		<span [translate]="'turnos.booking.FULL_PHONE_NUMBER'" *ngIf="data.phonePrefix || data.phoneNumber" [translateParams]="{phonePrefix: data.phonePrefix ? data.phonePrefix: '', phoneNumber: data.phoneNumber ? data.phoneNumber: ''}"></span>
 		<span [translate]="'turnos.booking.EMAIL'" [translateParams]="{email: data.email}"></span>
 	</div>
 </div>
