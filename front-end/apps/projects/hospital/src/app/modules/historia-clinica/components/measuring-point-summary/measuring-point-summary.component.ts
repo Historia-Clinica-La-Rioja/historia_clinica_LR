@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { MeasuringPointData } from '@historia-clinica/services/anesthetic-report-document-summary.service';
+import { MeasuringPointData } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
     selector: 'app-measuring-point-summary',

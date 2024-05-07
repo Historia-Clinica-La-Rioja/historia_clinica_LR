@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PersonalHistoriesData } from '@historia-clinica/services/anesthetic-report-document-summary.service';
+import { PersonalHistoriesData } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
     selector: 'app-histories-summary',

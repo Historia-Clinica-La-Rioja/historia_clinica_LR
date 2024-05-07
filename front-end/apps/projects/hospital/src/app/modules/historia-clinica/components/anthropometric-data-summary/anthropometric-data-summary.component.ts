@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AnthropometricData } from '@historia-clinica/services/anesthetic-report-document-summary.service';
+import { AnthropometricData } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
     selector: 'app-anthropometric-data-summary',
