@@ -152,18 +152,18 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
 		LocalTime todayTime = dateTimeProvider.nowDateTimeWithZone(institutionZoneId).toLocalTime();
 		
 		if ((date.isBefore(todayDate)) || ((date.equals(todayDate)) && (time.isBefore(todayTime)))){
-			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, String.format("El horario del turno es anterior a la hora actual."));
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BEFORE_NOW, "El horario del turno es anterior a la hora actual.");
 		}
 
 		if ((diary.get().getStartDate().isAfter(date)) || (diary.get().getEndDate().isBefore(date))) {
-			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, String.format("La fecha del turno se encuentra fuera del rango de la agenda."));
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_OUT_OF_DIARY_RANGE, "La fecha del turno se encuentra fuera del rango de la agenda.");
 		}
 		if (appointmentBo.get().getAppointmentStateId() != 1){
-			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, String.format("El estado del turno es invalido."));
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_STATE_INVALID, "El estado del turno es invalido.");
 		}
 
-		if (appointmentService.existAppointment(appointmentBo.get().getDiaryId(),date,time, appointmentId) && !appointmentService.isAppointmentOverturn(appointmentId)) {
-			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_ALREADY_ASSIGNED, String.format("En ese horario ya existe un turno asignado o la agenda se encuentra bloqueada."));
+		if (appointmentService.findBlockedAppointmentBy(appointmentBo.get().getDiaryId(),date,time).isPresent()) {
+			throw new UpdateAppointmentDateException(UpdateAppointmentDateExceptionEnum.APPOINTMENT_DATE_BLOCKED, "En ese horario la agenda se encuentra bloqueada.");
 		}
 
 		Collection<DiaryOpeningHoursBo> diaryOpeningHours = diaryOpeningHoursService.getDiaryOpeningHours(diary.get().getId());

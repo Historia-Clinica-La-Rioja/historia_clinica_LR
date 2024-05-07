@@ -74,7 +74,7 @@ public class GetMonthlyFreeAppointmentDates {
 													 Collection<AppointmentBo> assignedAppointments, List<LocalDate> result) {
 		LocalTime openingHoursStartTime = diaryOpeningHoursBo.getOpeningHours().getFrom();
 		LocalTime openingHoursEndTime = diaryOpeningHoursBo.getOpeningHours().getTo();
-		long possibleAppointmentsAmount = ChronoUnit.MINUTES.between(openingHoursStartTime, openingHoursEndTime) / appointmentDuration;
+		long possibleAppointmentsAmount = ChronoUnit.MINUTES.between(openingHoursStartTime, openingHoursEndTime) / appointmentDuration + diaryOpeningHoursBo.getOverturnCount();
 		int openingHoursDayOfWeek = freeAppointmentsUtils.parseOpeningHoursWeekOfDay(diaryOpeningHoursBo.getOpeningHours());
 		LocalDate iterationWeekDay = startDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.of(openingHoursDayOfWeek)));
 		while (iterationWeekDay.isBefore(endDate) || iterationWeekDay.equals(endDate)) {

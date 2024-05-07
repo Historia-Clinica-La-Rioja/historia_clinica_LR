@@ -929,4 +929,13 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			" AND a.deleteable.deleted IS NOT TRUE" +
 			" ORDER BY a.id")
 	List<Appointment> getAllAssignedAppointmentsFromDiary(@Param("diaryId") Integer diaryId);
+
+	@Transactional
+	@Modifying
+	@Query( "UPDATE Appointment AS a " +
+			"SET a.isOverturn = :overturn " +
+			"WHERE a.id = :appointmentId ")
+	void updateOverturnCharacteristic(@Param("appointmentId") Integer appointmentId,
+									  @Param("overturn") boolean overturn);
+
 }

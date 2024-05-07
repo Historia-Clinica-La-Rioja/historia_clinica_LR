@@ -7,9 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
+import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 
-import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmentEmailService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
@@ -17,6 +17,8 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,7 +28,7 @@ public class ReassignAppointment {
 
 	private AppointmentRepository appointmentRepository;
 
-	private EquipmentAppointmentAssnRepository appointmentAssnRepository;
+	private AppointmentAssnRepository appointmentAssnRepository;
 
 	private FeatureFlagsService featureFlagsService;
 
@@ -39,6 +41,7 @@ public class ReassignAppointment {
 		log.debug("Input parameters -> appointmentUpdateData {}", appointmentUpdateData);
 		appointmentRepository.updateDate(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getDate(), appointmentUpdateData.getTime());
 		appointmentAssnRepository.updateOpeningHoursId(appointmentUpdateData.getOpeningHoursId(), appointmentUpdateData.getAppointmentId());
+		updateAppointmentOverturn(appointmentUpdateData);
 		updateRecurringType(appointmentUpdateData);
 		AppointmentBo appointment = appointmentRepository.getEmailNotificationData(appointmentUpdateData.getAppointmentId());
 		updateModalityRelatedData(appointment, appointmentUpdateData);
@@ -46,6 +49,15 @@ public class ReassignAppointment {
 			sendNotificationEmail(appointment, appointmentUpdateData);
 		log.debug("Output -> {}", Boolean.TRUE);
 		return Boolean.TRUE;
+	}
+
+	private void updateAppointmentOverturn(UpdateAppointmentDateBo appointmentUpdateData) {
+		var appointment = appointmentService.getAppointmentSummary(appointmentUpdateData.getAppointmentId()).get();
+		var existsAppointment = appointmentService.existAppointment(appointment.getDiaryId(), appointmentUpdateData.getDate(), appointmentUpdateData.getTime(), appointmentUpdateData.getAppointmentId());
+		if (existsAppointment)
+			appointmentRepository.updateOverturnCharacteristic(appointmentUpdateData.getAppointmentId(), true);
+		if (!existsAppointment && appointment.isOverturn())
+			appointmentRepository.updateOverturnCharacteristic(appointmentUpdateData.getAppointmentId(), false);
 	}
 
 	private void updateModalityRelatedData(AppointmentBo appointment, UpdateAppointmentDateBo appointmentUpdateData) {
