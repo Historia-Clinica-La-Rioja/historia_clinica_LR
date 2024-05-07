@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DocumentService } from '@api-rest/services/document.service';
 import { Item } from '../emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
@@ -26,6 +26,7 @@ export class DocumentActionsComponent {
 		this._episodeId = episodeId;
 		this.setAdministrativeDischarge();
 	};
+	@Output() resetActiveDocument = new EventEmitter<void>();
 
 	constructor(
 		private readonly documentService: DocumentService,
@@ -41,6 +42,7 @@ export class DocumentActionsComponent {
 	editDocument() {
 		this.emergencyCareEvolutionNoteService.getByDocumentId(this._episodeId, this.document.summary.docId).subscribe(evolutionNoteData => {
 			this.openEvolutionNote(evolutionNoteData);
+			this.resetActiveDocument.next();
 		});
 	}
 
