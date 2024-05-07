@@ -1,4 +1,15 @@
 <div class="anamnesis-container">
-    <app-document-summary-header [headerData]="headerTestInfo" [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
-    <mat-divider></mat-divider>
+    <div *ngIf="(anamnesis$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start"
+        fxLayout="column" fxLayoutGap="36px">
+        <app-document-summary-header [headerData]="headerTestInfo" [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+        <mat-divider></mat-divider>
+
+        <app-diagnosis-summary *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis"
+            [diagnosis]="anamnesis.diagnosis"
+            [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
+
+    </div>
+    <ng-template #loader>
+        <mat-spinner color="primary" style="margin: auto"></mat-spinner>
+    </ng-template>
 </div>
