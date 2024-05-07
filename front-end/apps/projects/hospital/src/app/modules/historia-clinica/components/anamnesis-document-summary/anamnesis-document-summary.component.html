@@ -7,10 +7,15 @@
         <app-diagnosis-summary *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis"
             [diagnosis]="anamnesis.diagnosis"
             [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
+
         <app-clinical-evaluation-summary *ngIf="anamnesis.clinicalEvaluation"
             [clinicalEvaluation]="anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
+
         <app-procedures-summary *ngIf="anamnesis.procedures"
             [procedures]="anamnesis.procedures"></app-procedures-summary>
+
+        <app-anthropometric-data-summary *ngIf="anamnesis.anthropometricData"
+            [anthropometricData]="anamnesis.anthropometricData"></app-anthropometric-data-summary>
 
     </div>
     <ng-template #loader>

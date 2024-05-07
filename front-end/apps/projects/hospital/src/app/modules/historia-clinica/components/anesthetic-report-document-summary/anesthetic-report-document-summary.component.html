@@ -1,5 +1,5 @@
 <div class="anesthesic-report-content">
-    <div *ngIf="(anestheticReport$ | async) && !isLoading, else loader" fxFlex="80%" FxLayoutAlign="start"
+    <div *ngIf="(anestheticReport$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start"
         fxLayout="column" fxLayoutGap="36px">
 
         <app-diagnosis-summary *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis"
