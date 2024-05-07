@@ -80,7 +80,7 @@ export class DocumentsSummaryService {
         return vaccines.map(vaccine => {
             return {
                 description: vaccine.snomed.pt,
-                dateOrTime: { date: fromStringToDateByDelimeter(vaccine.administrationDate, '/') }
+                dateOrTime: vaccine.administrationDate ? { date: fromStringToDateByDelimeter(vaccine.administrationDate, '-') } : null,
             };
         })
     }
@@ -89,7 +89,7 @@ export class DocumentsSummaryService {
         return histories.map(history => {
             return {
                 description: history.snomed.pt,
-                dateOrTime: { date: fromStringToDateByDelimeter(history.startDate, '/') }
+                dateOrTime: history.startDate ? { date: fromStringToDateByDelimeter(history.startDate, '-') } : null,
             };
         })
     }    
@@ -102,12 +102,12 @@ export class DocumentsSummaryService {
 
     hasClinicalEvaluations(notes: DocumentObservationsDto): boolean {
         return (
-            !!notes.currentIllnessNote.length 
-            || !!notes.physicalExamNote.length 
-            || !!notes.studiesSummaryNote.length 
-            || !!notes.evolutionNote.length 
-            || !!notes.clinicalImpressionNote.length 
-            || !!notes.otherNote.length)
+            !!notes.currentIllnessNote?.length 
+            || !!notes.physicalExamNote?.length 
+            || !!notes.studiesSummaryNote?.length 
+            || !!notes.evolutionNote?.length 
+            || !!notes.clinicalImpressionNote?.length 
+            || !!notes.otherNote?.length)
     }
 
     getClinicalEvaluationAsStringArray(notes: DocumentObservationsDto): ClinicalEvaluationData {

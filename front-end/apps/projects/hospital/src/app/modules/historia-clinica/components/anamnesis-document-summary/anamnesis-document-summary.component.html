@@ -9,6 +9,8 @@
             [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
         <app-clinical-evaluation-summary *ngIf="anamnesis.clinicalEvaluation"
             [clinicalEvaluation]="anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
+        <app-procedures-summary *ngIf="anamnesis.procedures"
+            [procedures]="anamnesis.procedures"></app-procedures-summary>
 
     </div>
     <ng-template #loader>

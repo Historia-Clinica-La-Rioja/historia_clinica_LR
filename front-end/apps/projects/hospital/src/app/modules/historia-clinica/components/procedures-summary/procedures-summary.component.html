@@ -1,0 +1,8 @@
+<div data-id="clinical-evolution-section">
+    <app-iconed-titled-section icon="library_add" title="internaciones.documents-summary.procedure.TITLE"></app-iconed-titled-section>
+    <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+        <app-title-description-list *ngIf="procedures?.length"
+            title="internaciones.documents-summary.procedure.REGISTERED_PROCEDURES"
+            [descriptionData]="procedures"></app-title-description-list>
+    </div>
+</div>

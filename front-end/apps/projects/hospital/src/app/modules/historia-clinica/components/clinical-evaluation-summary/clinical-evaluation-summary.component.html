@@ -1,23 +1,23 @@
 <div data-id="clinical-evolution-section">
-    <app-iconed-titled-section icon="chat" title="internaciones.anamnesis.observations.TITLE"></app-iconed-titled-section>
+    <app-iconed-titled-section icon="chat" title="internaciones.documents-summary.observations.TITLE"></app-iconed-titled-section>
     <div fxLayout="column" fxLayoutGap="8px" class="section-description">
         <app-title-description-list *ngIf="clinicalEvaluation.currentIllnessNote?.length"
-            title="internaciones.anamnesis.observations.CURRENT_DISEASE"
+            title="internaciones.documents-summary.observations.CURRENT_DISEASE"
             [descriptionData]="clinicalEvaluation.currentIllnessNote"></app-title-description-list>
         <app-title-description-list *ngIf="clinicalEvaluation.physicalExamNote?.length"
-            title="internaciones.anamnesis.observations.PHYSICAL_EXAMINATION"
+            title="internaciones.documents-summary.observations.PHYSICAL_EXAMINATION"
             [descriptionData]="clinicalEvaluation.physicalExamNote"></app-title-description-list>
         <app-title-description-list *ngIf="clinicalEvaluation.studiesSummaryNote?.length"
-            title="internaciones.anamnesis.observations.STUDIES_PROCEDURES"
+            title="internaciones.documents-summary.observations.STUDIES_PROCEDURES"
             [descriptionData]="clinicalEvaluation.studiesSummaryNote"></app-title-description-list>
         <app-title-description-list *ngIf="clinicalEvaluation.evolutionNote?.length"
-            title="internaciones.anamnesis.observations.PATIENT_PROGRESS"
+            title="internaciones.documents-summary.observations.PATIENT_PROGRESS"
             [descriptionData]="clinicalEvaluation.evolutionNote"></app-title-description-list>
         <app-title-description-list *ngIf="clinicalEvaluation.clinicalImpressionNote?.length"
-            title="internaciones.anamnesis.observations.CLINICAL_IMPRESSION"
+            title="internaciones.documents-summary.observations.CLINICAL_IMPRESSION"
             [descriptionData]="clinicalEvaluation.clinicalImpressionNote"></app-title-description-list>
         <app-title-description-list *ngIf="clinicalEvaluation.otherNote?.length"
-            title="internaciones.anamnesis.observations.OTHERS"
+            title="internaciones.documents-summary.observations.OTHERS"
             [descriptionData]="clinicalEvaluation.otherNote"></app-title-description-list>
     </div>
 </div>

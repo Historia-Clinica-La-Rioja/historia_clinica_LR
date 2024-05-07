@@ -626,6 +626,19 @@
 			"info": {
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			},
+            "procedure": {
+				"TITLE": "Procedimientos",
+				"REGISTERED_PROCEDURES": "Procedimientos registrados"
+			},
+			"observations": {
+				"TITLE": "Evaluación clínica",
+				"CURRENT_DISEASE": "Enfermedad actual",
+				"PHYSICAL_EXAMINATION": "Examen físico",
+				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
+				"PATIENT_PROGRESS": "Evolución",
+				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
+				"OTHERS": "Otras observaciones"
+			},
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",

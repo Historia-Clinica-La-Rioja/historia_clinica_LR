@@ -70,6 +70,7 @@ import { PremedicationAndFoodIntakeSummaryComponent } from './components/premedi
 import { ProblemListComponent } from './components/problem-list/problem-list.component';
 import { ProcedureAndDescriptionComponent } from './components/procedure-and-description/procedure-and-description.component';
 import { ProcedureListComponent } from './components/procedure-list/procedure-list.component';
+import { ProceduresSummaryComponent } from './components/procedures-summary/procedures-summary.component';
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
 import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
@@ -218,6 +219,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		PremedicationAndFoodIntakeSummaryComponent,
 		ProblemListComponent,
 		ProcedureListComponent,
+        ProceduresSummaryComponent,
 		ProposedSurgeryBackgroundListComponent,
 		ProposedSurgeryComponent,
 		ProposedSurgerySummaryComponent,
