@@ -1,13 +1,18 @@
 <app-dock-popup [dockPopupRef]="dockPopupRef" [header]="{ title:'Parte Quirúrgico'} ">
 	<div body fxLayout="column" fxLayoutGap="20px" *ngIf="!loadingReport">
-		<app-surgical-report-diagnosis [diagnosis]="diagnosis" [mainDiagnosis]="mainDiagnosis" [(surgicalReport)]="surgicalReport">
+		<app-surgical-report-diagnosis [diagnosis]="diagnosis" [mainDiagnosis]="mainDiagnosis"
+			[(surgicalReport)]="surgicalReport">
 		</app-surgical-report-diagnosis>
-		
-		<app-surgical-report-surgery-procedures [(surgicalReport)]="surgicalReport"></app-surgical-report-surgery-procedures>
+
+		<app-surgical-report-surgery-procedures
+			[(surgicalReport)]="surgicalReport"></app-surgical-report-surgery-procedures>
 
 		<app-surgical-report-professional-team [professionals]="professionals" [(surgicalReport)]="surgicalReport">
 		</app-surgical-report-professional-team>
 
+		<app-surgical-report-anesthesia [(surgicalReport)]="surgicalReport"
+			[searchConceptsLocallyFF]="searchConceptsLocallyFF"></app-surgical-report-anesthesia>
+			
 		<app-surgical-report-procedures [(surgicalReport)]="surgicalReport" (validDate)="setValidDate($event)"
 			[markAsTouched]="markAsTouched">
 		</app-surgical-report-procedures>

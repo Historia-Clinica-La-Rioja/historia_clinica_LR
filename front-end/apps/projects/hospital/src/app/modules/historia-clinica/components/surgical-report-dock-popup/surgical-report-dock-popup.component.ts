@@ -1,9 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosisDto, EProfessionType, HealthConditionDto, ProcedureTypeEnum, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { AppFeature, DiagnosisDto, EProfessionType, HealthConditionDto, ProcedureTypeEnum, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
 import { HealthcareProfessionalService } from '@api-rest/services/healthcare-professional.service';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
 import { InternmentFields } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
@@ -17,7 +18,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 	styleUrls: ['./surgical-report-dock-popup.component.scss'],
 	providers: [ComponentEvaluationManagerService]
 })
-export class SurgicalReportDockPopupComponent {
+export class SurgicalReportDockPopupComponent implements OnInit{
+	searchConceptsLocallyFF: boolean;
 	mainDiagnosis: HealthConditionDto;
 	diagnosis: DiagnosisDto[];
 	professionals: ProfessionalDto[];
@@ -80,6 +82,7 @@ export class SurgicalReportDockPopupComponent {
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
+		private readonly featureFlagService: FeatureFlagService
 	) {
 		this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
 		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
@@ -100,7 +103,12 @@ export class SurgicalReportDockPopupComponent {
 			})
 		}
 	}
-
+	ngOnInit(): void {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+			this.searchConceptsLocallyFF = isOn;
+		})
+	}
+	
 	setDisabled(): void {
 		this.disabled = !this.validDate || !this.validProsthesis;
 	}

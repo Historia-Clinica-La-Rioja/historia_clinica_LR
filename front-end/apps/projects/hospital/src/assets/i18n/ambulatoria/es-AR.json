@@ -322,12 +322,15 @@
 					"SKIN_CLOSURE": "Cierre de piel",
 					"ADD_PROCEDURE": "Agregar procedimiento",
 					"REGISTERED_PROCEDURES": "Procedimientos registrados",
-					"ADD_ANESTHESIA": "Agregar anestesia",
-					"ADDED_ANESTHESIAS": "Anestesias agregadas",
 					"SURGERY_DESCRIPTION": "Descripción de cirugía realizada",
 					"ADD_DIAGNOSIS": "Agregar diagnóstico post-operatorio",
 					"DIAGNOSIS": "Diagnóstico Post-Operatorio"
 				},
+                "anesthesia": {
+                    "TITLE": "Técnica anestésica",
+                    "ADD_ANESTHESIA": "Agregar técnica anestésica",
+					"ADDED_ANESTHESIAS": "Anestesias agregadas"
+                },
 				"exam": {
 					"TITLE": "Examen Anatomopatológico",
 					"PATOLOGO": "Patólogo"

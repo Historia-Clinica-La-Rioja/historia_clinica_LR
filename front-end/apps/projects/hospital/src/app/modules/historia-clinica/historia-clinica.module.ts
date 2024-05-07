@@ -68,6 +68,7 @@ import { ProfessionalAndDescriptionComponent } from './components/professional-a
 import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
+import { SurgicalReportAnesthesiaComponent } from './components/surgical-report-anesthesia/surgical-report-anesthesia.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
 import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
 import { SurgicalReportProceduresComponent } from './components/surgical-report-procedures/surgical-report-procedures.component';
@@ -248,6 +249,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		ProblemConceptSearchDialogComponent,
 		PersonalHistoriesBackgroundListComponent,
 		PersonalHistoriesSummaryComponent,
+		SurgicalReportAnesthesiaComponent,
 		SurgicalReportDockPopupComponent,
 		SurgicalReportDiagnosisComponent,
 		SurgicalReportProfessionalTeamComponent,
