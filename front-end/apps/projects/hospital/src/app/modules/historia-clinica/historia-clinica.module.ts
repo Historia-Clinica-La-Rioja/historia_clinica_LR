@@ -23,6 +23,7 @@ import { AntecedentesFamiliaresSummaryComponent } from './components/antecedente
 import { AnthropometricDataSummaryComponent } from './components/anthropometric-data-summary/anthropometric-data-summary.component';
 import { AntropometricosSummaryComponent } from './components/antropometricos-summary/antropometricos-summary.component';
 import { BackgroundListComponent } from './components/background-list/background-list.component';
+import { ClinicalEvaluationSummaryComponent } from './components/clinical-evaluation-summary/clinical-evaluation-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
@@ -180,6 +181,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		AntropometricosSummaryComponent,
 		BackgroundListComponent,
 		BoxMessageComponent,
+        ClinicalEvaluationSummaryComponent,
 		ConceptsSearchComponent,
 		ConceptTypeaheadSearchComponent,
 		DiagnosisSummaryComponent,

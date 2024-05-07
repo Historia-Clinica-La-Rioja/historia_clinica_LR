@@ -113,12 +113,12 @@ export class DocumentsSummaryService {
     getClinicalEvaluationAsStringArray(notes: DocumentObservationsDto): ClinicalEvaluationData {
         return {
             clinicalImpressionNote: notes.clinicalImpressionNote ? [{ description: notes.clinicalImpressionNote }] : null,
-            currentIllnessNote: notes.clinicalImpressionNote ? [{ description: notes.clinicalImpressionNote }] : null,
-            evolutionNote: notes.clinicalImpressionNote ? [{ description: notes.clinicalImpressionNote }] : null,
-            indicationsNote: notes.clinicalImpressionNote ? [{ description: notes.clinicalImpressionNote }] : null,
-            otherNote: notes.clinicalImpressionNote ? [{ description: notes.clinicalImpressionNote }] : null,
-            physicalExamNote: notes.clinicalImpressionNote ? [{ description: notes.clinicalImpressionNote }] : null,
-            studiesSummaryNote: notes.clinicalImpressionNote ? [{ description: notes.clinicalImpressionNote }] : null,
+            currentIllnessNote: notes.currentIllnessNote ? [{ description: notes.currentIllnessNote }] : null,
+            evolutionNote: notes.evolutionNote ? [{ description: notes.evolutionNote }] : null,
+            indicationsNote: notes.indicationsNote ? [{ description: notes.indicationsNote }] : null,
+            otherNote: notes.otherNote ? [{ description: notes.otherNote }] : null,
+            physicalExamNote: notes.physicalExamNote ? [{ description: notes.physicalExamNote }] : null,
+            studiesSummaryNote: notes.studiesSummaryNote ? [{ description: notes.studiesSummaryNote }] : null,
         }
     }
 }

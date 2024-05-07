@@ -7,6 +7,8 @@
         <app-diagnosis-summary *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis"
             [diagnosis]="anamnesis.diagnosis"
             [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
+        <app-clinical-evaluation-summary *ngIf="anamnesis.clinicalEvaluation"
+            [clinicalEvaluation]="anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
 
     </div>
     <ng-template #loader>
