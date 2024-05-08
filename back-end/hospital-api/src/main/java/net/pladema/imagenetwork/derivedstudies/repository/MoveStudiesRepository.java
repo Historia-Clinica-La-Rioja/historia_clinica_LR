@@ -2,6 +2,7 @@ package net.pladema.imagenetwork.derivedstudies.repository;
 
 import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
 
+import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -121,4 +122,30 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"FROM MoveStudies AS mo " +
 			"WHERE mo.appointmentId = :appointmentId")
 	Optional<Integer> getSizeImageByAppointmentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT new net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo( " +
+			"	mo.id, " +
+			"	mo.appointmentId, " +
+			"	mo.moveDate, " +
+			"	a.patientId, " +
+			"	a.modalityId, " +
+			" 	ed.equipmentId, " +
+			"	aoi.orderId, " +
+			"	aoi.studyId, " +
+			"	aoi.transcribedOrderId, " +
+			"	mo.status " +
+			") " +
+			"FROM MoveStudies mo " +
+			"JOIN AppointmentOrderImage aoi ON (aoi.pk.appointmentId = mo.appointmentId) " +
+			"JOIN Appointment a ON (mo.appointmentId = a.id) " +
+			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
+			"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId) " +
+			"WHERE (mo.institutionId = :institutionId) " +
+			"AND (mo.result IS NULL or mo.result != :resultNot)" +
+			"ORDER BY mo.id")
+	List<ImageQueueBo> findImagesNotMovedByInstitutionIdAndResultNot(
+			@Param("institutionId") Integer institutionId,
+			@Param("resultNot") String resultNot
+	);
 }

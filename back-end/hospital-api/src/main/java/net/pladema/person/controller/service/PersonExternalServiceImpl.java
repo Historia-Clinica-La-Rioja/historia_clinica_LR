@@ -217,9 +217,10 @@ public class PersonExternalServiceImpl implements PersonExternalService {
 				.filter(g -> g.getId().equals(person.getGenderId())).findAny()
 				.orElse(new Gender());
 
-		String selfPerceivedGender = String.valueOf(selfPerceivedGenders.stream()
+		String selfPerceivedGender = selfPerceivedGenders.stream()
 				.filter(spg -> spg.getId().equals(personExtended.getGenderSelfDeterminationId())).findAny()
-				.orElse(new SelfPerceivedGender()));
+				.map(SelfPerceivedGender::getDescription)
+				.orElse(null);
 
 		IdentificationType identificationType = identificationTypes.stream()
 				.filter(i -> i.getId().equals(person.getIdentificationTypeId())).findAny()

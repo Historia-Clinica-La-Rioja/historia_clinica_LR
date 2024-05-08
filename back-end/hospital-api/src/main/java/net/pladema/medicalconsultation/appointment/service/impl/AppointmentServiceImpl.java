@@ -168,7 +168,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .distinct()
                 .sorted(Comparator.comparing(EquipmentAppointmentBo::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(EquipmentAppointmentBo::getHour))
                 .peek(e -> e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId())))
-                .peek(e -> e.setStudies(serviceRequestStorage.getDiagnosticReportsFrom(e)))
+                .peek(e -> e.setStudies(serviceRequestStorage.getDiagnosticReportsFrom(e.getDiagnosticReportId(),e.getTranscribedServiceRequestId())))
                 .collect(Collectors.toList());
         log.debug("Result size {}", result.size());
         log.trace(OUTPUT, result);

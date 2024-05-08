@@ -2458,6 +2458,37 @@ export interface ImageNetworkProductivityFilterDto {
     to: DateDto;
 }
 
+export interface ImageQueueListDto {
+    appointmentId: number;
+    equipmentId: number;
+    id: number;
+    imageMoveStatus: EImageMoveStatus;
+    modalityId: number;
+    patient: ImageQueuePatientDataDto;
+    result: string;
+    serviceRequestId: number;
+    studies: string[];
+    transcribedServiceRequestId: number;
+    updatedOn: Date;
+}
+
+export interface ImageQueuePatientDataDto {
+    birthDate: Date;
+    firstName: string;
+    gender: GenderDto;
+    identificationNumber: string;
+    identificationType: string;
+    lastName: string;
+    middleNames: string;
+    nameSelfDetermination: string;
+    otherLastNames: string;
+    patientId: number;
+    patientTypeId: number;
+    personAgeDto: PersonAgeDto;
+    personId: number;
+    selfPerceivedGender: string;
+}
+
 export interface ImmunizationDto extends ClinicalTermDto {
     administrationDate: string;
     billable?: boolean;
@@ -5497,6 +5528,12 @@ export const enum EHealthSystemOrganization {
     MINISTRY_CENTER = "MINISTRY_CENTER",
     CAPS = "CAPS",
     OTHERS = "OTHERS",
+}
+
+export const enum EImageMoveStatus {
+    PENDING = "PENDING",
+    MOVING = "MOVING",
+    ERROR = "ERROR",
 }
 
 export const enum EIndicationStatus {

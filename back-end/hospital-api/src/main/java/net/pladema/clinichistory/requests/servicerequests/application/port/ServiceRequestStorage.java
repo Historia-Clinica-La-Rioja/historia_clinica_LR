@@ -10,5 +10,5 @@ public interface ServiceRequestStorage {
 
 	void cancelServiceRequest(Integer serviceRequestId);
 
-    List<String> getDiagnosticReportsFrom(EquipmentAppointmentBo equipmentAppointmentBo);
+    List<String> getDiagnosticReportsFrom(Integer diagnosticReportId, Integer transcribedServiceRequestId);
 }

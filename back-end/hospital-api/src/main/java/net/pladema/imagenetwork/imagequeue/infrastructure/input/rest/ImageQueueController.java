@@ -1,0 +1,54 @@
+package net.pladema.imagenetwork.imagequeue.infrastructure.input.rest;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.pladema.imagenetwork.imagequeue.application.getimagequeue.GetImageQueue;
+import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
+import net.pladema.imagenetwork.imagequeue.infrastructure.input.rest.dto.ImageQueueListDto;
+import net.pladema.imagenetwork.imagequeue.infrastructure.input.rest.mapper.ImageQueueMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Validated
+@RequiredArgsConstructor
+@Tag(name = "Image Queue", description = "Image Queue")
+@RequestMapping("/institutions/{institutionId}/image-queue")
+@RestController
+public class ImageQueueController {
+
+    public static final String OUTPUT = "Output -> {}";
+
+    private final GetImageQueue getImageQueue;
+    private final ImageQueueMapper mapper;
+
+    @PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
+    @GetMapping
+    public ResponseEntity<PageDto<ImageQueueListDto>> getImageQueueList(
+            @PathVariable("institutionId") Integer institutionId,
+            @RequestParam(name = "pageNumber") Integer pageNumber,
+            @RequestParam(name = "pageSize") Integer pageSize
+    ) {
+        log.debug("Input parameters -> institutionId {}", institutionId);
+        List<ImageQueueBo> resultList = getImageQueue.run(institutionId);
+        List<ImageQueueBo> currentPageList  =
+                resultList.stream()
+                        .skip((long) pageNumber * pageSize)
+                        .limit(pageSize)
+                        .collect(Collectors.toList());
+        List<ImageQueueListDto> mappedResult = mapper.toImageQueueListDto(currentPageList);
+        log.trace(OUTPUT, mappedResult);
+        return ResponseEntity.ok(new PageDto<>(mappedResult,(long) resultList.size()));
+    }
+
+
+}
+
+

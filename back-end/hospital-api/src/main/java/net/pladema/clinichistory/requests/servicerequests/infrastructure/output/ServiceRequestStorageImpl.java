@@ -47,22 +47,22 @@ public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 	}
 
 	@Override
-	public List<String> getDiagnosticReportsFrom(EquipmentAppointmentBo equipmentAppointmentBo) {
-		log.debug("Input parameters -> equipmentAppointmentBo {} ", equipmentAppointmentBo);
+	public List<String> getDiagnosticReportsFrom(Integer diagnosticReportId, Integer transcribedServiceRequestId) {
+		log.debug("Input parameters -> diagnosticReportId {}, transcribedServiceRequestId {} ",
+				diagnosticReportId, transcribedServiceRequestId);
 
-		Integer diagnosticReportFromOrder = equipmentAppointmentBo.getDiagnosticReportId();
-		if (diagnosticReportFromOrder != null)
-			return diagnosticReportRepository.getDiagnosticReportById(diagnosticReportFromOrder)
+		if (diagnosticReportId != null)
+			return diagnosticReportRepository.getDiagnosticReportById(diagnosticReportId)
 					.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
 					.map(Arrays::asList)
 					.orElse(List.of());
 
-		Integer transcribedServiceRequestId = equipmentAppointmentBo.getTranscribedServiceRequestId();
 		if (transcribedServiceRequestId != null)
 			return transcribedServiceRequestStorage.get(transcribedServiceRequestId)
 					.getStudies();
 
 		return List.of();
 	}
+
 
 }
