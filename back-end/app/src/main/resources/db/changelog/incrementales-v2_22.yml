@@ -1261,3 +1261,74 @@ databaseChangeLog:
                 - column:
                     name: other_profession_type_description
                     type: varchar(255)
+
+    - changeSet:
+        id: document_percentiles-createTable
+        comment: Create table document_percentiles
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: document_percentiles
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_percentiles
+                    name: id
+                    type: int
+                - column:
+                    name: document_id
+                    type: bigint
+                    constraints:
+                      foreignKeyName: FK_document_percentiles_document
+                      references: document(id)
+                      nullable: false
+                - column:
+                    name: percentiles_id
+                    type: int
+                    constraints:
+                      foreignKeyName: FK_document_percentiles_percentiles
+                      references: percentiles(id)
+                      nullable: false
+                - column:
+                    name: percentiles_value
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
