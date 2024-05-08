@@ -667,6 +667,10 @@
                 "TITLE": "Antecedentes familiares",
                 "RECORDED_FAMILY_HISTORIES": "Antecedentes familiares registrados"
             },
+            "usual-medications": {
+                "TITLE": "Medicación habitual",
+                "RECORDED_USUAL_MEDICATIONS": "Medicación habitual registrada"
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",
