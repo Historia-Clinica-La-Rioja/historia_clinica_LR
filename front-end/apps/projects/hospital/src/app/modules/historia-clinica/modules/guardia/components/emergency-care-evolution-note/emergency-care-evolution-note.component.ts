@@ -11,13 +11,12 @@ export class EmergencyCareEvolutionNoteComponent {
 
 
 	@Input() set content(newContent: EmergencyCareEvolutionNoteDocumentDto) {
-		console.log(newContent);
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(
 			c => {
 				this.criticalityTypes = c;
 				this.alergiasContent = this.toAlergias(newContent.emergencyCareEvolutionNoteClinicalData.allergies);
 				if (newContent.emergencyCareEvolutionNoteClinicalData.allergies.isReferred === false)
-					this.alergiasContent = ['No refiere alergias'];
+					this.alergiasContent = ['guardia.no_refer.ALLERGIES'];
 			}
 		)
 		this.especialidadContent = [newContent.clinicalSpecialtyName];
@@ -50,7 +49,7 @@ export class EmergencyCareEvolutionNoteComponent {
 
 	private toAntecedentesFamiliares(familyHistories): string[] {
 		if (familyHistories.isReferred === false)
-			this.antecedentesFamiliaresContent = ['No refiere antecedentes familiares'];
+			this.antecedentesFamiliaresContent = ['guardia.no_refer.FAMILY_HISTORIES'];
 		return familyHistories.referredContent.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
 
 		function map(m: OutpatientFamilyHistoryDto): string[] {

@@ -245,6 +245,10 @@
 		},
 		"NO_INFO": "Sin información",
 		"NO": "No",
-		"SI": "Si"
+		"SI": "Si",
+		"no_refer": {
+			"ALLERGIES": "No refiere alergias",
+			"FAMILY_HISTORIES": "No refiere antecedentes familiares"
+		}
 	}
 }

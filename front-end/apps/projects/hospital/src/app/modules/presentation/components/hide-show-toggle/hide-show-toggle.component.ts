@@ -16,7 +16,7 @@ const EXPAND_LESS_ICON = 'expand_less';
 export class HideShowToggleComponent {
 
 	@Input() header: HideShowToggleHeader;
-	@Input() showBorder: boolean = true;
+	@Input() showBorder = true;
 	rightIcon: string = ADD_ICON;
 	show: boolean = false;
 
