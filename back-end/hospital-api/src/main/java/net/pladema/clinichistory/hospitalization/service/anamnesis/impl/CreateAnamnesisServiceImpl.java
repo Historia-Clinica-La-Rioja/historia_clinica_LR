@@ -3,6 +3,8 @@ package net.pladema.clinichistory.hospitalization.service.anamnesis.impl;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import lombok.AllArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisVali
 import net.pladema.clinichistory.hospitalization.service.anamnesis.CreateAnamnesisService;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.domain.AnamnesisBo;
 
+@AllArgsConstructor
 @Service
 public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
 
@@ -29,16 +32,6 @@ public class CreateAnamnesisServiceImpl implements CreateAnamnesisService {
     private final DateTimeProvider dateTimeProvider;
 
 	private final AnamnesisValidator anamnesisValidator;
-
-    public CreateAnamnesisServiceImpl(DocumentFactory documentFactory,
-                                      InternmentEpisodeService internmentEpisodeService,
-                                      DateTimeProvider dateTimeProvider,
-									  AnamnesisValidator anamnesisValidator) {
-        this.documentFactory = documentFactory;
-        this.internmentEpisodeService = internmentEpisodeService;
-        this.dateTimeProvider = dateTimeProvider;
-		this.anamnesisValidator = anamnesisValidator;
-    }
 
     @Override
     @Transactional

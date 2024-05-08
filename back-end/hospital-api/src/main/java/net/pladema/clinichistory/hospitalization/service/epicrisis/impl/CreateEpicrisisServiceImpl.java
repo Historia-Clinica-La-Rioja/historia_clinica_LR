@@ -3,6 +3,8 @@ package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import net.pladema.clinichistory.hospitalization.service.epicrisis.CreateEpicris
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisValidator;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.domain.EpicrisisBo;
 
+@RequiredArgsConstructor
 @Service
 public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 
@@ -29,13 +32,6 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
     private final DateTimeProvider dateTimeProvider;
 
     private final EpicrisisValidator epicrisisValidator;
-
-    public CreateEpicrisisServiceImpl(DocumentFactory documentFactory, InternmentEpisodeService internmentEpisodeService, DateTimeProvider dateTimeProvider, EpicrisisValidator epicrisisValidator) {
-        this.documentFactory = documentFactory;
-        this.internmentEpisodeService = internmentEpisodeService;
-        this.dateTimeProvider = dateTimeProvider;
-		this.epicrisisValidator = epicrisisValidator;
-    }
 
     @Override
 	@Transactional
@@ -66,6 +62,7 @@ public class CreateEpicrisisServiceImpl implements CreateEpicrisisService {
 		epicrisis.setConfirmed(!draft);
 		epicrisis.setPatientInternmentAge(internmentEpisodeService.getEntryDate(epicrisis.getEncounterId()).toLocalDate());
         epicrisis.setId(documentFactory.run(epicrisis, epicrisis.isConfirmed()));
+
         internmentEpisodeService.updateEpicrisisDocumentId(internmentEpisode.getId(), epicrisis.getId());
 
         LOG.debug(OUTPUT, epicrisis);

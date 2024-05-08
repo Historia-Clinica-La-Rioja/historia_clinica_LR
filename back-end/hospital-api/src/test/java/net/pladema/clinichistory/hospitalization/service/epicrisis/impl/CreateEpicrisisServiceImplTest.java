@@ -128,8 +128,8 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 	@Mock
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
-    @Mock
-    private AnestheticStorage anestheticStorage;
+	@Mock
+	private AnestheticStorage anestheticStorage;
 
     @BeforeEach
     void setUp(){
@@ -155,7 +155,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
                 internmentEpisodeService,
                 dateTimeProvider,
 				new EpicrisisValidator(internmentEpisodeService)
-				);
+		);
     }
 
     @Test
