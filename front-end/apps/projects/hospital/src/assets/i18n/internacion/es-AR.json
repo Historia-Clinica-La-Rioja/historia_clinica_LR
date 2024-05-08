@@ -659,6 +659,10 @@
                 "TITLE": "Vacunas",
                 "RECORDED_VACCINES": "Vacunas registradas"
             },
+            "personal-histories": {
+                "TITLE": "Antecedentes personales",
+                "RECORDED_PERSONAL_HISTORIES": "Antecedentes personales registrados"
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",

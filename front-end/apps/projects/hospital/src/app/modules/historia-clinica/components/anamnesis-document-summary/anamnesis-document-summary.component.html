@@ -28,6 +28,10 @@
         <app-description-item-data-summary *ngIf="anamnesis.vaccines" data-id="vaccines-summary"
             [summary]="anamnesis.vaccines" icon="vaccines" title="internaciones.documents-summary.vaccines.TITLE"
             subtitle="internaciones.documents-summary.vaccines.RECORDED_VACCINES"></app-description-item-data-summary>
+            
+        <app-description-item-data-summary *ngIf="anamnesis.personalHistories" data-id="personal-histories-summary"
+            [summary]="anamnesis.personalHistories" icon="report" title="internaciones.documents-summary.personal-histories.TITLE"
+            subtitle="internaciones.documents-summary.personal-histories.RECORDED_PERSONAL_HISTORIES"></app-description-item-data-summary>
     </div>
     <ng-template #loader>
         <mat-spinner color="primary" style="margin: auto"></mat-spinner>
