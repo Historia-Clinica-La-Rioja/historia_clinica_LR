@@ -26,5 +26,6 @@ public class AttentionInfoBo {
 	private SingleDiagnosticBo singleDiagnosticBo;
 	private DateTimeBo attentionDateWithTime;
 	private PersonInfoExtendedBo personInfoExtended;
+	private DateTimeBo emergencyCareAdministrativeDischargeDateTime;
 
 }

@@ -76,6 +76,7 @@ public class ActivitiesMapper {
 				.singleDiagnosticDto(mapToSingleDiagnosticBo(attentionInfoBo.getSingleDiagnosticBo()))
 				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
 				.personExtendedInfo(mapToPersonExtendedInfoDto(attentionInfoBo.getPersonInfoExtended()))
+				.emergencyCareAdministrativeDischargeDateTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getEmergencyCareAdministrativeDischargeDateTime()))
 				.build();
 	}
 
@@ -92,6 +93,7 @@ public class ActivitiesMapper {
 				.responsibleDoctor(mapToProfessional(attentionInfoBo.getResponsibleDoctor()))
 				.attentionDateWithTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getAttentionDateWithTime()))
 				.personExtendedInfo(mapToPersonExtendedInfoDto(attentionInfoBo.getPersonInfoExtended()))
+				.emergencyCareAdministrativeDischargeDateTime(mapToAttentionDateWithTimeDto(attentionInfoBo.getEmergencyCareAdministrativeDischargeDateTime()))
 				.build();
 	}
 
@@ -106,9 +108,11 @@ public class ActivitiesMapper {
 	}
 
 	private DateTimeDto mapToAttentionDateWithTimeDto(DateTimeBo attentionDateWithTime) {
-		return new DateTimeDto(
+		if (attentionDateWithTime != null)
+			return new DateTimeDto(
 				new DateDto(attentionDateWithTime.getDate().getYear(), attentionDateWithTime.getDate().getMonth(), attentionDateWithTime.getDate().getDay()),
 				new TimeDto(attentionDateWithTime.getTime().getHours(), attentionDateWithTime.getTime().getMinutes(), attentionDateWithTime.getTime().getSeconds()));
+		return null;
 	}
 
 	private SingleDiagnosticDto mapToSingleDiagnosticBo(SingleDiagnosticBo singleDiagnosticBo) {
@@ -260,6 +264,7 @@ public class ActivitiesMapper {
 						.id(lastMainDiagnosis.getId())
 						.attentionDateWithTime(lastMainDiagnosis.getAttentionDateWithTime())
 						.personExtendedInfo(lastMainDiagnosis.getPersonExtendedInfo())
+						.emergencyCareAdministrativeDischargeDateTime(lastMainDiagnosis.getEmergencyCareAdministrativeDischargeDateTime())
 						.build();
 
 				result.add(attention);
