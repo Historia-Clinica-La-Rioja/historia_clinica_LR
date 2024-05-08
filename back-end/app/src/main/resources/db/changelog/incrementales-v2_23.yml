@@ -1,3 +1,170 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_23 
+    - logicalFilePath: incrementales-v2_23
 
+    - changeSet:
+        id: parameter-createTable
+        comment: Create table parameter
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameter
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parameter
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      references: loinc_code(id)
+                      foreignKeyName: FK_parameter_loinc_id
+                    name: loinc_id
+                    type: int
+                - column:
+                    name: description
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: type_id
+                    type: smallint
+                - column:
+                    name: input_count
+                    type: smallint
+                - column:
+                    constraints:
+                      references: snomed_group(id)
+                      foreignKeyName: FK_parameter_snomed_group_id
+                    name: snomed_group_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: parameter_unit_of_measure-createTable
+        comment: creation of parameter_unit_of_measure table
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameter_unit_of_measure
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: parameter(id)
+                      foreignKeyName: FK_parameter_unit_of_measure_parameter_id
+                    name: parameter_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: unit_of_measure(id)
+                      foreignKeyName: FK_parameter_unit_of_measure_unit_of_measure_id
+                    name: unit_of_measure_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: parameter_id, unit_of_measure_id
+              constraintName: PK_parameter_unit_of_measure
+              tableName: parameter_unit_of_measure
+              validate: true
+
+    - changeSet:
+        id: parameter_text_option-createTable
+        comment: Create table parameter_text_option
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameter_text_option
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parameter_text_option
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(255)
+                - column:
+                    constraints:
+                      nullable: false
+                      references: parameter(id)
+                      foreignKeyName: FK_parameter_text_option_parameter_id
+                    name: parameter_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
