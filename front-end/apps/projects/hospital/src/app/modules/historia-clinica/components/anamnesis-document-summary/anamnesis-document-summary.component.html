@@ -32,6 +32,10 @@
         <app-description-item-data-summary *ngIf="anamnesis.personalHistories" data-id="personal-histories-summary"
             [summary]="anamnesis.personalHistories" icon="report" title="internaciones.documents-summary.personal-histories.TITLE"
             subtitle="internaciones.documents-summary.personal-histories.RECORDED_PERSONAL_HISTORIES"></app-description-item-data-summary>
+            
+        <app-description-item-data-summary *ngIf="anamnesis.familyHistories" data-id="family-histories-summary"
+            [summary]="anamnesis.familyHistories" icon="report" title="internaciones.documents-summary.family-histories.TITLE"
+            subtitle="internaciones.documents-summary.family-histories.RECORDED_FAMILY_HISTORIES"></app-description-item-data-summary>
     </div>
     <ng-template #loader>
         <mat-spinner color="primary" style="margin: auto"></mat-spinner>
