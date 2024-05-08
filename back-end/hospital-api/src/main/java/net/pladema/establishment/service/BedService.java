@@ -7,21 +7,22 @@ import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import net.pladema.establishment.repository.entity.Bed;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
+
 public interface BedService {
 
     Bed updateBedStatusOccupied(Integer id);
 
-	public Optional<Bed> freeBed(Integer bedId);
+	Optional<Bed> freeBed(Integer bedId);
 	
-	public List<Bed> getFreeBeds(Integer institutionId, Integer clinicalSpecialtyId); 
+	List<Bed> getFreeBeds(Integer institutionId, Integer clinicalSpecialtyId);
 	
-	public HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation);
+	HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation);
 	
-	public Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId);
+	Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId);
 	
-	public Optional<BedInfoVo> getBedInfo(Integer bedId);
+	Optional<BedInfoVo> getBedInfo(Integer bedId);
 	
-	public List<BedSummaryVo> getBedSummary(Integer institutionId, Short[] sectorType);
+	List<BedSummaryVo> getBedSummary(Integer institutionId, Short[] sectorType);
 
 	void updateBedNurse(Integer userId, Integer bedId);
 
