@@ -11,8 +11,8 @@
         <app-clinical-evaluation-summary *ngIf="anamnesis.clinicalEvaluation"
             [clinicalEvaluation]="anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
 
-        <app-description-item-data-summary data-id="procedures-summary" [summary]="anamnesis.procedures" icon="library_add"
-            title="internaciones.documents-summary.procedure.TITLE"
+        <app-description-item-data-summary *ngIf="anamnesis.procedures" data-id="procedures-summary"
+            [summary]="anamnesis.procedures" icon="library_add" title="internaciones.documents-summary.procedure.TITLE"
             subtitle="internaciones.documents-summary.procedure.REGISTERED_PROCEDURES"></app-description-item-data-summary>
 
         <app-anthropometric-data-summary *ngIf="anamnesis.anthropometricData"
@@ -21,8 +21,8 @@
         <app-vital-signs-and-risk-factors-summary *ngIf="anamnesis.vitalSignsAndRiskFactors"
             [vitalSignsAndRiskFactors]="anamnesis.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
 
-        <app-description-item-data-summary data-id="allergies-summary" [summary]="anamnesis.allergies" icon="cancel"
-            title="internaciones.documents-summary.allergies.TITLE"
+        <app-description-item-data-summary *ngIf="anamnesis.allergies" data-id="allergies-summary"
+            [summary]="anamnesis.allergies" icon="cancel" title="internaciones.documents-summary.allergies.TITLE"
             subtitle="internaciones.documents-summary.allergies.RECORDED_ALLERGIES"></app-description-item-data-summary>
     </div>
     <ng-template #loader>

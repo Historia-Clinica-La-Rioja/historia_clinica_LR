@@ -104,7 +104,7 @@ export class DocumentsSummaryService {
     }
 
     private isSuspended(medication: MedicationDto): string {
-        return medication.suspended ? '(Suspendida)' : null
+        return medication.suspended ? ' (Suspendida)' : ''
     }
 
     hasClinicalEvaluations(notes: DocumentObservationsDto): boolean {

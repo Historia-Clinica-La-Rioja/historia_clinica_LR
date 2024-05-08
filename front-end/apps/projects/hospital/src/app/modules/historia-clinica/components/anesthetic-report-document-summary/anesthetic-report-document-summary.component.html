@@ -6,8 +6,10 @@
             [diagnosis]="anestheticReport.diagnosis"
             [mainDiagnosis]="anestheticReport.mainDiagnosis"></app-diagnosis-summary>
 
-        <app-proposed-surgery-summary *ngIf="anestheticReport.proposedSurgeries"
-            [proposedSurgeries]="anestheticReport.proposedSurgeries"></app-proposed-surgery-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.proposedSurgeries" data-id="proposed-surgery-summary"
+            [summary]="anestheticReport.proposedSurgeries" icon="assignment"
+            title="internaciones.anesthesic-report.proposed-surgery.TITLE"
+            subtitle="internaciones.anesthesic-report.proposed-surgery.REGISTERED_PROPOSED_SURGERIES"></app-description-item-data-summary>
 
         <app-anthropometric-data-summary *ngIf="anestheticReport.anthropometricData"
             [anthropometricData]="anestheticReport.anthropometricData"></app-anthropometric-data-summary>
@@ -15,11 +17,15 @@
         <app-anesthesic-clinical-evaluation-summary *ngIf="anestheticReport.anesthesicClinicalEvaluation"
             [anesthesicClinicalEvaluation]="anestheticReport.anesthesicClinicalEvaluation"></app-anesthesic-clinical-evaluation-summary>
 
-        <app-anesthetic-history-summary *ngIf="anestheticReport.anestheticHistory"
-            [anestheticHistory]="anestheticReport.anestheticHistory"></app-anesthetic-history-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.anestheticHistory" data-id="anesthetic-history-summary"
+            [summary]="anestheticReport.anestheticHistory" icon="assignment"
+            title="internaciones.anesthesic-report.anesthetic-history.TITLE"
+            subtitle="internaciones.anesthesic-report.anesthetic-history.PREVIOUS_ANESTHESIA"></app-description-item-data-summary>
 
-        <app-usual-medication-summary *ngIf="anestheticReport.usualMedication"
-            [usualMedication]="anestheticReport.usualMedication"></app-usual-medication-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.usualMedication" data-id="usual-medication-summary"
+            [summary]="anestheticReport.usualMedication" icon="assignment"
+            title="internaciones.anesthesic-report.usual-medication.TITLE"
+            subtitle="internaciones.anesthesic-report.usual-medication.REGISTERED_USUAL_MEDICATION"></app-description-item-data-summary>
 
         <app-premedication-and-food-intake-summary
             *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake"
@@ -29,30 +35,44 @@
         <app-histories-summary *ngIf="anestheticReport.histories"
             [histories]="anestheticReport.histories"></app-histories-summary>
 
-        <app-anesthetic-plan-summary *ngIf="anestheticReport.anestheticPlanList"
-            [anestheticPlanList]="anestheticReport.anestheticPlanList"></app-anesthetic-plan-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.anestheticPlanList" data-id="anesthetic-plan-summary"
+            [summary]="anestheticReport.anestheticPlanList" icon="assignment"
+            title="internaciones.anesthesic-report.anesthetic-plan.TITLE"
+            subtitle="internaciones.anesthesic-report.anesthetic-plan.PLAN_RECORDS"></app-description-item-data-summary>
 
-        <app-analgesic-technique-summary *ngIf="anestheticReport.analgesicTechniques"
-            [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.analgesicTechniques" data-id="analgesic-technique-summary"
+            [summary]="anestheticReport.analgesicTechniques" icon="assignment"
+            title="internaciones.anesthesic-report.analgesic-technique.TITLE"
+            subtitle="internaciones.anesthesic-report.analgesic-technique.TECHNIQUE_RECORDS"></app-description-item-data-summary>
 
-        <app-anesthetic-technique-summary *ngIf="anestheticReport.anestheticTechniques"
-            [anestheticTechnique]="anestheticReport.anestheticTechniques"></app-anesthetic-technique-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.anestheticTechniques" data-id="anesthetic-technique-summary"
+            [summary]="anestheticReport.anestheticTechniques" icon="assignment"
+            title="internaciones.anesthesic-report.anesthetic-technique.TITLE"
+            subtitle="internaciones.anesthesic-report.anesthetic-technique.TECHNIQUE_RECORDS"></app-description-item-data-summary>
 
-        <app-fluid-administration-summary *ngIf="anestheticReport.fluidAdministrations"
-            [fluidAdministration]="anestheticReport.fluidAdministrations"></app-fluid-administration-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.fluidAdministrations" data-id="fluid-administration-summary"
+            [summary]="anestheticReport.fluidAdministrations" icon="assignment"
+            title="internaciones.anesthesic-report.fluid-administration.TITLE"
+            subtitle="internaciones.anesthesic-report.fluid-administration.FLUID_RECORDS"></app-description-item-data-summary>
 
-        <app-anesthetic-agents-summary *ngIf="anestheticReport.anestheticAgents"
-            [anestheticAgents]="anestheticReport.anestheticAgents"></app-anesthetic-agents-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.anestheticAgents" data-id="anesthetic-agents-summary"
+            [summary]="anestheticReport.anestheticAgents" icon="assignment"
+            title="internaciones.anesthesic-report.anesthetic-agents.TITLE"
+            subtitle="internaciones.anesthesic-report.anesthetic-agents.REGISTERED_ANESTHETIC_AGENTS"></app-description-item-data-summary>
 
-        <app-non-anesthetic-drugs-summary *ngIf="anestheticReport.nonAnestheticDrugs"
-            [nonAnestheticDrugs]="anestheticReport.nonAnestheticDrugs"></app-non-anesthetic-drugs-summary>
+        <app-description-item-data-summary *ngIf="anestheticReport.nonAnestheticDrugs" data-id="non-anesthetic-drugs-summary"
+            [summary]="anestheticReport.nonAnestheticDrugs" icon="assignment"
+            title="internaciones.anesthesic-report.non-anesthetic-drugs.TITLE"
+            subtitle="internaciones.anesthesic-report.non-anesthetic-drugs.REGISTERED_NON_ANESTHETIC_DRUGS"></app-description-item-data-summary>
 
         <app-intrasurgical-anesthetic-procedures-summary
             [procedures]="anestheticReport.intrasurgicalAnestheticProcedures"></app-intrasurgical-anesthetic-procedures-summary>
-
-        <app-antibiotic-prophylaxis-summary *ngIf="anestheticReport.antibioticProphylaxis"
-            [antibioticProphylaxis]="anestheticReport.antibioticProphylaxis"></app-antibiotic-prophylaxis-summary>
-
+        
+        <app-description-item-data-summary *ngIf="anestheticReport.antibioticProphylaxis" data-id="antibiotic-prophylaxis-summary"
+            [summary]="anestheticReport.antibioticProphylaxis" icon="assignment"
+            title="internaciones.anesthesic-report.antibiotic-prophylaxis.TITLE"
+            subtitle="internaciones.anesthesic-report.antibiotic-prophylaxis.REGISTERED_ANTIBIOTIC_PROPHYLAXIS"></app-description-item-data-summary>
+     
         <app-vital-signs-summary *ngIf="anestheticReport.vitalSigns"
             [vitalSigns]="anestheticReport.vitalSigns"></app-vital-signs-summary>
 
