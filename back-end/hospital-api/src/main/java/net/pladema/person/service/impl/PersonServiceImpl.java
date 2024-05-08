@@ -6,10 +6,12 @@ import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.pladema.patient.controller.dto.AuditPatientSearch;
 import net.pladema.person.repository.domain.CompletePersonNameBo;
@@ -178,6 +180,14 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
+	public String parseCompletePersonName(String givenName, String familyNames, String selfDeterminateName) {
+		String finalFirstName = getFinalFirstName(givenName, selfDeterminateName);
+		return Stream.of(finalFirstName, familyNames)
+				.filter(Objects::nonNull)
+				.collect(Collectors.joining(" "));
+	}
+
+	@Override
 	public String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName) {
 		String finalFirstName = this.getFinalFirstName(firstName, middleNames, selfDeterminateName);
 		String finalLastName = this.getFinalLastName(lastName, otherLastNames);
@@ -215,6 +225,10 @@ public class PersonServiceImpl implements PersonService {
 
 	private String getFinalFirstName(String firstName, String middleNames, String selfDeterminateName) {
 		return featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName : middleNames != null ? String.join(" ", firstName != null ? firstName : "", middleNames != null ? middleNames : "") : firstName != null ? firstName : "";
+	}
+
+	private String getFinalFirstName(String givenName, String selfDeterminateName) {
+		return featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) && selfDeterminateName != null ? selfDeterminateName :  givenName;
 	}
 
 	private String getFinalLastName(String lastName, String otherLastNames) {

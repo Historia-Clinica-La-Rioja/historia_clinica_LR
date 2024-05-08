@@ -23,6 +23,8 @@ import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 import net.pladema.reports.application.fetchnominalconsultationdetail.FetchNominalConsultationDetail;
 import net.pladema.reports.application.fetchnominalappointmentdetail.FetchNominalAppointmentDetail;
 
+import net.pladema.reports.application.fetchnominalemergencycarepisodedetail.FetchNominalECEpisodeDetail;
+
 import net.pladema.reports.domain.ReportSearchFilterBo;
 
 import org.springframework.core.io.Resource;
@@ -65,8 +67,6 @@ public class ReportsController {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final NominalDetailExcelService nominalDetailExcelService;
-
     private final ConsultationSummaryReport consultationSummaryReport;
 
     private final QueryFactory queryFactory;
@@ -91,15 +91,20 @@ public class ReportsController {
 
 	private final SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService;
 
-    public ReportsController(NominalDetailExcelService nominalDetailExcelService, ConsultationSummaryReport consultationSummaryReport,
+	private final FetchNominalECEpisodeDetail fetchNominalECEpisodeDetail;
+
+	private final ObjectMapper objectMapper;
+
+    public ReportsController(ConsultationSummaryReport consultationSummaryReport,
 							 QueryFactory queryFactory, LocalDateMapper localDateMapper,
 							 PdfService pdfService, AnnexReportService annexReportService,
 							 FormReportService formReportService, ReportsMapper reportsMapper,
 							 FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService,
 							 FetchNominalConsultationDetail fetchNominalConsultationDetail,
 							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail,
-							 SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService){
-        this.nominalDetailExcelService = nominalDetailExcelService;
+							 SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService,
+							 FetchNominalECEpisodeDetail fetchNominalECEpisodeDetail,
+							 ObjectMapper objectMapper){
         this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
         this.localDateMapper = localDateMapper;
@@ -112,6 +117,8 @@ public class ReportsController {
 		this.fetchNominalAppointmentDetail = fetchNominalAppointmentDetail;
 		this.fetchNominalConsultationDetail = fetchNominalConsultationDetail;
 		this.sharedAppointmentAnnexPdfReportService = sharedAppointmentAnnexPdfReportService;
+		this.fetchNominalECEpisodeDetail = fetchNominalECEpisodeDetail;
+		this.objectMapper = objectMapper;
 	}
 
     @GetMapping(value = "/{institutionId}/monthly")
@@ -362,4 +369,34 @@ public class ReportsController {
 				wb.getContentType()
 		);
 	}
+
+	@GetMapping(value = "/institution/{institutionId}/nominal-emergency-care-episode-detail")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<Resource> getNominalECEDetailReport(@PathVariable Integer institutionId,
+															  @RequestParam String searchFilter) throws Exception {
+		log.debug("Input parameters -> institutionId {}, searchFilter {}" , institutionId, searchFilter);
+
+		String title = "DNG";
+		ReportSearchFilterBo filter = parseFilter(institutionId, searchFilter);
+		IWorkbook wb = fetchNominalECEpisodeDetail.run(title, filter);
+		String filename = title + "." + wb.getExtension();
+
+		return StoredFileResponse.sendFile(
+				buildReport(wb),
+				filename,
+				wb.getContentType()
+		);
+	}
+
+	private ReportSearchFilterBo parseFilter(Integer institutionId, String filter) {
+		ReportSearchFilterBo searchFilter = null;
+		try {
+			searchFilter = this.objectMapper.readValue(filter, ReportSearchFilterBo.class);
+			searchFilter.setInstitutionId(institutionId);
+		} catch (IOException e) {
+			log.error(String.format("Error mapping filter: %s", filter), e);
+		}
+		return searchFilter;
+	}
+
 }

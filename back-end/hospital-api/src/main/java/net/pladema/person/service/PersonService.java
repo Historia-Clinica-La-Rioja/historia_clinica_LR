@@ -50,7 +50,9 @@ public interface PersonService {
 
     String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
 
-    String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
+	String parseCompletePersonName(String givenName, String familyNames, String selfDeterminateName);
+
+	String parseFormalPersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
 
     ContactInfoBo getContactInfoById(Integer personId);
 

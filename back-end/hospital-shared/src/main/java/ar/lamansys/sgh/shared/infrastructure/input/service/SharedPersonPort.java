@@ -14,7 +14,9 @@ public interface SharedPersonPort {
 	String getCompletePersonNameById(Integer personId);
 
 	String parseCompletePersonName(String firstName, String middleNames, String lastName, String otherLastNames, String selfDeterminateName);
-	
+
+	String parseCompletePersonName(String givenName, String familyNames, String selfDeterminateName);
+
 	CompletePersonDto getCompletePersonData(Integer personId);
 
 	String getFormalPersonNameById(Integer personId);

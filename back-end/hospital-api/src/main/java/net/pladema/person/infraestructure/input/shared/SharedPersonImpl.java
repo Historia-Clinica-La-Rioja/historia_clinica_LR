@@ -55,6 +55,13 @@ public class SharedPersonImpl implements SharedPersonPort {
 	}
 
 	@Override
+	public String parseCompletePersonName(String givenName, String familyNames, String selfDeterminateName) {
+		log.debug("Input paremeters -> givenName {}, familyNames {}, selfDeterminationName {} ",
+				givenName, familyNames, selfDeterminateName);
+		return personService.parseCompletePersonName(givenName, familyNames, selfDeterminateName);
+	}
+
+	@Override
 	public String getFormalPersonNameById(Integer personId) {
 		log.debug("Input paremeters -> personId {}", personId);
 		return personService.getFormalPersonNameById(personId);
