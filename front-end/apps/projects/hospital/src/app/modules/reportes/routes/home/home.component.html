@@ -60,7 +60,7 @@
 				</ng-container>
 
 				<div fxLayout="row" fxLayoutGap="30px" class="padding-top">
-					<ng-container *ngIf="form.value.reportType !== REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT; else fixedEndDateRangePicker">
+					<ng-container *ngIf="!hasDateRangeFilterWithFixedEndDate; else fixedEndDateRangePicker">
 						<div id="start-date" fxFlex="50%" fxLayout="column" fxLayoutGap="5px">
 							<div>
 								<mat-label [translate]="'reportes.form.START_DATE'"></mat-label>
@@ -143,7 +143,7 @@
 					</div>
 				</div>
 
-				<div *ngIf="form.value.reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL" fxLayout="row"
+				<div *ngIf="hasToShowAppointmentStateFilter" fxLayout="row"
 					fxLayoutGap="30px" class="padding-top">
 					<div id="appointment-state" fxFlex="50%" fxLayout="column">
 						<div>

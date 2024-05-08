@@ -70,6 +70,8 @@ export class HomeComponent implements OnInit {
 	cubeReportData: UIComponentDto;
 
 	hasToShowHierarchicalUnitSection = false;
+	hasToShowAppointmentStateFilter = false;
+	hasDateRangeFilterWithFixedEndDate = false;
 	isLoadingRequestReport = false;
 	private nameSelfDeterminationFF = false;
 	private licensesTypeMasterData: LicenseNumberTypeDto[];
@@ -130,15 +132,30 @@ export class HomeComponent implements OnInit {
 
 	private onSelectionReportTypeChange() {
 		this.form.controls.reportType.valueChanges.subscribe(
-			reportType => this.hasToShowHierarchicalUnitSection = this.showHierarchicalUnitSection(reportType));
+			reportType => {
+				this.hasToShowHierarchicalUnitSection = this.showHierarchicalUnitSection(reportType);
+				this.hasToShowAppointmentStateFilter = this.showAppointmentStateFilter(reportType);
+				this.hasDateRangeFilterWithFixedEndDate = this.showDateRangeFilterWithFixedEndDate(reportType);
+			});
 	}
 
 	private showHierarchicalUnitSection(reportType: number): boolean {
 		return (reportType === REPORT_TYPES_ID.MONTHLY ||
 			reportType === REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT ||
+			reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
 			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT ||
 			reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL   ||
 			reportType === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING);
+	}
+
+	private showAppointmentStateFilter(reportType: number): boolean {
+		return (reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
+			reportType === REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL);
+	}
+
+	private showDateRangeFilterWithFixedEndDate(reportType: number): boolean {
+		return (reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
+			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
 	}
 
 	private firstDayOfThisMonth(): Date {
