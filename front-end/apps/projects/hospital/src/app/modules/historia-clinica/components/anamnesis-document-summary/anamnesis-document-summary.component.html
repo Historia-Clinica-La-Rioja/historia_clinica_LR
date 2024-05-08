@@ -16,6 +16,9 @@
 
         <app-anthropometric-data-summary *ngIf="anamnesis.anthropometricData"
             [anthropometricData]="anamnesis.anthropometricData"></app-anthropometric-data-summary>
+        
+        <app-vital-signs-and-risk-factors-summary *ngIf="anamnesis.vitalSignsAndRiskFactors"
+            [vitalSignsAndRiskFactors]="anamnesis.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
 
     </div>
     <ng-template #loader>

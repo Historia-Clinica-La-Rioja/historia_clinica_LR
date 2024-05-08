@@ -8,7 +8,7 @@ form {
 
 mat-selection-list {
 	overflow: auto;
-	width: 45%;
+	width: 25vw;
 }
 
 .content {
@@ -22,7 +22,7 @@ mat-selection-list {
 }
 
 .selection-documents {
-	min-width: 30vw;
+	min-width: 25vw;
 }
 
 .selection-documents mat-list-option {
@@ -82,4 +82,14 @@ mat-selection-list {
 
 .document-summary {
 	width: 100%;
+}
+
+@media (max-width: 1000px) {
+    mat-selection-list {
+        width: 30vw;
+    }
+    
+    .selection-documents {
+        min-width: 30vw;
+    }
 }

@@ -88,6 +88,7 @@ import { UsualMedicationSummaryComponent } from './components/usual-medication-s
 import { ViolenceModalitiesListComponent } from './components/violence-modalities-list/violence-modalities-list.component';
 import { ViolenceSituationsListComponent } from './components/violence-situations-list/violence-situations-list.component';
 import { ViolentPersonListComponent } from './components/violent-person-list/violent-person-list.component';
+import { VitalSignsAndRiskFactorsSummaryComponent } from './components/vital-signs-and-risk-factors-summary/vital-signs-and-risk-factors-summary.component';
 import { VitalSignsSummaryComponent } from './components/vital-signs-summary/vital-signs-summary.component';
 // dialogs
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
@@ -228,6 +229,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		ReferenceRequestListComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		UsualMedicationSummaryComponent,
+        VitalSignsAndRiskFactorsSummaryComponent,
 		VitalSignsSummaryComponent,
 		// dialogs
 		AddAllergyComponent,

@@ -10,7 +10,7 @@
 
 .identifier-row {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 190px);
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
 }
 
 app-identifier-cases {

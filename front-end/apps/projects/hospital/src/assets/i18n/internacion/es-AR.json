@@ -639,6 +639,18 @@
 				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
 				"OTHERS": "Otras observaciones"
 			},
+			"vital-signs-and-risk-factor": {
+				"TITLE": "Signos vitales y factores de riesgo",
+				"HEART_RATE": "Frecuencia cardíaca",
+				"RESPIRATORY_RATE": "Frecuencia respiratoria",
+				"TEMPERATURE": "Temperatura corporal",
+				"BLOOD_OXYGEN_SATURATION": "Saturación de oxigeno",
+				"SYSTOLIC_BLOOD_PRESSURE": "Tensión sistólica",
+				"DIASTOLIC_BLOOD_PRESSURE": "Tensión diastólica",
+				"BLOOD_GLUCOSE": "Glucemia",
+                "GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada",
+                "CARDIOVASCULAR_RISK": "Riesgo cardiovascular"
+			},
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",

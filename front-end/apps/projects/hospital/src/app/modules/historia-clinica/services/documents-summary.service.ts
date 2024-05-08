@@ -57,16 +57,16 @@ export class DocumentsSummaryService {
 
     getVitalSignsAndRiskFactors(riskFactors: RiskFactorDto): VitalSignsAndRiskFactorsData {
         return {
-            bloodGlucose: riskFactors.bloodGlucose ? [{ description: riskFactors.bloodGlucose.value }] : null,
-            bloodOxygenSaturation: riskFactors.bloodOxygenSaturation ? [{ description: riskFactors.bloodOxygenSaturation.value }] : null,
-            cardiovascularRisk: riskFactors.cardiovascularRisk ? [{ description: riskFactors.cardiovascularRisk.value }] : null,
-            diastolicBloodPressure: riskFactors.diastolicBloodPressure ? [{ description: riskFactors.diastolicBloodPressure.value }] : null,
-            glycosylatedHemoglobin: riskFactors.glycosylatedHemoglobin ? [{ description: riskFactors.glycosylatedHemoglobin.value }] : null,
-            heartRate: riskFactors.heartRate ? [{ description: riskFactors.heartRate.value }] : null,
-            hematocrit: riskFactors.hematocrit ? [{ description: riskFactors.hematocrit.value }] : null,
-            respiratoryRate: riskFactors.respiratoryRate ? [{ description: riskFactors.respiratoryRate.value }] : null,
-            systolicBloodPressure: riskFactors.systolicBloodPressure ? [{ description: riskFactors.systolicBloodPressure.value }] : null,
-            temperature: riskFactors.temperature ? [{ description: riskFactors.temperature.value }] : null,
+            bloodGlucose: riskFactors.bloodGlucose ? [{ description: riskFactors.bloodGlucose.value + 'mg/dl'}] : null,
+            bloodOxygenSaturation: riskFactors.bloodOxygenSaturation ? [{ description: riskFactors.bloodOxygenSaturation.value + '%'}] : null,
+            cardiovascularRisk: riskFactors.cardiovascularRisk ? [{ description: riskFactors.cardiovascularRisk.value + '%' }] : null,
+            diastolicBloodPressure: riskFactors.diastolicBloodPressure ? [{ description: riskFactors.diastolicBloodPressure.value + 'mm' }] : null,
+            glycosylatedHemoglobin: riskFactors.glycosylatedHemoglobin ? [{ description: riskFactors.glycosylatedHemoglobin.value + '%' }] : null,
+            heartRate: riskFactors.heartRate ? [{ description: riskFactors.heartRate.value + '/min'  }] : null,
+            hematocrit: riskFactors.hematocrit ? [{ description: riskFactors.hematocrit.value + '%'}] : null,
+            respiratoryRate: riskFactors.respiratoryRate ? [{ description: riskFactors.respiratoryRate.value + '/min' }] : null,
+            systolicBloodPressure: riskFactors.systolicBloodPressure ? [{ description: riskFactors.systolicBloodPressure.value + 'mm' }] : null,
+            temperature: riskFactors.temperature ? [{ description: riskFactors.temperature.value + '°'}] : null,
         }
     }
 
