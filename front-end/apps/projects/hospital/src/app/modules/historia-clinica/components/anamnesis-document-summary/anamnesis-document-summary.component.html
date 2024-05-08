@@ -24,6 +24,10 @@
         <app-description-item-data-summary *ngIf="anamnesis.allergies" data-id="allergies-summary"
             [summary]="anamnesis.allergies" icon="cancel" title="internaciones.documents-summary.allergies.TITLE"
             subtitle="internaciones.documents-summary.allergies.RECORDED_ALLERGIES"></app-description-item-data-summary>
+
+        <app-description-item-data-summary *ngIf="anamnesis.vaccines" data-id="vaccines-summary"
+            [summary]="anamnesis.vaccines" icon="vaccines" title="internaciones.documents-summary.vaccines.TITLE"
+            subtitle="internaciones.documents-summary.vaccines.RECORDED_VACCINES"></app-description-item-data-summary>
     </div>
     <ng-template #loader>
         <mat-spinner color="primary" style="margin: auto"></mat-spinner>

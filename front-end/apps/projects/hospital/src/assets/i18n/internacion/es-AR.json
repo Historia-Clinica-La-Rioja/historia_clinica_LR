@@ -655,6 +655,10 @@
                 "TITLE": "Alergias",
                 "RECORDED_ALLERGIES": "Alergias registradas"
             },
+            "vaccines": {
+                "TITLE": "Vacunas",
+                "RECORDED_VACCINES": "Vacunas registradas"
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",
