@@ -2,6 +2,7 @@ package net.pladema.establishment.controller.mapper;
 
 import java.util.List;
 
+import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.establishment.controller.dto.BedSummaryDto;
 import net.pladema.establishment.repository.domain.BedSummaryVo;
 import org.mapstruct.IterableMapping;
@@ -22,6 +23,9 @@ public interface BedMapper {
 
     @Named("toBedDto")
     BedDto toBedDto(Bed bed);
+
+    @Named("toBedDtoFromBedBo")
+    BedDto toBedDtoFromBedBo(BedBo bed);
     
     @Named("toListBedDto")
     @IterableMapping(qualifiedByName = "toBedDto")

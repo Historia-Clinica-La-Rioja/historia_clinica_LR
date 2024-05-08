@@ -2342,6 +2342,16 @@ export interface HospitalUserPersonInfoDto {
     username: string;
 }
 
+export interface HospitalizationDocumentHeaderDto {
+    bed?: BedDto;
+    clinicalSpecialtyName: string;
+    createdOn: DateTimeDto;
+    id: number;
+    institutionName: string;
+    professionalName: string;
+    sourceTypeName: string;
+}
+
 export interface HospitalizationProcedureDto {
     id?: number;
     isPrimary?: boolean;
