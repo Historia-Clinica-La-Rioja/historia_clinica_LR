@@ -28,6 +28,7 @@ import { ConceptsSearchComponent } from './components/concepts-search/concepts-s
 import { ConceptTypeaheadSearchComponent } from './components/concept-typeahead-search/concept-typeahead-search.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
+import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
 import { DiagnosticosComponent } from './components/diagnosticos/diagnosticos.component';
 import { DiagnosticosFormComponent } from './components/diagnosticos-form/diagnosticos-form.component';
 import { DiagnosisSummaryComponent } from './components/diagnosis-summary/diagnosis-summary.component';
@@ -70,7 +71,6 @@ import { PremedicationAndFoodIntakeSummaryComponent } from './components/premedi
 import { ProblemListComponent } from './components/problem-list/problem-list.component';
 import { ProcedureAndDescriptionComponent } from './components/procedure-and-description/procedure-and-description.component';
 import { ProcedureListComponent } from './components/procedure-list/procedure-list.component';
-import { ProceduresSummaryComponent } from './components/procedures-summary/procedures-summary.component';
 import { ProcedimientosFormComponent } from './components/procedimientos-form/procedimientos-form.component';
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
 import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
@@ -186,6 +186,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
         ClinicalEvaluationSummaryComponent,
 		ConceptsSearchComponent,
 		ConceptTypeaheadSearchComponent,
+        DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		DocumentSummaryHeaderComponent,
@@ -220,7 +221,6 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		PremedicationAndFoodIntakeSummaryComponent,
 		ProblemListComponent,
 		ProcedureListComponent,
-        ProceduresSummaryComponent,
 		ProposedSurgeryBackgroundListComponent,
 		ProposedSurgeryComponent,
 		ProposedSurgerySummaryComponent,

@@ -1,25 +1,29 @@
 <div class="anamnesis-container">
-    <div *ngIf="(anamnesis$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start"
-        fxLayout="column" fxLayoutGap="36px">
-        <app-document-summary-header [headerData]="headerTestInfo" [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+    <div *ngIf="(anamnesis$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+        fxLayoutGap="36px">
+        <app-document-summary-header [headerData]="headerTestInfo"
+            [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
         <mat-divider></mat-divider>
 
-        <app-diagnosis-summary *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis"
-            [diagnosis]="anamnesis.diagnosis"
+        <app-diagnosis-summary *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis" [diagnosis]="anamnesis.diagnosis"
             [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
 
         <app-clinical-evaluation-summary *ngIf="anamnesis.clinicalEvaluation"
             [clinicalEvaluation]="anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
 
-        <app-procedures-summary *ngIf="anamnesis.procedures"
-            [procedures]="anamnesis.procedures"></app-procedures-summary>
+        <app-description-item-data-summary data-id="procedures-summary" [summary]="anamnesis.procedures" icon="library_add"
+            title="internaciones.documents-summary.procedure.TITLE"
+            subtitle="internaciones.documents-summary.procedure.REGISTERED_PROCEDURES"></app-description-item-data-summary>
 
         <app-anthropometric-data-summary *ngIf="anamnesis.anthropometricData"
             [anthropometricData]="anamnesis.anthropometricData"></app-anthropometric-data-summary>
-        
+
         <app-vital-signs-and-risk-factors-summary *ngIf="anamnesis.vitalSignsAndRiskFactors"
             [vitalSignsAndRiskFactors]="anamnesis.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
 
+        <app-description-item-data-summary data-id="allergies-summary" [summary]="anamnesis.allergies" icon="cancel"
+            title="internaciones.documents-summary.allergies.TITLE"
+            subtitle="internaciones.documents-summary.allergies.RECORDED_ALLERGIES"></app-description-item-data-summary>
     </div>
     <ng-template #loader>
         <mat-spinner color="primary" style="margin: auto"></mat-spinner>

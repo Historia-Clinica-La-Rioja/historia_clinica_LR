@@ -1,0 +1,10 @@
+<div>
+    <app-iconed-titled-section icon="{{ icon }}"
+        title="{{ title }}"></app-iconed-titled-section>
+    <div class="section-description">
+        <app-title-description-list *ngIf="summary?.length"
+            title="{{ subtitle }}"
+            [descriptionData]="summary"></app-title-description-list>
+    </div>
+</div>
+

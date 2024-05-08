@@ -43,7 +43,10 @@ export class DocumentsSummaryService {
 
     getProceduresAsStringArray(procedures: HospitalizationProcedureDto[]): DescriptionItemData[] {
         return procedures.map(procedure => {
-            return { description: procedure.snomed.pt }
+            return { 
+                description: procedure.snomed.pt ,
+                dateOrTime: procedure.performedDate ? { date: fromStringToDateByDelimeter(procedure.performedDate, '-') } : null,
+            }
         })
     }
 
@@ -96,8 +99,12 @@ export class DocumentsSummaryService {
     
     getMedicationsAsStringArray(medications: MedicationDto[]): DescriptionItemData[] {
         return medications.map(medication => {
-            return { description: medication.note ? medication.snomed.pt + INFO_DIVIDER + medication.note : medication.snomed.pt };
+            return { description: medication.note ? medication.snomed.pt + this.isSuspended(medication) + INFO_DIVIDER + medication.note : medication.snomed.pt };
         })
+    }
+
+    private isSuspended(medication: MedicationDto): string {
+        return medication.suspended ? '(Suspendida)' : null
     }
 
     hasClinicalEvaluations(notes: DocumentObservationsDto): boolean {

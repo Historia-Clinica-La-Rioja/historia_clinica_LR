@@ -651,6 +651,10 @@
                 "GLYCOSYLATED_HEMOGLOBIN": "Hemoglobina glicosilada",
                 "CARDIOVASCULAR_RISK": "Riesgo cardiovascular"
 			},
+            "allergies": {
+                "TITLE": "Alergias",
+                "RECORDED_ALLERGIES": "Alergias registradas"
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",
