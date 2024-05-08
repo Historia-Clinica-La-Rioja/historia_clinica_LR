@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Position } from '@presentation/components/identifier/identifier.component';
 import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 
@@ -9,12 +9,22 @@ import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/ident
 })
 export class DocumentSummaryHeaderComponent {
 
-    @Input() headerData?: HeaderData;
+    @Input() headerData: HeaderData;
     @Input() isPopUpOpen: boolean;
+    @Output() deleteDocument = new EventEmitter<boolean>();
+    @Output() editDocument = new EventEmitter<boolean>();
     identiferCases = IDENTIFIER_CASES;
     position = Position;
-
+    
     constructor() { }
+
+    delete() {
+        this.deleteDocument.emit(true);
+    }
+
+    edit() {
+        this.editDocument.emit(true);
+    }
 }
 
 export interface HeaderData {

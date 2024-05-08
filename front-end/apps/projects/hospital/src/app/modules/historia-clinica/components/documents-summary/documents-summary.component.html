@@ -235,11 +235,15 @@
 				</div>
 			</ng-container>
 			<ng-container *ngIf="activeDocument?.document.documentType === 'Parte anestésico'">
-				<app-anesthetic-report-document-summary class="document-summary" [documentId]="activeDocument.document.id" [internmentEpisodeId]="internmentEpisodeId"></app-anesthetic-report-document-summary>
-			</ng-container>
-			<ng-container *ngIf="activeDocument?.document.documentType === 'Anamnesis'">
-				<app-anamnesis-document-summary [internmentEpisodeId]="internmentEpisodeId" [documentId]="activeDocument.document.id" [isPopUpOpen]="isPopUpOpen" class="document-summary"></app-anamnesis-document-summary>
-			</ng-container>
+                <app-anesthetic-report-document-summary class="document-summary"
+                    [documentId]="activeDocument.document.id"
+                    [internmentEpisodeId]="internmentEpisodeId"></app-anesthetic-report-document-summary>
+            </ng-container>
+            <ng-container *ngIf="activeDocument?.document.documentType === 'Anamnesis'">
+                <app-anamnesis-document-summary class="document-summary" [internmentEpisodeId]="internmentEpisodeId"
+                    [activeDocument]="activeDocument" [isPopUpOpen]="isPopUpOpen"
+                    (resetActiveDocument)="resetActiveDocument()"></app-anamnesis-document-summary>
+            </ng-container>
 		</div>
 		<div
 			*ngIf="this.documentHistoric && !this.documentHistoric.documents?.length">

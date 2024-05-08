@@ -1,9 +1,16 @@
 <div class="anamnesis-container">
     <div *ngIf="(anamnesis$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
         fxLayoutGap="36px">
-        <app-document-summary-header [headerData]="headerTestInfo"
-            [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+        <app-document-summary-header [headerData]="headerTestInfo" [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
+            (editDocument)="edit()"></app-document-summary-header>
         <mat-divider></mat-divider>
+
+        <section *ngIf="editedOn">
+            <div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </section>
 
         <app-diagnosis-summary *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis" [diagnosis]="anamnesis.diagnosis"
             [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
@@ -28,17 +35,20 @@
         <app-description-item-data-summary *ngIf="anamnesis.vaccines" data-id="vaccines-summary"
             [summary]="anamnesis.vaccines" icon="vaccines" title="internaciones.documents-summary.vaccines.TITLE"
             subtitle="internaciones.documents-summary.vaccines.RECORDED_VACCINES"></app-description-item-data-summary>
-            
+
         <app-description-item-data-summary *ngIf="anamnesis.personalHistories" data-id="personal-histories-summary"
-            [summary]="anamnesis.personalHistories" icon="report" title="internaciones.documents-summary.personal-histories.TITLE"
+            [summary]="anamnesis.personalHistories" icon="report"
+            title="internaciones.documents-summary.personal-histories.TITLE"
             subtitle="internaciones.documents-summary.personal-histories.RECORDED_PERSONAL_HISTORIES"></app-description-item-data-summary>
-            
+
         <app-description-item-data-summary *ngIf="anamnesis.familyHistories" data-id="family-histories-summary"
-            [summary]="anamnesis.familyHistories" icon="report" title="internaciones.documents-summary.family-histories.TITLE"
+            [summary]="anamnesis.familyHistories" icon="report"
+            title="internaciones.documents-summary.family-histories.TITLE"
             subtitle="internaciones.documents-summary.family-histories.RECORDED_FAMILY_HISTORIES"></app-description-item-data-summary>
-            
+
         <app-description-item-data-summary *ngIf="anamnesis.medications" data-id="usual-medication-summary"
-            [summary]="anamnesis.medications" icon="event_available" title="internaciones.documents-summary.usual-medications.TITLE"
+            [summary]="anamnesis.medications" icon="event_available"
+            title="internaciones.documents-summary.usual-medications.TITLE"
             subtitle="internaciones.documents-summary.usual-medications.RECORDED_USUAL_MEDICATIONS"></app-description-item-data-summary>
     </div>
     <ng-template #loader>

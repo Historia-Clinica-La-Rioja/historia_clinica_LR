@@ -209,6 +209,10 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		this.activeDocument = undefined;
 	}
 
+    resetActiveDocument() {
+        this.activeDocument = undefined;
+    }
+
 	editDraftEpicrisis(document: DocumentSearchDto) {
 
 		this.documentActions.editEpicrisisDraft(document);
