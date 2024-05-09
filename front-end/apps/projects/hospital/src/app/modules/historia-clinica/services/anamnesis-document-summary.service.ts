@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ResponseAnamnesisDto } from '@api-rest/api-model';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
-import { DocumentsSummaryService } from './documents-summary.service';
+import { DocumentsSummaryMapperService } from './documents-summary.service';
 import { AnthropometricData, ClinicalEvaluationData, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { AnthropometricData, ClinicalEvaluationData, VitalSignsAndRiskFactorsDat
 export class AnamnesisDocumentSummaryService {
 
     constructor(
-        private readonly documentsSummaryService: DocumentsSummaryService,
+        private readonly documentsSummaryService: DocumentsSummaryMapperService,
     ) { }
 
     getAnamnesisAsViewFormat(anamnesis: ResponseAnamnesisDto): AnamnesisAsViewFormat {

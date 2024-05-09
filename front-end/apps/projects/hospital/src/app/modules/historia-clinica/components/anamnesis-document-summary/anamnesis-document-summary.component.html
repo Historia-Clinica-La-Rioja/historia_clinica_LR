@@ -1,56 +1,60 @@
 <div class="anamnesis-container" data-id="anamnesis-summary">
-    <div *ngIf="(anamnesis$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
-        fxLayoutGap="36px">
-        <app-document-summary-header data-id="summary-header" [headerData]="headerTestInfo" [isPopUpOpen]="isPopUpOpen"
-            (deleteDocument)="delete()" (editDocument)="edit()"></app-document-summary-header>
+    <div *ngIf="(hasData$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+        fxLayoutGap="15px">
+        <app-document-summary-header data-id="summary-header" [headerData]="headerDescription"
+            [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
+            (editDocument)="edit()"></app-document-summary-header>
         <mat-divider></mat-divider>
 
-        <section *ngIf="editedOn" data-id="edited-summary">
-            <div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+        <ng-container *ngIf="editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
                 <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
                 <span>{{ editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
             </div>
-        </section>
+        </ng-container>
 
-        <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis"
-            [diagnosis]="anamnesis.diagnosis" [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
+        <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="anamnesis.mainDiagnosis || anamnesis.diagnosis"
+                [diagnosis]="anamnesis.diagnosis" [mainDiagnosis]="anamnesis.mainDiagnosis"></app-diagnosis-summary>
 
-        <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="anamnesis.clinicalEvaluation"
-            [clinicalEvaluation]="anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
+            <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="anamnesis.clinicalEvaluation"
+                [clinicalEvaluation]="anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>
 
-        <app-description-item-data-summary *ngIf="anamnesis.procedures" data-id="procedures-summary"
-            [summary]="anamnesis.procedures" icon="library_add" title="internaciones.documents-summary.procedure.TITLE"
-            subtitle="internaciones.documents-summary.procedure.REGISTERED_PROCEDURES"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="anamnesis.procedures" data-id="procedures-summary"
+                [summary]="anamnesis.procedures" icon="library_add"
+                title="internaciones.documents-summary.procedure.TITLE"
+                subtitle="internaciones.documents-summary.procedure.REGISTERED_PROCEDURES"></app-description-item-data-summary>
 
-        <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="anamnesis.anthropometricData"
-            [anthropometricData]="anamnesis.anthropometricData"></app-anthropometric-data-summary>
+            <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="anamnesis.anthropometricData"
+                [anthropometricData]="anamnesis.anthropometricData"></app-anthropometric-data-summary>
 
-        <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
-            *ngIf="anamnesis.vitalSignsAndRiskFactors"
-            [vitalSignsAndRiskFactors]="anamnesis.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+            <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
+                *ngIf="anamnesis.vitalSignsAndRiskFactors"
+                [vitalSignsAndRiskFactors]="anamnesis.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
 
-        <app-description-item-data-summary *ngIf="anamnesis.allergies" data-id="allergies-summary"
-            [summary]="anamnesis.allergies" icon="cancel" title="internaciones.documents-summary.allergies.TITLE"
-            subtitle="internaciones.documents-summary.allergies.RECORDED_ALLERGIES"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="anamnesis.allergies" data-id="allergies-summary"
+                [summary]="anamnesis.allergies" icon="cancel" title="internaciones.documents-summary.allergies.TITLE"
+                subtitle="internaciones.documents-summary.allergies.RECORDED_ALLERGIES"></app-description-item-data-summary>
 
-        <app-description-item-data-summary *ngIf="anamnesis.vaccines" data-id="vaccines-summary"
-            [summary]="anamnesis.vaccines" icon="vaccines" title="internaciones.documents-summary.vaccines.TITLE"
-            subtitle="internaciones.documents-summary.vaccines.RECORDED_VACCINES"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="anamnesis.vaccines" data-id="vaccines-summary"
+                [summary]="anamnesis.vaccines" icon="vaccines" title="internaciones.documents-summary.vaccines.TITLE"
+                subtitle="internaciones.documents-summary.vaccines.RECORDED_VACCINES"></app-description-item-data-summary>
 
-        <app-description-item-data-summary *ngIf="anamnesis.personalHistories" data-id="personal-histories-summary"
-            [summary]="anamnesis.personalHistories" icon="report"
-            title="internaciones.documents-summary.personal-histories.TITLE"
-            subtitle="internaciones.documents-summary.personal-histories.RECORDED_PERSONAL_HISTORIES"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="anamnesis.personalHistories" data-id="personal-histories-summary"
+                [summary]="anamnesis.personalHistories" icon="report"
+                title="internaciones.documents-summary.personal-histories.TITLE"
+                subtitle="internaciones.documents-summary.personal-histories.RECORDED_PERSONAL_HISTORIES"></app-description-item-data-summary>
 
-        <app-description-item-data-summary *ngIf="anamnesis.familyHistories" data-id="family-histories-summary"
-            [summary]="anamnesis.familyHistories" icon="report"
-            title="internaciones.documents-summary.family-histories.TITLE"
-            subtitle="internaciones.documents-summary.family-histories.RECORDED_FAMILY_HISTORIES"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="anamnesis.familyHistories" data-id="family-histories-summary"
+                [summary]="anamnesis.familyHistories" icon="report"
+                title="internaciones.documents-summary.family-histories.TITLE"
+                subtitle="internaciones.documents-summary.family-histories.RECORDED_FAMILY_HISTORIES"></app-description-item-data-summary>
 
-        <app-description-item-data-summary *ngIf="anamnesis.medications" data-id="usual-medication-summary"
-            [summary]="anamnesis.medications" icon="event_available"
-            title="internaciones.documents-summary.usual-medications.TITLE"
-            subtitle="internaciones.documents-summary.usual-medications.RECORDED_USUAL_MEDICATIONS"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="anamnesis.medications" data-id="usual-medication-summary"
+                [summary]="anamnesis.medications" icon="event_available"
+                title="internaciones.documents-summary.usual-medications.TITLE"
+                subtitle="internaciones.documents-summary.usual-medications.RECORDED_USUAL_MEDICATIONS"></app-description-item-data-summary>
+        </div>
     </div>
     <ng-template #loader>
         <mat-spinner color="primary" style="margin: auto"></mat-spinner>

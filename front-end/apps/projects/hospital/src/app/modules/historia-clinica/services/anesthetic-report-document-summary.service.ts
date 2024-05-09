@@ -7,7 +7,7 @@ import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clin
 import { TranslateService } from '@ngx-translate/core';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { take } from 'rxjs';
-import { DocumentsSummaryService } from './documents-summary.service';
+import { DocumentsSummaryMapperService } from './documents-summary.service';
 import { AnesthesicClinicalEvaluationData, AnthropometricData, EndOfAnesthesiaStatusData, IntrasurgicalAnestheticProceduresData, MeasuringPointData, PersonalHistoriesData, StartAndEndProceduresDateTimeData, VitalSignsData } from '@historia-clinica/utils/document-summary.model';
 
 const INFO_DIVIDER = ' | ';
@@ -30,7 +30,7 @@ export class AnestheticReportDocumentSummaryService {
     constructor(
         private readonly translateService: TranslateService,
         readonly internacionMasterDataService: InternacionMasterDataService,
-        private readonly documentsSummaryService: DocumentsSummaryService,
+        private readonly documentsSummaryService: DocumentsSummaryMapperService,
     ) {
         this.loadMasterData();
     }

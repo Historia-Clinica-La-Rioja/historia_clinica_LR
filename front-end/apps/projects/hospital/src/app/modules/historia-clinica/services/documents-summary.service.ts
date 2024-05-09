@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentObservationsDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentObservationsDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
-import { AnthropometricData, ClinicalEvaluationData, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ClinicalEvaluationData, HeaderDescription, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { fromStringToDateByDelimeter } from '@core/utils/date.utils';
+import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
@@ -13,16 +16,35 @@ const INFO_DIVIDER = ' | ';
 @Injectable({
     providedIn: 'root'
 })
-export class DocumentsSummaryService {
+export class DocumentsSummaryMapperService {
 
     private confirmedStatus: string = '';
     private presumptiveStatus: string = '';
 
     constructor(
         private readonly translateService: TranslateService,
+        private readonly dateFormatPipe: DateFormatPipe
     ) {
         this.confirmedStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.CONFIRMED')
         this.presumptiveStatus = this.translateService.instant('internaciones.anesthesic-report.diagnosis.PRESUMPTIVE')
+    }
+
+    mapToHeaderDescription(header: HospitalizationDocumentHeaderDto, title: string, activeDocument: DocumentSearch): HeaderDescription {
+        return {
+            title,
+            edit: activeDocument.canDoAction.edit,
+            delete: activeDocument.canDoAction.delete,
+            headerDescriptionData: {
+                scope: header.sourceTypeName,
+                specialty: header.clinicalSpecialtyName,
+                dateTime: this.dateFormatPipe.transform(dateTimeDtotoLocalDate(header.createdOn), 'datetime'),
+                professional: header.professionalName,
+                institution: header.institutionName,
+                sector: header.bed?.room.sector.description,
+                room: header.bed?.room.description,
+                bed: header.bed?.bedNumber,
+            },
+        }
     }
 
     getDiagnosisAsStringArray(diagnosis: DiagnosisDto[]): DescriptionItemData[] {
@@ -99,7 +121,7 @@ export class DocumentsSummaryService {
     
     getMedicationsAsStringArray(medications: MedicationDto[]): DescriptionItemData[] {
         return medications.map(medication => {
-            return { description: medication.note ? medication.snomed.pt + this.isSuspended(medication) + INFO_DIVIDER + medication.note : medication.snomed.pt };
+            return { description: medication.note ? medication.snomed.pt + this.isSuspended(medication) + INFO_DIVIDER + medication.note : medication.snomed.pt + this.isSuspended(medication) };
         })
     }
 

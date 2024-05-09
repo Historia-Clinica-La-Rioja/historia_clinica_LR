@@ -1,5 +1,23 @@
 import { DescriptionItemData } from "@presentation/components/description-item/description-item.component";
 
+export interface HeaderDescription {
+    title: string,
+    edit: boolean,
+    delete: boolean,
+    headerDescriptionData: HeaderDescriptionData,
+}
+
+export interface HeaderDescriptionData {
+    scope: string,
+    specialty: string,
+    dateTime: string,
+    professional: string,
+    institution: string,
+    sector: string,
+    room: string,
+    bed: string,
+}
+
 export interface AnthropometricData {
     bloodType: DescriptionItemData[],
     height: DescriptionItemData[],
