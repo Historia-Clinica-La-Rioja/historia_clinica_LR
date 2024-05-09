@@ -66,6 +66,7 @@ public class ListTranscribedDiagnosticReportRepositoryImpl implements ListTransc
                 "LEFT JOIN {h-schema}document_file df ON df.id = aoi.document_id " +
                 "LEFT JOIN {h-schema}document d ON d.id = aoi.document_id " +
                 "WHERE aoi.order_id IS NULL " +
+				"AND aoi.active = true " +
                 "AND tsr.patient_id = :patientId " +
                 "AND (aoi.transcribed_order_id NOT IN (SELECT aoii.transcribed_order_id " +
 					"FROM appointment_order_image aoii " +
