@@ -1,6 +1,6 @@
 <app-new-consultation-expansion-section id="diagnosticos"
 	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-	[title]="'ambulatoria.paciente.surgical-report.surgical-team.TITLE' | translate" icon="brush" [collapsed]="false"
+	[title]="'ambulatoria.paciente.surgical-report.surgical-team.TITLE' | translate" icon="brush" [collapsed]="true"
 	[hideBorder]="false" [isEmpty]="isEmpty()">
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
