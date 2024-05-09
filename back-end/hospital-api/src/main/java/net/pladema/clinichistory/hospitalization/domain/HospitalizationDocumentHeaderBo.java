@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentHeaderBo;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,5 +41,9 @@ public class HospitalizationDocumentHeaderBo {
 
     public Integer getCreatedBy() {
         return baseDocumentHeader.getCreatedBy();
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return baseDocumentHeader.getCreatedOn();
     }
 }

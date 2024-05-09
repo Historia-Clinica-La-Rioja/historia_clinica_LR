@@ -1,5 +1,6 @@
 package net.pladema.establishment.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,9 @@ public interface BedService {
 	HistoricPatientBedRelocation addPatientBedRelocation(HistoricPatientBedRelocation patientBedRelocation);
 	
 	Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId);
-	
+
+	Optional<HistoricPatientBedRelocation> getBedRelocationByDateTime(Integer internmentEpisodeId, LocalDateTime localDateTime);
+
 	Optional<BedInfoVo> getBedInfo(Integer bedId);
 	
 	List<BedSummaryVo> getBedSummary(Integer institutionId, Short[] sectorType);

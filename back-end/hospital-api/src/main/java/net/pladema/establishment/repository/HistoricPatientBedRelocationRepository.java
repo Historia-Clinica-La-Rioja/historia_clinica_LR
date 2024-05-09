@@ -16,10 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface HistoricPatientBedRelocationRepository extends SGXAuditableEntityJPARepository<HistoricPatientBedRelocation, Integer> {
 
-	@Query(value = " SELECT hpbr FROM  HistoricPatientBedRelocation hpbr "
-			+ " WHERE hpbr.internmentEpisodeId =:internmentEpisodeId ORDER BY hpbr.relocationDate DESC ")
-	Stream<HistoricPatientBedRelocation> getAllByInternmentEpisode(
-			@Param("internmentEpisodeId") Integer internmentEpisodeId);
+	@Query(" SELECT hpbr " +
+			"FROM HistoricPatientBedRelocation hpbr " +
+			"WHERE hpbr.internmentEpisodeId = :internmentEpisodeId " +
+			"ORDER BY hpbr.relocationDate DESC")
+	Stream<HistoricPatientBedRelocation> getAllByInternmentEpisode(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT NEW net.pladema.establishment.service.domain.InternmentPatientBedRoomBo(b.bedNumber, r.roomNumber) " +

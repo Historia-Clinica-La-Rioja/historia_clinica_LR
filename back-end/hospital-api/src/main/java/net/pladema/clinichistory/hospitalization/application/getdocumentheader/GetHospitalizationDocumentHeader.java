@@ -11,6 +11,7 @@ import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.clinichistory.hospitalization.service.domain.SectorBo;
 import net.pladema.establishment.repository.domain.BedInfoVo;
+import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.staff.service.ClinicalSpecialtyService;
@@ -53,7 +54,7 @@ public class GetHospitalizationDocumentHeader {
                 documentHeaderBo.getInstitutionId());
 
         this.setClinicalSpecialtyName(documentHeaderBo, episode);
-        this.setLastBed(episode, documentHeaderBo);
+        this.setBedCorrectLocation(episode, documentHeaderBo);
     }
 
     private void setClinicalSpecialtyName(HospitalizationDocumentHeaderBo documentHeaderBo, InternmentEpisode episode) {
@@ -61,8 +62,12 @@ public class GetHospitalizationDocumentHeader {
                 .ifPresent(clinicalSpecialtyBo -> documentHeaderBo.setClinicalSpecialtyName(clinicalSpecialtyBo.getName()));
     }
 
-    private void setLastBed(InternmentEpisode episode, HospitalizationDocumentHeaderBo documentHeaderBo) {
-        bedService.getBedInfo(episode.getBedId())
+    private void setBedCorrectLocation(InternmentEpisode episode, HospitalizationDocumentHeaderBo documentHeaderBo) {
+        var bedId = bedService.getBedRelocationByDateTime(episode.getId(), documentHeaderBo.getCreatedOn())
+                .map(HistoricPatientBedRelocation::getDestinationBedId)
+                .orElse(episode.getBedId());
+
+        bedService.getBedInfo(bedId)
                 .map(this::toBedBo)
                 .ifPresent(documentHeaderBo::setBed);
     }
