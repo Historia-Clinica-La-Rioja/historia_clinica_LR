@@ -1,55 +1,41 @@
 <app-new-consultation-expansion-section id="diagnosticos"
 	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
-	[title]="'ambulatoria.paciente.surgical-report.surgical-team.TITLE' | translate" icon="brush" [collapsed]="true"
+	[title]="'ambulatoria.paciente.surgical-report.surgical-team.TITLE' | translate" icon="brush" [collapsed]="false"
 	[hideBorder]="false" [isEmpty]="isEmpty()">
 
 	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CIRUJANO' | translate"
-		[externalSetProfessional]="surgeon?.healthcareProfessional"
-		(professionalChange)="professionalChange($event, SURGEON)">
+		[externalSetProfessional]="surgeon?.healthcareProfessional" (professionalChange)="selectSurgeon($event)">
 	</app-surgical-report-professional-info>
 
-	<ng-container *ngFor="let index of [].constructor(ayudanteCount); let i = index">
-		<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
-			[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.AYUDANTE' | translate"
-			[externalSetProfessional]="surgeonAssistant?.healthcareProfessional"
-			(professionalChange)="professionalChange($event, SURGEON_ASSISTANT)">
-		</app-surgical-report-professional-info>
-	</ng-container>
+	<app-titled-content-card [title]="'ambulatoria.paciente.surgical-report.surgical-team.CARD_TITLE'" *ngIf="!!healthcareProfessionals.length">
+		<div *ngFor="let professional of healthcareProfessionals; index as i; last as isLast">
+			<div fxLayout="row" fxLayoutAlign="space-between center" class="list-item">
+				<div fxLayout="column">
+					<span class="bold" *ngIf="professional.profession.type != OTHER else other">{{
+						professional.profession.type }}</span>
+					<ng-template #other>
+						<span class="bold" #other>{{ professional.profession.typeDescription }}</span>
+					</ng-template>
+					<span>{{ professional.healthcareProfessional.person.fullName }} </span>
+					<div>
+						<span>{{'ambulatoria.paciente.surgical-report.surgical-team.DNI' | translate}} </span>
+						<span>{{ professional.healthcareProfessional.person.identificationNumber }} </span>
+						<span> | {{ 'ambulatoria.paciente.surgical-report.surgical-team.MATRICULA' | translate }} </span>
+						<span>{{ professional.healthcareProfessional.licenseNumber }} </span>
+					</div>
+				</div>
+				<button type="button" mat-icon-button color="warn" (click)="deleteProfessional(i)">
+					<mat-icon>delete_outline</mat-icon>
+				</button>
+			</div>
+			<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+		</div>
+	</app-titled-content-card>
+
 	<div>
-		<button type="button" mat-button color="primary" class="add-ayudante" (click)="addAyudante()">
-			{{'ambulatoria.paciente.surgical-report.surgical-team.ADD_AYUDANTE' | translate}}
+		<button type="button" mat-button color="primary" class="add-button" (click)="addProfessional()">
+			{{'ambulatoria.paciente.surgical-report.surgical-team.ADD_PROFESSIONAL' | translate}}
 		</button>
 	</div>
-
-	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
-		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.ANESTESIOLOGO' | translate"
-		[externalSetProfessional]="anesthesiologist?.healthcareProfessional"
-		(professionalChange)="professionalChange($event, ANESTHESIOLOGIST)">
-	</app-surgical-report-professional-info>
-
-	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
-		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CARDIOLOGO' | translate"
-		[externalSetProfessional]="cardiologist?.healthcareProfessional"
-		(professionalChange)="professionalChange($event, CARDIOLOGIST)">
-	</app-surgical-report-professional-info>
-
-	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
-		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.INSTRUMENTADOR' | translate"
-		[externalSetProfessional]="surgicalInstrumentTechnician?.healthcareProfessional"
-		(professionalChange)="professionalChange($event, SURGICAL_INSTRUMENT_TECHNICIAN)">
-	</app-surgical-report-professional-info>
-
-	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
-		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.OBSTETRA' | translate"
-		[externalSetProfessional]="obstetrician?.healthcareProfessional"
-		(professionalChange)="professionalChange($event, OBSTETRICIAN)">
-	</app-surgical-report-professional-info>
-
-	<app-surgical-report-professional-info *ngIf="professionals" [professionals]="professionals"
-		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.PEDIATRA' | translate"
-		[externalSetProfessional]="pediatrician?.healthcareProfessional"
-		(professionalChange)="professionalChange($event, PEDIATRICIAN)">
-	</app-surgical-report-professional-info>
-
 </app-new-consultation-expansion-section>

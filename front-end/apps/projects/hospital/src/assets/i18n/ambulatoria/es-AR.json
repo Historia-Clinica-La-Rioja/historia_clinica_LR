@@ -302,16 +302,11 @@
 				},
 				"surgical-team": {
 					"TITLE": "Equipo Quirófano",
+					"CARD_TITLE": "Otros integrantes del equipo registrados",
 					"CIRUJANO": "Cirujano",
-					"AYUDANTE": "Ayudante",
-					"ANESTESIOLOGO": "Anestesiólogo",
-					"CARDIOLOGO": "Cardiólogo",
-					"INSTRUMENTADOR": "Instrumentador",
-					"OBSTETRA": "Obstetra",
-					"PEDIATRA": "Pediatra",
 					"DNI": "DNI",
 					"MATRICULA": "Matrícula",
-					"ADD_AYUDANTE": "+ Agregar ayudante"
+					"ADD_PROFESSIONAL": "+ Agregar otro integrante al equipo"
 				},
 				"procedures": {
 					"TITLE": "Procedimientos",
