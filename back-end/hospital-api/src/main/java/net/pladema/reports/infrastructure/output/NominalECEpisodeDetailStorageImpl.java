@@ -132,7 +132,7 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"attentions.quantity as attentions_quantity, "+
 				"dt.description as ece_discharge_type," +
 				"pa.person_id as p_person_id, " +
-				"hp.id as author_last_attention_professional_id " +
+				"hp2.id as author_last_attention_professional_id " +
 				"FROM {h-schema}emergency_care_episode ece " +
 				"JOIN {h-schema}patient pa ON (ece.patient_id = pa.id) " +
 				"LEFT JOIN {h-schema}v_user_person_complete_data AS patient_data ON (pa.person_id = patient_data.person_id) " +
@@ -187,8 +187,9 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"			GROUP BY sr.source_id " +
 				"			) AS order_proced ON (order_proced.ece_id = ece.id) " +
 				"LEFT JOIN {h-schema}emergency_care_discharge ecd ON (ece.id = ecd.emergency_care_episode_id) " +
+				"LEFT JOIN {h-schema}healthcare_professional hp ON (ecd.medical_discharge_by_professional = hp.id) " +
 				"LEFT JOIN {h-schema}discharge_type dt ON (ecd.discharge_type_id = dt.id) " +
-				"LEFT JOIN {h-schema}v_user_person_complete_data AS author_medical_discharge ON (ecd.medical_discharge_by_professional = author_medical_discharge.user_id) " +
+				"LEFT JOIN {h-schema}v_user_person_complete_data AS author_medical_discharge ON (hp.person_id = author_medical_discharge.person_id) " +
 				"LEFT JOIN (SELECT DISTINCT ON(t.emergency_care_episode_id)  t.emergency_care_episode_id AS ece_id, t.created_on, t.triage_category_id, t.created_by " +
 				"			FROM {h-schema}triage AS t " +
 				"			ORDER BY t.emergency_care_episode_id, t.created_on DESC " +
@@ -214,7 +215,7 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"			WHERE hee.emergency_care_state_id = 1 " +
 				"			GROUP BY hee.emergency_care_episode_id " +
 				"			) AS attentions ON (ece.id = attentions.ece_id) " +
-				"LEFT JOIN healthcare_professional hp ON (author_last_attention.person_id = hp.person_id) " +
+				"LEFT JOIN healthcare_professional hp2 ON (author_last_attention.person_id = hp2.person_id) " +
 				"WHERE ece.institution_id = :institutionId " +
 				"AND ece.created_on BETWEEN :startDate AND :endDate ";
 
@@ -228,7 +229,7 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				: "";
 
 		if (filter.getDoctorId() != null)
-			sqlQuery += " AND hp.id = " + filter.getDoctorId();
+			sqlQuery += " AND hp2.id = " + filter.getDoctorId();
 
 		var query = entityManager.createNativeQuery(sqlQuery);
 
