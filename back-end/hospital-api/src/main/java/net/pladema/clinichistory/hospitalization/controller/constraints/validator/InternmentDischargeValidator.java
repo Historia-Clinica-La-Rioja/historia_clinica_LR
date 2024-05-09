@@ -40,13 +40,21 @@ public class InternmentDischargeValidator implements ConstraintValidator<Internm
         if (!featureFlagService.isOn(AppFeature.HABILITAR_ALTA_SIN_EPICRISIS)) {
             valid = internmentEpisodeRepository.hasFinalEpicrisis(internmentEpisodeId);
         }
+
+        if (!valid) {
+            setResponse(context, "{internmentdischarge.invalid.no-epicrisis}", INTERNMENT_EPISODE_PROPERTY);
+        }
+
         if (featureFlagService.isOn(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO)) {
             var anestheticReportDraft = anestheticStorage.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId);
-            valid = valid && anestheticReportDraft != null;
+            boolean noDraft = anestheticReportDraft == null;
+            valid = valid && noDraft;
         }
+
         if (!valid) {
-            setResponse(context, "{internmentdischarge.invalid}", INTERNMENT_EPISODE_PROPERTY);
+            setResponse(context, "{internmentdischarge.invalid.pending-draft}", INTERNMENT_EPISODE_PROPERTY);
         }
+
         return valid;
     }
 
