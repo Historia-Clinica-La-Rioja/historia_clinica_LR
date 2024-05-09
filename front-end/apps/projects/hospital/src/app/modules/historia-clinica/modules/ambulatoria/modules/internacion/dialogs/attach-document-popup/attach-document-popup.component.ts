@@ -43,6 +43,7 @@ export class AttachDocumentPopupComponent implements OnInit {
 	hasConsentDocumentError: string;
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 	searchConceptsLocallyFF = false;
+	isLoading = false;
 
 	constructor(private fb: UntypedFormBuilder,
 		private internmentEpisodeDocument: InternmentEpisodeDocumentService,
@@ -145,18 +146,21 @@ export class AttachDocumentPopupComponent implements OnInit {
 
 	save() {
 		if (!this.form.valid) return;
-
+		this.isLoading = true;
 		const formDataFile: FormData = new FormData();
 		formDataFile.append('file', this.file);
 		const consentId: number =  this.consentSelectedType?.consentId ? this.consentSelectedType.consentId : REGULAR_DOCUMENT;
 		this.internmentEpisodeDocument.saveInternmentEpisodeDocument(formDataFile, this.data.internmentEpisodeId, this.form.get('type').value, consentId)
 			.subscribe(resp => {
-				if (resp)
+				if (resp) {
 					this.dialogRef.close()
-				}, (error: ApiErrorMessageDto) => {
-					this.form.controls.type.setErrors({invalid: true});
-					this.hasConsentDocumentError = error.text;
-				});
+				}
+				this.isLoading = false;
+			}, (error: ApiErrorMessageDto) => {
+				this.form.controls.type.setErrors({invalid: true});
+				this.hasConsentDocumentError = error.text;
+				this.isLoading = false;
+			});
 	}
 
 	setControlTouched(control) {
