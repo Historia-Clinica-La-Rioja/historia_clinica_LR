@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { fixDate } from '@core/utils/date/format';
-import * as moment from 'moment';
-import { Moment } from "moment";
 
 @Component({
 	selector: 'app-datepicker',
@@ -45,15 +43,15 @@ export class DatepickerComponent implements OnInit {
 		this.subscribeToFormChanges();
 	}
 
-	dateFilter = (date?: Moment): boolean => {
+	dateFilter = (date?: Date): boolean => {
 		if (!this.availableDays.length && !this.disableDays.length)
 			return true;
 		if (date != null) {
-			if (this.disableDays.find(x => x.getTime() == date.toDate().getTime())) {
+			if (this.disableDays.find(x => x.getTime() == date.getTime())) {
 				return false;
 			}
 		}
-		const day = (date || moment()).day();
+		const day = (date || new Date()).getDay();
 		return this.availableDays.includes(day);
 	}
 

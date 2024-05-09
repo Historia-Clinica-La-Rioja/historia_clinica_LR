@@ -160,10 +160,10 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 		else this.initialProvinceTypeaheadOptionSelected = undefined;
 	}
 
-	updateEndDate(initialDate: any) {
+	updateEndDate(initialDate: Date) {
 		this.resetResults();
 		if (initialDate) {
-			this.searchForm.controls.endDate.setValue(datePlusDays(initialDate.toDate(), PERIOD_DAYS));
+			this.searchForm.controls.endDate.setValue(datePlusDays(initialDate, PERIOD_DAYS));
 		}
 	}
 
