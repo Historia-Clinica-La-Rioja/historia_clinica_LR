@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
 import { Size } from '@presentation/components/item-summary/item-summary.component';
-import { Observable, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Color } from '@presentation/colored-label/colored-label.component';
-import { PAGE_SIZE_OPTIONS } from '../../../documents-signature/modules/joint-signature/constants/joint-signature.constants';
 import { ButtonType } from '@presentation/components/button/button.component';
-import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
+import { ImageQueueService } from '@api-rest/services/image-queue.service';
+import { PatientNameService } from '@core/services/patient-name.service';
+import { QUEUE_ERROR, mapToItemImageQueue } from '../../constants/image.queue.mapper';
 
 @Component({
 	selector: 'app-image-table-technical',
@@ -14,141 +15,75 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 })
 export class ImageTableTechnicalComponent implements OnInit {
 
-	imageList$: Observable<ItemImageQueue[]> = imagequeue.pipe(map(itemImages => this.mapToItemImageQueue(itemImages)))
+	imageList$: Observable<ItemImageQueue[]>
 	size: Size = Size.SMALL
-	pageSizeOptions = PAGE_SIZE_OPTIONS;
-	readonly PAGE_SIZE = 20;
+	ERROR_IMAGE = QUEUE_ERROR
+	readonly PAGE_SIZE = 10;
 	readonly FIRST_PAGE = 0;
 	readonly ButtonType = ButtonType;
-	isLoading = false
+	elementsAmount = 0
+	pageIndex = 0
+	SIN_INFORMACION = 'Sin información'
+	private pageIndexState: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>({
+		length: null,
+		pageIndex: this.FIRST_PAGE,
+		pageSize: null,
+		previousPageIndex: null
+	})
 
 
-	constructor(private personMasterDataService:PersonMasterDataService) { }
+	constructor(
+		private imageQueueService: ImageQueueService,
+		private patientNameService: PatientNameService,
+	) { }
 
 	ngOnInit(): void {
-
-		this.personMasterDataService.getIdentificationTypes()
-		.subscribe( _  => {
-		})
+		this.imageList$ = this.getImageListPage(this.FIRST_PAGE)
 	}
 
 
-	mapToItemImageQueue(items: ItemImageQueueDto[]): ItemImageQueue[] {
-		return items.map(item => {
-			return {
-				person: item.person,
-				studies: item.studiesNames ? item.studiesNames.join(' | ') : null,
-				status: item.status,
-				date: item.date
+	getImageListPage(pageIndex: number): Observable<ItemImageQueue[]> {
+		return 	this.imageQueueService.getImageQueueList(this.PAGE_SIZE, pageIndex)
+		.pipe(
+		tap(pageImageQueue => {this.elementsAmount = pageImageQueue.totalElementsAmount}),
+		map(pageImageQueue => mapToItemImageQueue(pageImageQueue.content, this.patientNameService)))
+	}
+
+	tryAgain(image: ItemImageQueue): void {
+		this.imageQueueService.updateImageQueueRetry(image.idMove).subscribe(
+			success => {
+				if (success)
+					{
+						this.imageList$ = this.getImageListPage(this.pageIndexState.value.pageIndex)
+						this.pageIndex = this.pageIndexState.value.pageIndex
+					}
 			}
-		})
+		)
 	}
 
-	tryAgain(): void {
+	onPageChanges(event: PageEvent): void {
+		this.pageIndex = event.pageIndex
+		this.imageList$ = this.getImageListPage(event.pageIndex)
+		this.pageIndexState.next(event)
 	}
-
-	doIndex(): void { }
-
-	onPageChange(event: any): void {
-	}
-}
-
-export const imagequeue: Observable<ItemImageQueueDto[]> = of([
-	{
-		person: {
-			fullName: 'Michael Jordan',
-			identification: {
-				type: 'DNI',
-				number: 11235790,
-			},
-			id: 1,
-			gender: 'Masculino',
-			age: 32,
-		},
-		studiesNames: ["administración de inmunoglobulina anti - varicela", "prevención de lesiones"],
-		status: {
-			description: "pendiente de moverse",
-			color: Color.YELLOW,
-		},
-		serviceRequestId: null,
-		date: new Date("2023-12-22T14:11:43.423Z")
-	},
-	{
-		person: {
-			fullName: 'Michael Jordan',
-			identification: {
-				type: 'DNI',
-				number: 11235790,
-			},
-			id: 1,
-			gender: 'Masculino',
-			age: 32,
-		},
-		studiesNames: ["administración de inmunoglobulina anti - varicela", "prevención de lesiones"],
-		status: {
-			description: "moviendo ...",
-			color: Color.YELLOW,
-		},
-		serviceRequestId: 12,
-		date: new Date("2023-12-22T14:11:43.423Z")
-	},
-	{
-		person: {
-			fullName: 'Michael Jordan',
-			identification: {
-				type: 'DNI',
-				number: 11235790,
-			},
-			id: 1,
-			gender: 'Masculino',
-			age: 32,
-		},
-		studiesNames: ["administración de inmunoglobulina anti - varicela", "prevención de lesiones"],
-		status: {
-			description: "Error",
-			color: Color.RED,
-		},
-		serviceRequestId: 12,
-		date: new Date("2023-12-22T14:11:43.423Z")
-	},
-	{
-		person: {
-			fullName: 'Michael Jordan',
-			identification: {
-				type: 'DNI',
-				number: 11235790,
-			},
-			id: 1,
-			gender: 'Masculino',
-			age: 32,
-		},
-		studiesNames: null,
-		status: {
-			description: "Error",
-			color: Color.RED,
-		},
-		serviceRequestId: null,
-		date: new Date("2023-12-22T14:11:43.423Z")
-	}
-])
-
-
-export interface ItemImageQueueDto {
-	person: PatientSummary
-	studiesNames: String[],
-	status?: {
-		description: String,
-		color: Color,
-		icon?: String
-	},
-	serviceRequestId: number,
-	date?: Date,
 }
 
 export interface ItemImageQueue {
 	person: PatientSummary
-	studies: String
-	date?: Date,
-	hour?: string,
-	status: any
+	studies: string,
+	status: {
+		description: string,
+		color: Color,
+		icon?: String
+	},
+	serviceRequestId: number,
+	date: Date,
+	idMove: number
+}
+
+export interface PageEvent {
+	length: number
+	pageIndex: number
+	pageSize: number
+	previousPageIndex: number
 }

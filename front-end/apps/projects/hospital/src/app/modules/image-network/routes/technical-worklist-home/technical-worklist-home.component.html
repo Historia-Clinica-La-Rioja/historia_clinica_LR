@@ -2,10 +2,14 @@
 	<div>
 		<mat-tab-group>
 			<mat-tab label="{{ 'image-network.technical-section.WORKLIST' | translate }}">
-				<app-worklist-by-technical></app-worklist-by-technical>
+				<ng-template matTabContent>
+					<app-worklist-by-technical></app-worklist-by-technical>
+				</ng-template>
 			</mat-tab>
 			<mat-tab label="{{ 'image-network.technical-section.QUEUE_IMAGE' | translate }}">
-				<app-queue-image-technical></app-queue-image-technical>
+				<ng-template matTabContent>
+					<app-queue-image-technical></app-queue-image-technical>
+				</ng-template>
 			</mat-tab>
 		</mat-tab-group>
 	</div>
