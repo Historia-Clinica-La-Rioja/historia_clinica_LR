@@ -234,9 +234,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
 		log.debug("Input parameters -> appointmentId {}, appointmentStateId {}, userId {}, reason {}", appointmentId, appointmentStateId, userId, reason);
 		appointmentRepository.updateState(appointmentId, appointmentStateId, userId, LocalDateTime.now());
-		if(appointmentStateId == 4 || appointmentStateId == 3) //si se cambia a "Ausente" o "Cancelado", se borra la asociacion turno-orden medica
+		if(appointmentStateId == AppointmentState.CANCELLED || appointmentStateId == AppointmentState.ABSENT) //si se cambia a "Ausente" o "Cancelado", se borra la asociacion turno-orden medica
 			appointmentOrderImageRepository.deleteByAppointment(appointmentId);
-
+		if (appointmentStateId == AppointmentState.ASSIGNED || appointmentStateId == AppointmentState.CONFIRMED)
+			appointmentOrderImageRepository.activateAppointment(appointmentId);
 		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
 			Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
 
