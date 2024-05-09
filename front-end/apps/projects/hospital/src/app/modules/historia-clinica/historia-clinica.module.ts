@@ -71,6 +71,7 @@ import { ReasonListComponent } from './components/reason-list/reason-list.compon
 import { SurgicalReportAnesthesiaComponent } from './components/surgical-report-anesthesia/surgical-report-anesthesia.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
 import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
+import { SurgicalReportPostDiagnosisComponent } from './components/surgical-report-post-diagnosis/surgical-report-post-diagnosis.component';
 import { SurgicalReportProceduresComponent } from './components/surgical-report-procedures/surgical-report-procedures.component';
 import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
 import { SurgicalReportProfessionalTeamComponent } from './components/surgical-report-professional-team/surgical-report-professional-team.component';
@@ -252,6 +253,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		SurgicalReportAnesthesiaComponent,
 		SurgicalReportDockPopupComponent,
 		SurgicalReportDiagnosisComponent,
+		SurgicalReportPostDiagnosisComponent,
 		SurgicalReportProfessionalTeamComponent,
 		SurgicalReportProfessionalInfoComponent,
 		SurgicalReportProceduresComponent,

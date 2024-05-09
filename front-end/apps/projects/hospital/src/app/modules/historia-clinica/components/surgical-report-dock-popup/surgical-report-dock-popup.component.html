@@ -12,7 +12,6 @@
 
 		<app-surgical-report-anesthesia [(surgicalReport)]="surgicalReport"
 			[searchConceptsLocallyFF]="searchConceptsLocallyFF"></app-surgical-report-anesthesia>
-			
 		<app-surgical-report-procedures [(surgicalReport)]="surgicalReport" (validDate)="setValidDate($event)"
 			[markAsTouched]="markAsTouched">
 		</app-surgical-report-procedures>
@@ -50,6 +49,8 @@
 			[buttonTitle]="'ambulatoria.paciente.surgical-report.drainage.BUTTON_TITLE' | translate" [icon]="'vaccines'"
 			[type]="DRAINAGE" [(surgicalReport)]="surgicalReport">
 		</app-procedure-and-description>
+
+		<app-surgical-report-post-diagnosis [(surgicalReport)]="surgicalReport"></app-surgical-report-post-diagnosis>
 
 		<div class="spinner" *ngIf="loadingReport">
 			<mat-spinner color="primary" style="margin: auto"></mat-spinner>

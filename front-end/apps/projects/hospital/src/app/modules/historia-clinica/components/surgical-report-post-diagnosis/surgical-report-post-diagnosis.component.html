@@ -1,0 +1,26 @@
+<app-new-consultation-expansion-section id="diagnosticos"
+    *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
+    [title]="'ambulatoria.paciente.surgical-report.post-diagnosis.TITLE' | translate" icon="error_outlined" [collapsed]="false"
+    [hideBorder]="false" [isEmpty]="isEmpty()">
+
+     <div>
+        <button id="clear_identification_type" type="button" mat-button color="primary" (click)="addDiagnosis()">
+            + {{'ambulatoria.paciente.surgical-report.post-diagnosis.ADD_DIAGNOSIS' | translate}}
+        </button>
+    </div>
+
+    <app-titled-content-card *ngIf="surgicalReport.postoperativeDiagnosis.length"
+        [title]="'ambulatoria.paciente.surgical-report.post-diagnosis.DIAGNOSIS' | translate">
+        <div *ngFor="let diagnosis of surgicalReport.postoperativeDiagnosis; index as i; last as isLast">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column">
+                    <span>{{ diagnosis.snomed.pt }}</span>
+                </div>
+                <button type="button" mat-icon-button color="warn">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </div>
+            <mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+        </div>
+    </app-titled-content-card>
+</app-new-consultation-expansion-section>
