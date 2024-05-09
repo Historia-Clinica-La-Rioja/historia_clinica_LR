@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { TitleDescriptionListComponent } from './title-description-list.component';
+import { DateFormat } from '../description-item/description-item.component';
 
 
 const meta: Meta<TitleDescriptionListComponent> = {
@@ -11,7 +12,7 @@ const meta: Meta<TitleDescriptionListComponent> = {
 			description: 'String para el titulo',
 		},
 		descriptionData: {
-            description: '<strong>descriptionData:</strong> arreglo de tipo DescriptionItemData<br> <strong>description</strong> atributo requerido de tipo string que tiene la descripción a mostrar <br> <strong>dateOrTime</strong> atributo opcional que puede tener un atributo date, time o dateTime (todos tipo Date)',
+            description: '<strong>descriptionData:</strong> arreglo de tipo DescriptionItemData<br> <strong>description</strong> atributo requerido de tipo string que tiene la descripción a mostrar <br> <strong>dateToShow</strong> atributo opcional que tiene un date y un format(dateFormat)',
         },
 	},
     parameters: {
@@ -47,8 +48,9 @@ export const SingleDescriptionCaseWithDate: Story = {
 		title: "Diagnóstico principal",
 		descriptionData: [{
 			description: "Enfermedad causada por COVID-19 (Confirmado)",
-			dateOrTime: {
-				dateTime: new Date()
+			dateToShow: {
+				date: new Date(),
+                format: DateFormat.DATE_TIME,
 			}
 		}]
 	}
@@ -75,20 +77,23 @@ export const MultiDescriptionCaseWithDate: Story = {
 		title: "Diagnóstico principal",
 		descriptionData: [{
 			description: "Enfermedad causada por COVID-19 (Confirmado)",
-			dateOrTime: {
-				dateTime: new Date()
+			dateToShow: {
+				date: new Date(),
+                format: DateFormat.DATE_TIME,
 			}
 		},
 		{
 			description: "Enfermedad causada por COVID-19 (Confirmado)",
-			dateOrTime: {
-				dateTime: new Date()
+			dateToShow: {
+				date: new Date(),
+                format: DateFormat.DATE_TIME,
 			}
 		},
 		{
 			description: "Enfermedad causada por COVID-19 (Confirmado)",
-			dateOrTime: {
-				dateTime: new Date()
+			dateToShow: {
+				date: new Date(),
+                format: DateFormat.DATE_TIME,
 			}
 		},
 		]
@@ -100,14 +105,16 @@ export const MultiDescriptionCaseWithMixedAttributes: Story = {
 		title: "Diagnóstico principal",
 		descriptionData: [{
 			description: "Enfermedad causada por COVID-19 (Confirmado)",
-			dateOrTime: {
-				dateTime: new Date()
+			dateToShow: {
+				date: new Date(),
+                format: DateFormat.DATE_TIME,
 			}
 		},
 		{
 			description: "Enfermedad causada por COVID-19 (Confirmado)",
-			dateOrTime: {
-				date: new Date()
+			dateToShow: {
+				date: new Date(),
+                format: DateFormat.DATE,
 			}
 		},
 		{
@@ -115,8 +122,9 @@ export const MultiDescriptionCaseWithMixedAttributes: Story = {
 		},
 		{
 			description: "Enfermedad causada por COVID-19 (Confirmado)",
-			dateOrTime: {
-				time: new Date()
+			dateToShow: {
+				date: new Date(),
+                format: DateFormat.TIME,
 			}
 		},
 		{

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AllergyConditionDto, AnthropometricDataDto, DiagnosisDto, DocumentObservationsDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
-import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
+import { DateFormat, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { AnthropometricData, ClinicalEvaluationData, HeaderDescription, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
@@ -67,7 +67,7 @@ export class DocumentsSummaryMapperService {
         return procedures.map(procedure => {
             return { 
                 description: procedure.snomed.pt ,
-                dateOrTime: procedure.performedDate ? { date: fromStringToDateByDelimeter(procedure.performedDate, '-') } : null,
+                dateToShow: procedure.performedDate ? { date: fromStringToDateByDelimeter(procedure.performedDate, '-'), format: DateFormat.DATE } : null,
             }
         })
     }
@@ -105,7 +105,7 @@ export class DocumentsSummaryMapperService {
         return vaccines.map(vaccine => {
             return {
                 description: vaccine.snomed.pt,
-                dateOrTime: vaccine.administrationDate ? { date: fromStringToDateByDelimeter(vaccine.administrationDate, '-') } : null,
+                dateToShow: vaccine.administrationDate ? { date: fromStringToDateByDelimeter(vaccine.administrationDate, '-'), format: DateFormat.DATE } : null,
             };
         })
     }
@@ -114,7 +114,7 @@ export class DocumentsSummaryMapperService {
         return histories.map(history => {
             return {
                 description: history.snomed.pt,
-                dateOrTime: history.startDate ? { date: fromStringToDateByDelimeter(history.startDate, '-') } : null,
+                dateToShow: history.startDate ? { date: fromStringToDateByDelimeter(history.startDate, '-'), format: DateFormat.DATE } : null,
             };
         })
     }    

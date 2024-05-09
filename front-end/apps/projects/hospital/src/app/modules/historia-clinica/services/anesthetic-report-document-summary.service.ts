@@ -5,7 +5,7 @@ import { InternacionMasterDataService } from '@api-rest/services/internacion-mas
 import { capitalize } from '@core/utils/core.utils';
 import { ANESTHESIA_ZONE_ID, PREVIOUS_ANESTHESIA_STATE_ID } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report-anesthetic-history.service';
 import { TranslateService } from '@ngx-translate/core';
-import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
+import { DateFormat, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { take } from 'rxjs';
 import { DocumentsSummaryMapperService } from './documents-summary.service';
 import { AnesthesicClinicalEvaluationData, AnthropometricData, EndOfAnesthesiaStatusData, IntrasurgicalAnestheticProceduresData, MeasuringPointData, PersonalHistoriesData, StartAndEndProceduresDateTimeData, VitalSignsData } from '@historia-clinica/utils/document-summary.model';
@@ -226,7 +226,7 @@ export class AnestheticReportDocumentSummaryService {
         return itemArray.map(item => {
             return {
                 description: item.snomed.pt + INFO_DIVIDER + this.getViaTranslate() + this.getAnestheticReportViaDescription(viasList, item.viaId) + INFO_DIVIDER + this.getDoseTranslate() + item.dosage.quantity.value + INFO_DIVIDER + this.getUnitTranslate() + item.dosage.quantity.unit,
-                dateOrTime: { dateTime: dateTimeDtoToDate(item.dosage.startDateTime) }
+                dateToShow: { date: dateTimeDtoToDate(item.dosage.startDateTime), format: DateFormat.DATE_TIME }
             }
         })
     }
