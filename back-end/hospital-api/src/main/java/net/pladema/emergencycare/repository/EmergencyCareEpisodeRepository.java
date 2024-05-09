@@ -257,8 +257,8 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Query(" SELECT NEW ar.lamansys.sgh.shared.domain.EmergencyCareEpisodeNotificationBo(ece.id, p2.firstName, p2.lastName, CASE WHEN ece.bedId IS NOT NULL THEN CONCAT('Habitacion ', r.roomNumber) WHEN ece.shockroomId IS NOT NULL THEN sr.description ELSE do.description END, " +
 			"tc.name, tc.colorCode, CASE WHEN ece.bedId IS NOT NULL THEN r.topic WHEN ece.shockroomId IS NOT NULL THEN sr.topic ELSE do.topic END) " +
 			"FROM EmergencyCareEpisode ece " +
-			"JOIN Patient p ON (p.id = ece.patientId)" +
-			"JOIN Person p2 ON (p2.id = p.personId) " +
+			"LEFT JOIN Patient p ON (p.id = ece.patientId)" +
+			"LEFT JOIN Person p2 ON (p2.id = p.personId) " +
 			"LEFT JOIN DoctorsOffice do ON (do.id = ece.doctorsOfficeId) " +
 			"LEFT JOIN Bed b ON (b.id = ece.bedId) " +
 			"LEFT JOIN Room r ON (r.id = b.roomId) " +
