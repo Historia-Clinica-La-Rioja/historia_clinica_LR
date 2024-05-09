@@ -159,19 +159,24 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"			JOIN {h-schema}reasons r ON (r.id = ecer.reason_id) " +
 				"			GROUP BY ecer.emergency_care_episode_id" +
 				"			) AS reasons ON (reasons.ece_id = ece.id) " +
-				"LEFT JOIN {h-schema}document doc ON (ece.id = doc.source_id AND doc.type_id = 16 AND doc.status_id = '445665009') " +
-				"LEFT JOIN (SELECT dhc.document_id AS document_id,  STRING_AGG(s.pt, ', ') AS description " +
-				"			FROM {h-schema}document_health_condition dhc " +
+				"LEFT JOIN (SELECT doc.source_id AS doc_source_id, STRING_AGG(DISTINCT s.pt, ', ') AS description " +
+				"			FROM {h-schema}document doc " +
+				"			JOIN {h-schema}document_health_condition dhc ON (doc.id = dhc.document_id) " +
 				"			JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
 				"			JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
-				"			GROUP BY dhc.document_id " +
-				"			) AS diagnosis ON (diagnosis.document_id = doc.id) " +
-				"LEFT JOIN (SELECT dp.document_id AS document_id, STRING_AGG(s.pt, ', ') AS description " +
-				"			FROM {h-schema}document_procedure dp " +
+				"			WHERE doc.type_id = 16 " +
+				"			AND doc.status_id = '445665009' " +
+				"			GROUP BY doc.source_id " +
+				"			) AS diagnosis ON (ece.id = diagnosis.doc_source_id) " +
+				"LEFT JOIN (SELECT doc.source_id AS doc_source_id, STRING_AGG(DISTINCT s.pt, ', ') AS description " +
+				"			FROM {h-schema}document doc " +
+				"			JOIN {h-schema}document_procedure dp ON (doc.id = dp.document_id) " +
 				"			JOIN {h-schema}procedures p ON (dp.procedure_id = p.id) " +
 				"			JOIN {h-schema}snomed s ON (p.snomed_id = s.id) " +
-				"			GROUP BY dp.document_id " +
-				"			) AS proced ON (proced.document_id = doc.id) " +
+				"			WHERE doc.type_id = 16 " +
+				"			AND doc.status_id = '445665009' " +
+				"			GROUP BY doc.source_id " +
+				"			) AS proced ON (ece.id = proced.doc_source_id) " +
 				"LEFT JOIN (SELECT sr.source_id AS ece_id, STRING_AGG(s.pt, ', ') AS description " +
 				"			FROM {h-schema}service_request sr " +
 				"			JOIN {h-schema}document doc ON (sr.id = doc.source_id AND doc.source_type_id = 3) " +
