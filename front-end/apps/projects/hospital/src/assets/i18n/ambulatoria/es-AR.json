@@ -967,6 +967,9 @@
                             "QUESTION_7": "¿En qué institución?",
                             "QUESTION_8": "¿La persona en situación de violencia es un niño, niña, adolescente o persona con alguna condición que lo requiera?",
                             "QUESTION_9": "¿En qué sector?"
+                        },
+                        "placeholders": {
+                            "WRITE_INSTITUTIONS_NAME": "Escriba nombre de institución"
                         }
                     },
                     "new-violence-episode": {
@@ -1001,12 +1004,21 @@
                             "QUESTION_11": "Nombre de autoridad/organismo",
                             "QUESTION_12": "¿Se registra violencia sexual?",
                             "QUESTION_13": "Acciones implementadas"
+                        },
+                        "placeholders": {
+                            "SELECT_WHICH_AREA_ORGANISM": "Seleccione ante que área/organismo",
+                            "SELECT_WICH_ESTABLISHMENT": "Seleccione que establecimiento",
+                            "SELECT_WICH_ORGANIZATION": "Seleccione ante que organismo",
+                            "SELECT_WICH_AUTHORITY_ORGANISM": "Seleccione ante que autoridad/organismo"
                         }
                     },
                     "relevant-information": {
                         "TITLE": "Información relevante",
                         "questions": {
                             "QUESTION_1": "Observaciones"
+                        },
+                        "placeholders": {
+                            "WRITE_OBSERVATIONS_CONSIDERED_NECESSARY": "Escriba observaciones que considere necesarias"
                         }
                     },
                     "violent-person-information":{

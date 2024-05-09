@@ -23,7 +23,7 @@
                     translate}}</label>
                 <mat-form-field appearance="outline" class="mt-10">
                     <mat-select id="violence-situation-area-label" multiple formControlName="area" (selectionChange)="updateValidationOtherArea()"
-                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_1' | translate}}">
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.placeholders.SELECT_WHICH_AREA_ORGANISM' | translate}}">
                         
                         <mat-select-trigger>
                             {{form.controls.area.value?.[0]?.text || ''}} 
@@ -70,7 +70,7 @@
                 <mat-form-field appearance="outline">
                     <mat-select id="violence-situation-establishment" multiple
                         formControlName="articulationEstablishmentList"
-                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_3' | translate}}" (selectionChange)="updateValidationArticulationEstablishmentOther()">
+                        placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.placeholders.SELECT_WICH_ESTABLISHMENT' | translate}}" (selectionChange)="updateValidationArticulationEstablishmentOther()">
                         <mat-select-trigger>
                             {{form.controls.articulationEstablishmentList.value?.[0]?.text || ''}}
                             <span *ngIf="form.controls.articulationEstablishmentList.value?.length > 1">
@@ -165,7 +165,7 @@
                 translate}}</label>
             <mat-form-field appearance="outline">
                 <mat-select id="violence-situation-establishment" multiple formControlName="agencyComplaint"
-                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_7' | translate}}">
+                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.placeholders.SELECT_WICH_ORGANIZATION' | translate}}">
                     <mat-select-trigger>
                         {{form.controls.agencyComplaint.value?.[0]?.text || ''}} 
                         <span *ngIf="form.controls.agencyComplaint.value?.length > 1">
@@ -209,7 +209,7 @@
             <mat-form-field appearance="outline">
                 <mat-select id="violence-situation-organizations-extended" multiple
                     formControlName="institutionComplaintsOrganizations" (selectionChange)="updateValidationAutorityName()"
-                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.questions.QUESTION_10' | translate}}">
+                    placeholder="{{'ambulatoria.paciente.violence-situations.dialog.implemented-actions.placeholders.SELECT_WICH_AUTHORITY_ORGANISM' | translate}}">
                     <mat-select-trigger>
                         {{form.controls.institutionComplaintsOrganizations.value?.[0]?.text || ''}}
                         <span *ngIf="form.controls.institutionComplaintsOrganizations.value?.length > 1">

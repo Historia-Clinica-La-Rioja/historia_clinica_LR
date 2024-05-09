@@ -72,7 +72,7 @@
 		<div *ngIf="isPersonInstitutionalized" class="mt-10 aside">
 			<label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.questions.QUESTION_7' | translate}}</label>
 			<mat-form-field class="full-width" appearance="outline" >
-				<input matInput formControlName="inWhichInstitution" placeholder="{{'ambulatoria.paciente.violence-situations.dialog.TEXT_FREE_LABEL' | translate}}">
+				<input matInput formControlName="inWhichInstitution" placeholder="{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.placeholders.WRITE_INSTITUTIONS_NAME' | translate}}">
 				<mat-error *ngIf="hasError(form, 'required', 'inWhichInstitution')" [translate]="'forms.REQUIRED'"></mat-error>
 			</mat-form-field>
 		</div>
