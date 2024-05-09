@@ -1900,6 +1900,27 @@ export interface FhirCodeDto {
     theDisplay: string;
 }
 
+export interface FhirObservationGroupInfoDto {
+    diagnosticReportId: number;
+    id: number;
+    observations: FhirObservationInfoDto[];
+    patientId: number;
+}
+
+export interface FhirObservationInfoDto {
+    id: number;
+    loincCode: string;
+    observationGroupId: number;
+    quantity: FhirQuantityInfoDto;
+    value: string;
+}
+
+export interface FhirQuantityInfoDto {
+    id: number;
+    unit: string;
+    value: number;
+}
+
 export interface FileCreationDto extends Serializable {
     createdOn: Date;
 }
@@ -5124,6 +5145,7 @@ export const enum AppFeature {
     HABILITAR_VISTA_COBERTURA_TURNOS = "HABILITAR_VISTA_COBERTURA_TURNOS",
     HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL = "HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL",
     HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO = "HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO",
+    HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO = "HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO",
 }
 
 export const enum EAggressorRelationship {
@@ -5485,6 +5507,8 @@ export const enum ERole {
     AUDITORIA_DE_ACCESO = "AUDITORIA_DE_ACCESO",
     GESTOR_CENTRO_LLAMADO = "GESTOR_CENTRO_LLAMADO",
     ADMINISTRADOR_DE_DATOS_PERSONALES = "ADMINISTRADOR_DE_DATOS_PERSONALES",
+    FHIR_POST_DIAGNOSTIC_REPORT = "FHIR_POST_DIAGNOSTIC_REPORT",
+    FHIR_ACCESS_ALL_RESOURCES = "FHIR_ACCESS_ALL_RESOURCES",
 }
 
 export const enum ESchoolLevel {

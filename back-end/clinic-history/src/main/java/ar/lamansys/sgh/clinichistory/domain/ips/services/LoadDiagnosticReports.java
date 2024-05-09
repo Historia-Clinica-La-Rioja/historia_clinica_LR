@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class LoadDiagnosticReports {
@@ -69,6 +70,8 @@ public class LoadDiagnosticReports {
         if (diagnosticReportBo.getStatusId() != null) {
             result.setStatusId(diagnosticReportBo.getStatusId());
         }
+
+		result.setUuid(UUID.randomUUID());
         LOG.debug(OUTPUT, result);
         return result;
     }

@@ -68,6 +68,8 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case GESTOR_CENTRO_LLAMADO: return "Gestor de centro de llamado";
 			case AUDITORIA_DE_ACCESO: return "Auditoria de Acceso";
 			case ADMINISTRADOR_DE_DATOS_PERSONALES: return "Administrador de Datos Personales";
+			case FHIR_POST_DIAGNOSTIC_REPORT: return "API FHIR Laboratorio";
+			case FHIR_ACCESS_ALL_RESOURCES: return "API FHIR Acceso general a la API";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}

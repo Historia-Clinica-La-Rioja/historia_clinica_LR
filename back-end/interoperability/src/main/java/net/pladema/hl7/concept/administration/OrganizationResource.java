@@ -46,10 +46,25 @@ public class OrganizationResource extends ISingleResourceFhir {
         return resource;
     }
 
+	public Organization fetchById(Integer id) {
+		OrganizationVo organization = store.getOrganizationFromId(id);
+
+		Organization resource = new Organization();
+		resource.setId(getSisaCode());
+		resource.addIdentifier(newIdentifier(CodingSystem.REFES, getSisaCode()));
+		resource.setName(organization.getName());
+		if(organization.hasPhoneNumber())
+			resource.addTelecom(newTelecom(organization.getPhoneNumber(), ContactPoint.ContactPointUse.WORK));
+		if(organization.hasAddress())
+			resource.addAddress(newAddress(organization.getFullAddress()));
+		resource.setActive(true);
+		return resource;
+	}
+
     public static OrganizationVo encode(IBaseResource baseResource) {
         OrganizationVo data = new OrganizationVo();
         Organization resource = (Organization) baseResource;
-        data.setId(resource.getId());
+        data.setId(resource.getIdElement().getIdPart());
         data.setName(resource.getName());
         if(resource.hasTelecom())
             data.setPhoneNumber(resource.getTelecom().get(0).getValue());

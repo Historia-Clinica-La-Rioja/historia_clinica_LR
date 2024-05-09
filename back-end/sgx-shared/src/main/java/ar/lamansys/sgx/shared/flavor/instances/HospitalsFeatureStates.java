@@ -79,6 +79,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS, false);
 		map.put(AppFeature.HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL, false);
 		map.put(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,false);
+		map.put(AppFeature.HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO, false);
 	}
 
 	@Override

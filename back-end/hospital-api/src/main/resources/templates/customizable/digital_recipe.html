@@ -27,6 +27,14 @@
             <span th:text="${recipeNumber}"></span><br/>
         </div>
         <div th:classappend="white-color">
+            <strong class="text">CÓDIGO UUID DE RECETA</strong><br/>
+            <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + recipeUuidBarCode}" alt=""></img><br/>
+        </div>
+        <div th:classappend="white-color">
+            <strong class="text">UUID DE RECETA</strong><br/>
+            <span th:text="${recipeUuid}"></span><br/>
+        </div>
+        <div th:classappend="white-color">
             <strong class="text">NÚMERO DE DNI</strong><br/>
             <img th:src="${'data:image/jpeg;charset=utf-8;base64,' + patientIdentificationNumberBarCode}" alt=""></img><br/>
         </div>

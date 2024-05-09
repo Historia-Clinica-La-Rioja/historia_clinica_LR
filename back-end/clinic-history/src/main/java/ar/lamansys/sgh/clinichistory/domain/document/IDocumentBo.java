@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
@@ -217,7 +218,9 @@ public interface IDocumentBo {
     default PostAnesthesiaStatusBo getPostAnesthesiaStatus() { return null; }
 
     default String getAnestheticChart() { return null; }
-	
+
 	default List<Integer> getInvolvedHealthcareProfessionalIds() { return Collections.emptyList(); }
+
+	default UUID getUuid() {return null;}
 
 }

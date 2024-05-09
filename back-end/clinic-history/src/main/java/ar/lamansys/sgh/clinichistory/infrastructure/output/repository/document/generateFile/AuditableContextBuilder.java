@@ -286,6 +286,11 @@ public class AuditableContextBuilder {
 		ctx.put("recipeNumberBarCode", recipeNumberBarCode);
 		ctx.put("recipeNumber", recipeNumberWithDomain);
 
+		var recipeUuidWithDomain = completeDomain(recipeDomain.toString()) + "-" + document.getUuid().toString();
+		var recipeUuidBarCode = generateDigitalRecipeBarCode(recipeUuidWithDomain);
+		ctx.put("recipeUuidBarCode", recipeUuidBarCode);
+		ctx.put("recipeUuid", recipeUuidWithDomain);
+
 		var professionalInformation = authorFromDocumentFunction.apply(document.getId());
 		var professionalRelatedProfession = professionalInformation.getProfessions().stream().filter(profession -> profession.getSpecialties().stream().anyMatch(specialty -> specialty.getSpecialty().getId().equals(document.getClinicalSpecialtyId()))).findFirst();
 
@@ -370,5 +375,9 @@ public class AuditableContextBuilder {
 		return personAge.getMonths() + (personAge.getMonths() == 1 ? " mes " : " meses ") + personAge.getDays() + (personAge.getDays() == 1 ? " día" : " días" );
 	}
 
+	private String completeDomain(String domain) {
+		return String.format("%0" + (11 - domain.length()) + "d%s", 0, domain);
+
+	}
 }
 

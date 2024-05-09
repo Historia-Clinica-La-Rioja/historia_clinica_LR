@@ -24,3 +24,177 @@ databaseChangeLog:
                     name: topic
                     type: varchar(255)
               tableName: room
+
+    - changeSet:
+        id: addColumn-uuid-service-request
+        author: mvalin
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: uuid
+                    type: uuid
+
+    - changeSet:
+        id: addColumn-uuid-diagnostic-report
+        author: mvalin
+        changes:
+          - addColumn:
+              tableName: diagnostic_report
+              columns:
+                - column:
+                    name: uuid
+                    type: uuid
+
+    - changeSet:
+        id: fhir_quantity-createTable
+        comment: creation of fhir_quantity table
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: fhir_quantity
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_fhir_quantity
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: value
+                    type: float
+                - column:
+                    constraints:
+                      nullable: false
+                    name: unit
+                    type: varchar(20)
+
+    - changeSet:
+        id: fhir_observation_group-createTable
+        comment: creation of fhir_observation_group table
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: fhir_observation_group
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_fhir_observation_group
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: patient(id)
+                      foreignKeyName: FK_fhir_observation_group_patient
+                    name: patient_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: fhir_observation-createTable
+        comment: creation of fhir_observation table
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: fhir_observation
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_fhir_observation
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: fhir_observation_group(id)
+                      foreignKeyName: FK_fhir_observation_fhir_observation_group
+                    name: fhir_observation_group_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: loinc_code
+                    type: varchar(20)
+                - column:
+                    name: value
+                    type: varchar(20)
+                - column:
+                    constraints:
+                      references: fhir_quantity(id)
+                      foreignKeyName: FK_fhir_observation_quantity
+                    name: quantity_id
+                    type: int
+
+    - changeSet:
+        id: diagnostic_report_fhir_observation_group-createTable
+        comment: creation of diagnostic_report_fhir_observation_group table
+        author: mvalin
+        changes:
+          - createTable:
+              tableName: diagnostic_report_fhir_observation_group
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      references: fhir_observation_group(id)
+                      foreignKeyName: FK_diagnostic_report_fhir_observation_group_fhir_observation_group
+                    name: fhir_observation_group_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: diagnostic_report(id)
+                      foreignKeyName: FK_diagnostic_report_fhir_observation_group_diagnostic_report
+                    name: diagnostic_report_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: fhir_observation_group_id, diagnostic_report_id
+              constraintName: PK_diagnostic_report_fhir_observation_group
+              tableName: diagnostic_report_fhir_observation_group
+              validate: true
+              

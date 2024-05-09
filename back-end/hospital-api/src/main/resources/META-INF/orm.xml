@@ -149,6 +149,192 @@
         </query>
     </named-native-query>
 
+	<named-native-query name="HCE.getMedication" result-set-mapping="HCE.findAllMedicationsResult">
+		<query>
+			SELECT  ms.id, s.sctid AS sctidCode, s.pt AS sctidTerm, ms.status_id AS status,
+			dsg.sequence, dsg.count, dsg.duration, dsg.duration_unit, dsg.frequency, dsg.period_unit,
+			coalesce(dsg.start_date, ms.created_on) as effectiveTime, dsg.end_date
+			FROM medication_statement ms
+			JOIN snomed s ON ( ms.snomed_id = s.id )
+			LEFT JOIN dosage dsg ON ( ms.dosage_id = dsg.id )
+			WHERE (ms.id = :medicationStatementId) and (ms.deleted is not true)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.getOrganizationFromId" result-set-mapping="HCE.getOrganizationResult">
+		<query>
+			select i.sisa_code, i.name, i.phone_number, i.address_id
+			from institution i
+			where i.id = :institutionId
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.getPractitioner" result-set-mapping="HCE.getPractitionerResult">
+		<query>
+			select hp.person_id, p.identification_number, p.first_name, p.middle_names, p.last_name,
+			p.other_last_names, pext.phone_prefix, pext.phone_number,
+			pext.address_id, p.gender_id, p.birth_date
+			from healthcare_professional hp
+			join person p on ( hp.person_id = p.id )
+			join person_extended pext on ( p.id = pext.person_id )
+			where (hp.id = :doctorId)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.getCoverage" result-set-mapping="HCE.getCoverageResult">
+		<query>
+			select pmc.id as patientMedicalCoverageId, mc.id as medicalCoverageId, pmc.affiliate_number,
+			pmc.active, pmc.patient_id, pmc.start_date, pmc.end_date, mc.cuit, mc.name, pmc.plan_id, mcp.plan
+			from patient_medical_coverage pmc
+			join medical_coverage mc on ( pmc.medical_coverage_id = mc.id )
+			left join medical_coverage_plan mcp on ( pmc.plan_id = mcp.id )
+			where (pmc.id = :patientMedicalCoverageId)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.getMedicationRequest" result-set-mapping="HCE.getMedicationRequestResult">
+		<query>
+			select mr.id, mr.status_id, mr.intent_id, mr.category_id as categoryId,
+			ms.id as medicationStatementId, mr.patient_id,
+			mr.institution_id, mr.request_date, mr.doctor_id, s.sctid as problemId, s.pt as problemPt, mr.medical_coverage_id,
+			n.description, mr.has_recipe, dos.frequency, dos.period_unit,q.value as quantityValue, q.unit as quantityUnit, dos.duration,
+			dos.duration_unit , ms.prescription_date, ms.due_date, dos.sequence, dos.count as timingRepeat, ms.prescription_line_state, ms.prescription_line_number,
+			mr.uuid as requestUuid, ms.uuid as lineUuid
+			from medication_request mr
+			join document d on ( mr.id = d.source_id and d.type_id = 14)
+			join document_medicamention_statement dms on ( d.id = dms.document_id )
+			join medication_statement ms on ( dms.medication_statement_id = ms.id )
+			left join dosage dos on ( ms.dosage_id = dos.id )
+			left join quantity q on ( dos.dose_quantity_id = q.id )
+			left join note n on ( mr.note_id = n.id )
+			left join health_condition hc on ( ms.health_condition_id = hc.id )
+			left join snomed s on ( hc.snomed_id = s.id )
+			left join patient p on ( mr.patient_id = p.id )
+			left join person per on ( p.person_id = per.id )
+			where (mr.uuid = :medicationRequestUuid)
+			and (per.identification_type_id = 1)
+			and (per.identification_number = :identificationNumber)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.getMedicationDataForValidation" result-set-mapping="HCE.getMedicationDataForValidationResult">
+		<query>
+			select mr.id, mr.status_id, mr.intent_id, mr.category_id as categoryId,
+			ms.id as medicationStatementId, mr.patient_id,
+			mr.institution_id, mr.request_date, mr.doctor_id, s.sctid as medicationCode, mr.medical_coverage_id,
+			n.description, mr.has_recipe, dos.frequency, dos.period_unit,q.value as quantityValue, q.unit as quantityUnit, dos.duration,
+			dos.duration_unit , ms.prescription_date, ms.due_date, dos.sequence, dos.count as timingRepeat, ms.prescription_line_state,
+			per.identification_number, pmc.medical_coverage_id as medicalCoverageId, pmc.affiliate_number, ms.prescription_line_number
+			from medication_request mr
+			join document d on ( mr.id = d.source_id )
+			join document_medicamention_statement dms on ( d.id = dms.document_id )
+			join medication_statement ms on ( dms.medication_statement_id = ms.id and ms.uuid = :lineUuid )
+			left join dosage dos on ( ms.dosage_id = dos.id )
+			left join quantity q on ( dos.dose_quantity_id = q.id )
+			left join note n on ( mr.note_id = n.id )
+			left join health_condition hc on ( ms.health_condition_id = hc.id )
+			left join snomed s on ( ms.snomed_id = s.id )
+			left join patient_medical_coverage pmc on ( mr.medical_coverage_id = pmc.id )
+			left join patient p on ( mr.patient_id = p.id )
+			left join person per on ( p.person_id = per.id )
+			where (mr.uuid = :medicationRequestUuid)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.setLineStateMedication">
+		<query>
+			UPDATE medication_statement ms set prescription_line_state = :lineStateId where ms.id in :medicationStatementIds
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.isMedicationRequestCompleted">
+		<query>
+			select (CASE WHEN COUNT(ms.id) > 0 THEN FALSE ELSE TRUE END)
+			from medication_request mr
+			join document d on ( mr.id = d.source_id and d.type_id = 14 )
+			join document_medicamention_statement dms on ( d.id = dms.document_id )
+			join medication_statement ms on ( (dms.medication_statement_id = ms.id) and (ms.prescription_line_state != 2) )
+			where mr.id = :medicationRequestId
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.setMedicationRequestCompleted">
+		<query>
+			UPDATE medication_request mr set status_id = '255594003' where mr.id = :medicationRequestId
+		</query>
+	</named-native-query>
+	
+	<named-native-query name="HCE.getServiceRequest" result-set-mapping="HCE.getServiceRequestResult">
+		<query>
+			with temporal as (
+			select sr.id, sr.status_id as serviceRequestStatus, sr.intent_id,
+			sr.category_id as categoryId, dr.id as diagnosticReportId, sr.patient_id,
+			sr.institution_id, sr.request_date, sr.doctor_id, s.sctid as problemId,
+			s.pt as problemPt, sr.medical_coverage_id, n.description, dr.link,
+			dr.status_id as diagnosticReportStatus, dr.snomed_id as diagnosticReportSnomedId,
+			sr.uuid as serviceRequestUuid, dr.uuid as diagnosticReportUuid
+			from service_request sr
+			join document d on ( sr.id = d.source_id and d.source_type_id = 3 )
+			join document_diagnostic_report ddr ON ( d.id = ddr.document_id )
+			join diagnostic_report dr ON ( ddr.diagnostic_report_id = dr.id )
+			left join note n on ( sr.note_id = n.id )
+			left join health_condition hc on ( dr.health_condition_id = hc.id )
+			left join snomed s on ( hc.snomed_id = s.id )
+			left join patient p on ( sr.patient_id = p.id )
+			left join person per on ( p.person_id = per.id )
+			where (sr.id = :serviceRequestId)
+			and (per.identification_type_id = 1)
+			and (per.identification_number = :identificationNumber)
+			)
+			select t.id, t.serviceRequestStatus, t.intent_id, t.categoryId, t.diagnosticReportId,
+			t.patient_id, t.institution_id, t.request_date, t.doctor_id, t.problemId, t.problemPt,
+			t.medical_coverage_id, t.description, t.link, t.diagnosticReportStatus,
+			s.sctid, s.pt, t.serviceRequestUuid, t.diagnosticReportUuid
+			from temporal t
+			left join snomed s on ( t.diagnosticReportSnomedId = s.id )
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.getServiceRequestDataForValidation" result-set-mapping="HCE.getServiceRequestDataForValidationResult">
+		<query>
+			select sr.id as serviceRequestId, dr.id as diagnosticReportId, sr.patient_id, per.identification_number,
+			sr.institution_id, sr.request_date, sr.doctor_id, sr.medical_coverage_id,
+			pmc.medical_coverage_id as medicalCoverageId, pmc.affiliate_number,
+			sr.status_id as serviceRequestStatusId, dr.status_id as diagnosticReportStatusId
+			from service_request sr
+			join document d on ( sr.id = d.source_id and d.source_type_id = 3 )
+			join document_diagnostic_report ddr ON ( d.id = ddr.document_id )
+			join diagnostic_report dr ON ( ddr.diagnostic_report_id = dr.id and dr.uuid = :diagnosticReportUuid )
+			left join patient_medical_coverage pmc on ( sr.medical_coverage_id = pmc.id )
+			left join patient p on ( sr.patient_id = p.id )
+			left join person per on ( p.person_id = per.id )
+			where (sr.uuid = :serviceRequestUuid)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.setDiagnosticReportStatus">
+		<query>
+			UPDATE diagnostic_report dr set status_id = :statusId where dr.uuid = :diagnosticReportUuid
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.isServiceRequestCompleted">
+		<query>
+			select (CASE WHEN COUNT(dr.*) > 0 THEN FALSE ELSE TRUE END)
+			from service_request sr
+			join document d on ( sr.id = d.source_id and d.source_type_id = 3 )
+			join document_diagnostic_report ddr ON ( d.id = ddr.document_id )
+			join diagnostic_report dr ON ( (ddr.diagnostic_report_id = dr.id) and (dr.status_id = '255609007' or dr.status_id = '1') )
+			where (sr.id = :serviceRequestId)
+		</query>
+	</named-native-query>
+
+	<named-native-query name="HCE.setServiceRequestCompleted">
+		<query>
+			UPDATE service_request sr set status_id = '255594003' where sr.id = :serviceRequestId
+		</query>
+	</named-native-query>
+	
     <!-- ========================================== -->
     <!-- ================ Reports ================= -->
     <!-- ========================================== -->
@@ -573,6 +759,164 @@
             <column name="address_id" class="java.lang.Integer"/>
         </constructor-result>
     </sql-result-set-mapping>
+	<!--<sql-result-set-mapping name="HCE.getMedicationResult">
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationVo">
+			<column name="id" class="java.lang.Integer"/>
+			<column name="sctidCode" class="java.lang.String"/>
+			<column name="sctidTerm" class="java.lang.String"/>
+			<column name="status" class="java.lang.String"/>
+			<column name="sequence" class="java.lang.Integer"/>
+			<column name="count" class="java.lang.Integer"/>
+			<column name="duration" class="java.lang.Double"/>
+			<column name="duration_unit" class="java.lang.String"/>
+			<column name="frequency" class="java.lang.Integer"/>
+			<column name="period_unit" class="java.lang.String"/>
+			<column name="effectiveTime" class="java.sql.Date"/>
+			<column name="end_date" class="java.sql.Date"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="HCE.getOrganizationFromIdResult" >
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.OrganizationVo">
+			<column name="sisa_code" class="java.lang.String"/>
+			<column name="name" class="java.lang.String"/>
+			<column name="phone_number" class="java.lang.String"/>
+			<column name="address_id" class="java.lang.Integer"/>
+		</constructor-result>
+	</sql-result-set-mapping>-->
+	<sql-result-set-mapping name="HCE.getPractitionerResult" >
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.PractitionerVo">
+			<column name="person_id" class="java.lang.Integer"/>
+			<column name="identification_number" class="java.lang.String"/>
+			<column name="first_name" class="java.lang.String"/>
+			<column name="middle_names" class="java.lang.String"/>
+			<column name="last_name" class="java.lang.String"/>
+			<column name="other_last_names" class="java.lang.String"/>
+			<column name="phone_prefix" class="java.lang.String"/>
+			<column name="phone_number" class="java.lang.String"/>
+			<column name="address_id" class="java.lang.Integer"/>
+			<column name="gender_id" class="java.lang.Short"/>
+			<column name="birth_date" class="java.util.Date"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="HCE.getCoverageResult" >
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.CoverageVo">
+			<column name="patientMedicalCoverageId" class="java.lang.Integer"/>
+			<column name="medicalCoverageId" class="java.lang.Integer"/>
+			<column name="affiliate_number" class="java.lang.String"/>
+			<column name="active" class="java.lang.Boolean"/>
+			<column name="patient_id" class="java.lang.Integer"/>
+			<column name="start_date" class="java.util.Date"/>
+			<column name="end_date" class="java.util.Date"/>
+			<column name="cuit" class="java.lang.String"/>
+			<column name="name" class="java.lang.String"/>
+			<column name="plan_id" class="java.lang.Integer"/>
+			<column name="plan" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="HCE.getMedicationRequestResult" >
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationRequestVo">
+			<column name="id" class="java.lang.Integer"/>
+			<column name="status_id" class="java.lang.String"/>
+			<column name="intent_id" class="java.lang.String"/>
+			<column name="categoryId" class="java.lang.String"/>
+			<!--<column name="categoryDescription" class="java.lang.String"/>-->
+			<column name="medicationStatementId" class="java.lang.Integer"/>
+			<column name="patient_id" class="java.lang.Integer"/>
+			<column name="institution_id" class="java.lang.Integer"/>
+			<column name="request_date" class="java.util.Date"/>
+			<column name="doctor_id" class="java.lang.Integer"/>
+			<column name="problemId" class="java.lang.String"/>
+			<column name="problemPt" class="java.lang.String"/>
+			<column name="medical_coverage_id" class="java.lang.Integer"/>
+			<column name="description" class="java.lang.String"/>
+			<column name="has_recipe" class="java.lang.Boolean"/>
+			<column name="frequency" class="java.lang.Integer"/>
+			<column name="period_unit" class="java.lang.String"/>
+			<column name="quantityValue" class="java.lang.Float"/>
+			<column name="quantityUnit" class="java.lang.String"/>
+			<column name="duration" class="java.lang.Double"/>
+			<column name="duration_unit" class="java.lang.String"/>
+			<column name="prescription_date" class="java.util.Date"/>
+			<column name="due_date" class="java.util.Date"/>
+			<column name="sequence" class="java.lang.Integer"/>
+			<column name="timingRepeat" class="java.lang.Integer"/>
+			<column name="prescription_line_state" class="java.lang.Short"/>
+			<column name="prescription_line_number" class="java.lang.Integer"/>
+			<column name="requestUuid" class="java.util.UUID"/>
+			<column name="lineUuid" class="java.util.UUID"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="HCE.getMedicationDataForValidationResult" >
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.MedicationRequestVo">
+			<column name="id" class="java.lang.Integer"/>
+			<column name="status_id" class="java.lang.String"/>
+			<column name="intent_id" class="java.lang.String"/>
+			<column name="categoryId" class="java.lang.String"/>
+			<column name="medicationStatementId" class="java.lang.Integer"/>
+			<column name="patient_id" class="java.lang.Integer"/>
+			<column name="institution_id" class="java.lang.Integer"/>
+			<column name="request_date" class="java.util.Date"/>
+			<column name="doctor_id" class="java.lang.Integer"/>
+			<column name="medicationCode" class="java.lang.String"/>
+			<column name="medical_coverage_id" class="java.lang.Integer"/>
+			<column name="description" class="java.lang.String"/>
+			<column name="has_recipe" class="java.lang.Boolean"/>
+			<column name="frequency" class="java.lang.Integer"/>
+			<column name="period_unit" class="java.lang.String"/>
+			<column name="quantityValue" class="java.lang.Float"/>
+			<column name="quantityUnit" class="java.lang.String"/>
+			<column name="duration" class="java.lang.Double"/>
+			<column name="duration_unit" class="java.lang.String"/>
+			<column name="prescription_date" class="java.util.Date"/>
+			<column name="due_date" class="java.util.Date"/>
+			<column name="sequence" class="java.lang.Integer"/>
+			<column name="timingRepeat" class="java.lang.Integer"/>
+			<column name="prescription_line_state" class="java.lang.Short"/>
+			<column name="identification_number" class="java.lang.String"/>
+			<column name="medicalCoverageId" class="java.lang.Integer"/>
+			<column name="affiliate_number" class="java.lang.String"/>
+			<column name="prescription_line_number" class="java.lang.Integer"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="HCE.getServiceRequestResult" >
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ServiceRequestVo">
+			<column name="id" class="java.lang.Integer"/>
+			<column name="serviceRequestStatus" class="java.lang.String"/>
+			<column name="intent_id" class="java.lang.String"/>
+			<column name="categoryId" class="java.lang.String"/>
+			<column name="diagnosticReportId" class="java.lang.Integer"/>
+			<column name="patient_id" class="java.lang.Integer"/>
+			<column name="institution_id" class="java.lang.Integer"/>
+			<column name="request_date" class="java.util.Date"/>
+			<column name="doctor_id" class="java.lang.Integer"/>
+			<column name="problemId" class="java.lang.String"/>
+			<column name="problemPt" class="java.lang.String"/>
+			<column name="medical_coverage_id" class="java.lang.Integer"/>
+			<column name="description" class="java.lang.String"/>
+			<column name="link" class="java.lang.String"/>
+			<column name="diagnosticReportStatus" class="java.lang.String"/>
+			<column name="sctid" class="java.lang.String"/>
+			<column name="pt" class="java.lang.String"/>
+			<column name="serviceRequestUuid" class="java.util.UUID"/>
+			<column name="diagnosticReportUuid" class="java.util.UUID"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="HCE.getServiceRequestDataForValidationResult" >
+		<constructor-result target-class="net.pladema.hl7.dataexchange.model.domain.ServiceRequestVo">
+			<column name="serviceRequestId" class="java.lang.Integer"/>
+			<column name="diagnosticReportId" class="java.lang.Integer"/>
+			<column name="patient_id" class="java.lang.Integer"/>
+			<column name="identification_number" class="java.lang.String"/>
+			<column name="institution_id" class="java.lang.Integer"/>
+			<column name="request_date" class="java.util.Date"/>
+			<column name="doctor_id" class="java.lang.Integer"/>
+			<column name="medical_coverage_id" class="java.lang.Integer"/>
+			<column name="medicalCoverageId" class="java.lang.Integer"/>
+			<column name="affiliate_number" class="java.lang.String"/>
+			<column name="serviceRequestStatusId" class="java.lang.String"/>
+			<column name="diagnosticReportStatusId" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
     <sql-result-set-mapping name="Reports.OutpatientSummaryResult">
         <constructor-result target-class="net.pladema.reports.repository.ConsultationSummary">
             <column name="professional_id" class="java.lang.Integer"/>

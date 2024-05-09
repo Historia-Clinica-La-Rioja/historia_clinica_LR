@@ -54,6 +54,7 @@ public class BusAuthorizationService extends RestTemplate {
         try {
             result = exchangePost(configuration.getAuthorizationPath(), new AuthorizationPayload(accessToken));
         } catch (RestClientException e) {
+			logger.debug("Federar token validation failed", e);
             throw new AuthenticationException("Invalid access token: " + e.getMessage() ) ;
         }
         return result;
