@@ -7,7 +7,7 @@
 			<app-detail-box *ngFor="let detail of details" [id]="detail.id" [detail]="detail">
 			</app-detail-box>
 		</div>
-		<app-patient-evolution-charts-button></app-patient-evolution-charts-button>
+		<app-patient-evolution-charts-button *ngIf="patientEvolutionChartService.isEnabledPatientEvolutionCharts$ | async"></app-patient-evolution-charts-button>
 	</mat-card-content>
 	<ng-template #noInfo>
 		<app-no-data></app-no-data>

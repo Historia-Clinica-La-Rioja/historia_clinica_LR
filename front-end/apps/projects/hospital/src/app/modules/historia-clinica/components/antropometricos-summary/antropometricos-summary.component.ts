@@ -33,8 +33,8 @@ export class AntropometricosSummaryComponent implements OnInit {
 
 	constructor(
 		public dialog: MatDialog,
+		readonly patientEvolutionChartService: PatientEvolutionChartsService,
 		private readonly internmentSummaryFacadeService: InternmentSummaryFacadeService,
-		private readonly patientEvolutionChartService: PatientEvolutionChartsService,
 		private readonly activatedRoute: ActivatedRoute
 	) { }
 
