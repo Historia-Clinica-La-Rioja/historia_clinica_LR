@@ -52,7 +52,8 @@
                       group
                     </mat-icon>
                   </div>
-                  <span _ngcontent-yvu-c347="" class="color-primary title" style="margin-right: 10px; font-size: 20px;">
+                  <span class="color-primary title"
+                    style="margin-right: 10px; font-size: 20px; background-color: #f6fafb ; text-align: center;">
                     FAMILIA
                   </span>
                   <mat-divider _ngcontent-yvu-c347="" role="separator" inset=""
@@ -71,7 +72,6 @@
                       <th>En el cuarto</th>
                     </tr>
 
-
                     <tr>
 
                       <td>Madre</td>
@@ -83,7 +83,7 @@
                         <input type="checkbox" name="name2" id="">
                       </td>
                       <td>
-                        <input class="yellowCheck" type="checkbox" name="name3" id="">
+                        <input type="checkbox" name="name3" id="">
                       </td>
 
                     </tr>
@@ -206,15 +206,6 @@
                         <input type="checkbox" name="name26" id="">
                       </td>
                     </tr>
-
-
-                    <!-- <tr *ngFor="let pregunta of preguntasFamilia">
-                        <td>{{ pregunta.texto }}</td>
-                        <td><input type="checkbox" [checked]="pregunta.respuesta === 1" (change)="cambiarRespuesta(pregunta, 1)"></td>
-                        <td><input type="checkbox" [checked]="pregunta.respuesta === 2" (change)="cambiarRespuesta(pregunta, 2)"></td>
-                        <td><input type="checkbox" [checked]="pregunta.respuesta === 3" (change)="cambiarRespuesta(pregunta, 3)" [class]="getCheckboxClass(pregunta.value)"></td>
-                      </tr> -->
-
                   </table>
 
                   <div *ngIf="viveConOtros()">
@@ -287,16 +278,16 @@
                   </table>
 
                   <br>
-                   
-                    <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486=""
-                      aria-orientation="horizontal"
-                      class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
-                      style="margin-bottom: 15px;"></mat-divider>
 
-                <br/>
-                  
+                  <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486=""
+                    aria-orientation="horizontal"
+                    class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
+                    style="margin-bottom: 15px;"></mat-divider>
+
+                  <br />
+
                   <table>
-                     <tr>
+                    <tr>
                       <th>Ultimo nivel de instrucción</th>
 
                     </tr>
@@ -336,12 +327,12 @@
                       </td>
                       <td>
                         Univ./terciario
-                      </td> 
+                      </td>
 
                     </tr>
-                   
 
-                    <tr class="section3" >
+
+                    <tr class="section3">
                       <td>
                         Madre o sustituta
                       </td>
@@ -357,11 +348,132 @@
                       </td>
                     </tr>
                   </table>
+                  <br>
 
+                  <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486=""
+                    aria-orientation="horizontal"
+                    class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
+                    style="margin-bottom: 15px;"></mat-divider>
 
+                  <br />
+
+                  <span class="color-primary title && title-section4"
+                    style="margin-right: 10px; font-size: 20px; background-color: #f6fafb ; text-align: center;">
+                    Madre
+                  </span>
+
+                  <table>
+                    <div class="div1">
+                      <tr>
+                        <th class="section4">Edad</th>
+
+                      <tr class="section4-b && section4">
+                        <td>
+                          Años
+                        </td>
+                        <td>
+                          <input class="section4-b" type="checkbox" name="23" id="">
+                        </td>
+                      </tr>
+                    </div>
+
+                    <div class="div1">
+                      <tr>
+
+                        <th class="section4 && section4b2">Estado civil</th>
+
+                      </tr>
+
+                      <tr class="section4-b && section4">
+
+                        <td>
+                          Casada
+                        </td>
+                        <td>
+                          <input class="section4-b" type="checkbox" name="24" id="">
+
+                        </td>
+                      </tr>
+
+                      <tr class="section4-b && section4">
+
+                        <td>
+                          Soltera
+                        </td>
+                        <td>
+                          <input class="section4-b" type="checkbox" name="25" id="">
+
+                        </td>
+
+                      </tr>
+
+                      <tr class="section4-b && section4">
+
+                        <td>
+                          Unión estable
+                        </td>
+                        <td>
+                          <input class="section4-b" type="checkbox" name="26" id="">
+
+                        </td>
+
+                      </tr>
+
+                      <tr class="section4-b && section4">
+                        <td>
+                          Otros
+                        </td>
+                        <td>
+                          <input class="section4-b" type="checkbox" name="27" id="">
+
+                        </td>
+
+                      </tr>
+                    </div>
+
+                    <div class="div1">
+                      <tr>
+
+                        <th class="section4 && section4b2">Trabajo remunerado</th>
+
+                      </tr>
+
+                      <tr class="section4-b && section4">
+
+                        <td>
+                          Si
+                        </td>
+                        <td>
+                          <input class="section4-b" type="checkbox" name="24" id="">
+
+                        </td>
+                      </tr>
+
+                      <tr class="section4-b && section4">
+
+                        <td>
+                          No
+                        </td>
+                        <td>
+                          <input class="section4-b" type="checkbox" name="25" id="">
+
+                        </td>
+                    </div>
+
+                  </table>
+
+                  <br>
+
+                  <mat-divider _ngcontent-phc-c769="" role="separator" ngcontent-rqs-c486=""
+                    aria-orientation="horizontal"
+                    class="mat-divider mat-divider-horizonal ng-star-inserted mat-divider-horizontal"
+                    style="margin-bottom: 15px;"></mat-divider>
+
+                  <br />
                 </div>
               </div>
             </div>
+
           </app-content>
         </div>
       </mat-card>

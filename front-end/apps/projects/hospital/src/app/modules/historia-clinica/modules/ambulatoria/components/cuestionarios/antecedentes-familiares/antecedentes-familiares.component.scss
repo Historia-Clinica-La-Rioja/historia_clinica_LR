@@ -24,25 +24,63 @@ td {
   top: 10px;
 }
 
-table { 
+table {
   margin-top: 1%;
 }
 
- 
+
 .section3 {
-display: inline-grid;
-justify-items: center;
-margin-left: 15%;
+  display: inline-grid;
+  justify-items: center;
+  margin-left: 15%;
+}
+
+.section4 {
+  display: inline-grid;
+  justify-items: center;
+  margin-left: 48%;
+}
+
+.section4-b {
+  display: flex;
+  position: relative;
+  right: 1%;
+}
+
+.title-section4 {
+
+  padding: 1%;
 }
 
 .text1 {
 
-position: relative;
-top: 21.5px;
+  position: relative;
+  top: 21.5px;
 }
 
 .checkPadres {
-  
+
   display: inline-grid;
   padding-top: 12%;
 }
+
+.div1 {
+
+  display: grid;
+
+}
+
+.div3 {
+
+background-color: red;
+}
+
+
+.section4b2 { 
+
+margin-top: 3% ;
+position: relative;
+right: 18px;
+
+}
+
