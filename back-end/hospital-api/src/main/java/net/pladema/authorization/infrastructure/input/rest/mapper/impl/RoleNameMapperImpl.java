@@ -71,6 +71,7 @@ public class RoleNameMapperImpl implements RoleNameMapper {
 			case FHIR_POST_DIAGNOSTIC_REPORT: return "API FHIR Laboratorio";
 			case FHIR_ACCESS_ALL_RESOURCES: return "API FHIR Acceso general a la API";
 			case API_ANEXO: return "API Anexo";
+			case API_REPORTES: return "API Reportes";
 		}
 		throw new NotFoundException("role-not-exists", String.format("El rol %s no existe", eRole));
 	}
