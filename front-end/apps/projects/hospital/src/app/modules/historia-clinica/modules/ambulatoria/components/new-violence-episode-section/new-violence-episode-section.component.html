@@ -3,7 +3,7 @@
 	<form [formGroup]="form">
 
 		<app-datepicker id="episodeDate" title="ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_1"
-			(selectDate)="dateChanged($event)" requiredText="Fecha requerida" [markAsTouched]="markAsTouched">
+			(selectDate)="dateChanged($event)" requiredText="Fecha requerida" [markAsTouched]="markAsTouched" [maxDate]="todayDate">
 		</app-datepicker>
 
 		<div class="violence-situation">

@@ -40,6 +40,8 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 	basicOptions = BasicOptions;
 	markAsTouched = false;
 
+	todayDate = new Date();
+
 	constructor(private readonly violenceSituationService: ViolenceSituationsNewConsultationService,
 				private readonly violenceModalityService: ViolenceModalityNewConsultationService) {}
 
