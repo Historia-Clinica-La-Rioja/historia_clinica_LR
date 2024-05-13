@@ -336,48 +336,27 @@ export class HomeComponent implements OnInit {
 		this.submitted = true;
 		if (this.form.valid) {
 			this.isLoadingRequestReport = true;
-			const params: ReportFilters = this.getReportFilters();
+			const reportFilters = this.getReportFilters();
 			const reportId = this.form.value.reportType;
-			switch (reportId) {
-				case REPORT_TYPES_ID.MONTHLY:
-					this.reportsService.getMonthlyReport(params, `${this.REPORT_TYPES[0].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				case REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT:
-					this.reportsService.getOutpatientSummaryReport(params, `${this.REPORT_TYPES[1].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				case REPORT_TYPES_ID.DIABETIC_PATIENTS:
-					this.reportsService.getDiabetesReport().subscribe(result => {
-						this.cubeReportData = result
-						this.isLoadingRequestReport = false
-					});
-					break;
-				case REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS:
-					this.reportsService.getHypertensionReport().subscribe(result => {
-						this.cubeReportData = result
-						this.isLoadingRequestReport = false
-					});
-					break;
-				case REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT:
-					this.reportsService.getEpidemiologicalWeekReport().subscribe(result => {
-						this.cubeReportData = result
-						this.isLoadingRequestReport = false
-					});
-					break;
-				case REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL:
-					this.reportsService.getNominalAppointmentsDetail(params, `${this.REPORT_TYPES[5].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				case REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING:
-					this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${this.REPORT_TYPES[6].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					break;
-				case REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT: {
-					const reportDescription = this.REPORT_TYPES.find(reportType => reportType.id ===  REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT).description;
-					this.reportsService.getNominalEmergencyCareEpisodeDetail(params, `${reportDescription}.xls`).subscribe(() => this.isLoadingRequestReport = false);
-					}
-				break;
-				default:
+
+			const getReportById = {
+				[REPORT_TYPES_ID.MONTHLY]: this.reportsService.getMonthlyReport(reportFilters, `${REPORT_TYPES_ID.MONTHLY}.xls`),
+				[REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT]: this.reportsService.getOutpatientSummaryReport(reportFilters, `${REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT}.xls`),
+				[REPORT_TYPES_ID.DIABETIC_PATIENTS]: this.reportsService.getDiabetesReport(),
+				[REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS]: this.reportsService.getHypertensionReport(),
+				[REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT]: this.reportsService.getEpidemiologicalWeekReport(),
+				[REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL]: this.reportsService.getNominalAppointmentsDetail(reportFilters, `${REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL}.xls`),
+				[REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING]: this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING}.xls`),
+				[REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT]: this.reportsService.getNominalEmergencyCareEpisodeDetail(reportFilters, `${REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT}.xls`)
+			};
+
+			const selectedReport = getReportById[reportId];
+			if (selectedReport) {
+				selectedReport().subscribe(() => this.isLoadingRequestReport = false);
 			}
 		}
 	}
+
 
 	resetCubeReport() {
 		this.cubeReportData = null;
