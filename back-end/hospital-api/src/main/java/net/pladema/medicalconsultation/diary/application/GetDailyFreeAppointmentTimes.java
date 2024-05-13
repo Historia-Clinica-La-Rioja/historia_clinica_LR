@@ -88,8 +88,8 @@ public class GetDailyFreeAppointmentTimes {
 		LocalDate iterationWeekDay = date.with(TemporalAdjusters.nextOrSame(DayOfWeek.of(openingHoursDayOfWeek)));
 		long possibleAppointmentsAmount = ChronoUnit.MINUTES.between(diaryOpeningHours.getOpeningHours().getFrom(), diaryOpeningHours.getOpeningHours().getTo()) / appointmentDuration + diaryOpeningHours.getOverturnCount();
 		assignedAppointments.forEach(appointment -> {
-			List<AppointmentBo> dayAppointments = assignedAppointments.stream().filter(a -> a.getDate().equals(iterationWeekDay)).collect(toList());
-			int overturnAppointmentsQuantity = (int) assignedAppointments.stream().filter(a -> a.getDate().equals(iterationWeekDay) && a.isOverturn()).count();
+			List<AppointmentBo> dayAppointments = assignedAppointments.stream().filter(a -> a.getDate().equals(iterationWeekDay) && a.getOpeningHoursId().equals(diaryOpeningHours.getOpeningHours().getId())).collect(toList());
+			int overturnAppointmentsQuantity = (int) dayAppointments.stream().filter(AppointmentBo::isOverturn).count();
 			if (dayAppointments.size() >= possibleAppointmentsAmount || overturnAppointmentsQuantity == diaryOpeningHours.getOverturnCount())
 				time.remove(appointment.getHour());
 		});

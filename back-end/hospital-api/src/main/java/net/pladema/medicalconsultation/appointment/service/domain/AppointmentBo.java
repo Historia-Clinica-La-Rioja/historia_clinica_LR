@@ -152,6 +152,7 @@ public class AppointmentBo {
 				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
 				.patientEmail(appointmentDiaryVo.getEmail())
 				.diaryLabelBo(appointmentDiaryVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentDiaryVo.getDiaryLabel()): null)
+				.openingHoursId(appointmentDiaryVo.getOpeningHoursId())
 				.build();
 	}
 

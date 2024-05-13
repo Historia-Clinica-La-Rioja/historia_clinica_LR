@@ -66,7 +66,8 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 						"aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl) " +
+						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, " +
+						"pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, aa.pk.openingHoursId) " +
 						"FROM Appointment AS a " +
 						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 						"JOIN Diary d ON (d.id = aa.pk.diaryId )" +
@@ -105,7 +106,8 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 						"aa.pk.diaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, doh.medicalAttentionTypeId, " +
-						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl)" +
+						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, " +
+						"pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, aa.pk.openingHoursId)" +
 						"FROM Appointment AS a " +
 						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 						"JOIN DiaryOpeningHours AS doh ON (aa.pk.openingHoursId = doh.pk.openingHoursId)" +
@@ -140,7 +142,8 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 				"SELECT  NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo(" +
 						"eaa.pk.equipmentDiaryId, a.id, a.patientId, a.dateTypeId, a.hour, a.appointmentStateId, a.isOverturn, " +
 						"a.patientMedicalCoverageId,a.phonePrefix, a.phoneNumber, edoh.medicalAttentionTypeId, " +
-						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl)" +
+						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, " +
+						"pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, eaa.pk.openingHoursId)" +
 						"FROM Appointment AS a " +
 						"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 						"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId ) " +

@@ -49,7 +49,7 @@ public class GetMonthlyFreeAppointmentDates {
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diaryId), filter.getDate(), endDate);
 		Collection<DiaryOpeningHoursBo> openingHours = diaryOpeningHoursService.getDiaryOpeningHours(diaryId);
 		List<LocalDate> result = new ArrayList<>();
-		openingHours.forEach(diaryOpeningHoursBo -> processOpeningHours(filter, diaryOpeningHoursBo, diary, endDate, assignedAppointments, result));
+		processOpeningHours(filter, openingHours, diary, endDate, assignedAppointments, result);
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -59,32 +59,44 @@ public class GetMonthlyFreeAppointmentDates {
 		Assert.isTrue((date.equals(diaryLimitDates.getEndDate()) || date.isBefore(diaryLimitDates.getEndDate())) && (date.equals(diaryLimitDates.getStartDate()) || date.isAfter(diaryLimitDates.getStartDate())), "La fecha solicitada se encuentra fuera del rango definido por la agenda");
 	}
 
-	private void processOpeningHours(FreeAppointmentSearchFilterBo filter, DiaryOpeningHoursBo diaryOpeningHoursBo, DiaryBo diary, LocalDate endDate, Collection<AppointmentBo> assignedAppointments, List<LocalDate> result) {
-		boolean isOpeningHoursValidToReassign = freeAppointmentsUtils.isOpeningHoursValidToReassign(filter, diaryOpeningHoursBo);
-		if (isOpeningHoursValidToReassign)
-			processOpeningHoursFreeAppointments(filter.getDate(), diaryOpeningHoursBo, diary.getAppointmentDuration(), endDate, assignedAppointments, result);
-	}
-
 	private LocalDate getLastCalculationDate(LocalDate startDate, DiaryBo diary) {
 		YearMonth yearMonth = YearMonth.of(startDate.getYear(), startDate.getMonth());
         return yearMonth.atEndOfMonth().isAfter(diary.getEndDate()) ? diary.getEndDate() : yearMonth.atEndOfMonth();
 	}
 
-	private void processOpeningHoursFreeAppointments(LocalDate startDate, DiaryOpeningHoursBo diaryOpeningHoursBo, Short appointmentDuration, LocalDate endDate,
-													 Collection<AppointmentBo> assignedAppointments, List<LocalDate> result) {
-		LocalTime openingHoursStartTime = diaryOpeningHoursBo.getOpeningHours().getFrom();
-		LocalTime openingHoursEndTime = diaryOpeningHoursBo.getOpeningHours().getTo();
-		long possibleAppointmentsAmount = ChronoUnit.MINUTES.between(openingHoursStartTime, openingHoursEndTime) / appointmentDuration + diaryOpeningHoursBo.getOverturnCount();
-		int openingHoursDayOfWeek = freeAppointmentsUtils.parseOpeningHoursWeekOfDay(diaryOpeningHoursBo.getOpeningHours());
-		LocalDate iterationWeekDay = startDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.of(openingHoursDayOfWeek)));
+	private void processOpeningHours(FreeAppointmentSearchFilterBo filter, Collection<DiaryOpeningHoursBo> diaryOpeningHours,
+									 DiaryBo diary, LocalDate endDate, Collection<AppointmentBo> assignedAppointments,
+									 List<LocalDate> result) {
+		diaryOpeningHours.forEach(doh -> {
+			if (freeAppointmentsUtils.isOpeningHoursValidToReassign(filter, doh)) {
+				processValidOpeningHours(filter, doh, diary, endDate, assignedAppointments, result);
+			}
+		});
+	}
+
+	private void processValidOpeningHours(FreeAppointmentSearchFilterBo filter, DiaryOpeningHoursBo doh, DiaryBo diary,
+										  LocalDate endDate, Collection<AppointmentBo> assignedAppointments,
+										  List<LocalDate> result) {
+		long possibleAppointmentsAmount = calculatePossibleAppointmentsAmount(doh, diary);
+		int openingHoursDayOfWeek = freeAppointmentsUtils.parseOpeningHoursWeekOfDay(doh.getOpeningHours());
+		LocalDate iterationWeekDay = filter.getDate().with(TemporalAdjusters.nextOrSame(DayOfWeek.of(openingHoursDayOfWeek)));
 		while (iterationWeekDay.isBefore(endDate) || iterationWeekDay.equals(endDate)) {
-			processDateInSearchOfFreeAppointments(assignedAppointments, result, iterationWeekDay, possibleAppointmentsAmount);
+			processDateInSearchOfFreeAppointments(assignedAppointments, result, iterationWeekDay, doh.getOpeningHours().getId(), possibleAppointmentsAmount);
 			iterationWeekDay = iterationWeekDay.plusWeeks(1);
 		}
 	}
 
-	private void processDateInSearchOfFreeAppointments(Collection<AppointmentBo> assignedAppointments, List<LocalDate> result, LocalDate iterationWeekDay, long possibleAppointmentsAmount) {
-        List<AppointmentBo> dayAppointments = assignedAppointments.stream().filter(appointment -> appointment.getDate().equals(iterationWeekDay)).collect(toList());
+	private long calculatePossibleAppointmentsAmount(DiaryOpeningHoursBo doh, DiaryBo diary) {
+		LocalTime openingHoursStartTime = doh.getOpeningHours().getFrom();
+		LocalTime openingHoursEndTime = doh.getOpeningHours().getTo();
+		return ChronoUnit.MINUTES.between(openingHoursStartTime, openingHoursEndTime) / diary.getAppointmentDuration() + doh.getOverturnCount();
+	}
+
+	private void processDateInSearchOfFreeAppointments(Collection<AppointmentBo> assignedAppointments, List<LocalDate> result,
+													   LocalDate iterationWeekDay, Integer openingHourId, long possibleAppointmentsAmount) {
+        List<AppointmentBo> dayAppointments = assignedAppointments.stream()
+				.filter(a -> a.getDate().equals(iterationWeekDay) && a.getOpeningHoursId().equals(openingHourId))
+				.collect(toList());
 		if (dayAppointments.size() < possibleAppointmentsAmount && !result.contains(iterationWeekDay))
 			result.add(iterationWeekDay);
 	}
