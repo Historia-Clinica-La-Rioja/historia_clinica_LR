@@ -25,6 +25,14 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: appointment
               validate: true
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT recurring_appointment_type_id, appointment_id
+                FROM appointment
 
     - changeSet:
         id: customAppointment-createTable
@@ -106,6 +114,12 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: appointment
               validate: true
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: "SELECT COUNT(*) FROM custom_appointment"
 
     - changeSet:
         id: createTable-document_involved_professional

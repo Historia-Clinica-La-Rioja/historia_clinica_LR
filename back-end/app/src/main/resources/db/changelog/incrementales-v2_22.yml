@@ -12,6 +12,14 @@ databaseChangeLog:
                     name: topic
                     type: varchar(255)
               tableName: shockroom
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT topic
+                FROM shockroom
 
     - changeSet:
         id: room_topic-addTopicColumn
@@ -24,6 +32,14 @@ databaseChangeLog:
                     name: topic
                     type: varchar(255)
               tableName: room
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT topic
+                FROM room
 
     - changeSet:
         id: addColumn-uuid-service-request

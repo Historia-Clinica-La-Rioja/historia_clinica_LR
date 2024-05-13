@@ -43,6 +43,14 @@ databaseChangeLog:
               tableName: clinical_specialty_mandatory_medical_practice
               columnNames: clinical_specialty_id, mandatory_medical_practice_id
               constraintName: UQ_clinical_specialty_id_mandatory_medical_practice_id
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT clinical_specialty_id, mandatory_medical_practice_id
+                FROM clinical_specialty_mandatory_medical_practice   
         
     - changeSet:    
         id: add-virtual-consultation-columns-diary_opening_hours

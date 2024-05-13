@@ -363,3 +363,11 @@ databaseChangeLog:
                 - column:
                     name: phone_prefix
                     type: varchar(10)
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT phone_number, phone_prefix
+                FROM booking_person 
