@@ -16,10 +16,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
 import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 
+import net.pladema.reports.application.fetchappointmentconsultationsummary.FetchAppointmentConsultationSummary;
 import net.pladema.reports.application.fetchnominalconsultationdetail.FetchNominalConsultationDetail;
 import net.pladema.reports.application.fetchnominalappointmentdetail.FetchNominalAppointmentDetail;
 
@@ -61,6 +63,7 @@ import net.pladema.reports.service.domain.ConsultationsBo;
 import net.pladema.reports.service.domain.FormVBo;
 
 @Slf4j
+@RequiredArgsConstructor
 @RequestMapping("reports")
 @RestController
 public class ReportsController {
@@ -95,31 +98,7 @@ public class ReportsController {
 
 	private final ObjectMapper objectMapper;
 
-    public ReportsController(ConsultationSummaryReport consultationSummaryReport,
-							 QueryFactory queryFactory, LocalDateMapper localDateMapper,
-							 PdfService pdfService, AnnexReportService annexReportService,
-							 FormReportService formReportService, ReportsMapper reportsMapper,
-							 FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService,
-							 FetchNominalConsultationDetail fetchNominalConsultationDetail,
-							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail,
-							 SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService,
-							 FetchNominalECEpisodeDetail fetchNominalECEpisodeDetail,
-							 ObjectMapper objectMapper){
-        this.consultationSummaryReport = consultationSummaryReport;
-        this.queryFactory = queryFactory;
-        this.localDateMapper = localDateMapper;
-        this.pdfService = pdfService;
-        this.annexReportService = annexReportService;
-        this.formReportService = formReportService;
-        this.reportsMapper = reportsMapper;
-        this.fetchConsultations = fetchConsultations;
-		this.featureFlagsService = featureFlagsService;
-		this.fetchNominalAppointmentDetail = fetchNominalAppointmentDetail;
-		this.fetchNominalConsultationDetail = fetchNominalConsultationDetail;
-		this.sharedAppointmentAnnexPdfReportService = sharedAppointmentAnnexPdfReportService;
-		this.fetchNominalECEpisodeDetail = fetchNominalECEpisodeDetail;
-		this.objectMapper = objectMapper;
-	}
+	private final FetchAppointmentConsultationSummary fetchAppointmentConsultationSummary;
 
     @GetMapping(value = "/{institutionId}/monthly")
     public ResponseEntity<Resource> getMonthlyExcelReport(
@@ -381,6 +360,21 @@ public class ReportsController {
 		IWorkbook wb = fetchNominalECEpisodeDetail.run(title, filter);
 		String filename = title + "." + wb.getExtension();
 
+		return StoredFileResponse.sendFile(
+				buildReport(wb),
+				filename,
+				wb.getContentType()
+		);
+	}
+
+	@GetMapping(value = "/institution/{institutionId}/appointment-consultation-summary")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<Resource> getAppointmentConsultationSummaryReport(@PathVariable Integer institutionId,
+																			@RequestParam String searchFilter) throws Exception {
+		log.debug("Input parameters -> institutionId {}, searchFilter {}" , institutionId, searchFilter);
+		String title = "Resumen Mensual de Turnos en Consultorios Externos ";
+		IWorkbook wb = fetchAppointmentConsultationSummary.run(title, parseFilter(institutionId, searchFilter));
+		String filename = title + "." + wb.getExtension();
 		return StoredFileResponse.sendFile(
 				buildReport(wb),
 				filename,
