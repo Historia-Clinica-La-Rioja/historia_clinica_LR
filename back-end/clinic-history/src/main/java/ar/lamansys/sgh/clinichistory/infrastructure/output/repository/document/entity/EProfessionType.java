@@ -15,6 +15,11 @@ public enum EProfessionType {
 	PEDIATRICIAN((short)7, "Pediatra"),
 	PATHOLOGIST((short)8, "Patologo"),
 	TRANSFUSIONIST((short)9, "Transfusionista"),
+	NURSE((short) 11, "Enferemero"),
+	MEDICAL_SPECIALIST((short) 12, "Especialista médico"),
+	NEONATOLOGIST((short) 13, "Neonatólogo"),
+	DENTIST((short) 14, "Odontólogo"),
+	HEALTHCARE_PROFESSIONAL((short) 15, "Profesional de la salud"),
 	OTHER((short) 10, "Otro");
 
 	private Short id;
