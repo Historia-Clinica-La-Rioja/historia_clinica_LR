@@ -108,8 +108,8 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"a.appointmentBlockMotiveId, a.updateable.updatedOn, a.creationable.createdOn, p.id, p.firstName, p.lastName, pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl)" +
 						"FROM Appointment AS a " +
 						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
+						"JOIN DiaryOpeningHours AS doh ON (aa.pk.openingHoursId = doh.pk.openingHoursId)" +
 						"JOIN Diary d ON (d.id = aa.pk.diaryId ) " +
-						"JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id) " +
 						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
 						"LEFT JOIN PersonExtended pex ON (p.id = pex.id) " +
