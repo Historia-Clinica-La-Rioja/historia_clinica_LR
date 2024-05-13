@@ -143,21 +143,14 @@ public class GetQuestionnairePdfService {
 
 	public String formatAge(Period agePeriod) {
 		int years = agePeriod.getYears();
-		int months = agePeriod.getMonths();
 
 		StringBuilder formattedAge = new StringBuilder();
 
 		if (years > 0) {
 			formattedAge.append(years).append(" ").append(years == 1 ? "año" : "años");
 		}
-		if (months > 0) {
-			if (years > 0) {
-				formattedAge.append(", ");
-			}
-			formattedAge.append(months).append(" ").append(months == 1 ? "mes" : "meses");
-		}
 		if (formattedAge.length() == 0) {
-			formattedAge.append("Menos de un mes");
+			formattedAge.append("Menos de un año");
 		}
 
 		return formattedAge.toString();

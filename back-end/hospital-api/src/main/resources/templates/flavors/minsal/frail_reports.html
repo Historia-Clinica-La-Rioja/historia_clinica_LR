@@ -54,16 +54,16 @@
         <p style="text-align:right;">Fecha de atención: <span th:text="${formattedCreatedOn}"></span></p>
         <p>Institución: <span th:text="${institution.name}"></span></p>
         <hr></hr>
-        <h5>Detalles del paciente</h5>
+        <h5>Datos del paciente</h5>
         <p>Apellido y nombre: <span th:text="${patientPersonFullName}"></span></p>
         <p><span th:utext="${'<b>' + patientIdType.description + ':</b> ' + patientPerson.identificationNumber}"></span></p>
         <p>Edad a la fecha de atención: <span th:text="${patientAge}"></span></p>
         <hr></hr>
-        <h5>Detalles del profesional</h5>
+        <h5>Datos del profesional</h5>
         <p>Apellido y nombre: <span th:text="${professionalPersonFullName}"></span></p>
-        <p>Licencia: <span th:text="${professional.licenseNumber}"></span></p>
+        <p>M.P.: <span th:text="${professional.licenseNumber}"></span></p>
 
-        <h3>Prueba de Frail (fragilidad) - Resultados de informe</h3>
+        <h3>Escala de Frail (fragilidad) - Informe de resultados</h3>
 
         <hr></hr>
 
@@ -137,14 +137,14 @@
 
         <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
             <h4>Comorbilidad</h4>
-            <p>¿Alguna vez un médico le dijo que usted tiene: hipertensión, diabetes, cáncer (que no sea un cáncer de piel de menor importancia), enfermedad pulmonar crónica, ataque cardíaco, insuficiencia cardíaca congestiva, angina de pecho, asma, artritis, ictus y enfermedad renal? (cant. menor a 5 = 'No', cant. mayor o igual 5 = 'Sí')</p>
+            <p>¿Cuántas de las siguientes patologías le ha indicado un médico que usted tiene: hipertensión, diabetes, cáncer (que no sea un cáncer de piel de menor importancia), enfermedad pulmonar crónica, ataque cardíaco, insuficiencia cardíaca congestiva, angina de pecho, asma, artritis, ictus y enfermedad renal?</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt10" th:checked="${respuesta.answerId == 20}"></input>
-                Sí
+                Tiene 5 o más patologías
             </label><br></br>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt11" th:checked="${respuesta.answerId == 19}"></input>
-                No
+                Tiene menos de 5 patologías
             </label><br></br>
         </div>
 
