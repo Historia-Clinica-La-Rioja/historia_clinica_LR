@@ -130,8 +130,11 @@ export class CardPatientComponent {
 		})
 	}
 	private getLastNames(patient: PatientSearchDto): string {
-		return patient.person?.otherLastNames ? patient.person?.lastName || '' + ' ' + patient.person?.otherLastNames : patient.person?.lastName || '';
+		const lastName = patient.person?.lastName ? patient.person.lastName : '';
+		const otherLastNames = patient.person?.otherLastNames ? patient.person.otherLastNames : '';
+		return `${lastName} ${otherLastNames}`;
 	}
+
 	onPageChange($event: any): void {
 		const page = $event;
 		const startPage = page.pageIndex * page.pageSize;
