@@ -46,4 +46,8 @@ public class HospitalizationDocumentHeaderBo {
     public LocalDateTime getCreatedOn() {
         return baseDocumentHeader.getCreatedOn();
     }
+
+    public Integer getClinicalSpecialtyId() {
+        return baseDocumentHeader.getClinicalSpecialtyId();
+    };
 }

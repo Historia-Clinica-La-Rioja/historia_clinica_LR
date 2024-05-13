@@ -1,7 +1,10 @@
 package net.pladema.clinichistory.hospitalization.application.getdocumentheader;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.DocumentHeaderPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.domain.HospitalizationDocumentHeaderBo;
@@ -14,7 +17,7 @@ import net.pladema.establishment.repository.domain.BedInfoVo;
 import net.pladema.establishment.repository.entity.HistoricPatientBedRelocation;
 import net.pladema.establishment.service.BedService;
 import net.pladema.establishment.service.InstitutionService;
-import net.pladema.staff.service.ClinicalSpecialtyService;
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -26,7 +29,6 @@ public class GetHospitalizationDocumentHeader {
     private final InstitutionService institutionService;
     private final BedService bedService;
     private final DocumentHeaderPort documentHeaderPort;
-    private final ClinicalSpecialtyService clinicalSpecialtyService;
     private final SharedStaffPort sharedStaffPort;
 
     public HospitalizationDocumentHeaderBo run(Integer institutionId, Integer internmentEpisodeId, Long documentId) {
@@ -53,13 +55,14 @@ public class GetHospitalizationDocumentHeader {
                 documentHeaderBo.getEncounterId(),
                 documentHeaderBo.getInstitutionId());
 
-        this.setClinicalSpecialtyName(documentHeaderBo, episode);
+        this.setClinicalSpecialtyName(documentHeaderBo);
         this.setBedCorrectLocation(episode, documentHeaderBo);
     }
 
-    private void setClinicalSpecialtyName(HospitalizationDocumentHeaderBo documentHeaderBo, InternmentEpisode episode) {
-        clinicalSpecialtyService.getClinicalSpecialty(episode.getClinicalSpecialtyId())
-                .ifPresent(clinicalSpecialtyBo -> documentHeaderBo.setClinicalSpecialtyName(clinicalSpecialtyBo.getName()));
+    private void setClinicalSpecialtyName(HospitalizationDocumentHeaderBo documentHeaderBo) {
+        List<ClinicalSpecialtyBo> specialties = this.getClinicalSpecialtyFromInternmentInformation(documentHeaderBo);
+        var clinicalSpecialtyName = this.buildClinicalSpecialtyName(specialties);
+        documentHeaderBo.setClinicalSpecialtyName(clinicalSpecialtyName);
     }
 
     private void setBedCorrectLocation(InternmentEpisode episode, HospitalizationDocumentHeaderBo documentHeaderBo) {
@@ -92,5 +95,28 @@ public class GetHospitalizationDocumentHeader {
     private void setProfessionalName(HospitalizationDocumentHeaderBo result) {
         sharedStaffPort.getProfessionalCompleteNameByUserId(result.getCreatedBy())
                 .ifPresent(result::setProfessionalName);
+    }
+
+    private String buildClinicalSpecialtyName(List<ClinicalSpecialtyBo> specialties) {
+        if (specialties.isEmpty())
+            return "";
+        String firstClinicalSpecialty = specialties.get(0).getName();
+        int size = specialties.size();
+        if (size == 1)
+            return firstClinicalSpecialty;
+
+        int cantMoreSpecialties = size - 1;
+        return String.format("%s (+%d)", firstClinicalSpecialty, cantMoreSpecialties);
+    }
+
+    private List<ClinicalSpecialtyBo> getClinicalSpecialtyFromInternmentInformation(HospitalizationDocumentHeaderBo documentHeaderBo) {
+        var professional = sharedStaffPort.getProfessionalCompleteInfo(documentHeaderBo.getCreatedBy());
+        return this.mapTo(professional.getClinicalSpecialties());
+    }
+
+    private List<ClinicalSpecialtyBo> mapTo(List<ClinicalSpecialtyDto> clinicalSpecialties) {
+        return clinicalSpecialties.stream()
+                .map(clinicalSpecialtyDto -> new ClinicalSpecialtyBo(clinicalSpecialtyDto.getId(), clinicalSpecialtyDto.getName()))
+                .collect(Collectors.toList());
     }
 }
