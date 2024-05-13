@@ -99,6 +99,9 @@ export class WorklistByTechnicalComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(isOn => {
 			this.permission = isOn;
 		})
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => {
+			this.nameSelfDeterminationFF = isOn;
+		})
 	}
 
 	ngOnInit(): void {
