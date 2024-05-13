@@ -146,16 +146,14 @@
                     <div class="row-content">
                         <div class="data-title">Nombre y apellido del paciente</div>
                         <div style="float: left; margin-right: 3px;">
-                            <div class="data-text" style="text-transform: uppercase;" th:if="${!selfPerceivedFF || patient.person.nameSelfDetermination == null || patient.person.nameSelfDetermination == ''}" th:text="${patient.person.firstName + (patient.person.middleNames != null ? ' ' + patient.person.middleNames : '') }"></div>
-                            <div class="data-text" style="text-transform: uppercase;" th:if="${selfPerceivedFF && patient.person.nameSelfDetermination != null && patient.person.nameSelfDetermination != ''}" th:text="${patient.person.nameSelfDetermination}"></div>
-                        </div>
-                        <div style="float: left;">
-                            <div class="data-text" style="text-transform: uppercase;" th:text="${patient.person.lastName + (patient.person.otherLastNames != null ? ' ' + patient.person.otherLastNames : '') }"></div>
+                            <div class="data-text" th:if="${patientCompleteName != null}" style="text-transform: uppercase;" th:text="${patientCompleteName}"></div>
+                            <div class="data-text" th:if="${patientCompleteName == null}">Sin información</div>
                         </div>
                     </div>
                     <div class="row-content">
                         <div class="data-title">Documento</div>
-                        <div class="data-text" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
+                        <div class="data-text" th:if="${patient.identificationNumber != null}" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
+                        <div class="data-text" th:if="${patient.identificationNumber == null}">Sin información</div>
                     </div>
                     <div class="row-content">
                         <div class="data-title">N° HC</div>

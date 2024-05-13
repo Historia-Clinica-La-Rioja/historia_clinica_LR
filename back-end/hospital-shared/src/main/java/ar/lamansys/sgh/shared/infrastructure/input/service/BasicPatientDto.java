@@ -50,4 +50,6 @@ public class BasicPatientDto implements Serializable {
 
 	public LocalDate getBirthDate() { return person != null ? person.getBirthDate(): null; }
 
+	public String getCompletePersonName(boolean selfPerceivedFeatureFlag) { return person.completeName(selfPerceivedFeatureFlag); }
+
 }

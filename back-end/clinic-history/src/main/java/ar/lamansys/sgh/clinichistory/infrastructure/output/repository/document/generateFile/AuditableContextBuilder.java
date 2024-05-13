@@ -154,6 +154,7 @@ public class AuditableContextBuilder {
 	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId, Short documentType) {
 		var patientDto = basicDataFromPatientLoader.apply(patientId);
 		contextMap.put("patient", patientDto);
+		contextMap.put("patientCompleteName", patientDto.getCompletePersonName(featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)));
 		contextMap.put("patientAge", calculatePatientAge(patientDto));
 
 		contextMap.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
