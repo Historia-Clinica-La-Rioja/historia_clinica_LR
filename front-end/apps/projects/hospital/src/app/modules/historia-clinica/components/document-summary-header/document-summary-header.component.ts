@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Position } from '@presentation/components/identifier/identifier.component';
 import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/identifier-cases.component';
+import { HeaderDescription, HeaderIdentifierData } from '@historia-clinica/utils/document-summary.model';
+import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 
 @Component({
     selector: 'app-document-summary-header',
@@ -9,14 +11,19 @@ import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/ident
 })
 export class DocumentSummaryHeaderComponent {
 
-    @Input() headerData: HeaderData;
+    @Input() set headerData(headerData: HeaderDescription) {
+        this._headerData = this.documentSummaryMapper.mapToHeaderIdentifierData(headerData);
+    };
     @Input() isPopUpOpen: boolean;
     @Output() deleteDocument = new EventEmitter<boolean>();
     @Output() editDocument = new EventEmitter<boolean>();
     identiferCases = IDENTIFIER_CASES;
     position = Position;
-    
-    constructor() { }
+    _headerData: HeaderIdentifierData;
+
+    constructor(
+        private readonly documentSummaryMapper: DocumentsSummaryMapperService
+    ) { }
 
     delete() {
         this.deleteDocument.emit(true);
@@ -25,24 +32,4 @@ export class DocumentSummaryHeaderComponent {
     edit() {
         this.editDocument.emit(true);
     }
-}
-
-export interface HeaderData {
-    title: string,
-    edit?: boolean,
-    delete?: boolean,
-    download?: boolean,
-    headerDescriptionData?: HeaderDescriptionData,
-}
-
-export interface HeaderDescriptionData {
-    scope?: string,
-    patient?: string,
-    specialty?: string,
-    dateTime?: string,
-    professional?: string,
-    institution?: string,
-    sector?: string,
-    room?: string,
-    bed?: string,
 }

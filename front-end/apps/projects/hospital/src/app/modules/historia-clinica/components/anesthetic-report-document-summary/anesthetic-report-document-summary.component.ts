@@ -15,7 +15,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
         this.anestheticReport = null;
         if (this.internmentEpisodeId && this._documentId) {
             this.anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._documentId, this.internmentEpisodeId).pipe(tap(anestheticReport => {
-                this.anestheticReport = this.anestheticReportDocumentSummaryService.getAnestheticReportAsViewFormat(anestheticReport);
+                this.anestheticReport = this.anestheticReportDocumentSummaryService.mapToAnestheticReportViewFormat(anestheticReport);
                 this.isLoading = false;
             } ))
         }
@@ -33,7 +33,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
 
     ngOnInit(): void {
         this.anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._documentId, this.internmentEpisodeId).pipe(tap(anestheticReport => {
-            this.anestheticReport = this.anestheticReportDocumentSummaryService.getAnestheticReportAsViewFormat(anestheticReport);
+            this.anestheticReport = this.anestheticReportDocumentSummaryService.mapToAnestheticReportViewFormat(anestheticReport);
             this.isLoading = false;
         } ))
     }

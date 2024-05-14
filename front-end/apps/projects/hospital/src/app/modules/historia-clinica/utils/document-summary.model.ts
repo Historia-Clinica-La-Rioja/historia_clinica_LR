@@ -1,21 +1,37 @@
 import { DescriptionItemData } from "@presentation/components/description-item/description-item.component";
+import { IDENTIFIER_CASES } from "../../hsi-components/identifier-cases/identifier-cases.component";
+
+export interface IdentifierData {
+    value: string,
+    dataId: string,
+    identifierCase: IDENTIFIER_CASES,
+}
+
+export interface HeaderIdentifierData {
+    title: string,
+    edit?: boolean,
+    delete?: boolean,
+    download?: boolean,
+    headerDescriptionData?: IdentifierData[],
+}
 
 export interface HeaderDescription {
     title: string,
-    edit: boolean,
-    delete: boolean,
+    edit?: boolean,
+    delete?: boolean,
     headerDescriptionData: HeaderDescriptionData,
 }
 
 export interface HeaderDescriptionData {
-    scope: string,
-    specialty: string,
-    dateTime: string,
-    professional: string,
-    institution: string,
-    sector: string,
-    room: string,
-    bed: string,
+    scope?: string,
+    patient?: string,
+    specialty?: string,
+    dateTime?: string,
+    professional?: string,
+    institution?: string,
+    sector?: string,
+    room?: string,
+    bed?: string,
 }
 
 export interface AnthropometricData {
@@ -57,12 +73,12 @@ export interface IntrasurgicalAnestheticProceduresData {
 }
 
 export interface VitalSignsData {
-    startAndEndProceduresDateTime: StartAndEndProceduresDateTimeData,
-    chart: string[],
+    startAndEndProceduresDateTime: ProceduresDateTimeData,
+    vitalSignsChart: string[],
     measuringPoints: MeasuringPointData[],
 }
 
-export interface StartAndEndProceduresDateTimeData {
+export interface ProceduresDateTimeData {
     anesthesiaEndDate?: Date;
     anesthesiaEndTime?: Date;
     anesthesiaStartDate?: Date;

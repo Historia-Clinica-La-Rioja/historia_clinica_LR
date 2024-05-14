@@ -21,7 +21,7 @@ export class VitalSignsSummaryComponent {
             width: '50%',
             autoFocus: false,
             data: {
-                imgList: this.vitalSigns.chart,
+                imgList: this.vitalSigns.vitalSignsChart,
             }
         });
     }

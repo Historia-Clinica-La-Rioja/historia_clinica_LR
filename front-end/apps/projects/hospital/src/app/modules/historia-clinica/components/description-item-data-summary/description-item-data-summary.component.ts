@@ -8,9 +8,13 @@ import { DescriptionItemData } from '@presentation/components/description-item/d
 })
 export class DescriptionItemDataSummaryComponent {
 
-    @Input() summary: DescriptionItemData[];
-    @Input() icon: string;
-    @Input() title: string;
-    @Input() subtitle: string;
+    @Input() descriptionItemDataSummary: DescriptionItemDataSummary;
     constructor() { }
+}
+
+export interface DescriptionItemDataSummary {
+    summary: DescriptionItemData[],
+    icon: string,
+    title: string,
+    subtitle: string,
 }

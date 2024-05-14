@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DateTimeDto } from '@api-rest/api-model';
 import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
-import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary.service';
+import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { DocumentActionsService, DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { InternmentSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { AnamnesisAsViewFormat, AnamnesisDocumentSummaryService } from '@historia-clinica/services/anamnesis-document-summary.service';
-import { Observable, forkJoin, tap } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
+import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
     selector: 'app-anamnesis-document-summary',
@@ -18,31 +18,13 @@ export class AnamnesisDocumentSummaryComponent {
     @Input() isPopUpOpen: boolean;
     @Input() internmentEpisodeId: number;
     @Input() set activeDocument (activeDocument: DocumentSearch) {
-        this.editedOn = activeDocument.document?.editedOn;
-        this._documentId = activeDocument.document?.id;
         this._activeDocument = activeDocument;
-
-        if (this.internmentEpisodeId && this._documentId) {
-            let anamnesis$ = this.anamnesisService.getAnamnesis(this._documentId, this.internmentEpisodeId);
-            let header$ = this.documentSummaryService.getDocumentHeader(this._documentId, this.internmentEpisodeId);
-
-            this.hasData$ = forkJoin([header$, anamnesis$]).pipe(tap(masterdataInfo => {
-                this.headerDescription = this.documentSummaryMapperService.mapToHeaderDescription(masterdataInfo[0], 'Evaluación de ingreso', this._activeDocument);
-                this.anamnesis = this.anamnesisDocumentSummaryService.getAnamnesisAsViewFormat(masterdataInfo[1]);
-                this.isLoading = false;
-            }));
-        }
+        this.fetchSummaryInfo();
     };
     @Output() resetActiveDocument = new EventEmitter<boolean>();
 
-    headerDescription;
-    
-    anamnesis: AnamnesisAsViewFormat;
     _activeDocument: DocumentSearch;
-    _documentId: number
-    hasData$: Observable<any>;
-    isLoading = true;
-    editedOn: DateTimeDto;
+    documentSummary$: Observable<{headerDescription: HeaderDescription, anamnesis: AnamnesisAsViewFormat}>;
 
     constructor(
         private readonly anamnesisService: AnamnesisService,
@@ -52,6 +34,20 @@ export class AnamnesisDocumentSummaryComponent {
         private readonly documentSummaryService: DocumentsSummaryService,
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
     ) { }
+
+    private fetchSummaryInfo(){
+        if (this._activeDocument?.document?.id) {
+            let anamnesis$ = this.anamnesisService.getAnamnesis(this._activeDocument.document?.id, this.internmentEpisodeId);
+            let header$ = this.documentSummaryService.getDocumentHeader(this._activeDocument.document?.id, this.internmentEpisodeId);
+
+            this.documentSummary$ = forkJoin([header$, anamnesis$]).pipe(map(([headerData, anamnesisData]) => {
+                return {
+                    headerDescription: this.documentSummaryMapperService.mapToHeaderDescription(headerData, 'Evaluación de ingreso', this._activeDocument),
+                    anamnesis: this.anamnesisDocumentSummaryService.mapToAnamnesisAsViewFormat(anamnesisData),
+                }
+            }));
+        }
+    }
 
     delete() {
 		this.documentActions.deleteDocument(this._activeDocument.document, this.internmentEpisodeId).subscribe(

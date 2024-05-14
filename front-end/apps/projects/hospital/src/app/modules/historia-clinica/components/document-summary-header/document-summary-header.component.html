@@ -1,54 +1,30 @@
 <div fxFlex fxLayout="column">
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between">
-        <span class="header-title">{{ headerData?.title }}</span>
+        <span class="header-title">{{ _headerData?.title }}</span>
         <div *ngIf="!isPopUpOpen">
-            <button mat-button color="primary" data-id="download_document" *ngIf="headerData.download">
+            <button mat-button color="primary" data-id="download_document" *ngIf="_headerData.download">
                 <mat-icon fontSet="material-icons-outlined">download_icon</mat-icon>
             </button>
-            <button mat-button color="primary" data-id="edit_document" *ngIf="headerData.edit" (click)="edit()">
+            <button mat-button color="primary" data-id="edit_document" *ngIf="_headerData.edit" (click)="edit()">
                 <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
             </button>
-            <button mat-button color="warn" data-id="delete_document" *ngIf="headerData.delete" (click)="delete()">
+            <button mat-button color="warn" data-id="delete_document" *ngIf="_headerData.delete" (click)="delete()">
                 <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
             </button>
         </div>
     </div>
     <div class="data-description" data-id="data-description">
         <div class="identifier-row">
-            <app-identifier-cases data-id="scope" *ngIf="headerData?.headerDescriptionData?.scope"
-                [position]="position.COLUMN" [showLegend]="true"
-                [description]="headerData?.headerDescriptionData?.scope" [identifierCase]="identiferCases.SCOPE"
-                id="scope"></app-identifier-cases>
-            <app-identifier-cases data-id="specialty" *ngIf="headerData?.headerDescriptionData?.specialty"
-                [position]="position.COLUMN" [showLegend]="true"
-                [description]="headerData?.headerDescriptionData?.specialty" [identifierCase]="identiferCases.SPECIALTY"
-                id="specialty"></app-identifier-cases>
-            <app-identifier-cases data-id="dateTime" *ngIf="headerData?.headerDescriptionData?.dateTime"
-                [position]="position.COLUMN" [showLegend]="true"
-                [description]="headerData?.headerDescriptionData?.dateTime" [identifierCase]="identiferCases.DATE"
-                id="date"></app-identifier-cases>
-            <app-identifier-cases data-id="patient" *ngIf="headerData?.headerDescriptionData?.patient"
-                [position]="position.COLUMN" [showLegend]="true"
-                [description]="headerData?.headerDescriptionData?.patient" [identifierCase]="identiferCases.PATIENT"
-                id="patient"></app-identifier-cases>
-            <app-identifier-cases data-id="professional" *ngIf="headerData?.headerDescriptionData?.professional"
-                [position]="position.COLUMN" [showLegend]="true"
-                [description]="headerData?.headerDescriptionData?.professional"
-                [identifierCase]="identiferCases.PROFESSIONAL" id="professional"></app-identifier-cases>
-            <app-identifier-cases data-id="institution" *ngIf="headerData?.headerDescriptionData?.institution"
-                [position]="position.COLUMN" [showLegend]="true"
-                [description]="headerData?.headerDescriptionData?.institution"
-                [identifierCase]="identiferCases.INSTITUTION" id="institution"></app-identifier-cases>
-            <app-identifier-cases data-id="sector" *ngIf="headerData?.headerDescriptionData?.sector"
-                [position]="position.COLUMN" [showLegend]="true"
-                [description]="headerData?.headerDescriptionData?.sector" [identifierCase]="identiferCases.SECTOR"
-                id="sector"></app-identifier-cases>
-            <app-identifier-cases data-id="room" *ngIf="headerData?.headerDescriptionData?.room"
-                [position]="position.COLUMN" [showLegend]="true" [description]="headerData?.headerDescriptionData?.room"
-                [identifierCase]="identiferCases.ROOM" id="room"></app-identifier-cases>
-            <app-identifier-cases data-id="bed" *ngIf="headerData?.headerDescriptionData?.bed"
-                [position]="position.COLUMN" [showLegend]="true" [description]="headerData?.headerDescriptionData?.bed"
-                [identifierCase]="identiferCases.BED" id="bed"></app-identifier-cases>
+            <ng-container *ngFor="let data of _headerData.headerDescriptionData">
+                <app-identifier-cases
+                    *ngIf="data.value"
+                    data-id="data.dataId"
+                    position="{{ position.COLUMN }}"
+                    showLegend="true"
+                    [description]="data.value"
+                    [identifierCase]="data.identifierCase">
+                </app-identifier-cases>
+            </ng-container>
         </div>
     </div>
 </div>
