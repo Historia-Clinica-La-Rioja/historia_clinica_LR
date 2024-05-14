@@ -46,6 +46,7 @@
     "ng2-pdf-viewer": "^9.1.4",
     "ngx-quill": "^17.0.0",
     "ngx-translate-multi-http-loader": "^3.0.0",
+    "ol": "^9.1.0",
     "quill": "^1.3.7",
     "quill-mention": "^3.2.0",
     "rxjs": "~7.5.0",
