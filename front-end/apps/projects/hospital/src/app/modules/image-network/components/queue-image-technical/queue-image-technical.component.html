@@ -1,4 +1,7 @@
 <section class="queue-image-section">
     <h2>{{'image-network.technical-section.QUEUE_IMAGE' | translate}}</h2>
-    <app-image-table-technical></app-image-table-technical>
+    <div fxlayout="column" fxLayoutGap="10px">
+        <app-image-queue-filters></app-image-queue-filters>
+        <app-image-table-technical></app-image-table-technical>
+    </div>
 </section>

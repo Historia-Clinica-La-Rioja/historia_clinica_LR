@@ -66,7 +66,8 @@
         },
         "queue_list": {
         "TRY_AGAIN": "Reintentar",
-        "INDEX": "Indexar"
+        "INDEX": "Indexar",
+        "DO_FILTER":"Aplicar filtros"
         },
         "worklist": {
             "status": {
@@ -135,6 +136,7 @@
             "PATIENT_DOCUMENT": "Documento de paciente",
             "INSTITUTION": "Institución",
             "STATUS": "Estado",
+            "STUDY":"Estudio",
             "FINISH": "finalizar",
             "VIEW_DETAILS": "ver detalle",
 			"DERIVE_REPORT": "Derivar informe",

@@ -1,47 +1,7 @@
 <mat-card class="image-list-card">
     <mat-list>
-        <ng-container *ngIf=" imageList$ | async as imageList, else loading ">
-            <ng-container *ngIf=" imageList.length > 0, else noData">
-                <ng-container *ngFor="let image of imageList">
-                    <mat-list-item class="item-content">
-                        <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="25px" fxFlex="100">
-                            <app-patient-summary fxFlex.gt-sm="20" [person]="image.person" [size]="size"></app-patient-summary>
-                            <div fxFlex.gt-sm="3">
-                                <ng-container *ngIf="!image.serviceRequestId">
-                                    <app-tooltip-order
-                                        [typeOrder]="!image.studies ? 'sin orden' : 'transcripta'"></app-tooltip-order>
-                                </ng-container>
-                            </div>
-                            <span *ngIf="image.studies; else noStudy" class="study-name capitalize"
-                                fxFlex.gt-sm="23">{{image.studies}}</span>
-                            <ng-template #noStudy><span fxFlex.gt-sm="23"
-                                    class="study-name grey">{{'image-network.worklist.details_study.PENDING_ORDER' |
-                                    translate}}</span></ng-template>
-                            <app-colored-label class="personalized-label capitalize" fxFlex.xl="7" fxFlex.lg="9"
-                                fxFlex.gt-sm="13" description={{image.status.description}} color="{{image.status.color}}"
-                                [icon]="image.status.icon"></app-colored-label>
-                            <div fxFlex.gt-sm="8" class="time-size">
-                                <span>
-                                    {{ image.date | dateFormat: 'datetime' }}
-                                </span>
-                            </div>
-                            <div fxFlex.gt-sm="20" fxFlex.gt-md="25" fxLayout="row" fxLayoutGap="6px"
-                                fxLayoutAlign="center baseline">
-                                <app-button class="loading-button" fxFlex="70" [buttonType]="ButtonType.RAISED"
-                                    [text]="'image-network.queue_list.TRY_AGAIN'" [disabled]="image.status.description !== ERROR_IMAGE"
-                                    (clicked)="tryAgain(image)">
-                                </app-button>
-                                <!-- <app-button fxFlex="70" [buttonType]="ButtonType.RAISED"
-                                    [text]="'image-network.queue_list.INDEX'" [disabled]="true" (clicked)="doIndex()">
-                                </app-button> TODO: enable when be is available -->
-                            </div>
-                        </div>
-                    </mat-list-item>
-                    <mat-divider></mat-divider>
-                </ng-container>
-                <mat-paginator #paginator (page)="onPageChanges($event)" [length]="elementsAmount" [pageSize]="PAGE_SIZE" [pageIndex]="pageIndex" showFirstLastButtons>
-                </mat-paginator>
-            </ng-container>
+        <ng-container *ngIf="imageList$ | async as imageList, else loading">
+            <app-queue-image-list [queueList]="imageList" [paginationAmount]="elementsAmount"></app-queue-image-list>
         </ng-container>
     </mat-list>
 </mat-card>
@@ -50,8 +10,4 @@
     <div class="spinner">
         <mat-spinner color="primary"></mat-spinner>
     </div>
-</ng-template>
-
-<ng-template #noData>
-    <strong class="no-data grey">{{SIN_INFORMACION}}</strong>
 </ng-template>

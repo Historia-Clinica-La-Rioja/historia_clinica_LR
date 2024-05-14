@@ -46,6 +46,7 @@ const PAGE_MIN_SIZE = 10;
 export class WorklistByTechnicalComponent implements OnInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(WorklistFiltersComponent) worklistFiltersComponent: WorklistFiltersComponent;
+
 	equipments: EquipmentDto[] = [];
 	modalities$: Observable<ModalityDto[]>;
 	allEquipments: EquipmentDto[] = [];

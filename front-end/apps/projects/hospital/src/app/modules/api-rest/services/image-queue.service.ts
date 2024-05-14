@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ImageQueueListDto, PageDto } from '@api-rest/api-model';
+import { ImageQueueFilteringCriteriaDto, ImageQueueListDto, PageDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -16,10 +16,10 @@ export class ImageQueueService {
 	) { }
 
 
-	getImageQueueList(pageSize: number, pageNumber: number):Observable<PageDto<ImageQueueListDto>> {
+	getImageQueueList(pageSize: number, pageNumber: number, filterValues?: ImageQueueFilteringCriteriaDto ):Observable<PageDto<ImageQueueListDto>> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/image-queue`;
 		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize);
-		return this.http.get<PageDto<ImageQueueListDto>>(url, {params: queryParam})
+		return this.http.post<PageDto<ImageQueueListDto>>(url, filterValues, {params: queryParam})
 	}
 
 	updateImageQueueRetry(idMoveImage:number): Observable<boolean> {

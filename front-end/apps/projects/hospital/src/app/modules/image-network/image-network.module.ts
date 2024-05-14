@@ -38,6 +38,9 @@ import { TechnicalWorklistHomeComponent } from './routes/technical-worklist-home
 import { QueueImageTechnicalComponent } from './components/queue-image-technical/queue-image-technical.component';
 import { ImageTableTechnicalComponent } from './components/image-table-technical/image-table-technical.component';
 import { PatientSummaryComponent } from '../hsi-components/patient-summary/patient-summary.component';
+import { ImageQueueFiltersComponent } from './components/image-queue-filters/image-queue-filters.component';
+import { ImageQueuePaginatorComponent } from './components/image-queue-paginator/image-queue-paginator.component';
+import { QueueImageListComponent } from './components/queue-image-list/queue-image-list.component';
 
 @NgModule({
     declarations: [
@@ -68,6 +71,9 @@ import { PatientSummaryComponent } from '../hsi-components/patient-summary/patie
         TechnicalWorklistHomeComponent,
         QueueImageTechnicalComponent,
         ImageTableTechnicalComponent,
+        ImageQueueFiltersComponent,
+        ImageQueuePaginatorComponent,
+        QueueImageListComponent,
     ],
     imports: [
         CommonModule,

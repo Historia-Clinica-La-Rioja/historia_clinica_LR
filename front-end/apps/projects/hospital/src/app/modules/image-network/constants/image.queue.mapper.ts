@@ -3,21 +3,22 @@ import { PatientSummary } from "../../hsi-components/patient-summary/patient-sum
 import { ItemImageQueue } from "../components/image-table-technical/image-table-technical.component"
 import { Color } from "@presentation/colored-label/colored-label.component"
 import { PatientNameService } from "@core/services/patient-name.service"
+import { convertDateTimeDtoToDate } from "@api-rest/mapper/date-dto.mapper"
 
 
-const EIMAGE_QUEUE_ERROR = EImageMoveStatus.ERROR
+export const EIMAGE_QUEUE_ERROR = EImageMoveStatus.ERROR
 
 export const QUEUE_ERROR = 'Error'
-const MOVIENDO = 'Moviendo ...'
+export const MOVIENDO = 'Moviendo ...'
 const PENDIENTE = 'Pendiente de moverse'
 
 
-const translateMappingStatus = new Map<EImageMoveStatus,string>()
+export const translateMappingStatus = new Map<EImageMoveStatus,string>()
 translateMappingStatus.set(EImageMoveStatus.ERROR, QUEUE_ERROR)
 translateMappingStatus.set(EImageMoveStatus.MOVING, MOVIENDO)
 translateMappingStatus.set(EImageMoveStatus.PENDING, PENDIENTE)
 
-export const mapToItemImageQueue = (items: ImageQueueListDto[], patientNameServiceInstance: PatientNameService): ItemImageQueue[] => {
+export const mapToListItemImageQueue = (items: ImageQueueListDto[], patientNameServiceInstance: PatientNameService): ItemImageQueue[] => {
     return items.map(item => {
         return {
             person: toPatientSummary(item.patient, patientNameServiceInstance),
@@ -26,7 +27,7 @@ export const mapToItemImageQueue = (items: ImageQueueListDto[], patientNameServi
                 description: translateMappingStatus.get(item.imageMoveStatus),
                 color: item.imageMoveStatus === EIMAGE_QUEUE_ERROR ? Color.RED : Color.YELLOW,
             },
-            date: new Date(item.updatedOn),
+            date: convertDateTimeDtoToDate(item.createdOn),
             serviceRequestId: item.serviceRequestId,
             idMove: item.id
         }
