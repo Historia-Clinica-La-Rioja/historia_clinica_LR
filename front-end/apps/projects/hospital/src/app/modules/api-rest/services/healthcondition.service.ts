@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, map} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environments/environment';
 import {HealthConditionNewConsultationDto} from '@api-rest/api-model';
 import {ContextService} from '@core/services/context.service';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,6 +18,6 @@ export class HealthConditionService {
 
 	getHealthCondition(healthConditionId: number): Observable<HealthConditionNewConsultationDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/healthcondition/${healthConditionId}`;
-		return this.http.get<HealthConditionNewConsultationDto>(url);
+		return this.http.get<HealthConditionNewConsultationDto>(url).pipe(map(hc => {return {...hc ,startDate: dateISOParseDate(hc.startDate.toString())}}));
 	}
 }
