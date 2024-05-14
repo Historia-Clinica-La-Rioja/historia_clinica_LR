@@ -51,7 +51,6 @@ import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
-import * as _ from 'lodash';
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 
 const TIME_OUT = 5000;

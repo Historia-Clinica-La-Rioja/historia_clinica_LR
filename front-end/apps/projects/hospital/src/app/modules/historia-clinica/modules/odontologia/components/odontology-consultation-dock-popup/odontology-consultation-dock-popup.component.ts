@@ -361,18 +361,23 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		const referencesToUpdate: Observable<number[]>[] = [];
 
 		references.forEach((reference, index) => {
-			const obs = this.referenceFileService.uploadReferenceFiles(this.data.patientId, reference.referenceFiles);
-			referencesToUpdate.push(obs);
+			if (reference.referenceFiles?.length) {
+				const obs = this.referenceFileService.uploadReferenceFiles(this.data.patientId, reference.referenceFiles);
+				referencesToUpdate.push(obs);
+			}
+
 			if (referencesToUpdate.length) {
-				forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
-					const filesAmount = reference.referenceFiles.length;
-					for(let i = 0; i < filesAmount; i++ ){
-						this.odontologyReferenceService.addFileIdAt(index, referenceFileIds[index][i]);
-					}
-					this.createConsultation(odontologyDto);
-				}, _ => {
-					this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
-				});
+					forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
+						const filesAmount = reference.referenceFiles.length;
+						for(let i = 0; i < filesAmount; i++ ){
+							if (referenceFileIds[index]?.[i]) {
+								this.odontologyReferenceService.addFileIdAt(index, referenceFileIds[index][i]);
+							}
+						}
+						this.createConsultation(odontologyDto);
+					}, _ => {
+						this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
+					});
 			} else {
 				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
 				this.createConsultation(odontologyDto);
