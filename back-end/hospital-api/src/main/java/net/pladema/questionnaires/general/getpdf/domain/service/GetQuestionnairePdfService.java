@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.pladema.questionnaires.common.domain.service.QuestionnaireUtilsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
@@ -49,14 +51,18 @@ public class GetQuestionnairePdfService {
 	@Autowired
 	private final IdentificationTypeRepository identificationTypeRepository;
 
-    public GetQuestionnairePdfService(AnswerRepository answerRepository, QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, InstitutionRepository institutionRepository, PersonRepository personRepository, IdentificationTypeRepository identificationTypeRepository) {
+	@Autowired
+	private final QuestionnaireUtilsService utilsService;
+
+    public GetQuestionnairePdfService(AnswerRepository answerRepository, QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, InstitutionRepository institutionRepository, PersonRepository personRepository, IdentificationTypeRepository identificationTypeRepository, QuestionnaireUtilsService utilsService) {
         this.answerRepository = answerRepository;
         this.questionnaireResponseRepository = questionnaireResponseRepository;
         this.healthcareProfessionalRepository = healthcareProfessionalRepository;
         this.institutionRepository = institutionRepository;
         this.personRepository = personRepository;
         this.identificationTypeRepository = identificationTypeRepository;
-    }
+		this.utilsService = utilsService;
+	}
 
     public Map<String, Object> createQuestionnaireContext(Integer questionnaireResponseId, Integer institutionId) throws DocumentException, IOException {
 		QuestionnaireResponse response = questionnaireResponseRepository.findById(questionnaireResponseId)
@@ -81,8 +87,8 @@ public class GetQuestionnairePdfService {
 		IdentificationType patientIdType = identificationTypeRepository.findById(patientPerson.getIdentificationTypeId())
 				.orElseThrow(() -> new NotFoundException("Patient person not found"));
 
-		String professionalPersonFullName = fullNameFromPerson(professionalPerson);
-		String patientPersonFullName = fullNameFromPerson(patientPerson);
+		String professionalPersonFullName = utilsService.fullNameFromPerson(professionalPerson);
+		String patientPersonFullName = utilsService.fullNameFromPerson(patientPerson);
 
 		Period patientAgePeriod = calculateAgeAtQuestionnaireResponseCreation(response);
 		String patientAge = formatAge(patientAgePeriod);
@@ -103,26 +109,6 @@ public class GetQuestionnairePdfService {
 		context.put("formattedCreatedOn", formattedCreatedOn);
 
 		return context;
-	}
-
-	public String fullNameFromPerson(Person person) {
-
-		StringBuilder fullNameBuilder = new StringBuilder();
-
-		if (person.getLastName() != null) {
-			fullNameBuilder.append(person.getLastName()).append(" ");
-		}
-		if (person.getOtherLastNames() != null) {
-			fullNameBuilder.append(person.getOtherLastNames()).append(" ");
-		}
-		if (person.getFirstName() != null) {
-			fullNameBuilder.append(person.getFirstName()).append(" ");
-		}
-		if (person.getMiddleNames() != null) {
-			fullNameBuilder.append(person.getMiddleNames()).append(" ");
-		}
-
-		return fullNameBuilder.toString().trim();
 	}
 
 	public Period calculateAgeAtQuestionnaireResponseCreation(QuestionnaireResponse questionnaireResponse) {
@@ -160,7 +146,7 @@ public class GetQuestionnairePdfService {
 		Person person = personRepository.findPersonByPatientId(response.getPatientId())
 				.orElseThrow(() -> new NotFoundException("Person not found"));
 
-		String personName = fullNameFromPerson(person);
+		String personName = utilsService.fullNameFromPerson(person);
 
 		String formattedResponseDate = formatDbTimestamp(response.getCreatedOn());
 
