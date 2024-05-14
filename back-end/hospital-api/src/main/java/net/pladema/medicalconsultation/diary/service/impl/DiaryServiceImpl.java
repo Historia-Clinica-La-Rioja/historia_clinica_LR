@@ -57,6 +57,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -166,9 +167,12 @@ public class DiaryServiceImpl implements DiaryService {
 		LOG.debug("Input parameters -> diaryToUpdate {}", diaryToUpdate);
 
 		validateDiary(diaryToUpdate);
-		validateOverlapWithOcupation(diaryToUpdate);
 
-		return diaryRepository.findById(diaryToUpdate.getId()).map(savedDiary -> {
+		Optional<Diary> diaryOpt = diaryRepository.findById(diaryToUpdate.getId());
+		if (diaryOpt.isPresent() && !diaryOpt.get().getDoctorsOfficeId().equals(diaryToUpdate.getDoctorsOfficeId()))
+			validateOverlapWithOcupation(diaryToUpdate);
+
+		return diaryOpt.map(savedDiary -> {
 			HashMap<DiaryOpeningHoursBo, List<AppointmentBo>> apmtsByNewDOH = new HashMap<>();
 			diaryToUpdate.getDiaryOpeningHours().forEach( doh -> {
 				if (doh.getProtectedAppointmentsAllowed() != null && doh.getProtectedAppointmentsAllowed() && diaryToUpdate.getCareLines().isEmpty())
@@ -629,12 +633,18 @@ public class DiaryServiceImpl implements DiaryService {
 								.flatMap(occupationBo -> occupationBo.getTimeRanges()
 										.stream()
 										.map(timeRangeBo -> new OpeningHoursBo(occupationBo.getId(), timeRangeBo)))
-								.filter(doh::overlap);
+								.filter(oh -> !isSameOpeningHour(doh,oh) && doh.overlap(oh));
 					} catch (DiaryOpeningHoursException e) {
 						throw new DiaryException(DiaryEnumException.DIARY_OPENING_HOURS_OVERLAP, e.getMessage());
 					}
 				})
 				.findAny().isPresent();
+	}
+
+	private Boolean isSameOpeningHour(OpeningHoursBo openingHoursBo, OpeningHoursBo openingHoursBo2){
+		return Objects.equals(openingHoursBo.getDayWeekId(), openingHoursBo2.getDayWeekId()) &&
+				openingHoursBo.getFrom() == openingHoursBo2.getFrom() &&
+				openingHoursBo.getTo() == openingHoursBo2.getTo();
 	}
 
 }
