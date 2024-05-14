@@ -118,7 +118,7 @@ public class ProgramReportController {
 		String title = "Reporte de Recupero - Obras Sociales";
 
 		String [] headers = new String[]{"Institution", "Unidad Operativa", "Prestador", "DNI", "Fecha de atención","Hora", "Cons.N°", "DNI Paciente", "Nombre Paciente", "Sexo",
-				"Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy","Obra/s social/es", "Domicilio", "Localidad", "Motivos", "Procedimientos",
+				"Fecha de nacimiento", "Edad a fecha del turno", "Edad a Hoy","Obra/s social/es", "Domicilio", "Localidad", "Indice de Masa Corporal", "Motivos", "Procedimientos",
 				"Problemas", "Medicación", "Evolución"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
