@@ -582,6 +582,7 @@ export class AppointmentComponent implements OnInit {
 	loadAppointmentsHours(date: DateDto, isInitial?: boolean) {
 		this.possibleScheduleHours = [];
 		this.selectedOpeningHourId = null;
+		this.formDate.controls.hour.setValue(null);
 		const searchCriteria = this.prepareSearchCriteria(date);
 		this.diaryService.getDailyFreeAppointmentTimes(this.data.agenda.id, searchCriteria).subscribe((diaryOpeningHours: DiaryOpeningHoursFreeTimesDto[]) => {
 			if (diaryOpeningHours.length) {
