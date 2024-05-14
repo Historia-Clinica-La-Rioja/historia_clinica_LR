@@ -79,6 +79,12 @@ const routes: Routes = [
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_FIRMA_CONJUNTA }
 			},
+			{
+				path: 'areas-sanitarias',
+				loadChildren: () => import('../sanitary-areas/sanitary-areas.module').then(m => m.SanitaryAreasModule),
+				canActivate: [FeatureFlagGuard],
+				data: { featureFlag: AppFeature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA }
+			},
 
 		],
 		canActivate: [RoleGuard],
