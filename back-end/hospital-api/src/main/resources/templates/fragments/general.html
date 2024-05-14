@@ -81,13 +81,6 @@
             font-size: 13.21px;
         }
 
-        .section-title {
-            font-weight: 500;
-            font-family: 'Roboto', sans-serif;
-            font-size: 13.21px;
-            padding-bottom: 5px;
-        }
-
         .data-title {
             font-weight: 400;
             font-family: 'Roboto', sans-serif;
@@ -646,7 +639,7 @@
     <div th:fragment="personalHistory" th:if="${not #lists.isEmpty(personalHistories.content) || personalHistories.isReferred != null}">
         <p class="section-title">Antecedentes personales</p>
         <div th:if="${!personalHistories.isReferred}">
-            <p>No refiere</p>
+            <p class="section-data">No refiere</p>
         </div>
         <div th:if="${personalHistories.isReferred}">
             <dl class="section-data" th:each="personalHistory,iter: ${personalHistories.content}">
@@ -660,7 +653,7 @@
     <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories.content) || familyHistories.isReferred != null}">
         <p class="section-title">Antecedentes familiares</p>
         <div th:if="${!familyHistories.isReferred}">
-            <p>No refiere</p>
+            <p class="section-data">No refiere</p>
         </div>
         <div th:if="${familyHistories.isReferred}">
             <dl class="section-data" th:each="familyHistory,iter: ${familyHistories.content}">
@@ -674,7 +667,7 @@
     <div th:fragment="allergies" th:if="${not #lists.isEmpty(allergies.content) || allergies.isReferred != null}">
         <p class="section-title">Alergias</p>
         <div th:if="${!allergies.isReferred}">
-            <p>No refiere</p>
+            <p class="section-data">No refiere</p>
         </div>
         <div th:if="${allergies.isReferred}" class="section-data">
             <dl class="lista" th:each="allergy,iter: ${allergies.content}">
