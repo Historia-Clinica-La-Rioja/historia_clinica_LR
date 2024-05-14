@@ -21,10 +21,10 @@ export class AnamnesisDocumentSummaryService {
             procedures: anamnesis.procedures.length ? this.documentsSummaryService.getProceduresAsStringArray(anamnesis.procedures) : null,
             anthropometricData: anamnesis.anthropometricData ? this.documentsSummaryService.getAnthropometricDataAsStrings(anamnesis.anthropometricData) : null,
             vitalSignsAndRiskFactors: anamnesis.riskFactors ? this.documentsSummaryService.getVitalSignsAndRiskFactors(anamnesis.riskFactors) : null,
-            allergies: anamnesis.allergies.length ? this.documentsSummaryService.getAllergiesAsStringArray(anamnesis.allergies) : null,
+            allergies: anamnesis.allergies.content.length ? this.documentsSummaryService.getAllergiesAsStringArray(anamnesis.allergies.content) : null,
             vaccines: anamnesis.immunizations.length ? this.documentsSummaryService.getVaccinesAsStringArray(anamnesis.immunizations) : null,
-            personalHistories: anamnesis.personalHistories.length ? this.documentsSummaryService.getHistoriesAsStringArray(anamnesis.personalHistories) : null,
-            familyHistories: anamnesis.familyHistories.length ? this.documentsSummaryService.getHistoriesAsStringArray(anamnesis.familyHistories) : null,
+            personalHistories: anamnesis.personalHistories.content.length ? this.documentsSummaryService.getHistoriesAsStringArray(anamnesis.personalHistories.content) : null,
+            familyHistories: anamnesis.familyHistories.content.length ? this.documentsSummaryService.getHistoriesAsStringArray(anamnesis.familyHistories.content) : null,
             medications: anamnesis.medications.length ? this.documentsSummaryService.getMedicationsAsStringArray(anamnesis.medications) : null,
         }
     }
