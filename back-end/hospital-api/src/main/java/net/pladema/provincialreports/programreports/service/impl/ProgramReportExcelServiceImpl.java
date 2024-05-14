@@ -40,7 +40,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 	}
 
 	@Override
-	public IWorkbook buildExcelEpidemiologyOne(String title, String[] headers, List<EpidemiologyOneConsultationDetail> result) {
+	public IWorkbook  buildExcelEpidemiologyOne(String title, String[] headers, List<EpidemiologyOneConsultationDetail> result) {
 		IWorkbook wb = WorkbookCreator.createExcelWorkbook();
 		createCellStyle(wb);
 
@@ -440,6 +440,10 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
 		cell15.setCellValue(content.getLocation());
 		cell15.setCellStyle(style);
+
+		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
+		cell16.setCellValue(content.getBodyMassIndex());
+		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
 		cell17.setCellValue(content.getReasons());

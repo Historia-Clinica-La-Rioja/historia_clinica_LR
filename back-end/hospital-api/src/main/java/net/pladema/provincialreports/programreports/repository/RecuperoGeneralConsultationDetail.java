@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class RecuperoGeneralConsultationDetail {
 
 	private String institution;
@@ -43,6 +45,8 @@ public class RecuperoGeneralConsultationDetail {
 
 	private String location;
 
+	private String bodyMassIndex;//
+
 	private String reasons;
 
 	private String procedures;
@@ -52,5 +56,7 @@ public class RecuperoGeneralConsultationDetail {
 	private String medication;
 
 	private String evolution;
+
+
 
 }
