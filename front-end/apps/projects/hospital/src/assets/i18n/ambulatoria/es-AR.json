@@ -990,6 +990,7 @@
                         "TITLE": "Acciones implementadas",
                         "SUBTITLE_1": "Articulación al interior del sistema de salud",
                         "SUBTITLE_2": "Articulación al interior del establecimiento de salud",
+                        "MORE_DEVICES": "(+{{ amountOfDevices }} más)",
                         "questions": {
                             "QUESTION_1": "¿Ante qué área/organismo?",
                             "QUESTION_2": "Nombre de área/organismo",
@@ -1009,7 +1010,8 @@
                             "SELECT_WHICH_AREA_ORGANISM": "Seleccione ante que área/organismo",
                             "SELECT_WICH_ESTABLISHMENT": "Seleccione que establecimiento",
                             "SELECT_WICH_ORGANIZATION": "Seleccione ante que organismo",
-                            "SELECT_WICH_AUTHORITY_ORGANISM": "Seleccione ante que autoridad/organismo"
+                            "SELECT_WICH_AUTHORITY_ORGANISM": "Seleccione ante que autoridad/organismo",
+                            "SELECT_DEVICES": "Seleccione dispositivo/s"
                         }
                     },
                     "relevant-information": {

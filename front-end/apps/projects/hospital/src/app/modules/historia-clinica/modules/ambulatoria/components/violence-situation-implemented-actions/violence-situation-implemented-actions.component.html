@@ -119,19 +119,39 @@
                 devicesEnum.MUNICIPAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.MUNICIPAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let mdev of municipalDevicesList" [checked]="selectedMunicipalDevices.includes(mdev.value)" (change)="setMunicipalDevices(mdev.value)"
-                    color="primary">{{ mdev.text }}</mat-checkbox>
-
-				<mat-error *ngIf="hasError(form, 'required', 'municipalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
+                <mat-form-field fxFlex="100%" appearance="outline">
+                    <mat-select (selectionChange)="setMunicipalDevices($event.value)" multiple [placeholder]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.placeholders.SELECT_DEVICES' | translate">
+                       <mat-select-trigger>
+                            {{form.value.municipalDevices?.[0] | translateDeviceText: municipalDevicesList}}
+                            <span *ngIf="(form.value.municipalDevices?.length) > 1" [translate]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.MORE_DEVICES'" 
+                                [translateParams]="{amountOfDevices: form.value.municipalDevices.length - 1}">
+                            </span>
+                       </mat-select-trigger>
+                       <mat-option *ngFor="let mdev of municipalDevicesList" [value]="mdev.value">
+                            {{mdev.text}}
+                       </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-error *ngIf="hasError(form, 'required', 'municipalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
-
+            
             <mat-checkbox (change)="setDevice(devicesEnum.PROVINCIAL_DEVICES)" [checked]="selectedDevices.includes(devicesEnum.PROVINCIAL_DEVICES)" color="primary">{{
                 devicesEnum.PROVINCIAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.PROVINCIAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let pdev of provincialDevicesList" [checked]="selectedProvincialDevices.includes(pdev.value)" (change)="setProvincialDevices(pdev.value)"
-                    color="primary">{{ pdev.text }}</mat-checkbox>
-
+                <mat-form-field fxFlex="100%" appearance="outline">
+                    <mat-select (selectionChange)="setProvincialDevices($event.value)" multiple [placeholder]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.placeholders.SELECT_DEVICES' | translate">
+                        <mat-select-trigger>
+                            {{form.value.provincialDevices?.[0] | translateDeviceText: provincialDevicesList}}
+                            <span *ngIf="(form.value.provincialDevices?.length) > 1" [translate]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.MORE_DEVICES'"
+                                [translateParams]="{amountOfDevices: form.value.provincialDevices.length - 1}">
+                            </span>
+                        </mat-select-trigger>
+                        <mat-option *ngFor="let pdev of provincialDevicesList" [value]="pdev.value">
+                            {{pdev.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
 				<mat-error *ngIf="hasError(form, 'required', 'provincialDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 
@@ -139,9 +159,19 @@
                 devicesEnum.NATIONAL_DEVICES }}</mat-checkbox>
 
             <div *ngIf="devices.includes(devicesEnum.NATIONAL_DEVICES)" class="aside column">
-                <mat-checkbox *ngFor="let ndev of nationalDevicesList" [checked]="selectedNationalDevices.includes(ndev.value)" (change)="setNationalDevices(ndev.value)"
-                    color="primary">{{ ndev.text }}</mat-checkbox>
-
+                <mat-form-field fxFlex="100%" appearance="outline">
+                    <mat-select (selectionChange)="setNationalDevices($event.value)" multiple [placeholder]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.placeholders.SELECT_DEVICES' | translate">
+                        <mat-select-trigger>
+                            {{form.value.nationalDevices?.[0] | translateDeviceText: nationalDevicesList}}
+                            <span *ngIf="(form.value.nationalDevices?.length) > 1" [translate]="'ambulatoria.paciente.violence-situations.dialog.implemented-actions.MORE_DEVICES'"
+                                [translateParams]="{amountOfDevices: form.value.nationalDevices.length - 1}">
+                            </span>
+                        </mat-select-trigger>
+                       <mat-option *ngFor="let ndev of nationalDevicesList" [value]="ndev.value">
+                            {{ndev.text}}
+                       </mat-option> 
+                    </mat-select>
+                </mat-form-field>
 				<mat-error *ngIf="hasError(form, 'required', 'nationalDevices')" [translate]="'forms.REQUIRED'"></mat-error>
             </div>
 

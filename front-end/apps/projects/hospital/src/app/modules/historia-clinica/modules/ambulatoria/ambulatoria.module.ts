@@ -66,6 +66,8 @@ import { ViolenceSituationPersonInformationComponent } from './components/violen
 import { ViolenceSituationRelevantInformationSectionComponent } from './components/violence-situation-relevant-information-section/violence-situation-relevant-information-section.component';
 import { ViolenceSituationsComponent } from './components/violence-situations/violence-situations.component';
 import { ViolenceSituationViolentPersonInformationComponent } from './components/violence-situation-violent-person-information/violence-situation-violent-person-information.component';
+//pipes
+import { TranslateDeviceTextPipe } from './pipes/translate-device-text';
 //standalone componentes
 import { ReferenceStateLabelComponent } from '../../../hsi-components/reference-state-label/reference-state-label.component';
 import { IdentifierCasesComponent } from '../../../hsi-components/identifier-cases/identifier-cases.component';
@@ -196,6 +198,8 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		ShowClosedFormsTemplateComponent,
  		SelectTemplateComponent,
  		ControlSelectTemplateComponent,
+		//pipe
+		TranslateDeviceTextPipe,
 	],
 	imports: [
 		CommonModule,
