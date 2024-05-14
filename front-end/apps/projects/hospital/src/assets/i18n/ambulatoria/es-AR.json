@@ -942,7 +942,7 @@
                 },
                 "dialog": {
                     "TEXT_FREE_LABEL":"Texto libre",
-                    "SAVE": "Guardar situación de violencia",
+                    "CONFIRM": "Confirmar",
                     "SUCCESS": "Episodio de violencia cargado exitosamente",
                     "ERROR_FORM": "Faltan completar campos",
                     "expanded-person-information": {
