@@ -1,9 +1,11 @@
 package net.pladema.establishment.service.impl;
 
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.externalservice.InternmentEpisodeExternalService;
@@ -36,6 +38,7 @@ public class BedServiceImpl implements BedService {
 	private final InternmentEpisodeExternalService internmentEpisodeExtService;
 	private final PersonService personService;
 	private final HistoricInchargeNurseBedRepository historicInchargeNurseBedRepository;
+	private final LocalDateMapper localDateMapper;
 
 	@Override
 	public Bed updateBedStatusOccupied(Integer id) {
@@ -97,13 +100,31 @@ public class BedServiceImpl implements BedService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Optional<HistoricPatientBedRelocation> getBedRelocationByDateTime(Integer internmentEpisodeId, LocalDateTime localDateTime) {
-		log.debug("Input parameters -> internmentEpisodeId {} localDateTime {}", internmentEpisodeId, localDateTime);
-		Optional<HistoricPatientBedRelocation> result = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId)
-				.filter(historicPatientBedRelocation -> localDateTime.isAfter(historicPatientBedRelocation.getRelocationDate()))
-				.findFirst();
+	public Optional<HistoricPatientBedRelocation> getBedIdByDateTime(Integer internmentEpisodeId, LocalDateTime requestDateTime) {
+		log.debug("Input parameters -> internmentEpisodeId {} requestDateTime {}", internmentEpisodeId, requestDateTime);
+		var patientBedRelocations = historicPatientBedRelocationRepository.getAllByInternmentEpisode(internmentEpisodeId)
+				.collect(Collectors.toList());
+
+		if (patientBedRelocations.isEmpty()) {
+			log.debug(OUTPUT, "No bed relocation yet");
+			return Optional.empty();
+		}
+
+		var result = patientBedRelocations.stream()
+				.filter(historicPatientBedRelocation -> this.isAfter(requestDateTime, historicPatientBedRelocation.getRelocationDate()))
+				.findFirst()
+				.or(() -> {
+                    Integer firstBedId = patientBedRelocations.get(patientBedRelocations.size() - 1).getOriginBedId();
+					return Optional.of(new HistoricPatientBedRelocation(null, firstBedId));
+				});
+
 		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	private boolean isAfter(LocalDateTime requestDateTime, LocalDateTime bedRelocationDateTime) {
+		var parsedRelocationDateTime = localDateMapper.fromLocalDateTimeToUTCLocalDateTime(bedRelocationDateTime);
+		return requestDateTime.isAfter(parsedRelocationDateTime);
 	}
 
 	@Override

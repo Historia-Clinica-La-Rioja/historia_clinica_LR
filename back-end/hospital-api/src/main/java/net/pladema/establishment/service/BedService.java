@@ -21,7 +21,7 @@ public interface BedService {
 	
 	Optional<HistoricPatientBedRelocation> getLastPatientBedRelocation(Integer internmentEpisodeId);
 
-	Optional<HistoricPatientBedRelocation> getBedRelocationByDateTime(Integer internmentEpisodeId, LocalDateTime localDateTime);
+	Optional<HistoricPatientBedRelocation> getBedIdByDateTime(Integer internmentEpisodeId, LocalDateTime localDateTime);
 
 	Optional<BedInfoVo> getBedInfo(Integer bedId);
 	

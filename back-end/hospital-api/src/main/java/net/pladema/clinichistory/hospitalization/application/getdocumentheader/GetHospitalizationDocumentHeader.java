@@ -66,7 +66,7 @@ public class GetHospitalizationDocumentHeader {
     }
 
     private void setBedCorrectLocation(InternmentEpisode episode, HospitalizationDocumentHeaderBo documentHeaderBo) {
-        var bedId = bedService.getBedRelocationByDateTime(episode.getId(), documentHeaderBo.getCreatedOn())
+        var bedId = bedService.getBedIdByDateTime(episode.getId(), documentHeaderBo.getCreatedOn())
                 .map(HistoricPatientBedRelocation::getDestinationBedId)
                 .orElse(episode.getBedId());
 

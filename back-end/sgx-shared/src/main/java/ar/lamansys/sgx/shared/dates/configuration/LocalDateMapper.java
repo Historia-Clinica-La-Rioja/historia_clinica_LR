@@ -54,6 +54,13 @@ public interface LocalDateMapper {
 		ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneOffset.UTC);
 		return zonedDateTime.withZoneSameInstant(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
 	}
+
+	default LocalDateTime fromLocalDateTimeToUTCLocalDateTime(LocalDateTime localDateTime) {
+		if (localDateTime == null)
+			return null;
+		ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+		return LocalDateTime.from(zonedDateTime.withZoneSameInstant(ZoneOffset.UTC));
+	}
 	
 	default LocalTime fromStringToLocalTime(String date) {
 		if (date == null)
