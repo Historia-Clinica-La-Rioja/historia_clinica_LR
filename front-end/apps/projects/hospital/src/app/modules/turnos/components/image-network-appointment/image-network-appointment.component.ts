@@ -372,12 +372,17 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
 		if (this.selectedState !== newStateId) {
 			this.checkIfAbsent(newStateId);
-			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
+			if (this.checkToConfirmState(this.selectedState, newStateId) && this.coverageIsNotUpdate() && this.appointment.appointmentStateId !== APPOINTMENT_STATES_ID.CONFIRMED) {
 				this.confirmChangeState(newStateId);
 			} else {
 				this.updateState(newStateId);
 			}
 		}
+	}
+
+	private checkToConfirmState(selectedState: number, newState: number) {
+		return (selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newState === APPOINTMENT_STATES_ID.CONFIRMED) ||
+		(selectedState === APPOINTMENT_STATES_ID.ABSENT && newState === APPOINTMENT_STATES_ID.CONFIRMED)
 	}
 
 	private checkIfAbsent(newStateId: APPOINTMENT_STATES_ID) {
