@@ -1,6 +1,6 @@
 <app-typeahead *ngIf="professionalsTypeAhead?.length" [options]="professionalsTypeAhead"
 	[externalSetValue]="externalSetValue" [titleInput]="professionalTitle" [required]="false"
-	(selectionChange)="setProfessional($event)">
+	(selectionChange)="setProfessional($event)" placeholder="ambulatoria.paciente.surgical-report.surgical-team.LABEL_SEARCH_PROFESSIONAL">
 </app-typeahead>
 <div fxLayout="row" fxLayoutGap="20px" class="professional-info">
 	<mat-form-field appearance="outline">

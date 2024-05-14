@@ -84,6 +84,7 @@ import { VitalSignsSummaryComponent } from './components/vital-signs-summary/vit
 import { AddAllergyComponent } from './dialogs/add-allergy/add-allergy.component';
 import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-anthropometric.component';
 import { AddInmunizationComponent } from './dialogs/add-inmunization/add-inmunization.component';
+import { AddMemberMedicalTeamComponent } from './dialogs/add-member-medical-team/add-member-medical-team.component';
 import { AddRiskFactorsComponent } from './dialogs/add-risk-factors/add-risk-factors.component';
 import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/audit-access-register.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
@@ -215,6 +216,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		AddAllergyComponent,
 		AddAnthropometricComponent,
 		AddInmunizationComponent,
+		AddMemberMedicalTeamComponent,
 		AddRiskFactorsComponent,
 		ConceptsSearchDialogComponent,
 		EffectiveTimeDialogComponent,
@@ -311,6 +313,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		ProfessionalListComponent,
 		PatientEvolutionChartsButtonComponent,
 		// dialogs
+		AddMemberMedicalTeamComponent,
 		ConceptsSearchDialogComponent,
 		ConceptsTypeaheadSearchDialogComponent,
 		NewConsultationAddProblemFormComponent,

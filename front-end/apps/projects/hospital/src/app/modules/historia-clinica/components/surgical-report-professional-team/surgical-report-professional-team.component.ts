@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfessionalDto, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { MatDialog } from '@angular/material/dialog';
+import { DocumentHealthcareProfessionalDto, EProfessionType, GenericMasterDataDto, HCEHealthcareProfessionalDto, ProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
+import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
+import { AddMemberMedicalTeam, AddMemberMedicalTeamComponent } from '@historia-clinica/dialogs/add-member-medical-team/add-member-medical-team.component';
 
 @Component({
 	selector: 'app-surgical-report-professional-team',
@@ -12,55 +15,51 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	@Input() professionals: ProfessionalDto[];
 	@Input() surgicalReport: SurgicalReportDto;
 
-	healthcareProfessionals: DocumentHealthcareProfessionalDto[] = [];
+	healthcareProfessionals: AddMemberMedicalTeam[] = [];
 	surgeon: DocumentHealthcareProfessionalDto;
 	OTHER = EProfessionType.OTHER;
+	professions: GenericMasterDataDto<EProfessionType>[];
 
-	mockedProfessional: DocumentHealthcareProfessionalDto = {
-		healthcareProfessional: {
-			id: 1,
-			licenseNumber: "1111111",
-			person: {
-				birthDate: "",
-				fullName: "Juan Carlos Rodriguez",
-				id: 1,
-				identificationNumber: "37123456",
-			}
-		},
-		profession: {
-			type: EProfessionType.ANESTHESIOLOGIST,
-			typeDescription: null
-		}
-	};
-
-	mockedProfessional2: DocumentHealthcareProfessionalDto = {
-		healthcareProfessional: {
-			id: 2,
-			licenseNumber: "2222222",
-			person: {
-				birthDate: "",
-				fullName: "Mariano Gutierrez",
-				id: 2,
-				identificationNumber: "18123456",
-			}
-		},
-		profession: {
-			type: EProfessionType.OTHER,
-			typeDescription: "AYUDANTE"
-		}
-	};
-
-	constructor() { }
+	constructor(private dialog: MatDialog, private requestMasterDataService: RequestMasterDataService) { }
 
 	ngOnInit(): void {
 		this.surgeon = this.surgicalReport.healthcareProfessionals.find(p => p.profession.type === EProfessionType.SURGEON)
+		this.requestMasterDataService.getSurgicalReportProfessionTypes().subscribe(professions => {
+			professions.shift();
+			this.professions = professions;
+			this.setHealthcareProfessionals();
+		})
 	}
 
 	addProfessional(): void {
-		this.healthcareProfessionals.push(this.mockedProfessional);
-		this.surgicalReport.healthcareProfessionals.push(this.mockedProfessional);
-		this.healthcareProfessionals.push(this.mockedProfessional2);
-		this.surgicalReport.healthcareProfessionals.push(this.mockedProfessional2);
+		const dialogRef = this.dialog.open(AddMemberMedicalTeamComponent, {
+			data: {
+				professionals: this.professionals,
+				professions: this.professions,
+			}
+		})
+		dialogRef.afterClosed().subscribe((professional: AddMemberMedicalTeam) => {
+			if (professional) {
+				this.surgicalReport.healthcareProfessionals.push(professional.professionalData);
+				this.healthcareProfessionals.push(professional);
+			}
+		})
+	}
+
+	setHealthcareProfessionals() {
+		this.healthcareProfessionals = this.surgicalReport.healthcareProfessionals
+			.filter(hp => hp.profession.type !== EProfessionType.SURGEON)
+			.map(hp => {
+				let professional = {
+					professionalData: hp,
+					descriptionType: null,
+				};
+				const profession = this.professions.find(profession => hp.profession.type === profession.id);
+				if (profession && profession.id !== this.OTHER) {
+					professional.descriptionType = profession.description;
+				}
+				return professional;
+			});
 	}
 
 	deleteProfessional(index: number): void {
@@ -90,7 +89,7 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 			healthcareProfessional: professional,
 			profession: {
 				type: type,
-				typeDescription: description
+				otherTypeDescription: description
 			}
 		}
 	}

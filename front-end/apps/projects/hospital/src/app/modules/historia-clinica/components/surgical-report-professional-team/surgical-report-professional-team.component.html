@@ -8,21 +8,23 @@
 		[externalSetProfessional]="surgeon?.healthcareProfessional" (professionalChange)="selectSurgeon($event)">
 	</app-surgical-report-professional-info>
 
-	<app-titled-content-card [title]="'ambulatoria.paciente.surgical-report.surgical-team.CARD_TITLE'" *ngIf="!!healthcareProfessionals.length">
+	<app-titled-content-card [title]="'ambulatoria.paciente.surgical-report.surgical-team.CARD_TITLE'"
+		*ngIf="!!healthcareProfessionals.length">
 		<div *ngFor="let professional of healthcareProfessionals; index as i; last as isLast">
 			<div fxLayout="row" fxLayoutAlign="space-between center" class="list-item">
 				<div fxLayout="column">
-					<span class="bold" *ngIf="professional.profession.type != OTHER else other">{{
-						professional.profession.type }}</span>
+					<span class="bold" *ngIf="professional.professionalData.profession.type != OTHER else other">{{
+						professional.descriptionType }}</span>
 					<ng-template #other>
-						<span class="bold" #other>{{ professional.profession.typeDescription }}</span>
+						<span class="bold capitalize-first-letter" #other>{{ professional.professionalData.profession.otherTypeDescription }}</span>
 					</ng-template>
-					<span>{{ professional.healthcareProfessional.person.fullName }} </span>
+					<span>{{ professional.professionalData.healthcareProfessional.person.fullName }} </span>
 					<div>
 						<span>{{'ambulatoria.paciente.surgical-report.surgical-team.DNI' | translate}} </span>
-						<span>{{ professional.healthcareProfessional.person.identificationNumber }} </span>
-						<span> | {{ 'ambulatoria.paciente.surgical-report.surgical-team.MATRICULA' | translate }} </span>
-						<span>{{ professional.healthcareProfessional.licenseNumber }} </span>
+						<span>{{ professional.professionalData.healthcareProfessional.person.identificationNumber }} </span>
+						<span> | {{ 'ambulatoria.paciente.surgical-report.surgical-team.MATRICULA' | translate }}
+						</span>
+						<span>{{ professional.professionalData.healthcareProfessional.licenseNumber }} </span>
 					</div>
 				</div>
 				<button type="button" mat-icon-button color="warn" (click)="deleteProfessional(i)">

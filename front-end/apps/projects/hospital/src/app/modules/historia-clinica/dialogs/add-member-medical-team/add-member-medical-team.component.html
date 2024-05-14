@@ -1,0 +1,42 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title [translate]="'ambulatoria.paciente.surgical-report.surgical-team.TITLE_POPUP'"></span>
+    <button mat-icon-button mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <div fxLayout="column">
+        <mat-label [translate]="'ambulatoria.paciente.surgical-report.surgical-team.PROFESSION_TYPE'">
+        </mat-label>
+        <mat-form-field appearance="outline">
+            <mat-select (selectionChange)="setProfessionType($event.value)" name="professionType"
+                placeholder="{{'ambulatoria.paciente.surgical-report.surgical-team.LABEL_PROFESSION_TYPE' | translate}}">
+                <mat-option *ngFor="let profession of data.professions" [value]="profession.id">
+                    {{profession.description | translate}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div *ngIf="professional?.professionalData.profession.type === otherProfession" fxLayout="column">
+            <mat-label [translate]="'ambulatoria.paciente.surgical-report.surgical-team.OTHER_PROFESSION'">
+            </mat-label>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" name="otherDescription"
+                    [(ngModel)]="professional?.professionalData.profession.otherTypeDescription">
+            </mat-form-field>
+        </div>
+
+    </div>
+    <app-surgical-report-professional-info [professionals]="data.professionals"
+        [professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.PROFESSIONAL' | translate"
+        [externalSetProfessional]="null" (professionalChange)="selectProfessional($event)">
+    </app-surgical-report-professional-info>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-stroked-button color="primary" cdkFocusInitial mat-dialog-close>
+        <span [translate]="'buttons.CANCEL'"></span>
+    </button>
+    <button mat-raised-button color="primary" id="confirm_button" (click)="emitProfessionalSelected()">
+        <span [translate]="'buttons.CONFIRM'"></span>
+    </button>
+</div>

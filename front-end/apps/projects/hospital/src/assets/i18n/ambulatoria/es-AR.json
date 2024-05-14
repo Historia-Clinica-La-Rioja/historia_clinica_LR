@@ -302,11 +302,17 @@
 				},
 				"surgical-team": {
 					"TITLE": "Equipo Quirófano",
+                    "TITLE_POPUP": "Agregar integrante al equipo",
 					"CARD_TITLE": "Otros integrantes del equipo registrados",
 					"CIRUJANO": "Cirujano",
 					"DNI": "DNI",
 					"MATRICULA": "Matrícula",
-					"ADD_PROFESSIONAL": "+ Agregar otro integrante al equipo"
+					"ADD_PROFESSIONAL": "+ Agregar otro integrante al equipo",
+                    "PROFESSION_TYPE": "Tipo de integrante",
+                    "LABEL_PROFESSION_TYPE": "Seleccione tipo de integrante",
+                    "OTHER_PROFESSION": "Otro tipo de integrante",
+                    "PROFESSIONAL": "Profesional",
+                    "LABEL_SEARCH_PROFESSIONAL":"Buscar por nombre y apellido"
 				},
 				"procedures": {
 					"TITLE": "Procedimientos",

@@ -46,7 +46,7 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 			healthcareProfessional: professional,
 			profession: {
 				type: this.type,
-				typeDescription: null
+				otherTypeDescription: null
 			}
 		}
 	}
