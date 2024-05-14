@@ -87,8 +87,9 @@ import { RecurringCustomizePopupComponent } from '../recurring-customize-popup/r
 import { RecurringCancelPopupComponent } from '../recurring-cancel-popup/recurring-cancel-popup.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
-import { timeDifference, toHourMinuteSecond } from '@core/utils/date.utils';
+import { sameHourAndMinute, timeDifference, toHourMinuteSecond } from '@core/utils/date.utils';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { pushIfNotExists } from '@core/utils/array.utils';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -574,9 +575,16 @@ export class AppointmentComponent implements OnInit {
 		appointmentHour.hours = parseInt(partes[0]);
 		appointmentHour.minutes = parseInt(partes[1]);
 		appointmentHour.seconds = parseInt(partes[2]);
-		this.possibleScheduleHours.push(appointmentHour);
+		this.possibleScheduleHours = pushIfNotExists<TimeDto>(this.possibleScheduleHours, appointmentHour, compareHours);
 		this.possibleScheduleHours.sort((a, b) => a.hours - b.hours || a.minutes - b.minutes);
-		this.formDate.controls.hour.setValue(appointmentHour);
+		const hourToSet = this.possibleScheduleHours.find(hours => compareHours(hours, appointmentHour));
+		this.formDate.controls.hour.setValue(hourToSet);
+
+		function compareHours(time1: TimeDto, time2: TimeDto): boolean {
+			const dateTime1 = timeDtoToDate(time1);
+			const dateTime2 = timeDtoToDate(time2);
+			return sameHourAndMinute(dateTime1, dateTime2);
+		}
 	}
 
 	loadAppointmentsHours(date: DateDto, isInitial?: boolean) {
