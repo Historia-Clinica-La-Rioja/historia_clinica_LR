@@ -121,6 +121,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
                 "           LEFT JOIN ( " +
                 "               SELECT dp.document_id, CAST(1 AS BIT) as proced " +
                 "               FROM {h-schema}document_procedure dp " +
+				"               WHERE dp.document_id = :documentId " +
                 "               GROUP BY proced, dp.document_id " +
                 "           ) pr ON (t.doc_id = pr.document_id) " +
                 "           LEFT JOIN ( " +
@@ -130,7 +131,7 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 					"           FROM {h-schema}document_health_condition dhc " +
 					"           JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
 					"           JOIN {h-schema}snomed sno ON (hc.snomed_id = sno.id) " +
-					"           WHERE hc.problem_id IN (:problemTypes) " +
+					"           WHERE hc.problem_id IN (:problemTypes) AND dhc.document_id = :documentId " +
 					"           GROUP BY dhc.document_id " +
 					"           ) prob ON (t.doc_id = prob.document_id) ";
         Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
