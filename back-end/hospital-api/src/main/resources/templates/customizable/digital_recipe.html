@@ -44,7 +44,7 @@
         </div>
         <div th:classappend="white-color">
             <strong >APELLIDO Y NOMBRE</strong><br/>
-            <span  th:text="${patient.person.completeName()}"></span><br/>
+            <span  th:text="${patient.person.completeName(selfPerceivedFF)}"></span><br/>
         </div>
         <div >
             <div  th:classappend="white-color">
@@ -180,7 +180,7 @@
             </div>
             <div th:classappend="white-color">
                 <strong>APELLIDO Y NOMBRE</strong><br/>
-                <span th:text="${patient.person.completeName()}"></span><br/>
+                <span th:text="${patient.person.completeName(selfPerceivedFF)}"></span><br/>
             </div>
             <div>
                 <div th:classappend="white-color">
