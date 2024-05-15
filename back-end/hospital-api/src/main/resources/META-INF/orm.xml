@@ -609,6 +609,7 @@
 			(SELECT string_agg(concat(mc.name, '(RNOS: ', hi.rnos, ')'), ', ') FROM patient_medical_coverage pmc LEFT JOIN medical_coverage mc on pmc.medical_coverage_id=mc.id LEFT JOIN 					 		health_insurance hi ON hi.id=mc.id WHERE pmc.patient_id=pa.id) AS medicalCoverage,
 			concat(a.street, ' N° ', a.number, CASE WHEN a.floor is not null THEN concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) AS address,
 			c.description AS location,
+			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs on dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs on ovs.snomed_id=s_vs.id where dvs.document_id=d.id and s_vs.id=10) AS bodyMassIndex,
 			cs.id as clinicalSpecialtyId, cs.name as clinicalSpecialty,
 			hp.id as professionalId,
 			(SELECT ovs.value FROM document_vital_sign dvs INNER JOIN observation_vital_sign ovs ON dvs.observation_vital_sign_id=ovs.id INNER JOIN snomed s_vs ON ovs.snomed_id=s_vs.id WHERE dvs.document_id=d.id and s_vs.id=10) AS bmi,
@@ -639,6 +640,7 @@
 			ORDER BY oc.created_on;
 		</query>
 	</named-native-query>
+
 
 	<named-native-query name="ProgramReports.SumarGeneralConsultationDetail" result-set-mapping="ProgramReports.SumarGeneralConsultationDetailResult">
 		<query>
@@ -1907,6 +1909,7 @@
     </named-native-query>
 
 
+
     <!-- ========================================== -->
     <!-- ============== Results-mapping =============== -->
     <!-- ========================================== -->
@@ -2085,6 +2088,7 @@
 			<column name="medicalCoverage" class="java.lang.String"/>
 			<column name="address" class="java.lang.String"/>
 			<column name="location" class="java.lang.String"/>
+			<column name="bodyMassIndex" class="java.lang.String"/>
 			<column name="reasons" class="java.lang.String"/>
 			<column name="procedures" class="java.lang.String"/>
 			<column name="problems" class="java.lang.String"/>
@@ -2579,5 +2583,6 @@
 			<column name="consultations" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
+
 
 </entity-mappings>
