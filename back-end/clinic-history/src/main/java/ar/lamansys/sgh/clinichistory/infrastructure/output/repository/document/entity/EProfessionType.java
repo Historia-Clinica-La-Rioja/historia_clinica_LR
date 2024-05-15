@@ -1,10 +1,18 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import lombok.Getter;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Getter
-public enum EProfessionType {
+public enum EProfessionType implements Serializable {
 
 	SURGEON((short)1, "Cirujano"),
 	SURGEON_ASSISTANT((short)2, "Ayudante"),
@@ -29,6 +37,11 @@ public enum EProfessionType {
 	EProfessionType(Short id, String description){
 		this.id = id;
 		this.description = description;
+	}
+
+	@JsonCreator
+	public static List<EProfessionType> getAll(){
+		return Stream.of(EProfessionType.values()).collect(Collectors.toList());
 	}
 
 	public static EProfessionType map(Short id) {

@@ -1,5 +1,8 @@
 package net.pladema.clinichistory.requests.controller;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.EProfessionType;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.AbstractMasterdataDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.GenericMasterDataDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.requests.controller.dto.ServiceRequestCategoryDto;
 import net.pladema.clinichistory.requests.service.GetServiceRequestCategoriesService;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,4 +60,18 @@ public class RequestMasterdataController {
         LOG.debug("OUTPUT -> {}", result);
         return ResponseEntity.ok().body(result);
     }
+
+	@GetMapping(value = "/get-surgical-report-profession-types")
+	public ResponseEntity<List<GenericMasterDataDto<EProfessionType>>> getSurgicalReportProfessionTypes(){
+		LOG.debug("{}", "Get all surgical report's profession types");
+		List<EProfessionType> surgicalReportProfessions = EProfessionType.getAll();
+		List<GenericMasterDataDto<EProfessionType>> result = surgicalReportProfessions.stream().map(this::createProfessionTypeGenericMasterDataDto).collect(Collectors.toList());
+		LOG.debug("OUTPUT -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	private GenericMasterDataDto<EProfessionType> createProfessionTypeGenericMasterDataDto(EProfessionType professionType) {
+		return new GenericMasterDataDto<>(professionType, professionType.getDescription());
+	}
+
 }

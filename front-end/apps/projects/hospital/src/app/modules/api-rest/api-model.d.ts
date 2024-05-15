@@ -2024,6 +2024,9 @@ export interface GeneratedApiKeyDto {
     name: string;
 }
 
+export interface GenericMasterDataDto<T> extends AbstractMasterdataDto<T> {
+}
+
 export interface GraphicDatasetInfoDto {
     intersections: GraphicDatasetIntersectionDto[];
     label: EAnthropometricGraphicLabel;
