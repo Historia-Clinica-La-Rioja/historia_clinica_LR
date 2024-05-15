@@ -750,7 +750,7 @@ databaseChangeLog:
               validate: true
 
     - changeSet:
-        id: dropView-v_clinic_history_11
+        id: dropView-v_clinic_history_12
         author: mmalyvarni
         dbms: "postgresql"
         changes:
@@ -758,8 +758,8 @@ databaseChangeLog:
               viewName: v_clinic_history
 
     - changeSet:
-        id: createView-v_clinic_history_12
-        comment: Create view v_clinic_history_12
+        id: createView-v_clinic_history_13
+        comment: Create view v_clinic_history_13
         author: mmalyvarni
         changes:
           - createView:
@@ -1211,24 +1211,30 @@ databaseChangeLog:
                 join triage t on (t.id = dt.triage_id)
                 join triage_category tc on (tc.id = t.triage_category_id)
                 where dt.document_id = d.id and d.type_id = 15 group by d.id),'') as triage_level,
+                COALESCE('\nEvolución: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.evolution_note_id and d.type_id = 3), '') ||
                 COALESCE('\nEnfermedad actual: '|| (select string_agg(n.description, ', ' )
                 from note n
-                where n.id = d.current_illness_note_id and d.type_id in (1, 2, 3)), '') ||
+                where n.id = d.current_illness_note_id and d.type_id in (1, 2)), '') ||
+                COALESCE('\nIndicaciones al alta: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.indications_note_id and d.type_id = 3), '') ||
+                COALESCE('\nResumen de estudios y procedimientos realizados: '|| (select string_agg(n.description, ', ' )
+                from note n
+                where n.id = d.studies_summary_note_id and d.type_id = 3), '') ||
                 COALESCE('\nExamen físico: '|| (select string_agg(n.description, ', ' )
                 from note n
                 where n.id = d.physical_exam_note_id and d.type_id in (1, 2, 3)), '') ||
                 COALESCE('\nResumen de estudios y procedimientos realizados: '|| (select string_agg(n.description, ', ' )
                 from note n
-                where n.id = d.studies_summary_note_id and d.type_id in (1, 2, 3)), '') ||
+                where n.id = d.studies_summary_note_id and d.type_id in (1, 2)), '') ||
                 COALESCE('\nEvolución: '|| (select string_agg(n.description, ', ' )
                 from note n
-                where n.id = d.evolution_note_id and d.type_id in (1,2,3)), '') ||
+                where n.id = d.evolution_note_id and d.type_id IN (1, 2)), '') ||
                 COALESCE('\nImpresión clínica y plan: '|| (select string_agg(n.description, ', ' )
                 from note n
-                where n.id = d.clinical_impression_note_id and d.type_id in (1, 2, 3)), '') ||
-                COALESCE('\nIndicaciones al alta: '|| (select string_agg(n.description, ', ' )
-                from note n
-                where n.id = d.indications_note_id and d.type_id in (1, 2, 3)), '') ||
+                where n.id = d.clinical_impression_note_id and d.type_id in (1, 2)), '') ||
                 COALESCE('\nOtras observaciones: '|| (select string_agg(n.description, ',' )
                 from note n
                 where n.id = d.other_note_id and d.type_id in (1, 2, 3)), '') ||
