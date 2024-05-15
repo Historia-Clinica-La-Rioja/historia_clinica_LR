@@ -37,7 +37,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.adultGynecologicalForm = this.formBuilder.group({
-			evaluation: [null]
+			observation: [null]
 		});
 		this.riskFactorsForm = this.factoresDeRiesgoFormService.getForm();
 	}
@@ -58,7 +58,7 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 			const triage: TriageAdultGynecologicalDto = {
 				categoryId: this.triageCategoryId,
 				doctorsOfficeId: this.doctorsOfficeId,
-				notes: formValue.evaluation,
+				notes: formValue.observation,
 				riskFactors: this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue)
 			};
 			this.confirm.emit(triage);

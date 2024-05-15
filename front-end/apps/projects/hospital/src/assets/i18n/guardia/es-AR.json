@@ -13,7 +13,8 @@
 			"CIRCULATION": "Circulación",
 			"CONFIRM": "Confirmar triage",
 			"CRYING_EXCESSIVE": "Llanto sin consuelo",
-			"EVALUATION": "Evaluación",
+			"OBSERVATIONS": "Observaciones",
+			"SET_OBSERVATIONS": "Ingresar observaciones",
 			"HEART_RATE": "Frecuencia cardíaca (/min)",
 			"LEVEL": "Nivel de urgencia",
 			"MUSCLE_HYPERTONIA": "Tono muscular",
@@ -187,7 +188,7 @@
 					"RESPIRACION_ESTRIDOR": "Respiración con estridor",
 					"PERFUSION": "Perfusión",
 					"FACTORES_DE_RIESGO": "Signos vitales y factores de riesgo",
-					"EVALUACION": "Evaluación",
+					"OBSERVATIONS": "Observaciones",
 					"SI": "Si",
 					"NO": "No"
 				}

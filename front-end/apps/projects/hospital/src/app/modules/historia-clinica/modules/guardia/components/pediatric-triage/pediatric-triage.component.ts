@@ -52,7 +52,7 @@ export class PediatricTriageComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.pediatricForm = this.formBuilder.group({
-			notes: [null],
+			observation: [null],
 			appearance: this.formBuilder.group({
 				bodyTemperatureId: [null],
 				cryingExcessive: [null],
@@ -132,7 +132,7 @@ export class PediatricTriageComponent implements OnInit {
 				...formValue.circulation,
 				heartRate: this.mapRiskFactorToDto(formValue.circulation.heartRate)
 			},
-			notes: formValue.notes
+			notes: formValue.observation
 		};
 	}
 
