@@ -30,9 +30,12 @@ export class DesempenoFisicoComponent implements OnInit {
   ticketNum1: number = 0;
   iconActive: boolean;
   iconImageSource: string = 'assets/icons/icon-07.png';
-  customIconSource: string = 'assets/icons/icon-10.png';
   iconImageSource2: string = 'assets/icons/icon-08.png';
+  iconImageSource3: string = 'assets/icons/icon-12.png'
   customIconSource2: string = 'assets/icons/icon-09.png';
+  customIconSource: string = 'assets/icons/icon-10.png';
+  customIconSource3: string = 'assets/icons/icon-11.png';
+
   patientId: number;
   questionnaireId: number;
 
@@ -158,11 +161,18 @@ export class DesempenoFisicoComponent implements OnInit {
       this.iconImageSource = 'assets/icons/icon-07.png';
     }
 
-    if (this.selectedoptionB === '2B' || this.selectedoptionB === '3B') {
+    if (this.selectedoptionA === '2A' || this.selectedoptionA === '3A' || this.selectedoptionB === '2B' || this.selectedoptionB === '3B') {
       this.iconImageSource2 = this.customIconSource2;
     } else {
       this.iconImageSource2 = 'assets/icons/icon-08.png';
     }
+
+    if (this.selectedoptionE === '2D' || this.selectedoptionE === '3D') {
+      this.iconImageSource3 = this.customIconSource3;
+    } else {
+      this.iconImageSource3 = 'assets/icons/icon-12.png';
+    }
+
 
     let counterB2Points = 0;
     if (this.counterB2 < 3.0) {

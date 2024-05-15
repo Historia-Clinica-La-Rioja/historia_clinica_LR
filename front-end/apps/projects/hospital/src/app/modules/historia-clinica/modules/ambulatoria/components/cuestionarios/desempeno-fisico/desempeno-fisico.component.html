@@ -226,7 +226,7 @@
             <!-- SEPTIMA CONSULTA -->
 
             <div class="slogans">
-                <img class="icon" src="assets/icons/icon-12.png" alt="icon5">
+                <img class="icon" [src]="iconImageSource3" alt="iconActive">
 
                 ¿El paciente puede levantarse 5 veces de la <br> silla sin usar sus brazos?<br />
 
@@ -245,8 +245,9 @@
 
             <div class="counter4" id="CT6" name="counter6" *ngIf="!isCounterDisabled6() && !isCounterDisabled7()">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="86" type="number"  value="F4" [(ngModel)]="counterE1" (change)="onInputDesempenoChange2($event)" class="chart" />
-             </div>
+                <input id="86" type="number" value="F4" [(ngModel)]="counterE1"
+                    (change)="onInputDesempenoChange2($event)" class="chart" />
+            </div>
 
             <!-- RESULTADO FINAL -->
 
