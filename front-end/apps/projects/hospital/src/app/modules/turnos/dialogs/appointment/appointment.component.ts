@@ -680,7 +680,7 @@ export class AppointmentComponent implements OnInit {
 		else {
 			updateAppointmentDate.recurringAppointmentTypeId = this.formDate.get('recurringType').value;
 			if (updateAppointmentDate.recurringAppointmentTypeId == RECURRING_APPOINTMENT_OPTIONS.NO_REPEAT) {
-				if (previousDate.getTime() === dateTimeDtoToDate(dateNow).getTime()) {
+				if (previousDate.getTime() === dateTimeDtoToDate(dateNow).getTime() && this.isParentAppointmentOrHasAppointmentChilds()) {
 					this.openConfirmDialog()
 						.afterClosed()
 						.subscribe((result: boolean) => {
@@ -724,6 +724,10 @@ export class AppointmentComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	private isParentAppointmentOrHasAppointmentChilds = (): boolean => {
+		return (this.appointment.hasAppointmentChilds || this.appointment.parentAppointmentId != undefined);
 	}
 
 	private getDateNow = (): DateTimeDto => {
