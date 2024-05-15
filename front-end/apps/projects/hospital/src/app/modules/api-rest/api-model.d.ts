@@ -3298,6 +3298,22 @@ export interface PageDto<T> {
     totalElementsAmount: number;
 }
 
+export interface ParameterDto {
+    description: string;
+    id: number;
+    inputCount: number;
+    loincId: number;
+    snomedGroupId: number;
+    textOptions: string[];
+    typeId: number;
+    unitsOfMeasureIds: number[];
+}
+
+export interface ParameterTypeDto {
+    description: string;
+    id: number;
+}
+
 export interface ParenteralPlanDto extends IndicationDto {
     dosage: NewDosageDto;
     frequency: FrequencyDto;
