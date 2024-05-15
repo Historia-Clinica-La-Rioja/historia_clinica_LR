@@ -3,6 +3,7 @@ package net.pladema.clinichistory.documents.infrastructure.output.repository;
 import ar.lamansys.refcounterref.infraestructure.output.repository.counterreference.CounterReferenceRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.nursing.SharedNursingConsultationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.odontology.SharedOdontologyConsultationPort;
@@ -77,7 +78,7 @@ public class ClinicHistoryContextBuilder {
 		Map<String, Object> ctx = new HashMap<>();
 		boolean selfPerceived = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 		/* Patient Info */
-		addPatientInfo(ctx, document);
+		addPatientInfo(ctx, document, selfPerceived);
 		/* Encounter Info */
 		addEncounterInfo(ctx, document, document.getSourceId(), ECHEncounterType.OUTPATIENT);
 		/* Find the related appointment, if exists */
@@ -109,7 +110,7 @@ public class ClinicHistoryContextBuilder {
 			boolean selfPerceived = featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS);
 			CHDocumentBo referentialDocument = documents.get(0);
 			/* PatientInfo */
-			addPatientInfo(ctx, referentialDocument);
+			addPatientInfo(ctx, referentialDocument, selfPerceived);
 			/* Episode info */
 			addEncounterInfo(ctx, referentialDocument, episodeId, encounterType);
 			/* Clinical records */
@@ -121,8 +122,10 @@ public class ClinicHistoryContextBuilder {
 		return new HashMap<>();
 	}
 
-	private void addPatientInfo(Map<String, Object> context, CHDocumentBo document){
+	private void addPatientInfo(Map<String, Object> context, CHDocumentBo document, boolean selfPerceived){
+		BasicPatientDto patient = patientExternalService.getBasicDataFromPatient(document.getPatientId());
 		context.put("patient", patientExternalService.getBasicDataFromPatient(document.getPatientId()));
+		context.put("patientName", patient.getCompletePersonName(selfPerceived));
 		String patientAge = document.getPatientAgePeriod().contains("Y") ? document.getPatientAgePeriod().substring(1, document.getPatientAgePeriod().indexOf("Y")) : "0";
 		context.put("patientAge", patientAge);
 	}

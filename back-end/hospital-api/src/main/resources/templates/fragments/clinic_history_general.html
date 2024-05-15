@@ -86,11 +86,11 @@
             <div>
                 <div class="row-content">
                     <div class="data-title">Nombre y apellido</div>
-                    <div class="data-text" th:text="${patient.person.completeName()}"></div>
+                    <div class="data-text" th:text="${patientName}"></div>
                 </div>
                 <div class="row-content">
                     <div class="data-title">Documento</div>
-                    <div class="data-text" th:text="${patient.person.identificationNumber}"></div>
+                    <div class="data-text" th:text="${patient.getIdentificationNumber()}"></div>
                 </div>
                 <div class="row-content">
                     <div class="data-title">ID</div>
@@ -102,7 +102,7 @@
                 </div>
                 <div class="row-content">
                     <div class="data-title">Fecha nac.</div>
-                    <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
+                    <div class="data-text" th:text="${#temporals.format(patient.getBirthDate(), 'dd/MM/yyyy')}"></div>
                 </div>
             </div>
         </div>
