@@ -12,15 +12,14 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.e
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class LoadHealthcareProfessionals {
 
 	public static final String OUTPUT = "Output -> {}";
 
 	private final DocumentService documentService;
-
 
 	public List<DocumentHealthcareProfessionalBo> run(Long documentId, List<DocumentHealthcareProfessionalBo> professionals) {
 		log.debug("Input parameters -> documentId {}, professionals {}", documentId, professionals);

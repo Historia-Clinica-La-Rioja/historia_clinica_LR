@@ -522,7 +522,7 @@
         <div th:if="${not #lists.isEmpty(healthcareProfessionals)}">
             <dl th:each="professional,iter: ${healthcareProfessionals}">
                 <dl>
-                    <dd><strong>Rol: </strong><label  th:text="${professional.type.description}"></label></dd>
+                    <dd><strong>Rol: </strong><label  th:text="${professional.professionType.getDescription() + ( professional.otherProfessionTypeDescription != null ? ( ' - ' + professional.otherProfessionTypeDescription ) : '' )}"></label></dd>
                 </dl>
                 <dd><strong>Profesional: </strong> <p  th:text="${professional.healthcareProfessional.person.fullName}"></p></dd>
                 <div th:if="${professional.comments != null}">

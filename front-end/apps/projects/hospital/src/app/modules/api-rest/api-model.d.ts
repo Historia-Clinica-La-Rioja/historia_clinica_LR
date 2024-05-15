@@ -1381,7 +1381,7 @@ export interface DocumentHealthcareProfessionalDto {
     comments?: string;
     healthcareProfessional: HCEHealthcareProfessionalDto;
     id?: number;
-    type: EProfessionType;
+    profession: ProfessionTypeDto;
 }
 
 export interface DocumentHistoricDto {
@@ -3694,6 +3694,11 @@ export interface ProfessionSpecialtyDto {
     specialty: ClinicalSpecialtyDto;
 }
 
+export interface ProfessionTypeDto {
+    otherTypeDescription: string;
+    type: EProfessionType;
+}
+
 export interface ProfessionalAvailabilityDto {
     availability: DiaryAvailabilityDto[];
     professional: BookingProfessionalDto;
@@ -5442,6 +5447,7 @@ export const enum EProfessionType {
     PEDIATRICIAN = "PEDIATRICIAN",
     PATHOLOGIST = "PATHOLOGIST",
     TRANSFUSIONIST = "TRANSFUSIONIST",
+    OTHER = "OTHER",
 }
 
 export const enum EProvincialGovernmentDevice {

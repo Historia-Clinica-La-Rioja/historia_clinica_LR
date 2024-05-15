@@ -577,9 +577,13 @@ public class DocumentServiceImpl implements DocumentService {
 	@Override
 	public DocumentHealthcareProfessional createDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional) {
 		log.debug("Input parameters -> documentId {}, professional {}", documentId, professional);
-		DocumentHealthcareProfessional result = documentHealthcareProfessionalRepository.save(new DocumentHealthcareProfessional(professional.getId(), documentId, professional.getHealthcareProfessional().getId(), professional.getType().getId(), professional.getComments()));
+		DocumentHealthcareProfessional result = documentHealthcareProfessionalRepository.save(getDocumentHealthcareProfessional(documentId, professional));
 		log.debug("Output -> {}", result);
 		return result;	}
+
+	private DocumentHealthcareProfessional getDocumentHealthcareProfessional(Long documentId, DocumentHealthcareProfessionalBo professional) {
+		return new DocumentHealthcareProfessional(professional.getId(), documentId, professional.getHealthcareProfessional().getId(), professional.getProfessionType().getId(), professional.getOtherProfessionTypeDescription(), professional.getComments());
+	}
 
 	@Override
 	public DocumentProsthesis createDocumentProsthesis(Long documentId, String description) {

@@ -1250,3 +1250,14 @@ databaseChangeLog:
                 join institution i on (i.id=d.institution_id)
                 left outer join clinical_specialty cs on (d.clinical_specialty_id=cs.id)
                 where d.deleted=false and d.status_id = '445665009';
+                
+    - changeSet:
+        id: addColumn-profession_type_description-to-document_healthcare_professional
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: document_healthcare_professional
+              columns:
+                - column:
+                    name: other_profession_type_description
+                    type: varchar(255)
