@@ -338,21 +338,26 @@ export class HomeComponent implements OnInit {
 			this.isLoadingRequestReport = true;
 			const reportFilters = this.getReportFilters();
 			const reportId = this.form.value.reportType;
+			const reportDescription = this.REPORT_TYPES.find(reportType => reportType.id === reportId).description;
 
 			const getReportById = {
-				[REPORT_TYPES_ID.MONTHLY]: this.reportsService.getMonthlyReport(reportFilters, `${REPORT_TYPES_ID.MONTHLY}.xls`),
-				[REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT]: this.reportsService.getOutpatientSummaryReport(reportFilters, `${REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT}.xls`),
+				[REPORT_TYPES_ID.MONTHLY]: this.reportsService.getMonthlyReport(reportFilters, `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT]: this.reportsService.getOutpatientSummaryReport(reportFilters, `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS]:
+					this.reportsService.getMonthlySummaryOfExternalClinicAppointmentsReport(reportFilters, `${reportDescription}.xls`),
 				[REPORT_TYPES_ID.DIABETIC_PATIENTS]: this.reportsService.getDiabetesReport(),
 				[REPORT_TYPES_ID.HYPERTENSIVE_PATIENTS]: this.reportsService.getHypertensionReport(),
 				[REPORT_TYPES_ID.WEEKLY_EPIDEMIOLOGICAL_REPORT]: this.reportsService.getEpidemiologicalWeekReport(),
-				[REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL]: this.reportsService.getNominalAppointmentsDetail(reportFilters, `${REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL}.xls`),
-				[REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING]: this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING}.xls`),
-				[REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT]: this.reportsService.getNominalEmergencyCareEpisodeDetail(reportFilters, `${REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT}.xls`)
+				[REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL]:
+					this.reportsService.getNominalAppointmentsDetail(reportFilters, `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING]:
+					this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${reportDescription}.xls`),
+				[REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT]: this.reportsService.getNominalEmergencyCareEpisodeDetail(reportFilters, `${reportDescription}.xls`)
 			};
 
 			const selectedReport = getReportById[reportId];
 			if (selectedReport) {
-				selectedReport().subscribe(() => this.isLoadingRequestReport = false);
+				selectedReport.subscribe(() => this.isLoadingRequestReport = false);
 			}
 		}
 	}
@@ -448,7 +453,7 @@ export class HomeComponent implements OnInit {
 		return {
 			fromDate: this.form.controls.startDate.value,
 			toDate: this.form.controls.endDate.value,
-			specialtyId: this.form.controls.specialtyId.value,
+			clinicalSpecialtyId: this.form.controls.specialtyId.value,
 			doctorId: this.form.controls.professionalId.value,
 			hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
 			hierarchicalUnitId: this.form.controls.hierarchicalUnitId.value,
@@ -473,7 +478,7 @@ interface ReportForm {
 export interface ReportFilters {
 	fromDate: Date;
 	toDate: Date;
-	specialtyId?: number;
+	clinicalSpecialtyId?: number;
 	doctorId?: number;
 	hierarchicalUnitTypeId?: number;
 	hierarchicalUnitId?: number;

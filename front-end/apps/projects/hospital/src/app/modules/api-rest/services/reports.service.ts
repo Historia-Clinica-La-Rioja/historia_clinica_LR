@@ -24,8 +24,8 @@ export class ReportsService {
 		let requestParams: HttpParams = new HttpParams();
 		requestParams = requestParams.append('fromDate', toApiFormat(params.fromDate));
 		requestParams = requestParams.append('toDate', toApiFormat(params.toDate));
-		if (params.specialtyId) {
-			requestParams = requestParams.append('clinicalSpecialtyId', params.specialtyId);
+		if (params.clinicalSpecialtyId) {
+			requestParams = requestParams.append('clinicalSpecialtyId', params.clinicalSpecialtyId);
 		}
 		if (params.doctorId) {
 			requestParams = requestParams.append('doctorId', params.doctorId);
@@ -55,6 +55,11 @@ export class ReportsService {
 		return this.getReport(params, fileName, url);
 	}
 
+	getMonthlySummaryOfExternalClinicAppointmentsReport(searchFilter: ReportFilters, fileName: string): Observable<any> {
+		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/appointment-consultation-summary`;
+		const filters = new HttpParams().append('searchFilter', JSON.stringify(searchFilter));
+		return this.downloadService.downloadXlsWithRequestParams(url, fileName, filters);
+	}
 
 	getDiabetesReport(): Observable<UIComponentDto> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/diabetes`;
@@ -78,8 +83,8 @@ export class ReportsService {
 
 	getNominalEmergencyCareEpisodeDetail(searchFilter: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-emergency-care-episode-detail`;
-		const params = new HttpParams().append('searchFilter', JSON.stringify(searchFilter));
-		return this.downloadService.downloadXlsWithRequestParams(url, fileName, params);
+		const filters = new HttpParams().append('searchFilter', JSON.stringify(searchFilter));
+		return this.downloadService.downloadXlsWithRequestParams(url, fileName, filters);
 	}
 
 	getImageNetworkProductivityReport(searchCriteria: ImageNetworkProductivityFilterDto, fileName: string){
