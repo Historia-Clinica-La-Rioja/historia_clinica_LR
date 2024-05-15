@@ -118,7 +118,6 @@ export class EdmontonComponent {
 
 
     );
-
   }
 
   mappingCognitive() {
@@ -127,8 +126,6 @@ export class EdmontonComponent {
       'B': 2,
       'C': 3
     };
-
-    console.log(this.mappingCognitive, "mapeado de consigna 1")
 
     return cognitiveMap[this.selectedCognitiveOption] || undefined;
   }
@@ -140,11 +137,7 @@ export class EdmontonComponent {
       'G': 6
     };
 
-    console.log(this.mappingHealhtStatus, "mapeado de consigna 2")
-
-
     return healthMapping[this.selectedHealthStatusOption] || undefined;
-
   }
 
   mappingHealthStatusDos() {
@@ -153,9 +146,6 @@ export class EdmontonComponent {
       'I': 8,
       'J': 9
     };
-
-    console.log(this.mappingHealthStatusDos, "mapeado de consigna 2.5")
-
 
     return healthDosMapping[this.selectedHealthStatusOptionDos] || undefined;
 
@@ -180,8 +170,6 @@ export class EdmontonComponent {
       'M': 15
     };
 
-    console.log(this.mappingIndFunction, "mapeado de consigna 3")
-
     return indepFunctionMapping[this.selectedFunctionIndOption] || undefined;
   }
 
@@ -191,8 +179,6 @@ export class EdmontonComponent {
       'N2': 17,
       'O': 18
     };
-
-    console.log(this.mappingSupportSocial, "mapeado de consigna 4")
 
     return suppSocialMapping[this.selectedSupportSocOption] || undefined;
   }
@@ -248,21 +234,19 @@ export class EdmontonComponent {
 
   }
 
+  mappingtotalScore() {
+    const scoreTotalMapping = { 
+      'A1': 21,
+      'A2': 22,
+      'A3': 23,
+      'A4': 24,
+      'A5': 25,
+    }
+
+return scoreTotalMapping[this.calificationTotal] || undefined;
+  }
+
   construirDatos() {
-       const scoreTotal = this.calculateTotal(
-        this.selectedCognitiveOption,
-        this.selectedHealthStatusOption,
-        this.selectedHealthStatusOptionDos,
-        this.selectedFunctionIndOption,
-        this.selectedSupportSocOption,
-        this.selectedMedicationOption,
-        this.selectedMedicationOptionDos,
-        this.selectedNutritionOption,
-        this.selectedAnimoOption,
-        this.selectedContingenciaOption,
-        this.selectedRendimientoFuncOption,
-        this.calificationTotal
-      );
 
      const datos = {
       "questionnaireId": 1,
@@ -328,14 +312,13 @@ export class EdmontonComponent {
         },
 
         {
-          "itemId": 70,
-          "optionId": null,
-          "value": scoreTotal,
+          "itemId": 22,
+          "optionId": this.mappingtotalScore(),
+          "value": "",
         },
       ]
     }
-
-    return datos;
+     return datos;
 
   }
 
