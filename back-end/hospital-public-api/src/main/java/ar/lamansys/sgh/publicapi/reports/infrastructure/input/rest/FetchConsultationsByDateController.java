@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @AllArgsConstructor
-@Tag(name = "PublicApi Turnos", description = "endpoint of consultations and hierarchical units")
+@Tag(name = "PublicApi Reportes", description = "Public Api General Reports")
 @RequestMapping("/public-api/reports/consultations")
 @RestController
 public class FetchConsultationsByDateController {
