@@ -64,7 +64,7 @@
             <div>
                 <strong>DNI: </strong>
                 <label th:text="${patient.person.identificationNumber}"></label>
-                <strong> Nombre y apellido: </strong><label th:text="${patient.person.completeName()}"></label>
+                <strong> Nombre y apellido: </strong><label th:text="${patient.person.completeName(selfPerceivedFF)}"></label>
                 <br/>
                 <div th:if="${patientCoverage != null}">
                     <strong>Cobertura prestacional: </strong>
