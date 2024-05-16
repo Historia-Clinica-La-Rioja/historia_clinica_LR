@@ -1634,6 +1634,8 @@ export interface EmergencyCareEvolutionNoteClinicalData {
 export interface EmergencyCareEvolutionNoteDocumentDto {
     clinicalSpecialtyName: string;
     documentId: number;
+    editedOn: DateTimeDto;
+    editor: HealthcareProfessionalDto;
     emergencyCareEvolutionNoteClinicalData: EmergencyCareEvolutionNoteClinicalData;
     fileName: string;
     performedDate: DateTimeDto;

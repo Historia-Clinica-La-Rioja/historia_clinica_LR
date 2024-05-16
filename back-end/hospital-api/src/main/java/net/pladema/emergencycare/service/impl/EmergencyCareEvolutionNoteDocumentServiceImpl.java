@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.application.reason.ReasonService;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.AllArgsConstructor;
 import net.pladema.emergencycare.repository.EmergencyCareEvolutionNoteRepository;
@@ -18,10 +19,7 @@ import net.pladema.staff.service.HealthcareProfessionalService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -113,7 +111,19 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		evolutionNoteBo.setFileName(documentFileRepository.findById(evolutionNote.getDocumentId()).get().getFilename());
 		evolutionNoteBo.setProfessional(healthcareProfessionalService.findActiveProfessionalById(evolutionNote.getDoctorId()));
 		evolutionNoteBo.setClinicalSpecialtyName(clinicalSpecialtyService.getClinicalSpecialty(evolutionNote.getClinicalSpecialtyId()).get().getName());
+		setEditedOn(evolutionNoteBo);
 		return evolutionNoteBo;
+	}
+
+	private void setEditedOn(EmergencyCareEvolutionNoteDocumentBo evolutionNoteBo) {
+		Long initialDocumentId = documentService.findById(evolutionNoteBo.getId()).map(Document::getInitialDocumentId).orElse(null);
+		if (initialDocumentId != null){
+			documentService.findById(initialDocumentId).ifPresent(initial -> {
+				evolutionNoteBo.setEditedOn(evolutionNoteBo.getPerformedDate());
+				evolutionNoteBo.setPerformedDate(initial.getCreatedOn());
+				evolutionNoteBo.setEditor(healthcareProfessionalService.findProfessionalByUserId(initial.getCreatedBy()));
+			});
+		}
 	}
 
 }

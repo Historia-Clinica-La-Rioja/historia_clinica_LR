@@ -76,6 +76,10 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 
 	private Integer sectorId;
 
+	private LocalDateTime editedOn;
+
+	private HealthcareProfessionalBo editor;
+
 	@Override
 	public Integer getPatientId() {
 		if (patientInfo != null)
