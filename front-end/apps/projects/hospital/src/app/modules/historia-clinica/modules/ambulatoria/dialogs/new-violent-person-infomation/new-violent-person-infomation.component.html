@@ -12,14 +12,14 @@
             <mat-form-field appearance="outline">
                 <mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.LASTNAME' |
                     translate}}</mat-label>
-                <input matInput formControlName="lastname">
+                <input onlyAlphabeticCharacters matInput formControlName="lastname">
                 <mat-error *ngIf="hasError(form, 'required', 'lastname')" [translate]="'forms.REQUIRED'"></mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.NAME' |
                     translate}}</mat-label>
-                <input matInput formControlName="name">
+                <input onlyAlphabeticCharacters matInput formControlName="name">
                 <mat-error *ngIf="hasError(form, 'required', 'name')" [translate]="'forms.REQUIRED'"></mat-error>
             </mat-form-field>
 

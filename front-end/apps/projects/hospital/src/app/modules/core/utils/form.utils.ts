@@ -19,6 +19,7 @@ export const DEFAULT_COUNTRY_ID = 14;
 export const NON_WHITESPACE_REGEX = /\S/;
 export const STRING_PATTERN = /^[a-zA-Z\s]+$/;
 export const BACKSPACE = 'Backspace';
+export const WHITESPACE = '';
 
 export function hasError(form: AbstractControl, type: string, control: string): boolean {
 	return form.get(control).hasError(type);
