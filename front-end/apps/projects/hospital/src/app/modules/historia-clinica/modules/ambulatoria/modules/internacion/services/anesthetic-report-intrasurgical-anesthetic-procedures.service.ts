@@ -45,13 +45,13 @@ export class AnestheticReportIntrasurgicalAnestheticProceduresService {
 		this.isEmptySource.next(this.isEmpty());
     }
 
-    getIntrasurgicalAnestheticProceduresData(): IntrasurgicalAnestheticProceduresData {
-        return {
-            venousAccess: this.form.value.venousAccess ? this.form.value.venousAccess === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
-            nasogastricTube: this.form.value.nasogastricTube ? this.form.value.nasogastricTube === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
-            urinaryCatheter: this.form.value.urinaryCatheter ? this.form.value.urinaryCatheter === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
-        }
-    }
+	getIntrasurgicalAnestheticProceduresData(): IntrasurgicalAnestheticProceduresData {
+		return {
+			venousAccess: this.form.value.venousAccess !== null ? this.form.value.venousAccess === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
+			nasogastricTube: this.form.value.nasogastricTube !== null ? this.form.value.nasogastricTube === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
+			urinaryCatheter: this.form.value.urinaryCatheter !== null ? this.form.value.urinaryCatheter === INTRASURGICAL_ANESTHETIC_PROCEDURES_OPTIONS.YES : null,
+		};
+	}
 
     getForm(): FormGroup {
         return this.form;
