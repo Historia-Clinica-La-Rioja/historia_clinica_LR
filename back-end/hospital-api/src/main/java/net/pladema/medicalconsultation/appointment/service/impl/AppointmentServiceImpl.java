@@ -24,7 +24,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import lombok.AllArgsConstructor;
 
 import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
-import net.pladema.clinichistory.requests.servicerequests.repository.TranscribedServiceRequestRepository;
+import net.pladema.clinichistory.requests.transcribed.infrastructure.output.repository.TranscribedServiceRequestRepository;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
@@ -50,8 +50,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.sgh.clinichistory.application.ports.OrderImageFileStorage;
-import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalInfoDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;

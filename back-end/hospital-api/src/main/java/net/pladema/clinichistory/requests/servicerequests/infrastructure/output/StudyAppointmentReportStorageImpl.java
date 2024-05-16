@@ -23,8 +23,8 @@ import net.pladema.clinichistory.requests.servicerequests.domain.InformerObserva
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
+import net.pladema.clinichistory.requests.transcribed.application.getbyappointmentid.GetTranscribedServiceRequestByAppointmentId;
+import net.pladema.clinichistory.requests.transcribed.domain.TranscribedServiceRequestBo;
 import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
@@ -53,7 +53,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 	private final DocumentFactory documentFactory;
 	private final SharedDocumentPort sharedDocumentPort;
 	private final DiagnosticReportInfoService diagnosticReportInfoService;
-	private final ListTranscribedDiagnosticReportInfoService transcribedDiagnosticReportInfoService;
+	private final GetTranscribedServiceRequestByAppointmentId getTranscribedServiceRequestByAppointmentId;
 	private final PersonService personService;
 	private final MoveStudiesService moveStudiesService;
 	private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
@@ -215,7 +215,7 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		if (diagnosticReportFromOrder != null)
 			return List.of(diagnosticReportFromOrder);
 
-		List<DiagnosticReportBo> transcribedDiagnosticReports = transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId)
+		List<DiagnosticReportBo> transcribedDiagnosticReports = getTranscribedServiceRequestByAppointmentId.run(appointmentId)
 				.map(TranscribedServiceRequestBo::getDiagnosticReports)
 				.orElse(List.of());
 		if (!transcribedDiagnosticReports.isEmpty())
