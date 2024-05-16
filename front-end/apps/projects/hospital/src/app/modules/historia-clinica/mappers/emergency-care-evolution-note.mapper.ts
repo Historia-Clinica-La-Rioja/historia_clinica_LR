@@ -1,4 +1,4 @@
-import { EffectiveClinicalObservationDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto } from "@api-rest/api-model";
+import { EffectiveClinicalObservationDto, OutpatientAllergyConditionDto, OutpatientAnthropometricDataDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto, OutpatientReasonDto, OutpatientRiskFactorDto, ReferableItemDto } from "@api-rest/api-model";
 import { toApiFormat } from "@api-rest/mapper/date.mapper";
 import { fixDate } from "@core/utils/date/format";
 import { dateISOParseDate } from "@core/utils/moment.utils";
@@ -69,8 +69,8 @@ const toAllergy = (allergy: OutpatientAllergyConditionDto): Alergia => {
 	return { snomed: allergy.snomed, criticalityId: allergy.criticalityId }
 }
 
-export const toAllergies = (allergies: OutpatientAllergyConditionDto[]): Alergia[] => {
-	return allergies.map(allergy => toAllergy(allergy));
+export const toAllergies = (allergies: ReferableItemDto<OutpatientAllergyConditionDto>): Alergia[] => {
+	return allergies.content?.map(allergy => toAllergy(allergy));
 }
 
 const toProcedure = (procedure: OutpatientProcedureDto): Procedimiento => {
@@ -101,8 +101,8 @@ const toFamilyHistory = (familyHistory: OutpatientFamilyHistoryDto): Antecedente
 	return { snomed: familyHistory.snomed, fecha: familyHistory.startDate ? dateISOParseDate(familyHistory.startDate) : null }
 }
 
-export const toFamilyHistories = (familyHistories: OutpatientFamilyHistoryDto[]): AntecedenteFamiliar[] => {
-	return familyHistories.map(familyHistory => toFamilyHistory(familyHistory));
+export const toFamilyHistories = (familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>): AntecedenteFamiliar[] => {
+	return familyHistories.content?.map(familyHistory => toFamilyHistory(familyHistory));
 }
 
 export const toEffectiveObservation = (factorDeRiesgo: EffectiveClinicalObservationDto): EffectiveObservation => {

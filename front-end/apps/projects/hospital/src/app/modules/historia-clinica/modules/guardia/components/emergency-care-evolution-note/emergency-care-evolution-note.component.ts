@@ -50,7 +50,7 @@ export class EmergencyCareEvolutionNoteComponent {
 	private toAntecedentesFamiliares(familyHistories): string[] {
 		if (familyHistories.isReferred === false)
 			this.antecedentesFamiliaresContent = ['guardia.no_refer.FAMILY_HISTORIES'];
-		return familyHistories.referredContent.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
+		return familyHistories.content?.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
 
 		function map(m: OutpatientFamilyHistoryDto): string[] {
 			return [m.snomed.pt, m.startDate ? `Desde ${m.startDate}`: null]
