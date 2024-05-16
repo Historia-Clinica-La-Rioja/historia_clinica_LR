@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller;
 
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
@@ -245,6 +246,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
         outpatient.setProblems(Collections.singletonList(outpatientConsultationMapper.fromHealthConditionNewConsultationDto(solvedProblemDto)));
         outpatient.getProblems().forEach(p->p.setId(null));
+		outpatient.setFamilyHistories(new ReferableItemBo<>(new ArrayList<>(), null));
+		outpatient.setAllergies(new ReferableItemBo<>(new ArrayList<>(), null));
 		createOutpatientDocumentService.execute(outpatient, false);
 
         return ResponseEntity.ok().body(true);
