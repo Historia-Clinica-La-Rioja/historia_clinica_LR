@@ -7,11 +7,12 @@
 
 	<article>
 		<button
+			id="add-button-concepts-list"
 			(click)="open()"
 			[disabled]="checkboxOn"
 			mat-button type="button" color="primary">
 			+ {{content.actions.button | translate}}
 		</button>
-		<mat-checkbox color="primary" *ngIf="content.actions.checkbox" (change)="toggleCheckbox()" [disabled]="hasConcepts">{{content.actions.checkbox | translate}}</mat-checkbox>
+		<mat-checkbox id="checkbox-concepts-list" color="primary" *ngIf="content.actions.checkbox" (change)="toggleCheckbox()" [disabled]="hasConcepts">{{content.actions.checkbox | translate}}</mat-checkbox>
 	</article>
 </app-hide-show-toggle>

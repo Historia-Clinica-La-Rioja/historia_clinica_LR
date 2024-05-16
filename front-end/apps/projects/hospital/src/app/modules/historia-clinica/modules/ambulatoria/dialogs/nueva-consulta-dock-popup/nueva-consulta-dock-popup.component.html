@@ -75,6 +75,7 @@
 		</app-new-consultation-expansion-section>
 
 		<app-concepts-list
+			id="personal_histories"
 			[hasConcepts]="!personalHistoriesNewConsultationService.isEmpty()"
 			[content]="personalHistoriesContent"
 			(openEmit)="checkPersonalHistoriesEvent($event)">
@@ -82,6 +83,7 @@
 		</app-concepts-list>
 
 		<app-concepts-list
+			id="antecedentes-familiares"
 			[hasConcepts]="!antecedentesFamiliaresNuevaConsultaService.isEmpty()"
 			[content]="familyHistoriesContent"
 			(openEmit)="checkFamilyHistoriesEvent($event)">
@@ -140,6 +142,7 @@
 		</app-new-consultation-expansion-section>
 
 		<app-concepts-list
+			id="alergias"
 			[hasConcepts]="!alergiasNuevaConsultaService.isEmpty()"
 			[content]="allergyContent"
 			(openEmit)="checkAllergyEvent($event)">
