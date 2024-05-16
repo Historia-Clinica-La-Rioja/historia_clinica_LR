@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { EAggressorRelationship, MasterDataDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { DEFAULT_COUNTRY_ID, hasError, includesEventCodeNumber, updateControlValidator } from '@core/utils/form.utils';
+import { DEFAULT_COUNTRY_ID, hasError, updateControlValidator } from '@core/utils/form.utils';
 import { Observable } from 'rxjs';
 import { CustomViolenceReportAggressorDto, ViolenceAggressorsNewConsultationService } from '../../services/violence-aggressors-new-consultation.service';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -29,8 +29,6 @@ export class NewViolentPersonInfomationComponent implements OnInit {
   form: FormGroup;
   provinces$: Observable<MasterDataDto[]>;
   departments$: Observable<MasterDataDto[]>;
-
-  includesEventCodeNumber = includesEventCodeNumber;
 
   constructor(public dialogRef: MatDialogRef<NewViolentPersonInfomationComponent>,
     private addressMasterDataService: AddressMasterDataService,

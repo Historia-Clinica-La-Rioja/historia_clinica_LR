@@ -104,7 +104,7 @@
 
 			<mat-form-field class="full-width" appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.violence-situations.dialog.expanded-person-information.AGE' | translate}}</mat-label>
-				<input matInput formControlName="age" (keypress)="includesEventCodeNumber($event)">
+				<input onlyNumericCharacters matInput formControlName="age">
 				<mat-error *ngIf="hasError(form, 'required', 'age')" [translate]="'forms.REQUIRED'"></mat-error>
 			</mat-form-field>
 

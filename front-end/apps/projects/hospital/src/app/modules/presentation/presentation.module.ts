@@ -102,6 +102,7 @@ import { FileViewerPdfComponent } from './dialogs/view-pdf/file-viewer-pdf/file-
 import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
+import { OnlyNumericCharactersDirective } from './directives/only-numeric-characters.directive';
 // pipes
 import { DateFormatPipe } from './pipes/date-format.pipe';
 import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
@@ -213,6 +214,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		ViewPdfComponent,
 		// directives
 		CtrlTemplateDirective,
+		OnlyNumericCharactersDirective,
 		// pipes
 		DateFormatPipe,
 		DayTimeRangePipe,
@@ -325,6 +327,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		// dialogs
 		// directives
 		CtrlTemplateDirective,
+		OnlyNumericCharactersDirective,
 		// pipes
 		DateFormatPipe,
 		DayTimeRangePipe,

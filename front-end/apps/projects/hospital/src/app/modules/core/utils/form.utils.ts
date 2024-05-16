@@ -2,7 +2,6 @@ import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl,
 import { ElementRef } from '@angular/core';
 import { DateFormat, toHourMinute } from './date.utils';
 import { format } from 'date-fns';
-import { EVENT_CODE_NUMBERS } from './core.utils';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
@@ -19,6 +18,7 @@ export const NUMBER_PATTERN = /^[0-9]\d*$/;
 export const DEFAULT_COUNTRY_ID = 14;
 export const NON_WHITESPACE_REGEX = /\S/;
 export const STRING_PATTERN = /^[a-zA-Z\s]+$/;
+export const BACKSPACE = 'Backspace';
 
 export function hasError(form: AbstractControl, type: string, control: string): boolean {
 	return form.get(control).hasError(type);
@@ -188,11 +188,6 @@ export function NoWhitespaceValidator(): ValidatorFn {
 	  const isValid = !isWhitespace;
 	  return isValid ? null : { 'whitespace': true };
 	};
-}
-
-export function includesEventCodeNumber(event: KeyboardEvent) {
-	const code = event.code;
-	return EVENT_CODE_NUMBERS.includes(code);
 }
 
 export type ToFormGroup<T> = {[P in keyof T]: FormControl<T[P]>; };

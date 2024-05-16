@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChange
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { EDisabilityCertificateStatus, EKeeperRelationship, MasterDataDto, ViolenceReportDto, ViolenceReportVictimDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { DEFAULT_COUNTRY_ID, hasError, includesEventCodeNumber, updateControlValidator } from '@core/utils/form.utils';
+import { DEFAULT_COUNTRY_ID, hasError, updateControlValidator } from '@core/utils/form.utils';
 import { Observable, Subscription } from 'rxjs';
 import { BasicOptions, BasicTwoOptions, DisabilityCertificateStatus, FormOption, RelationOption, Sectors } from '../../constants/violence-masterdata';
 import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
@@ -57,8 +57,6 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 		relationPersonViolenceSituation: FormControl<EKeeperRelationship>,
 		whichTypeRelation: FormControl<string>,
 	}>;
-
-	includesEventCodeNumber = includesEventCodeNumber;
 
 	constructor(private addressMasterDataService: AddressMasterDataService,
 				private readonly violenceSituationFacadeService: ViolenceReportFacadeService) { }
