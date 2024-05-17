@@ -19,6 +19,9 @@
 
             <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="evolutionNote.clinicalEvaluation"
                 [clinicalEvaluation]="evolutionNote.clinicalEvaluation"></app-clinical-evaluation-summary>
+            
+            <app-description-item-data-summary *ngIf="evolutionNote.procedures" data-id="procedures-summary"
+                [descriptionItemDataSummary]="evolutionNote.procedures"></app-description-item-data-summary>
         </div>
     </div>
     <ng-template #loader>

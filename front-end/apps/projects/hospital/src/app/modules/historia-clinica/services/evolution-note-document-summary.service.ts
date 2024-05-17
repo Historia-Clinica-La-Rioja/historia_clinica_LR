@@ -3,6 +3,7 @@ import { ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { DocumentsSummaryMapperService } from './documents-summary-mapper.service';
 import { ClinicalEvaluationData } from '@historia-clinica/utils/document-summary.model';
+import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,8 @@ export class EvolutionNoteDocumentSummaryService {
         return {
             ...(evolutionNote.mainDiagnosis && { mainDiagnosis: [{ description: this.documentsSummaryService.mapDescriptionAndStatusToString(evolutionNote.mainDiagnosis) }] }),
             ...(evolutionNote.diagnosis.length && { diagnosis: this.documentsSummaryService.mapDiagnosisToDescriptionItemData(evolutionNote.diagnosis)} ),
-            ...(this.documentsSummaryService.hasClinicalEvaluations(evolutionNote.notes) && { clinicalEvaluation: this.documentsSummaryService.mapClinicalEvaluationToDescriptionItemData(evolutionNote.notes)} )
+            ...(this.documentsSummaryService.hasClinicalEvaluations(evolutionNote.notes) && { clinicalEvaluation: this.documentsSummaryService.mapClinicalEvaluationToDescriptionItemData(evolutionNote.notes)} ),
+            ...(evolutionNote.procedures.length && { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(evolutionNote.procedures)} ),
         }
     }
 }
@@ -26,4 +28,5 @@ export interface EvolutionNoteAsViewFormat {
     mainDiagnosis: DescriptionItemData[],
     diagnosis: DescriptionItemData[],
     clinicalEvaluation: ClinicalEvaluationData,
+    procedures: DescriptionItemDataSummary,
 }
