@@ -6,6 +6,7 @@ import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { AnesthesiaFormComponent } from '@historia-clinica/dialogs/anesthesia-form/anesthesia-form.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -14,14 +15,15 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
   styleUrls: ['./surgical-report-anesthesia.component.scss']
 })
 export class SurgicalReportAnesthesiaComponent {
-  anesthesiaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+  anesthesiaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
   @Input() searchConceptsLocallyFF: boolean;
   @Input() surgicalReport: SurgicalReportDto;
 
   constructor(private readonly snackBarService: SnackBarService,
     private readonly snomedService: SnomedService,
     private readonly formBuilder: UntypedFormBuilder,
-    private readonly dialog: MatDialog) {
+    private readonly dialog: MatDialog,
+    private readonly dateFormatPipe: DateFormatPipe,) {
     this.anesthesiaService.setECL(SnomedECL.ANESTHESIA);
     this.anesthesiaService.procedimientos$.subscribe(anesthesias => this.changeAnesthesia(anesthesias));
 
@@ -51,10 +53,10 @@ export class SurgicalReportAnesthesiaComponent {
   
   private changeAnesthesia(anesthesias): void {
     anesthesias.forEach(procedure =>
-      this.surgicalReport.anesthesia = pushIfNotExists(this.surgicalReport.anesthesia, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.ANESTHESIA_PROCEDURE), this.compare));
+      this.surgicalReport.anesthesia = pushIfNotExists(this.surgicalReport.anesthesia, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.ANESTHESIA_PROCEDURE), this.compareByEqual));
   }
 
-  private compare(first, second): boolean {
+  private compareByEqual(first, second): boolean {
     return first.snomed.sctid === second.snomed.sctid;
   }
 

@@ -17,7 +17,7 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 
 	healthcareProfessionals: AddMemberMedicalTeam[] = [];
 	surgeon: DocumentHealthcareProfessionalDto;
-	OTHER = EProfessionType.OTHER;
+	readonly OTHER = EProfessionType.OTHER;
 	professions: GenericMasterDataDto<EProfessionType>[];
 
 	constructor(private dialog: MatDialog, private requestMasterDataService: RequestMasterDataService) { }

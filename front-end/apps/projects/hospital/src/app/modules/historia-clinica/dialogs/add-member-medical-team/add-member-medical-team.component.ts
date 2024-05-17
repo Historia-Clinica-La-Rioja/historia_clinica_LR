@@ -21,21 +21,13 @@ export class AddMemberMedicalTeamComponent {
     },
     descriptionType: null,
   }; 
-  otherProfession = EProfessionType.OTHER;
-  showOtherInput: boolean;
+  readonly otherProfession = EProfessionType.OTHER;
   constructor(public dialogRef: MatDialogRef<AddMemberMedicalTeamComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { professionals: ProfessionalDto[], professions: any[] }) {
    }
 
   selectProfessional(professional: HCEHealthcareProfessionalDto) {
     this.professional.professionalData.healthcareProfessional = professional;
-  }
-
-  setProfessionType(profession) {
-    if (profession === EProfessionType.OTHER) {
-      this.showOtherInput = true;
-    }
-    this.professional.professionalData.profession.type = profession;
   }
 
   emitProfessionalSelected(){

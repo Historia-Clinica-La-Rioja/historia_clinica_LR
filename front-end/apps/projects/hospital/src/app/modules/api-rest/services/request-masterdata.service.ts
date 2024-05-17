@@ -29,7 +29,7 @@ export class RequestMasterDataService {
 	}
 
 	getSurgicalReportProfessionTypes(): Observable<GenericMasterDataDto<EProfessionType>[]>{
-		const url = `${environment.apiBase}/requests/masterdata//get-surgical-report-profession-types`;
+		const url = `${environment.apiBase}/requests/masterdata/get-surgical-report-profession-types`;
 		return this.http.get<GenericMasterDataDto<EProfessionType>[]>(url);
 	}
 }

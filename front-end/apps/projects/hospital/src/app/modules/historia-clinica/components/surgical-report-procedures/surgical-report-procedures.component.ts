@@ -12,8 +12,6 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
-import { BehaviorSubject } from 'rxjs';
 @Component({
 	selector: 'app-surgical-report-procedures',
 	templateUrl: './surgical-report-procedures.component.html',
@@ -32,8 +30,6 @@ export class SurgicalReportProceduresComponent implements OnInit {
 	}
 
 	@Output() validDate = new EventEmitter();
-	private isEmptySubject = new BehaviorSubject<boolean>(true);
-	isEmpty$ = this.isEmptySubject.asObservable();
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 	searchConceptsLocallyFF = false;
 	description: string;
@@ -76,8 +72,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 			this.searchConceptsLocallyFF = isOn;
 		})
 		this.procedureService.procedimientos$.subscribe(procedures => {
-			this.isEmpty(procedures);
-			this.changeProcedure(procedures)});
+			this.changeProcedure(procedures)
+		});
 	}
 
 	ngOnInit(): void {
@@ -142,7 +138,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 
 
 
-	changeStartDate(moment: Moment): void {
+	changeStartDate(moment: any): void {
 		const date = moment?.toDate();
 		if (date) {
 			this.surgicalReport.startDateTime.date = dateToDateDto(date);
@@ -152,7 +148,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		this.validateDate();
 	}
 
-	changeEndDate(moment: Moment): void {
+	changeEndDate(moment: any): void {
 		const date = moment?.toDate();
 		if (date) {
 			this.surgicalReport.endDateTime.date = dateToDateDto(date);
@@ -166,12 +162,17 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		this.surgicalReport.description = description;
 	}
 
-	private isEmpty(procedures) {
-		if (procedures.length) {
-		  this.isEmptySubject.next(false);
-		}
-	  }
- 
+	isEmpty(): boolean {
+		return (
+			!this.dateForm.get('startDate').value &&
+			!this.dateForm.get('startTime').value &&
+			!this.dateForm.get('endDate').value &&
+			!this.dateForm.get('endTime').value &&
+			!this.surgicalReport.procedures?.length &&
+			!this.surgicalReport.description
+		)
+	}
+
 	changeStartTime(startTime: TimeDto) {
 		this.dateForm.controls.startTime.setValue(startTime);
 		this.surgicalReport.startDateTime.time = startTime;
@@ -187,9 +188,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 	private changeProcedure(procedures): void {
 		procedures.forEach(procedure =>
 			this.surgicalReport.procedures = pushIfNotExists(this.surgicalReport.procedures, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.PROCEDURE), this.compare));
-			this.isEmpty(procedures);
-		}
-	
+	}
 
 	private compare(first, second): boolean {
 		return first.snomed.sctid === second.snomed.sctid;

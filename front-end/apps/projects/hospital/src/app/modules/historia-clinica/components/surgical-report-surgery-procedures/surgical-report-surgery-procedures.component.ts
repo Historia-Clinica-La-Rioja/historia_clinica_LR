@@ -7,6 +7,7 @@ import { removeFrom, pushIfNotExists } from '@core/utils/array.utils';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -15,7 +16,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
   styleUrls: ['./surgical-report-surgery-procedures.component.scss']
 })
 export class SurgicalReportSurgeryProceduresComponent implements OnInit {
-  procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+  procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
   searchConceptsLocallyFF = false;
   @Input() surgicalReport: SurgicalReportDto;
 
@@ -23,15 +24,17 @@ export class SurgicalReportSurgeryProceduresComponent implements OnInit {
     public dialog: MatDialog,
     private readonly snomedService: SnomedService,
     private readonly snackBarService: SnackBarService,
-    private readonly featureFlagService: FeatureFlagService
+    private readonly featureFlagService: FeatureFlagService,
+    private readonly dateFormatPipe: DateFormatPipe,
   ) { }
 
   ngOnInit(): void {
     this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
       this.searchConceptsLocallyFF = isOn;
     })
-    this.procedureService.procedimientos$.subscribe(procedures => this.changeSurgeryProcedure(procedures));
-
+    this.procedureService.procedimientos$.subscribe(procedures =>{
+      this.changeSurgeryProcedure(procedures)
+    } )
   }
 
   addProcedure(): void {
