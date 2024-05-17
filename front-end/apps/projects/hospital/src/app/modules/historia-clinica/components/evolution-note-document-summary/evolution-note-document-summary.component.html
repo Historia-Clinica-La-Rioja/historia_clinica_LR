@@ -22,6 +22,9 @@
             
             <app-description-item-data-summary *ngIf="evolutionNote.procedures" data-id="procedures-summary"
                 [descriptionItemDataSummary]="evolutionNote.procedures"></app-description-item-data-summary>
+
+            <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="evolutionNote.anthropometricData"
+                [anthropometricData]="evolutionNote.anthropometricData"></app-anthropometric-data-summary>
         </div>
     </div>
     <ng-template #loader>
