@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { DocumentsSummaryMapperService } from './documents-summary-mapper.service';
-import { AnthropometricData, ClinicalEvaluationData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ClinicalEvaluationData, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 
 @Injectable({
@@ -21,6 +21,7 @@ export class EvolutionNoteDocumentSummaryService {
             ...(this.documentsSummaryService.hasClinicalEvaluations(evolutionNote.notes) && { clinicalEvaluation: this.documentsSummaryService.mapClinicalEvaluationToDescriptionItemData(evolutionNote.notes)} ),
             ...(evolutionNote.procedures.length && { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(evolutionNote.procedures)} ),
             ...(evolutionNote.anthropometricData && { anthropometricData: this.documentsSummaryService.mapToAnthropometricData(evolutionNote.anthropometricData)} ),
+            ...(evolutionNote.riskFactors && { vitalSignsAndRiskFactors: this.documentsSummaryService.mapToVitalSignsAndRiskFactors(evolutionNote.riskFactors)} ),
         }
     }
 }
@@ -31,4 +32,5 @@ export interface EvolutionNoteAsViewFormat {
     clinicalEvaluation: ClinicalEvaluationData,
     procedures: DescriptionItemDataSummary,
     anthropometricData: AnthropometricData,
+    vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
 }
