@@ -664,7 +664,7 @@
 
     <!-- Alergias -->
 
-    <div th:fragment="allergies" th:if="${not #lists.isEmpty(allergies.content) || allergies.isReferred != null}">
+    <div th:fragment="allergies" th:if="${allergies != null && (not #lists.isEmpty(allergies.content) || allergies.isReferred != null)}">
         <p class="section-title">Alergias</p>
         <div th:if="${!allergies.isReferred}">
             <p class="section-data">No refiere</p>
