@@ -238,7 +238,9 @@
                     (resetActiveDocument)="resetActiveDocument()"></app-anamnesis-document-summary>
             </ng-container>
             <ng-container *ngIf="activeDocument?.document.documentType === 'Nota de evolución'">
-                <app-evolution-note-document-summary class="document-summary"></app-evolution-note-document-summary>
+                <app-evolution-note-document-summary class="document-summary" [internmentEpisodeId]="internmentEpisodeId"
+                    [activeDocument]="activeDocument" [isPopUpOpen]="isPopUpOpen"
+                    (resetActiveDocument)="resetActiveDocument()"></app-evolution-note-document-summary>
             </ng-container>
 		</div>
 		<div
