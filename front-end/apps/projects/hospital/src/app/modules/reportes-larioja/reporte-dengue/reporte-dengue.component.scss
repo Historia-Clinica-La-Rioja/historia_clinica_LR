@@ -1,0 +1,27 @@
+#report-type > * {
+    padding-top: 5px;
+}
+
+#report-type-radio-group > * {
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.required-field {
+    color: #9c9fa3;
+    font-size: 11px;
+    padding-left: 10px;
+}
+
+.text {
+    font: 500 15px / 30px Roboto, "Helvetica Neue", sans-serif;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    text-align: center;
+    background: #2687c530;
+    border-radius: 3px;
+}
+
+.observation {
+    font: 500 15px/20px Roboto, "Helvetica Neue", sans-serif;
+}

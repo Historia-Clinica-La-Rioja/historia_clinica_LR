@@ -1269,13 +1269,13 @@ export interface CreateQuestionnaireDTO {
 	questionnaire: QuestionnaireAnswerDTO[];
 }
 
-export interface EdMontonAnswers {
+export interface EdmontonAnswers {
 	id: number;
 	idQuestion: number;
 	idAnswer: number;
 }
 
-export interface EdMontonSummary {
+export interface EdmontonSummary {
 	institutionId: number;
 	patientId: number;
 	edMontonId: number;
@@ -4811,7 +4811,6 @@ export const enum AppFeature {
     HABILITAR_TURNOS_CENTRO_LLAMADO = "HABILITAR_TURNOS_CENTRO_LLAMADO",
     HABILITAR_AUDITORIA_DE_ACCESO_EN_HC = "HABILITAR_AUDITORIA_DE_ACCESO_EN_HC",
     HABILITAR_CUESTIONARIOS = "HABILITAR_CUESTIONARIOS",
-    HABILITAR_RUTAS = "HABILITAR_RUTAS"
 }
 
 export const enum EAggressorRelationship {

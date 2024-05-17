@@ -11,23 +11,31 @@ import lombok.ToString;
 @AllArgsConstructor
 public class DiabeticHypertensionConsultationDetail {
 
-	private String id;
-
 	private String institution;
 
 	private String attentionDate;
 
-	private String lender;
+	private String lenderLastNames;
 
-	private String identificationLender;
+	private String lenderNames;
 
-	private String patient;
+	private String lenderDni;
 
-	private String identificationPatient;
+	private String patientLastNames;
 
-	private String problem;
+	private String patientNames;
+
+	private String patientDni;
+
+	private String gender;
+
+	private String birthDate;
+
+	private String ageTurn;
 
 	private String reasons;
+
+	private String problem;
 
 	private String glycosylatedHemoglobinBloodPressure;
 

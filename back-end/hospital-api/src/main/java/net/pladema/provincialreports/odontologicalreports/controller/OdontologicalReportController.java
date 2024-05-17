@@ -50,7 +50,7 @@ public class OdontologicalReportController {
 		this.institutionRepository = institutionRepository;
 	}
 
-	String[] headers = new String[] {"Institución", "Profesional", "Procedimiento", "Total"};
+	String[] headers = new String[] {"Profesional", "Procedimiento", "Total"};
 
 	@GetMapping(value = "/{institutionId}/promocion-primer-nivel")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
@@ -69,7 +69,7 @@ public class OdontologicalReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryPromocionPrimerNivel(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryPromocionPrimerNivel(institutionId, startDate, endDate), fromDate, toDate, institutionId);
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -99,7 +99,7 @@ public class OdontologicalReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryPrevencionPrimerNivel(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryPrevencionPrimerNivel(institutionId, startDate, endDate), fromDate, toDate, institutionId);
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -129,7 +129,7 @@ public class OdontologicalReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryPrevencionGrupalPrimerNivel(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryPrevencionGrupalPrimerNivel(institutionId, startDate, endDate), fromDate, toDate, institutionId);
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -159,7 +159,7 @@ public class OdontologicalReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryOperatoriaSegundoNivel(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryOperatoriaSegundoNivel(institutionId, startDate, endDate), fromDate, toDate, institutionId);
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
@@ -189,7 +189,7 @@ public class OdontologicalReportController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryEndodonciaSegundoNivel(institutionId, startDate, endDate));
+		IWorkbook wb = this.excelService.buildExcelOdontology(title, headers, this.queryFactory.queryEndodonciaSegundoNivel(institutionId, startDate, endDate), fromDate, toDate, institutionId);
 
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);

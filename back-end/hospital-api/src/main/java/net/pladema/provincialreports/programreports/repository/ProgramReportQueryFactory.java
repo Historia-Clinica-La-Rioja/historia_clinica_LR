@@ -68,7 +68,7 @@ public class ProgramReportQueryFactory {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<RecuperoOdontologicoConsultationDetail> queryRecuperoOdontologico(Integer institutionId, LocalDate start, LocalDate end) {
+	public List<OdontologicalConsultationDetail> queryRecuperoOdontologico(Integer institutionId, LocalDate start, LocalDate end) {
 
 		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0);
 		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59, LocalTime.MAX.getNano());
@@ -77,7 +77,7 @@ public class ProgramReportQueryFactory {
 		query.setParameter("institutionId", institutionId);
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
-		List<RecuperoOdontologicoConsultationDetail> data = query.getResultList();
+		List<OdontologicalConsultationDetail> data = query.getResultList();
 		return data;
 
 	}
@@ -103,7 +103,7 @@ public class ProgramReportQueryFactory {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<SumarOdontologicoConsultationDetail> querySumarOdontologico(Integer institutionId, LocalDate start, LocalDate end) {
+	public List<OdontologicalConsultationDetail> querySumarOdontologico(Integer institutionId, LocalDate start, LocalDate end) {
 
 		var startDate = LocalDateTime.of(start.getYear(), start.getMonth(), start.getDayOfMonth(), 0, 0);
 		var endDate = LocalDateTime.of(end.getYear(), end.getMonth(), end.getDayOfMonth(), 23, 59, 59, LocalTime.MAX.getNano());
@@ -112,7 +112,7 @@ public class ProgramReportQueryFactory {
 		query.setParameter("institutionId", institutionId);
 		query.setParameter("startDate", startDate);
 		query.setParameter("endDate", endDate);
-		List<SumarOdontologicoConsultationDetail> data = query.getResultList();
+		List<OdontologicalConsultationDetail> data = query.getResultList();
 		return data;
 
 	}

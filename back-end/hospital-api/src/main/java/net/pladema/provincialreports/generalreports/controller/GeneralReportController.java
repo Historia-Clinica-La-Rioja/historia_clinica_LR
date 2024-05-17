@@ -56,7 +56,7 @@ public class GeneralReportController {
 		String[] headers = new String[]{"Institución", "Ambulancia", "Oficina", "Sector", "Intervención Policial",
 				"Fecha de atención", "Hora de atención", "Identificación", "Apellidos", "Nombres", "Obra social",
 				"Medio de Ingreso", "Estado", "Tipo", "Notas del Triage", "Triage", "Fecha de Alta",
-				"Ambulancia de Alta", "Tipo de Alta", "Salida"};
+				"Ambulancia de Alta", "Tipo de Alta", "Salida", "Motivos", "Problemas", "Evolución"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
@@ -87,8 +87,9 @@ public class GeneralReportController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte de Diabéticos Confirmados";
-		String[] headers = new String[]{"ID", "Institución", "Fecha", "Prestador", "DNI-Prestador", "Paciente", "DNI-Paciente",
-				"Problema", "Motivos", "Hemoglobina Glicosilada", "Medicación"};
+		String[] headers = new String[]{"Institución", "Fecha", "Apellido/s del Prestador", "Nombre/s del Prestador",
+				"DNI-Prestador", "Apellido/s del Paciente", "Nombre/s del Paciente", "DNI-Paciente", "Sexo", "Fecha de nacimiento",
+				"Edad a fecha del turno", "Motivos", "Problema", "Hemoglobina Glicosilada", "Medicación"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
@@ -119,8 +120,9 @@ public class GeneralReportController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String title = "Reporte de Hipertensos Confirmados";
-		String[] headers = new String[]{"ID", "Institución", "Fecha", "Prestador", "DNI-Prestador", "Paciente", "DNI-Paciente",
-				"Problema", "Motivos", "Presión Arterial", "Medicación"};
+		String[] headers = new String[]{"Institución", "Fecha", "Apellido/s del Prestador", "Nombre/s del Prestador",
+				"DNI-Prestador", "Apellido/s del Paciente", "Nombre/s del Paciente", "DNI-Paciente", "Sexo", "Fecha de nacimiento",
+				"Edad a fecha del turno", "Motivos", "Problema", "Presión Arterial", "Medicación"};
 
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);

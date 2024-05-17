@@ -12,6 +12,7 @@ import { ReportesEnfermeriaComponent } from './reportes-enfermeria/reportes-enfe
 import { ReportesOdontologiaComponent } from './reportes-odontologia/reportes-odontologia.component';
 import { ReportesAdultomayorComponent } from './reportes-adultomayor/reportes-adultomayor.component';
 import { ReportesPersonagestanteComponent } from './reportes-personagestante/reportes-personagestante.component';
+import { ReporteDengueComponent } from './reporte-dengue/reporte-dengue.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ReportesPersonagestanteComponent } from './reportes-personagestante/rep
     ReportesEnfermeriaComponent,
     ReportesOdontologiaComponent,
     ReportesAdultomayorComponent,
-    ReportesPersonagestanteComponent
+    ReportesPersonagestanteComponent,
+    ReporteDengueComponent
   ],
   imports: [
     CommonModule,

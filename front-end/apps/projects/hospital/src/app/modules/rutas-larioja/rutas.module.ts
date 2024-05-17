@@ -7,8 +7,6 @@ import { ExtensionsModule } from '@extensions/extensions.module';
 import { RutasRoutingModule } from './rutas-routing.module';
 import { RutasComponent } from './rutas.component';
 
-
-
 @NgModule({
   declarations: [
     RutasComponent

@@ -10,7 +10,7 @@ import java.util.Date;
 @Service
 public class DateFormat {
 	@SneakyThrows
-	public String ReformatDate (String previousDate) {
+	public String reformatDate (String previousDate) {
 
 		SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = inputFormat.parse(previousDate);
@@ -18,7 +18,7 @@ public class DateFormat {
 		return outputFormat.format(date);
 	}
 
-	public String ReformatDateTwo(String previousDate) {
+	public String reformatDateTwo(String previousDate) {
 		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date= null;
 		try {
@@ -35,7 +35,7 @@ public class DateFormat {
 
 	@SneakyThrows
 
-	public String ReformatDateThree(String previousDate) {
+	public String reformatDateThree(String previousDate) {
 		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date= null;
 		try {
@@ -48,7 +48,7 @@ public class DateFormat {
 		return outputFormat.format(date);
 	}
 
-	public String ReformatDateFour (String previousDate) {
+	public String reformatDateFour (String previousDate) {
 		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ss");
 		Date date= null;
 		try {
@@ -65,7 +65,7 @@ public class DateFormat {
 
 
 	@SneakyThrows
-	public String ReformatDateFive (String previousDate) {
+	public String reformatDateFive (String previousDate) {
 
 		if (previousDate !=null) {
 			SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
