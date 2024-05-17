@@ -79,7 +79,6 @@ export class EdmontonComponent {
       this.calificationTotal = 'A5';
     }
 
-    // console.log("puntaje:", scoreFinal);
     return scoreFinal;
   }
 

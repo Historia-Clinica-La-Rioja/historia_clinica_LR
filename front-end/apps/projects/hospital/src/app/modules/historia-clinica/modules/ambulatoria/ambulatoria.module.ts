@@ -193,7 +193,7 @@ import { GetEdmontonComponent } from './components/cuestionarios/edmonton/get-ed
 		LatestStudiesComponent,
 		DesempenoFisicoComponent,
 		InputDesempenoComponent,
-  GetEdmontonComponent
+  		GetEdmontonComponent
 
 	],
 	imports: [

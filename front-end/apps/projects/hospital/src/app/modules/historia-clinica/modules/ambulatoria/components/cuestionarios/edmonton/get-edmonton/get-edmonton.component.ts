@@ -37,25 +37,19 @@ export class GetEdmontonComponent implements OnInit {
   }
 
   getLastEdmontonQuestionnaireId(): void {
-    console.log("TRAEEE: ", this.edmontonQuestionnaires);
     // Filter "edmonton" questionnaires
     const edmontonQuestionnaires = this.edmontonQuestionnaires.filter(
       (questionnaire) => questionnaire.questionnaireTypeId === 1
     );
-
-    console.log("Trae? Okk?", edmontonQuestionnaires);
 
     // Sort by creation date
     edmontonQuestionnaires.sort((a, b) => {
       return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
     });
 
-    console.log("Trae ordenados? Okk?", edmontonQuestionnaires);
-
     // Get the latest ID
     if (edmontonQuestionnaires.length > 0) {
       this.lastEdmontonQuestionnaireId = edmontonQuestionnaires[0].id;
-      console.log("Trae ID? Okk? ", this.lastEdmontonQuestionnaireId);
     } else {
       console.warn('No frail questionnaires found for this patient')
     }
