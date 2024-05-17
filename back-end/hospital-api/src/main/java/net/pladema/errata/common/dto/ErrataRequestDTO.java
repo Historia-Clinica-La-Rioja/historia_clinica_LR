@@ -15,4 +15,6 @@ public class ErrataRequestDTO {
 
 	private Integer documentId;
 
+	private Integer healthcareProfessionalId;
+
 }

@@ -48,7 +48,6 @@ export class EdmontonComponent {
     selectedAnimoOption: any,
     selectedContingenciaOption: any,
     selectedRendimientoFuncOption: any,
-    calificationTotal: any,
 
 
   ): number {
@@ -97,7 +96,6 @@ export class EdmontonComponent {
       this.selectedAnimoOption,
       this.selectedContingenciaOption,
       this.selectedRendimientoFuncOption,
-      this.calificationTotal
     );
   }
 
@@ -220,7 +218,6 @@ export class EdmontonComponent {
     }
 
     return animoMapping[this.selectedAnimoOption] || undefined;
-
   }
 
   mappingContingencia() {
@@ -231,7 +228,6 @@ export class EdmontonComponent {
     }
 
     return contingenciaMapping[this.selectedContingenciaOption] || undefined;
-
   }
 
   mappingtotalScore() {
@@ -247,7 +243,7 @@ return scoreTotalMapping[this.calificationTotal] || undefined;
 
   }
 
-  construirDatos() {
+ construirDatos() {
 
      const datos = {
       "questionnaireId": 1,
@@ -322,63 +318,93 @@ return scoreTotalMapping[this.calificationTotal] || undefined;
      return datos;
   }
 
-  onSubmit(): void {
-
-    Swal.fire({
-      icon: 'question',
-      iconColor: '#2687c5',
-      title: '¿Está seguro de enviar el formulario?',
-      text: 'Por favor, revise las opciones marcadas antes de presionar Enviar',
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: 'Enviar',
-      confirmButtonColor: '#2687c5',
-      denyButtonText: 'No enviar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          icon: 'info',
-          iconColor: '#2687c5',
-          title: 'Enviando...',
-          text: 'Por favor, espere un momento.',
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-            setTimeout(() => {
-              Swal.close();
-              this.enviarFormulario();
-              Swal.fire({
-                icon: 'success',
-                iconColor: '#2687c5',
-                title: 'Enviado con éxito',
-                text: 'El formulario ha sido enviado correctamente.',
-                confirmButtonColor: '#2687c5',
-                confirmButtonText: 'Aceptar',
-              });
-            }, 2000);
-          },
-        });
-      } else if (result.isDenied) {
-        Swal.fire({
-          icon: 'warning',
-          iconColor: '#ff0000',
-          title: 'Formulario cancelado',
-          text: 'El formulario no ha sido enviado.',
-          confirmButtonColor: '#2687c5',
-          confirmButtonText: 'Aceptar',
-        });
-      }
-    });
+  ngOnInit(): void {
+    window.addEventListener('offline', this.goOffline.bind(this));
+    window.addEventListener('online', this.goOnline.bind(this));
   }
+
+  onSubmit(): void {
+    if (navigator.onLine) {
+      this.goOnline();
+      Swal.fire({
+        icon: 'question',
+        iconColor: '#2687c5',
+        title: '¿Está seguro de enviar el formulario?',
+        text: 'Por favor, revise las opciones marcadas antes de presionar Enviar',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Enviar',
+        confirmButtonColor: '#2687c5',
+        denyButtonText: 'No enviar',
+        allowOutsideClick: false,
+
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            icon: 'info',
+            iconColor: '#2687c5',
+            title: 'Enviando...',
+            text: 'Por favor, espere un momento.',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+              setTimeout(() => {
+                Swal.close();
+                this.enviarFormulario();
+                Swal.fire({
+                  icon: 'success',
+                  iconColor: '#2687c5',
+                  title: 'Enviado con éxito',
+                  text: 'El formulario ha sido enviado correctamente.',
+                  confirmButtonColor: '#2687c5',
+                  confirmButtonText: 'Aceptar',
+                  allowOutsideClick: false,
+
+                });
+              }, 2000);
+            },
+          });
+        } else if (result.isDenied) {
+          Swal.fire({
+            icon: 'warning',
+            iconColor: '#ff0000',
+            title: 'Formulario cancelado',
+            text: 'El formulario no ha sido enviado.',
+            confirmButtonColor: '#2687c5',
+            confirmButtonText: 'Aceptar',
+            allowOutsideClick: false,
+
+          });
+        }
+      });
+    } else {
+      this.goOffline();
+      Swal.fire({
+        icon: 'error',
+        iconColor: '#ff0000',
+        title: 'ERROR',
+        text: 'No se detectó conexión a internet. Por favor, revise su conexión e inténtelo de nuevo.',
+        confirmButtonColor: '#2687c5',
+        allowOutsideClick: false,
+
+      });
+    }
+  }
+
+  goOnline(): void {
+    document.body.classList.remove('offline');
+    document.body.classList.add('online');
+  }
+
+  goOffline(): void {
+    document.body.classList.remove('online');
+    document.body.classList.add('offline');
+  }
+
 
   enviarFormulario(): void {
     const questionnaireData = this.construirDatos();
     this.edmontonService.createEdmonton(this.patientId, questionnaireData).subscribe();
-
-    console.log(this.enviarFormulario, this.edmontonService, questionnaireData)
   }
-
-
-
 }
 

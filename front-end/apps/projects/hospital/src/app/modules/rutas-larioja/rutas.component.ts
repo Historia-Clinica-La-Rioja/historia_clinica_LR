@@ -27,7 +27,7 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     IconDT: ICON + "DT-active-icon.png",
     Orden: 1,
     Nombre: "Hipertensión arterial",
-    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Hipertensión-RutaAsistencial.pdf",        // Ruta al DR
+    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Hipertension-RutaAsistencial.pdf",        // Ruta al DR
     routerLink: '../../../assets/rutas-lr/', 
     pdfDT: null,                                                                           // Ruta al DT
   },
