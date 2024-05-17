@@ -3,12 +3,16 @@ package net.pladema.person.infraestructure.input.shared;
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.person.CompletePersonDto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.person.PersonDto;
 import net.pladema.address.repository.entity.Address;
 import net.pladema.address.repository.entity.City;
 import net.pladema.address.repository.entity.Country;
+import net.pladema.person.controller.mapper.PersonMapper;
 import net.pladema.person.repository.domain.CompletePersonVo;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+
+import net.pladema.user.domain.PersonBo;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.hl7.dataexchange.model.adaptor.FhirString;
 import net.pladema.person.service.PersonService;
 
+import javax.persistence.EntityNotFoundException;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -27,6 +34,8 @@ import java.util.List;
 public class SharedPersonImpl implements SharedPersonPort {
 
 	private final PersonService personService;
+
+	private final PersonMapper personMapper;
 
 	@Override
 	public String getCountryIsoCodeFromPerson(Integer personId) {
@@ -81,6 +90,30 @@ public class SharedPersonImpl implements SharedPersonPort {
 		List<String> result = personService.getCompletePersonNameByIds(personIds);
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	@Override
+	public Optional<PersonDto> getPersonData(Integer patientId) {
+			Optional<PersonBo> personBo = personService.getPersonData(patientId);
+			if (personBo.isEmpty()) {
+				throw new EntityNotFoundException("No se encontró ningún dato para el paciente con ID: " + patientId);
+			}
+			return Optional.ofNullable(PersonDto.builder()
+					.firstName(personBo.get().getFirstName())
+					.middleNames(personBo.get().getMiddleNames())
+					.lastName(personBo.get().getLastName())
+					.otherLastNames(personBo.get().getOtherLastNames())
+					.identificationTypeId(personBo.get().getIdentificationTypeId())
+					.identificationTypeDescription(personBo.get().getIdentificationTypeDescription())
+					.identificationNumber(personBo.get().getIdentificationNumber())
+					.genderId(personBo.get().getGenderId())
+					.genderDescription(personBo.get().getGenderDescription())
+					.birthDate(personBo.get().getBirthDate())
+					.cuil(personBo.get().getCuil())
+					.selfDeterminationName(personBo.get().getSelfDeterminationName())
+					.selfDeterminationGender(personBo.get().getSelfDeterminationGender())
+					.selfDeterminationGenderDescription(personBo.get().getSelfDeterminationGenderDescription())
+					.build());
 	}
 
 	public CompletePersonDto getCompletePersonData(Integer personId) {

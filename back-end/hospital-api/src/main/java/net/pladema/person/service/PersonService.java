@@ -9,6 +9,7 @@ import net.pladema.person.repository.domain.PersonSearchResultVo;
 import net.pladema.person.repository.domain.PersonalInformation;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.person.repository.entity.PersonExtended;
+import net.pladema.user.domain.PersonBo;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,4 +61,5 @@ public interface PersonService {
     
     CompletePersonNameBo findByHealthcareProfessionalId(Integer healthcareProfessionalId);
 
+	Optional<PersonBo> getPersonData(Integer patientId);
 }

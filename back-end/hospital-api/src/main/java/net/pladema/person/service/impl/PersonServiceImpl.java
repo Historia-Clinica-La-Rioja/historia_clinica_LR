@@ -19,6 +19,8 @@ import net.pladema.person.repository.domain.DuplicatePersonVo;
 
 import net.pladema.person.repository.domain.PersonSearchResultVo;
 
+import net.pladema.user.domain.PersonBo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -156,6 +158,11 @@ public class PersonServiceImpl implements PersonService {
 		CompletePersonNameBo result = personRepository.findByHealthcareProfessionalId(healthcareProfessionalId);
 		LOG.debug(OUTPUT, result);
 		return result;
+	}
+
+	@Override
+	public Optional<PersonBo> getPersonData(Integer patientId) {
+		return personRepository.findPersonExtendedByPatientId(patientId);
 	}
 
 	@Override

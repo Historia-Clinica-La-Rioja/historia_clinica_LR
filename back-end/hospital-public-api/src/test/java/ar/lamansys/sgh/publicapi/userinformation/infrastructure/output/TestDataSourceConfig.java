@@ -15,7 +15,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@ComponentScan(basePackages = "ar.lamansys.sgh.publicapi.userinformation")
 @EntityScan(basePackages = {"ar.lamansys.sgh.publicapi.userinformation"})
 @PropertySource("classpath:application-test.properties")
 @EnableTransactionManagement

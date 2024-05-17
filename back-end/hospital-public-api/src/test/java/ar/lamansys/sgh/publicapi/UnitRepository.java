@@ -20,7 +20,6 @@ import ar.lamansys.sgh.publicapi.userinformation.infrastructure.input.service.Us
 @EnableJpaRepositories(basePackages = {"net.pladema", "ar.lamansys.sgh.publicapi"})
 @EntityScan(basePackages = {"net.pladema", "ar.lamansys.sgh.publicapi"})
 @Transactional
-@ComponentScan(basePackages = "ar.lamansys.sgh.publicapi.userinformation")
 @PropertySource("classpath:application-test.properties")
 @DataJpaTest(showSql = false)
 @ContextConfiguration(classes = {TestDataSourceConfig.class}, loader = AnnotationConfigContextLoader.class)
