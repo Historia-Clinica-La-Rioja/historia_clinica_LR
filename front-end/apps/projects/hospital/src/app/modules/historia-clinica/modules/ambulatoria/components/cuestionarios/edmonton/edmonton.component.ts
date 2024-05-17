@@ -79,7 +79,6 @@ export class EdmontonComponent {
       this.calificationTotal = 'A5';
     }
 
-    console.log("puntaje:", scoreFinal);
     return scoreFinal;
   }
 
@@ -116,7 +115,6 @@ export class EdmontonComponent {
 
 
     );
-
   }
 
   mappingCognitive() {
@@ -137,7 +135,6 @@ export class EdmontonComponent {
     };
 
     return healthMapping[this.selectedHealthStatusOption] || undefined;
-
   }
 
   mappingHealthStatusDos() {
@@ -232,22 +229,22 @@ export class EdmontonComponent {
     return contingenciaMapping[this.selectedContingenciaOption] || undefined;
   }
 
-  construirDatos() {
-    const scoreTotal = this.calculateTotal(
-      this.selectedCognitiveOption,
-      this.selectedHealthStatusOption,
-      this.selectedHealthStatusOptionDos,
-      this.selectedFunctionIndOption,
-      this.selectedSupportSocOption,
-      this.selectedMedicationOption,
-      this.selectedMedicationOptionDos,
-      this.selectedNutritionOption,
-      this.selectedAnimoOption,
-      this.selectedContingenciaOption,
-      this.selectedRendimientoFuncOption,
-    );
+  mappingtotalScore() {
+    const scoreTotalMapping = { 
+      'A1': 21,
+      'A2': 22,
+      'A3': 23,
+      'A4': 24,
+      'A5': 25,
+    }
 
-    const datos = {
+return scoreTotalMapping[this.calificationTotal] || undefined;
+
+  }
+
+ construirDatos() {
+
+     const datos = {
       "questionnaireId": 1,
       "answers": [
 
@@ -311,15 +308,13 @@ export class EdmontonComponent {
         },
 
         {
-          "itemId": 70,
-          "optionId": null,
-          "value": scoreTotal,
+          "itemId": 22,
+          "optionId": this.mappingtotalScore(),
+          "value": "",
         },
       ]
     }
-
-    return datos;
-
+     return datos;
   }
 
   ngOnInit(): void {

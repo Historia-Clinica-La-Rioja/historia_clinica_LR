@@ -1,13 +1,11 @@
 <div class="popup-container" style="border: none;">
-  <h2 *ngIf="!selectedOption" >Ultimas evaluaciones</h2>
+  <h2 *ngIf="!selectedOption">Últimas evaluaciones</h2>
 
   <mat-form-field *ngIf="!selectedOption">  
-  
-    <mat-label>Seleccione la ultima evaluación</mat-label>
+    <mat-label>Seleccione la última evaluación</mat-label>
     <mat-select [(ngModel)]="selectedOption">
-
       <mat-option value="option2">Escala de Frail</mat-option>
-      
+      <mat-option value="option3">Escala de Edmonton</mat-option>  
     </mat-select>
   </mat-form-field>
 
@@ -17,6 +15,15 @@
         <mat-icon>close</mat-icon>
       </button>
       <app-get-frail></app-get-frail>
+    </div>
   </div>
+
+  <div *ngIf="selectedOption === 'option3'">  
+    <div class="form-container">
+      <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal(true)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <app-get-edmonton></app-get-edmonton>  
+    </div>
   </div>
 </div>

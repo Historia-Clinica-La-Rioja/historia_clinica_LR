@@ -147,8 +147,8 @@
     <!-- PUNTAJE -->
     <div class="text">
       <h3 class="tipos" id="69">Interpretación de puntaje</h3>
-      <p id="70">La sumatoria da como resultado:</p>
-      <mat-radio-group class="points" id="puntaje" name="points" [(ngModel)]="calificationTotal">
+      <p >La sumatoria da como resultado:</p>
+      <mat-radio-group id="22" class="points" id="puntaje" name="points" [(ngModel)]="calificationTotal">
         <p id="21" [style.color]="(calificationTotal === 'A1') ? '#2687c5' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A1') ? '550' : 'normal'">- Se considera INDIVIDUO SANO</p>
         <p id="22" [style.color]="(calificationTotal === 'A2') ? '#2687c5' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A2') ? '550' : 'normal'">- Se considera INDIVIDUO VULNERABLE</p>
         <p id="23" [style.color]="(calificationTotal === 'A3') ? '#2687c5' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A3') ? '550' : 'normal'">- Se considera PERSONA CON FRAGILIDAD LEVE</p>
@@ -156,7 +156,7 @@
         <p id="25" [style.color]="(calificationTotal === 'A5') ? '#ff0000' : 'darkgray'" [style.font-weight]="(calificationTotal === 'A5') ? '550' : 'normal'">- Se considera PERSONA CON FRAGILIDAD SEVERA</p>
       </mat-radio-group>
 
-      <button mat-raised-button color="primary" [disabled]="isSubmitDisabled()" type="submit">Enviar Formulario</button>
+      <button mat-raised-button color="primary" [disabled]="isSubmitDisabled()" type="submit">Guardar Formulario</button>
 
     </div>
   </form>
