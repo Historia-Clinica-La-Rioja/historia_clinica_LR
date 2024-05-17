@@ -111,7 +111,7 @@ export class AddAllergyComponent implements OnInit {
 
 		function buildEvolutionNote(allergy: SnomedDto): EvolutionNoteDto {
 			const allergyDto: ReferableItemDto<AllergyConditionDto> = {
-				isReferred: null,
+				isReferred: true,
 				content: [{
 					categoryId: null,
 					date: null,
