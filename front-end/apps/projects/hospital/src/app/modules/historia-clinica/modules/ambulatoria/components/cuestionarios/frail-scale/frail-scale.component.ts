@@ -189,6 +189,8 @@ export class FrailScaleComponent implements OnInit {
                 title: 'Enviado exitosamente',
                 confirmButtonColor: '#2687c5',
                 confirmButtonText: 'Aceptar',
+              }).then(() => {
+                window.location.reload();
               });
             }, 2000);
           }
