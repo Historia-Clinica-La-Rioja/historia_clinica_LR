@@ -22,6 +22,7 @@ export class EvolutionNoteDocumentSummaryService {
             ...(evolutionNote.procedures.length && { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(evolutionNote.procedures)} ),
             ...(evolutionNote.anthropometricData && { anthropometricData: this.documentsSummaryService.mapToAnthropometricData(evolutionNote.anthropometricData)} ),
             ...(evolutionNote.riskFactors && { vitalSignsAndRiskFactors: this.documentsSummaryService.mapToVitalSignsAndRiskFactors(evolutionNote.riskFactors)} ),
+            ...(evolutionNote.allergies.content?.length && { allergies: this.documentsSummaryService.mapAllergiesToDescriptionItemDataSummary(evolutionNote.allergies.content)} ),
         }
     }
 }
@@ -33,4 +34,5 @@ export interface EvolutionNoteAsViewFormat {
     procedures: DescriptionItemDataSummary,
     anthropometricData: AnthropometricData,
     vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
+    allergies: DescriptionItemDataSummary,
 }
