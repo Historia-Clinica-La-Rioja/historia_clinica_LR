@@ -2,6 +2,8 @@ package net.pladema.questionnaires.general.getall.domain.service;
 
 import java.util.List;
 
+import net.pladema.questionnaires.common.domain.service.QuestionnaireUtilsService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -26,11 +28,15 @@ public class GetAllService {
 	@Autowired
 	private final PersonRepository personRepository;
 
-    public GetAllService(QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, PersonRepository personRepository) {
+	@Autowired
+	private final QuestionnaireUtilsService utilsService;
+
+    public GetAllService(QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, PersonRepository personRepository, QuestionnaireUtilsService utilsService) {
         this.questionnaireResponseRepository = questionnaireResponseRepository;
         this.healthcareProfessionalRepository = healthcareProfessionalRepository;
         this.personRepository = personRepository;
-    }
+		this.utilsService = utilsService;
+	}
 
 	public List<QuestionnaireResponse> getResponsesByPatientIdWithDetails(Integer patientId) {
 		Sort sort = Sort.by(Sort.Order.desc("id"));
@@ -48,22 +54,7 @@ public class GetAllService {
 		Person person = personRepository.findById(personId)
 				.orElseThrow(() -> new NotFoundException("Person not found"));
 
-		StringBuilder fullNameBuilder = new StringBuilder();
-
-		if (person.getLastName() != null) {
-			fullNameBuilder.append(person.getLastName()).append(" ");
-		}
-		if (person.getOtherLastNames() != null) {
-			fullNameBuilder.append(person.getOtherLastNames()).append(" ");
-		}
-		if (person.getFirstName() != null) {
-			fullNameBuilder.append(person.getFirstName()).append(" ");
-		}
-		if (person.getMiddleNames() != null) {
-			fullNameBuilder.append(person.getMiddleNames()).append(" ");
-		}
-
-		return fullNameBuilder.toString().trim();
+		return utilsService.fullNameFromPerson(person);
 	}
 
 }
