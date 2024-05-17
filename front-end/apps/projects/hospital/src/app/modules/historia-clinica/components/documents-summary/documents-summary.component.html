@@ -121,7 +121,8 @@
 					</div>
 				</mat-list-option>
 			</mat-selection-list>
-			<ng-container *ngIf="!(activeDocument?.document.documentType === 'Parte anestésico' || activeDocument?.document.documentType === 'Anamnesis')">
+			<ng-container *ngIf="!(activeDocument?.document.documentType === 'Parte anestésico' || activeDocument?.document.documentType === 'Anamnesis'
+                || activeDocument?.document.documentType === 'Nota de evolución')">
 				<div *ngIf="viewEvolutionNote()" class="content" fxLayout="row" fxLayoutAlign="space-between">
 					<div fxFlex="70%">
 						<ng-container>
@@ -235,6 +236,9 @@
                 <app-anamnesis-document-summary class="document-summary" [internmentEpisodeId]="internmentEpisodeId"
                     [activeDocument]="activeDocument" [isPopUpOpen]="isPopUpOpen"
                     (resetActiveDocument)="resetActiveDocument()"></app-anamnesis-document-summary>
+            </ng-container>
+            <ng-container *ngIf="activeDocument?.document.documentType === 'Nota de evolución'">
+                <app-evolution-note-document-summary class="document-summary"></app-evolution-note-document-summary>
             </ng-container>
 		</div>
 		<div

@@ -38,6 +38,7 @@ import { EvolucionFormComponent } from './components/evolucion-form/evolucion-fo
 import { EvolutionChartOptionsComponent } from './components/evolution-chart-options/evolution-chart-options.component';
 import { EvolutionChartSelectComponent } from './components/evolution-chart-select/evolution-chart-select.component';
 import { EvolutionChartTypeSelectComponent } from './components/evolution-chart-type-select/evolution-chart-type-select.component';
+import { EvolutionNoteDocumentSummaryComponent } from './components/evolution-note-document-summary/evolution-note-document-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
@@ -184,6 +185,7 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 		EvolutionChartSelectComponent,
 		EvolutionChartTypeSelectComponent,
 		EvolutionChartOptionsComponent,
+        EvolutionNoteDocumentSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
 		FluidAdministrationComponent,
