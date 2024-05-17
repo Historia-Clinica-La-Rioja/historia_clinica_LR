@@ -80,7 +80,7 @@ export class EdmontonComponent {
       this.calificationTotal = 'A5';
     }
 
-    console.log("puntaje:", scoreFinal);
+    // console.log("puntaje:", scoreFinal);
     return scoreFinal;
   }
 
@@ -244,6 +244,7 @@ export class EdmontonComponent {
     }
 
 return scoreTotalMapping[this.calificationTotal] || undefined;
+
   }
 
   construirDatos() {
@@ -319,7 +320,6 @@ return scoreTotalMapping[this.calificationTotal] || undefined;
       ]
     }
      return datos;
-
   }
 
   onSubmit(): void {
