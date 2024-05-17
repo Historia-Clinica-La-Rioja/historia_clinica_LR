@@ -128,7 +128,7 @@ public class GetQuestionnairePdfService {
 	public Period calculateAgeAtQuestionnaireResponseCreation(QuestionnaireResponse questionnaireResponse) {
 
 		Integer patientId = questionnaireResponse.getPatientId();
-		Person person = personRepository.findById(patientId)
+		Person person = personRepository.findPersonByPatientId(patientId)
 				.orElseThrow(() -> new NotFoundException("Person not found"));
 
 		if (person != null && person.getBirthDate() != null) {
