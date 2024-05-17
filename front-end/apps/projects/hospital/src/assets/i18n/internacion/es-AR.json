@@ -626,6 +626,10 @@
 			"info": {
 				"WITHOUT_DIAGNOSIS": "Sin diagnóstico definido"
 			},
+            "document-name": {
+				"ANAMNESIS": "Evaluación de ingreso",
+				"EVOLUTION_NOTE": "Nota de evolución"
+			},
             "procedure": {
 				"TITLE": "Procedimientos",
 				"REGISTERED_PROCEDURES": "Procedimientos registrados"

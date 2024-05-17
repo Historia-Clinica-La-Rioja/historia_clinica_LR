@@ -7,6 +7,7 @@ import { InternmentSummaryFacadeService } from '@historia-clinica/modules/ambula
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { EvolutionNoteAsViewFormat, EvolutionNoteDocumentSummaryService } from '@historia-clinica/services/evolution-note-document-summary.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, forkJoin, tap } from 'rxjs';
 
 @Component({
@@ -30,6 +31,7 @@ export class EvolutionNoteDocumentSummaryComponent implements OnInit {
     _activeDocument: DocumentSearch;
     hasData$: Observable<[HospitalizationDocumentHeaderDto, ResponseEvolutionNoteDto]>;
     isLoading = true;
+    documentName = '';
 
     constructor(
         private readonly evolutionNoteService: EvolutionNoteService,
@@ -38,7 +40,10 @@ export class EvolutionNoteDocumentSummaryComponent implements OnInit {
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
         private internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly documentActions: DocumentActionsService,
-    ) { }
+		private readonly translateService: TranslateService,
+    ) {
+        this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.EVOLUTION_NOTE');
+    }
 
     ngOnInit(): void {
     }
@@ -49,7 +54,7 @@ export class EvolutionNoteDocumentSummaryComponent implements OnInit {
             let header$ = this.documentSummaryService.getDocumentHeader(this._activeDocument.document?.id, this.internmentEpisodeId);
 
             this.hasData$ = forkJoin([header$, evolutionNote$]).pipe(tap(([headerData, evolutionNoteData]) => {
-                this.headerDescription = this.documentSummaryMapperService.mapToHeaderDescription(headerData, 'Nota de evolución', this._activeDocument);
+                this.headerDescription = this.documentSummaryMapperService.mapToHeaderDescription(headerData, this.documentName, this._activeDocument);
                 this.evolutionNote = this.evolutionNoteDocumentSummaryService.mapEvolutionNoteAsViewFormat(evolutionNoteData);
                 this.isLoading = false;
             }));

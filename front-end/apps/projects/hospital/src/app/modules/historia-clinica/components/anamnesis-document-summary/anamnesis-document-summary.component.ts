@@ -7,6 +7,7 @@ import { InternmentSummaryFacadeService } from '@historia-clinica/modules/ambula
 import { AnamnesisAsViewFormat, AnamnesisDocumentSummaryService } from '@historia-clinica/services/anamnesis-document-summary.service';
 import { Observable, forkJoin, map } from 'rxjs';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-anamnesis-document-summary',
@@ -25,6 +26,7 @@ export class AnamnesisDocumentSummaryComponent {
 
     _activeDocument: DocumentSearch;
     documentSummary$: Observable<{headerDescription: HeaderDescription, anamnesis: AnamnesisAsViewFormat}>;
+    documentName = '';
 
     constructor(
         private readonly anamnesisService: AnamnesisService,
@@ -33,7 +35,10 @@ export class AnamnesisDocumentSummaryComponent {
 		private readonly documentActions: DocumentActionsService,
         private readonly documentSummaryService: DocumentsSummaryService,
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
-    ) { }
+		private readonly translateService: TranslateService,
+    ) {
+        this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.ANAMNESIS');
+    }
 
     private fetchSummaryInfo(){
         if (this._activeDocument?.document?.id) {

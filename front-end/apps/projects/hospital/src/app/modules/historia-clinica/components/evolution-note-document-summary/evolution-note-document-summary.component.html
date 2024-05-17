@@ -32,6 +32,9 @@
 
             <app-description-item-data-summary *ngIf="evolutionNote.allergies" data-id="allergies-summary"
                 [descriptionItemDataSummary]="evolutionNote.allergies"></app-description-item-data-summary>
+
+            <app-description-item-data-summary *ngIf="evolutionNote.vaccines" data-id="vaccines-summary"
+                [descriptionItemDataSummary]="evolutionNote.vaccines"></app-description-item-data-summary>
         </div>
     </div>
     <ng-template #loader>

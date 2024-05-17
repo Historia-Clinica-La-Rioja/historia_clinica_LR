@@ -137,7 +137,7 @@ const hierarchicalUnit: IconLegend = {
 
 const scope: IconLegend = {
 	icon: 'add_box',
-	legend: 'Ambito',
+	legend: 'Ámbito',
 }
 
 const patient: IconLegend = {
