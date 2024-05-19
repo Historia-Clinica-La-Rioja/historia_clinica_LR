@@ -7,7 +7,7 @@ import ParameterShow from "./ParameterShow";
 
 
 const parameters =  (permissions: SGXPermissions) => {
-    const hasPermission = permissions.hasAnyAssignment(...BASIC_BO_ROLES);
+    const hasPermission = permissions.hasAnyAssignment(...BASIC_BO_ROLES)  && permissions.isOn('HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
     return {
         list: hasPermission ? ParameterList : undefined,
         show: hasPermission ? ParameterShow : undefined,

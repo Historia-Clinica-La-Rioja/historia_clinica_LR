@@ -211,6 +211,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Permite atender un turno manual desde el PopUp del mismo")
 	HABILITAR_ATENDER_TURNO_MANUAL,
+
+	@Label("Habilita la configuracion de formularios")
+	HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO,
 	;
 
 	public boolean isActive() {
