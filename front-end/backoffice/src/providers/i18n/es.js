@@ -1,5 +1,4 @@
 
-
 const sectorMessages = {
     name: 'Sector |||| Sectores',
     fields: {
@@ -1056,6 +1055,39 @@ const messages = {
                 responseCode:'Código de respuesta',
                 date:'Fecha'
             }
+        },
+        parameters: {
+            name: 'Parametros de formularios',
+            fields: {
+                loincRadioButton: {
+                    title: "Código LOINC asociado",
+                    option_1: "Si",
+                    option_2: "No",
+                },
+                loincId: 'Código LOINC',
+                description: 'Descripción',
+                typeId: 'Tipo de parámetro',
+                units: 'Unidades',
+                unitsOfMeasureIds: 'Unidades de medida',
+                inputCount: 'Cantidad de valores a ingresar',
+                eclId: 'ECL',
+                snomedGroupId: 'ECL',
+                option: 'Opción',
+                textOptions: 'Opciones'
+            },
+            typeChoices: {
+                numeric: 'Numérico',
+                options: 'Lista de opciones',
+                snomed: 'SNOMED (ECL)',
+                text: 'Texto libre'
+            },
+            errors: {
+                inputCountLte0: 'El número de valores a ingresar debe ser mayor a 0',
+                inputCountGtUomCount: 'La cantidad de valores a ingresar debe ser menor o igual al número de unidades de medida',
+                optionsMinLength: 'El número de opciones debe ser mayor o igual a 2',
+                uniqueUoms: 'Las unidades de medida no pueden repetirse'
+            },
+
         }
     }
 };
