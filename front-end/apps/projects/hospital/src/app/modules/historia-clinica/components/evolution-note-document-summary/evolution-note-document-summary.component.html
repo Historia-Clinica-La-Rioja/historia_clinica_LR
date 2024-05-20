@@ -1,7 +1,7 @@
 <div class="evolution-note-container" data-id="evolution-note-summary">
-    <div *ngIf="(hasData$ | async) && !isLoading, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
-        fxLayoutGap="15px">
-        <app-document-summary-header data-id="summary-header" [headerData]="headerDescription"
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+        fxLayoutGap="20px">
+        <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
             [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
             (editDocument)="edit()"></app-document-summary-header>
         <mat-divider></mat-divider>
@@ -14,27 +14,27 @@
         </ng-container>
 
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
-            <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="evolutionNote.mainDiagnosis || evolutionNote.diagnosis"
-                [diagnosis]="evolutionNote.diagnosis" [mainDiagnosis]="evolutionNote.mainDiagnosis"></app-diagnosis-summary>
+            <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="summary.evolutionNote.mainDiagnosis || summary.evolutionNote.diagnosis"
+                [diagnosis]="summary.evolutionNote.diagnosis" [mainDiagnosis]="summary.evolutionNote.mainDiagnosis"></app-diagnosis-summary>
 
-            <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="evolutionNote.clinicalEvaluation"
-                [clinicalEvaluation]="evolutionNote.clinicalEvaluation"></app-clinical-evaluation-summary>
+            <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="summary.evolutionNote.clinicalEvaluation"
+                [clinicalEvaluation]="summary.evolutionNote.clinicalEvaluation"></app-clinical-evaluation-summary>
             
-            <app-description-item-data-summary *ngIf="evolutionNote.procedures" data-id="procedures-summary"
-                [descriptionItemDataSummary]="evolutionNote.procedures"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="summary.evolutionNote.procedures" data-id="procedures-summary"
+                [descriptionItemDataSummary]="summary.evolutionNote.procedures"></app-description-item-data-summary>
 
             <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
-                *ngIf="evolutionNote.vitalSignsAndRiskFactors"
-                [vitalSignsAndRiskFactors]="evolutionNote.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+                *ngIf="summary.evolutionNote.vitalSignsAndRiskFactors"
+                [vitalSignsAndRiskFactors]="summary.evolutionNote.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
 
-            <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="evolutionNote.anthropometricData"
-                [anthropometricData]="evolutionNote.anthropometricData"></app-anthropometric-data-summary>
+            <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="summary.evolutionNote.anthropometricData"
+                [anthropometricData]="summary.evolutionNote.anthropometricData"></app-anthropometric-data-summary>
 
-            <app-description-item-data-summary *ngIf="evolutionNote.allergies" data-id="allergies-summary"
-                [descriptionItemDataSummary]="evolutionNote.allergies"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="summary.evolutionNote.allergies" data-id="allergies-summary"
+                [descriptionItemDataSummary]="summary.evolutionNote.allergies"></app-description-item-data-summary>
 
-            <app-description-item-data-summary *ngIf="evolutionNote.vaccines" data-id="vaccines-summary"
-                [descriptionItemDataSummary]="evolutionNote.vaccines"></app-description-item-data-summary>
+            <app-description-item-data-summary *ngIf="summary.evolutionNote.vaccines" data-id="vaccines-summary"
+                [descriptionItemDataSummary]="summary.evolutionNote.vaccines"></app-description-item-data-summary>
         </div>
     </div>
     <ng-template #loader>

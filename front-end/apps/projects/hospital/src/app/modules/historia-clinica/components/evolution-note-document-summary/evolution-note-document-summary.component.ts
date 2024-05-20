@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { HospitalizationDocumentHeaderDto, ResponseEvolutionNoteDto } from '@api-rest/api-model';
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { DocumentActionsService, DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
@@ -8,7 +7,7 @@ import { DocumentsSummaryMapperService } from '@historia-clinica/services/docume
 import { EvolutionNoteAsViewFormat, EvolutionNoteDocumentSummaryService } from '@historia-clinica/services/evolution-note-document-summary.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, forkJoin, tap } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 
 @Component({
     selector: 'app-evolution-note-document-summary',
@@ -25,12 +24,9 @@ export class EvolutionNoteDocumentSummaryComponent implements OnInit {
     };
     @Output() resetActiveDocument = new EventEmitter<boolean>();
 
-    headerDescription: HeaderDescription;
-
-    evolutionNote: EvolutionNoteAsViewFormat;
     _activeDocument: DocumentSearch;
-    hasData$: Observable<[HospitalizationDocumentHeaderDto, ResponseEvolutionNoteDto]>;
-    isLoading = true;
+    documentSummary$: Observable<{headerDescription: HeaderDescription, evolutionNote: EvolutionNoteAsViewFormat}>;
+
     documentName = '';
 
     constructor(
@@ -49,15 +45,15 @@ export class EvolutionNoteDocumentSummaryComponent implements OnInit {
     }
 
     private fetchSummaryInfo(){
-        if (this.internmentEpisodeId && this._activeDocument?.document?.id) {
+        if (this._activeDocument?.document?.id) {
             let evolutionNote$ = this.evolutionNoteService.getEvolutionDiagnosis(this._activeDocument.document?.id, this.internmentEpisodeId);
             let header$ = this.documentSummaryService.getDocumentHeader(this._activeDocument.document?.id, this.internmentEpisodeId);
 
-            this.hasData$ = forkJoin([header$, evolutionNote$]).pipe(tap(([headerData, evolutionNoteData]) => {
-                this.headerDescription = this.documentSummaryMapperService.mapToHeaderDescription(headerData, this.documentName, this._activeDocument);
-                this.evolutionNote = this.evolutionNoteDocumentSummaryService.mapEvolutionNoteAsViewFormat(evolutionNoteData);
-                this.isLoading = false;
-            }));
+            this.documentSummary$ = forkJoin([header$, evolutionNote$]).pipe(map(([headerData, evolutionNoteData]) => {
+                return {
+                    headerDescription: this.documentSummaryMapperService.mapToHeaderDescription(headerData, this.documentName, this._activeDocument),
+                    evolutionNote: this.evolutionNoteDocumentSummaryService.mapEvolutionNoteAsViewFormat(evolutionNoteData),
+            }}));
         }
     }
 
