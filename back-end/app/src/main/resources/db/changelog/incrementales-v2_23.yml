@@ -399,3 +399,45 @@ databaseChangeLog:
                       primaryKeyName: PK_diagnostic_report_tree
                       references: diagnostic_report(id)
                       foreignKeyName: FK_diagnostic_report_tree__diagnostic_report_child_id
+    - changeSet:
+        id: triage_reason-createTable
+        comment: creation of triage_reason table
+        author: tomasbecher
+        changes:
+              - createTable:
+                    tableName: triage_reason
+                    columns:
+                        - column:
+                              name: triage_id
+                              type: int
+                              constraints:
+                                  nullable: false
+                        - column:
+                              name: reason_id
+                              type: varchar(20)
+                              constraints:
+                                  nullable: false
+              - addPrimaryKey:
+                    clustered: true
+                    columnNames: triage_id, reason_id
+                    constraintName: PK_triage_reason
+                    tableName: triage_reason
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: triage_id
+                    baseTableName: triage_reason
+                    constraintName: FK_triage_reason__triage
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: triage
+                    validate: true
+              - addForeignKeyConstraint:
+                    baseColumnNames: reason_id
+                    baseTableName: triage_reason
+                    constraintName: FK_triage_reason__reason
+                    onDelete: NO ACTION
+                    onUpdate: NO ACTION
+                    referencedColumnNames: id
+                    referencedTableName: reasons
+                    validate: true
