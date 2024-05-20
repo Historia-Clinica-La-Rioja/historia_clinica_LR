@@ -574,12 +574,12 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
+        this.transcribedOrderService.resetTranscribedOrder();
 		if (this.data.isEquipmentAppointment) {
 			let medicalOrder = this.appointmentInfoForm.get('medicalOrder').get('appointmentMedicalOrder').value;
 			let orderId = medicalOrder?.serviceRequestId;
 			let studyId = medicalOrder?.studyId;
 			if (medicalOrder?.isTranscribed) {
-				this.transcribedOrderService.resetTranscribedOrder();
 				return this.equipmentAppointmentFacade.addAppointmentWithTranscribedOrder(newAppointment, orderId);
 			}
 			return this.equipmentAppointmentFacade.addAppointment(newAppointment, orderId, studyId);
