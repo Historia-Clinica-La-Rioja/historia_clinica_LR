@@ -128,7 +128,7 @@ export class AnestheticReportVitalSignsService {
 		return this._endTidal$;
 	}
 
-	public handleFormChanges() {
+	private handleFormChanges() {
 		this.handleFormControlChanges('bloodPressureMax', 'bloodPressureMaxSource');
 		this.handleFormControlChanges('bloodPressureMin', 'bloodPressureMinSource');
 		this.handleFormControlChanges('pulse', 'pulseSource');
