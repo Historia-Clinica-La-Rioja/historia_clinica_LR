@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
@@ -49,7 +48,7 @@ public class EmergencyCareBo {
 
     private LocalDateTime createdOn;
 
-    private List<ReasonBo> reasons;
+    private String reason;
 
     private TriageBo triage;
 
@@ -125,10 +124,6 @@ public class EmergencyCareBo {
 
 	public String getBedNumber() {
 		return bed != null ? bed.getBedNumber(): null;
-	}
-
-	public String getRoomDescription() {
-		return room != null ? room.getDescription(): null;
 	}
 
 }

@@ -252,7 +252,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             PoliceInterventionDetailsBo policeInterventionDetailsBo = newEmergencyCare.getPoliceInterventionDetails();
             updatePoliceIntervention(policeInterventionDetailsBo, e, newEmergencyCare);
             e.setHasPoliceIntervention(newEmergencyCare.getHasPoliceIntervention());
-            updateReasons(newEmergencyCare.getReasons(), e.getId());
             EmergencyCareEpisode saved  = emergencyCareEpisodeRepository.save(e);
             log.debug(OUTPUT, saved);;
         return 1;
@@ -287,18 +286,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         }
     }
 
-    private void updateReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
-        emergencyCareEpisodeReasonRepository.deleteByEpisodeId(emergencyCareEpisodeId);
-        if (reasons.size() != 0) {
-            log.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
-            reasons.forEach(reason -> {
-                EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getSctid());
-                emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);
-            });
-            log.debug(OUTPUT, reasons);
-        }
-    }
-
     private void validPatient(PatientECEBo patient, Integer institutionId) {
         if (patient != null)
             assertPatientValid(patient.getId(), institutionId);
@@ -322,11 +309,9 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		setTriageDocumentData(newEmergencyCare, riskFactors);
         TriageBo triageBo = saveTriage.apply(new SaveTriageArgs(newEmergencyCare.getTriage(), emergencyCareEpisodeBo.getId(), institutionId));
 
-        List<ReasonBo> reasons = saveReasons(newEmergencyCare.getReasons(), emergencyCareEpisodeBo.getId());
 
         emergencyCareEpisodeBo.setPoliceInterventionDetails(policeInterventionDetailsBo);
         emergencyCareEpisodeBo.setTriage(triageBo);
-        emergencyCareEpisodeBo.setReasons(reasons);
 
         log.debug(OUTPUT, emergencyCareEpisodeBo);
         return emergencyCareEpisodeBo;
@@ -400,16 +385,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 			return result;
 		}
 		return null;
-    }
-
-    private List<ReasonBo> saveReasons(List<ReasonBo> reasons, Integer emergencyCareEpisodeId) {
-        log.debug("Input parameters -> reasons {}, emergencyCareEpisodeId {}", reasons, emergencyCareEpisodeId);
-        reasons.forEach(reason -> {
-            EmergencyCareEpisodeReason emergencyCareEpisodeReason = new EmergencyCareEpisodeReason(emergencyCareEpisodeId, reason.getSctid());
-            emergencyCareEpisodeReasonRepository.save(emergencyCareEpisodeReason);
-        });
-        log.debug(OUTPUT, reasons);
-        return reasons;
     }
 
     private LocalDateTime UTCIntoInstitutionLocalDateTime(Integer institutionId, LocalDateTime date) {

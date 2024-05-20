@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NewEmergencyCareDto } from '@api-rest/api-model';
 import { BehaviorSubject } from 'rxjs';
-import { MotivoConsulta } from '../../ambulatoria/services/motivo-nueva-consulta.service';
 import { GuardiaMapperService } from './guardia-mapper.service';
 
 @Injectable()
@@ -40,7 +39,7 @@ export class NewEpisodeService {
 
 export interface AdministrativeAdmission {
 	patientId: number;
-	reasons: MotivoConsulta[];
+	reason: string;
 	patientMedicalCoverageId: number;
 	emergencyCareTypeId: number;
 	doctorsOfficeId: number;
