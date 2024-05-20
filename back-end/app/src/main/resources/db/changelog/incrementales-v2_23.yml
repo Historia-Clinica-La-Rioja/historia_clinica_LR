@@ -186,3 +186,35 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE document_file SET deleted = TRUE, deleted_on = NOW(), deleted_by = -1 WHERE id IN (SELECT id FROM document WHERE deleted IS TRUE );
+
+
+    - changeSet:
+        id: addColumn-reason-emergency_care_episode and fillColumn-reason-emergency_care_episode
+        author: bchacon
+        changes:
+          - addColumn:
+              tableName: emergency_care_episode
+              columns:
+                - column:
+                    name: reason
+                    type: text
+
+          - sql:
+              sql: |-               
+                WITH ece_reasons AS (
+                  SELECT ecer.emergency_care_episode_id, string_agg(r.description, ', ') AS descriptions
+                FROM
+                  emergency_care_episode_reason ecer
+                JOIN
+                  reasons r ON ecer.reason_id = r.id
+                GROUP BY
+                  ecer.emergency_care_episode_id
+                )
+                UPDATE emergency_care_episode ece
+                SET
+                  reason = ece_r.descriptions
+                FROM
+                  ece_reasons ece_r
+                WHERE
+                  ece.id = ece_r.emergency_care_episode_id;
+                  
