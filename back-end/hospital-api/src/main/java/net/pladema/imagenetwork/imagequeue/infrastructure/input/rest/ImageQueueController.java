@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.imagequeue.application.getimagequeue.GetImageQueue;
+import net.pladema.imagenetwork.imagequeue.application.imagemoveretry.ImageMoveRetry;
 import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
 import net.pladema.imagenetwork.imagequeue.infrastructure.input.rest.dto.ImageQueueListDto;
 import net.pladema.imagenetwork.imagequeue.infrastructure.input.rest.mapper.ImageQueueMapper;
@@ -27,6 +28,7 @@ public class ImageQueueController {
     public static final String OUTPUT = "Output -> {}";
 
     private final GetImageQueue getImageQueue;
+    private final ImageMoveRetry imageMoveRetry;
     private final ImageQueueMapper mapper;
 
     @PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
@@ -48,6 +50,16 @@ public class ImageQueueController {
         return ResponseEntity.ok(new PageDto<>(mappedResult,(long) resultList.size()));
     }
 
+    @PutMapping("move-image/{moveImageId}/retry")
+    public ResponseEntity<Boolean> retryMove(
+            @PathVariable("institutionId") Integer institutionId,
+            @PathVariable("moveImageId") Integer moveImageId
+    ) {
+        log.debug("Input parameters -> institutionId {}, moveImageId {}", institutionId, moveImageId);
+        Boolean result = imageMoveRetry.run(institutionId,moveImageId);
+        log.trace(OUTPUT, result);
+        return ResponseEntity.ok(result);
+    }
 
 }
 

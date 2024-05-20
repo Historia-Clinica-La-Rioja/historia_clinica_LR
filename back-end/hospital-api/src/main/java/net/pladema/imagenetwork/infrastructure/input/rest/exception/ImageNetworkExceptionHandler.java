@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.util.Locale;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.imagenetwork.imagequeue.application.imagemoveretry.exceptions.ImageQueueException;
 import org.springframework.context.MessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -36,6 +37,13 @@ public class ImageNetworkExceptionHandler {
 	protected ApiErrorMessageDto handleImageNetworkException(URISyntaxException ex, Locale locale) {
 		log.debug("URISyntaxException message -> {}", ex.getMessage(), ex);
 		return buildErrorMessage(HttpStatus.BAD_REQUEST.toString(), ex.getMessage(), locale);
+	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ImageQueueException.class})
+	protected ApiErrorMessageDto handleImageQueueException(ImageQueueException ex, Locale locale) {
+		log.debug("ImageQueueException message -> {}", ex.getMessage(), ex);
+		return buildErrorMessage(ex.getCode().toString(), ex.getMessage(), locale);
 	}
 
 	private ApiErrorMessageDto buildErrorMessage(String code, String message, Locale locale) {

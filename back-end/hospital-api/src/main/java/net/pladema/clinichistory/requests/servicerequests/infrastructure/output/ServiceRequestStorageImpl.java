@@ -2,6 +2,8 @@ package net.pladema.clinichistory.requests.servicerequests.infrastructure.output
 
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DiagnosticReportRepository;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -50,18 +52,24 @@ public class ServiceRequestStorageImpl implements ServiceRequestStorage {
 	public List<String> getDiagnosticReportsFrom(Integer diagnosticReportId, Integer transcribedServiceRequestId) {
 		log.debug("Input parameters -> diagnosticReportId {}, transcribedServiceRequestId {} ",
 				diagnosticReportId, transcribedServiceRequestId);
+		List<String> result = new ArrayList<>();
 
-		if (diagnosticReportId != null)
-			return diagnosticReportRepository.getDiagnosticReportById(diagnosticReportId)
-					.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
-					.map(Arrays::asList)
-					.orElse(List.of());
-
-		if (transcribedServiceRequestId != null)
-			return transcribedServiceRequestStorage.get(transcribedServiceRequestId)
-					.getStudies();
-
-		return List.of();
+		if (diagnosticReportId != null) {
+			result.addAll(
+					diagnosticReportRepository.getDiagnosticReportById(diagnosticReportId)
+							.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
+							.map(Arrays::asList)
+							.orElse(List.of())
+			);
+		}
+		else if (transcribedServiceRequestId != null) {
+			result.addAll(
+					this.transcribedServiceRequestStorage.get(transcribedServiceRequestId)
+							.getStudies()
+			);
+		}
+		log.debug("Output -> {}",result);
+		return result;
 	}
 
 
