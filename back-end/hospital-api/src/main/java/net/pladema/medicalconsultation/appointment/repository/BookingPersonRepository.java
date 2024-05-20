@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -49,4 +50,13 @@ public interface BookingPersonRepository extends JpaRepository<BookingPerson, In
     "JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
     "WHERE ba.pk.uuid LIKE :uuid")
     Optional<BookingPerson> findPatientByUuid(@Param("uuid") String uuid);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT bp " +
+			"FROM BookingPerson bp " +
+			"WHERE bp.email LIKE :email " +
+			"AND bp.identificationNumber = :identificationNumber " +
+			"ORDER BY bp.id DESC")
+	List<BookingPerson> findByEmailAndIdentificationNumber(@Param("email") String email, @Param("identificationNumber") String identificationNumber);
+
 }

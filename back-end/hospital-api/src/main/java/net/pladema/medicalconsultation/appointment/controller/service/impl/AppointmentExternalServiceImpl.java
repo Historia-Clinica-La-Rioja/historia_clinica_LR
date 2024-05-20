@@ -201,8 +201,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 
 	private BookingPerson getBookingPerson(BookingPersonDto bookingPersonDto, String requestingBookingPersonEmail) throws BookingPersonMailNotExistsException {
 		BookingPerson bookingPerson;
-		boolean shouldExistsBookingPerson = (bookingPersonDto == null);
-		if(shouldExistsBookingPerson)
+		if(bookingPersonDto == null)
 			bookingPerson = bookingPersonService.findByEmail(requestingBookingPersonEmail)
 					.orElseThrow(BookingPersonMailNotExistsException::new);
 		else
@@ -212,8 +211,9 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 
 	private BookingPerson searchOrSaveBookingPerson(BookingPersonDto bookingPersonDto) {
 		BookingPerson bookingPerson = null;
-		if(bookingPersonDto.getEmail() != null)
-			bookingPerson = bookingPersonService.findByEmail(bookingPersonDto.getEmail()).orElse(null);
+		if(bookingPersonDto.getEmail() != null && bookingPersonDto.getIdNumber() != null)
+			bookingPerson = bookingPersonService.findByEmailAndIdentificationNumber(bookingPersonDto.getEmail(), bookingPersonDto.getIdNumber())
+					.stream().findFirst().orElse(null);
 		if(bookingPerson == null)
 			return bookingPersonService.save(mapToBookingPerson(bookingPersonDto));
 		return bookingPerson;

@@ -3,6 +3,7 @@ package net.pladema.medicalconsultation.appointment.service.booking;
 import net.pladema.medicalconsultation.appointment.repository.domain.BookingPersonBo;
 import net.pladema.medicalconsultation.appointment.repository.entity.BookingPerson;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -21,4 +22,6 @@ public interface BookingPersonService {
     Optional<String> getPatientName(String uuid);
 
     Optional<String> getProfessionalName(Integer diaryId);
+
+	List<BookingPerson> findByEmailAndIdentificationNumber(String email, String identificationNumber);
 }
