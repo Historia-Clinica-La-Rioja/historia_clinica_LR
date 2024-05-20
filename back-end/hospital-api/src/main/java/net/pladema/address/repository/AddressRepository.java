@@ -19,8 +19,10 @@ import java.util.Optional;
 public interface AddressRepository extends JpaRepository<Address, Integer> {
 
     @Transactional(readOnly = true)
-    @Query("SELECT new net.pladema.address.repository.domain.AddressVo(a.id,a.street,a.number,a.floor,a.apartment,a.postcode,c.id,c.description, a.countryId, a.provinceId, a.departmentId) " +
-            "FROM Address a LEFT JOIN City c ON (a.cityId = c.id) " +
+    @Query("SELECT new net.pladema.address.repository.domain.AddressVo(a.id,a.street,a.number,a.floor,a.apartment,a.postcode,c.id,c.description, a.countryId, a.provinceId, a.departmentId, p.description) " +
+            "FROM Address a " +
+			"LEFT JOIN City c ON (a.cityId = c.id) " +
+			"LEFT JOIN Province p ON (p.id = a.provinceId) " +
             "WHERE a.id IN :addressIds")
     List<AddressVo> findByIds(@Param("addressIds") List<Integer> addressIds);
 
@@ -91,5 +93,16 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 			"FROM Institution i " +
 			"WHERE i.id = :institutionId)")
 	void saveInstitutionGlobalCoordinates(@Param("institutionId") Integer institutionId, @Param("latitude") Double latitude, @Param("longitude") Double longitude);
+	
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.address.repository.domain.AddressVo(a.id,a.street,a.number,a.floor,a.apartment,a.postcode,c.id,c.description, a.countryId, a.provinceId, a.departmentId, pr.description) " +
+			"FROM Patient p " +
+			"JOIN Person pe ON (pe.id = p.personId) " +
+			"JOIN PersonExtended pex ON (pex.id = pe.id) " +
+			"LEFT JOIN Address a ON (a.id = pex.addressId) " +
+			"LEFT JOIN City c ON (a.cityId = c.id) " +
+			"LEFT JOIN Province pr ON (pr.id = a.provinceId) " +
+			"WHERE p.id = :patientId")
+	AddressVo findByPatientId(@Param("patientId") Integer patientId);
 
 }

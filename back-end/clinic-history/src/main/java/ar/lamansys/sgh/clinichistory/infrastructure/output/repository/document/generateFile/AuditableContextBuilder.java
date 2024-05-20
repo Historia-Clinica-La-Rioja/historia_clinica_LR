@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
@@ -80,6 +81,8 @@ public class AuditableContextBuilder {
 	
 	private final DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder;
 
+	private final SharedAddressPort sharedAddressPort;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -100,7 +103,8 @@ public class AuditableContextBuilder {
 			RoomFinder roomFinder,
 			DoctorsOfficeFinder doctorsOfficeFinder,
 			ShockRoomFinder shockRoomFinder,
-			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder) {
+			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder,
+			SharedAddressPort sharedAddressPort) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -121,6 +125,7 @@ public class AuditableContextBuilder {
 		this.doctorsOfficeDescriptionFunction = doctorsOfficeFinder::getDoctorsOfficeDescription;
 		this.shockRoomDescriptionFunction = shockRoomFinder::getShockRoomDescription;
 		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
+		this.sharedAddressPort = sharedAddressPort;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -318,6 +323,8 @@ public class AuditableContextBuilder {
 		ctx.put("logo", generatePdfImage("pdf/digital_recipe_logo.png"));
 		ctx.put("headerLogos", generatePdfImage("pdf/digital_recipe_header_logo.png"));
 		ctx.put("isArchived", document.getIsArchived());
+		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
+		ctx.put("patientAddress", sharedAddressPort.fetchPatientCompleteAddress(document.getPatientId()));
 	}
 
 	private List<ImmunizationInfoDto> mapImmunizations(List<ImmunizationBo> immunizations) {
