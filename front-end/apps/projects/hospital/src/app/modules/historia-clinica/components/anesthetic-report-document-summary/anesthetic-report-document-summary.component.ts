@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AnestheticReportDto, HospitalizationDocumentHeaderDto } from '@api-rest/api-model';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { AnestheticReportDocumentSummaryService, AnestheticReportViewFormat } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
-import { Observable, forkJoin, tap } from 'rxjs';
+import { Observable, forkJoin, map } from 'rxjs';
 
 @Component({
     selector: 'app-anesthetic-report-document-summary',
@@ -21,12 +20,9 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
         this.fetchSummaryInfo();
     };
     @Output() resetActiveDocument = new EventEmitter<boolean>();
-    
-    headerDescription: HeaderDescription;
-    anestheticReport: AnestheticReportViewFormat;
+
     _activeDocument: DocumentSearch;
-    hasData$: Observable<[HospitalizationDocumentHeaderDto, AnestheticReportDto]>;
-    isLoading = true;
+    documentSummary$: Observable<{headerDescription: HeaderDescription, anestheticReport: AnestheticReportViewFormat}>;
 
     constructor( 
         private readonly anestheticReportService: AnesthethicReportService,
@@ -40,15 +36,15 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
     }
 
     private fetchSummaryInfo(){
-        if (this.internmentEpisodeId && this._activeDocument?.document?.id) {
+        if (this._activeDocument?.document?.id) {
             let anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._activeDocument.document.id, this.internmentEpisodeId);
             let header$ = this.documentSummaryService.getDocumentHeader(this._activeDocument.document?.id, this.internmentEpisodeId);
 
-            this.hasData$ = forkJoin([header$, anestheticReport$]).pipe(tap(([headerData, anestheticReportData]) => {
-                this.headerDescription = this.documentSummaryMapperService.mapToHeaderDescription(headerData, 'Parte anestésico', this._activeDocument);
-                this.anestheticReport = this.anestheticReportDocumentSummaryService.mapToAnestheticReportViewFormat(anestheticReportData);
-                this.isLoading = false;
-            }));
+            this.documentSummary$ = forkJoin([header$, anestheticReport$]).pipe(map(([headerData, anestheticReportData]) => {
+                return {
+                    headerDescription: this.documentSummaryMapperService.mapToHeaderDescription(headerData, 'Parte anestésico', this._activeDocument),
+                    anestheticReport: this.anestheticReportDocumentSummaryService.mapToAnestheticReportViewFormat(anestheticReportData),
+            }}));
         }
     }
 }
