@@ -28,7 +28,10 @@
 			"TRIAGE_ROOM_DESCRIPTION": "Lugar físico en el que se realiza el Triage",
 			"STRIDOR": "Respiración con estridor",
 			"TEMPERATURE": "Temperatura",
-			"TITLE": "Nuevo triage"
+			"TITLE": "Nuevo triage",
+			"REASON": "Motivo de consulta",
+			"LIST_CARD_TITLE": "Motivos registrados",
+			"ADD_REASON": "+ agregar motivo"
 		},
 		"administrative_admision": {
 			"TITLE": "Nuevo episodio",

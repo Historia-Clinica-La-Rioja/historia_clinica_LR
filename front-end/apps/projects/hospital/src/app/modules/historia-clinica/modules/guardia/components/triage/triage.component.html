@@ -3,18 +3,22 @@
 		<mat-label [translate]="'guardia.triage.LEVEL'"></mat-label>
 		<mat-select formControlName="triageCategoryId">
 			<mat-option id="triageCategoryId"
-			            *ngFor="let triageCategory of triageCategories" [value]="triageCategory.id"
-			            (onSelectionChange)="selectTriageCategoryId($event, triageCategory.id)">
+			            *ngFor="let triageCategory of triageCategories" [value]="triageCategory.id">
 				{{triageCategory.description}}
 			</mat-option>
 		</mat-select>
 	</mat-form-field>
+
+	<section *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
+		<span [translate]="'guardia.triage.REASON'"></span>
+		<app-reasons-form (selectedReasons)="setSelectedReasons($event)"></app-reasons-form>
+	</section>
+	
 	<mat-form-field *ngIf="false" class="simple-form-field" appearance="outline">
 		<mat-label [translate]="'guardia.triage.TRIAGE_ROOM'"></mat-label>
 		<mat-select matTooltip="{{'guardia.triage.TRIAGE_ROOM_DESCRIPTION' | translate}}" formControlName="doctorsOfficeId">
 			<mat-option id="doctorsOfficeId"
-			            *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id"
-			            (onSelectionChange)="selectDoctorsOfficeId($event, office.id)">
+			            *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id">
 				{{office.description}}
 			</mat-option>
 		</mat-select>

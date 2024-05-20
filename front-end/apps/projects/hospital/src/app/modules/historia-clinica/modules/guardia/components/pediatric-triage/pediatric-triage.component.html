@@ -2,8 +2,7 @@
 	<form [formGroup]="pediatricForm">
 
 		<section id="triage">
-			<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
-				(doctorsOfficeIdChange)="setDoctorsOfficeId($event)"
+			<app-triage (triageData)="setTriageData($event)"
 				[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
 			</app-triage>
 		</section>

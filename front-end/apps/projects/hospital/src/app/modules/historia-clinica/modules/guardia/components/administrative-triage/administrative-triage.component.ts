@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TriageAdministrativeDto } from '@api-rest/api-model';
+import { Triage } from '../triage/triage.component';
+
 
 @Component({
 	selector: 'app-administrative-triage',
@@ -8,31 +10,28 @@ import { TriageAdministrativeDto } from '@api-rest/api-model';
 })
 export class AdministrativeTriageComponent {
 
+	private triageData: Triage;
+
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
-	private triageCategoryId: number;
-	private doctorsOfficeId: number;
 
 	constructor() {
 	}
 
-	setTriageCategoryId(triageCategoryId: number): void {
-		this.triageCategoryId = triageCategoryId;
-	}
-
-	setDoctorsOfficeId(doctorsOfficeId: number): void {
-		this.doctorsOfficeId = doctorsOfficeId;
+	setTriageData(triageData: Triage) {
+		this.triageData = triageData;
 	}
 
 	confirmTriage(): void {
 		this.disableConfirmButton = true;
 		const triage: TriageAdministrativeDto = {
-			categoryId: this.triageCategoryId,
-			doctorsOfficeId: this.doctorsOfficeId
+			categoryId: this.triageData.triageCategoryId,
+			doctorsOfficeId: this.triageData.doctorsOfficeId,
+			reasons: this.triageData.reasons
 		};
 		this.confirm.emit(triage);
 	}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Triage } from '../components/triage-details/triage-details.component';
+import { TriageDetails } from '../components/triage-details/triage-details.component';
 import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateDtoToDate, timeDtoToDate, dateToDateTimeDtoUTC } from '@api-rest/mapper/date-dto.mapper';
 import {
 	AdministrativeDischargeDto,
@@ -27,7 +27,7 @@ import { toHourMinute } from '@core/utils/date.utils';
 
 export class GuardiaMapperService {
 
-	triageListDtoToTriage: (triageListDto: TriageListDto) => Triage = GuardiaMapperService._mapTriageListDtoToTriage;
+	triageListDtoToTriage: (triageListDto: TriageListDto) => TriageDetails = GuardiaMapperService._mapTriageListDtoToTriage;
 	triageListDtoToTriageReduced: (triageListDto: TriageListDto) => TriageReduced = GuardiaMapperService._mapTriageListDtoToTriageReduced;
 	riskFactorsValuetoNewRiskFactorsObservationDto: (v: RiskFactorsValue) => NewRiskFactorsObservationDto = GuardiaMapperService._mapRiskFactorsValuetoNewRiskFactorsObservationDto;
 	formToAMedicalDischargeDto: (s: MedicalDischargeForm) => AMedicalDischargeDto = GuardiaMapperService._mapFormToAMedicalDischargeDto;
@@ -37,7 +37,7 @@ export class GuardiaMapperService {
 	constructor() {
 	}
 
-	public static _mapTriageListDtoToTriage(triageListDto: TriageListDto): Triage {
+	public static _mapTriageListDtoToTriage(triageListDto: TriageListDto): TriageDetails {
 		return {
 			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {

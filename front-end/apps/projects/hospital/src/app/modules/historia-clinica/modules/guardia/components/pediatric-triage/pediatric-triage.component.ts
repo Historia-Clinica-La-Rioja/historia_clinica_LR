@@ -8,6 +8,7 @@ import { EffectiveObservation, FactoresDeRiesgoFormService } from '@historia-cli
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
+import { Triage } from '../triage/triage.component';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -16,14 +17,14 @@ import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 })
 export class PediatricTriageComponent implements OnInit {
 
+	private triageData: Triage;
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
-	private triageCategoryId: number;
-	private doctorsOfficeId: number;
+
 	pediatricForm: UntypedFormGroup;
 	bodyTemperatures$: Observable<MasterDataDto[]>;
 	muscleHypertonyaOptions$: Observable<MasterDataDto[]>;
@@ -85,12 +86,8 @@ export class PediatricTriageComponent implements OnInit {
 		this.respiratoryRetractionOptions$ = this.triageMasterDataService.getRespiratoryRetraction();
 	}
 
-	setTriageCategoryId(triageCategoryId: number): void {
-		this.triageCategoryId = triageCategoryId;
-	}
-
-	setDoctorsOfficeId(doctorsOfficeId: number): void {
-		this.doctorsOfficeId = doctorsOfficeId;
+	setTriageData(triageData: Triage) {
+		this.triageData = triageData;
 	}
 
 	confirmPediatricTriage(): void {
@@ -118,8 +115,8 @@ export class PediatricTriageComponent implements OnInit {
 	private buildTriagePediatricDto(): TriagePediatricDto {
 		const formValue = this.pediatricForm.value;
 		return {
-			categoryId: this.triageCategoryId,
-			doctorsOfficeId: this.doctorsOfficeId,
+			categoryId: this.triageData.triageCategoryId,
+			doctorsOfficeId: this.triageData.doctorsOfficeId,
 			appearance: {
 				...formValue.appearance,
 			},
@@ -132,7 +129,8 @@ export class PediatricTriageComponent implements OnInit {
 				...formValue.circulation,
 				heartRate: this.mapRiskFactorToDto(formValue.circulation.heartRate)
 			},
-			notes: formValue.observation
+			notes: formValue.observation,
+			reasons: this.triageData.reasons
 		};
 	}
 

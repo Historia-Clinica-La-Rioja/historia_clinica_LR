@@ -27,6 +27,7 @@ import { PediatricTriageComponent } from './components/pediatric-triage/pediatri
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
 import { TriageComponent } from './components/triage/triage.component';
 import { TriageDetailsComponent } from './components/triage-details/triage-details.component';
+import { ReasonsFormComponent } from './components/reasons-form/reasons-form.component';
 // dialogs
 import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
@@ -59,6 +60,7 @@ import { PatientSummaryComponent } from '../../../hsi-components/patient-summary
 		TriageChipComponent,
 		TriageComponent,
 		TriageDetailsComponent,
+		ReasonsFormComponent,
 		// dialogs
 		AdministrativeTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,

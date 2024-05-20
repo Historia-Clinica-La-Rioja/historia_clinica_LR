@@ -10,7 +10,7 @@ import {
 	PatientPhotoDto,
 	ProfessionalPersonDto,
 	PageDto,
-	EmergencyCareEpisodeFilterDto
+	EmergencyCareEpisodeFilterDto,
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';

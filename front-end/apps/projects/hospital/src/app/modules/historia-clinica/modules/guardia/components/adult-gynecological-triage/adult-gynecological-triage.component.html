@@ -1,8 +1,7 @@
 <div class="page" fxLayout="column">
 	<div fxLayout="column">
 		<section id="triage">
-			<app-triage (triageCategoryIdChange)="setTriageCategoryId($event)"
-				(doctorsOfficeIdChange)="setDoctorsOfficeId($event)"
+			<app-triage (triageData)="setTriageData($event)"
 				[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
 			</app-triage>
 		</section>
@@ -18,8 +17,8 @@
 			<section id="evaluation" fxLayout="column">
 				<h4 [translate]="'guardia.triage.OBSERVATIONS'"></h4>
 				<mat-form-field fxFlex="100%" appearance="outline">
-					<textarea matInput placeholder="{{'guardia.triage.SET_OBSERVATIONS' | translate}}" formControlName="observation" 
-						name="observation"></textarea>
+					<textarea matInput placeholder="{{'guardia.triage.SET_OBSERVATIONS' | translate}}"
+						formControlName="observation" name="observation"></textarea>
 				</mat-form-field>
 			</section>
 		</form>

@@ -4,6 +4,8 @@ import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { FactoresDeRiesgoFormService, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
+import { Triage } from '../triage/triage.component';
+
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
@@ -12,20 +14,17 @@ import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 })
 export class AdultGynecologicalTriageComponent implements OnInit {
 
+	private triageData: Triage;
+	adultGynecologicalForm: UntypedFormGroup;
+	riskFactorsForm: UntypedFormGroup;
+	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
+
 	@Input() confirmLabel = 'Confirmar episodio';
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
-
-	private triageCategoryId: number;
-	private doctorsOfficeId: number;
-
-	adultGynecologicalForm: UntypedFormGroup;
-	riskFactorsForm: UntypedFormGroup;
-	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
-
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -42,12 +41,8 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 		this.riskFactorsForm = this.factoresDeRiesgoFormService.getForm();
 	}
 
-	setTriageCategoryId(triageCategoryId: number): void {
-		this.triageCategoryId = triageCategoryId;
-	}
-
-	setDoctorsOfficeId(doctorsOfficeId: number): void {
-		this.doctorsOfficeId = doctorsOfficeId;
+	setTriageData(triageData: Triage) {
+		this.triageData = triageData;
 	}
 
 	confirmAdultGynecologicalTriage(): void {
@@ -56,10 +51,11 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 			this.disableConfirmButton = true;
 			const riskFactorsValue: RiskFactorsValue = this.factoresDeRiesgoFormService.buildRiskFactorsValue(this.riskFactorsForm);
 			const triage: TriageAdultGynecologicalDto = {
-				categoryId: this.triageCategoryId,
-				doctorsOfficeId: this.doctorsOfficeId,
+				categoryId: this.triageData.triageCategoryId,
+				doctorsOfficeId: this.triageData.doctorsOfficeId,
 				notes: formValue.observation,
-				riskFactors: this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue)
+				riskFactors: this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue),
+				reasons: this.triageData.reasons
 			};
 			this.confirm.emit(triage);
 		}
