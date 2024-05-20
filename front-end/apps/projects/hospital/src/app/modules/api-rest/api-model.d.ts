@@ -15,7 +15,7 @@ export interface AEmergencyCareDto extends Serializable {
     hasPoliceIntervention?: boolean;
     patient?: AEmergencyCarePatientDto;
     policeInterventionDetails?: PoliceInterventionDetailsDto;
-    reasons?: SnomedDto[];
+    reason: string;
 }
 
 export interface AEmergencyCarePatientDto extends Serializable {
@@ -1570,7 +1570,7 @@ export interface EmergencyCareDto extends Serializable {
     hasPoliceIntervention: boolean;
     patient: EmergencyCarePatientDto;
     policeInterventionDetails: PoliceInterventionDetailsDto;
-    reasons: SnomedDto[];
+    reason: string;
 }
 
 export interface EmergencyCareEpisodeFilterDto {
@@ -1652,6 +1652,7 @@ export interface EmergencyCareListDto extends Serializable {
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     patient: EmergencyCarePatientDto;
+    reason: string;
     relatedProfessional: ProfessionalPersonDto;
     shockroom: ShockroomDto;
     state: MasterDataDto;

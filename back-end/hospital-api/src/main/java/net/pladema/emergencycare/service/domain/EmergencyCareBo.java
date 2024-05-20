@@ -90,6 +90,7 @@ public class EmergencyCareBo {
 		this.bed = emergencyCareVo.getBed() != null ? new BedBo(emergencyCareVo.getBed().getId(), emergencyCareVo.getBed().getBedNumber(), null) : null;
 		this.endDate = emergencyCareVo.getEndDate();
 		this.institutionName = emergencyCareVo.getInstitutionName();
+		this.reason = emergencyCareVo.getReason();
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {

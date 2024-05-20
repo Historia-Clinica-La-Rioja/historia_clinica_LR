@@ -1,18 +1,15 @@
 package net.pladema.emergencycare.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
-import net.pladema.emergencycare.repository.EmergencyCareEpisodeReasonRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.repository.PoliceInterventionRepository;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
-import net.pladema.emergencycare.repository.entity.EmergencyCareEpisodeReason;
 import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.repository.entity.PoliceInterventionDetails;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
@@ -40,7 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -60,8 +56,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     private PoliceInterventionRepository policeInterventionRepository;
 
     private EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
-
-    private EmergencyCareEpisodeReasonRepository emergencyCareEpisodeReasonRepository;
 
     private InstitutionExternalService institutionExternalService;
 
@@ -114,13 +108,6 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         EmergencyCareVo emergencyCareEpisode = emergencyCareEpisodeRepository.getEpisode(episodeId)
                 .orElseThrow(() -> new NotFoundException(WRONG_CARE_ID_EPISODE, CARE_EPISODE_NOT_FOUND));
         EmergencyCareBo result = new EmergencyCareBo(emergencyCareEpisode);
-
-        //Motivos de consulta
-        List<ReasonBo> reasons = emergencyCareEpisodeReasonRepository.findByEpisodeId(episodeId)
-                .stream()
-                .map(ReasonBo::new)
-                .collect(Collectors.toList());
-        result.setReasons(reasons);
 		result.setRoom(emergencyCareEpisode.getRoom() != null ? new RoomBo(emergencyCareEpisode.getRoom()): null);
         result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
 		log.debug(OUTPUT, result);

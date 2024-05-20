@@ -37,11 +37,11 @@ public class ResponseEmergencyCareDto extends EmergencyCareDto {
 
 	private String institutionName;
 
-    public ResponseEmergencyCareDto(Integer id, List<SnomedDto> reasons, MasterDataDto emergencyCareType,
+    public ResponseEmergencyCareDto(Integer id, String reason, MasterDataDto emergencyCareType,
                                     MasterDataDto entranceType, Boolean hasPoliceIntervention, PoliceInterventionDetailsDto policeIntervention,
                                     String ambulanceCompanyId, EmergencyCarePatientDto patient,
                                     MasterDataDto emergencyCareState, DateTimeDto createdOn){
-        super(reasons, emergencyCareType, entranceType, hasPoliceIntervention, policeIntervention, ambulanceCompanyId, patient);
+        super(reason, emergencyCareType, entranceType, hasPoliceIntervention, policeIntervention, ambulanceCompanyId, patient);
         this.id = id;
         this.emergencyCareState = emergencyCareState;
         this.creationDate = createdOn;

@@ -242,7 +242,7 @@ export class GuardiaMapperService {
 			patientId: dto.patient ? dto.patient.id : null,
 			patientMedicalCoverageId: dto.patient?.patientMedicalCoverageId ? dto.patient.patientMedicalCoverageId : null,
 			plateNumber: dto.policeInterventionDetails?.plateNumber ? dto.policeInterventionDetails.plateNumber : null,
-			reasons: dto.reasons.map(s => ({ snomed: s })),
+			reason: dto.reason,
 		};
 	}
 
@@ -255,7 +255,7 @@ export class GuardiaMapperService {
 				id: administrativeAdmission.patientId,
 				patientMedicalCoverageId: administrativeAdmission.patientMedicalCoverageId
 			},
-			reasons: administrativeAdmission.reasons.map(s => s.snomed),
+			reason: administrativeAdmission.reason,
 			emergencyCareTypeId: administrativeAdmission.emergencyCareTypeId,
 			entranceTypeId: administrativeAdmission.emergencyCareEntranceTypeId,
 			ambulanceCompanyId: administrativeAdmission.ambulanceCompanyId,

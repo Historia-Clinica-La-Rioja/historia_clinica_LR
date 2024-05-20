@@ -66,6 +66,8 @@ public class EmergencyCareVo implements Serializable {
 
 	private String institutionName;
 
+	private String reason;
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
 						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
 						   String shockroomDescription, Bed bed){
@@ -84,6 +86,7 @@ public class EmergencyCareVo implements Serializable {
 		this.hasPoliceIntervention = emergencyCareEpisode.getHasPoliceIntervention();
 		this.shockroom = emergencyCareEpisode.getShockroomId() != null ? new ShockroomVo(emergencyCareEpisode.getShockroomId(), shockroomDescription) : null;
 		this.bed = emergencyCareEpisode.getBedId() != null ? new BedVo(bed) : null;
+		this.reason = emergencyCareEpisode.getReason();
 	}
 
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
