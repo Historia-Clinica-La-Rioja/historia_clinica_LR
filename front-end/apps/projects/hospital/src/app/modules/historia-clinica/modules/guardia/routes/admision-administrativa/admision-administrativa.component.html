@@ -1,15 +1,10 @@
 <h2 [translate]="'guardia.administrative_admision.PATIENT'"></h2>
 
-<button mat-stroked-button color="primary" *ngIf="!patientCardInfo" (click)="searchPatient()" class="uppercase"
-	translate="guardia.administrative_admision.SEARCH_PATIENT"></button>
-<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" (ngSubmit)="continue()" class="form">
+<app-button *ngIf="!patientCardInfo" matIcon="person_search" text="buttons.SEARCH" (clicked)="searchPatient()"></app-button>
+<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" class="form">
 	<ng-container *ngIf="patientCardInfo">
 		<app-patient-card [patient]="patientCardInfo.basicData" [personPhoto]="patientCardInfo.photo" size="small">
-			<div horizontal-content fxFlexAlign="center">
-				<button mat-icon-button color="warn" (click)="clearSelectedPatient()">
-					<mat-icon>delete_outline</mat-icon>
-				</button>
-			</div>
+			<app-button buttonType="{{buttonType.ICON}}" color="{{buttonThemeWarn}}" matIcon="clear" (clicked)="clearSelectedPatient()"></app-button>
 		</app-patient-card>
 		<mat-form-field appearance="outline">
 			<mat-label translate="guardia.administrative_admision.SELECT_MEDICAL_COVERAGE"></mat-label>
@@ -177,13 +172,10 @@
 	</ng-container>
 
 	<section id="actions" fxLayout="row" fxLayoutAlign="space-between">
-
-		<button mat-stroked-button color="primary" type="button" (click)="goBack()" class="uppercase"
-			translate="buttons.BACK"></button>
-
+		<app-button text="buttons.BACK" (clicked)="goBack()"></app-button>
 		<div fxLayoutGap="5px">
 			<ng-content select="[moreActions]"></ng-content>
-			<button mat-raised-button color="primary" class="uppercase">{{submitLabel | translate}}</button>
+			<app-button buttonType="{{buttonType.RAISED}}" text="{{submitLabel}}" (clicked)="continue()"></app-button>
 		</div>
 
 	</section>

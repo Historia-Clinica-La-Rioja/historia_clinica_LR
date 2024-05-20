@@ -27,6 +27,7 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -67,6 +68,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	private selectedPatient;
 
 	minDate = MIN_DATE;
+	buttonType = ButtonType;
+	buttonThemeWarn = 'warn';
 
 	constructor(
 		private readonly dialog: MatDialog,

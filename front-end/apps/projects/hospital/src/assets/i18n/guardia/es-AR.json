@@ -32,7 +32,6 @@
 		"administrative_admision": {
 			"TITLE": "Nuevo episodio",
 			"PATIENT": "Paciente",
-			"SEARCH_PATIENT": "Buscar Paciente",
 			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
 			"UPDATE_MEDICAL_COVERAGE": "Actualizar Cobertura",
 			"motivo": {
