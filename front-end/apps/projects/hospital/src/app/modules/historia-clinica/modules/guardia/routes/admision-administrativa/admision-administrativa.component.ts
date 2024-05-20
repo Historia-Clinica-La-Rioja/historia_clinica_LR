@@ -11,9 +11,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { MedicalCoverageComponent } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
-import { MapperService as PatientMapperService } from '@presentation/services/mapper.service';
 import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
-import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { AdministrativeAdmission } from '../../services/new-episode.service';
@@ -28,6 +26,9 @@ import { Patient } from '@pacientes/component/search-patient/search-patient.comp
 import { MIN_DATE } from "@core/utils/date.utils";
 import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { PatientSummary } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+import { PatientNameService } from '@core/services/patient-name.service';
+import { Size } from '@presentation/components/item-summary/item-summary.component';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -38,10 +39,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	hasError = hasError;
 	TIME_PATTERN = TIME_PATTERN;
-	patientCardInfo: {
-		photo: PersonPhotoDto,
-		basicData: PatientBasicData
-	};
+	patientSummary: PatientSummary;
+	SIZE = Size.SMALL;
 
 	@Input() initData: AdministrativeAdmission;
 	@Input() isDoctorOfficeEditable = true;
@@ -77,11 +76,11 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly emergencyCareMasterData: EmergencyCareMasterDataService,
 		private formBuilder: UntypedFormBuilder,
 		private readonly mapperService: MapperService,
-		private readonly patientMapperService: PatientMapperService,
 		private readonly snackBarService: SnackBarService,
 		private readonly snomedService: SnomedService,
 		private readonly patientService: PatientService,
-		private readonly doctorsOfficeService: DoctorsOfficeService
+		private readonly doctorsOfficeService: DoctorsOfficeService,
+		private readonly patientNameService: PatientNameService,
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
 	}
@@ -112,7 +111,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		this.setExistingInfo();
 	}
 
-	dateChanged(date:Date) {
+	dateChanged(date: Date) {
 		this.form.controls.callDate.setValue(date);
 	}
 
@@ -159,7 +158,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	clearSelectedPatient(): void {
 		this.selectedPatient = null;
-		this.patientCardInfo = null;
+		this.patientSummary = null;
 		this.form.controls.patientId.setValue(null);
 		this.form.controls.patientMedicalCoverageId.setValue(null);
 	}
@@ -196,10 +195,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
 
 		this.form.controls.patientId.setValue(basicData.id);
-		this.patientCardInfo = {
-			basicData: this.patientMapperService.toPatientBasicData(basicData),
-			photo
-		};
+		this.patientSummary = basicData.person ? this.toPatientSummary(basicData, photo) : null;
 		this.selectedPatient = {
 			id: basicData.id,
 			genderId: basicData.person?.gender.id,
@@ -234,5 +230,20 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	clear(control: AbstractControl): void {
 		control.reset();
+	}
+
+	private toPatientSummary(basicData: BasicPatientDto, photo: PersonPhotoDto): PatientSummary {
+		const { firstName, nameSelfDetermination, lastName, middleNames, otherLastNames } = basicData.person;
+		return {
+			fullName: this.patientNameService.completeName(firstName, nameSelfDetermination, lastName, middleNames, otherLastNames),
+			...(basicData.identificationType && { identification: {
+				type: basicData.identificationType,
+				number: +basicData.identificationNumber
+			}}),
+			id: basicData.id,
+			gender: basicData.person.gender?.description || null,
+			age: basicData.person.age || null,
+			photo: photo.imageData
+		}
 	}
 }

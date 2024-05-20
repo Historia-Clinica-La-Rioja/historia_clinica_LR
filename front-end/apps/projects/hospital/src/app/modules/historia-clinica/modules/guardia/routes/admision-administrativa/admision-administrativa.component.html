@@ -2,16 +2,16 @@
 	<mat-card-content>
 		<h2 [translate]="'guardia.administrative_admision.PATIENT'"></h2>
 
-		<app-button *ngIf="!patientCardInfo" matIcon="person_search" text="buttons.SEARCH"
+		<app-button *ngIf="!patientSummary" matIcon="person_search" text="buttons.SEARCH"
 			(clicked)="searchPatient()"></app-button>
 		<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" (ngSubmit)="continue()"
 			class="form">
-			<ng-container *ngIf="patientCardInfo">
-				<app-patient-card [patient]="patientCardInfo.basicData" [personPhoto]="patientCardInfo.photo"
-					size="small">
+			<ng-container *ngIf="!!patientSummary">
+				<mat-card fxLayout="row" fxLayoutAlign="space-between">
+					<app-patient-summary [person]="patientSummary" size="SIZE"></app-patient-summary>
 					<app-button buttonType="{{buttonType.ICON}}" color="{{buttonThemeWarn}}" matIcon="clear"
 						(clicked)="clearSelectedPatient()"></app-button>
-				</app-patient-card>
+				</mat-card>
 				<mat-form-field appearance="outline">
 					<mat-label translate="guardia.administrative_admision.SELECT_MEDICAL_COVERAGE"></mat-label>
 					<mat-select formControlName="patientMedicalCoverageId" name="patientMedicalCoverageId"

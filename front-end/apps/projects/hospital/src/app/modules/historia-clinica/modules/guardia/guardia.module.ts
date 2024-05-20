@@ -36,6 +36,8 @@ import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-
 // services
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
+// standalone
+import { PatientSummaryComponent } from '../../../hsi-components/patient-summary/patient-summary.component';
 
 @NgModule({
 	declarations: [
@@ -76,6 +78,8 @@ import { NewEpisodeService } from './services/new-episode.service';
 		InstitucionModule,
 		LazyMaterialModule,
 		PresentationModule,
+		// standalone
+		PatientSummaryComponent,
 	],
 	exports: [
 		TriageDetailsComponent,
