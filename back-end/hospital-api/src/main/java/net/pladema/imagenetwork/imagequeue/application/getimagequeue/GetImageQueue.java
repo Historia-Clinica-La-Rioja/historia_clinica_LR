@@ -1,11 +1,15 @@
 package net.pladema.imagenetwork.imagequeue.application.getimagequeue;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
+import net.pladema.imagenetwork.imagequeue.application.filter.ImageQueueFilter;
 import net.pladema.imagenetwork.imagequeue.application.port.ImageQueueStorage;
 import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
+import net.pladema.imagenetwork.imagequeue.domain.ImageQueueFilteringCriteriaBo;
 import net.pladema.imagenetwork.imagequeue.domain.ImageQueuePatientBo;
 import net.pladema.patient.controller.service.PatientExternalService;
 import org.springframework.stereotype.Service;
@@ -19,24 +23,56 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class GetImageQueue {
+
     private final ImageQueueStorage imageQueueStorage;
     private final ServiceRequestStorage serviceRequestStorage;
     private final PatientExternalService patientExternalService;
+    private final FeatureFlagsService featureFlagsService;
 
-    public List<ImageQueueBo> run(Integer institutionId) {
-        log.debug("Input parameters -> institutionId {}", institutionId);
-        List<ImageQueueBo> imageQueueBoList = imageQueueStorage.getStudiesInQueue(institutionId);
-        imageQueueBoList.forEach(iq ->
-                iq.setStudies(serviceRequestStorage.getDiagnosticReportsFrom(iq.getStudyId(),iq.getTranscribedServiceRequestId()))
+    public List<ImageQueueBo> run(
+            Integer institutionId,
+            ImageQueueFilteringCriteriaBo filteringCriteriaBo
+    ) {
+        log.debug("Input parameters -> institutionId {}, filteringCriteria {}", institutionId, filteringCriteriaBo);
+
+        ImageQueueFilter filter = new ImageQueueFilter(
+                filteringCriteriaBo,
+                featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS)
         );
-        completePatientData(imageQueueBoList);
-        log.debug("Output -> imageQueueList {}", imageQueueBoList);
-        return imageQueueBoList;
+
+        List<ImageQueueBo> unfilteredList = imageQueueStorage.getStudiesInQueue(
+                institutionId,
+                filteringCriteriaBo.getFrom(),
+                filteringCriteriaBo.getTo()
+        );
+
+        List<ImageQueueBo> filteredByEquipmentAndModalityAndStatus = filter.byImageMoveAttributes(unfilteredList);
+
+        filteredByEquipmentAndModalityAndStatus.forEach(this::completeDiagnosticsReport);
+
+        List<ImageQueueBo> filteredByStudyName = filter.byStudyName(filteredByEquipmentAndModalityAndStatus);
+
+        completePatientData(filteredByStudyName);
+
+        List<ImageQueueBo> finalFilteredList = filter.byPatientData(filteredByStudyName);
+
+        log.debug("Output -> finalFilteredList {}",finalFilteredList);
+        return finalFilteredList;
+    }
+
+
+    private void completeDiagnosticsReport(ImageQueueBo iq) {
+        iq.setStudies(
+                serviceRequestStorage.getDiagnosticReportsFrom(
+                        iq.getStudyId(),
+                        iq.getTranscribedServiceRequestId()
+                )
+        );
     }
 
     private void completePatientData(List<ImageQueueBo> resultService) {
         List<ImageQueueBo> imagesWithPatientId = resultService.stream()
-                .filter(Objects::nonNull)
+                .filter(iqbo -> Objects.nonNull(iqbo.getPatientId()))
                 .collect(Collectors.toList());
 
         Set<Integer> patientsIds = imagesWithPatientId.stream()

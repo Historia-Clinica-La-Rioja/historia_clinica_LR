@@ -2440,6 +2440,17 @@ export interface ImageNetworkProductivityFilterDto {
     to: DateDto;
 }
 
+export interface ImageQueueFilteringCriteriaDto {
+    equipmentId: number;
+    from: DateDto;
+    identificationNumber: string;
+    modalityId: number;
+    name: string;
+    statusList: EImageMoveStatus[];
+    study: string;
+    to: DateDto;
+}
+
 export interface ImageQueueListDto {
     appointmentId: number;
     equipmentId: number;

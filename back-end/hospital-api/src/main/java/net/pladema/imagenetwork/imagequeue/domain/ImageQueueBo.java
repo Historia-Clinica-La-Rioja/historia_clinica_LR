@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class ImageQueueBo {
@@ -40,4 +41,27 @@ public class ImageQueueBo {
         this.imageMoveStatus = EImageMoveStatus.map(status);
     }
 
+    public String getPatientFirstName() {
+        return Objects.isNull(getPatient()) ? null : getPatient().getFirstName();
+    }
+
+    public String getPatientLastName() {
+        return Objects.isNull(getPatient()) ? null : getPatient().getLastName();
+    }
+
+    public String getPatientMiddleNames() {
+        return Objects.isNull(getPatient()) ? null : getPatient().getMiddleNames();
+    }
+
+    public String getNameSelfDetermination() {
+        return Objects.isNull(getPatient()) ? null : getPatient().getNameSelfDetermination();
+    }
+
+    public String getOtherLastNames() {
+        return Objects.isNull(getPatient()) ? null : getPatient().getOtherLastNames();
+    }
+
+    public String getPatientIdentificationNumber() {
+        return Objects.isNull(getPatient()) ? null : getPatient().getIdentificationNumber();
+    }
 }

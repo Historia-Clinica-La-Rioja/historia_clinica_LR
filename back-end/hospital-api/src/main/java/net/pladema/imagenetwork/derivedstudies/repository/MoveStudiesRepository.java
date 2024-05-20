@@ -1,7 +1,6 @@
 package net.pladema.imagenetwork.derivedstudies.repository;
 
 import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
-
 import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -142,10 +141,13 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
 			"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId) " +
 			"WHERE (mo.institutionId = :institutionId) " +
-			"AND (mo.result IS NULL or mo.result != :resultNot)" +
+			"AND (mo.result IS NULL or mo.result != :resultNot) " +
+			"AND (mo.moveDate BETWEEN :from AND :to) " +
 			"ORDER BY mo.id")
-	List<ImageQueueBo> findImagesNotMovedByInstitutionIdAndResultNot(
+	List<ImageQueueBo> findImagesNotMovedByInstitutionId(
 			@Param("institutionId") Integer institutionId,
+			@Param("from") Date from,
+			@Param("to") Date to,
 			@Param("resultNot") String resultNot
 	);
 

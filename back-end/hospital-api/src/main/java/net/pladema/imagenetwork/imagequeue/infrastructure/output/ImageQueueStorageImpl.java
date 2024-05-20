@@ -9,6 +9,10 @@ import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
 import net.pladema.imagenetwork.imagequeue.domain.MoveImageBo;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +27,12 @@ public class ImageQueueStorageImpl implements ImageQueueStorage {
     private final MoveStudiesRepository moveStudiesRepository;
 
     @Override
-    public List<ImageQueueBo> getStudiesInQueue(Integer institutionId) {
-        return moveStudiesRepository.findImagesNotMovedByInstitutionIdAndResultNot(institutionId, RESULT_OK);
+    public List<ImageQueueBo> getStudiesInQueue(Integer institutionId, LocalDate from, LocalDate to) {
+        return moveStudiesRepository.findImagesNotMovedByInstitutionId(
+                institutionId,
+                Date.from(from.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                Date.from(to.plusDays(1L).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                RESULT_OK);
     }
 
     @Override
