@@ -51,7 +51,8 @@ export class GuardiaMapperService {
 			appearance: mapAppearance(triageListDto.appearance),
 			breathing: mapBreathing(triageListDto.breathing),
 			circulation: mapCirculation(triageListDto.circulation),
-			notes: triageListDto.notes
+			notes: triageListDto.notes,
+			reasons: triageListDto.reasons.map(reason => reason.snomed.pt),
 		};
 
 		function mapAppearance(appearance) {

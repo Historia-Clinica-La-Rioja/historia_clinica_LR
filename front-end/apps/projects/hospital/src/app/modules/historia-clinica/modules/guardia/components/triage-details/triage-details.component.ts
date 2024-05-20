@@ -143,6 +143,7 @@ export interface TriageDetails {
 		}
 	};
 	notes?: string;
+	reasons?: string[];
 }
 
 export interface RiskFactorFull {

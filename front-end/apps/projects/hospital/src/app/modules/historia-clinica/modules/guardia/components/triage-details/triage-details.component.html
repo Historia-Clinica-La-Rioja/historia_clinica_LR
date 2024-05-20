@@ -21,6 +21,10 @@
 		</div>
 	</div>
 
+	<section id="reasons" fxLayout="column" fxLayoutGap="5px">
+		<span class="title-weight">{{'guardia.triage.REASON' | translate}}</span>
+		<span *ngIf="triage.reasons.length else noInfo">{{ triage.reasons | stringSeparator }}</span>
+	</section>
 
 	<section
 		*ngIf="emergencyCareType && ( emergencyCareType === emergencyCareTypes.PEDIATRIA || (showRiskFactors && riskFactors?.length))"

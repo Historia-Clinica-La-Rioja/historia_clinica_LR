@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit {
 			.pipe(
 				tap(result => this.elementsAmount = result.totalElementsAmount),
 				map((episodes: PageDto<EmergencyCareListDto>) =>
-					episodes.content.map(episode => this.setWaitingTime(episode))
+					episodes.content.map(episode => this.mapToEpisode(episode))
 				)
 			)
 			.subscribe((episodes: Episode[]) => {
@@ -238,13 +238,18 @@ export class HomeComponent implements OnInit {
 		}
 	}
 
-	private setWaitingTime(episode: EmergencyCareListDto): Episode {
+	private mapToEpisode(episode: EmergencyCareListDto): Episode {
 		const minWaitingTime = episode.state.id === this.estadosEpisodio.EN_ESPERA ?
 			HomeComponent.calculateWaitingTime(episode.creationDate) : undefined;
 		return {
 			...episode,
+			triage: {
+				emergencyCareEpisodeListTriageDto: episode.triage,
+				reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt)
+			},
 			waitingTime: minWaitingTime,
-			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined
+			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined,
+			
 		};
 	}
 
@@ -275,10 +280,15 @@ export interface Episode {
 	id: number;
 	patient: EmergencyCarePatientDto;
 	state: MasterDataDto;
-	triage: EmergencyCareEpisodeListTriageDto;
+	triage: EpisodeListTriage;
 	type: MasterDataDto;
 	relatedProfessional: ProfessionalPersonDto;
 	reason?: string;
+}
+
+export interface EpisodeListTriage {
+	emergencyCareEpisodeListTriageDto: EmergencyCareEpisodeListTriageDto,
+	reasons: string[],
 }
 
 export interface AttendPlace {
