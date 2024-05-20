@@ -31,7 +31,6 @@
 		},
 		"administrative_admision": {
 			"TITLE": "Nuevo episodio",
-			"SUBTITLE": "Complete datos solicitados para continuar",
 			"PATIENT": "Paciente",
 			"SEARCH_PATIENT": "Buscar Paciente",
 			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
