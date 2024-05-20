@@ -192,9 +192,6 @@
 	</mat-card-content>
 	<mat-card-actions id="actions" class="card-actions" fxLayout="row" fxLayoutAlign="space-between">
 		<app-button text="buttons.BACK" (clicked)="goBack()"></app-button>
-		<div fxLayoutGap="5px">
-			<ng-content select="[moreActions]"></ng-content>
-			<app-button buttonType="{{buttonType.RAISED}}" text="{{submitLabel}}" (clicked)="continue()"></app-button>
-		</div>
+		<app-button buttonType="{{buttonType.RAISED}}" text="{{submitLabel}}" (clicked)="continue()"></app-button>
 	</mat-card-actions>
 </mat-card>

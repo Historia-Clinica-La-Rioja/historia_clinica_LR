@@ -45,8 +45,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	@Input() initData: AdministrativeAdmission;
 	@Input() isDoctorOfficeEditable = true;
 	@Input() isEmergencyCareTypeEditable = true;
-	@Output() confirm = new EventEmitter();
-	@Output() cancel = new EventEmitter();
+	@Output() confirm = new EventEmitter<AdministrativeAdmission>();
+	@Output() cancel = new EventEmitter<void>();
 	@Input() submitLabel = 'buttons.CONTINUE';
 
 	readonly POLICE_OFFICER = POLICE_OFFICER;
