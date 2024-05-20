@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.utils.DateUtils;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -140,7 +141,11 @@ public class AppointmentValidatorServiceImpl implements AppointmentValidatorServ
     }
 
     private boolean validStateTransition(short appointmentStateId, AppointmentBo apmt) {
-        return validStates.get(apmt.getAppointmentStateId()).contains(appointmentStateId);
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL) && apmt.getAppointmentStateId() == CONFIRMED && appointmentStateId == SERVED) {
+			return true;
+		} else {
+			return validStates.get(apmt.getAppointmentStateId()).contains(appointmentStateId);
+		}
     }
 
 	public boolean validateDateUpdate(Integer institutionId, Integer appointmentId, LocalDate date, LocalTime time){

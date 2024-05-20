@@ -201,6 +201,7 @@ export class AppointmentComponent implements OnInit {
 	coverage: Coverage;
 	HABILITAR_VISTA_COBERTURA_TURNOS: boolean = false;
 	waitingTime: string;
+	HABILITAR_ATENDER_TURNO_MANUAL: boolean = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -411,6 +412,7 @@ export class AppointmentComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.HABILITAR_TELEMEDICINA = isEnabled);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO).subscribe((isOn: boolean) => this.isHabilitarRecurrencia = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS).subscribe((isOn: boolean) => this.HABILITAR_VISTA_COBERTURA_TURNOS = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL).subscribe((isOn: boolean) => this.HABILITAR_ATENDER_TURNO_MANUAL = isOn);
 	}
 
 	private checkInputUpdatePermissions() {

@@ -330,9 +330,10 @@
 						</mat-icon>
 					</button>
 
-					<button type="button" disabled
+					<button type="button"
 						[ngClass]="{'selected served': selectedState === appointmentStatesIds.SERVED }"
-						mat-stroked-button>
+						(click)="onClickedState(appointmentStatesIds.SERVED)" mat-stroked-button
+						[disabled]="(hasRoleToChangeState$ | async) === false || !HABILITAR_ATENDER_TURNO_MANUAL">
 						<mat-icon color="primary" svgIcon="person_check_outlined"
 							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 					</button>
