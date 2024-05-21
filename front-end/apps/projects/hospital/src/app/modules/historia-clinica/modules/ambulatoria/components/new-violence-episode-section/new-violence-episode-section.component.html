@@ -9,7 +9,7 @@
 		<div class="violence-situation">
 			<app-concept-typeahead-search [ecl]="eclType"
 				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_2'"
-				(conceptSelected)="addViolenceSituation($event)">
+				(conceptSelected)="addViolenceSituation($event)" [appearanceOutline]="true">
 			</app-concept-typeahead-search>
 			<mat-error *ngIf="!violenceSituations.length && form.touched"
             [translate]="'forms.REQUIRED'"></mat-error>
@@ -22,7 +22,7 @@
 		<div>
 			<app-concept-typeahead-search [ecl]="eclModality"
 				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_3'"
-				(conceptSelected)="addViolenceModality($event)">
+				(conceptSelected)="addViolenceModality($event)" [appearanceOutline]="true">
 			</app-concept-typeahead-search>
 			<mat-error *ngIf="!violenceModalities.length && form.touched"
             [translate]="'forms.REQUIRED'"></mat-error>
