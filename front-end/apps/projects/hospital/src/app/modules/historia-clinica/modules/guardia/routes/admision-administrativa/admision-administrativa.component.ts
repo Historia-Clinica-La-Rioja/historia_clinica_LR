@@ -11,7 +11,7 @@ import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-car
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { MedicalCoverageComponent } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
-import { hasError, TIME_PATTERN } from '@core/utils/form.utils';
+import { hasError, NON_WHITESPACE_REGEX, TIME_PATTERN } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { AdministrativeAdmission } from '../../services/new-episode.service';
@@ -20,8 +20,6 @@ import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-co
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
-import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
@@ -59,7 +57,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	form: UntypedFormGroup;
 	today: Date = new Date();
 
-	motivoNuevaConsultaService: MotivoNuevaConsultaService;
 	readonly EMERGENCY_CARE_ENTRANCE_TYPE = EmergencyCareEntranceType;
 
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
@@ -77,13 +74,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private formBuilder: UntypedFormBuilder,
 		private readonly mapperService: MapperService,
 		private readonly snackBarService: SnackBarService,
-		private readonly snomedService: SnomedService,
 		private readonly patientService: PatientService,
 		private readonly doctorsOfficeService: DoctorsOfficeService,
 		private readonly patientNameService: PatientNameService,
-	) {
-		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
-	}
+	) { }
 
 	ngOnInit(): void {
 
@@ -103,7 +97,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			plateNumber: [null, Validators.maxLength(POLICE_OFFICER.PLATE_NUMBER.max_length)],
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
-			reasons: [null],
+			reason: [null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]],
 			patientId: [null]
 		});
 
@@ -164,7 +158,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	continue(): void {
-		this.form.controls.reasons.setValue(this.motivoNuevaConsultaService.getMotivosConsulta());
 		const formValue: AdministrativeAdmission = this.form.getRawValue();
 		if (this.form.valid) {
 			this.confirm.emit(formValue);
@@ -193,7 +186,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto): void {
-
 		this.form.controls.patientId.setValue(basicData.id);
 		this.patientSummary = basicData.person ? this.toPatientSummary(basicData, photo) : null;
 		this.selectedPatient = {
@@ -223,8 +215,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			if (this.initData.patientId) {
 				this.loadPatient(this.initData.patientId);
 			}
-
-			this.form.value.reasons.forEach(reason => this.motivoNuevaConsultaService.add(reason));
 		}
 	}
 

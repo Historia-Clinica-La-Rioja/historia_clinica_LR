@@ -34,44 +34,16 @@
 				</mat-form-field>
 			</ng-container>
 
-			<div id="motivos">
-				<app-document-section [sectionTitle]="'guardia.administrative_admision.motivo.TITLE'"
-					[tableTitle]="'guardia.administrative_admision.motivo.table.TITLE'"
-					[columns]="motivoNuevaConsultaService.getColumns()"
-					[data]="motivoNuevaConsultaService.getMotivosConsulta()" [addRemoveColumn]="true"
-					(removeColumn)="motivoNuevaConsultaService.remove($event)">
-
-					<ng-container concept-form>
-						<app-concepts-search
-							*ngIf="!motivoNuevaConsultaService.getSnomedConcept() else mainMotivoConsulta"
-							[label]="'guardia.administrative_admision.motivo.MOTIVO'"
-							(search)="motivoNuevaConsultaService.openSearchDialog($event)">
-						</app-concepts-search>
-
-						<ng-template #mainMotivoConsulta>
-							<form [formGroup]="motivoNuevaConsultaService.getForm()"
-								(ngSubmit)="motivoNuevaConsultaService.addToList()">
-								<mat-form-field appearance="outline">
-									<mat-label [translate]="'guardia.administrative_admision.motivo.DIAGNOSIS'">
-									</mat-label>
-									<input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed"
-										readonly matTooltip="{{motivoNuevaConsultaService.getSnomedConcept().pt }}">
-									<button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
-										(click)="motivoNuevaConsultaService.resetForm()">
-										<mat-icon>close</mat-icon>
-									</button>
-								</mat-form-field>
-								<div align="end">
-									<button id="submit_motivos" class="uppercase" mat-raised-button color="primary"
-										type="submit">
-										<span class="uppercase"
-											[translate]="'guardia.administrative_admision.motivo.ADD'"></span>
-									</button>
-								</div>
-							</form>
-						</ng-template>
-					</ng-container>
-				</app-document-section>
+			<h2 [translate]="'guardia.administrative_admision.EPISODE_DETAILS'"></h2>
+			<div id="motivos" fxLayout="column" fxLayoutGap="10px">
+				<span>{{'guardia.administrative_admision.reasons.TITLE' | translate}}</span>
+				<mat-form-field appearance="outline">
+					<textarea matInput type="text" formControlName="reason"
+						placeholder="{{'guardia.administrative_admision.reasons.PLACEHOLDER' | translate}}"></textarea>
+					<mat-error *ngIf="hasError(form, 'required', 'reason')" [translate]="'forms.REQUIRED'">
+					</mat-error>
+					<mat-error *ngIf="hasError(form, 'pattern', 'reason')" [translate]="'forms.REQUIRED'"></mat-error>
+				</mat-form-field>
 			</div>
 
 

@@ -242,7 +242,7 @@ export class GuardiaMapperService {
 			patientId: dto.patient ? dto.patient.id : null,
 			patientMedicalCoverageId: dto.patient?.patientMedicalCoverageId ? dto.patient.patientMedicalCoverageId : null,
 			plateNumber: dto.policeInterventionDetails?.plateNumber ? dto.policeInterventionDetails.plateNumber : null,
-			reason: dto.reason,
+			reason: dto.reason || null,
 		};
 	}
 

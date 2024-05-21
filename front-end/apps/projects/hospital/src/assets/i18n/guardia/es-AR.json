@@ -34,17 +34,10 @@
 			"PATIENT": "Paciente",
 			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
 			"UPDATE_MEDICAL_COVERAGE": "Actualizar Cobertura",
-			"motivo": {
-				"TITLE": "Detalle del episodio",
-				"MOTIVO": "motivo",
-				"ADD": "Agregar motivo",
-				"table": {
-					"TITLE": "Motivos registrados",
-					"columns": {
-						"MOTIVO": "Motivos"
-					}
-				},
-				"DIAGNOSIS": "Diagnóstico"
+			"EPISODE_DETAILS": "Detalle del episodio",
+			"reasons": {
+				"TITLE": "Motivo de ingreso",
+				"PLACEHOLDER": "Descripción del paciente"
 			},
 			"form": {
 				"EMERGENCY_CARE_TYPE": "Tipo de guardia",
@@ -117,7 +110,6 @@
 			"NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
 			"administrative": {
 				"EPISODE": "Episodio",
-				"REASONS": "Motivos de consulta",
 				"ENTRANCE": "Ingreso",
 				"POLICE_INTERVENTION": "Intervención policial",
 				"UBICACION": "Ubicación"

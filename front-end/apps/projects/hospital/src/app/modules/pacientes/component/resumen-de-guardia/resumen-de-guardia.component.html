@@ -17,8 +17,8 @@
             <div fxLayout="row" fxLayoutGap="5px">
                 <strong>{{ 'ambulatoria.paciente.guardia.REASONS' | translate }}:</strong>
                 <div fxLayout="column" fxLayoutGap="1px">
-					<div class="content-primary">
-						<span id="reason">{{ responseEmergencyCare?.reason }}</span>
+					<div class="content-primary" *ngIf="responseEmergencyCare?.reason else noInfo">
+						<span id="reason" class="wrap-reason">{{ responseEmergencyCare?.reason }}</span>
 					</div>
                 </div>
             </div>

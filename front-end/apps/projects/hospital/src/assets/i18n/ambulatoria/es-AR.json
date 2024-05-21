@@ -706,7 +706,7 @@
                 "TAB_LABEL": "Guardia",
                 "SUMMARY_TOOLTIP": "Resumen de guardia",
                 "ID": "ID",
-                "REASONS": "Motivos de consulta",
+                "REASONS": "Motivo de ingreso",
                 "ENTRANCE": "Ingreso",
                 "POLICE_INTERVENTION": "Intervención policial",
                 "UBICACION": "Ubicación",
