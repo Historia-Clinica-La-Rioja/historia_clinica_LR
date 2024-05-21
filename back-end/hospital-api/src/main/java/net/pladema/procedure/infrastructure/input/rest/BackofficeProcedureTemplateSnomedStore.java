@@ -17,6 +17,8 @@ import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureTe
 import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureTemplateSnomedPK;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
+import net.pladema.sgx.exceptions.BackofficeValidationException;
+
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -31,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class BackofficeProcedureTemplateStore implements BackofficeStore<ProcedureTemplateDto, Integer> {
+public class BackofficeProcedureTemplateSnomedStore implements BackofficeStore<ProcedureTemplateDto, Integer> {
 
 	private final ProcedureTemplateRepository procedureTemplateRepository;
 	private final ProcedureTemplateSnomedRepository procedureTemplateSnomedRepository;
@@ -49,7 +51,9 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 				.stream()
 				.filter(pt -> !pt.getDeleteable().getDeleted())
 				.map(this::mapEntityToDto)
-				.peek(dto -> dto.setAssociatedPractices(procedureTemplateSnomedRepository.getAllPracticesByProcedureTemplateId(dto.getId())
+				.peek(dto -> dto.setAssociatedPractices(
+						procedureTemplateSnomedRepository
+						.getAllPracticesByProcedureTemplateId(dto.getId())
 						.stream()
 						.map(this::mapSnomedPracticeVoToDto)
 						.collect(Collectors.toList())))
@@ -116,39 +120,57 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 	 *
 	 * BackofficeSnomedPracticesStore#findAll outputs:
 	 * 	HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS=true
-	 *     conceptId = snomed table id
+	 *     conceptId = snomed table id (type int)
 	 *     id = snomed_related_group.id
 	 *     the real sctid is missing
 	 *     ex.: [{"id":898742,"conceptId":290343,"groupId":16,"groupDescription":"PROCEDURE","conceptPt":"ecografía de arteria periférica"}]
 	 *
 	 * 	HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS=false
-	 *     conceptId = the actual sctid
+	 *     conceptId = the actual sctid (type long)
 	 *     id = the sctid again
 	 *     example : [{"id":419861003,"conceptId":419861003,"groupDescription":"PROCEDURE","conceptPt":"ecografía de arteria periférica"}]
 	 *
+	 * 	Also notice that the coneptId field's type. This is the reason why SnomedPracticeDto.id is Long and not Integer.
+	 *
 	 * What this save method does:
-	 * If HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS is on: lookup the snomed term by id
-	 * Else: lookup the term by sctid and pt
+	 * If HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS is on: Lookup the snomed term by id. The template will reference the id.
+	 * Else: Lookup the term by sctid and pt. If it doesn't exist in the snomed table it inserts a new
+	 * row with the given sctid and pt pair. The new row id will be referenced by the template being saved.
 	 *
 	 */
 	@Override
 	public ProcedureTemplateDto save(ProcedureTemplateDto entity) {
-		if ((entity.getId() != null) && (procedureTemplateRepository.existsById(entity.getId())))
-			if (entity.getAssociatedPractices() != null)
-				for (SnomedPracticeDto associatedPractice : entity.getAssociatedPractices()) {
-					Integer conceptId = null;
-					if (featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS)) {
-						SharedSnomedDto concept = sharedSnomedPort.getSnomed(associatedPractice.getId());
-						conceptId = concept == null ? null : associatedPractice.getId();
-					}
-					else {
-						var concept = new SnomedBo(associatedPractice.getSctid(), associatedPractice.getPt());
-						conceptId = snomedService.getSnomedId(concept).orElseGet(() -> snomedService.createSnomedTerm(concept));
-					}
-					if (conceptId != null && !procedureTemplateSnomedRepository.existsById(new ProcedureTemplateSnomedPK(entity.getId(), conceptId)))
-						procedureTemplateSnomedRepository.save(new ProcedureTemplateSnomed(entity.getId(), conceptId));
-				}
+		if (
+			(entity.getId() != null) &&
+			(procedureTemplateRepository.existsById(entity.getId())) &&
+			(entity.getAssociatedPractices() != null))
+		{
+			for (SnomedPracticeDto associatedPractice : entity.getAssociatedPractices()) {
+				savePractice(entity, associatedPractice);
+			}
+		}
 		return entity;
+	}
+
+	private void savePractice(ProcedureTemplateDto entity, SnomedPracticeDto associatedPractice) {
+		Integer conceptId = null;
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS)) {
+			try {
+				Integer snomedId = Math.toIntExact(associatedPractice.getId());
+				SharedSnomedDto concept = sharedSnomedPort.getSnomed(snomedId);
+				conceptId = concept == null ? null : snomedId;
+			} catch (ArithmeticException e) {
+				throw new BackofficeValidationException(String.format("El concepto snomed con id %s es invalido", associatedPractice.getId()));
+			}
+		}
+		else {
+			var concept = new SnomedBo(associatedPractice.getSctid(), associatedPractice.getPt());
+			conceptId = snomedService.getSnomedId(concept).orElseGet(() -> snomedService.createSnomedTerm(concept));
+		}
+
+
+		if (conceptId != null && !procedureTemplateSnomedRepository.existsById(new ProcedureTemplateSnomedPK(entity.getId(), conceptId)))
+			procedureTemplateSnomedRepository.save(new ProcedureTemplateSnomed(entity.getId(), conceptId));
 	}
 
 	@Override
@@ -173,7 +195,7 @@ public class BackofficeProcedureTemplateStore implements BackofficeStore<Procedu
 	}
 
 	private SnomedPracticeDto mapSnomedPracticeVoToDto(SnomedPracticeVo snomedPracticeVo){
-		return new SnomedPracticeDto(snomedPracticeVo.getId(), snomedPracticeVo.getSctid(), snomedPracticeVo.getPt());
+		return new SnomedPracticeDto(snomedPracticeVo.getId().longValue(), snomedPracticeVo.getSctid(), snomedPracticeVo.getPt());
 	}
 
 }

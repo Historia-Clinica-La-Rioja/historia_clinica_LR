@@ -13,7 +13,12 @@ import lombok.ToString;
 @AllArgsConstructor
 public class SnomedPracticeDto {
 
-	private Integer id;
+	/**
+	 * Note on the id type:
+	 * The id may represent an sctid (long) or a real id from the snomed table (int).
+	 * See the comments on BackofficeProcedureTemplateSnomedStore#save
+	 */
+	private Long id;
 	private String sctid;
 	private String pt;
 
