@@ -1,6 +1,6 @@
 package net.pladema.emergencycare.triage.service;
 
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 
 import java.util.List;
 

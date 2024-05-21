@@ -2,14 +2,17 @@ package net.pladema.emergencycare.triage.service.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EBodyTemperature;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EMuscleHypertonia;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EPerfusion;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ERespiratoryRetraction;
 import io.jsonwebtoken.lang.Assert;
+import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
+import net.pladema.emergencycare.triage.application.addtriagereasons.AddTriageReasons;
 import net.pladema.emergencycare.triage.repository.TriageDetailsRepository;
 import net.pladema.emergencycare.triage.repository.TriageRepository;
 import net.pladema.emergencycare.triage.repository.TriageRiskFactorsRepository;
@@ -18,7 +21,7 @@ import net.pladema.emergencycare.triage.repository.entity.Triage;
 import net.pladema.emergencycare.triage.repository.entity.TriageDetails;
 import net.pladema.emergencycare.triage.repository.entity.TriageRiskFactors;
 import net.pladema.emergencycare.triage.service.TriageService;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import net.pladema.establishment.repository.RoomRepository;
@@ -36,6 +39,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class TriageServiceImpl implements TriageService {
 
@@ -62,31 +66,7 @@ public class TriageServiceImpl implements TriageService {
 	private final RoomRepository roomRepository;
 
 	private final DoctorsOfficeRepository doctorsOfficeRepository;
-
-    public TriageServiceImpl(TriageRepository triageRepository,
-                             TriageDetailsRepository triageDetailsRepository,
-                             TriageRiskFactorsRepository triageRiskFactorsRepository,
-                             InstitutionExternalService institutionExternalService,
-                             EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
-							 EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
-							 DocumentFactory documentFactory,
-							 DocumentService documentService,
-							 ShockroomRepository shockroomRepository,
-							 RoomRepository roomRepository,
-							 DoctorsOfficeRepository doctorsOfficeRepository) {
-        super();
-        this.triageRepository = triageRepository;
-        this.triageDetailsRepository = triageDetailsRepository;
-        this.triageRiskFactorsRepository = triageRiskFactorsRepository;
-        this.institutionExternalService = institutionExternalService;
-        this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
-        this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
-		this.documentFactory = documentFactory;
-		this.documentService = documentService;
-		this.shockroomRepository = shockroomRepository;
-		this.roomRepository = roomRepository;
-		this.doctorsOfficeRepository = doctorsOfficeRepository;
-    }
+	private final AddTriageReasons addTriageReasons;
 
     @Override
     public List<TriageBo> getAll(Integer institutionId, Integer episodeId) {
@@ -134,7 +114,9 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public TriageBo createAdultGynecological(TriageBo triageBo, Integer institutionId) {
-        return persistTriage(triageBo, institutionId, getAdultConsumer());
+		TriageBo result = persistTriage(triageBo, institutionId, getAdultConsumer());
+		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+        return result;
     }
 
     @Override
@@ -231,5 +213,10 @@ public class TriageServiceImpl implements TriageService {
 			triage.setDoctorsOfficeId(doctorsOfficeId);
 			triage.setSectorId(doctorsOfficeRepository.getSectorId(doctorsOfficeId));
 		}
+	}
+
+	private void addTriageReasons(List<ReasonBo> reasons, Integer triageId){
+		if (reasons != null && !reasons.isEmpty())
+			addTriageReasons.run(triageId, reasons);
 	}
 }

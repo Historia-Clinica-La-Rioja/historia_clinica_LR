@@ -20,7 +20,7 @@ import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
 import net.pladema.emergencycare.triage.service.TriageService;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;

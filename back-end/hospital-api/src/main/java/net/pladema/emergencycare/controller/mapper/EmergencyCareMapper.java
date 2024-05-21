@@ -8,7 +8,7 @@ import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
-import net.pladema.emergencycare.triage.controller.mapper.TriageMapper;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.mapper.TriageMapper;
 import net.pladema.medicalconsultation.doctorsoffice.controller.mapper.DoctorsOfficeMapper;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;

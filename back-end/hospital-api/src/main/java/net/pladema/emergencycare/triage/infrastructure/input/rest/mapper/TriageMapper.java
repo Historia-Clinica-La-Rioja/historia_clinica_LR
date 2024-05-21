@@ -1,8 +1,9 @@
-package net.pladema.emergencycare.triage.controller.mapper;
+package net.pladema.emergencycare.triage.infrastructure.input.rest.mapper;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.NewRiskFactorsObservationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.triage.controller.dto.TriageAdministrativeDto;
-import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.dto.TriageAdultGynecologicalDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageAppearanceDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageBreathingDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageCategoryDto;
@@ -10,7 +11,7 @@ import net.pladema.emergencycare.triage.controller.dto.TriageCirculationDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageListDto;
 import net.pladema.emergencycare.triage.controller.dto.TriagePediatricDto;
 import net.pladema.emergencycare.triage.repository.entity.TriageCategory;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.IterableMapping;
@@ -22,7 +23,7 @@ import org.mapstruct.Named;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(uses = {LocalDateMapper.class})
+@Mapper(uses = {LocalDateMapper.class, OutpatientConsultationMapper.class})
 public interface TriageMapper {
 
     @Named("toTriageBo")

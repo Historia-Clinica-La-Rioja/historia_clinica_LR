@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
-import net.pladema.emergencycare.triage.controller.dto.TriageAdultGynecologicalDto;
+import net.pladema.emergencycare.triage.infrastructure.input.rest.dto.TriageAdultGynecologicalDto;
 
 import java.io.Serializable;
 

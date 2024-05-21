@@ -1,9 +1,10 @@
-package net.pladema.emergencycare.triage.service.domain;
+package net.pladema.emergencycare.triage.domain;
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DocumentObservationsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -66,6 +67,7 @@ public class TriageBo implements IDocumentBo {
 	private Integer roomId;
 
 	private Integer sectorId;
+	private List<ReasonBo> reasons;
 
     public TriageBo(TriageVo triageVo) {
         this.triageId = triageVo.getId();
@@ -114,6 +116,11 @@ public class TriageBo implements IDocumentBo {
 			return result;
 		}
 		return null;
+	}
+
+	@Override
+	public List<ReasonBo> getReasons() {
+		return reasons;
 	}
 
 }

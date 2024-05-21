@@ -10,7 +10,7 @@ import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
 import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
-import net.pladema.emergencycare.triage.service.domain.TriageBo;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.doctorsoffice.service.domain.DoctorsOfficeBo;
 import net.pladema.medicalconsultation.shockroom.domain.ShockRoomBo;

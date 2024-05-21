@@ -4864,6 +4864,7 @@ export interface TriageListDto extends Serializable {
 
 export interface TriageNoAdministrativeDto extends TriageDto {
     notes?: string;
+    reasons?: OutpatientReasonDto[];
 }
 
 export interface TriagePediatricDto extends TriageNoAdministrativeDto {

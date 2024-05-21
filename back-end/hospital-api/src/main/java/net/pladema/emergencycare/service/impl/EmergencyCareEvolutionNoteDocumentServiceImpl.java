@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.application.reason.ReasonService;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentFile;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.AllArgsConstructor;
 import net.pladema.emergencycare.repository.EmergencyCareEvolutionNoteRepository;
@@ -16,6 +17,8 @@ import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocume
 
 import net.pladema.staff.service.ClinicalSpecialtyService;
 import net.pladema.staff.service.HealthcareProfessionalService;
+
+import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,9 +111,11 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		evolutionNoteBo.setEvolutionNote(noteService.getEvolutionNoteDescriptionByDocumentId(evolutionNote.getDocumentId()));
 		evolutionNoteBo.setPerformedDate(localDateMapper.fromLocalDateTimeToZonedDateTime(evolutionNote.getPerformedDate()).toLocalDateTime());
 		evolutionNoteBo.setId(evolutionNote.getDocumentId());
-		evolutionNoteBo.setFileName(documentFileRepository.findById(evolutionNote.getDocumentId()).get().getFilename());
+		evolutionNoteBo.setFileName(documentFileRepository.findById(evolutionNote.getDocumentId())
+				.map(DocumentFile::getFilename).orElse(null));
 		evolutionNoteBo.setProfessional(healthcareProfessionalService.findActiveProfessionalById(evolutionNote.getDoctorId()));
-		evolutionNoteBo.setClinicalSpecialtyName(clinicalSpecialtyService.getClinicalSpecialty(evolutionNote.getClinicalSpecialtyId()).get().getName());
+		evolutionNoteBo.setClinicalSpecialtyName(clinicalSpecialtyService.getClinicalSpecialty(evolutionNote.getClinicalSpecialtyId())
+				.map(ClinicalSpecialtyBo::getName).orElse(null));
 		setEditedOn(evolutionNoteBo);
 		return evolutionNoteBo;
 	}
