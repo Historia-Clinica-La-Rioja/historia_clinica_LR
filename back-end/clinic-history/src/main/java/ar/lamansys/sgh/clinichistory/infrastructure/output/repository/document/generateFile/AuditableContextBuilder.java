@@ -239,8 +239,10 @@ public class AuditableContextBuilder {
 	}
 
 	private <T extends IDocumentBo> void addImageReportData(Map<String, Object> ctx, T document) {
-
-		ctx.put("diagnosticReportList", document.getDiagnosticReports());
+		var diagnosticReportList = document.getDiagnosticReports().stream()
+				.map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
+				.collect(Collectors.joining(", "));
+		ctx.put("diagnosticReportList", diagnosticReportList);
 		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionDataById(document.getInstitutionId()));
 		ctx.put("institutionAddress",sharedInstitutionPort.fetchInstitutionAddress(document.getInstitutionId()));
 		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
