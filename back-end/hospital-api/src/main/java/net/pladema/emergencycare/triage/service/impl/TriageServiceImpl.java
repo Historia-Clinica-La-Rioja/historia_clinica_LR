@@ -121,7 +121,9 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public TriageBo createPediatric(TriageBo triageBo, Integer institutionId) {
-        return persistTriage(triageBo, institutionId, getPediatricConsumer());
+		TriageBo result = persistTriage(triageBo, institutionId, getPediatricConsumer());
+		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		return result;
     }
 	@Transactional
     private TriageBo persistTriage(TriageBo triageBo, Integer institutionId, Consumer<TriageBo> consumer){
