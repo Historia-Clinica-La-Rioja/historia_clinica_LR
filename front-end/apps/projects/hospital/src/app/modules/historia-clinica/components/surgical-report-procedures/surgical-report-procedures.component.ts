@@ -6,6 +6,7 @@ import { dateTimeDtoToDate, dateToDateDto } from '@api-rest/mapper/date-dto.mapp
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { sameDayMonthAndYear } from '@core/utils/date.utils';
+import { fixDate } from '@core/utils/date/format';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -108,7 +109,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		const endTimeValid = !this.dateForm.get('endTime').hasError('required');
 		const endTimeBeforeStartTime = endTime.hours < startTime.hours || (endTime.hours === startTime.hours && endTime.minutes <= startTime.minutes);
 
-		const endDateControl = this.dateForm.value.endTime;
+		const endDateControl = this.dateForm.controls.endTime;
 		const currentErrors = endDateControl.errors;
 
 		if (startTimeValid && endTimeValid && endTimeBeforeStartTime) {
@@ -138,8 +139,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 
 
 
-	changeStartDate(moment: any): void {
-		const date = moment?.toDate();
+	changeStartDate(moment): void {
+		const date = fixDate(moment)
 		if (date) {
 			this.surgicalReport.startDateTime.date = dateToDateDto(date);
 			this.dateForm.controls.startDate.setValue(date);
@@ -148,8 +149,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		this.validateDate();
 	}
 
-	changeEndDate(moment: any): void {
-		const date = moment?.toDate();
+	changeEndDate(moment): void {
+		const date = fixDate(moment)
 		if (date) {
 			this.surgicalReport.endDateTime.date = dateToDateDto(date);
 			this.dateForm.controls.endDate.setValue(date);
