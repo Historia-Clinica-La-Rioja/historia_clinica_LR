@@ -2900,6 +2900,13 @@ export interface MedicineDoctorCompleteDto {
     professions: ProfessionCompleteDto[];
 }
 
+export interface MedicineFinancingStatusDto extends Serializable {
+    conceptPt: string;
+    conceptSctid: string;
+    financed: boolean;
+    id: number;
+}
+
 export interface MergedPatientSearchDto {
     auditType: EAuditType;
     idPatient: number;
@@ -3621,6 +3628,23 @@ export interface PersonDataDto {
     lastName?: string;
     userId: number;
     username?: string;
+}
+
+export interface PersonDto {
+    birthDate: Date;
+    cuil: string;
+    firstName: string;
+    genderDescription: string;
+    genderId: number;
+    identificationNumber: string;
+    identificationTypeDescription: string;
+    identificationTypeId: number;
+    lastName: string;
+    middleNames: string;
+    otherLastNames: string;
+    selfDeterminationGender: number;
+    selfDeterminationGenderDescription: string;
+    selfDeterminationName: string;
 }
 
 export interface PersonFileDto {
