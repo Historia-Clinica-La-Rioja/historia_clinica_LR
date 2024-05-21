@@ -1088,7 +1088,14 @@ const messages = {
                 optionsMinLength: 'El número de opciones debe ser mayor o igual a 2',
                 uniqueUoms: 'Las unidades de medida no pueden repetirse'
             },
-
+        },
+        medicinefinancingstatus: {
+            name: "Fármaco |||| Fármacos",
+            fields: {
+                conceptPt: "Fármaco de uso clínico",
+                conceptSctid: "COD Snomed",
+                financed: "Financiado"
+            }
         }
     }
 };
