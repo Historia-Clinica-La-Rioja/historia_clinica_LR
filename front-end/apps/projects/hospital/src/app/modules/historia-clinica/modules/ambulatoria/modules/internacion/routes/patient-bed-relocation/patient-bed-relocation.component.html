@@ -54,7 +54,7 @@
 						<section>
 							<h2 [translate]="'internaciones.bed-relocation.SECTION_DATE'"></h2>
 							<div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="20px" *ngIf="minDate" class="form-row">
-								<app-datepicker [minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="today"
+								<app-datepicker  id="relocationDate" [minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="today"
 									(selectDate)="relocationDateDateChanged($event)"></app-datepicker>
 								<mat-form-field appearance="outline">
 									<mat-label>Hora</mat-label>

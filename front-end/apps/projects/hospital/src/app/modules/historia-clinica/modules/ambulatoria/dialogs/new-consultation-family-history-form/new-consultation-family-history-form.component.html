@@ -38,6 +38,7 @@
             </mat-form-field>
 
             <app-datepicker
+                id="fecha_antecedente"
                 title="{{'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.FECHA'}}"
                 [minDate]="minDate"
                 [maxDate]="data.familyHistoryService.getMaxFecha()"
