@@ -93,3 +93,63 @@ databaseChangeLog:
                 INNER JOIN person p2 ON hp.person_id = p2.id
                 WHERE a.appointment_state_id = 6)
 
+    - changeSet:
+        id: medicine_financing_status-createTable
+        comment: Create table medicine_financing_status
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: medicine_financing_status
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medicine_financing_status
+                      references: snomed(id)
+                      foreignKeyName: FK_medicine_financing_status_snomed
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: financed
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+
