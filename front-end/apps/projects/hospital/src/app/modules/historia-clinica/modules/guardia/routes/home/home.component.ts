@@ -278,6 +278,7 @@ export interface Episode {
 	triage: EmergencyCareEpisodeListTriageDto;
 	type: MasterDataDto;
 	relatedProfessional: ProfessionalPersonDto;
+	reason?: string;
 }
 
 export interface AttendPlace {

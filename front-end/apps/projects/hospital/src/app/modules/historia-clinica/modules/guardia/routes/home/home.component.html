@@ -178,11 +178,12 @@
 												{{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
 											</span>
 										</mat-card-title>
-										<mat-card-subtitle *ngIf="episode.patient?.id">
-											<span class="mat-small">
+										<mat-card-subtitle class="mat-small" >
+											<span *ngIf="episode.patient?.id">
 												{{ 'guardia.home.episodes.episode.patient.ID'| translate }}
 												{{ episode.patient?.id }}
 											</span>
+											<app-title-description *ngIf="episode.reason" [title]="'guardia.home.episodes.episode.patient.REASON'" [text]="episode.reason" [limit]="20"></app-title-description>
 										</mat-card-subtitle>
 									</mat-card-header>
 									<ng-template #emergency_care_temporary>

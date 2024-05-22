@@ -78,6 +78,7 @@
 					},
 					"patient": {
 						"ID": "ID Paciente",
+						"REASON": "Motivo de ingreso",
 						"NO_INFO": "Sin información",
 						"TEMPORAL": "Paciente temporal",
 						"EMERGENCY_CARE_TEMPORARY": "Paciente temporal de guardia"
