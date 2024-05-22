@@ -2453,6 +2453,7 @@ export interface ImageQueueFilteringCriteriaDto {
 
 export interface ImageQueueListDto {
     appointmentId: number;
+    createdOn: DateTimeDto;
     equipmentId: number;
     id: number;
     imageMoveStatus: EImageMoveStatus;
@@ -2462,7 +2463,6 @@ export interface ImageQueueListDto {
     serviceRequestId: number;
     studies: string[];
     transcribedServiceRequestId: number;
-    updatedOn: Date;
 }
 
 export interface ImageQueuePatientDataDto {

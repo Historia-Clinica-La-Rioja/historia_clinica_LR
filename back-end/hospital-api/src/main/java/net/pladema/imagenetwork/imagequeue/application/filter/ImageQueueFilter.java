@@ -73,9 +73,9 @@ public class ImageQueueFilter {
             return ALLWAYS_TRUE;
         }
         String name = filteringCriteria.getName().get();
-        return iq -> (Objects.nonNull(iq.getPatientFirstName()) && containsNormalized(iq.getPatientFirstName(),name)) ||
+        return iq -> (!isFFSelfPerceivedDataOn && Objects.nonNull(iq.getPatientFirstName()) && containsNormalized(iq.getPatientFirstName(),name)) ||
                 (Objects.nonNull(iq.getPatientLastName()) && containsNormalized(iq.getPatientLastName(),name)) ||
-                (Objects.nonNull(iq.getPatientMiddleNames()) && containsNormalized(iq.getPatientMiddleNames(),name)) ||
+                (!isFFSelfPerceivedDataOn && Objects.nonNull(iq.getPatientMiddleNames()) && containsNormalized(iq.getPatientMiddleNames(),name)) ||
                 (Objects.nonNull(iq.getOtherLastNames()) && containsNormalized(iq.getOtherLastNames(),name)) ||
                 (isFFSelfPerceivedDataOn && Objects.nonNull(iq.getNameSelfDetermination()) && containsNormalized(iq.getNameSelfDetermination(),name));
     }

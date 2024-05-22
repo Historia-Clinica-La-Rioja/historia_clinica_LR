@@ -15,7 +15,7 @@ public class ImageQueueBo {
     private final Integer id;
     private final Integer appointmentId;
     private final Integer patientId;
-    private final LocalDateTime updatedOn;
+    private final LocalDateTime createdOn;
     private final Short modalityId;
     private final Integer equipmentId;
     private final EImageMoveStatus imageMoveStatus;
@@ -27,11 +27,11 @@ public class ImageQueueBo {
     @Setter
     private ImageQueuePatientBo patient;
 
-    public ImageQueueBo(Integer id, Integer appointmentId, Date updatedOn, Integer patientId, Short modalityId, Integer equipmentId,
+    public ImageQueueBo(Integer id, Integer appointmentId, Date createdOn, Integer patientId, Short modalityId, Integer equipmentId,
                         Integer serviceRequestId, Integer studyId, Integer transcribedServiceRequestId, String status) {
         this.id = id;
         this.appointmentId = appointmentId;
-        this.updatedOn = LocalDateTime.ofInstant(updatedOn.toInstant(), ZoneId.systemDefault());
+        this.createdOn = LocalDateTime.ofInstant(createdOn.toInstant(), ZoneId.systemDefault());
         this.patientId = patientId;
         this.modalityId = modalityId;
         this.equipmentId = equipmentId;
