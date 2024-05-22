@@ -52,7 +52,6 @@ export class GetFrailComponent implements OnInit {
     if (frailQuestionnaires.length > 0) {
       this.lastFrailQuestionnaireId = frailQuestionnaires[0].id;
     } else {
-     console.log(frailQuestionnaires, "test-trae");
       console.warn('No frail questionnaires found for this patient')
     }
   }

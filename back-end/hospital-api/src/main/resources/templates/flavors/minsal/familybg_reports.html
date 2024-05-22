@@ -50,16 +50,16 @@
         <p style="text-align:right;">Fecha de atención: <span th:text="${formattedCreatedOn}"></span></p>
         <p>Institución: <span th:text="${institution.name}"></span></p>
         <hr></hr>
-        <h5>Detalles del paciente</h5>
+        <h5>Datos del paciente</h5>
         <p>Apellido y nombre: <span th:text="${patientPersonFullName}"></span></p>
         <p><span th:utext="${'<b>' + patientIdType.description + ':</b> ' + patientPerson.identificationNumber}"></span></p>
         <p>Edad a la fecha de atención: <span th:text="${patientAge}"></span></p>
         <hr></hr>
-        <h5>Detalles del profesional</h5>
+        <h5>Datos del profesional</h5>
         <p>Apellido y nombre: <span th:text="${professionalPersonFullName}"></span></p>
-        <p>Licencia: <span th:text="${professional.licenseNumber}"></span></p>
+        <p>M.P.: <span th:text="${professional.licenseNumber}"></span></p>
 
-        <h3>Cuestionario de antecedentes familiares - Resultados de informe</h3>
+        <h3>Cuestionario de antecedentes familiares - Informe de resultados</h3>
 
         <hr></hr>
 

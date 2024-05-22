@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { environment } from '@environments/environment.prod';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EdmontonAnswers, QuestionnairesResponses } from '@api-rest/api-model';
+import { QuestionnairesResponses, EdmontonAnswers } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
-
-
+import { environment } from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
