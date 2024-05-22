@@ -572,7 +572,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					};
 				}
 			),
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: toApiFormat(p.performedDate)}}),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null}}),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,

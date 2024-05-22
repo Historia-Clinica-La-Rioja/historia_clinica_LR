@@ -283,7 +283,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			problem: this.formEvolucion.value?.clinicalProblem,
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: toApiFormat(p.performedDate)}}),
+			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: p.performedDate? toApiFormat(p.performedDate) : null}}),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
