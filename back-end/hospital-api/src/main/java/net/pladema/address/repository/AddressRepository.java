@@ -3,6 +3,7 @@ package net.pladema.address.repository;
 import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.repository.domain.AddressVo;
 import net.pladema.address.repository.entity.Address;
+import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.GlobalCoordinatesBo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -51,4 +52,12 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 			"JOIN City c ON (a.cityId = c.id) " +
 			"WHERE i.id = :institutionId")
 	Optional<ar.lamansys.sgh.shared.domain.general.AddressBo> findAddressDataByInstitutionId(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.GlobalCoordinatesBo(a.latitude, a.longitude) " +
+			"FROM Institution i " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"WHERE i.id = :institutionId")
+	GlobalCoordinatesBo fetchInstitutionGlobalCoordinates(@Param("institutionId") Integer institutionId);
+
 }
