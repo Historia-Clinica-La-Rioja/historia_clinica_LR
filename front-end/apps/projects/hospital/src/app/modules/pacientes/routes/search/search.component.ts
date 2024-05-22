@@ -65,6 +65,7 @@ export class SearchComponent implements OnInit {
 	public genderFieldDisabled = false;
 	public identificationTypeFieldDisabled = false;
 	public identificationNumberFieldDisabled = false;
+	fromGuardModule = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -99,6 +100,7 @@ export class SearchComponent implements OnInit {
 			this.back();
 		else {
 			this.route.queryParams.subscribe(params => {
+				this.fromGuardModule = params.fromGuardModule;
 				this.identificationTypeId = params.identificationTypeId;
 				this.identificationNumber = +params.identificationNumber;
 				this.genderId = params.genderId;
@@ -328,7 +330,10 @@ export class SearchComponent implements OnInit {
 
 		} else {
 			this.router.navigate([this.routePrefix + ROUTE_NEW], {
-				queryParams: person
+				queryParams: {
+					...person,
+					fromGuardModule: this.fromGuardModule
+				}
 			});
 		}
 	}

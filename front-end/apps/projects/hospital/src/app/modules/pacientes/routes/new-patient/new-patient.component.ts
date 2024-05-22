@@ -36,6 +36,7 @@ import { fixDate } from '@core/utils/date/format';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
+const ROUTE_GUARD = 'guardia/nuevo-episodio/administrativa';
 
 @Component({
 	selector: 'app-new-patient',
@@ -82,6 +83,7 @@ export class NewPatientComponent implements OnInit {
 	hasToSaveFiles: boolean = false;
 	patientId: number;
 	personId: number;
+	fromGuardModule = false;
 
 	constructor(
 		private formBuilder: UntypedFormBuilder,
@@ -107,6 +109,7 @@ export class NewPatientComponent implements OnInit {
 		this.navigationService.saveURL(this.router.url);
 		this.route.queryParams
 			.subscribe(params => {
+				this.fromGuardModule = params.fromGuardModule;
 				this.form = this.formBuilder.group({
 					firstName: [params.firstName ? params.firstName : null, [Validators.required]],
 					middleNames: [params.middleNames ? params.middleNames : null],
@@ -288,7 +291,7 @@ export class NewPatientComponent implements OnInit {
 					this.patientService.getPatientBasicData<BasicPatientDto>(patientId).subscribe((patientBasicData: BasicPatientDto) => {
 						this.personId = patientBasicData.person.id;
 						this.hasToSaveFiles = true;
-					})
+
 					if (this.personPhoto != null) {
 						this.patientService.addPatientPhoto(patientId, this.personPhoto).subscribe();
 					}
@@ -296,9 +299,13 @@ export class NewPatientComponent implements OnInit {
 					if (this.patientMedicalCoveragesToAdd) {
 						const patientMedicalCoveragesDto: PatientMedicalCoverageDto[] =
 							this.patientMedicalCoveragesToAdd.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
-						this.patientMedicalCoverageService.addPatientMedicalCoverages
-							(patientId, patientMedicalCoveragesDto).subscribe();
+						this.patientMedicalCoverageService.addPatientMedicalCoverages(patientId, patientMedicalCoveragesDto)
+							.subscribe();
 					}
+
+					if(this.fromGuardModule)
+						this.redirectToGuard();
+					});
 				}, _ => {
 					this.isSubmitButtonDisabled = false;
 					this.snackBarService.showError(this.getMessagesError());
@@ -306,6 +313,14 @@ export class NewPatientComponent implements OnInit {
 		} else {
 			scrollIntoError(this.form, this.el);
 		}
+	}
+
+	private redirectToGuard() {
+		this.router.navigate([this.routePrefix + ROUTE_GUARD], {
+			queryParams: {
+				patientId: this.patientId
+			}
+		});
 	}
 
 	private getMessagesSuccess(): string {
@@ -432,7 +447,8 @@ export class NewPatientComponent implements OnInit {
 
 	goBack(): void {
 		this.formSubmitted = false;
-		this.router.navigate([this.routePrefix + ROUTE_HOME_PATIENT]);
+		const route = this.fromGuardModule ? `${this.routePrefix}${ROUTE_GUARD}` : `${this.routePrefix}${ROUTE_HOME_PATIENT}`;
+		this.router.navigate([route]);
 	}
 
 	public showOtherSelfPerceivedGender(): void {
@@ -463,5 +479,4 @@ export class NewPatientComponent implements OnInit {
 		}
 
 	}
-
 }
