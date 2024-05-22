@@ -81,6 +81,7 @@ import { SearchComponent } from './components/search/search.component';
 import { SelectableCardComponent } from './components/selectable-card/selectable-card.component';
 import { SummaryCardComponent } from './components/summary-card/summary-card.component';
 import { TableComponent } from './components/table/table.component';
+import { TextEllipsisTooltipComponent } from './components/text-ellipsis-tooltip/text-ellipsis-tooltip.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TitledContentCardComponent } from './components/titled-content-card/titled-content-card.component';
 import { TitledContentComponent } from './components/titled-content/titled-content.component';
@@ -190,6 +191,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		SelectableCardComponent,
 		SummaryCardComponent,
 		TableComponent,
+		TextEllipsisTooltipComponent,
 		TimePickerComponent,
 		TitledContentCardComponent,
 		TitledContentComponent,

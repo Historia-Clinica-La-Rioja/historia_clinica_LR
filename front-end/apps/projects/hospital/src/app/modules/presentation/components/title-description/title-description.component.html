@@ -1,8 +1,4 @@
-<span class="grey">
-	{{title | translate}}:
-</span>
-<div>
-	<span class="text">
-		{{text}}
-	</span>
+<div class="title-description">
+	<span class="grey">{{title | translate}}:</span>
+	<app-text-ellipsis-tooltip [text]="text" [limit]="limit"></app-text-ellipsis-tooltip>
 </div>
