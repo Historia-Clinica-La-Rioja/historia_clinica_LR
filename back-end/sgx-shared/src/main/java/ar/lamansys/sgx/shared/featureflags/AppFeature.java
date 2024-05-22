@@ -214,6 +214,9 @@ public enum AppFeature implements Feature {
 
 	@Label("Habilita la configuracion de formularios")
 	HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO,
+	
+	@Label("Habilita el módulo de responsabilidad sanitaria")
+	HABILITAR_AREA_RESPONSABILIDAD_SANITARIA,
 	;
 
 	public boolean isActive() {

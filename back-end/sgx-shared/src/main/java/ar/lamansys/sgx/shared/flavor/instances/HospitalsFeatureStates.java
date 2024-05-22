@@ -82,6 +82,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_API_FHIR_DISPENSA_Y_CARGA_RESULTADOS_LABORATORIO, false);
 		map.put(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL, false);
 		map.put(AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA, false);
 	}
 
 	@Override
