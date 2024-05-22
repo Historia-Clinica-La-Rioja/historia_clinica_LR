@@ -45,11 +45,12 @@ const ParameterList = props => (
     <List
         {...props}
         hasCreate={true}
+        bulkActionButtons={false}
     >
         <Datagrid rowClick="show">
             <ParameterDescription label="resources.parameters.fields.description" />
             <ParameterLoincCode  label="resources.parameters.fields.loincId"/>
-            <SelectField source='typeId' label="resources.parameters.fields.typeId" choices={TYPE_CHOICES_IDS} sortable={false} />
+            <SelectField source='typeId' label="resources.parameters.fields.type" choices={TYPE_CHOICES_IDS} sortable={false} />
             <ReferenceArrayField
                 label="resources.parameters.fields.units"
                 reference="units-of-measure"

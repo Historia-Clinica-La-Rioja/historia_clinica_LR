@@ -34,7 +34,7 @@ const ParameterShow = (props) => (
             <ReferenceField
                 source="loincId"
                 reference="loinc-codes"
-                label="resources.parameters.fields.loincId"
+                label="resources.parameters.fields.loincDescription"
                 link={false}
             >
                 <FunctionField
@@ -44,7 +44,7 @@ const ParameterShow = (props) => (
 
             <TextField source="description" label="resources.parameters.fields.description"></TextField>
 
-            <SelectField source="typeId" label="Tipo" choices={TYPE_CHOICES_IDS} />
+            <SelectField source="typeId" label="resources.parameters.fields.type" choices={TYPE_CHOICES_IDS} />
 
             <ArrayField source="textOptions">
                 <SingleFieldList linkType={false}>

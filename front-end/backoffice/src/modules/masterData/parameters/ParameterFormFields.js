@@ -72,7 +72,7 @@ export const ParameterTypeInput = (props) => {
     const {
         input: { value: typeIdValue }
     } = useField('typeId');
-    
+
     const prevTypeIdValue = useRef(typeIdValue);
 
     useEffect(() => {
@@ -93,7 +93,7 @@ export const ParameterTypeInput = (props) => {
             choices={TYPE_CHOICES_IDS}
             validate={[required()]}
         />
-    );     
+    );
 }
 
 export const UnitsOfMeasure = (props) => {
@@ -197,7 +197,7 @@ const notIncludeLoinc = 2;
 export const LoincRadioButton = (props) => {
     const { record } = props;
     const form = useForm();
-    
+
     let defaultValue = includeLoinc;
     if (record && record.id) {
         defaultValue = (record.loincId !== null && record.loincId !== undefined) ? includeLoinc : notIncludeLoinc;
@@ -217,8 +217,9 @@ export const LoincRadioButton = (props) => {
         }
     }, [selectedRadioButton, form]);
 
-    const handleChange = (event) => {
-        setSelectedRadioButton(event.target.value);
+    const handleChange = (value) => {
+        if (value)
+            setSelectedRadioButton(value);
     };
 
     const radioButtonChoices = [
