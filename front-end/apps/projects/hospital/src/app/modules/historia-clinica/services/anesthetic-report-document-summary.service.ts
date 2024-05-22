@@ -147,11 +147,15 @@ export class AnestheticReportDocumentSummaryService {
 
     private getAnalgesicTechniqueDescription(analgesicTechnique: AnalgesicTechniqueDto): string {
         return `${analgesicTechnique.snomed.pt} ${INFO_DIVIDER} ${analgesicTechnique.injectionNote} ${INFO_DIVIDER} ${this.getDoseTranslate()} ${analgesicTechnique.dosage.quantity.value} 
-            ${INFO_DIVIDER} ${this.getUnitTranslate()} ${this.getCatetherValue(analgesicTechnique.catheter)}`;
+            ${INFO_DIVIDER} ${this.getUnitTranslate()} ${this.getCatetherValue(analgesicTechnique.catheter)} ${this.getCatetherNote(analgesicTechnique.catheterNote)}`;
     }
 
     private getCatetherValue(catether: boolean): string {
         return catether ? this.translateService.instant('historia-clinica.anesthetic-report.summary.YES') : this.translateService.instant('historia-clinica.anesthetic-report.summary.NO');
+    }
+
+    private getCatetherNote(catetherNote: string): string {
+        return catetherNote ? `${INFO_DIVIDER} ${catetherNote}` : '';
     }
 
     private getAnestheticTechniques(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemData[] {
