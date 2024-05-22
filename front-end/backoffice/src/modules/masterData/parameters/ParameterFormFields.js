@@ -89,6 +89,7 @@ export const ParameterTypeInput = (props) => {
     return (
         <SelectInput
             source="typeId"
+            label="resources.parameters.fields.type"
             choices={TYPE_CHOICES_IDS}
             validate={[required()]}
         />
@@ -193,42 +194,57 @@ export const Description = props => (
 const includeLoinc = 1;
 const notIncludeLoinc = 2;
 
-export const LoincRadioButton = props => {
-    let defaultValue;
-    if (props.record && props.record.id) {
-        defaultValue = props.record.loincId ? includeLoinc : notIncludeLoinc;
-    }
-    else
-        defaultValue = includeLoinc;
-    const radioButtonChoices = [{ id: includeLoinc, name: "resources.parameters.fields.loincRadioButton.option_1" }, { id: notIncludeLoinc, name: "resources.parameters.fields.loincRadioButton.option_2" }];
-    const [selectedRadioButton, setSelectedRadioButton] = useState(defaultValue);
+export const LoincRadioButton = (props) => {
+    const { record } = props;
     const form = useForm();
-    const onChange = (newValue) => {
-        setSelectedRadioButton(newValue);
-    };
+    
+    let defaultValue = includeLoinc;
+    if (record && record.id) {
+        defaultValue = (record.loincId !== null && record.loincId !== undefined) ? includeLoinc : notIncludeLoinc;
+    }
+
+    const [selectedRadioButton, setSelectedRadioButton] = useState(defaultValue);
 
     useEffect(() => {
-        selectedRadioButton === notIncludeLoinc ? form.change('loincId', null) : form.change('description', null);
+        setSelectedRadioButton(defaultValue);
+    }, [defaultValue]);
+
+    useEffect(() => {
+        if (selectedRadioButton === notIncludeLoinc) {
+            form.change('loincId', null);
+        } else {
+            form.change('description', null);
+        }
     }, [selectedRadioButton, form]);
+
+    const handleChange = (event) => {
+        setSelectedRadioButton(event.target.value);
+    };
+
+    const radioButtonChoices = [
+        { id: includeLoinc, name: "resources.parameters.fields.loincRadioButton.option_1" },
+        { id: notIncludeLoinc, name: "resources.parameters.fields.loincRadioButton.option_2" },
+    ];
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             <RadioButtonGroupInput
-                source='radioButton'
-                label='resources.parameters.fields.loincRadioButton.title'
+                source="radioButton"
+                label="resources.parameters.fields.loincRadioButton.title"
                 choices={radioButtonChoices}
                 validate={required()}
-                onChange={onChange}
+                onChange={handleChange}
                 defaultValue={defaultValue}
             />
 
-            {selectedRadioButton === includeLoinc ?
+            {selectedRadioButton === includeLoinc ? (
                 <>
                     <LoincCode />
                     <LoincDescription />
                 </>
-                : <Description />
-            }
+            ) : (
+                <Description />
+            )}
         </div>
-    )
-}
+    );
+};
