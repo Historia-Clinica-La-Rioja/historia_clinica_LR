@@ -9,7 +9,7 @@ import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptio
 import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptions.InstitutionNotFoundException;
 import ar.lamansys.sgh.publicapi.reports.application.fetchconsultations.exceptions.WrongDateFilterException;
 import ar.lamansys.sgh.publicapi.reports.application.port.out.ConsultationsByDateStorage;
-import ar.lamansys.sgh.publicapi.reports.domain.ConsultationBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationBo;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.service.ConsultationsByDatePublicApiPermissions;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.AllArgsConstructor;

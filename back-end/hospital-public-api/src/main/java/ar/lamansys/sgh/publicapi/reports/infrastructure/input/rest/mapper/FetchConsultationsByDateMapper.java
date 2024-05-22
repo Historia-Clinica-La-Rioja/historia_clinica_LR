@@ -3,8 +3,8 @@ package ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.publicapi.reports.domain.ConsultationBo;
-import ar.lamansys.sgh.publicapi.reports.domain.ConsultationItemWithDateBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationItemWithDateBo;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationItemWithDateDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.HierarchicalUnitDto;

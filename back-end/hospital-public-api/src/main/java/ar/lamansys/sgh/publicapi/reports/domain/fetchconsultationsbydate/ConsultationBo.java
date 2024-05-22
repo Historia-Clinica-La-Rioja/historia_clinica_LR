@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.reports.domain;
+package ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate;
 
 import java.util.List;
 import java.util.Objects;
@@ -6,6 +6,9 @@ import java.util.Objects;
 import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
+import ar.lamansys.sgh.publicapi.reports.domain.IdentificationBo;
+import ar.lamansys.sgh.publicapi.reports.domain.MedicalCoverageBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.reports.domain;
+package ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate;
 
 import java.time.LocalDate;
 import java.util.Objects;

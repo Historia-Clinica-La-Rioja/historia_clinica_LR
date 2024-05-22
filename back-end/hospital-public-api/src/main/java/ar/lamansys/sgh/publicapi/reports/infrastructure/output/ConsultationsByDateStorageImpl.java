@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.appointment.infrastructure.output;
+package ar.lamansys.sgh.publicapi.reports.infrastructure.output;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -17,23 +17,23 @@ import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 import ar.lamansys.sgh.publicapi.reports.application.port.out.ConsultationsByDateStorage;
-import ar.lamansys.sgh.publicapi.reports.domain.ConsultationBo;
-import ar.lamansys.sgh.publicapi.reports.domain.ConsultationItemWithDateBo;
+import ar.lamansys.sgh.publicapi.reports.application.port.out.GetHierarchicalUnitServiceParent;
 import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
 import ar.lamansys.sgh.publicapi.reports.domain.IdentificationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.MedicalCoverageBo;
-import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.HierarchicalParentChildBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationBo;
+import ar.lamansys.sgh.publicapi.reports.domain.fetchconsultationsbydate.ConsultationItemWithDateBo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorage {
 
 	private final EntityManager entityManager;
 
-	private static final Short SERVICE_TYPE = 8;
+	private final GetHierarchicalUnitServiceParent getHierarchicalUnitServiceParent;
 
 	@Override
 	public List<ConsultationBo> fetchConsultations(LocalDate dateFrom, LocalDate dateUntil, Integer institutionId, Integer hierarchicalUnitId) {
@@ -105,20 +105,9 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 		var mergedConsultations = mergeConsultations(processRows(rows));
 
 		if(!mergedConsultations.isEmpty()) {
-			String queryForParents = "select hierarchical_unit_parent_id as parent, hierarchical_unit_child_id as child, " +
-					"hu.type_id as parent_type, hu2.type_id as child_type, " +
-					"hu.alias as parent_alias, hu2.alias as child_alias " +
-					"from hierarchical_unit_relationship hur join hierarchical_unit hu " +
-					"on hu.id = hur.hierarchical_unit_parent_id " +
-					"join hierarchical_unit hu2 on hu2.id = hur.hierarchical_unit_child_id " +
-					"where hur.deleted IS NOT TRUE AND hu.deleted IS NOT TRUE AND hu2.deleted IS NOT TRUE ";
 
-			entityManager.clear();
-
-			var listOfServiceParents = entityManager.createNativeQuery(queryForParents)
-					.getResultList();
-
-			mergedConsultations.forEach(a -> a.setServiceHierarchicalUnit(getServiceParent(a.getServiceHierarchicalUnit(), listOfServiceParents)));
+			mergedConsultations.forEach(a -> a.setServiceHierarchicalUnit(
+					getHierarchicalUnitServiceParent.getServiceParent(a.getServiceHierarchicalUnit()).orElse(null)));
 
 			if(hierarchicalUnitId != null) {
 				mergedConsultations = mergedConsultations.stream()
@@ -161,58 +150,7 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				.collect(Collectors.toList());
 	}
 
-	private HierarchicalUnitBo getServiceParent(HierarchicalUnitBo serviceHierarchicalUnit, List<Object[]> serviceParents) {
 
-		if(serviceHierarchicalUnit.getId() == null || serviceHierarchicalUnit.getType() == null)
-			return null;
-
-		if(serviceHierarchicalUnit.getType().equals(SERVICE_TYPE))
-			return new HierarchicalUnitBo(serviceHierarchicalUnit.getId(), serviceHierarchicalUnit.getDescription(), null);
-
-		//a[0] will hold the child original hierarchical unit
-		var parentsAndChildren = serviceParents.stream()
-				.map(row -> new HierarchicalParentChildBo(
-						(Integer) row[0],
-						(Integer) row[1],
-						((Integer) row[2]).shortValue(),
-						((Integer) row[3]).shortValue(),
-						(String) row[4],
-						(String) row[5]
-						))
-				.collect(Collectors.toList());
-
-		var actual = serviceHierarchicalUnit;
-		boolean end = false;
-
-		while(!end) {
-			var a = findParent(parentsAndChildren, actual.getId());
-			if(a == null) {
-				end = true;
-				actual = null;
-			}
-			else {
-				if(a.getParentType().equals(SERVICE_TYPE)) {
-					end = true;
-				}
-				actual = new HierarchicalUnitBo(a.getParentId(), a.getParentAlias(), a.getParentType());
-			}
-		}
-		//the type is not needed in the final return
-		return actual == null ? null : new HierarchicalUnitBo(actual.getId(), actual.getDescription(), null);
-	}
-
-	private HierarchicalParentChildBo findParent(List<HierarchicalParentChildBo> serviceParents, Integer childId) {
-		var results = serviceParents.stream()
-				.filter(a -> a.getChildId().equals(childId))
-				.collect(Collectors.toList());
-		if(results.isEmpty()) {
-			return null;
-		}
-		return results.stream()
-				.filter(a -> a.getParentType().equals(SERVICE_TYPE))
-				.findFirst()
-				.orElse(results.get(0));
-	}
 
 	private List<ConsultationBo> processRows(List<Object[]> rows) {
 		return rows.stream()
