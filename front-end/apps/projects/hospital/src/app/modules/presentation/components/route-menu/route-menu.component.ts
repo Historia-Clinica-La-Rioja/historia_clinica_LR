@@ -32,7 +32,6 @@ export class RouteMenuComponent implements OnInit {
 
 		this.routeItems = (this.route.routeConfig.children || []).map(
 			childRoute => {
-				console.log('ngOnInit', childRoute);
 				return {
 					route: childRoute,
 				}
@@ -49,7 +48,6 @@ export class RouteMenuComponent implements OnInit {
 	}
 
 	onActivate(event): void {
-		console.log('onActivate', event);
 		// childActive se inicializa como false, el cambio puede estar sucediendo inmediatamente luego de inicializar
 		this.childActive = true;
 		// Forzar una nueva detección de cambios

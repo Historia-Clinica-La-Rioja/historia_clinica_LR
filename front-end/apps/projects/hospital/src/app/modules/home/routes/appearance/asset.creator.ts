@@ -1,19 +1,17 @@
-import { Asset, Favicon, SponsorLogo, Icon72, Icon96, Icon128, Icon144, Icon152, Icon192, Icon384, Icon512 } from './asset.model';
+import {
+	Asset,
+	Icon72,
+	Icon96,
+	Icon128,
+	Icon144,
+	Icon152,
+	Icon192,
+	Icon384,
+	Icon512,
+} from './asset.model';
 
 export abstract class AssetCreator {
 	public abstract factoryMethod(): Asset;
-}
-
-export class FaviconCreator extends AssetCreator {
-	public factoryMethod(): Asset {
-		return new Favicon();
-	}
-}
-
-export class SponsorLogoCreator extends AssetCreator {
-	public factoryMethod(): Asset {
-		return new SponsorLogo();
-	}
 }
 
 export class Icon72Creator extends AssetCreator {

@@ -1,26 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Asset } from '../../routes/appearance/asset.model';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SettingsService } from '@api-rest/services/settings.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { Asset } from './asset.model';
-import { addAvailableAssetsToList } from './asset.facade';
-import { FaviconCreator, SponsorLogoCreator } from './asset.creator';
 
 @Component({
-	selector: 'app-logo-settings',
-	templateUrl: './logo-settings.component.html',
-	styleUrls: ['./logo-settings.component.scss']
+	selector: 'app-asset-form',
+	templateUrl: './asset-form.component.html',
+	styleUrls: ['./asset-form.component.scss']
 })
-export class LogoSettingsComponent implements OnInit {
-
-	readonly BASE_PATH = 'assets/custom/';
-	favicon: Asset;
-	sponsorLogo: Asset;
-	icons: Asset[];
+export class AssetFormComponent implements OnInit {
+	@Input() icon: Asset;
+	@Input() basePath: string;
 	timestamp: string;
-
-	private assets: Asset[];
 
 	constructor(
 		private dialog: MatDialog,
@@ -30,12 +23,6 @@ export class LogoSettingsComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.timestamp = this.getTimestamp();
-		this.assets = addAvailableAssetsToList();
-		const faviconInstance = new FaviconCreator().factoryMethod();
-		const sponsorLogoInstance = new SponsorLogoCreator().factoryMethod();
-		this.favicon = this.assets.find(a => a.name === faviconInstance.getName());
-		this.sponsorLogo = this.assets.find(a => a.name === sponsorLogoInstance.getName());
-		this.icons = this.assets.filter(a => a.name !== faviconInstance.getName() && a.name !== sponsorLogoInstance.getName());
 	}
 
 	selectFile(file: File, fileName: string): void {
@@ -52,6 +39,7 @@ export class LogoSettingsComponent implements OnInit {
 			this.snackBarService.showError('configuracion.logos.toast_messages.VALID_IMAGE_ERROR');
 		}
 	}
+
 
 	restore(fileName: string, fileNameToShow: string): void {
 		const dialogRefConfirmation = this.dialog.open(ConfirmDialogComponent,
@@ -79,4 +67,5 @@ export class LogoSettingsComponent implements OnInit {
 	private getTimestamp(): string {
 		return '?ts=' + new Date().getTime();
 	}
+
 }

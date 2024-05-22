@@ -4,11 +4,6 @@ export interface Asset {
 	width: number;
 	height: number;
 	extension: string;
-	getName(): string;
-	getPath(): string;
-	getWidth(): number;
-	getHeight(): number;
-	getExtension(): string;
 }
 
 export class Favicon implements Asset {
@@ -36,7 +31,7 @@ export class Favicon implements Asset {
 }
 
 export class SponsorLogo implements Asset {
-	public name = 'logotipo de auspiciante';
+	public name = 'Logotipo de auspiciante';
 	public path = 'sponsor-logo-512x128.png';
 	public width = 512;
 	public height = 128;
@@ -59,8 +54,9 @@ export class SponsorLogo implements Asset {
 	}
 }
 
+
 export class Icon72 implements Asset {
-	public name = 'icono de 72 x 72 pixeles';
+	public name = 'Ícono de 72 pixeles';
 	public path = 'icons/icon-72x72.png';
 	public width = 72;
 	public height = 72;
@@ -84,7 +80,7 @@ export class Icon72 implements Asset {
 }
 
 export class Icon96 implements Asset {
-	public name = 'icono de 96 x 96 pixeles';
+	public name = 'Ícono de 96 pixeles';
 	public path = 'icons/icon-96x96.png';
 	public width = 96;
 	public height = 96;
@@ -108,7 +104,7 @@ export class Icon96 implements Asset {
 }
 
 export class Icon128 implements Asset {
-	public name = 'icono de 128 x 128 pixeles';
+	public name = 'Ícono de 128 pixeles';
 	public path = 'icons/icon-128x128.png';
 	public width = 128;
 	public height = 128;
@@ -132,7 +128,7 @@ export class Icon128 implements Asset {
 }
 
 export class Icon144 implements Asset {
-	public name = 'icono de 144 x 144 pixeles';
+	public name = 'Ícono de 144 pixeles';
 	public path = 'icons/icon-144x144.png';
 	public width = 144;
 	public height = 144;
@@ -156,7 +152,7 @@ export class Icon144 implements Asset {
 }
 
 export class Icon152 implements Asset {
-	public name = 'icono de 152 x 152 pixeles';
+	public name = 'Ícono de 152 pixeles';
 	public path = 'icons/icon-152x152.png';
 	public width = 152;
 	public height = 152;
@@ -180,7 +176,7 @@ export class Icon152 implements Asset {
 }
 
 export class Icon192 implements Asset {
-	public name = 'icono de 192 x 192 pixeles';
+	public name = 'Ícono de 192 pixeles';
 	public path = 'icons/icon-192x192.png';
 	public width = 192;
 	public height = 192;
@@ -204,7 +200,7 @@ export class Icon192 implements Asset {
 }
 
 export class Icon384 implements Asset {
-	public name = 'icono de 384 x 384 pixeles';
+	public name = 'Ícono de 384 pixeles';
 	public path = 'icons/icon-384x384.png';
 	public width = 384;
 	public height = 384;
@@ -228,7 +224,7 @@ export class Icon384 implements Asset {
 }
 
 export class Icon512 implements Asset {
-	public name = 'icono de 512 x 512 pixeles';
+	public name = 'Ícono de 512 pixeles';
 	public path = 'icons/icon-512x512.png';
 	public width = 512;
 	public height = 512;
