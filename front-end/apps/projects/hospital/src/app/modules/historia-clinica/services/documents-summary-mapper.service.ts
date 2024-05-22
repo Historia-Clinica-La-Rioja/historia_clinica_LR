@@ -92,16 +92,16 @@ export class DocumentsSummaryMapperService {
 
     mapToVitalSignsAndRiskFactors(riskFactors: RiskFactorDto): VitalSignsAndRiskFactorsData {
         return {
-            ...(riskFactors.bloodGlucose && { bloodGlucose: [this.toDescriptionItemData(`${riskFactors.bloodGlucose.value}${VITAL_SIGNS_AND_RISK_FACTORS.MG_DL}`)] }),
+            ...(riskFactors.bloodGlucose && { bloodGlucose: [this.toDescriptionItemData(`${riskFactors.bloodGlucose.value} ${VITAL_SIGNS_AND_RISK_FACTORS.MG_DL}`)] }),
             ...(riskFactors.bloodOxygenSaturation && { bloodOxygenSaturation: [this.toDescriptionItemData(`${riskFactors.bloodOxygenSaturation.value}${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)] }),
-            ...(riskFactors.cardiovascularRisk && { cardiovascularRisk: [this.toDescriptionItemData(`${riskFactors.cardiovascularRisk.value} ${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)] }),
+            ...(riskFactors.cardiovascularRisk && { cardiovascularRisk: [this.toDescriptionItemData(`${riskFactors.cardiovascularRisk.value}${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)] }),
             ...(riskFactors.diastolicBloodPressure && { diastolicBloodPressure: [this.toDescriptionItemData(`${riskFactors.diastolicBloodPressure.value} ${VITAL_SIGNS_AND_RISK_FACTORS.MILIMITERS}`)] }),
-            ...(riskFactors.glycosylatedHemoglobin && { glycosylatedHemoglobin: [this.toDescriptionItemData(`${riskFactors.glycosylatedHemoglobin.value} ${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)] }),
-            ...(riskFactors.heartRate && { heartRate: [this.toDescriptionItemData(`${riskFactors.heartRate.value} ${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)] }),
-            ...(riskFactors.hematocrit && { hematocrit: [this.toDescriptionItemData(`${riskFactors.hematocrit.value} ${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)] }),
-            ...(riskFactors.respiratoryRate && { respiratoryRate: [this.toDescriptionItemData(`${riskFactors.respiratoryRate.value} ${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)] }),
+            ...(riskFactors.glycosylatedHemoglobin && { glycosylatedHemoglobin: [this.toDescriptionItemData(`${riskFactors.glycosylatedHemoglobin.value}${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)] }),
+            ...(riskFactors.heartRate && { heartRate: [this.toDescriptionItemData(`${riskFactors.heartRate.value}${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)] }),
+            ...(riskFactors.hematocrit && { hematocrit: [this.toDescriptionItemData(`${riskFactors.hematocrit.value}${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)] }),
+            ...(riskFactors.respiratoryRate && { respiratoryRate: [this.toDescriptionItemData(`${riskFactors.respiratoryRate.value}${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)] }),
             ...(riskFactors.systolicBloodPressure && { systolicBloodPressure: [this.toDescriptionItemData(`${riskFactors.systolicBloodPressure.value} ${VITAL_SIGNS_AND_RISK_FACTORS.MILIMITERS}`)] }),
-            ...(riskFactors.temperature && { temperature: [this.toDescriptionItemData(`${riskFactors.temperature.value} ${VITAL_SIGNS_AND_RISK_FACTORS.TEMPERATURE}`)] }),
+            ...(riskFactors.temperature && { temperature: [this.toDescriptionItemData(`${riskFactors.temperature.value}${VITAL_SIGNS_AND_RISK_FACTORS.TEMPERATURE}`)] }),
         }
     }
 
