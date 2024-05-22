@@ -28,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.service.domain.EquipmentBO;
 import net.pladema.establishment.service.domain.OrchestratorBO;
 import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
+import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
@@ -62,6 +65,8 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 	private final DiagnosticReportInfoService diagnosticReportInfoService;
 
 	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
+
+	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
 
 	@Override
 	public Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId) {
@@ -133,6 +138,13 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 		if (basicDataPatient == null){
 			return null;
 		}
+
+		boolean hasAlreadyPublishedWorkList = historicAppointmentStateRepository.hasHistoricallyConfirmedAtLeastOnes(appointmentId);
+		if (hasAlreadyPublishedWorkList) {
+			log.debug("Already published worklist from appointmentId {}", appointmentId);
+			return null;
+		}
+
 		String identificationNumber = basicDataPatient.getIdentificationNumber();
 		String identification = identificationNumber == null ?basicDataPatient.getId()+"": identificationNumber;
 		String UID= "1." + ThreadLocalRandom.current().nextInt(1,10) + "." +

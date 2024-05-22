@@ -8,12 +8,12 @@ import java.util.Optional;
 
 public interface EquipmentAppointmentService {
 
-	Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId);
+    Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId);
 
-	boolean updateEquipmentState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
+    boolean updateEquipmentState(Integer appointmentId, short appointmentStateId, Integer userId, String reason);
 
-	AppointmentBo updateEquipmentAppointment(UpdateAppointmentBo appointmentDto);
+    AppointmentBo updateEquipmentAppointment(UpdateAppointmentBo appointmentDto);
 
-	MqttMetadataBo publishWorkList (Integer institutionId, Integer appointmentId);
+    MqttMetadataBo publishWorkList(Integer institutionId, Integer appointmentId);
 
-    }
+}
