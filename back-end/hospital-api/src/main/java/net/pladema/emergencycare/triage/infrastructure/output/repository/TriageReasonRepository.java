@@ -7,6 +7,10 @@ import net.pladema.emergencycare.triage.infrastructure.output.entity.TriageReaso
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TriageReasonRepository extends JpaRepository<TriageReason, TriageReasonPk> {
+
+	List<TriageReason> findAllByPkTriageId(Integer triageId);
 }

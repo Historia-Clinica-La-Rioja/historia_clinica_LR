@@ -4859,6 +4859,7 @@ export interface TriageListDto extends Serializable {
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     notes: string;
+    reasons: OutpatientReasonDto[];
     riskFactors: NewRiskFactorsObservationDto;
 }
 

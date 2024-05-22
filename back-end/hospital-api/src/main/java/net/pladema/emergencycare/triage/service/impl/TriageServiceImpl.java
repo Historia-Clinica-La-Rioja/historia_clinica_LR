@@ -13,6 +13,7 @@ import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.application.addtriagereasons.AddTriageReasons;
+import net.pladema.emergencycare.triage.application.fetchtriagereasons.FetchTriageReasons;
 import net.pladema.emergencycare.triage.repository.TriageDetailsRepository;
 import net.pladema.emergencycare.triage.repository.TriageRepository;
 import net.pladema.emergencycare.triage.repository.TriageRiskFactorsRepository;
@@ -67,6 +68,7 @@ public class TriageServiceImpl implements TriageService {
 
 	private final DoctorsOfficeRepository doctorsOfficeRepository;
 	private final AddTriageReasons addTriageReasons;
+	private final FetchTriageReasons fetchTriageReasons;
 
     @Override
     public List<TriageBo> getAll(Integer institutionId, Integer episodeId) {
@@ -78,6 +80,7 @@ public class TriageServiceImpl implements TriageService {
         result.forEach(t -> {
             setDetailsDescriptions(t);
             t.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, t.getCreatedOn()));
+			t.setReasons(fetchTriageReasons.run(t.getTriageId()));
         });
         LOG.debug("Output size -> {}", result.size());
         LOG.trace("Output -> {}", result);

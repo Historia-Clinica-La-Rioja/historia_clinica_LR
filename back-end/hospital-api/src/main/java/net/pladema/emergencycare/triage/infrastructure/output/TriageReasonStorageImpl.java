@@ -9,6 +9,8 @@ import net.pladema.emergencycare.triage.infrastructure.output.repository.TriageR
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class TriageReasonStorageImpl implements TriageReasonStorage {
@@ -18,5 +20,10 @@ public class TriageReasonStorageImpl implements TriageReasonStorage {
 	@Override
 	public TriageReason saveTriageReason(TriageReason triageReason) {
 		return triageReasonRepository.save(triageReason);
+	}
+
+	@Override
+	public List<TriageReason> getAllByTriageId(Integer triageId) {
+		return triageReasonRepository.findAllByPkTriageId(triageId);
 	}
 }
