@@ -11,8 +11,8 @@
     <mat-form-field appearance="outline" *ngIf="isHabilitarRecetaDigitalEnabled">
         <mat-select id="clinicalSpecialtyId" name="clinicalSpecialty" formControlName="clinicalSpecialty"
             placeholder="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.SELECT_SPECIALTY' | translate}}">
-            <mat-option *ngFor="let clinicalSpecialty of this.specialties"
-                [value]="clinicalSpecialty.id">
+            <mat-option *ngFor="let clinicalSpecialty of specialties"
+                [value]="clinicalSpecialty">
                 {{clinicalSpecialty.name}}
             </mat-option>
         </mat-select>
