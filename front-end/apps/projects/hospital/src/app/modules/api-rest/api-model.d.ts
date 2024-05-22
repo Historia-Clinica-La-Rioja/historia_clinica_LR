@@ -2042,6 +2042,11 @@ export interface GeneratedApiKeyDto {
 export interface GenericMasterDataDto<T> extends AbstractMasterdataDto<T> {
 }
 
+export interface GlobalCoordinatesDto {
+    latitude: number;
+    longitude: number;
+}
+
 export interface GetDiagnosticReportObservationDto {
     id: number;
     procedureParameterId: number;
@@ -2915,6 +2920,14 @@ export interface NewbornDto {
     genderId: EGender;
     id?: number;
     weight: number;
+}
+
+export interface NominatimAddressDto {
+    cityName: string;
+    houseNumber: string;
+    postalCode: string;
+    stateName: string;
+    streetName: string;
 }
 
 export interface NotifyPatientDto {
