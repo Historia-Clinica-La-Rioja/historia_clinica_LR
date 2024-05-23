@@ -361,13 +361,13 @@ export class DesempenoFisicoComponent implements OnInit {
     return sixCounterMap[this.counterE1] || undefined;
   }
 
-  // calculoMapping() {
-  //   const scoreMapping = {
-  //     'F1': 0,
-  //     'F2': 0,
-  //   }
-  //   return scoreMapping[this.selectedCalificacion] || undefined;
-  // }
+  calculoMapping() {
+    const scoreMapping = {
+      'F1': "bajo",
+      'F2': "alto",
+    }
+    return scoreMapping[this.selectedCalificacion] || undefined;
+  }
   
   construirDatos() {
     const totalScore = this.calculePoints();
@@ -455,7 +455,7 @@ export class DesempenoFisicoComponent implements OnInit {
         {
           "itemId": 88,
           "optionId": totalScore,
-          "value": this.selectedCalificacion,
+          "value": this.calculoMapping(),
         },
 
 
