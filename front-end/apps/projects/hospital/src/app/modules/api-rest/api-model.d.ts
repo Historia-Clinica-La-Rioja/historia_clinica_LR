@@ -1293,6 +1293,15 @@ export interface FrailSummary{
     frailId: number;
 }
 
+export interface PhysicalSummary{
+    institutionId: number;
+    patientId : number;
+    frailId: number;
+}
+
+
+
+
 export interface QuestionnairesResponses {
     id: number;
     statusId: number;

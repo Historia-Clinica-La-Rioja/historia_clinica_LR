@@ -226,7 +226,7 @@
             <!-- SEPTIMA CONSULTA -->
 
             <div class="slogans">
-                <img class="icon" src="assets/icons/icon-12.png" alt="icon5">
+                <img class="icon" [src]="iconImageSource3" alt="iconActive">
 
                 ¿El paciente puede levantarse 5 veces de la <br> silla sin usar sus brazos?<br />
 
@@ -242,7 +242,6 @@
 
             </mat-radio-group>
 
-
             <div class="counter4" id="CT6" name="counter6" *ngIf="!isCounterDisabled6() && !isCounterDisabled7()">
                 <label for="number">Tiempo en segundos:</label>
                 <input id="86" type="number"  value="F4" [(ngModel)]="counterE1" (change)="onInputDesempenoChange2($event)" class="chart" />
@@ -251,29 +250,28 @@
             <!-- RESULTADO FINAL -->
 
             <div id="contenidoData">
-                <!-- <h3 class="title-final">RESULTADOS</h3> -->
+                <h3 class="title-final">RESULTADOS</h3>
             </div>
 
             <div class="options">
 
-                <div class="result-details" *ngIf="finalScore > 0">
-                    <span [style.color]="finalScore >= 8 ? '#2ba05a' : '#ff6054'">
-
-                    </span>
-
-                </div>
+                <div class="text">
+                     <p id="70">La sumatoria da como resultado:</p>
+                    <mat-radio-group id="88" name="points" [(ngModel)]="selectedCalificacion">
+                      <p color="primary"[style.color]="(selectedCalificacion === 'F1') ? '#2687c5' : 'darkgray'" [style.font-weight]="(selectedCalificacion === 'F1') ? '550' : 'normal'" id="49" value="F1">- DESEMPEÑO FISICO BAJO</p>
+                      <p color="primary" [style.color]="(selectedCalificacion === 'F2') ? '#2687c5' : 'darkgray'" [style.font-weight]="(selectedCalificacion === 'F2') ? '550' : 'normal'"  id="50" value="F2">- DESEMPEÑO FISICO ALTO</p>
+                    </mat-radio-group>
 
             </div>
-
-            <!-- SUBMIT  -->
-
-            <button mat-raised-button color="primary" type="submit">Enviar Formulario</button>
         </div>
 
-        <div>
-            <!-- Salto de linea -->
-            <br>
-        </div>
-    </form>
-
-</div>
+               <!-- SUBMIT  -->
+               <button mat-raised-button color="primary" type="submit">Guardar Formulario</button>
+            </div>
+    
+            <div>
+                <!-- Salto de linea -->
+                <br>
+            </div>
+        </form>
+    </div>

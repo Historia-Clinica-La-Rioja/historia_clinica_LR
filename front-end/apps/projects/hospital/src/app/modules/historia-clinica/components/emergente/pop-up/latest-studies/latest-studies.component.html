@@ -6,6 +6,7 @@
     <mat-select [(ngModel)]="selectedOption">
       <mat-option value="option2">Escala de Frail</mat-option>
       <mat-option value="option3">Escala de Edmonton</mat-option>  
+      <mat-option value="option4">Prueba corta de desempeño físico</mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -26,4 +27,13 @@
       <app-get-edmonton></app-get-edmonton>  
     </div>
   </div>
+  <div *ngIf="selectedOption === 'option4'">
+    <div class="form-container">
+      <button id="close-modal" mat-button mat-icon-button aria-label="close" (click)="closeModal(true)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <app-get-physical-performance></app-get-physical-performance>
+    </div>
 </div>
+</div>
+

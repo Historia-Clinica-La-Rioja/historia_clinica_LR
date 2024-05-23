@@ -30,11 +30,14 @@ export class DesempenoFisicoComponent implements OnInit {
   ticketNum1: number = 0;
   iconActive: boolean;
   iconImageSource: string = 'assets/icons/icon-07.png';
-  customIconSource: string = 'assets/icons/icon-10.png';
   iconImageSource2: string = 'assets/icons/icon-08.png';
+  iconImageSource3: string = 'assets/icons/icon-12.png'
   customIconSource2: string = 'assets/icons/icon-09.png';
+  customIconSource: string = 'assets/icons/icon-10.png';
+  customIconSource3: string = 'assets/icons/icon-11.png';
   patientId: number;
   questionnaireId: number;
+  selectedCalificacion: string;
 
   constructor(private physicalService: PhysicalPerformanceService,
 
@@ -60,7 +63,7 @@ export class DesempenoFisicoComponent implements OnInit {
 
   onInputDesempenoChange2(event: any): void {
     this.counterE1 = event.target.value;
-    this.calculePoints(); 
+    this.calculePoints();
   }
 
   isSubmitDisabled(): boolean {
@@ -158,10 +161,16 @@ export class DesempenoFisicoComponent implements OnInit {
       this.iconImageSource = 'assets/icons/icon-07.png';
     }
 
-    if (this.selectedoptionB === '2B' || this.selectedoptionB === '3B') {
+    if (this.selectedoptionA === '2A' || this.selectedoptionA === '3A' || this.selectedoptionB === '2B' || this.selectedoptionB === '3B') {
       this.iconImageSource2 = this.customIconSource2;
     } else {
       this.iconImageSource2 = 'assets/icons/icon-08.png';
+    }
+
+    if (this.selectedoptionE === '2D' || this.selectedoptionE === '3D') {
+      this.iconImageSource3 = this.customIconSource3;
+    } else {
+      this.iconImageSource3 = 'assets/icons/icon-12.png';
     }
 
     let counterB2Points = 0;
@@ -173,7 +182,7 @@ export class DesempenoFisicoComponent implements OnInit {
       counterB2Points = 2;
     }
 
-  
+
     let counterA1NoPoints = 0;
 
     if (this.counterA1 < 0) {
@@ -208,74 +217,32 @@ export class DesempenoFisicoComponent implements OnInit {
 
 
     let counterE1Points = 0;
-     if (this.counterE1 <= 11.19) {
-       counterE1Points = 4
+    if (this.counterE1 <= 11.19) {
+      counterE1Points = 4
     } else if (this.counterE1 >= 11.2 && this.counterE1 <= 13.69) {
       counterE1Points = 3;
-     } else if (this.counterE1 > 13.69 && this.counterE1 <= 16.69) {
+    } else if (this.counterE1 > 13.69 && this.counterE1 <= 16.69) {
       counterE1Points = 2;
     } else if (this.counterE1 > 16.69 && this.counterE1 <= 60) {
       counterE1Points = 1;
     } else if (this.counterE1 > 60.00) {
       counterE1Points = 0;
     }
-    
 
-    let totalScore = balance1 + balance2 + counterB2Points+ counterA1NoPoints + counterA2NoPoints + counterC2NoPoints
+
+    let totalScore = balance1 + balance2 + counterB2Points + counterA1NoPoints + counterA2NoPoints + counterC2NoPoints
       + counterC3Points + counterE1Points;
 
-    this.finalScore = totalScore;
-
-    this.Calculefinal = (this.finalScore >= 8) ? '1F' : '2F';
-
+      console.log(totalScore, "puntaje: " )
+      
+      if (totalScore < 8) {
+        this.selectedCalificacion = 'F1';
+       } else if(totalScore >= 8) {
+        this.selectedCalificacion = 'F2';
+      }
+  
     return totalScore;
 
-  }
-  submitForm(): void {
-    const textColor = this.finalScore >= 8 ? '#2ba05a' : '#ff6054';
-
-    Swal.fire({
-      icon: 'question',
-      iconColor: '#2687c5',
-      title: '¿Está seguro de enviar el formulario?',
-      text: `DESEMPEÑO FISICO: ${this.Calculefinal === '1F' ? 'ALTO' : 'BAJO'} - Puntaje final: ${this.finalScore}/12`,
-      html: `<span style="color: ${textColor}">DESEMPEÑO FISICO: ${this.Calculefinal === '1F' ? 'ALTO' : 'BAJO'} - Puntaje final: ${this.finalScore}/12</span>`,
-      showDenyButton: true,
-      showCancelButton: false,
-      confirmButtonText: 'Enviar',
-      confirmButtonColor: '#2687c5',
-      denyButtonText: 'Cancelar',
-
-    }).then((result) => {
-
-      if (result.isConfirmed) {
-        Swal.fire({
-          icon: 'info',
-          iconColor: '#2687c5',
-          title: 'Enviando...',
-          text: 'Por favor, espere un momento.',
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-            setTimeout(() => {
-              Swal.close();
-              this.enviarFormulario();
-              document.getElementById('contenidoData').style.display = 'none';
-
-
-              Swal.fire({
-                icon: 'success',
-                iconColor: '#2687c5',
-                title: 'Enviado exitosamente',
-                confirmButtonColor: '#2687c5',
-                confirmButtonText: 'Aceptar',
-              });
-            }, 2000);
-          }
-
-        });
-      }
-    });
   }
 
   // PRIMERA SECCION
@@ -394,7 +361,16 @@ export class DesempenoFisicoComponent implements OnInit {
     return sixCounterMap[this.counterE1] || undefined;
   }
 
+  calculoMapping() {
+    const scoreMapping = {
+      'F1': "bajo",
+      'F2': "alto",
+    }
+    return scoreMapping[this.selectedCalificacion] || undefined;
+  }
+  
   construirDatos() {
+    const totalScore = this.calculePoints();
     const datos = {
       "questionnaireId": 4,
       "answers": [
@@ -476,10 +452,63 @@ export class DesempenoFisicoComponent implements OnInit {
           "value": this.counterE1
         },
 
+        {
+          "itemId": 88,
+          "optionId": totalScore,
+          "value": this.calculoMapping(),
+        },
+
+
       ]
     };
     return datos;
   }
+
+  submitForm(): void {
+
+    Swal.fire({
+      icon: 'question',
+      iconColor: '#2687c5',
+      title: '¿Está seguro de enviar el formulario?',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Enviar',
+      confirmButtonColor: '#2687c5',
+      denyButtonText: 'Cancelar',
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'info',
+          iconColor: '#2687c5',
+          title: 'Enviando...',
+          text: 'Por favor, espere un momento.',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+            setTimeout(() => {
+              Swal.close();
+              this.enviarFormulario();
+              document.getElementById('contenidoData').style.display = 'none';
+
+
+              Swal.fire({
+                icon: 'success',
+                iconColor: '#2687c5',
+                title: 'Enviado exitosamente',
+                confirmButtonColor: '#2687c5',
+                confirmButtonText: 'Aceptar',
+              });
+            }, 2000);
+          }
+
+        });
+      }
+    });
+  }
+
+
 
   enviarFormulario(): void {
     this.physicalService.createPhysical(this.patientId, this.construirDatos()).subscribe();
