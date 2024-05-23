@@ -147,12 +147,16 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
     @Override
     public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdult, riskFactors);
+		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriageAdult, riskFactors);
+		triageService.addTriageReasons(emergencyCareBo.getTriage().getReasons(), emergencyCareBo.getTriage().getTriageId());
+        return emergencyCareBo;
     }
 
     @Override
     public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric, riskFactors);
+		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric, riskFactors);
+		triageService.addTriageReasons(emergencyCareBo.getTriage().getReasons(), emergencyCareBo.getTriage().getTriageId());
+        return emergencyCareBo;
     }
 
 	@Override

@@ -220,7 +220,8 @@ public class TriageServiceImpl implements TriageService {
 		}
 	}
 
-	private void addTriageReasons(List<ReasonBo> reasons, Integer triageId){
+	@Override
+	public void addTriageReasons(List<ReasonBo> reasons, Integer triageId){
 		if (reasons != null && !reasons.isEmpty())
 			addTriageReasons.run(triageId, reasons);
 	}
