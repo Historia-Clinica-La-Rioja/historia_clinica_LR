@@ -70,12 +70,9 @@ public class GetQuestionnairePdfService {
 
 		List<Answer> answers = answerRepository.findByQuestionnaireResponseId(questionnaireResponseId);
 
-		HealthcareProfessional professional = healthcareProfessionalRepository.findById(response.getCreatedBy())
-				.orElseThrow(() -> new NotFoundException("HealthcareProfessional not found"));
+		HealthcareProfessional professional = utilsService.getHealthcareProfessionalByUserId(response.getCreatedBy());
 
-		Integer professionalPersonId = professional.getPersonId();
-
-		Person professionalPerson = personRepository.findById(professionalPersonId)
+		Person professionalPerson = personRepository.findById(professional.getPersonId())
 				.orElseThrow(() -> new NotFoundException("Healthcare professional person not found"));
 
 		Institution institution = institutionRepository.findById(institutionId)
