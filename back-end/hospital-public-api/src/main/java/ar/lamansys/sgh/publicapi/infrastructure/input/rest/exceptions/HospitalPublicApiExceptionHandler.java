@@ -8,7 +8,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exception
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SaveExternalBookingException;
-
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.SharedAppointmentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -221,6 +221,17 @@ public class HospitalPublicApiExceptionHandler {
 		);
 	}
 
+	// Errores de API Pública | Turnos
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ UpdateResultException.class })
+	protected ApiErrorMessageDto handleSharedAppointmentException(SharedAppointmentException ex) {
+		logger.debug("SharedAppointmentException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto(
+				"update-appointment-failed",
+				ex.getMessage()
+		);
+	}
+
 	// Errores genéricos de API Pública
 
 	@ResponseStatus(HttpStatus.FORBIDDEN)
@@ -258,12 +269,12 @@ public class HospitalPublicApiExceptionHandler {
 		logger.debug("DateTimeParseException -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto("El formato de la fecha es invalido", ex.getMessage());
 	}
-	
+
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
 	@ExceptionHandler({ SaveExternalBookingException.class })
 	protected ApiErrorMessageDto handleSaveExternalBookingException(SaveExternalBookingException ex) {
 		logger.error("DigitalSignatureCallbackException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
-	
+
 }
