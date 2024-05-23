@@ -27,6 +27,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedIns
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -105,8 +106,12 @@ public class FetchSummaryClinicHistory {
 		oesBo.setProcedures(procedures.stream().filter(p -> p.getConsultationId().equals(oes.getConsultationId()))
 				.map(ProcedureBo::new).collect(Collectors.toList()));
 		oesBo.setInstitutionName(getInstitutionFromDocument(oesBo.getDocument()));
-		if (featureFlagsService.isOn(AppFeature.HABILITAR_FIRMA_CONJUNTA))
-			oesBo.setElectronicJointSignatureProfessionals(fetchElectronicJointSignatureProfessionals(oesBo.getDocument().getId()));
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_FIRMA_CONJUNTA)) {
+            Optional.ofNullable(oesBo.getDocument())
+                    .map(DocumentDataBo::getId)
+                    .ifPresentOrElse(documentId -> oesBo.setElectronicJointSignatureProfessionals(this.fetchElectronicJointSignatureProfessionals(documentId)),
+                            () -> log.debug("No document present associated with this evolution summary from consultation id {}", oesBo.getConsultationID()));
+        }
 		result.add(oesBo);
 	}
 
