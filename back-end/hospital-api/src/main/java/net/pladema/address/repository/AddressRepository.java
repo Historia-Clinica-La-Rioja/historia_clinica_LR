@@ -3,6 +3,7 @@ package net.pladema.address.repository;
 import net.pladema.address.controller.service.domain.AddressBo;
 import net.pladema.address.repository.domain.AddressVo;
 import net.pladema.address.repository.entity.Address;
+import net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddress.domain.GetSanitaryResponsibilityAreaInstitutionAddressBo;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.GlobalCoordinatesBo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -59,5 +60,16 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 			"JOIN Address a ON (a.id = i.addressId) " +
 			"WHERE i.id = :institutionId")
 	GlobalCoordinatesBo fetchInstitutionGlobalCoordinates(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddress.domain.GetSanitaryResponsibilityAreaInstitutionAddressBo(p.id, p.description, " +
+			"d.id, d.description, c.id, c.description, a.street, a.number) " +
+			"FROM Address a " +
+			"JOIN Institution i ON (i.addressId = a.id) " +
+			"LEFT JOIN City c ON (c.id = a.cityId) " +
+			"LEFT JOIN Department d ON (d.id = c.departmentId) " +
+			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
+			"WHERE i.id = :institutionId")
+	GetSanitaryResponsibilityAreaInstitutionAddressBo fetchGetSanitaryResponsibilityAreaInstitutionAddressPort(@Param("institutionId") Integer institutionId);
 
 }

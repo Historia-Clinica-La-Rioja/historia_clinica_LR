@@ -2042,6 +2042,14 @@ export interface GeneratedApiKeyDto {
 export interface GenericMasterDataDto<T> extends AbstractMasterdataDto<T> {
 }
 
+export interface GetSanitaryResponsibilityAreaInstitutionAddressDto {
+    city: MasterDataDto;
+    department: MasterDataDto;
+    houseNumber: string;
+    state: MasterDataDto;
+    streetName: string;
+}
+
 export interface GlobalCoordinatesDto {
     latitude: number;
     longitude: number;
