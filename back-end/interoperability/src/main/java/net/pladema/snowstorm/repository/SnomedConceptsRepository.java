@@ -39,20 +39,17 @@ public class SnomedConceptsRepository {
 
     private List<SnomedSearchItemVo> searchConcepts(String term, String ecl, String groupDescription) {
         String sqlString =
-                "SELECT DISTINCT s.id, s.sctid, s.pt " +
-                    ", ts_rank(to_tsvector('spanish', s.pt), plainto_tsquery('spanish', :term), 2) as rank " +
+                "SELECT s.id, s.sctid, s.pt " +
+                    ", ts_rank( to_tsvector('spanish', s.pt), plainto_tsquery('spanish', :term), 2 ) as rank " +
 						// the parameter '2' makes the ts_rank function divide the rank by the document length
 						// there are other modes documented in PostgreSQL's doc "Controlling Text Search"
                 "FROM Snomed s " +
                 "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
                 "JOIN SnomedGroup sg ON (srg.groupId = sg.id)  " +
-				"LEFT JOIN SnomedSynonym ss ON (ss.pk.mainConceptId = s.id) " +
-				"LEFT JOIN Snomed synon ON (synon.id = ss.pk.synonymId) " +
-                "WHERE (fts(s.pt, :term) = true OR fts(synon.pt, :term) = true) " +
-                "AND sg.ecl = :ecl " +
-				"AND sg.description = :groupDescription " +
-                "AND srg.lastUpdate >= sg.lastUpdate " +
-				"AND s.synonym IS FALSE " +
+                "WHERE fts(s.pt, :term ) = true " +
+                    "AND (sg.ecl = :ecl ) " +
+					"AND (sg.description = :groupDescription ) " +
+                    "AND (srg.lastUpdate >= sg.lastUpdate ) " +
                 "ORDER BY rank DESC "
         ;
 
@@ -70,23 +67,26 @@ public class SnomedConceptsRepository {
 				.map(o -> new SnomedSearchItemVo((Integer) o[0], (String) o[1], (String) o[2]))
 				.collect(Collectors.toList());
 
-        return result;
+		List<Integer> conceptIds = result.stream().map(item -> item.getSnomedId()).collect(Collectors.toList());
+
+		List<SnomedSearchItemVo> synonyms = getConceptsSynonyms(conceptIds);
+
+		result.addAll(synonyms);
+
+        return result.stream().distinct().collect(Collectors.toList());
     }
 
     private Long getTotalResultCount(String term, String ecl, String groupDescription) {
 
         String sqlString =
-                "SELECT COUNT(DISTINCT s.id) " +
+                "SELECT COUNT(s.id) " +
                 "FROM Snomed s " +
                 "JOIN SnomedRelatedGroup srg ON (s.id = srg.snomedId) " +
                 "JOIN SnomedGroup sg ON (srg.groupId = sg.id)  " +
-				"LEFT JOIN SnomedSynonym ss ON (ss.pk.mainConceptId = s.id) " +
-				"LEFT JOIN Snomed synon ON (synon.id = ss.pk.synonymId) " +
-                "WHERE (fts(s.pt, :term) = true OR fts(synon.pt, :term) = true) " +
-				"AND sg.ecl = :ecl " +
-				"AND sg.description = :groupDescription " +
-                "AND srg.lastUpdate >= sg.lastUpdate " +
-				"AND s.synonym IS FALSE "
+                "WHERE fts(s.pt, :term ) = true " +
+					"AND (sg.ecl = :ecl ) " +
+					"AND (sg.description = :groupDescription ) " +
+                    "AND (srg.lastUpdate >= sg.lastUpdate ) "
                 ;
 
         Query query = entityManager.createQuery(sqlString)
@@ -95,10 +95,32 @@ public class SnomedConceptsRepository {
                 .setParameter("term", term)
                 ;
 
-        Long queryResult = (Long) query.getSingleResult();
+        List<Object> queryResult = query.getResultList();
 
-        return queryResult;
+        return (Long) queryResult.get(0);
 
     }
+	
+	private List<SnomedSearchItemVo> getConceptsSynonyms(List<Integer> conceptIds){
+		String sqlString = 
+				"SELECT s.id, s.sctid, s.pt " +
+				"FROM Snomed s " +
+				"JOIN SnomedSynonym ss ON (s.id = ss.pk.synonymId OR s.id = ss.pk.mainConceptId) " +
+				"WHERE (ss.pk.mainConceptId IN (:conceptIds) and s.synonym = true) " +
+				"OR (ss.pk.synonymId IN (:conceptIds) AND s.synonym = false) " +
+				"GROUP BY s.id"
+				;
+		
+		Query query = entityManager.createQuery(sqlString)
+				.setParameter("conceptIds", conceptIds)
+				;
+
+		List<Object[]> queryResult = query.getResultList();
+
+		List<SnomedSearchItemVo> result = queryResult.stream()
+				.map(o -> new SnomedSearchItemVo((Integer) o[0], (String) o[1], (String) o[2]))
+				.collect(Collectors.toList());
+		return result;
+	} 
 
 }
