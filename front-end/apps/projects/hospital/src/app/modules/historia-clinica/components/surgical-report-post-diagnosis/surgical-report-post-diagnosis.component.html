@@ -16,7 +16,7 @@
                 <div fxLayout="column">
                     <span>{{ diagnosis.snomed.pt }}</span>
                 </div>
-                <button type="button" mat-icon-button color="warn">
+                <button type="button" mat-icon-button color="warn" (click)="deleteDiagnosis(i)">
                     <mat-icon>delete_outline</mat-icon>
                 </button>
             </div>
