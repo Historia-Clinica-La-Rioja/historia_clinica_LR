@@ -5,6 +5,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -101,9 +103,11 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final SnomedService snomedService;
 
-    @Override
-    @Transactional
-    public Integer addDiary(DiaryBo diaryToSave) {
+    private final FeatureFlagsService featureFlagsService;
+
+	@Override
+	@Transactional
+	public Integer addDiary(DiaryBo diaryToSave) {
         log.debug("Input parameters -> diaryToSave {}", diaryToSave);
 
         validateDiary(diaryToSave);
@@ -453,19 +457,33 @@ public class DiaryServiceImpl implements DiaryService {
         validateSearchCriteria(searchCriteria);
         List<CompleteDiaryBo> diaries = getActiveDiariesBySearchCriteria(institutionId, searchCriteria.getAliasOrSpecialtyName(), searchCriteria.getPracticeId());
 
-        if (mustFilterByModality)
-            filterOpeningHoursByModality(searchCriteria, diaries);
-        LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
-        for (CompleteDiaryBo diary : diaries)
-            emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary, currentDateTime);
-        emptyAppointments.sort(Comparator.comparing(EmptyAppointmentBo::getDate).thenComparing(EmptyAppointmentBo::getHour));
-        log.debug(OUTPUT, emptyAppointments);
+		if (mustFilterByModality && featureFlagsService.isOn(AppFeature.HABILITAR_TELEMEDICINA)) {
+            this.filterAllDiariesByModality(searchCriteria, diaries);
+		}
+
+		LocalDateTime currentDateTime = dateTimeProvider.nowDateTimeWithZone(institutionExternalService.getTimezone(institutionId));
+		for (CompleteDiaryBo diary: diaries)
+			emptyAppointments = getEmptyAppointmentBos(searchCriteria, emptyAppointments, diary, currentDateTime);
+		emptyAppointments.sort(Comparator.comparing(EmptyAppointmentBo::getDate).thenComparing(EmptyAppointmentBo::getHour));
+		log.debug(OUTPUT, emptyAppointments);
         return emptyAppointments;
     }
 
-    private void filterOpeningHoursByModality(AppointmentSearchBo searchCriteria, List<CompleteDiaryBo> diariesBySpecialty) {
-        diariesBySpecialty.forEach(diary -> diary.setDiaryOpeningHours(diary.getDiaryOpeningHours().stream().filter(openingHours -> (searchCriteria.getModality().equals(EAppointmentModality.ON_SITE_ATTENTION) && openingHours.getOnSiteAttentionAllowed()) ||
-                (searchCriteria.getModality().equals(EAppointmentModality.PATIENT_VIRTUAL_ATTENTION) && openingHours.getPatientVirtualAttentionAllowed())).collect(toList())));
+    private void filterAllDiariesByModality(AppointmentSearchBo searchCriteria, List<CompleteDiaryBo> diaries) {
+        diaries.forEach(diaryBo -> this.setOpeningHoursFilteringByModality(searchCriteria, diaryBo));
+	}
+
+	private void setOpeningHoursFilteringByModality(AppointmentSearchBo searchCriteria, CompleteDiaryBo diaryBo) {
+		var openingHoursFiltered = diaryBo.getDiaryOpeningHours()
+				.stream()
+				.filter(openingHours -> this.isOnSiteOrPatientVirtualAttention(searchCriteria.getModality(), openingHours))
+				.collect(toList());
+		diaryBo.setDiaryOpeningHours(openingHoursFiltered);
+	}
+
+	private boolean isOnSiteOrPatientVirtualAttention(EAppointmentModality modality, DiaryOpeningHoursBo openingHours) {
+		return (EAppointmentModality.ON_SITE_ATTENTION.equals(modality) && openingHours.getOnSiteAttentionAllowed())
+                || (EAppointmentModality.PATIENT_VIRTUAL_ATTENTION.equals(modality) && openingHours.getPatientVirtualAttentionAllowed());
     }
 
     private List<EmptyAppointmentBo> getEmptyAppointmentBos(AppointmentSearchBo searchCriteria,
