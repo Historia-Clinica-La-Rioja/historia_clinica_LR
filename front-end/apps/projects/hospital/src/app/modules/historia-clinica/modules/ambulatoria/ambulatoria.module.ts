@@ -107,6 +107,7 @@ import { LatestStudiesComponent } from '@historia-clinica/components/emergente/p
 import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-fisico/desempeno-fisico.component';
 import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fisico/input-desempeno/input-desempeno.component';
 import { GetEdmontonComponent } from './components/cuestionarios/edmonton/get-edmonton/get-edmonton.component';
+import { GetPhysicalPerformanceComponent } from './components/cuestionarios/desempeno-fisico/get-physical-performance/get-physical-performance.component';
 
 @NgModule({
 	declarations: [
@@ -193,7 +194,8 @@ import { GetEdmontonComponent } from './components/cuestionarios/edmonton/get-ed
 		LatestStudiesComponent,
 		DesempenoFisicoComponent,
 		InputDesempenoComponent,
-  		GetEdmontonComponent
+		GetEdmontonComponent,
+		GetPhysicalPerformanceComponent
 
 	],
 	imports: [
