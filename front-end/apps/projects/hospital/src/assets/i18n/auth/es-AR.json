@@ -124,7 +124,8 @@
 				"ABORDAJE_VIOLENCIAS": "Abordaje violencias",
 				"AUDITORIA_DE_ACCESO": "Auditoria de Acceso",
 				"GESTOR_CENTRO_LLAMADO":  "Gestor de centro de llamado",
-				"ADMINISTRADOR_DE_DATOS_PERSONALES": "Administrador de datos personales"
+				"ADMINISTRADOR_DE_DATOS_PERSONALES": "Administrador de datos personales",
+				"API_REPORTES": "API Reportes"
 			}
 		}
 	}
