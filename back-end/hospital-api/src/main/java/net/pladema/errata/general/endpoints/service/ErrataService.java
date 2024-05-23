@@ -29,7 +29,7 @@ public class ErrataService {
 			throw new RuntimeException("An errata already exists for the document with the ID " + requestDTO.getDocumentId());
 		}
 
-		boolean isAuthorized = customDocumentRepository.existsByIdAndCreatedByOrUpdatedBy(Long.valueOf(requestDTO.getDocumentId()), requestDTO.getHealthcareProfessionalId(), requestDTO.getHealthcareProfessionalId());
+		boolean isAuthorized = customDocumentRepository.existsByIdAndCreatedByOrUpdatedBy(Long.valueOf(requestDTO.getDocumentId()), requestDTO.getUserId(), requestDTO.getUserId());
 		if (!isAuthorized) {
 			throw new RuntimeException("You are not authorized to create an errata for document with ID " + requestDTO.getDocumentId());
 		}
