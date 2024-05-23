@@ -38,25 +38,21 @@ export class GetPhysicalPerformanceComponent implements OnInit {
   }
 
   getLastPhysicalQuestionnaireId(): void {
-    console.log("TRAEEE: ", this.physicalQuestionnaires);
     // Filter "edmonton" questionnaires
     const physicalQuestionnaires = this.physicalQuestionnaires.filter(
       (questionnaire) => questionnaire.questionnaireTypeId === 4
     );
 
-    console.log("Trae? Okk?", physicalQuestionnaires);
 
     // Sort by creation date
     physicalQuestionnaires.sort((a, b) => {
       return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
     });
 
-    console.log("Trae ordenados? Okk?", physicalQuestionnaires);
 
     // Get the latest ID
     if (physicalQuestionnaires.length > 0) {
       this.lastPhysicalQuestionnaireId = physicalQuestionnaires[0].id;
-      console.log("Trae ID? Okk? ", this.lastPhysicalQuestionnaireId);
     } else {
       console.warn('No frail questionnaires found for this patient')
     }
