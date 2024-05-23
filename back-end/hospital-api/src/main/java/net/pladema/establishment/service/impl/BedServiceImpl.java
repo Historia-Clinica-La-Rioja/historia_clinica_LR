@@ -1,12 +1,8 @@
 package net.pladema.establishment.service.impl;
 
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -115,7 +111,7 @@ public class BedServiceImpl implements BedService {
 		}
 
 		var result = patientBedRelocations.stream()
-				.filter(historicPatientBedRelocation -> this.isAfter(requestDateTime, historicPatientBedRelocation.getRelocationDate()))
+				.filter(historicPatientBedRelocation -> requestDateTime.isAfter(historicPatientBedRelocation.getRelocationDate()))
 				.findFirst()
 				.or(() -> {
                     Integer firstBedId = patientBedRelocations.get(patientBedRelocations.size() - 1).getOriginBedId();
@@ -124,12 +120,6 @@ public class BedServiceImpl implements BedService {
 
 		log.debug(OUTPUT, result);
 		return result;
-	}
-
-	private boolean isAfter(LocalDateTime requestDateTime, LocalDateTime bedRelocationDateTime) {
-		ZonedDateTime zonedDateTime = bedRelocationDateTime.atZone(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-		var parsedRelocationDateTime = LocalDateTime.from(zonedDateTime.withZoneSameInstant(ZoneOffset.UTC));
-		return requestDateTime.isAfter(parsedRelocationDateTime);
 	}
 
 	@Override
