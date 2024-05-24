@@ -390,24 +390,28 @@ export class SearchComponent implements OnInit {
 	}
 
 	private callRenaperService(): void {
-		this.personService.getRenaperPersonData({
-			identificationNumber: this.identificationNumber,
-			genderId: this.genderId
-		})
-			.pipe(finalize(() => this.isLoading = false))
-			.subscribe(
-				personData => {
-					if (personData && Object.keys(personData).length !== 0) {
-						const personToAdd = this.mapToPerson(personData);
-						personToAdd.identificationTypeId = this.identificationTypeId;
-						personToAdd.identificationNumber = this.identificationNumber;
-						personToAdd.genderId = this.genderId;
-						personToAdd.typeId = PATIENT_TYPE.VALID;
-						this.goToAddPatient(personToAdd);
-					}
-				}, () => {
-					this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
-				});
+		if(this.identificationNumber && this.identificationTypeId && this.genderId){
+			this.personService.getRenaperPersonData({
+				identificationNumber: this.identificationNumber,
+				genderId: this.genderId
+			})
+				.pipe(finalize(() => this.isLoading = false))
+				.subscribe(
+					personData => {
+						if (personData && Object.keys(personData).length !== 0) {
+							const personToAdd = this.mapToPerson(personData);
+							personToAdd.identificationTypeId = this.identificationTypeId;
+							personToAdd.identificationNumber = this.identificationNumber;
+							personToAdd.genderId = this.genderId;
+							personToAdd.typeId = PATIENT_TYPE.VALID;
+							this.goToAddPatient(personToAdd);
+						}
+					}, () => {
+						this.snackBarService.showError('pacientes.search.RENAPER_TIMEOUT');
+					});
+		}else {
+			this.isLoading = false;
+		}
 	}
 
 }
