@@ -2,6 +2,11 @@ package net.pladema.questionnaires.general.getall.controller;
 
 import java.util.List;
 
+import net.pladema.person.repository.entity.Person;
+import net.pladema.questionnaires.common.domain.service.QuestionnaireUtilsService;
+
+import net.pladema.staff.repository.entity.HealthcareProfessional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +33,13 @@ public class GetAllController {
 	@Autowired
 	private final GetAllService getAllService;
 
-    public GetAllController(GetAllService getAllService) {
+	@Autowired
+	private final QuestionnaireUtilsService utilsService;
+
+    public GetAllController(GetAllService getAllService, QuestionnaireUtilsService utilsService) {
         this.getAllService = getAllService;
-    }
+		this.utilsService = utilsService;
+	}
 
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO_ADULTO_MAYOR, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	@GetMapping("institution/{institutionId}/patient/{patientId}/all-questionnaire-responses")
@@ -43,14 +52,20 @@ public class GetAllController {
 
 			for (QuestionnaireResponse response : responses) {
 
-				Integer createdByHealthcareProfessionalId = response.getCreatedBy();
-				Integer updatedByHealthcareProfessionalId = response.getUpdatedBy();
+				Person createdByPerson = utilsService.getPersonByUserId(response.getCreatedBy());
+				Person updatedByPerson = utilsService.getPersonByUserId(response.getUpdatedBy());
 
-				String createdByHealthcareProfessionalFullName = getAllService.getFullNameByHealthcareProfessionalId(createdByHealthcareProfessionalId);
-				String updatedByHealthcareProfessionalFullName = getAllService.getFullNameByHealthcareProfessionalId(updatedByHealthcareProfessionalId);
+				HealthcareProfessional createdByProfessional = utilsService.getHealthcareProfessionalByUserId(response.getCreatedBy());
+				HealthcareProfessional updatedByProfessional = utilsService.getHealthcareProfessionalByUserId(response.getUpdatedBy());
+
+				String createdByHealthcareProfessionalFullName = utilsService.fullNameFromPerson(createdByPerson);
+				String updatedByHealthcareProfessionalFullName = utilsService.fullNameFromPerson(updatedByPerson);
 
 				response.setCreatedByFullName(createdByHealthcareProfessionalFullName);
 				response.setUpdatedByFullName(updatedByHealthcareProfessionalFullName);
+
+				response.setCreatedByLicenseNumber(createdByProfessional.getLicenseNumber());
+				response.setUpdatedByLicenseNumber(updatedByProfessional.getLicenseNumber());
 			}
 			return new ResponseEntity<>(responses, HttpStatus.OK);
 		} catch (Exception e) {

@@ -109,20 +109,4 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 		}
 	}
 
-	public String getCreatedByLicenseNumber() {
-		if (createdByHealthcareProfessional != null) {
-			return createdByHealthcareProfessional.getLicenseNumber();
-		} else  {
-			return null;
-		}
-	}
-
-	public String getUpdatedByLicenseNumber() {
-		if (updatedByHealthcareProfessional != null) {
-			return updatedByHealthcareProfessional.getLicenseNumber();
-		} else  {
-			return null;
-		}
-	}
-
 }

@@ -44,17 +44,4 @@ public class GetAllService {
 		return questionnaireResponseRepository.findResponsesWithCreatedByDetails(patientId, sort);
 	}
 
-	public String getFullNameByHealthcareProfessionalId(Integer healthcareProfessionalId) {
-
-		HealthcareProfessional healthcareProfessional = healthcareProfessionalRepository.findById(healthcareProfessionalId)
-				.orElseThrow(() -> new NotFoundException("HealthcareProfessional not found"));
-
-		Integer personId = healthcareProfessional.getPersonId();
-
-		Person person = personRepository.findById(personId)
-				.orElseThrow(() -> new NotFoundException("Person not found"));
-
-		return utilsService.fullNameFromPerson(person);
-	}
-
 }
