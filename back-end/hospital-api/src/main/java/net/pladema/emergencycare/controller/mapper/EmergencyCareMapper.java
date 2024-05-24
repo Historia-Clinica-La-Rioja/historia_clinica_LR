@@ -1,5 +1,7 @@
 package net.pladema.emergencycare.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.SnomedMapper;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.controller.dto.*;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
 import net.pladema.emergencycare.infrastructure.input.dto.EmergencyCareEpisodeFilterDto;
@@ -22,7 +24,8 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, MasterDataMapper.class, LocalDateMapper.class, DoctorsOfficeMapper.class})
+@Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, SnomedMapper.class, MasterDataMapper.class,
+		LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class, OutpatientConsultationMapper.class})
 public interface EmergencyCareMapper {
 
     @Named("toResponseEmergencyCareDto")
@@ -48,6 +51,7 @@ public interface EmergencyCareMapper {
     @Mapping(target = "triage.id", source = "triageCategoryId")
     @Mapping(target = "triage.name", source = "triageName")
     @Mapping(target = "triage.color", source = "triageColorCode")
+	@Mapping(target = "triage.reasons", source = "triage.reasons")
     EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
 
     @Named("toListEmergencyCareListDto")

@@ -1,4 +1,4 @@
-package net.pladema.emergencycare.triage.repository.entity;
+package net.pladema.emergencycare.triage.infrastructure.output.entity;
 
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import lombok.AllArgsConstructor;

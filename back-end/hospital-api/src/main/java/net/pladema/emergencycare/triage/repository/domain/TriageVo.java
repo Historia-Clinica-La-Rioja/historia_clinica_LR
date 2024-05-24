@@ -3,7 +3,7 @@ package net.pladema.emergencycare.triage.repository.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.emergencycare.triage.repository.entity.Triage;
+import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 import net.pladema.emergencycare.triage.repository.entity.TriageDetails;
 
 import java.time.LocalDateTime;

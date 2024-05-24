@@ -1607,6 +1607,7 @@ export interface EmergencyCareEpisodeListTriageDto {
     color: string;
     id: number;
     name: string;
+    reasons: OutpatientReasonDto[];
 }
 
 export interface EmergencyCareEpisodeNotificationDto {

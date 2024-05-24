@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
+import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 import net.pladema.emergencycare.triage.repository.domain.TriageVo;
 
 import java.time.LocalDateTime;
@@ -83,6 +84,14 @@ public class TriageBo implements IDocumentBo {
         this.riskFactorIds = triageVo.getRiskFactorIds();
 		this.encounterId = triageVo.getEmergencyCareEpisodeId();
     }
+
+	public TriageBo(Triage triage){
+		this.triageId = triage.getId();
+		this.emergencyCareEpisodeId = triage.getEmergencyCareEpisodeId();
+		this.notes = triage.getNotes();
+		this.categoryId = triage.getTriageCategoryId();
+		this.doctorsOfficeId = triage.getDoctorsOfficeId();
+	}
 
     public boolean isAdultGynecological() {
         return EEmergencyCareType.ADULTO.getId().equals(emergencyCareTypeId) ||
