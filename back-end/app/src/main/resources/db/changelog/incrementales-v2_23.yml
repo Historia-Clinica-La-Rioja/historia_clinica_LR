@@ -178,4 +178,11 @@ databaseChangeLog:
                     sql: |-
                         CREATE INDEX IF NOT EXISTS "IDX_historic_appointment_state_appointment_state_id" ON historic_appointment_state(appointment_state_id);
 
-
+    - changeSet:
+        id: update-document_file-deleted-documents
+        context: "!schema-only"
+        author: fsimaro
+        changes:
+          - sql:
+              sql: |-
+                UPDATE document_file SET deleted = TRUE, deleted_on = NOW(), deleted_by = -1 WHERE id IN (SELECT id FROM document WHERE deleted IS TRUE );

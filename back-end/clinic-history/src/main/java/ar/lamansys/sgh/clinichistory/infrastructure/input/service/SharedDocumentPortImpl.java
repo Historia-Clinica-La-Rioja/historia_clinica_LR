@@ -35,6 +35,7 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 	public void deleteDocument(Long documentId, String newDocumentStatus) {
 		log.debug("Input parameter documentId {}, newDocumentStatus {}", documentId, newDocumentStatus);
 		documentService.deleteById(documentId, newDocumentStatus);
+		documentFileStorage.deleteById(documentId);
 	}
 
 	@Override
