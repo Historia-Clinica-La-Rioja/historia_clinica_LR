@@ -4353,6 +4353,14 @@ export interface RuleDto {
     snomedId: number;
 }
 
+export interface SaveInstitutionAddressDto {
+    cityId: number;
+    departmentId: number;
+    houseNumber: string;
+    stateId: number;
+    streetName: string;
+}
+
 export interface SavedBookingAppointmentDto {
     appointmentId: number;
     bookingPersonId: number;

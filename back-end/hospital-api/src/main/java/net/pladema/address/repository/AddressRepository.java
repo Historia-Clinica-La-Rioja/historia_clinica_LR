@@ -6,6 +6,7 @@ import net.pladema.address.repository.entity.Address;
 import net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddress.domain.GetSanitaryResponsibilityAreaInstitutionAddressBo;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.GlobalCoordinatesBo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -71,5 +72,15 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
 			"WHERE i.id = :institutionId")
 	GetSanitaryResponsibilityAreaInstitutionAddressBo fetchGetSanitaryResponsibilityAreaInstitutionAddressPort(@Param("institutionId") Integer institutionId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Address a " +
+			"SET a.provinceId = :stateId, a.departmentId = :departmentId, a.cityId = :cityId, a.street = :streetName, a.number = :houseNumber " +
+			"WHERE a.id = (SELECT i.addressId " +
+			"FROM Institution i " +
+			"WHERE i.id = :institutionId)")
+	void saveInstitutionAddress(@Param("institutionId") Integer institutionId, @Param("stateId") Short stateId, @Param("departmentId") Short departmentId,
+								@Param("cityId") Integer cityId, @Param("streetName") String streetName, @Param("houseNumber") String houseNumber);
 
 }
