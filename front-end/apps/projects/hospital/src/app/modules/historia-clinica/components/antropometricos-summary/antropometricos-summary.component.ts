@@ -24,6 +24,7 @@ export class AntropometricosSummaryComponent implements OnInit, OnDestroy {
 	details: DetailBoxExtended[] = [];
 	readonly antropometricosSummary = ANTROPOMETRICOS;
 	subscriptionAnthropometricData: Subscription;
+	patientId: number;
 
 	private readonly LABELS = {
 		height: 'Talla (cm)',
@@ -44,7 +45,8 @@ export class AntropometricosSummaryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.patientEvolutionChartService.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
+		this.patientId = Number(getParam(this.activatedRoute.snapshot, 'idPaciente'));
+		this.patientEvolutionChartService.patientId = this.patientId;
 		this.subscriptionAnthropometricData = this.anthropometricDataList$.subscribe(list => {
 			this.updateAnthropometricData(list);
 			this.patientEvolutionChartService.updateButtonEnablementByPatientInfo();
@@ -56,7 +58,8 @@ export class AntropometricosSummaryComponent implements OnInit, OnDestroy {
 			disableClose: true,
 			width: '25%',
 			data: {
-				internmentEpisodeId: this.internmentEpisodeId
+				internmentEpisodeId: this.internmentEpisodeId,
+				patientId : this.patientId
 			}
 		});
 
