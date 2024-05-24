@@ -5,6 +5,8 @@ import java.util.List;
 import net.pladema.person.repository.entity.Person;
 import net.pladema.questionnaires.common.domain.service.QuestionnaireUtilsService;
 
+import net.pladema.staff.repository.entity.HealthcareProfessional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +55,17 @@ public class GetAllController {
 				Person createdByPerson = utilsService.getPersonByUserId(response.getCreatedBy());
 				Person updatedByPerson = utilsService.getPersonByUserId(response.getUpdatedBy());
 
+				HealthcareProfessional createdByProfessional = utilsService.getHealthcareProfessionalByUserId(response.getCreatedBy());
+				HealthcareProfessional updatedByProfessional = utilsService.getHealthcareProfessionalByUserId(response.getUpdatedBy());
+
 				String createdByHealthcareProfessionalFullName = utilsService.fullNameFromPerson(createdByPerson);
 				String updatedByHealthcareProfessionalFullName = utilsService.fullNameFromPerson(updatedByPerson);
 
 				response.setCreatedByFullName(createdByHealthcareProfessionalFullName);
 				response.setUpdatedByFullName(updatedByHealthcareProfessionalFullName);
+
+				response.setCreatedByLicenseNumber(createdByProfessional.getLicenseNumber());
+				response.setUpdatedByLicenseNumber(updatedByProfessional.getLicenseNumber());
 			}
 			return new ResponseEntity<>(responses, HttpStatus.OK);
 		} catch (Exception e) {
