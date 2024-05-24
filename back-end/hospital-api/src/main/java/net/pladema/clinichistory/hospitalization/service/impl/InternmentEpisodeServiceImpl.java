@@ -484,7 +484,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 		InstitutionBo institutionBo = institutionService.get(institutionId);
 		EpisodeDocumentTypeBo episodeDocumentTypeBo = fetchEpisodeDocumentTypeById.run(consentId);
-		Map<String, Object> context = createContext(mapToBasicDataPersonDto(pe),
+		Map<String, Object> context = createContext(
+				mapToBasicDataPersonDto(pe),
 				isbo.getDoctor(),
 				institutionBo.getName(),
 				LocalDateTime.from(internmentEpisode.getEntryDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3"))),
@@ -532,6 +533,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		ctx.put("subtitle", consentId.equals((int) SURGICAL_CONSENT) ? SURGICAL : ADMISSION);
 		ctx.put("procedures", procedures);
 		ctx.put("observations", observations);
+		ctx.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		return ctx;
 	}
 
