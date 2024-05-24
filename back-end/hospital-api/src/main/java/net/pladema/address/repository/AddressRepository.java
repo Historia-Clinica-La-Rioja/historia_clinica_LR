@@ -83,4 +83,13 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 	void saveInstitutionAddress(@Param("institutionId") Integer institutionId, @Param("stateId") Short stateId, @Param("departmentId") Short departmentId,
 								@Param("cityId") Integer cityId, @Param("streetName") String streetName, @Param("houseNumber") String houseNumber);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE Address a " +
+			"SET a.latitude = :latitude, a.longitude = :longitude " +
+			"WHERE a.id = (SELECT i.addressId " +
+			"FROM Institution i " +
+			"WHERE i.id = :institutionId)")
+	void saveInstitutionGlobalCoordinates(@Param("institutionId") Integer institutionId, @Param("latitude") Double latitude, @Param("longitude") Double longitude);
+
 }

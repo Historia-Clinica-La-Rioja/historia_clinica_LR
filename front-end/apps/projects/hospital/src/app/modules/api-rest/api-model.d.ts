@@ -4361,6 +4361,11 @@ export interface SaveInstitutionAddressDto {
     streetName: string;
 }
 
+export interface SaveInstitutionGlobalCoordinatesDto {
+    latitude: number;
+    longitude: number;
+}
+
 export interface SavedBookingAppointmentDto {
     appointmentId: number;
     bookingPersonId: number;
