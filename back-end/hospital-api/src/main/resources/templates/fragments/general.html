@@ -213,7 +213,7 @@
                     </div>
                 </div>
                 <div style="clear: both; margin-bottom: 10px;">
-                    <div class="row-content">
+                    <div style="overflow-wrap: break-word; width: 40%" class="row-content">
                         <div class="data-title">Cobertura</div>
                         <div class="data-text" th:if="${patientCoverage != null}" th:text="${patientCoverage.medicalCoverage.name}"></div>
                         <div class="data-text" th:unless="${patientCoverage != null}">Sin información</div>
