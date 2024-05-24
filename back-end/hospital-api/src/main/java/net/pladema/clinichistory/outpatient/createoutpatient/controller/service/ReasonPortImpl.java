@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,5 +31,14 @@ public class ReasonPortImpl implements ReasonPort {
 	@Override
 	public Optional<ReasonBo> getByReasonId(String reasonId) {
 		return reasonExternalService.getByReasonId(reasonId).map(dto -> snomedMapper.toReasonBo(dto.getSnomed()));
+	}
+
+	@Override
+	public List<ReasonBo> saveReasons(List<ReasonBo> reasonsBo) {
+		List<ReasonDto> reasonsDto = reasonsBo.stream()
+				.map(r -> new ReasonDto(new SnomedDto(r.getSnomed().getSctid(), r.getPt())))
+				.collect(Collectors.toList());
+		reasonExternalService.addReasons(reasonsDto);
+		return reasonsBo;
 	}
 }

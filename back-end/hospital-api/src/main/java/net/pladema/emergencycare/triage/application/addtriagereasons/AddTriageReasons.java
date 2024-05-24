@@ -9,12 +9,13 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientR
 
 
 import net.pladema.emergencycare.triage.application.ports.TriageReasonStorage;
-import net.pladema.emergencycare.triage.infrastructure.output.entity.TriageReason;
+import net.pladema.emergencycare.triage.domain.TriageReasonBo;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -24,22 +25,16 @@ public class AddTriageReasons {
 	private final ReasonPort reasonPort;
 	private final TriageReasonStorage triageReasonStorage;
 
+	@Transactional
 	public List<ReasonBo> run(Integer triageId, List<ReasonBo> reasons){
 		log.debug("Input parameters -> triageId {}, reasons {}", triageId, reasons);
-		reasons.stream()
-				.map(reasonPort::saveReason)
-				.forEach(r -> saveTriageReason(r, triageId));
+		reasonPort.saveReasons(reasons);
+		triageReasonStorage.saveTriageReasons(reasons.stream()
+						.map(r -> new TriageReasonBo(triageId, r.getSctid()))
+						.collect(Collectors.toList())
+		);
 		log.debug("Output -> {}", reasons);
 		return reasons;
 	}
 
-	private TriageReason saveTriageReason(ReasonBo reason, Integer triageId) {
-		log.debug("Input parameters -> triageId {}, reason {}", triageId, reason);
-		Objects.requireNonNull(reason);
-		TriageReason result = triageReasonStorage.saveTriageReason(
-				new TriageReason(triageId,reason.getSctid())
-		);
-		log.debug("Output -> {}", result);
-		return result;
-	}
 }

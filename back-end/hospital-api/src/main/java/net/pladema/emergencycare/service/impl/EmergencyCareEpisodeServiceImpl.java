@@ -142,7 +142,9 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 
 	@Override
     public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId) {
-        return createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative, null);
+		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative, null);
+		triageService.addTriageReasons(emergencyCareBo.getTriage().getReasons(), emergencyCareBo.getTriage().getTriageId());
+		return emergencyCareBo;
     }
 
     @Override

@@ -2,7 +2,7 @@ package net.pladema.emergencycare.triage.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.triage.application.ports.TriageStorage;
-import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 
 import net.pladema.emergencycare.triage.infrastructure.output.repository.TriageRepository;
 
@@ -17,8 +17,9 @@ public class TriageStorageImpl implements TriageStorage {
 	private final TriageRepository triageRepository;
 
 	@Override
-	public Optional<Triage> getLatestByEmergencyCareEpisodeId(Integer emergencyCareEpisodeId) {
+	public Optional<TriageBo> getLatestByEmergencyCareEpisodeId(Integer emergencyCareEpisodeId) {
 		return triageRepository.findAllByEmergencyCareEpisodeIdOrderByIdDesc(emergencyCareEpisodeId)
-				.stream().findFirst();
+				.stream().findFirst()
+				.map(TriageBo::new);
 	}
 }

@@ -24,7 +24,7 @@ public class FetchTriageReasons {
 	public List<ReasonBo> run(Integer triageId){
 		log.debug("Input parameters -> triageId {} ", triageId);
 		List<ReasonBo> result = triageReasonStorage.getAllByTriageId(triageId)
-				.stream().map(tr -> reasonPort.getByReasonId(tr.getPk().getReasonId()).orElse(null))
+				.stream().map(tr -> reasonPort.getByReasonId(tr.getReasonId()).orElse(null))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);

@@ -112,7 +112,9 @@ public class TriageServiceImpl implements TriageService {
 
     @Override
     public TriageBo createAdministrative(TriageBo triageBo, Integer institutionId) {
-        return persistTriage(triageBo, institutionId, getAdministrativeConsumer());
+		TriageBo result = persistTriage(triageBo, institutionId, getAdministrativeConsumer());
+		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		return result;
     }
 
     @Override

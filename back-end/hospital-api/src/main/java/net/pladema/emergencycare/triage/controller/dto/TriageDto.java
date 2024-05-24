@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientReasonDto;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @ToString
@@ -19,4 +21,6 @@ public abstract class TriageDto implements Serializable {
     @Nullable
     Integer doctorsOfficeId;
 
+	@Nullable
+	List<OutpatientReasonDto> reasons;
 }

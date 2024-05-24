@@ -4848,6 +4848,7 @@ export interface TriageDocumentDto {
 export interface TriageDto extends Serializable {
     categoryId: number;
     doctorsOfficeId?: number;
+    reasons?: OutpatientReasonDto[];
 }
 
 export interface TriageListDto extends Serializable {
@@ -4866,7 +4867,6 @@ export interface TriageListDto extends Serializable {
 
 export interface TriageNoAdministrativeDto extends TriageDto {
     notes?: string;
-    reasons?: OutpatientReasonDto[];
 }
 
 export interface TriagePediatricDto extends TriageNoAdministrativeDto {

@@ -8,7 +8,6 @@ import net.pladema.emergencycare.triage.application.ports.TriageStorage;
 
 import net.pladema.emergencycare.triage.domain.TriageBo;
 
-import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 
 import org.springframework.stereotype.Service;
 
@@ -24,10 +23,10 @@ public class FetchLastTriageByEmergencyCareEpisodeId {
 
 	public TriageBo run(Integer emergencyCareEpisodeId){
 		log.debug("Input parameters -> emergencyCareEpisodeId {} ", emergencyCareEpisodeId);
-		Optional<Triage> triageOpt = triageStorage.getLatestByEmergencyCareEpisodeId(emergencyCareEpisodeId);
+		Optional<TriageBo> triageOpt = triageStorage.getLatestByEmergencyCareEpisodeId(emergencyCareEpisodeId);
 		TriageBo result = null;
 		if (triageOpt.isPresent()){
-			result = new TriageBo(triageOpt.get());
+			result = triageOpt.get();
 			result.setReasons(fetchTriageReasons.run(result.getTriageId()));
 		}
 		log.debug("Output -> {}", result);

@@ -1,11 +1,11 @@
 package net.pladema.emergencycare.triage.application.ports;
 
 
-import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
+import net.pladema.emergencycare.triage.domain.TriageBo;
 
 import java.util.Optional;
 
 public interface TriageStorage {
 
-	Optional<Triage> getLatestByEmergencyCareEpisodeId(Integer emergencyCareEpisodeId);
+	Optional<TriageBo> getLatestByEmergencyCareEpisodeId(Integer emergencyCareEpisodeId);
 }
