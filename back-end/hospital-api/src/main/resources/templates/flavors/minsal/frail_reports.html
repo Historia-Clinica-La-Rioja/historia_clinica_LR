@@ -166,15 +166,19 @@
         <hr></hr>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
-            <h4>Interpretación de puntaje</h4>
-            <p>La sumatoria da como resultado</p>
+            <h4>Resultado de evaluación</h4>
+            <p>
+                <span class="bold-text">El puntaje final de la prueba es: </span>
+                <span style="font-weight: normal;" th:text="${respuesta.value + ' puntos'}">[PUNTUACIÓN]</span>
+            </p>
+            <p>Que se interpreta como:</p>
             <label th:class="${respuesta.answerId == 49} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt14" th:checked="${respuesta.answerId == 49}"></input>
-                0 a 2 - persona pre-frágil
+                0 - 2: persona pre-frágil
             </label><br></br>
             <label th:class="${respuesta.answerId == 50} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt15" th:checked="${respuesta.answerId == 50}"></input>
-                3 a 5 - persona frágil
+                3 - 5: persona frágil
             </label><br></br>
         </div>
         <br></br>

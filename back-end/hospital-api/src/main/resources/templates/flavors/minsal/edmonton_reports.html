@@ -248,23 +248,27 @@
         <br></br>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[11]}">
-            <h4>Total</h4>
-            <p>El puntaje final de la prueba realizada se interpreta como:</p>
+            <h4>Resultado de evaluación</h4>
+            <p>
+                <span class="bold-text">El puntaje final de la prueba es: </span>
+                <span style="font-weight: normal;" th:text="${respuesta.value + ' puntos'}">[PUNTUACIÓN]</span>
+            </p>
+            <p>Que se interpreta como:</p>
             <label th:class="${respuesta.answerId == 21} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt29" th:checked="${respuesta.answerId == 21}"></input>
-                4 o menor: individuo sano
+                0 - 4: individuo sano
             </label><br></br>
             <label th:class="${respuesta.answerId == 22} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt30" th:checked="${respuesta.answerId == 22}"></input>
-                5 o 6: vulnerable
+                5 - 6: vulnerable
             </label><br></br>
             <label th:class="${respuesta.answerId == 23} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt31" th:checked="${respuesta.answerId == 23}"></input>
-                7 u 8: fragilidad leve
+                7 - 8: fragilidad leve
             </label><br></br>
             <label th:class="${respuesta.answerId == 24} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt32" th:checked="${respuesta.answerId == 24}"></input>
-                9 o 10: fragilidad moderada
+                9 - 10: fragilidad moderada
             </label><br></br>
             <label th:class="${respuesta.answerId == 25} ? 'bold-text' : ''">
                 <input type="checkbox" disabled="disabled" readonly="readonly" name="opt33" th:checked="${respuesta.answerId == 25}"></input>
