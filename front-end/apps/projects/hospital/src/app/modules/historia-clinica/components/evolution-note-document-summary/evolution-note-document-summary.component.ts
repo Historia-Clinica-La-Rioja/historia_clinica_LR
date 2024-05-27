@@ -9,6 +9,8 @@ import { HeaderDescription } from '@historia-clinica/utils/document-summary.mode
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, forkJoin, map } from 'rxjs';
 
+const ACTION_TRIGGERED = true;
+
 @Component({
     selector: 'app-evolution-note-document-summary',
     templateUrl: './evolution-note-document-summary.component.html',
@@ -64,13 +66,13 @@ export class EvolutionNoteDocumentSummaryComponent implements OnInit {
 					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
 					this.internmentSummaryFacadeService.updateInternmentEpisode();
 				}
+                this.resetActiveDocument.emit(ACTION_TRIGGERED);
 			}
 		);
-		this.resetActiveDocument.emit(true);
 	}
 
 	edit() {
 		this.documentActions.editDocument(this._activeDocument.document, this.internmentEpisodeId);
-		this.resetActiveDocument.emit(true);
+		this.resetActiveDocument.emit(ACTION_TRIGGERED);
 	}
 }

@@ -11,8 +11,10 @@ import { DocumentsSummaryMapperService } from './documents-summary-mapper.servic
 import { AnesthesicClinicalEvaluationData, AnthropometricData, EndOfAnesthesiaStatusData, IntrasurgicalAnestheticProceduresData, MeasuringPointData, PersonalHistoriesData, ProceduresDateTimeData, VitalSignsData } from '@historia-clinica/utils/document-summary.model';
 import { ANALGESIC_TECHNIQUE_DESCRIPTION_ITEM, ANESTHESIC_CLINICAL_EVALUATION, ANESTHETIC_AGENTS_DESCRIPTION_ITEM, ANESTHETIC_HISTORY_DESCRIPTION_ITEM, ANESTHETIC_PLAN_DESCRIPTION_ITEM, ANESTHETIC_TECHNIQUE_DESCRIPTION_ITEM, ANTIBIOTIC_PROPHYLAXIS_DESCRIPTION_ITEM, FLUID_ADMINISTRATION_DESCRIPTION_ITEM, NON_ANESTHETIC_DRUGS_DESCRIPTION_ITEM, PROPOSED_SURGERIES_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
+import { getElementAtPosition } from '@core/utils/array.utils';
 
 const INFO_DIVIDER = ' | ';
+const UNIQUE_PROCEDURE_INDEX = 0;
 
 @Injectable({
     providedIn: 'root'
@@ -306,7 +308,7 @@ export class AnestheticReportDocumentSummaryService {
 
     private mapIntermentDescriptionToDescriptionItemData(interment: boolean, internmentPlace: EInternmentPlace): DescriptionItemData[] {
         let intermentPlaceDescription = interment ? `- ${this.getInternmentPlaceDescription(internmentPlace)}` : '';
-        return [ this.documentsSummaryService.toDescriptionItemData(`${this.getProcedureValue(interment)[0].description} ${intermentPlaceDescription}`) ]
+        return [ this.documentsSummaryService.toDescriptionItemData(`${getElementAtPosition(this.getProcedureValue(interment), UNIQUE_PROCEDURE_INDEX).description} ${intermentPlaceDescription}`) ]
     }
 
     private getInternmentPlaceDescription(internmentPlace: EInternmentPlace): string {
