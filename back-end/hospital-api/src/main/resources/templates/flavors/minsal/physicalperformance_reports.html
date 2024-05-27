@@ -47,10 +47,6 @@
             font-weight: bold;
         }
 
-        .hidden-checkbox {
-            visibility: hidden;
-        }
-
     </style>
 </head>
 <body th:fragment="physicalperformance">
@@ -121,7 +117,7 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
             <p>· Párese en posición tándem: ¿mantuvo la posición al menos 10 segundos?</p>
             <label>
-                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 44}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
                 Se niega
             </label><br></br>
         </div>
@@ -140,7 +136,7 @@
             <p>En esta oportunidad, la prueba requiere medir el tiempo en segundos para la realización de la prueba de velocidad de marcha en una distancia de 4 metros.</p>
             <p>· Primera medición: tiempo requerido para recorrer la distancia. Si el participante no logra completarla, finaliza la prueba.</p>
             <label>
-                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 44}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
                 Se niega
             </label><br></br>
         </div>
@@ -155,7 +151,7 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[8]}">
             <p>· Segunda medición: tiempo requerido para recorrer la distancia.</p>
             <label>
-                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 44}"></input>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
                 Se niega
             </label><br></br>
         </div>
@@ -211,24 +207,24 @@
 
         <div class="itemcontainer" th:each="respuesta : ${answers[13]}">
             <h4>Resultado de evaluación</h4>
-            <p>El puntaje total da como resultado:</p>
-            <label th:class="${respuesta.value == 'bajo'} ? 'bold-text' : ''">
-                <input type="checkbox" disabled="disabled" readonly="readonly"
-                       th:checked="${respuesta.value == 'bajo'}"
-                       th:classappend="${respuesta.value != 'bajo'} ? 'hidden-checkbox' : ''"></input>
-                Desempeño físico bajo
+            <p>
+                <span class="bold-text">El puntaje final de la prueba es: </span>
+                <span style="font-weight: normal;" th:text="${respuesta.value + ' puntos'}">[PUNTUACIÓN]</span>
+            </p>
+            <p>Que se interpreta como:</p>
+            <label th:class="${respuesta.answerId == 52} ? 'bold-text' : ''">
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 52}"></input>
+                0 - 7: Desempeño físico bajo
             </label><br></br>
-            <label th:class="${respuesta.value == 'alto'} ? 'bold-text' : ''">
-                <input type="checkbox" disabled="disabled" readonly="readonly"
-                       th:checked="${respuesta.value == 'alto'}"
-                       th:classappend="${respuesta.value != 'alto'} ? 'hidden-checkbox' : ''"></input>
-                Desempeño físico alto
+            <label th:class="${respuesta.answerId == 53} ? 'bold-text' : ''">
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 53}"></input>
+                8 - 12: Desempeño físico alto
             </label><br></br>
         </div>
 
         <hr></hr>
 
-        <p style="text-align: right; margin-top: 3em;">2/2</p>
+        <p style="text-align: right; margin-top: 2.5em;">2/2</p>
 
     </div>
     <!-- Bootstrap's script -->
