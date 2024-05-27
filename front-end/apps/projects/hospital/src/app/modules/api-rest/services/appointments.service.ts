@@ -39,15 +39,17 @@ import { fixDate } from '@core/utils/date/format';
 })
 export class AppointmentsService {
 
-	private readonly BASE_URL: string;
+	private BASE_URL: string;
 
-	constructor(
-		private http: HttpClient,
-		private contextService: ContextService,
-		private downloadService: DownloadService
-	) {
-		this.BASE_URL = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments`;
-	}
+    constructor(
+        private http: HttpClient,
+        private contextService: ContextService,
+        private downloadService: DownloadService
+    ) {
+        this.contextService.institutionId$.subscribe(institutionId => 
+            this.BASE_URL = `${environment.apiBase}/institutions/${institutionId}/medicalConsultations/appointments`
+        )
+    }
 
 
 	create(appointment: CreateAppointmentDto): Observable<number> {
