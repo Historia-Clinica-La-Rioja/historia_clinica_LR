@@ -1,0 +1,26 @@
+{
+    "gis": {
+        "steppers": {
+            "INSTITUTION_DATA": "Datos de la institución",
+            "MAP_POSITION": "Posicionar en el mapa",
+            "RESPONSABILITY_AREA": "Área de responsabilidad"
+        },
+        "address": {
+            "INSTITUTION": "Institución:",
+            "STATE": "Provincia",
+            "DEPARTMENT": "Localidad",
+            "CITY": "Ciudad",
+            "STREET": "Calle",
+            "HOUSE_NUMBER": "Número"
+        },
+        "institution-data": {
+            "TITLE": "1. Datos de la institución",
+            "STREET_PLACEHOLDER": "Ej: Calle San Martín",
+            "HOUSE_NUMBER_PLACEHOLDER": "Ej: 813"
+        },
+        "map-position": {
+            "TITLE": "2. Posicionar en mapa",
+            "COORDINATES": "Coordenadas"
+        }
+    }
+}
