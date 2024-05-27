@@ -226,7 +226,7 @@ export class SearchComponent implements OnInit {
 				genderId: this.formSearch.controls.genderId.value ? this.formSearch.controls.genderId.value : null,
 				identificationTypeId: this.formSearch.controls.identificationTypeId.value ? this.formSearch.controls.identificationTypeId.value : null,
 				identificationNumber: this.formSearch.controls.identificationNumber.value,
-				birthDate: toApiFormat(this.formSearch.controls.birthDate.value),
+				birthDate: this.formSearch.controls.birthDate.value? toApiFormat(this.formSearch.controls.birthDate.value) : null,
 				otherLastNames: this.formSearch.controls.otherLastNames.value,
 				middleNames: this.formSearch.controls.middleNames.value,
 				typeId: PATIENT_TYPE.PERMANENT_INVALID
