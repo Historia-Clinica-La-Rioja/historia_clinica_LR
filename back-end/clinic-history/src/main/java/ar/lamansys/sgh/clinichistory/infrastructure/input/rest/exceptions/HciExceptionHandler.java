@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.exceptions;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.exceptions.FetchDocumentFileException;
+import ar.lamansys.sgh.clinichistory.application.getanthropometricgraphicdata.exceptions.GetAnthropometricGraphicDataException;
 import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileException;
 import ar.lamansys.sgh.clinichistory.application.signDocumentFile.exceptions.SignDocumentFileException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
@@ -45,6 +46,13 @@ public class HciExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ RebuildFileException.class })
 	protected ApiErrorMessageDto handleRebuildFileException(RebuildFileException ex) {
+		LOG.error("RebuildFileException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ GetAnthropometricGraphicDataException.class })
+	protected ApiErrorMessageDto handleGetAnthropometricGraphicDataException(GetAnthropometricGraphicDataException ex) {
 		LOG.error("RebuildFileException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}

@@ -1,6 +1,7 @@
 package net.pladema.patient.infrastructure.input.shared;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.*;
+import ar.lamansys.sgh.shared.infrastructure.input.service.patient.PatientGenderAgeDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.patient.enums.EAuditType;
 import net.pladema.audit.service.domain.enums.EActionType;
 import net.pladema.patient.controller.dto.APatientDto;
@@ -11,6 +12,7 @@ import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.PatientMedicalCoverageService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.HealthInsuranceBo;
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.patient.service.domain.PrivateHealthInsuranceBo;
 import net.pladema.person.controller.dto.BMPersonDto;
@@ -18,6 +20,7 @@ import net.pladema.person.controller.service.PersonExternalService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -77,6 +80,11 @@ public class SharedPatientImpl implements SharedPatientPort {
         externalPatientCoverages.stream().map(this::mapToPatientMedicalCoverage);
         patientMedicalCoverageService.saveExternalCoverages(externalPatientCoverages.stream().map(this::mapToPatientMedicalCoverage).collect(Collectors.toList()), patientId);
     }
+
+	@Override
+	public Optional<PatientGenderAgeDto> getPatientGenderAge(Integer patientId){
+		return patientService.getPatientGenderAge(patientId).map(patientMapper::toPatientGenderAgeDto);
+	}
 
 	@Override
 	public boolean isValidatedOrPermanentPatient(Short patientTypeId) {

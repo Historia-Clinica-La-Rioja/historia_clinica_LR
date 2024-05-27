@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum EAnthropometricGraphicLabel {
@@ -18,6 +20,14 @@ public enum EAnthropometricGraphicLabel {
 	EAnthropometricGraphicLabel(Number id, String value){
 		this.id = id.shortValue();
 		this.value = value;
+	}
+
+	public static List<EAnthropometricGraphicLabel> getZScoreLabels(){
+		return List.of(SD3, SD2, SD1, SD0, SD1NEGATIVE, SD2NEGATIVE, SD3NEGATIVE);
+	}
+
+	public static List<EAnthropometricGraphicLabel> getPercentilesLabels(){
+		return List.of(P97, P90, P75, P50, P25, P10, P3);
 	}
 
 }
