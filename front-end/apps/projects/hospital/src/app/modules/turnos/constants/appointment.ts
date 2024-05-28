@@ -43,7 +43,7 @@ export enum APPOINTMENT_STATES_DESCRIPTION {
 	ABSENT = 'Ausente',
 	CANCELLED = 'Cancelado',
 	SERVED = 'Atendido',
-	BOOKED = 'Turno online',
+	BOOKED = 'Reserva',
 	OUT_OF_DIARY = 'Fuera de agenda',
 	CONFIRMED_WAITING_ROOM = 'En sala'
 }
@@ -243,7 +243,7 @@ export const getAppointmentLabelColor = (appointmentStateId: number): string => 
 
 	if (appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED)
 		return Color.YELLOW;
-		
+
 	if (appointmentStateId === APPOINTMENT_STATES_ID.SERVED)
 		return Color.GREEN;
 
