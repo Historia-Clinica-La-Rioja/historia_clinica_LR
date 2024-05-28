@@ -6,7 +6,7 @@
 		</span>
 
 		<mat-form-field appearance="outline" id="procedure-templates">
-			<mat-label>Plantilla de resultados</mat-label>
+			<mat-label>{{'ambulatoria.complete-info.RESULTS_TEMPLATE' | translate}}</mat-label>
 			<mat-select (selectionChange)="onSelect($event.value, i, template.id)">
 				<mat-option *ngFor="let t of template.form" [value]="t">
 					{{ t.description }}

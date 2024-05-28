@@ -50,8 +50,7 @@ export class CompleteInfoComponent implements OnInit {
 		});
 
 		let currentFormSet = [];
-
-		this.studies.forEach((e: StudyInfo) => {
+		this.studies?.forEach((e: StudyInfo) => {
 			this.getProcedureTemplatesService(e.idDiagnostic).subscribe(
 				(procedureTemplates: any) => {
 					currentFormSet.push({
@@ -143,11 +142,13 @@ export class CompleteInfoComponent implements OnInit {
 	}
 
 	cleanProcedureParameterIds(data): AddDiagnosticReportObservationsCommandDto {
-		return data.map((item) => {
-			if (typeof item.procedureParameterId === 'string' && item.procedureParameterId.includes('_')) {
-				item.procedureParameterId = item.procedureParameterId.split('_')[0];
+		return data?.map((item) => {
+			if (item) {
+				if (typeof item.procedureParameterId === 'string' && item.procedureParameterId.includes('_')) {
+					item.procedureParameterId = item.procedureParameterId.split('_')[0];
+				}
+				return item;
 			}
-			return item;
 		});
 	}
 

@@ -1112,6 +1112,9 @@
 		},
 		"reference-request-data": {
 			"TITLE": "Datos de referencia"
+		},
+	    "complete-info": {
+		    "RESULTS_TEMPLATE": "Plantillas de resultados"
 		}
     }
 }
