@@ -6,6 +6,7 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntityRepository;
 
 import java.util.Optional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -36,4 +37,7 @@ public interface DiagnosticReportRepository extends SGXAuditableEntityJPAReposit
 			"WHERE dr.id = :id ")
 	Optional<DiagnosticReportBo> getDiagnosticReportById(@Param("id") Integer id);
 
+	@Modifying
+	@Query("UPDATE DiagnosticReport dr SET dr.statusId = :newStatus WHERE dr.id = :diagnosticReportId")
+	void updateStatus(@Param("diagnosticReportId") Integer diagnosticReportId, @Param("newStatus") String partial);
 }

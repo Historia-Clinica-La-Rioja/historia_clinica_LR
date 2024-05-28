@@ -81,4 +81,8 @@ public class ProcedureTemplate extends SGXAuditableEntity<Integer> {
 	public static List<Short> getAllStatuses() {
 		return EProcedureTemplateStatusBo.getAllStatuses().stream().map(x->x.getId()).collect(Collectors.toList());
 	}
+
+	public boolean isActive() {
+		return (this.statusId != null) && EProcedureTemplateStatusBo.map(this.statusId).isActive();
+	}
 }

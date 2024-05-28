@@ -89,6 +89,20 @@ export interface AccessDataDto {
     username: string;
 }
 
+export interface AddDiagnosticReportObservationCommandDto {
+    procedureParameterId: number;
+    snomedPt: string;
+    snomedSctid: string;
+    unitOfMeasureId: number;
+    value: string;
+}
+
+export interface AddDiagnosticReportObservationsCommandDto {
+    isPartialUpload: boolean;
+    procedureTemplateId: number;
+    values: AddDiagnosticReportObservationCommandDto[];
+}
+
 export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;
@@ -2038,6 +2052,25 @@ export interface GraphicDatasetIntersectionDto {
     y: string;
 }
 
+export interface GetDiagnosticReportObservationDto {
+    id: number;
+    procedureParameterId: number;
+    representation: Representation;
+    snomedPt: string;
+    snomedSctid: string;
+    unitOfMeasureId: number;
+    value: string;
+}
+
+export interface GetDiagnosticReportObservationGroupDto {
+    diagnosticReportId: number;
+    id: number;
+    isPartialUpload: boolean;
+    observations: GetDiagnosticReportObservationDto[];
+    procedureTemplateId: number;
+}
+
+
 export interface GroupAppointmentResponseDto {
     appointmentId: number;
     appointmentStateId: number;
@@ -3686,6 +3719,55 @@ export interface ProcedureParameterDto {
     unitsOfMeasureIds: number[];
 }
 
+export interface ProcedureParameterFullSummaryDto {
+    id: number;
+    inputCount: number;
+    loincCode: ProcedureParameterLoincCodeFullSummaryVo;
+    orderNumber: number;
+    snomedGroupDescription: string;
+    snomedGroupId: number;
+    textOptions: ProcedureParameterTextOptionFullSummaryDto[];
+    typeDescription: string;
+    typeId: number;
+    unitsOfMeasure: ProcedureParameterUnitOfMeasureFullSummaryDto[];
+}
+
+export interface ProcedureParameterLoincCodeFullSummaryDto {
+    code: string;
+    customDisplayName: string;
+    description: string;
+    displayName: string;
+    loincCodeId: number;
+    statusDescription: string;
+    statusId: number;
+    systemDescription: string;
+    systemId: number;
+}
+
+export interface ProcedureParameterLoincCodeFullSummaryVo {
+    code: string;
+    customDisplayName: string;
+    description: string;
+    displayName: string;
+    loincCodeId: number;
+    procedureParameterId: number;
+    statusDescription: string;
+    statusId: number;
+    systemDescription: string;
+    systemId: number;
+}
+
+export interface ProcedureParameterTextOptionFullSummaryDto {
+    description: string;
+    procedureTextOptionId: number;
+}
+
+export interface ProcedureParameterUnitOfMeasureFullSummaryDto {
+    code: string;
+    description: string;
+    unitOfMeasureId: number;
+}
+
 export interface ProcedureReduced {
     performedDate: Date;
     procedure: string;
@@ -3697,6 +3779,17 @@ export interface ProcedureTemplateDto {
     id: number;
     statusId: number;
     uuid: string;
+}
+
+export interface ProcedureTemplateFullSummaryDto {
+    description: string;
+    id: number;
+    parameters: ProcedureParameterFullSummaryDto[];
+}
+
+export interface ProcedureTemplateShortSummaryDto {
+    description: string;
+    id: number;
 }
 
 export interface ProfessionCompleteDto {
@@ -4111,6 +4204,11 @@ export interface RejectDocumentElectronicJointSignatureDto {
 
 export interface ReportClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: Date;
+}
+
+export interface Representation {
+    description: string;
+    value: string;
 }
 
 export interface RequiredPatientDataDto {

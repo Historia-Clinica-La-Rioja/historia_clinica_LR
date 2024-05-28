@@ -1,17 +1,13 @@
 package net.pladema.procedure.infrastructure.output.repository;
 
-import lombok.RequiredArgsConstructor;
-import net.pladema.procedure.application.port.ProcedureParameterStore;
-
-import net.pladema.procedure.domain.ProcedureParameterBo;
-
-import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameter;
-
-import net.pladema.procedure.infrastructure.output.repository.mapper.ProcedureParameterMapper;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import net.pladema.procedure.application.port.ProcedureParameterStore;
+import net.pladema.procedure.domain.ProcedureParameterBo;
+import net.pladema.procedure.infrastructure.output.repository.mapper.ProcedureParameterMapper;
 
 @Service
 @RequiredArgsConstructor

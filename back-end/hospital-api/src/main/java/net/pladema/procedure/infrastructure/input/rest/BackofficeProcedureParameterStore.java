@@ -1,17 +1,8 @@
 package net.pladema.procedure.infrastructure.input.rest;
 
-import lombok.AllArgsConstructor;
-import net.pladema.procedure.domain.ProcedureParameterVo;
-import net.pladema.procedure.infrastructure.input.rest.dto.ProcedureParameterDto;
-import net.pladema.procedure.infrastructure.output.repository.ProcedureParameterRepository;
-import net.pladema.procedure.infrastructure.output.repository.ProcedureParameterTextOptionRepository;
-import net.pladema.procedure.infrastructure.output.repository.ProcedureParameterUnitOfMeasureRepository;
-import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameter;
-import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameterTextOption;
-import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameterType;
-import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameterUnitOfMeasure;
-import net.pladema.procedure.infrastructure.output.repository.mapper.ProcedureParameterMapper;
-import net.pladema.sgx.backoffice.repository.BackofficeStore;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -20,9 +11,19 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
+import net.pladema.procedure.domain.ProcedureParameterTypeBo;
+import net.pladema.procedure.domain.ProcedureParameterVo;
+import net.pladema.procedure.infrastructure.input.rest.dto.ProcedureParameterDto;
+import net.pladema.procedure.infrastructure.output.repository.ProcedureParameterRepository;
+import net.pladema.procedure.infrastructure.output.repository.ProcedureParameterTextOptionRepository;
+import net.pladema.procedure.infrastructure.output.repository.ProcedureParameterUnitOfMeasureRepository;
+import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameter;
+import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameterTextOption;
+import net.pladema.procedure.infrastructure.output.repository.entity.ProcedureParameterUnitOfMeasure;
+import net.pladema.procedure.infrastructure.output.repository.mapper.ProcedureParameterMapper;
+import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
 @Service
 @AllArgsConstructor
@@ -86,9 +87,9 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 					procedureParameter.getOrderNumber(),
 					procedureParameter.getInputCount(),
 					procedureParameter.getSnomedGroupId());
-			if (procedureParameterVo.getTypeId().equals(ProcedureParameterType.NUMERIC))
+			if (procedureParameterVo.getTypeId().equals(ProcedureParameterTypeBo.NUMERIC))
 				procedureParameterVo.setUnitsOfMeasureIds(procedureParameterUnitOfMeasureRepository.getUnitOfMeasureFromProcedureParameterId(procedureParameterVo.getId()));
-			else if (procedureParameterVo.getTypeId().equals(ProcedureParameterType.TEXT_OPTION))
+			else if (procedureParameterVo.getTypeId().equals(ProcedureParameterTypeBo.TEXT_OPTION))
 				procedureParameterVo.setTextOptions(procedureParameterTextOptionRepository.getDescriptionsFromProcedureParameterId(procedureParameterVo.getId()));
 			return Optional.of(procedureParameterMapper.toProcedureParameterDto(procedureParameterVo));
 		}
@@ -106,22 +107,22 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 
 				procedureParameter.setInputCount(entity.getInputCount());
 
-				if (procedureParameter.getTypeId().equals(ProcedureParameterType.NUMERIC))
+				if (procedureParameter.getTypeId().equals(ProcedureParameterTypeBo.NUMERIC))
 					procedureParameterUnitOfMeasureRepository.deleteUnitOfMeasureFromProcedureParameterId(entity.getId());
 
-				if (entity.getTypeId().equals(ProcedureParameterType.NUMERIC))
+				if (entity.getTypeId().equals(ProcedureParameterTypeBo.NUMERIC))
 					for (Integer unitsOfMeasureId : entity.getUnitsOfMeasureIds())
 						procedureParameterUnitOfMeasureRepository.save(new ProcedureParameterUnitOfMeasure(entity.getId(), unitsOfMeasureId));
 
-				if (procedureParameter.getTypeId().equals(ProcedureParameterType.TEXT_OPTION)) {
-					if (entity.getTypeId().equals(ProcedureParameterType.TEXT_OPTION)) {
+				if (procedureParameter.getTypeId().equals(ProcedureParameterTypeBo.TEXT_OPTION)) {
+					if (entity.getTypeId().equals(ProcedureParameterTypeBo.TEXT_OPTION)) {
 						updateTextOptions(entity);
 					}
 					else {
 						procedureParameterTextOptionRepository.deleteTextOptionFromProcedureParameterId(entity.getId());
 					}
 				} else {
-					if (entity.getTypeId().equals(ProcedureParameterType.TEXT_OPTION)) {
+					if (entity.getTypeId().equals(ProcedureParameterTypeBo.TEXT_OPTION)) {
 						for (String textOption : entity.getTextOptions()) {
 							ProcedureParameterTextOption procedureParameterTextOption = new ProcedureParameterTextOption();
 							procedureParameterTextOption.setDescription(textOption);
@@ -140,11 +141,11 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 			if (orders.isEmpty()) entity.setOrderNumber((short) 1);
 			else entity.setOrderNumber((short) (orders.get(0) + 1));
 			ProcedureParameter entitySaved = procedureParameterRepository.save(mapDtoToEntity(entity));
-			if (entity.getTypeId().equals(ProcedureParameterType.NUMERIC))
+			if (entity.getTypeId().equals(ProcedureParameterTypeBo.NUMERIC))
 				if (entity.getUnitsOfMeasureIds().size() >= entity.getInputCount())
 					for (Integer unitsOfMeasureId : entity.getUnitsOfMeasureIds())
 						procedureParameterUnitOfMeasureRepository.save(new ProcedureParameterUnitOfMeasure(entitySaved.getId(), unitsOfMeasureId));
-			if (entity.getTypeId().equals(ProcedureParameterType.TEXT_OPTION))
+			if (entity.getTypeId().equals(ProcedureParameterTypeBo.TEXT_OPTION))
 				for (String textOption : entity.getTextOptions()) {
 					ProcedureParameterTextOption procedureParameterTextOption = new ProcedureParameterTextOption();
 					procedureParameterTextOption.setDescription(textOption);
@@ -185,11 +186,11 @@ public class BackofficeProcedureParameterStore implements BackofficeStore<Proced
 			procedureParameter.delete();
 			procedureParameterRepository.save(procedureParameter);
 
-			if (procedureParameter.getTypeId().equals(ProcedureParameterType.NUMERIC)) {
+			if (procedureParameter.getTypeId().equals(ProcedureParameterTypeBo.NUMERIC)) {
 				procedureParameterUnitOfMeasureRepository.deleteUnitOfMeasureFromProcedureParameterId(id);
 			}
 
-			if (procedureParameter.getTypeId().equals(ProcedureParameterType.TEXT_OPTION)) {
+			if (procedureParameter.getTypeId().equals(ProcedureParameterTypeBo.TEXT_OPTION)) {
 				procedureParameterTextOptionRepository.deleteTextOptionFromProcedureParameterId(id);
 			}
 

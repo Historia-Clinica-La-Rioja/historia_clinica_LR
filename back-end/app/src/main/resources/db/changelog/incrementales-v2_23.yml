@@ -218,3 +218,184 @@ databaseChangeLog:
                 WHERE
                   ece.id = ece_r.emergency_care_episode_id;
                   
+
+    - changeSet:
+        id: createTable-diagnostic_report_observation_group
+        comment: Create table diagnostic_report_observation_group
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: diagnostic_report_observation_group
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_observation_group
+                - column:
+                    name: diagnostic_report_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: diagnostic_report(id)
+                      foreignKeyName: FK_diagnostic_report_observation_group_diagnostic_report_id
+                      unique: true
+                      uniqueConstraintName: UQ_diagnostic_report_observation_diagnostic_report_observation_group_id
+                - column:
+                    name: procedure_template_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: procedure_template(id)
+                      foreignKeyName: FK_diagnostic_report_observation_procedure_template_id
+                - column:
+                    name: is_partial_upload
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+    - changeSet:
+        id: createTable-diagnostic_report_observation
+        comment: Create table diagnostic_report_observation
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: diagnostic_report_observation
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_observation
+                - column:
+                    name: diagnostic_report_observation_group_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: diagnostic_report_observation_group(id)
+                      foreignKeyName: FK_diagnostic_report_observation_diagnostic_report_observation_group_id
+                - column:
+                    name: procedure_parameter_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: procedure_parameter(id)
+                      foreignKeyName: FK_diagnostic_report_observation_procedure_parameter_id
+                - column:
+                    name: value
+                    type: text
+                    constraints:
+                      nullable: false
+                    defaultValue: ''
+                - column:
+                    name: unit_of_measure_id
+                    type: smallint
+                    constraints:
+                      nullable: true
+                      references: unit_of_measure(id)
+                      foreignKeyName: FK_diagnostic_report_observation_unit_of_measure_id
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: '-1'
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+
+    - changeSet:
+        id: createTable-diagnostic_report_tree
+        comment: Create table diagnostic_report_tree
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: diagnostic_report_tree
+              columns:
+                - column:
+                    name: diagnostic_report_parent_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_tree
+                      references: diagnostic_report(id)
+                      foreignKeyName: FK_diagnostic_report_tree__diagnostic_report_parent_id
+                - column:
+                    name: diagnostic_report_child_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_diagnostic_report_tree
+                      references: diagnostic_report(id)
+                      foreignKeyName: FK_diagnostic_report_tree__diagnostic_report_child_id

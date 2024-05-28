@@ -149,7 +149,7 @@ public class DocumentFactoryImpl implements DocumentFactory {
         clinicalObservationService.loadRiskFactors(patientId, doc.getId(), Optional.ofNullable(documentBo.getRiskFactors()));
         clinicalObservationService.loadAnthropometricData(patientId, doc.getId(), Optional.ofNullable(documentBo.getAnthropometricData()));
 
-        loadDiagnosticReports.run(doc.getId(), patientId, documentBo.getDiagnosticReports());
+        loadDiagnosticReports.run(doc.getId(), patientId, Optional.empty(), documentBo.getDiagnosticReports());
 
 		loadExternalCause.run(doc.getId(), Optional.ofNullable(documentBo.getExternalCause()));
 		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class FhirObservationGroupBo {
 
 	private Integer id;

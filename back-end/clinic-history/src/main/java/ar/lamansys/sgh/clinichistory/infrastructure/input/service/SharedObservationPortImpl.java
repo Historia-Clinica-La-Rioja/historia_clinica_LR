@@ -1,8 +1,7 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
-import ar.lamansys.sgh.clinichistory.application.observation.ObservationMapper;
-import ar.lamansys.sgh.clinichistory.application.observation.ObservationService;
-import ar.lamansys.sgh.clinichistory.domain.ips.FhirObservationGroupBo;
+import ar.lamansys.sgh.clinichistory.application.observation.FhirObservationMapper;
+import ar.lamansys.sgh.clinichistory.application.observation.SaveFhirObservationService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.observation.FhirObservationGroupInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.observation.SharedObservationPort;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SharedObservationPortImpl implements SharedObservationPort {
 
-	private final ObservationService observationService;
-	private final ObservationMapper observationMapper;
+	private final SaveFhirObservationService saveFhirObservationService;
+	private final FhirObservationMapper fhirObservationMapper;
 
 	@Override
 	public void save(FhirObservationGroupInfoDto fhirObservationGroupInfoDto) {
-		observationService.save(observationMapper.toFhirObservationGroupBo(fhirObservationGroupInfoDto));
+		saveFhirObservationService.save(fhirObservationMapper.toFhirObservationGroupBo(fhirObservationGroupInfoDto));
 	}
 }

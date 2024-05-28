@@ -96,4 +96,8 @@ public class DiagnosticReport extends SGXAuditableEntity<Integer> implements SGX
 	public int hashCode() {
 		return Objects.hash(id, patientId);
 	}
+
+	public boolean isFinal() {
+		return Objects.equals(this.getStatusId(), DiagnosticReportStatus.FINAL);
+	}
 }

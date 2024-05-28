@@ -1,8 +1,8 @@
 package net.pladema.procedure.application.port;
 
-import net.pladema.procedure.domain.ProcedureParameterBo;
-
 import java.util.Optional;
+
+import net.pladema.procedure.domain.ProcedureParameterBo;
 
 public interface ProcedureParameterStore {
 	public Optional<ProcedureParameterBo> findById(Integer id);

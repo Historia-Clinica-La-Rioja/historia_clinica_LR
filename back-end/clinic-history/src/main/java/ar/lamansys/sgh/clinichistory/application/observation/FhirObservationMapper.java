@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
 @Mapper(uses = {LocalDateMapper.class})
-public interface ObservationMapper {
+public interface FhirObservationMapper {
 
 	@Named("toFhirObservationGroupBo")
 	FhirObservationGroupBo toFhirObservationGroupBo(FhirObservationGroupInfoDto fhirObservationGroupInfoDto);
