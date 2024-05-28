@@ -15,7 +15,9 @@ import javax.persistence.EntityManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -35,11 +37,7 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 		LocalDateTime startDate = filter.getFromDate().atTime(3, 0);
 		LocalDateTime endDate = filter.getToDate().atTime(3, 0).plusDays(1);
 
-		String sqlQuery = "SELECT " +
-				"hut.description as hierarchical_unit_type, " +
-				"hu.alias as hierarchical_unit, " +
-				"cs.name AS clinicalSpecialty, " +
-				"CAST(COUNT(CASE WHEN extract(year FROM age(apt.date_type_id, p2.birth_date)) < 1 AND p2.gender_id = 1 THEN 1 END) AS INTEGER) AS ageRange0to1F, " +
+		String selectCommon = "CAST(COUNT(CASE WHEN extract(year FROM age(apt.date_type_id, p2.birth_date)) < 1 AND p2.gender_id = 1 THEN 1 END) AS INTEGER) AS ageRange0to1F, " +
 				"CAST(COUNT(CASE WHEN extract(year FROM age(apt.date_type_id, p2.birth_date)) < 1 AND p2.gender_id = 2 THEN 1 END) AS INTEGER) AS ageRange0to1M, " +
 				"CAST(COUNT(CASE WHEN extract(year FROM age(apt.date_type_id, p2.birth_date)) < 1 AND p2.gender_id = 3 THEN 1 END) AS INTEGER) AS ageRange0to1X, " +
 				"CAST(COUNT(CASE WHEN extract(year FROM age(apt.date_type_id, p2.birth_date)) BETWEEN 1 AND 4 AND p2.gender_id = 1 THEN 1 END) AS INTEGER) AS ageRange1to4F, " +
@@ -69,7 +67,16 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 				"CAST(COUNT(CASE WHEN p2.gender_id IS NULL OR extract(year FROM age(apt.date_type_id, p2.birth_date)) IS NULL THEN 1 END) AS INTEGER) AS unspecified, " +
 				"CAST(COUNT(apt.id) AS INTEGER) AS total, " +
 				"CAST(COUNT(CASE WHEN apt.patient_medical_coverage_id IS NOT NULL THEN 1 END) AS INTEGER) AS hasCoverage, " +
-				"CAST(COUNT(CASE WHEN apt.patient_medical_coverage_id IS NULL THEN 1 END) AS INTEGER) AS noCoverage " +
+				"CAST(COUNT(CASE WHEN apt.patient_medical_coverage_id IS NULL THEN 1 END) AS INTEGER) AS noCoverage ";
+
+		String whereCommon = "WHERE i.id = :institutionId " +
+				"AND apt.date_type_id BETWEEN :startDate AND :endDate ";
+
+		String sqlQuery = "SELECT " +
+				"hut.description as hierarchical_unit_type, " +
+				"hu.alias as hierarchical_unit, " +
+				"cs.name AS clinicalSpecialty, " +
+				selectCommon +
 				"FROM {h-schema}institution i " +
 				"JOIN {h-schema}doctors_office dof ON (i.id = dof.institution_id) " +
 				"JOIN {h-schema}diary d ON (dof.id = d.doctors_office_id) " +
@@ -81,8 +88,7 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 				"JOIN {h-schema}person p2 ON (p.person_id = p2.id) " +
 				"LEFT JOIN {h-schema}clinical_specialty cs ON (d.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}healthcare_professional hp ON (hp.id = d.healthcare_professional_id) " +
-				"WHERE i.id = :institutionId " +
-				"AND apt.date_type_id BETWEEN :startDate AND :endDate ";
+				whereCommon;
 
 		if (filter.getHierarchicalUnitTypeId() != null)
 			sqlQuery += " AND hu.type_id = " + filter.getHierarchicalUnitTypeId();
@@ -102,7 +108,27 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 		sqlQuery += "GROUP BY " +
 				"hu.alias, " +
 				"hut.description, " +
-				"cs.name; ";
+				"cs.name ";
+
+		String sqlSecondQuery = "SELECT " +
+				"'Imágenes' as hierarchical_unit_type, " +
+				"'' as hierarchical_unit, " +
+				"'' AS clinicalSpecialty, " +
+				selectCommon +
+				"FROM {h-schema}institution i " +
+				"LEFT JOIN {h-schema}sector s ON (s.institution_id = i.id) " +
+				"LEFT JOIN {h-schema}equipment e ON (e.sector_id = s.id) " +
+				"LEFT JOIN {h-schema}equipment_diary ed ON (ed.equipment_id = e.id) " +
+				"LEFT JOIN {h-schema}equipment_appointment_assn eaa ON (eaa.equipment_diary_id = ed.id) " +
+				"LEFT JOIN {h-schema}appointment apt on (apt.id = eaa.appointment_id) " +
+				"JOIN {h-schema}patient p ON (apt.patient_id = p.id) " +
+				"JOIN {h-schema}person p2 ON (p.person_id = p2.id) " +
+				whereCommon +
+				"GROUP BY " +
+				"i.id; ";
+
+		sqlQuery += "UNION " +
+				sqlSecondQuery;
 
 		var query = entityManager.createNativeQuery(sqlQuery);
 
@@ -154,7 +180,9 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 				))
 		);
 		log.debug("Appointment consultation summary size -> {} ", result.size());
-		return result;
+		return result.stream()
+				.sorted(Comparator.comparing(AppointmentConsultationSummaryBo::getHierarchicalUnitType))
+				.collect(Collectors.toList());
 	}
 
 	@Override
