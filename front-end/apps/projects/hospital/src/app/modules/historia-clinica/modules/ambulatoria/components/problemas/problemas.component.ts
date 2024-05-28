@@ -188,11 +188,11 @@ export class ProblemasComponent implements OnInit, OnDestroy {
 	loadHistoricalProblems() {
 		this.historicalProblems$ = this.historicalProblemsFacadeService.getHistoricalProblems().pipe(
 			tap(historicalProblems => this.historicalProblemsAmount = historicalProblems ? historicalProblems.length : 0)
-		).subscribe(data => {
-			this.historicalProblemsList = data.map(problem => {
+		).subscribe(historicalProblems => {
+			this.historicalProblemsList = historicalProblems ? historicalProblems.map(problem => {
 				problem.headerInfoDetails = buildProblemHeaderInformation(problem);
 				return problem;
-			})
+			}) : [];
 		})
 	}
 
