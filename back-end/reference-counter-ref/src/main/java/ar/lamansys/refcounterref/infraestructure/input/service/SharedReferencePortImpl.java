@@ -23,12 +23,25 @@ public class SharedReferencePortImpl implements SharedReferencePort {
 		if (counterReference == null)
 			return;
 		log.debug("Input parameter -> counterReference {}, institutionId {}, patientId {}", counterReference, institutionId, patientId);
+		CounterReferenceBo counterReferenceBo = getCounterReferenceBo(counterReference, institutionId, patientId);
+		createCounterReference.run(counterReferenceBo);
+	}
+
+	@Override
+	public void validateReference(ReferenceClosureDto counterReference, Integer institutionId, Integer patientId){
+		if (counterReference == null)
+			return;
+		log.debug("Input parameter -> counterReference {}, institutionId {}, patientId {}", counterReference, institutionId, patientId);
+		CounterReferenceBo counterReferenceBo = getCounterReferenceBo(counterReference, institutionId, patientId);
+		createCounterReference.runValidations(counterReferenceBo);
+	}
+
+	private CounterReferenceBo getCounterReferenceBo(ReferenceClosureDto counterReference, Integer institutionId, Integer patientId) {
 		CounterReferenceBo counterReferenceBo = counterReferenceMapper.fromReferenceRequestClosureDto(counterReference);
 		counterReferenceBo.setInstitutionId(institutionId);
 		counterReferenceBo.setPatientId(patientId);
 		if(counterReferenceBo.getCounterReferenceNote() == null)
 			counterReferenceBo.setCounterReferenceNote("");
-		createCounterReference.run(counterReferenceBo);
+		return counterReferenceBo;
 	}
-
 }

@@ -101,6 +101,7 @@ export interface AddDiagnosticReportObservationCommandDto {
 export interface AddDiagnosticReportObservationsCommandDto {
     isPartialUpload: boolean;
     procedureTemplateId: number;
+    referenceClosure: ReferenceClosureDto;
     values: AddDiagnosticReportObservationCommandDto[];
 }
 

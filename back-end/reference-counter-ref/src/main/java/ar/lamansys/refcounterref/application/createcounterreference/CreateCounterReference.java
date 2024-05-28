@@ -41,20 +41,9 @@ public class CreateCounterReference {
 
         log.debug("Input parameters -> counterReferenceBo {}", counterReferenceBo);
 
-		boolean referenceIsClosed= counterReferenceStorage.existsCounterReference(counterReferenceBo.getReferenceId());
+		CounterReferenceDoctorInfoBo doctorInfoBo = validate(counterReferenceBo);
 
-		assertValidCounterReference(referenceIsClosed);
-
-		var referenceData = referenceStorage.findById(counterReferenceBo.getReferenceId()).orElseThrow(() -> new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE, "El identificador de la referencia es invalido"));
-
-		var doctorInfoBo = counterReferenceDoctorStorage.getDoctorInfo().orElseThrow(() -> new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es invalido"));
-
-		assertContextValid(counterReferenceBo, doctorInfoBo, referenceData.getConsultation());
-
-		assertValidReferenceStatus(referenceData);
-
-        LocalDate now = dateTimeProvider.nowDate();
-        counterReferenceBo.setPatientMedicalCoverageId(counterReferenceAppointmentStorage.getPatientMedicalCoverageId(counterReferenceBo.getPatientId(), doctorInfoBo.getId()));
+		LocalDate now = dateTimeProvider.nowDate();
 
         var encounterId = counterReferenceStorage.save(
                 new CounterReferenceInfoBo(null,
@@ -74,6 +63,28 @@ public class CreateCounterReference {
 
 		counterReferenceAppointmentStorage.run(counterReferenceBo.getPatientId(), doctorInfoBo.getId(), now);
     }
+
+	public void runValidations(CounterReferenceBo counterReferenceBo) {
+		log.debug("Input parameters -> counterReferenceBo {}", counterReferenceBo);
+		validate(counterReferenceBo);
+	}
+
+	private CounterReferenceDoctorInfoBo validate(CounterReferenceBo counterReferenceBo) {
+		boolean referenceIsClosed = counterReferenceStorage.existsCounterReference(counterReferenceBo.getReferenceId());
+
+		assertValidCounterReference(referenceIsClosed);
+
+		var referenceData = referenceStorage.findById(counterReferenceBo.getReferenceId()).orElseThrow(() -> new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_REFERENCE, "El identificador de la referencia es invalido"));
+
+		var doctorInfoBo = counterReferenceDoctorStorage.getDoctorInfo().orElseThrow(() -> new CreateCounterReferenceException(CreateCounterReferenceExceptionEnum.INVALID_DOCTOR, "El identificador del profesional es invalido"));
+
+		assertContextValid(counterReferenceBo, doctorInfoBo, referenceData.getConsultation());
+
+		assertValidReferenceStatus(referenceData);
+
+		counterReferenceBo.setPatientMedicalCoverageId(counterReferenceAppointmentStorage.getPatientMedicalCoverageId(counterReferenceBo.getPatientId(), doctorInfoBo.getId()));
+		return doctorInfoBo;
+	}
 
     private void assertContextValid(CounterReferenceBo counterReferenceBo, CounterReferenceDoctorInfoBo doctorInfoBo, boolean consultation) {
         if (counterReferenceBo.getInstitutionId() == null)

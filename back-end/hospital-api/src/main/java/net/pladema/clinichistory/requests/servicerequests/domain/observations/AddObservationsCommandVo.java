@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.ReferenceRequestClosureBo;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -40,4 +41,5 @@ public class AddObservationsCommandVo {
 	private Boolean isPartialUpload;
 	private Integer procedureTemplateId;
 	private List<Observation> values;
+	private ReferenceRequestClosureBo referenceClosure;
 }

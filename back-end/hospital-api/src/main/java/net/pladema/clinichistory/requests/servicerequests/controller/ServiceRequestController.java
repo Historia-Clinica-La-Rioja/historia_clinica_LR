@@ -165,11 +165,13 @@ public class ServiceRequestController {
                          @PathVariable(name = "patientId") Integer patientId,
                          @PathVariable(name = "diagnosticReportId") Integer diagnosticReportId,
                          @RequestBody() CompleteRequestDto completeRequestDto) {
+
         log.debug("Input parameters ->  {} institutionIdpatientId {}, diagnosticReportId {}, completeRequestDto {}",
                 institutionId,
                 patientId,
                 diagnosticReportId,
                 completeRequestDto);
+
 		if (completeRequestDto.getReferenceClosure() != null)
 			completeRequestDto.getReferenceClosure().setFileIds(completeRequestDto.getFileIds());
 
@@ -371,7 +373,7 @@ public class ServiceRequestController {
 				observations);
 
 		AddObservationsCommandVo observationsBo = diagnosticReportObservationsMapper.fromDto(observations);
-		addDiagnosticReportObservations.run(diagnosticReportId, observationsBo);
+		addDiagnosticReportObservations.run(diagnosticReportId, observationsBo, institutionId, patientId);
 
 		log.debug(OUTPUT, "endpoint doesn't provide output");
 	}

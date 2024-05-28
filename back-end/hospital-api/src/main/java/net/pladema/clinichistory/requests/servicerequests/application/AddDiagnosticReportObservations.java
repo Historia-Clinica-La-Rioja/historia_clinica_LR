@@ -1,9 +1,9 @@
 package net.pladema.clinichistory.requests.servicerequests.application;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferencePort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportFinalizedException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportNotFoundException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportObservationException;
@@ -11,6 +11,8 @@ import net.pladema.clinichistory.requests.servicerequests.domain.observations.ex
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.UpdatedDiagnosticReportObservationBo;
 
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.InvalidProcedureTemplateChangeException;
+
+import net.pladema.clinichistory.requests.servicerequests.service.domain.ReferenceRequestClosureBo;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ public class AddDiagnosticReportObservations {
 
 	private final DiagnosticReportObservationStorage diagnosticReportObservationStorage;
 	private final SnomedService snomedService;
+	private final SharedReferencePort sharedReferencePort;
 
 	/**
 	 * The given diagnostic report may have an associated observation group (and it's observations) or not.
@@ -38,8 +41,19 @@ public class AddDiagnosticReportObservations {
 	 *
 	 */
 	@Transactional
-	public void run(Integer diagnosticReportId, AddObservationsCommandVo addObservationsCommand) throws DiagnosticReportObservationException, InvalidProcedureTemplateChangeException {
+	public void run(Integer diagnosticReportId, AddObservationsCommandVo addObservationsCommand, Integer institutionId, Integer patientId) throws DiagnosticReportObservationException, InvalidProcedureTemplateChangeException {
 		log.debug("input -> diagnosticRepoortId {}, addObservationsCommand {}", diagnosticReportId, addObservationsCommand);
+
+
+		/**
+		 * If the diagnostic report is linked to a reference it must pass the same validations
+		 * as when calling the "complete" method of the service request controller.
+		 * See ServiceRequestController::complete.
+		 */
+		var referenceClosure = addObservationsCommand.getReferenceClosure();
+		if (referenceClosure != null) {
+			sharedReferencePort.validateReference(mapToReferenceClosureDto(referenceClosure), institutionId, patientId);
+		}
 
 		assertDiagnosticReportExists(diagnosticReportId);
 
@@ -55,6 +69,14 @@ public class AddDiagnosticReportObservations {
 		updateDiagnosticReportStatus(diagnosticReportId);
 	}
 
+	private ReferenceClosureDto mapToReferenceClosureDto (ReferenceRequestClosureBo bo){
+		ReferenceClosureDto result = new ReferenceClosureDto();
+		result.setReferenceId(bo.getReferenceId());
+		result.setClosureTypeId(bo.getClosureTypeId());
+		result.setCounterReferenceNote(bo.getCounterReferenceNote());
+		result.setClinicalSpecialtyId(bo.getClinicalSpecialtyId());
+		return result;
+	}
 	private void assertDiagnosticReportExists(Integer diagnosticReportId) throws DiagnosticReportNotFoundException {
 		if (!diagnosticReportObservationStorage.existsDiagnosticReport(diagnosticReportId))
 			throw new DiagnosticReportNotFoundException(diagnosticReportId);
