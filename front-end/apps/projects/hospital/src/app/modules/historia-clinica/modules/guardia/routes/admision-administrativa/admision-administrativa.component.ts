@@ -210,8 +210,7 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	private setExistingInfo(): void {
 		if (this.initData) {
-			this.form.setValue(this.initData);
-
+			this.setInitDataInForm();
 			if (this.initData.patientId) {
 				this.loadPatient(this.initData.patientId);
 			}
@@ -226,14 +225,22 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		const { firstName, nameSelfDetermination, lastName, middleNames, otherLastNames } = basicData.person;
 		return {
 			fullName: this.patientNameService.completeName(firstName, nameSelfDetermination, lastName, middleNames, otherLastNames),
-			...(basicData.identificationType && { identification: {
-				type: basicData.identificationType,
-				number: +basicData.identificationNumber
-			}}),
+			...(basicData.identificationType && {
+				identification: {
+					type: basicData.identificationType,
+					number: +basicData.identificationNumber
+				}
+			}),
 			id: basicData.id,
 			gender: basicData.person.gender?.description || null,
 			age: basicData.person.age || null,
 			photo: photo.imageData
 		}
+	}
+
+	private setInitDataInForm() {
+		this.form.setValue(this.initData);
+		this.form.markAllAsTouched();
+		this.form.updateValueAndValidity();
 	}
 }

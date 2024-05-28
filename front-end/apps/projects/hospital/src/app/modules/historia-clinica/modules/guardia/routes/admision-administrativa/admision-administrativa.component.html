@@ -119,7 +119,7 @@
 				<span translate="guardia.administrative_admision.form.police_intervention.CALL_DETAIL"></span>
 
 				<div fxLayout="row" fxLayoutGap="5px">
-					<app-datepicker id="callDate" [minDate]="minDate" [maxDate]="today"
+					<app-datepicker id="callDate" [minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initData?.callDate"
 						(selectDate)="dateChanged($event)">
 					</app-datepicker>
 
