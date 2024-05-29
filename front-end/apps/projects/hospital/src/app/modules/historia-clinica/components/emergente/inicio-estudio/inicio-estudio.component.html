@@ -1,15 +1,78 @@
-<div class="masEstudios">
-  <mat-card class="box">
-    <mat-card-header class="mat-card-header header">
-      <div class="icon-container">
-        <img class="icon" src="/assets/images/icon_adultomayor.png" alt="icono">
-      </div>
-      <div class="title">
-        Evaluacion geriátrica
-      </div>
-    </mat-card-header>
+<app-content width="full">
 
-    <div class="btnEstudios">
+  <!-- <app-no-data></app-no-data> -->
+
+  <!-- medical_services -->
+
+  <div class="box">
+
+    <mat-icon fontset="material-icons-outlined" class="iconMedical material-icons-outlined mat-icon-no-color ">
+      medical_services </mat-icon>
+    Evaluaciones geriatricas
+
+  </div>
+
+
+  <span class="mat-button-wrapper add-button-wrapper">
+    <button mat-icon-button color="primary">
+      <mat-icon class="add">add_circle_outlined</mat-icon>
+    </button>
+  </span>
+
+  <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+    <button mat-button class="filter-button" color="primary">
+      <mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+
+  <!-- FORMULARIOS -->
+
+  <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+    <button mat-button class="filter-button" color="primary">
+      <mat-icon fontSet="material-icons-outlined">receipt_long</mat-icon> TEST DE EDMONTON
+    </button>
+  </div>
+
+  <div class="latest-edmonton-questionnaires" *ngIf="lastEdmontonQuestionnaires.length > 0">
+    <h3>Últimos 3 formularios de Edmonton</h3>
+    <ul>
+      <li *ngFor="let questionnaire of lastEdmontonQuestionnaires">
+        {{ questionnaire.createdOn | date:'short' }}
+        <button mat-button (click)="downloadEdmontonPdf(questionnaire.id)">Descargar PDF</button>
+
+      </li>
+    </ul>
+  </div>
+
+  <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+    <button mat-button class="filter-button" color="primary">
+      <mat-icon fontSet="material-icons-outlined">elderly_woman</mat-icon> ESCALA DE FRAIL
+    </button>
+  </div>
+
+  <div class="latest-frail-questionnaires" *ngIf="lastThreeFrailQuestionnaires.length > 0">
+    <h3>Últimos 3 formularios de Frail</h3>
+    <ul>
+      <li *ngFor="let questionnaire of lastThreeFrailQuestionnaires">
+        {{ questionnaire.createdOn | date:'short' }}
+        <button mat-button (click)="downloadFrailPdf(questionnaire.id)">Descargar PDF</button>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+    <button mat-button class="filter-button" color="primary">
+      <mat-icon fontSet="material-icons-outlined">directions_run</mat-icon> PRUEBA CORTA DE DESEMPEÑO FISICO
+    </button>
+  </div>
+
+  <app-no-data></app-no-data>
+
+
+  <div class="test" style="background-color: rgb(196, 196, 196);">
       <button mat-icon-button color="primary" (click)="mostrarPopup()">
         <mat-icon>add</mat-icon>
         Agregar evaluación
@@ -22,6 +85,6 @@
         </button>
       </div>
     </div>
+ 
 
-  </mat-card>
-</div>
+</app-content>
