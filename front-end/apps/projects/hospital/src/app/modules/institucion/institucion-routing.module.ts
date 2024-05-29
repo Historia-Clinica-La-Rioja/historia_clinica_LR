@@ -81,7 +81,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'areas-sanitarias',
-				loadChildren: () => import('../sanitary-areas/sanitary-areas.module').then(m => m.SanitaryAreasModule),
+				loadChildren: () => import('../gis/gis.module').then(m => m.GisModule),
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA }
 			},

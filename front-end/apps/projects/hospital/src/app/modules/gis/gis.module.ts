@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { SanitaryAreasRoutingModule } from './sanitary-areas-routing.module';
-import { HomeComponent } from './routes/home/home.component';
+//deps
 import { PresentationModule } from '@presentation/presentation.module';
+import { GisRoutingModule } from './gis-routing.module';
+//components
+import { HomeComponent } from './routes/home/home.component';
 
 
 @NgModule({
@@ -12,8 +13,8 @@ import { PresentationModule } from '@presentation/presentation.module';
   	],
 	imports: [
 		CommonModule,
-		SanitaryAreasRoutingModule,
+		GisRoutingModule,
 		PresentationModule
 	]
 })
-export class SanitaryAreasModule { }
+export class GisModule { }

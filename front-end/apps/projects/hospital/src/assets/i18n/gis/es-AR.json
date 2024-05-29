@@ -6,7 +6,7 @@
             "RESPONSABILITY_AREA": "Área de responsabilidad"
         },
         "address": {
-            "INSTITUTION": "Institución:",
+            "INSTITUTION": "Institución",
             "STATE": "Provincia",
             "DEPARTMENT": "Localidad",
             "CITY": "Ciudad",

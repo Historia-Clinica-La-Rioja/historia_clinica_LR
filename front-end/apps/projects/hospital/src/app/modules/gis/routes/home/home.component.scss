@@ -1,0 +1,25 @@
+.street-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.aside {
+    width: 50%;
+}
+
+.street-house-number {
+    width: 47%;
+}
+
+.m-top {
+    margin-top: 1rem;
+}
+
+mat-stepper {
+    padding: 5rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
