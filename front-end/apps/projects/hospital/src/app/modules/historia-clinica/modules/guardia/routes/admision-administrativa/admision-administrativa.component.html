@@ -4,7 +4,7 @@
 
 		<app-button *ngIf="!patientSummary" matIcon="person_search" text="buttons.SEARCH"
 			(clicked)="searchPatient()"></app-button>
-		<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" (ngSubmit)="continue()"
+		<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form"
 			class="form">
 			<ng-container *ngIf="!!patientSummary">
 				<mat-card fxLayout="row" fxLayoutAlign="space-between">

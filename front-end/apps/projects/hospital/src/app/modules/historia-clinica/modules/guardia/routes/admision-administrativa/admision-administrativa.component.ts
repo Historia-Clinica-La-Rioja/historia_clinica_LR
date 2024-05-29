@@ -162,6 +162,10 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		if (this.form.valid) {
 			this.confirm.emit(formValue);
 		}
+		else {
+			this.form.markAllAsTouched();
+			this.form.updateValueAndValidity();
+		}
 	}
 
 	onChange(): void {
