@@ -629,7 +629,9 @@
 			},
             "document-name": {
 				"ANAMNESIS": "Evaluación de ingreso",
-				"EVOLUTION_NOTE": "Nota de evolución"
+				"EVOLUTION_NOTE": "Nota de evolución",
+				"NURSE_EVOLUTION_NOTE": "Nota de evolución de enfermería",
+                "ANESTHETIC_REPORT": "Parte anestésico"
 			},
             "procedure": {
 				"TITLE": "Procedimientos",

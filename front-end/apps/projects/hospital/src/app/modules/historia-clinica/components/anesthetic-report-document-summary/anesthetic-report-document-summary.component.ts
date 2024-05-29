@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DocumentSearchDto } from '@api-rest/api-model';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
@@ -7,6 +6,7 @@ import { DocumentActionsService } from '@historia-clinica/modules/ambulatoria/mo
 import { AnestheticReportDocumentSummaryService, AnestheticReportViewFormat } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, forkJoin, map } from 'rxjs';
 
 @Component({
@@ -26,8 +26,8 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
 
     _activeDocument: DocumentSearch;
     documentSummary$: Observable<{headerDescription: HeaderDescription, anestheticReport: AnestheticReportViewFormat}>;
-	isDraft = false
-	activeDocumentDraft: DocumentSearchDto;
+	isDraft = false;
+    documentName = '';
 
 	constructor(
 		private readonly anestheticReportService: AnesthethicReportService,
@@ -35,7 +35,10 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
 		private readonly documentActions: DocumentActionsService,
         private readonly documentSummaryService: DocumentsSummaryService,
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
-	) { }
+		private readonly translateService: TranslateService,
+     ) {
+        this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.ANESTHETIC_REPORT');
+    }
 
     ngOnInit(): void {
         this.fetchSummaryInfo();
@@ -48,7 +51,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
 
             this.documentSummary$ = forkJoin([header$, anestheticReport$]).pipe(map(([headerData, anestheticReportData]) => {
                 return {
-                    headerDescription: this.documentSummaryMapperService.mapToHeaderDescription(headerData, 'Parte anestésico', this._activeDocument),
+                    headerDescription: this.documentSummaryMapperService.mapToHeaderDescription(headerData, this.documentName, this._activeDocument),
                     anestheticReport: this.anestheticReportDocumentSummaryService.mapToAnestheticReportViewFormat(anestheticReportData),
             }}));
         }

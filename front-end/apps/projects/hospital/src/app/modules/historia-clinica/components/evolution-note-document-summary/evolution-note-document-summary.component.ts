@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
 import { EvolutionNoteService } from '@api-rest/services/evolution-note.service';
 import { DocumentActionsService, DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
@@ -10,13 +10,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, forkJoin, map } from 'rxjs';
 
 const ACTION_TRIGGERED = true;
+const EVOLUTION_NOTE = 'Nota de evolución';
 
 @Component({
     selector: 'app-evolution-note-document-summary',
     templateUrl: './evolution-note-document-summary.component.html',
     styleUrls: ['./evolution-note-document-summary.component.scss']
 })
-export class EvolutionNoteDocumentSummaryComponent implements OnInit {
+export class EvolutionNoteDocumentSummaryComponent {
 
     @Input() isPopUpOpen: boolean;
     @Input() internmentEpisodeId: number;
@@ -39,16 +40,16 @@ export class EvolutionNoteDocumentSummaryComponent implements OnInit {
         private internmentSummaryFacadeService: InternmentSummaryFacadeService,
 		private readonly documentActions: DocumentActionsService,
 		private readonly translateService: TranslateService,
-    ) {
-        this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.EVOLUTION_NOTE');
-    }
-
-    ngOnInit(): void {
-    }
+    ) { }
 
     private fetchSummaryInfo(){
         if (this._activeDocument?.document?.id) {
-            let evolutionNote$ = this.evolutionNoteService.getEvolutionDiagnosis(this._activeDocument.document?.id, this.internmentEpisodeId);
+            this.documentName = (this._activeDocument.document.documentType == EVOLUTION_NOTE ) 
+                ? this.translateService.instant('internaciones.documents-summary.document-name.EVOLUTION_NOTE')
+                : this.translateService.instant('internaciones.documents-summary.document-name.NURSE_EVOLUTION_NOTE');
+            let evolutionNote$ = (this._activeDocument.document.documentType == EVOLUTION_NOTE )
+                ? this.evolutionNoteService.getEvolutionDiagnosis(this._activeDocument.document?.id, this.internmentEpisodeId)
+                : this.evolutionNoteService.getEvolutionDiagnosisNursing(this._activeDocument.document?.id, this.internmentEpisodeId);
             let header$ = this.documentSummaryService.getDocumentHeader(this._activeDocument.document?.id, this.internmentEpisodeId);
 
             this.documentSummary$ = forkJoin([header$, evolutionNote$]).pipe(map(([headerData, evolutionNoteData]) => {

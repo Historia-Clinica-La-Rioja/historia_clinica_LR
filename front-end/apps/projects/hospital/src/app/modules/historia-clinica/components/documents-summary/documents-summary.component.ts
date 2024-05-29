@@ -56,6 +56,8 @@ export class DocumentsSummaryComponent implements OnInit {
 	public minDate: Date;
 	isPopUpOpen = false;
 
+    public readonly DOCUMENT_TYPES = DocumentTypes;
+
 	constructor(
 		private formBuilder: UntypedFormBuilder,
 		private internmentSummaryFacadeService: InternmentSummaryFacadeService,
@@ -249,3 +251,10 @@ export interface SearchField {
 	label: string;
 }
 
+enum DocumentTypes {
+    ANESTHETIC_REPORT = 'Parte anestésico',
+    EVOLUTION_NOTE = 'Nota de evolución',
+    NURSE_EVOLUTION_NOTE = 'Nota de evolución de enfermería',
+    ANAMNESIS = 'Anamnesis',
+    EPICRISIS = 'Epicrisis',
+}
