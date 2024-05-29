@@ -1,16 +1,16 @@
 import { Inject, Component, OnInit } from '@angular/core';
 import { PhysicalPerformanceService } from '@api-rest/services/physical-performance.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { QuestionnairesResponses } from '@api-rest/api-model';
+import { AlertDialogComponent } from '../../alert-dialog/alert-dialog.component';
  
 @Component({
   selector: 'app-get-physical-performance',
   templateUrl: './get-physical-performance.component.html',
   styleUrls: ['./get-physical-performance.component.scss']
 })
-export class GetPhysicalPerformanceComponent implements OnInit {
 
-  
+export class GetPhysicalPerformanceComponent implements OnInit {  
   submitted: boolean;
   patientId: number;
   physicalQuestionnaires: QuestionnairesResponses[] = [];
@@ -19,6 +19,7 @@ export class GetPhysicalPerformanceComponent implements OnInit {
   constructor(
     private PhysicalPerformanceService: PhysicalPerformanceService,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialog: MatDialog
   ) {
 
     this.patientId = data.patientId
@@ -43,7 +44,6 @@ export class GetPhysicalPerformanceComponent implements OnInit {
       (questionnaire) => questionnaire.questionnaireTypeId === 4
     );
 
-
     // Sort by creation date
     physicalQuestionnaires.sort((a, b) => {
       return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
@@ -55,6 +55,7 @@ export class GetPhysicalPerformanceComponent implements OnInit {
       this.lastPhysicalQuestionnaireId = physicalQuestionnaires[0].id;
     } else {
       console.warn('No frail questionnaires found for this patient')
+      this.showAlert('No hay cuestionarios disponibles para este paciente.')
     }
   }
 
@@ -69,10 +70,19 @@ export class GetPhysicalPerformanceComponent implements OnInit {
         },
         (error) => {
           console.error('Error downloading the questionnaire PDF:', error);
+          this.showAlert('No hay cuestionarios disponibles para este paciente.')
         }
       );
     } else {
       console.warn('No Frail questionnaires available to download PDF.')
+      this.showAlert('No hay cuestionarios disponibles para este paciente.')
     }
   }
+
+  showAlert(message: string): void {
+    this.dialog.open(AlertDialogComponent, {
+      data: { message: message }
+    });
+  }
+
 }
