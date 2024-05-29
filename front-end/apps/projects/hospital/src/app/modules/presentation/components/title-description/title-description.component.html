@@ -1,4 +1,4 @@
 <div class="title-description">
 	<span class="grey">{{title | translate}}:</span>
-	<app-text-ellipsis-tooltip [text]="text" [limit]="limit"></app-text-ellipsis-tooltip>
+	<app-text-ellipsis-tooltip *ngIf="text" [text]="text" [limit]="limit"></app-text-ellipsis-tooltip>
 </div>
