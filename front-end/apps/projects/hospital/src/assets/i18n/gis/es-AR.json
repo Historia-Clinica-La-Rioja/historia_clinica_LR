@@ -20,7 +20,8 @@
         },
         "map-position": {
             "TITLE": "2. Posicionar en mapa",
-            "COORDINATES": "Coordenadas"
+            "COORDINATES": "Coordenadas",
+            "SEARCHING": "Buscando..."
         }
     }
 }

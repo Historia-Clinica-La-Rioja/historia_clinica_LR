@@ -22,7 +22,7 @@ export class GisService {
 	}
 
 	getInstitutionCoordinatesFromAddress = (address: string): Observable<GlobalCoordinatesDto> => {
-		const url = `${this.URL_PREFIX}/sanitary-responsibility-area/get-global-coordinates-by-address`;
+		const url = `${environment.apiBase}/sanitary-responsibility-area/get-global-coordinates-by-address`;
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('address', address);
 		return this.http.get<GlobalCoordinatesDto>(url, {params: queryParams});

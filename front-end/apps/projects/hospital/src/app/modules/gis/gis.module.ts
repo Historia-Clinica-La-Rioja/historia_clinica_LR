@@ -5,11 +5,15 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { GisRoutingModule } from './gis-routing.module';
 //components
 import { HomeComponent } from './routes/home/home.component';
+import { MapComponent } from './components/map/map.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 
 @NgModule({
 	declarations: [
-    	HomeComponent
+    	HomeComponent,
+     	MapComponent,
+      LoadingComponent
   	],
 	imports: [
 		CommonModule,

@@ -8,7 +8,7 @@ import { ContextService } from '@core/services/context.service';
 import { DEFAULT_COUNTRY_ID, hasError } from '@core/utils/form.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
-import { forkJoin, map } from 'rxjs';
+import { finalize, forkJoin, map } from 'rxjs';
 
 interface InstitutionAddress {
     stateId: FormControl<number>;
@@ -16,7 +16,11 @@ interface InstitutionAddress {
 	cityId: FormControl<number>;
     streetName: FormControl<string>;
     houseNumber: FormControl<string>;
+	coordinates: FormControl<string>;
 }
+
+const INSTITUTION_ADDRESS_STEP = 0;
+const MAP_POSITION_INDEX = 1;
 
 @Component({
 	selector: 'app-home',
@@ -29,12 +33,21 @@ export class HomeComponent implements OnInit {
 	institution: InstitutionDto;
 	showMap = false;
 	institutionAddressForm: FormGroup<InstitutionAddress>;
+
 	states: TypeaheadOption<AddressProjection>[] = [];
 	departments: TypeaheadOption<AddressProjection>[] = [];
 	cities: TypeaheadOption<AddressProjection>[] = [];
+
 	stateInitValue: TypeaheadOption<AddressProjection>;
 	departmentInitValue: TypeaheadOption<AddressProjection>;
 	cityInitValue: TypeaheadOption<AddressProjection>;
+
+	stateCurrentValue: AddressProjection;
+	departmentCurrentValue: AddressProjection;
+	cityCurrentValue: AddressProjection;
+	coordinatesCurrentValue: GlobalCoordinatesDto;
+
+	isLoading = false;
 
 	constructor(private readonly gisService: GisService,
 				private readonly addressMasterDataService: AddressMasterDataService,
@@ -48,6 +61,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	setState = (state: AddressProjection) => {
+		this.stateCurrentValue = state;
 		this.institutionAddressForm.controls.stateId.setValue(state?.id);
 		if (!state) {
 			this.institutionAddressForm.controls.departmentId.setValue(null);
@@ -59,6 +73,7 @@ export class HomeComponent implements OnInit {
 	}
 	
 	setDepartment = (department: AddressProjection) => {
+		this.departmentCurrentValue = department;
 		this.institutionAddressForm.controls.departmentId.setValue(department?.id);
 		if (!department) {
 			this.institutionAddressForm.controls.cityId.setValue(null);
@@ -68,7 +83,51 @@ export class HomeComponent implements OnInit {
 	}
 
 	setCity = (city: AddressProjection) => {
+		this.cityCurrentValue = city;
 		this.institutionAddressForm.controls.cityId.setValue(city?.id);
+	}
+
+	changeStep = ($event) => {
+		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) {
+			this.showMap = false;
+		}
+
+		if ($event.selectedIndex === MAP_POSITION_INDEX) {
+			this.stepToMapPosition();
+		}
+	}
+
+	stepToMapPosition = () => {
+		this.isLoading = true;
+		const address: string = this.toStringify();
+		this.gisService.getInstitutionCoordinatesFromAddress(address)
+			.pipe(finalize(() => this.isLoading = false))
+			.subscribe((coordinates: GlobalCoordinatesDto) => {
+				this.coordinatesCurrentValue = coordinates;
+				if (!coordinates) return;
+
+				this.showMap = true;
+				this.institutionAddressForm.controls.coordinates.setValue(`${coordinates.latitude}, ${coordinates.longitude}`);
+			});
+	}
+	
+	get street(): string {
+		return this.institutionAddressForm.value.streetName;
+	}
+
+	get houseNumber(): string {
+		return this.institutionAddressForm.value.houseNumber;
+	}
+
+	private toStringify = (): string => {
+		return JSON.stringify(
+			{
+				houseNumber: this.institutionAddressForm.value.houseNumber,
+				streetName: this.institutionAddressForm.value.streetName,
+				stateName: this.stateCurrentValue.description,
+				cityName: this.cityCurrentValue.description
+			}
+		)
 	}
 
 	private setInstitution = () => {
@@ -82,6 +141,7 @@ export class HomeComponent implements OnInit {
 			cityId: new FormControl(null, Validators.required),
 			streetName: new FormControl(null, Validators.required),
 			houseNumber: new FormControl(null, Validators.required),
+			coordinates: new FormControl({value: null, disabled: true})
 		});
 	}
 
@@ -110,7 +170,7 @@ export class HomeComponent implements OnInit {
 			.pipe(map(states => listToTypeaheadOptions(states, 'description')))
 			.subscribe((states: TypeaheadOption<AddressProjection>[]) => {
 				this.states = states;
-				this.stateInitValue = this.states.find(state => state.value.id === this.institutionAddressForm.value.stateId);
+				this.stateInitValue = this.setInitValue(this.states, this.institutionAddressForm.value.stateId);
 			});
 	}
 
@@ -119,7 +179,7 @@ export class HomeComponent implements OnInit {
 			.pipe(map(departments => listToTypeaheadOptions(departments, 'description')))
 			.subscribe((departments: TypeaheadOption<AddressProjection>[]) => {
 				this.departments = departments;
-				this.departmentInitValue = this.departments.find(department => department.value.id === this.institutionAddressForm.value.departmentId);
+				this.departmentInitValue = this.setInitValue(this.departments, this.institutionAddressForm.value.departmentId);
 			});
 	}
 
@@ -128,7 +188,11 @@ export class HomeComponent implements OnInit {
 			.pipe(map(cities => listToTypeaheadOptions(cities, 'description')))
 			.subscribe((cities: TypeaheadOption<AddressProjection>[]) => {
 				this.cities = cities;
-				this.cityInitValue = this.cities.find(city => city.value.id === this.institutionAddressForm.value.cityId);
+				this.cityInitValue = this.setInitValue(this.cities, this.institutionAddressForm.value.cityId);
 			});
+	}
+
+	private setInitValue = (list: TypeaheadOption<AddressProjection>[], id: number) => {
+		return list.find(value => value.value.id === id);
 	}
 }
