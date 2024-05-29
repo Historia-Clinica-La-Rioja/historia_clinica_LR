@@ -127,9 +127,4 @@ public class TriageBo implements IDocumentBo {
 		return null;
 	}
 
-	@Override
-	public List<ReasonBo> getReasons() {
-		return reasons;
-	}
-
 }
