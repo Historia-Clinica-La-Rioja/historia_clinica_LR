@@ -4,7 +4,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exception
 import lombok.Getter;
 
 @Getter
-public class AppointmentException extends RuntimeException implements SharedAppointmentException {
+public class AppointmentException extends SharedAppointmentException {
 
     private static final long serialVersionUID = -869671290283371644L;
     private final AppointmentEnumException code;

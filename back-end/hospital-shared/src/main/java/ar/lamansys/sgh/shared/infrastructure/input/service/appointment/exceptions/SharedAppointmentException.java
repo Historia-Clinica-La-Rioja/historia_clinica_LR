@@ -1,8 +1,7 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions;
 
-public interface SharedAppointmentException {
-
-    String getMessage();
-
-    Throwable getCause();
+public class SharedAppointmentException extends RuntimeException {
+    public SharedAppointmentException(String errorMessage) {
+        super(errorMessage);
+    }
 }

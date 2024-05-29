@@ -223,7 +223,7 @@ public class HospitalPublicApiExceptionHandler {
 
 	// Errores de API Pública | Turnos
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ UpdateResultException.class })
+	@ExceptionHandler({ SharedAppointmentException.class })
 	protected ApiErrorMessageDto handleSharedAppointmentException(SharedAppointmentException ex) {
 		logger.debug("SharedAppointmentException message -> {}", ex.getMessage(), ex.getCause());
 		return new ApiErrorMessageDto(
