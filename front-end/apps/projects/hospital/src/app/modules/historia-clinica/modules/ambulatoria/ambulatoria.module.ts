@@ -108,6 +108,7 @@ import { DesempenoFisicoComponent } from './components/cuestionarios/desempeno-f
 import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fisico/input-desempeno/input-desempeno.component';
 import { GetEdmontonComponent } from './components/cuestionarios/edmonton/get-edmonton/get-edmonton.component';
 import { GetPhysicalPerformanceComponent } from './components/cuestionarios/desempeno-fisico/get-physical-performance/get-physical-performance.component';
+import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/alert-dialog.component';
 
 @NgModule({
 	declarations: [
@@ -195,7 +196,8 @@ import { GetPhysicalPerformanceComponent } from './components/cuestionarios/dese
 		DesempenoFisicoComponent,
 		InputDesempenoComponent,
 		GetEdmontonComponent,
-		GetPhysicalPerformanceComponent
+		GetPhysicalPerformanceComponent,
+		AlertDialogComponent
 
 	],
 	imports: [
