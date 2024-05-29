@@ -532,6 +532,7 @@ export class AgendaComponent implements OnInit, OnDestroy, OnChanges {
 	private _getOpeningHoursFor(date: Date): DiaryOpeningHoursDto[] {
 		const start = dateISOParseDate(this.agenda.startDate);
 		const end = dateISOParseDate(this.agenda.endDate);
+        end.setHours(23,59,59,59);
 
 		return isBetweenDates(date, start, end, '[]') ?
 			this.diaryOpeningHours.filter(oh => oh.openingHours.dayWeekId === date.getDay()) : [];
