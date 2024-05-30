@@ -1,5 +1,23 @@
 <div class="epicrisis-note-container" data-id="epicrisis-note-summary">
-    
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+        fxLayoutGap="20px">
+        <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
+            [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
+            (editDocument)="edit()"></app-document-summary-header>
+        <mat-divider></mat-divider>
+
+        <ng-container *ngIf="_activeDocument?.document?.editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ _activeDocument.document?.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </ng-container>
+
+        <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            
+        </div>
+    </div>
+
     <ng-template #loader>
         <mat-spinner color="primary" class="loader"></mat-spinner>
     </ng-template>
