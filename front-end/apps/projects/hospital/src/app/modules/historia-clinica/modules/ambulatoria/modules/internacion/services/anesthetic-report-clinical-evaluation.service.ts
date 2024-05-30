@@ -97,6 +97,20 @@ export class AnestheticReportClinicalEvaluationService {
         return this.mapToRiskFactorDto();
     }
 
+	setData(riskFactorData: RiskFactorDto) {
+		if (riskFactorData) {
+			if (riskFactorData.systolicBloodPressure?.value) {
+				this.form.get('maxBloodPressure').setValue(riskFactorData.systolicBloodPressure.value);
+			}
+			if (riskFactorData.diastolicBloodPressure?.value) {
+				this.form.get('minBloodPressure').setValue(riskFactorData.diastolicBloodPressure.value);
+			}
+			if (riskFactorData.hematocrit?.value) {
+				this.form.get('hematocrit').setValue(riskFactorData.hematocrit.value);
+			}
+		}
+	}
+
     private mapToRiskFactorDto(): RiskFactorDto {
         return {
             systolicBloodPressure: this.form.value.maxBloodPressure ? {
