@@ -21,6 +21,7 @@ export class EpicrisisDocumentSummaryService {
             ...(this.documentsSummaryService.hasClinicalEvaluations(epicrisis.notes) && { clinicalEvaluation: this.documentsSummaryService.mapClinicalEvaluationToDescriptionItemData(epicrisis.notes)} ),
             ...(epicrisis.procedures.length && { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(epicrisis.procedures)} ),
             ...(epicrisis.personalHistories?.length && { personalHistories: this.documentsSummaryService.mapPersonalHistoriesToDescriptionItemDataSummary(epicrisis.personalHistories)} ),
+            ...(epicrisis.familyHistories?.length && { familyHistories: this.documentsSummaryService.mapFamilyHistoriesToDescriptionItemDataSummary(epicrisis.familyHistories)} ),
         }
 }
 }
@@ -31,4 +32,5 @@ export interface EpicrisisViewFormat {
     clinicalEvaluation: ClinicalEvaluationData,
     procedures: DescriptionItemDataSummary,
     personalHistories: DescriptionItemDataSummary,
+    familyHistories: DescriptionItemDataSummary,
 }
