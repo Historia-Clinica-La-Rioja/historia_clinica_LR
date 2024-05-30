@@ -38,7 +38,7 @@ public class CounterReferenceBo {
 
     private List<@Valid CounterReferenceMedicationBo> medications = new ArrayList<>();
 
-    private ReferableItemBo<@Valid CounterReferenceAllergyBo> allergies;
+    private ReferableItemBo<@Valid CounterReferenceAllergyBo> allergies = new ReferableItemBo<>();
 
     private List<Integer> fileIds;
 
