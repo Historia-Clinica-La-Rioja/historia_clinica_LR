@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { HealthConditionDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { HealthConditionDto, ProcedureDescriptionDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { ToFormGroup } from '@core/utils/form.utils';
 import { SnomedService, SnomedSemanticSearch } from '@historia-clinica/services/snomed.service';
@@ -126,6 +126,21 @@ export class AnestheticReportRecordService {
 
     isEmpty(): boolean {
         return !(!!this.recordList.length)
+    }
+
+	setData(records: HealthConditionDto[], procedures: ProcedureDescriptionDto) {
+        this.recordList = records.map(record => record.snomed);
+        this.dataEmitter.next(this.recordList);
+        this.isEmptySource.next(this.isEmpty());
+
+		if (procedures) {
+			if (procedures.note) {
+				this.personalRecordForm.get('observations').setValue(procedures.note);
+			}
+			if (procedures.asa) {
+				this.personalRecordForm.get('asa').setValue(procedures.asa);
+			}
+		}
     }
 }
 
