@@ -17,12 +17,13 @@ import { MedicationData, MedicationService } from './medicationService';
 import { UntypedFormBuilder } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
 import { scrollIntoError } from '@core/utils/form.utils';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
-import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
+import { AnestheticHistoryDto, AnestheticReportDto, DiagnosisDto, HealthConditionDto, MasterDataDto, PostAnesthesiaStatusDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 
 const TIME_OUT = 5000;
 
@@ -53,6 +54,8 @@ export class AnestheticReportService {
     anestheticPlanList$: Observable<MedicationData[]>
     analgesicTechniqueList$: Observable<AnalgesicTechniqueData[]>
     anestheticTechniqueList$: Observable<AnestheticTechniqueData[]>
+
+	premedicationViasDescription: MasterDataDto[]
 
     private collapsedAnthropometricDataSectionSource = new BehaviorSubject<boolean>(true);
     collapsedAnthropometricDataSection$: Observable<boolean> = this.collapsedAnthropometricDataSectionSource.asObservable();
@@ -100,14 +103,67 @@ export class AnestheticReportService {
     private isEndOfAnesthesiaStatusEmptySource = new BehaviorSubject<boolean>(true);
 	isEndOfAnesthesiaStatusEmpty$ = this.isEndOfAnesthesiaStatusEmptySource.asObservable();
 
+	private anestheticHistorySubject: BehaviorSubject<AnestheticHistoryDto> = new BehaviorSubject<AnestheticHistoryDto>(null);
+    anestheticHistory$ = this.anestheticHistorySubject.asObservable();
+
+	lastIntakeSubject: BehaviorSubject<TimeDto> = new BehaviorSubject<TimeDto>(null);
+    lastIntake$ = this.lastIntakeSubject.asObservable();
+
+	private intrasurgicalAnestheticProceduresSubject: BehaviorSubject<ProcedureDescriptionDto> = new BehaviorSubject<ProcedureDescriptionDto>(null);
+    intrasurgicalAnestheticProcedures$ = this.intrasurgicalAnestheticProceduresSubject.asObservable();
+
+	private postAnesthesiaSubject: BehaviorSubject<PostAnesthesiaStatusDto> = new BehaviorSubject<PostAnesthesiaStatusDto>(null);
+    postAnesthesia$ = this.postAnesthesiaSubject.asObservable();
+
     constructor(
         private readonly snomedService: SnomedService,
 		private readonly formBuilder: UntypedFormBuilder,
         private readonly snackBarService: SnackBarService,
         private readonly translateService: TranslateService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
-        private readonly anesthethicReportService: AnesthethicReportService,
+		private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
+        readonly anesthethicReportService: AnesthethicReportService,
     ) { }
+
+	loadAnestheticPreviousData(dialogData: any) {
+		this.setAnestheticPreviousData(dialogData)
+	}
+
+	private setAnestheticPreviousData(dialogData: any) {
+		if (dialogData.isDraft) {
+			forkJoin([
+				this.internacionMasterDataService.getViasPremedication(),
+				this.anesthethicReportService.getAnestheticReport(dialogData.anestheticPartId, dialogData.internmentEpisodeId)
+			]).subscribe((result: [MasterDataDto[], AnestheticReportDto]) => {
+				const dataPremedication = result[0]
+				const data = result[1]
+
+				this.anesthesicReportProposedSurgeryService.setData(data.surgeryProcedures);
+				this.anesthesicReportAnthropometricDataService.setData(data.anthropometricData);
+				this.anestheticReportClinicalEvaluationService.setData(data.riskFactors);
+				this.anestheticReportAnestheticHistoryService.setData(data.anestheticHistory);
+				this.anestheticHistorySubject.next(data.anestheticHistory);
+				this.medicacionesNuevaConsultaService.setData(data.medications);
+				this.anestheticReportPremedicationAndFoodIntakeService.setData(data.preMedications, dataPremedication);
+				this.lastIntakeSubject.next(data.foodIntake?.clockTime)
+				this.anestheticReportRecordService.setData(data.histories, data.procedureDescription);
+				this.anestheticPlanService.setData(data.anestheticPlans, dataPremedication);
+				this.analgesicTechniqueService.setData(data.analgesicTechniques);
+				this.anestheticTechniqueService.setData(data.anestheticTechniques);//probar con resultados
+				this.fluidAdministrationService.setData(data.fluidAdministrations);
+				this.anestheticReportAnestheticAgentService.setData(data.anestheticAgents, dataPremedication);
+				this.anestheticReportNonAnestheticDrugsService.setData(data.nonAnestheticDrugs, dataPremedication);
+				this.anestheticReportIntrasurgicalAnestheticProceduresService.setData(data.procedureDescription);
+				this.anestheticReportAntibioticProphylaxisService.setData(data.antibioticProphylaxis, dataPremedication);
+				this.anestheticReportVitalSignsService.setDataVitalSigns(data.procedureDescription);
+				this.anestheticReportVitalSignsService.setMeasuringPoints(data.measuringPoints);
+				this.intrasurgicalAnestheticProceduresSubject.next(data.procedureDescription)
+				this.anestheticReportEndOfAnesthesiaStatusService.setDataEndOfAnesthesiaStatus(data.postAnesthesiaStatus);
+				this.postAnesthesiaSubject.next(data.postAnesthesiaStatus)
+
+			})
+		}
+	}
 
     createAnestheticReportServiceInstances() {
         this.anesthesicReportProposedSurgeryService = new AnestheticReportProposedSurgeryService(this.snomedService, this.snackBarService);
@@ -115,16 +171,16 @@ export class AnestheticReportService {
         this.anestheticReportClinicalEvaluationService = new AnestheticReportClinicalEvaluationService(this.translateService);
         this.anestheticReportAnestheticHistoryService = new AnestheticReportAnestheticHistoryService();
 		this.medicacionesNuevaConsultaService = new MedicacionesNuevaConsultaService(this.formBuilder, this.snomedService, this.snackBarService);
-		this.anestheticReportPremedicationAndFoodIntakeService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
+		this.anestheticReportPremedicationAndFoodIntakeService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
         this.anestheticReportRecordService = new AnestheticReportRecordService(this.snomedService, this.snackBarService);
-        this.anestheticPlanService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticPlanService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
         this.analgesicTechniqueService = new AnalgesicTechniqueService(this.snomedService, this.snackBarService, this.translateService);
         this.anestheticTechniqueService = new AnestheticTechniqueService(this.snomedService, this.snackBarService)
         this.fluidAdministrationService = new FluidAdministrationService(this.snomedService, this.snackBarService)
-        this.anestheticReportAnestheticAgentService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
-        this.anestheticReportNonAnestheticDrugsService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticReportAnestheticAgentService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
+        this.anestheticReportNonAnestheticDrugsService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
         this.anestheticReportIntrasurgicalAnestheticProceduresService = new AnestheticReportIntrasurgicalAnestheticProceduresService();
-        this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService);
+        this.anestheticReportAntibioticProphylaxisService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
         this.anestheticReportEndOfAnesthesiaStatusService = new AnestheticReportEndOfAnesthesiaStatusService();
         this.anestheticReportVitalSignsService = new AnestheticReportVitalSignsService(this.translateService, this.snackBarService);
         this.initializeData();
@@ -158,7 +214,7 @@ export class AnestheticReportService {
         this.anestheticTechniqueList$ = this.anestheticTechniqueService.getAnestheticTechniqueList();
     }
 
-    checkFormErrors(elementRef: ElementRef, isDraft: boolean) {
+    checkFormErrors(elementRef: ElementRef) {
         if (this.anesthesicReportAnthropometricDataService.getForm().invalid) {
             this.collapsedAnthropometricDataSectionSource.next(false);
             setTimeout(() => {

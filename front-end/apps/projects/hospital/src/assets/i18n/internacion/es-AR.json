@@ -326,6 +326,7 @@
 		"anesthesic-report": {
 			"SUCCESS": "Parte anestésico guardado correctamente",
 			"SUCCESS_DRAFT": "Borrador parte anestésico guardado correctamente",
+			"CONTINUE_DRAFT": "Seguir editando",
 			"diagnosis": {
 				"TITLE": "Diagnósticos",
 				"MAIN_DIAGNOSIS": "Diagnóstico principal",

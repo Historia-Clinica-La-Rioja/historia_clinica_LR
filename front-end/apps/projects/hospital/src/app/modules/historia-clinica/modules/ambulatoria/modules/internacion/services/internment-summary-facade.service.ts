@@ -26,6 +26,7 @@ export class InternmentSummaryFacadeService {
 
 	private anamnesisSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private epicrisisSubject: Subject<any> = new BehaviorSubject<any>([]);
+	private anestheticPartSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private evolutionNoteSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private hasMedicalDischargeSubject: Subject<any> = new BehaviorSubject<any>([]);
 	private lastProbableDischargeDateSubject: Subject<Date> = new BehaviorSubject<any>([]);
@@ -46,6 +47,7 @@ export class InternmentSummaryFacadeService {
 	readonly clinicalEvaluation$ = this.clinicalEvaluationSubject.asObservable();
 	readonly anamnesis$ = this.anamnesisSubject.asObservable();
 	readonly epicrisis$ = this.epicrisisSubject.asObservable();
+	readonly anestheticPart$ = this.anestheticPartSubject.asObservable();
 	readonly evolutionNote$ = this.evolutionNoteSubject.asObservable();
 	readonly hasMedicalDischarge$ = this.hasMedicalDischargeSubject.asObservable();
 	readonly lastProbableDischargeDate$ = this.lastProbableDischargeDateSubject.asObservable();
@@ -158,7 +160,8 @@ export class InternmentSummaryFacadeService {
 			(internmentEpisode: InternmentSummaryDto) => {
 				this.anamnesisSubject.next(internmentEpisode.documents?.anamnesis);
 				this.epicrisisSubject.next(internmentEpisode.documents?.epicrisis);
-				this.evolutionNoteSubject.next(internmentEpisode.documents?.lastEvaluationNote);				
+				this.anestheticPartSubject.next(internmentEpisode.documents?.lastAnestheticReport)
+				this.evolutionNoteSubject.next(internmentEpisode.documents?.lastEvaluationNote);
 				this.lastProbableDischargeDateSubject.next(internmentEpisode.probableDischargeDate ? new Date(internmentEpisode.probableDischargeDate) : undefined);
 			});
 		this.internmentEpisodeService.getPatientDischarge(this.internmentEpisodeId)
@@ -212,6 +215,7 @@ export class InternmentSummaryFacadeService {
 	clearInternment() {
 		this.anamnesisSubject.next([]);
 		this.epicrisisSubject.next([]);
+		this.anestheticPartSubject.next([])
 		this.evolutionNoteSubject.next([]);
 		this.hasMedicalDischargeSubject.next([]);
 	}

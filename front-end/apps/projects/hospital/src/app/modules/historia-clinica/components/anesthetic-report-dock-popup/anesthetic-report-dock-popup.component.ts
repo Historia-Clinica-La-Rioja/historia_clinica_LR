@@ -29,7 +29,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         this.mainDiagnosis = data.mainDiagnosis;
         this.diagnosis = data.diagnosis;
 
-        this.anesthethicReportHandlerService.createAnestheticReportServiceInstances();
+		this.anesthethicReportHandlerService.createAnestheticReportServiceInstances();
     }
 
     ngOnInit(): void {
@@ -41,6 +41,9 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		this.anesthethicReportHandlerService.getIsAnestheticReportLoadingDraft().subscribe(isLoadingDraft => {
             this.isLoadingDraft = isLoadingDraft;
         })
+
+		this.anesthethicReportHandlerService.loadAnestheticPreviousData(this.data)
+
     }
 
     save(isDraft: boolean): void {
@@ -51,8 +54,9 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 
         if (this.anesthethicReportHandlerService.isValidConsultation()) {
             this.anesthethicReportHandlerService.createAnestheticReport(newAnestheticReport, this.data.internmentEpisodeId, this.dockPopupRef, isDraft);
+
         } else {
-            this.anesthethicReportHandlerService.checkFormErrors(this.el, isDraft);
+            this.anesthethicReportHandlerService.checkFormErrors(this.el);
         }
 	}
 

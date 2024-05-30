@@ -50,6 +50,7 @@
                         "NURSING": "Enfermería",
                         "EPICRISIS_DRAFT": "Continuar epicrisis",
                         "ANESTHETIC_REPORT": "Parte anestésico",
+						"ANESTHETIC_REPORT_DRAFT": "Continuar parte anestésico",
 						"SURGICAL_REPORT": "Parte quirúrgico"
                     }
                 },

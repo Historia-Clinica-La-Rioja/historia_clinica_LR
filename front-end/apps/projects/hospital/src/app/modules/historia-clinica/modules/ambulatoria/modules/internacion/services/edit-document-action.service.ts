@@ -39,11 +39,20 @@ export class EditDocumentActionService {
 			this.internmentActions.surgicalReport$.subscribe(fieldsToUpdate => this.updateInternment(fieldsToUpdate));
 			this.internmentActions.openSurgicalReport(document.id);
 		}
+		if (document.documentType === "Parte anestésico") {
+			this.internmentActions.anestheticReport$.subscribe(fieldsToUpdate => this.updateInternment(fieldsToUpdate));
+			this.internmentActions.openAnestheticReport(document.id);
+		}
 	}
 
 	editDraftEpicrisis(document: DocumentSearchDto, canConfirmedDocument: boolean) {
 		this.canConfirmedDocument = canConfirmedDocument;
 		this.internmentActions.openEpicrisis(document.id, true);
+	}
+
+	editDraftAnesthetic(document: DocumentSearchDto, canConfirmedDocument: boolean) {
+		this.canConfirmedDocument = canConfirmedDocument;
+		this.internmentActions.openAnestheticReport(document.id, true);
 	}
 
 	private updateInternment(fieldsToUpdate: InternmentFields) {
