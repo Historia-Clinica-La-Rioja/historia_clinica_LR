@@ -638,10 +638,10 @@
 
     <div th:fragment="personalHistory" th:if="${not #lists.isEmpty(personalHistories.content) || personalHistories.isReferred != null}">
         <p class="section-title">Antecedentes personales</p>
-        <div th:if="${!personalHistories.isReferred}">
+        <div th:if="${personalHistories.isReferred != null && personalHistories.isReferred == false}">
             <p class="section-data">No refiere</p>
         </div>
-        <div th:if="${personalHistories.isReferred}">
+        <div th:if="${(personalHistories.isReferred == null && not #lists.isEmpty(personalHistories.content)) || personalHistories.isReferred == true}">
             <dl class="section-data" th:each="personalHistory,iter: ${personalHistories.content}">
                 <dd><p th:text="${'- ' + personalHistory.snomed.pt}"></p></dd>
             </dl>
@@ -652,10 +652,10 @@
 
     <div th:fragment="familyHistory" th:if="${not #lists.isEmpty(familyHistories.content) || familyHistories.isReferred != null}">
         <p class="section-title">Antecedentes familiares</p>
-        <div th:if="${!familyHistories.isReferred}">
+        <div th:if="${personalHistories.isReferred != null && familyHistories.isReferred == false}">
             <p class="section-data">No refiere</p>
         </div>
-        <div th:if="${familyHistories.isReferred}">
+        <div th:if="${(familyHistories.isReferred == null && not #lists.isEmpty(familyHistories.content)) || familyHistories.isReferred == true}">
             <dl class="section-data" th:each="familyHistory,iter: ${familyHistories.content}">
                 <dd><p th:text="${'- ' +familyHistory.snomed.pt}"></p></dd>
             </dl>
