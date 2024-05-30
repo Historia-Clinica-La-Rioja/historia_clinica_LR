@@ -264,6 +264,7 @@ public class HospitalPublicApiExceptionHandler {
 		);
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ DateTimeParseException.class })
 	protected ApiErrorMessageDto handleDateTimeParseException(DateTimeParseException ex) {
 		logger.debug("DateTimeParseException -> {}", ex.getMessage(), ex);
