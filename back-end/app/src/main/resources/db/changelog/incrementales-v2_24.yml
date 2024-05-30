@@ -152,4 +152,25 @@ databaseChangeLog:
                     name: deleted_on
                     type: datetime
 
+    - changeSet:
+        id: medicine_financing_status-metadata
+        comment : Populate table medicine_financing_status
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  row_data RECORD;
+                BEGIN
+                  FOR row_data IN ( 
+                    SELECT srg.snomed_id as id
+                    FROM snomed_related_group srg
+                    WHERE srg.group_id IN (SELECT id from snomed_group sg WHERE description = 'MEDICINE' AND institution_id = -1)
+                  ) LOOP
+                    INSERT INTO medicine_financing_status (id) VALUES (row_data.id);
+                  END LOOP;
+                END $$;
 
