@@ -147,4 +147,15 @@ export class MedicacionesNuevaConsultaService {
 			this.addToList();
 		});
 	}
+	setData(medications: MedicationDto[]) {
+		if (medications) {
+			this.data = medications.map(medication => ({
+				snomed: medication.snomed,
+				observaciones: medication.note,
+				suspendido: medication.suspended
+			}));
+			this.medicacionEmitter.next(this.data);
+			this.isEmptySource.next(this.isEmpty());
+		}
+    }
 }
