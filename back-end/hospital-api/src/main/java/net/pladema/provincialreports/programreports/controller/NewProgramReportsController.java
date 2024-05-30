@@ -44,22 +44,13 @@ public class NewProgramReportsController {
 
 	@GetMapping(value = "/{institutionId}/epidemiology-one")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
-	public @ResponseBody
-	void getEpidemiologyOneExcelReport(
-			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate") String fromDate,
-			@RequestParam(value = "toDate") String toDate,
-			HttpServletResponse response
-			) throws Exception {
+	public @ResponseBody void getEpidemiologyOneExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate") String fromDate, @RequestParam(value = "toDate") String toDate, HttpServletResponse response) throws Exception {
 
 		logger.info("getEpidemiologyOneExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
 
 		String title = "Reporte de epidemiología - Vigilancia epidemiológica";
 
-		String[] headers = new String[]{
-				"Apellido y nombre", "Codificación", "Fecha de nacimiento", "Sexo", "Fecha",
-				"Departamento", "Domicilio", "CIE10", "Documento", "Diagnóstico"
-		};
+		String[] headers = new String[]{"Apellido y nombre", "Codificación", "Fecha de nacimiento", "Sexo", "Fecha", "Departamento", "Domicilio", "CIE10", "Documento", "Diagnóstico"};
 
 		try {
 			LocalDate startDate = LocalDate.parse(fromDate);
@@ -67,16 +58,14 @@ public class NewProgramReportsController {
 
 			logger.debug("Parsed dates - startDate: {}, endDate: {}", startDate, endDate);
 
-			IWorkbook wb = this.excelService.buildEpidemiologyOneExcel(
-					title, headers, this.queryFactory.queryEpidemiologyOne(institutionId, startDate, endDate), institutionId, startDate, endDate
-			);
+			IWorkbook wb = this.excelService.buildEpidemiologyOneExcel(title, headers, this.queryFactory.queryEpidemiologyOne(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
 			String filename = "Epidemiología - Vigilancia epidemiológica - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
 
-			logger.debug("Writing excel report to response with filename: {}", filename);
+			logger.debug("Writing epidemiology one excel report to response with filename: {}", filename);
 
 			OutputStream outputStream = response.getOutputStream();
 			wb.write(outputStream);
@@ -84,9 +73,48 @@ public class NewProgramReportsController {
 			outputStream.flush();
 			response.flushBuffer();
 
-			logger.info("Successfully wrote epidemiology report for institutionId: {}", institutionId);
+			logger.info("Successfully wrote epidemiology one report for institutionId: {}", institutionId);
 		} catch (Exception e) {
-			logger.error("Error generating epidemiology report for institutionId: {}", institutionId, e);
+			logger.error("Error generating epidemiology one report for institutionId: {}", institutionId, e);
+			throw e;
+		}
+
+	}
+
+	@GetMapping(value = "/{institutionId}/epidemiology-two")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody void getEpidemiologyTwoExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate") String fromDate, @RequestParam(value = "toDate") String toDate, HttpServletResponse response) throws Exception {
+
+		logger.info("getEpidemiologyTwoExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
+
+		String title = "Reporte de epidemiología - Notificación colectiva";
+
+		String[] headers = new String[]{"Diagnóstico/código", "Grupo", "Total"};
+
+		try {
+			LocalDate startDate = LocalDate.parse(fromDate);
+			LocalDate endDate = LocalDate.parse(toDate);
+
+			logger.debug("Parsed dates - startDate: {}, endDate: {}", startDate, endDate);
+
+			IWorkbook wb = this.excelService.buildEpidemiologyTwoExcel(title, headers, this.queryFactory.queryEpidemiologyTwo(institutionId, startDate, endDate), institutionId, startDate, endDate);
+
+			String filename = "Epidemiología - Notificación colectiva - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+
+			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			response.setContentType(wb.getContentType());
+
+			logger.debug("Writing epidemiology two excel report to response with filename: {}", filename);
+
+			OutputStream outputStream = response.getOutputStream();
+			wb.write(outputStream);
+			outputStream.close();
+			outputStream.flush();
+			response.flushBuffer();
+
+			logger.info("Successfully wrote epidemiology report two for institutionId: {}", institutionId);
+		} catch (Exception e) {
+			logger.error("Error generating epidemiology report two for institutionId: {}", institutionId, e);
 			throw e;
 		}
 

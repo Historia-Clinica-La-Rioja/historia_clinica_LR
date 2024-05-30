@@ -7,9 +7,9 @@ import ar.lamansys.sgx.shared.reports.util.struct.IRow;
 import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 
-import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.provincialreports.programreports.repository.EpidemiologyOneConsultationDetail;
 
+import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoConsultationDetail;
 import net.pladema.provincialreports.reportformat.DateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +36,7 @@ public class NewProgramReportsExcelService {
 		this.dateTools = dateTools;
 	}
 
-	public IWorkbook buildEpidemiologyOneExcel (
-			String title, String[] headers, List<EpidemiologyOneConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate
-	) {
+	public IWorkbook buildEpidemiologyOneExcel(String title, String[] headers, List<EpidemiologyOneConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 
@@ -52,14 +50,42 @@ public class NewProgramReportsExcelService {
 
 		ICellStyle dataCellsStyle = excelUtilsService.getDataCellsStyle(workbook);
 
-		result.forEach(
-				resultData -> {
-					IRow row = sheet.createRow(rowNumber.getAndIncrement());
-					fillEpidemiologyOneRow(row, resultData, dataCellsStyle);
-				}
-		);
+		result.forEach(resultData -> {
+			IRow row = sheet.createRow(rowNumber.getAndIncrement());
+			fillEpidemiologyOneRow(row, resultData, dataCellsStyle);
+		});
 
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
 		excelUtilsService.setSheetDimensions(sheet);
+
+		return workbook;
+	}
+
+	public IWorkbook buildEpidemiologyTwoExcel(String title, String[] headers, List<EpidemiologyTwoConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
+
+		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
+
+		excelUtilsService.createHeaderCellsStyle(workbook);
+
+		ISheet sheet = workbook.createSheet(title);
+
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 7, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle dataCellsStyle = excelUtilsService.getDataCellsStyle(workbook);
+
+		result.forEach(resultData -> {
+			IRow row = sheet.createRow(rowNumber.getAndIncrement());
+			fillEpidemiologyTwoRow(row, resultData, dataCellsStyle);
+		});
+
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
+
+		// manual adjustments
+		sheet.setColumnWidth(1, 90);
+		sheet.setColumnWidth(2, 90);
 
 		return workbook;
 	}
@@ -106,6 +132,23 @@ public class NewProgramReportsExcelService {
 		ICell cell9 = row.createCell(cellNumber.getAndIncrement());
 		cell9.setCellStyle(style);
 		cell9.setCellValue(content.getProblems());
+
+	}
+
+	public void fillEpidemiologyTwoRow(IRow row, EpidemiologyTwoConsultationDetail content, ICellStyle style) {
+		AtomicInteger cellNumber = new AtomicInteger(0);
+
+		ICell cell0 = row.createCell(cellNumber.getAndIncrement());
+		cell0.setCellStyle(style);
+		cell0.setCellValue(content.getDiagnostic());
+
+		ICell cell1 = row.createCell(cellNumber.getAndIncrement());
+		cell1.setCellStyle(style);
+		cell1.setCellValue(content.getGrp());
+
+		ICell cell2 = row.createCell(cellNumber.getAndIncrement());
+		cell2.setCellStyle(style);
+		cell2.setCellValue(content.getCounter());
 
 	}
 

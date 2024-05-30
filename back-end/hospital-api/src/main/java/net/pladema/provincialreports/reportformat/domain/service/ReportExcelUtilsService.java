@@ -170,6 +170,17 @@ public class ReportExcelUtilsService {
 		sheet.setRowHeight(rowNumber++, 23);
 
 		do sheet.setRowHeight(rowNumber++, 23); while (rowNumber < sheet.getCantRows());
+
+	}
+
+	public void setMinimalHeaderDimensions(ISheet sheet) {
+		int columnNumber = 0;
+		sheet.setColumnWidth(columnNumber++, 175);
+		sheet.setColumnWidth(columnNumber++, 125);
+		sheet.setColumnWidth(columnNumber++, 125);
+
+		do sheet.setColumnWidth(columnNumber++, 125); while (columnNumber < 10);
+
 	}
 
 	public String currentDateAsDDMMYYYY(String separator) {
