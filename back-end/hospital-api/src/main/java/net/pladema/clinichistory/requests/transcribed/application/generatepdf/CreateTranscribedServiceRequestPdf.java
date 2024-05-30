@@ -6,6 +6,7 @@ import static ar.lamansys.sgx.shared.files.pdf.EPDFTemplate.RECIPE_ORDER_TABLE;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateDeliveryOrderBaseForm;
 import net.pladema.clinichistory.requests.servicerequests.application.CreateDeliveryOrderFormContext;
 import net.pladema.clinichistory.requests.transcribed.application.getbyid.GetTranscribedServiceRequest;
@@ -35,6 +36,7 @@ public class CreateTranscribedServiceRequestPdf {
     private final CreateDeliveryOrderBaseForm createDeliveryOrderBaseForm;
     private final CreateDeliveryOrderFormContext createDeliveryOrderFormContext;
     private final AppointmentService appointmentService;
+	private final FeatureFlagsService featureFlagsService;
 
     public GeneratedBlobBo run(Integer institutionId, Integer patientId, Integer transcribedServiceRequestId, Integer appointmentId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequestId {}", institutionId, patientId, transcribedServiceRequestId);
@@ -102,6 +104,7 @@ public class CreateTranscribedServiceRequestPdf {
         ctx.put("patientCoverage", patientMedicalCoverage);
         ctx.put("institutionName", transcribedServiceRequest.getInstitutionName());
         ctx.put("requestDate", transcribedServiceRequest.getReportDate());
+		ctx.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 
         log.trace("Output -> {}", ctx);
         return ctx;

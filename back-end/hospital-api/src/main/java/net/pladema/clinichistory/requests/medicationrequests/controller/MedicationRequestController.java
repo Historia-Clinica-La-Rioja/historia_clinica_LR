@@ -355,6 +355,7 @@ public class MedicationRequestController {
         ctx.put("patientCoverage", patientCoverageDto);
         var date = medicationRequestBo.getRequestDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         ctx.put("requestDate", date);
+		ctx.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 
 		LOG.debug("Output -> {}", ctx);
         return ctx;
