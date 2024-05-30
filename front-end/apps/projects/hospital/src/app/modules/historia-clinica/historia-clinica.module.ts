@@ -31,6 +31,7 @@ import { EffectiveTimeComponent } from './components/effective-time/effective-ti
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
 import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
 import { EndOfAnesthesiaStatusSummaryComponent } from './components/end-of-anesthesia-status-summary/end-of-anesthesia-status-summary.component';
+import { EpicrisisDocumentSummaryComponent } from './components/epicrisis-document-summary/epicrisis-document-summary.component';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
 import { EspecialidadFormComponent } from './components/especialidad-form/especialidad-form.component';
 import { EvolucionFormComponent } from './components/evolucion-form/evolucion-form.component';
@@ -180,6 +181,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
 		EndOfAnesthesiaStatusSummaryComponent,
+        EpicrisisDocumentSummaryComponent,
 		EpisodeDataComponent,
 		EvolutionChartSelectComponent,
 		EvolutionChartTypeSelectComponent,

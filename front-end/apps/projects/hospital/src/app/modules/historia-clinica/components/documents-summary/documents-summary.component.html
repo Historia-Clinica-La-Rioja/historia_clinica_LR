@@ -122,7 +122,8 @@
 				</mat-list-option>
 			</mat-selection-list>
 			<ng-container *ngIf="!(activeDocument?.document.documentType === DOCUMENT_TYPES.ANESTHETIC_REPORT || activeDocument?.document.documentType === DOCUMENT_TYPES.ANAMNESIS
-                || activeDocument?.document.documentType === DOCUMENT_TYPES.EVOLUTION_NOTE || activeDocument?.document.documentType === DOCUMENT_TYPES.NURSE_EVOLUTION_NOTE)">
+                || activeDocument?.document.documentType === DOCUMENT_TYPES.EVOLUTION_NOTE || activeDocument?.document.documentType === DOCUMENT_TYPES.NURSE_EVOLUTION_NOTE 
+                || activeDocument?.document.documentType === DOCUMENT_TYPES.EPICRISIS)">
 				<div *ngIf="viewEvolutionNote()" class="content" fxLayout="row" fxLayoutAlign="space-between">
 					<div fxFlex="70%">
 						<ng-container>
@@ -241,6 +242,11 @@
                 <app-evolution-note-document-summary class="document-summary" [internmentEpisodeId]="internmentEpisodeId"
                     [activeDocument]="activeDocument" [isPopUpOpen]="isPopUpOpen"
                     (resetActiveDocument)="resetActiveDocument()"></app-evolution-note-document-summary>
+            </ng-container>
+            <ng-container *ngIf="activeDocument?.document.documentType === DOCUMENT_TYPES.EPICRISIS">
+                <app-epicrisis-document-summary class="document-summary" [internmentEpisodeId]="internmentEpisodeId"
+                    [activeDocument]="activeDocument" [isPopUpOpen]="isPopUpOpen"
+                    (resetActiveDocument)="resetActiveDocument()"></app-epicrisis-document-summary>
             </ng-container>
 		</div>
 		<div
