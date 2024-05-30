@@ -21,12 +21,23 @@ export class AnestheticReportAnestheticHistoryComponent implements OnInit {
         private readonly service: AnestheticReportService,
     ) { }
 
-    ngOnInit(): void {
-        this.form = this.service.anestheticReportAnestheticHistoryService.getForm();
-    }
+	ngOnInit(): void {
+		this.form = this.service.anestheticReportAnestheticHistoryService.getForm();
+		this.service.anestheticHistory$.subscribe(anestheticHistory => {
+			if (anestheticHistory) {
+				if (anestheticHistory.stateId === PREVIOUS_ANESTHESIA_STATE_ID.YES) {
+					this.viewZoneOptions = true;
+					this.service.anestheticReportAnestheticHistoryService.setData(anestheticHistory);
+				} else {
+					this.viewZoneOptions = false;
+					this.service.anestheticReportAnestheticHistoryService.setData(anestheticHistory);
+				}
+			}
+		});
+	}
 
     onPreviousAnesthesiaStateSelected($event: MatRadioChange){
-        $event.value === PREVIOUS_ANESTHESIA_STATE_ID.YES ? 
+        $event.value === PREVIOUS_ANESTHESIA_STATE_ID.YES ?
             this.viewZoneOptions = true : this.viewZoneOptions = false;
         this.service.anestheticReportAnestheticHistoryService.setPreviousAnesthesiaData($event.value)
     }
@@ -34,5 +45,4 @@ export class AnestheticReportAnestheticHistoryComponent implements OnInit {
     onAnesthesiaZoneSelected($event: MatRadioChange){
         this.service.anestheticReportAnestheticHistoryService.setAnesthesiaZoneData($event.value)
     }
-
 }

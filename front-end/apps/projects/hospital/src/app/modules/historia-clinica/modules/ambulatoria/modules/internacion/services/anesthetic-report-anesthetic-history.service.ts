@@ -38,6 +38,15 @@ export class AnestheticReportAnestheticHistoryService {
     setAnesthesiaZoneData(anesthesiaZone: ANESTHESIA_ZONE_ID){
         this.form.get("anesthesiaZone").setValue(anesthesiaZone);
     }
+
+	setData(anestheticHistoryData: AnestheticHistoryDto) {
+		if (anestheticHistoryData) {
+			this.setPreviousAnesthesiaData(anestheticHistoryData.stateId);
+			if (anestheticHistoryData.stateId === PREVIOUS_ANESTHESIA_STATE_ID.YES) {
+				this.setAnesthesiaZoneData(anestheticHistoryData.zoneId);
+			}
+		}
+    }
 }
 
 export interface PreviousAnesthesiaDataForm{
