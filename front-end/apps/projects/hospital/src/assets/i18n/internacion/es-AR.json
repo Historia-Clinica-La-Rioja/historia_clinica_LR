@@ -645,7 +645,8 @@
 				"STUDIES_PROCEDURES": "Resumen de estudios y procedimientos realizados",
 				"PATIENT_PROGRESS": "Evolución",
 				"CLINICAL_IMPRESSION": "Impresión clínica y plan",
-				"OTHERS": "Otras observaciones"
+				"OTHERS": "Otras observaciones",
+                "INDICATIONS_NOTE": "Indicaciones al alta"
 			},
 			"vital-signs-and-risk-factor": {
 				"TITLE": "Signos vitales y factores de riesgo",

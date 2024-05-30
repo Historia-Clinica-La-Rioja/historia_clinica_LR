@@ -16,6 +16,9 @@
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
             <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="summary.epicrisis.mainDiagnosis || summary.epicrisis.diagnosis"
                 [diagnosis]="summary.epicrisis.diagnosis" [mainDiagnosis]="summary.epicrisis.mainDiagnosis"></app-diagnosis-summary>
+
+            <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="summary.epicrisis.clinicalEvaluation"
+                [clinicalEvaluation]="summary.epicrisis.clinicalEvaluation"></app-clinical-evaluation-summary>
         </div>
     </div>
 

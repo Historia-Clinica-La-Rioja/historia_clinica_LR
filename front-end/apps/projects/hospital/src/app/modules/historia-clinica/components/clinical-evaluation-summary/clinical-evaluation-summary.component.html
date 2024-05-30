@@ -16,6 +16,9 @@
         <app-title-description-list data-id="clinical-impression-note" *ngIf="clinicalEvaluation.clinicalImpressionNote?.length"
             title="internaciones.documents-summary.observations.CLINICAL_IMPRESSION"
             [descriptionData]="clinicalEvaluation.clinicalImpressionNote"></app-title-description-list>
+        <app-title-description-list data-id="indications-note" *ngIf="clinicalEvaluation.indicationsNote?.length"
+            title="internaciones.documents-summary.observations.INDICATIONS_NOTE"
+            [descriptionData]="clinicalEvaluation.indicationsNote"></app-title-description-list>
         <app-title-description-list data-id="other-note" *ngIf="clinicalEvaluation.otherNote?.length"
             title="internaciones.documents-summary.observations.OTHERS"
             [descriptionData]="clinicalEvaluation.otherNote"></app-title-description-list>
