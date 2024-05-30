@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto } from '@api-rest/api-model';
+import { GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto, SaveInstitutionAddressDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -31,5 +31,15 @@ export class GisService {
 	getInstitutionCoordinatesByInstitutionId = (): Observable<GlobalCoordinatesDto> => {
 		const url = `${this.URL_PREFIX}/${this.contextService.institutionId}/sanitary-responsibility-area/get-institution-global-coordinates`;
 		return this.http.get<GlobalCoordinatesDto>(url);
+	}
+
+	saveInstitutionAddress = (address: SaveInstitutionAddressDto): Observable<number> => {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sanitary-responsibility-area/save-institution-address`;
+		return this.http.post<number>(url, address);
+	}
+
+	saveInstitutionCoordinates = (coordinates: GlobalCoordinatesDto): Observable<number> => {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sanitary-responsibility-area/save-institution-global-coordinates`;
+		return this.http.post<number>(url, coordinates);
 	}
 }

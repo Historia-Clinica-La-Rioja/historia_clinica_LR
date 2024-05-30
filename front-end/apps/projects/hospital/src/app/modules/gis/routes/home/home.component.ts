@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto, InstitutionDto } from '@api-rest/api-model';
+import { GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto, InstitutionDto, SaveInstitutionAddressDto } from '@api-rest/api-model';
 import { AddressMasterDataService, AddressProjection } from '@api-rest/services/address-master-data.service';
 import { GisService } from '@api-rest/services/gis.service';
 import { InstitutionService } from '@api-rest/services/institution.service';
 import { ContextService } from '@core/services/context.service';
 import { DEFAULT_COUNTRY_ID, hasError } from '@core/utils/form.utils';
+import { ButtonType } from '@presentation/components/button/button.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
 import { finalize, forkJoin, map } from 'rxjs';
 
@@ -32,6 +34,7 @@ export class HomeComponent implements OnInit {
 	hasError = hasError;
 	institution: InstitutionDto;
 	showMap = false;
+	ButtonType = ButtonType;
 	institutionAddressForm: FormGroup<InstitutionAddress>;
 
 	states: TypeaheadOption<AddressProjection>[] = [];
@@ -48,11 +51,13 @@ export class HomeComponent implements OnInit {
 	coordinatesCurrentValue: GlobalCoordinatesDto;
 
 	isLoading = false;
+	isSaving = false;
 
 	constructor(private readonly gisService: GisService,
 				private readonly addressMasterDataService: AddressMasterDataService,
 				private readonly institutionService: InstitutionService,
-				private readonly contextService: ContextService) {}
+				private readonly contextService: ContextService,
+				private readonly snackBarService: SnackBarService) {}
 
 	ngOnInit(): void {
 		this.setInstitution();
@@ -110,6 +115,17 @@ export class HomeComponent implements OnInit {
 				this.institutionAddressForm.controls.coordinates.setValue(`${coordinates.latitude}, ${coordinates.longitude}`);
 			});
 	}
+
+	confirm = () => {
+		this.isSaving = true;
+		forkJoin(
+			[
+				this.gisService.saveInstitutionCoordinates(this.coordinatesCurrentValue),
+				this.gisService.saveInstitutionAddress(this.mapToSaveInstitutionAddressDto())
+			]
+		).pipe(finalize(() => this.isSaving = false))
+		.subscribe((_) => this.snackBarService.showSuccess("gis.status.UPDATE_DATA_SUCCESS"));
+	}
 	
 	get street(): string {
 		return this.institutionAddressForm.value.streetName;
@@ -117,6 +133,28 @@ export class HomeComponent implements OnInit {
 
 	get houseNumber(): string {
 		return this.institutionAddressForm.value.houseNumber;
+	}
+
+	get stateId(): number {
+		return this.institutionAddressForm.value.stateId;
+	}
+
+	get departmentId(): number {
+		return this.institutionAddressForm.value.departmentId;
+	}
+
+	get cityId(): number {
+		return this.institutionAddressForm.value.cityId;
+	}
+
+	private mapToSaveInstitutionAddressDto = (): SaveInstitutionAddressDto => {
+		return {
+			stateId: this.stateId,
+			departmentId: this.departmentId,
+			cityId: this.cityId,
+			streetName: this.street,
+			houseNumber: this.houseNumber
+		}
 	}
 
 	private toStringify = (): string => {

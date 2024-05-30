@@ -22,6 +22,9 @@
             "TITLE": "2. Posicionar en mapa",
             "COORDINATES": "Coordenadas",
             "SEARCHING": "Buscando..."
+        },
+        "status": {
+            "UPDATE_DATA_SUCCESS": "Datos de la institución actualizados"
         }
     }
 }

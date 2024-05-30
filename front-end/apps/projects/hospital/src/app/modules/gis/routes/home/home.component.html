@@ -71,7 +71,7 @@
                         </div>
                 
                         <div class="actions">
-                            <button matStepperNext mat-button mat-raised-button color="primary" translate="buttons.NEXT"></button>
+                            <button matStepperNext mat-button mat-raised-button color="primary">{{'buttons.NEXT' | translate | uppercase}}</button>
                         </div>
                   </form>
                 </mat-step>
@@ -125,8 +125,15 @@
                         </mat-form-field>
 
                         <div class="actions">
-                            <button matStepperPrevious mat-button mat-stroked-button color="primary" translate="buttons.BACK"></button>
-                            <button *ngIf="showMap" mat-button mat-raised-button color="primary" translate="buttons.CONFIRM"></button>
+                            <button matStepperPrevious mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
+
+                            <app-button 
+                                *ngIf="showMap" 
+                                text="buttons.CONFIRM" 
+                                [buttonType]="ButtonType.RAISED" 
+                                [isLoading]="isSaving"
+                                (clicked)="confirm()">
+                            </app-button>
                         </div>
                     </form>
                 </mat-step>

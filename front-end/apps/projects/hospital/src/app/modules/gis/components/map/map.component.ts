@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GisLayersService } from '../../services/gis-layers.service';
 import { GlobalCoordinatesDto } from '@api-rest/api-model';
 
@@ -7,7 +7,7 @@ import { GlobalCoordinatesDto } from '@api-rest/api-model';
 	templateUrl: './map.component.html',
 	styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
+export class MapComponent {
 
 	@Input() set setMap(coordinates: GlobalCoordinatesDto) {
 		this.coordinates = coordinates;
@@ -17,9 +17,6 @@ export class MapComponent implements OnInit {
 	coordinates: GlobalCoordinatesDto;
 
 	constructor(private readonly gisLayersService: GisLayersService) { }
-
-	ngOnInit(): void {
-	}
 
 	markPoint = () => {
 		const position: number[] = this.gisLayersService.fromLonLat(this.coordinates);
