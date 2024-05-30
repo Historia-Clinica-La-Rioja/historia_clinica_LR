@@ -22,8 +22,9 @@ export class EpicrisisDocumentSummaryService {
             ...(epicrisis.procedures.length && { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(epicrisis.procedures)} ),
             ...(epicrisis.personalHistories?.length && { personalHistories: this.documentsSummaryService.mapPersonalHistoriesToDescriptionItemDataSummary(epicrisis.personalHistories)} ),
             ...(epicrisis.familyHistories?.length && { familyHistories: this.documentsSummaryService.mapFamilyHistoriesToDescriptionItemDataSummary(epicrisis.familyHistories)} ),
+            ...(epicrisis.allergies?.length && { allergies: this.documentsSummaryService.mapAllergiesToDescriptionItemDataSummary(epicrisis.allergies)} ),
         }
-}
+    }
 }
 
 export interface EpicrisisViewFormat {
@@ -33,4 +34,5 @@ export interface EpicrisisViewFormat {
     procedures: DescriptionItemDataSummary,
     personalHistories: DescriptionItemDataSummary,
     familyHistories: DescriptionItemDataSummary,
+    allergies: DescriptionItemDataSummary,
 }
