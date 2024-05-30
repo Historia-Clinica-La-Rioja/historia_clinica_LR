@@ -19,6 +19,9 @@
 
             <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="summary.epicrisis.clinicalEvaluation"
                 [clinicalEvaluation]="summary.epicrisis.clinicalEvaluation"></app-clinical-evaluation-summary>
+            
+            <app-description-item-data-summary *ngIf="summary.epicrisis.procedures" data-id="procedures-summary"
+                [descriptionItemDataSummary]="summary.epicrisis.procedures"></app-description-item-data-summary>
         </div>
     </div>
 
