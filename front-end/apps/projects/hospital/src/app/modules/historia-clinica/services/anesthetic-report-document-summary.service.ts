@@ -139,7 +139,7 @@ export class AnestheticReportDocumentSummaryService {
         }
     }
 
-    private getAnestheticReportViaDescription(viasArray: MasterDataDto[], viaId: number): string {
+    getAnestheticReportViaDescription(viasArray: MasterDataDto[], viaId: number): string {
         return viasArray.filter(via => via.id == viaId)[0].description;
     }
 
@@ -148,7 +148,7 @@ export class AnestheticReportDocumentSummaryService {
     }
 
     private getAnalgesicTechniqueDescription(analgesicTechnique: AnalgesicTechniqueDto): string {
-        return `${analgesicTechnique.snomed.pt} ${INFO_DIVIDER} ${analgesicTechnique.injectionNote} ${INFO_DIVIDER} ${this.getDoseTranslate()} ${analgesicTechnique.dosage.quantity.value} 
+        return `${analgesicTechnique.snomed.pt} ${INFO_DIVIDER} ${analgesicTechnique.injectionNote} ${INFO_DIVIDER} ${this.getDoseTranslate()} ${analgesicTechnique.dosage.quantity.value}
             ${INFO_DIVIDER} ${this.getUnitTranslate()} ${this.getCatetherValue(analgesicTechnique.catheter)} ${this.getCatetherNote(analgesicTechnique.catheterNote)}`;
     }
 
@@ -187,7 +187,7 @@ export class AnestheticReportDocumentSummaryService {
     private getTrachealIntubationDescription(anestheticTechnique: AnestheticTechniqueDto): string {
         let description = '';
         if (anestheticTechnique.trachealIntubation) {
-            description = `${INFO_DIVIDER} ${this.translateService.instant('historia-clinica.anesthetic-report.summary.TRACHEAL_INTUBATION')} 
+            description = `${INFO_DIVIDER} ${this.translateService.instant('historia-clinica.anesthetic-report.summary.TRACHEAL_INTUBATION')}
                 ${this.getTrachealIntubationIdsDescription(anestheticTechnique.trachealIntubationMethodIds)}`;
         }
         return description
@@ -209,18 +209,18 @@ export class AnestheticReportDocumentSummaryService {
 
     private getFluidAdministration(fluidAdministration: AnestheticSubstanceDto): string {
         return fluidAdministration.dosage.quantity.value ?
-            `${fluidAdministration.snomed.pt} ${INFO_DIVIDER} ${this.translateService.instant('historia-clinica.anesthetic-report.summary.QUANTITY_USED')} 
+            `${fluidAdministration.snomed.pt} ${INFO_DIVIDER} ${this.translateService.instant('historia-clinica.anesthetic-report.summary.QUANTITY_USED')}
             ${fluidAdministration.dosage.quantity.value} ${fluidAdministration.dosage.quantity.unit}`
             : fluidAdministration.snomed.pt
     }
 
     private mapToIntrasurgicalAnestheticProceduresData(procedures: ProcedureDescriptionDto): IntrasurgicalAnestheticProceduresData {
         return {
-            venousAccess: procedures ? this.getProcedureValue(procedures.venousAccess) 
+            venousAccess: procedures ? this.getProcedureValue(procedures.venousAccess)
                 : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
-            nasogastricTube: procedures ? this.getProcedureValue(procedures.nasogastricTube) 
+            nasogastricTube: procedures ? this.getProcedureValue(procedures.nasogastricTube)
                 : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
-            urinaryCatheter: procedures ? this.getProcedureValue(procedures.urinaryCatheter) 
+            urinaryCatheter: procedures ? this.getProcedureValue(procedures.urinaryCatheter)
                 : [this.documentsSummaryService.getNoInformationAsDescriptionItemData()],
         }
     }
@@ -240,7 +240,7 @@ export class AnestheticReportDocumentSummaryService {
     }
 
     private getAnestheticSubstanceDescription(item: AnestheticSubstanceDto, viasList: MasterDataDto[]): string {
-        return `${item.snomed.pt} ${INFO_DIVIDER} ${this.getViaTranslate()} ${this.getAnestheticReportViaDescription(viasList, item.viaId)} ${INFO_DIVIDER} ${this.getDoseTranslate()} 
+        return `${item.snomed.pt} ${INFO_DIVIDER} ${this.getViaTranslate()} ${this.getAnestheticReportViaDescription(viasList, item.viaId)} ${INFO_DIVIDER} ${this.getDoseTranslate()}
             ${item.dosage.quantity.value} ${INFO_DIVIDER} ${this.getUnitTranslate()} ${item.dosage.quantity.unit}`
     }
 

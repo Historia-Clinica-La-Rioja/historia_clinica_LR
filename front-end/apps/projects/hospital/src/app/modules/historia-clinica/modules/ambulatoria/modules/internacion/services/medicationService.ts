@@ -5,8 +5,10 @@ import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { NoWhitespaceValidator } from '@core/utils/form.utils';
 import { PREMEDICATION } from '@historia-clinica/constants/validation-constants';
+import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { TranslateService } from '@ngx-translate/core';
+import { TimePickerDto } from '@presentation/components/time-picker/time-picker.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
@@ -35,6 +37,7 @@ export class MedicationService {
         private readonly snomedService: SnomedService,
         private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService,
+		private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
     ) {
         this.form = new FormGroup<MedicationForm>({
             snomed: new FormControl(null, Validators.required),
@@ -179,6 +182,32 @@ export class MedicationService {
 
     get dosisError$(): Observable<string | void> {
 		return this._dosisError$;
+	}
+
+	setData(medications: AnestheticSubstanceDto[], preMediactionVias: MasterDataDto[]): void {
+		let newList = medications.map(medication => ({
+			snomed: medication.snomed,
+			dosis: medication.dosage ? medication.dosage.quantity.value : null,
+			unit: medication.dosage ? medication.dosage.quantity.unit : null,
+			via: {
+				id: medication.viaId,
+				description: medication.viaNote ? medication.viaNote : this.anestheticReportDocumentSummaryService.getAnestheticReportViaDescription(preMediactionVias, medication.viaId) },
+			time: medication.dosage ? medication.dosage.startDateTime.time : null,
+			viaNote: medication.viaNote ? medication.viaNote : this.anestheticReportDocumentSummaryService.getAnestheticReportViaDescription(preMediactionVias, medication.viaId)
+		}));
+
+		this.medicationList = [...newList];
+
+		this.dataEmitter.next(this.medicationList);
+		this.isEmptySource.next(this.isEmpty());
+	}
+
+	setLastIntake(lastFoodIntake?: TimeDto): TimePickerDto {
+		const timePickerDto: TimePickerDto = {
+			hours: lastFoodIntake.hours,
+			minutes: lastFoodIntake.minutes,
+		}
+		return timePickerDto
 	}
 }
 

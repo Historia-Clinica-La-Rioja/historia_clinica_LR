@@ -13,6 +13,6 @@
 
     <div fxLayout="column">
         <h3 class="last-food-intake-title">{{ 'internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE' | translate }}</h3>
-        <app-time-picker (timeSelected)="onTimeSelected($event)"></app-time-picker>
+        <app-time-picker *ngIf="(lastFoodIntake$ | async) !== null" [timePickerData]="timePickerData" (timeSelected)="onTimeSelected($event)"></app-time-picker>
     </div>
 </div>
