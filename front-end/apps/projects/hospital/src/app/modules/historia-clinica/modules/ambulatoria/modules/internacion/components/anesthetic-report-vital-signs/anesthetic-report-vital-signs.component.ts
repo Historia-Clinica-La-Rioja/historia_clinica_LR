@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { VitalSignsAttribute, VitalSignsData } from '../../services/anesthetic-report-vital-signs.service';
 import { TimeDto } from '@api-rest/api-model';
-import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 import { FormGroup } from '@angular/forms';
 import { ToFormGroup } from '@core/utils/form.utils';
 import { AnestheticReportService } from '../../services/anesthetic-report.service';
+import { Observable } from 'rxjs';
+
 
 @Component({
     selector: 'app-anesthetic-report-vital-signs',
@@ -14,9 +15,8 @@ import { AnestheticReportService } from '../../services/anesthetic-report.servic
 export class AnestheticReportVitalSignsComponent {
 
     vitalSignsForm: FormGroup<ToFormGroup<VitalSignsData>>;
-    timePickerData: TimePickerData = {
-        hideLabel: true,
-    }
+
+	selectedData$: Observable<VitalSignsData>
 
     constructor(
         readonly service: AnestheticReportService,
@@ -24,6 +24,7 @@ export class AnestheticReportVitalSignsComponent {
 
     ngOnInit(): void {
         this.vitalSignsForm = this.service.anestheticReportVitalSignsService.getVitalSignsForm();
+		this.selectedData$ = this.service.anestheticReportVitalSignsService.vitalSigns$
     }
 
     setDateAttribute(date: Date, attribute: VitalSignsAttribute) {
