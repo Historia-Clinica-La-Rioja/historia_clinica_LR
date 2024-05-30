@@ -1,6 +1,6 @@
 <app-content width="full">
     <section class="container">
-        <div class="institution-address-container">
+        <div class="institution-address-container" *ngIf="isFirstTime">
             <mat-stepper linear #stepper (selectionChange)="changeStep($event)">
                 <mat-step label="{{'gis.steppers.INSTITUTION_DATA' | translate}}" [stepControl]="institutionAddressForm" [completed]="institutionAddressForm.valid">
                     <h1 [translate]="'gis.institution-data.TITLE'"></h1>
@@ -76,68 +76,13 @@
                   </form>
                 </mat-step>
                 <mat-step label="{{'gis.steppers.MAP_POSITION' | translate}}">
-                    <h1 [translate]="'gis.map-position.TITLE'"></h1>
-                    <app-title-description-list 
-                        *ngIf="institution"
-                        [title]="'gis.address.INSTITUTION'"
-                        [descriptionData]="[{description: institution.name}]">
-                    </app-title-description-list>
-    
-                    <div class="space-between m-top">
-                        <app-title-description-list 
-                            [title]="'gis.address.STREET'"
-                            [descriptionData]="[{description: street}]">
-                        </app-title-description-list>
-        
-                        <app-title-description-list 
-                            [title]="'gis.address.HOUSE_NUMBER'"
-                            [descriptionData]="[{description: houseNumber}]">
-                        </app-title-description-list>
-                    </div>
-            
-                    <div class="actions">
-                        <button [disabled]="institutionAddressForm.invalid" mat-button mat-raised-button color="primary" translate="buttons.NEXT"></button>
-                    </div>
-    
-                    <div class="space-between m-top">
-                        <app-title-description-list *ngIf="cityCurrentValue"
-                            [title]="'gis.address.CITY'"
-                            [descriptionData]="[{description: cityCurrentValue.description}]">
-                        </app-title-description-list>
-        
-                        <app-title-description-list *ngIf="departmentCurrentValue"
-                            [title]="'gis.address.DEPARTMENT'"
-                            [descriptionData]="[{description: departmentCurrentValue.description}]">
-                        </app-title-description-list>
-                    </div>
-    
-                    <div class="m-top">
-                        <app-title-description-list *ngIf="stateCurrentValue"
-                            [title]="'gis.address.STATE'"
-                            [descriptionData]="[{description: stateCurrentValue.description}]">
-                        </app-title-description-list>
-                    </div>
-    
-                    <form [formGroup]="institutionAddressForm" class="m-top column">
-                        <mat-label [translate]="'gis.map-position.COORDINATES'"></mat-label>
-                        <mat-form-field appearance="outline">
-                            <input matInput type="text" formControlName="coordinates">
-                        </mat-form-field>
-
-                        <div class="actions">
-                            <button matStepperPrevious mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
-
-                            <app-button 
-                                *ngIf="showMap" 
-                                text="buttons.CONFIRM" 
-                                [buttonType]="ButtonType.RAISED" 
-                                [isLoading]="isSaving"
-                                (clicked)="confirm()">
-                            </app-button>
-                        </div>
-                    </form>
+                    <app-institution-description *ngIf="institutionDescription" [setInstitutionDescription]="institutionDescription"></app-institution-description>
                 </mat-step>
               </mat-stepper>
+        </div>
+
+        <div *ngIf="!isFirstTime" class="institution-description">
+            <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
         </div>
 
         <div class="map-container">

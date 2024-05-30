@@ -2042,6 +2042,24 @@ export interface GeneratedApiKeyDto {
 export interface GenericMasterDataDto<T> extends AbstractMasterdataDto<T> {
 }
 
+export interface GetDiagnosticReportObservationDto {
+    id: number;
+    procedureParameterId: number;
+    representation: Representation;
+    snomedPt: string;
+    snomedSctid: string;
+    unitOfMeasureId: number;
+    value: string;
+}
+
+export interface GetDiagnosticReportObservationGroupDto {
+    diagnosticReportId: number;
+    id: number;
+    isPartialUpload: boolean;
+    observations: GetDiagnosticReportObservationDto[];
+    procedureTemplateId: number;
+}
+
 export interface GetSanitaryResponsibilityAreaInstitutionAddressDto {
     city: MasterDataDto;
     department: MasterDataDto;

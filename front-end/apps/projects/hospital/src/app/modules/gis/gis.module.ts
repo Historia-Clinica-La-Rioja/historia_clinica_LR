@@ -7,13 +7,15 @@ import { GisRoutingModule } from './gis-routing.module';
 import { HomeComponent } from './routes/home/home.component';
 import { MapComponent } from './components/map/map.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { InstitutionDescriptionComponent } from './components/institution-description/institution-description.component';
 
 
 @NgModule({
 	declarations: [
     	HomeComponent,
      	MapComponent,
-      LoadingComponent
+      LoadingComponent,
+      InstitutionDescriptionComponent
   	],
 	imports: [
 		CommonModule,
