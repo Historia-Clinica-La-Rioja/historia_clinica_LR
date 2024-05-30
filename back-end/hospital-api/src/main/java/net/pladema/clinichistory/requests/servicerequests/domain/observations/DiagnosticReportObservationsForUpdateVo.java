@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import lombok.Getter;
 import lombok.Value;
@@ -45,8 +46,13 @@ public class DiagnosticReportObservationsForUpdateVo {
 		}
 
 		var updates = updatedObservations.getValues();
+		var existingObservationsCopy = this.getExistingObservations();
+
 		for (var update : updates) {
-			var existing = findExisting(this.getExistingObservations(), update);
+
+			int existingIndex = findExistingIndex(existingObservationsCopy, update);
+			var existing = existingObservationsCopy.remove(existingIndex);
+
 			if (update.isNumeric())
 				output.add(new UpdatedDiagnosticReportObservationBo(existing.getId(), update.getValue(), update.getUnitOfMeasureId()));
 			else
@@ -56,32 +62,34 @@ public class DiagnosticReportObservationsForUpdateVo {
 	}
 
 	/**
-	 * Match the updated observation with the one found in the database.
-	 * Numeric observations special case:
-	 * 	A numeric parameter may have more than one observation attached (See ProcedureParameter.inputCount).
-	 * 	In this case the match with existing observations is done through parameter id and unit of measure id.
+	 * Match the updated observation with the one found in the database via parameter id.
+	 * Numeric observations considerations:
+	 * 	Numeric parameters may have more than one observation associated. For a given numeric parameter
+	 * 	the observations are matched by order.
+	 * 	Ex: the db has this:
+	 * 		Observation id=1: procedureParameterId=1, value="", uomId=123
+	 * 		Observation id=2: procedureParameterId=1, value="456", uomId=321
+	 * 	The update id:
+	 * 		procedureParameterId=1, value="45645", uomId=321
+	 * 	 	procedureParameterId=1, value="456", uomId=567
+	 *
+	 * 	 The first line of the update will be matched with Observation id=1, while the second one, with
+	 * 	 id=2. The final result will represent the intended update. The requirement is that the update
+	 * 	 always has as many elements as observations are in the database.
 	 *
 	 * @param existingObservations
 	 * @param update
 	 * @return
 	 */
-	private DiagnosticReportObservationForUpdateVo findExisting(
+	private Integer findExistingIndex(
 		List<DiagnosticReportObservationForUpdateVo> existingObservations,
 		AddObservationsCommandVo.Observation update) throws ObservationToUpdateNotFound {
-		Predicate<DiagnosticReportObservationForUpdateVo> filter = (x) -> {
-			var sameParameterId = Objects.equals(x.getProcedureParameterId(), update.getProcedureParameterId());
-			if (update.isNumeric()) {
-				var sameUom = Objects.equals(x.getUnitOfMeasureId(), update.getUnitOfMeasureId());
-				return sameUom && sameParameterId;
-			}
-			return sameParameterId;
-		};
-
-		return
-		existingObservations.stream()
-		.filter(filter)
-		.findAny()
-		.orElseThrow(() -> new ObservationToUpdateNotFound());
+		return IntStream
+			.range(0, existingObservations.size())
+			.filter(idx -> Objects.equals(
+				existingObservations.get(idx).getProcedureParameterId(),
+				update.getProcedureParameterId())
+			)
+			.findFirst().orElseThrow(() -> new ObservationToUpdateNotFound());
 	}
-
 }

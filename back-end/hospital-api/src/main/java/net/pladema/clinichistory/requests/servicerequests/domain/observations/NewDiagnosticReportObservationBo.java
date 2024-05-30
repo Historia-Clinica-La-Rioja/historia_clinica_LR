@@ -8,13 +8,13 @@ import java.util.Optional;
 public class NewDiagnosticReportObservationBo {
 
 	private Integer procedureParameterId;
-	private String value;
+	private Optional<String> value;
 
 	private Optional<Short> unitOfMeasureId;
 
 	private NewDiagnosticReportObservationBo(Integer procedureParameterId, String value, Short unitOfMeasureId){
 		this.procedureParameterId = procedureParameterId;
-		this.value = value;
+		this.value = Optional.ofNullable(value);
 		this.unitOfMeasureId = Optional.ofNullable(unitOfMeasureId);
 	}
 

@@ -9,19 +9,19 @@ import java.util.Optional;
 public class UpdatedDiagnosticReportObservationBo {
 
 	private Integer id;
-	private String value;
+	private Optional<String> value;
 	private Optional<Short> unitOfMeasureId;
 
 
 	public UpdatedDiagnosticReportObservationBo(Integer id, String value, Short unitOfMeasureId) {
 		this.id = id;
-		this.value = value;
+		this.value = Optional.ofNullable(value);
 		this.unitOfMeasureId = Optional.ofNullable(unitOfMeasureId);
 	}
 
 	public UpdatedDiagnosticReportObservationBo(Integer id, String value) {
 		this.id = id;
-		this.value = value;
+		this.value = Optional.ofNullable(value);
 		this.unitOfMeasureId = Optional.empty();
 	}
 

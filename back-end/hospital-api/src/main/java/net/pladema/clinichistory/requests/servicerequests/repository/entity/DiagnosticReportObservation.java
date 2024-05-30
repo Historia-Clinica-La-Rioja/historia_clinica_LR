@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Optional;
+
 @Entity
 @Table(name = "diagnostic_report_observation")
 @EntityListeners(SGXAuditListener.class)
@@ -46,23 +48,31 @@ public class DiagnosticReportObservation extends SGXAuditableEntity<Integer> {
 	@Column(name = "unit_of_measure_id", nullable = true)
 	private Short unitOfMeasureId;
 
-	public static DiagnosticReportObservation newNumericObservation(Integer diagnosticReportGroupId, Integer procedureParameterId, String value, Short unitOfMeasureId) {
+	public static DiagnosticReportObservation newNumericObservation(Integer diagnosticReportGroupId, Integer procedureParameterId, Optional<String> value, Short unitOfMeasureId) {
 		return new DiagnosticReportObservation(
 			null,
 			diagnosticReportGroupId,
 			procedureParameterId,
-			value,
+			value.orElse(""),
 			unitOfMeasureId
 		);
 	}
 
-	public static DiagnosticReportObservation newNonNumericObservation(Integer diagnosticReportGroupId, Integer procedureParameterId, String value) {
+	public static DiagnosticReportObservation newNonNumericObservation(Integer diagnosticReportGroupId, Integer procedureParameterId, Optional<String> value) {
 		return new DiagnosticReportObservation(
 			null,
 			diagnosticReportGroupId,
 			procedureParameterId,
-			value,
+			value.orElse(""),
 			null
 		);
+	}
+
+	public void setValue(Optional<String> value) {
+		this.value = value.orElse("");
+	}
+
+	public void setValue(String value) {
+		this.setValue(Optional.ofNullable(value));
 	}
 }
