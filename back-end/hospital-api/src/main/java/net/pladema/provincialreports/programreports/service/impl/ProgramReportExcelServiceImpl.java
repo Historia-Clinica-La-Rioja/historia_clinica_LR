@@ -283,8 +283,10 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell.setCellStyle(data.getStyle());
 		cell.setCellValue(data);
 
-		if (data.isCellRange())
+		if (data.isCellRange()) {
 			sheet.addMergedRegion(nRow, data.lastRow(), nColumn, data.lastCol(), true);
+
+		}
 	}
 
 	private void fillRowContent(IRow row, EpidemiologyOneConsultationDetail content, ICellStyle style) {
@@ -299,7 +301,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell2.setCellStyle(style);
 
 		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
-		cell3.setCellValue(reformatdate.reformatDate(content.getBirthDate()));
+		cell3.setCellValue(content.getBirthDate());
 		cell3.setCellStyle(style);
 
 		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
@@ -307,7 +309,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell4.setCellStyle(style);
 
 		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
-		cell5.setCellValue(reformatdate.reformatDate(content.getStartDate()));
+		cell5.setCellValue(content.getStartDate());
 		cell5.setCellStyle(style);
 
 		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
