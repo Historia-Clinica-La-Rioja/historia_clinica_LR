@@ -1559,6 +1559,14 @@ export interface ElectronicJointSignatureInstitutionProfessionalDto {
     license: ElectronicJointSignatureLicenseDto;
 }
 
+export interface ElectronicJointSignatureInvolvedDocumentListFilterDto {
+    electronicSignaturesStatusIds?: number[];
+    endDate?: DateDto;
+    patientFirstName?: string;
+    patientLastName?: string;
+    startDate?: DateDto;
+}
+
 export interface ElectronicJointSignatureLicenseDto {
     number: string;
     type: ELicenseNumberType;
