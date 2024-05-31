@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto, SaveInstitutionAddressDto } from '@api-rest/api-model';
 import { GisService } from '@api-rest/services/gis.service';
 import { ButtonType } from '@presentation/components/button/button.component';
@@ -25,6 +25,7 @@ export class InstitutionDescriptionComponent {
 		this.coordinatesToShow = transformCoordinates(institutionDescription.coordinates);
 	}
 	@Input() showActions: boolean = true;
+	@Output() confirmed = new EventEmitter<boolean>();
 
 	institutionDescription: InstitutionDescription;
 	isSaving: boolean = false;
@@ -45,6 +46,7 @@ export class InstitutionDescriptionComponent {
 		).pipe(finalize(() => this.isSaving = false))
 		.subscribe((_) => {
 			this.snackBarService.showSuccess("gis.status.UPDATE_DATA_SUCCESS");
+			this.confirmed.emit(true);
 		});
 	}
 	

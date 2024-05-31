@@ -120,6 +120,10 @@ export class HomeComponent implements OnInit {
 				this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
 			});
 	}
+
+	goToDetails = () => {
+		this.isFirstTime = false;
+	}
 	
 	get street(): string {
 		return this.institutionAddressForm.value.streetName;

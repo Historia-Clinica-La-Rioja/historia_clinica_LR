@@ -76,7 +76,7 @@
                   </form>
                 </mat-step>
                 <mat-step label="{{'gis.steppers.MAP_POSITION' | translate}}">
-                    <app-institution-description *ngIf="institutionDescription" [setInstitutionDescription]="institutionDescription"></app-institution-description>
+                    <app-institution-description *ngIf="institutionDescription" (confirmed)="goToDetails()" [setInstitutionDescription]="institutionDescription"></app-institution-description>
                 </mat-step>
               </mat-stepper>
         </div>
