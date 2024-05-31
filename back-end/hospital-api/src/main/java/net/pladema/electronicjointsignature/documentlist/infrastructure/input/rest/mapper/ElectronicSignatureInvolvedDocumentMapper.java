@@ -13,6 +13,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mapper(uses = {LocalDateMapper.class, EElectronicSignatureStatus.class})
 public interface ElectronicSignatureInvolvedDocumentMapper {
 
@@ -20,9 +23,16 @@ public interface ElectronicSignatureInvolvedDocumentMapper {
 	@Named("toElectronicSignatureInvolvedDocumentDto")
 	ElectronicSignatureInvolvedDocumentDto toElectronicSignatureInvolvedDocumentDto(ElectronicSignatureInvolvedDocumentBo electronicSignatureInvolvedDocumentBo);
 
+	@Mapping(target = "signatureStatusIds", expression = "java(parseToEnumIds(electronicJointSignatureInvolvedDocumentListFilterDto.getElectronicSignaturesStatusIds()))")
 	@Mapping(target = "institutionId", expression = "java(institutionId)")
 	@Named("fromElectronicJointSignatureInvolvedDocumentListFilterDto")
 	ElectronicSignatureDocumentListFilterBo fromElectronicJointSignatureInvolvedDocumentListFilterDto (ElectronicJointSignatureInvolvedDocumentListFilterDto electronicJointSignatureInvolvedDocumentListFilterDto,
 																									   @Context Integer institutionId);
+
+	default List<Short> parseToEnumIds(List<EElectronicSignatureStatus> eElectronicSignatureStatuses) {
+		if (eElectronicSignatureStatuses != null)
+			return eElectronicSignatureStatuses.stream().map(EElectronicSignatureStatus::getId).collect(Collectors.toList());
+		return null;
+	}
 
 }

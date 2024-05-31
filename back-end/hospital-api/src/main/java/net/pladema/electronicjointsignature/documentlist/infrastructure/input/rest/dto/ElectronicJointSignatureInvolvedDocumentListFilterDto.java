@@ -1,5 +1,6 @@
 package net.pladema.electronicjointsignature.documentlist.infrastructure.input.rest.dto;
 
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EElectronicSignatureStatus;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 public class ElectronicJointSignatureInvolvedDocumentListFilterDto {
 
 	@Nullable
-	private List<Short> electronicSignaturesStatusIds;
+	private List<EElectronicSignatureStatus> electronicSignaturesStatusIds;
 
 	@Nullable
 	private DateDto startDate;

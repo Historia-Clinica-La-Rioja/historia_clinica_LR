@@ -1560,7 +1560,7 @@ export interface ElectronicJointSignatureInstitutionProfessionalDto {
 }
 
 export interface ElectronicJointSignatureInvolvedDocumentListFilterDto {
-    electronicSignaturesStatusIds?: number[];
+    electronicSignaturesStatusIds?: EElectronicSignatureStatus[];
     endDate?: DateDto;
     patientFirstName?: string;
     patientLastName?: string;
