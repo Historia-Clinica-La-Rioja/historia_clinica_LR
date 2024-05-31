@@ -81,9 +81,13 @@
               </mat-stepper>
         </div>
 
-        <div *ngIf="!isFirstTime" class="institution-description">
-            <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
-        </div>
+        <app-hide-show-toggle *ngIf="!isFirstTime && institutionDescription" 
+            [header]="{icon: 'info', text: 'Ver detalles'}"
+            [showBorder]="false">
+            <div class="institution-description">
+                <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
+            </div>
+        </app-hide-show-toggle>
 
         <div class="map-container">
             <app-loading *ngIf="isLoading"></app-loading>

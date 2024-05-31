@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
 	coordinatesCurrentValue: GlobalCoordinatesDto;
 
 	showMap = false;
-	isFirstTime = true;
+	isFirstTime = false;
 	isLoading = false;
 
 	constructor(private readonly gisService: GisService,
@@ -123,6 +123,7 @@ export class HomeComponent implements OnInit {
 
 	goToDetails = () => {
 		this.isFirstTime = false;
+		this.mapToInstitutionDescriptionDetailed('gis.detailed-information.TITLE');
 	}
 	
 	get street(): string {
