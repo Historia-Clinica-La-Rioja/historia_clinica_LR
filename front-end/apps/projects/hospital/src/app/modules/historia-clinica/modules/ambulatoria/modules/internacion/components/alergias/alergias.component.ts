@@ -26,6 +26,7 @@ export class AlergiasComponent {
 	emptyAllergies: boolean = true;
 
 	allergyContent: ConceptsList = {
+		id: 'allergy-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
 			icon: 'cancel'

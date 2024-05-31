@@ -22,6 +22,7 @@ type Story = StoryObj<ConceptsListComponent>;
 export const Minimun: Story = {
 	args: {
 		content: {
+			id: 'allergy-checkbox-concepts-list',
             header: {
                 text: 'Alergias',
                 icon: 'cancel'
@@ -37,6 +38,7 @@ export const Minimun: Story = {
 export const WithNoReferCheckbox: Story = {
 	args: {
 		content: {
+			id: 'allergy-checkbox-concepts-list',
             header: {
                 text: 'Alergias',
                 icon: 'cancel'
@@ -53,6 +55,7 @@ export const WithNoReferCheckbox: Story = {
 export const WithConceptListAndNoReferCheckbox: Story = {
 	args: {
 		content: {
+			id: 'allergy-checkbox-concepts-list',
             header: {
                 text: 'Alergias',
                 icon: 'cancel'

@@ -27,6 +27,7 @@ export class AntecedentesFamiliaresComponent{
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 
 	familyHistoriesContent: ConceptsList = {
+		id: 'family-histories-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE',
 			icon: 'report'

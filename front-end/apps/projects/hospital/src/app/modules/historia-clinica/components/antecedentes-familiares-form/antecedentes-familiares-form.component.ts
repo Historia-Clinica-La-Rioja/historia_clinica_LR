@@ -32,6 +32,7 @@ export class AntecedentesFamiliaresFormComponent implements ControlValueAccessor
 	searchConceptsLocallyFFIsOn = false;
 	onChangeSub: Subscription;
 	familyHistoriesContent: ConceptsList = {
+		id: 'family-histories-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE',
 			icon: 'report'

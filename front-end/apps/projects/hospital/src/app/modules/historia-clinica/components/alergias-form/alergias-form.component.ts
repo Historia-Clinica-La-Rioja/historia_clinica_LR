@@ -29,6 +29,7 @@ export class AlergiasFormComponent implements ControlValueAccessor {
 	searchConceptsLocallyFFIsOn = false;
 
 	allergyContent: ConceptsList = {
+		id: 'allergy-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
 			icon: 'cancel'

@@ -99,6 +99,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	touchedConfirm = false;
 	referenceSituationViolence = null;
 	allergyContent: ConceptsList = {
+		id: 'allergy-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
 			icon: 'cancel'
@@ -111,6 +112,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 	isAllergyNoRefer: boolean = true;
 	personalHistoriesContent: ConceptsList = {
+		id: 'personal-histories-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.TITLE',
 			icon: 'report'
@@ -123,6 +125,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 	isPersonalHistoriesNoRefer: boolean = true;
 	familyHistoriesContent: ConceptsList = {
+		id: 'family-histories-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-familiares.TITLE',
 			icon: 'report'

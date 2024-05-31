@@ -79,6 +79,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 
 	isAllergyNoRefer: boolean = true;
 	allergyContent: ConceptsList = {
+		id: 'allergy-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.alergias.TITLE',
 			icon: 'cancel'
@@ -90,6 +91,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		}
 	}
 	personalHistoriesContent: ConceptsList = {
+		id: 'personal-histories-checkbox-concepts-list',
 		header: {
 			text: 'odontologia.odontology-consultation-dock-popup.PERSONAL_HISTORY',
 			icon: 'cancel'

@@ -22,6 +22,7 @@ export class AntecedentesPersonalesComponent {
 	searchConceptsLocallyFFIsOn: boolean = false;
 	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	personalHistoriesContent: ConceptsList = {
+		id: 'personal-histories-checkbox-concepts-list',
 		header: {
 			text: 'ambulatoria.paciente.nueva-consulta.antecedentes-personales.TITLE',
 			icon: 'report'
