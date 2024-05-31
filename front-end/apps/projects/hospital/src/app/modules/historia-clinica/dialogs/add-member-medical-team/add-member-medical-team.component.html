@@ -31,12 +31,13 @@
         [professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.PROFESSIONAL' | translate"
         [externalSetProfessional]="null" (professionalChange)="selectProfessional($event)">
     </app-surgical-report-professional-info>
+    <mat-error *ngIf="showErrorProfessionalRepeated">{{'ambulatoria.paciente.surgical-report.surgical-team.ERROR_PROFESSIONAL_REPEATED' | translate}}</mat-error>
 </div>
 <div mat-dialog-actions align="end">
     <button mat-stroked-button color="primary" mat-dialog-close>
         <span [translate]="'buttons.CANCEL'"></span>
     </button>
-    <button mat-raised-button color="primary" id="confirm_button" (click)="emitProfessionalSelected()">
+    <button mat-raised-button color="primary" id="confirm_button" [disabled]="showErrorProfessionalRepeated" (click)="emitProfessionalSelected()">
         <span [translate]="'buttons.CONFIRM'"></span>
     </button>
 </div>

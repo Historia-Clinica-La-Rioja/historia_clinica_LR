@@ -312,7 +312,8 @@
                     "LABEL_PROFESSION_TYPE": "Seleccione tipo de integrante",
                     "OTHER_PROFESSION": "Otro tipo de integrante",
                     "PROFESSIONAL": "Profesional",
-                    "LABEL_SEARCH_PROFESSIONAL":"Buscar por nombre y apellido"
+                    "LABEL_SEARCH_PROFESSIONAL":"Buscar por nombre y apellido",
+                    "ERROR_PROFESSIONAL_REPEATED":"Este profesional ya es miembro del equipo"
 				},
 				"procedures": {
 					"TITLE": "Procedimientos",

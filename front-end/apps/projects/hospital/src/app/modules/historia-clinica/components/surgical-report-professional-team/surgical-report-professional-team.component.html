@@ -7,7 +7,7 @@
 		[professionalTitle]="'ambulatoria.paciente.surgical-report.surgical-team.CIRUJANO' | translate"
 		[externalSetProfessional]="surgeon?.healthcareProfessional" (professionalChange)="selectSurgeon($event)">
 	</app-surgical-report-professional-info>
-
+	<mat-error *ngIf="showErrorProfessionalRepeated">{{'ambulatoria.paciente.surgical-report.surgical-team.ERROR_PROFESSIONAL_REPEATED' | translate}}</mat-error>
 	<app-titled-content-card [title]="'ambulatoria.paciente.surgical-report.surgical-team.CARD_TITLE'"
 		*ngIf="!!healthcareProfessionals.length">
 		<div *ngFor="let professional of healthcareProfessionals; index as i; last as isLast">
@@ -36,7 +36,7 @@
 	</app-titled-content-card>
 
 	<div>
-		<button type="button" mat-button color="primary" class="add-button" (click)="addProfessional()">
+		<button type="button" mat-button color="primary" class="add-button" [disabled]="!surgeon" (click)="addProfessional()">
 			{{'ambulatoria.paciente.surgical-report.surgical-team.ADD_PROFESSIONAL' | translate}}
 		</button>
 	</div>

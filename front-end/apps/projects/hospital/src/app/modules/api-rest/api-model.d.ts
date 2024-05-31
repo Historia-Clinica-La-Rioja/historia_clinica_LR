@@ -2042,16 +2042,6 @@ export interface GeneratedApiKeyDto {
 export interface GenericMasterDataDto<T> extends AbstractMasterdataDto<T> {
 }
 
-export interface GraphicDatasetInfoDto {
-    intersections: GraphicDatasetIntersectionDto[];
-    label: EAnthropometricGraphicLabel;
-}
-
-export interface GraphicDatasetIntersectionDto {
-    x: string;
-    y: string;
-}
-
 export interface GetDiagnosticReportObservationDto {
     id: number;
     procedureParameterId: number;
@@ -2070,6 +2060,15 @@ export interface GetDiagnosticReportObservationGroupDto {
     procedureTemplateId: number;
 }
 
+export interface GraphicDatasetInfoDto {
+    intersections: GraphicDatasetIntersectionDto[];
+    label: EAnthropometricGraphicLabel;
+}
+
+export interface GraphicDatasetIntersectionDto {
+    x: string;
+    y: string;
+}
 
 export interface GroupAppointmentResponseDto {
     appointmentId: number;

@@ -19,6 +19,7 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	surgeon: DocumentHealthcareProfessionalDto;
 	readonly OTHER = EProfessionType.OTHER;
 	professions: GenericMasterDataDto<EProfessionType>[];
+	showErrorProfessionalRepeated = false;
 
 	constructor(private dialog: MatDialog, private requestMasterDataService: RequestMasterDataService) { }
 
@@ -36,6 +37,7 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 			data: {
 				professionals: this.professionals,
 				professions: this.professions,
+				idProfessionalSelected: this.surgeon.healthcareProfessional.id,
 			}
 		})
 		dialogRef.afterClosed().subscribe((professional: AddMemberMedicalTeam) => {
@@ -68,16 +70,26 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	}
 
 	selectSurgeon(professional: HCEHealthcareProfessionalDto): void {
-		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === EProfessionType.SURGEON);
-
-		if (professional && index == -1)
-			this.surgicalReport.healthcareProfessionals.push(this.mapToDocumentHealthcareProfessionalDto(professional, EProfessionType.SURGEON));
-
-		if (professional && index != -1)
-			this.surgicalReport.healthcareProfessionals.splice(index, 1, this.mapToDocumentHealthcareProfessionalDto(professional, EProfessionType.SURGEON));
-
-		if (!professional && index != -1)
-			this.surgicalReport.healthcareProfessionals.splice(index, 1);
+		const indexRemove = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === EProfessionType.SURGEON);
+		this.showErrorProfessionalRepeated = false;
+		if (!professional) {
+			if (indexRemove !== -1) {
+				this.surgicalReport.healthcareProfessionals.splice(indexRemove, 1);
+				this.surgeon = null;
+			}
+			return;
+		}
+		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.healthcareProfessional.id === professional.id);
+		this.surgeon = this.mapToDocumentHealthcareProfessionalDto(professional, EProfessionType.SURGEON);
+		
+		if (index === -1) {
+			this.surgicalReport.healthcareProfessionals.push(this.surgeon);
+		} else {
+			if (indexRemove !== -1) {
+				this.surgicalReport.healthcareProfessionals.splice(indexRemove, 1);
+			}
+			this.showErrorProfessionalRepeated = true;
+		}
 	}
 
 	isEmpty(): boolean {

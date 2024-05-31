@@ -22,12 +22,18 @@ export class AddMemberMedicalTeamComponent {
     descriptionType: null,
   }; 
   readonly otherProfession = EProfessionType.OTHER;
+  showErrorProfessionalRepeated = false;
   constructor(public dialogRef: MatDialogRef<AddMemberMedicalTeamComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { professionals: ProfessionalDto[], professions: any[] }) {
+    @Inject(MAT_DIALOG_DATA) public data: { professionals: ProfessionalDto[], professions: any[], idProfessionalSelected: number }) {
    }
 
   selectProfessional(professional: HCEHealthcareProfessionalDto) {
-    this.professional.professionalData.healthcareProfessional = professional;
+    if(this.data.idProfessionalSelected !== professional?.id){
+      this.professional.professionalData.healthcareProfessional = professional;
+      this.showErrorProfessionalRepeated = false;
+    }else{
+      this.showErrorProfessionalRepeated = true;
+    }
   }
 
   emitProfessionalSelected(){
