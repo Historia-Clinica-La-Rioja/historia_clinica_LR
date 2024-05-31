@@ -203,7 +203,8 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 	}
 
 	private DoctorBo buildDoctor(DoctorInfoSummary doctor) {
-		return new DoctorBo(doctor.getLicenseNumber(), doctor.getFirstName(), doctor.getLastName(), doctor.getIdentificationNumber());
+		return new DoctorBo(doctor.getLicenseNumber(), doctor.getFirstName(), doctor.getLastName(),
+				doctor.getIdentificationNumber(), doctor.getGenderId());
 	}
 
 	private PatientBo buildPatient(PatientInfoSummary patient) {

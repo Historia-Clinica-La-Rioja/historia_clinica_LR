@@ -65,7 +65,8 @@ public class VAppointmentSummary {
 		@AttributeOverride( name = "licenseNumber", column = @Column(name = "license_number")),
 		@AttributeOverride( name = "firstName", column = @Column(name = "doctor_name")),
 		@AttributeOverride( name = "lastName", column = @Column(name = "doctor_last_name")),
-		@AttributeOverride( name = "identificationNumber", column = @Column(name = "doctor_identification_number"))
+		@AttributeOverride( name = "identificationNumber", column = @Column(name = "doctor_identification_number")),
+			@AttributeOverride(name = "genderId", column = @Column(name = "doctor_gender_id"))
 	})
 	private DoctorInfoSummary doctor;
 

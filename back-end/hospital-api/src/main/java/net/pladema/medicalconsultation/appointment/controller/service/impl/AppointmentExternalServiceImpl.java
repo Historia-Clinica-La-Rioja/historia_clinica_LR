@@ -335,6 +335,7 @@ public class AppointmentExternalServiceImpl implements AppointmentExternalServic
 						.firstName(doctor.getFirstName())
 						.lastName(doctor.getLastName())
 						.identificationNumber(doctor.getIdentificationNumber())
+						.genderId(doctor.getGenderId())
 						.build()
 		);
 	}
