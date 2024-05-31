@@ -69,7 +69,7 @@ public class AnestheticReportController {
     }
 
     @GetMapping("/{documentId}")
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA,ENFERMERO, PROFESIONAL_DE_SALUD')")
     public ResponseEntity<AnestheticReportDto> getById(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
