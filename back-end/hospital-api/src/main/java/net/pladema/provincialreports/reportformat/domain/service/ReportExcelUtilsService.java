@@ -99,7 +99,7 @@ public class ReportExcelUtilsService {
 		cellStyle.setFontSize((short) 12);
 		cellStyle.setBorders(true);
 		cellStyle.setHAlign(ICellStyle.HALIGNMENT.LEFT);
-		cellStyle.setVAlign(ICellStyle.VALIGNMENT.CENTER);
+		cellStyle.setVAlign(ICellStyle.VALIGNMENT.TOP);
 		return cellStyle;
 	}
 
