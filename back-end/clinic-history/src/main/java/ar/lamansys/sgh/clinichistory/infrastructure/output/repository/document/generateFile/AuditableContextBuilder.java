@@ -147,11 +147,6 @@ public class AuditableContextBuilder {
 			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 			return contextMap;
 		}
-		if (document.getDocumentType() == DocumentType.ANESTHETIC_REPORT) {
-			this.addAnestheticReportData(contextMap, document);
-			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
-			return contextMap;
-		}
 		addDocumentInfo(contextMap, document);
 		logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 		return contextMap;
@@ -195,6 +190,21 @@ public class AuditableContextBuilder {
 		contextMap.put("drainages", document.getDrainages());
 		contextMap.put("prosthesis", document.getProsthesisDescription());
 		contextMap.put("description", document.getDescription());
+
+		contextMap.put("anestheticHistory", document.getAnestheticHistory());
+		contextMap.put("preMedications", document.getPreMedications());
+		contextMap.put("histories", document.getHistories());
+		contextMap.put("procedureDescription", document.getProcedureDescription());
+		contextMap.put("anestheticPlans", document.getAnestheticPlans());
+		contextMap.put("analgesicTechniques", document.getAnalgesicTechniques());
+		contextMap.put("anestheticTechniques", document.getAnestheticTechniques());
+		contextMap.put("fluidAdministrations", document.getFluidAdministrations());
+		contextMap.put("anestheticAgents", document.getAnestheticAgents());
+		contextMap.put("nonAnestheticDrugs", document.getNonAnestheticDrugs());
+		contextMap.put("antibioticProphylaxis", document.getAntibioticProphylaxis());
+		contextMap.put("measuringPoints", document.getMeasuringPoints());
+		contextMap.put("postAnesthesiaStatus", document.getPostAnesthesiaStatus());
+		contextMap.put("chart", document.getAnestheticChart());
 
 		var immunizations =  mapImmunizations(document.getImmunizations());
 		contextMap.put("billableImmunizations", immunizations.stream().filter(ImmunizationInfoDto::isBillable).collect(Collectors.toList()));
@@ -275,10 +285,6 @@ public class AuditableContextBuilder {
 					.flatMap(sharedDiagnosticImagingOrder::getDiagnosticImagingTranscribedOrderAuthor)
 					.ifPresent(professionalName -> ctx.put("authorTranscribedOrder", professionalName));
 		}
-	}
-
-	private <T extends IDocumentBo> void addAnestheticReportData(Map<String, Object> ctx, T document) {
-		ctx.put("chart", document.getAnestheticChart());
 	}
 
 	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {
