@@ -119,4 +119,42 @@ public class NewProgramReportsController {
 		}
 
 	}
+
+	@GetMapping(value = "/{institutionId}/recupero-general")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public @ResponseBody void getRecuperoGeneralExcelReport(@PathVariable Integer institutionId, @RequestParam(value = "fromDate") String fromDate, @RequestParam(value = "toDate") String toDate, HttpServletResponse response) throws Exception {
+
+		logger.info("getRecuperoGeneralExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
+
+		String title = "Reporte de recupero - obras sociales";
+
+		String[] headers = new String[]{"Unidad Operativa", "Nombre de prestador", "DNI de prestador", "Fecha de atención", "Hora", "Cons. n°", "DNI de paciente", "Nombre de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a hoy", "Obra/s social/es", "Domicilio", "Localidad", "Motivos", "Procedimientos", "Problemas", "Medicación", "Evolución"};
+		try {
+			LocalDate startDate = LocalDate.parse(fromDate);
+			LocalDate endDate = LocalDate.parse(toDate);
+
+			logger.debug("Parsed dates - startDate: {}, endDate: {}", startDate, endDate);
+
+			IWorkbook wb = this.excelService.buildRecuperoGeneralExcel(title, headers, this.queryFactory.queryRecuperoGeneral(institutionId, startDate, endDate), institutionId, startDate, endDate);
+
+			String filename = "Recupero - Obras sociales - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+
+			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			response.setContentType(wb.getContentType());
+
+			logger.debug("Writing 'recupero - obras sociales' excel report to response with filename: {}", filename);
+
+			OutputStream outputStream = response.getOutputStream();
+			wb.write(outputStream);
+			outputStream.close();
+			outputStream.flush();
+			response.flushBuffer();
+
+			logger.info("Successfully wrote 'recupero - obras sociales' report for institutionId: {}", institutionId);
+		} catch (Exception e) {
+			logger.error("Error generating 'recupero - obras sociales' report for institutionId: {}", institutionId, e);
+			throw e;
+		}
+
+	}
 }
