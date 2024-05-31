@@ -363,28 +363,37 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 			});
 		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
 			if (upDateState) {
-				this.appointmentService.publishWorkList(this.data.appointmentData.appointmentId)
-					.subscribe(() => {
-						this.updateState(newStateId);
-					});
+				this.publishWorkListUpdate(newStateId)
 			}
 		});
+	}
+
+	publishWorkListUpdate(newStateId: number): void {
+		this.appointmentService.publishWorkList(this.data.appointmentData.appointmentId).
+		subscribe(
+			() => this.updateState(newStateId)
+		)
 	}
 
 	onClickedState(newStateId: APPOINTMENT_STATES_ID): void {
 		if (this.selectedState !== newStateId) {
 			this.checkIfAbsent(newStateId);
-			if (this.checkToConfirmState(this.selectedState, newStateId) && this.coverageIsNotUpdate() && this.appointment.appointmentStateId !== APPOINTMENT_STATES_ID.CONFIRMED) {
-				this.confirmChangeState(newStateId);
-			} else {
-				this.updateState(newStateId);
-			}
+			this.applyChangeState(this.selectedState, newStateId)
 		}
 	}
 
-	private checkToConfirmState(selectedState: number, newState: number) {
-		return (selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newState === APPOINTMENT_STATES_ID.CONFIRMED) ||
-		(selectedState === APPOINTMENT_STATES_ID.ABSENT && newState === APPOINTMENT_STATES_ID.CONFIRMED)
+	applyChangeState(selectedState: number, newStateId: number) {
+		const checkStatesConfirm = selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED
+		if (newStateId === APPOINTMENT_STATES_ID.CONFIRMED) {
+			if ( checkStatesConfirm && this.coverageIsNotUpdate() && this.appointment.appointmentStateId !== APPOINTMENT_STATES_ID.CONFIRMED) {
+				this.confirmChangeState(newStateId);
+			}else {
+				this.publishWorkListUpdate(newStateId)
+			}}
+		else {
+			this.updateState(newStateId);
+		}
+
 	}
 
 	private checkIfAbsent(newStateId: APPOINTMENT_STATES_ID) {
