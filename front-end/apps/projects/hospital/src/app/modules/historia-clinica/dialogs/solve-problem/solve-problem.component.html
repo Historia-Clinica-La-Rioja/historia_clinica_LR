@@ -38,12 +38,14 @@
 
 					<app-datepicker title="ambulatoria.paciente.nueva-consulta.problemas.FECHA_INICIO"
 						id="fecha_inicio" [minDate]="minDate" [maxDate]="maxDate"
-						(selectDate)="fechaInicioChanged($event)" [dateToSetInDatepicker]="dateToSet">
+						(selectDate)="fechaInicioChanged($event)" [dateToSetInDatepicker]="dateToSet" 
+						>
 					</app-datepicker>
 	
 					<app-datepicker title="ambulatoria.paciente.nueva-consulta.problemas.FECHA_FIN"
 						id="fecha_fin" [minDate]="getForm().value.fechaInicio" [maxDate]="today"
-						(selectDate)="fechaFinChanged($event)">
+						(selectDate)="fechaFinChanged($event)" requiredText='Fecha Requerida'
+						[markAsTouched]="markAsTouched">
 					</app-datepicker>
 				</div>
 

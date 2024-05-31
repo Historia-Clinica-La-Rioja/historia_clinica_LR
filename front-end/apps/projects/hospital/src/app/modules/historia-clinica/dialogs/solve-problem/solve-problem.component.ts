@@ -35,6 +35,7 @@ export class SolveProblemComponent implements OnInit {
 	minDate = MIN_DATE;
 	maxDate = new Date();
 	dateToSet: Date;
+	markAsTouched = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) data,
@@ -93,6 +94,7 @@ export class SolveProblemComponent implements OnInit {
 	}
 
 	solveProblem() {
+		this.markAsTouched = true;
 		if (this.form.valid) {
 			const dialogRefConfirmation = this.dialog.open(DiscardWarningComponent,
 				{
