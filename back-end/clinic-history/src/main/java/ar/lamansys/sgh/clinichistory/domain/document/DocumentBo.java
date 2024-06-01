@@ -28,6 +28,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -97,6 +98,8 @@ public class DocumentBo implements IDocumentBo {
     private List<ConclusionBo> conclusions = new ArrayList<>();
 
 	private List<Integer> involvedHealthcareProfessionalIds;
+
+    private Map<String,Object> contextMap;
 
 
     public String getDocumentStatusId(){

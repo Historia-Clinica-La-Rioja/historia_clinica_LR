@@ -6,8 +6,13 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
+import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
@@ -17,22 +22,25 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.files.FileService;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 public class GenerateFilePortImpl implements GenerateFilePort {
 
 	private final FileService fileService;
 	private final PdfService pdfService;
-	private final AuditableContextBuilder auditableContextBuilder;
+	@Qualifier(value = "generate_document_context_visitor")
+	private final DocumentVisitor generateDocumentContext;
 
 	@Override
 	public Optional<DocumentFile> save(OnGenerateDocumentEvent event) {
-		Map<String,Object> contextMap = auditableContextBuilder.buildContext(event.getDocumentBo(), event.getPatientId());
+
+		IDocumentBo documentBo = event.getDocumentBo();
+		documentBo.accept(generateDocumentContext);
+		Map<String,Object> contextMap = documentBo.getContextMap();
 
 		formatStringDates(contextMap);
 

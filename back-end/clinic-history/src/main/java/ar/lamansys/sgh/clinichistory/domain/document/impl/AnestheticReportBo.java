@@ -21,6 +21,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -103,6 +105,8 @@ public class AnestheticReportBo implements IDocumentBo {
     private short documentType = DocumentType.ANESTHETIC_REPORT;
 
     private Short documentSource = SourceType.HOSPITALIZATION;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public Integer getPatientId() {
