@@ -1,19 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
-import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
+import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
@@ -34,8 +21,17 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
+import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.shared.domain.general.AddressBo;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public interface IDocumentBo {
 
@@ -192,34 +188,6 @@ public interface IDocumentBo {
         return false;
     }
 
-    default AnestheticHistoryBo getAnestheticHistory() { return null; }
-
-    default List<AnestheticSubstanceBo> getPreMedications() { return Collections.emptyList(); }
-
-    default List<HealthConditionBo> getHistories() { return Collections.emptyList(); }
-
-    default ProcedureDescriptionBo getProcedureDescription() { return null; }
-
-    default List<AnestheticSubstanceBo> getAnestheticPlans() { return Collections.emptyList(); }
-
-    default List<AnalgesicTechniqueBo> getAnalgesicTechniques() { return Collections.emptyList(); }
-
-    default List<AnestheticTechniqueBo> getAnestheticTechniques() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getFluidAdministrations() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getAnestheticAgents() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getNonAnestheticDrugs() { return Collections.emptyList(); }
-
-    default List<AnestheticSubstanceBo> getAntibioticProphylaxis() { return Collections.emptyList(); }
-
-    default List<MeasuringPointBo> getMeasuringPoints() { return Collections.emptyList(); }
-
-    default PostAnesthesiaStatusBo getPostAnesthesiaStatus() { return null; }
-
-    default String getAnestheticChart() { return null; }
-
 	default List<Integer> getInvolvedHealthcareProfessionalIds() { return Collections.emptyList(); }
 
 	default UUID getUuid() {return null;}
@@ -230,7 +198,15 @@ public interface IDocumentBo {
 
     default void setPreviousDocumentId(Long lastDocumentId) {}
 
-    default void setPatientInfo(PatientInfoBo patientInfo) {};
+    default void setPatientInfo(PatientInfoBo patientInfo) {}
 
-    default void setPatientId(Integer patientId) {};
+    default void setPatientId(Integer patientId) {}
+
+    default void accept(DocumentVisitor documentVisitor) {
+        documentVisitor.visit(this);
+    }
+
+    default Map<String,Object> getContextMap() { return new HashMap<>(); }
+
+    default void setContextMap(Map<String,Object> contextMap) {}
 }

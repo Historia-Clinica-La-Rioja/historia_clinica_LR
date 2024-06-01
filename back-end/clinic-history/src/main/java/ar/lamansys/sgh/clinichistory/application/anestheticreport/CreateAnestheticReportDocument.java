@@ -24,11 +24,13 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @Service
 public class CreateAnestheticReportDocument {
 
@@ -40,6 +42,7 @@ public class CreateAnestheticReportDocument {
     private final GetChartImage getChartImage;
     private final SharedHospitalizationPort sharedHospitalizationPort;
     private final AnestheticReportValidator anestheticReportValidator;
+    @Qualifier(value = "common_document_factory")
     private final DocumentFactory documentFactory;
     private final AnestheticReportStorage anestheticReportStorage;
     private final ParsePointsToTimeSeries parsePointsToTimeSeries;

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
@@ -106,6 +107,11 @@ public class AnestheticReportBo implements IDocumentBo {
     @Override
     public Integer getPatientId() {
         return patientInfo != null ? patientInfo.getId() : patientId;
+    }
+
+    @Override
+    public void accept(DocumentVisitor documentVisitor) {
+        documentVisitor.visitAnestheticReport(this);
     }
 
 }

@@ -2,13 +2,6 @@ package ar.lamansys.sgh.clinichistory.application.createDocument;
 
 import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
 import ar.lamansys.sgh.clinichistory.application.saveanthropometricdatapercentiles.SaveAnthropometricDataPercentiles;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnalgesicTechniques;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticHistory;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticTechniques;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadAnestheticSubstances;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMeasuringPoints;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadPostAnesthesiaStatus;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedureDescription;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
@@ -85,20 +78,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final LoadProsthesis loadProsthesis;
 
-    private final LoadAnestheticHistory loadAnestheticHistory;
-    
-    private final LoadAnestheticSubstances loadAnestheticSubstances;
-
-    private final LoadProcedureDescription loadProcedureDescription;
-
-    private final LoadAnalgesicTechniques loadAnalgesicTechniques;
-
-    private final LoadAnestheticTechniques loadAnestheticTechniques;
-
-    private final LoadMeasuringPoints loadMeasuringPoints;
-
-    private final LoadPostAnesthesiaStatus loadPostAnesthesiaStatus;
-
 	private final SaveDocumentInvolvedProfessionals saveDocumentInvolvedProfessionals;
 
 	private final SaveAnthropometricDataPercentiles saveAnthropometricDataPercentiles;
@@ -137,7 +116,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
         healthConditionService.loadOtherProblems(patientInfo, doc.getId(), documentBo.getOtherProblems());
 		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPreoperativeDiagnosis());
 		healthConditionService.loadDiagnosis(patientInfo, doc.getId(), documentBo.getPostoperativeDiagnosis());
-        healthConditionService.loadOtherHistories(patientInfo, doc.getId(), documentBo.getHistories());
 
 		loadAllergies.run(patientInfo, doc.getId(), documentBo.getAllergies());
         loadImmunizations.run(patientId, doc.getId(), documentBo.getImmunizations());
@@ -155,19 +133,6 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		loadObstetricEvent.run(doc.getId(), Optional.ofNullable(documentBo.getObstetricEvent()));
 		loadHealthcareProfessionals.run(doc.getId(), documentBo.getHealthcareProfessionals());
 		loadProsthesis.run(doc.getId(), documentBo.getProsthesisDescription());
-
-        loadAnestheticHistory.run(doc.getId(), Optional.ofNullable(documentBo.getAnestheticHistory()));
-        loadAnestheticSubstances.run(doc.getId(), documentBo.getPreMedications());
-        loadAnestheticSubstances.run(doc.getId(), documentBo.getAnestheticPlans());
-        loadProcedureDescription.run(doc.getId(), Optional.ofNullable(documentBo.getProcedureDescription()));
-        loadAnalgesicTechniques.run(doc.getId(), documentBo.getAnalgesicTechniques());
-        loadAnestheticTechniques.run(doc.getId(), documentBo.getAnestheticTechniques());
-        loadAnestheticSubstances.run(doc.getId(), documentBo.getFluidAdministrations());
-        loadAnestheticSubstances.run(doc.getId(), documentBo.getAnestheticAgents());
-        loadAnestheticSubstances.run(doc.getId(), documentBo.getNonAnestheticDrugs());
-        loadAnestheticSubstances.run(doc.getId(), documentBo.getAntibioticProphylaxis());
-        loadMeasuringPoints.run(doc.getId(), documentBo.getMeasuringPoints());
-        loadPostAnesthesiaStatus.run(doc.getId(), Optional.ofNullable(documentBo.getPostAnesthesiaStatus()));
 
 		saveDocumentInvolvedProfessionals.run(doc.getId(), documentBo.getInvolvedHealthcareProfessionalIds());
 
