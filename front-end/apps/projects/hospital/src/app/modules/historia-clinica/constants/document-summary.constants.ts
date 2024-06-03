@@ -49,6 +49,12 @@ export const USUAL_MEDICATIONS_DESCRIPTION_ITEM = {
     icon: 'event_available',
 }
 
+export const OTHER_PROBLEMS_DESCRIPTION_ITEM = {
+    title: 'internaciones.documents-summary.other-problems.TITLE',
+    subtitle: 'internaciones.documents-summary.other-problems.REGISTERED_OTHER_PROBLEMS',
+    icon: 'event_available',
+}
+
 export const PROPOSED_SURGERIES_DESCRIPTION_ITEM = {
     title: 'internaciones.anesthesic-report.proposed-surgery.TITLE',
     subtitle: 'internaciones.anesthesic-report.proposed-surgery.REGISTERED_PROPOSED_SURGERIES',

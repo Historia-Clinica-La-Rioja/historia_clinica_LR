@@ -680,6 +680,10 @@
                 "TITLE": "Medicación habitual",
                 "RECORDED_USUAL_MEDICATIONS": "Medicación habitual registrada"
             },
+            "other-problems": {
+                "TITLE": "Otras circunstancias que prolongan la internación",
+                "REGISTERED_OTHER_PROBLEMS": "Otras circunstancias que prolongan la internación registradas"
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",
