@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DiagnosisBo extends HealthConditionBo {
+public class DiagnosisBo extends HealthConditionBo implements IpsBo {
 
     private boolean presumptive = false;
 
@@ -57,4 +58,9 @@ public class DiagnosisBo extends HealthConditionBo {
 	private boolean specificEquals(ClinicalTerm bo){
 		return super.equals(bo)&&((DiagnosisBo)bo).isPresumptive()==isPresumptive();
 	}
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitDiagnosis(this);
+    }
 }

@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class CreateDocumentWithDraftSupport {
     private final Function<Integer, Long> getLastDraftDocumentId;
     private final Function<Long, IDocumentBo> getLastDraftDocument;
     private final DiscardPreviousDocument discardPreviousDocument;
-    private final SetNullIdsDocumentElements setNullIdsDocumentElements;
+    private final IpsVisitor setNullIdsDocumentElementsVisitor;
     private final Function<IDocumentBo, Integer> createNewDocument;
     private final Function<Integer, BasicPatientDto> setPatientInfo;
 
@@ -28,11 +29,16 @@ public class CreateDocumentWithDraftSupport {
 
         this.setPreviousDocumentId(newDocument);
         this.discardPreviousDocument(newDocument);
-        setNullIdsDocumentElements.run(newDocument);
+        this.setNullIdsDocumentElements(newDocument);
         Integer id = createNewDocument.apply(newDocument);
 
         log.debug("Output -> new document id {} generated", id);
         return id;
+    }
+
+    private void setNullIdsDocumentElements(IDocumentBo documentBo) {
+        documentBo.getIpsComponents()
+                .forEach(ipsBo -> ipsBo.accept(setNullIdsDocumentElementsVisitor));
     }
 
     private void setPreviousDocumentId(IDocumentBo newDocument) {

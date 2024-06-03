@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import javax.validation.Valid;
 @Setter
 @ToString
 @NoArgsConstructor
-public class RiskFactorBo extends SelfValidating<RiskFactorBo> {
+public class RiskFactorBo extends SelfValidating<RiskFactorBo> implements IpsBo {
 
     @Valid
     private ClinicalObservationBo systolicBloodPressure;
@@ -65,4 +66,9 @@ public class RiskFactorBo extends SelfValidating<RiskFactorBo> {
 		return systolicBloodPressure == null && diastolicBloodPressure == null && meanPressure == null && temperature == null && heartRate == null && respiratoryRate == null
 				&& bloodOxygenSaturation == null && bloodGlucose == null && glycosylatedHemoglobin == null && cardiovascularRisk == null && hematocrit == null;
 	}
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitRiskFactor(this);
+    }
 }

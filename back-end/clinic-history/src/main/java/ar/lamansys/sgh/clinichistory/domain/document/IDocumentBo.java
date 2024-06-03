@@ -13,6 +13,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ExternalCauseBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IpsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ObstetricEventBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.OtherRiskFactorBo;
@@ -27,6 +28,8 @@ import ar.lamansys.sgh.shared.domain.general.AddressBo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -208,4 +211,6 @@ public interface IDocumentBo {
     Map<String,Object> getContextMap();
 
     void setContextMap(Map<String,Object> contextMap);
+
+    default Collection<IpsBo> getIpsComponents() { return new ArrayList<>(); }
 }

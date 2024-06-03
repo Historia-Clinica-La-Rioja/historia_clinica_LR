@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.domain.ips;
 
 import java.util.List;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.visitor.IpsVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AnestheticTechniqueBo extends ClinicalTerm {
+public class AnestheticTechniqueBo extends ClinicalTerm implements IpsBo {
 
     private Short techniqueId;
     private Boolean trachealIntubation;
@@ -28,5 +30,10 @@ public class AnestheticTechniqueBo extends ClinicalTerm {
         this.trachealIntubation = trachealIntubation;
         this.breathingId = breathingId;
         this.circuitId = circuitId;
+    }
+
+    @Override
+    public void accept(IpsVisitor visitor) {
+        visitor.visitAnestheticTechnique(this);
     }
 }

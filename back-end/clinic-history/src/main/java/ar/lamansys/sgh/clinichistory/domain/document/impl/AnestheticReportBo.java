@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.IpsBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo;
@@ -20,8 +21,11 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -116,6 +120,33 @@ public class AnestheticReportBo implements IDocumentBo {
     @Override
     public void accept(DocumentVisitor documentVisitor) {
         documentVisitor.visitAnestheticReport(this);
+    }
+
+    @Override
+    public Collection<IpsBo> getIpsComponents() {
+        ArrayList<IpsBo> result = new ArrayList<>();
+
+        Optional.ofNullable(mainDiagnosis).ifPresent(result::add);
+        Optional.ofNullable(anthropometricData).ifPresent(result::add);
+        Optional.ofNullable(riskFactors).ifPresent(result::add);
+        Optional.ofNullable(anestheticHistory).ifPresent(result::add);
+        Optional.ofNullable(procedureDescription).ifPresent(result::add);
+        Optional.ofNullable(postAnesthesiaStatus).ifPresent(result::add);
+        result.addAll(diagnosis);
+        result.addAll(surgeryProcedures);
+        result.addAll(medications);
+        result.addAll(preMedications);
+        result.addAll(histories);
+        result.addAll(anestheticPlans);
+        result.addAll(analgesicTechniques);
+        result.addAll(anestheticTechniques);
+        result.addAll(fluidAdministrations);
+        result.addAll(anestheticAgents);
+        result.addAll(nonAnestheticDrugs);
+        result.addAll(antibioticProphylaxis);
+        result.addAll(measuringPoints);
+
+        return result;
     }
 
 }
