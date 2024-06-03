@@ -1096,6 +1096,17 @@ const messages = {
                 conceptSctid: "COD Snomed",
                 financed: "Financiado"
             }
+        },
+        medicinegroups: {
+            name: "Grupo de fármacos |||| Grupos de fármacos",
+            fields: {
+                name: "Nombre del grupo",
+                requiresAudit: "Requiere auditoría",
+                outpatient: "Ambulatoria",
+                emergencyCare: "Guardia", 
+                internment: "Internación"
+            },
+            createRelated: 'Crear Grupo de fármacos'
         }
     }
 };

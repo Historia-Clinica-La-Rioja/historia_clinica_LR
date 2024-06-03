@@ -24,6 +24,7 @@ import medicalcoverageplans from './medicalcoverageplans';
 import institutionpracticesrelatedgroups from './institutionpracticesrelatedgroups';
 import parameters from './parameters';
 import medicineFinancingStatus from './medicinefinancingstatus';
+import medicineGroups from './medicinegroups';
 
 const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="episodedocumenttypes" {...episodesDocumentTypes(permissions)} />,
@@ -48,7 +49,8 @@ const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="institutionpracticesrelatedgroups" {...institutionpracticesrelatedgroups} />,
     <Resource name="medicalcoveragesmerge" />,
     <Resource name="parameters" {...parameters(permissions)} />,
-    <Resource name="medicinefinancingstatus" {...medicineFinancingStatus(permissions)} />
+    <Resource name="medicinefinancingstatus" {...medicineFinancingStatus(permissions)} />,
+    <Resource name="medicinegroups" {...medicineGroups(permissions)} />
 ];
 
 export default resourcesMasterData;
