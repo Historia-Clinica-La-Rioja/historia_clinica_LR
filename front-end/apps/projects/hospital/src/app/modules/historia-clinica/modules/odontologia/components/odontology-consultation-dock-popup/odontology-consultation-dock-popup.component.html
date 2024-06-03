@@ -81,6 +81,7 @@
 		</app-new-consultation-expansion-section>
 
 		<app-concepts-list
+			id="allergies"
 			[hasConcepts]="!allergiesNewConsultationService.isEmpty()"
 			[content]="allergyContent"
 			(openEmit)="checkAllergyEvent($event)">
@@ -88,6 +89,7 @@
 		</app-concepts-list>
 
 		<app-concepts-list
+			id="personal_histories"
 			[hasConcepts]="!personalHistoriesNewConsultationService.isEmpty()"
 			[content]="personalHistoriesContent"
 			(openEmit)="checkPersonalHistoriesEvent($event)">
