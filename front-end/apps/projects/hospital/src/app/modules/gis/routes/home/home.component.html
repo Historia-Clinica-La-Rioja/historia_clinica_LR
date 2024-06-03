@@ -73,7 +73,7 @@
                         </div>
                 
                         <div class="actions">
-                            <button matStepperNext mat-button mat-raised-button color="primary">{{'buttons.NEXT' | translate | uppercase}}</button>
+                            <button [disabled]="institutionAddressForm.invalid" matStepperNext mat-button mat-raised-button color="primary">{{'buttons.NEXT' | translate | uppercase}}</button>
                         </div>
                   </form>
                 </mat-step>
