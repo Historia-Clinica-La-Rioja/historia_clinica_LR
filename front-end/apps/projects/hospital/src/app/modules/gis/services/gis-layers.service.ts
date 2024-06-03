@@ -1,4 +1,3 @@
-import { Injectable } from '@angular/core';
 import { Map, Overlay, View } from 'ol';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
@@ -13,9 +12,6 @@ import Icon from 'ol/style/Icon';
 
 const LOCATION_POINT = '../../../../assets/icons/gis_location_point.svg';
 
-@Injectable({
-  	providedIn: 'root'
-})
 export class GisLayersService {
 
 	vectorLayer = new VectorLayer({

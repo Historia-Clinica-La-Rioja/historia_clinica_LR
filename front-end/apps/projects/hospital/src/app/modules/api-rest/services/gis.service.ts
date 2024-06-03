@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 export class GisService {
 
 	private readonly URL_PREFIX = `${environment.apiBase}/institution`;
-	institutionId: number;
 
   	constructor(private readonly http: HttpClient,
 				private readonly contextService: ContextService) {}

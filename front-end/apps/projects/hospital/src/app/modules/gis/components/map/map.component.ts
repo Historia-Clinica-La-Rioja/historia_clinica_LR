@@ -13,10 +13,9 @@ export class MapComponent {
 		this.coordinates = coordinates;
 		this.markPoint();
 	}	
-
+	
 	coordinates: GlobalCoordinatesDto;
-
-	constructor(private readonly gisLayersService: GisLayersService) { }
+	private readonly gisLayersService: GisLayersService = new GisLayersService();
 
 	markPoint = () => {
 		const position: number[] = this.gisLayersService.fromLonLat(this.coordinates);
