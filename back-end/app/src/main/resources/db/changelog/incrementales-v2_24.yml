@@ -174,3 +174,13 @@ databaseChangeLog:
                   END LOOP;
                 END $$;
 
+    - changeSet:
+        id: addColumn-patient_description-emergency_care_episode
+        author: jvaldez
+        changes:
+          - addColumn:
+              tableName: emergency_care_episode
+              columns:
+                - column:
+                    name: patient_description
+                    type: text
