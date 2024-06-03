@@ -1,0 +1,11 @@
+<div class="dialog" 
+    [ngClass]="{'small-width': dialogWidth === DIALOG_WIDTH.SMALL, 
+                'medium-width': dialogWidth === DIALOG_WIDTH.MEDIUM,
+                'large-width': dialogWidth === DIALOG_WIDTH.LARGE
+    }">
+    <ng-content select="[header]"></ng-content>
+
+    <ng-content mat-dialog-content select="[content]"></ng-content>
+
+    <ng-content mat-dialog-actions select="[actions]"></ng-content>
+</div>
