@@ -60,5 +60,6 @@ export interface SelectedFilters {
 export interface Filter {
 	key: string,
 	name: string,
-	options: Option[]
+	options: Option[],
+	isMultiple?: boolean,
 }

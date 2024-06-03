@@ -57,8 +57,8 @@ export class FiltersSelectV2Component {
 		});
 	}
 
-	private toSelectedFilterOption(key: string, value: Option): SelectedFilterOption {
-		return { key, value: value.id }
+	private toSelectedFilterOption(key: string, values: Option[]): SelectedFilterOption {
+		return { key, value: values.map(value => value.id) }
 	}
 }
 

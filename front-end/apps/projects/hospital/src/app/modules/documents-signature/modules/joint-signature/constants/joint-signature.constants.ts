@@ -42,6 +42,7 @@ export const SIGNATURE_STATUS_OPTION = {
 export const SIGNATURE_STATUS_FILTER: Filter[] = [{
 	key: SIGNATURE_STATUS_KEY,
 	name: 'firma-conjunta.signature-status-filter.LABEL',
+	isMultiple:true,
 	options: [{
 		id: EElectronicSignatureStatus.PENDING,
 		description: 'firma-conjunta.signature-status-filter.PENDING',
