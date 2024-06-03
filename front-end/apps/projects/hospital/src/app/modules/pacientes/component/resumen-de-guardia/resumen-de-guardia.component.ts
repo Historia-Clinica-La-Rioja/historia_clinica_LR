@@ -235,7 +235,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote && !this.isEmergencyCareTemporalPatient) {
 					let action: ActionInfo = {
-						label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
+						label: 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE_BUTTON',
 						id: 'medical_discharge',
 						callback: this.goToMedicalDischarge.bind(this)
 					}
