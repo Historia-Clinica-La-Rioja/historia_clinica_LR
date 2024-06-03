@@ -149,4 +149,15 @@ public class AnestheticReportBo implements IDocumentBo {
         return result;
     }
 
+    @Override
+    public Collection<IpsBo> getIpsComponentsWithStatus() {
+        ArrayList<IpsBo> result = new ArrayList<>();
+        Optional.ofNullable(mainDiagnosis).ifPresent(result::add);
+        Optional.ofNullable(anthropometricData).ifPresent(result::add);
+        result.addAll(diagnosis);
+        result.addAll(surgeryProcedures);
+        result.addAll(medications);
+        result.addAll(histories);
+        return result;
+    }
 }

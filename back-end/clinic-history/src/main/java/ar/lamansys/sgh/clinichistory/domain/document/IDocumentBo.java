@@ -213,4 +213,6 @@ public interface IDocumentBo {
     void setContextMap(Map<String,Object> contextMap);
 
     default Collection<IpsBo> getIpsComponents() { return new ArrayList<>(); }
+
+    default Collection<IpsBo> getIpsComponentsWithStatus() { return new ArrayList<>(); }
 }
