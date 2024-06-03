@@ -22,7 +22,7 @@ import java.io.Serializable;
 @EntityListeners(SGXAuditListener.class)
 @Table(name = "medicine_financing_status")
 @Entity
-public class MedicineFinancingStatus extends SGXAuditableEntity<Integer> implements Serializable {
+public class MedicineFinancingStatus extends SGXAuditableEntity<Integer> {
 
 	@Id
 	@Column
