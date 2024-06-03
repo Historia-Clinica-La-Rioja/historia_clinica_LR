@@ -76,8 +76,8 @@ export class HomeComponent implements OnInit {
 		this.institutionAddressForm.controls.stateId.setValue(state?.id);
 		if (!state) {
 			this.institutionAddressForm.controls.departmentId.setValue(null);
-			this.institutionAddressForm.controls.cityId.setValue(null);
 			this.departments = [];
+			this.institutionAddressForm.controls.cityId.setValue(null);
 			return this.cities = [];
 		}
 		this.setDepartments(state.id);

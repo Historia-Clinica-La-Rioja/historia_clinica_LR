@@ -29,7 +29,8 @@
                             <app-typeahead
                                 [externalSetValue]="departmentInitValue"
                                 [required]="true"
-                                [options]="departments" 
+                                [options]="departments"
+                                [disabled]="!this.institutionAddressForm.value.stateId"
                                 (selectionChange)="setDepartment($event)">
                             </app-typeahead>
                             <mat-error class="vanilla-mat-error" *ngIf="hasError(institutionAddressForm, 'required', 'departmentId')">
@@ -42,7 +43,8 @@
                             <app-typeahead
                                 [externalSetValue]="cityInitValue"
                                 [required]="true"
-                                [options]="cities" 
+                                [options]="cities"
+                                [disabled]="!this.institutionAddressForm.value.departmentId"
                                 (selectionChange)="setCity($event)">
                             </app-typeahead>
                             <mat-error class="vanilla-mat-error" *ngIf="hasError(institutionAddressForm, 'required', 'cityId')">
