@@ -184,3 +184,88 @@ databaseChangeLog:
                 - column:
                     name: patient_description
                     type: text
+
+    - changeSet:
+        id: medicine_group-createTable
+        comment: Create table medicine_group
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: medicine_group
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_medicine_group
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: requires_audit
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: outpatient
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: internment
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: emergency_care
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: message
+                    type: text
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
