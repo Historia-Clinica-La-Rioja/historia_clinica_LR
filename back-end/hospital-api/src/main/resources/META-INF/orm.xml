@@ -680,6 +680,7 @@
 			et.pt as ethnicity,
 			concat(mc.name, '(RNOS: ', hi.rnos, ')') as medicalCoverage,
 			concat(a.street, ' N° ', a.number, case when a.floor is not null then concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) as direction,
+			a.quarter as neighborhood,
 			c.description as location,
 			ed.description as educationLevel,
 			lab.description as occupation,
@@ -2316,6 +2317,7 @@
 			<column name="ethnicity" class="java.lang.String"/>
 			<column name="medicalCoverage" class="java.lang.String"/>
 			<column name="direction" class="java.lang.String"/>
+			<column name="neighborhood" class="java.lang.String"/>
 			<column name="location" class="java.lang.String"/>
 			<column name="educationLevel" class="java.lang.String"/>
 			<column name="occupation" class="java.lang.String"/>

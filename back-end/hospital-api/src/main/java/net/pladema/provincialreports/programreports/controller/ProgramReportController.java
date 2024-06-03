@@ -152,7 +152,7 @@ public class ProgramReportController {
 		LOG.debug("Inputs parameters -> institutionId {}, fromDate {}, toDate{}", institutionId);
 
 		String [] headers = new String[]{"Institucion","Unidad Operativa", "Prestador","DNI","Fecha de Atencion","Hora","Cons. N°","DNI Paciente","Nombre Paciente","Sexo","Genero","Nombre con el que se identifica",
-				"Fecha de nacimiento","Edad a fecha del turno","Edad a hoy","Etnia","Obra/s Social/es","Domicilio","Localidad","Nivel de Instruccion","Situacion Laboral",
+				"Fecha de nacimiento","Edad a fecha del turno","Edad a hoy","Etnia","Obra/s Social/es","Domicilio","Barrio","Localidad","Nivel de Instruccion","Situacion Laboral",
 				"Presión sistólica","Presión diastólica","Presion arterial media","Temperatura","Frecuencia cardiaca","Frecuencia respiratoria","Saturación de hemoglobina con oxigeno",
 				"Altura","Peso","Indice de Masa corporal","Perímetro cefálico","Motivos","Procedimientos","Problemas","Medicacion","Evolución"};
 
