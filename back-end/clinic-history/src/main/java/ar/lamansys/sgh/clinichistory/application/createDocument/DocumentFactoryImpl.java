@@ -15,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProsthesis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.snvs.application.ports.patient.PatientStorage;
 
+@Primary
 @Slf4j
 @RequiredArgsConstructor
 @Service

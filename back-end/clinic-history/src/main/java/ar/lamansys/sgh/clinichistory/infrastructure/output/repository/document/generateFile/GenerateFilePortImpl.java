@@ -11,7 +11,6 @@ import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 @Component
 public class GenerateFilePortImpl implements GenerateFilePort {
 

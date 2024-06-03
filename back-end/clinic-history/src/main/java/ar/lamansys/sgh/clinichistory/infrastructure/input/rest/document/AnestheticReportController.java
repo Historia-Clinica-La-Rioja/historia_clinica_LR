@@ -9,7 +9,6 @@ import ar.lamansys.sgh.clinichistory.application.anestheticreport.GetAnestheticR
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.AnestheticReportDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.mapper.AnestheticReportMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Anesthetic Report", description = "Anesthetic Report")
 @RequestMapping("/institutions/{institutionId}/anesthetic-report")
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 @Validated
 @Slf4j
 @RestController
