@@ -40,6 +40,9 @@
 
             <app-description-item-data-summary *ngIf="summary.epicrisis.otherProblems" data-id="other-problems-summary"
                 [descriptionItemDataSummary]="summary.epicrisis.otherProblems"></app-description-item-data-summary>
+
+            <app-external-cause-summary *ngIf="summary.epicrisis.externalCause" data-id="external-cause-summary"
+                [externalCause]="summary.epicrisis.externalCause"></app-external-cause-summary>
         </div>
     </div>
 

@@ -684,6 +684,12 @@
                 "TITLE": "Otras circunstancias que prolongan la internación",
                 "REGISTERED_OTHER_PROBLEMS": "Otras circunstancias que prolongan la internación registradas"
             },
+            "external-cause": {
+                "TITLE": "Causa externa de traumatismo, envenenamiento y otros efectos adversos",
+                "PRODUCED_BY": "Producido por",
+                "EVENT_LOCATION": "Lugar donde ocurrió",
+				"HOW_IT_HAPPENED": "Cómo se produjo"
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",

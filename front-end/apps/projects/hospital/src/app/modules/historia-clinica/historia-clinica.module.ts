@@ -39,6 +39,7 @@ import { EvolutionChartOptionsComponent } from './components/evolution-chart-opt
 import { EvolutionChartSelectComponent } from './components/evolution-chart-select/evolution-chart-select.component';
 import { EvolutionChartTypeSelectComponent } from './components/evolution-chart-type-select/evolution-chart-type-select.component';
 import { EvolutionNoteDocumentSummaryComponent } from './components/evolution-note-document-summary/evolution-note-document-summary.component';
+import { ExternalCauseSummaryComponent } from './components/external-cause-summary/external-cause-summary.component';
 import { FactoresDeRiesgoFormComponent } from './components/factores-de-riesgo-form/factores-de-riesgo-form.component';
 import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo-form-v2/factores-de-riesgo-form-v2.component';
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
@@ -187,6 +188,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		EvolutionChartTypeSelectComponent,
 		EvolutionChartOptionsComponent,
         EvolutionNoteDocumentSummaryComponent,
+        ExternalCauseSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
 		BoxMessageComponent,

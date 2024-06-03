@@ -122,3 +122,15 @@ export interface ClinicalEvaluationData {
     physicalExamNote: DescriptionItemData[];
     studiesSummaryNote: DescriptionItemData[];
 }
+
+export interface ExternalCauseData {
+    producedBy: DescriptionItemData[];
+    eventLocation: DescriptionItemData[];
+    howItHappened: DescriptionItemData[];
+}
+
+export interface DescriptionItemDataInfo {
+    title: string,
+    dataId: string,
+    descriptionData: DescriptionItemData[],
+}

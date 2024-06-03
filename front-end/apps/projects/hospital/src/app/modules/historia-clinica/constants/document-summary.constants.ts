@@ -153,3 +153,17 @@ export const HEADER_DATA_BED = {
     dataId: "bed",
     identifierCase: IDENTIFIER_CASES.BED,
 }
+
+export const ExternalCauseType = {
+    ACCIDENT: "Accidente",
+    SELF_INFLICTED_INJURY: "Lesión autoinfligida",
+    AGRESSION: "Agresión",
+    IGNORED: "Se ignora",
+}
+
+export const EventLocation = {
+    DOMICILIO_PARTICULAR: "Domicilio particular",
+    VIA_PUBLICA: "Vía pública",
+    LUGAR_DE_TRABAJO: "Lugar de trabajo",
+    OTRO: "Otro",
+}
