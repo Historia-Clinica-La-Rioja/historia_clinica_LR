@@ -12,6 +12,7 @@ import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.uti
 import { finalize, forkJoin, map } from 'rxjs';
 import { InstitutionDescription } from '../../components/institution-description/institution-description.component';
 import { transformCoordinates } from '../../constants/coordinates.utils';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 interface InstitutionAddress {
     stateId: FormControl<number>;
@@ -61,7 +62,8 @@ export class HomeComponent implements OnInit {
 	constructor(private readonly gisService: GisService,
 				private readonly addressMasterDataService: AddressMasterDataService,
 				private readonly institutionService: InstitutionService,
-				private readonly contextService: ContextService) {}
+				private readonly contextService: ContextService,
+				private readonly snackBarService: SnackBarService) {}
 
 	ngOnInit(): void {
 		this.setInstitution();
@@ -99,6 +101,7 @@ export class HomeComponent implements OnInit {
 	changeStep = ($event) => {
 		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) {
 			this.showMap = false;
+			this.coordinatesCurrentValue = null;
 		}
 
 		if ($event.selectedIndex === MAP_POSITION_INDEX) {
@@ -109,15 +112,18 @@ export class HomeComponent implements OnInit {
 	stepToMapPosition = () => {
 		this.isLoading = true;
 		const address: string = this.toStringify();
+		this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
 		this.gisService.getInstitutionCoordinatesFromAddress(address)
 			.pipe(finalize(() => this.isLoading = false))
 			.subscribe((coordinates: GlobalCoordinatesDto) => {
 				this.coordinatesCurrentValue = coordinates;
-				if (!coordinates) return;
+
+				if (!coordinates) 
+					return this.snackBarService.showError('gis.map-position.ERROR');
 
 				this.showMap = true;
-				this.institutionAddressForm.controls.coordinates.setValue(transformCoordinates(coordinates));
 				this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
+				this.institutionAddressForm.controls.coordinates.setValue(transformCoordinates(coordinates));
 			});
 	}
 

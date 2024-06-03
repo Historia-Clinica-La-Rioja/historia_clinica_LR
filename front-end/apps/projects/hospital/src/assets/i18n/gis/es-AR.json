@@ -21,7 +21,8 @@
         "map-position": {
             "TITLE": "2. Posicionar en mapa",
             "COORDINATES": "Coordenadas",
-            "SEARCHING": "Buscando..."
+            "SEARCHING": "Buscando...",
+            "ERROR": "No se ha encontrado la ubicación"
         },
         "detailed-information": {
             "TITLE": "Detalle de la institución"
