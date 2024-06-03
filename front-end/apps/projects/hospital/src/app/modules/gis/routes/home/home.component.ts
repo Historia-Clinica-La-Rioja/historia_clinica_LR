@@ -129,7 +129,7 @@ export class HomeComponent implements OnInit {
 
 	goToDetails = () => {
 		this.isFirstTime = false;
-		this.mapToInstitutionDescriptionDetailed('gis.detailed-information.TITLE');
+		this.setInstitutionData();
 	}
 	
 	get street(): string {
