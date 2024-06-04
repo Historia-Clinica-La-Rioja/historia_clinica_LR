@@ -1680,6 +1680,7 @@ export interface EmergencyCareListDto extends Serializable {
 
 export interface EmergencyCarePatientDto extends Serializable {
     id: number;
+    patientDescription: string;
     patientMedicalCoverageId: number;
     person: EmergencyCarePersonDto;
     typeId: number;

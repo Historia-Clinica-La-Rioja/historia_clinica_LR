@@ -29,6 +29,7 @@ public class PatientECEBo {
 		this.patientMedicalCoverageId = patient.getPatientMedicalCoverageId();
 		this.typeId = patient.getTypeId();
 		this.person = patient.getPerson() != null ? new PersonECEBo(patient.getPerson()) : null;
+		this.patientDescription = patient.getPatientDescription();
 	}
 
 	public PatientECEBo(Integer patientId, Integer patientMedicalCoverageId) {

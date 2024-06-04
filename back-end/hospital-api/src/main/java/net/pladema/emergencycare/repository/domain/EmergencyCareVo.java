@@ -72,7 +72,7 @@ public class EmergencyCareVo implements Serializable {
 						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
 						   String shockroomDescription, Bed bed){
 		this.id = emergencyCareEpisode.getId();
-		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person, nameSelfDetermination) : null;
+		this.patient = emergencyCareEpisode.getPatientId() != null ? new PatientECEVo(emergencyCareEpisode.getPatientId(), emergencyCareEpisode.getPatientMedicalCoverageId(), patientTypeId, person, nameSelfDetermination, emergencyCareEpisode.getPatientDescription()) : null;
 		this.triageCategoryId = triage.getId();
 		this.triageName = triage.getName();
 		this.triageColorCode = triage.getColorCode();
