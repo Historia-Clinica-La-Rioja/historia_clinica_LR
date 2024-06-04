@@ -31,3 +31,8 @@ mat-divider.mat-divider-horizontal.mat-divider-inset.separation {
 .bold {
 	font-weight: 500;
 }
+
+.actions {
+	display: flex;
+	justify-content: flex-end;
+}

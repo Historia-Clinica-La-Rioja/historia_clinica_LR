@@ -38,7 +38,7 @@ import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
-import { forkJoin, Observable, of } from 'rxjs';
+import { finalize, forkJoin, Observable, of } from 'rxjs';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
 import { HCEPersonalHistory } from '../reference/reference.component';
@@ -53,6 +53,7 @@ import { BoxMessageInformation } from '@historia-clinica/components/box-message/
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { ButtonType } from '@presentation/components/button/button.component';
 
 const TIME_OUT = 5000;
 
@@ -137,6 +138,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		}
 	}
 	isFamilyHistoriesNoRefer: boolean = true;
+	ButtonType = ButtonType;
+	isSaving = false;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -276,7 +279,9 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		if(!this.touchedConfirm && this.showWarningViolenceSituation){
 			this.touchedConfirm = true;
 		}
-			this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
+		this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems)
+			.pipe(finalize(() => this.isSaving = false))
+			.subscribe(res => {
 				if (res.length) {
 					this.dataName = res.map(p=> ` "${p.pt}"`);
 					this.showWarningViolenceSituation = true;
@@ -294,6 +299,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	confirmForm(){
+		this.isSaving = true;
 		if(this.referenceSituationViolence === null){
 			this.previousAlertReference();
 		}else if(this.referenceSituationViolence || !this.referenceSituationViolence){
@@ -302,47 +308,46 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	save(): void {
-		this.previousDataIsConfirmed().subscribe((answerPreviousData: boolean) => {
+		this.previousDataIsConfirmed()
+			.pipe(finalize(() => this.isSaving = false))
+			.subscribe((answerPreviousData: boolean) => {
+				const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
+				const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
+				this.apiErrors = [];
 
-			const nuevaConsulta: CreateOutpatientDto = this.buildCreateOutpatientDto();
-			const fieldsService = new NewConsultationSuggestedFieldsService(nuevaConsulta, this.translateService);
-			this.apiErrors = [];
-
-			if (answerPreviousData) {
-				if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
-					if (!fieldsService.nonCompletedFields.length) {
-						this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
-					}
-					else {
-						(this.isEnablePopUpConfirm)
-							? this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta)
-							: this.uploadReferencesFileAndCreateConsultation(nuevaConsulta)
-					}
-				} else {
-					this.disableConfirmButton = false;
-					if (!this.isValidConsultation()) {
-						if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
-							this.collapsedAnthropometricDataSection = false;
-							setTimeout(() => {
-								scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el)
-							}, 300);
+				if (answerPreviousData) {
+					if ((this.isValidConsultation()) && (this.formEvolucion.valid)) {
+						if (!fieldsService.nonCompletedFields.length) {
+							this.uploadReferencesFileAndCreateConsultation(nuevaConsulta);
 						}
-						else if (this.factoresDeRiesgoFormService.getForm().invalid) {
-							this.collapsedRiskFactorsSection = false;
-							setTimeout(() => {
-								scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
-							}, 300);
+						else {
+							(this.isEnablePopUpConfirm)
+								? this.openDialog(fieldsService.nonCompletedFields, fieldsService.presentFields, nuevaConsulta)
+								: this.uploadReferencesFileAndCreateConsultation(nuevaConsulta)
 						}
-						if (this.hierarchicalUnitFormService.isValidForm()) {
-							setTimeout(() => {
-								scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
-							}, 300);
+					} else {
+						this.disableConfirmButton = false;
+						if (!this.isValidConsultation()) {
+							if (this.datosAntropometricosNuevaConsultaService.getForm().invalid) {
+								this.collapsedAnthropometricDataSection = false;
+								setTimeout(() => {
+									scrollIntoError(this.datosAntropometricosNuevaConsultaService.getForm(), this.el)
+								}, 300);
+							}
+							else if (this.factoresDeRiesgoFormService.getForm().invalid) {
+								this.collapsedRiskFactorsSection = false;
+								setTimeout(() => {
+									scrollIntoError(this.factoresDeRiesgoFormService.getForm(), this.el)
+								}, 300);
+							}
+							if (this.hierarchicalUnitFormService.isValidForm()) {
+								setTimeout(() => {
+									scrollIntoError(this.hierarchicalUnitFormService.getForm(), this.el)
+								}, 300);
+							}
 						}
 					}
-
 				}
-			}
-
 		});
 	}
 

@@ -28,6 +28,8 @@ import { EpisodeData } from '@historia-clinica/components/episode-data/episode-d
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { ButtonType } from '@presentation/components/button/button.component';
+import { finalize } from 'rxjs';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -74,7 +76,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	severityTypes: any[];
 	criticalityTypes: any[];
 	healthProblemOptions = [];
-
+	ButtonType = ButtonType;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -235,27 +237,29 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	}
 
 	private createConsultation(nursingConsultationDto: NursingConsultationDto) {
-		this.nursingPatientConsultationService.createNursingPatientConsultation(nursingConsultationDto, this.data.idPaciente).subscribe(
-			_ => {
-				this.snackBarService.showSuccess('ambulatoria.paciente.new-nursing-consultation.messages.SUCCESS');
-				this.dockPopupRef.close(mapToFieldsToUpdate(nursingConsultationDto));
-			},
-			response => {
-				this.disableConfirmButton = false;
-				if (response.errors)
-					response.errors.forEach(val => {
-						this.apiErrors.push(val);
-					});
-				this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
-			},
-			() => {
-				if (this.apiErrors?.length > 0) {
-					setTimeout(() => {
-						this.apiErrorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-					}, 500);
+		this.nursingPatientConsultationService.createNursingPatientConsultation(nursingConsultationDto, this.data.idPaciente)
+			.pipe(finalize(() => this.disableConfirmButton = false))
+			.subscribe(
+				_ => {
+					this.snackBarService.showSuccess('ambulatoria.paciente.new-nursing-consultation.messages.SUCCESS');
+					this.dockPopupRef.close(mapToFieldsToUpdate(nursingConsultationDto));
+				},
+				response => {
+					this.disableConfirmButton = false;
+					if (response.errors)
+						response.errors.forEach(val => {
+							this.apiErrors.push(val);
+						});
+					this.snackBarService.showError('ambulatoria.paciente.new-nursing-consultation.messages.ERROR');
+				},
+				() => {
+					if (this.apiErrors?.length > 0) {
+						setTimeout(() => {
+							this.apiErrorsView.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+						}, 500);
+					}
 				}
-			}
-		);
+			);
 
 		function mapToFieldsToUpdate(nuevaConsultaEnfermeriaDto: NursingConsultationDto): FieldsToUpdate {
 			return {
