@@ -26,6 +26,7 @@ export class InstitutionDescriptionComponent {
 	}
 	@Input() showActions: boolean = true;
 	@Output() confirmed = new EventEmitter<boolean>();
+	@Output() previous = new EventEmitter<boolean>();
 
 	institutionDescription: InstitutionDescription;
 	isSaving: boolean = false;
@@ -48,6 +49,10 @@ export class InstitutionDescriptionComponent {
 			this.snackBarService.showSuccess("gis.status.UPDATE_DATA_SUCCESS");
 			this.confirmed.emit(true);
 		});
+	}
+
+	previousStepper = () => {
+		this.previous.emit(true);
 	}
 	
 	private mapToSaveInstitutionAddressDto = (): SaveInstitutionAddressDto => {

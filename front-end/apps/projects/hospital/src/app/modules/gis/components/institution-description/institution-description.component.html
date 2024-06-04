@@ -44,7 +44,7 @@
     </div>
 
     <div *ngIf="showActions" class="actions m-top">
-        <button matStepperPrevious mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
+        <button (click)="previousStepper()" mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
         <app-button 
             text="buttons.CONFIRM" 
             [disabled]="!institutionDescription.coordinates?.latitude"

@@ -59,6 +59,8 @@ export class HomeComponent implements OnInit {
 	isFirstTime = false;
 	isLoading = false;
 
+	currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+
 	constructor(private readonly gisService: GisService,
 				private readonly addressMasterDataService: AddressMasterDataService,
 				private readonly institutionService: InstitutionService,
@@ -99,17 +101,15 @@ export class HomeComponent implements OnInit {
 	}
 
 	changeStep = ($event) => {
-		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) {
-			this.showMap = false;
-			this.coordinatesCurrentValue = null;
-		}
+		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) 
+			this.stepToInstitutionAddress();
 
-		if ($event.selectedIndex === MAP_POSITION_INDEX) {
+		if ($event.selectedIndex === MAP_POSITION_INDEX) 
 			this.stepToMapPosition();
-		}
 	}
 
 	stepToMapPosition = () => {
+		this.currentStepperIndex = MAP_POSITION_INDEX;
 		this.isLoading = true;
 		const address: string = this.toStringify();
 		this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
@@ -127,11 +127,31 @@ export class HomeComponent implements OnInit {
 			});
 	}
 
-	goToDetails = () => {
-		this.isFirstTime = false;
-		this.setInstitutionData();
-	}
 	
+	stepToInstitutionAddress = () => {
+		this.coordinatesCurrentValue = null;
+		this.showMap = false;
+		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+	}
+
+	setInstitutionData = () => {
+		forkJoin([
+			this.gisService.getInstitutionCoordinatesByInstitutionId(),
+			this.gisService.getInstitutionAddressById()
+		]).subscribe(([coordinates, address]: [GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto]) => {
+			this.coordinatesCurrentValue = coordinates;
+			this.address = address;
+			this.isFirstTime = !this.hasCoordinates();
+			this.showMap = this.hasCoordinates();
+			if (this.hasCoordinates()) {
+				this.mapToInstitutionDescriptionDetailed('gis.detailed-information.TITLE');
+			} else {
+				this.setInstitutionAddressFormData();
+				this.setStates();
+			}
+		})
+	}
+
 	get street(): string {
 		return this.institutionAddressForm.value.streetName;
 	}
@@ -176,24 +196,6 @@ export class HomeComponent implements OnInit {
 			houseNumber: new FormControl(null, Validators.required),
 			coordinates: new FormControl({value: null, disabled: true})
 		});
-	}
-
-	private setInstitutionData = () => {
-		forkJoin([
-			this.gisService.getInstitutionCoordinatesByInstitutionId(),
-			this.gisService.getInstitutionAddressById()
-		]).subscribe(([coordinates, address]: [GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto]) => {
-			this.coordinatesCurrentValue = coordinates;
-			this.address = address;
-			this.isFirstTime = !this.hasCoordinates();
-			this.showMap = this.hasCoordinates();
-			if (this.hasCoordinates()) {
-				this.mapToInstitutionDescriptionDetailed('gis.detailed-information.TITLE');
-			} else {
-				this.setInstitutionAddressFormData();
-				this.setStates();
-			}
-		})
 	}
 
 	private hasCoordinates = (): boolean => {
@@ -257,7 +259,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	private setCities = (departmentId: number) => {
-		this.addressMasterDataService.getCitiesByDepartment(departmentId)
+		this.addressMasterDataService.getAllCitiesByDepartment(departmentId)
 			.pipe(map(cities => listToTypeaheadOptions(cities, 'description')))
 			.subscribe((cities: TypeaheadOption<AddressProjection>[]) => {
 				this.cities = cities;
