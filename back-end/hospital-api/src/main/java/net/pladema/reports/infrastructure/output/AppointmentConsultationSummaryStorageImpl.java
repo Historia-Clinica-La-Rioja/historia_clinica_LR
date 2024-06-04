@@ -36,6 +36,7 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 
 		LocalDateTime startDate = filter.getFromDate().atTime(3, 0);
 		LocalDateTime endDate = filter.getToDate().atTime(3, 0).plusDays(1);
+		boolean doUnion = true;
 
 		String selectCommon = "CAST(COUNT(CASE WHEN extract(year FROM age(apt.date_type_id, p2.birth_date)) < 1 AND p2.gender_id = 1 THEN 1 END) AS INTEGER) AS ageRange0to1F, " +
 				"CAST(COUNT(CASE WHEN extract(year FROM age(apt.date_type_id, p2.birth_date)) < 1 AND p2.gender_id = 2 THEN 1 END) AS INTEGER) AS ageRange0to1M, " +
@@ -90,26 +91,6 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 				"JOIN {h-schema}healthcare_professional hp ON (hp.id = d.healthcare_professional_id) " +
 				whereCommon;
 
-		if (filter.getHierarchicalUnitTypeId() != null)
-			sqlQuery += " AND hu.type_id = " + filter.getHierarchicalUnitTypeId();
-
-		if (filter.getHierarchicalUnitId() != null)
-			sqlQuery += filter.isIncludeHierarchicalUnitDescendants() ? " AND hu.id IN (:hierarchicalUnitIds) " : " AND hu.id = " + filter.getHierarchicalUnitId();
-
-		if (filter.getClinicalSpecialtyId() != null)
-			sqlQuery += " AND d.clinical_specialty_id = " + filter.getClinicalSpecialtyId();
-
-		if (filter.getDoctorId() != null)
-			sqlQuery += " AND hp.id = " + filter.getDoctorId();
-
-		if (filter.getAppointmentStateId() != null)
-			sqlQuery += " AND apt.appointment_state_id = " + filter.getAppointmentStateId();
-
-		sqlQuery += "GROUP BY " +
-				"hu.alias, " +
-				"hut.description, " +
-				"cs.name ";
-
 		String sqlSecondQuery = "SELECT " +
 				"'Imágenes' as hierarchical_unit_type, " +
 				"'' as hierarchical_unit, " +
@@ -123,12 +104,46 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 				"LEFT JOIN {h-schema}appointment apt on (apt.id = eaa.appointment_id) " +
 				"JOIN {h-schema}patient p ON (apt.patient_id = p.id) " +
 				"JOIN {h-schema}person p2 ON (p.person_id = p2.id) " +
-				whereCommon +
-				"GROUP BY " +
+				whereCommon;
+
+		if (filter.getHierarchicalUnitTypeId() != null){
+			sqlQuery += " AND hu.type_id = " + filter.getHierarchicalUnitTypeId();
+			doUnion = false;
+		}
+
+		if (filter.getHierarchicalUnitId() != null){
+			sqlQuery += filter.isIncludeHierarchicalUnitDescendants() ? " AND hu.id IN (:hierarchicalUnitIds) " : " AND hu.id = " + filter.getHierarchicalUnitId();
+			doUnion = false;
+		}
+
+		if (filter.getClinicalSpecialtyId() != null){
+			sqlQuery += " AND d.clinical_specialty_id = " + filter.getClinicalSpecialtyId();
+			doUnion = false;
+		}
+
+		if (filter.getDoctorId() != null){
+			sqlQuery += " AND hp.id = " + filter.getDoctorId();
+			doUnion = false;
+		}
+
+		if (filter.getAppointmentStateId() != null) {
+			String appointmentStateFilter = " AND apt.appointment_state_id = " + filter.getAppointmentStateId();
+			sqlQuery += appointmentStateFilter;
+			sqlSecondQuery += appointmentStateFilter;
+		}
+
+		sqlQuery += "GROUP BY " +
+				"hu.alias, " +
+				"hut.description, " +
+				"cs.name ";
+
+		sqlSecondQuery += "GROUP BY " +
 				"i.id; ";
 
-		sqlQuery += "UNION " +
-				sqlSecondQuery;
+		if (doUnion)
+			sqlQuery += "UNION " +
+					sqlSecondQuery;
+		else sqlQuery += "; ";
 
 		var query = entityManager.createNativeQuery(sqlQuery);
 
