@@ -13,40 +13,40 @@ public class AppointmentConsultationSummaryBo {
 	private String hierarchicalUnitAlias;
 	private String clinicalSpecialty;
 
-	private Integer ageRange0to1M;
 	private Integer ageRange0to1F;
+	private Integer ageRange0to1M;
 	private Integer ageRange0to1X;
 
-	private Integer ageRange1to4M;
 	private Integer ageRange1to4F;
+	private Integer ageRange1to4M;
 	private Integer ageRange1to4X;
 
-	private Integer ageRange5to9M;
 	private Integer ageRange5to9F;
+	private Integer ageRange5to9M;
 	private Integer ageRange5to9X;
 
-	private Integer ageRange10to14M;
 	private Integer ageRange10to14F;
+	private Integer ageRange10to14M;
 	private Integer ageRange10to14X;
 
-	private Integer ageRange15to19M;
 	private Integer ageRange15to19F;
+	private Integer ageRange15to19M;
 	private Integer ageRange15to19X;
 
-	private Integer ageRange20to34M;
 	private Integer ageRange20to34F;
+	private Integer ageRange20to34M;
 	private Integer ageRange20to34X;
 
-	private Integer ageRange35to49M;
 	private Integer ageRange35to49F;
+	private Integer ageRange35to49M;
 	private Integer ageRange35to49X;
 
-	private Integer ageRange50to64M;
 	private Integer ageRange50to64F;
+	private Integer ageRange50to64M;
 	private Integer ageRange50to64X;
 
-	private Integer ageRangeOver65M;
 	private Integer ageRangeOver65F;
+	private Integer ageRangeOver65M;
 	private Integer ageRangeOver65X;
 
 	private Integer unspecified;
