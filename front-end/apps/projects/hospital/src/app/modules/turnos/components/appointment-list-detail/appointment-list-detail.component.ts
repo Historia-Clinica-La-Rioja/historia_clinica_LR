@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CompleteDiaryDto, GroupAppointmentResponseDto } from '@api-rest/api-model';
 import { GroupAppointmentFacadeService } from '@api-rest/services/group-appointment-facade.service';
 import { APPOINTMENT_STATES_ID, getAppointmentLabelColor, getAppointmentState } from '@turnos/constants/appointment';
@@ -24,6 +24,7 @@ export class AppointmentListDetailComponent implements OnInit {
 	appointmentStateColor: string; 
 
 	constructor(private readonly dialog: MatDialog,
+				private readonly dialogRef: MatDialogRef<AppointmentListDetailComponent>,
 				private readonly groupAppointmentFacadeService: GroupAppointmentFacadeService) {}
 
 	ngOnInit(): void {
@@ -41,6 +42,7 @@ export class AppointmentListDetailComponent implements OnInit {
 	}
 
 	private openAppointmentDialog = (appointmentData: PatientAppointmentInformation) => {
+		this.dialogRef.close();
 		this.dialog.open(AppointmentComponent, {
 			disableClose: true,
 			data: {
@@ -53,6 +55,7 @@ export class AppointmentListDetailComponent implements OnInit {
 	}
 
 	private openBookingDialog = (appointmentData: PatientAppointmentInformation) => {
+		this.dialogRef.close();
 		this.dialog.open(ConfirmBookingComponent, {
 			width: '30%',
 			data: {
