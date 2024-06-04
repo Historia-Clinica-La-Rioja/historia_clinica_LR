@@ -76,6 +76,9 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 	@Column(name = "reason", columnDefinition = "TEXT")
 	private String reason;
 
+	@Column(name = "patient_description", columnDefinition = "TEXT")
+	private String patientDescription;
+
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
 								TriageBo triageBo) {
 		this.id = emergencyCareBo.getId();
@@ -90,6 +93,7 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 		this.ambulanceCompanyId = emergencyCareBo.getAmbulanceCompanyId();
 		this.hasPoliceIntervention = emergencyCareBo.getHasPoliceIntervention();
 		this.reason = emergencyCareBo.getReason();
+		this.patientDescription = emergencyCareBo.getPatient().getPatientDescription();
 	}
 
 	@PrePersist

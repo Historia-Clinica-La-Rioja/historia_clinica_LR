@@ -13,13 +13,14 @@ export interface AEmergencyCareDto extends Serializable {
     emergencyCareTypeId?: number;
     entranceTypeId?: number;
     hasPoliceIntervention?: boolean;
-    patient?: AEmergencyCarePatientDto;
+    patient: AEmergencyCarePatientDto;
     policeInterventionDetails?: PoliceInterventionDetailsDto;
     reason: string;
 }
 
 export interface AEmergencyCarePatientDto extends Serializable {
     id?: number;
+    patientDescription?: string;
     patientMedicalCoverageId?: number;
 }
 

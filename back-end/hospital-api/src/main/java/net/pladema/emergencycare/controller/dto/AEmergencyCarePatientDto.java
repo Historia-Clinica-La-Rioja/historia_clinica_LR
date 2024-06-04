@@ -22,4 +22,7 @@ public class AEmergencyCarePatientDto implements Serializable {
     @Nullable
     private final Integer patientMedicalCoverageId;
 
+	@Nullable
+	private final String patientDescription;
+
 }

@@ -22,6 +22,8 @@ public class PatientECEBo {
 
 	private PersonECEBo person;
 
+	private String patientDescription;
+
 	public PatientECEBo(PatientECEVo patient){
 		this.id = patient.getId();
 		this.patientMedicalCoverageId = patient.getPatientMedicalCoverageId();

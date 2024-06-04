@@ -38,6 +38,6 @@ public abstract class AEmergencyCareDto implements Serializable {
 	@Length(max = 15)
 	private String ambulanceCompanyId;
 
-	@Nullable
+	@NotNull
 	private AEmergencyCarePatientDto patient;
 }

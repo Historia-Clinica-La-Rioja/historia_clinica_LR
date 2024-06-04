@@ -13,11 +13,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.application.GetAllEpisodeListByFilter;
+import net.pladema.emergencycare.controller.dto.AEmergencyCarePatientDto;
 import net.pladema.emergencycare.controller.dto.ECAdministrativeDto;
 import net.pladema.emergencycare.controller.dto.ECAdultGynecologicalDto;
 import net.pladema.emergencycare.controller.dto.ECPediatricDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareListDto;
 import net.pladema.emergencycare.controller.dto.NewEmergencyCareDto;
+import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeExceptionEnum;
+import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeException;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
@@ -109,8 +112,10 @@ public class EmergencyCareEpisodeController {
         LOG.debug("Add emergency care administrative episode -> institutionId {}, body {}", institutionId, body);
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.administrativeEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+		if (newEmergencyCare.getPatient().getId() == null) {
+			PatientECEBo temporaryPatient = createEmergencyCareEpisodeTemporaryPatient(body.getAdministrative().getPatient());
+			newEmergencyCare.setPatient(temporaryPatient);
+		}
         newEmergencyCare = emergencyCareEpisodeService.createAdministrative(newEmergencyCare, institutionId);
         Integer result = newEmergencyCare.getId();
         LOG.debug("Output -> {}", result);
@@ -143,8 +148,10 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.adultGynecologicalEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+		if (newEmergencyCare.getPatient().getId() == null) {
+			PatientECEBo temporaryPatient = createEmergencyCareEpisodeTemporaryPatient(body.getAdministrative().getPatient());
+			newEmergencyCare.setPatient(temporaryPatient);
+		}
 
         NewRiskFactorsObservationDto riskFactorsObservationDto =
                 riskFactorExternalService.saveRiskFactors(newEmergencyCare.getPatient().getId(), body.riskFactorsObservation());
@@ -167,8 +174,10 @@ public class EmergencyCareEpisodeController {
         EmergencyCareBo newEmergencyCare = emergencyCareMapper.pediatricEmergencyCareDtoToEmergencyCareBo(body);
         newEmergencyCare.setInstitutionId(institutionId);
 
-		if (newEmergencyCare.getPatient() == null || newEmergencyCare.getPatient().getId() == null)
-			newEmergencyCare.setPatient(createEmergencyCareEpisodePatient());
+		if (newEmergencyCare.getPatient().getId() == null) {
+			PatientECEBo temporaryPatient = createEmergencyCareEpisodeTemporaryPatient(body.getAdministrative().getPatient());
+			newEmergencyCare.setPatient(temporaryPatient);
+		}
 
         NewRiskFactorsObservationDto riskFactorsObservationDto = triageRiskFactorMapper.fromTriagePediatricDto(body.getTriage());
         riskFactorsObservationDto = riskFactorExternalService.saveRiskFactors(newEmergencyCare.getPatient().getId(), riskFactorsObservationDto);
@@ -240,11 +249,18 @@ public class EmergencyCareEpisodeController {
         return result;
     }
 
-	private PatientECEBo createEmergencyCareEpisodePatient() {
+	private PatientECEBo createEmergencyCareEpisodeTemporaryPatient(AEmergencyCarePatientDto patient) {
+		assertTemporaryPatient(patient.getPatientDescription());
 		PatientECEBo result = new PatientECEBo();
 		Integer patientId = patientService.addPatient(new Patient(EPatientType.EMERGENCY_CARE_TEMPORARY.getId(), EAuditType.UNAUDITED.getId())).getId();
 		result.setId(patientId);
+		result.setPatientDescription(patient.getPatientDescription());
 		return result;
 	}
 
+	private void assertTemporaryPatient(String patientDescription) {
+		boolean hasNotDescription = patientDescription == null || patientDescription.isEmpty();
+		if (hasNotDescription)
+			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_DESCRIPTION,"No se puede crear un episodio de guardia con paciente temporal sin una descripcion identificatoria del paciente");
+	}
 }

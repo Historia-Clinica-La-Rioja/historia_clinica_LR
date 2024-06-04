@@ -19,9 +19,15 @@ public class EmergencyCareExceptionHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({GetEvolutionNoteByDocumentIdException.class})
-	protected ApiErrorMessageDto handleCreateInternmentEpisodeException(GetEvolutionNoteByDocumentIdException ex) {
-		log.debug("CreateInternmentEpisodeException exception -> {}", ex.getMessage());
+	protected ApiErrorMessageDto handleGetEvolutionNoteByDocumentIdException(GetEvolutionNoteByDocumentIdException ex) {
+		log.debug("GetEvolutionNoteByDocumentIdException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({SaveEmergencyCareEpisodeException.class})
+	protected ApiErrorMessageDto handleCreateUpdateEmergencyCareException(SaveEmergencyCareEpisodeException ex) {
+		log.debug("CreateUpdateEmergencyCareEpisodeException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
 }
