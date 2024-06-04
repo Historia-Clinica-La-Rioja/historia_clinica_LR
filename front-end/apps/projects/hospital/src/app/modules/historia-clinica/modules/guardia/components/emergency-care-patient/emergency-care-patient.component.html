@@ -1,0 +1,46 @@
+<h2 [translate]="'guardia.administrative_admision.PATIENT'"></h2>
+
+<div *ngIf="hasToShowButtonsActions else patientInformation" fxLayout="row" fxLayoutGap="18px">
+    <app-button matIcon="person_search" text="buttons.SEARCH" (clicked)="searchPatient()"></app-button>
+</div>
+<form [formGroup]="form">
+
+    <ng-template #patientInformation>
+        <ng-container *ngTemplateOutlet="permanentPatient"></ng-container>
+    </ng-template>
+
+    <ng-template #permanentPatient>
+        <div fxLayout="column" fxLayoutGap="15px" *ngIf="!!patientSummary">
+            <mat-card fxLayout="row" fxLayoutAlign="space-between">
+                <app-patient-summary [person]="patientSummary"
+                    size="SIZE"></app-patient-summary>
+                <app-button buttonType="{{BUTTON_TYPE_ICON}}" color="warn" matIcon="clear"
+                    (clicked)="clearSelectedPatient()"></app-button>
+            </mat-card>
+            <form [formGroup]="form">
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label translate="guardia.administrative_admision.SELECT_MEDICAL_COVERAGE"></mat-label>
+                    <mat-select formControlName="patientMedicalCoverageId" name="patientMedicalCoverageId"
+                        id="patientMedicalCoverageId">
+                        <mat-option
+                            *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
+                            [value]="patientMedicalCoverage.id">
+                            {{ patientMedicalCoverage | fullMedicalCoverage }}
+                        </mat-option>
+                        <mat-divider></mat-divider>
+                        <mat-option (click)="openMedicalCoverageDialog()">
+                            <span class="color-primary"
+                                translate="guardia.administrative_admision.UPDATE_MEDICAL_COVERAGE"></span>
+                        </mat-option>
+                    </mat-select>
+                    <button id="clear_medical_coverage" type="button" mat-button
+                        *ngIf="form.value.patientMedicalCoverageId" matSuffix color="warn" mat-icon-button
+                        (click)="clear(form.controls.patientMedicalCoverageId); $event.stopPropagation()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </form>
+        </div>
+    </ng-template>
+
+</form>

@@ -39,6 +39,7 @@
 			"SELECT_MEDICAL_COVERAGE": "Seleccione una cobertura",
 			"UPDATE_MEDICAL_COVERAGE": "Actualizar Cobertura",
 			"EPISODE_DETAILS": "Detalle del episodio",
+			"TEMPORARY": "Temporal",
 			"reasons": {
 				"TITLE": "Motivo de ingreso",
 				"PLACEHOLDER": "Descripción del paciente"

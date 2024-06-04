@@ -1,38 +1,8 @@
 <mat-card class="card-size">
 	<mat-card-content>
-		<h2 [translate]="'guardia.administrative_admision.PATIENT'"></h2>
+		<app-emergency-care-patient [emergencyCarePatientData]="emergencyCarePatientData" (selectedPatientData)="setPatientData($event)"></app-emergency-care-patient>
 
-		<app-button *ngIf="!patientSummary" matIcon="person_search" text="buttons.SEARCH"
-			(clicked)="searchPatient()"></app-button>
-		<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form"
-			class="form">
-			<ng-container *ngIf="!!patientSummary">
-				<mat-card fxLayout="row" fxLayoutAlign="space-between">
-					<app-patient-summary [person]="patientSummary" size="SIZE"></app-patient-summary>
-					<app-button buttonType="{{buttonType.ICON}}" color="{{buttonThemeWarn}}" matIcon="clear"
-						(clicked)="clearSelectedPatient()"></app-button>
-				</mat-card>
-				<mat-form-field appearance="outline">
-					<mat-label translate="guardia.administrative_admision.SELECT_MEDICAL_COVERAGE"></mat-label>
-					<mat-select formControlName="patientMedicalCoverageId" name="patientMedicalCoverageId"
-						id="patientMedicalCoverageId">
-						<mat-option *ngFor="let patientMedicalCoverage of patientMedicalCoverages"
-							[value]="patientMedicalCoverage.id">
-							{{ patientMedicalCoverage | fullMedicalCoverage }}
-						</mat-option>
-						<mat-divider></mat-divider>
-						<mat-option (click)="openMedicalCoverageDialog()">
-							<span class="color-primary"
-								translate="guardia.administrative_admision.UPDATE_MEDICAL_COVERAGE"></span>
-						</mat-option>
-					</mat-select>
-					<button id="clear_medical_coverage" type="button" mat-button
-						*ngIf="form.value.patientMedicalCoverageId" matSuffix color="warn" mat-icon-button
-						(click)="clear(form.controls.patientMedicalCoverageId); $event.stopPropagation()">
-						<mat-icon>close</mat-icon>
-					</button>
-				</mat-form-field>
-			</ng-container>
+		<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" class="form">
 
 			<h2 [translate]="'guardia.administrative_admision.EPISODE_DETAILS'"></h2>
 			<div id="motivos" fxLayout="column" fxLayoutGap="10px">

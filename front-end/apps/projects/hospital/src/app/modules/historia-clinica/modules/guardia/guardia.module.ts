@@ -22,6 +22,7 @@ import { AdultGynecologicalTriageComponent } from './components/adult-gynecologi
 import { DocumentActionsComponent } from './components/document-actions/document-actions.component';
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
+import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
@@ -56,6 +57,7 @@ import { PatientSummaryComponent } from '../../../hsi-components/patient-summary
 		// components
 		AdministrativeTriageComponent,
 		AdultGynecologicalTriageComponent,
+		EmergencyCarePatientComponent,
 		PediatricTriageComponent,
 		TriageChipComponent,
 		TriageComponent,

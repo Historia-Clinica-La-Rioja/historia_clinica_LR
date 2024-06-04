@@ -1,0 +1,179 @@
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Patient } from '@pacientes/component/search-patient/search-patient.component';
+import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
+import { PatientSummary } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+import { BasicPatientDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PatientService } from '@api-rest/services/patient.service';
+import { MapperService } from '@core/services/mapper.service';
+import { PatientNameService } from '@core/services/patient-name.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { MedicalCoverageComponent } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
+import { Observable, forkJoin } from 'rxjs';
+import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
+import { ButtonType } from '@presentation/components/button/button.component';
+
+@Component({
+	selector: 'app-emergency-care-patient',
+	templateUrl: './emergency-care-patient.component.html',
+	styleUrls: ['./emergency-care-patient.component.scss']
+})
+export class EmergencyCarePatientComponent implements OnInit {
+
+	private selectedPatient: SelectedPatient;
+	patientSummary: PatientSummary;
+	patientMedicalCoverages: PatientMedicalCoverageDto[] = [];
+	hasToShowButtonsActions = true;
+	form = this.buildForm();
+	BUTTON_TYPE_ICON = ButtonType.ICON;
+
+	@Input() set emergencyCarePatientData(emergencyCarePatientData: EmergencyCarePatient) {
+		if (emergencyCarePatientData) {
+			this.form.setValue(emergencyCarePatientData);
+			this.loadPatient(emergencyCarePatientData.patientId);
+			this.calculatePatientActions(emergencyCarePatientData.patientId);
+		}
+	};
+
+	@Output() selectedPatientData = new EventEmitter<EmergencyCarePatient>;
+
+	constructor(
+		private readonly dialog: MatDialog,
+		private readonly patientService: PatientService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
+		private readonly mapperService: MapperService,
+		private readonly snackBarService: SnackBarService,
+		private readonly patientNameService: PatientNameService,
+	) { }
+
+	ngOnInit(): void {
+		this.form.valueChanges.subscribe(formValues => {
+			const { patientId, patientMedicalCoverageId } = formValues;
+			this.selectedPatientData.emit({ patientId, patientMedicalCoverageId });
+		})
+	}
+
+	searchPatient() {
+		const dialogRef = this.dialog.open(SearchPatientDialogComponent);
+
+		dialogRef.afterClosed()
+			.subscribe((foundPatient: Patient) => {
+				if (foundPatient) {
+					this.hasToShowButtonsActions = false;
+					this.setPatientAndMedicalCoverages(foundPatient.basicData, foundPatient.photo);
+				}
+			});
+	}
+
+	openMedicalCoverageDialog() {
+		const { genderId, identificationNumber, identificationTypeId, patientId } = this.selectedPatient;
+		const dialogRef = this.dialog.open(MedicalCoverageComponent, {
+			data: {
+				genderId,
+				identificationNumber,
+				identificationTypeId,
+				initValues: this.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverage(s)),
+				patientId
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(values => {
+			if (values) {
+				const patientCoverages = values.patientMedicalCoverages.map(s => this.mapperService.toPatientMedicalCoverageDto(s));
+
+				this.patientMedicalCoverageService.addPatientMedicalCoverages(this.selectedPatient.patientId, patientCoverages).subscribe(
+					_ => {
+						this.snackBarService.showSuccess('Las coberturas fueron actualizadas correctamente');
+						this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.selectedPatient.patientId).subscribe(updatedCoverages => {
+							this.patientMedicalCoverages = updatedCoverages;
+						});
+					},
+					_ => this.snackBarService.showError('Ocurrió un error al actualizar las coberturas')
+				);
+			}
+		});
+	}
+
+	private setPatientAndMedicalCoverages(basicData: BasicPatientDto, photo: PersonPhotoDto) {
+		this.form.controls.patientId.setValue(basicData.id);
+		this.patientSummary = basicData.person ? this.toPatientSummary(basicData, photo) : null;
+		this.setSelectedPatient(basicData);
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(basicData.id).subscribe(coverages => {
+			this.patientMedicalCoverages = coverages;
+		});
+	}
+
+	private loadPatient(patientId: number) {
+		const patientBasicData$: Observable<BasicPatientDto> = this.patientService.getPatientBasicData(patientId);
+		const patientPhoto$: Observable<PersonPhotoDto> = this.patientService.getPatientPhoto(patientId);
+		forkJoin([patientBasicData$, patientPhoto$]).subscribe(([patientBasicData, patientPhoto]) => this.setPatientAndMedicalCoverages(patientBasicData, patientPhoto));
+	}
+
+	clearSelectedPatient() {
+		this.patientSummary = null;
+		this.selectedPatient = null;
+		this.hasToShowButtonsActions = true;
+		this.form.controls.patientId.setValue(null);
+		this.form.controls.patientMedicalCoverageId.setValue(null);
+	}
+
+	clear(control: AbstractControl): void {
+		control.reset();
+	}
+
+	private buildForm(): FormGroup<EmergencyCarePatientForm> {
+		return new FormGroup<EmergencyCarePatientForm>({
+			patientId: new FormControl(null),
+			patientMedicalCoverageId: new FormControl(null)
+		})
+	}
+
+	private setSelectedPatient(basicData: BasicPatientDto) {
+		this.selectedPatient = {
+			patientId: basicData.id,
+			genderId: basicData.person?.gender.id,
+			identificationNumber: basicData.person?.identificationNumber,
+			identificationTypeId: basicData.person?.identificationTypeId,
+		};
+	}
+
+	private toPatientSummary(basicData: BasicPatientDto, photo: PersonPhotoDto): PatientSummary {
+		const { firstName, nameSelfDetermination, lastName, middleNames, otherLastNames } = basicData.person;
+		return {
+			fullName: this.patientNameService.completeName(firstName, nameSelfDetermination, lastName, middleNames, otherLastNames),
+			...(basicData.identificationType && {
+				identification: {
+					type: basicData.identificationType,
+					number: +basicData.identificationNumber
+				}
+			}),
+			id: basicData.id,
+			gender: basicData.person.gender?.description || null,
+			age: basicData.person.age || null,
+			photo: photo.imageData
+		}
+	}
+
+	private calculatePatientActions(patientId: number) {
+		this.hasToShowButtonsActions = patientId === null;
+	}
+
+}
+
+export interface EmergencyCarePatient {
+	patientId: number;
+	patientMedicalCoverageId: number;
+}
+
+interface EmergencyCarePatientForm {
+	patientId: FormControl<number>;
+	patientMedicalCoverageId: FormControl<number>;
+}
+
+interface SelectedPatient {
+	patientId: number,
+	genderId: number,
+	identificationNumber: string,
+	identificationTypeId: number,
+}
