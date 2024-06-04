@@ -130,7 +130,29 @@ export interface ExternalCauseData {
 }
 
 export interface DescriptionItemDataInfo {
-    title: string,
-    dataId: string,
-    descriptionData: DescriptionItemData[],
+    title: string;
+    dataId: string;
+    descriptionData: DescriptionItemData[];
+}
+
+export interface ObstetricEventData {
+    previousPregnancies?: DescriptionItemData[];
+    currentPregnancyEndDate?: DescriptionItemData[];
+    gestationalAge?: DescriptionItemData[];
+    pregnancyTerminationType?: DescriptionItemData[];
+}
+
+export interface NewBornsData {
+    birthWeight: DescriptionItemData[];
+    birthCondition: DescriptionItemData[];
+    gender: DescriptionItemData[];
+}
+
+export interface ObstetricEventInfo {
+    obstetricEvent: DescriptionItemDataInfo[];
+    newBorns: NewBornsSummary[];
+}
+
+export interface NewBornsSummary {
+    newBornSummary: DescriptionItemDataInfo[];
 }

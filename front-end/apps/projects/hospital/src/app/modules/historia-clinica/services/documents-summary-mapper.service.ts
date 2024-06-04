@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
-import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-import { dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
+import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
-import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation } from '@historia-clinica/constants/document-summary.constants';
+import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender } from '@historia-clinica/constants/document-summary.constants';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
@@ -258,6 +258,10 @@ export class DocumentsSummaryMapperService {
         }
     }
 
+    hasExternalCause(externalCause: ExternalCauseDto): boolean {
+        return !!(externalCause.eventLocation || externalCause.externalCauseType || externalCause.snomed);
+    }
+
     mapExternalCauseToDescriptionItemDataInfo(externalCause: ExternalCauseDto): DescriptionItemDataInfo[] {
         let externalCauseData: ExternalCauseData = this.mapExternalCauseToDescriptionItemDataSummary(externalCause);
         return [{
@@ -275,5 +279,84 @@ export class DocumentsSummaryMapperService {
             dataId: "how-it-happened-note",
             descriptionData: externalCauseData.howItHappened
         }]
+    }
+
+    private mapToObstetricEventData(obstetricEvent: ObstetricEventDto): ObstetricEventData {
+        return {
+            ...(obstetricEvent.previousPregnancies && { previousPregnancies: [this.toDescriptionItemData(obstetricEvent.previousPregnancies?.toString())] }),
+            ...(obstetricEvent.currentPregnancyEndDate && { currentPregnancyEndDate: [this.toDescriptionItemData(this.dateFormatPipe.transform(dateDtoToDate(obstetricEvent.currentPregnancyEndDate), 'date'))] }),
+            ...(obstetricEvent.gestationalAge && { gestationalAge: [this.toDescriptionItemData(`${obstetricEvent.gestationalAge?.toString()} semanas`)] }),
+            ...(obstetricEvent.pregnancyTerminationType && { pregnancyTerminationType: [this.toDescriptionItemData(PregnancyTerminationType[obstetricEvent.pregnancyTerminationType])] }),
+        }
+    }
+
+    private mapToNewBornsData(newBorns: NewbornDto[]): NewBornsData[] {
+        return newBorns.map(newBorn => {
+            return {
+                ...(newBorn.weight && { birthWeight: [this.toDescriptionItemData(`${newBorn.weight} gr`)] }),
+                ...(newBorn.birthConditionType && { birthCondition: [this.toDescriptionItemData(BirthConditionType[newBorn.birthConditionType])] }),
+                ...(newBorn.genderId && { gender: [this.toDescriptionItemData(Gender[newBorn.genderId])] }),
+            }
+        })
+    }
+
+    mapObstetricEventToDescriptionItemDataInfo(obstetricEventData: ObstetricEventDto): ObstetricEventInfo {
+        let obstetricEvent: ObstetricEventData = this.mapToObstetricEventData(obstetricEventData);
+        let newBorns: NewBornsData[] = this.mapToNewBornsData(obstetricEventData.newborns);
+        return {
+            obstetricEvent: this.mapToObstetricEventSummary(obstetricEvent),
+            newBorns: this.mapToNewBornsInfo(newBorns),
+        }
+    }
+
+    private mapToObstetricEventSummary(obstetricEvent: ObstetricEventData): DescriptionItemDataInfo[] {
+        return [{
+            title: "internaciones.documents-summary.obstetric-event.PREVIOUS_PREGNANCIES",
+            dataId: "previous-pregnancies",
+            descriptionData: obstetricEvent.previousPregnancies
+        },
+        {
+            title: "internaciones.documents-summary.obstetric-event.CURRENT_FEAT",
+            dataId: "current-feat",
+            descriptionData: obstetricEvent.currentPregnancyEndDate
+        },
+        {
+            title: "internaciones.documents-summary.obstetric-event.GESTATIONAL_AGE",
+            dataId: "gestational-age",
+            descriptionData: obstetricEvent.gestationalAge
+        },
+        {
+            title: "internaciones.documents-summary.obstetric-event.TERMINATION",
+            dataId: "termination",
+            descriptionData: obstetricEvent.pregnancyTerminationType
+        }]
+    }
+
+    private mapToNewBornsInfo(newBornsData: NewBornsData[]): NewBornsSummary[] {
+        return newBornsData.map(newBorn => {
+            return { newBornSummary: [{
+                title: "internaciones.documents-summary.obstetric-event.new-born.WEIGHT",
+                dataId: "weight",
+                descriptionData: newBorn.birthWeight
+            },
+            {
+                title: "internaciones.documents-summary.obstetric-event.new-born.CONDITION",
+                dataId: "condition",
+                descriptionData: newBorn.birthCondition
+            },
+            {
+                title: "internaciones.documents-summary.obstetric-event.new-born.GENDER",
+                dataId: "gender",
+                descriptionData: newBorn.gender
+            }]
+        }})
+    }
+
+    hasObstetricEvent(obstetricEvent: ObstetricEventDto): boolean {
+        return !!(obstetricEvent.newborns.length && 
+                !!(obstetricEvent.currentPregnancyEndDate 
+                || obstetricEvent.gestationalAge 
+                || obstetricEvent.pregnancyTerminationType 
+                || obstetricEvent.previousPregnancies));
     }
 }

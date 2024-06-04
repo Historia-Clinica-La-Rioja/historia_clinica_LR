@@ -43,6 +43,9 @@
 
             <app-external-cause-summary *ngIf="summary.epicrisis.externalCause" data-id="external-cause-summary"
                 [externalCause]="summary.epicrisis.externalCause"></app-external-cause-summary>
+
+            <app-obstetric-event-summary *ngIf="summary.epicrisis.obstetricEvent" data-id="obstetric-event-summary"
+                [eventData]="summary.epicrisis.obstetricEvent"></app-obstetric-event-summary>
         </div>
     </div>
 

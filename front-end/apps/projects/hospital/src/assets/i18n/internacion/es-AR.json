@@ -690,6 +690,19 @@
                 "EVENT_LOCATION": "Lugar donde ocurrió",
 				"HOW_IT_HAPPENED": "Cómo se produjo"
             },
+            "obstetric-event": {
+                "TITLE": "Datos del evento obstétrico",
+                "PREVIOUS_PREGNANCIES": "Gestas anteriores - Número total de nacimientos previos (vaginales y cesáreas), vivos o muertos, antes del presente",
+                "CURRENT_FEAT": "Gesta actual - Fecha de término del embarazo",
+                "GESTATIONAL_AGE": "Edad gestacional",
+				"TERMINATION": "Terminación",
+                "new-born": {
+                    "NEWBORN": "Recién nacido",
+                    "WEIGHT": "Peso al nacer",
+				    "CONDITION": "Condición al nacer",
+				    "GENDER": "Sexo"
+                }
+            },
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",

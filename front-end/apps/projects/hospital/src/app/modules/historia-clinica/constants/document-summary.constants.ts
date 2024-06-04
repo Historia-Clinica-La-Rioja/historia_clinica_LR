@@ -167,3 +167,20 @@ export const EventLocation = {
     LUGAR_DE_TRABAJO: "Lugar de trabajo",
     OTRO: "Otro",
 }
+
+export const PregnancyTerminationType = {
+    VAGINAL: "Vaginal",
+    CESAREAN: "Cesárea",
+    UNDEFINED: "Sin definir",
+}
+
+export const BirthConditionType = {
+    BORN_ALIVE: "Vivo",
+	FETAL_DEATH: "Defunción fetal",
+}
+
+export const Gender = {
+    MALE: "Masculino",
+	FEMALE: "Femenino",
+	INDETERMINATE: "Indeterminado",
+}
