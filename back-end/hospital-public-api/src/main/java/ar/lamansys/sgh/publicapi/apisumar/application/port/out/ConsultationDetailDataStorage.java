@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ConsultationDetailDataStorage {
 
-	List<ConsultationDetailDataBo> getConsultationsData(Integer institutionId);
+	List<ConsultationDetailDataBo> getConsultationsData(String sisaCode);
 
 }

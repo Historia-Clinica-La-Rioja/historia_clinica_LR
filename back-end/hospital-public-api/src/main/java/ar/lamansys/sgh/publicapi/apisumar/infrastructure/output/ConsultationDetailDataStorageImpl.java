@@ -30,8 +30,8 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 
 
 	@Override
-	public List<ConsultationDetailDataBo> getConsultationsData(Integer institutionId) {
-		LOG.debug("institutionId -> {}", institutionId);
+	public List<ConsultationDetailDataBo> getConsultationsData(String sisaCode) {
+		LOG.debug("sisaCode -> {}", sisaCode);
 
 		String stringQuery = "WITH documents_filtered AS ( " +
 				"SELECT * FROM document d " +
@@ -131,10 +131,10 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				"LEFT JOIN patient_medical_coverage pmc ON pmc.id=b.patient_medical_coverage_id " +
 				"LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id " +
 				"LEFT JOIN health_insurance hi ON hi.id=mc.id " +
-				"WHERE ins.id = :institutionId";
+				"WHERE ins.sisa_code = :sisaCode";
 
 		Query query = entityManager.createNativeQuery(stringQuery)
-				.setParameter("institutionId", institutionId);
+				.setParameter("sisaCode", sisaCode);
 
 		List<Object[]> queryResult = query.getResultList();
 
