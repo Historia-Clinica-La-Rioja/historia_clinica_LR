@@ -51,4 +51,8 @@ public class ClinicalObservationBo extends SelfValidating<ClinicalObservationBo>
         this.effectiveTime = LocalDateTime.parse(effectiveTime, DateTimeFormatter.ofPattern(JacksonDateFormatConfig.DATE_TIME_FORMAT));
     }
 
+    public LocalDateTime getLocalDateEffectiveTime() {
+        return this.getEffectiveTime();
+    }
+
 }
