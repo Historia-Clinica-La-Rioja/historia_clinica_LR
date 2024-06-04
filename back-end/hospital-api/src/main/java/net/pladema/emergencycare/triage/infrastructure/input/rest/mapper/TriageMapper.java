@@ -30,6 +30,7 @@ public interface TriageMapper {
     TriageBo toTriageBo(TriageAdministrativeDto triageDto);
 
     @Named("toTriageBo")
+    @Mapping(target = "notes", expression = "java(triageDto.getNotes())")
     TriageBo toTriageBo(TriageAdultGynecologicalDto triageDto);
 
     @Named("toTriageBo")
@@ -39,6 +40,7 @@ public interface TriageMapper {
     @Mapping(target = "otherRiskFactors.respiratoryRetractionId", source = "breathing.respiratoryRetractionId")
     @Mapping(target = "otherRiskFactors.stridor", source = "breathing.stridor")
     @Mapping(target = "otherRiskFactors.perfusionId", source = "circulation.perfusionId")
+    @Mapping(target = "notes", expression = "java(triageDto.getNotes())")
     TriageBo toTriageBo(TriagePediatricDto triageDto);
 
     @Named("toTriageListDto")

@@ -42,7 +42,7 @@ public class GetDocumentHeader {
 
     private void setFirstCreatedOn(DocumentHeaderBo result) {
         Optional.ofNullable(result.getInitialDocumentId())
-                .flatMap(documentStorage::getDocumentBo)
+                .flatMap(documentStorage::getMinimalDocumentBo)
                 .ifPresent(documentBo -> result.setCreatedOn(documentBo.getPerformedDate()));
     }
 }

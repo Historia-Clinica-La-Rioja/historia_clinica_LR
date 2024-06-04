@@ -102,7 +102,7 @@ public class AnestheticReportBo implements IDocumentBo {
 
     private String anestheticChart;
 
-    private boolean confirmed = false;
+    private boolean confirmed = true;
 
     private Long previousDocumentId;
 

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.anestheticreport.visitor;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.FillOutAnestheticReport;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.SaveAnestheticReportComponents;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.GenerateAnestheticReportDocumentContext;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
@@ -14,6 +15,7 @@ public class AnestheticReportVisitorMethods {
 
     private final GenerateAnestheticReportDocumentContext generateAnestheticReportDocumentContext;
     private final SaveAnestheticReportComponents saveAnestheticReportComponents;
+    private final FillOutAnestheticReport fillOutAnestheticReport;
 
     public void saveComponents(AnestheticReportBo anestheticReportBo) {
         saveAnestheticReportComponents.run(anestheticReportBo);
@@ -21,6 +23,10 @@ public class AnestheticReportVisitorMethods {
 
     public Map<String, Object> generateContext(AnestheticReportBo anestheticReportBo) {
         return generateAnestheticReportDocumentContext.run(anestheticReportBo);
+    }
+
+    public void fillOutAnestheticReport(AnestheticReportBo anestheticReportBo) {
+        fillOutAnestheticReport.run(anestheticReportBo);
     }
 
 }

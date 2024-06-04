@@ -215,4 +215,18 @@ public interface IDocumentBo {
     default Collection<IpsBo> getIpsComponents() { return new ArrayList<>(); }
 
     default Collection<IpsBo> getIpsComponentsWithStatus() { return new ArrayList<>(); }
+
+    default void setEncounterId(Integer encounterId) {}
+
+    default void setDocumentSource(Short documentSource) {}
+
+    default void setDocumentType(short documentType) {}
+
+    default void setPerformedDate(LocalDateTime performedDate) {}
+
+    default void setClinicalSpecialtyId(Integer clinicalSpecialtyId) {}
+
+    default void setInstitutionId(Integer institutionId) {}
+
+    default void setNotes(DocumentObservationsBo notes) {}
 }
