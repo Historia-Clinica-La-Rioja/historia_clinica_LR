@@ -28,6 +28,13 @@ public interface CityRepository extends JpaRepository<City, Integer> {
 	<T> Collection<T> findByDepartment(@Param("departmentId") Short departmentId, Sort by, Class<T> clazz);
 
 	@Transactional(readOnly = true)
+	@Query("SELECT c " +
+			"FROM City c " +
+			"WHERE c.departmentId = :departmentId " +
+			"AND c.active = TRUE")
+	<T> Collection<T> findAllByDepartment(@Param("departmentId") Short departmentId, Sort by, Class<T> clazz);
+
+	@Transactional(readOnly = true)
 	@Query("SELECT c.departmentId FROM City as c WHERE c.id = :cityId")
 	Short findDepartmentByCity(@Param("cityId") Integer cityId);
 

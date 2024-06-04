@@ -1,5 +1,7 @@
 package net.pladema.address.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.address.controller.mapper.DepartmentMapper;
 import net.pladema.address.controller.service.domain.DepartmentBo;
 import net.pladema.address.repository.CityRepository;
@@ -7,14 +9,11 @@ import net.pladema.address.repository.CountryRepository;
 import net.pladema.address.repository.DepartmentRepository;
 import net.pladema.address.repository.ProvinceRepository;
 import net.pladema.address.repository.entity.Department;
-import net.pladema.address.repository.projections.AddressProjection;
 import net.pladema.address.service.AddressMasterDataService;
 
 import net.pladema.snowstorm.repository.entity.SnomedGroupType;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
@@ -22,10 +21,10 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class AddressMasterDataServiceImpl implements AddressMasterDataService {
-
-	private static final Logger LOG = LoggerFactory.getLogger(AddressMasterDataServiceImpl.class);
 
 	private static final String DESCRIPTION = "description";
 
@@ -38,18 +37,6 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	private final CountryRepository countryRepository;
 
 	private final DepartmentMapper departmentMapper;
-
-	public AddressMasterDataServiceImpl(CityRepository cityRepository, ProvinceRepository provinceRepository,
-										DepartmentRepository departmentRepository, CountryRepository countryRepository,
-										DepartmentMapper departmentMapper) {
-		super();
-		this.cityRepository = cityRepository;
-		this.provinceRepository = provinceRepository;
-		this.countryRepository = countryRepository;
-		this.departmentRepository = departmentRepository;
-		this.departmentMapper = departmentMapper;
-		LOG.debug("{}", "created service");
-	}
 
 	@Override
 	public <T> Collection<T> findCityByProvince(Short provinceId, Class<T> clazz) {
@@ -77,6 +64,11 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 	}
 
 	@Override
+	public <T> Collection<T> findAllCitiesByDepartment(Short departmentId, Class<T> clazz) {
+		return cityRepository.findAllByDepartment(departmentId, Sort.by(Order.asc(DESCRIPTION)), clazz);
+	}
+
+	@Override
 	public boolean existProvinceInCountry(Short countryId, Short provinceId) {
 		return provinceRepository.existProvinceInCountry(countryId, provinceId);
 	}
@@ -99,7 +91,7 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 
 	@Override
 	public <T> Collection<T> getDepartmentsByReferenceFilterByClinicalSpecialty(Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz) {
-		LOG.debug("Input parameters -> careLineId {}, clinicalSpecialtyIds {}, clazz {}", careLineId, clinicalSpecialtyIds, clazz);
+		log.debug("Input parameters -> careLineId {}, clinicalSpecialtyIds {}, clazz {}", careLineId, clinicalSpecialtyIds, clazz);
 		if (careLineId != null)
 			return departmentRepository.findAllByCareLineIdAndClinicalSpecialtyId(careLineId, clinicalSpecialtyIds, clazz);
 		return departmentRepository.findAllByProfessionalsWithClinicalSpecialtyId(clinicalSpecialtyIds, clazz);
@@ -107,7 +99,7 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 
 	@Override
 	public <T> Collection<T> getDepartmentsByReferenceFilterByPractice(Integer practiceSnomedId, Integer careLineId, List<Integer> clinicalSpecialtyIds, Class<T> clazz) {
-		LOG.debug("Input parameters -> practiceSnomedId {}, careLineId {}, clinicalSpecialtyIds {}, clazz {}", practiceSnomedId, careLineId, clinicalSpecialtyIds, clazz);
+		log.debug("Input parameters -> practiceSnomedId {}, careLineId {}, clinicalSpecialtyIds {}, clazz {}", practiceSnomedId, careLineId, clinicalSpecialtyIds, clazz);
 		if (careLineId != null && (clinicalSpecialtyIds == null || clinicalSpecialtyIds.isEmpty()))
 			return departmentRepository.findAllByCareLineIdAndPracticeSnomedId(careLineId, practiceSnomedId, clazz);
 		if (careLineId != null)
@@ -120,9 +112,9 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 
 	@Override
 	public <T> Collection<T> getDepartmentsByInstitutions() {
-		LOG.debug("Fetch departments by institutions domain");
+		log.debug("Fetch departments by institutions domain");
 		Collection<T> result = departmentRepository.findAllByInstitutions();
-		LOG.debug("Output result -> {} ", result);
+		log.debug("Output result -> {} ", result);
 		return result;
 	}
 }
