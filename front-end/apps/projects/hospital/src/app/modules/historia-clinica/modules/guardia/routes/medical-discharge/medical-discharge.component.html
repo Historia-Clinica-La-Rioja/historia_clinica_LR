@@ -128,7 +128,7 @@
 			<button mat-stroked-button class="uppercase" type="button" (click)="goToEpisodeDetails()">
 				<span translate="buttons.BACK"></span>
 			</button>
-			<button mat-raised-button class="uppercase" color="primary">
+			<button mat-raised-button [disabled]="isLoading" class="uppercase" color="primary">
 				<span translate="buttons.CONFIRM"></span>
 			</button>
 		</div>

@@ -39,6 +39,7 @@ export class MedicalDischargeComponent implements OnInit {
 	today = new Date();
 	episodeCreatedOn: Date;
 	formSubmited = false;
+	isLoading = false;
 	private episodeId: number;
 	private patientId: number;
 
@@ -111,17 +112,22 @@ export class MedicalDischargeComponent implements OnInit {
 
 	confirm(): void {
 		this.formSubmited = true;
+		this.isLoading = true;
 		if (this.form.valid && this.problemasService.getProblemas().length) {
 			const s: MedicalDischargeForm = { ... this.form.value, problems: this.problemasService.getProblemas() };
 			const medicalCoverageDto: AMedicalDischargeDto = this.guardiaMapperService.formToAMedicalDischargeDto(s);
 			this.emergencyCareEspisodeDischargeService.newMedicalDischarge
 				(this.episodeId, medicalCoverageDto).subscribe(
 					saved => {
+						this.isLoading = false
 						if (saved) {
 							this.goToEpisodeDetails();
 							this.snackBarService.showSuccess('guardia.episode.medical_discharge.messages.SUCCESS');
 						}
-					}, error => this.snackBarService.showError(error.message ? error.message : 'guardia.episode.medical_discharge.messages.ERROR')
+					}, error => {
+						this.isLoading = false
+						this.snackBarService.showError(error.message ? error.message : 'guardia.episode.medical_discharge.messages.ERROR');
+					}
 				);
 		}
 	}
