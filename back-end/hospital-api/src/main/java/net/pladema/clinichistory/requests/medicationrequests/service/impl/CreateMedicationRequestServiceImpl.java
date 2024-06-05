@@ -6,7 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import net.pladema.clinichistory.hospitalization.service.documents.validation.DosageValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.DosageValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.PatientInfoValidator;
 import net.pladema.clinichistory.hospitalization.service.documents.validation.SnomedValidator;
 import net.pladema.clinichistory.requests.medicationrequests.repository.MedicationRequestRepository;
