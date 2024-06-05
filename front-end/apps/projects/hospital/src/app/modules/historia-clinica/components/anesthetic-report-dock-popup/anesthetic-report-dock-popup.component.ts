@@ -50,11 +50,10 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		this.isLoading = !isDraft;
 		this.isLoadingDraft = isDraft;
 
-        const newAnestheticReport: AnestheticReportDto = this.anesthethicReportHandlerService.buildAnestheticReportDto(this.mainDiagnosis, this.diagnosis, isDraft);
+        const newAnestheticReport: AnestheticReportDto = this.anesthethicReportHandlerService.buildAnestheticReportDto(this.mainDiagnosis, this.diagnosis, this.data.internmentEpisodeId, isDraft);
 
         if (this.anesthethicReportHandlerService.isValidConsultation()) {
-            this.anesthethicReportHandlerService.createAnestheticReport(newAnestheticReport, this.data.internmentEpisodeId, this.dockPopupRef, isDraft);
-
+            this.anesthethicReportHandlerService.createAnestheticReport(newAnestheticReport, this.dockPopupRef, isDraft);
         } else {
             this.anesthethicReportHandlerService.checkFormErrors(this.el);
         }

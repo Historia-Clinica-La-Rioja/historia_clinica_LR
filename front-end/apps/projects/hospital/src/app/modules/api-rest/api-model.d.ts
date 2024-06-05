@@ -199,6 +199,7 @@ export interface AnestheticReportDto {
     antibioticProphylaxis?: AnestheticSubstanceDto[];
     confirmed: boolean;
     diagnosis?: DiagnosisDto[];
+    encounterId: number;
     fluidAdministrations?: AnestheticSubstanceDto[];
     foodIntake?: FoodIntakeDto;
     histories?: HealthConditionDto[];
@@ -210,7 +211,7 @@ export interface AnestheticReportDto {
     preMedications?: AnestheticSubstanceDto[];
     procedureDescription?: ProcedureDescriptionDto;
     riskFactors?: RiskFactorDto;
-    surgeryProcedures?: HospitalizationProcedureDto[];
+    surgeryProcedures?: SpecificProcedureDto[];
 }
 
 export interface AnestheticReportSummaryDto extends DocumentSummaryDto {
@@ -4729,6 +4730,15 @@ export interface SnvsToReportDto {
 export interface SourceTypeDto {
     description: string;
     id: number;
+}
+
+export interface SpecificProcedureDto {
+    id?: number;
+    isPrimary?: boolean;
+    note?: string;
+    performedDate?: string;
+    snomed: SnomedDto;
+    type?: ProcedureTypeEnum;
 }
 
 export interface StudyAppointmentDto {

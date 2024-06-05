@@ -10,25 +10,25 @@ import { Observable } from 'rxjs';
 })
 export class AnesthethicReportService {
 
-	private readonly BASIC_URL = `${environment.apiBase}/institutions/${this.contextService.institutionId}/internments`;
+	private readonly BASIC_URL = `${environment.apiBase}/institutions/${this.contextService.institutionId}/anesthetic-report`;
 	constructor(
 		private http: HttpClient,
 		private contextService: ContextService,
 	) { }
 
 
-	createAnestheticReport(anesthethicReport: AnestheticReportDto, internmentEpisodeId: number): Observable<AnestheticReportDto> {
-		const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/close`;
+	createAnestheticReport(anesthethicReport: AnestheticReportDto): Observable<AnestheticReportDto> {
+		const url = `${this.BASIC_URL}/close`;
 		return this.http.post<AnestheticReportDto>(url, anesthethicReport);
 	}
 
-	createAnestheticReportDraft(anesthethicReportDraft: AnestheticReportDto, internmentEpisodeId: number): Observable<AnestheticReportDto> {
-		const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/draft`;
+	createAnestheticReportDraft(anesthethicReportDraft: AnestheticReportDto): Observable<AnestheticReportDto> {
+		const url = `${this.BASIC_URL}/draft`;
 		return this.http.post<AnestheticReportDto>(url, anesthethicReportDraft);
 	}
 
-	getAnestheticReport(documentId: number, internmentEpisodeId: number): Observable<AnestheticReportDto> {
-		const url = `${this.BASIC_URL}/${internmentEpisodeId}/anesthetic-report/${documentId}`;
+	getAnestheticReport(documentId: number): Observable<AnestheticReportDto> {
+		const url = `${this.BASIC_URL}/by-document/${documentId}`;
 		return this.http.get<AnestheticReportDto>(url)
 	}
 }

@@ -136,7 +136,7 @@ export class AnestheticReportService {
 
 	private setAnestheticPreviousData(dialogData: any, viasData: DraftViasArray) {
 		if (dialogData.isDraft) {
-			this.anesthethicReportService.getAnestheticReport(dialogData.anestheticPartId, dialogData.internmentEpisodeId).subscribe(data => {
+			this.anesthethicReportService.getAnestheticReport(dialogData.anestheticPartId).subscribe(data => {
 				if (data) {
 					this.diagnosisSource.next(data.diagnosis);
 					this.anesthesicReportProposedSurgeryService.setData(data.surgeryProcedures);
@@ -239,10 +239,10 @@ export class AnestheticReportService {
         }
     }
 
-    createAnestheticReport(newAnestheticReport: AnestheticReportDto, internmentEpisodeId: number, dockPopupRef: DockPopupRef, isDraft: boolean) {
+    createAnestheticReport(newAnestheticReport: AnestheticReportDto, dockPopupRef: DockPopupRef, isDraft: boolean) {
 		const service = isDraft ?
-			this.anesthethicReportService.createAnestheticReportDraft(newAnestheticReport, internmentEpisodeId) :
-			this.anesthethicReportService.createAnestheticReport(newAnestheticReport, internmentEpisodeId)
+			this.anesthethicReportService.createAnestheticReportDraft(newAnestheticReport) :
+			this.anesthethicReportService.createAnestheticReport(newAnestheticReport)
 		const successMessage = isDraft ? 'internaciones.anesthesic-report.SUCCESS_DRAFT' : 'internaciones.anesthesic-report.SUCCESS';
 
         service.subscribe({
@@ -277,7 +277,7 @@ export class AnestheticReportService {
 		return true;
     }
 
-    buildAnestheticReportDto(mainDiagnosis: HealthConditionDto, diagnosis: DiagnosisDto[], isDraft: boolean): AnestheticReportDto {
+    buildAnestheticReportDto(mainDiagnosis: HealthConditionDto, diagnosis: DiagnosisDto[], internmentEpisodeId: number, isDraft: boolean): AnestheticReportDto {
         return {
             mainDiagnosis: mainDiagnosis,
             diagnosis: diagnosis,
@@ -300,6 +300,7 @@ export class AnestheticReportService {
             measuringPoints: this.anestheticReportVitalSignsService.getMeasuringPointsAsMeasuringPointDto(),
             postAnesthesiaStatus: this.anestheticReportEndOfAnesthesiaStatusService.getPostAnesthesiaStatusDto(),
 			confirmed: !isDraft,
+            encounterId: internmentEpisodeId,
 		};
 	}
 

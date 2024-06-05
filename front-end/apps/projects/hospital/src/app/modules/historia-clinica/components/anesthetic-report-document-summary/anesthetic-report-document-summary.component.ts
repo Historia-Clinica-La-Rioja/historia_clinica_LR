@@ -46,7 +46,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
 
     private fetchSummaryInfo(){
         if (this._activeDocument?.document?.id) {
-            let anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._activeDocument.document.id, this.internmentEpisodeId);
+            let anestheticReport$ = this.anestheticReportService.getAnestheticReport(this._activeDocument.document.id);
             let header$ = this.documentSummaryService.getDocumentHeader(this._activeDocument.document?.id, this.internmentEpisodeId);
 
             this.documentSummary$ = forkJoin([header$, anestheticReport$]).pipe(map(([headerData, anestheticReportData]) => {
