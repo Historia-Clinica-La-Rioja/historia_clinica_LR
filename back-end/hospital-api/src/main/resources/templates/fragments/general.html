@@ -1014,6 +1014,16 @@
         </div>
     </div>
 
+    <!-- Antecedentes anestésicos -->
+    <div th:fragment="anestheticHistory(message)" th:if="${anestheticHistory != null && anestheticHistory.hasStringValues}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data">
+            <strong>¿El paciente se realizó algún tipo de anestesia previamente?</strong>
+            <span th:text="${anestheticHistory.previousAnesthesiaState}"></span>
+            <span th:text="${anestheticHistory.anesthesiaZone} ? ${'(' + anestheticHistory.anesthesiaZone + ')'} : _"></span>
+        </div>
+    </div>
+
 </body>
 <footer th:fragment="footer">
     <div class="footer">

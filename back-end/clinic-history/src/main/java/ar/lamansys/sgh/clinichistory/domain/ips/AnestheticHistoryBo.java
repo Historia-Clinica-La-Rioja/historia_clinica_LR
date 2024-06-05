@@ -34,6 +34,14 @@ public class AnestheticHistoryBo implements IpsBo {
         return nonNull(zone) ? zone.getId() : null;
     }
 
+    public String getPreviousAnesthesiaState() {
+        return state != null ? state.getDescription() : null;
+    }
+
+    public String getAnesthesiaZone() {
+        return zone != null ? zone.getDescription() : null;
+    }
+
     @Override
     public void accept(IpsVisitor visitor) {
         visitor.visitAnestheticHistory(this);
