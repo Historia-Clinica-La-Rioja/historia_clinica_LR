@@ -13,6 +13,7 @@ export class ButtonService {
 	submit$ = this.submitForm.asObservable();
 	submitPartialSave$ = this._submitPartialSave.asObservable();
 	isLoading$ = this.submitForm.asObservable();
+	isLoadingPartialSave$ = this._submitPartialSave.asObservable();
 
 	updateFormStatus(isValid: boolean) {
 		this.formDisabled.next(isValid);
@@ -31,7 +32,7 @@ export class ButtonService {
 	}
 
 	resetLoadingPartialSave() {
-		this.submitForm.next(false);
+		this._submitPartialSave.next(false);
 	}
 
 }

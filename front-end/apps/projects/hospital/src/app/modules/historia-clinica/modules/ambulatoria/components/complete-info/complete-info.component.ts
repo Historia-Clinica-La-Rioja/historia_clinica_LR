@@ -167,7 +167,7 @@ export class CompleteInfoComponent implements OnInit {
 					maxWidth: '500px'
 				});
 			warnignComponent.afterClosed().subscribe(confirmed =>
-				confirmed ? this.partialSave() : null
+				confirmed ? this.partialSave() : this.buttonService.resetLoadingPartialSave()
 			);
 		}
 		else
