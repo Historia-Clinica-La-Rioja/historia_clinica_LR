@@ -1,0 +1,21 @@
+
+<h2 class="title capitalize-first-letter bold">{{data.title | translate}}</h2>
+
+<div fxLayout="column" fxLayoutGap="10px" class="identifiers">
+	<app-identifier-cases *ngIf="data.problem"
+		[identifierCase]="identiferCases.PROBLEM"
+		[description]="data.problem">
+	</app-identifier-cases>
+	<app-identifier-cases *ngIf="data.patient"
+		[identifierCase]="identiferCases.PATIENT"
+		[description]="data.patient">
+	</app-identifier-cases>
+</div>
+
+<app-register-editor-info
+	[registerEditor]="data.registerEditor"
+	[registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
+</app-register-editor-info>
+
+<ng-content></ng-content>
+
