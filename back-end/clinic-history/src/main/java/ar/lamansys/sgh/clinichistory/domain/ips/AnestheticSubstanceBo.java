@@ -60,6 +60,12 @@ public class AnestheticSubstanceBo extends ClinicalTerm implements IpsBo {
         return typeId != null ? EAnestheticSubstanceType.map(typeId).getDescription() : null;
     }
 
+    public String getViaDescription() {
+        if (viaId == null)
+            return null;
+        return EVia.getById(viaId).getDescription();
+    }
+
     @Override
     public void accept(IpsVisitor visitor) {
         visitor.visitAnestheticSubstance(this);

@@ -18,6 +18,7 @@ public interface AnestheticSubstanceMapper {
 
     @Named(value = "toAnestheticSubstanceDto")
     @Mapping(target = "dosage.startDateTime", source = "dosage.startDate")
+    @Mapping(target = "performedTime", source = "dosage.startDate")
     AnestheticSubstanceDto toAnestheticSubstanceDto(AnestheticSubstanceBo AnestheticSubstanceBo);
 
     @Named("toListAnestheticSubstanceBo")

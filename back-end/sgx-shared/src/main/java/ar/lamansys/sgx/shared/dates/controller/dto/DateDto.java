@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import ar.lamansys.sgx.shared.dates.controller.constraints.DateDtoValid;
+import lombok.ToString;
 
 import java.util.Objects;
 
 @Getter
 @DateDtoValid
+@ToString
 public class DateDto {
 
 	private final Integer year;

@@ -3,10 +3,12 @@ package ar.lamansys.sgx.shared.dates.controller.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Objects;
 
 @Getter
+@ToString
 public class DateTimeDto implements Comparable<DateTimeDto>{
 
     private final DateDto date;

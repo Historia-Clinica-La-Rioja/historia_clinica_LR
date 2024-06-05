@@ -3,6 +3,7 @@ package ar.lamansys.sgx.shared.dates.controller.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
+@ToString
 public class TimeDto {
 
     @NotNull

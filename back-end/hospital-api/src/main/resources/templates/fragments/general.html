@@ -1024,6 +1024,29 @@
         </div>
     </div>
 
+    <!-- Sustancias anestésicas -->
+    <div th:fragment="anestheticSubstance(message, anestheticSubstances)" th:if="${anestheticSubstances != null && not #lists.isEmpty(anestheticSubstances)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="substance,iter: ${anestheticSubstances}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + substance.snomed.pt}"></p>
+                    <dl>
+                        <dd th:if="${substance.viaDescription}">
+                            <strong>Vía: </strong><span th:text="${substance.viaDescription}"></span>
+                            <span class="wide_wrapped_text" th:text="${substance.viaNote} ? ${' - ' + substance.viaNote} : _"></span>
+                        </dd>
+                        <dd><strong>Dosis: </strong><span th:text="${substance.dosage.quantity.value}"></span></dd>
+                        <dd><strong>Unidad: </strong><span th:text="${substance.dosage.quantity.unit}"></span></dd>
+                        <dd th:if="${substance.viaDescription}">
+                            <strong>Fecha de administración: </strong>
+                            <span th:text="${substance.performedTime} ? ${#temporals.format(substance.performedTime, 'HH:mm') + ' hs.'} : _"></span>
+                        </dd>
+                    </dl>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
 </body>
 <footer th:fragment="footer">
     <div class="footer">
