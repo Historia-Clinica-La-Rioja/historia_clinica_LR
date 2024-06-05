@@ -5,7 +5,6 @@ import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReportRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -50,6 +49,13 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
                 .orElse(null);
     }
 
+    @Override
+    public String getAntestheticChart(Long documentId) {
+        return anestheticReportRepository.findByDocumentId(documentId)
+                .map(AnestheticReport::getAnestheticChart)
+                .orElse(null);
+    }
+
     private AnestheticReport mapToEntity(AnestheticReportBo anestheticReport) {
         return AnestheticReport.builder()
                 .id(anestheticReport.getAnestheticReportId())
@@ -64,27 +70,23 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
     }
 
     private AnestheticReportBo mapToBo(Document document) {
-        Integer anestheticReportId = anestheticReportRepository.getAnestheticReportIdByDocumentId(document.getId()).orElse(null);
+        return anestheticReportRepository.findByDocumentId(document.getId())
+                .map(anestheticReport -> build(document, anestheticReport))
+                .orElse(null);
+    }
+
+    private AnestheticReportBo build(Document document, AnestheticReport anestheticReport) {
         return AnestheticReportBo.builder()
-                .anestheticReportId(anestheticReportId)
+                .anestheticReportId(anestheticReport.getId())
                 .id(document.getId())
                 .encounterId(document.getSourceId())
                 .institutionId(document.getInstitutionId())
                 .patientId(document.getPatientId())
                 .performedDate(document.getCreatedOn())
-                .anestheticChart(this.getAntestheticChart(document))
+                .anestheticChart(anestheticReport.getAnestheticChart())
                 .confirmed(document.isConfirmed())
                 .initialDocumentId(document.getInitialDocumentId())
                 .build();
-    }
-
-    private String getAntestheticChart(Document document) {
-        if (document.getStatusId().equals(DocumentStatus.FINAL)) {
-            return anestheticReportRepository.findByDocumentId(document.getId())
-                    .map(AnestheticReport::getAnestheticChart).orElse(null);
-        }
-        return null;
-
     }
 
 }

@@ -10,4 +10,6 @@ public interface AnestheticReportStorage {
     Optional<AnestheticReportBo> get(Long documentId);
 
     Long getDocumentIdFromLastAnestheticReportDraft(Integer internmentEpisodeId);
+
+    String getAntestheticChart(Long documentId);
 }

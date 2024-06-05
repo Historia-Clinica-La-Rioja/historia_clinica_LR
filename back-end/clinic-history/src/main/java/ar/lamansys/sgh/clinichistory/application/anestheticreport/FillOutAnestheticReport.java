@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.anestheticreport;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
@@ -20,10 +21,11 @@ import java.util.stream.Collectors;
 public class FillOutAnestheticReport {
 
     private final DocumentService documentService;
+    private final AnestheticReportStorage anestheticReportStorage;
 
     public AnestheticReportBo run(AnestheticReportBo document) {
+        log.debug("Input parameters -> document {}", document);
         Long documentId = document.getId();
-        log.debug("Input parameters -> documentId {}", documentId);
 
         GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(documentId);
         document.setMainDiagnosis(generalHealthConditionBo.getMainDiagnosis());
@@ -68,6 +70,8 @@ public class FillOutAnestheticReport {
 
         document.setPostAnesthesiaStatus(documentService.getPostAnesthesiaStatusStateFromDocument(documentId));
 
+        this.setAnestheticChart(document);
+
         log.debug("Output -> anestheticReport {}", document);
         return document;
     }
@@ -76,5 +80,12 @@ public class FillOutAnestheticReport {
         return substances.stream()
                 .filter(substance -> substance.isOfType(type))
                 .collect(Collectors.toList());
+    }
+
+    private void setAnestheticChart(AnestheticReportBo document) {
+        if (document.getAnestheticChart() == null && document.isConfirmed()) {
+            String chart = anestheticReportStorage.getAntestheticChart(document.getId());
+            document.setAnestheticChart(chart);
+        }
     }
 }

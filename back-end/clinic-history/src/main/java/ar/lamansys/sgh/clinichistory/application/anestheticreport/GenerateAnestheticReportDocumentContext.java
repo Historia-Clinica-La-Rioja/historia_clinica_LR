@@ -76,7 +76,7 @@ public class GenerateAnestheticReportDocumentContext implements GenerateDocument
 
         contextMap.put("postAnesthesiaStatus", document.getPostAnesthesiaStatus());
 
-        contextMap.put("chart", document.getAnestheticChart());
+        contextMap.put("anestheticChart", document.getAnestheticChart());
     }
     
 }

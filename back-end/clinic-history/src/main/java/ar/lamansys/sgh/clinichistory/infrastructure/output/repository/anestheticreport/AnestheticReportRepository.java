@@ -17,11 +17,6 @@ public interface AnestheticReportRepository extends JpaRepository<AnestheticRepo
 	Optional<AnestheticReport> findByDocumentId(Long documentId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT ar.id " +
-            "FROM AnestheticReport ar WHERE ar.documentId = :documentId ")
-    Optional<Integer> getAnestheticReportIdByDocumentId(@Param("documentId") Long documentId);
-
-    @Transactional(readOnly = true)
     @Query("SELECT d.id " +
             "FROM Document d " +
             "WHERE d.sourceId = :internmentEpisodeId " +

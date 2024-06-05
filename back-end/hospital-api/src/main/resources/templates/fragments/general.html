@@ -119,6 +119,11 @@
             float: left;
             margin-right: 30px;
         }
+
+        .graph-container {
+            width: 700px;
+            height: 420px;
+        }
 	</style>
 </head>
 <body>
@@ -1179,6 +1184,14 @@
             <dd th:if="${postAnesthesiaStatus.note}">
                 <strong>Observaciones: </strong><p class="wide_wrapped_text" th:text="${postAnesthesiaStatus.note}"></p>
             </dd>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div th:fragment="chart(message, chartData)" th:if="${chartData != null}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="graph-container">
+            <img th:src="${chartData}" alt=""/>
         </div>
     </div>
 
