@@ -31,6 +31,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ValidationException;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -244,6 +246,14 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
             log.debug(OUTPUT, saved);;
         return 1;
     }
+
+	@Override
+	public Optional<LocalDateTime> getCreatedOn(Integer episodeId){
+		log.debug("Input parameters -> episodeId {}", episodeId);
+		Optional<LocalDateTime> result = emergencyCareEpisodeRepository.findById(episodeId).map(EmergencyCareEpisode::getCreatedOn);
+		log.debug("Output -> result {}", result);
+		return result;
+	}
 
     private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId){
         if (episodeToUpdate.getPatient() != null) {
