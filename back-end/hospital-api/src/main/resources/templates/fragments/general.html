@@ -1047,6 +1047,14 @@
         </div>
     </div>
 
+    <!-- Última hora ingesta alimentaria -->
+    <div th:fragment="foodInTake(message)" class="section-data" th:if="${foodIntake != null && foodIntake.performedTime != null}">
+        <p class="section-title" th:text="${preMedications == null || #lists.isEmpty(preMedications)} ? ${message} : _"></p>
+        <strong>Última ingesta de comida: </strong>
+        <span th:text="${#temporals.format(foodIntake.performedTime, 'HH:mm') + ' hs.'}"></span>
+    </div>
+
+
 </body>
 <footer th:fragment="footer">
     <div class="footer">

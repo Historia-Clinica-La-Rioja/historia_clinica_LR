@@ -13,6 +13,7 @@ public interface ProcedureDescriptionMapper {
 
     @Named("toFoodIntakeDto")
     @Mapping(target = "clockTime", source = "foodIntake")
+    @Mapping(target = "performedTime", source = "foodIntake")
     FoodIntakeDto toFoodIntakeDto(ProcedureDescriptionBo procedureDescriptionBo);
 
     @Named("toProcedureDescriptionDto")

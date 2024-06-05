@@ -4,12 +4,14 @@ import ar.lamansys.sgh.clinichistory.domain.ips.FoodIntakeBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.FoodIntakeDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(uses = LocalDateMapper.class)
 public interface FoodIntakeMapper {
 
     @Named("toFoodIntakeDto")
+    @Mapping(target = "performedTime", source = "clockTime")
     FoodIntakeDto toFoodIntakeDto(FoodIntakeBo foodIntakeBo);
 
     @Named("toFoodIntakeBo")
