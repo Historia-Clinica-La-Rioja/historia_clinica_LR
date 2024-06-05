@@ -65,4 +65,10 @@ public class ProcedureDescriptionDto {
         return (note != null  && !note.isEmpty()) || asa != null;
     }
 
+    public boolean hasIntrasurgicalAnestheticProceduresValues() {
+        return venousAccess != null
+                || nasogastricTube != null
+                || urinaryCatheter != null;
+    }
+
 }

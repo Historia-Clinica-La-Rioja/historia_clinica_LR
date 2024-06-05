@@ -1122,6 +1122,22 @@
         </div>
     </div>
 
+    <!-- Procedimientos anestésicos intraquirúrgicos -->
+    <div th:fragment="intrasurgicalAnestheticProcedures(message)" th:if="${procedureDescription != null && procedureDescription.hasIntrasurgicalAnestheticProceduresValues()}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data">
+            <dd th:if="${procedureDescription.venousAccess != null}">
+                <strong>Acceso venoso: </strong><span th:text="${procedureDescription.venousAccess} ? Si : No"></span>
+            </dd>
+            <dd th:if="${procedureDescription.nasogastricTube != null}">
+                <strong>Sonda nasogástrica: </strong><span th:text="${procedureDescription.nasogastricTube} ? Si : No"></span>
+            </dd>
+            <dd th:if="${procedureDescription.urinaryCatheter != null}">
+                <strong>Sonda vesical: </strong><span th:text="${procedureDescription.urinaryCatheter} ? Si : No"></span>
+            </dd>
+        </div>
+    </div>
+
     <!-- Estado al finalizar la anestesia -->
     <div th:fragment="postAnesthesiaStatus(message)" th:if="${postAnesthesiaStatus != null && postAnesthesiaStatus.hasValues()}">
         <p class="section-title" th:text="${message}"></p>

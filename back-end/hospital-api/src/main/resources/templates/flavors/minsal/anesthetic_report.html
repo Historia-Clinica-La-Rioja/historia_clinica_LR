@@ -30,6 +30,7 @@
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Administración de líquidos', anestheticSubstances=${fluidAdministrations})"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Agentes anestésicos', anestheticSubstances=${anestheticAgents})"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Drogas no anestésicas', anestheticSubstances=${nonAnestheticDrugs})"></div>
+            <div th:replace="fragments/general.html :: intrasurgicalAnestheticProcedures(message='Procedimientos anestésicos intraquirúrgicos')"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Profilaxis antibiótica', anestheticSubstances=${antibioticProphylaxis})"></div>
             <div th:replace="fragments/general.html :: postAnesthesiaStatus(message='Estado al finalizar la anestesia')"></div>
         </div>
