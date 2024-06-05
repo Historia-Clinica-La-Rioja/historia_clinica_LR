@@ -1096,6 +1096,32 @@
         </div>
     </div>
 
+    <!-- Técnicas anestésicas -->
+    <div th:fragment="anestheticTechnique(message)" th:if="${anestheticTechniques != null && not #lists.isEmpty(anestheticTechniques)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="substance,iter: ${anestheticTechniques}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + substance.snomed.pt}"></p>
+                    <dl>
+                        <dd th:if="${substance.techniqueDescription}">
+                            <strong>Técnica: </strong><span th:text="${substance.techniqueDescription}"></span>
+                        </dd>
+                        <dd th:if="${substance.trachealIntubation != null}">
+                            <strong>Intubación traqueal: </strong><span th:text="${substance.trachealIntubation} ? Si : No"></span>
+                            <span th:text="${substance.trachealIntubationMethodDescription} ? ${' - ' + substance.trachealIntubationMethodDescription} : _"></span>
+                        </dd>
+                        <dd th:if="${substance.breathingDescription}">
+                            <strong>Respiración: </strong><span th:text="${substance.breathingDescription}"></span>
+                        </dd>
+                        <dd th:if="${substance.circuitDescription}">
+                            <strong>Circuito: </strong><span th:text="${substance.circuitDescription}"></span>
+                        </dd>
+                    </dl>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
 
 </body>
 <footer th:fragment="footer">
