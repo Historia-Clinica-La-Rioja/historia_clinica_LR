@@ -61,6 +61,11 @@
 						"NAME": "Nombre",
 						"LAST_NAME": "Apellido"
 					}
+				},
+				"temporary_patient_popup": {
+					"TITLE": "Paciente temporal",
+					"SUBTITLE": "Detalles identificatorios",
+					"PLACEHOLDER": "Agregar..."
 				}
 			}
 		},

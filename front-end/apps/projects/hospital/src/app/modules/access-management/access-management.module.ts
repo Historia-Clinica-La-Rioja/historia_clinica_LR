@@ -37,7 +37,6 @@ import { RegulationSearchCriteriaComponent } from './components/regulation-searc
 import { SearchAppointmentsForRegulationComponent } from './components/search-appointments-for-regulation/search-appointments-for-regulation.component';
 import { ShowPriorityComponent } from './components/show-priority/show-priority.component';
 //dialogs
-import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { RegulationNewAppointmentPopUpComponent } from './dialogs/regulation-new-appointment-pop-up/regulation-new-appointment-pop-up.component';
 import { ReferenceEditionPopUpComponent } from './dialogs/reference-edition-pop-up/reference-edition-pop-up.component';
 import { ReportCompleteDataPopupComponent } from './dialogs/report-complete-data-popup/report-complete-data-popup.component';
@@ -72,7 +71,6 @@ import { TabsService } from './services/tabs.service';
 		SearchAppointmentsForRegulationComponent,
 		ShowPriorityComponent,
 		//dialogs
-		ReasonPopUpComponent,
 		ReferenceEditionPopUpComponent,
 		RegulationNewAppointmentPopUpComponent,
 		ReportCompleteDataPopupComponent,

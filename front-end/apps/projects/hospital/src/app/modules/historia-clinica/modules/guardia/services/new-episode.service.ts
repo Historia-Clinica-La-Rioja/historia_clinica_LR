@@ -51,5 +51,7 @@ export interface AdministrativeAdmission {
 	plateNumber: string;
 	firstName: string;
 	lastName: string;
+	patientDescription?: string;
+	patientTypeId?: number;
 }
 

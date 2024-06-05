@@ -244,6 +244,8 @@ export class GuardiaMapperService {
 			patientMedicalCoverageId: dto.patient?.patientMedicalCoverageId ? dto.patient.patientMedicalCoverageId : null,
 			plateNumber: dto.policeInterventionDetails?.plateNumber ? dto.policeInterventionDetails.plateNumber : null,
 			reason: dto.reason || null,
+			patientDescription: dto.patient.patientDescription || null,
+			patientTypeId: dto.patient.typeId || null,
 		};
 	}
 
@@ -254,7 +256,8 @@ export class GuardiaMapperService {
 		const newEmergencyCareDto: NewEmergencyCareDto = {
 			patient: {
 				id: administrativeAdmission.patientId,
-				patientMedicalCoverageId: administrativeAdmission.patientMedicalCoverageId
+				patientMedicalCoverageId: administrativeAdmission.patientMedicalCoverageId,
+				...(administrativeAdmission.patientDescription && { patientDescription: administrativeAdmission.patientDescription })
 			},
 			reason: administrativeAdmission.reason,
 			emergencyCareTypeId: administrativeAdmission.emergencyCareTypeId,

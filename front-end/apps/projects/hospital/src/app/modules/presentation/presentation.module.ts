@@ -102,6 +102,7 @@ import { FileDownloadComponent } from './dialogs/view-pdf/file-download/file-dow
 import { FileDownloadCardComponent } from './dialogs/view-pdf/file-download-card/file-download-card.component';
 import { FileViewerPdfComponent } from './dialogs/view-pdf/file-viewer-pdf/file-viewer-pdf.component';
 import { OpenStorybookDialogComponent } from './components/open-storybook-dialog/open-storybook-dialog.component';
+import { ReasonPopUpComponent } from './dialogs/reason-pop-up/reason-pop-up.component';
 import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
@@ -218,6 +219,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		FileDownloadCardComponent,
 		FileViewerPdfComponent,
 		OpenStorybookDialogComponent,
+		ReasonPopUpComponent,
 		ViewPdfComponent,
 		// directives
 		CtrlTemplateDirective,

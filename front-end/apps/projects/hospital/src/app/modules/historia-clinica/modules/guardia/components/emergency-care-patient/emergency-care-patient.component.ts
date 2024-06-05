@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
@@ -10,30 +10,33 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { MedicalCoverageComponent } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, Subscription, forkJoin } from 'rxjs';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { PatientType } from '@historia-clinica/constants/summaries';
+import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 
 @Component({
 	selector: 'app-emergency-care-patient',
 	templateUrl: './emergency-care-patient.component.html',
 	styleUrls: ['./emergency-care-patient.component.scss']
 })
-export class EmergencyCarePatientComponent implements OnInit {
+export class EmergencyCarePatientComponent implements OnDestroy {
 
 	private selectedPatient: SelectedPatient;
+	private _emergencyCarePatientData: EmergencyCarePatient;
+	private patientDescriptionSubscription: Subscription;
+	readonly BUTTON_TYPE_ICON = ButtonType.ICON;
 	patientSummary: PatientSummary;
 	patientMedicalCoverages: PatientMedicalCoverageDto[] = [];
 	hasToShowButtonsActions = true;
+	isAnEmergencyCareTemporaryPatient = false;
 	form = this.buildForm();
-	BUTTON_TYPE_ICON = ButtonType.ICON;
 
 	@Input() set emergencyCarePatientData(emergencyCarePatientData: EmergencyCarePatient) {
-		if (emergencyCarePatientData) {
-			this.form.setValue(emergencyCarePatientData);
-			this.loadPatient(emergencyCarePatientData.patientId);
-			this.calculatePatientActions(emergencyCarePatientData.patientId);
-		}
+		this._emergencyCarePatientData = emergencyCarePatientData;
+		if (emergencyCarePatientData)
+			this.setPatientData();
 	};
 
 	@Output() selectedPatientData = new EventEmitter<EmergencyCarePatient>;
@@ -45,13 +48,23 @@ export class EmergencyCarePatientComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly snackBarService: SnackBarService,
 		private readonly patientNameService: PatientNameService,
-	) { }
-
-	ngOnInit(): void {
+		readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
+	) {
 		this.form.valueChanges.subscribe(formValues => {
-			const { patientId, patientMedicalCoverageId } = formValues;
-			this.selectedPatientData.emit({ patientId, patientMedicalCoverageId });
+			const { patientId, patientMedicalCoverageId, patientDescription } = formValues;
+			const emergencyCareData: EmergencyCarePatient = { patientId, patientMedicalCoverageId, patientDescription };
+			this.selectedPatientData.emit(emergencyCareData);
+		});
+
+		this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(patientDescription => {
+			this.form.controls.patientDescription.setValue(patientDescription);
+			this.isAnEmergencyCareTemporaryPatient = !!patientDescription;
+			this.hasToShowButtonsActions = !patientDescription;
 		})
+	}
+
+	ngOnDestroy(): void {
+		this.patientDescriptionSubscription?.unsubscribe();
 	}
 
 	searchPatient() {
@@ -62,6 +75,7 @@ export class EmergencyCarePatientComponent implements OnInit {
 				if (foundPatient) {
 					this.hasToShowButtonsActions = false;
 					this.setPatientAndMedicalCoverages(foundPatient.basicData, foundPatient.photo);
+					this.isAnEmergencyCareTemporaryPatient = false;
 				}
 			});
 	}
@@ -125,7 +139,8 @@ export class EmergencyCarePatientComponent implements OnInit {
 	private buildForm(): FormGroup<EmergencyCarePatientForm> {
 		return new FormGroup<EmergencyCarePatientForm>({
 			patientId: new FormControl(null),
-			patientMedicalCoverageId: new FormControl(null)
+			patientMedicalCoverageId: new FormControl(null),
+			patientDescription: new FormControl(null)
 		})
 	}
 
@@ -155,20 +170,33 @@ export class EmergencyCarePatientComponent implements OnInit {
 		}
 	}
 
-	private calculatePatientActions(patientId: number) {
-		this.hasToShowButtonsActions = patientId === null;
+
+	private setPatientData() {
+		this.preloadedFormData();
+		this.isAnEmergencyCareTemporaryPatient = this._emergencyCarePatientData.patientTypeId === PatientType.EMERGENCY_CARE_TEMPORARY;
+		this.hasToShowButtonsActions = !!this._emergencyCarePatientData.patientTypeId;
+		if (!this.isAnEmergencyCareTemporaryPatient)
+			this.loadPatient(this._emergencyCarePatientData.patientId);
+	}
+
+	private preloadedFormData() {
+		const { patientId, patientMedicalCoverageId, patientDescription } = this._emergencyCarePatientData;
+		this.form.setValue({ patientId, patientMedicalCoverageId, patientDescription });
 	}
 
 }
 
 export interface EmergencyCarePatient {
-	patientId: number;
-	patientMedicalCoverageId: number;
+	patientId?: number;
+	patientMedicalCoverageId?: number;
+	patientDescription?: string;
+	patientTypeId?: number;
 }
 
 interface EmergencyCarePatientForm {
 	patientId: FormControl<number>;
 	patientMedicalCoverageId: FormControl<number>;
+	patientDescription: FormControl<string>;
 }
 
 interface SelectedPatient {

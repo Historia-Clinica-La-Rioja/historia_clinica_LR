@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import {
 	DoctorsOfficeDto,
@@ -6,7 +6,7 @@ import {
 } from '@api-rest/api-model';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { hasError, NON_WHITESPACE_REGEX, TIME_PATTERN } from '@core/utils/form.utils';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AdministrativeAdmission } from '../../services/new-episode.service';
 import { AMBULANCE, PERSON, POLICE_OFFICER } from '@core/constants/validation-constants';
 import { EmergencyCareEntranceType } from '@api-rest/masterdata';
@@ -15,14 +15,17 @@ import { SECTOR_AMBULATORIO } from '../../constants/masterdata';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { ButtonType } from '@presentation/components/button/button.component';
 import { EmergencyCarePatient } from '../../components/emergency-care-patient/emergency-care-patient.component';
+import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 
 @Component({
 	selector: 'app-admision-administrativa',
 	templateUrl: './admision-administrativa.component.html',
 	styleUrls: ['./admision-administrativa.component.scss']
 })
-export class AdmisionAdministrativaComponent implements OnInit {
+export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 
+	
+	private patientDescriptionSubscription: Subscription;
 	readonly POLICE_OFFICER = POLICE_OFFICER;
 	readonly PERSON = PERSON;
 	readonly AMBULANCE = AMBULANCE;
@@ -39,7 +42,6 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	form: UntypedFormGroup;
 
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
-
 	emergencyCarePatientData: EmergencyCarePatient;
 
 	@Input() initData: AdministrativeAdmission;
@@ -53,7 +55,12 @@ export class AdmisionAdministrativaComponent implements OnInit {
 		private readonly emergencyCareMasterData: EmergencyCareMasterDataService,
 		private formBuilder: UntypedFormBuilder,
 		private readonly doctorsOfficeService: DoctorsOfficeService,
+		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 	) { }
+
+	ngOnDestroy(): void {
+		this.patientDescriptionSubscription?.unsubscribe();
+	}
 
 	ngOnInit(): void {
 
@@ -74,7 +81,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 			firstName: [null, Validators.maxLength(PERSON.MAX_LENGTH.firstName)],
 			lastName: [null, Validators.maxLength(PERSON.MAX_LENGTH.lastName)],
 			reason: [null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]],
-			patientId: [null]
+			patientId: [null],
+			patientDescription: [null]
 		});
 
 		this.setExistingInfo();
@@ -86,6 +94,12 @@ export class AdmisionAdministrativaComponent implements OnInit {
 
 	continue(): void {
 		const formValue: AdministrativeAdmission = this.form.getRawValue();
+
+		if (!formValue.patientId && !formValue.patientDescription) {
+			this.openTemporaryPatientDialog();
+			return;
+		}
+
 		if (this.form.valid) {
 			this.confirm.emit(formValue);
 		}
@@ -119,8 +133,8 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	private setExistingInfo(): void {
 		if (this.initData) {
 			this.setInitDataInForm();
-			const { patientId, patientMedicalCoverageId } = this.initData;
-			this.emergencyCarePatientData = { patientId, patientMedicalCoverageId };
+			const { patientId, patientMedicalCoverageId, patientDescription, patientTypeId } = this.initData;
+			this.emergencyCarePatientData = { patientId, patientMedicalCoverageId, patientDescription, patientTypeId };
 		}
 	}
 
@@ -129,13 +143,31 @@ export class AdmisionAdministrativaComponent implements OnInit {
 	}
 
 	private setInitDataInForm() {
-		this.form.setValue(this.initData);
+		const { patientTypeId, ...formData } = this.initData
+		this.form.setValue(formData);
 		this.form.markAllAsTouched();
 		this.form.updateValueAndValidity();
 	}
 
-	setPatientData(patientData: EmergencyCarePatient) {
-		this.form.controls.patientId.setValue(patientData.patientId);
-		this.form.controls.patientMedicalCoverageId.setValue(patientData.patientMedicalCoverageId);
+	setPatientData(emergencyCarePatient: EmergencyCarePatient) {
+		const { patientId, patientMedicalCoverageId, patientDescription } = emergencyCarePatient;
+		this.form.controls.patientId.setValue(patientId);
+		this.form.controls.patientMedicalCoverageId.setValue(patientMedicalCoverageId);
+		this.form.controls.patientDescription.setValue(patientDescription);
+	}
+
+	private openTemporaryPatientDialog() {
+		this.patientDescriptionSubscription = this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(patientDescription => {
+			if (patientDescription) {
+				this.updatePatientDescription(patientDescription);
+			}
+		});
+
+		this.emergencyCareTemporaryPatientService.openTemporaryPatient();
+	}
+
+	private updatePatientDescription(patientDescription: string) {
+		this.form.controls.patientDescription.setValue(patientDescription);
+		this.continue();
 	}
 }

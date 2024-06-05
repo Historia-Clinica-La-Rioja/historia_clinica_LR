@@ -3,7 +3,6 @@
 		<app-emergency-care-patient [emergencyCarePatientData]="emergencyCarePatientData" (selectedPatientData)="setPatientData($event)"></app-emergency-care-patient>
 
 		<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" class="form">
-
 			<h2 [translate]="'guardia.administrative_admision.EPISODE_DETAILS'"></h2>
 			<div id="motivos" fxLayout="column" fxLayoutGap="10px">
 				<span>{{'guardia.administrative_admision.reasons.TITLE' | translate}}</span>

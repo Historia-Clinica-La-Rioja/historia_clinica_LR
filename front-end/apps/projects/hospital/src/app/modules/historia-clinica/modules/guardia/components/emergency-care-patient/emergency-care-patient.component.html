@@ -2,6 +2,7 @@
 
 <div *ngIf="hasToShowButtonsActions else patientInformation" fxLayout="row" fxLayoutGap="18px">
     <app-button matIcon="person_search" text="buttons.SEARCH" (clicked)="searchPatient()"></app-button>
+    <app-button matIcon="pending_actions" text="guardia.administrative_admision.TEMPORARY" (clicked)="emergencyCareTemporaryPatientService.openTemporaryPatient()"></app-button>
 </div>
 <form [formGroup]="form">
 

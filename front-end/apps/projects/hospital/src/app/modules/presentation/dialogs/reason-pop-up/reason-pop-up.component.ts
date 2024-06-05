@@ -10,7 +10,7 @@ import { NON_WHITESPACE_REGEX } from '@core/utils/form.utils';
 })
 export class ReasonPopUpComponent implements OnInit {
 
-	motive: FormGroup;
+	form: FormGroup<MotiveForm>;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: ReasonPopupData,
@@ -18,14 +18,16 @@ export class ReasonPopUpComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.motive = new FormGroup<MotiveForm>({
+		this.form = new FormGroup<MotiveForm>({
 			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]),
 		});
 	}
 
 	confirm() {
-		if (this.motive.valid)
-			this.dialogRef.close(this.motive.value);
+		if (this.form.valid)
+			this.dialogRef.close(this.form.value.motive);
+		else
+			this.form.markAllAsTouched();
 	}
 
 }
