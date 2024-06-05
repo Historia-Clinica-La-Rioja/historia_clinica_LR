@@ -286,7 +286,7 @@
 					<section>
 						<mat-tab id="tab_violence_situations" *appHasRole="['ABORDAJE_VIOLENCIAS']"
 						label="{{'ambulatoria.paciente.violence-situations.TAB_LABEL' | translate | uppercase}}">
-							<app-violence-situations></app-violence-situations>
+							<app-violence-situations (isNewViolenceSituationOpen)="setStateNewViolenceSituationOpen($event)"></app-violence-situations>
 						</mat-tab>
 					</section>
 				</mat-tab-group>
