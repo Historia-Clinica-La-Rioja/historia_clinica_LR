@@ -239,6 +239,7 @@
 		"no_refer": {
 			"ALLERGIES": "No refiere alergias",
 			"FAMILY_HISTORIES": "No refiere antecedentes familiares"
-		}
+		},
+		"EDITED": "(Editado) -"
 	}
 }
