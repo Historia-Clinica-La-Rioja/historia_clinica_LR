@@ -1121,7 +1121,11 @@
 			"TITLE": "Datos de referencia"
 		},
 	    "complete-info": {
-		    "RESULTS_TEMPLATE": "Plantillas de resultados"
+		    "RESULTS_TEMPLATE": "Plantillas de resultados",
+			"TITLE": "Observaciones y archivos adjuntos no se guardarán",
+			"CONTENT": "Si “completa parcialmente” el estudio las observaciones y los archivos adjuntos no quedarán guardados. ¿Desea completar parcialmente de todos modos?",
+			"OK_BUTTON" : "Si, completar",
+			"CANCEL": "No, completar"
 		}
     }
 }

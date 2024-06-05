@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProcedureParameterUnitOfMeasureFullSummaryDto } from '@api-rest/api-model';
-import { LoincInput } from '../../loinc-input.model';
-import { FormGroup } from '@angular/forms';
+import { ChangeEvent } from 'react';
+// import { LoincInput } from '../../loinc-input.model';
+// import { FormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-loinc-input-number',
@@ -9,11 +10,68 @@ import { FormGroup } from '@angular/forms';
 	styleUrls: ['./loinc-input-number.component.scss']
 })
 
-export class LoincInputNumberComponent {
+export class LoincInputNumberComponent implements OnInit {
+	_preloadUnit
+	unitOfMeasureId: number;
+	value = '';
+	@Input() title: string;
+	@Input() listOptionsUnits: ProcedureParameterUnitOfMeasureFullSummaryDto[];
+	@Input() preloadValue;
+	@Input() preloadUnit: number;
+	@Output() valueSelected: EventEmitter<NumberWithUnit> = new EventEmitter<NumberWithUnit>();
 
-	@Input() loincInput: LoincInput;
-	@Input() form!: FormGroup;
-	@Input() unitOfMeasure: ProcedureParameterUnitOfMeasureFullSummaryDto;
-	@Output() valueSelected: EventEmitter<ProcedureParameterUnitOfMeasureFullSummaryDto> = new EventEmitter<ProcedureParameterUnitOfMeasureFullSummaryDto>();
+	ngOnInit() {
+		this.setPreloadUnited();
 
+		if (this.preloadValue)
+			this.emitValuesPreload();
+		else {
+			this.setFirstElment();
+		}
+	}
+
+	private setPreloadUnited() {
+		this._preloadUnit = this.listOptionsUnits.find(elem => elem.unitOfMeasureId === this.preloadUnit);
+	}
+
+	emitValueChange($event: ChangeEvent<HTMLInputElement>) {
+		this.value = $event.target.value
+		this.emitValueSelected();
+	}
+
+	onUnitChange(unitOfMeasureId: number) {
+		this.unitOfMeasureId = unitOfMeasureId;
+		this.emitValueSelected();
+	}
+
+	private emitValuesPreload() {
+
+		this.synchronizePreloadedValues();
+		this.emitValueSelected();
+	}
+
+	private synchronizePreloadedValues() {
+		this.value = this.preloadValue;
+		this.unitOfMeasureId = this.preloadUnit;
+	}
+
+	private emitValueSelected() {
+		const value: NumberWithUnit = {
+			value: this.value,
+			unitOfMeasureId: this.unitOfMeasureId
+		}
+		this.valueSelected.emit(value)
+	}
+
+	private setFirstElment() {
+		const firstElment = this.listOptionsUnits[0]
+		this._preloadUnit = firstElment;
+		this.onUnitChange(firstElment.unitOfMeasureId);
+	}
+
+}
+
+export interface NumberWithUnit {
+	value: string,
+	unitOfMeasureId: number
 }

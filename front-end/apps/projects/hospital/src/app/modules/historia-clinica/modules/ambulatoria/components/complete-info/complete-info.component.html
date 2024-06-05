@@ -1,33 +1,6 @@
-<div *ngIf="(formSet$ | async) as formSet">
-	<div class="template-values" *ngFor="let template of formSet; let i = index; last as isLast" fxLayout="column">
 
-		<span mat-line class="mat-h3 capitalize-first-letter">
-			{{template.name}}
-		</span>
-
-		<mat-form-field appearance="outline" id="procedure-templates">
-			<mat-label>{{'ambulatoria.complete-info.RESULTS_TEMPLATE' | translate}}</mat-label>
-			<mat-select (selectionChange)="onSelect($event.value, i, template.id)">
-				<mat-option *ngFor="let t of template.form" [value]="t">
-					{{ t.description }}
-				</mat-option>
-			</mat-select>
-		</mat-form-field>
-
-		<ng-container *ngIf="(selectedTemplate$ | async) as selectedTemplate">
-			<mat-card-content>
-				<app-procedure-template-form *ngIf="selectedTemplate[i] !== null" [template]="selectedTemplate[i]"
-					(valueChange)="changeValues($event,template.id)">
-				</app-procedure-template-form>
-			</mat-card-content>
-		</ng-container>
-
-		<mat-divider *ngIf="!isLast" insert class="divider"></mat-divider>
-
-	</div>
-</div>
-
-
+<app-control-select-template [studies]="studies" [patientId]="patientId">
+</app-control-select-template>
 
 <form [formGroup]="formStudyClosure" fxLayout="column">
 	<mat-form-field appearance="outline">

@@ -1,12 +1,18 @@
-<div [formGroup]="form">
-	<h3>{{loincInput?.label | translate}}</h3>
+<h3>{{title | translate}}</h3>
 
-	<div fxLayoutGap="8px" fxLayout="row" fxLayoutAlign="none center">
+<div fxLayoutGap="8px" fxLayout="row" fxLayoutAlign="none center">
+	<mat-form-field appearance="outline">
+		<input matInput type="number" [(value)]="preloadValue" (change)="emitValueChange($event)">
+
+	</mat-form-field>
+	<div>
 		<mat-form-field appearance="outline">
-			<input [id]="loincInput.key" matInput [type]="loincInput.type" [formControlName]="loincInput.key">
+			<mat-select [disabled]="listOptionsUnits.length === 1" [(value)]="_preloadUnit"
+				(selectionChange)="onUnitChange($event.value.unitOfMeasureId)">
+				<mat-option *ngFor="let unit of listOptionsUnits" [value]="unit">
+					{{unit.description}}
+				</mat-option>
+			</mat-select>
 		</mat-form-field>
-		<app-observation-input-unit class="observation-input-unit" matSuffix [value]="unitOfMeasure"
-			[list]="loincInput.param.unitsOfMeasure" (valueSelected)="valueSelected.emit($event)">
-		</app-observation-input-unit>
 	</div>
 </div>

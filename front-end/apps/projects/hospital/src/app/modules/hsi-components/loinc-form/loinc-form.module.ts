@@ -6,7 +6,6 @@ import { ObservationsFormComponent } from './components/observations-form/observ
 import { ObservationInputComponent } from './components/observation-input/observation-input.component';
 import { DiagnosticReportLoincFormComponent } from './components/diagnostic-report-loinc-form/diagnostic-report-loinc-form.component';
 import { ProcedureTemplateFormComponent } from './components/procedure-template-form/procedure-template-form.component';
-import { ObservationInputUnitComponent } from './components/observation-input-unit/observation-input-unit.component';
 import { LoincInputNumberComponent } from './components/loinc-input-number/loinc-input-number.component';
 import { LoincInputSnomedComponent } from './components/loinc-input-snomed/loinc-input-snomed.component';
 import { LoincInputTextBoxComponent } from './components/loinc-input-text-box/loinc-input-text-box.component';
@@ -20,7 +19,6 @@ import { ConceptTypeaheadSearchComponent } from '../concept-typeahead-search/con
 		ObservationInputComponent,
 		DiagnosticReportLoincFormComponent,
 		ProcedureTemplateFormComponent,
-		ObservationInputUnitComponent,
 		LoincInputNumberComponent,
 		LoincInputSnomedComponent,
   		LoincInputTextBoxComponent,

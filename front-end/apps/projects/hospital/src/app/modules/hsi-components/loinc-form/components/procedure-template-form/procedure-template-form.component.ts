@@ -9,50 +9,62 @@ import { dtoToLoincInput } from '../../utils/dto-loinc-input.mapper';
 	styleUrls: ['./procedure-template-form.component.scss']
 })
 export class ProcedureTemplateFormComponent {
+	@Input() preload: ProcedureTemplateFullSummaryDto;
 	@Output() valueChange: EventEmitter<LoincFormValues> = new EventEmitter<LoincFormValues>();
 	@Input() values: LoincFormValues;
 	loincForm: LoincInput[];
 
-	constructor() { }
-
 	@Input()
-	set template(t: ProcedureTemplateFullSummaryDto) {
+	set template(ProcedureTemplate: ProcedureTemplateFullSummaryDto) {
 
-		if (t?.parameters) {
-			let dtli = t.parameters.map(dtoToLoincInput).sort((a, b) => a.order - b.order);
+		let _preload = makeProcedureParameterIdUniquePreload(this.preload);
 
-			this.loincForm = fixDuplicateIds(dtli);
+		let params = makeProcedureParameterIdUnique(ProcedureTemplate);
 
-			function fixDuplicateIds(data) {
-				const keyMap = {};
-				const idMap = {};
-				data.forEach(obj => {
-					let originalKey = obj.key;
-					let count = 1;
-					while (keyMap[obj.key]) {
-						obj.key = originalKey + `_${count}`;
-						obj.label = null;
-						count++;
-					}
-					keyMap[obj.key] = true;
+		if (params?.parameters) {
+			const dtli = params.parameters.map(param => dtoToLoincInput(param, _preload)).sort((a, b) => a.order - b.order);
 
-					const originalId = obj.param.id;
-					count = 1;
-					while (idMap[obj.param.id]) {
-						obj.param.id = originalId + `_${count}`;
-						count++;
-					}
-					idMap[obj.param.id] = true;
-				});
-				return data;
-			}
+			this.loincForm = dtli;
 		}
-	}
 
+		function makeProcedureParameterIdUnique(obj) {
+			const idCount = {};
+			obj?.parameters.forEach((param) => {
+				const id = param.id;
+				if (idCount[id]) {
+					idCount[id]++;
+					param.id = `${id}_${idCount[id]}`;
+					param.loincCode.customDisplayName = '';
+					param.loincCode.description = '';
+				} else {
+					idCount[id] = 1;
+				}
+			});
+			return obj;
+		}
+
+		function makeProcedureParameterIdUniquePreload(obj) {
+			const idCount = {};
+
+			obj?.observations.forEach(observation => {
+				let id = observation.procedureParameterId;
+
+				if (idCount[id]) {
+					idCount[id]++;
+					observation.procedureParameterId = `${id}_${idCount[id]}`;
+					observation.customDisplayName = ' ';
+				} else {
+					idCount[id] = 1;
+				}
+			});
+
+			return obj;
+		}
+
+	}
 
 	changeValues($event) {
 		this.valueChange.emit($event);
 	}
 
 }
-

@@ -1,36 +1,37 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, Subject, forkJoin, switchMap } from 'rxjs';
-import { AddDiagnosticReportObservationsCommandDto, CompleteRequestDto, DiagnosticReportInfoDto, ProcedureTemplateFullSummaryDto, ProcedureTemplateShortSummaryDto } from '@api-rest/api-model';
-import { MatDialogRef } from '@angular/material/dialog';
+import { forkJoin, of } from 'rxjs';
+import {
+	AddDiagnosticReportObservationsCommandDto, DiagnosticReportInfoDto,
+	CompleteRequestDto
+} from '@api-rest/api-model';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ButtonService } from '../../services/button.service';
 import { StudyInformation } from '../../modules/estudio/components/study/study.component';
 import { ToFormGroup } from '@core/utils/form.utils';
-import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 import { PrescripcionesService } from '../../services/prescripciones.service';
 import { StudyInfo } from '../../services/study-results.service';
-import { LoincObservationValue } from 'projects/hospital/src/app/modules/hsi-components/loinc-form/loinc-input.model';
+import { ControlTemplatesService } from '../../services/control-templates.service';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
 	selector: 'app-complete-info',
 	templateUrl: './complete-info.component.html',
-	styleUrls: ['./complete-info.component.scss']
+	styleUrls: ['./complete-info.component.scss'],
+	providers: [ControlTemplatesService]
 })
 export class CompleteInfoComponent implements OnInit {
 	selectedFiles: File[] = [];
 	formStudyClosure;
-	selectedTemplate$: BehaviorSubject<ProcedureTemplateFullSummaryDto[]> = new BehaviorSubject<ProcedureTemplateFullSummaryDto[]>([]);
-	arrayIdTemplatesProcedures = [];
-	formSet$ = new Subject<any | null>();
-	formTemplateValues: ValueMap = {};
 	@Input() patientId: number;
 	@Input() diagnosticReport: DiagnosticReportInfoDto[] | StudyInformation[];
 	@Input() studies: StudyInfo[];
 	constructor(
+		public dialog: MatDialog,
 		public dialogRef: MatDialogRef<CompleteInfoComponent>,
 		private prescripcionesService: PrescripcionesService,
 		readonly buttonService: ButtonService,
-		private procedureTemplatesService: ProcedureTemplatesService,
+		readonly controlTemplatesService: ControlTemplatesService,
 
 	) { }
 
@@ -49,18 +50,9 @@ export class CompleteInfoComponent implements OnInit {
 				this.completeStudy();
 		});
 
-		let currentFormSet = [];
-		this.studies?.forEach((e: StudyInfo) => {
-			this.getProcedureTemplatesService(e.idDiagnostic).subscribe(
-				(procedureTemplates: any) => {
-					currentFormSet.push({
-						name: e.snomed.pt,
-						id: e.idDiagnostic,
-						form: procedureTemplates
-					});
-					this.formSet$.next(currentFormSet);
-				}
-			);
+		this.buttonService.submitPartialSave$.subscribe(submitPartialSlave => {
+			if (submitPartialSlave)
+				this.existsAppointment();
 		});
 
 	}
@@ -69,26 +61,6 @@ export class CompleteInfoComponent implements OnInit {
 		this.selectedFiles = $event;
 	}
 
-	changeValues($event, idDiagnostic: number) {
-		if ($event?.values) {
-			this.formTemplateValues[idDiagnostic] = $event.values;
-		}
-	}
-
-	onSelect(selectedProcedureTemplate: any, index: number, diagnosticId: number) {
-
-		this.arrayIdTemplatesProcedures.push({ diagnosticId: diagnosticId, selectedrocedureTemplateId: selectedProcedureTemplate.id });
-
-		const selectedTemplates = this.selectedTemplate$.value.slice();
-
-		this.selectedTemplate$.next(null);
-
-		selectedTemplates[index] = selectedProcedureTemplate;
-
-		setTimeout(() => {
-			this.selectedTemplate$.next(selectedTemplates);
-		});
-	}
 
 	private completeStudy() {
 		const completeRequest: CompleteRequestDto = {
@@ -100,8 +72,10 @@ export class CompleteInfoComponent implements OnInit {
 
 				const reportInfo: DiagnosticReportInfoDto = report?.diagnosticInformation || report;
 
-				let template = this.getProcedureTemplateId(reportInfo.id);
-				let reportObservations: AddDiagnosticReportObservationsCommandDto = this.buildProcedureTemplateFullSummaryDto(reportInfo.id, template);
+				let template = this.controlTemplatesService.getProcedureTemplateId(reportInfo.id);
+				let formTemplateValues = this.controlTemplatesService.getFormTemplateValues();
+				let reportObservations: AddDiagnosticReportObservationsCommandDto =
+					this.buildProcedureTemplateFullSummaryDto(reportInfo.id, template, formTemplateValues, false);
 
 				if (reportObservations?.procedureTemplateId && reportObservations?.values?.length > 0) {
 					return this.prescripcionesService.completeStudyTemplateWhithForm(this.patientId,
@@ -119,29 +93,56 @@ export class CompleteInfoComponent implements OnInit {
 				});
 	}
 
+
+	private partialSave() {
+		forkJoin(
+			this.diagnosticReport.map(report => {
+
+				const reportInfo: DiagnosticReportInfoDto = report?.diagnosticInformation || report;
+
+				let template = this.controlTemplatesService.getProcedureTemplateId(reportInfo.id);
+
+				let formTemplateValues = this.controlTemplatesService.getFormTemplateValues();
+
+				let isPartialUpload = true;
+
+				let reportObservations: AddDiagnosticReportObservationsCommandDto =
+					this.buildProcedureTemplateFullSummaryDto(reportInfo.id, template, formTemplateValues, isPartialUpload);
+
+				if (reportObservations?.procedureTemplateId && reportObservations?.values?.length > 0 && !!template) {
+					return this.prescripcionesService.partialStudyTemplateWhithForm(this.patientId,
+						reportInfo.id, reportObservations)
+				} else {
+					return of(null);
+				}
+
+			})).subscribe(
+				() => {
+					this.closeModal(false, true);
+				}, _ => {
+					this.closeModal(false, true);
+				});
+
+	}
+
 	private closeModal(simpleClose: boolean, completed?: boolean): void {
 		this.dialogRef.close(simpleClose ? null : { completed });
 	}
 
-	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number, template): AddDiagnosticReportObservationsCommandDto {
+	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number, template, formTemplateValues, isPartialUpload?: boolean): AddDiagnosticReportObservationsCommandDto {
 		return {
-			isPartialUpload: false,
+			isPartialUpload: isPartialUpload || false,
 			procedureTemplateId: template,
-			values: Object.keys(this.formTemplateValues).length > 0 ? this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic) : [],
+			values: Object.keys(formTemplateValues).length > 0 ? this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic, formTemplateValues) : [],
 		}
 	}
 
-	private getProcedureTemplateId(selectedProcedureTemplate: number): number {
-		let a = this.arrayIdTemplatesProcedures.filter(a => a.diagnosticId === selectedProcedureTemplate);
-		return a.length ? a[0].selectedrocedureTemplateId : null
-	}
-
-	private buildAddDiagnosticReportObservationsCommandDto(idDiagnostic: number): any {
-		let procedure = this.formTemplateValues[idDiagnostic];
+	private buildAddDiagnosticReportObservationsCommandDto(idDiagnostic: number, formTemplateValues): any {
+		let procedure = formTemplateValues[idDiagnostic];
 		return this.cleanProcedureParameterIds(procedure);
 	}
 
-	cleanProcedureParameterIds(data): AddDiagnosticReportObservationsCommandDto {
+	private cleanProcedureParameterIds(data): AddDiagnosticReportObservationsCommandDto {
 		return data?.map((item) => {
 			if (item) {
 				if (typeof item.procedureParameterId === 'string' && item.procedureParameterId.includes('_')) {
@@ -152,21 +153,29 @@ export class CompleteInfoComponent implements OnInit {
 		});
 	}
 
-	private getProcedureTemplatesService(idDiagnostic: number): any {
-		return this.procedureTemplatesService.findByDiagnosticReportId(idDiagnostic).pipe(
-			switchMap((practiceTemplates: ProcedureTemplateShortSummaryDto[]) => {
-				let observables = practiceTemplates.map(t => this.procedureTemplatesService.findById(t.id));
-				return forkJoin(observables);
-			})
-		);
+	private existsAppointment() {
+		if (this.formStudyClosure.valid) {
+			const warnignComponent = this.dialog.open(DiscardWarningComponent,
+				{
+					disableClose: false,
+					data: {
+						title: 'ambulatoria.complete-info.TITLE',
+						contentBold: 'ambulatoria.complete-info.CONTENT',
+						okButtonLabel: 'ambulatoria.complete-info.OK_BUTTON',
+						cancelButtonLabel: 'ambulatoria.complete-info.CANCEL'
+					},
+					maxWidth: '500px'
+				});
+			warnignComponent.afterClosed().subscribe(confirmed =>
+				confirmed ? this.partialSave() : null
+			);
+		}
+		else
+			this.partialSave()
+
 	}
 
 }
-
 interface FormStudyClosure {
 	description: string;
-}
-
-interface ValueMap {
-	[idDiagnostic: string]: LoincObservationValue;
 }

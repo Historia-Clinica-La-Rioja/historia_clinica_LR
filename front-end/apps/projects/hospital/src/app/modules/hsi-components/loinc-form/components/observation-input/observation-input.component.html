@@ -1,25 +1,27 @@
 <div [formGroup]="form">
 	<div [ngSwitch]="loincInput.controlType" [attr.data-id]="loincInput.key">
-		<div *ngSwitchCase="'textbox'">
-			<app-loinc-input-text-box [title]="loincInput.label" (valueSelected)="setValue(loincInput.key, $event)">
+		<div *ngSwitchCase="'textbox'" id="textbox">
+			<app-loinc-input-text-box [title]="loincInput.label" [preload]="loincInput.preload"
+				(valueSelected)="setValue(loincInput.key, $event)">
 			</app-loinc-input-text-box>
 		</div>
 
-		<div *ngSwitchCase="'numeric'" fxLayout="column" fxLayoutGap="8px">
-			<app-loinc-input-number [form]="form" [loincInput]="loincInput" [unitOfMeasure]="unitOfMeasure"
-				(valueSelected)="unitSelected($event)">
+		<div *ngSwitchCase="'numeric'" fxLayout="column" fxLayoutGap="8px" id="numeric">
+			<app-loinc-input-number [title]="loincInput.label" [preloadValue]="loincInput.preload"
+				[preloadUnit]="loincInput.preloadUnitOfMeasureId" [listOptionsUnits]="loincInput.param.unitsOfMeasure"
+				(valueSelected)="emitValueNumber($event)">
 			</app-loinc-input-number>
 		</div>
 
-		<div *ngSwitchCase="'snomed'">
+		<div *ngSwitchCase="'snomed'" id="snomed">
 			<app-loinc-input-snomed [title]="loincInput.label" [ecl]="loincInput.param.snomedGroupDescription"
-				(valueSelected)="setValue(loincInput.key, $event)">
+				[preload]="loincInput.preload" (valueSelected)="setValue(loincInput.key, $event)">
 			</app-loinc-input-snomed>
 		</div>
 
-		<div *ngSwitchCase="'dropdown'">
+		<div *ngSwitchCase="'dropdown'" id="dropdown">
 			<app-loinc-input-dropdown [title]="loincInput.label" [options]="loincInput.options"
-				(valueSelected)="setValue(loincInput.key, $event)">
+				[preload]="loincInput.preload" (valueSelected)="setValue(loincInput.key, $event)">
 			</app-loinc-input-dropdown>
 		</div>
 

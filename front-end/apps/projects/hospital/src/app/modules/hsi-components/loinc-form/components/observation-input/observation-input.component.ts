@@ -6,14 +6,8 @@ import {
 	LoincObservationValue,
 } from '../../loinc-input.model';
 import { ProcedureParameterUnitOfMeasureFullSummaryDto, SnomedDto } from '@api-rest/api-model';
+import { NumberWithUnit } from '../loinc-input-number/loinc-input-number.component';
 
-const findByIdOrFirst = (
-	unitSelectedId: number,
-	unitList: ProcedureParameterUnitOfMeasureFullSummaryDto[] = [],
-): ProcedureParameterUnitOfMeasureFullSummaryDto => {
-	const unitSelected = unitList.find(u => u.unitOfMeasureId === unitSelectedId);
-	return unitSelected?.unitOfMeasureId ? unitSelected : unitList[0];
-}
 
 
 @Component({
@@ -30,11 +24,6 @@ export class ObservationInputComponent implements OnInit {
 	unitOfMeasure: ProcedureParameterUnitOfMeasureFullSummaryDto;
 
 	ngOnInit() {
-		this.unitOfMeasure = findByIdOrFirst(
-			this.loincInput.observationValue?.unitOfMeasureId,
-			this.loincInput.param.unitsOfMeasure,
-		);
-
 		this.form.controls[this.loincInput.key].valueChanges.subscribe(
 			value => {
 				this.emitValue(value);
@@ -49,8 +38,17 @@ export class ObservationInputComponent implements OnInit {
 		);
 	}
 
-	setValue(controlName: string, value: SnomedDto | string | any) {
+	setValue(controlName: string, value: SnomedDto | string) {
 		this.form.controls[controlName].setValue(value);
+	}
+
+	emitValueNumber($event: NumberWithUnit) {
+		const procedureParameter = this.loincInput.param;
+		this.valueChange.emit({
+			procedureParameterId: procedureParameter.id,
+			value: $event.value,
+			unitOfMeasureId: $event.unitOfMeasureId,
+		});
 	}
 
 	get isValid() {
@@ -66,7 +64,7 @@ export class ObservationInputComponent implements OnInit {
 		this.valueChange.emit({
 			procedureParameterId: procedureParameter.id,
 			value,
-			unitOfMeasureId: this.unitOfMeasure?.unitOfMeasureId,
+			unitOfMeasureId: null,
 		});
 	}
 

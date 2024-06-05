@@ -31,6 +31,7 @@ import { CardEstudiosComponent } from './components/card-estudios/card-estudios.
 import { CardIndicacionesComponent } from './components/card-indicaciones/card-indicaciones.component';
 import { CarelinesAndSpecialtiesReferenceComponent } from './components/carelines-and-specialties-reference/carelines-and-specialties-reference.component';
 import { ClinicalHistoryActionsComponent } from './components/clinical-history-actions/clinical-history-actions.component';
+import { ControlSelectTemplateComponent } from './components/control-select-template/control-select-template.component';
 import { CompleteStudyComponent } from './dialogs/complete-study/complete-study.component';
 import { CompleteStudyInformationComponent } from './components/complete-study-information/complete-study-information.component';
 import { CompleteInfoComponent } from './components/complete-info/complete-info.component';
@@ -52,6 +53,7 @@ import { ReferenceStudyCloseComponent } from './components/reference-study-close
 import { ReferenceStudyClosureInformationComponent } from './components/reference-study-closure-information/reference-study-closure-information.component';
 import { ReferenceStudyComponent } from './components/reference-study/reference-study.component';
 import { ResumenComponent } from './components/resumen/resumen.component';
+import { SelectTemplateComponent } from './components/select-template/select-template.component';
 import { SuggestedFieldsPopupComponent } from '../../../presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { StudyInformationComponent } from './components/study-information/study-information.component';
 import { VacunasComponent } from './components/vacunas/vacunas.component';
@@ -191,7 +193,9 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
       	ViolenceSituationImplementedActionsComponent,
       	ViolenceSituationListComponent,
 		ViolenceSituationHistoryFiltersComponent,
-		ShowClosedFormsTemplateComponent
+		ShowClosedFormsTemplateComponent,
+ 		SelectTemplateComponent,
+ 		ControlSelectTemplateComponent,
 	],
 	imports: [
 		CommonModule,

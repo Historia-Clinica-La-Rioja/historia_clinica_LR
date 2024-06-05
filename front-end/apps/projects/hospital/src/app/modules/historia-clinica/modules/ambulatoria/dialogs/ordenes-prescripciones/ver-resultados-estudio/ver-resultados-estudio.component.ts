@@ -73,12 +73,14 @@ export class VerResultadosEstudioComponent implements OnInit {
 
 				const studyResults: StudyResults[] = [];
 				diagnostic.observations.forEach((elem: GetDiagnosticReportObservationDto) => {
-					const result: StudyResults = {
-						procedureParameterId: elem.procedureParameterId,
-						description: elem.representation.description,
-						value:  elem.representation.value || elem?.value
+					if (elem?.value != "") {
+						const result: StudyResults = {
+							procedureParameterId: elem.procedureParameterId,
+							description: elem.representation.description,
+							value: elem.representation.value || elem?.value
+						}
+						studyResults.push(result);
 					}
-					studyResults.push(result);
 				});
 
 				const result: ResultPractice = {
