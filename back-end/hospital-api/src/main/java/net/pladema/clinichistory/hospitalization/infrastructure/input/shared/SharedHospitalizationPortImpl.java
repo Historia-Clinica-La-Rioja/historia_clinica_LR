@@ -1,13 +1,16 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.input.shared;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationAllergyState;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 
+import net.pladema.patient.controller.service.PatientExternalService;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ExternalCoverageDto;
@@ -29,6 +32,7 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	private final FetchHospitalizationAllergyState fetchHospitalizationAllergyState;
 
 	private final InternmentPatientService internmentPatientService;
+	private final PatientExternalService patientExternalService;
 
 	@Override
 	public Optional<ExternalPatientCoverageDto> getActiveEpisodeMedicalCoverage(Integer internmentEpisodeId) {
@@ -51,6 +55,24 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	public Optional<Integer> getInternmentEpisodeId(Integer institutionId, Integer patientId){
 		log.debug("Input parameters -> patientId {}", patientId);
 		Optional<Integer> result = internmentPatientService.getInternmentEpisodeIdInProcess(institutionId, patientId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public BasicPatientDto getPatientInfo(Integer intermentEpisodeId) {
+		log.debug("Input parameters -> intermentEpisodeId {}", intermentEpisodeId);
+		var result = internmentEpisodeService.getPatient(intermentEpisodeId)
+				.map(patientExternalService::getBasicDataFromPatient)
+				.orElse(null);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public LocalDate getEntryLocalDate(Integer intermentEpisodeId) {
+		log.debug("Input parameters -> intermentEpisodeId {}", intermentEpisodeId);
+		var result = internmentEpisodeService.getEntryDate(intermentEpisodeId).toLocalDate();
 		log.debug("Output -> {}", result);
 		return result;
 	}

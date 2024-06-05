@@ -24,7 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.clinichistory.hospitalization.application.setpatientfrominternmenteposiode.SetPatientFromInternmentEpisode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +38,7 @@ public class CreateAnestheticReportDocument {
     private final EImageFileExtension IMAGE_FILE_EXTENSION = EImageFileExtension.PNG;
 
     private final GetChartImage getChartImage;
-    private final SetPatientFromInternmentEpisode setPatientFromInternmentEpisode;
-    private final InternmentEpisodeService internmentEpisodeService;
+    private final SharedHospitalizationPort sharedHospitalizationPort;
     private final AnestheticReportValidator anestheticReportValidator;
     private final DocumentFactory documentFactory;
     private final AnestheticReportStorage anestheticReportStorage;
@@ -90,10 +88,20 @@ public class CreateAnestheticReportDocument {
 
     private void completeValuesAnestheticReport(AnestheticReportBo anestheticReport) {
 
-        setPatientFromInternmentEpisode.run(anestheticReport);
 
         Integer encounterId = anestheticReport.getEncounterId();
-        LocalDate entryDate = internmentEpisodeService.getEntryDate(encounterId).toLocalDate();
+
+        Optional.ofNullable(sharedHospitalizationPort.getPatientInfo(encounterId))
+                .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
+                .ifPresent(patientInfo -> {
+                    anestheticReport.setPatientInfo(patientInfo);
+                    anestheticReport.setPatientId(patientInfo.getId());
+                });
+
+        sharedHospitalizationPort.getActiveEpisodeMedicalCoverage(encounterId)
+                .ifPresent(externalPatientCoverageDto -> anestheticReport.setPatientMedicalCoverageId(externalPatientCoverageDto.getMedicalCoverage().getId()));
+
+        LocalDate entryDate = sharedHospitalizationPort.getEntryLocalDate(encounterId);
         anestheticReport.setPatientInternmentAge(entryDate);
 
         anestheticReport.setPerformedDate(LocalDateTime.now());
