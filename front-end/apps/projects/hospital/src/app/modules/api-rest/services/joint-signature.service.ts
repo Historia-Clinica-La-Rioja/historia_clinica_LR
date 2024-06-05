@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentElectronicSignatureProfessionalStatusDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { DocumentElectronicSignatureProfessionalStatusDto, EElectronicSignatureStatus, ElectronicSignatureInvolvedDocumentDto, GenericMasterDataDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -10,13 +10,13 @@ import { Observable } from 'rxjs';
 })
 export class JointSignatureService {
 
-	private readonly BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}`;
+	private readonly BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}/electronic-joint-signature`;
 
 	constructor(private readonly http: HttpClient,
 		private readonly contextService: ContextService) { }
 
 	getProfessionalInvolvedDocumentList(pageSize: number, pageNumber: number, filter?: string): Observable<PageDto<ElectronicSignatureInvolvedDocumentDto>> {
-		const url = `${this.BASE_URL}/electronic-joint-signature/get-involved-document-list`;
+		const url = `${this.BASE_URL}/get-involved-document-list`;
 		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize);
 		if (filter)
 			queryParam = queryParam.append('filter', filter);
@@ -24,17 +24,22 @@ export class JointSignatureService {
 	}
 
 	getDocumentElectronicSignatureProfessionalStatus(documentId: number): Observable<DocumentElectronicSignatureProfessionalStatusDto[]> {
-		const URL = this.BASE_URL + `/document/${documentId}/electronic-joint-signature/get-professionals-status`
+		const URL = this.BASE_URL + `/document/${documentId}/get-professionals-status`
 		return this.http.get<DocumentElectronicSignatureProfessionalStatusDto[]>(URL);
 	}
 
 	rejectDocumentElectronicJointSignature(rejectReason: RejectDocumentElectronicJointSignatureDto): Observable<number> {
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/electronic-joint-signature/reject`;
+		const url = this.BASE_URL + `/reject`;
 		return this.http.put<number>(url, rejectReason);
 	}
 
-	signDocumentElectronicJointSignature(documentIds: number[]){
-		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/electronic-joint-signature/sign`;
+	signDocumentElectronicJointSignature(documentIds: number[]) {
+		const url = this.BASE_URL + `/sign`;
 		return this.http.put<number>(url, documentIds);
+	}
+
+	getElectronicJointSignatureDocumentPossibleStatusesController(): Observable<GenericMasterDataDto<EElectronicSignatureStatus>[]> {
+		const url = `${environment.apiBase}/electronic-joint-signature/master-data/get-document-possible-statuses`;
+		return this.http.get<GenericMasterDataDto<EElectronicSignatureStatus>[]>(url);
 	}
 }

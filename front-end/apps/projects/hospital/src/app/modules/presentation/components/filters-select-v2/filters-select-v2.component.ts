@@ -17,7 +17,7 @@ export class FiltersSelectV2Component {
 	@Input() set setFilters(filters: Filter[]) {
 		if (filters.length) {
 			this.filters = filters;
-			this.filterForm = this.toFormGroup(this.filters);
+			this.filterForm = this.toFormGroup();
 		}
 	}
 	@Output() selectedFilters = new EventEmitter<SelectedFilterOption[]>();
@@ -35,9 +35,15 @@ export class FiltersSelectV2Component {
 		this.selectedFilters.emit(this.selectedFilterOptions);
 	}
 
-	private toFormGroup(filters: Filter[]): FormGroup {
+	private toFormGroup(): FormGroup {
 		const group: any = {};
-		filters.forEach(filter => group[filter.key] = new FormControl(null));
+		this.filters.forEach(filter => {
+			const defaultValues = Array.isArray(filter.defaultValue) ? filter.defaultValue : [filter.defaultValue];
+			const values = filter.options.filter(f => {
+				return defaultValues.includes(f.id);
+			});
+			group[filter.key] = new FormControl(values);
+		});
 		return new FormGroup(group);
 	}
 

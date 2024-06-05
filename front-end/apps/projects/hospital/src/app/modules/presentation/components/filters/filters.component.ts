@@ -62,4 +62,5 @@ export interface Filter {
 	name: string,
 	options: Option[],
 	isMultiple?: boolean,
+	defaultValue?: any[],
 }
