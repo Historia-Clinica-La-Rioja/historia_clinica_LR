@@ -39,7 +39,7 @@ import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 // standalone
-import { PatientSummaryComponent } from '../../../hsi-components/patient-summary/patient-summary.component';
+import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 
 @NgModule({
 	declarations: [
