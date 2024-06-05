@@ -100,6 +100,7 @@ import { FileDownloadComponent } from './dialogs/view-pdf/file-download/file-dow
 import { FileDownloadCardComponent } from './dialogs/view-pdf/file-download-card/file-download-card.component';
 import { FileViewerPdfComponent } from './dialogs/view-pdf/file-viewer-pdf/file-viewer-pdf.component';
 import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
+import { ConfirmDialogV2Component } from './dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
 import { DialogPresentationComponent } from './components/dialog-presentation/dialog-presentation.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
@@ -214,6 +215,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		FileDownloadCardComponent,
 		FileViewerPdfComponent,
 		ViewPdfComponent,
+		ConfirmDialogV2Component,
 		DialogPresentationComponent,
 		// directives
 		CtrlTemplateDirective,
@@ -328,6 +330,8 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		TypeaheadComponent,
 		TypeaheadV2Component,
 		UserBadgeComponent,
+		//dialogs
+		ConfirmDialogV2Component,
 		// directives
 		CtrlTemplateDirective,
 		OnlyNumericCharactersDirective,
