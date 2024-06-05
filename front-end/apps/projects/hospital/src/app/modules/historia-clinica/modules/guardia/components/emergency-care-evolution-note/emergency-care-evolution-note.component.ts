@@ -31,11 +31,13 @@ export class EmergencyCareEvolutionNoteComponent {
 		this.medicacionContent = this.toMedications(newContent.emergencyCareEvolutionNoteClinicalData.medications);
 		this.procedimientosContent = this.toProcedimientos(newContent.emergencyCareEvolutionNoteClinicalData.procedures);
 		this.factoresContent = this.toRiskFactors(newContent.emergencyCareEvolutionNoteClinicalData.riskFactors);
-		this.antecedentesFamiliaresContent = this.toAntecedentesFamiliares(newContent.emergencyCareEvolutionNoteClinicalData.familyHistories)
+		this.antecedentesFamiliaresContent = this.toAntecedentesFamiliares(newContent.emergencyCareEvolutionNoteClinicalData.familyHistories);
 
 		if (!!newContent.editor) {
 			this.setRegisterEvolutionNoteEdition(newContent.editedOn, newContent.editor);
 		}
+		else
+			this.registerEvolutionNoteEdition = null;
 	}
 
 	private criticalityTypes: any[];
