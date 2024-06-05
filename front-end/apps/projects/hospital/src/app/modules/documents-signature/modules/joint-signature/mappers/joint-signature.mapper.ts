@@ -1,58 +1,47 @@
-import { EElectronicSignatureStatus, ElectronicSignatureInvolvedDocumentDto } from "@api-rest/api-model"
+import { ElectronicSignatureInvolvedDocumentDto } from "@api-rest/api-model"
 import { convertDateTimeDtoToDate } from "@api-rest/mapper/date-dto.mapper"
 import { getDocumentType } from "@core/constants/summaries"
-import { dateTimeToViewDateHourMinuteSecond, dateToViewDate } from "@core/utils/date.utils"
-import { ColoredIconText } from "@presentation/components/colored-icon-text/colored-icon-text.component"
+import { dateToViewDate } from "@core/utils/date.utils"
 import { Detail } from "@presentation/components/details-section-custom/details-section-custom.component"
-import { ItemListCard, ItemListOption } from "@presentation/components/selectable-card/selectable-card.component"
 import { ShowMoreConceptsPipe } from "@presentation/pipes/show-more-concepts.pipe"
-import { SIGNATURE_STATUS_OPTION } from "../constants/joint-signature.constants"
-import { capitalizeSentence } from "@core/utils/core.utils"
+import { capitalize, capitalizeSentence } from "@core/utils/core.utils"
+import { SummaryItem } from "../../../../hsi-components/summary-list/summary-list.component"
+import { SummaryMultipleSignData } from "../../../../hsi-components/summary-multiple-sign/summary-multiple-sign.component"
+import { SummaryAttentionData } from "../../../../hsi-components/summary-attention/summary-attention.component"
+import { RegisterEditor } from "@presentation/components/register-editor-info/register-editor-info.component"
 
-export const buildItemListCard = (documents: ElectronicSignatureInvolvedDocumentDto[]): ItemListCard[] => {
+export const buildSummaryItemCard = (documents: ElectronicSignatureInvolvedDocumentDto[]): SummaryItem[] => {
 	return documents.map(document => {
 		return {
 			id: document.documentId,
-			icon: getDocumentType(document.documentTypeId).icon,
-			title: getDocumentType(document.documentTypeId).title,
-			options: buildItemListOption(document),
-			coloredIconTextOption: buildSignatureStatusOption(document.signatureStatus)
+			data: buildSummaryMultipleSignData(document)
 		}
 	})
 }
 
-const buildItemListOption = (document: ElectronicSignatureInvolvedDocumentDto): ItemListOption[] => {
-	const showMoreConceptsPipe = new ShowMoreConceptsPipe();
-	return [
-		{
-			title: 'digital-signature.card-information.PROBLEM',
-			value: document.problems.length ? [showMoreConceptsPipe.transform(document.problems)] : ['digital-signature.card-information.NO_SNOMED_CONCEPT']
-		},
-		{
-			title: 'digital-signature.card-information.CREATED',
-			value: [dateTimeToViewDateHourMinuteSecond(convertDateTimeDtoToDate(document.documentCreationDate))],
-		},
-		{
-			title: 'digital-signature.card-information.PROFESSIONAL',
-			value: [capitalizeSentence(document.responsibleProfessionalCompleteName)]
-		},
-		{
-			title: 'digital-signature.card-information.PATIENT',
-			value: [capitalizeSentence(document.patientCompleteName)],
-		}
-	]
-}
-
-const buildSignatureStatusOption = (status: EElectronicSignatureStatus): ItemListOption => {
+export const buildSummaryMultipleSignData = (document: ElectronicSignatureInvolvedDocumentDto): SummaryMultipleSignData => {
 	return {
-		title: 'digital-signature.card-information.SIGN_STATUS',
-		value: buildSignatureStatusValue(status)
+		attentionData: buildSummaryAttentionData(document),
+		signStatus: document.signatureStatus
 	}
 }
 
-const buildSignatureStatusValue = (status: EElectronicSignatureStatus): ColoredIconText => {
-	return SIGNATURE_STATUS_OPTION[status];
-};
+export const buildSummaryAttentionData = (document: ElectronicSignatureInvolvedDocumentDto): SummaryAttentionData => {
+	const showMoreConceptsPipe = new ShowMoreConceptsPipe();
+	return {
+		title: getDocumentType(document.documentTypeId).title,
+		patient: capitalizeSentence(document.patientCompleteName),
+		problem: document.problems.length ? capitalize(showMoreConceptsPipe.transform(document.problems)) : 'digital-signature.card-information.NO_SNOMED_CONCEPT',
+		registerEditor: buildRegisterEditor(document)
+	}
+}
+
+export const buildRegisterEditor = (document: ElectronicSignatureInvolvedDocumentDto): RegisterEditor => {
+	return {
+		createdBy: capitalizeSentence(document.responsibleProfessionalCompleteName),
+		date: convertDateTimeDtoToDate(document.documentCreationDate)
+	}
+}
 
 export const buildHeaderInformation = (document: ElectronicSignatureInvolvedDocumentDto): Detail[] => {
 	return [

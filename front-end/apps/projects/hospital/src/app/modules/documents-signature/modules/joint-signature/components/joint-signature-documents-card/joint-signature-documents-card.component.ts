@@ -1,8 +1,5 @@
 import { Component, Input, ViewChild, } from '@angular/core';
 import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
-import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
-import { buildHeaderInformation, buildItemListCard } from '../../mappers/joint-signature.mapper';
-import { DocumentDto, ElectronicJointSignatureInvolvedDocumentListFilterDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { map, tap } from 'rxjs';
 import { INITIAL_PAGE, PAGE_SIZE, PAGE_SIZE_OPTIONS } from '../../constants/joint-signature.constants';
@@ -14,6 +11,10 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
 import { DocumentService } from '@api-rest/services/document.service';
 import { DocumentSignatureService } from '../../../../services/document-signature.service';
+import { SummaryItem } from 'projects/hospital/src/app/modules/hsi-components/summary-list/summary-list.component';
+import { ElectronicJointSignatureInvolvedDocumentListFilterDto, ElectronicSignatureInvolvedDocumentDto, PageDto, DocumentDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
+import { buildSummaryItemCard, buildHeaderInformation } from '../../mappers/joint-signature.mapper';
 
 @Component({
 	selector: 'app-joint-signature-documents-card',
@@ -31,7 +32,7 @@ export class JointSignatureDocumentsCardComponent {
 	filter: ElectronicJointSignatureInvolvedDocumentListFilterDto;
 	headerInformation: Detail[] = [];
 	isLoading: boolean;
-	documents: ItemListCard[] = [];
+	documents: SummaryItem[] = [];
 	jointSignatureDocuments: ElectronicSignatureInvolvedDocumentDto[];
 	selectedDocumentId: number;
 	elementsAmount: number;
@@ -61,7 +62,7 @@ export class JointSignatureDocumentsCardComponent {
 			)
 			.subscribe((documents: ElectronicSignatureInvolvedDocumentDto[]) => {
 				this.jointSignatureDocuments = documents;
-				this.documents = buildItemListCard(this.jointSignatureDocuments);
+				this.documents = buildSummaryItemCard(this.jointSignatureDocuments);
 				this.isLoading = false;
 			}, _ => this.isLoading = false);
 	}
@@ -84,11 +85,11 @@ export class JointSignatureDocumentsCardComponent {
 		}
 	}
 
-	seeDetails(ids: SelectableCardIds): void {
-		this.documentService.getDocumentInfo(ids.id)
+	seeDetails(id: number): void {
+		this.documentService.getDocumentInfo(id)
 			.subscribe((document: DocumentDto) => {
-				this.selectedDocumentId = ids.id;
-				const jointSignatureDocument = this.jointSignatureDocuments.find(item => item.documentId === ids.id);
+				this.selectedDocumentId = id;
+				const jointSignatureDocument = this.jointSignatureDocuments.find(item => item.documentId === id);
 				this.headerInformation = buildHeaderInformation(jointSignatureDocument);
 				this.detailedInformation = this.documentSignatureService.buildDetailedInformation(document);
 			});
@@ -170,7 +171,7 @@ export class JointSignatureDocumentsCardComponent {
 	downloadPdf(): void {
         this.selectedDocumentsId.forEach(selectedId => this.download({id: selectedId}));
     }
-	
+
 	download(ids: SelectableCardIds): void {
         this.documentService.downloadUnnamedFile(ids.id);
     }
