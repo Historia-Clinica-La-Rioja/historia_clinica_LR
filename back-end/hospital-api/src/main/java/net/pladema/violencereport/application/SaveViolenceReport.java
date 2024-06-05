@@ -368,7 +368,7 @@ public class SaveViolenceReport {
 	}
 
 	private Integer getSnomedIdByConceptIdAndDescription(SnomedBo snomed) {
-		return snomedService.getSnomedIdBySctidAndDescription(snomed.getSctid(), snomed.getPt()).orElseThrow(() -> new NotFoundException("concept-not-exists", "El concepto no existe"));
+		return snomedService.getSnomedIdBySctidAndDescription(snomed.getSctid(), snomed.getPt());
 	}
 
 	private List<ViolenceType> parseViolenceTypes(Integer reportId, List<Integer> violenceTypeSnomedIds) {
