@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.maindiagnoses;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
@@ -19,7 +20,6 @@ import java.util.Collections;
 import javax.validation.ConstraintViolationException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
-import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -102,7 +102,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
     @Mock
-    private AnestheticStorage anestheticStorage;
+    private AnestheticReportStorage anestheticReportStorage;
 
     @Mock
     private ValidateAdministrativeDischarge validateAdministrativeDischarge;
@@ -124,7 +124,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
 				getLicenseNumberByProfessional,
-                anestheticStorage,
+                anestheticReportStorage,
                 validateAdministrativeDischarge
         );
         changeMainDiagnosesService = new ChangeMainDiagnosesServiceImpl(

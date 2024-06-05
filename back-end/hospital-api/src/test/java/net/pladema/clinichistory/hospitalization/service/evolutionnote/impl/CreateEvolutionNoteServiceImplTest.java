@@ -12,6 +12,10 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.application.document.validators.AnthropometricDataValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.EffectiveRiskFactorTimeValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
@@ -54,7 +58,6 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
-import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
@@ -69,10 +72,6 @@ import net.pladema.permissions.service.dto.RoleAssignment;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
 import org.springframework.boot.test.mock.mockito.MockBean;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 
@@ -137,7 +136,7 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
     @Mock
-    private AnestheticStorage anestheticStorage;
+    private AnestheticReportStorage anestheticReportStorage;
 
     @Mock
     private ValidateAdministrativeDischarge validateAdministrativeDischarge;
@@ -159,13 +158,20 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
 				getLicenseNumberByProfessional,
-                anestheticStorage,
+                anestheticReportStorage,
                 validateAdministrativeDischarge);
+
+        var generalDocumentValidator = new GeneralDocumentValidator(
+                new AnthropometricDataValidator(),
+                new EffectiveRiskFactorTimeValidator()
+        );
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
                 fetchHospitalizationHealthConditionState,
-                dateTimeProvider, new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService));
+                dateTimeProvider,
+                new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService, generalDocumentValidator)
+        );
     }
 
     @Test

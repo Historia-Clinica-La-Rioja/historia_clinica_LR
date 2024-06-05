@@ -11,6 +11,9 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.application.document.validators.AnthropometricDataValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.EffectiveRiskFactorTimeValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 
@@ -75,7 +78,11 @@ class UpdateEpicrisisServiceImplTest extends UnitRepository {
 
 	@BeforeEach
 	public void setUp() {
-		epicrisisValidator = new EpicrisisValidator(internmentEpisodeService);
+		var generalDocumentValidator = new GeneralDocumentValidator(
+				new AnthropometricDataValidator(),
+				new EffectiveRiskFactorTimeValidator()
+		);
+		epicrisisValidator = new EpicrisisValidator(internmentEpisodeService, generalDocumentValidator);
 		documentModificationValidator = new InternmentDocumentModificationValidatorImpl(sharedDocumentPort, internmentEpisodeService);
 		updateEpicrisisService = new UpdateEpicrisisServiceImpl(documentModificationValidator, sharedDocumentPort, epicrisisValidator, internmentEpisodeService, dateTimeProvider, documentFactory, epicrisisService);
 	}

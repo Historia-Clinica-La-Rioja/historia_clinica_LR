@@ -10,6 +10,7 @@ import java.util.Collections;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -75,9 +76,12 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 	@MockBean
 	private DocumentFileRepository documentFileRepository;
 
+	@Mock
+	private GeneralDocumentValidator generalDocumentValidator;
+
 	@BeforeEach
 	public void setUp() {
-		anamnesisValidator = new AnamnesisValidator(featureFlagsService);
+		anamnesisValidator = new AnamnesisValidator(featureFlagsService, generalDocumentValidator);
 		documentModificationValidator = new InternmentDocumentModificationValidatorImpl(sharedDocumentPort, internmentEpisodeService);
 		updateAnamnesisService = new UpdateAnamnesisServiceImpl(documentModificationValidator, sharedDocumentPort, anamnesisValidator, internmentEpisodeService, dateTimeProvider, documentFactory, anamnesisService);
 	}

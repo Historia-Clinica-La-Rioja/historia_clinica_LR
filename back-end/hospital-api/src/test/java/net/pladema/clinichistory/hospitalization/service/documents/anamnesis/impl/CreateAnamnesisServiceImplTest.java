@@ -12,6 +12,10 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.application.document.validators.AnthropometricDataValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.EffectiveRiskFactorTimeValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
@@ -27,7 +31,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
-import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.establishment.service.InstitutionService;
@@ -122,7 +125,7 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	private GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
 	@Mock
-	private AnestheticStorage anestheticStorage;
+	private AnestheticReportStorage anestheticReportStorage;
 
 	@Mock
 	private ValidateAdministrativeDischarge validateAdministrativeDischarge;
@@ -144,11 +147,17 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
 				getLicenseNumberByProfessional,
-				anestheticStorage,
-				validateAdministrativeDischarge);
+				anestheticReportStorage,
+                validateAdministrativeDischarge);
+
+		var generalDocumentValidator = new GeneralDocumentValidator(
+				new AnthropometricDataValidator(),
+				new EffectiveRiskFactorTimeValidator()
+		);
+		var anamnesisValidator = new AnamnesisValidator(featureFlagsService, generalDocumentValidator);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
-						new AnamnesisValidator(featureFlagsService));
+						anamnesisValidator);
 	}
 
 	@Test

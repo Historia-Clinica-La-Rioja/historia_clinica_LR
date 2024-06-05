@@ -1,6 +1,9 @@
 package net.pladema.clinichistory.hospitalization.service.evolutionnote.impl;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.validators.AnthropometricDataValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.EffectiveRiskFactorTimeValidator;
+import ar.lamansys.sgh.clinichistory.application.document.validators.GeneralDocumentValidator;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
@@ -82,7 +85,11 @@ class UpdateEvolutionNoteServiceImplTest extends UnitRepository {
 
 	@BeforeEach
 	public void setUp() {
-		evolutionNoteValidator = new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService);
+		var generalDocumentValidator = new GeneralDocumentValidator(
+				new AnthropometricDataValidator(),
+				new EffectiveRiskFactorTimeValidator()
+		);
+		evolutionNoteValidator = new EvolutionNoteValidator(fetchLoggedUserRolesExternalService, internmentEpisodeService, generalDocumentValidator);
 		documentModificationValidator = new InternmentDocumentModificationValidatorImpl(sharedDocumentPort, internmentEpisodeService);
 		updateEvolutionNoteService = new UpdateEvolutionNoteServiceImpl(documentModificationValidator, sharedDocumentPort, internmentEpisodeService, dateTimeProvider, documentFactory, evolutionNoteService, evolutionNoteValidator);
 	}
