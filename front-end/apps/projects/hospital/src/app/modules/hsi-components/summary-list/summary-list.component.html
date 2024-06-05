@@ -1,29 +1,27 @@
-
 <mat-selection-list [multiple]="false" color="primary" id="selection-list" *ngIf="dataList.length else noData">
-	<mat-list-item class="select-all" *ngIf="enableCheckboxes">
-		<header>
-			<input type="checkbox" (click)="selectAll()" id="select-all">
-			<span translate="presentation.selectable-card.SELECT_ALL"></span>
-		</header>
-	</mat-list-item>
+    <mat-list-item class="select-all" *ngIf="enableCheckboxes">
+        <header>
+            <input type="checkbox" (click)="selectAll()" id="select-all">
+            <span translate="presentation.selectable-card.SELECT_ALL"></span>
+        </header>
+    </mat-list-item>
 
-	<div class="cards-container">
-		<mat-list-option *ngFor="let data of dataList" id="selected-card"
-			(click)="seeDetails(data.id, $event)">
-			<div fxLayout="row" fxLayoutAlign="space-between start" >
-				<header>
-					<input class="checkbox" *ngIf="enableCheckboxes" type="checkbox" [checked]="data.checked" [value]="data.id"
-						(change)="checkboxSelect(data.id)">
-				</header>
-				<app-summary-multiple-sign [data]="data.data" *ngIf="data.data"></app-summary-multiple-sign>
-			</div>
-		</mat-list-option>
-	</div>
+    <div class="cards-container">
+        <mat-list-option *ngFor="let data of dataList" id="selected-card"
+            (click)="handleOptionClick(data.id, $event)">
+            <div fxLayout="row" fxLayoutAlign="space-between start" >
+                <header>
+                    <input class="checkbox" *ngIf="enableCheckboxes" type="checkbox" [checked]="data.checked" [value]="data.id"
+                        (change)="stopEvent($event); checkboxSelect(data.id)">
+                </header>
+                <app-summary-multiple-sign [data]="data.data" *ngIf="data.data"></app-summary-multiple-sign>
+            </div>
+        </mat-list-option>
+    </div>
 </mat-selection-list>
 
 <ng-template #noData>
-	<div class="no-information-container">
-		<h3>{{noDataMessage | translate}}</h3>
-	</div>
+    <div class="no-information-container">
+        <h3>{{noDataMessage | translate}}</h3>
+    </div>
 </ng-template>
-

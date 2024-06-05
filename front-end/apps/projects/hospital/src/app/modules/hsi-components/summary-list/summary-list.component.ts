@@ -24,7 +24,7 @@ export class SummaryListComponent {
 	selectedIds: number[] = [];
 	isAllSelected: boolean = false;
 
-	constructor() {	}
+	constructor() { }
 
 	selectAll(): void {
 		if (this.isAllSelected) {
@@ -52,10 +52,14 @@ export class SummaryListComponent {
 		this.checkedIds.emit(this.selectedIds);
 	}
 
-	seeDetails(id: number, event: any): void {
-		(event.target.nodeName === INPUT_NODE_NAME)
-			? event.stopPropagation()
-			: this.selectedId.emit(id);
+	handleOptionClick(id: number, event: any): void {
+		if (event.target.nodeName !== INPUT_NODE_NAME) {
+			this.selectedId.emit(id);
+		}
+	}
+
+	stopEvent(event: Event): void {
+		event.stopPropagation();
 	}
 }
 
