@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AppFeature } from '@api-rest/api-model';
@@ -20,6 +20,13 @@ export class ReasonsFormComponent {
 	form = new FormGroup<ReasonsForm>({
 		reasons: new FormControl<MotivoConsulta[]>([]),
 	});
+
+	@Input() set reasons(reasons: MotivoConsulta[]) {
+		if (reasons.length) {
+			this.form.controls.reasons.setValue(reasons);
+			this.motivoNuevaConsultaService.setMotives(reasons);
+		}
+	}
 	@Output() selectedReasons = new EventEmitter<MotivoConsulta[]>;
 
 	constructor(

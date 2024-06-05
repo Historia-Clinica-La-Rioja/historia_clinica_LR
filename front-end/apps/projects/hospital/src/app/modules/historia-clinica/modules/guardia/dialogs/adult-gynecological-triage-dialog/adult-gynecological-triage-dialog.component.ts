@@ -5,26 +5,28 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TriageAdultGynecologicalDto } from '@api-rest/api-model';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 import { NewRiskFactorsService } from '@historia-clinica/modules/guardia/services/new-risk-factors.service';
+import { LastTriage } from '../../utils/last-triage';
 
 @Component({
 	selector: 'app-adult-gynecological-triage-dialog',
 	templateUrl: './adult-gynecological-triage-dialog.component.html',
 	styleUrls: ['./adult-gynecological-triage-dialog.component.scss']
 })
-export class AdultGynecologicalTriageDialogComponent {
+export class AdultGynecologicalTriageDialogComponent extends LastTriage {
 
 	private triage: TriageAdultGynecologicalDto;
 	requestPending = false;
 	NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE = false;
 
 	constructor(
-		private triageService: TriageService,
+		protected triageService: TriageService,
 		private readonly snackBarService: SnackBarService,
 		public readonly dialogRef: MatDialogRef<AdultGynecologicalTriageDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public episodeId: number,
 		private readonly newTriageService: NewTriageService,
 		private readonly newRiskFactorsService: NewRiskFactorsService,
-	) {
+	) {	
+		super(triageService, episodeId);
 	}
 
 	setTriage(triage: TriageAdultGynecologicalDto): void {

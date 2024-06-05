@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TriageAdministrativeDto } from '@api-rest/api-model';
+import { TriageAdministrativeDto, TriageListDto } from '@api-rest/api-model';
 import { Triage } from '../triage/triage.component';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class AdministrativeTriageComponent {
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
+	@Input() lastTriage$: Observable<TriageListDto>;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 

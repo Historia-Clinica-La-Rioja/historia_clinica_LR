@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
+import { MasterDataDto, NewEffectiveClinicalObservationDto, TriageListDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
@@ -22,6 +22,7 @@ export class PediatricTriageComponent implements OnInit {
 	@Input() cancelLabel = 'Volver';
 	@Input() disableConfirmButton: boolean;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
+	@Input() lastTriage$: Observable<TriageListDto>;
 	@Output() confirm = new EventEmitter();
 	@Output() cancel = new EventEmitter();
 

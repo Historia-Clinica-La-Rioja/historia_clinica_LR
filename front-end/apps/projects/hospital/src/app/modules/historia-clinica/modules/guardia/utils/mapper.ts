@@ -10,3 +10,11 @@ const toOutpatientReason = (reason: MotivoConsulta): OutpatientReasonDto => {
 export const toOutpatientReasons = (reasons: MotivoConsulta[]): OutpatientReasonDto[] => {
 	return reasons.map(reason => toOutpatientReason(reason));
 }
+
+const toMotive = (motive: OutpatientReasonDto): MotivoConsulta => {
+	return { snomed: motive.snomed }
+}
+
+export const toMotives = (motives: OutpatientReasonDto[]): MotivoConsulta[] => {
+	return motives.map(motive => toMotive(motive));
+}

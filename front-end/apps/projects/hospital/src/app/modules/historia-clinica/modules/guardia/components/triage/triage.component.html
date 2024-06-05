@@ -9,10 +9,10 @@
 		</mat-select>
 	</mat-form-field>
 
-	<section *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
+	<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
 		<span [translate]="'guardia.triage.REASON'"></span>
-		<app-reasons-form (selectedReasons)="setSelectedReasons($event)"></app-reasons-form>
-	</section>
+		<app-reasons-form [reasons]="lastTriageReasons" (selectedReasons)="setSelectedReasons($event)"></app-reasons-form>
+	</div>
 	
 	<mat-form-field *ngIf="false" class="simple-form-field" appearance="outline">
 		<mat-label [translate]="'guardia.triage.TRIAGE_ROOM'"></mat-label>

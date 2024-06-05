@@ -1,16 +1,16 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
-import { DoctorsOfficeDto, ERole, OutpatientReasonDto } from '@api-rest/api-model';
+import { DoctorsOfficeDto, ERole, OutpatientReasonDto, TriageListDto } from '@api-rest/api-model';
 import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, forkJoin, take } from 'rxjs';
 import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID } from '../../constants/masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
-import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { ToFormGroup } from '@core/utils/form.utils';
 import { toOutpatientReasons } from '../../utils/mapper';
+import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 
-const WITHOUT_TRIAGE_LEVEL_NOT_VALID_ROLES: ERole[] = [ERole.ENFERMERO, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+const ROLE_ALLOWED_NOT_TO_DEFINE_TRIAGE_LEVEL = [ERole.ADMINISTRATIVO];
 const WITHOUT_TRIAGE_CATEGORY_ID = 6;
 
 @Component({
@@ -20,12 +20,18 @@ const WITHOUT_TRIAGE_CATEGORY_ID = 6;
 })
 export class TriageComponent implements OnInit {
 
-	triageForm: FormGroup<ToFormGroup<Triage>>;
+	triageForm = this.buildTriageForm();
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 	triageCategories: TriageCategoryDto[];
+	lastTriageReasons: MotivoConsulta[] = [];
 
 	@Input() cancelFunction: () => void;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
+	@Input() set lastTriage(lastTriage: TriageListDto) {
+		if (lastTriage) {
+			this.preloadedLastTriageData(lastTriage);
+		}
+	};
 	@Output() triageData = new EventEmitter<Triage>();
 
 	constructor(
@@ -35,15 +41,14 @@ export class TriageComponent implements OnInit {
 	) { }
 
 	ngOnInit(): void {
-		this.triageForm = this.buildTriageForm();
 		this.subscribeToFormChanges();
 
-		let role$ = this.permissionsService.hasContextAssignments$(WITHOUT_TRIAGE_LEVEL_NOT_VALID_ROLES);
-		let triages$ = this.triageMasterDataService.getCategories();
+		const hasValidRoleToNotDefineTriageLevel$ = this.permissionsService.hasContextAssignments$(ROLE_ALLOWED_NOT_TO_DEFINE_TRIAGE_LEVEL).pipe(take(1));
+		const triageCategories$ = this.triageMasterDataService.getCategories();
 
-		combineLatest([role$, triages$]).subscribe(([hasntTriageNotDefinedRole, triageCategories]) => {
+		forkJoin([hasValidRoleToNotDefineTriageLevel$, triageCategories$]).subscribe(([hasValidRoleToNotDefineTriageLevel, triageCategories]) => {
 			this.triageCategories = triageCategories;
-			if (!hasntTriageNotDefinedRole && this.canAssignNotDefinedTriageLevel)
+			if (hasValidRoleToNotDefineTriageLevel && this.canAssignNotDefinedTriageLevel)
 				this.triageForm.controls.triageCategoryId.setValue(WITHOUT_TRIAGE_CATEGORY_ID);
 			else {
 				this.triageCategories = this.triageCategories.filter(category => category.id != WITHOUT_TRIAGE_CATEGORY_ID);
@@ -83,6 +88,12 @@ export class TriageComponent implements OnInit {
 			doctorsOfficeId: new FormControl<number>(null),
 			reasons: new FormControl<OutpatientReasonDto[]>(null)
 		});
+	}
+
+	private preloadedLastTriageData(lastTriage: TriageListDto) {
+		this.lastTriageReasons = lastTriage.reasons;
+		const preloadedTriageCategotyId = this.triageCategories.find(triageCategory => triageCategory.id === lastTriage.category.id).id;
+		this.triageForm.controls.triageCategoryId.setValue(preloadedTriageCategotyId);
 	}
 
 }

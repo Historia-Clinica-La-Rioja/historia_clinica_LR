@@ -1,6 +1,7 @@
 <div class="page" fxLayout="column">
 	<section>
 		<app-triage (triageData)="setTriageData($event)"
+					[lastTriage]="lastTriage$ | async"
 					[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
 		</app-triage>
 	</section>
