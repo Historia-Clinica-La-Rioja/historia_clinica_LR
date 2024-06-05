@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
-import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -108,7 +108,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private final GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
-	private final AnestheticStorage anestheticStorage;
+	private final AnestheticReportStorage anestheticReportStorage;
 
 	private final ValidateAdministrativeDischarge validateAdministrativeDischarge;
 
@@ -540,7 +540,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private AnestheticReportSummaryVo getLastAnestheticReportDraft(Integer internmentEpisodeId) {
 		log.debug(INPUT_PARAMETERS, internmentEpisodeId);
-		Long documentId = anestheticStorage.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId);
+		Long documentId = anestheticReportStorage.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId);
 		AnestheticReportSummaryVo result = new AnestheticReportSummaryVo(documentId, DocumentStatus.DRAFT);
 		log.debug(LOGGING_OUTPUT, result);
 		return result;
