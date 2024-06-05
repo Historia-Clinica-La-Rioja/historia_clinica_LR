@@ -245,7 +245,7 @@ export class HomeComponent implements OnInit {
 			...episode,
 			triage: {
 				emergencyCareEpisodeListTriageDto: episode.triage,
-				reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt)
+				...(episode.triage.reasons && { reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt) } )
 			},
 			waitingTime: minWaitingTime,
 			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined,
