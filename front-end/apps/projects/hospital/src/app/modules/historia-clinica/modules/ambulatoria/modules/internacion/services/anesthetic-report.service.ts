@@ -106,7 +106,7 @@ export class AnestheticReportService {
 	private anestheticHistorySubject: BehaviorSubject<AnestheticHistoryDto> = new BehaviorSubject<AnestheticHistoryDto>(null);
     anestheticHistory$ = this.anestheticHistorySubject.asObservable();
 
-	lastIntakeSubject: BehaviorSubject<TimeDto> = new BehaviorSubject<TimeDto>(null);
+	private lastIntakeSubject: BehaviorSubject<TimeDto> = new BehaviorSubject<TimeDto>(null);
     lastIntake$ = this.lastIntakeSubject.asObservable();
 
 	private intrasurgicalAnestheticProceduresSubject: BehaviorSubject<ProcedureDescriptionDto> = new BehaviorSubject<ProcedureDescriptionDto>(null);
@@ -126,6 +126,7 @@ export class AnestheticReportService {
     ) { }
 
 	loadAnestheticPreviousData(dialogData: any) {
+		this.resetDraftSubjects()
 		this.setAnestheticPreviousData(dialogData)
 	}
 
@@ -144,12 +145,12 @@ export class AnestheticReportService {
 				this.anestheticReportAnestheticHistoryService.setData(data.anestheticHistory);
 				this.anestheticHistorySubject.next(data.anestheticHistory);
 				this.medicacionesNuevaConsultaService.setData(data.medications);
-				this.anestheticReportPremedicationAndFoodIntakeService.setData(data.preMedications, dataPremedication);
 				this.lastIntakeSubject.next(data.foodIntake?.clockTime)
+				this.anestheticReportPremedicationAndFoodIntakeService.setData(data.preMedications, dataPremedication);
 				this.anestheticReportRecordService.setData(data.histories, data.procedureDescription);
 				this.anestheticPlanService.setData(data.anestheticPlans, dataPremedication);
 				this.analgesicTechniqueService.setData(data.analgesicTechniques);
-				this.anestheticTechniqueService.setData(data.anestheticTechniques);//probar con resultados
+				this.anestheticTechniqueService.setData(data.anestheticTechniques);
 				this.fluidAdministrationService.setData(data.fluidAdministrations);
 				this.anestheticReportAnestheticAgentService.setData(data.anestheticAgents, dataPremedication);
 				this.anestheticReportNonAnestheticDrugsService.setData(data.nonAnestheticDrugs, dataPremedication);
@@ -160,9 +161,15 @@ export class AnestheticReportService {
 				this.intrasurgicalAnestheticProceduresSubject.next(data.procedureDescription)
 				this.anestheticReportEndOfAnesthesiaStatusService.setDataEndOfAnesthesiaStatus(data.postAnesthesiaStatus);
 				this.postAnesthesiaSubject.next(data.postAnesthesiaStatus)
-
 			})
 		}
+	}
+
+	private resetDraftSubjects() {
+		this.anestheticHistorySubject.next(null);
+		this.lastIntakeSubject.next(null);
+		this.intrasurgicalAnestheticProceduresSubject.next(null);
+		this.postAnesthesiaSubject.next(null);
 	}
 
     createAnestheticReportServiceInstances() {
@@ -318,6 +325,7 @@ export class AnestheticReportService {
 
     setLastFoodIntakeTime(newLastFoodIntakeTimeSelected: TimeDto) {
         this.lastFoodIntakeTimeSelected = newLastFoodIntakeTimeSelected;
+		this.lastIntakeSubject.next(this.lastFoodIntakeTimeSelected)
     }
 
     private resetValues() {

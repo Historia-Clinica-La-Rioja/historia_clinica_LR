@@ -85,6 +85,6 @@ export class AnestheticReportPremedicationAndFoodIntakeComponent implements OnIn
 
     onTimeSelected(newTimeValue: TimeDto) {
         this.timeSelected.emit(newTimeValue);
-		this.service.lastIntakeSubject.next(newTimeValue)
+		this.service.setLastFoodIntakeTime(newTimeValue)
     }
 }

@@ -8,7 +8,6 @@ import { PREMEDICATION } from '@historia-clinica/constants/validation-constants'
 import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { TranslateService } from '@ngx-translate/core';
-import { TimePickerDto } from '@presentation/components/time-picker/time-picker.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
@@ -200,14 +199,6 @@ export class MedicationService {
 
 		this.dataEmitter.next(this.medicationList);
 		this.isEmptySource.next(this.isEmpty());
-	}
-
-	setLastIntake(lastFoodIntake?: TimeDto): TimePickerDto {
-		const timePickerDto: TimePickerDto = {
-			hours: lastFoodIntake.hours,
-			minutes: lastFoodIntake.minutes,
-		}
-		return timePickerDto
 	}
 }
 
