@@ -23,6 +23,7 @@
             <div th:replace="fragments/general.html :: medications(title='Medicación habitual')"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Premedicación e ingesta alimentaria', anestheticSubstances=${preMedications})"></div>
             <div th:replace="fragments/general.html :: foodInTake(message='Premedicación e ingesta alimentaria')"></div>
+            <div th:replace="fragments/general.html :: histories(message='Antecedentes')"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Plan anestésico', anestheticSubstances=${anestheticPlans})"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Administración de líquidos', anestheticSubstances=${fluidAdministrations})"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Agentes anestésicos', anestheticSubstances=${anestheticAgents})"></div>

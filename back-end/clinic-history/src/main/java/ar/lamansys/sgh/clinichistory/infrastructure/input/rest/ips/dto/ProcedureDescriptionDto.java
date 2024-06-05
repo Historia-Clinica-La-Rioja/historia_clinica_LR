@@ -60,4 +60,9 @@ public class ProcedureDescriptionDto {
 
     @Nullable
     private TimeDto surgeryEndTime;
+
+    public boolean hasHistoryStringValues() {
+        return (note != null  && !note.isEmpty()) || asa != null;
+    }
+
 }

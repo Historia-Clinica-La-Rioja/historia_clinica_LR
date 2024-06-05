@@ -1054,6 +1054,24 @@
         <span th:text="${#temporals.format(foodIntake.performedTime, 'HH:mm') + ' hs.'}"></span>
     </div>
 
+    <!-- Antecedentes (histories) -->
+    <div th:fragment="histories(message)" th:if="${not #lists.isEmpty(histories) || (procedureDescription != null && procedureDescription.hasHistoryStringValues())}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data">
+            <dl th:each="history,iter: ${histories}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + history.snomed.pt}"></p></dd>
+            </dl>
+            <dd th:if="${procedureDescription != null}">
+                <strong>Observaciones: </strong>
+                <p class="wide_wrapped_text" th:text="${procedureDescription.note} ? ${procedureDescription.note} : _"></p>
+            </dd>
+            <dd th:if="${procedureDescription != null}">
+                <strong>ASA: </strong>
+                <span th:text="${procedureDescription.asa} ? ${procedureDescription.asa} : _"></span>
+            </dd>
+        </div>
+    </div>
+
 
 </body>
 <footer th:fragment="footer">
