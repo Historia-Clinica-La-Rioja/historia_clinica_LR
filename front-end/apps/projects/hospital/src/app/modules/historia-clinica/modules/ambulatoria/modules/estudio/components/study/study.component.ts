@@ -83,7 +83,7 @@ export class StudyComponent implements OnInit {
 		return {
 			status: {
 				description: prescriptionStatus,
-				cssClass: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? 'red' : 'blue'
+				cssClass: this.setCssClass(prescriptionStatus)
 			},
 			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(', ') : capitalize(diagnosticReport.snomed.pt),
 			extra_info: diagnosticReport.healthCondition ? [{
@@ -315,6 +315,16 @@ export class StudyComponent implements OnInit {
 		return {
 			description: prescriptionStatus,
 			color: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? Color.RED : Color.BLUE,
+		}
+	}
+
+	private setCssClass(prescriptionStatus: string): string {
+		switch (prescriptionStatus) {
+			case STUDY_STATUS.REGISTERED.description:
+				return Color.RED;
+			case STUDY_STATUS.PARTIAL.description:
+				return Color.YELLOW;
+			default: return Color.BLUE;
 		}
 	}
 }
