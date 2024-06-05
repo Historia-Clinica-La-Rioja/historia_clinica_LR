@@ -55,4 +55,20 @@ public class PostAnesthesiaStatusDto {
 
     @Nullable
     private String note;
+
+    public boolean hasValues() {
+        return intentionalSensitivity != null
+                || cornealReflex != null
+                || obeyOrders != null
+                || talk != null
+                || respiratoryDepression != null
+                || circulatoryDepression != null
+                || vomiting != null
+                || curated != null
+                || trachealCannula != null
+                || pharyngealCannula != null
+                || internment != null
+                || internmentPlace != null
+                || (note != null && !note.isEmpty());
+    }
 }

@@ -1122,6 +1122,50 @@
         </div>
     </div>
 
+    <!-- Estado al finalizar la anestesia -->
+    <div th:fragment="postAnesthesiaStatus(message)" th:if="${postAnesthesiaStatus != null && postAnesthesiaStatus.hasValues()}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data">
+            <dd th:if="${postAnesthesiaStatus.intentionalSensitivity != null}">
+                <strong>Sensibilidad dolorosa: </strong><span th:text="${postAnesthesiaStatus.intentionalSensitivity} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.cornealReflex != null}">
+                <strong>Reflejo corneal: </strong><span th:text="${postAnesthesiaStatus.cornealReflex} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.obeyOrders != null}">
+                <strong>Obedece órdenes: </strong><span th:text="${postAnesthesiaStatus.obeyOrders} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.talk != null}">
+                <strong>Conversa: </strong><span th:text="${postAnesthesiaStatus.talk} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.respiratoryDepression != null}">
+                <strong>Depresión respiratoria: </strong><span th:text="${postAnesthesiaStatus.respiratoryDepression} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.circulatoryDepression != null}">
+                <strong>Depresión circulatoria: </strong><span th:text="${postAnesthesiaStatus.circulatoryDepression} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.vomiting != null}">
+                <strong>Vómitos: </strong><span th:text="${postAnesthesiaStatus.vomiting} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.curated != null}">
+                <strong>Curarizado: </strong><span th:text="${postAnesthesiaStatus.curated} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.trachealCannula != null}">
+                <strong>Cánula traqueal: </strong><span th:text="${postAnesthesiaStatus.trachealCannula} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.pharyngealCannula != null}">
+                <strong>Cánula faringea: </strong><span th:text="${postAnesthesiaStatus.pharyngealCannula} ? Si : No"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.internment != null}">
+                <strong>Se interna: </strong><span th:text="${postAnesthesiaStatus.internment} ? Si : No"></span>
+                <span th:text="${postAnesthesiaStatus.internmentPlace} ? ${' - ' + postAnesthesiaStatus.internmentPlace.getDescription()} : _"></span>
+            </dd>
+            <dd th:if="${postAnesthesiaStatus.note}">
+                <strong>Observaciones: </strong><p class="wide_wrapped_text" th:text="${postAnesthesiaStatus.note}"></p>
+            </dd>
+        </div>
+    </div>
+
 
 </body>
 <footer th:fragment="footer">
