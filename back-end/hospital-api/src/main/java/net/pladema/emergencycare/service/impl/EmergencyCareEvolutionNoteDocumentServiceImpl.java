@@ -120,8 +120,9 @@ public class EmergencyCareEvolutionNoteDocumentServiceImpl implements EmergencyC
 		if (initialDocumentId != null){
 			documentService.findById(initialDocumentId).ifPresent(initial -> {
 				evolutionNoteBo.setEditedOn(evolutionNoteBo.getPerformedDate());
-				evolutionNoteBo.setPerformedDate(initial.getCreatedOn());
-				evolutionNoteBo.setEditor(healthcareProfessionalService.findProfessionalByUserId(initial.getCreatedBy()));
+				evolutionNoteBo.setPerformedDate(localDateMapper.fromLocalDateTimeToZonedDateTime(initial.getCreatedOn()).toLocalDateTime());
+				evolutionNoteBo.setEditor(evolutionNoteBo.getProfessional());
+				evolutionNoteBo.setProfessional(healthcareProfessionalService.findProfessionalByUserId(initial.getCreatedBy()));
 			});
 		}
 	}
