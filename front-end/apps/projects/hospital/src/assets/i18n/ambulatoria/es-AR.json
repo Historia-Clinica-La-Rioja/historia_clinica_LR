@@ -607,6 +607,7 @@
                 "complete_study_dialog": {
                     "TITLE": "Completar estudio",
                     "COMPLETE_BUTTON": "Completar",
+					"COMPLETE_PARTIAL_BUTTON": "Completar parcialmente",
                     "OBSERVATIONS_LABEL": "Observaciones",
                     "OBSERVATIONS_PLACEHOLDER": "Descripción de los resultados",
                     "UPLOAD_FILES": "Adjuntar archivos"
@@ -684,6 +685,7 @@
                 "INTERNMENT_MEDICAL_STUDY": "Estudio solicitado durante internación",
                 "study_state": {
                     "PENDING": "Pendiente",
+                    "PARTIAL": "Completado Parcialmente",
                     "COMPLETED": "Completo"
                 },
                 "sections": {
@@ -696,6 +698,9 @@
                     "ADVICE": "Asesoramiento",
                     "EDUCATION": "Educación"
                 },
+				"select_template": {
+                    "TITLE": "Plantilla de resultados"
+				},
                 "dialog": {
                     "TITLE_DELETE_STUDY_CONFIRM": "¿Seguro que desea eliminar el estudio?"
                 }
@@ -1102,6 +1107,7 @@
 			"ERROR": "La referencia asociada al estudio está esperando ser aprobada",
 			"ERROR_TITLE": "No se pudo completar el estudio",
 			"COMPLETE_BUTTON": "Completar",
+			"COMPLETE_PARTIAL_BUTTON": "Completar parcialmente",
 			"UPLOAD_FILES": "Adjuntar archivos",
 			"OK_BUTTON": "Aceptar",
             "SPECIALTIES": "Especialidades",
