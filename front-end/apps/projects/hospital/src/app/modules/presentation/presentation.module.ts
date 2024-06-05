@@ -94,14 +94,15 @@ import { TypeaheadV2Component } from './components/typeahead-v2/typeahead-v2.com
 import { UserBadgeComponent } from './components/user-badge/user-badge.component';
 // dialogs
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogV2Component } from './dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
 import { DatePickerComponent } from './dialogs/date-picker/date-picker.component';
+import { DialogPresentationComponent } from './components/dialog-presentation/dialog-presentation.component';
 import { DiscardWarningComponent } from './dialogs/discard-warning/discard-warning.component';
 import { FileDownloadComponent } from './dialogs/view-pdf/file-download/file-download.component';
 import { FileDownloadCardComponent } from './dialogs/view-pdf/file-download-card/file-download-card.component';
 import { FileViewerPdfComponent } from './dialogs/view-pdf/file-viewer-pdf/file-viewer-pdf.component';
+import { OpenStorybookDialogComponent } from './components/open-storybook-dialog/open-storybook-dialog.component';
 import { ViewPdfComponent } from './dialogs/view-pdf/view-pdf.component';
-import { ConfirmDialogV2Component } from './dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
-import { DialogPresentationComponent } from './components/dialog-presentation/dialog-presentation.component';
 // directives
 import { CtrlTemplateDirective } from './directives/ctrl-template.directive';
 import { OnlyNumericCharactersDirective } from './directives/only-numeric-characters.directive';
@@ -209,14 +210,15 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		UserBadgeComponent,
 		// dialogs
 		ConfirmDialogComponent,
+		ConfirmDialogV2Component,
 		DatePickerComponent,
+		DialogPresentationComponent,
 		DiscardWarningComponent,
 		FileDownloadComponent,
 		FileDownloadCardComponent,
 		FileViewerPdfComponent,
+		OpenStorybookDialogComponent,
 		ViewPdfComponent,
-		ConfirmDialogV2Component,
-		DialogPresentationComponent,
 		// directives
 		CtrlTemplateDirective,
 		OnlyNumericCharactersDirective,
@@ -332,6 +334,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		UserBadgeComponent,
 		//dialogs
 		ConfirmDialogV2Component,
+		OpenStorybookDialogComponent,
 		// directives
 		CtrlTemplateDirective,
 		OnlyNumericCharactersDirective,
