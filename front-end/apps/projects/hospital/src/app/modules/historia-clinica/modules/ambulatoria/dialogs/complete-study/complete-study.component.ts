@@ -41,6 +41,11 @@ export class CompleteStudyComponent implements OnInit {
 		this.buttonService.submit();
 	}
 
+	completePartialStudy() {
+		this.buttonService.submitPartialSave();
+	}
+
+
 	private prescriptionItemDataBuilder(diagnosticReport): StudyData {
 		const prescriptionPt: string = diagnosticReport[0].diagnosticInformation ? diagnosticReport[0].diagnosticInformation.snomed.pt : diagnosticReport[0].snomed.pt;
 		const problemPt: string = diagnosticReport[0].diagnosticInformation ? diagnosticReport[0].diagnosticInformation.healthCondition.snomed.pt : diagnosticReport[0].healthCondition.snomed.pt;

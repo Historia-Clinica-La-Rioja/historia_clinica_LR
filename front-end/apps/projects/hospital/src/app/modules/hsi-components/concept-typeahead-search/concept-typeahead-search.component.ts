@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormControl } from "@angular/forms";
 import { Observable, of } from "rxjs";
 import { debounceTime, distinctUntilChanged, mergeMap, startWith } from "rxjs/operators";
 import { SnowstormService } from "@api-rest/services/snowstorm.service";
-import { SnomedECL, SnomedDto } from "@api-rest/api-model";
+import { SnomedECL, SnomedDto, SnomedSearchItemDto } from "@api-rest/api-model";
 import { PresentationModule } from '@presentation/presentation.module';
 
 @Component({
@@ -16,7 +16,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 })
 
 
-export class ConceptTypeaheadSearchComponent {
+export class ConceptTypeaheadSearchComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
 	@Input() ecl: SnomedECL;
@@ -28,6 +28,7 @@ export class ConceptTypeaheadSearchComponent {
 	@Input() buttonMessage = '';
 	@Input() showSearchIcon = false;
 	@Input() showOptionSelected = false;
+	@Input() preload: string = null;
 
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
@@ -48,6 +49,9 @@ export class ConceptTypeaheadSearchComponent {
 		)
 
 	}
+	ngOnInit() {
+		this.setPreload();
+	}
 
 	private filter(searchValue: string): Observable<SnomedDto[]> {
 		return this.searchConcepts(searchValue)
@@ -60,8 +64,8 @@ export class ConceptTypeaheadSearchComponent {
 			this.snowstormService.searchSNOMEDConcepts({ term: searchValue, ecl: this.ecl });
 	}
 
-	getDisplayName(option): string {
-		return option && option.pt.term ? option.pt.term : '';
+	getDisplayName(option: SnomedSearchItemDto): string {
+		return option && option.pt?.term ? option.pt?.term : '';
 	}
 
 	handleOptionSelected(event: any) {
@@ -87,6 +91,30 @@ export class ConceptTypeaheadSearchComponent {
 	clear() {
 		this.snomedConcept = null;
 		this.myControl.reset();
+		this.conceptSelected.emit(this.snomedConcept);
+	}
+
+	private setPreload() {
+		if (this.preload) {
+			let concept = {
+				conceptId: "",
+				id: "",
+				fsn: {
+					term: this.preload,
+					lang: ""
+				},
+				pt: {
+					term: this.preload,
+					lang: ""
+				}
+			}
+			this.snomedConcept = {
+				sctid: "-1",
+				pt: this.preload
+			};
+			this.myControl.setValue(concept);
+			this.conceptSelected.emit(this.snomedConcept);
+		}
 	}
 }
 

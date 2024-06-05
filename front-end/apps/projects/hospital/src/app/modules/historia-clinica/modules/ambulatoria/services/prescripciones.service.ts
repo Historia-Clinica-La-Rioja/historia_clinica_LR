@@ -134,6 +134,11 @@ export class PrescripcionesService {
 			));
 	}
 
+	partialStudyTemplateWhithForm(patientId: number, diagnosticReportId: number, reportObservations: AddDiagnosticReportObservationsCommandDto):
+		Observable<void> {
+		return this.serviceRequestService.addObservations(patientId, diagnosticReportId, reportObservations);
+	}
+
 	completeStudyByRdi(patientId: number, appointmentId: number): Observable<void> {
 		return this.serviceRequestService.completeByRdi(patientId, appointmentId);
 	}
@@ -232,6 +237,8 @@ export class PrescripcionesService {
 		switch (statusId) {
 			case this.STUDY_STATUS.REGISTERED.id:
 				return this.STUDY_STATUS.REGISTERED.description;
+			case this.STUDY_STATUS.PARTIAL.id:
+				return this.STUDY_STATUS.PARTIAL.description;
 			case this.STUDY_STATUS.FINAL.id:
 				return this.STUDY_STATUS.FINAL.description;
 			case this.STUDY_STATUS.FINAL_RDI.id:

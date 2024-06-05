@@ -7,8 +7,10 @@ export class LoincInput {
 	order: number;
 	controlType: string;
 	type: string;
-	options: {key: string, value: string}[];
+	options: { key: string, value: string }[];
 	param: any;
+	preload: string;
+	preloadUnitOfMeasureId: number;
 
 	constructor(options: {
 		observationValue?: LoincObservationValue;
@@ -18,18 +20,22 @@ export class LoincInput {
 		order?: number;
 		controlType?: string;
 		type?: string;
-		options?: {key: string, value: string}[];
+		options?: { key: string, value: string }[];
 		param?: any;
-	  } = {}) {
-	  this.observationValue = options.observationValue;
-	  this.key = options.key || '';
-	  this.label = options.label || '';
-	  this.required = !!options.required;
-	  this.order = options.order === undefined ? 1 : options.order;
-	  this.controlType = options.controlType || '';
-	  this.type = options.type || '';
-	  this.options = options.options || [];
-	  this.param = options.param;
+		preload?: string;
+		unitOfMeasureId?: number;
+	} = {}) {
+		this.observationValue = options.observationValue;
+		this.key = options.key || '';
+		this.label = options.label || '';
+		this.required = !!options.required;
+		this.order = options.order === undefined ? 1 : options.order;
+		this.controlType = options.controlType || '';
+		this.type = options.type || '';
+		this.options = options.options || [];
+		this.param = options.param;
+		this.preload = options.preload || '';
+	    this.preloadUnitOfMeasureId = options.unitOfMeasureId;
 	}
 }
 

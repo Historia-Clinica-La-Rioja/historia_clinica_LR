@@ -26,7 +26,7 @@
 							</button>
 						</ng-container>
 						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
-							<button mat-menu-item (click)="completeStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
+							<button mat-menu-item (click)="completeStudy(study.diagnosticInformation)" *ngIf="(study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id) ||( study.diagnosticInformation.statusId === STUDY_STATUS.PARTIAL.id)"
 							[disabled]="study.hasActiveAppointment">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.COMPLETE'"></span>
 							</button>
@@ -37,8 +37,8 @@
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
 							</button>
 						</ng-container>
-						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
-							<button mat-menu-item (click)="showStudyResults(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.FINAL.id">
+							<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'PERSONAL_DE_IMAGENES', 'PERSONAL_DE_LABORATORIO']">
+								<button mat-menu-item (click)="showStudyResults(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.FINAL.id || (study.diagnosticInformation.statusId === STUDY_STATUS.PARTIAL.id)">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.SHOW_RESULTS'"></span>
 							</button>
 						</ng-container>

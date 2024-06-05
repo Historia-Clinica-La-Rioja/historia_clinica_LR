@@ -1,5 +1,4 @@
 <h3>{{title | translate}}</h3>
-
 <app-concept-typeahead-search
 	 [ecl]="eclSelected"
      [appearanceOutline]="true"
@@ -7,5 +6,6 @@
 	 [showSearchIcon]="true"
 	 [showOptionSelected]="true"
 	 [clearButton]="true"
-	 (conceptSelected)="valueSelected.emit($event.pt)">
+	 [preload]="preload"
+	 (conceptSelected)="valueSelected.emit($event?.pt)">
 </app-concept-typeahead-search>

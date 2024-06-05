@@ -6,8 +6,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 	styleUrls: ['./loinc-input-dropdown.component.scss']
 })
 export class LoincInputDropdownComponent {
+	_preload: string;
 
-	@Input() options;
+	@Input() options: preloadKey;
 	@Input() title: string;
-	@Output() valueSelected: EventEmitter<any> = new EventEmitter<any>();
+	@Input() set preload(preload: string) {
+		this._preload = preload;
+		this.valueSelected.emit(preload);
+	};
+	@Output() valueSelected: EventEmitter<string> = new EventEmitter<string>();
+}
+export interface preloadKey {
+	key: number,
+	value: string
 }

@@ -21,8 +21,10 @@
 		</app-study-information>
 	</mat-dialog-content>
 </mat-dialog-content>
-
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="10px">
+	<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_PARTIAL_BUTTON'
+		[isLoading]="buttonService.isLoading$ | async" (clicked)="completePartialStudy()">
+	</app-button>
 	<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
 		[isLoading]="buttonService.isLoading$ | async" [disabled]="(buttonService.formDisabled$ | async)"
 		(clicked)="completeStudy()">

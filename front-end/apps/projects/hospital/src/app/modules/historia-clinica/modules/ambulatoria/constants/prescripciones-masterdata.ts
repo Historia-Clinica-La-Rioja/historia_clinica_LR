@@ -32,6 +32,10 @@ export const STUDY_STATUS = {
 		id: '2',
 		description: 'Completado'
 	},
+	PARTIAL: {
+		id: '255609007',
+		description: 'Completado Parcialmente'
+	},
 	ERROR: {
 		id: '89925002',
 		description: 'Eliminado'

@@ -6,7 +6,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 	styleUrls: ['./loinc-input-text-box.component.scss']
 })
 export class LoincInputTextBoxComponent {
-
+	_preload: string;
+	@Input() set preload(preload: string) {
+		this._preload = preload;
+		this.valueSelected.emit(preload);
+	};
 	@Input() title: string;
 	@Output() valueSelected: EventEmitter<string> = new EventEmitter<string>();
 }
