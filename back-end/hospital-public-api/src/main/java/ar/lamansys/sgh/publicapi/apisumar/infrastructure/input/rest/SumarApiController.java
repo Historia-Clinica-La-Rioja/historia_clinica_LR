@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.publicapi.apisumar.infrastructure.input.rest;
 
-import ar.lamansys.sgh.publicapi.apisumar.application.fetchconsultationsbyinstitutionid.FetchConsultationsByInstitutionId;
+import ar.lamansys.sgh.publicapi.apisumar.application.fetchconsultationsbysisacode.FetchConsultationsBySisaCode;
 import ar.lamansys.sgh.publicapi.apisumar.domain.exceptions.BadConsultationFormatException;
 import ar.lamansys.sgh.publicapi.apisumar.domain.exceptions.ConsultationNotFoundException;
 import ar.lamansys.sgh.publicapi.apisumar.domain.exceptions.ConsultationRequestException;
@@ -15,41 +15,39 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @Validated
 @Tag(name = "PublicApi Sumar", description = "Public Api Sumar Access")
-@RequestMapping("/public-api/institution/{institutionId}/sumar-consultation-details")
+@RequestMapping("/public-api/institution/{sisaCode}/sumar-consultation-details")
 public class SumarApiController {
 	private static final String OUTPUT = "Output -> {}";
 	private static final String INPUT = "Input data -> ";
 
-	private final FetchConsultationsByInstitutionId fetchConsultationsByInstitutionId;
+	private final FetchConsultationsBySisaCode fetchConsultationsBySisaCode;
 
 	private final ConsultationMapper consultationMapper;
 
 	public SumarApiController(
-			FetchConsultationsByInstitutionId fetchConsultationsByInstitutionId,
+			FetchConsultationsBySisaCode fetchConsultationsBySisaCode,
 			ConsultationMapper consultationMapper
 	) {
-		this.fetchConsultationsByInstitutionId = fetchConsultationsByInstitutionId;
+		this.fetchConsultationsBySisaCode = fetchConsultationsBySisaCode;
 		this.consultationMapper = consultationMapper;
 	}
 
 	@GetMapping
 	public ResponseEntity<List<ConsultationDetailDataDto>> consultationRequest(
-			@PathVariable("institutionId") Integer institutionId
+			@PathVariable("sisaCode") String sisaCode
 	) throws BadConsultationFormatException, ConsultationNotFoundException {
-		log.debug(INPUT + "institutionId {}", institutionId);
+		log.debug(INPUT + "sisaCode {}", sisaCode);
 
 		try {
-			var consultations = fetchConsultationsByInstitutionId.run(institutionId);
+			var consultations = fetchConsultationsBySisaCode.run(sisaCode);
 			List<ConsultationDetailDataDto> result = (consultations != null) ? consultationMapper.mapToConsultations(consultations) : null;
 
 			log.debug(OUTPUT, result);
