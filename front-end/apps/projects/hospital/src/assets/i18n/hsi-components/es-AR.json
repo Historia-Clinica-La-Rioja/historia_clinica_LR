@@ -4,5 +4,13 @@
 	},
 	"temporary-patient": {
 		"TITLE": "Paciente temporal"
+	},
+	"summary-multiple-sign": {
+		"state-signature": {
+			"OUTDATED": "Vencido",
+			"PENDING" : "Pendiente",
+			"REJECTED" : "Rechazado",
+			"SIGNED" : "Firmado"
+		}
 	}
 }
