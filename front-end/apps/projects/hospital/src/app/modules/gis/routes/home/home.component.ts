@@ -127,7 +127,6 @@ export class HomeComponent implements OnInit {
 			});
 	}
 
-	
 	stepToInstitutionAddress = () => {
 		this.coordinatesCurrentValue = null;
 		this.showMap = false;
