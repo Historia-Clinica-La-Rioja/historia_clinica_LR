@@ -191,4 +191,46 @@ databaseChangeLog:
               relativeToChangelogFile: true
               splitStatements: false
 
+    - changeSet:
+        id: delete-empty-rows-obstetric_event
+        comment: Borrado de registros sin información en obstetric_event
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                DELETE FROM document_obstetric_event doe 
+                WHERE doe.obstetric_event_id IN (
+                  SELECT id FROM obstetric_event oe
+                  WHERE oe.previous_pregnancies IS NULL
+                  AND oe.current_pregnancy_end_date IS NULL
+                  AND oe.gestational_age IS NULL
+                  AND oe.pregnancy_termination_type IS NULL
+                  AND NOT EXISTS (SELECT 1 from newborn n where n.obstetric_event_id = oe.id)
+                );
+                DELETE FROM obstetric_event oe 
+                WHERE oe.previous_pregnancies IS NULL
+                AND oe.current_pregnancy_end_date IS NULL
+                AND oe.gestational_age IS NULL
+                AND oe.pregnancy_termination_type IS NULL
+                AND NOT EXISTS (SELECT 1 from newborn n where n.obstetric_event_id = oe.id);
 
+    - changeSet:
+        id: delete-empty-rows-external_cause
+        comment: Borrado de registros sin información en external_cause
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                DELETE FROM document_external_cause dec 
+                WHERE dec.external_cause_id IN (
+                  SELECT id FROM external_cause ec
+                  WHERE ec.external_cause_type_id IS NULL
+                  AND ec.event_location IS NULL
+                  AND ec.snomed_id IS NULL
+                );
+                DELETE FROM external_cause ec 
+                WHERE ec.external_cause_type_id IS NULL
+                AND ec.event_location IS NULL
+                AND ec.snomed_id IS NULL;

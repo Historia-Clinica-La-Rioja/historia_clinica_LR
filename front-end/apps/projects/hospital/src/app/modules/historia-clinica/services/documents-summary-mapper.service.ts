@@ -336,7 +336,7 @@ ${medication.note}`
     }
 
     hasExternalCause(externalCause: ExternalCauseDto): boolean {
-        return !!(externalCause.eventLocation || externalCause.externalCauseType || externalCause.snomed);
+        return !!(externalCause && (externalCause.eventLocation || externalCause.externalCauseType || externalCause.snomed));
     }
 
     mapExternalCauseToDescriptionItemDataInfo(externalCause: ExternalCauseDto): DescriptionItemDataInfo[] {

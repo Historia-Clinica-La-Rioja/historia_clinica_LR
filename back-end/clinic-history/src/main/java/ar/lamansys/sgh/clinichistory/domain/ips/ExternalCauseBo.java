@@ -29,4 +29,10 @@ public class ExternalCauseBo {
 		setEventLocation(vo.getEventLocation() != null ? EEventLocation.map(vo.getEventLocation()) : null);
 	}
 
+	public boolean hasNotNullValues(){
+		return externalCauseType != null ||
+				eventLocation != null ||
+				snomed != null;
+	}
+
 }

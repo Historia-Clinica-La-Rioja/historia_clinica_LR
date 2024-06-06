@@ -37,6 +37,8 @@ public class LoadObstetricEvent {
 	public ObstetricEventBo run (Long documentId, Optional<ObstetricEventBo> obstetricEventBo){
 		LOG.debug("Input parameters -> documentId {}, obstetricEvent {}", documentId, obstetricEventBo);
 		obstetricEventBo.ifPresent(oe -> {
+			if (!oe.hasNotNullValues())
+				return;
 			ObstetricEvent entity = new ObstetricEvent();
 			entity.setGestationalAge(oe.getGestationalAge());
 			entity.setPregnancyTerminationType(oe.getPregnancyTerminationType() != null ? oe.getPregnancyTerminationType().getId() : null);
