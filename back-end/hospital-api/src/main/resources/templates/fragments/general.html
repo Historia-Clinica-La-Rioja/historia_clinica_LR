@@ -422,17 +422,12 @@
         </div>
     </div>
 
-    <!-- Procedimientos quirúrgicos -->
-    <div th:fragment="surgeryProcedures (message)">
-        <h3 th:text="${message}"></h3>
-        <div th:if="${#lists.isEmpty(surgeryProcedures)}">
-            <dl class="lista" >
-                <dd><p >Sin cambios registrados</p></dd>
-            </dl>
-        </div>
-        <div th:if="${not #lists.isEmpty(surgeryProcedures)}">
-            <dl th:each="procedure,iter: ${surgeryProcedures}">
-                <dd><p  th:text="${'- ' + procedure.snomed.pt}"></p></dd>
+    <!-- Cirugía propuesta -->
+    <div th:fragment="surgeryProcedures(message)" th:if="${surgeryProcedures != null && not #lists.isEmpty(surgeryProcedures)}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data" th:each="procedure,iter: ${surgeryProcedures}">
+                <dd><p class="wide_wrapped_text" th:text="${'- ' + procedure.snomed.pt}"></p></dd>
             </dl>
         </div>
     </div>
