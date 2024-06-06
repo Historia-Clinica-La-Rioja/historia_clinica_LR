@@ -65,4 +65,10 @@ public class RiskFactorDto implements Serializable {
                 || cardiovascularRisk != null
                 || hematocrit != null);
     }
+
+    public boolean hasAnestheticClinicalEvaluationValues() {
+        return systolicBloodPressure != null
+                || diastolicBloodPressure != null
+                || hematocrit != null;
+    }
 }
