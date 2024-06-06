@@ -143,21 +143,21 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 	@Override
     public EmergencyCareBo createAdministrative(EmergencyCareBo newEmergencyCare, Integer institutionId) {
 		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriageAdministrative, null);
-		triageService.addTriageReasons(emergencyCareBo.getTriage().getReasons(), emergencyCareBo.getTriage().getTriageId());
+		addTriageReasons(emergencyCareBo.getTriage());
 		return emergencyCareBo;
     }
 
     @Override
     public EmergencyCareBo createAdult(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
 		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriageAdult, riskFactors);
-		triageService.addTriageReasons(emergencyCareBo.getTriage().getReasons(), emergencyCareBo.getTriage().getTriageId());
+		addTriageReasons(emergencyCareBo.getTriage());
         return emergencyCareBo;
     }
 
     @Override
     public EmergencyCareBo createPediatric(EmergencyCareBo newEmergencyCare, Integer institutionId, RiskFactorBo riskFactors) {
 		EmergencyCareBo emergencyCareBo = createEpisode(newEmergencyCare, institutionId, this::saveTriagePediatric, riskFactors);
-		triageService.addTriageReasons(emergencyCareBo.getTriage().getReasons(), emergencyCareBo.getTriage().getTriageId());
+		addTriageReasons(emergencyCareBo.getTriage());
         return emergencyCareBo;
     }
 
@@ -401,6 +401,11 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         log.debug(OUTPUT, result);
         return result;
     }
+
+	private void addTriageReasons(TriageBo triageBo){
+		if (triageBo != null)
+			triageService.addTriageReasons(triageBo.getReasons(), triageBo.getTriageId());
+	}
 
     class SaveTriageArgs {
         final TriageBo triageBo;
