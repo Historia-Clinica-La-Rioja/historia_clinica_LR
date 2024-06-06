@@ -4,8 +4,11 @@ import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.GlobalCoordi
 
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.dto.GlobalCoordinatesDto;
 
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+
+import java.util.List;
 
 @Mapper
 public interface GlobalCoordinatesMapper {
@@ -15,5 +18,9 @@ public interface GlobalCoordinatesMapper {
 
 	@Named("toGlobalCoordinatesDto")
 	GlobalCoordinatesDto toGlobalCoordinatesDto(GlobalCoordinatesBo globalCoordinatesBo);
+
+	@IterableMapping(qualifiedByName = "toGlobalCoordinatesDto")
+	@Named("toGlobalCoordinatesDtoList")
+    List<GlobalCoordinatesDto> toGlobalCoordinatesDtoList(List<GlobalCoordinatesBo> resultBo);
 
 }
