@@ -74,19 +74,15 @@
 				</button>
 			</ng-container>
 		</div>
-		<ng-container *ngIf="(hasInternmentActionsToDo || enableReports) && !this.documentAnestheticPartDraft">
+		<ng-container *ngIf="hasInternmentActionsToDo || enableReports">
 			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions" (click)="openSurgicalReport()">
 				{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}
 			</button>
 			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
-				(click)="openAnestheticReport()">
-				{{'ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate}}
-			</button>
-		</ng-container>
-		<ng-container *ngIf="this.documentAnestheticPartDraft">
-			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
-				(click)="openAnestheticReportDraft()">
-				{{'ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT_DRAFT' | translate}}
+				(click)="this.documentAnestheticPartDraft ? openAnestheticReportDraft() : openAnestheticReport()">
+				{{ this.documentAnestheticPartDraft
+				? ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT_DRAFT' | translate)
+				: ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate) }}
 			</button>
 		</ng-container>
 
