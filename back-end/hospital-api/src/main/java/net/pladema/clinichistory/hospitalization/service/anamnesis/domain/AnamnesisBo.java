@@ -3,6 +3,7 @@ package net.pladema.clinichistory.hospitalization.service.anamnesis.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -86,6 +87,8 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
 	private Integer sectorId;
 
 	private Integer medicalCoverageId;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public Integer getPatientId() {

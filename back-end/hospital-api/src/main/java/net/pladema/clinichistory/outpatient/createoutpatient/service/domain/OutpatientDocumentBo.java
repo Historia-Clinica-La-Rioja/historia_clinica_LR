@@ -25,6 +25,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -76,6 +77,8 @@ public class OutpatientDocumentBo implements IDocumentBo {
 	private List<Integer> involvedHealthcareProfessionalIds;
     
 	private Integer medicalCoverageId;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public DocumentObservationsBo getNotes() {

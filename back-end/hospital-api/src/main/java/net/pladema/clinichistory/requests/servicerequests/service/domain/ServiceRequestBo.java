@@ -3,6 +3,7 @@ package net.pladema.clinichistory.requests.servicerequests.service.domain;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.util.Strings;
@@ -56,6 +57,8 @@ public class ServiceRequestBo implements IDocumentBo, IServiceRequestBo {
 	private Integer associatedSourceId;
 
 	private String observations;
+
+    private Map<String, Object> contextMap;
 
 	@Override
     public Integer getPatientId() {

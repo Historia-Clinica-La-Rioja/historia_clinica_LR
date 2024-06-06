@@ -20,6 +20,7 @@ import net.pladema.emergencycare.triage.repository.domain.TriageVo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -69,6 +70,8 @@ public class TriageBo implements IDocumentBo {
 
 	private Integer sectorId;
 	private List<ReasonBo> reasons;
+
+	private Map<String, Object> contextMap;
 
     public TriageBo(TriageVo triageVo) {
         this.triageId = triageVo.getId();

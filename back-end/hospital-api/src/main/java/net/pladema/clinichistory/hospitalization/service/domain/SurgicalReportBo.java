@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -96,6 +97,8 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 
 	@Nullable
 	private String modificationReason;
+
+	private Map<String, Object> contextMap;
 
 	@Override
 	public Integer getPatientId() {

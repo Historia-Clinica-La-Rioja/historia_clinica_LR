@@ -13,6 +13,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Setter
@@ -44,6 +45,8 @@ public class MedicalDischargeBo implements IDocumentBo {
 	private String otherDischargeDescription;
 
 	private String observation;
+
+    private Map<String, Object> contextMap;
 
     @Override
     public short getDocumentType() {

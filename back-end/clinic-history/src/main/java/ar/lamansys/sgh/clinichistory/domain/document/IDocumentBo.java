@@ -28,7 +28,6 @@ import ar.lamansys.sgh.shared.domain.general.AddressBo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -206,7 +205,7 @@ public interface IDocumentBo {
         documentVisitor.visit(this);
     }
 
-    default Map<String,Object> getContextMap() { return new HashMap<>(); }
+    Map<String,Object> getContextMap();
 
-    default void setContextMap(Map<String,Object> contextMap) {}
+    void setContextMap(Map<String,Object> contextMap);
 }
