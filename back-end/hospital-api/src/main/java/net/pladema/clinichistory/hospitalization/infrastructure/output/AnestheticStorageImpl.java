@@ -78,6 +78,7 @@ public class AnestheticStorageImpl implements AnestheticStorage {
                 .performedDate(document.getCreatedOn())
                 .anestheticChart(this.getAntestheticChart(document))
                 .confirmed(document.isConfirmed())
+                .initialDocumentId(document.getInitialDocumentId())
                 .build();
     }
 
