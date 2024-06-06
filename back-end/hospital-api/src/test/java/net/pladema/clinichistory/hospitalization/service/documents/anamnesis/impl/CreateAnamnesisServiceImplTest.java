@@ -28,6 +28,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.service.PersonService;
@@ -123,6 +124,9 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	@Mock
 	private AnestheticStorage anestheticStorage;
 
+	@Mock
+	private ValidateAdministrativeDischarge validateAdministrativeDischarge;
+
 	@BeforeEach
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -141,7 +145,8 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
 				getLicenseNumberByProfessional,
-				anestheticStorage);
+				anestheticStorage,
+				validateAdministrativeDischarge);
 		createAnamnesisServiceImpl =
 				new CreateAnamnesisServiceImpl(documentFactory, internmentEpisodeService, dateTimeProvider,
 						new AnamnesisValidator(featureFlagsService));

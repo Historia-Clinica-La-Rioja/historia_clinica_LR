@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
@@ -114,6 +115,8 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	private final GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
 	private final AnestheticStorage anestheticStorage;
+
+	private final ValidateAdministrativeDischarge validateAdministrativeDischarge;
 
 	@Override
     public void updateAnamnesisDocumentId(Integer internmentEpisodeId, Long anamnesisDocumentId) {
@@ -304,6 +307,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	@Override
 	public PatientDischargeBo saveAdministrativeDischarge(PatientDischargeBo patientDischargeBo) {
 		log.debug(INPUT_PARAMETERS, patientDischargeBo);
+
+		validateAdministrativeDischarge.run(patientDischargeBo.getInternmentEpisodeId());
+
 		return patientDischargeRepository.findById(patientDischargeBo.getInternmentEpisodeId()).map(pd -> {
 			PatientDischargeBo result = new PatientDischargeBo(updatePatientDischarge(pd, patientDischargeBo));
 			log.debug(LOGGING_OUTPUT, result);

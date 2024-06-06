@@ -15,8 +15,8 @@ import javax.validation.ConstraintViolationException;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
 import net.pladema.person.service.PersonService;
@@ -44,7 +44,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
@@ -53,15 +52,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.Snomed
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
-import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.ConstraintViolationException;
 import net.pladema.UnitRepository;
-import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -73,22 +64,10 @@ import net.pladema.clinichistory.hospitalization.service.evolutionnote.Evolution
 import net.pladema.clinichistory.hospitalization.service.evolutionnote.domain.EvolutionNoteBo;
 import net.pladema.clinichistory.hospitalization.service.impl.InternmentEpisodeServiceImpl;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
-import net.pladema.establishment.service.InstitutionService;
-import net.pladema.patient.service.PatientService;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.permissions.service.dto.RoleAssignment;
-import net.pladema.person.service.PersonService;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.sgx.session.infrastructure.input.service.FetchLoggedUserRolesExternalService;
-import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
-import net.pladema.staff.service.HealthcareProfessionalService;
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -160,6 +139,9 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
     @Mock
     private AnestheticStorage anestheticStorage;
 
+    @Mock
+    private ValidateAdministrativeDischarge validateAdministrativeDischarge;
+
 	@BeforeEach
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
@@ -178,7 +160,8 @@ class CreateEvolutionNoteServiceImplTest extends UnitRepository {
 				fetchEpisodeDocumentTypeById,
 				healthcareProfessionalService,
 				getLicenseNumberByProfessional,
-                anestheticStorage);
+                anestheticStorage,
+                validateAdministrativeDischarge);
         createEvolutionNoteService = new CreateEvolutionNoteServiceImpl(
                 documentFactory,
                 internmentEpisodeService,
