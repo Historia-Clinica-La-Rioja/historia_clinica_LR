@@ -13,6 +13,7 @@ import { PrescripcionesService } from '../../services/prescripciones.service';
 import { StudyInfo } from '../../services/study-results.service';
 import { ControlTemplatesService } from '../../services/control-templates.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
 	selector: 'app-complete-info',
@@ -32,7 +33,7 @@ export class CompleteInfoComponent implements OnInit {
 		private prescripcionesService: PrescripcionesService,
 		readonly buttonService: ButtonService,
 		readonly controlTemplatesService: ControlTemplatesService,
-
+		readonly snackBarService: SnackBarService
 	) { }
 
 	ngOnInit() {
@@ -87,8 +88,11 @@ export class CompleteInfoComponent implements OnInit {
 
 			})).subscribe(
 				() => {
+					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
+
 					this.closeModal(false, true);
 				}, _ => {
+					 this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
 					this.closeModal(false, false);
 				});
 	}
@@ -118,9 +122,11 @@ export class CompleteInfoComponent implements OnInit {
 
 			})).subscribe(
 				() => {
+					this.snackBarService.showSuccess('ambulatoria.complete-info.SUCCESS');
 					this.closeModal(false, true);
 				}, _ => {
-					this.closeModal(false, true);
+					this.snackBarService.showSuccess('ambulatoria.complete-info.ERROR');
+					this.closeModal(false, false);
 				});
 
 	}

@@ -181,10 +181,7 @@ export class StudyComponent implements OnInit {
 						});
 					}
 					this.updateCurrentReportsEventEmitter.emit();
-					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_SUCCESS');
 				}
-				else
-					this.snackBarService.showError('ambulatoria.paciente.ordenes_prescripciones.toast_messages.COMPLETE_STUDY_ERROR');
 			}
 		});
 	}
