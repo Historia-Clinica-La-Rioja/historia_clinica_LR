@@ -269,3 +269,11 @@ databaseChangeLog:
                     name: deleted_on
                     type: datetime
 
+    - changeSet:
+        id: insert-new-discharge-type-in-table-discharge_type
+        author: tomasbecher
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO discharge_type VALUES (14, 'Retiro sin alta médica (fuga)', false, true);
+
