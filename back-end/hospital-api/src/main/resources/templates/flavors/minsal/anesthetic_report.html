@@ -33,7 +33,7 @@
             <div th:replace="fragments/general.html :: intrasurgicalAnestheticProcedures(message='Procedimientos anestésicos intraquirúrgicos')"></div>
             <div th:replace="fragments/general.html :: anestheticSubstance(message='Profilaxis antibiótica', anestheticSubstances=${antibioticProphylaxis})"></div>
             <div th:replace="fragments/general.html :: postAnesthesiaStatus(message='Estado al finalizar la anestesia')"></div>
-            <div th:replace="fragments/general.html :: chart(message='Gráfico', chartData=${anestheticChart})"></div>
+            <div th:replace="fragments/general.html :: vitalSignsDuringAnesthesia(message='Signos vitales durante la anestesia', chartData=${anestheticChart})"></div>
         </div>
     </td></tr></tbody>
     <tfoot><tr><td>

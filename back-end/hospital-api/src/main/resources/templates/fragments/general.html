@@ -123,6 +123,14 @@
         .graph-container {
             width: 700px;
             height: 420px;
+            padding-top: 10px;
+        }
+
+        .divider {
+            background: rgb(180, 180, 180);
+            border: 0;
+            height: 1px;
+            margin: 8px 0;
         }
 	</style>
 </head>
@@ -1187,11 +1195,60 @@
         </div>
     </div>
 
-    <!-- Gráfico -->
-    <div th:fragment="chart(message, chartData)" th:if="${chartData != null}">
+    <!-- Signos vitales durante la anestesia -->
+    <div th:fragment="vitalSignsDuringAnesthesia(message, chartData)"
+         th:if="${(procedureDescription != null && procedureDescription.hasTimeValues())
+         || chartData != null
+         || (measuringPoints != null && not #lists.isEmpty(measuringPoints))}">
         <p class="section-title" th:text="${message}"></p>
-        <div class="graph-container">
-            <img th:src="${chartData}" alt=""/>
+        <div class="section-data" th:if="${procedureDescription != null && procedureDescription.hasTimeValues()}" th:with="pd=${procedureDescription}">
+            <dd th:if="${pd.anesthesiaStartLocalDate != null || pd.anesthesiaStartLocalTime != null}">
+                <strong>Comienzo anestesia: </strong>
+                <span th:text="${pd.anesthesiaStartLocalDate} ? ${#temporals.format(pd.anesthesiaStartLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.anesthesiaStartLocalDate != null && pd.anesthesiaStartLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.anesthesiaStartLocalTime} ? ${#temporals.format(pd.anesthesiaStartLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+            <dd th:if="${pd.anesthesiaEndLocalDate != null || pd.anesthesiaEndLocalTime != null}">
+                <strong>Fin anestesia: </strong>
+                <span th:text="${pd.anesthesiaEndLocalDate} ? ${#temporals.format(pd.anesthesiaEndLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.anesthesiaEndLocalDate != null && pd.anesthesiaEndLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.anesthesiaEndLocalTime} ? ${#temporals.format(pd.anesthesiaEndLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+            <dd th:if="${pd.surgeryStartLocalDate != null || pd.surgeryStartLocalTime != null}">
+                <strong>Comienzo cirugía: </strong>
+                <span th:text="${pd.surgeryStartLocalDate} ? ${#temporals.format(pd.surgeryStartLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.surgeryStartLocalDate != null && pd.surgeryStartLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.surgeryStartLocalTime} ? ${#temporals.format(pd.surgeryStartLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+            <dd th:if="${pd.surgeryEndLocalDate != null || pd.surgeryEndLocalTime != null}">
+                <strong>Fin cirugía: </strong>
+                <span th:text="${pd.surgeryEndLocalDate} ? ${#temporals.format(pd.surgeryEndLocalDate, 'dd/MM/yyyy')} : _"> </span>
+                <span th:text="${pd.surgeryEndLocalDate != null && pd.surgeryEndLocalTime != null} ? ' - ' : _"> </span>
+                <span th:text="${pd.surgeryEndLocalTime} ? ${#temporals.format(pd.surgeryEndLocalTime, 'HH:mm') + ' hs.'} : _"> </span>
+            </dd>
+        </div>
+        <div th:if="${chartData != null}">
+            <img class="graph-container" th:src="${chartData}" alt=""/>
+        </div>
+        <div th:if="${measuringPoints != null && not #lists.isEmpty(measuringPoints)}">
+            <div class="divider">
+                <hr />
+            </div>
+            <dl class="section-data" th:each="point,iter: ${measuringPoints}">
+                <dd>
+                    <strong><span th:text="'Medición ' + ${iter.index+1} +' (' + ${#temporals.format(point.localDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(point.localTime, 'HH:mm')} + ' hs.)'"></span></strong>
+                </dd>
+                <dd th:if="${point.hasPointValues()}">
+                    <strong>TA Max: </strong><span th:text="${point.bloodPressureMax} ? ${point.bloodPressureMax + 'mmHg'} : '-'"></span>
+                    <strong> TA Min: </strong><span th:text="${point.bloodPressureMin} ? ${point.bloodPressureMin + 'mmHg'} : '-'"></span>
+                    <strong> Pulso: </strong><span th:text="${point.bloodPulse} ? ${point.bloodPulse + 'lat/min'} : '-'"></span>
+                    <strong> Saturación: </strong><span th:text="${point.o2Saturation} ? ${point.o2Saturation + '%'} : '-'"></span>
+                    <strong> End Tidal CO2: </strong><span th:text="*{point.co2EndTidal}?: '-'"></span>
+                </dd>
+                <div class="divider">
+                    <hr />
+                </div>
+            </dl>
         </div>
     </div>
 

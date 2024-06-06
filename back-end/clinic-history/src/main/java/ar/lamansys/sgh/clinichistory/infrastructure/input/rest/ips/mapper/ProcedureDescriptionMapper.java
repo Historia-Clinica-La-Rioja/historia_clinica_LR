@@ -17,6 +17,14 @@ public interface ProcedureDescriptionMapper {
     FoodIntakeDto toFoodIntakeDto(ProcedureDescriptionBo procedureDescriptionBo);
 
     @Named("toProcedureDescriptionDto")
+    @Mapping(target = "anesthesiaStartLocalDate", source = "anesthesiaStartDate")
+    @Mapping(target = "anesthesiaStartLocalTime", source = "anesthesiaStartTime")
+    @Mapping(target = "anesthesiaEndLocalDate", source = "anesthesiaEndDate")
+    @Mapping(target = "anesthesiaEndLocalTime", source = "anesthesiaEndTime")
+    @Mapping(target = "surgeryStartLocalDate", source = "surgeryStartDate")
+    @Mapping(target = "surgeryStartLocalTime", source = "surgeryStartTime")
+    @Mapping(target = "surgeryEndLocalDate", source = "surgeryEndDate")
+    @Mapping(target = "surgeryEndLocalTime", source = "surgeryEndTime")
     ProcedureDescriptionDto toProcedureDescriptionDto(ProcedureDescriptionBo procedureDescriptionBo);
 
     @Named("toProcedureDescriptionBo")

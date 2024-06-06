@@ -5,12 +5,17 @@ import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import javax.annotation.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -61,6 +66,38 @@ public class ProcedureDescriptionDto {
     @Nullable
     private TimeDto surgeryEndTime;
 
+    @Nullable
+    @JsonIgnore
+    private LocalDate anesthesiaStartLocalDate;
+
+    @Nullable
+    @JsonIgnore
+    private LocalTime anesthesiaStartLocalTime;
+
+    @Nullable
+    @JsonIgnore
+    private LocalDate anesthesiaEndLocalDate;
+
+    @Nullable
+    @JsonIgnore
+    private LocalTime anesthesiaEndLocalTime;
+
+    @Nullable
+    @JsonIgnore
+    private LocalDate surgeryStartLocalDate;
+
+    @Nullable
+    @JsonIgnore
+    private LocalTime surgeryStartLocalTime;
+
+    @Nullable
+    @JsonIgnore
+    private LocalDate surgeryEndLocalDate;
+
+    @Nullable
+    @JsonIgnore
+    private LocalTime surgeryEndLocalTime;
+
     public boolean hasHistoryStringValues() {
         return (note != null  && !note.isEmpty()) || asa != null;
     }
@@ -69,6 +106,18 @@ public class ProcedureDescriptionDto {
         return venousAccess != null
                 || nasogastricTube != null
                 || urinaryCatheter != null;
+    }
+
+    public boolean hasTimeValues() {
+        return anesthesiaStartLocalDate != null
+                || anesthesiaStartLocalTime != null
+                || anesthesiaEndLocalDate != null
+                || anesthesiaEndLocalTime != null
+                ||surgeryStartLocalDate != null
+                || surgeryStartLocalTime != null
+                || surgeryEndLocalDate != null
+                || surgeryEndLocalTime != null;
+
     }
 
 }
