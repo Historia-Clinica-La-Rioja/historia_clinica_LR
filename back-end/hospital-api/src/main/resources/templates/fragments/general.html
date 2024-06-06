@@ -574,42 +574,54 @@
         </div>
     </div>
 
-    <!-- Datos Antropometricos -->
+    <!-- Factor sanguíneo -->
+    <div th:fragment="bloodType">
+        <strong>- Factor sanguíneo:</strong>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'A+')}">A+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'A−')}">A-</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'B+')}">B+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'B−')}">B-</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'AB+')}">AB+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, 'AB−')}">AB-</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, '0+')}">0+</span>
+            <span th:if="${anthropometricData.bloodType != null && #strings.equals(anthropometricData.bloodType.value, '0−')}">0-</span>
+            <span th:text="${anthropometricData.bloodType == null} ? 'Sin cambios registrados' : _"></span>
+    </div>
 
-    <div th:fragment="antropometicData" th:if="${anthropometricData != null && anthropometricData.hasValues}">
-        <p class="section-title">Datos antropométricos</p>
+    <!-- Altura -->
+    <div th:fragment="height">
+        <strong>- Talla:</strong>
+        <span th:text="${anthropometricData.height != null} ? ${anthropometricData.height.value + 'cm'} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- Peso -->
+    <div th:fragment="weight">
+        <strong>- Peso:</strong>
+        <span th:text="${anthropometricData.weight != null} ? ${anthropometricData.weight.value + 'Kg'} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- IMC -->
+    <div th:fragment="icm">
+        <strong>- IMC:</strong>
+        <span th:text="${anthropometricData.BMI != null} ? ${anthropometricData.BMI.value} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- Perímetro encefálico -->
+    <div th:fragment="headCircumference">
+        <strong>- Perímetro cefálico:</strong>
+        <span th:text="${anthropometricData.headCircumference != null} ? ${anthropometricData.headCircumference.value + 'cm'} : 'Sin cambios registrados'"></span>
+    </div>
+
+    <!-- Datos Antropométricos -->
+    <div th:fragment="antropometicData(message)" th:if="${anthropometricData != null && anthropometricData.hasValues}">
+        <p class="section-title" th:text="${message}"></p>
         <div class="section-data">
-            - Factor sanguíneo:
-            <strong>
-            <label th:if="${anthropometricData.bloodType != null}">
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'A+')}">A+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'A−')}">A-</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'B+')}">B+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'B−')}">B-</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'AB+')}">AB+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, 'AB−')}">AB-</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, '0+')}">0+</span>
-                <span th:if="${#strings.equals(anthropometricData.bloodType.value, '0−')}">0-</span>
-            </label>
-            </strong>
-            <strong><span  th:if="${anthropometricData.bloodType  == null}">Sin cambios registrados</span></strong><br/>
-
-            - Talla:
-            <strong><label  th:if="${anthropometricData.height  != null}" th:text="${anthropometricData.height.value + 'cm'}"></label></strong>
-            <strong><span  th:if="${anthropometricData.height  == null}">Sin cambios registrados</span></strong><br/>
-
-            - Peso:
-            <strong><label  th:if="${anthropometricData.weight  != null}" th:text="${anthropometricData.weight.value + 'Kg'}"></label></strong>
-            <strong><span  th:if="${anthropometricData.weight  == null}">Sin cambios registrados</span></strong><br/>
-
-            - IMC:
-            <strong><label  th:if="${anthropometricData.BMI  != null}" th:text="${anthropometricData.BMI.value}"></label></strong>
-            <strong><span  th:if="${anthropometricData.BMI  == null}">Sin cambios registrados</span></strong><br/>
-
-            - Perímetro cefálico:
-            <strong><label  th:if="${anthropometricData.headCircumference  != null}" th:text="${anthropometricData.headCircumference.value + 'cm'}"></label></strong>
-            <strong><span  th:if="${anthropometricData.headCircumference  == null}">Sin cambios registrados</span></strong><br/>
-        </div><br/>
+            <div th:replace=" :: bloodType"></div>
+            <div th:replace=" :: height"></div>
+            <div th:replace=" :: weight"></div>
+            <div th:replace=" :: icm"></div>
+            <div th:replace=" :: headCircumference"></div>
+        </div>
     </div>
 
     <!-- Diagnósticos dentales -->
@@ -1019,6 +1031,16 @@
      <div th:fragment="report-image">
         <div class="center-padding wide_wrapped_text">
             [(${evolutionNote})]
+        </div>
+    </div>
+
+    <!-- Datos Antropométricos parte anestésico -->
+    <div th:fragment="antropometicDataAnestheticReport(message)" th:if="${anthropometricData != null && anthropometricData.hasMinimalValues()}">
+        <p class="section-title" th:text="${message}"></p>
+        <div class="section-data">
+            <div th:replace=" :: bloodType"></div>
+            <div th:replace=" :: height"></div>
+            <div th:replace=" :: weight"></div>
         </div>
     </div>
 
