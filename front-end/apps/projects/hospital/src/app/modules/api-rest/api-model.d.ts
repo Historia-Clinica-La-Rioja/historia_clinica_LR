@@ -4466,6 +4466,10 @@ export interface SaveInstitutionGlobalCoordinatesDto {
     longitude: number;
 }
 
+export interface SaveInstitutionResponsibilityAreaDto {
+    responsibilityAreaPolygon: GlobalCoordinatesDto[];
+}
+
 export interface SavedBookingAppointmentDto {
     appointmentId: number;
     bookingPersonId: number;
