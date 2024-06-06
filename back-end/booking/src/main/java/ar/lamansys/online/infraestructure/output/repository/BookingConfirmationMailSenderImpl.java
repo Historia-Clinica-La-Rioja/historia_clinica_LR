@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
+
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -47,6 +49,8 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 	private final BookingClinicalSpecialtyJpaRepository bookingClinicalSpecialtyJpaRepository;
 
 	private final FeatureFlagsService featureFlagsService;
+
+	private final SharedSnomedPort sharedSnomedPort;
 
 	@Override
 	public void sendEmail(
@@ -96,7 +100,7 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 		model.put("date", getDate(bookingBo));
 		model.put("nameProfessional",getProfessionalName(bookingBo));
 		model.put("specialty",getSpecialty(bookingBo) + " - " + getPractice(bookingBo));
-		model.put("institution",getInstitution());
+		model.put("institution",getInstitution(bookingBo));
 		model.put("recomendation", getRecommendations(bookingBo));
 
 		return model;
@@ -110,11 +114,15 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 		return "Especialidad";
 	}
 
-	private String getInstitution() {
-		return "Sanatorio Tandil - Sarmiento 770";
+	private String getInstitution(BookingBo bookingBo) {
+		if (bookingBo.isOnlineBooking())
+			return "Sanatorio Tandil - Sarmiento 770";
+		return bookingAppointmentStorage.getInstitutionAddress(bookingBo.bookingAppointment.getDiaryId());
 	}
 
 	private String getPractice(BookingBo bookingBo) {
+		if (!bookingBo.isOnlineBooking() && bookingBo.getBookingAppointment().getSnomedId() != null)
+			return sharedSnomedPort.getSnomed(bookingBo.bookingAppointment.getSnomedId()).getPt();
 		var a = bookingPracticeRepository.
 				findBySnomedId(bookingBo.bookingAppointment.getSnomedId());
 		if(a.isPresent())
@@ -123,6 +131,9 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 	}
 
 	private String getRecommendations(BookingBo bookingBo) {
+		if (!bookingBo.isOnlineBooking())
+			return RECOMMENDATION;
+
 		var a =
 				repository.findBySnomedIdAndSpecialtyId(
 					bookingBo.bookingAppointment.getSnomedId(),

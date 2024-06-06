@@ -6,7 +6,7 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import {getError, hasError, VALIDATIONS } from '@core/utils/form.utils';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { forkJoin, Observable } from 'rxjs';

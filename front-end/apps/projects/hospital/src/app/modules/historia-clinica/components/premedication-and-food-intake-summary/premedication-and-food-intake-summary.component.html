@@ -1,0 +1,14 @@
+<div data-id="premedication-and-food-intake-section">
+    <app-iconed-titled-section icon="assignment"
+        title="internaciones.anesthesic-report.premedication-and-food-intake.TITLE"></app-iconed-titled-section>
+    <div fxLayout="column" fxLayoutGap="8px" class="section-description">
+        <app-title-description-list *ngIf="premedicationList?.length"
+            title="internaciones.anesthesic-report.premedication-and-food-intake.REGISTERED_PREMEDICATION"
+            [descriptionData]="premedicationList"></app-title-description-list>
+        <div *ngIf="lastFoodIntake">
+            <app-title-description-list
+                title="internaciones.anesthesic-report.premedication-and-food-intake.LAST_FOOD_INTAKE"></app-title-description-list>
+            <div><span>{{ lastFoodIntake | dateFormat : 'time' }}</span></div>
+        </div>
+    </div>
+</div>

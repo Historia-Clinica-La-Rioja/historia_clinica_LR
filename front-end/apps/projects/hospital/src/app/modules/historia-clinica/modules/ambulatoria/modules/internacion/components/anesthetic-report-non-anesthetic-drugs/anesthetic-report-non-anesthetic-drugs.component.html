@@ -1,0 +1,13 @@
+<div fxLayout="column" fxLayoutGap="2vh">
+    <app-titled-content-card *ngIf="!service.isEmpty()"
+        title="{{ 'internaciones.anesthesic-report.non-anesthetic-drugs.REGISTERED_NON_ANESTHETIC_DRUGS' }}">
+        <app-medication-background-list [service]="service"></app-medication-background-list>
+    </app-titled-content-card>
+
+    <div>
+        <button id="add-agent" mat-button color="primary" class="non-anesthetic-drug-button"
+            (click)="addNonAnestheticDrug()">
+            {{ 'internaciones.anesthesic-report.non-anesthetic-drugs.ADD_NON_ANESTHETIC_DRUG' | translate }}
+        </button>
+    </div>
+</div>

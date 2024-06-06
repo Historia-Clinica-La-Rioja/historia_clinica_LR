@@ -9,10 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryProtectedAppointmentsSearch;
+import net.pladema.medicalconsultation.diary.controller.dto.DiaryAvailableAppointmentsDto;
+import net.pladema.medicalconsultation.diary.domain.DiaryAppointmentsSearchBo;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
-import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableProtectedAppointmentsBo;
-import net.pladema.medicalconsultation.diary.controller.dto.DiaryAvailableProtectedAppointmentsDto;
+import net.pladema.medicalconsultation.diary.service.domain.DiaryAvailableAppointmentsBo;
 
 import net.pladema.medicalconsultation.diary.service.DiaryAvailableAppointmentsService;
 
@@ -46,17 +46,28 @@ public class DiaryAvailableAppointmentsSearchController {
 	private final DiaryMapper diaryMapper;
 	private final DiaryAvailableAppointmentsService diaryAvailableAppointmentsService;
 	private final ObjectMapper jackson;
-	private final static Integer NO_INSTITUTION = -1;
-
 
 	@GetMapping("/protected")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
-	public ResponseEntity<List<DiaryAvailableProtectedAppointmentsDto>> getAvailableProtectedAppointments(@PathVariable(name = "institutionId") Integer institutionId,
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA') ||" +
+			" hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	public ResponseEntity<List<DiaryAvailableAppointmentsDto>> getAvailableProtectedAppointments(@PathVariable(name = "institutionId") Integer institutionId,
 																										  @RequestParam String diaryProtectedAppointmentsSearch) {
 		log.debug("Get all available protected appointments by filters {}, ", diaryProtectedAppointmentsSearch);
-		DiaryProtectedAppointmentsSearch filter = parseFilter(diaryProtectedAppointmentsSearch, institutionId);
-		List<DiaryAvailableProtectedAppointmentsBo> diaryAvailableProtectedAppointmentsBoList = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(filter, institutionId);
-		List<DiaryAvailableProtectedAppointmentsDto> result = diaryAvailableProtectedAppointmentsBoList.stream().map(diaryMapper::toDiaryAvailableProtectedAppointmentsDto).collect(Collectors.toList());
+		DiaryAppointmentsSearchBo filter = parseFilter(diaryProtectedAppointmentsSearch);
+		List<DiaryAvailableAppointmentsBo> diaryAvailableAppointmentsBoList = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(filter, institutionId);
+		List<DiaryAvailableAppointmentsDto> result = diaryAvailableAppointmentsBoList.stream().map(diaryMapper::toDiaryAvailableAppointmentsDto).collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/third-party-booking")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public ResponseEntity<List<DiaryAvailableAppointmentsDto>> getAvailableAppointmentsToThirdPartyBooking(@PathVariable(name = "institutionId") Integer institutionId,
+																										   @RequestParam String searchFilter) {
+		log.debug("Get all available appointments for third party booking by filter {}, ", searchFilter);
+		DiaryAppointmentsSearchBo filter = parseFilter(searchFilter);
+		List<DiaryAvailableAppointmentsBo> availableAppointments = diaryAvailableAppointmentsService.getAvailableAppointmentsToThirdPartyBooking(filter, institutionId);
+		List<DiaryAvailableAppointmentsDto> result = diaryMapper.toListDiaryAvailableAppointmentsDto(availableAppointments);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -73,8 +84,8 @@ public class DiaryAvailableAppointmentsSearchController {
 				careLineId, departmentId, institutionDestinationId, clinicalSpecialtyIds, practiceSnomedId);
 		LocalDate from = LocalDate.now();
 		LocalDate to = from.plusDays(60);
-		Integer result = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(new DiaryProtectedAppointmentsSearch(
-				careLineId, clinicalSpecialtyIds, departmentId, institutionDestinationId, from, to, false, EAppointmentModality.NO_MODALITY, practiceSnomedId), institutionId).size();
+		Integer result = diaryAvailableAppointmentsService.getAvailableProtectedAppointmentsBySearchCriteria(new DiaryAppointmentsSearchBo(
+				careLineId, clinicalSpecialtyIds, departmentId, institutionDestinationId, from, to, false, EAppointmentModality.NO_MODALITY, practiceSnomedId, true), institutionId).size();
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok(result);
 	}
@@ -112,12 +123,10 @@ public class DiaryAvailableAppointmentsSearchController {
 		return ResponseEntity.ok(result);
 	}
 
-	private DiaryProtectedAppointmentsSearch parseFilter(String diaryProtectedAppointmentsSearch, Integer institutionId) {
-		DiaryProtectedAppointmentsSearch searchFilter = null;
+	private DiaryAppointmentsSearchBo parseFilter(String diaryProtectedAppointmentsSearch) {
+		DiaryAppointmentsSearchBo searchFilter = null;
 		try {
-			searchFilter = jackson.readValue(diaryProtectedAppointmentsSearch, DiaryProtectedAppointmentsSearch.class);
-			if (institutionId == NO_INSTITUTION)
-				searchFilter.setRegulationProtected(true);
+			searchFilter = jackson.readValue(diaryProtectedAppointmentsSearch, DiaryAppointmentsSearchBo.class);
 		} catch (IOException e) {
 			log.error(String.format("Error mapping filter: %s", diaryProtectedAppointmentsSearch), e);
 		}

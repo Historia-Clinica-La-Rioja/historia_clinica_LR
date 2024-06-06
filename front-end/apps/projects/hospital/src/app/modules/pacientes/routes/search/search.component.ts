@@ -3,14 +3,13 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { hasError, VALIDATIONS } from '@core/utils/form.utils';
 import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Moment } from 'moment';
 import { ERole } from '@api-rest/api-model';
 import { MasterDataDto } from '@api-rest/api-model';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { DateFormat, momentFormat, momentParseDate, momentParseDateTime, newMoment } from '@core/utils/moment.utils';
+import { DateFormat, dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { PersonService } from '@api-rest/services/person.service';
 import { finalize } from 'rxjs/operators';
@@ -24,6 +23,8 @@ import { NavigationService } from '@pacientes/services/navigation.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PermissionsService } from '@core/services/permissions.service';
+import { differenceInYears } from 'date-fns';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
@@ -41,7 +42,7 @@ export class SearchComponent implements OnInit {
 	readonly PERSON_MAX_LENGHT = PERSON;
 	patientData: PatientSearchDto[] = [];
 	minDate = MIN_DATE;
-	today: Moment = newMoment();
+	today: Date = newDate();
 	genders: MasterDataDto[] = [];
 	identificationTypes: MasterDataDto[] = [];
 	public formSearchSubmitted = false;
@@ -78,6 +79,7 @@ export class SearchComponent implements OnInit {
 		public navigationService: NavigationService,
 		private readonly patientNameService: PatientNameService,
 		private permissionsService: PermissionsService,
+		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId + '/';
@@ -86,9 +88,9 @@ export class SearchComponent implements OnInit {
 				this.genders = genders;
 			});
 		this.personMasterDataService.getIdentificationTypes()
-		.subscribe(identificationTypes => {
-			this.identificationTypes = identificationTypes;
-		});
+			.subscribe(identificationTypes => {
+				this.identificationTypes = identificationTypes;
+			});
 	}
 
 	ngOnInit(): void {
@@ -149,45 +151,45 @@ export class SearchComponent implements OnInit {
 				age: calculateAge(String(patient.person.birthDate)),
 				gender: this.genderOptionsViewTable[patient.person.genderId],
 				birthDate: (patient.person.birthDate === undefined) ? '' :
-					momentFormat(momentParseDateTime(String(patient.person.birthDate)), DateFormat.VIEW_DATE),
+					this.dateFormatPipe.transform(patient.person.birthDate, 'date'),
 				identificationNumber: patient.person.identificationNumber,
 				identificationTypeId: this.identifyTypeViewPatientDetail[patient.person.identificationTypeId]
 			}
 		});
 
 		function calculateAge(birthDate: string): number {
-			const today: Moment = newMoment();
-			const birth: Moment = momentParseDateTime(birthDate);
-
-			return today.diff(birth, 'years');
+			const today = newDate();
+			const birth = dateISOParseDate(birthDate)
+			const result = differenceInYears(today, birth)
+			return result;
 		}
 	}
 
 	private buildFormSearchWithValidations(params) {
 		this.formSearch = this.formBuilder.group({
 			identificationNumber: [params.identificationNumber, this.identificationTypeId == IDENTIFICATION_TYPE_IDS.NO_POSEE ? [] :
-				[Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+				[Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [params.identificationTypeId ? Number(params.identificationTypeId) : null, Validators.required],
 			firstName: [params.firstName, Validators.required],
 			middleNames: [params.middleNames],
 			lastName: [params.lastName, Validators.required],
 			otherLastNames: [params.otherLastNames],
 			genderId: [Number(params.genderId) ? Number(params.genderId) : undefined, Validators.required],
-			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined, Validators.required]
+			birthDate: [params.birthDate ? (params.birthDate) : undefined, Validators.required]
 		});
 		this.lockFormField(params);
 	}
 
 	private buildFormSearchWithoutValidations(params) {
 		this.formSearch = this.formBuilder.group({
-			identificationNumber: [params.identificationNumber != 0 ? params.identificationNumber : '', [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+			identificationNumber: [params.identificationNumber != 0 ? params.identificationNumber : '', [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 			identificationTypeId: [Number(params.identificationTypeId)],
 			firstName: [params.firstName],
 			middleNames: [params.middleNames],
 			lastName: [params.lastName],
 			otherLastNames: [params.otherLastNames],
 			genderId: [Number(params.genderId) ? Number(params.genderId) : undefined],
-			birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined]
+			birthDate: [params.birthDate ? dateISOParseDate(params.birthDate) : undefined]
 		});
 		this.lockFormField(params);
 		this.isLoading = false;
@@ -259,7 +261,7 @@ export class SearchComponent implements OnInit {
 					columnDef: 'birthDate',
 					header: 'F. Nac',
 					text: (row) => (row.person.birthDate === undefined) ? '' :
-						momentFormat(momentParseDateTime(String(row.person.birthDate)), DateFormat.VIEW_DATE)
+						this.dateFormatPipe.transform(row.person.birthDate, 'date')
 				},
 				{
 					columnDef: 'numberDni',
@@ -319,7 +321,7 @@ export class SearchComponent implements OnInit {
 				person.comments = params.comments;
 				person.identityVerificationStatus = params.identityVerificationStatus;
 				this.router.navigate([this.routePrefix + ROUTE_NEW_TEMPORARY], {
-				queryParams: person
+					queryParams: person
 				});
 			})
 

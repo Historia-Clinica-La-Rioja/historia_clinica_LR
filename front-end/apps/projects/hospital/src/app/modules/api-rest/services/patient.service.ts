@@ -8,11 +8,9 @@ import {
 	PatientSearchDto,
 	ReducedPatientDto,
 	PersonPhotoDto,
-	PatientPhotoDto, LimitedPatientSearchDto
+	PatientPhotoDto, LimitedPatientSearchDto, PatientGenderAgeDto
 } from '@api-rest/api-model';
-import { DateFormat, momentFormat } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
-import {ContextService} from "@core/services/context.service";
+import { ContextService } from "@core/services/context.service";
 
 @Injectable({
 	providedIn: 'root'
@@ -20,7 +18,7 @@ import {ContextService} from "@core/services/context.service";
 export class PatientService {
 
 	constructor(private http: HttpClient,
-				private readonly contextService: ContextService) {
+		private readonly contextService: ContextService) {
 	}
 
 	getPatientMinimal(params): Observable<number[]> {
@@ -31,7 +29,7 @@ export class PatientService {
 	addPatient(datosPersonales: APatientDto): Observable<number> {
 		const url = `${environment.apiBase}/patient/institution/${this.contextService.institutionId}`;
 		return this.http.post<number>(url, datosPersonales);
-	  }
+	}
 
 
 	getPatient(): Observable<any> {
@@ -64,20 +62,8 @@ export class PatientService {
 	}
 
 	searchPatientOptionalFilters(person: PersonInformationRequest): Observable<LimitedPatientSearchDto> {
-
-		this.mapToRequestParams(person);
 		const url = `${environment.apiBase}/patient/optionalfilter`;
 		return this.http.get<LimitedPatientSearchDto>(url, { params: { searchFilterStr: JSON.stringify(person) } });
-	}
-
-	private mapToRequestParams(person: PersonInformationRequest) {
-		if (person.birthDate != null) {
-		person.birthDate = momentFormat(person.birthDate as Moment, DateFormat.API_DATE);
-		}
-
-		for (const property of Object.keys(person) ) {
-			person[property] = person[property] === '' ? null : person[property];
-		}
 	}
 
 	getBasicPersonalData(patientId: number): Observable<ReducedPatientDto> {
@@ -102,6 +88,10 @@ export class PatientService {
 		return this.http.post<boolean>(url, personPhoto);
 	}
 
+	getPatientGender(patientId: number): Observable<PatientGenderAgeDto> {
+		const url = `${environment.apiBase}/patient/${patientId}/gender-age`;
+		return this.http.get<PatientGenderAgeDto>(url);
+	}
 }
 
 export class PersonInformationRequest {
@@ -112,5 +102,5 @@ export class PersonInformationRequest {
 	genderId?: number;
 	identificationNumber?: string;
 	identificationTypeId?: number;
-	birthDate?: string | Moment;
+	birthDate?: string;
 }

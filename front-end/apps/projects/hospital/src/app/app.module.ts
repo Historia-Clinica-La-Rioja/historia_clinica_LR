@@ -26,6 +26,7 @@ import { OAuthModule } from "angular-oauth2-oidc";
 import { StompService } from './stomp.service';
 import { stompServiceFactory } from './stomp-factory';
 import { ApiOverlayDelayComponent } from './api-overlay-delay/api-overlay-delay.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { MatIconModule } from '@angular/material/icon';
 
 registerLocaleData(localeEsAr, localeEsArExtras);
@@ -64,6 +65,7 @@ registerLocaleData(localeEsAr, localeEsArExtras);
 		httpInterceptorProviders,
 		pwaInstallProviders,
 		DatePipe,
+		DateFormatPipe,
 		TitleCasePipe,
 		{ provide: LOCALE_ID, useValue: DEFAULT_LANG }, // Esto lo usa el calendario
 		{ provide: StompService, useFactory: stompServiceFactory }
@@ -99,7 +101,10 @@ export function createTranslateLoader(http: HttpClient): TranslateLoader {
 			{ prefix: './assets/i18n/telemedicina/', suffix },
 			{ prefix: './assets/i18n/digital-signature/', suffix},
 			{ prefix: './assets/i18n/access-management/', suffix},
-			{ prefix: './assets/i18n/hsi-components/', suffix}
+			{ prefix: './assets/i18n/hsi-components/', suffix},
+			{ prefix: './assets/i18n/call-center/', suffix},
+			{ prefix: './assets/i18n/firmas/', suffix},
+			{ prefix: './assets/i18n/firma-conjunta/', suffix},
 		]
 	);
 }

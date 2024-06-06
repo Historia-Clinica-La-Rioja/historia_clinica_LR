@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 public enum EInstitutionReportPlace {
 
-	POLICE_STATION(1, "POLICE_STATION"),
-	POLICE_STATION_WOMEN_OFFICE(2, "POLICE_STATION_WOMEN_OFFICE"),
-	PUBLIC_PROSECUTORS_OFFICE(3, "PUBLIC_PROSECUTORS_OFFICE"),
-	FAMILY_COURT(4, "FAMILY_COURT"),
-	PEACE_COURT(5, "PEACE_COURT"),
-	DIGITAL_SECURITY_REPORT(6, "DIGITAL_SECURITY_REPORT"),
-	OTHER(7, "OTHER");
+	POLICE_STATION(1, "Comisaría"),
+	POLICE_STATION_WOMEN_OFFICE(2, "Comisaría/Oficina de la Mujer"),
+	PUBLIC_PROSECUTORS_OFFICE(3, "Fiscalía"),
+	FAMILY_COURT(4, "Juzgado de la Familia"),
+	PEACE_COURT(5, "Juzgado de Paz"),
+	DIGITAL_SECURITY_REPORT(6, "Denuncia medio digital de seguridad pasa a fiscalía"),
+	OTHER(7, "Otro");
 
 	private Short id;
 

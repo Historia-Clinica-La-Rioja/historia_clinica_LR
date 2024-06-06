@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { map } from 'rxjs/operators';
-import { SnomedDto, SnomedResponseDto, SnomedTemplateDto } from '@api-rest/api-model';
+import { SharedSnomedDto, SnomedDto, SnomedECL, SnomedResponseDto, SnomedTemplateDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 
 export const SNOMED_RESULTS_LIMIT = '30';
@@ -47,9 +47,19 @@ export class SnowstormService {
 		const url = `${environment.apiBase}/snowstorm/search-templates`;
 		return this.http.get<SnomedTemplateDto[]>(url, { params });
 	}
+
+	areConceptsECLRelated(snomedECL: SnomedECL, snomedConcepts: SnomedConceptRequestParams[]): Observable<SharedSnomedDto[]> {
+		const url = `${environment.apiBase}/snowstorm/concept-related-ecl`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('snomedConcepts', JSON.stringify(snomedConcepts));
+		queryParams = queryParams.append('ecl', snomedECL);
+		return this.http.get<SharedSnomedDto[]>(url, {
+			params: queryParams
+		});
+	}
 }
 
-export interface ConceptRequestParams {
-	term: string;
-	ecl?: string;
+export interface SnomedConceptRequestParams {
+	pt: string;
+	sctid: string;
 }

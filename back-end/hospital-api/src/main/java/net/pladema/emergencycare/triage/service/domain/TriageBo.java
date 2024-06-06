@@ -59,6 +59,14 @@ public class TriageBo implements IDocumentBo {
 
     private List<Integer> riskFactorIds;
 
+	private Integer medicalCoverageId;
+
+	private Integer shockRoomId;
+
+	private Integer roomId;
+
+	private Integer sectorId;
+
     public TriageBo(TriageVo triageVo) {
         this.triageId = triageVo.getId();
         this.emergencyCareEpisodeId = triageVo.getEmergencyCareEpisodeId();

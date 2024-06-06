@@ -1,7 +1,7 @@
 <app-new-consultation-expansion-section id="diagnosticos"
 	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 	[title]="'ambulatoria.paciente.surgical-report.procedures.TITLE' | translate" icon="library_add" [collapsed]="false"
-	[hideBorder]="false">
+	[hideBorder]="false" [isEmpty]="isEmpty()">
 
 	<form [formGroup]="dateForm">
 		<div fxLayout="row" fxLayoutGap="20px">
@@ -50,7 +50,7 @@
 	<div fxLayout="column" fxLayoutGap="20px">
 		<div>
 			<button mat-button type="button" id="add-procedure-button" color="primary" (click)="addProcedure()">
-				+ {{ 'ambulatoria.paciente.surgical-report.procedures.ADD' | translate }}
+				+ {{ 'ambulatoria.paciente.surgical-report.procedures.ADD_PROCEDURE' | translate }}
 			</button>
 		</div>
 		<app-titled-content-card *ngIf="!procedureService.isEmpty() || surgicalReport.procedures.length"
@@ -73,6 +73,28 @@
 		<mat-label [translate]="'ambulatoria.paciente.surgical-report.procedures.SURGERY_DESCRIPTION'"></mat-label>
 		<textarea matInput [(ngModel)]="description" (ngModelChange)="changeDescription($event)"></textarea>
 	</mat-form-field>
+
+	<div fxLayout="column" fxLayoutGap="20px">
+		<div>
+			<button mat-button type="button" id="add-procedure-button" color="primary" (click)="addAnesthesia()">
+				+ {{ 'ambulatoria.paciente.surgical-report.procedures.ADD_ANESTHESIA' | translate }}
+			</button>
+		</div>
+		<app-titled-content-card *ngIf="!anesthesiaService.isEmpty() || surgicalReport.anesthesia.length"
+			[title]="'ambulatoria.paciente.surgical-report.procedures.ADDED_ANESTHESIAS'">
+			<div *ngFor="let anesthesia of surgicalReport.anesthesia; index as i; last as isLast">
+				<div fxLayout="row" fxLayoutAlign="space-between center">
+					<div fxLayout="column">
+						<span>{{ anesthesia.snomed.pt }}</span>
+					</div>
+					<button type="button" mat-icon-button color="warn" (click)="deleteAnesthesia(i)">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</div>
+				<mat-divider class="separation" inset *ngIf="!isLast"></mat-divider>
+			</div>
+		</app-titled-content-card>
+	</div>
 
 	<div>
 		<button id="clear_identification_type" type="button" mat-button color="primary" (click)="addDiagnosis()">

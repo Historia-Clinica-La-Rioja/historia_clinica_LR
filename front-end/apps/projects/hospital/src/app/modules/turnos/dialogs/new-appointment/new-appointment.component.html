@@ -1,7 +1,10 @@
 <div mat-dialog-title fxLayout="column" fxLayoutGap="10px">
 	<div fxLayout="row" fxLayoutAlign="space-between start">
-		<p class="mat-h2"
-			[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></p>
+		<p class="mat-h2" *ngIf="data.expiredAppointment else newAppointment">{{'turnos.new-appointment.expired-appointment.TITLE' | translate}}</p>
+		<ng-template #newAppointment>
+			<p class="mat-h2"
+				[translate]="data.overturnMode ? 'turnos.overturns.CREATE' : 'turnos.new-appointment.NEW_APPOINTMENT'"></p>
+		</ng-template>
 		<button id="close-dialog" mat-icon-button [mat-dialog-close]="-1" (click)="cancelBtnActions()" type="button" class="icon-close">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -22,6 +25,7 @@
 			<app-modality-label *ngIf="viewModalityLabel$ | async " [modality]="modalitySelected"></app-modality-label>
 		</div>
 	</div>
+	<app-box-message class="mat-h3" *ngIf="data.expiredAppointment" [boxMessageInfo]="boxMessageInfo"></app-box-message>
 </div>
 
 <div mat-dialog-content class="dialog-content">
@@ -180,7 +184,7 @@
 			</mat-card>
 		</mat-step>
 
-		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.STEP_3' | translate }}"
+		<mat-step [stepControl]="associateReferenceForm" label="{{'turnos.new-appointment.REFERENCE_STEP_3' | translate }}"
 			*ngIf="data.protectedAppointment">
 			<mat-card>
 				<form [formGroup]="associateReferenceForm">
@@ -209,6 +213,10 @@
 				</form>
 			</mat-card>
 		</mat-step>
+
+		<mat-step *ngIf="data.expiredAppointment" [stepControl]="expiredAppointmentForm" label="{{'turnos.new-appointment.MOTIVE_STEP_3' | translate }}">
+			<app-expired-appointment-motive-form [expiredAppointmentForm]="expiredAppointmentForm"></app-expired-appointment-motive-form>
+		</mat-step>
 	</mat-stepper>
 </div>
 
@@ -233,11 +241,11 @@
 		[disabled]="isSubmitButtonDisabled">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
-	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || (data.protectedAppointment && stepper.selectedIndex === indexStep.INFO) " [disabled]="stepper.selectedIndex === indexStep.INFO && !appointmentInfoForm.valid" mat-raised-button type="button" color="primary">
+	<button id="next" (click)="stepper.next()" *ngIf="(!data.protectedAppointment && !data.expiredAppointment && stepper.selectedIndex !== indexStep.SEARCH && stepper.selectedIndex !== indexStep.INFO) || ((data.protectedAppointment || data.expiredAppointment) && (stepper.selectedIndex === indexStep.INFO || stepper.selectedIndex === indexStep.MODALITY)) " [disabled]="stepper.selectedIndex === indexStep.INFO && !appointmentInfoForm.valid" mat-raised-button type="button" color="primary">
 		<span [translate]="'buttons.CONTINUE'"></span>
 	</button>
 	<button id="confirm-from-step-3" (click)="submit(true)" mat-raised-button type="button" color="primary"
-		*ngIf="data.protectedAppointment && stepper.selectedIndex === indexStep.PROTECTED" [disabled]="disableConfirmButtonStep3()">
+		*ngIf="((data.protectedAppointment || data.expiredAppointment) && stepper.selectedIndex === indexStep.PROTECTED_MOTIVE)" [disabled]="disableConfirmButtonStep3()">
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </mat-dialog-actions>

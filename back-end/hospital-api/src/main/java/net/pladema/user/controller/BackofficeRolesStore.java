@@ -48,6 +48,10 @@ public class BackofficeRolesStore implements BackofficeStore<Role, Short> {
 
 			}
 		}
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_ADMINISTRADOR_DATOS_PERSONALES)) {
+			content.removeIf(role -> role.getId().equals(ERole.ADMINISTRADOR_DE_DATOS_PERSONALES.getId()));
+		}
+
 		return new PageImpl<>(content, pageable, content.size());
 	}
 

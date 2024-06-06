@@ -6,15 +6,14 @@ import { finalize, map, takeUntil } from 'rxjs/operators';
 import { CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { WeekViewHourSegment } from 'calendar-utils';
 import { addDays, addMinutes, endOfWeek } from 'date-fns';
-import { Moment } from 'moment';
 
-import { buildFullDate, currentWeek, DateFormat, dateToMoment, momentFormat } from '@core/utils/moment.utils';
+import { buildFullDateFromDate, currentDateWeek } from '@core/utils/moment.utils';
 import { REMOVEATTENTION } from '@core/constants/validation-constants';
 import { DiaryOpeningHoursDto, OccupationDto, TimeRangeDto } from '@api-rest/api-model';
 
 import { MEDICAL_ATTENTION } from '../constants/descriptions';
 import { NewAttentionComponent } from '../dialogs/new-attention/new-attention.component';
-import { getDayHoursIntervalsByMinuteValue } from '@core/utils/date.utils';
+import { getDayHoursIntervalsByMinuteValue, toHourMinuteSecond } from '@core/utils/date.utils';
 
 function floorToNearest(amount: number, precision: number) {
 	return Math.floor(amount / precision) * precision;
@@ -34,15 +33,16 @@ const colors: any = {
 		secondary: '#D6FBD8',
 	},
 };
-
 export class AgendaHorarioService {
 
 	private diaryOpeningHours: CalendarEvent[] = [];
 	private occupiedOpeningHours: CalendarEvent[] = [];
 
-	private mappedCurrentWeek: Moment[] = [];
+	private daysOfCurrentWeek: Date[] = [];
 	private hasSelectedLinesOfCare = false;
 	private editMode = false;
+	private appointmentDuration: number;
+
 	constructor(
 		private readonly dialog: MatDialog,
 		private readonly cdr: ChangeDetectorRef,
@@ -51,12 +51,10 @@ export class AgendaHorarioService {
 		private readonly snackBarService: SnackBarService,
 		private readonly diaryType: EDiaryType
 	) {
-		currentWeek().forEach(day => {
-			this.mappedCurrentWeek[day.day()] = day;
+		currentDateWeek().forEach(day => {
+			this.daysOfCurrentWeek[day.getDay()] = day;
 		});
 	}
-
-	private appointmentDuration: number;
 
 	getMedicalAttentionTypeText(medicalAttentionTypeId: number): string {
 		const medicalAttentionType = medicalAttentionTypeId === 2 ? 'Espontánea' : 'Programada';
@@ -117,7 +115,7 @@ export class AgendaHorarioService {
 				},
 				maxHeight: 'fit-content',
 				autoFocus: false,
-				height: '95%'
+				height: 'max-content'
 			});
 		dialogRef.afterClosed().subscribe(dialogInfo => {
 			if (!dialogInfo) {
@@ -246,8 +244,8 @@ export class AgendaHorarioService {
 			return {
 				openingHours: {
 					dayWeekId: event.start.getDay(),
-					from: momentFormat(dateToMoment(event.start), DateFormat.HOUR_MINUTE_SECONDS),
-					to: momentFormat(dateToMoment(event.end), DateFormat.HOUR_MINUTE_SECONDS),
+					from: toHourMinuteSecond(event.start),
+					to: toHourMinuteSecond(event.end),
 				},
 				externalAppointmentsAllowed: event.meta.availableForBooking,
 				medicalAttentionTypeId: event.meta.medicalAttentionType.id,
@@ -307,7 +305,7 @@ export class AgendaHorarioService {
 	}
 
 	private getFullDate(dayNumber: number, time: string): Date {
-		return buildFullDate(time, this.mappedCurrentWeek[dayNumber]).toDate();
+		return buildFullDateFromDate(time, this.daysOfCurrentWeek[dayNumber]);
 	}
 
 	private limitNewEventsEnd(dragToSelectEvent: CalendarEvent, mouseMoveEvent: MouseEvent, segment: WeekViewHourSegment, segmentElement: HTMLElement): void {

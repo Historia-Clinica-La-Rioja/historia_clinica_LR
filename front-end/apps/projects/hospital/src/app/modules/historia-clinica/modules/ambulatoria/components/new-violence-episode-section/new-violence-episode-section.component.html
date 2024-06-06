@@ -10,7 +10,7 @@
 		</mat-form-field>
 
 		<div class="violence-situation">
-			<app-concept-typeahead-search [ecl]="ecl"
+			<app-concept-typeahead-search [ecl]="eclType"
 				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_2'"
 				(conceptSelected)="addViolenceSituation($event)">
 			</app-concept-typeahead-search>
@@ -23,7 +23,7 @@
 		</div>
 
 		<div>
-			<app-concept-typeahead-search [ecl]="ecl"
+			<app-concept-typeahead-search [ecl]="eclModality"
 				[placeholder]="'ambulatoria.paciente.violence-situations.dialog.new-violence-episode.questions.QUESTION_3'"
 				(conceptSelected)="addViolenceModality($event)">
 			</app-concept-typeahead-search>

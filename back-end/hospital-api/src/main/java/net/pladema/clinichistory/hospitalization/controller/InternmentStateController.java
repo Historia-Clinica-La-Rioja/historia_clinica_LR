@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.controller;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
 import java.util.List;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
@@ -68,6 +69,8 @@ public class InternmentStateController {
 
     private final InternmentStateMapper internmentStateMapper;
 
+    private final HealthConditionMapper healthConditionMapper;
+
     @InternmentValid
     @GetMapping("/{internmentEpisodeId}/general")
     public ResponseEntity<InternmentGeneralStateDto> internmentGeneralState(
@@ -99,7 +102,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         log.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
         List<DiagnosisBo> diagnosis = fetchHospitalizationHealthConditionState.getAlternativeDiagnosisGeneralState(internmentEpisodeId);
-        List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
+        List<DiagnosisDto> result = healthConditionMapper.toListDiagnosisDto(diagnosis);
         log.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
@@ -111,7 +114,7 @@ public class InternmentStateController {
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) {
         log.debug(LOGGING_INSTITUTION_AND_INTERNMENT_EPISODE, institutionId, internmentEpisodeId);
         List<DiagnosisBo> diagnosis = fetchHospitalizationHealthConditionState.getActiveAlternativeDiagnosesGeneralState(internmentEpisodeId);
-        List<DiagnosisDto> result = internmentStateMapper.toListDiagnosisDto(diagnosis);
+        List<DiagnosisDto> result = healthConditionMapper.toListDiagnosisDto(diagnosis);
         log.debug(LOGGING_OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }

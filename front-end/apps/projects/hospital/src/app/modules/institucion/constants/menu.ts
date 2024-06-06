@@ -31,7 +31,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.PERSONAL_DE_LEGALES,
 			ERole.ABORDAJE_VIOLENCIAS
 		],
-		featureFlag: AppFeature.HABILITAR_HISTORIA_CLINICA_AMBULATORIA
+		featureFlag: [AppFeature.HABILITAR_HISTORIA_CLINICA_AMBULATORIA]
 	},
 	{
 		text: 'app.menu.INTERNACION',
@@ -61,7 +61,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ADMINISTRATIVO_RED_DE_IMAGENES,
 			ERole.ABORDAJE_VIOLENCIAS
 		],
-		featureFlag: AppFeature.HABILITAR_GESTION_DE_TURNOS
+		featureFlag: [AppFeature.HABILITAR_GESTION_DE_TURNOS]
 	},
 	{
 		text: 'app.menu.CAMAS',
@@ -88,7 +88,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ADMINISTRATIVO_RED_DE_IMAGENES,
 			ERole.ESPECIALISTA_EN_ODONTOLOGIA,
 		],
-		featureFlag: AppFeature.HABILITAR_MODULO_GUARDIA
+		featureFlag: [AppFeature.HABILITAR_MODULO_GUARDIA]
 	},
 	{
 		text: 'app.menu.REPORTES',
@@ -104,7 +104,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.ENFERMERO,
 			ERole.ESPECIALISTA_EN_ODONTOLOGIA
 		],
-		featureFlag: AppFeature.HABILITAR_REPORTES
+		featureFlag: [AppFeature.HABILITAR_REPORTES]
 	},
 	{
 		text: 'app.menu.REPORTES_PROVINCIALES',
@@ -122,7 +122,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'listadoTrabajo',
 		url: './imagenes/lista-trabajos',
 		permissions: [ERole.TECNICO, ERole.INFORMADOR],
-		featureFlag: AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES
+		featureFlag: [AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES]
 	},
 	{
 		text: 'app.menu.TELEMEDICINE',
@@ -130,21 +130,22 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'telemedicina',
 		url: './telesalud',
 		permissions: [ERole.VIRTUAL_CONSULTATION_PROFESSIONAL, ERole.VIRTUAL_CONSULTATION_RESPONSIBLE],
-		featureFlag: AppFeature.HABILITAR_TELEMEDICINA
+		featureFlag: [AppFeature.HABILITAR_TELEMEDICINA]
 	},
 	{
-		text: 'app.menu.DIGITAL_SIGNATURE',
+		text: 'app.menu.SIGNATURES',
 		icon: 'border_color',
-		id: 'digitalSignature',
-		url: './firma-digital/documentos',
+		id: 'documentsSignature',
+		url: './firma-documentos',
 		permissions: [
 			ERole.ESPECIALISTA_MEDICO,
 			ERole.PROFESIONAL_DE_SALUD,
 			ERole.ENFERMERO_ADULTO_MAYOR,
 			ERole.ENFERMERO,
-			ERole.ESPECIALISTA_EN_ODONTOLOGIA
+			ERole.ESPECIALISTA_EN_ODONTOLOGIA,
+			ERole.ABORDAJE_VIOLENCIAS,
 		],
-		featureFlag: AppFeature.HABILITAR_FIRMA_DIGITAL
+		featureFlag: [AppFeature.HABILITAR_FIRMA_CONJUNTA, AppFeature.HABILITAR_FIRMA_DIGITAL]
 	},
 	{
 		text: 'app.menu.RUTAS_PROVINCIALES',
@@ -176,5 +177,5 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 			
 		],
 		
-	},
+	}
 ];

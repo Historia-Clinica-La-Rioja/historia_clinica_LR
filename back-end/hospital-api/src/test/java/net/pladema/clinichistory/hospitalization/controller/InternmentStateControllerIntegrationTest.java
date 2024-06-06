@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.Fetch
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationHealthConditionState;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationImmunizationState;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationMedicationState;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
 import net.pladema.IntegrationController;
 import net.pladema.clinichistory.hospitalization.controller.mapper.InternmentStateMapper;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
@@ -44,6 +45,9 @@ class InternmentStateControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private InternmentStateMapper internmentStateMapper;
+
+	@MockBean
+	private HealthConditionMapper healthConditionMapper;
 
 	@MockBean
 	private InternmentEpisodeRepository internmentEpisodeRepository;

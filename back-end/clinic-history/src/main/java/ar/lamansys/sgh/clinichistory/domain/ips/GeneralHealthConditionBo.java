@@ -3,7 +3,10 @@ package ar.lamansys.sgh.clinichistory.domain.ips;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +25,9 @@ import static java.util.Objects.nonNull;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Slf4j
 @ToString
 public class GeneralHealthConditionBo implements Serializable {
@@ -43,6 +49,8 @@ public class GeneralHealthConditionBo implements Serializable {
 	private List<DiagnosisBo> preoperativeDiagnosis = new ArrayList<>();
 
 	private List<DiagnosisBo> postoperativeDiagnosis = new ArrayList<>();
+
+    private List<HealthConditionBo> otherHistories = new ArrayList<>();
 
 	public GeneralHealthConditionBo(List<HealthConditionVo> healthConditionVos) {
         setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
@@ -79,6 +87,11 @@ public class GeneralHealthConditionBo implements Serializable {
 				healthConditionVo -> healthConditionVo.isOfType(ProblemTypeEnum.POSTOPERATIVE_DIAGNOSIS),
 				this::mapDiagnosis
 		));
+        setOtherHistories(buildGeneralState(
+                healthConditionVos,
+                HealthConditionVo::isOtherHistory,
+                this::mapToHealthConditionBo
+        ));;
     }
 	private <T extends HealthConditionBo> List<T> buildGeneralState(List<HealthConditionVo> data,
                                                                     Predicate<? super HealthConditionVo> filterFunction,

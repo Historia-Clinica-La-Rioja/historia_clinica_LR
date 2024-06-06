@@ -8,7 +8,8 @@
 				"CREATE_AGENDA": "Crear agenda",
 				"PROFESSONAL": "Profesionales",
 				"NEW_AGENDA": "Nueva agenda",
-				"SEARCH_APPOINTMENTS": "Buscar turnos"
+				"SEARCH_APPOINTMENTS": "Buscar turnos",
+				"REGISTER_UNSATISFIED_DEMAND": "Registrar como demanda insatisfecha"
 			},
 			"PROFESSIONAL_SEARCH": "Profesional",
 			"SPECIALTY_SEARCH": "Especialidad",
@@ -41,7 +42,13 @@
 			"NOT_FOUND_APPOINTMENTS": "¿No encuentra turnos disponibles para el paciente?",
 			"SEARCH_IN_CARE_NETWORK": "Buscar turnos en red de atención",
 			"messages": {
-				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda"
+				"NO_SPECIFIED_DATE": "Por favor ingrese una fecha para realizar la búsqueda",
+				"NO_APPOINTMENT-AVAILABLE": "No se encontraron turnos disponibles",
+				"SUGGESTION" : "Intente refinando los criterios de búsqueda o en caso contrario puede: ",
+				"TITLE_REGISTER_UNSATISFIED_DEMAND": "¿Registrar como demanda insatisfecha?",
+				"MESSAGE_REGISTER_UNSATISFIED_DEMAND": "Si confirma la demanda insatisfecha quedará registrado que no hay turnos disponibles bajo los criterios buscados, a fin de evaluar y mejorar la oferta de turnos en el futuro.",
+				"SUCCESS_REGISTER_UNSATISFIED_DEMAND": "Búsqueda de turnos registrada como demanda insatisfecha",
+				"NO_ACCEPT_FACE_TO_FACE_APPOINTMMENTS" : "La franja horaria seleccionada no admite turnos presenciales"
 			}
 		},
 		"MODALITY_ATTENTION":"Modalidad de atención",
@@ -72,7 +79,6 @@
 			"OVERTURNS": "Atiende {{overturnCount}} sobreturnos",
 			"NO_OVERTURN": "No atiende sobreturnos",
 			"PROTECTED_APPOINTMENT_REGULATION": "Regulación",
-			"PROTECTED_APPOINTMENT_WEB": "Web",
 			"NO_PROTECTED_APPOINTMENT": "No atiende turnos protegidos"
 		},
 		"agenda-setup": {
@@ -122,7 +128,7 @@
 				"ATTENDS_FACE_TO_FACE": "Atiende presencial",
 				"TAKE_PROTECTED_ONLINE": "Atiende turnos protegidos por linea de cuidado",
 				"SERVES_SHIFTS_PROTECTED_BY_REGULATION": "Atiende turnos protegidos por regulación",
-				"ATTEND_ONLINE": "Atiende turnos online",
+				"ONLINE_APPOINTMENTS": "Turnos online (centro de llamado y autogestión)",
 				"ATTEND_SHIFTS_PROTECTED_BY_LINES_OF_CARE": "Atiende turnos protegidos por líneas de cuidado",
 				"ERROR": "No se puede destildar esta opción porque hay turno asignados de este tipo",
 				"ATTENDS_BY_TELECONSULTATION_OF_PATIENT": "Atiende teleconsultas a pacientes",
@@ -156,7 +162,8 @@
 			"STEP_0": "Modalidad",
 			"STEP_1": "Búsqueda de paciente",
 			"STEP_2": "Información paciente",
-			"STEP_3": "Referencia",
+			"REFERENCE_STEP_3": "Referencia",
+			"MOTIVE_STEP_3": "Motivo",
 			"ASSOCIATED_REFERENCE": "Referencia asociada",
 			"TEMPORARY_PATIENT": "Paciente temporal",
 			"PATIENT_ID": "ID del paciente",
@@ -174,6 +181,7 @@
 				"DOCUMENT_TYPE": "Tipo de documento",
 				"DOCUMENT_NUMBER": "Nº de documento"
 			},
+			"EDIT": "Editar turno recurrente",
 			"messages": {
 				"ERROR": "Paciente no encontrado",
 				"SUCCESS": "Paciente encontrado",
@@ -189,12 +197,26 @@
 					"ASSIGN": "Si, asignar turno",
 					"NOT-ASSIGN": "No, cancelar"
 				}
+			},
+			"expired-appointment": {
+				"TITLE": "Registrar turno vencido",
+				"SUBTITLE": "Al registrar un turno como “Turno vencido”, el mismo se marcará en estado “Atendido” y permitirá el registro posterior de la consulta por parte del profesional médico.",
+				"MESSAGE_SUCCESS": "Se registro el turno vencido correctamente.",
+				"MESSAGE_ERROR": "No se permiten nuevos sobreturnos"
 			}
 		},
 		"cancel": {
 			"TITLE": "Cancelar turno",
 			"CONFIRM": "¿Desea cancelar el turno seleccionado?",
-			"SUCCESS": "El turno fue cancelado exitosamente"
+			"SUCCESS": "El turno fue cancelado exitosamente",
+			"PLURAL_SUCCESS": "Los turnos fueron cancelados exitosamente",
+			"CANCEL": "Eliminar turno recurrente",
+			"confirm-cancel": {
+				"TITLE": "Dejar de repetir eliminará los turnos posteriores",
+				"CONTENT": "Si este turno pertenece a una recurrencia se eliminarán los turnos posteriores pertenecientes a la misma. ¿Está seguro que desea dejar de repetir el turno?",
+				"CANCEL": "Cancelar",
+				"CONFIRM": "Confirmar"
+			}
 		},
 		"overturns": {
 			"CREATE": "Crear sobreturno",
@@ -222,6 +244,24 @@
 			"MONTH":"Mes",
 			"YEAR":"Año",
 			"HOUR":"Hora",
+			"RECURRING_TYPE": "Recurrencia",
+			"RECURRING_ERROR": "No hay disponibilidad de turnos en alguno de estos dias",
+			"recurring-dialog": {
+				"TITLE": "Personalizar repeticiones",
+				"REPEAT_EVERY": "Repetir cada",
+				"REPEATS_ON": "Se repite el",
+				"WEEKS": "semana/s",
+				"END_DATE": "Fecha de finalización",
+				"WITHOUT_END_DATE": "Sin fecha de finalización",
+				"AFTER_FEW_WEEKS": "Finaliza en",
+				"CANCEL": "Cancelar",
+				"CONFIRM": "Confirmar"
+			},
+			"cancel-dialog": {
+				"CURRENT_TURN": "Este turno",
+				"CURRENT_AND_NEXTS_TURNS": "Este turno y los posteriores",
+				"ALL_TURNS": "Todos los turnos"
+			},
 			"date": {
 				"EDIT_DATE_TIME": "Editar fecha y hora del turno",
 				"UPDATE_SUCCESS": "La fecha y hora del turno se actualizaron exitosamente"
@@ -309,6 +349,12 @@
 		"report-complete-data": {
 			"SHOW_SUCCESS_OBSERVATION": "La observación se agregó correctamente",
 			"SHOW_ERROR_OBSERVATION": "Error al cargar la observación"
+		},
+		"group-appointment": {
+			"SELECT_APPOINTMENT": "Seleccionar turno",
+			"DNI": "DNI {{DNI}}",
+			"ID": " - ID {{ID}}",
+			"SEE_DETAIL": "Ver detalle"
 		}
 	}
 }

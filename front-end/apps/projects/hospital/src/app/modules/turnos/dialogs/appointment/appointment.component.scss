@@ -88,6 +88,11 @@
 	.appointment-title {
 		margin-bottom: 10px;
 	}
+
+	.recurring-type-text {
+		color: gray;
+		font-size: .75rem;
+	}
 }
 
 .assigned-appointment {
@@ -195,6 +200,11 @@ a {
 	color: #2687C5;
 }
 
+.waiting-time {
+	color: #FFA500;
+	font-weight: 500;
+}
+
 mat-form-field {
 	width: 100%;
 }
@@ -218,6 +228,45 @@ section {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.dateForm {
+	.date {
+		width: 276px;
+	}
+
+	.hour {
+		width: 90px;
+		height: 50px;
+	}
+
+	.hs {
+		height: fit-content;
+		margin-top: 20px;
+		margin-left: 5px;
+	}
+
+	.confirm-buttons {
+		margin-top: 15px;
+	}
+
+	.recurring-type {
+		width: 15rem;
+		margin-top: 1.65rem;
+	}
+}
+
+.observation-section {
+	a {
+		cursor: pointer;
+	}
+
+	p {
+		margin: auto;
+		margin-left: 3px;
+		white-space: pre-line;
+		overflow-wrap: break-word;
+	}
 }
 
 .confirm-buttons {

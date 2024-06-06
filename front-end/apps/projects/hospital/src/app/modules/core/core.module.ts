@@ -6,6 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexModule } from '@angular/flex-layout';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
 // deps
 import { CoreMaterialModule } from './core.material.module';
 import { AppMaterialModule } from '../material/app.material.module';
@@ -16,8 +18,7 @@ import { ExchangeableThemeComponent } from './components/exchangeable-theme/exch
 import { HasRoleDirective } from './directives/has-role.directive';
 import { HasRoleWithoutContextDirective } from './directives/has-role-without-context.directive';
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
+//pipes
 import { StringSeparatorPipe } from './pipes/string-separator.pipe';
 
 @NgModule({

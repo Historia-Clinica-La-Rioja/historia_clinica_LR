@@ -1,33 +1,35 @@
 package net.pladema.clinichistory.requests.servicerequests.service.domain;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.requests.controller.dto.TranscribedPrescriptionDto;
 
 import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequestBo;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class TranscribedServiceRequestBo implements IServiceRequestBo {
 
-    private Integer transcribedServiceRequestId;
+    private Integer id;
 
-    private Integer patientId;
+    private PatientInfoBo patientInfo;
 
-    private SnomedBo healthCondition;
+    private HealthConditionBo healthCondition;
 
-    private String cie10Codes;
-
-    private SnomedBo study;
+    private List<DiagnosticReportBo> diagnosticReports;
 
     private String healthcareProfessionalName;
 
@@ -37,31 +39,18 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
 
     private LocalDateTime creationDate;
 
-    public TranscribedServiceRequestBo(Integer transcribedServiceRequestId, Integer patientId, String healthConditionSctid, String healthConditionPt, String cie10Codes, String studySctid, String studyPt,
-                                       String healthcareProfessionalName, String institutionName,
-                                       LocalDateTime creationDate) {
-        this.transcribedServiceRequestId = transcribedServiceRequestId;
-        this.patientId = patientId;
-        this.healthCondition = new SnomedBo(healthConditionSctid, healthConditionPt);
-        this.cie10Codes = cie10Codes;
-        this.study = new SnomedBo(studySctid, studyPt);
+    public TranscribedServiceRequestBo(Integer id, Integer patientId, String healthcareProfessionalName, String institutionName, LocalDateTime creationDate, String observations) {
+        this.id = id;
+        this.patientInfo = new PatientInfoBo(patientId);
         this.healthcareProfessionalName = healthcareProfessionalName;
         this.institutionName = institutionName;
         this.creationDate = creationDate;
-    }
-
-    public TranscribedServiceRequestBo(TranscribedPrescriptionDto transcribedPrescriptionDto, Integer patientId) {
-        this.patientId = patientId;
-        this.healthCondition = new SnomedBo(transcribedPrescriptionDto.getHealthCondition().getSctid(), transcribedPrescriptionDto.getHealthCondition().getPt());
-        this.study = new SnomedBo(transcribedPrescriptionDto.getStudy().getSctid(), transcribedPrescriptionDto.getStudy().getPt());
-        this.healthcareProfessionalName = transcribedPrescriptionDto.getHealthcareProfessionalName();
-        this.institutionName = transcribedPrescriptionDto.getInstitutionName();
-        this.observations = transcribedPrescriptionDto.getObservations();
+        this.observations = observations;
     }
 
     @Override
     public Integer getServiceRequestId() {
-        return transcribedServiceRequestId;
+        return id;
     }
 
     @Override
@@ -70,18 +59,20 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
     }
 
     @Override
-    public List<String> getProblemsPt() {
-        return List.of(healthCondition.getPt());
+    public List<String> getStudies() {
+        return diagnosticReports.stream()
+                .map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<String> getStudies() {
-        return List.of(study.getPt());
+    public List<String> getProblemsPt() {
+        return List.of(healthCondition != null && healthCondition.getSnomed() != null ? healthCondition.getSnomedPt() : diagnosticReports.get(0).getSnomedPt());
     }
 
     @Override
     public List<String> getCie10Codes() {
-        return List.of(cie10Codes);
+        return List.of(healthCondition != null ? healthCondition.getCie10codes() : diagnosticReports.get(0).getHealthCondition().getCie10codes());
     }
 
     @Override
@@ -92,5 +83,12 @@ public class TranscribedServiceRequestBo implements IServiceRequestBo {
     public boolean isTranscribed() {
         return true;
     }
+
+    public Integer getPatientId() {
+        if (patientInfo != null)
+            return patientInfo.getId();
+        return null;
+    }
+
 }
 

@@ -95,6 +95,8 @@ public class DocumentBo implements IDocumentBo {
 
     private List<ConclusionBo> conclusions = new ArrayList<>();
 
+	private List<Integer> involvedHealthcareProfessionalIds;
+
 
     public String getDocumentStatusId(){
         return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;

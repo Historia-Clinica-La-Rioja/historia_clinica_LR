@@ -1,0 +1,30 @@
+<div fxLayout="row" fxLayoutAlign="space-between start">
+	<h1 class="capitalize-first-letter">{{study.prescriptionPt}}</h1>
+
+	<div>
+		<button id="close" mat-icon-button mat-dialog-close>
+			<mat-icon>close</mat-icon>
+		</button>
+	</div>
+</div>
+
+<mat-dialog-content>
+	<mat-dialog-content fxLayout="row" fxLayoutGap="22px">
+		<app-complete-study-information fxFlex="55%" [order]="data.order" [registerEditor]="study.registerEditor"
+			[titleContent]="study.problemPt" [descriptionState]="study.problemPt" [status]="data.status">
+		</app-complete-study-information>
+
+		<mat-divider [vertical]="true"></mat-divider>
+
+		<app-study-information fxFlex="45%" [patientId]="data.patientId" [diagnosticReport]="diagnosticReport">
+
+		</app-study-information>
+	</mat-dialog-content>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end start">
+	<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
+		[isLoading]="buttonService.isLoading$ | async" [disabled]="(buttonService.formDisabled$ | async)"
+		(clicked)="completeStudy()">
+	</app-button>
+</mat-dialog-actions>

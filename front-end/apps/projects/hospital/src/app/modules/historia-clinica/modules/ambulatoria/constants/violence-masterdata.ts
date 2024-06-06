@@ -114,7 +114,7 @@ enum RiskLevelDescription {
     HIGH = 'Alto'
 }
 
-enum RelationOptionDescription {
+export enum RelationOptionDescription {
     MOTHER = 'Madre',
     FATHER = 'Padre',
     GRANDFATHERMOTHER = 'Abuelo/a',
@@ -131,7 +131,7 @@ export interface BasicOption {
 export interface ValueOption {
     text: string,
     value: string,
-    checked: boolean
+    checked?: boolean
 }
 
 export enum FormOption {
@@ -542,7 +542,7 @@ export const BasicOptions: BasicOption[] = [
     },
     {
         text: FormOption.WITHOUT_DATA,
-        value: null
+        value: null || undefined
     }
 ]
 
@@ -621,7 +621,7 @@ export const StateOptions: BasicOption[] = [
     }
 ]
 
-export const InstitutionOptions: any[] = [
+export const InstitutionOptions: ValueOption[] = [
     {
         text: 'Excombatiente',
         value: ESecurityForceType.EX_COMBATANT,
@@ -801,7 +801,7 @@ export const CriminalRecordStatus: ValueOption[] = [
         checked: false
     },
     {
-        text: "Si con otras personas",
+        text: "Sí, con otras personas",
         value: ECriminalRecordStatus.WITH_OTHER_PEOPLE,
         checked: false
     },

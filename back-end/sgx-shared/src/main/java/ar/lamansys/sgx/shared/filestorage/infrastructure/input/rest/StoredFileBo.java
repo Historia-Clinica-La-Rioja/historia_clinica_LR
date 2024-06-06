@@ -1,15 +1,25 @@
 package ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest;
 
+import org.springframework.http.MediaType;
+
 import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 public class StoredFileBo {
 	@Getter
     public final FileContentBo resource;
-	public final String contentType;
-    public final String filename;
+	protected final MediaType contentType;
+	public final String filename;
+
+	public StoredFileBo(FileContentBo resource, MediaType contentType, String filename) {
+		this.resource = resource;
+		this.contentType = contentType;
+		this.filename = filename;
+	}
+
+	public StoredFileBo(FileContentBo resource, String contentType, String filename) {
+		this(resource, MediaType.parseMediaType(contentType), filename);
+	}
 
 	@Override
 	public String toString() {

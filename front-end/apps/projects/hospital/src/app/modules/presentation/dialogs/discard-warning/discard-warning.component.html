@@ -15,10 +15,15 @@
 		</ng-template>
 	</div>
 
-	<h1 mat-dialog-title [ngClass]="!data.content && !data.contentBold ? 'no-margin-bottom' : 'margin-bottom'">{{ data.title | translate}}</h1>
+	<ng-container *ngIf="!data.paramTranslate else hasParam">
+		<h1 mat-dialog-title [ngClass]="!data.content && !data.contentBold ? 'no-margin-bottom' : 'margin-bottom'">{{ data.title | translate}}</h1>
+	</ng-container>
+	<ng-template #hasParam>
+		<h1 mat-dialog-title [ngClass]="!data.content && !data.contentBold ? 'no-margin-bottom' : 'margin-bottom'" [translate]="data.title" [translateParams]="{param: data.paramTranslate}"></h1>
+	</ng-template> 
 
-	<div mat-dialog-content class="content" fxLayoutGap="25px">
-		<div innerHTML="{{ data.content | translate}}"></div>
+	<div mat-dialog-content class="content" fxLayoutGap="25px" *ngIf="data.content">
+			<div innerHTML="{{ data.content | translate}}"></div>
 	</div>
 
 	<div mat-dialog-content fxLayoutGap="25px">

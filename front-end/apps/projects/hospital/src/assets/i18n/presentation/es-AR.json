@@ -19,6 +19,30 @@
 			"UPDATE_SUCCESS": "Las observaciones se han modificado correctamente",
 			"ADD_OBSERVATION": "+ Agregar observaciones",
 			"ADD_OBSERVATION_SUBTITLE": "Ingrese observaciones..."
-		}
+		},
+        "patient": {
+            "age": {
+                "DAYS": "{{patientAge.totalDays}} días",
+                "DAY": "{{patientAge.days}} día",
+                "MONTHS_AND_DAYS": "{{patientAge.months}} meses y {{patientAge.days}} días",
+                "MONTHS_AND_DAY": "{{patientAge.months}} meses y {{patientAge.days}} día",
+                "MONTH_AND_DAYS": "{{patientAge.months}} mes y {{patientAge.days}} días",
+                "MONTH_AND_DAY": "{{patientAge.months}} mes y {{patientAge.days}} día",
+                "YEARS": "{{patientAge.years}} años",
+                "YEAR": "{{patientAge.years}} año",
+                "NO_AGE": "Sin edad"
+            },
+            "gender": {
+                "NO_GENDER": "Sin género"
+            }
+        },
+        "time-picker": {
+            "HOUR": "Hora"
+            
+        },
+        "radio-group": {
+            "YES": "Si",
+            "NO": "No"
+        }
     }
 }

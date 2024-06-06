@@ -1,13 +1,15 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
+
+import java.time.LocalDateTime;
+
+import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryLabelDto;
-
-import java.time.LocalDateTime;
 
 @Value
 @Builder
@@ -45,10 +47,14 @@ public class AppointmentListDto {
 
 	private final LocalDateTime createdOn;
 
+	private final DateTimeDto updatedOn;
+
 	private final ProfessionalPersonDto professionalPersonDto;
 	
 	private final DiaryLabelDto diaryLabelDto;
 
 	private String patientEmail;
+
+	private boolean expiredRegister;
 
 }

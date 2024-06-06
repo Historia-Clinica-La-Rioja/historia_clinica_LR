@@ -39,16 +39,16 @@ export class AddressMasterDataService {
 		return this.http.get<DepartmentDto>(url);
 	}
 
-	getDeparmentsByCareLineAndClinicalSpecialty(clinicalSpecialtyIds: number[], careLineId?: number) {
+	getDeparmentsByCareLineAndClinicalSpecialty(clinicalSpecialtyIds: number[], careLineId?: number): Observable<AddressProjection[]> {
 		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-clinical-specialty-filter`;
 		let queryParams = new HttpParams();
 		clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', JSON.stringify(clinicalSpecialtyId)));
 		if (careLineId !== undefined && careLineId !== null)
 			queryParams = queryParams.append('careLineId', JSON.stringify(careLineId));
-		return this.http.get<any[]>(url, { params: queryParams });
+		return this.http.get<AddressProjection[]>(url, { params: queryParams });
 	}
 
-	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyIds?: number[], careLineId?: number,) {
+	getDepartmentsByCareLineAndPracticesAndClinicalSpecialty(practiceSnomedId: number, clinicalSpecialtyIds?: number[], careLineId?: number): Observable<AddressProjection[]> {
 		const url = `${environment.apiBase}/address/masterdata/institution/${this.contextService.institutionId}/departments/by-reference-practice-filter`;
 
 		let queryParams = new HttpParams().append('practiceSnomedId', practiceSnomedId.toString());
@@ -58,6 +58,16 @@ export class AddressMasterDataService {
 
 		if (clinicalSpecialtyIds !== undefined && clinicalSpecialtyIds !== null && clinicalSpecialtyIds.length)
 			clinicalSpecialtyIds.forEach(clinicalSpecialtyId => queryParams = queryParams.append('clinicalSpecialtyIds', clinicalSpecialtyId.toString()));
-		return this.http.get<any[]>(url, { params: queryParams });
+		return this.http.get<AddressProjection[]>(url, { params: queryParams });
 	}
+
+	getDepartmentsByInstitutions(): Observable<AddressProjection[]> {
+		const url = `${environment.apiBase}/address/masterdata/departments`;
+		return this.http.get<AddressProjection[]>(url);
+	}
+}
+
+export interface AddressProjection {
+	id: number;
+	description: string;
 }

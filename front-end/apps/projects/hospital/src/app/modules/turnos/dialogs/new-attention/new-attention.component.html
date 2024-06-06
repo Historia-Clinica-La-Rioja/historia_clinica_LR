@@ -79,22 +79,22 @@
 
 
 		<div *ngIf="!isSpontaneousMedicalAttention && data.diaryType == 0">
-			<div fxLayout="column">
+			<div fxLayout="column" *ngIf="isEnableTelemedicina">
 				<div fxLayout="column" >
 					<p mat-dialog-title>{{'turnos.agenda-setup.dialog.MODALITY' | translate}}</p>
 					<mat-error *ngIf="showErrorModality" [translate]="'forms.REQUIRED'"></mat-error>
 				</div>
-				<mat-checkbox color="primary" [disabled]="!isEnableTelemedicina" formControlName="onSiteAttentionAllowed">
+				<mat-checkbox color="primary" formControlName="onSiteAttentionAllowed">
 					<span>
 						{{'turnos.agenda-setup.dialog.ATTENDS_FACE_TO_FACE' | translate}}
 					</span>
 				</mat-checkbox>
-				<mat-checkbox color="primary" [disabled]="!isEnableTelemedicina" formControlName="patientVirtualAttentionAllowed">
+				<mat-checkbox color="primary" formControlName="patientVirtualAttentionAllowed">
 					<span>
 						{{'turnos.agenda-setup.dialog.ATTENDS_BY_TELECONSULTATION_OF_PATIENT' | translate}}
 					</span>
 				</mat-checkbox>
-				<mat-checkbox color="primary" [disabled]="!data.hasSelectedLinesOfCare || !isEnableTelemedicina" formControlName="secondOpinionVirtualAttentionAllowed">
+				<mat-checkbox color="primary" [disabled]="!data.hasSelectedLinesOfCare" formControlName="secondOpinionVirtualAttentionAllowed">
 					<span>
 						{{'turnos.agenda-setup.dialog.ATTENDS_BY_TELECONSULTATION_OF_SECOND_OPINION' | translate}}
 					</span>
@@ -122,7 +122,7 @@
 				<div>
 					<mat-checkbox (change)="changeAvailableForBooking()" [disabled]="!isEnableOnlineAppointments"
 						[checked]="form.value.availableForBooking">
-						<span [translate]="'turnos.agenda-setup.dialog.ATTEND_ONLINE'"></span>
+						<span [translate]="'turnos.agenda-setup.dialog.ONLINE_APPOINTMENTS'"></span>
 					</mat-checkbox>
 				</div>
 			</div>

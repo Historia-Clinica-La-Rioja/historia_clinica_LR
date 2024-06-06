@@ -7,7 +7,7 @@ import {
 	EDocumentSearch,
 	DocumentSearchDto,
 	DocumentHistoricDto,
-	MasterDataDto
+	MasterDataDto,
 } from '@api-rest/api-model';
 import { DateFormat, momentFormat, newMoment } from '@core/utils/moment.utils';
 import { hasError } from '@core/utils/form.utils';
@@ -135,14 +135,16 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 	updateDocuments() {
 		this.form.patchValue({ documentsWithoutDiagnosis: false })
 		this.activeDocument = null;
-		const documents = this.documentHistoric.documents.filter(document => {
+		const documents = this.documentHistoric.documents?.filter(document => {
 			return this.form.value.mainDiagnosisOnly ? document.mainDiagnosis.length : true;
 		});
-		this.documentActions.setPatientDocuments(documents);
-		this.documentsToShow = documents.map(document => {
-			return { document }
-		})
-		this.changeDetectorRef.detectChanges();
+		if (documents){
+			this.documentActions.setPatientDocuments(documents);
+			this.documentsToShow = documents.map(document => {
+				return { document }
+			})
+			this.changeDetectorRef.detectChanges();
+		}
 	}
 
 	showDocumentsWithoutDiagnosis() {
@@ -151,11 +153,13 @@ export class DocumentsSummaryComponent implements OnInit, OnChanges {
 		const documents = this.documentHistoric.documents.filter(document => {
 			return this.form.value.documentsWithoutDiagnosis ? !document.diagnosis.length && !document.mainDiagnosis.length : true;
 		});
-		this.documentActions.setPatientDocuments(documents);
-		this.documentsToShow = documents.map(document => {
-			return { document }
-		});
-		this.changeDetectorRef.detectChanges();
+		if (documents){
+			this.documentActions.setPatientDocuments(documents);
+			this.documentsToShow = documents.map(document => {
+				return { document }
+			});
+			this.changeDetectorRef.detectChanges();
+		}
 	}
 
 	viewEvolutionNote(): boolean {

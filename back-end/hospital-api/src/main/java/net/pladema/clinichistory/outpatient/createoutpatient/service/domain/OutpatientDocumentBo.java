@@ -72,6 +72,10 @@ public class OutpatientDocumentBo implements IDocumentBo {
 
     private LocalDateTime performedDate;
 
+	private List<Integer> involvedHealthcareProfessionalIds;
+    
+	private Integer medicalCoverageId;
+
     @Override
     public DocumentObservationsBo getNotes() {
         if (evolutionNote == null)

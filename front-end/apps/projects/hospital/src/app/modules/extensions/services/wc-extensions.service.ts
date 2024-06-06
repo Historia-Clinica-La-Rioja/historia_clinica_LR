@@ -34,7 +34,6 @@ export class WCExtensionsService {
 	constructor(
 		private readonly extensionService: ExtensionsService,
 	) {
-		this.fetchExtensions();
 	}
 
 	getSystemHomeComponents(): Observable<WCParams[]> {

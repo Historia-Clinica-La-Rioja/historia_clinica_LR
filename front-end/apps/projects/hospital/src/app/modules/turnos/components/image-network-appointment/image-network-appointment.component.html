@@ -12,7 +12,8 @@
 
 		<section gdArea="personal-data" id="personal-data" fxLayout="column" fxLayoutGap="5px">
 			<div class="header" fxLayout="row" fxLayoutAlign="space-between" fxLayout.lt-md="column">
-				<app-patient-summary data-id="patient-summary" *ngIf="patientSummary" [person]="patientSummary"></app-patient-summary>
+				<app-patient-summary data-id="patient-summary" *ngIf="patientSummary"
+					[person]="patientSummary"></app-patient-summary>
 				<div fxLayoutAlign="end center" fxLayoutAlign.lt-md="start center">
 					<button id="print-appointment" mat-stroked-button color="primary" btn-block type="button"
 						(click)="getAppointmentTicketReport()">
@@ -32,8 +33,8 @@
 					<div fxLayout="row" fxLayoutGap="5px" fxLayout.xs="column">
 						<span class="mat-body subtitle-size medical-order-description" *ngIf="medicalOrder else noInfo"
 							matTooltip="{{medicalOrder.displayText | titlecase}}">
-							<a mat-button color="primary" (click)="downloadMedicalOrder(medicalOrder)" 
-								class="download-link">{{medicalOrder.displayText | titlecase}}</a>
+							<a mat-button color="primary" (click)="downloadMedicalOrder(medicalOrder)"
+								class="download-link">{{transcribedLabelOrder | titlecase}}</a>
 						</span>
 					</div>
 				</div>
@@ -70,6 +71,8 @@
 
 			<ng-template #editAppointment>
 				<form [formGroup]="formEdit" fxLayout="column" fxLayoutGap="5px" (ngSubmit)="edit()">
+
+					
 					<app-medical-order-input [patientMedicalOrders]="patientMedicalOrders"
 						[patientId]="data.appointmentData.patient.id" [disabled]="!canOrderBeEdited"
 						(selectionChange)="setAsociatedCoverageData($event)"></app-medical-order-input>
@@ -94,6 +97,7 @@
 							</mat-option>
 						</mat-select>
 					</mat-form-field>
+
 					<div fxLayout="row" fxLayoutGap="10px" fxLayout.xs="column">
 						<mat-form-field fxFlex="30%" appearance="outline">
 							<mat-label>{{'turnos.appointment.phoneNumber.PHONE_PREFIX' | translate}}</mat-label>
@@ -149,7 +153,8 @@
 							text="{{selectedDate | date:'EEEE, d ' | titlecase }} de {{selectedDate | date:'MMMM ' | titlecase}} de {{selectedDate | date:'y ' | titlecase}}"></app-iconed-text>
 					</div>
 					<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start" data-id="appointment-time">
-						<app-iconed-text icon="access_time" text="{{selectedDate | date:'H:mm'}} hs"></app-iconed-text>
+						<app-iconed-text icon="access_time"
+							text="{{selectedDate | dateFormat:'time'}}"></app-iconed-text>
 					</div>
 					<div fxLayout="column" fxLayoutGap="10px" *ngIf="appointment?.protected">
 						<span class="purple">{{'turnos.appointment.PROTECTED' | translate}}</span>
@@ -158,8 +163,8 @@
 						*ngIf="data.appointmentData.professionalPersonDto else bookingAppointment"
 						data-id="assignment-professional">
 						<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}
-							{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn |
-							date:"dd/MM/yyyy H:mm"}}hs.</span>
+							{{data.appointmentData.professionalPersonDto.fullName}} - {{data.appointmentData.createdOn.toString() | isoToDate |
+							dateFormat:'datetime'}}</span>
 					</div>
 				</div>
 			</div>
@@ -218,7 +223,7 @@
 
 
 				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
-					<span class="mat-body-strong strong-size" 
+					<span class="mat-body-strong strong-size"
 						*ngIf="absentMotive || !hideAbsentMotiveForm">
 						{{'turnos.appointment.ABSENCE_MOTIVE' | translate}}
 					</span>
@@ -282,7 +287,7 @@
 <ng-template #bookingAppointment>
 	<div class="assigned-by" fxLayout="column">
 		<span>{{'turnos.appointment.ASSIGNED_BY' | translate}}</span>
-		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn | date:"dd/mm/yyyy
-			H:mm"}}hs.</span>
+		<span>{{'turnos.appointment.BOOKING' | translate}} - {{data.appointmentData.createdOn |
+			dateFormat:'datetime'}}</span>
 	</div>
 </ng-template>

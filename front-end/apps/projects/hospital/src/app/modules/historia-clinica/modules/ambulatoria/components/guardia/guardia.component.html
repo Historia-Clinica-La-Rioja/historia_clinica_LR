@@ -6,7 +6,7 @@
 
 		<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px">
 			<div fxLayout="column" fxFlex="50%" fxLayoutGap="20px">
-				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId">
+				<app-resumen-de-guardia *ngIf="showEmergencyCareSummary" [episodeId]="episodeId" [isEmergencyCareTemporalPatient]="isEmergencyCareTemporalPatient">
 				</app-resumen-de-guardia>
 			</div>
 

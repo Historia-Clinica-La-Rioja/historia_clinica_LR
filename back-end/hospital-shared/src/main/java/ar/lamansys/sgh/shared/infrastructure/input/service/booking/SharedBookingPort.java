@@ -1,11 +1,14 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service.booking;
 
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
+
 import java.util.List;
 
 public interface SharedBookingPort {
 
-	SavedBookingAppointmentDto makeBooking(BookingDto bookingDto);
+	SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException;
 
 	void cancelBooking(String uuid);
 
@@ -30,6 +33,15 @@ public interface SharedBookingPort {
 			Integer professionalId,
 			Integer clinicalSpecialtyId,
 			Integer practiceId
+	);
+
+	ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(
+			Integer institutionId,
+			Integer professionalId,
+			Integer clinicalSpecialtyId,
+			Integer practiceId,
+			Integer coverageId,
+			String maxDate
 	);
 
 	List<ProfessionalAvailabilityDto> fetchAvailabilityByPractice(Integer institutionId,  Integer clinicalSpecialtyId, Integer practiceId, Integer medicalCoverageId);

@@ -174,7 +174,7 @@ public class DiaryController {
     }
 
     private void updateOutOfBoundsAppointments(DiaryDto diaryToUpdate) {
-        Collection<AppointmentBo> appointments = appointmentService.getFutureActiveAppointmentsByDiary(diaryToUpdate.getId());
+        Collection<AppointmentBo> appointments = appointmentService.getAppointmentsByDiaries(List.of(diaryToUpdate.getId()), null, null);
 
         LocalDate from = localDateMapper.fromStringToLocalDate(diaryToUpdate.getStartDate());
         LocalDate to = localDateMapper.fromStringToLocalDate(diaryToUpdate.getEndDate());
@@ -194,13 +194,11 @@ public class DiaryController {
     }
 
     private void changeToOutOfDiaryState(AppointmentBo appointmentBo) {
-        if(!appointmentBo.getDate().isAfter(LocalDate.now()))
-            return;
-
-        if(appointmentBo.getAppointmentStateId() != AppointmentState.BLOCKED)
-            appointmentService.updateState(appointmentBo.getId(), AppointmentState.OUT_OF_DIARY, UserInfo.getCurrentAuditor(), "Fuera de agenda");
-        else
-            appointmentService.delete(appointmentBo);
+		if (appointmentBo.getAppointmentStateId() == AppointmentState.BLOCKED)
+			appointmentService.delete(appointmentBo);
+		else
+			if (appointmentBo.getDate().isAfter(LocalDate.now()))
+				appointmentService.updateState(appointmentBo.getId(), AppointmentState.OUT_OF_DIARY, UserInfo.getCurrentAuditor(), "Fuera de agenda");
     }
 
     private boolean outOfOpeningHoursBounds(AppointmentBo a, List<DiaryOpeningHoursDto> newHours) {

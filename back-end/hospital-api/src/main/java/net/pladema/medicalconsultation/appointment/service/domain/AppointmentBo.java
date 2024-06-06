@@ -1,23 +1,25 @@
 package net.pladema.medicalconsultation.appointment.service.domain;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
-
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentDiaryVo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo;
 import net.pladema.medicalconsultation.appointment.repository.entity.Appointment;
-import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryLabelBo;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+
+import javax.annotation.Nullable;
 
 @Getter
 @Setter
@@ -61,6 +63,8 @@ public class AppointmentBo {
 
 	private Short appointmentBlockMotiveId;
 
+	private LocalDateTime updatedOn;
+
 	private boolean isProtected;
 
 	private LocalDateTime createdOn;
@@ -75,7 +79,7 @@ public class AppointmentBo {
 	
 	private DiagnosticReportBo orderData;
 
-	private TranscribedDiagnosticReportBo transcribedData;
+	private TranscribedServiceRequestBo transcribedOrderData;
 
 	private String applicantHealthcareProfessionalEmail;
 
@@ -85,8 +89,26 @@ public class AppointmentBo {
 
 	private Short associatedReferenceClosureTypeId;
 	
+	private RecurringTypeBo recurringTypeBo;
+
+	private Integer parentAppointmentId;
+
+	@Nullable
+	private Short appointmentOptionId;
+
+	@Nullable
+	private boolean hasAppointmentChilds;
+
+	private Integer referenceId;
+
+	private Short expiredReasonId;
+
+	private String expiredReasonText;
+
+	private boolean expiredRegister;
+
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
-						 String applicantHealthcareProfessionalEmail) {
+						String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;
 		this.patientId = patientId;
 		this.date = date;
@@ -97,7 +119,19 @@ public class AppointmentBo {
 		this.applicantHealthcareProfessionalEmail = applicantHealthcareProfessionalEmail;
 	}
 
-	private Integer referenceId;
+	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Integer openingHoursId,
+						 boolean isOverturn, Integer patientMedicalCoverageId, String phonePrefix, String phoneNumber, Short modalityId) {
+		this.diaryId = diaryId;
+		this.patientId = patientId;
+		this.date = date;
+		this.hour = hour;
+		this.openingHoursId = openingHoursId;
+		this.overturn = isOverturn;
+		this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.phonePrefix = phonePrefix;
+		this.phoneNumber = phoneNumber;
+		this.modalityId = modalityId;
+	}
 
 	public static AppointmentBo fromAppointmentDiaryVo(AppointmentDiaryVo appointmentDiaryVo) {
 		return AppointmentBo.builder()
@@ -114,6 +148,7 @@ public class AppointmentBo {
 				.phoneNumber(appointmentDiaryVo.getPhoneNumber())
 				.appointmentBlockMotiveId(appointmentDiaryVo.getAppointmentBlockMotiveId())
 				.createdOn(appointmentDiaryVo.getCreatedOn())
+				.updatedOn(appointmentDiaryVo.getUpdatedOn())
 				.professionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo() != null ? new ProfessionalPersonBo(appointmentDiaryVo.getProfessionalPersonVo()) : null)
 				.patientEmail(appointmentDiaryVo.getEmail())
 				.diaryLabelBo(appointmentDiaryVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentDiaryVo.getDiaryLabel()): null)
@@ -138,6 +173,15 @@ public class AppointmentBo {
 				.modalityId(appointmentVo.getModalityId())
 				.diaryLabelBo(appointmentVo.getDiaryLabel() != null ? new DiaryLabelBo(appointmentVo.getDiaryLabel()): null)
 				.patientEmail(appointmentVo.getPatientEmail())
+				.recurringTypeBo(appointmentVo.getRecurringAppointmentTypeId() != null
+						? new RecurringTypeBo(
+							appointmentVo.getRecurringAppointmentTypeId(),
+							RecurringAppointmentType.map(appointmentVo.getRecurringAppointmentTypeId()).getValue()
+						)
+						: null
+				)
+				.parentAppointmentId(appointmentVo.getAppointment().getParentAppointmentId())
+				.updatedOn(appointmentVo.getAppointment().getUpdatedOn())
 				.build();
 	}
 
@@ -153,6 +197,7 @@ public class AppointmentBo {
 				.phonePrefix(appointment.getPhonePrefix())
 				.phoneNumber(appointment.getPhoneNumber())
 				.snomedId(appointment.getSnomedId())
+				.updatedOn(appointment.getUpdatedOn())
 				.build();
     }
 
@@ -168,4 +213,9 @@ public class AppointmentBo {
 	public int hashCode() {
 		return Objects.hash(getId());
 	}
+
+	public boolean isExpiredRegister() {
+		return LocalDateTime.of(this.date, this.hour).isBefore(this.createdOn.minusHours(3));
+	}
+
 }

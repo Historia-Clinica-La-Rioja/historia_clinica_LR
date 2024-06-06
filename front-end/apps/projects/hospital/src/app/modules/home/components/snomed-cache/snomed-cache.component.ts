@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { LoadStatus, SnomedCacheService, TerminologyECLStatus } from './snomed-cache.service';
-import { TerminologyCSVDto, TerminologyQueueItemDto } from '@api-rest/api-model';
+import { ETerminologyKind, SnomedECL, TerminologyQueueItemDto } from '@api-rest/api-model';
 import { Observable } from 'rxjs';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { TerminologyCacheService } from '@api-rest/services/terminology-cache.service';
 
 export const TERMINOLOGYLOADSTATUS = {
 	LOADED: {
@@ -30,18 +31,25 @@ export const TERMINOLOGYLOADSTATUS = {
 	styleUrls: ['./snomed-cache.component.scss']
 })
 export class SnomedCacheComponent implements OnInit {
+	@Input() kind: ETerminologyKind;
 	terminologies: TerminologyECLStatus[];
 	queue$: Observable<TerminologyQueueItemDto[]>;
 	disableForm = false;
 	terminologyLoadStatus = TERMINOLOGYLOADSTATUS;
+	private snomedCacheService: SnomedCacheService;
 
 	constructor(
-		private snomedCacheService: SnomedCacheService,
+		private terminologyCacheService: TerminologyCacheService,
 		private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService
-	) { }
+	) {
+	}
 
 	ngOnInit(): void {
+		this.snomedCacheService = new SnomedCacheService(
+			this.terminologyCacheService,
+			this.kind,
+		);
 		this.list();
 		this.snomedCacheService.status$.asObservable().subscribe(terminologies => {
 			this.terminologies = terminologies;
@@ -73,8 +81,8 @@ export class SnomedCacheComponent implements OnInit {
 		return isUpdating;
 	}
 
-	addCsv(newCsv: TerminologyCSVDto) {
-		this.snomedCacheService.add(newCsv);
+	addCsv(ecl: SnomedECL, url: string) {
+		this.snomedCacheService.add(ecl, url);
 	}
 
 	list() {
@@ -86,5 +94,9 @@ export class SnomedCacheComponent implements OnInit {
 			translatedText => this.snackBarService.showSuccess(translatedText)
 		);
 		this.list();
+	}
+
+	delete(tqi: TerminologyQueueItemDto) {
+		this.snomedCacheService.delete(tqi.id)
 	}
 }

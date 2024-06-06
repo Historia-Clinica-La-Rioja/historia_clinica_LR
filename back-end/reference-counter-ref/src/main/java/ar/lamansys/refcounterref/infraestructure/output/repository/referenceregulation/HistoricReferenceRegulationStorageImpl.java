@@ -42,7 +42,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		if (reference.getStudy() != null && reference.getStudy().getPractice() != null)
 			addRegulatedRuleBySnomedAndInstitution(reference, rules);
 		else
-			rules = sharedRulePort.findRegulatedRuleByClinicalSpecialtyIdInInstitution(reference.getClinicalSpecialtyIds(), reference.getDestinationInstitutionId());
+			rules = sharedRulePort.findRegulatedRuleByClinicalSpecialtyIdInInstitution(reference.getClinicalSpecialtyIds(), reference.getInstitutionId());
 		if (rules.isEmpty())
 			return saveEmptyRegulation(referenceId);
 		rules.forEach(rule -> saveHistoricReferenceRegulation(referenceId, rule));
@@ -62,7 +62,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 	}
 
 	private void addRegulatedRuleBySnomedAndInstitution(CompleteReferenceBo reference, List<SharedRuleDto> rules) {
-        sharedRulePort.findRegulatedRuleBySnomedIdInInstitution(reference.getStudy().getPractice().getId(), reference.getDestinationInstitutionId()).ifPresent(rules::add);
+        sharedRulePort.findRegulatedRuleBySnomedIdInInstitution(reference.getStudy().getPractice().getId(), reference.getInstitutionId()).ifPresent(rules::add);
     }
 
 	@Override
@@ -85,10 +85,10 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 	}
 
 	private void saveHistoricReferenceRegulation(Integer referenceId) {
-		HistoricReferenceRegulation entity = new HistoricReferenceRegulation();
-		entity.setReferenceId(referenceId);
-		entity.setStateId(EReferenceRegulationState.APPROVED.getId());
+		Short approvedStateId = EReferenceRegulationState.APPROVED.getId();
+		HistoricReferenceRegulation entity = new HistoricReferenceRegulation(referenceId, approvedStateId);
 		historicReferenceRegulationRepository.save(entity);
+		updateReferenceRegulationStateId(referenceId, approvedStateId);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class HistoricReferenceRegulationStorageImpl implements HistoricReference
 		log.debug("Input parameters -> referenceId {}, stateId {} ", referenceId, stateId);
 		Reference reference = referenceRepository.getById(referenceId);
 		reference.setRegulationStateId(stateId);
-		referenceRepository.save(reference);
+		referenceRepository.saveAndFlush(reference);
 	}
 
 	private boolean validRegulationState(Optional<HistoricReferenceRegulation> hrr){

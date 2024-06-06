@@ -137,4 +137,13 @@ public class HealthcareProfessionalController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@GetMapping(value = "/department/{departmentId}")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public List<ProfessionalDto> getAllByDepartment(@PathVariable("departmentId") Short departmentId) {
+		LOG.debug("Input parameter -> departmentId {}", departmentId);
+		List<HealthcareProfessionalBo> professionals = healthcareProfessionalService.getAllProfessionalsByDepartment(departmentId);
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
 }

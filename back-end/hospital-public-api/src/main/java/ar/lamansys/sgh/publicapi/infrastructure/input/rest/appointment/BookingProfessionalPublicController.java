@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingProfessionalDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -39,24 +38,5 @@ public class BookingProfessionalPublicController {
         log.debug("Get all booking institutions => {}", result);
         return ResponseEntity.ok(result);
     }
-
-    @GetMapping("/{professionalId}/specialty/{clinicalSpecialtyId}/practice/{practiceId}/availability")
-    public ResponseEntity<ProfessionalAvailabilityDto> getProfessionalAvailability(
-            @PathVariable(name="institutionId") Integer institutionId,
-            @PathVariable(name="professionalId") Integer professionalId,
-            @PathVariable(name="clinicalSpecialtyId") Integer clinicalSpecialtyId,
-            @PathVariable(name="practiceId") Integer practiceId
-    ) {
-        var result = bookAppointmentPort.fetchAvailabilityByPracticeAndProfessional(
-				institutionId,
-				professionalId,
-				clinicalSpecialtyId,
-				practiceId
-		);
-        log.debug("Get availability by professionalId {} and practiceId{} => {}", professionalId, practiceId, result);
-        return ResponseEntity.ok(result);
-    }
-
-
 
 }

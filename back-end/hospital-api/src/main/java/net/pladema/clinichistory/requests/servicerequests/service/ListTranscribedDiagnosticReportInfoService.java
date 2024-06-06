@@ -1,14 +1,14 @@
 package net.pladema.clinichistory.requests.servicerequests.service;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
-
 import java.util.List;
+import java.util.Optional;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 
 public interface ListTranscribedDiagnosticReportInfoService {
-    List<TranscribedDiagnosticReportBo> execute(Integer patientId);
+    List<TranscribedServiceRequestBo> execute(Integer patientId);
 
-    TranscribedDiagnosticReportBo getByAppointmentId(Integer patientId);
+    Optional<TranscribedServiceRequestBo> getByAppointmentId(Integer appointmentId);
 
-    List<StudyTranscribedOrderReportInfoBo> getListTranscribedOrder(Integer patientId);
+    List<StudyTranscribedOrderReportInfoBo> getListStudyTranscribedOrderReports(Integer patientId);
 }

@@ -11,10 +11,13 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ar.lamansys.sgh.publicapi.domain.PersonInfoExtendedBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
+
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +34,7 @@ import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
-import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
+
 @Service
 public class ActivityStorageImpl implements ActivityStorage {
 
@@ -39,8 +42,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 
 	private final EntityManager entityManager;
 
-	public ActivityStorageImpl(EntityManager entityManager) {
+	private final LocalDateMapper localDateMapper;
+
+	public ActivityStorageImpl(EntityManager entityManager, LocalDateMapper localDateMapper) {
 		this.entityManager = entityManager;
+		this.localDateMapper = localDateMapper;
 	}
 
 	private static final String JOIN_PATIENT_MEDICAL_COVERAGE = "LEFT JOIN {h-schema}patient_medical_coverage pmc ON (pmc.id = event.patient_medical_coverage_id)";
@@ -48,7 +54,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private static final String JOIN_HOSPITALIZATION = "LEFT JOIN {h-schema}internment_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_OUTPATIENT = "LEFT JOIN {h-schema}outpatient_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 	private static final String JOIN_ODONTOLOGY = "LEFT JOIN {h-schema}odontology_consultation event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
-	private static final String JOIN_EMERGENCY_CARE = "LEFT JOIN {h-schema}emergency_care_evolution_note event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
+	private static final String JOIN_EMERGENCY_CARE = "LEFT JOIN {h-schema}emergency_care_episode event ON event.id = va.encounter_id " + JOIN_PATIENT_MEDICAL_COVERAGE;
 
 	private static final Integer HOSPITALIZATION = 0;
 	private static final Integer OUTPATIENT_CONSULTATION = 1;
@@ -56,12 +62,14 @@ public class ActivityStorageImpl implements ActivityStorage {
 	private static final Integer EMERGENCY_CARE = 4;
 
 	private static final String JOIN_ANY_EVENT = "LEFT JOIN {h-schema}internment_episode ie ON ie.id = va.encounter_id AND va.scope_id =" + HOSPITALIZATION + " " +
-			"LEFT JOIN {h-schema}outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
-			"LEFT JOIN {h-schema}odontology_consultation odc ON odc.id = va.encounter_id and va.scope_id = " + ODONTOLOGY + " " +
-			"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (" +
+			"LEFT JOIN {h-schema} outpatient_consultation oc ON oc.id = va.encounter_id and va.scope_id =" + OUTPATIENT_CONSULTATION + " " +
+			"LEFT JOIN {h-schema} odontology_consultation odc ON odc.id = va.encounter_id and va.scope_id = " + ODONTOLOGY + " " +
+			"LEFT JOIN {h-schema} emergency_care_episode ece ON ece.id = va.encounter_id and va.scope_id = " + EMERGENCY_CARE + " " +
+			"LEFT JOIN {h-schema} patient_medical_coverage pmc ON (" +
 			"(ie.id IS NOT NULL AND pmc.id = ie.patient_medical_coverage_id) " +
 			"OR (oc.id IS NOT NULL AND pmc.id = oc.patient_medical_coverage_id) " +
-			"OR (odc.id  IS NOT NULL AND pmc.id = odc.patient_medical_coverage_id)" +
+			"OR (odc.id IS NOT NULL AND pmc.id = odc.patient_medical_coverage_id) " +
+			"OR (ece.id IS NOT NULL AND pmc.id = ece.patient_medical_coverage_id) " +
 			")";
 
 	private static final String SQL_STRING =
@@ -82,13 +90,20 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.updated_on, " +
 					"mcp.plan, " +
 					"hc.cie10_codes, " +
-					"va.created_on " +
+					"va.created_on, " +
+					"p.middle_names, " +
+					"p.other_last_names, " +
+					"p.email, " +
+					"p.name_self_determination, " +
+					"p.gender_self_determination " +
 					"FROM {h-schema}v_attention va " +
 					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
 					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
+					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number, pp.gender_id, pp.birth_date, " +
+					"pp.middle_names, pp.other_last_names, pe.email, pe.name_self_determination, pe.gender_self_determination " +
 					"FROM {h-schema}patient pat " +
-					"JOIN {h-schema}person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
+					"JOIN {h-schema}person pp on pp.id = pat.person_id " +
+					"LEFT JOIN {h-schema}person_extended pe on pe.person_id = pp.id) AS p ON (p.patient_id = va.patient_id) " +
 					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
 					"FROM {h-schema}healthcare_professional hp " +
 					"JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
@@ -122,16 +137,23 @@ public class ActivityStorageImpl implements ActivityStorage {
 					"hc.updated_on, " +
 					"mcp.plan, " +
 					"hc.cie10_codes, " +
-					"va.created_on " +
-					"FROM {h-schema} v_attention va " +
-					"LEFT JOIN {h-schema} attention_reads ar ON (ar.attention_id = va.id) " +
-					"JOIN {h-schema} institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number , pp.gender_id, pp.birth_date " +
+					"va.created_on, " +
+					"p.middle_names, " +
+					"p.other_last_names, " +
+					"p.email, " +
+					"p.name_self_determination, " +
+					"p.gender_self_determination " +
+					"FROM {h-schema}v_attention va " +
+					"LEFT JOIN {h-schema}attention_reads ar ON (ar.attention_id = va.id) " +
+					"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
+					"JOIN (SELECT pat.id as patient_id, pp.first_name, pp.last_name, pp.identification_number, pp.gender_id, pp.birth_date, " +
+					"pp.middle_names, pp.other_last_names, pe.email, pe.name_self_determination, pe.gender_self_determination " +
 					"FROM {h-schema} patient pat " +
-					"JOIN {h-schema} person pp on pp.id = pat.person_id) AS p ON (p.patient_id = va.patient_id) " +
+					"JOIN {h-schema}person pp on pp.id = pat.person_id " +
+					"LEFT JOIN {h-schema}person_extended pe on pe.person_id = pp.id) AS p ON (p.patient_id = va.patient_id) " +
 					"JOIN (SELECT hp.id as doctor_id, dp.first_name, dp.last_name, hp.license_number, dp.identification_number " +
-					"FROM {h-schema} healthcare_professional hp " +
-					"JOIN {h-schema} person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
+					"FROM {h-schema}healthcare_professional hp " +
+					"JOIN {h-schema}person dp on hp.person_id = dp.id) AS d ON (d.doctor_id = va.doctor_id) " +
 					"LEFT JOIN (SELECT cs.id, cs.name, cs.sctid_code " +
 					"FROM {h-schema} clinical_specialty cs) snm ON (va.clinical_speciality_id = snm.id) " +
 					"LEFT JOIN {h-schema} patient_discharge pd ON (va.scope_id = 0 AND pd.internment_episode_id = va.encounter_id) " +
@@ -169,7 +191,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitution ActivityStorage -> refsetCode {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, fromDate, toDate, reprocessing);
 
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
 				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing )" +
 				"AND va.scope_id = ";
 		String finalQuery = "("+String.format(SQL_STRING, JOIN_HOSPITALIZATION, whereClause + HOSPITALIZATION) +")"
@@ -205,7 +227,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndPatient ActivityStorage -> refsetCode {}, identificationNumber {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, identificationNumber, fromDate, toDate, reprocessing);
 
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
 				"p.identification_number = :identificationNumber AND " +
 				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing) " +
 				"AND va.scope_id = ";
@@ -240,7 +262,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 		LOG.debug("getActivitiesByInstitutionAndCoverage ActivityStorage -> refsetCode {}, coverageCuit {}, fromDate {}, toDate {}, reprocessing{}",
 				refsetCode, coverageCuit, fromDate, toDate, reprocessing);
 
-		String whereClause = "va.updated_on BETWEEN :fromDate AND :toDate AND " +
+		String whereClause = "cast(va.updated_on as date) BETWEEN :fromDate AND :toDate AND " +
 				"mc.cuit = :coverageCuit AND " +
 				"(ar.attention_id IS NULL OR NOT ar.processed OR ar.processed AND :reprocessing)" +
 				"AND va.scope_id = ";
@@ -269,10 +291,11 @@ public class ActivityStorageImpl implements ActivityStorage {
 	}
 
 	private AttentionInfoBo parseToAttentionInfoBo(Object[] rawAttention) {
+		var attentionDate = localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[1]).toLocalDateTime()).toLocalDate();
 		return new AttentionInfoBo(
 				((BigInteger) rawAttention[0]).longValue(),
 				((Integer)rawAttention[18]).longValue(),
-				((Timestamp) rawAttention[1]).toLocalDateTime().toLocalDate(),
+				attentionDate,
 				new SnomedBo((String) rawAttention[3], (String) rawAttention[2]),
 				buildPersonInfoBo(rawAttention),
 				buildCoverageInfoBo(rawAttention),
@@ -280,12 +303,23 @@ public class ActivityStorageImpl implements ActivityStorage {
 				buildInternmentBo(rawAttention),
 				buildProfessionalBo(rawAttention),
 				buildDiagnoses(rawAttention),
-				buildDateTimeBo(rawAttention)
+				buildDateTimeBo(rawAttention),
+				buildPersonExtendedInfoBo(rawAttention)
+		);
+	}
+
+	private PersonInfoExtendedBo buildPersonExtendedInfoBo(Object[] rawAttention) {
+		return new PersonInfoExtendedBo(
+				(String)rawAttention[28],
+				(String)rawAttention[29],
+				(String)rawAttention[30],
+				(String)rawAttention[31],
+				(Short)rawAttention[32]
 		);
 	}
 
 	private DateTimeBo buildDateTimeBo(Object[] rawAttention) {
-		var localDate = ((Timestamp) rawAttention[27]).toLocalDateTime();
+		var localDate = localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[27]).toLocalDateTime());
 		return new DateTimeBo(
 				new DateBo(localDate.toLocalDate().getYear(),
 							localDate.toLocalDate().getMonthValue(),

@@ -18,11 +18,13 @@ import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 import TuneIcon from '@material-ui/icons/Tune';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import RouterIcon from '@material-ui/icons/Router';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
 
-type MenuName = 'staff' | 'facilities' | 'debug' | 'masterData' | 'booking' | 'more';
+type MenuName = 'staff' | 'facilities' | 'masterData' | 'terminology' | 'booking' | 'imageNetwork' | 'debug' | 'more';
 
 const submenu = (submenu: string) => (resource: ResourceDefinition): boolean => 
-    (!!resource.hasList && (resource.options?.submenu || '') === submenu);
+    (!!resource.hasList && (resource.options?.submenu || 'more') === submenu);
 
 const Menu = ({ dense = false }: MenuProps) => {
     const [state, setState] = useState({
@@ -30,7 +32,9 @@ const Menu = ({ dense = false }: MenuProps) => {
         facilities: false,
         debug: false,
         masterData: false,
+        terminology: false,
         booking: false,
+        imageNetwork: false,
         more: false,
     });
 
@@ -68,12 +72,20 @@ const Menu = ({ dense = false }: MenuProps) => {
                 resources={resources.filter(submenu('facilities'))}
             />
             <SubMenu
-                handleToggle={() => handleToggle('debug')}
-                isOpen={state.debug}
-                name="app.menu.debug"
-                icon={<BugReportIcon />}
+                handleToggle={() => handleToggle('masterData')}
+                isOpen={state.masterData}
+                name="app.menu.masterData"
+                icon={<TuneIcon  />}
                 dense={dense}
-                resources={resources.filter(submenu('debug'))}
+                resources={resources.filter(submenu('masterData'))}
+            />
+            <SubMenu
+                handleToggle={() => handleToggle('terminology')}
+                isOpen={state.terminology}
+                name="app.menu.terminology"
+                icon={<AccountTreeIcon  />}
+                dense={dense}
+                resources={resources.filter(submenu('terminology'))}
             />
             <SubMenu
                 handleToggle={() => handleToggle('booking')}
@@ -84,12 +96,20 @@ const Menu = ({ dense = false }: MenuProps) => {
                 resources={resources.filter(submenu('booking'))}
             />
             <SubMenu
-                handleToggle={() => handleToggle('masterData')}
-                isOpen={state.masterData}
-                name="app.menu.masterData"
-                icon={<TuneIcon  />}
+                handleToggle={() => handleToggle('imageNetwork')}
+                isOpen={state.imageNetwork}
+                name="app.menu.imageNetwork"
+                icon={<RouterIcon />}
                 dense={dense}
-                resources={resources.filter(submenu('masterData'))}
+                resources={resources.filter(submenu('imageNetwork'))}
+            />
+            <SubMenu
+                handleToggle={() => handleToggle('debug')}
+                isOpen={state.debug}
+                name="app.menu.debug"
+                icon={<BugReportIcon />}
+                dense={dense}
+                resources={resources.filter(submenu('debug'))}
             />
             <SubMenu
                 handleToggle={() => handleToggle('more')}

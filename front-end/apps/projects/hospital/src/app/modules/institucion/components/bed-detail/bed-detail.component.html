@@ -10,10 +10,10 @@
                 <div *ngIf="bedInfo.bedNurse else assignNurseTemplate">
                     <button mat-menu-item (click)="openNurseAssign()">
                         <span [translate]="'gestion-camas.detail.more-actions.NURSE_EDIT_ASSIGN'"></span>
-                    </button> 
+                    </button>
                     <button mat-menu-item (click)="deleteAssignedNurse()">
                         <span [translate]="'gestion-camas.detail.more-actions.DELETE_NURSE'"></span>
-                    </button> 
+                    </button>
                 </div>
 
                 <ng-template #assignNurseTemplate>
@@ -65,19 +65,19 @@
                 </div>
                 <div mat-line>
                     <span class="mat-body-2">
-                        {{bedInfo.patient.person.firstName}} {{bedInfo.patient.person.lastName}}
+                        {{bedInfo.patient.person?.firstName}} {{bedInfo.patient.person?.lastName}}
                     </span>
                 </div>
                 <div mat-line>
-                    <span *ngIf="bedInfo.patient.person.identificationType" class="mat-body-2">
+                    <span *ngIf="bedInfo.patient.person?.identificationType" class="mat-body-2">
                         {{bedInfo.patient.person.identificationType}}:
                     </span>
                     <span class="mat-body-2">
-                        {{bedInfo.patient.person.identificationNumber}}
+                        {{bedInfo.patient.person?.identificationNumber}}
                     </span>
                 </div>
                 <div mat-line>
-                    <span *ngIf="bedInfo.patient.person.gender" class="mat-body-3">
+                    <span *ngIf="bedInfo.patient.person?.gender" class="mat-body-3">
                         Sexo: {{bedInfo.patient.person.gender.description}}
                     </span>
                 </div>
@@ -86,7 +86,7 @@
                 <div mat-line >
                     <span class="mat-body-1" [translate]="'gestion-camas.detail.PROBABLE_DISCHARGE_DATE'"></span>
                     <span class="mat-body-2" *ngIf="bedInfo.probableDischargeDate">
-                        {{bedInfo.probableDischargeDate | date : 'dd/MM/yyyy'}}
+                        {{bedInfo.probableDischargeDate | isoToDate | dateFormat : 'date'}}
                     </span>
                     <span *ngIf="!bedInfo.probableDischargeDate" class="mat-body-2" [translate]="'gestion-camas.detail.NO_DISCHARGE_DATE'"></span>
                 </div>
@@ -99,7 +99,7 @@
                 <span mat-line [translate]="'gestion-camas.detail.NURSE_DNI'" [translateParams]="{nurseDni: bedInfo.bedNurse.identificationNumber}"></span>
             </mat-list-item>
 			<mat-list-item>
-				<div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis">
+				<div mat-line *ngIf="!bedInfo.bed.free && patientHasAnamnesis && INTERNMENT_SECTOR_TYPE === bedInfo.bed.room.sector.type">
 					<button mat-raised-button color="primary" (click)="physicalDischarge()" *appHasRole="['ADMINISTRADOR_DE_CAMAS']" id="physical-discharge">
 						<span class="uppercase" [translate]="'internaciones.discharge.PHYSICAL_DISCHARGE'"></span>
 					</button>

@@ -266,10 +266,6 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			},
 			_ => {
 				this.snackBarService.showError('Error al guardar documento de nueva consulta odontológica');
-				const filesToDelete = odontologyDto.references.filter(reference => reference.fileIds.length > 0);
-				if (filesToDelete.length) {
-					this.errorToUploadReferenceFiles();
-				}
 			}
 		);
 
@@ -338,46 +334,26 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			return;
 		}
 
-		const filesToUpdate: Observable<number>[] = [];
+		const referencesToUpdate: Observable<number[]>[] = [];
 
-		references.forEach(reference => {
-			reference.referenceFiles.forEach(file => {
-				const obs = this.referenceFileService.uploadReferenceFiles(this.data.patientId, file);
-				filesToUpdate.push(obs);
-			})
-		});
-
-		if (filesToUpdate.length) {
-
-			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
-				let indexRefFilesIds = 0;
-				references.forEach(
-					(reference: ReferenceInformation, index: number) => {
-						const filesAmount = reference.referenceFiles.length;
-						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
-							this.odontologyReferenceService.addFileIdAt(index, referenceFileId[i]);
-						}
-						indexRefFilesIds += filesAmount;
+		references.forEach((reference, index) => {
+			const obs = this.referenceFileService.uploadReferenceFiles(this.data.patientId, reference.referenceFiles);
+			referencesToUpdate.push(obs);
+			if (referencesToUpdate.length) {
+				forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
+					const filesAmount = reference.referenceFiles.length;
+					for(let i = 0; i < filesAmount; i++ ){
+						this.odontologyReferenceService.addFileIdAt(index, referenceFileIds[index][i]);
 					}
-				);
+					this.createConsultation(odontologyDto);
+				}, _ => {
+					this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
+				});
+			} else {
 				odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
 				this.createConsultation(odontologyDto);
-			}, _ => {
-				this.snackBarService.showError('odontologia.odontology-consultation-dock-popup.ERROR_TO_UPLOAD_FILES');
-				this.errorToUploadReferenceFiles();
 			}
-			);
-		}
-		else {
-			odontologyDto.references = this.odontologyReferenceService.getOdontologyReferences();
-			this.createConsultation(odontologyDto);
-		}
-	}
-
-	private errorToUploadReferenceFiles() {
-		const filesToDelete = this.odontologyReferenceService.getReferenceFilesIds();
-		this.referenceFileService.deleteReferenceFiles(filesToDelete);
-		this.odontologyReferenceService.deleteReferenceFilesIds();
+		});
 	}
 
 	private problemsToUpdate(odontologyDto: OdontologyConsultationDto): OdontologyDiagnosticDto[] {

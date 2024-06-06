@@ -1,7 +1,7 @@
 <app-new-consultation-expansion-section id="diagnosticos"
 	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 	[title]="'ambulatoria.paciente.surgical-report.prosthesis.TITLE' | translate" [icon]="'accessibility'"
-	[collapsed]="true" [hideBorder]="false">
+	[collapsed]="collapsed" [hideBorder]="false" [isEmpty]="isEmpty()">
 	<form [formGroup]="form" fxLayoutGap="20px">
 		<label [translate]="'ambulatoria.paciente.surgical-report.prosthesis.TITLE'"></label>
 		<mat-radio-group aria-label="Select an option" fxLayout="column" fxLayoutGap="10px" formControlName="prosthesis" class="radio-group">

@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public enum EVictimKeeperReportPlace {
 
-	POLICE_STATION(1, "POLICE_STATION"),
-	POLICE_STATION_WOMEN_OFFICE(2, "POLICE_STATION_WOMEN_OFFICE"),
-	PUBLIC_PROSECUTORS_OFFICE(3, "PUBLIC_PROSECUTORS_OFFICE"),
-	FAMILY_COURT(4, "FAMILY_COURT"),
-	PEACE_COURT(5, "PEACE_COURT");
+	POLICE_STATION(1, "Comisaría"),
+	POLICE_STATION_WOMEN_OFFICE(2, "Comisaría/Oficina de la Mujer"),
+	PUBLIC_PROSECUTORS_OFFICE(3, "Fiscalía"),
+	FAMILY_COURT(4, "Juzgado de la Familia"),
+	PEACE_COURT(5, "Juzgado de Paz");
 
 	private Short id;
 

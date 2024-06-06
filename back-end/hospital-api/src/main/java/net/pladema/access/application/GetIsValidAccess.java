@@ -22,11 +22,12 @@ public class GetIsValidAccess {
 	private final AppointmentService appointmentService;
 
 	private final UserLogged userLogged;
+	private final ClinicHistoryAccessService clinicHistoryAccessService;
 
 	@Value("${clinic.history.appointment.min.days:5}")
 	private Short MIN_DATE_LIMIT;
 
-	private final static String OUTPUT = "Output -> {} {} {} {} {}";
+	private final static String OUTPUT = "Output -> {} {} {} {} {} {}";
 
 	public boolean run(Integer institutionId, Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
@@ -35,7 +36,8 @@ public class GetIsValidAccess {
 		boolean hasCurrentAppointment = appointmentService.hasCurrentAppointment(patientId, userLogged.getProfessionalId(), LocalDate.now());
 		boolean hasPastAppointment = appointmentService.hasOldAppointmentWithMinDateLimit(patientId, userLogged.getProfessionalId(), MIN_DATE_LIMIT);
 		boolean hasFutureAppointment = appointmentService.hasFutureAppointmentByPatientId(patientId, userLogged.getProfessionalId());
-		log.debug(OUTPUT, isIntermentEpisodeActive, isEmergencyCareEpisodeActive, hasCurrentAppointment, hasPastAppointment, hasFutureAppointment);
-		return isIntermentEpisodeActive || isEmergencyCareEpisodeActive || hasCurrentAppointment || hasPastAppointment || hasFutureAppointment;
+		boolean has24HoursAccess = clinicHistoryAccessService.has24HoursAccessByPatientId(patientId);
+		log.debug(OUTPUT, isIntermentEpisodeActive, isEmergencyCareEpisodeActive, hasCurrentAppointment, hasPastAppointment, hasFutureAppointment, has24HoursAccess);
+		return isIntermentEpisodeActive || isEmergencyCareEpisodeActive || hasCurrentAppointment || hasPastAppointment || hasFutureAppointment || has24HoursAccess;
 	}
 }

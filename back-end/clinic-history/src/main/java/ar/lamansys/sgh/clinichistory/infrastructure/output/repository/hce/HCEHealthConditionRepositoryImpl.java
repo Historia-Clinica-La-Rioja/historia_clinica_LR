@@ -43,6 +43,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
                 "   JOIN {h-schema}document_health_condition dhc on d.id = dhc.document_id " +
                 "   JOIN {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
                 "   WHERE d.status_id IN (:docStatusId) " +
+				"   AND NOT hc.verification_status_id = :verificationId " +
                 "   AND d.type_id in (:documentTypes) "+
                 "   AND hc.patient_id = :patientId " +
                 "   AND hc.problem_id IN (:validProblemTypes) " +
@@ -56,9 +57,10 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
                 .setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
+				.setParameter("verificationId", ConditionVerificationStatus.ERROR)
                 .setParameter("patientId", patientId)
                 .setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
-                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT))
+                .setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
                 .getResultList();
 
         List<HCEHealthConditionVo> result = new ArrayList<>();
@@ -100,6 +102,7 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 				"	JOIN {h-schema}person p on hcp.person_id = p.id " +
 				"	JOIN {h-schema}user_person up on up.person_id = p.id " +
 				"   WHERE d.status_id IN (:docStatusId) " +
+				"   AND NOT hc.verification_status_id = :verificationId " +
 				"   AND d.type_id in (:documentTypes) "+
 				"   AND hc.patient_id = :patientId " +
 				"   AND hc.problem_id IN (:validProblemTypes) " +
@@ -114,10 +117,61 @@ public class HCEHealthConditionRepositoryImpl implements HCEHealthConditionRepos
 
 		List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
 				.setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
+				.setParameter("verificationId", ConditionVerificationStatus.ERROR)
 				.setParameter("patientId", patientId)
 				.setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
-				.setParameter("documentTypes", List.of(DocumentType.OUTPATIENT))
+				.setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
 				.setParameter("userId", userId)
+				.getResultList();
+
+		List<HCEHealthConditionVo> result = new ArrayList<>();
+
+		queryResult.forEach(h ->
+				result.add(
+						new HCEHealthConditionVo(
+								(Integer)h[0],
+								new Snomed((String)h[1], (String)h[2], null, null),
+								(String)h[3],
+								(boolean)h[4],
+								(String)h[5],
+								(String)h[6],
+								(String)h[7],
+								h[8] != null ? ((Date)h[8]).toLocalDate() : null,
+								h[9] != null ? ((Date)h[9]).toLocalDate() : null,
+								(Integer) h[10],
+								null,
+								null,
+								null,
+								null))
+		);
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	@Transactional(readOnly = true)
+	public List<HCEHealthConditionVo> getProblemsMarkedAsError(Integer patientId) {
+		log.debug(INPUT_PARAMETERS_PATIENT_ID, patientId);
+		String sqlString =
+				"   SELECT hc.id, s.sctid, s.pt, hc.status_id, hc.main, hc.verification_status_id, hc.problem_id," +
+				"          hc.severity, hc.start_date, hc.inactivation_date, hc.patient_id " +
+				"   FROM {h-schema}document d " +
+				"   JOIN {h-schema}document_health_condition dhc on d.id = dhc.document_id " +
+				"   JOIN {h-schema}health_condition hc on dhc.health_condition_id = hc.id " +
+				"   JOIN {h-schema}snomed s ON hc.snomed_id = s.id " +
+				"   WHERE d.status_id IN (:docStatusId) " +
+				"   AND hc.verification_status_id = :verificationId " +
+				"   AND d.type_id in (:documentTypes) "+
+				"   AND hc.patient_id = :patientId " +
+				"   AND hc.problem_id IN (:validProblemTypes) " +
+				"   ORDER BY hc.updated_on DESC";
+
+		List<Object[]> queryResult = entityManager.createNativeQuery(sqlString)
+				.setParameter("docStatusId", List.of(DocumentStatus.FINAL, DocumentStatus.DRAFT))
+				.setParameter("verificationId", ConditionVerificationStatus.ERROR)
+				.setParameter("patientId", patientId)
+				.setParameter("validProblemTypes", Arrays.asList(ProblemType.PROBLEM, ProblemType.CHRONIC))
+				.setParameter("documentTypes", List.of(DocumentType.OUTPATIENT, DocumentType.ODONTOLOGY))
 				.getResultList();
 
 		List<HCEHealthConditionVo> result = new ArrayList<>();

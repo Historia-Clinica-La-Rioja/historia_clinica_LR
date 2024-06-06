@@ -1,12 +1,14 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller;
 
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentFileById;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import net.pladema.clinichistory.requests.medicationrequests.service.CancelPrescriptionLineState;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -67,6 +69,9 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
     @MockBean
     private PatientExternalMedicalCoverageService patientExternalMedicalCoverageService;
 
+	@MockBean
+	private GeneratedPdfResponseService generatedPdfResponseService;
+
     @MockBean
     private PdfService pdfService;
 
@@ -99,6 +104,9 @@ class MedicationRequestControllerIntegrationTest extends IntegrationController {
 
 	@MockBean
 	private FetchDocumentFileById fetchDocumentFileById;
+
+	@MockBean
+	private SharedPersonPort sharedPersonPort;
 
     @BeforeEach
     void setup() {

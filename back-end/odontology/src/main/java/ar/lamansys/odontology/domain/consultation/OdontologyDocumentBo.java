@@ -44,6 +44,8 @@ public class OdontologyDocumentBo {
 
     private LocalDate performedDate;
 
+	private Integer medicalCoverageId;
+
     public OdontologyDocumentBo(Long id,
                                 ConsultationBo consultation,
                                 Integer encounterId,
@@ -64,6 +66,7 @@ public class OdontologyDocumentBo {
         this.medications = consultation.getMedications();
         this.evolutionNote = consultation.getEvolutionNote();
         this.performedDate = performedDate;
+		this.medicalCoverageId = consultation.getPatientMedicalCoverageId();
     }
 
 }

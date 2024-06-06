@@ -5,13 +5,27 @@
     <th:block th:include="fragments/general.html :: headerfiles"></th:block>
 </head>
 <body>
-<div th:replace="fragments/general.html :: header(title='Nueva consulta', subtitle='Contrarreferencia')"></div>
-<div th:replace="fragments/general.html :: clinicalSpecialty(message='Especialidad clínica')"></div>
-<div th:replace="fragments/general.html :: personalData(patientType='Paciente')"></div>
-<div th:replace="fragments/general.html :: procedures(message='Procedimientos')"></div>
-<div th:replace="fragments/general.html :: medications(title='Medicaciones')"></div>
-<div th:replace="fragments/general.html :: allergies"></div>
-<div th:replace="fragments/general.html :: counterReference"></div>
+    <table>
+        <thead><tr><td>
+            <div class="header-space">&nbsp;</div>
+        </td></tr></thead>
+        <tbody><tr><td>
+            <div>
+                <div th:replace="fragments/general.html :: header"></div>
+                <div th:replace="fragments/general.html :: encounterData(type='Contrarreferencia')"></div>
+                <div th:replace="fragments/general.html :: professionalData"></div>
+                <div th:replace="fragments/general.html :: documentTypeTitle(title='Nueva consulta')"></div>
+                <div th:replace="fragments/general.html :: clinicalSpecialty(message='Especialidad clínica')"></div>
+                <div th:replace="fragments/general.html :: procedures(message='Procedimientos')"></div>
+                <div th:replace="fragments/general.html :: medications(title='Medicaciones')"></div>
+                <div th:replace="fragments/general.html :: allergies"></div>
+                <div th:replace="fragments/general.html :: counterReference"></div>
+            </div>
+        </td></tr></tbody>
+        <tfoot><tr><td>
+            <div class="footer-space">&nbsp;</div>
+        </td></tr></tfoot>
+    </table>
 </body>
 <footer>
     <div th:replace="fragments/general.html :: footer"></div>

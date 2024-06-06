@@ -3,12 +3,9 @@ package net.pladema.clinichistory.hospitalization.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.validation.Valid;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -29,11 +26,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentTypeDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import net.pladema.clinichistory.hospitalization.application.createEpisodeDocument.CreateEpisodeDocument;
 import net.pladema.clinichistory.hospitalization.application.deleteEpisodeDocument.DeleteEpisodeDocument;
@@ -42,7 +42,6 @@ import net.pladema.clinichistory.hospitalization.application.getEpisodeDocument.
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentPhysicalDischargeValid;
 import net.pladema.clinichistory.hospitalization.controller.constraints.ProbableDischargeDateValid;
-import ar.lamansys.sgh.shared.infrastructure.input.service.DocumentTypeDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.EpisodeDocumentResponseDto;
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentEpisodeADto;
@@ -61,6 +60,11 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.patientdischarge.PatientDischargeService;
 import net.pladema.establishment.controller.service.BedExternalService;
 import net.pladema.events.EHospitalApiTopicDto;
@@ -139,7 +143,8 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
 			@PathVariable(name = "consentId") Integer consentId,
 			@RequestPart("file") MultipartFile file) throws MoreThanOneConsentDocumentException {
-		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}, consentId", institutionId, internmentEpisodeId, episodeDocumentTypeId, file, consentId);
+		LOG.debug("Input parameters -> institutionId {}, internmentEpisodeId {}, episodeDocumentTypeId {}, file {}, consentId {}",
+				institutionId, internmentEpisodeId, episodeDocumentTypeId, file, consentId);
 		EpisodeDocumentDto dto = new EpisodeDocumentDto(file, episodeDocumentTypeId, internmentEpisodeId, consentId);
 		Integer result = createEpisodeDocument.run(dto);
 		LOG.debug(OUTPUT, result);
@@ -348,8 +353,11 @@ public class InternmentEpisodeController {
 			@PathVariable(name = "consentId") Integer consentId,
 			@PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId) throws GeneratePdfException, InternmentEpisodeNotFoundException, PersonNotFoundException, PatientNotFoundException {
 		LOG.debug("Input parameters -> institutionId {}, consentId {}, intermentEpisodeId {}, procedures {}, observations {}, professionalId {}", institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
-		ResponseEntity<Resource> result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
+		var result = internmentEpisodeService.generateEpisodeDocumentType(institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
+
 		LOG.debug(OUTPUT, result);
-		return result;
+		return StoredFileResponse.sendGeneratedBlob(//InternmentEpisodeDocumentService.generateConsentDocument
+				result
+		);
 	}
 }

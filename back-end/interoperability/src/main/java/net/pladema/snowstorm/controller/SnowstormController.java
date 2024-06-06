@@ -1,14 +1,22 @@
 package net.pladema.snowstorm.controller;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import net.pladema.cipres.domain.SnomedBo;
 import net.pladema.snowstorm.controller.dto.FullySpecifiedNamesDto;
 import net.pladema.snowstorm.controller.dto.PreferredTermDto;
 import net.pladema.snowstorm.controller.dto.SnomedEclDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchItemDto;
 import net.pladema.snowstorm.controller.dto.SnomedSearchDto;
 import net.pladema.snowstorm.controller.dto.SnomedTemplateDto;
+import net.pladema.snowstorm.domain.GetSnomedConceptEclRelated;
 import net.pladema.snowstorm.services.SnowstormService;
 import net.pladema.snowstorm.services.domain.SnomedTemplateSearchItemBo;
 import net.pladema.snowstorm.services.domain.FetchAllSnomedEcl;
@@ -16,6 +24,7 @@ import net.pladema.snowstorm.services.domain.SnomedSearchBo;
 import net.pladema.snowstorm.services.domain.SnomedSearchItemBo;
 import net.pladema.snowstorm.services.domain.SnowstormItemResponse;
 import net.pladema.snowstorm.services.domain.SnowstormSearchResponse;
+import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.exceptions.SnowstormApiException;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConcepts;
 import net.pladema.snowstorm.services.searchCachedConcepts.SearchCachedConceptsWithResultCount;
@@ -23,6 +32,7 @@ import net.pladema.snowstorm.services.searchTemplates.SearchTemplates;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,9 +41,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/snowstorm")
+@AllArgsConstructor
 @Tag(name = "Snowstorm", description = "Snowstorm")
+@RequestMapping("/snowstorm")
+@RestController
 public class SnowstormController {
 
     private static final String CONCEPTS = "/concepts";
@@ -52,20 +63,9 @@ public class SnowstormController {
 
 	private final SearchTemplates searchTemplates;
 
-    public SnowstormController(SnowstormService snowstormService,
-							   FetchAllSnomedEcl fetchAllSnomedEcl,
-							   SearchCachedConceptsWithResultCount searchCachedConceptsWithResultCount,
-							   SearchCachedConcepts searchCachedConcepts,
-							   FeatureFlagsService featureFlagsService,
-							   SearchTemplates searchTemplates
-	) {
-		this.snowstormService = snowstormService;
-        this.fetchAllSnomedEcl = fetchAllSnomedEcl;
-        this.searchCachedConceptsWithResultCount = searchCachedConceptsWithResultCount;
-		this.searchCachedConcepts = searchCachedConcepts;
-		this.featureFlagsService = featureFlagsService;
-		this.searchTemplates = searchTemplates;
-	}
+	private ObjectMapper objectMapper;
+
+	private GetSnomedConceptEclRelated getSnomedConceptEclRelated;
 
     @GetMapping(value = CONCEPTS)
     public SnomedSearchDto getConceptsWithResultCount(
@@ -97,6 +97,16 @@ public class SnowstormController {
 		result = searchLocally(term, eclKey);
 		LOG.debug("Output size -> {}", result.size());
 		LOG.trace("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping(value = "/concept-related-ecl")
+	public List<SharedSnomedDto> areConceptsECLRelated(@RequestParam(value = "snomedConcepts") String snomedConcepts, @Param("ecl") SnomedECL ecl) throws JsonProcessingException {
+		LOG.debug("Input parameters -> snomedConcepts {}, ecl {}", snomedConcepts, ecl);
+		List<SharedSnomedDto> parsedSnomeds = objectMapper.readValue(snomedConcepts, objectMapper.getTypeFactory().constructCollectionType(List.class, SharedSnomedDto.class));
+		List<SnomedBo> snomedBos = parsedSnomeds.stream().map(snomed -> new SnomedBo(snomed.getSctid(), snomed.getPt())).collect(Collectors.toList());
+		List<SharedSnomedDto> result = getSnomedConceptEclRelated.run(snomedBos, ecl).stream().map(concept -> new SharedSnomedDto(concept.getSctid(), concept.getPt())).collect(Collectors.toList());
+		LOG.debug("Output -> {}", result);
 		return result;
 	}
 

@@ -60,4 +60,8 @@ public interface CounterReferenceRepository extends JpaRepository<CounterReferen
 			"WHERE cr.patientMedicalCoverageId = :id")
 	Optional<Integer> getPatientMedicalCoverageId(@Param("id") Integer id);
 
+	@Query("SELECT (case when count(cr.id)>0 then true else false end)" +
+			"FROM CounterReference cr " +
+			"WHERE cr.referenceId = :referenceId")
+	boolean existsByReferenceId(@Param("referenceId")Integer referenceId);
 }

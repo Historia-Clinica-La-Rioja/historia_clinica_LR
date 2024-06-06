@@ -42,7 +42,7 @@ public class PrescriptionMapper {
 
 	public PrescriptionDto mapTo(PrescriptionBo prescriptionBo) throws PrescriptionNotFoundException {
 		if (prescriptionBo.getPrescriptionId() == null) {
-			throw new PrescriptionNotFoundException();
+			throw new PrescriptionNotFoundException("La receta no existe");
 		}
 		return PrescriptionDto.builder()
 				.domain(prescriptionBo.getDomain())
@@ -174,4 +174,5 @@ public class PrescriptionMapper {
 				.sisaCode(institutionPrescriptionBo.getSisaCode() != null ? institutionPrescriptionBo.getSisaCode() : null)
 				.build();
 	}
+
 }

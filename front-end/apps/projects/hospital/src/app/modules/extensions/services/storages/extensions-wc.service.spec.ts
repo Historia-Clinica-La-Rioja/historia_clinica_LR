@@ -85,7 +85,7 @@ describe('ExtensionsWCService', () => {
 			],
 		);
 		expect(extensionsWCService.stillLoading.length).toBe(0);
-		expect(extensionsWCService.wcSlots.length).toBe(2);
+		expect(extensionsWCService.wcSlots.length).toBe(4);
 	});
 
 	it('should handle duplicated WC in two Extension', () => {
@@ -109,7 +109,7 @@ describe('ExtensionsWCService', () => {
 			],
 		);
 		expect(extensionsWCService.stillLoading.length).toBe(0);
-		expect(extensionsWCService.wcSlots.length).toBe(1);
+		expect(extensionsWCService.wcSlots.length).toBe(2);
 	});
 
 });

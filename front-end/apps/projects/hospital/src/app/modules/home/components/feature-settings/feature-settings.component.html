@@ -1,4 +1,6 @@
-<app-content>
+<app-content width="full-back" >
+	<app-route-back></app-route-back>
+	<app-usage-card></app-usage-card>
 	<ng-container *ngIf="(page$ | async) as page; else loading">
 		<app-page-layout [page]="page"></app-page-layout>
 	</ng-container>

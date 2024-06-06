@@ -1,0 +1,7 @@
+<h1>{{this.data.title | translate}}</h1>
+
+<mat-selection-list [multiple]="false">
+    <mat-list-option *ngFor="let opt of options" (click)="cancel(opt.value)">
+        <span [translate]="opt.title"></span>
+    </mat-list-option>
+</mat-selection-list>

@@ -13,9 +13,9 @@ public class AssociateReferenceAppointment {
 
 	private final ReferenceAppointmentStorage referenceAppointmentStorage;
 
-	public void run(Integer referenceId, Integer appointmentId, Boolean alreadyHasPhone) {
-		log.debug("Input parameters -> referenceId {}, appointmentId {}, alreadyHasPhone {}", referenceId, appointmentId, alreadyHasPhone);
-		referenceAppointmentStorage.save(referenceId, appointmentId, alreadyHasPhone);
+	public void run(Integer referenceId, Integer appointmentId, Boolean isProtected) {
+		log.debug("Input parameters -> referenceId {}, appointmentId {}, isProtected {}", referenceId, appointmentId, isProtected);
+		referenceAppointmentStorage.save(referenceId, appointmentId, isProtected);
 	}
 
 }

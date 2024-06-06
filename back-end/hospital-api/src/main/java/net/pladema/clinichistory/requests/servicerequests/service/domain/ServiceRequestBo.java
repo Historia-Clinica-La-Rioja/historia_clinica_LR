@@ -15,6 +15,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.ToString;
 import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequestBo;
 
 @Getter
@@ -22,6 +23,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.IServiceRequest
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class ServiceRequestBo implements IDocumentBo, IServiceRequestBo {
 
     private Long id;
@@ -75,15 +77,15 @@ public class ServiceRequestBo implements IDocumentBo, IServiceRequestBo {
     }
 
     @Override
-    public List<String> getProblemsPt() {
-        return List.of(getDiagnosticReports().get(0).getHealthCondition().getSnomedPt());
+    public List<String> getStudies() {
+        return getDiagnosticReports().stream()
+                .map(DiagnosticReportBo::getDiagnosticReportSnomedPt)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<String> getStudies() {
-        return getDiagnosticReports().stream()
-                .map(diag -> diag.getSnomed().getPt())
-                .collect(Collectors.toList());
+    public List<String> getProblemsPt() {
+        return List.of(getDiagnosticReports().get(0).getHealthCondition().getSnomedPt());
     }
 
     @Override

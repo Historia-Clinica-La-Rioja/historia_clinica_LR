@@ -3,7 +3,7 @@
 		<span [translate]="'turnos.home.SEARCH_BY_INSTITUTION_CRITERIA'"></span>
 		<app-search-criteria [label]="'turnos.TYPE_ATTENTION'" [searchCriteryStyle]="'bold'"
 			[defaultOption]="selectedSearchCriteria" [disabled]="externalInformation?.disabledInput.others"
-			(selectedOption)="setCriteria($event)"></app-search-criteria>
+			(selectedOption)="resetDataAndSetCriteria($event)"></app-search-criteria>
 
 		<div fxLayout="row" fxLayoutGap="32px">
 			<div fxLayout="column" fxLayoutGap="8px">
@@ -13,7 +13,7 @@
 						[translate]="'turnos.OPTIONAL'"></span>
 				</div>
 				<app-typeahead [titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
-					[options]="aliasTypeaheadOptions" [externalSetValue]="externalSetValueSpecialty" 
+					[options]="aliasTypeaheadOptions" [externalSetValue]="externalSetValueSpecialty"
 					[disabled]="externalInformation?.disabledInput.specialty" (selectionChange)="setClinicalSpecialty($event)">
 				</app-typeahead>
 
@@ -31,13 +31,13 @@
 			</div>
 		</div>
 
-		<div fxLayout="column" fxLayoutGap="16px">
+		<div fxLayout="column" fxLayoutGap="16px" *ngIf="isEnableTelemedicina">
 			<span class="category-title" [translate]="'turnos.MODALITY_ATTENTION'"></span>
-			<mat-radio-group formControlName="modality">
+			<mat-radio-group formControlName="modality" (change)="clearSearchAppointment()">
 				<mat-radio-button color="primary" [value]="MODALITY_ON_SITE_ATTENTION">{{'turnos.ON_SITE_ATTENTION' |
 					translate}}</mat-radio-button>
 				<mat-radio-button color="primary" [value]="MODALITY_PATIENT_VIRTUAL_ATTENTION"
-					[disabled]="!isEnableTelemedicina">{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
+					>{{'turnos.PATIENT_VIRTUAL_ATTENTION' |
 					translate}}</mat-radio-button>
 			</mat-radio-group>
 		</div>
@@ -85,21 +85,16 @@
 		<div fxLayout="column" fxLayoutGap="8px">
 			<span class="category-title" [translate]="'turnos.home.SEARCH_RANGE'"></span>
 			<div style="height: 60px;" fxLayout="row" fxLayoutGap="8px">
-				<mat-form-field style="max-width: 25%;" appearance="outline">
-					<mat-label [translate]="'turnos.home.START_DATE'"></mat-label>
-					<input formControlName="searchInitialDate" matInput [matDatepicker]="startDatePicker"
-						[matDatepickerFilter]="dateSearchFilter" (dateChange)="updateSearchEndingDate($event)">
-					<mat-error [translate]="'turnos.home.messages.NO_SPECIFIED_DATE'"></mat-error>
-					<mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-					<mat-datepicker #startDatePicker></mat-datepicker>
-				</mat-form-field>
-				<mat-form-field style="max-width: 25%;" appearance="outline">
-					<mat-label [translate]="'turnos.home.END_DATE'"></mat-label>
-					<input formControlName="searchEndingDate" matInput [matDatepicker]="endDatePicker">
-					<mat-error [translate]="'turnos.home.messages.NO_SPECIFIED_DATE'"></mat-error>
-					<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-					<mat-datepicker #endDatePicker></mat-datepicker>
-				</mat-form-field>
+				<app-datepicker style="max-width: 25%;" [minDate]="today" [dateToSetInDatepicker]="today" title="turnos.home.START_DATE" (selectDate)="updateSearchEndingDate($event)"></app-datepicker>
+				<div style="max-width: 25%;" fxLayout="column" fxLayoutGap="10px">
+					<span class="datepicker-title">{{"turnos.home.END_DATE" | translate}}</span>
+					<mat-form-field appearance="outline">
+						<input formControlName="searchEndingDate" matInput [matDatepicker]="endDatePicker">
+						<mat-error [translate]="'turnos.home.messages.NO_SPECIFIED_DATE'"></mat-error>
+						<mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+						<mat-datepicker #endDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
 			</div>
 			<span class="disclaimer-text" [translate]="'turnos.home.SEARCH_DISCLAIMER'"></span>
 		</div>
@@ -118,9 +113,7 @@
 					*ngFor="let emptyAppointment of emptyAppointmentsFiltered; let last = last">
 					<app-appointment-details (resetInformation)="clearInformation()"
 						[emptyAppointment]="emptyAppointment" [patientId]="patientId"
-						[searchInitialDate]="form.controls.searchInitialDate.value"
 						[referenceSummary]="externalInformation?.referenceSummary"
-						[searchEndingDate]="form.controls.searchEndingDate.value"
 						[modalityAttention]="form.controls.modality.value"></app-appointment-details>
 					<mat-divider style="margin-top: 15px;" *ngIf="!last"></mat-divider>
 				</div>
@@ -131,18 +124,8 @@
 		</div>
 		<ng-template #noInfo>
 			<mat-card>
-				<app-no-data></app-no-data>
+				<app-no-appointment-available [reset]="resetRegisterDemandButtonDisabled" [redirectionDisabled]="redirectionDisabled" (preloadData)="sendPreloadedData()" (registerUnsatisfiedDemand)="saveRegisterUnsatisfiedDemand()"></app-no-appointment-available>
 			</mat-card>
 		</ng-template>
-	</div>
-
-	<div *ngIf="showCareNetworkSection" fxLayout="column" fxLayoutGap="15px">
-		<strong class="category-title">{{ 'turnos.home.NOT_FOUND_APPOINTMENTS' | translate}}</strong>
-
-		<div>
-			<button mat-flat-button color="primary" (click)="searchAppointmentsInCareNetwork()">
-				<span [translate]="'turnos.home.SEARCH_IN_CARE_NETWORK'"></span>
-			</button>
-		</div>
 	</div>
 </div>

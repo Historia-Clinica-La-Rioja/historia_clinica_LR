@@ -30,6 +30,6 @@
 		<span class="mat-body text"> {{ appointment.office }} </span>
 	</div>
 	<div *ngIf="appointment?.associatedReferenceClosureType || appointment?.hasAssociatedReference" fxLayout="row" fxLayoutGap="10px">
-		<app-reference-state-label [reference]="appointment.associatedReferenceClosureType"></app-reference-state-label>
+		<app-reference-state-label [referenceClosureDescription]="appointment.associatedReferenceClosureType?.description"></app-reference-state-label>
 	</div>
 </div>

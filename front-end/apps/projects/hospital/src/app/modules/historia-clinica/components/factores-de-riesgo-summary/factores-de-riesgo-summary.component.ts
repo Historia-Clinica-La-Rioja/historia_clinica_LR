@@ -3,7 +3,7 @@ import { SummaryHeader } from '@presentation/components/summary-card/summary-car
 import { FACTORES_DE_RIESGO } from '../../constants/summaries';
 import { RiskFactorCurrentPrevious } from '@presentation/components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { Last2RiskFactorsDto, RiskFactorDto } from '@api-rest/api-model';
-import { momentParseDateTime } from '@core/utils/moment.utils';
+import { dateISOParseDate,} from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { AddRiskFactorsComponent } from '../../dialogs/add-risk-factors/add-risk-factors.component';
 import { Observable } from 'rxjs';
@@ -54,21 +54,24 @@ export class FactoresDeRiesgoSummaryComponent implements OnInit {
 			this.factoresDeRiesgo = [];
 			const current: RiskFactorDto = riskFactors.current || {};
 			const previous: RiskFactorDto = riskFactors.previous || {};
-			Object.keys(LABELS).forEach(key => this.factoresDeRiesgo.push(
-				{
-					description: LABELS[key],
-					currentValue: {
-						value: Number(current[key]?.value),
-						effectiveTime: current[key]?.effectiveTime ? momentParseDateTime(current[key].effectiveTime) : undefined
-					},
-					previousValue: {
-						value: Number(previous[key]?.value),
-						effectiveTime: previous[key]?.effectiveTime ? momentParseDateTime(previous[key].effectiveTime) : undefined
+			Object.keys(LABELS).forEach(key => {
+				this.factoresDeRiesgo.push(
+					{
+						description: LABELS[key],
+						currentValue: {
+							value: Number(current[key]?.value),
+							effectiveTime: current[key]?.effectiveTime ? dateISOParseDate(current[key].effectiveTime) : undefined
+						},
+						previousValue: {
+							value: Number(previous[key]?.value),
+							effectiveTime: previous[key]?.effectiveTime ? dateISOParseDate(previous[key].effectiveTime) : undefined
+						}
 					}
-				}
-			));
+				)
+			});
 		};
 	}
+	
 
 
 	openDialog() {

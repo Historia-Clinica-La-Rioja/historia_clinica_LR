@@ -10,29 +10,34 @@ import net.pladema.sgx.exceptions.BackofficeValidationException;
 public class BackofficeProcedureTemplateParameterEntityValidator implements BackofficeEntityValidator<ProcedureParameterDto, Integer> {
 
 	private final BackofficeProcedureParameterStore store;
+	private final BackofficeProcedureTemplateEntityValidator procedureTemplateEntityValidator;
 
 	private BackofficeValidationException allReadyExists = new BackofficeValidationException("El estudio ya tiene asociado un parámetro con este código LOINC");
 
 	@Override
 	public void assertCreate(ProcedureParameterDto entity) {
-		var parentProcedureTemplate = entity.getProcedureTemplateId();
+		Integer procedureTemplateId = entity.getProcedureTemplateId();
+		procedureTemplateEntityValidator.assertUpdate(procedureTemplateId);
 		var loincId = entity.getLoincId();
-		if (store.existsInProcedureTemplateByLoinc(parentProcedureTemplate, loincId)) {
+		if (store.existsInProcedureTemplateByLoinc(procedureTemplateId, loincId)) {
 			throw allReadyExists;
 		}
 	}
 
 	@Override
 	public void assertUpdate(Integer id, ProcedureParameterDto entity) {
-		var parentProcedureTemplate = entity.getProcedureTemplateId();
+		Integer procedureTemplateId = entity.getProcedureTemplateId();
+		procedureTemplateEntityValidator.assertUpdate(procedureTemplateId);
 		var loincId = entity.getLoincId();
-		if (store.existsInProcedureTemplateByLoinc(parentProcedureTemplate, loincId, id)) {
+		if (store.existsInProcedureTemplateByLoinc(procedureTemplateId, loincId, id)) {
 			throw allReadyExists;
 		}
 	}
 
 	@Override
 	public void assertDelete(Integer id) {
-
+		var entity = store.findById(id);
+		if (entity.isPresent())
+			procedureTemplateEntityValidator.assertUpdate(entity.get().getProcedureTemplateId());
 	}
 }

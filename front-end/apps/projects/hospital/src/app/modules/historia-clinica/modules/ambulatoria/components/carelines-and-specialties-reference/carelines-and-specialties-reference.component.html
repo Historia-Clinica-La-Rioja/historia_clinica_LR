@@ -41,7 +41,7 @@
 	<div>
 		<mat-form-field appearance="outline" fxFlex="100%" fxLayoutGap="7px">
 			<mat-label [translate]="formReference.value.consultation ? 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY' : 'ambulatoria.paciente.nueva-consulta.reference-dialog.PLACEHOLDER_SPECIALITY_OPTIONAL'"></mat-label>
-			<mat-select id="specialty" name="clinicalSpecialties" formControlName="clinicalSpecialties" multiple>
+			<mat-select id="specialty" name="clinicalSpecialties" formControlName="clinicalSpecialties" multiple (selectionChange)="onSpecialtySelectionChange()">
 			  <mat-select-trigger>
 				{{formReference.controls.clinicalSpecialties.value?.[0]?.name || ''}}
 				<span *ngIf="(formReference.controls.clinicalSpecialties.value?.length || 0) > 1">

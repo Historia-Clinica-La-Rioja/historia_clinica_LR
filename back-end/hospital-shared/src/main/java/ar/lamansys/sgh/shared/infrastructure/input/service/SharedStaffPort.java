@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.shared.infrastructure.input.service;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
@@ -17,6 +18,15 @@ public interface SharedStaffPort {
 
 	ProfessionalCompleteDto getProfessionalCompleteById(Integer professionalId);
 
+	List<ProfessionalCompleteDto> getProfessionalsCompleteByIds(List<Integer> professionalIds);
+
 	Optional<String> getProfessionalCompleteNameByUserId(Integer professionalId);
 
+	String getSectorName(Integer sectorId);
+
+	String getRoomNumber(Integer sectorId);
+
+	String getDoctorsOfficeDescription(Integer doctorsOfficeId);
+
+	String getShockRoomDescription(Integer shockRoomId);
 }

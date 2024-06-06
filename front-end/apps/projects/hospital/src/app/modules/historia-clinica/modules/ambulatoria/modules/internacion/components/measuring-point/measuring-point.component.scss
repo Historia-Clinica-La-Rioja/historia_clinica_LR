@@ -1,0 +1,28 @@
+@import '../../../../../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
+.measuring-point-title {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.form-input-title {
+	font-weight: 500;
+}
+
+
+.measuring-point-form {
+    margin-top: 16px;
+}
+
+.imput-width {
+    width: 236px;
+}
+
+.register-button {
+    width: 236px;
+    height: 48px;
+}

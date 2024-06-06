@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 public enum EKeeperRelationship {
 
-	MOTHER(1, "MOTHER"),
-	FATHER(2, "FATHER"),
-	GRANDPARENT(3, "GRANDPARENT"),
-	UNCLE_OR_AUNT(4, "UNCLE_OR_AUNT"),
-	BROTHER_OR_SISTER(5, "BROTHER_OR_SISTER"),
-	RELATED(6, "RELATED"),
-	OTHER(7, "OTHER");
+	MOTHER(1, "Madre"),
+	FATHER(2, "Padre"),
+	GRANDPARENT(3, "Abuelo/a"),
+	UNCLE_OR_AUNT(4, "Tío/a"),
+	BROTHER_OR_SISTER(5, "Hermano/a"),
+	RELATED(6, "Referente"),
+	OTHER(7, "Otro");
 
 	private Short id;
 

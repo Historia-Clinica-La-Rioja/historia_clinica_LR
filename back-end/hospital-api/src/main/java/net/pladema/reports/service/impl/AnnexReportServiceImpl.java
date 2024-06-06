@@ -1,11 +1,24 @@
 package net.pladema.reports.service.impl;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
+
+import net.pladema.hsi.addons.billing.infrastructure.input.BillProceduresExternalService;
+import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresRequestDto;
+import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresResponseDto;
+import net.pladema.hsi.addons.billing.infrastructure.input.exception.BillProceduresExternalServiceException;
+import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
+import net.pladema.reports.service.domain.AnnexIIProcedureBo;
+
+import net.pladema.reports.service.exception.AnnexReportException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +48,18 @@ public class AnnexReportServiceImpl implements AnnexReportService {
     private final AnnexReportRepository annexReportRepository;
 	private final DocumentAppointmentService documentAppointmentService;
 	private final DocumentService documentService;
+	private final BillProceduresExternalService billProcedureExternalService;
 
-    public AnnexReportServiceImpl(AnnexReportRepository annexReportRepository, DocumentAppointmentService documentAppointmentService, DocumentService documentService){
+    public AnnexReportServiceImpl(
+    	AnnexReportRepository annexReportRepository,
+    	DocumentAppointmentService documentAppointmentService,
+    	DocumentService documentService,
+    	BillProceduresExternalService billProcedureExternalService)
+	{
         this.annexReportRepository = annexReportRepository;
 		this.documentAppointmentService = documentAppointmentService;
 		this.documentService = documentService;
+		this.billProcedureExternalService = billProcedureExternalService;
 	}
 
     @Override
@@ -60,13 +80,32 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			switch (documentSourceType){
 
 				case SourceType.OUTPATIENT: {
-					var outpatientConsultationData = annexReportRepository.getConsultationAnnexInfo(documentId);
-					if (outpatientConsultationData.isPresent()) {
-						var outpatientconsultationData = outpatientConsultationData.get();
+					var data = annexReportRepository.getConsultationAnnexInfo(documentId);
+					if (data.isPresent()) {
+						AnnexIIOutpatientVo outpatientconsultationData = data.get();
 						result.setSpecialty(outpatientconsultationData.getSpecialty());
 						result.setProblems(outpatientconsultationData.getProblems());
 						result.setHasProcedures(outpatientconsultationData.getHasProcedures());
 						result.setExistsConsultation(outpatientconsultationData.getExistsConsultation());
+
+						Optional<Integer> encounterId = Optional.ofNullable(outpatientconsultationData.getId());
+
+						BillProceduresResponseDto billedProcedures = getBilledProcedures(
+							outpatientconsultationData.getMedicalCoverageCuit(),
+							outpatientconsultationData.getConsultationDate().atStartOfDay(),
+							documentService.getProcedureStateFromDocument(documentId),
+							encounterId,
+							outpatientconsultationData.getSisaCode()
+						);
+						result.setShowProcedures(billedProcedures.isEnabled());
+						if (billedProcedures.isEnabled()) {
+							result.setProcedures(mapProcedures(billedProcedures));
+							result.setProceduresIngressDate(outpatientconsultationData.getCreatedOn());
+							result.setProceduresEgressDate(outpatientconsultationData.getCreatedOn());
+							result.setProceduresTotal(billedProcedures.getMedicalCoverageTotal());
+							result.setMissingProcedures(billedProcedures.getProceduresNotBilledCount());
+						}
+
 						LOG.debug("Output -> {}", result);
 						return result;
 					}
@@ -101,7 +140,42 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		return result;
 	}
 
-    @Override
+	private List<AnnexIIProcedureBo> mapProcedures(BillProceduresResponseDto billedProcedures) {
+		return billedProcedures
+			.getProcedures()
+			.stream().map(x ->
+				AnnexIIProcedureBo.builder()
+					.codeNomenclator(x.getCodeNomenclator())
+					.descriptionNomenclator(x.getDescriptionNomenclator())
+					.description(x.getDescription())
+					.amount(x.getAmount())
+					.date(x.getDate())
+					.rate(x.getRate())
+					.coveragePercentage(x.getCoveragePercentage())
+					.coverageRate(x.getCoverageRate())
+					.patientRate(x.getPatientRate())
+					.total(x.getTotal())
+					.build()
+			).collect(Collectors.toList());
+	}
+
+	private BillProceduresResponseDto getBilledProcedures(
+			String medicalCoverageCuit,
+			LocalDateTime date,
+			List<ProcedureBo> procedures,
+			Optional<Integer> encounterId,
+			String sisaCode)
+	{
+		try {
+			BillProceduresRequestDto request = new BillProceduresRequestDto(medicalCoverageCuit, date, encounterId, sisaCode);
+			procedures.stream().forEach(p -> request.addProcedure(p.getSnomed().getSctid(), p.getSnomed().getPt()));
+			return billProcedureExternalService.getBilledProcedures(request);
+		} catch (BillProceduresExternalServiceException e) {
+			throw new AnnexReportException(e.getCode(), e.getReason(), e.getErrorDetails());
+		}
+	}
+
+	@Override
     public AnnexIIBo getConsultationData(Long documentId) {
 
 		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForDocument(documentId);
@@ -211,6 +285,14 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		ctx.put("specialty", reportDataDto.getSpecialty());
 		ctx.put("problems", reportDataDto.getProblems());
 		ctx.put("rnos", reportDataDto.getRnos());
+		ctx.put("procedureLines", reportDataDto.getProcedures());
+
+		ctx.put("procedureLinesIngressDate", reportDataDto.getProceduresIngressDate());
+		ctx.put("procedureLinesEgressDate", reportDataDto.getProceduresEgressDate());
+		ctx.put("procedureLinesTotal", reportDataDto.getProceduresTotal());
+		ctx.put("showProcedureLines", reportDataDto.getShowProcedures());
+		ctx.put("missingProcedures", reportDataDto.getMissingProcedures());
+
         return ctx;
     }
 

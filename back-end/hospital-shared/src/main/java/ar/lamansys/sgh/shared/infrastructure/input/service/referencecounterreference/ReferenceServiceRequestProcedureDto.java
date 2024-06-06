@@ -16,4 +16,6 @@ public class ReferenceServiceRequestProcedureDto {
 
 	private SharedSnomedDto procedure;
 
+	private String category;
+
 }

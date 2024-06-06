@@ -48,7 +48,10 @@
                 "INSTITUTION": "Institución",
                 "OBSERVATIONS": "Observaciones",
                 "ATTACH_EXTERNAL_ORDER": "Adjuntar orden externa",
-                "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF"
+                "FILES_EXTENSION": "El tipo de archivo debe estar en formato JPG, JPEG, PNG o PDF",
+                "ADD_STUDY":"+ Agregar estudio",
+                "STUDY_TITLE":"Agregar estudio",
+                "STUDY_RECORDS": "Estudios a solicitar"
             },
             "confirm-dialog": {
 				"CONTENT": "Si confirma el turno no podrá actualizar la cobertura ni la orden médica luego.",
@@ -104,7 +107,8 @@
                 "SELECT_TEMPLATE_IMPORT": "Seleccione plantilla a importar",
                 "SELECT_TEMPLATE_DELETE": "Seleccione plantilla a eliminar",
                 "SNACKBAR_SUCCESS_IMPORT": "Plantilla importada exitosamente",
-                "SNACKBAR_SUCCESS_DELETE_TEMPLATE": "Plantilla eliminada exitosamente"
+                "SNACKBAR_SUCCESS_DELETE_TEMPLATE": "Plantilla eliminada exitosamente",
+                "DETAIL_ORDER":"Detalle orden"
 
             },
             "filters": {

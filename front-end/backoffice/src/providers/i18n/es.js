@@ -25,7 +25,9 @@ const messages = {
             facilities: 'Instalaciones',
             debug: 'Inspeccionar',
             masterData: 'Datos maestros',
+            terminology: 'Terminología',
             booking: 'Reservas online',
+            imageNetwork: 'Red de Imágenes',
             more: 'Mas',
 
         },
@@ -752,9 +754,9 @@ const messages = {
             }
         },
         pacservers: {
-            name: 'PAC Global',
+            name: 'PACS Global',
             fields: {
-                name: 'Nombre de servidor PAC',
+                name: 'Nombre de servidor PACS',
                 aetitle: 'AETITLE',
                 domain: 'Dominio',
                 pacServerType: 'Tipo de Servidor',
@@ -768,15 +770,15 @@ const messages = {
             },
         },
         pacserversimagelvl: {
-            name: 'Servidor PAC a nivel servicio',
+            name: 'Servidor PACS a nivel servicio',
             fields: {
-                name: 'Nombre de servidor PAC',
+                name: 'Nombre de servidor PACS',
                 aetitle: 'AETITLE',
                 domain: 'Dominio',
                 port: 'Puerto',
                 sectorId: 'Sector',
             },
-            createRelated: 'Crear Servidor PAC'
+            createRelated: 'Crear Servidor PACS'
         },
         orchestrator: {
             name: 'Orquestador',
@@ -805,7 +807,7 @@ const messages = {
                 aeTitle: 'AE Title',
                 orchestratorId: 'Orquestador asociado',
                 sectorId: 'Sector',
-                pacServerId: 'Nombre del servidor PAC',
+                pacServerId: 'Nombre del servidor PACS',
                 modalityId: 'Modalidad',
                 createId:'El equipo genera el ID del estudio'
             },
@@ -817,19 +819,42 @@ const messages = {
             pending:'Pendiente',
             moving:'Moviendo',
             finished:'Finalizado',
+            failed:'Movimiento Fallido',
             errorPriority:'La prioridad puede ser 0 o 1',
             fields: {
-                institutionId: 'Intitución',
+                institutionId: 'Institución',
                 imageId: 'Id del estudio',
                 sizeImage: 'Tamaño en bytes del estudio',
                 orchestratorId: 'Orquestador asociado',
                 attempsNumber: 'Número de fallos',
-                pacServerId: 'PAC Destino',
+                pacServerId: 'PACS Destino',
                 result: 'Resultado',
                 status:'Estado',
-                priorityMax:'Prioridad Máxima'
+                priorityMax:'Prioridad Máxima',
+                beginOfMove: 'Fecha de inicio de movimiento'
             }
         },
+
+        allmovestudies: {
+            name: 'Lista de Estudios',
+            pending:'Pendiente',
+            moving:'Moviendo',
+            finished:'Finalizado',
+            failed:'Movimiento Fallido',
+            fields: {
+                institutionId: 'Institución',
+                imageId: 'Id del estudio',
+                identificationNumber: 'Documento',
+                firstName: 'Nombre',
+                lastName: 'Apellido',
+                appoinmentDate: 'Fecha del turno',
+                appoinmentTime: 'Hora del turno',
+                result: 'Resultado',
+                status:'Estado',
+                acronym:'Modalidad'
+            }
+        },
+
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
             fields: {
@@ -953,8 +978,17 @@ const messages = {
             fields: {
                 description: 'Nombre de estudio',
                 associatedPractices: 'Prácticas asociadas',
-                associatedParameters: 'Parámetros asociados'
+                associatedParameters: 'Parámetros asociados',
+                statusId: 'Estado'
             },
+            statusId: {
+                draft: 'Borrador',
+                active: 'Activo',
+                inactive: 'Inactivo',
+                activate: 'Activar',
+                deactivate: 'Desactivar'
+            },
+            excludeInactive: 'Excluir inactivos'
         },
         proceduretemplatesnomeds: {
             name: 'Prácticas asociadas',
@@ -991,6 +1025,7 @@ const messages = {
                 unitsOfMeasureIds: 'Unidades de medida',
                 inputCount: 'Cantidad de valores a ingresar',
                 eclId: 'ECL',
+                snomedGroupId: 'ECL',
                 option: 'Opción',
                 textOptions: 'Opciones'
             },
@@ -1009,6 +1044,16 @@ const messages = {
             addRelated: 'Asociar parámetro',
             deleteRelated: 'Desasociar parámetro',
             editRelated: 'Editar parámetro'
+        },
+        cipresencounters: {
+            name: 'Monitoreo de Cipres',
+            fields: {
+                encounterId: 'Id de consulta en HSI',
+                encounterApiId: 'Id de consulta en Cipres',
+                status:'Estado',
+                responseCode:'Código de respuesta',
+                date:'Fecha'
+            }
         }
     }
 };

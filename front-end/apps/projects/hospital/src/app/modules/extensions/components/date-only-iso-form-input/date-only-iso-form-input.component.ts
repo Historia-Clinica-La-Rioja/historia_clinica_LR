@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { formatDateOnlyISO } from '@core/utils/date.utils';
-import {UntypedFormGroup, UntypedFormControl} from '@angular/forms';
-import * as moment from "moment";
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
+import { newDate } from '@core/utils/moment.utils';
+import { startOfYear } from 'date-fns';
+import { fixDate } from '@core/utils/date/format';
 
 @Component({
 	selector: 'app-date-only-iso-form-input',
@@ -13,8 +15,8 @@ export class DateOnlyIsoFormInputComponent implements OnInit {
 	@Output() rangeChange = new EventEmitter<string[]>();
 
 	dateRange = new UntypedFormGroup({
-		start: new UntypedFormControl(moment().startOf('year')),
-		end: new UntypedFormControl(moment()),
+		start: new UntypedFormControl(startOfYear(newDate())),
+		end: new UntypedFormControl(newDate()),
 	});
 
 	public today: Date = new Date();
@@ -22,16 +24,32 @@ export class DateOnlyIsoFormInputComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.emitRangeChane(this.dateRange.value);
-		this.dateRange.valueChanges.subscribe(range => this.emitRangeChane(range));
+		this.dateRange.valueChanges.subscribe(dates => {
+			this.emitRangeChane(this.fromFormToDate(dates));
+		});
 	}
 
-	private emitRangeChane({start, end}) {
-
-		if (!start || !end) return;
-
-		const startDate = formatDateOnlyISO(start.toDate());
-		const endDate = formatDateOnlyISO(end.toDate());
+	private emitRangeChane(dates: { start: Date, end: Date }) {
+		if (!dates.start || !dates.end) return;
+		const startDate = formatDateOnlyISO(dates.start);
+		const endDate = formatDateOnlyISO(dates.end);
 		this.rangeChange.emit([startDate, endDate]);
 	}
 
+	private fromFormToDate(dates: FormDates):Dates {
+		return {
+			start: fixDate(dates.start),
+			end: fixDate(dates.end)
+		}
+	}
+}
+
+interface Dates {
+	start: Date,
+	end: Date
+}
+
+interface FormDates {
+	start: any // moment,
+	end: any //moment
 }

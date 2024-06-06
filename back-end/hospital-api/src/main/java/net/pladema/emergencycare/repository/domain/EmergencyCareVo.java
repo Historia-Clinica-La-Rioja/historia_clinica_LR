@@ -64,6 +64,8 @@ public class EmergencyCareVo implements Serializable {
 
 	private RoomVo room;
 
+	private String institutionName;
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
 						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
 						   String shockroomDescription, Bed bed){
@@ -97,4 +99,12 @@ public class EmergencyCareVo implements Serializable {
 		this.id = id;
 		this.institutionId = institutionId;
 	}
+
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId, String nameSalfeDetermination,
+						   String doctorsOfficeDescription, TriageCategory triage, PoliceInterventionDetails policeInterventionDetails,
+						   String shockroomDescription, Bed bed, LocalDateTime endDate, Room room, String institutionName){
+		this(emergencyCareEpisode, person, patientTypeId, nameSalfeDetermination, doctorsOfficeDescription, triage, policeInterventionDetails, shockroomDescription, bed, endDate, room);
+		this.institutionName = institutionName ;
+	}
+	
 }

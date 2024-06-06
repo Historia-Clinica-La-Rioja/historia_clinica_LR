@@ -7,14 +7,16 @@ import {
 } from '@api-rest/api-model';
 import { HceGeneralStateService } from "@api-rest/services/hce-general-state.service";
 import { pushIfNotExists } from '@core/utils/array.utils';
-import { momentParseDate } from '@core/utils/moment.utils';
 import { Observable, ReplaySubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { HistoricalProblemsFilter } from '../components/historical-problems-filters/historical-problems-filters.component';
 import { REFERENCE_STATES } from '../constants/reference-masterdata';
 import { MapperService } from './../../../../presentation/services/mapper.service';
+import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
+import { isSameDay } from 'date-fns';
 
-@Injectable({providedIn: 'root'})
+
+@Injectable({ providedIn: 'root' })
 export class HistoricalProblemsFacadeService {
 
 	public specialties: ClinicalSpecialtyDto[] = [];
@@ -93,7 +95,7 @@ export class HistoricalProblemsFacadeService {
 	}
 
 	private filterByConsultationDate(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
-		return (filter.consultationDate ? problem.consultationDate ? momentParseDate(problem.consultationDate).isSame(momentParseDate(filter.consultationDate)) : false : true);
+		return (filter.consultationDate ? problem.consultationDate ? isSameDay(filter.consultationDate,problem.consultationDate,)  : false : true);
 	}
 
 	private filterByReference(filter: HistoricalProblemsFilter, problem: HistoricalProblems): boolean {
@@ -132,7 +134,7 @@ export class HistoricalProblemsFacadeService {
 		this.problems = [];
 	}
 
-	public getFilterOptions(): Observable<FilterOptions>{
+	public getFilterOptions(): Observable<FilterOptions> {
 		return this.filterOptions$;
 	}
 
@@ -182,13 +184,13 @@ export class Problem {
 }
 
 export class HistoricalProblems {
-	consultationDate: string;
+	consultationDate: Date;
 	consultationEvolutionNote: string;
 	consultationProfessionalId: number;
 	consultationProfessionalPersonId: number;
 	professionalFullName: string;
 	institutionName: string;
-	document:{
+	document: {
 		id: number;
 		filename: string;
 	};
@@ -211,6 +213,9 @@ export class HistoricalProblems {
 	markedAsError?: boolean;
 	color?: string;
 	errorProblem?: HCEErrorProblemDto;
+	headerInfoDetails?: Detail[];
+	professionalsThatDidNotSignAmount: number;
+	professionalsThatSignedNames: string[];
 }
 
 export interface FilterOptions {

@@ -32,6 +32,8 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
 
 	private static final Short REJECTED_REGULATION_STATE = 2;
 
+	private final List<Short> INVALID_REFERENCE_STATUS = List.of((short)3, (short)4);
+
     private final EntityManager entityManager;
 
 	private final MapReferenceSummary mapReferenceSummary;
@@ -194,13 +196,15 @@ public class HCEOutpatientConsultationSummaryStorageImpl implements HCEOutpatien
                 +"  AND r.sourceTypeId= " + SourceType.OUTPATIENT
                 +"  AND oc.id = :outpatientId"
 				+"  AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:userRoles) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))"
-				+"  AND r.regulationStateId <> :regulationStateId" ;
+				+"  AND r.regulationStateId <> :regulationStateId "
+				+" 	AND r.statusId NOT IN :invalidReferenceStatus" ;
 
         List<Object[]> queryResult = entityManager.createQuery(sqlString)
                 .setParameter("healthConditionId", healthConditionId)
                 .setParameter("outpatientId", outpatientId)
 				.setParameter("userRoles", loggedUserRoleIds)
 				.setParameter("regulationStateId", REJECTED_REGULATION_STATE)
+				.setParameter("invalidReferenceStatus", INVALID_REFERENCE_STATUS)
                 .getResultList();
         List<ReferenceSummaryBo> result = new ArrayList<>();
         queryResult.forEach(a -> result.add(mapReferenceSummary.processReferenceSummaryBo(a)));

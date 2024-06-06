@@ -2,6 +2,7 @@ package net.pladema.unitofmeasure.insfrastructure.input.rest;
 
 
 import net.pladema.loinc.infrastructure.output.entity.LoincCode;
+import net.pladema.sgx.backoffice.exceptions.PermissionDeniedException;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
@@ -66,7 +67,9 @@ public class BackofficeUnitOfMeasureController extends AbstractBackofficeControl
 
 				@Override
 				@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-				public void assertDelete(Short id) {}
+				public void assertDelete(Short id) {
+					throw new PermissionDeniedException("No se permite eliminar unidades de estudio");
+				}
 
 				@Override
 				@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")

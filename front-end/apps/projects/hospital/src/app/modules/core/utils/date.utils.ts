@@ -7,6 +7,8 @@ import {
 	format
 } from 'date-fns'
 
+const WAITING_TIME = 'En espera desde hace';
+
 const MIN_YEAR = 1900;
 const MIN_MONTH = 0;
 const MIN_DAY = 1;
@@ -39,6 +41,8 @@ export const dateToViewDate = (date: Date): string => format(date, DateFormat.VI
 export const timeToHourMinute = (time: Date): string => format(time, DateFormat.HOUR_MINUTE);
 
 export const dateTimeToViewDateHourMinute = (dateTime: Date): string => `${dateToViewDate(dateTime)} - ${timeToHourMinute(dateTime)}`;
+
+export const dateTimeToViewDateHourMinuteSecond = (dateTime: Date): string => `${dateToViewDate(dateTime)}, ${toHourMinuteSecond(dateTime)}`;
 
 export function formatDateOnlyISO(date: Date) {
 	return formatISO(date, { representation: 'date' });
@@ -97,10 +101,9 @@ export function dateMinusDays(date: Date, days: number): Date {
 
 export function timeDifference(createdOn: Date) {
 	const mins = differenceInMinutes(new Date(), createdOn);
-	if (mins < 60) {
-		return `${mins} mins en espera`
-	}
-	return `${differenceInHours(new Date(), createdOn)}.${mins % 60} hs en espera`
+	if (mins === 0) return `${WAITING_TIME} unos segundos`;
+	if (mins < 60) return `${WAITING_TIME} ${mins} minuto/s`
+	return `${WAITING_TIME} ${differenceInHours(new Date(), createdOn)} hora/s`
 }
 
 export function fromStringToDateByDelimeter(date: string, delimeter: string): Date {
@@ -112,6 +115,10 @@ export function fromStringToDateByDelimeter(date: string, delimeter: string): Da
 }
 
 export const compare = (d1: Date, d2: Date): number => compareAsc(d1, d2); // -1 , 0 , 1
+
+export const isEqualDate = (d1: Date, d2: Date): boolean => {
+    return (compare(d1,d2) == 0)
+}
 
 const HOUR_MINUTE = 'HH:mm';
 export const toHourMinute = (date: Date): string => format(date, HOUR_MINUTE);

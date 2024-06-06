@@ -1,0 +1,50 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+    [translate]="'internaciones.anesthesic-report.fluid-administration.ADD_TITLE'" > </span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.fluidAdministrationService.snomedConcept else fluidAdministrationForm">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else injectTypeaheadSearch"
+            [label]="'internaciones.anesthesic-report.fluid-administration.LIQUID_LABEL'"
+            (search)="data.fluidAdministrationService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #injectTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.fluidAdministrationService.getECL()"
+                [placeholder]="'internaciones.anesthesic-report.fluid-administration.LIQUID_LABEL'"
+                (conceptSelected)="data.fluidAdministrationService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #fluidAdministrationForm>
+    <form [formGroup]="form" (ngSubmit)="addFluidAdministration()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-label [translate]="'internaciones.anesthesic-report.fluid-administration.LIQUID_LABEL'"></mat-label>
+            <mat-form-field appearance="outline">
+                <input id="medication-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.fluidAdministrationService.snomedConcept.pt }}">
+                <button id="clear-drug" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.fluidAdministrationService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <mat-label [translate]="'internaciones.anesthesic-report.fluid-administration.AMOUNT_LABEL'"></mat-label>
+            <mat-form-field appearance="outline">
+                <input id="injection-input" matInput type="number" formControlName="amount" name="amount"  [placeholder]="'ml'">
+            </mat-form-field>
+
+            <div align="end">
+                <button id="submit_drug" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase" [translate]="'buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

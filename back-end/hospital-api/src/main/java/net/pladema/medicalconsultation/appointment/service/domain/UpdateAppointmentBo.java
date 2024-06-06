@@ -20,5 +20,9 @@ public class UpdateAppointmentBo {
 
     private Integer patientMedicalCoverageId;
 
+	private String phonePrefix;
+
     private String phoneNumber;
+
+	private Integer parentAppointmentId;
 }

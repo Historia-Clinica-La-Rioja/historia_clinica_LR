@@ -74,6 +74,10 @@ public class HealthConditionVo extends ClinicalTermVo {
     public boolean isFamilyHistory() {
         return problemId.equals(ProblemType.FAMILY_HISTORY);
     }
+
+    public boolean isOtherHistory() {
+        return ProblemType.OTHER_HISTORY.equals(problemId);
+    }
 	public boolean isOfType(ProblemTypeEnum type) {
 		return problemId.equals(type.getId());
 	}

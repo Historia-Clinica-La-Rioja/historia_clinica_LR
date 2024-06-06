@@ -6,7 +6,7 @@ import { FormOption, Areas, Establishments, InternmentIndication, MunicipalDevic
 import { EHealthInstitutionOrganization, EHealthSystemOrganization, EInstitutionReportPlace, EInstitutionReportReason, EIntermentIndicationStatus, EMunicipalGovernmentDevice, ENationalGovernmentDevice, EProvincialGovernmentDevice, ESexualViolenceAction, ViolenceReportDto, ViolenceReportImplementedActionsDto } from '@api-rest/api-model';
 import { ViolenceReportFacadeService } from '@api-rest/services/violence-report-facade.service';
 
-enum Articulation {
+export enum Articulation {
 	IN = 'Articulación con otras áreas/organismos del sector salud',
 	OUT = 'Articulación con otros organismos fuera del sector salud'
 }

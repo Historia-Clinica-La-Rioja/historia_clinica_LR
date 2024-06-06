@@ -4,8 +4,8 @@ import {ConsultationsDto} from "@api-rest/api-model";
 import {Observable} from "rxjs";
 import {environment} from "@environments/environment";
 import {ContextService} from "@core/services/context.service";
-import {DateFormat, momentFormat, momentParseDate} from "@core/utils/moment.utils";
 import {DownloadService} from "@core/services/download.service";
+import { toFileFormat } from '@api-rest/mapper/date.mapper';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,7 +30,7 @@ export class PatientReportsService {
 	}
 
 	getOutpatientConsultationReport(url: string, consultationDto: ConsultationsDto, pdfPrefixName: string, patientName: string): Observable<any> {
-		const consultationDate: string = momentFormat(momentParseDate(String(consultationDto.consultationDate)), DateFormat.FILE_DATE);
+		const consultationDate: string = toFileFormat(consultationDto.consultationDate);
 		const pdfName = pdfPrefixName + `_${patientName}_${consultationDate}_${consultationDto.completeProfessionalName}`;
 		const documentId = consultationDto.documentId;
 		return this.downloadService.downloadPdfWithRequestParams(url, pdfName, {documentId});

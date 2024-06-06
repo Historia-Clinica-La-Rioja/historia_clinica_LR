@@ -1,0 +1,11 @@
+.row {
+	display: flex;
+	justify-content: space-between;
+
+	padding: 24px;
+
+	app-label {
+		display: flex;
+  		align-items: center;
+	}
+}

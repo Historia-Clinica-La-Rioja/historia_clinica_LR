@@ -11,4 +11,8 @@ public interface DoctorsOfficeService {
     List<DoctorsOfficeBo> getDoctorsOfficeBySectorType(Integer institutionId, Short sectorTypeId);
 
     DoctorsOfficeBo getById(Integer doctorsOfficeId);
+
+	String getDescription(Integer doctorsOfficeId);
+
+	Integer getSectorId(Integer doctorsOfficeId);
 }

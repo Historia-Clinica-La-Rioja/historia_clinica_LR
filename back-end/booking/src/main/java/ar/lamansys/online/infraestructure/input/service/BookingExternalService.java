@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.online.application.integration.FetchBookingInstitutionsExtended;
 import ar.lamansys.online.domain.integration.BookingInstitutionExtendedBo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingInstitutionExtendedDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 
@@ -47,6 +49,8 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBooking
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -65,11 +69,12 @@ public class BookingExternalService implements SharedBookingPort {
 	private final FetchAvailabilityByPracticeAndProfessional fetchAvailabilityByPracticeAndProfessional;
 	private final FetchAvailabilityByPractice fetchAvailabilityByPractice;
 
-	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto) {
+	public SavedBookingAppointmentDto makeBooking(BookingDto bookingDto, boolean onlineBooking) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
 		BookingBo bookingBo = new BookingBo(
 				bookingDto.getAppointmentDataEmail(),
 				mapToAppointment(bookingDto.getBookingAppointmentDto()),
-				mapToPerson(bookingDto.getBookingPersonDto())
+				mapToPerson(bookingDto.getBookingPersonDto()),
+				onlineBooking
 		);
 		return bookAppointment.run(bookingBo);
 	}
@@ -187,6 +192,26 @@ public class BookingExternalService implements SharedBookingPort {
 		return result;
 	}
 
+	@Override
+	public ProfessionalAvailabilityDto fetchAvailabilityByPracticeAndProfessional(
+			Integer institutionId,
+			Integer professionalId,
+			Integer clinicalSpecialtyId,
+			Integer practiceId,
+			Integer medicalCoverageId,
+			String maxDate
+	) {
+		var professionalAvailabilityBo = fetchAvailabilityByPracticeAndProfessional.run(
+				institutionId,
+				professionalId,
+				clinicalSpecialtyId,
+				practiceId
+		);
+		var result = buildProfessionalAvailabilityDto(professionalAvailabilityBo);
+		log.debug("Get availability by professionalId {} and practiceId{} => {}", professionalId, practiceId, result);
+		return result;
+	}
+
 	private ProfessionalAvailabilityDto buildProfessionalAvailabilityDto(ProfessionalAvailabilityBo professionalAvailabilityBo) {
 		if(professionalAvailabilityBo == null || professionalAvailabilityBo.getAvailability() == null)
 			return null;
@@ -232,6 +257,7 @@ public class BookingExternalService implements SharedBookingPort {
 				.hour(bookingAppointmentDto.getHour())
 				.openingHoursId(bookingAppointmentDto.getOpeningHoursId())
 				.phoneNumber(bookingAppointmentDto.getPhoneNumber())
+				.phonePrefix(bookingAppointmentDto.getPhonePrefix())
 				.coverageId(bookingAppointmentDto.getCoverageId())
 				.snomedId(bookingAppointmentDto.getSnomedId())
 				.specialtyId(bookingAppointmentDto.getSpecialtyId())
@@ -249,6 +275,8 @@ public class BookingExternalService implements SharedBookingPort {
 				.idNumber(bookingPersonDto.getIdNumber())
 				.genderId(bookingPersonDto.getGenderId())
 				.birthDate(bookingPersonDto.getBirthDate())
+				.phoneNumber(bookingPersonDto.getPhoneNumber())
+				.phonePrefix(bookingPersonDto.getPhonePrefix())
 				.build();
 
 	}

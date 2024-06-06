@@ -1,6 +1,5 @@
-<app-summary-card [editable]="true" [header]="bookingAppointmentsSummary"
-	[canEdit]="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']"
-    (openInNew)="newAppointment()">
+<app-summary-card [header]="bookingAppointmentsSummary"
+	[canEdit]="['ADMINISTRATIVO', 'ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA', 'ENFERMERO']">
 	<mat-card-content>
 		<ng-container *ngIf="appointmentsList.length else noAppointments">
 			<div *ngFor="let appointment of appointmentsList, let index = index">

@@ -43,6 +43,9 @@
 						<mat-error *ngIf="hasError(form, 'maxlength', 'identificationNumber')">
 							{{ 'pacientes.form.IDENTIFICATION_NUMBER_MAXLENGHT_ERROR' | translate }}
 						</mat-error>
+						<mat-error *ngIf="hasError(form, 'pattern', 'identificationNumber')">
+							<span [translate]="'forms.FORMAT_WHITOUT_BLANK_SPACES'"></span>
+						</mat-error>
 					</mat-form-field>
 				</div>
 			</div>

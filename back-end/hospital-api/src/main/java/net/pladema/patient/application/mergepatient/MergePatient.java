@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.patient.application.port.MergePatientStorage;
 import net.pladema.patient.controller.dto.PatientToMergeDto;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,6 +31,7 @@ public class MergePatient {
 
 	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
 
+	@Transactional
 	public Integer run(Integer institutionId, PatientToMergeDto patientToMerge) {
 		log.debug("Input parameters -> institutionId {}, patientToMerge {}", institutionId, patientToMerge);
 		mergePatientStorage.assertBasicPersonData(patientToMerge.getRegistrationDataPerson());

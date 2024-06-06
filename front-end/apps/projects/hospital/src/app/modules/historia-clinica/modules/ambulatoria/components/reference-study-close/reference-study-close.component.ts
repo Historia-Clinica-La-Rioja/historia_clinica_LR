@@ -87,7 +87,6 @@ export class ReferenceStudyCloseComponent implements OnInit {
 	}
 
 	completeStudy() {
-		this.buttonService.updateLoading(true);
 		const completeRequest = this.buildRequest();
 		this.prescripcionesService.completeStudy(this.patientId, this.diagnosticReportId,
 			completeRequest, this.selectedFiles).subscribe(_ => {
@@ -95,8 +94,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 				this.closeModal(false, true);
 			}, error => {
 				this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
-				this.buttonService.updateLoading(false);
-
+				this.buttonService.resetLoading();
 				function getConfirmDataDialog() {
 					const keyPrefix = 'ambulatoria.reference-study-close';
 					return {

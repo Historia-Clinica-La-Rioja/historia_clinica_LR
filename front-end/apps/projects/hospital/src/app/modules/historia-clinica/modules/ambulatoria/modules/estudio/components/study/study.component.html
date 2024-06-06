@@ -32,7 +32,7 @@
 							</button>
 						</ng-container>
 						<ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-							<button mat-menu-item (click)="deleteStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
+							<button mat-menu-item (click)="confirmDeleteStudy(study.diagnosticInformation)" *ngIf="study.diagnosticInformation.statusId === STUDY_STATUS.REGISTERED.id"
 							[disabled]="study.hasActiveAppointment">
 								<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE'"></span>
 							</button>

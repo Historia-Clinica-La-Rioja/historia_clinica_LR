@@ -56,6 +56,15 @@ public class ReferenceForwardingStorageImpl implements ReferenceForwardingStorag
 				}).orElse(null);
 	}
 
+	@Override
+	public EReferenceForwardingType getLastForwardingReference(Integer referenceId) {
+		log.debug("Input parameter -> referenceId {}", referenceId);
+		var forwardings = referenceForwardingRepository.findByReferenceId(referenceId);
+		if (!forwardings.isEmpty())
+			return forwardings.stream().findFirst().get().getType();
+		return null;
+	}
+
 	private ReferenceForwardingBo mapToReferenceForwardingBo(ReferenceForwarding entity) {
 		return ReferenceForwardingBo.builder()
 				.id(entity.getId())

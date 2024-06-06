@@ -33,6 +33,8 @@ public interface MergeClinicHistoryStorage {
 	void modifySnvsReport(List<Integer> oldPatientsIds, Integer newPatientId);
 	void modifyOdontologyConsultation(List<Integer> ids, Integer newPatientId);
 	void modifyAppointment(List<Integer> oldPatientsIds, Integer newPatientId);
+	void modifyViolenceReport(List<Integer> oldPatientIds, Integer newPatientId);
+	void modifySurgicalReport(List<Integer> oldPatientIds, Integer newPatientId);
 	void rebuildDocumentsFiles(List<Long> documentsIds);
 	void modifyOdontogram(Integer newPatientId);
 	void unmergeClinicData(Integer inactivePatientId);

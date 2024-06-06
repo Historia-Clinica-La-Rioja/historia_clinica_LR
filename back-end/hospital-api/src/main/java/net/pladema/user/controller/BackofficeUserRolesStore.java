@@ -10,6 +10,7 @@ import net.pladema.permissions.repository.RoleRepository;
 
 import net.pladema.permissions.repository.entity.Role;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -82,10 +83,22 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 		validate(entity);
 		if (entity.getInstitutionId() == null)
 			entity.setInstitutionId(-1);
-		return userRoleRepository
-				.getUserRoleIfIsDeleted(entity.getUserId(), entity.getRoleId(), entity.getInstitutionId())
-				.map(userRoleRepository::reactivate)
-				.orElseGet( () -> userRoleRepository.save(entity));
+
+		try {
+			Optional<UserRole> userRoleAlreadyExist = userRoleRepository.findByRoleInstitutionAndUserId(
+					entity.getUserId(),
+					entity.getRoleId(),
+					entity.getInstitutionId()
+			);
+			if (userRoleAlreadyExist.isPresent())
+				throw new DataIntegrityViolationException("El usuario ya cuenta con ese rol en la institución");
+			return userRoleRepository
+					.getUserRoleIfIsDeleted(entity.getUserId(), entity.getRoleId(), entity.getInstitutionId())
+					.map(userRoleRepository::reactivate)
+					.orElseGet( () -> userRoleRepository.save(entity));
+		} catch (DataIntegrityViolationException e) {
+			throw new BackofficeUserException(BackofficeUserExceptionEnum.ROLE_ALREADY_ASSIGNED, "El usuario ya cuenta con ese rol en la institución");
+		}
 	}
 
 	private void validate(UserRole userRole) {
@@ -102,8 +115,6 @@ public class BackofficeUserRolesStore implements BackofficeStore<UserRole, Long>
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.ROOT_LOST_PERMISSION, "El admin no puede perder el rol: ROOT");
 		if(!isROOTUser(user.getUsername()) && isRootRole(userRole))
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El usuario creado no puede tener el siguiente rol: ROOT");
-		if (ERoleLevel.LEVEL1.equals(ERole.map(userRole.getRoleId()).getLevel()) && !assignedInstitution(userRole))
-			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El tipo de rol requiere definir una institución ");
 		if (ERoleLevel.LEVEL1.equals(ERole.map(userRole.getRoleId()).getLevel()) && !assignedInstitution(userRole))
 			throw new BackofficeUserException(BackofficeUserExceptionEnum.USER_INVALID_ROLE, "El tipo de rol requiere definir una institución ");
 		if (ERoleLevel.LEVEL0.equals(ERole.map(userRole.getRoleId()).getLevel()) && assignedInstitution(userRole))

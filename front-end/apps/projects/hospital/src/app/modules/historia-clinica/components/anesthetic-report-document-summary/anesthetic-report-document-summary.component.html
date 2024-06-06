@@ -1,0 +1,65 @@
+<div class="anesthesic-report-content">
+    <div *ngIf="(anestheticReport$ | async) && !isLoading, else loader" fxFlex="80%" FxLayoutAlign="start"
+        fxLayout="column" fxLayoutGap="36px">
+
+        <app-diagnosis-summary *ngIf="anestheticReport.mainDiagnosis || anestheticReport.diagnosis"
+            [diagnosis]="anestheticReport.diagnosis"
+            [mainDiagnosis]="anestheticReport.mainDiagnosis"></app-diagnosis-summary>
+
+        <app-proposed-surgery-summary *ngIf="anestheticReport.proposedSurgeries"
+            [proposedSurgeries]="anestheticReport.proposedSurgeries"></app-proposed-surgery-summary>
+
+        <app-anthropometric-data-summary *ngIf="anestheticReport.anthropometricData"
+            [anthropometricData]="anestheticReport.anthropometricData"></app-anthropometric-data-summary>
+
+        <app-anesthesic-clinical-evaluation-summary *ngIf="anestheticReport.anesthesicClinicalEvaluation"
+            [anesthesicClinicalEvaluation]="anestheticReport.anesthesicClinicalEvaluation"></app-anesthesic-clinical-evaluation-summary>
+
+        <app-anesthetic-history-summary *ngIf="anestheticReport.anestheticHistory"
+            [anestheticHistory]="anestheticReport.anestheticHistory"></app-anesthetic-history-summary>
+
+        <app-usual-medication-summary *ngIf="anestheticReport.usualMedication"
+            [usualMedication]="anestheticReport.usualMedication"></app-usual-medication-summary>
+
+        <app-premedication-and-food-intake-summary
+            *ngIf="anestheticReport.premedicationList || anestheticReport.lastFoodIntake"
+            [premedicationList]="anestheticReport.premedicationList"
+            [lastFoodIntake]="anestheticReport.lastFoodIntake"></app-premedication-and-food-intake-summary>
+
+        <app-histories-summary *ngIf="anestheticReport.histories"
+            [histories]="anestheticReport.histories"></app-histories-summary>
+
+        <app-anesthetic-plan-summary *ngIf="anestheticReport.anestheticPlanList"
+            [anestheticPlanList]="anestheticReport.anestheticPlanList"></app-anesthetic-plan-summary>
+
+        <app-analgesic-technique-summary *ngIf="anestheticReport.analgesicTechniques"
+            [analgesicTechnique]="anestheticReport.analgesicTechniques"></app-analgesic-technique-summary>
+
+        <app-anesthetic-technique-summary *ngIf="anestheticReport.anestheticTechniques"
+            [anestheticTechnique]="anestheticReport.anestheticTechniques"></app-anesthetic-technique-summary>
+
+        <app-fluid-administration-summary *ngIf="anestheticReport.fluidAdministrations"
+            [fluidAdministration]="anestheticReport.fluidAdministrations"></app-fluid-administration-summary>
+
+        <app-anesthetic-agents-summary *ngIf="anestheticReport.anestheticAgents"
+            [anestheticAgents]="anestheticReport.anestheticAgents"></app-anesthetic-agents-summary>
+
+        <app-non-anesthetic-drugs-summary *ngIf="anestheticReport.nonAnestheticDrugs"
+            [nonAnestheticDrugs]="anestheticReport.nonAnestheticDrugs"></app-non-anesthetic-drugs-summary>
+
+        <app-intrasurgical-anesthetic-procedures-summary
+            [procedures]="anestheticReport.intrasurgicalAnestheticProcedures"></app-intrasurgical-anesthetic-procedures-summary>
+
+        <app-antibiotic-prophylaxis-summary *ngIf="anestheticReport.antibioticProphylaxis"
+            [antibioticProphylaxis]="anestheticReport.antibioticProphylaxis"></app-antibiotic-prophylaxis-summary>
+
+        <app-vital-signs-summary *ngIf="anestheticReport.vitalSigns"
+            [vitalSigns]="anestheticReport.vitalSigns"></app-vital-signs-summary>
+
+        <app-end-of-anesthesia-status-summary
+            [endOfAnesthesiaStatus]="anestheticReport.endOfAnesthesiaStatus"></app-end-of-anesthesia-status-summary>
+    </div>
+    <ng-template #loader>
+        <mat-spinner color="primary" style="margin: auto"></mat-spinner>
+    </ng-template>
+</div>

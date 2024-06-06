@@ -1,4 +1,5 @@
 package ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
@@ -20,7 +21,8 @@ public class FetchHospitalizationProceduresState {
 
 	public List<ProcedureBo> run(Integer internmentEpisodeId) {
         log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-        List<ProcedureVo> queryResult = hchProcedureRepository.findGeneralState(internmentEpisodeId);
+        List<Short> invalidDocumentTypes = List.of(DocumentType.ANESTHETIC_REPORT);
+        List<ProcedureVo> queryResult = hchProcedureRepository.findGeneralState(internmentEpisodeId, invalidDocumentTypes);
         List<ProcedureBo> result = queryResult.stream().map(ProcedureBo::new).collect(Collectors.toList());
         log.debug(OUTPUT, result);
         return result;

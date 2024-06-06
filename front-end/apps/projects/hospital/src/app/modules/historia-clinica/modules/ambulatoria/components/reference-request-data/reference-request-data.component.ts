@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { ReferenceCounterReferenceFileDto, ReferenceDataDto } from '@api-rest/api-model';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { Color } from '@presentation/colored-label/colored-label.component';
-import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 import { Position } from '@presentation/components/identifier/identifier.component';
 import { IDENTIFIER_CASES } from 'projects/hospital/src/app/modules/hsi-components/identifier-cases/identifier-cases.component';
 
@@ -39,7 +38,6 @@ export class ReferenceRequestDataComponent {
 export interface ReferenceCompleteData {
 	dto: ReferenceDataDto;
 	priority: string;
-	closureType: ColoredIconText;
 	problems: string;
 }
 

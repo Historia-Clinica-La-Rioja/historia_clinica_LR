@@ -11,9 +11,12 @@ public class ContactInfoBo {
 
 	private AddressBo address;
 
-	public ContactInfoBo(String phonePrefix, String phoneNumber, String street, String number, String floor, String apartment, String cityName, String stateName) {
+	private String email;
+
+	public ContactInfoBo(String phonePrefix, String phoneNumber, String street, String number, String floor, String apartment, String cityName, String stateName, String email) {
 		phone = new PhoneBo(phonePrefix, phoneNumber);
 		address = new AddressBo(street, number, floor, apartment, cityName, stateName);
+		this.email = email;
 	}
 
 }

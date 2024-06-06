@@ -7,10 +7,10 @@ import {
 	HttpRequest,
 } from '@angular/common/http';
 import { throwError, EMPTY, Observable, ReplaySubject } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, filter, switchMap } from 'rxjs/operators';
 
 import { AuthenticationService } from '../modules/auth/services/authentication.service';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 const shouldAuthorize = (url: string) => !url.startsWith('http'); // any absolute request (another domain)
 
@@ -23,7 +23,12 @@ export class AuthInterceptor implements HttpInterceptor {
 	constructor(
 		private readonly authenticationService: AuthenticationService,
 		private readonly router: Router,
-	) { }
+	) {
+		this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
+			if (event.urlAfterRedirects === '/auth/login')
+				this.authenticationService.logout().subscribe();
+		});
+	}
 
 	intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(req.clone())
@@ -47,17 +52,13 @@ export class AuthInterceptor implements HttpInterceptor {
 			this.authenticationService.tokenRefresh().pipe(
 				catchError(_ => {
 					this.refreshTokenSubject = undefined;
-					this.authenticationService.logout().subscribe(finished => {
-						this.router.navigate(['/auth/login']);
-					});
+					this.router.navigate(['/auth/login']);
 					return EMPTY;
 				}),
 			).subscribe(token => {
 				if (!token) {
 					this.refreshTokenSubject = undefined;
-					this.authenticationService.logout().subscribe(finished => {
-						this.router.navigate(['/auth/login']);
-					});
+					this.router.navigate(['/auth/login']);
 					return;
 				}
 				this.refreshTokenSubject.next(token);

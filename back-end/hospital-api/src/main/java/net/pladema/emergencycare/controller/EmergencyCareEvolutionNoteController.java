@@ -17,6 +17,9 @@ import net.pladema.emergencycare.service.EmergencyCareEvolutionNoteReasonService
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocumentBo;
 
+import net.pladema.establishment.service.RoomService;
+import net.pladema.medicalconsultation.doctorsoffice.service.DoctorsOfficeService;
+import net.pladema.medicalconsultation.shockroom.application.FetchShockRoomSectorId;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
 
@@ -59,6 +62,12 @@ public class EmergencyCareEvolutionNoteController {
 
 	private final CreateEmergencyCareEvolutionNoteDocumentService createEmergencyCareEvolutionNoteDocumentService;
 
+	private final RoomService roomService;
+
+	private final DoctorsOfficeService doctorsOfficeService;
+
+	private final FetchShockRoomSectorId fetchShockRoomSectorId;
+
 	@PostMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Boolean> saveEmergencyCareEvolutionNote(
@@ -77,7 +86,8 @@ public class EmergencyCareEvolutionNoteController {
 		EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocument = emergencyCareEvolutionNoteMapper.fromEmergencyCareEvolutionNoteDto(evolutionNote);
 		emergencyCareEvolutionNoteDocument.setEncounterId(episodeId);
 		emergencyCareEvolutionNoteDocument.setInstitutionId(institutionId);
-
+		emergencyCareEvolutionNoteDocument.setMedicalCoverageId(patientMedicalCoverageId);
+		setEvolutionNotePlace(emergencyCareEvolutionNoteDocument, episodeId);
 		BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(evolutionNote.getPatientId());
 		if (patientDto.getPerson() != null)
 			emergencyCareEvolutionNoteDocument.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
@@ -98,6 +108,21 @@ public class EmergencyCareEvolutionNoteController {
 		Assert.isTrue(evolutionNote.getMainDiagnosis() != null, "La nota de evolución de guardia debe contener un diagnóstico principal");
 		Assert.isTrue(evolutionNote.getEvolutionNote() != null, "La nota de evolución de guardia debe contener una evolución");
 		Assert.isTrue(evolutionNote.getClinicalSpecialtyId() != null, "La nota de evolución de guardia debe tener asociada una especialidad");
+	}
+
+	private void setEvolutionNotePlace(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNoteDocument, Integer episodeId) {
+		emergencyCareEpisodeService.getRoomId(episodeId).ifPresent(roomId -> {
+			emergencyCareEvolutionNoteDocument.setRoomId(roomId);
+			emergencyCareEvolutionNoteDocument.setSectorId(roomService.getSectorId(roomId));
+		});
+		emergencyCareEpisodeService.getShockRoomId(episodeId).ifPresent(shockRoomId -> {
+			emergencyCareEvolutionNoteDocument.setShockRoomId(shockRoomId);
+			emergencyCareEvolutionNoteDocument.setSectorId(fetchShockRoomSectorId.execute(shockRoomId));
+		});
+		emergencyCareEpisodeService.getDoctorsOfficeId(episodeId).ifPresent(doctorsOfficeId -> {
+			emergencyCareEvolutionNoteDocument.setDoctorsOfficeId(doctorsOfficeId);
+			emergencyCareEvolutionNoteDocument.setSectorId(doctorsOfficeService.getSectorId(doctorsOfficeId));
+		});
 	}
 
 }

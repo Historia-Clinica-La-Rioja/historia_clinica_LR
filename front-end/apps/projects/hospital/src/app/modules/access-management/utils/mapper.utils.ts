@@ -1,11 +1,12 @@
-import { ClinicalSpecialtyDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
+import { CareLineDto, ClinicalSpecialtyDto, InstitutionBasicInfoDto, ReferenceAppointmentDto, ReferenceDataDto, ReferencePatientDto, ReferenceReportDto, SharedSnomedDto } from "@api-rest/api-model";
 import { PatientSummary } from "../../hsi-components/patient-summary/patient-summary.component";
-import { getColoredIconText, getPriority, getState, getAppointmentState } from "./reference.utils";
+import { getPriority, getState, getAppointmentState } from "./reference.utils";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
 import { ReferenceReport } from "@shared-appointment-access-management/components/reference-summary/reference-summary.component";
 import { AppointmentSummary } from "@access-management/components/appointment-summary/appointment-summary.component";
 import { ContactDetails } from "@access-management/components/contact-details/contact-details.component";
 import { ReferenceCompleteData } from "@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component";
+import { AddressProjection } from "@api-rest/services/address-master-data.service";
 
 export const toPatientSummary = (patient: ReferencePatientDto): PatientSummary => {
     return {
@@ -39,7 +40,6 @@ export const toReferenceReport = (report: ReferenceReportDto): ReferenceReport =
     return {
         dto: report,
         priority: getPriority(report.priority.id),
-        coloredIconText: getColoredIconText(report.closureType),
         state: report.attentionState ? getState(report.attentionState) : null,
         patient: toMinPatientSummary(report.patientFullName, report.identificationType, +report.identificationNumber)
     }
@@ -58,18 +58,62 @@ export const toMinPatientSummary = (fullName: string, identificationType: string
 }
 
 export const practicesToTypeaheadOptions = (practices: SharedSnomedDto[]): TypeaheadOption<any>[] => {
-    return practices.map(practice => practiceToTypeaheadOption(practice));
+	return practices.map(practice => practiceToTypeaheadOption(practice));
 }
 
 export const practiceToTypeaheadOption = (practice: SharedSnomedDto): TypeaheadOption<any> => {
-    return {
-        compareValue: practice.pt,
-        value: practice.id
-    }
+	return {
+		compareValue: practice.pt,
+		value: practice.id
+	}
 }
 
 export const specialtiesToTypeaheadOptions = (specialties: ClinicalSpecialtyDto[]): TypeaheadOption<any>[] => {
-    return specialties.map(practice => specialtyToTypeaheadOption(practice));
+	return specialties.map(practice => specialtyToTypeaheadOption(practice));
+}
+
+export const careLinesToTypeaheadOptions = (careLines: CareLineDto[]): TypeaheadOption<CareLineDto>[] => {
+	return careLines.map(careLines => careLineToTypeaheadOption(careLines));
+}
+
+export const institutionsToTypeaheadOptions = (institutions: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
+	return institutions.map(originInstitution => institutionToTypeaheadOptions(originInstitution));
+}
+
+export const destinationDepartamentsToTypeaheadOptions = (departaments: AddressProjection[]): TypeaheadOption<AddressProjection>[] => {
+	return departaments.map(departament => destinationDepartamentToTypeaheadOptions(departament));
+}
+
+export const institutionalGroupsToTypeaheadOptions = ( institutionalGroups: InstitutionBasicInfoDto[]): TypeaheadOption<InstitutionBasicInfoDto>[] => {
+	return  institutionalGroups.map(institution => institutionalGroupToTypeaheadOptions(institution));
+}
+
+export const institutionToTypeaheadOptions = (institution: InstitutionBasicInfoDto): TypeaheadOption<any> => {
+	return {
+		compareValue: institution.name,
+		value: institution.id
+	}
+}
+
+export const destinationDepartamentToTypeaheadOptions = (departament: AddressProjection): TypeaheadOption<any> => {
+	return {
+		compareValue: departament.description,
+		value: departament.id
+	}
+}
+
+export const institutionalGroupToTypeaheadOptions = (destinationInstitution: InstitutionBasicInfoDto): TypeaheadOption<any> => {
+	return {
+		compareValue: destinationInstitution.name,
+		value: destinationInstitution.id
+	}
+}
+
+export const careLineToTypeaheadOption = (careLine: CareLineDto): TypeaheadOption<any> => {
+    return {
+        compareValue: careLine.description,
+        value: careLine.id
+    }
 }
 
 export const specialtyToTypeaheadOption = (specialty: ClinicalSpecialtyDto): TypeaheadOption<any> => {
@@ -79,11 +123,10 @@ export const specialtyToTypeaheadOption = (specialty: ClinicalSpecialtyDto): Typ
     }
 }
 
-export const mapToReferenceCompleteData = (referenceData: ReferenceDataDto): ReferenceCompleteData =>{
+export const mapToReferenceCompleteData = (referenceData: ReferenceDataDto): ReferenceCompleteData => {
 	return {
 		dto: referenceData,
 		priority: getPriority(referenceData.priority.id),
-		closureType: getColoredIconText(referenceData.closureType),
 		problems: referenceData.problems.join(', ')
 	};
 }

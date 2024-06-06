@@ -34,4 +34,7 @@ public class HCEEvolutionSummaryDto {
     private String evolutionNote;
 
 	private String institutionName;
+
+	private ElectronicJointSignatureProfessionalsDto electronicJointSignatureProfessionals;
+
 }

@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
+import static net.pladema.staff.repository.entity.EpisodeDocumentType.SURGICAL_CONSENT;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -9,47 +11,25 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
-import ar.lamansys.sgx.shared.filestorage.application.FileContentBo;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
-import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
-import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
-
-import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
-import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
-import net.pladema.establishment.service.InstitutionService;
-import net.pladema.establishment.service.domain.InstitutionBo;
-import net.pladema.patient.repository.entity.Patient;
-import net.pladema.patient.service.PatientService;
-import net.pladema.person.repository.entity.Person;
-import net.pladema.person.service.PersonService;
-
-import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
-import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
-import net.pladema.staff.service.HealthcareProfessionalService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.xhtmlrenderer.util.XRRuntimeException;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import ar.lamansys.sgx.shared.files.pdf.EPDFTemplate;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
 import ar.lamansys.sgx.shared.security.UserInfo;
+import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
@@ -57,21 +37,35 @@ import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepo
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
+import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.EvaluationNoteSummaryVo;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
+import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeEnumException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PatientNotFoundException;
+import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.SaveMedicalDischargeExceptionEnum;
+import net.pladema.clinichistory.hospitalization.service.summary.domain.ResponsibleDoctorBo;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.establishment.service.InstitutionService;
+import net.pladema.establishment.service.domain.InstitutionBo;
+import net.pladema.patient.repository.entity.Patient;
+import net.pladema.patient.service.PatientService;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
-
-import org.xhtmlrenderer.util.XRRuntimeException;
-import static net.pladema.staff.repository.entity.EpisodeDocumentType.SURGICAL_CONSENT;
+import net.pladema.person.repository.entity.Person;
+import net.pladema.person.service.PersonService;
+import net.pladema.staff.application.getlicensenumberbyprofessional.GetLicenseNumberByProfessional;
+import net.pladema.staff.domain.ProfessionalLicenseNumberBo;
+import net.pladema.staff.service.HealthcareProfessionalService;
 
 @Service
 public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
@@ -104,7 +98,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private final FeatureFlagsService featureFlagsService;
 
-	private final PdfService pdfService;
+	private final GeneratedPdfResponseService generatedPdfResponseService;
 
 	private final PatientService patientService;
 
@@ -126,7 +120,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 										DocumentService documentService,
 										InternmentEpisodeStorage internmentEpisodeStorage,
 										FeatureFlagsService featureFlagsService,
-										PdfService pdfService,
+										GeneratedPdfResponseService generatedPdfResponseService,
 										PatientService patientService,
 										PersonService personService,
 										InstitutionService institutionService,
@@ -141,7 +135,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		this.documentService = documentService;
 		this.internmentEpisodeStorage = internmentEpisodeStorage;
 		this.featureFlagsService = featureFlagsService;
-		this.pdfService = pdfService;
+		this.generatedPdfResponseService = generatedPdfResponseService;
 		this.patientService = patientService;
 		this.personService = personService;
 		this.institutionService = institutionService;
@@ -485,7 +479,7 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 	}
 
 	@Override
-	public ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
+	public GeneratedBlobBo generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException {
 		LOG.debug("Input parameters -> institutionId {}, consentId {}, internmentEpisodeId {}, procedures {}, observations {}, professionalId {}", institutionId, consentId, internmentEpisodeId, procedures, observations, professionalId);
 		InternmentEpisode internmentEpisode = getInternmentEpisode(internmentEpisodeId, institutionId);
 		Optional<Patient> patient = patientService.getPatient(internmentEpisode.getPatientId());
@@ -521,13 +515,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 				consentId,
 				procedures,
 				observations);
-		String template = "consent_document";
 
-		return StoredFileResponse.sendFile(
-				getGenerate(context, template),
-				String.format("%s_.pdf", "Documento de consentimiento"),
-				MediaType.APPLICATION_PDF
-		);
+
+		return getGenerate(context, EPDFTemplate.CONSENT_DOCUMENT, "Documento de consentimiento");
 	}
 
 	@Override
@@ -535,6 +525,22 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		LOG.debug("Input parameters -> internmentEpisodeId {}, consentId {}", internmentEpisodeId, consentId);
 		if (internmentEpisodeRepository.existsConsentDocumentInInternmentEpisode(internmentEpisodeId, consentId))
 			throw new MoreThanOneConsentDocumentException();
+	}
+
+	@Override
+	public Integer getInternmentEpisodeSectorId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer result = internmentEpisodeRepository.getInternmentEpisodeSectorId(internmentEpisodeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public Integer getInternmentEpisodeRoomId(Integer internmentEpisodeId) {
+		LOG.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Integer result = internmentEpisodeRepository.getInternmentEpisodeRoomId(internmentEpisodeId);
+		LOG.debug(LOGGING_OUTPUT, result);
+		return result;
 	}
 
 	private Map<String, Object> createContext(BasicDataPersonDto personDto, ResponsibleDoctorBo doctor, String institutionName, LocalDateTime entryDate, Integer internmentEpisodeId, String richBody, Integer consentId, List<String> procedures, String observations){
@@ -560,9 +566,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		return dto;
 	}
 
-	private FileContentBo getGenerate(Map<String, Object> context, String template) throws GeneratePdfException {
+	private GeneratedBlobBo getGenerate(Map<String, Object> context, EPDFTemplate template, String filename) throws GeneratePdfException {
 		try {
-			return pdfService.generate(template, context);
+			return generatedPdfResponseService.generatePdf(template, context, filename);
 		} catch(XRRuntimeException exc) {
 			LOG.error(exc.getMessage());
 			throw new GeneratePdfException(exc.getMessage());

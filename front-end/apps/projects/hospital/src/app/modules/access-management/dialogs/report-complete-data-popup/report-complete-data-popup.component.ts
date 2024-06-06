@@ -1,25 +1,30 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, } from '@angular/material/dialog';
-import { EReferenceRegulationState, ERole, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
+import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef, } from '@angular/material/dialog';
+import { EReferenceRegulationState, ERole, ReferenceAppointmentDto, ReferenceCompleteDataDto, ReferenceDataDto, ReferenceRegulationDto } from '@api-rest/api-model';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { ContactDetails } from '@access-management/components/contact-details/contact-details.component';
 import { PatientSummary } from '../../../hsi-components/patient-summary/patient-summary.component';
-import { BehaviorSubject, Observable, map, of, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, switchMap, take } from 'rxjs';
 import { AppointmentSummary } from '@access-management/components/appointment-summary/appointment-summary.component';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { toPatientSummary, toContactDetails, toAppointmentSummary } from '@access-management/utils/mapper.utils';
-import { PENDING } from '@access-management/constants/reference';
+import { PENDING, PENDING_ATTENTION_STATE, REFERENCE_STATES } from '@access-management/constants/reference';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
-import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { PermissionsService } from '@core/services/permissions.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { convertDateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DerivationEmmiter, RegisterDerivationEditor } from '../../components/derive-request/derive-request.component'
+import { SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
+import { TabsService } from '@access-management/services/tabs.service';
 
 
 const GESTORES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_LOCAL, ERole.GESTOR_DE_ACCESO_REGIONAL];
+const TAB_OFERTA_POR_REGULACION = 1;
+const PENDING_STATE = REFERENCE_STATES.PENDING;
+const ABSENT_STATE = REFERENCE_STATES.ABSENT;
 
 @Component({
 	selector: 'app-report-complete-data-popup',
@@ -32,7 +37,8 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	reportCompleteData: ReportCompleteData;
 
 	colapseContactDetails = false;
-
+	registerEditorAppointment: RegisterEditor;
+	referenceAppointment: ReferenceAppointmentDto;
 	referenceRegulationDto$: Observable<ReferenceRegulationDto>;
 	approvedState = EReferenceRegulationState.APPROVED;
 	waitingApprovalState = EReferenceRegulationState.WAITING_APPROVAL;
@@ -45,8 +51,12 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 	registerDeriveEditor$: BehaviorSubject<RegisterDerivationEditor> = new BehaviorSubject<RegisterDerivationEditor>(null);
 	hasObservation: boolean = false;
 	hasDerivationRequest = false;
-	showDerivationRequest: boolean;
+	isRoleGestor: boolean;
+	hasAppointment = false;
+	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
+	pendingAttentionState = PENDING_ATTENTION_STATE;
 
+	@Output() assignTurn: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly institutionalReferenceReportService: InstitutionalReferenceReportService,
@@ -54,6 +64,9 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly permissionService: PermissionsService,
 		private readonly snackBarService: SnackBarService,
+		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
+		private readonly tabsService: TabsService,
+		private dialogRef: MatDialogRef<ReportCompleteDataPopupComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 	) { }
 
@@ -62,6 +75,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 		const referenceDetails$ = this.getObservable();
 		referenceDetails$.subscribe(
 			referenceDetails => {
+				this.setAppointment(referenceDetails.appointment);
 				this.setObservation(referenceDetails);
 				this.setDerivation(referenceDetails);
 				this.referenceCompleteData = referenceDetails;
@@ -69,15 +83,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 				this.setReportData(this.referenceCompleteData);
 				this.colapseContactDetails = this.referenceCompleteData.appointment?.appointmentStateId === APPOINTMENT_STATES_ID.SERVED;
 			});
-		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.showDerivationRequest = hasRole);
-	}
-
-	updateApprovalStatus() {
-		const referenceDetails$ = this.getObservable();
-		this.referenceRegulationDto$ = referenceDetails$.pipe(
-			map(referenceDetails => { return referenceDetails.regulation }),
-			tap(regulationNewState => this.referenceCompleteData = { ...this.referenceCompleteData, regulation: regulationNewState })
-		);
+		this.permissionService.hasContextAssignments$(GESTORES).subscribe(hasRole => this.isRoleGestor = hasRole);
 	}
 
 	private getObservable(): Observable<ReferenceCompleteDataDto> {
@@ -107,15 +113,15 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	performDerivationAction (derivation: DerivationEmmiter): void {
 		this.derivation = derivation.derivation;
-		if (derivation.canEdit) 
+		if (derivation.canEdit)
 			this.editDerivation(derivation.derivation);
-		else 
+		else
 			this.addDerivation(derivation.derivation);
 	}
 
 	editDerivation(derivation: string): void {
 		this.institutionalNetworkReferenceReportService.updateDerivation(this.registerDeriveEditor$.getValue().id, derivation)
-		.subscribe(editSuccess => { 
+		.subscribe(editSuccess => {
 			if (editSuccess) {
 				this.snackBarService.showSuccess('access-management.derive_request.SHOW_SUCCESS_EDIT');
 				this.updateDerivation();
@@ -136,6 +142,12 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			else
 				this.snackBarService.showError('access-management.derive_request.SHOW_ERROR_DERIVATION');
 		})
+	}
+
+	redirectToOfferByRegulation(): void {
+		this.searchAppointmentsInfoService.loadInformation(this.reportCompleteData.patient.id, this.reportCompleteData.reference);
+		this.tabsService.setTabActive(TAB_OFERTA_POR_REGULACION);
+		this.dialogRef.close();
 	}
 
 	private updateDerivation() {
@@ -159,6 +171,14 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 
 	private addObservationOtherRoles(observation: string) {
 		return this.institutionalReferenceReportService.addObservation(this.data.referenceId, observation);
+	}
+
+	private setAppointment(referenceDetails: ReferenceCompleteDataDto["appointment"]){
+		if(referenceDetails) {
+			const {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName} = referenceDetails;
+			this.referenceAppointment = {appointmentId, appointmentStateId, authorFullName, createdOn, date, institution, professionalFullName};
+			this.registerEditorAppointment = {createdBy: authorFullName, date: convertDateTimeDtoToDate(createdOn)}
+		}
 	}
 
 	private setDerivation(referenceDetails: ReferenceCompleteDataDto) {
@@ -188,6 +208,7 @@ export class ReportCompleteDataPopupComponent implements OnInit {
 			reference: referenceDetails.reference,
 			appointment: referenceDetails.appointment ? toAppointmentSummary(referenceDetails.appointment) : pendingAppointment,
 		}
+		this.hasAppointment = this.reportCompleteData.appointment.state.description === PENDING_STATE || this.reportCompleteData.appointment.state.description === ABSENT_STATE;
 	}
 }
 

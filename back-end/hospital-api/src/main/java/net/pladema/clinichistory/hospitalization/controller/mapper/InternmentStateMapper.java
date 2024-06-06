@@ -4,7 +4,6 @@ import java.util.List;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
@@ -14,12 +13,13 @@ import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AllergyConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.AnthropometricDataDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosesGeneralStateDto;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.DiagnosisDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthHistoryConditionDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.ImmunizationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Last2RiskFactorsDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -35,12 +35,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFa
 import net.pladema.clinichistory.hospitalization.controller.dto.InternmentGeneralStateDto;
 
 @Mapper(uses = {HealthConditionMapper.class, RiskFactorMapper.class, AnthropometricDataMapper.class,
-        MedicationMapper.class, ImmunizationMapper.class, AllergyConditionMapper.class})
+        MedicationMapper.class, ImmunizationMapper.class, AllergyConditionMapper.class, LocalDateMapper.class})
 public interface InternmentStateMapper {
-
-    @Named("toListDiagnosisDto")
-    @IterableMapping(qualifiedByName = "toDiagnosisDto")
-    List<DiagnosisDto> toListDiagnosisDto(List<DiagnosisBo> listDiagnosisBo);
 
     @Named("toListDiagnosesGeneralStateDto")
     @IterableMapping(qualifiedByName = "toDiagnosesGeneralStateDto")

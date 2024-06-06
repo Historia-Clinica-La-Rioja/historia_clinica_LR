@@ -1,0 +1,10 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="5px">
+    <span>{{"historia-clinica.evolution-charts-popup.evolution-charts-type-select.INPUT_TITLE" | translate}}</span>
+    <mat-form-field appearance="outline">
+        <mat-select formControlName="type" [placeholder]="'historia-clinica.evolution-charts-popup.evolution-charts-type-select.PLACEHOLDER' | translate">
+            <mat-option *ngFor="let chartType of evolutionChartTypes$ | async" [value]="chartType">
+                {{chartType.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</form>

@@ -11,7 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.patient.repository.entity.PatientHistory;
+
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -340,6 +344,14 @@ public class PatientServiceImpl implements PatientService {
 		LOG.debug("Input parameters -> maxDate {}, limit {}", maxDate, limit);
 		List<Patient> result = patientRepositoryCustom.getLongTermTemporaryPatientIds(maxDate, limit);
 		LOG.debug("Output result -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<PatientGenderAgeBo> getPatientGenderAge(Integer patientId){
+		LOG.debug("Input parameters -> patientId {}", patientId);
+		Optional<PatientGenderAgeBo> result = patientRepository.getPatientGenderAge(patientId);
+		LOG.debug("Output -> result {}", result);
 		return result;
 	}
 

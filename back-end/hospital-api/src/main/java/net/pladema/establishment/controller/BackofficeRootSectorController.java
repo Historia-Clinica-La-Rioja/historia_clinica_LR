@@ -14,11 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("backoffice/rootsectors")
 public class BackofficeRootSectorController extends AbstractBackofficeController<RootSector, Integer> {
 
-	public BackofficeRootSectorController(RootSectorRepository repository, BackofficeRootSectorValidator sectorValidator) {
-		super(new BackofficeRepository<>(
-				repository,
-				new SingleAttributeBackofficeQueryAdapter<>("description")
-		), sectorValidator);
+	public BackofficeRootSectorController(BackofficeRootSectorStore store, BackofficeRootSectorValidator sectorValidator) {
+		super(store, sectorValidator);
 	}
 
 }

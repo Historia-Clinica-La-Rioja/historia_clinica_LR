@@ -89,6 +89,14 @@ public class ClinicalSpecialtyServiceImpl implements ClinicalSpecialtyService{
 	}
 
 	@Override
+	public List<ClinicalSpecialtyBo> getClinicalSpecialtiesByDepartmentId(Short departmentId) {
+		LOG.debug("Input parameters -> departmentId {}", departmentId);
+		List<ClinicalSpecialtyBo> result = clinicalSpecialtyRepository.getClinicalSpecialtiesByDepartmentId(departmentId);
+		LOG.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
 	public List<ClinicalSpecialtyBo> getVirtualConsultationClinicalSpecialtiesByInstitutionId(Integer institutionId) {
 		LOG.debug("Input parameters -> institutionId {}", institutionId);
 		List<ClinicalSpecialtyBo> result = clinicalSpecialtyRepository.getVirtualConsultationClinicalSpecialtiesByInstitutionId(institutionId);

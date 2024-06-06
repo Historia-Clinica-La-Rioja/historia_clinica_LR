@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-
     <th:block th:include="fragments/annex_report.html :: headerfiles"></th:block>
 </head>
 <body>
-<div class="container">
-    <div th:replace="fragments/annex_report.html :: data"></div>
+
+<div th:if="${flavor == 'pba'}" class="container">
+    <div th:replace="fragments/annex_report.html :: data-pba"></div>
 </div>
+<div th:if="${flavor == 'mdz'}" class="container">
+    <div th:replace="fragments/annex_report.html :: data-mdz"></div>
+</div>
+
 </body>
 </html>

@@ -1,5 +1,7 @@
 package net.pladema.medicalconsultation.diary.application;
 
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.AllArgsConstructor;
 
@@ -39,9 +41,12 @@ public class GetDailyFreeAppointmentTimes {
 
 	private FreeAppointmentsUtils freeAppointmentsUtils;
 
+	private FeatureFlagsService featureFlagsService;
+
 	public List<DiaryOpeningHoursFreeTimesBo> run(Integer diaryId, FreeAppointmentSearchFilterBo filter) {
 		log.debug("Input parameters -> diaryId {}, filter {}", diaryId, filter);
-		assertValidDate(diaryId, filter.getDate());
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_AGENDA_DINAMICA))
+			assertValidDate(diaryId, filter.getDate());
 		Short diaryAppointmentDuration = diaryRepository.getDiaryAppointmentDuration(diaryId);
 		Collection<AppointmentBo> assignedAppointments = appointmentService.getAppointmentsByDiaries(List.of(diaryId), filter.getDate(), filter.getDate());
 		Collection<DiaryOpeningHoursBo> openingHours = diaryOpeningHoursService.getDiaryOpeningHours(diaryId);

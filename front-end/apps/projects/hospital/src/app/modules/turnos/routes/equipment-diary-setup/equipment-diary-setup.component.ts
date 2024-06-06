@@ -7,7 +7,7 @@ import { DAYS_OF_WEEK } from 'angular-calendar';
 import { Observable } from 'rxjs';
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
-import { currentWeek, DateFormat, momentFormat, momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate } from '@core/utils/moment.utils';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SectorService } from '@api-rest/services/sector.service';
@@ -18,6 +18,7 @@ import { EquipmentService } from '@api-rest/services/equipment.service';
 import { EquipmentDiaryOpeningHoursService } from '@api-rest/services/equipment-diary-opening-hours.service';
 import { CompleteEquipmentDiaryDto, EquipmentDiaryADto, EquipmentDiaryDto, EquipmentDto, SectorDto } from '@api-rest/api-model';
 import { TabsLabel } from '@turnos/constants/tabs';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const START = 0;
@@ -55,10 +56,11 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	getError = getError;
 
 	private readonly routePrefix;
-	private mappedCurrentWeek = {};
 
 	editMode = false;
 	editingDiaryId: number;
+	diaryStartDate: Date;
+	diaryEndDate: Date;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -80,10 +82,6 @@ export class EquipmentDiarySetupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-
-		currentWeek().forEach(day => {
-			this.mappedCurrentWeek[day.day()] = day;
-		});
 
 		this.form = this.formBuilder.group({
 			sectorId: [null, [Validators.required]],
@@ -107,7 +105,7 @@ export class EquipmentDiarySetupComponent implements OnInit {
 				this.route.paramMap.subscribe((params) => {
 					this.editingDiaryId = Number(params.get('agendaId'));
 					this.equipmentDiaryService.getBy(this.editingDiaryId).subscribe((diary: CompleteEquipmentDiaryDto) => {
-						this.minDate = momentParseDate(diary.startDate).toDate();
+						this.minDate = dateISOParseDate(diary.startDate);
 						this.setValuesFromExistingAgenda(diary);
 					})
 				});
@@ -139,8 +137,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 			return;
 		}
 
-		const startDate: string = momentFormat(formValue.startDate, DateFormat.API_DATE);
-		const endDate: string = momentFormat(formValue.endDate, DateFormat.API_DATE);
+		const startDate: string = toApiFormat(formValue.startDate);
+		const endDate: string = toApiFormat(formValue.endDate);
 
 		const ocupations$: Observable<any[]> = this.equipmentDiaryOpeningHoursService
 			.getAllWeeklyEquipmentOcupation(this.form.controls.equipmentId.value, this.editingDiaryId, startDate, endDate);
@@ -223,8 +221,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		return {
 			id: this.editingDiaryId,
 			appointmentDuration: this.form.controls.appointmentDuration.value,
-			startDate: momentFormat(this.form.controls.startDate.value, DateFormat.API_DATE),
-			endDate: momentFormat(this.form.controls.endDate.value, DateFormat.API_DATE),
+			startDate: toApiFormat(this.form.controls.startDate.value),
+			endDate: toApiFormat(this.form.controls.endDate.value),
 			automaticRenewal: this.autoRenew,
 			includeHoliday: this.holidayWork,
 			equipmentDiaryOpeningHours: this.agendaHorarioService.getDiaryOpeningHours(),
@@ -241,8 +239,8 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.form.controls.sectorId.setValue(diary.sectorId);
 		this.setEquipmentsBySector();
 		this.form.controls.equipmentId.setValue(diary.equipmentId);
-		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
-		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
+		this.diaryStartDate = dateISOParseDate(diary.startDate);
+		this.diaryEndDate = dateISOParseDate(diary.endDate);
 		this.loadCalendar();
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
 
@@ -250,6 +248,16 @@ export class EquipmentDiarySetupComponent implements OnInit {
 		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
 		this.agendaHorarioService.setDiaryOpeningHours(diary.equipmentDiaryOpeningHours);
 
+	}
+
+	setSelectedStartDate(selectDate: Date) {
+		this.form.controls.startDate.setValue(selectDate);
+		this.setAllWeeklyEquipmentOcupation();
+	}
+
+	setSelectedEndDate(selectDate: Date) {
+		this.form.controls.endDate.setValue(selectDate);
+		this.setAllWeeklyEquipmentOcupation();
 	}
 
 	private disableNotEditableControls() {

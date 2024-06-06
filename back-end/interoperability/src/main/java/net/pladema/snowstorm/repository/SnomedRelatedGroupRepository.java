@@ -86,4 +86,19 @@ public interface SnomedRelatedGroupRepository extends JpaRepository<SnomedRelate
 			"WHERE srg.snomedId IN :snomedIds")
 	List<Integer> getIdsBySnomedIds(@Param("snomedIds") List<Integer> snomedIds);
 
+	@Transactional(readOnly = true)
+	@Query( "SELECT DISTINCT new net.pladema.cipres.domain.SnomedBo(s.id, s.sctid, s.pt) " +
+			"FROM SnomedGroup sg " +
+			"JOIN SnomedGroup baseGroup ON sg.groupId = baseGroup.id " +
+			"JOIN SnomedRelatedGroup srg ON sg.id = srg.groupId " +
+			"JOIN Snomed s ON srg.snomedId = s.id " +
+			"JOIN Institution i ON (sg.institutionId = i.id) " +
+			"JOIN Address a ON (i.addressId = a.id) " +
+			"JOIN City c ON (a.cityId = c.id) " +
+			"WHERE sg.groupType = :snomedGroupTypeId " +
+			"AND baseGroup.description = :description " +
+			"AND c.departmentId = :departmentId")
+	List<SnomedBo> getAllByDepartmentId(@Param("description") String description,
+										@Param("snomedGroupTypeId") Short snomedGroupTypeId,
+										@Param("departmentId") Short departmentId);
 }

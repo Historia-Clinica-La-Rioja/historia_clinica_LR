@@ -1,0 +1,23 @@
+@import '../../../../../../../../../assets/styles/mat-mixins.scss';
+
+form {
+	@include mat-form-field-background-white;
+}
+
+.internment-options{
+    margin-left: 30%;
+    margin-top: 16px;
+    padding-left: 16px;
+}
+
+.option-title {
+    text-wrap: wrap;
+}
+
+.observations {
+    margin-top: 16px;
+}
+
+mat-form-field {
+	width: 100%;
+}

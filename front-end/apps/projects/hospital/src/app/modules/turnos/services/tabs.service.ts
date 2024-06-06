@@ -40,7 +40,7 @@ export class TabsService {
 		const activeFeatureFlag$ = this.featureFlagService.filterItems$(FF_TABS);
 
 		combineLatest([userLoggedPermissions$, activeFeatureFlag$]).pipe(take(1)).subscribe(([userLoggedPermission, activeFF]) => {
-			this.setAvailableTabs(userLoggedPermission, activeFF.map(activeFF => activeFF.featureFlag));
+			this.setAvailableTabs(userLoggedPermission, activeFF.flatMap(active => active.featureFlag));
 		});
 	}
 

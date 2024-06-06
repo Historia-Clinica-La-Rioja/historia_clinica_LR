@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public enum ESexualViolenceAction {
 
-	STI_LABORATORY_PRESCRIPTION(1, "STI_LABORATORY_PRESCRIPTION"),
-	HIV_STI_HEPATITIS_PROPHYLAXIS(2, "HIV_STI_HEPATITIS_PROPHYLAXIS"),
-	EMERGENCY_CONTRACEPTION_PRESCRIPTION(3, "EMERGENCY_CONTRACEPTION_PRESCRIPTION"),
-	LEGAL_INTERRUPTION_PREGNANCY_COUNSELING(4, "LEGAL_INTERRUPTION_PREGNANCY_COUNSELING");
+	STI_LABORATORY_PRESCRIPTION(1, "Indicación de estudios de laboratorio para determinar ITS"),
+	HIV_STI_HEPATITIS_PROPHYLAXIS(2, "Profilaxis para VIH, ITS y hepatitis virales frente a la exposición de fluidos potencialmente infecciosos"),
+	EMERGENCY_CONTRACEPTION_PRESCRIPTION(3, "Indicación de anticoncepción de emergencia"),
+	LEGAL_INTERRUPTION_PREGNANCY_COUNSELING(4, "Consejería de acceso a Interrupción Legal de Embarazo (ILE) frente a confirmación de embarazo producto de violación");
 
 	private Short id;
 

@@ -5,22 +5,30 @@
 		[translate]="'access-management.search_references.reference.approval.ENTERED_BY'"
 		[translateParams]="{rule: referenceRegulationDto.ruleLevel}"></span>
 
-	<app-colored-label [description]="regulationState.description | translate | uppercase" [color]="regulationState.color"
-		[icon]="regulationState.icon">
-	</app-colored-label>
+	<div *ngIf="(!hasGestorRole && referenceRegulationDto.state === referenceApprovalState.pending) || 
+		referenceRegulationDto.state !== referenceApprovalState.pending; else managerOptions">
+		<app-colored-label [description]="regulationState.description | translate | uppercase"
+			[color]="regulationState.color" [icon]="regulationState.icon">
+		</app-colored-label>
+	</div>
+
+	<ng-template #managerOptions>
+		<app-institutional-network-actions-dropdown
+			*appHasRoleWithoutContext="['GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL']"
+			[reportCompleteData]="referenceCompleteDataDto" (newState)="onNewState($event)">
+		</app-institutional-network-actions-dropdown>
+	</ng-template>
 
 	<div *ngIf="referenceRegulationDto?.reason" fxLayout="column" fxLayoutGap="10px">
-
 		<span class="reason">{{referenceRegulationDto.reason}}</span>
-
 		<div class="grey" fxLayout="row" fxLayoutAlign="space-between">
 			<span>{{referenceRegulationDto.professionalName}}</span>
-			<span>{{referenceRegulationDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}hs</span>
+			<span>{{referenceRegulationDto.createdOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}</span>
 		</div>
-
 	</div>
 
 	<div *appHasRole="['ESPECIALISTA_MEDICO', 'PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-		<app-approval-actions *ngIf="loggedUserCanDoActions" [referenceId]="referenceRegulationDto.referenceId"></app-approval-actions>
+		<app-approval-actions *ngIf="loggedUserCanDoActions"
+			[referenceCompleteDataDto]="referenceCompleteDataDto"></app-approval-actions>
 	</div>
 </div>

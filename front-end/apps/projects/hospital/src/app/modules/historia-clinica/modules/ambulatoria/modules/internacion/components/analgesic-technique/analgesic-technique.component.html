@@ -1,0 +1,14 @@
+<div fxLayout="column" fxLayoutGap="2vh">
+    <app-titled-content-card *ngIf="(analgesicTechniqueList$ | async ).length > 0"
+        title="{{ 'internaciones.anesthesic-report.analgesic-technique.TECHNIQUE_RECORDS' }}">
+        <app-analgesic-technique-background-list [service]="service"></app-analgesic-technique-background-list>
+    </app-titled-content-card>
+
+    <div>
+        <button id="add-analgesic-technique" mat-button color="primary" class="medication-button"
+            (click)="addAnalgesicTechnique()">
+            {{ 'internaciones.anesthesic-report.analgesic-technique.ADD_TECHNIQUE' | translate }}
+        </button>
+    </div>
+
+</div>

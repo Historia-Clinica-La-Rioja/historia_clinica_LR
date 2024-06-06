@@ -18,6 +18,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.mocks.ClinicalObservationTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ class HCHClinicalObservationRepositoryImplTest extends UnitRepository {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		createInternmentStates(1, LocalDateTime.parse(date, formatter));
 
-		MapClinicalObservationVo mapClinicalObservationVo = clinicalObservationRepository.getGeneralState(internmentEpisodeId);
+		MapClinicalObservationVo mapClinicalObservationVo = clinicalObservationRepository.getGeneralState(internmentEpisodeId, List.of());
 
 		Assertions.assertThat(mapClinicalObservationVo.getClinicalObservationByCode().entrySet())
 				.isNotNull()

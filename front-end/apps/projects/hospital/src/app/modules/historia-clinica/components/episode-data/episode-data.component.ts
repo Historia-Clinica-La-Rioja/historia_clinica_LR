@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ClinicalSpecialtyDto, ExternalCoverageDto, PatientMedicalCoverageDto, ReducedPatientDto } from '@api-rest/api-model';
+import { AppFeature, ClinicalSpecialtyDto, ExternalCoverageDto, PatientMedicalCoverageDto, ReducedPatientDto } from '@api-rest/api-model';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PatientService } from '@api-rest/services/patient.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { MapperService } from '@core/services/mapper.service';
 import { MedicalCoverageInfoService } from '@historia-clinica/modules/ambulatoria/services/medical-coverage-info.service';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
@@ -23,6 +24,8 @@ export class EpisodeDataComponent implements OnInit {
 	patientMedicalCoverages: PatientMedicalCoverage[] = [];
 	hierarchicalUnitId: number;
 	_patientId: number;
+	isEnableJointSignature= false;
+	involvedHealthcareProfessionalIds: number[] = [];
 
 	private patient: ReducedPatientDto;
 	private appointmentConfirmedCoverageInfo: ExternalCoverageDto;
@@ -46,10 +49,11 @@ export class EpisodeDataComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientService: PatientService,
 		private readonly medicalCoverageInfoService: MedicalCoverageInfoService,
+		private readonly featureFlagService: FeatureFlagService,
 	) { }
 
 	ngOnInit() {
-
+		this.featureFlagService.isActive(AppFeature.HABILITAR_FIRMA_CONJUNTA).subscribe(isEnabled => this.isEnableJointSignature = isEnabled);
 		this.form = this.formBuilder.group({
 			clinicalSpecialty: [null, [Validators.required]],
 			patientMedicalCoverage: [null],
@@ -101,6 +105,11 @@ export class EpisodeDataComponent implements OnInit {
 		this.setEpisodeData();
 	}
 
+	setInvolvedHealthcareProfessionals(event){
+		this.involvedHealthcareProfessionalIds = event;
+		this.setEpisodeData();
+	}
+
 	private setSpecialtyFields(specialties: ClinicalSpecialtyDto[]) {
 		this.specialties = specialties;
 		const defaultSpecialty = specialties[0];
@@ -141,7 +150,8 @@ export class EpisodeDataComponent implements OnInit {
 		return {
 			medicalCoverageId: this.form.value.patientMedicalCoverage?.id,
 			clinicalSpecialtyId: this.form.value.clinicalSpecialty?.id,
-			hierarchicalUnitId: this.hierarchicalUnitId
+			hierarchicalUnitId: this.hierarchicalUnitId,
+			involvedHealthcareProfessionalIds: this.involvedHealthcareProfessionalIds,
 		}
 	}
 }
@@ -150,4 +160,5 @@ export interface EpisodeData {
 	medicalCoverageId: number;
 	clinicalSpecialtyId: number;
 	hierarchicalUnitId: number;
+	involvedHealthcareProfessionalIds: number[];
 }

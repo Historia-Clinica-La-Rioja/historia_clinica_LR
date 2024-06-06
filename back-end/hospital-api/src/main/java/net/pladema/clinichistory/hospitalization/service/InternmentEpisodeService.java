@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service;
 
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
@@ -11,8 +12,6 @@ import net.pladema.clinichistory.hospitalization.service.impl.exceptions.Patient
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.PersonNotFoundException;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -75,8 +74,12 @@ public interface InternmentEpisodeService {
 
 	boolean haveMoreThanOneIntermentEpisodesFromPatients(List<Integer> patients);
 
-	ResponseEntity<Resource> generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
+	GeneratedBlobBo generateEpisodeDocumentType(Integer institutionId, Integer consentId, Integer internmentEpisodeId, List<String> procedures, String observations, String professionalId) throws GeneratePdfException, PatientNotFoundException, PersonNotFoundException, InternmentEpisodeNotFoundException;
 
 	void existsConsentDocumentInInternmentEpisode(Integer internmentEpisodeId, Integer consentId) throws MoreThanOneConsentDocumentException;
+    
+	Integer getInternmentEpisodeSectorId(Integer internmentEpisodeId);
+
+	Integer getInternmentEpisodeRoomId(Integer internmentEpisodeId);
 
 }

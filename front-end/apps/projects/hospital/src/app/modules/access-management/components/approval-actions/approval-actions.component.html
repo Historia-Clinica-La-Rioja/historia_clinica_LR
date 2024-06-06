@@ -1,3 +1,9 @@
-<app-button [color]="'warn'" [text]="'access-management.search_references.reference.approval_actions.CANCEL'"
-    (clicked)="cancel()">
-</app-button>
+<div fxLayout="row" fxLayoutGap="20px">
+    <app-button [color]="'warn'" [text]="'access-management.search_references.reference.approval_actions.CANCEL'"
+        (clicked)="cancel()">
+    </app-button>
+
+    <app-button [buttonType]="ButtonType.RAISED" [text]="'access-management.search_references.reference.approval_actions.MODIFY'"
+        (clicked)="edit()">
+    </app-button>
+</div>

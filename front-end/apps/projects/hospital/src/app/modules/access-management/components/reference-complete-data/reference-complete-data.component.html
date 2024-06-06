@@ -1,9 +1,9 @@
 <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start">
 	<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
-		<app-reference-state-label [reference]="referenceCompleteData.dto.closureType"></app-reference-state-label>
+		<app-reference-state-label [referenceClosureDescription]="referenceCompleteData.dto.closureType?.description"></app-reference-state-label>
 
 		<span class="grey">
-			{{referenceCompleteData.dto.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}hs
+			{{referenceCompleteData.dto.date | viewDateDto: 'localdatetime' | dateFormat: 'datetime'}}
 		</span>
 	</div>
 
@@ -19,7 +19,7 @@
 		<app-priority fxFlex="40" [priority]="referenceCompleteData.priority"></app-priority>
 	</div>
 
-	<app-identifier-cases [identifierCase]="identiferCases.PROBLEM" 
+	<app-identifier-cases [identifierCase]="identiferCases.PROBLEM"
         [description]="referenceCompleteData.problems"
 		[showLegend]="true">
     </app-identifier-cases>
@@ -50,13 +50,13 @@
 		<div id="destination" fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" fxFlex="50">
 			<span class="grey"> {{'access-management.search_references.DESTINATION' | translate | uppercase}}</span>
 
-			<app-identifier-cases *ngIf="referenceCompleteData.dto.procedure" 
-                [identifierCase]="identiferCases.PRACTICE" [description]="referenceCompleteData.dto.procedure.pt" 
+			<app-identifier-cases *ngIf="referenceCompleteData.dto.procedure"
+                [identifierCase]="identiferCases.PRACTICE" [description]="referenceCompleteData.dto.procedure.pt"
                 [position]="Position.COLUMN" [showLegend]="true">
 			</app-identifier-cases>
 
 			<app-identifier-cases *ngIf="clinicalSpecialtiesName.length"
-				[identifierCase]="identiferCases.SPECIALTY" [description]="clinicalSpecialtiesName | stringSeparator" 
+				[identifierCase]="identiferCases.SPECIALTY" [description]="clinicalSpecialtiesName | stringSeparator"
 				[position]="Position.COLUMN"
 				[showLegend]="true">
 			</app-identifier-cases>

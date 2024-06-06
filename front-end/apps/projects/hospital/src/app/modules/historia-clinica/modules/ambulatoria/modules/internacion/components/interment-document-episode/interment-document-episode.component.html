@@ -13,8 +13,8 @@
 				<a (click)="download(document.id, document.fileName)">{{document.fileName}}</a>
 				<p>{{document.createdOn |
 					viewDateDto:
-					'date' | date: 'dd/MM/yyyy'}}</p>
-				<button mat-button mat-icon-button color="warn" (click)="openDeleteDialog(document.id)">
+					'date' | dateFormat: 'date'}}</p>
+				<button mat-button mat-icon-button color="warn" [disabled]="hasAdministrativeDischarge" (click)="openDeleteDialog(document.id)">
 					<mat-icon>delete_outline</mat-icon>
 				</button>
 			</div>

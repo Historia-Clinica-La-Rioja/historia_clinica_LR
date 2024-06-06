@@ -7,6 +7,7 @@ import net.pladema.emergencycare.service.domain.PatientECEBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface  EmergencyCareEpisodeService {
 
@@ -39,5 +40,11 @@ public interface  EmergencyCareEpisodeService {
 	Boolean hasEvolutionNote(Integer episodeId);
 
 	Integer getEmergencyEpisodeEpisodeIdByDate(Integer institutionId, Integer patientId, LocalDateTime date);
+	
+	Optional<Integer> getRoomId(Integer emergencyCareEpisodeId);
+
+	Optional<Integer> getDoctorsOfficeId(Integer emergencyCareEpisodeId);
+
+	Optional<Integer> getShockRoomId(Integer emergencyCareEpisodeId);
 
 }

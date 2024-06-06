@@ -1,0 +1,205 @@
+databaseChangeLog:
+    - logicalFilePath: incrementales-v2_19
+
+    - changeSet:
+        id: addColumns-anesthetic_part4-procedure_description
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: procedure_description
+              columns:
+                - column:
+                    name: anesthesia_start_date
+                    type: date
+                - column:
+                    name: anesthesia_start_time
+                    type: time
+                - column:
+                    name: anesthesia_end_date
+                    type: date
+                - column:
+                    name: anesthesia_end_time
+                    type: time
+                - column:
+                    name: surgery_start_date
+                    type: date
+                - column:
+                    name: surgery_start_time
+                    type: time
+                - column:
+                    name: surgery_end_date
+                    type: date
+                - column:
+                    name: surgery_end_time
+                    type: time
+
+    - changeSet:
+        id: createTable-measuring_point
+        author: mromero
+        changes:
+          - createTable:
+              tableName: measuring_point
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_measuring_point
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_measuring_point
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: time
+                    type: time
+                - column:
+                    name: blood_pressure_min
+                    type: int
+                - column:
+                    name: blood_pressure_max
+                    type: int
+                - column:
+                    name: blood_pulse
+                    type: int
+                - column:
+                    name: o2_saturation
+                    type: int
+                - column:
+                    name: co2_end_tidal
+                    type: int
+
+    - changeSet:
+        id: createTable-document_measuring_point
+        author: mromero
+        changes:
+          - createTable:
+              tableName: document_measuring_point
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: measuring_point_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: document_id, measuring_point_id
+              constraintName: PK_document_measuring_point
+              tableName: document_measuring_point
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: document_id
+              baseTableName: document_measuring_point
+              constraintName: FK_document_id_document_measuring_point
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: document
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: measuring_point_id
+              baseTableName: document_measuring_point
+              constraintName: FK_measuring_point_id_document_measuring_point
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: measuring_point
+              validate: true
+
+    - changeSet:
+        id: createTable-document_post_anesthesia_status
+        author: mromero
+        changes:
+          - createTable:
+              tableName: document_post_anesthesia_status
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_post_anesthesia_status
+                      nullable: false
+                      references: document(id)
+                      foreignKeyName: FK_document_id_document_post_anesthesia_status
+                    name: document_id
+                    type: bigint
+                - column:
+                    name: intentional_sensitivity
+                    type: boolean
+                - column:
+                    name: corneal_reflex
+                    type: boolean
+                - column:
+                    name: obey_orders
+                    type: boolean
+                - column:
+                    name: talk
+                    type: boolean
+                - column:
+                    name: respiratory_depression
+                    type: boolean
+                - column:
+                    name: circulatory_depression
+                    type: boolean
+                - column:
+                    name: vomiting
+                    type: boolean
+                - column:
+                    name: curated
+                    type: boolean
+                - column:
+                    name: tracheal_cannula
+                    type: boolean
+                - column:
+                    name: pharyngeal_cannula
+                    type: boolean
+                - column:
+                    name: internment
+                    type: boolean
+                - column:
+                    name: internment_place_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: true
+                      references: note(id)
+                      foreignKeyName: FK_note_id_document_post_anesthesia_status
+                    name: note_id
+                    type: bigint
+
+    - changeSet:
+        id: snomed_cache_file-addColumn
+        comment: Add column kind to snomed_cache_file
+        author: sperruolo
+        changes:
+          - addColumn:
+              tableName: snomed_cache_file
+              columns:
+                - column:
+                    name: kind
+                    type: varchar(15)
+          - sql:
+              sql: |-
+                UPDATE snomed_cache_file
+                SET kind = 'TERMINOLOGY'
+                WHERE kind IS NULL;
+          -  addNotNullConstraint:
+               columnName: kind
+               constraintName:  NN_snomed_cache_file_kind
+               tableName: snomed_cache_file
+               validate:  true

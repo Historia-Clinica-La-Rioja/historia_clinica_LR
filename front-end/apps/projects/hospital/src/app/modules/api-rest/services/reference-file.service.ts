@@ -16,16 +16,16 @@ export class ReferenceFileService {
 		private readonly downloadService: DownloadService,
 	) { }
 
-	uploadReferenceFiles(patientId: number, referenceFile: File): Observable<number> {
-		const fileFormdata = new FormData();
-		fileFormdata.append('file', referenceFile);
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference-file/patient/${patientId}/uploadFile`;
-		return this.http.post<number>(url, fileFormdata);
+	uploadReferenceFiles(patientId: number, referenceFiles: File[]): Observable<number[]> {
+		const filesFormdata = new FormData();
+		Array.from(referenceFiles).forEach(file => filesFormdata.append('files', file));
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference-file/patient/${patientId}/uploadFiles`;
+		return this.http.post<number[]>(url, filesFormdata);
 	}
 
-	deleteReferenceFiles(fileIds: number[]): Observable<any> {
+	deleteReferenceFiles(fileIds: number[]): Observable<boolean> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/reference-file/delete`;
-		return this.http.delete(url, {
+		return this.http.delete<boolean>(url, {
 			params: {
 				fileIds
 			}
@@ -40,4 +40,5 @@ export class ReferenceFileService {
 			fileName,
 		).subscribe();
 	}
+
 }

@@ -1,0 +1,14 @@
+.page-title {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.section {
+	margin: 3vh 0;
+	padding: 0 16px;
+
+	&.page {
+		margin-bottom: 14vh;
+	}
+}

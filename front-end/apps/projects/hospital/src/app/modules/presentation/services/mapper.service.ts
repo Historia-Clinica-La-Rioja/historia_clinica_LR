@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
-import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
 import {
 	BasicPatientDto,
+	BedSummaryDto,
 	CompletePatientDto,
+	HCEEvolutionSummaryDto,
+	InternmentEpisodeDto,
+	InternmentPatientDto,
 	InternmentSummaryDto,
 	PatientType,
 	PersonalInformationDto,
-	BedSummaryDto,
-	InternmentPatientDto,
-	HCEEvolutionSummaryDto,
-	InternmentEpisodeDto,
 } from '@api-rest/api-model';
-import { PatientBasicData } from '../components/patient-card/patient-card.component';
+import { DateFormat, dateToMoment, momentParseDate, momentParseDateTime, momentFormat } from '@core/utils/moment.utils';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
-import { DateFormat, momentParseDate, momentParseDateTime, momentFormat, dateToMoment } from '@core/utils/moment.utils';
 import { BedManagement } from '../../camas/routes/home/home.component';
-import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
+import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
 import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
+import { PatientBasicData } from '@presentation/utils/patient.utils';
+import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 @Injectable({
 	providedIn: 'root'
@@ -74,7 +75,8 @@ export class MapperService {
 			gender: patient.person?.gender?.description,
 			age: patient.person?.age,
 			nameSelfDetermination: patient.person?.nameSelfDetermination,
-			selfPerceivedGender: patient.person?.selfPerceivedGender
+			selfPerceivedGender: patient.person?.selfPerceivedGender,
+			personAge: patient.person?.personAge
 		};
 	}
 
@@ -216,11 +218,10 @@ export class MapperService {
 	}
 
 	private static _toHistoricalProblems(hceEvolutionSummaryDto: HCEEvolutionSummaryDto[]): HistoricalProblems[] {
-
 		return hceEvolutionSummaryDto.reduce((historicalProblemsList, currentOutpatientEvolutionSummary) => {
 			currentOutpatientEvolutionSummary.healthConditions.length ?
 				historicalProblemsList = [...historicalProblemsList, ...currentOutpatientEvolutionSummary.healthConditions.map(problem => ({
-					consultationDate: currentOutpatientEvolutionSummary.startDate,
+					consultationDate: currentOutpatientEvolutionSummary.startDate ? dateTimeDtoToDate(currentOutpatientEvolutionSummary.startDate) : null,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
@@ -236,10 +237,11 @@ export class MapperService {
 					reference: problem.references?.length > 0 ? problem.references : null,
 					markedAsError: problem.isMarkedAsError,
 					color: problem.isMarkedAsError ? 'grey-text' : 'primary',
-					errorProblem: problem.errorProblem
-
+					errorProblem: problem.errorProblem,
+					professionalsThatDidNotSignAmount: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatDidNotSignAmount,
+					professionalsThatSignedNames: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatSignedNames,
 				}))] : historicalProblemsList = [...historicalProblemsList, {
-					consultationDate: currentOutpatientEvolutionSummary.startDate,
+					consultationDate: currentOutpatientEvolutionSummary.startDate ? dateTimeDtoToDate(currentOutpatientEvolutionSummary.startDate) : null,
 					consultationEvolutionNote: currentOutpatientEvolutionSummary.evolutionNote,
 					professionalFullName: currentOutpatientEvolutionSummary.professional.person.fullName,
 					consultationProfessionalId: currentOutpatientEvolutionSummary.professional.id,
@@ -254,6 +256,8 @@ export class MapperService {
 					consultationProcedures: currentOutpatientEvolutionSummary.procedures.map(p => ({ procedureDate: p.performedDate, procedureId: p.snomed.sctid, procedurePt: p.snomed.pt })),
 					reference: null,
 					color: 'primary',
+					professionalsThatDidNotSignAmount: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatDidNotSignAmount,
+					professionalsThatSignedNames: currentOutpatientEvolutionSummary.electronicJointSignatureProfessionals?.professionalsThatSignedNames,
 				}];
 			return historicalProblemsList;
 		}, []);

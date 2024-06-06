@@ -1,0 +1,8 @@
+<div [class]="_radioGroupInputData.alignments.position" class="spacing-title">
+    <span class="title" [translate]="_radioGroupInputData.presentation.title"></span>
+    <mat-radio-group [color]="_radioGroupInputData.presentation.color" [class]="_radioGroupInputData.alignments.optionsPosition" class="spacing-radio-buttons" (change)="onValueChange($event)">
+        <mat-radio-button *ngFor="let radioButton of _radioGroupInputData.presentation.data" [value]="radioButton">
+            {{ radioButton.description | translate }}
+        </mat-radio-button>
+    </mat-radio-group>
+</div>

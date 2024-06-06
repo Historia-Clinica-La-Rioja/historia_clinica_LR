@@ -1,0 +1,17 @@
+<div fxLayoutAlign="space-between">
+	<span mat-dialog-title>
+		{{ 'turnos.group-appointment.SELECT_APPOINTMENT' | translate }}
+	</span>
+	<button mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<mat-dialog-content>
+	<div fxLayout="center">
+		<mat-icon class="icon">event</mat-icon> 
+		<h3>{{data.date | date:medium}}</h3>
+	</div>
+
+	<app-appointment-list-detail *ngFor="let detail of appointments" [detail]="detail" [diary]="data.agenda" [hasPermissionToAssignShift]="data.hasPermissionToAssignShift" [appointments]="data.appointments" [diaryIdAndDate]="diaryIdAndDate" [date]="data.date"></app-appointment-list-detail>
+</mat-dialog-content>

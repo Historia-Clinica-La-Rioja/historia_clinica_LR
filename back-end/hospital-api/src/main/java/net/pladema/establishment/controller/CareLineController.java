@@ -29,20 +29,28 @@ public class CareLineController {
     private final CareLineMapper careLineMapper;
 
     @GetMapping()
-    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
-    public ResponseEntity<List<CareLineDto>> getAll(@PathVariable(name = "institutionId") Integer institutionId) {
+    @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+    public ResponseEntity<List<CareLineDto>> getCareLines(@PathVariable(name = "institutionId") Integer institutionId) {
         List<CareLineBo> careLinesBo = careLineService.getCareLines();
-        log.debug("Get all care lines  => {}", careLinesBo);
+        log.debug("Get all care lines with specialties => {}", careLinesBo);
         return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
     }
+
+	@GetMapping("/all")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ABORDAJE_VIOLENCIAS') || hasAnyAuthority('GESTOR_DE_ACCESO_DE_DOMINIO', 'GESTOR_DE_ACCESO_REGIONAL', 'GESTOR_DE_ACCESO_LOCAL')")
+	public ResponseEntity<List<CareLineDto>> getAllCareLines(@PathVariable(name = "institutionId") Integer institutionId) {
+		List<CareLineBo> careLinesBo = careLineService.getAllCareLines();
+		log.debug("Get all domain care lines including confidential  => {}", careLinesBo);
+		List<CareLineDto> result = careLineMapper.toListCareLineDto(careLinesBo);
+		return ResponseEntity.ok(result);
+	}
 
 	@GetMapping(value = "/by-problems")
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
 	public ResponseEntity<List<CareLineDto>> getAllByProblems(@PathVariable(name = "institutionId") Integer institutionId,
 															  @RequestParam(name = "snomedSctids") List<String> snomedSctids) {
 		log.debug("Input parameters -> institutionId {}, snomedSctids {}", institutionId, snomedSctids);
-		Integer loggedUserId = UserInfo.getCurrentAuditor();
-		List<CareLineBo> careLinesBo = careLineService.getAllByProblems(snomedSctids, institutionId, loggedUserId);
+		List<CareLineBo> careLinesBo = careLineService.getAllByProblems(snomedSctids);
 		log.debug("Get care lines by problems (snomed sctids) {}", careLinesBo);
 		return ResponseEntity.ok(careLineMapper.toListCareLineDto(careLinesBo));
 	}

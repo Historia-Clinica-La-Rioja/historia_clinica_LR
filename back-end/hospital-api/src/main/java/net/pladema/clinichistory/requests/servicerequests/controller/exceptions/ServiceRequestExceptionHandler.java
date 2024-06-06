@@ -18,9 +18,16 @@ public class ServiceRequestExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({ IllegalArgumentException.class })
-    public ApiErrorDto handleValidationExceptions(IllegalArgumentException ex) {
-        log.error("Constraint violation -> {}", ex.getMessage());
+    public ApiErrorDto handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.error("Constraint violation -> {}", ex.getMessage(), ex);
         return new ApiErrorDto("Constraint violation", ex.getMessage());
     }
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RuntimeException.class })
+	public ApiErrorDto handleRuntimeException(RuntimeException ex) {
+		log.error("Constraint violation -> {}", ex.getMessage(), ex);
+		return new ApiErrorDto("Constraint violation", ex.getMessage());
+	}
 
 }

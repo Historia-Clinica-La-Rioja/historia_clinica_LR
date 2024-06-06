@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -95,6 +96,8 @@ public class DiaryServiceImpl implements DiaryService {
 	private final DiaryPracticeService diaryPracticeService;
 
 	private final DiaryLabelRepository diaryLabelRepository;
+
+	private final SnomedService snomedService;
 
 	@Override
 	@Transactional
@@ -501,6 +504,10 @@ public class DiaryServiceImpl implements DiaryService {
 						.put(openingHours.getOpeningHours().getId(), generateEmptyAppointmentsHoursFromOpeningHours(openingHours.getOpeningHours(), diary, searchCriteria));
 			}
 		});
+
+		if (searchCriteria.getPracticeId() != null)
+			setPractice(searchCriteria.getPracticeId(), diary);
+
 		LocalDate searchInitialDate = searchCriteria.getInitialSearchDate();
 		LocalDate searchEndingDate = searchCriteria.getEndingSearchDate();
 		List<LocalDate> daysBetweenLimits = searchInitialDate.datesUntil(searchEndingDate).collect(Collectors.toList());
@@ -511,6 +518,12 @@ public class DiaryServiceImpl implements DiaryService {
 			}
 		});
 		return result;
+	}
+
+	private void setPractice(Integer practiceId, CompleteDiaryBo diary) {
+		List<SnomedBo> practiceToSet = new ArrayList<SnomedBo>();
+		practiceToSet.add(snomedService.getSnomed(practiceId));
+		diary.setPracticesInfo(practiceToSet);
 	}
 
 	private void generateDayEmptyAppointments(CompleteDiaryBo diary,
@@ -564,6 +577,8 @@ public class DiaryServiceImpl implements DiaryService {
 		result.setDoctorsOfficeDescription(diary.getDoctorsOfficeDescription());
 		result.setClinicalSpecialtyName(diary.getClinicalSpecialtyName());
 		result.setAlias(diary.getAlias());
+		if (diary.getPracticesInfo() != null)
+			result.setPractice(diary.getPracticesInfo().get(0));
 		return result;
 	}
 

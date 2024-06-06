@@ -34,8 +34,13 @@ public class ReferenceAppointmentBo {
 
 	private String email;
 
+	private String authorFullName;
+
+	private LocalDateTime createdOn;
+
 	public ReferenceAppointmentBo(Integer referenceId, Integer appointmentId) {
 		this.referenceId = referenceId;
 		this.appointmentId = appointmentId;
 	}
+
 }

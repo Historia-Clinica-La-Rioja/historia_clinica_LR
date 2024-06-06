@@ -5,10 +5,10 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.SharedAppointmentPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,8 +47,8 @@ public class BookingByInstitutionPublicController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public SavedBookingAppointmentDto bookPreappointment(@RequestBody BookingDto bookingDto) {
-		return bookAppointmentPort.makeBooking(bookingDto);
+	public SavedBookingAppointmentDto bookPreappointment(@RequestBody BookingDto bookingDto) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException {
+		return bookAppointmentPort.makeBooking(bookingDto, true);
 	}
 
 
@@ -69,19 +69,6 @@ public class BookingByInstitutionPublicController {
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(startDateStr);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(endDateStr);
 		return appointmentPort.fetchAppointments(institutionId, identificationNumber, List.of((short)6), startDate, endDate);
-	}
-
-	@GetMapping("/specialty/{clinicalSpecialtyId}/practice/{practiceId}/medicalCoverages/{medicalCoverageId}/availability")
-	public ResponseEntity<List<ProfessionalAvailabilityDto>> getProfessionalsAvailability(
-			@PathVariable(name="medicalCoverageId") Integer medicalCoverageId,
-			@PathVariable(name="practiceId") Integer practiceId,
-			@PathVariable(name="clinicalSpecialtyId") Integer clinicalSpecialtyId,
-			@PathVariable(name="institutionId") Integer institutionId
-	) {
-		var result = bookAppointmentPort.fetchAvailabilityByPractice(institutionId,
-				clinicalSpecialtyId, practiceId, medicalCoverageId);
-		log.debug("Get availability by practiceId{} => {}", practiceId, result);
-		return ResponseEntity.ok(result);
 	}
 
 }

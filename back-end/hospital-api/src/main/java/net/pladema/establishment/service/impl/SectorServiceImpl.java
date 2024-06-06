@@ -58,4 +58,12 @@ public class SectorServiceImpl implements SectorService {
         log.debug(OUTPUT, result);
         return result;
     }
+
+	@Override
+	public String getSectorName(Integer sectorId) {
+		log.debug("Input parameter -> sectorId {}", sectorId);
+		String result = sectorRepository.getSectorName(sectorId);
+		log.trace(OUTPUT, result);
+		return result;
+	}
 }

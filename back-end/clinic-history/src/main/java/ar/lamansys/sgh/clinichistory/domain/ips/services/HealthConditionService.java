@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class HealthConditionService {
 
     public static final String OUTPUT = "Output -> {}";
@@ -64,6 +64,8 @@ public class HealthConditionService {
     private final GetLastHealthConditionRepository getLastHealthConditionRepository;
 
     private final PersonalHistoryRepository personalHistoryRepository;
+
+
 
     private HealthCondition save(HealthCondition healthCondition){
         log.debug("Input parameters -> healthCondition {}", healthCondition);
@@ -240,6 +242,34 @@ public class HealthConditionService {
 		log.debug(OUTPUT, healthCondition);
 		return healthCondition;
 	}
+
+    public List<HealthConditionBo> loadOtherHistories(PatientInfoBo patientInfo, Long documentId, List<HealthConditionBo> otherHistories){
+        log.debug("Input parameters -> patientInfo {}, documentId {}, otherHistories {}", patientInfo, documentId, otherHistories);
+        otherHistories.forEach(op -> {
+            HealthCondition healthCondition = buildOtherHistory(patientInfo, op);
+            if (op.getId() == null)
+                healthCondition = healthConditionRepository.save(healthCondition);
+
+            op.setId(healthCondition.getId());
+            op.setVerificationId(healthCondition.getVerificationStatusId());
+            op.setVerification(getVerification(op.getVerificationId()));
+            op.setStatusId(healthCondition.getStatusId());
+            op.setStatus(getStatus(op.getStatusId()));
+
+            documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
+        });
+
+        log.debug(OUTPUT, otherHistories);
+        return otherHistories;
+    }
+
+    private HealthCondition buildOtherHistory(PatientInfoBo patientInfo, HealthConditionBo info){
+        log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);
+        HealthCondition healthCondition = buildBasicHealthCondition(patientInfo, info);
+        healthCondition.setProblemId(ProblemType.OTHER_HISTORY);
+        log.debug(OUTPUT, healthCondition);
+        return healthCondition;
+    }
 
     private HealthCondition buildBasicHealthCondition(PatientInfoBo patientInfo, HealthConditionBo info) {
         log.debug("Input parameters -> patientInfo {}, info {}", patientInfo, info);

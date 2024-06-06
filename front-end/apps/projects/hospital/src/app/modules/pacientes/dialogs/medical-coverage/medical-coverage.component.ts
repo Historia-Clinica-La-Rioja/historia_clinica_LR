@@ -8,8 +8,7 @@ import {
 } from '@api-rest/api-model';
 import { HealthInsuranceService } from '@api-rest/services/health-insurance.service';
 import { RenaperService } from '@api-rest/services/renaper.service';
-import { DateFormat, momentFormat, momentParse, newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
+import { DateFormat, dateParse, newDate } from '@core/utils/moment.utils';
 import { EPatientMedicalCoverageCondition } from '@api-rest/api-model';
 import { HealthInsuranceComponent } from "@pacientes/dialogs/health-insurance/health-insurance.component";
 import { PrivateHealthInsuranceComponent } from "@pacientes/dialogs/private-health-insurance/private-health-insurance.component";
@@ -18,6 +17,8 @@ import { map } from "rxjs/operators";
 import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
 import { MapperService } from "@core/services/mapper.service";
 import { pushIfNotExists } from '@core/utils/array.utils';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { fixDate } from '@core/utils/date/format';
 
 const DNI_TYPE_ID = 1;
 @Component({
@@ -42,11 +43,12 @@ export class MedicalCoverageComponent implements OnInit {
 			identificationNumber: string;
 			identificationTypeId: number;
 			patientId: number;
-			initValues:  PatientMedicalCoverage[];
+			initValues: PatientMedicalCoverage[];
 		},
 		private readonly dialog: MatDialog,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
-		private readonly mapperService: MapperService
+		private readonly mapperService: MapperService,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.patientMedicalCoverages = this.personInfo.initValues ? this.personInfo.initValues : [];
 	}
@@ -67,7 +69,7 @@ export class MedicalCoverageComponent implements OnInit {
 								if (!patientMedicalCoverage) {
 									this.patientMedicalCoverages = this.patientMedicalCoverages.concat(this.fromRenaperToPatientMedicalCoverage(healthInsurance));
 								} else if (healthInsurance.dateQuery) {
-									patientMedicalCoverage.validDate = momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
+									patientMedicalCoverage.validDate = dateParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH);
 								}
 							});
 						}
@@ -90,8 +92,8 @@ export class MedicalCoverageComponent implements OnInit {
 				)
 			)
 			.subscribe((patientMedicalCoverages: PatientMedicalCoverage[]) =>
-				patientMedicalCoverages.forEach(item=>{
-				this.patientMedicalCoverages = pushIfNotExists<PatientMedicalCoverage>(this.patientMedicalCoverages, item, this.compareMedicalCorevage);
+				patientMedicalCoverages.forEach(item => {
+					this.patientMedicalCoverages = pushIfNotExists<PatientMedicalCoverage>(this.patientMedicalCoverages, item, this.compareMedicalCorevage);
 				})
 
 			);
@@ -111,10 +113,10 @@ export class MedicalCoverageComponent implements OnInit {
 
 	getDatesText(patientMedicalCoverage: PatientMedicalCoverage): string {
 		const initText = patientMedicalCoverage.startDate ? 'desde ' +
-			momentFormat(patientMedicalCoverage.startDate, DateFormat.VIEW_DATE) : '';
+			this.dateFormatPipe.transform(patientMedicalCoverage.startDate, 'date') : '';
 
 		const endText = patientMedicalCoverage.endDate ? ' hasta ' +
-			momentFormat(patientMedicalCoverage.endDate, DateFormat.VIEW_DATE) : '';
+			this.dateFormatPipe.transform(patientMedicalCoverage.endDate, 'date') : '';
 
 		return initText + endText;
 	}
@@ -122,7 +124,15 @@ export class MedicalCoverageComponent implements OnInit {
 
 	save() {
 		this.dialogRef.close({
-			patientMedicalCoverages: this.patientMedicalCoverages.filter(pmc => pmc.id || isNewAndNotDeleted(pmc))
+			patientMedicalCoverages: this.patientMedicalCoverages
+				.filter(pmc => pmc.id || isNewAndNotDeleted(pmc))
+				.map(r => {
+					return {
+						...r,
+						startDate: fixDate(r.startDate),
+						endDate: fixDate(r.endDate)
+					}
+				})
 		});
 
 		function isNewAndNotDeleted(pmc: PatientMedicalCoverage): boolean {
@@ -153,7 +163,7 @@ export class MedicalCoverageComponent implements OnInit {
 		const medicalCoverage = new HealthInsurance(healthInsurance.rnos, healthInsurance.acronym,
 			healthInsuranceId, healthInsurance.name, EMedicalCoverageType.OBRASOCIAL);
 
-		if(medicalCoverage.id === undefined) {
+		if (medicalCoverage.id === undefined) {
 			this.healthInsuranceService.get(parseInt(healthInsurance.rnos))
 				.subscribe(data => {
 					medicalCoverage.id = data.id;
@@ -163,7 +173,7 @@ export class MedicalCoverageComponent implements OnInit {
 		return {
 			affiliateNumber: null,
 			medicalCoverage,
-			validDate: healthInsurance.dateQuery ? momentParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH) : newMoment(),
+			validDate: healthInsurance.dateQuery ? dateParse(healthInsurance.dateQuery, DateFormat.YEAR_MONTH) : newDate(),
 			active: true
 		};
 	}
@@ -177,7 +187,7 @@ export class MedicalCoverageComponent implements OnInit {
 				healthInsuranceToUpdate: healthInsurance
 			}
 		});
-		dialogRef.afterClosed().subscribe( (healthInsurance:PatientMedicalCoverage) => {
+		dialogRef.afterClosed().subscribe((healthInsurance: PatientMedicalCoverage) => {
 			if (healthInsurance) {
 				this.addMedicalCoverage(healthInsurance);
 			}
@@ -190,7 +200,7 @@ export class MedicalCoverageComponent implements OnInit {
 			disableClose: true,
 			data: { privateHealthInsuranceToupdate: privateHealthInsurance }
 		});
-		dialogRef.afterClosed().subscribe( (privateHealthInsurance:PatientMedicalCoverage) => {
+		dialogRef.afterClosed().subscribe((privateHealthInsurance: PatientMedicalCoverage) => {
 			if (privateHealthInsurance) {
 				this.addMedicalCoverage(privateHealthInsurance);
 			}
@@ -202,7 +212,7 @@ export class MedicalCoverageComponent implements OnInit {
 			autoFocus: true,
 			disableClose: true
 		});
-		dialogRef.afterClosed().subscribe((art:PatientMedicalCoverage) => {
+		dialogRef.afterClosed().subscribe((art: PatientMedicalCoverage) => {
 			if (art) {
 				this.addMedicalCoverage(art);
 			}
@@ -210,7 +220,7 @@ export class MedicalCoverageComponent implements OnInit {
 	}
 
 	private addMedicalCoverage(medicalCoverage: PatientMedicalCoverage) {
-		const index =  this.patientMedicalCoverages.findIndex(patientMedicalCoverage => medicalCoverage.id ? patientMedicalCoverage.id == medicalCoverage.id :
+		const index = this.patientMedicalCoverages.findIndex(patientMedicalCoverage => medicalCoverage.id ? patientMedicalCoverage.id == medicalCoverage.id :
 			patientMedicalCoverage.medicalCoverage.name === medicalCoverage.medicalCoverage.name && patientMedicalCoverage.validDate === medicalCoverage.validDate)
 		if (index != -1)
 			this.patientMedicalCoverages.splice(index, 1, medicalCoverage);
@@ -223,10 +233,10 @@ export class MedicalCoverageComponent implements OnInit {
 export interface PatientMedicalCoverage {
 	id?: number;
 	affiliateNumber?: string;
-	validDate?: Moment;
+	validDate?: Date;
 	medicalCoverage: HealthInsurance | PrivateHealthInsurance | MedicalCoverage;
-	startDate?: Moment;
-	endDate?: Moment;
+	startDate?: Date;
+	endDate?: Date;
 	planId?: number;
 	planName?: string;
 	active: boolean;
@@ -293,7 +303,7 @@ export class PrivateHealthInsurance extends MedicalCoverage {
 
 export enum EMedicalCoverageType {
 	PREPAGA = 1, OBRASOCIAL, ART
-	}
+}
 
 export function determineIfIsHealthInsurance(toBeDetermined: HealthInsurance | PrivateHealthInsurance | CoverageDto): toBeDetermined is HealthInsurance {
 	if ((toBeDetermined as HealthInsurance).type) {

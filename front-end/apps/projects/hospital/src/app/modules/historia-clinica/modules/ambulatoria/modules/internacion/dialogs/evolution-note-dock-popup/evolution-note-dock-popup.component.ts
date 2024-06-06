@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import {
-	AllergyConditionDto, DiagnosisDto, EvolutionNoteDto,
+	AllergyConditionDto, AppFeature, DiagnosisDto, EvolutionNoteDto,
 	HealthConditionDto, HospitalizationProcedureDto, ImmunizationDto, MasterDataInterface, ResponseEvolutionNoteDto
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
@@ -12,7 +12,6 @@ import { PermissionsService } from "@core/services/permissions.service";
 import { anyMatch } from "@core/utils/array.utils";
 import { MIN_DATE } from "@core/utils/date.utils";
 import { getError, hasError } from '@core/utils/form.utils';
-import { dateToMoment } from "@core/utils/moment.utils";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,6 +21,8 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-evolution-note-dock-popup',
@@ -54,6 +55,9 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 	isDisableConfirmButton = false;
 	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
 	observationsSubject = new BehaviorSubject<boolean>(true);
+	anthropometricData: AnthropometricData;
+	isEvolutionChartsFFActive = false;
+
 	constructor(
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
@@ -65,6 +69,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 		private readonly permissionsService: PermissionsService,
 		private readonly translateService: TranslateService,
 		private readonly dialog: MatDialog,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.diagnosticos = data.diagnosticos;
 		this.mainDiagnosis = data.mainDiagnosis;
@@ -119,12 +124,14 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 			this.observationsSubject.next(allFormValuesAreNull);
 		});
 
-		this.form.get('anthropometricData').valueChanges.pipe(
-			map(formData => Object.values(formData)),
-			map(formValues => formValues.every(value => value === null))
-		).subscribe(allFormValuesAreNull => {
+		this.form.get('anthropometricData').valueChanges.subscribe(formData => {
+			const formValues = Object.values(formData);
+			const allFormValuesAreNull = formValues.every(value => value === null);
 			this.anthropometricDataSubject.next(allFormValuesAreNull);
+			this.anthropometricData = formData;
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO).subscribe(isEvolutionChartsActive => this.isEvolutionChartsFFActive = isEvolutionChartsActive);
 	}
 
 	save(): void {
@@ -247,7 +254,7 @@ export class EvolutionNoteDockPopupComponent implements OnInit {
 				if (this.evolutionNote.riskFactors[key].value != undefined) {
 					this.form.controls.riskFactors.patchValue({ [key]: { value: this.evolutionNote.riskFactors[key].value } });
 					const date: Date = new Date(this.evolutionNote.riskFactors[key].effectiveTime);
-					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: dateToMoment(date) } });
+					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: date } });
 				}
 			});
 		}

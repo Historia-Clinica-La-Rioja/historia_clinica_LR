@@ -54,4 +54,5 @@ public interface PersonService {
 
     ContactInfoBo getContactInfoById(Integer personId);
 
+    List<String> getCompletePersonNameByIds(List<Integer> personIds);
 }

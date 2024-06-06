@@ -10,6 +10,7 @@ import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModa
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 
 import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.SendVirtualAppointmentEmailService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
@@ -31,11 +32,14 @@ public class ReassignAppointment {
 
 	private SendVirtualAppointmentEmailService sendVirtualAppointmentEmailService;
 
+	private AppointmentService appointmentService;
+
 	@Transactional
 	public boolean run(UpdateAppointmentDateBo appointmentUpdateData) {
 		log.debug("Input parameters -> appointmentUpdateData {}", appointmentUpdateData);
 		appointmentRepository.updateDate(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getDate(), appointmentUpdateData.getTime());
 		appointmentAssnRepository.updateOpeningHoursId(appointmentUpdateData.getOpeningHoursId(), appointmentUpdateData.getAppointmentId());
+		updateRecurringType(appointmentUpdateData);
 		AppointmentBo appointment = appointmentRepository.getEmailNotificationData(appointmentUpdateData.getAppointmentId());
 		updateModalityRelatedData(appointment, appointmentUpdateData);
 		if (mustSendEmail(appointmentUpdateData.getModality()))
@@ -75,6 +79,14 @@ public class ReassignAppointment {
 	private void updatePatientEmail(UpdateAppointmentDateBo appointmentUpdateData, AppointmentBo appointmentBo) {
 		appointmentBo.setPatientEmail(appointmentUpdateData.getPatientEmail());
 		appointmentRepository.updateAppointmentPatientEmail(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getPatientEmail());
+	}
+
+	private void updateRecurringType(UpdateAppointmentDateBo appointmentUpdateData) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO)) {
+			appointmentRepository.updateRecurringType(appointmentUpdateData.getAppointmentId(), appointmentUpdateData.getRecurringAppointmentTypeId());
+			appointmentService.getAppointment(appointmentUpdateData.getAppointmentId())
+					.ifPresent(app -> appointmentService.verifyRecurringAppointmentsOverturn(app.getDiaryId()));
+		}
 	}
 
 }

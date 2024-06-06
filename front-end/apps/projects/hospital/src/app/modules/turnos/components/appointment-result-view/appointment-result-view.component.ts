@@ -1,14 +1,14 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiaryAvailableProtectedAppointmentsDto, EAppointmentModality, ReferenceSummaryDto } from '@api-rest/api-model';
+import { DiaryAvailableAppointmentsDto, EAppointmentModality, ReferenceSummaryDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DatePipeFormat } from '@core/utils/date.utils';
-import { DateFormat, dateToMoment } from '@core/utils/moment.utils';
 import { NewAppointmentComponent } from '@turnos/dialogs/new-appointment/new-appointment.component';
 import { SearchAppointmentCriteria } from '../search-appointments-in-care-network/search-appointments-in-care-network.component';
 import { HolidayCheckService } from '@shared-appointment-access-management/services/holiday-check.service';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-appointment-result-view',
@@ -18,7 +18,7 @@ import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-man
 export class AppointmentResultViewComponent implements OnInit {
 	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
-	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
+	@Input() appointment: DiaryAvailableAppointmentsDto;
 	@Input() patientId: number;
 	@Input() searchAppointmentCriteria: SearchAppointmentCriteria;
 	@Input() referenceSummary?: ReferenceSummaryDto;
@@ -40,7 +40,7 @@ export class AppointmentResultViewComponent implements OnInit {
 	}
 
 	assign(): void {
-		const appointmentDate = dateToMoment(dateDtoToDate(this.appointment.date)).format(DateFormat.API_DATE);
+		const appointmentDate = toApiFormat(dateDtoToDate(this.appointment.date));
 		const appointmentHour = this.datePipe.transform(timeDtoToDate(this.appointment.hour), DatePipeFormat.MEDIUM_TIME);
 		this.holidayService.checkAvailability(appointmentDate).subscribe(isAvailable => {
 			if (isAvailable) {

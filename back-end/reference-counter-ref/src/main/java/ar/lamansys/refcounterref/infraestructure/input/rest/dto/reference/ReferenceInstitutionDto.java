@@ -15,4 +15,10 @@ public class ReferenceInstitutionDto {
 
 	private String description;
 
+	private Integer departmentId;
+
+	private String departmentName;
+
+	private String provinceName;
+
 }

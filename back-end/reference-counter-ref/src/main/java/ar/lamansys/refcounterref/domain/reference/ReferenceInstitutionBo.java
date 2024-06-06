@@ -13,4 +13,22 @@ public class ReferenceInstitutionBo {
 
 	private String description;
 
+	private Short departmentId;
+
+	private String departmentName;
+
+	private String provinceName;
+
+	public ReferenceInstitutionBo(Integer id, String description){
+		this.id = id;
+		this.description = description;
+	}
+
+	public ReferenceInstitutionBo(Integer id, String description, Short departmentId, String departmentName){
+		this.id = id;
+		this.description = description;
+		this.departmentId = departmentId;
+		this.departmentName = departmentName;
+	}
+
 }

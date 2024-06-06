@@ -3,7 +3,7 @@ import { ColoredIconTextComponent } from './colored-icon-text.component';
 import { Color } from '@presentation/colored-label/colored-label.component';
 
 const meta: Meta<ColoredIconTextComponent> = {
-    title: 'Example/ColoredIconTextComponent',
+    title: 'Presentation/ColoredIconTextComponent',
     component: ColoredIconTextComponent,
     tags: ['autodocs'],
     argTypes: {

@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface BookingPersonService {
-    Integer save(BookingPersonBo bookingPersonBo);
+    BookingPerson save(BookingPersonBo bookingPersonBo);
 
     boolean exists(String email);
 

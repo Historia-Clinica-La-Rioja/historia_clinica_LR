@@ -22,7 +22,7 @@ public interface LocalDateMapper {
 		return localDateTime != null ? localDateTime.toLocalDate() : null;
 	}
 
-default LocalDateTime fromLocalDate(LocalDate localDate) {
+	default LocalDateTime fromLocalDate(LocalDate localDate) {
 		return localDate!= null ? LocalDateTime.of(localDate, LocalTime.now()) : null; 	
     }
 

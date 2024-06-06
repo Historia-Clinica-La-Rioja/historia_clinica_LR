@@ -2,7 +2,7 @@ import { RegulationNewAppointmentData, RegulationNewAppointmentPopUpComponent } 
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EAppointmentModality, DiaryAvailableProtectedAppointmentsDto } from '@api-rest/api-model';
+import { EAppointmentModality, DiaryAvailableAppointmentsDto, ReferenceSummaryDto } from '@api-rest/api-model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DateFormat, DatePipeFormat } from '@core/utils/date.utils';
 import { ConfirmPrintAppointmentComponent } from '@shared-appointment-access-management/dialogs/confirm-print-appointment/confirm-print-appointment.component';
@@ -19,8 +19,10 @@ export class RegulationAppointmentResultViewComponent {
 
 	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	@Input() modalityAttention?: EAppointmentModality;
-	@Input() appointment: DiaryAvailableProtectedAppointmentsDto;
+	@Input() appointment: DiaryAvailableAppointmentsDto;
 	@Input() searchAppointmentCriteria: SearchAppointmentCriteria;
+	@Input() patientId: number;
+	@Input() referenceSummary: ReferenceSummaryDto;
 	@Output() resetInformation = new EventEmitter<void>();
 
 	constructor(
@@ -42,7 +44,9 @@ export class RegulationAppointmentResultViewComponent {
 					overturnMode: this.appointment.overturnMode,
 					modalityAttention: this.modalityAttention,
 					searchAppointmentCriteria: this.searchAppointmentCriteria,
-					institutionId: this.appointment.institution.id
+					institutionId: this.appointment.institution.id,
+					patientId: this.patientId,
+					referenceSummary: this.referenceSummary
 				}
 				const dialogRef = this.dialog.open(RegulationNewAppointmentPopUpComponent, {
 					width: '45%',

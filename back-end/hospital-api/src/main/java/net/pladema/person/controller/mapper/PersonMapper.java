@@ -1,8 +1,11 @@
 package net.pladema.person.controller.mapper;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.PersonAgeDto;
 import net.pladema.person.controller.dto.BasicPersonalDataDto;
 import net.pladema.person.repository.entity.IdentificationType;
+
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -61,7 +64,11 @@ public interface PersonMapper {
 	@Mapping(target = "identificationType", source = "identificationType.description")
 	BasicDataPersonDto basicDataFromPerson(Person person, Gender gender, String selfPerceivedGender, IdentificationType identificationType, String occupation, String educationLevel, String religion, String ethnicity);
 
-
+	@AfterMapping
+	default void personAgeMapping(@MappingTarget BasicDataPersonDto target, Person source){
+		if (source.getBirthDate() != null)
+			target.setPersonAge(new PersonAgeDto(source.getBirthDate()));
+	}
 
 	@Named("fromPersonalInformation")
     @Mapping(target = "identificationType", source = "identificationType", qualifiedByName = "fromIdentificationType")

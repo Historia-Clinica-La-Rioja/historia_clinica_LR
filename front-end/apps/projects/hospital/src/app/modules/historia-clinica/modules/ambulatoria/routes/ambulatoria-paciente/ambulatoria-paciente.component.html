@@ -178,7 +178,7 @@
 							<span>{{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress">
+							<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress" [isEmergencyCareTemporalPatient]="isEmergencyCareTemporalPatient">
 							</app-guardia>
 						</ng-template>
 					</mat-tab>
@@ -303,7 +303,7 @@
 							</ng-template>
 						</mat-tab>
 					</section>
-					<section *appFeatureFlag="'ENABLE_VIOLENCE_REPORT_DEVELOPMENT'">
+					<section>
 						<mat-tab id="tab_violence_situations" *appHasRole="['ABORDAJE_VIOLENCIAS']"
 						label="{{'ambulatoria.paciente.violence-situations.TAB_LABEL' | translate | uppercase}}">
 							<app-violence-situations></app-violence-situations>

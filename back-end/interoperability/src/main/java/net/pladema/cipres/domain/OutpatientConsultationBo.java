@@ -22,7 +22,11 @@ public class OutpatientConsultationBo {
 
 	private String date;
 
+	private Integer clinicalSpecialtyId;
+
 	private String clinicalSpecialtySctid;
+
+	private Integer institutionId;
 
 	private String institutionSisaCode;
 

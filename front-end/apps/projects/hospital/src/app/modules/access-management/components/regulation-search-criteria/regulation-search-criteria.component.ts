@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
@@ -8,9 +8,11 @@ import { SearchCriteria } from '@turnos/components/search-criteria/search-criter
 	templateUrl: './regulation-search-criteria.component.html',
 	styleUrls: ['./regulation-search-criteria.component.scss']
 })
-export class RegulationSearchCriteriaComponent implements OnInit {
+export class RegulationSearchCriteriaComponent {
 
-	form: FormGroup<RegulationSearchCriteriaForm>;
+	form: FormGroup<RegulationSearchCriteriaForm> = new FormGroup<RegulationSearchCriteriaForm>({
+		criteria: new FormControl(RegulationSearchCriteria.CONSULTATION),
+	});
 	readonly searchCriteria = SearchCriteria;
 	@Input() label: string;
 	@Input() searchCriteryStyle?: string;
@@ -20,14 +22,6 @@ export class RegulationSearchCriteriaComponent implements OnInit {
 
 	constructor() { }
 
-	ngOnInit() {
-
-		this.form = new FormGroup<RegulationSearchCriteriaForm>({
-			criteria: new FormControl(RegulationSearchCriteria.CONSULTATION),
-		});
-
-	}
-
 	ngOnChanges(changes: SimpleChanges) {
 		if (this.form) {
 			if (changes.defaultOption)
@@ -35,6 +29,7 @@ export class RegulationSearchCriteriaComponent implements OnInit {
 
 			if (changes.disabled?.currentValue)
 				this.form.controls.criteria.disable();
+
 			else
 				this.form.controls.criteria.enable();
 		}

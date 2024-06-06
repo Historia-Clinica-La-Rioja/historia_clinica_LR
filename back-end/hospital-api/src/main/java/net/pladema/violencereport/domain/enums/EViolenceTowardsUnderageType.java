@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public enum EViolenceTowardsUnderageType {
 
-	DIRECT_VIOLENCE(1, "DIRECT_VIOLENCE"),
-	INDIRECT_VIOLENCE(2, "INDIRECT_VIOLENCE"),
-	NO_VIOLENCE(3, "NO_VIOLENCE"),
-	NO_INFORMATION(4, "NO_INFORMATION");
+	DIRECT_VIOLENCE(1, "Si, es violencia directa contra NNyA"),
+	INDIRECT_VIOLENCE(2, "Si, es una violencia indirecta contra NNyA"),
+	NO_VIOLENCE(3, "No"),
+	NO_INFORMATION(4, "Sin información");
 
 
 	private Short id;

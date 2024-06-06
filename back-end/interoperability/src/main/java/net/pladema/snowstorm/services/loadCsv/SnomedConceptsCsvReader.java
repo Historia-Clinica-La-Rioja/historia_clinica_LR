@@ -16,12 +16,6 @@ import java.util.List;
 
 public class SnomedConceptsCsvReader {
 
-    private static final String TYPE = "text/csv";
-
-    public static boolean hasCsvFormat(MultipartFile file) {
-        return TYPE.equals(file.getContentType());
-    }
-
 	public static Integer getTotalRecords(InputStreamSource file) {
 		try {
 			return getTotalRecords(file.getInputStream());

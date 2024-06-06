@@ -27,5 +27,6 @@ export interface IconLegend {
 
 export enum Position {
 	ROW = 'row',
-	COLUMN = 'column'
+	COLUMN = 'column',
+	ROW_WRAP = 'row wrap',
 }

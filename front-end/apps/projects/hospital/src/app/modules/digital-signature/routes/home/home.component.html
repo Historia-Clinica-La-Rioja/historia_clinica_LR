@@ -1,3 +1,8 @@
+<button mat-button color="primary" id="button-back" *ngIf="buttonBack" (click)="goToBackDocumentsSignature()">
+    <mat-icon color="primary">arrow_back</mat-icon>
+    <span>{{ 'firmas.BACK_DOCUMENTS_SIGNATURE' | translate }}</span>
+</button>
+
 <section *ngIf="hasProfessionalCuil">
     <header>
         <h1 translate="digital-signature.TITLE" class="bold"></h1>

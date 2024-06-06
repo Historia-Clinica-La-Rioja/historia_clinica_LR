@@ -11,29 +11,26 @@
                 <span> {{ 'access-management.regulation_offer.OPTIONAL' | translate }}</span>
             </div>
             <app-typeahead id="careline" [titleInput]="'access-management.regulation_offer.CARELINE' | translate"
-                [options]="careLineTypeaheadOptions$ | async" [externalSetValue]="clearTypeaheadOption"
+                [externalSetValue]="externalInformation?.formInformation?.careLine"
+                [disabled]="externalInformation?.disabledInput" [options]="careLineTypeaheadOptions$ | async"
                 (selectionChange)="setCareLine($event)">
             </app-typeahead>
         </div>
 
         <app-regulation-search-criteria class="padding-bottom" [label]="'turnos.TYPE_ATTENTION'"
-            [searchCriteryStyle]="'bold'" [defaultOption]="selectedTypeAttention"
+            [searchCriteryStyle]="'bold'" [defaultOption]="selectedTypeAttention" [disabled]="externalInformation?.disabledInput.others"
             (selectedOption)="setCriteria($event)"></app-regulation-search-criteria>
 
-        <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column">
+        <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="20px" fxLayout.lt-sm="column" *ngIf="isEnableTelemedicina">
             <div fxLayout="column" fxLayoutGap="5px" fxFlex="100">
                 <strong [translate]="'access-management.regulation_offer.MODALITY_ATTENTION'"></strong>
-                <mat-radio-group formControlName="modality">
+                <mat-radio-group formControlName="modality" (change)="resetResults()">
                     <mat-radio-button color="primary"
                         [value]="appointmentModality.onSiteAttetion">{{'access-management.regulation_offer.ON_SITE_ATTENTION'
                         |
                         translate}}</mat-radio-button>
                     <mat-radio-button color="primary" [value]="appointmentModality.vitualAttention"
-                        [disabled]="!isEnableTelemedicina">{{'access-management.regulation_offer.PATIENT_VIRTUAL_ATTENTION'
-                        |
-                        translate}}</mat-radio-button>
-                    <mat-radio-button color="primary" [value]="appointmentModality.secondOpinionVirtualAttention"
-                        [disabled]="!isEnableTelemedicina">{{'access-management.regulation_offer.SECOND_OPINION_VIRTUAL_ATTENTION'
+                        >{{'access-management.regulation_offer.PATIENT_VIRTUAL_ATTENTION'
                         |
                         translate}}</mat-radio-button>
                 </mat-radio-group>
@@ -51,8 +48,8 @@
                         }}</span>
                 </div>
                 <app-typeahead id="specialty" [titleInput]="'access-management.regulation_offer.SPECIALTY' | translate"
-                    [options]="specialtyTypeaheadOptions" [externalSetValue]="clearTypeaheadOption"
-                    (selectionChange)="setClinicalSpecialty($event)">
+                    [options]="specialtyTypeaheadOptions" (selectionChange)="setClinicalSpecialty($event)"
+                    [externalSetValue]="externalSpecialty" [disabled]="externalInformation?.disabledInput.specialty">
                 </app-typeahead>
                 <div class="error-space">
                     <mat-error *ngIf="showTypeaheadErrors.specialty">{{ 'forms.REQUIRED' | translate }}</mat-error>
@@ -60,8 +57,8 @@
             </div>
             <div>
                 <app-typeahead-practices *ngIf="selectedTypeAttention == searchCriteria.PRACTICES"
-                    [practices]="practices$ | async" [externalValue]="clearTypeaheadOption"
-                    (selectedOption)="setPractice($event)">
+                    [practices]="practices$ | async" [externalValue]="externalInformation?.formInformation?.practice"
+                    [disabled]="externalInformation?.disabledInput.others" (selectedOption)="setPractice($event)">
                 </app-typeahead-practices>
                 <div class="error-space">
                     <mat-error *ngIf="showTypeaheadErrors.practice">{{ 'forms.REQUIRED' | translate }}</mat-error>
@@ -73,7 +70,8 @@
             <div fxFlex="25" fxLayout="column" fxLayoutGap="5px">
                 <strong>{{ 'access-management.regulation_offer.PROVINCE' | translate }}</strong>
                 <app-typeahead id="province" [titleInput]="'access-management.regulation_offer.PROVINCE' | translate"
-                    [options]="provinceTypeaheadOptions$ | async" (selectionChange)="setProvince($event)">
+                    [options]="provinceTypeaheadOptions$ | async" (selectionChange)="setProvince($event)"
+                    [externalSetValue]="initialProvinceTypeaheadOptionSelected">
                 </app-typeahead>
                 <div class="error-space">
                     <mat-error *ngIf="showTypeaheadErrors.province">{{ 'forms.REQUIRED' | translate }}</mat-error>
@@ -84,7 +82,8 @@
                 <strong> {{ 'access-management.regulation_offer.DEPARTMENT' | translate }} </strong>
                 <app-typeahead id="department"
                     [titleInput]="'access-management.regulation_offer.DEPARTMENT' | translate"
-                    [options]="departmentTypeaheadOptions$ | async" (selectionChange)="setDepartment($event)">
+                    [options]="departmentTypeaheadOptions$ | async" (selectionChange)="setDepartment($event)"
+                    [externalSetValue]="initialDepartmentTypeaheadOptionSelected">
                 </app-typeahead>
                 <div class="error-space">
                     <mat-error *ngIf="showTypeaheadErrors.department">{{ 'forms.REQUIRED' | translate }}</mat-error>
@@ -98,7 +97,8 @@
                 </span>
                 <app-typeahead id="institution"
                     [titleInput]="'access-management.regulation_offer.INSTITUTION' | translate"
-                    [options]="institutionTypeaheadOptions$ | async" (selectionChange)="setInstitution($event)">
+                    [options]="institutionTypeaheadOptions$ | async" (selectionChange)="setInstitution($event)"
+                    [externalSetValue]="initialInstitutionTypeaheadOptionSelected">
                 </app-typeahead>
                 <div class="error-space"></div>
             </div>
@@ -151,7 +151,9 @@
                 <div *ngFor="let appointment of appointmentsCurrentPage; last as isLast">
                     <app-regulation-appointment-result-view [appointment]="appointment" (resetInformation)="clearForm()"
                         [modalityAttention]="searchForm.controls.modality.value"
-                        [searchAppointmentCriteria]="searchAppointmentCriteria">
+                        [searchAppointmentCriteria]="searchAppointmentCriteria"
+                        [patientId]="externalInformation?.patientId"
+                        [referenceSummary]="externalInformation?.referenceSummary">
                     </app-regulation-appointment-result-view>
                     <mat-divider class="divider-list" inset *ngIf="!isLast"></mat-divider>
                 </div>

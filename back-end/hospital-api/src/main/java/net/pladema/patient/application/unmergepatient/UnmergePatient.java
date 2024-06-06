@@ -14,6 +14,8 @@ import net.pladema.patient.application.port.MergeClinicHistoryStorage;
 import net.pladema.patient.application.port.MergePatientStorage;
 import net.pladema.patient.controller.dto.PatientToMergeDto;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -22,7 +24,8 @@ public class UnmergePatient {
 	private final MergePatientStorage mergePatientStorage;
 
 	private final MergeClinicHistoryStorage mergeClinicHistoryStorage;
-	
+
+	@Transactional
 	public Boolean run(Integer institutionId, PatientToMergeDto patientToUnmerge) {
 		log.debug("Input parameters -> institutionId {}, patientToUnmerge {}", institutionId, patientToUnmerge);
 		mergePatientStorage.assertBasicPersonData(patientToUnmerge.getRegistrationDataPerson());

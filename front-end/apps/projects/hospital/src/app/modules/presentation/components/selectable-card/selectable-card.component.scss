@@ -1,7 +1,7 @@
 header {
     display: flex;
     align-items: center;
-    
+
     input {
         cursor: pointer;
         margin-right: .75rem;
@@ -13,44 +13,54 @@ header {
     }
 }
 
-section {
+.container {
+    margin: 0;
     display: grid;
     grid-template-columns: 1fr 2fr;
-    border: 1px solid #d3d3d3;
+    border-top: 1px solid #d3d3d3;
+    border-left: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
 }
 
 .no-information-container {
     height: 60vh;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border-bottom: 1px solid #d3d3d3;
+    border-right: 1px solid #d3d3d3;
 
     h3 {
         color: #9A9A9A;
     }
 }
 
+.no-detailed-information {
+    display: grid;
+    place-items: center;
+    border-bottom: 1px solid #d3d3d3;
+}
+
 .cards-container {
-    height: 40rem;
     overflow-y: auto;
     overflow-x: hidden;
 }
- 
-mat-selection-list mat-list-option {
-    height: auto;
+
+mat-selection-list {
     border-right: 1px solid #d3d3d3;
-    border-bottom: 1px solid #d3d3d3;
 
-    &:last-child {
-        border-bottom: 0;
-    }
-}
+	mat-list-option {
+		height: auto;
+		border-bottom: 1px solid #d3d3d3;
+	}
 
-.select-all {
-    border-right: 1px solid #d3d3d3;;
+	.mat-list-single-selected-option {
+		background-color: #E9F3F9;
+	}
 }
 
 ::ng-deep .mat-list-item-content {
-    padding: .75rem!important; 
+    padding: .75rem!important;
 }
 
 .mat-list-base {
@@ -68,15 +78,28 @@ mat-list-item {
     .title {
         min-width: 12rem;
         color: rgba(0, 0, 0, 0.54);
-        margin-right: 1rem;
     }
 
     .value-container {
         display: flex;
         flex-direction: column;
+        min-width: 8rem;
     }
 
     &:last-child {
         border-bottom: 0;
     }
+
+    .important {
+        font-weight: 500;
+        color: #333;
+    }
+}
+
+.detailed-information {
+    border-bottom: 1px solid #d3d3d3;
+}
+
+mat-divider {
+	margin: 0 2rem;
 }

@@ -7,6 +7,7 @@ import java.util.Collections;
 import javax.validation.ConstraintViolationException;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.establishment.service.InstitutionService;
@@ -83,8 +84,9 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 
 	@MockBean
 	private DocumentFileRepository documentFileRepository;
+
 	@Mock
-	private PdfService pdfService;
+	private GeneratedPdfResponseService generatedPdfResponseService;
 
 	@Mock
 	private PatientService patientService;
@@ -115,7 +117,7 @@ class ChangeMainDiagnosesServiceImplTest extends UnitRepository {
 				documentService,
 				internmentEpisodeStorage,
 				featureFlagsService,
-				pdfService,
+				generatedPdfResponseService,
 				patientService,
 				personService,
 				institutionService,

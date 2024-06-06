@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
-import ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
+import ar.lamansys.sgh.shared.domain.reference.ReferencePhoneBo;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -350,14 +352,24 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Integer getReferenceEncounterTypeId(@Param("referenceId") Integer referenceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
-			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
-			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.patientMedicalCoverageId, oc.id, " +
+			"r.consultation, oc.creationable.createdOn, rn.description," +
+			"cl.id, cl.description, cs.id, cs.name, " +
+			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId," +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
 			"FROM Reference r " +
 			"JOIN OutpatientConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
-			"JOIN Institution i ON (oc.institutionId = i.id) " +
-			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"JOIN Institution i ON (oc.institutionId = i.id)" +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"LEFT JOIN City c ON (c.id = a.cityId) " +
+			"LEFT JOIN Department d ON (d.id = c.departmentId)" +
+			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
+			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id)" +
+			"LEFT JOIN Address a2 ON (i2.addressId = a2.id) " +
+			"LEFT JOIN City c2 ON (c2.id = a2.cityId) " +
+			"LEFT JOIN Department d2 ON (c2.departmentId = d2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
@@ -366,14 +378,24 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Optional<ReferenceDataBo> getReferenceDataFromOutpatientConsultation(@Param("referenceId") Integer referenceId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.creationable.createdOn, " +
-			"rn.description, cl.id, cl.description, cs.id, cs.name, i.id, i.name, i2.id, i2.name,"+
-			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
+	@Query(value = "SELECT DISTINCT new ar.lamansys.refcounterref.domain.reference.ReferenceDataBo(r.id, oc.patientId, oc.patientMedicalCoverageId, oc.id, " +
+			"r.consultation, oc.creationable.createdOn, rn.description, " +
+			"cl.id, cl.description, cs.id, cs.name," +
+			"i.id, i.name, d.id, d.description, p.description, i2.id, i2.name, d2.id, d2.description,"+
+			"hp.personId, r.priority, cr.closureTypeId, r.phonePrefix, r.phoneNumber, r.serviceRequestId, " +
+			"oc.creationable.createdBy, r.statusId, r.regulationStateId) " +
 			"FROM Reference r " +
 			"JOIN OdontologyConsultation oc ON (r.encounterId = oc.id) " +
 			"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
 			"JOIN Institution i ON (oc.institutionId = i.id) " +
+			"JOIN Address a ON (a.id = i.addressId) " +
+			"LEFT JOIN City c ON (a.cityId = c.id) " +
+			"LEFT JOIN Department d ON (d.id = c.departmentId) " +
+			"LEFT JOIN Province p ON (p.id = d.provinceId) " +
 			"LEFT JOIN Institution i2 ON (r.destinationInstitutionId = i2.id) " +
+			"LEFT JOIN Address a2 ON (i2.addressId = a2.id) " +
+			"LEFT JOIN City c2 ON (c2.id = a2.cityId) " +
+			"LEFT JOIN Department d2 ON (c2.departmentId = d2.id) " +
 			"LEFT JOIN CareLine cl ON (cl.id = r.careLineId) " +
 			"LEFT JOIN ReferenceNote rn ON (rn.id = r.referenceNoteId) " +
 			"JOIN HealthcareProfessional hp ON (hp.id = oc.doctorId) " +
@@ -401,7 +423,7 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 	Optional<ReferenceRequestBo> getReferenceByServiceRequestId(@Param("serviceRequestId") Integer serviceRequestId);
 
 	@Transactional(readOnly = true)
-	@Query(" SELECT NEW ar.lamansys.refcounterref.domain.reference.ReferencePhoneBo(r.phoneNumber, r.phonePrefix) " +
+	@Query(" SELECT NEW ar.lamansys.sgh.shared.domain.reference.ReferencePhoneBo(r.phonePrefix, r.phoneNumber) " +
 			"FROM Reference r " +
 			"WHERE r.id = :referenceId")
 	ReferencePhoneBo getReferencePhoneData(@Param("referenceId") Integer referenceId);
@@ -423,5 +445,19 @@ public interface ReferenceRepository extends JpaRepository<Reference, Integer> {
 			", r.statusId = :statusId " +
 			"WHERE r.id = :referenceId")
 	void deleteAndUpdateStatus(@Param("referenceId") Integer referenceId, @Param("statusId") Short statusId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo(s2.id, s2.sctid, s2.pt, s.id, s.sctid, s.pt, sr.categoryId) " +
+			"FROM Reference r " +
+			"JOIN ServiceRequest sr ON (r.serviceRequestId = sr.id) " +
+			"JOIN Document d ON (sr.id = d.sourceId) " +
+			"JOIN DocumentDiagnosticReport ddr ON (ddr.pk.documentId = d.id) " +
+			"JOIN DiagnosticReport dr ON (ddr.pk.diagnosticReportId = dr.id) " +
+			"JOIN Snomed s ON (s.id = dr.snomedId)" +
+			"JOIN HealthCondition hc ON (dr.healthConditionId = hc.id)" +
+			"JOIN Snomed s2 ON (s2.id = hc.snomedId) " +
+			"WHERE r.id = :referenceId " +
+			"AND d.typeId = " + DocumentType.ORDER)
+	Optional<ReferenceStudyBo> getReferenceStudy(@Param("referenceId") Integer referenceId);
 
 }

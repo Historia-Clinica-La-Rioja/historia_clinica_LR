@@ -37,6 +37,8 @@ public class EvolutionSummaryBo {
 
 	private String institutionName;
 
+	private ElectronicJointSignatureProfessionalsBo electronicJointSignatureProfessionals;
+
     public EvolutionSummaryBo(Integer id, LocalDateTime startDate, HealthcareProfessionalBo professional, String evolutionNote){
         this.consultationID = id;
         this.startDate = startDate;

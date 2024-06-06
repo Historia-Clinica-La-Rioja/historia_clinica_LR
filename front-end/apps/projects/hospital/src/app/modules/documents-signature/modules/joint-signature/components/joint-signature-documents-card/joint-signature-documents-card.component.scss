@@ -1,0 +1,36 @@
+section {
+    margin: 3%;
+    padding: 3rem;
+    background-color: white;
+
+	h2 header{
+        font-weight: 500;
+    }
+
+    header {
+        height: 36px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+        .action-container {
+            button {
+                margin-left: .5rem;
+            }
+        }
+    }
+
+    .unselected-document-message {
+        color: grey;
+        margin: 15rem auto;
+    }
+}
+
+.bold {
+    font-weight: 500;
+}
+
+.header-information {
+	margin-left: 2rem;
+}

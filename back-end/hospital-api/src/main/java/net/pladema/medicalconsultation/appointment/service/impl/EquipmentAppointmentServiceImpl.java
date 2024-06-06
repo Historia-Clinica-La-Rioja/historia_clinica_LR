@@ -1,11 +1,8 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
@@ -31,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.service.domain.EquipmentBO;
 import net.pladema.establishment.service.domain.OrchestratorBO;
 import net.pladema.medicalconsultation.appointment.repository.EquipmentAppointmentAssnRepository;
+import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.service.AppointmentOrderImageService;
+import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
@@ -38,8 +38,8 @@ import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEqu
 import net.pladema.modality.service.domain.ModalityBO;
 
 @Slf4j
-@Service
 @AllArgsConstructor
+@Service
 public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentService {
 
 	private static final String OUTPUT = "Output -> {}";
@@ -66,30 +66,30 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 
 	private final ListTranscribedDiagnosticReportInfoService listTranscribedDiagnosticReportInfoService;
 
+	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
+
 	@Override
 	public Optional<AppointmentBo> getEquipmentAppointment(Integer appointmentId) {
 		log.debug("Input parameters -> appointmentId {}", appointmentId);
-		Optional<AppointmentBo>	result = equipmentAppointmentAssnRepository.getEquipmentAppointment(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
-		if (result.isPresent()) {
-			List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
-			result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
-					.stream().findFirst();
-			result.get().setOrderData(diagnosticReportInfoService.getByAppointmentId(appointmentId));
-			result.get().setTranscribedData(listTranscribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
-		}
+		AppointmentBo result = equipmentAppointmentAssnRepository.getEquipmentAppointment(appointmentId).stream()
+				.findFirst()
+				.map(AppointmentBo::fromAppointmentVo)
+				.map(appointmentBo -> {
+					Integer diaryId = appointmentBo.getDiaryId();
+					setIsAppointmentProtected(appointmentBo, diaryId);
+					appointmentBo.setOrderData(diagnosticReportInfoService.getByAppointmentId(appointmentId));
+					appointmentBo.setTranscribedOrderData(listTranscribedDiagnosticReportInfoService.getByAppointmentId(appointmentId).orElse(null));
+                    return appointmentBo;
+                })
+				.orElse(null);
+
 		log.debug(OUTPUT, result);
-		return result;
+		return Optional.ofNullable(result);
 	}
 
-	private Collection<AppointmentBo> setIsAppointmentProtected(Collection<AppointmentBo> appointments, List<Integer> diaryIds) {
-		List<Integer> protectedAppointments = sharedReferenceCounterReference.getProtectedAppointmentsIds(diaryIds);
-		appointments.stream().forEach(a -> {
-			if (protectedAppointments.contains(a.getId()))
-				a.setProtected(true);
-			else
-				a.setProtected(false);
-		});
-		return appointments;
+	private void setIsAppointmentProtected(AppointmentBo appointment, Integer diaryId) {
+		boolean isProtected = !sharedReferenceCounterReference.getProtectedAppointmentsIds(List.of(diaryId)).isEmpty();
+		appointment.setProtected(isProtected);
 	}
 
 	@Override
@@ -138,6 +138,13 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 		if (basicDataPatient == null){
 			return null;
 		}
+
+		boolean hasAlreadyPublishedWorkList = historicAppointmentStateRepository.hasHistoricallyConfirmedAtLeastOnes(appointmentId);
+		if (hasAlreadyPublishedWorkList) {
+			log.debug("Already published worklist from appointmentId {}", appointmentId);
+			return null;
+		}
+
 		String identificationNumber = basicDataPatient.getIdentificationNumber();
 		String identification = identificationNumber == null ?basicDataPatient.getId()+"": identificationNumber;
 		String UID= "1." + ThreadLocalRandom.current().nextInt(1,10) + "." +

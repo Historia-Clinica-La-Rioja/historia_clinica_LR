@@ -1,0 +1,28 @@
+<div *ngFor="let proposedSurgery of proposedSurgeries; index as i; last as isLastElement">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+        <div fxLayout="row" fxLayoutGap="10px">
+            <mat-checkbox id="{{ proposedSurgery.snomed.pt }}" [(ngModel)]="proposedSurgery.isAdded"
+                (change)="proposedSurgery.isAdded = $event.checked; updateAll()">
+                <div class="proposed-surgery-text">
+                    <strong>{{ proposedSurgery.snomed.pt | titlecase }}</strong>
+                </div>
+            </mat-checkbox>
+        </div>
+
+        <ng-container>
+            <button mat-icon-button color="warn" (click)="service.remove(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </ng-container>
+
+    </div>
+    <hr *ngIf="!isLastElement">
+</div>
+<br>
+<div *ngIf="proposedSurgeries.length > 1">
+    <br>
+    <mat-checkbox id="all-selected.surgeries" [checked]="allCheckedSurgeries" (change)="setAllSurgeries($event.checked)">
+        <span class="proposed-surgery-text">{{'internaciones.anesthesic-report.proposed-surgery.INCLUDE_ALL' |
+            translate}}</span>
+    </mat-checkbox>
+</div>

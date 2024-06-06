@@ -10,7 +10,7 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../home/home.component';
 import { InstitutionalNetworkReferenceReportService } from '@api-rest/services/institutional-network-reference-report.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 
 const MAX_DAYS = 90;
 const MIN_SIZE = 5;
@@ -20,7 +20,7 @@ const INITIAL_PAGE = 0;
 })
 export class DashboardService {
 
-	private isAdministrative = false;
+	private hasRolePermissionToReceive = false;
 	private references = new BehaviorSubject<PageDto<ReferenceReportDto>>(null);
 	readonly references$ = this.references.asObservable();
 
@@ -36,9 +36,14 @@ export class DashboardService {
 		private readonly permissionsService: PermissionsService,
 		private readonly institutionalNetworkReferenceReportService: InstitutionalNetworkReferenceReportService,
 		private readonly contextService: ContextService,
-	) {
+	) { }
+
+	initializeService() {
 		this.initializeFilters();
-		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO]).subscribe(hasRole => this.isAdministrative = hasRole);
+		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRATIVO,ERole.ABORDAJE_VIOLENCIAS]).pipe(take(1)).subscribe(hasRole => {
+			this.hasRolePermissionToReceive = hasRole
+			this.updateReports();
+		});
 	}
 
 	updateReports() {
@@ -62,6 +67,7 @@ export class DashboardService {
 		this.dashboardView = DashboardView.RECEIVED;
 		this.dashboardFilters = {} as DashboardFilters;
 		this.pageSize = MIN_SIZE;
+		this.pageNumber = INITIAL_PAGE;
 	}
 
 	updatePaginator(pageInfo: PageEvent) {
@@ -79,7 +85,7 @@ export class DashboardService {
 	}
 
 	private updateInsitutionalReferences() {
-		const methodName = this.isAdministrative && this.dashboardView == DashboardView.RECEIVED ? METHOD_NAMES.RECEIVED : METHOD_NAMES.REQUESTED;
+		const methodName = this.hasRolePermissionToReceive && this.dashboardView == DashboardView.RECEIVED ? METHOD_NAMES.RECEIVED : METHOD_NAMES.REQUESTED;
 		this.callReferenceReportService(this.institutionalReferenceReportService, methodName);
 	}
 

@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, DiagnosisDto, HospitalizationProcedureDto, ProblemTypeEnum, ProcedureTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
+import { AppFeature, DiagnosisDto, HospitalizationProcedureDto, ProblemTypeEnum, ProcedureTypeEnum, SnomedECL, SurgicalReportDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate, dateToDateDto, stringToTimeDto, timeDtotoString } from '@api-rest/mapper/date-dto.mapper';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { sameDayMonthAndYear } from '@core/utils/date.utils';
+import { AnesthesiaFormComponent } from '@historia-clinica/dialogs/anesthesia-form/anesthesia-form.component';
 import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { DiagnosisCreationEditionComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -21,9 +22,18 @@ import { Moment } from 'moment';
 export class SurgicalReportProceduresComponent implements OnInit {
 
 	@Input() surgicalReport: SurgicalReportDto;
+	@Input()
+	set markAsTouched(value: boolean) {
+		if (value) {
+			this.dateForm.get('startDate')?.markAsTouched();
+			this.dateForm.get('endDate')?.markAsTouched();
+		}
+	}
+
 	@Output() validDate = new EventEmitter();
 
 	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
+	anesthesiaService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService);
 	searchConceptsLocallyFF = false;
 	diagnosis: DiagnosisDto[] = [];
 	description: string;
@@ -49,6 +59,8 @@ export class SurgicalReportProceduresComponent implements OnInit {
 			this.searchConceptsLocallyFF = isOn;
 		})
 		this.procedureService.procedimientos$.subscribe(procedures => this.changeProcedure(procedures));
+		this.anesthesiaService.setECL(SnomedECL.ANESTHESIA);
+		this.anesthesiaService.procedimientos$.subscribe(anesthesias => this.changeAnesthesia(anesthesias));
 
 		this.dateForm.valueChanges.subscribe(data => {
 			if (data.startTime)
@@ -137,6 +149,11 @@ export class SurgicalReportProceduresComponent implements OnInit {
 			this.surgicalReport.procedures = pushIfNotExists(this.surgicalReport.procedures, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.PROCEDURE), this.compare));
 	}
 
+	private changeAnesthesia(anesthesias): void {
+		anesthesias.forEach(procedure =>
+			this.surgicalReport.anesthesia = pushIfNotExists(this.surgicalReport.anesthesia, this.mapToHospitalizationProcedure(procedure, ProcedureTypeEnum.ANESTHESIA_PROCEDURE), this.compare));
+	}
+
 	private compare(first, second): boolean {
 		return first.snomed.sctid === second.snomed.sctid;
 	}
@@ -152,6 +169,19 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		this.dialog.open(NewConsultationProcedureFormComponent, {
 			data: {
 				procedureService: this.procedureService,
+				searchConceptsLocallyFF: this.searchConceptsLocallyFF,
+				hideDate: true
+			},
+			autoFocus: false,
+			width: '35%',
+			disableClose: true,
+		});
+	}
+
+	addAnesthesia() {
+		this.dialog.open(AnesthesiaFormComponent, {
+			data: {
+				anesthesiaService: this.anesthesiaService,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFF,
 				hideDate: true
 			},
@@ -185,6 +215,12 @@ export class SurgicalReportProceduresComponent implements OnInit {
 
 	deleteProcedure(index: number): void {
 		this.surgicalReport.procedures = removeFrom(this.surgicalReport.surgeryProcedures, index);
+		this.procedureService.remove(index);
+	}
+
+	deleteAnesthesia(index: number): void {
+		this.surgicalReport.anesthesia = removeFrom(this.surgicalReport.anesthesia, index);
+		this.anesthesiaService.remove(index);
 	}
 
 	changeStartDate(moment: Moment): void {
@@ -196,6 +232,7 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		}
 		else
 			this.dateForm.get('startTime')?.disable();
+		this.dateForm.get('startTime')?.markAsTouched();
 		this.validateDate();
 	}
 
@@ -208,10 +245,23 @@ export class SurgicalReportProceduresComponent implements OnInit {
 		}
 		else
 			this.dateForm.get('endTime')?.disable();
+		this.dateForm.get('endTime')?.markAsTouched();
 		this.validateDate();
 	}
 
 	changeDescription(description): void {
 		this.surgicalReport.description = description;
 	}
+
+	isEmpty(): boolean {
+		return (
+			!this.dateForm.get('startDate').value &&
+			!this.dateForm.get('startTime').value &&
+			!this.dateForm.get('endDate').value &&
+			!this.dateForm.get('endTime').value &&
+			!this.surgicalReport.procedures?.length &&
+			!this.surgicalReport.description &&
+			!this.surgicalReport.postoperativeDiagnosis?.length
+		)
+    }
 }

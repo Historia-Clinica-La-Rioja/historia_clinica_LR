@@ -8,20 +8,22 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.application.port.out.ActivityInfoStorage;
 import ar.lamansys.sgh.publicapi.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
 import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ENursingRecordStatus;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @Service
 public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 
@@ -34,11 +36,7 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 
 	private final EntityManager entityManager;
 	private final AttentionReadsRepository attentionReadsRepository;
-
-	public ActivityInfoStorageImpl(EntityManager entityManager, AttentionReadsRepository attentionReadsRepository) {
-		this.entityManager = entityManager;
-		this.attentionReadsRepository = attentionReadsRepository;
-	}
+	private final LocalDateMapper localDateMapper;
 
 	@Override
 	public void processActivity(String refsetCode, Long activityId) {
@@ -83,7 +81,9 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 				.map(procedure ->
 						ProcedureInformationBo.builder()
 								.snomedBo(new SnomedBo((String) procedure[1], (String) procedure[0]))
-								.administrationTime(((Timestamp)procedure[2]).toLocalDateTime())
+								.administrationTime(localDateMapper
+										.fromLocalDateTimeToZonedDateTime(((Timestamp) procedure[2]).toLocalDateTime())
+										.toLocalDateTime())
 								.build())
 				.collect(Collectors.toList());
 

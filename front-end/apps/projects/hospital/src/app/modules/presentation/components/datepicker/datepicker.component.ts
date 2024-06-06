@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
+import { fixDate } from '@core/utils/date/format';
 import * as moment from 'moment';
 import { Moment } from "moment";
 
@@ -11,30 +12,26 @@ import { Moment } from "moment";
 
 export class DatepickerComponent implements OnInit {
 
-	form: UntypedFormGroup;
+	form = new FormGroup({
+		selectedDate: new FormControl(null)
+	});
+
 	@Input() enableDelete = false;
 	@Input() title: string;
-	@Input() dateToSetInDatepicker: Date;
 	@Input() maxDate: Date;
 	@Input() minDate: Date;
 	@Input() availableDays: number[] = [];
 	@Input() disableDays: Date[] = [];
+	@Input() set dateToSetInDatepicker(dateToSet: Date) {
+		if (dateToSet)
+			this.form.controls.selectedDate.setValue(dateToSet);
+	};
 	@Output() selectDate: EventEmitter<Date> = new EventEmitter();
 
-	constructor(
-		private readonly formBuilder: UntypedFormBuilder
-	) { }
+	constructor() { }
 
 	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			selectedDate: [null]
-		})
-		this.form.controls.selectedDate.setValue(this.dateToSetInDatepicker);
-	}
-
-	changeDate() {
-		const moment: Moment = this.form.value.selectedDate;
-		this.selectDate.next(moment.toDate());
+		this.subscribeToFormChanges();
 	}
 
 	dateFilter = (date?: Moment): boolean => {
@@ -52,5 +49,12 @@ export class DatepickerComponent implements OnInit {
 	delete() {
 		this.form.controls.selectedDate.setValue(null);
 		this.selectDate.next(null);
+	}
+
+	private subscribeToFormChanges() {
+		this.form.controls.selectedDate.valueChanges.subscribe(selectedDate => {
+			const date = fixDate(selectedDate);
+			this.selectDate.next(date);
+		});
 	}
 }

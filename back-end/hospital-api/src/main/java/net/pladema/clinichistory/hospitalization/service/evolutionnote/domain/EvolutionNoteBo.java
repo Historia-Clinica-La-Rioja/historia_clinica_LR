@@ -72,6 +72,12 @@ public class EvolutionNoteBo extends SelfValidating<EvolutionNoteBo> implements 
 
 	private Long initialDocumentId;
 
+	private Integer medicalCoverageId;
+
+	private Integer sectorId;
+
+	private Integer roomId;
+
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)

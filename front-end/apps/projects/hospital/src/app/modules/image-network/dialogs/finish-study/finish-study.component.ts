@@ -39,10 +39,13 @@ export class FinishStudyComponent  implements OnInit {
 	ngOnInit(): void {
 		this.detailOrderInfo$ = this.appointmentsService.getAppoinmentOrderDetail(this.data.appointmentId, this.data.isTranscribed)
 		.pipe(
-			map(orderDetail =>{return { ...orderDetail ,
+			map(orderDetail =>{ return { ...orderDetail ,
 				studyName: this.data.studyName,
 				hasOrder: this.data.hasOrder,
-				creationDate:  orderDetail.creationDate ? new Date(orderDetail.creationDate) : null}}))
+				studiesNames: this.data.studies,
+				creationDate:  orderDetail.creationDate ? new Date(orderDetail.creationDate) : null,
+				patient:this.data.patient
+			}}))
 	}
 
 	confirm() {
@@ -105,4 +108,6 @@ export interface StudyInfo {
 	studyName?: string;
 	appointmentId: number,
 	patientId: number,
+	patient?: string
+	studies?: string;
 }

@@ -50,5 +50,9 @@
 			<app-hierarchical-unit-consultation [patientId]="_patientId" (response)="setHUId($event)"></app-hierarchical-unit-consultation>
 		</div>
 
+		<div id="intervening-professionals-joint-signature" *ngIf="isEnableJointSignature">
+			<app-intervening-professionals (interveningProfessional)="setInvolvedHealthcareProfessionals($event)"></app-intervening-professionals>
+		</div>
+
 	</mat-card-content>
 </mat-card>

@@ -8,7 +8,6 @@ import { anyMatch } from "@core/utils/array.utils";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Moment } from 'moment';
 
 @Component({
 	selector: 'app-add-risk-factors',
@@ -87,7 +86,7 @@ export class AddRiskFactorsComponent implements OnInit {
 		return riskFactors ? { confirmed: true, riskFactors, isNursingEvolutionNote: this.isNursingEvolutionNote } : undefined;
 
 		function isNull(formGroupValues: any): boolean {
-			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Moment }) => el.value === null);
+			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Date }) => el.value === null);
 		}
 
 		function getEffectiveValue(controlValue: any) {

@@ -21,6 +21,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.PersonalHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import ar.lamansys.sgx.shared.files.pdf.PdfService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.establishment.service.InstitutionService;
@@ -100,8 +101,9 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 
 	@MockBean
 	private DocumentFileRepository documentFileRepository;
+
 	@Mock
-	private PdfService pdfService;
+	private GeneratedPdfResponseService generatedPdfResponseService;
 
 	@Mock
 	private PatientService patientService;
@@ -132,7 +134,7 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
 				documentService,
 				internmentEpisodeStorage,
 				featureFlagsService,
-				pdfService,
+				generatedPdfResponseService,
 				patientService,
 				personService,
 				institutionService,

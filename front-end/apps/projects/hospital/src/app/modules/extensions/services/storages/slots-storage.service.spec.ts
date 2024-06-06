@@ -43,11 +43,11 @@ describe('SlotsStorageService', () => {
 		expect(slotsStorageService.wcForSlot(Slot.CLINIC_HISTORY_TAB).length).toBe(0);
 	});
 
-	it('should ignore duplicated WebComponent', () => {
+	it('should store duplicated WebComponent', () => {
 		slotsStorageService.addAll([webCompontentInfo(), webCompontentInfo()], baseUrl);
 		slotsStorageService.addAll([webCompontentInfo()], baseUrl);
-		expect(slotsStorageService.length).toBe(1);
-		expect(slotsStorageService.wcForSlot(Slot.HOME_MENU).length).toBe(1);
+		expect(slotsStorageService.length).toBe(3);
+		expect(slotsStorageService.wcForSlot(Slot.HOME_MENU).length).toBe(3);
 		expect(slotsStorageService.wcForSlot(Slot.CLINIC_HISTORY_TAB).length).toBe(0);
 	});
 });

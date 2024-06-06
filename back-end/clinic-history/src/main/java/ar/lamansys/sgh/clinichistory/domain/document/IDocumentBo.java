@@ -1,5 +1,12 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticTechniqueBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.MeasuringPointBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.PostAnesthesiaStatusBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -25,7 +32,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
-import ar.lamansys.sgh.clinichistory.domain.ips.TranscribedDiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.shared.domain.general.AddressBo;
 
@@ -127,10 +133,6 @@ public interface IDocumentBo {
         return Collections.emptyList();
     }
 
-	default TranscribedDiagnosticReportBo getTranscribedDiagnosticReport(){
-		return null;
-	}
-
 	default String getEvolutionNote(){
 		return null;
 	}
@@ -156,6 +158,13 @@ public interface IDocumentBo {
     default List<ConclusionBo> getConclusions() {
         return Collections.emptyList();
     }
+	default Integer getSectorId() { return null; }
+
+	default Integer getRoomId() { return null; }
+
+	default Integer getShockRoomId() { return null; }
+
+	default Integer getDoctorsOfficeId() { return null; }
 
 	default List<DocumentHealthcareProfessionalBo> getHealthcareProfessionals() { return Collections.emptyList(); }
 
@@ -180,4 +189,35 @@ public interface IDocumentBo {
     default boolean isTranscribed() {
         return false;
     }
+
+    default AnestheticHistoryBo getAnestheticHistory() { return null; }
+
+    default List<AnestheticSubstanceBo> getPreMedications() { return Collections.emptyList(); }
+
+    default List<HealthConditionBo> getHistories() { return Collections.emptyList(); }
+
+    default ProcedureDescriptionBo getProcedureDescription() { return null; }
+
+    default List<AnestheticSubstanceBo> getAnestheticPlans() { return Collections.emptyList(); }
+
+    default List<AnalgesicTechniqueBo> getAnalgesicTechniques() { return Collections.emptyList(); }
+
+    default List<AnestheticTechniqueBo> getAnestheticTechniques() { return Collections.emptyList(); }
+
+    default List<AnestheticSubstanceBo> getFluidAdministrations() { return Collections.emptyList(); }
+
+    default List<AnestheticSubstanceBo> getAnestheticAgents() { return Collections.emptyList(); }
+
+    default List<AnestheticSubstanceBo> getNonAnestheticDrugs() { return Collections.emptyList(); }
+
+    default List<AnestheticSubstanceBo> getAntibioticProphylaxis() { return Collections.emptyList(); }
+
+    default List<MeasuringPointBo> getMeasuringPoints() { return Collections.emptyList(); }
+
+    default PostAnesthesiaStatusBo getPostAnesthesiaStatus() { return null; }
+
+    default String getAnestheticChart() { return null; }
+	
+	default List<Integer> getInvolvedHealthcareProfessionalIds() { return Collections.emptyList(); }
+
 }

@@ -11,11 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 public class ViolenceReportBo {
 
+	private Integer id;
+
 	private Integer patientId;
 
 	private Short situationId;
 
 	private Short evolutionId;
+
+	private Integer institutionId;
 
 	private ViolenceReportVictimBo victimData;
 
@@ -91,4 +95,14 @@ public class ViolenceReportBo {
 		return result;
 	}
 
+	public ViolenceReportBo(Integer id, Integer patientId) {
+		this.id = id;
+		this.patientId = patientId;
+	}
+
+	public ViolenceReportBo(Integer id, Short situationId, Integer patientId) {
+		this.id = id;
+		this.situationId = situationId;
+		this.patientId = patientId;
+	}
 }

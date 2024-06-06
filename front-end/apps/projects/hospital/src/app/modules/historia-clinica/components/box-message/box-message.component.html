@@ -1,0 +1,30 @@
+<div fxLayout="row" fxLayoutGap="16px" class="background-primary" [ngClass]="boxMessageInfo?.viewError ? 'background-primary error-border' : 'background-primary' ">
+    <div fxLayoutGap="2px" [ngClass]="boxMessageInfo?.title ? 'column-layout' : 'row-layout' ">
+        <div fxLayout="row" fxLayoutGap="2px">
+            <mat-icon color="primary" [ngClass]="boxMessageInfo?.title? '' : 'icon-without-title'">error_outline</mat-icon>
+            <p align="start" class="title-warning">{{ boxMessageInfo?.title | translate}}</p>
+        </div>
+
+        <div [ngClass]="boxMessageInfo?.title? 'content' : ''">
+            <div fxLayout="column">
+                <span>{{boxMessageInfo?.message}}</span>
+                <span class="bold" fxLayoutGap="2px">
+                    {{boxMessageInfo?.question | translate}}
+                </span>
+            </div>
+           
+
+            <div fxLayout="row" class="buttons" *ngIf="boxMessageInfo?.showButtons">
+                <button mat-button color="primary" (click)="response.emit(true)" id="add_button">
+                    {{ (boxMessageInfo?.addButtonLabel? boxMessageInfo?.addButtonLabel: 'historia-clinica.include-previous-data-question.ADD' ) |
+                    translate }}
+                </button>
+                <button mat-button color="warn" (click)="response.emit(false)" id="discard_button">
+                    {{(boxMessageInfo?.discardButtonLabel? boxMessageInfo?.discardButtonLabel
+                    :'historia-clinica.include-previous-data-question.DISCARD') | translate }}
+                </button>
+            </div>
+            <mat-error *ngIf="boxMessageInfo?.viewError">{{'historia-clinica.include-previous-data-question.ERROR' | translate}}</mat-error>
+        </div>
+    </div>
+</div>

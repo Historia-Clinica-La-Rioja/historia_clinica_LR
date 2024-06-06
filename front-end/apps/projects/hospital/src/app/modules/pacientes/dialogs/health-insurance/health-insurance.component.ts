@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { EPatientMedicalCoverageCondition, MedicalCoverageDto, MedicalCoveragePlanDto } from "@api-rest/api-model";
 import { HealthInsuranceService } from "@api-rest/services/health-insurance.service";
 import { MIN_DATE } from "@core/utils/date.utils";
-import { newMoment } from "@core/utils/moment.utils";
+import { newDate } from "@core/utils/moment.utils";
 import {
 	EMedicalCoverageType,
 	HealthInsurance,
@@ -92,7 +92,7 @@ export class HealthInsuranceComponent implements OnInit {
 		const toAdd: PatientMedicalCoverage = {
 			medicalCoverage: this.healthInsuranceToAdd,
 			affiliateNumber: this.healthInsuranceForm.value.affiliateNumber,
-			validDate: newMoment(),
+			validDate: newDate(),
 			active: true,
 			condition: this.healthInsuranceForm.value.condition,
 			planId: this.healthInsuranceForm.value.plan,

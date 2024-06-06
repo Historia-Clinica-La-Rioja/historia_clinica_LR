@@ -4,9 +4,8 @@ import { ProfessionalLicenseService } from "@api-rest/services/professional-lice
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Moment } from 'moment';
 
-import { dateToMoment, newMoment } from '@core/utils/moment.utils';
+import { isSameOrAfter, newDate } from '@core/utils/moment.utils';
 import { hasError } from '@core/utils/form.utils';
 import { MIN_DATE } from '@core/utils/date.utils';
 
@@ -16,7 +15,7 @@ import {
 	AppFeature,
 	ERole,
 	HierarchicalUnitDto,
-	HierarchicalUnitTypeDto, LicenseNumberTypeDto, ProfessionalDto,
+	HierarchicalUnitTypeDto, ImageNetworkProductivityFilterDto, LicenseNumberTypeDto,
 	ProfessionalLicenseNumberDto, ProfessionalRegistrationNumbersDto,
 	ProfessionalsByClinicalSpecialtyDto
 } from '@api-rest/api-model';
@@ -30,6 +29,9 @@ import { PermissionsService } from '@core/services/permissions.service';
 import { HierarchicalUnitsService } from "@api-rest/services/hierarchical-units.service";
 import { HierarchicalUnitTypeService } from "@api-rest/services/hierarchical-unit-type.service";
 import { APPOINTMENT_STATES_DESCRIPTION, APPOINTMENT_STATES_ID, AppointmentState } from "@turnos/constants/appointment";
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { fixDate } from '@core/utils/date/format';
+import { isBefore, subMonths } from 'date-fns';
 
 @Component({
 	selector: 'app-home',
@@ -44,7 +46,6 @@ export class HomeComponent implements OnInit {
 	public hasError = hasError;
 
 	professionalsTypeahead: TypeaheadOption<ProfessionalRegistrationNumbersDto>[];
-	professionalInitValue: TypeaheadOption<ProfessionalDto>;
 	professionals: ProfessionalRegistrationNumbersDto[] = [];
 	hierarchicalUnitTypesTypeahead: TypeaheadOption<HierarchicalUnitTypeDto>[];
 	hierarchicalUnitsTypeahead: TypeaheadOption<HierarchicalUnitDto>[];
@@ -60,6 +61,8 @@ export class HomeComponent implements OnInit {
 	REPORT_TYPES_ID = REPORT_TYPES_ID;
 
 	minDate = MIN_DATE;
+	maxEndDate: Date;
+	minEndDate: Date;
 
 	cubeReportData: UIComponentDto;
 
@@ -76,7 +79,7 @@ export class HomeComponent implements OnInit {
 		private readonly hierarchicalUnitTypeService: HierarchicalUnitTypeService,
 		private readonly featureFlagService: FeatureFlagService,
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn =>{this.nameSelfDeterminationFF = isOn});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isOn => { this.nameSelfDeterminationFF = isOn });
 	}
 
 	ngOnInit(): void {
@@ -100,13 +103,14 @@ export class HomeComponent implements OnInit {
 			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
 				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.MONTHLY
 					&& report.id != REPORT_TYPES_ID.OUTPATIENT_SUMMARY_REPORT
-					&& report.id != REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL);
+					&& report.id != REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL
+					&& report.id != REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING);
 		});
 		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
 			this.hierarchicalUnits = hierarchicalUnits;
 			this.hierarchicalUnitsTypeahead = hierarchicalUnits.map(hu => this.toHierarchicalUnitTypeahead(hu));
 		});
-		this.hierarchicalUnitTypeService.getByInstitution().subscribe( hierarchicalUnitTypes => this.hierarchicalUnitTypesTypeahead = hierarchicalUnitTypes.map(hut => this.toHierarchicalUnitTypeTypeahead(hut)));
+		this.hierarchicalUnitTypeService.getByInstitution().subscribe(hierarchicalUnitTypes => this.hierarchicalUnitTypesTypeahead = hierarchicalUnitTypes.map(hut => this.toHierarchicalUnitTypeTypeahead(hut)));
 
 		this.professionalLicenseService.getLicensesType().subscribe(licensesTypeMasterData => {
 			this.licensesTypeMasterData = licensesTypeMasterData;
@@ -115,22 +119,19 @@ export class HomeComponent implements OnInit {
 		this.appointmentStates = this.getAppointmentStates();
 	}
 
-	private firstDayOfThisMonth(): Moment {
-		const today = newMoment();
-		return dateToMoment(new Date(today.year(), today.month(), 1));
+	private firstDayOfThisMonth(): Date {
+		const today = newDate();
+		return new Date(today.getUTCFullYear(), today.getUTCMonth(), 1);
 	}
 
-	private lastDayOfThisMonth(): Moment {
-		const today = newMoment();
-		return dateToMoment(new Date(today.year(), today.month() + 1, 0));
+	private lastDayOfThisMonth(): Date {
+		const today = newDate();
+		return new Date(today.getUTCFullYear(), today.getUTCMonth() + 1, 0);
 	}
 
 	maxStartDate(endDate) {
-		const today = newMoment();
-		if (endDate) {
-			return (today.isBefore(endDate)) ? today : endDate;
-		}
-		return today;
+		const today = newDate();
+		return !endDate ? today : isBefore(today, endDate) ? today : endDate;
 	}
 
 	private getSpecialtiesTypeaheadOptions$(doctors: ProfessionalRegistrationNumbersDto[]) {
@@ -151,7 +152,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	setSpecialty(professionalsByClinicalSpecialtyDto: ProfessionalsByClinicalSpecialtyDto) {
-		this.professionalInitValue = null;
 		this.idSpecialty = professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id;
 		this.form.controls.specialtyId.setValue(professionalsByClinicalSpecialtyDto?.clinicalSpecialty?.id);
 
@@ -166,7 +166,8 @@ export class HomeComponent implements OnInit {
 
 		if (!hierarchicalUnitTypeDto) {
 			this.form.controls.includeHierarchicalUnitDescendants.setValue(false);
-			this.form.controls.hierarchicalUnitId.setValue(null);		}
+			this.form.controls.hierarchicalUnitId.setValue(null);
+		}
 	}
 
 	public setHierarchicalUnit(hierarchicalUnitDto: HierarchicalUnitDto) {
@@ -237,27 +238,37 @@ export class HomeComponent implements OnInit {
 			.join(' - ')}`;
 	}
 
-	checkValidDates() {
+	checkValidDates(isStartDateChange: boolean) {
+		const fixStartDate = fixDate(this.form.value.startDate);
+		const fixEndDate = fixDate(this.form.value.endDate);
+
+		this.form.controls.startDate.setValue(fixStartDate);
+		this.form.controls.endDate.setValue(fixEndDate);
 		// if both are present, check that the end date is not after the start date
 		if (this.form.value.startDate && this.form.value.endDate) {
-			const endDate: Moment = this.form.value.endDate;
-			if (endDate.isBefore(this.form.value.startDate)) {
+			if (isBefore(fixEndDate, fixStartDate)) {
 				this.form.controls.endDate.setErrors({ min: true });
 				this.form.controls.startDate.setErrors({ max: true });
 			} else {
 				this.form.controls.endDate.setErrors(null);
 				this.checkStartDateIsSameOrBeforeToday();
 			}
-		} else if (this.form.value.startDate) {
+			if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING && isStartDateChange ) {
+					this.form.controls.endDate.setValue(null);
+					this.maxEndDate = new Date(fixStartDate.getUTCFullYear(), fixStartDate.getUTCMonth() + 1, 0);
+					this.minEndDate = fixStartDate;
+			}
+		} else if (fixStartDate) {
 			this.checkStartDateIsSameOrBeforeToday();
-		} else if (this.form.value.endDate) {
+		} else if (fixEndDate) {
 			this.form.controls.endDate.setErrors(null);
 		}
 	}
 
 	private checkStartDateIsSameOrBeforeToday() {
-		const today = newMoment();
-		(today.isSameOrAfter(this.form.value.startDate))
+		const today = newDate();
+		const startDate = this.form.value.startDate;
+		(isSameOrAfter(today, startDate)) 
 			? this.form.controls.startDate.setErrors(null)
 			: this.form.controls.startDate.setErrors({ afterToday: true });
 	}
@@ -266,16 +277,7 @@ export class HomeComponent implements OnInit {
 		this.submitted = true;
 		if (this.form.valid) {
 			this.isLoadingRequestReport = true;
-			let params: ReportFilters = {
-				startDate: this.form.controls.startDate.value,
-				endDate: this.form.controls.endDate.value,
-				specialtyId: this.form.controls.specialtyId.value,
-				professionalId: this.form.controls.professionalId.value,
-				hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
-				hierarchicalUnitId: this.form.controls.hierarchicalUnitId.value,
-				includeHierarchicalUnitDescendants: this.form.controls.includeHierarchicalUnitDescendants.value,
-				appointmentStateId: this.form.controls.appointmentStateId.value
-			}
+			const params: ReportFilters = this.getReportFilters();
 			const reportId = this.form.value.reportType;
 			switch (reportId) {
 				case REPORT_TYPES_ID.MONTHLY:
@@ -305,6 +307,9 @@ export class HomeComponent implements OnInit {
 				case REPORT_TYPES_ID.NOMINAL_APPOINTMENTS_DETAIL:
 					this.reportsService.getNominalAppointmentsDetail(params, `${this.REPORT_TYPES[5].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
 					break;
+				case REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING:
+					this.reportsService.getImageNetworkProductivityReport(this.prepareImageNetworkProductivityFilterDto(), `${this.REPORT_TYPES[6].description}.xls`).subscribe(() => this.isLoadingRequestReport = false);
+					break;
 				default:
 			}
 		}
@@ -312,13 +317,63 @@ export class HomeComponent implements OnInit {
 
 	resetCubeReport() {
 		this.cubeReportData = null;
+		this.resetForm();
+		if (this.form.controls.reportType.value === REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING) {
+			this.setDatesForNominalDiagnosticImaging();
+		}
+	}
+
+	prepareImageNetworkProductivityFilterDto(): ImageNetworkProductivityFilterDto {
+		return {
+			clinicalSpecialtyId: this.form.controls.specialtyId.value,
+			from: dateToDateDto(fixDate(this.form.value.startDate)),
+			healthcareProfessionalId: this.form.controls.professionalId.value,
+			to: dateToDateDto(fixDate(this.form.value.endDate)),
+		}
+	}
+
+	setDatesForNominalDiagnosticImaging() {
+		this.form.controls.endDate.setValue(this.getDateWithPreviousMonth(false));
+		this.form.controls.startDate.setValue(this.getDateWithPreviousMonth(true));
+		this.maxEndDate = this.form.value.endDate;
+	}
+
+	resetForm() {
+		this.form.controls.endDate.setValue(this.lastDayOfThisMonth());
+		this.form.controls.startDate.setValue(this.firstDayOfThisMonth());
+		this.form.controls.professionalId.setValue(null);
+		this.clearAppointmentStateId();
+		this.setHierarchicalUnitType(null);
+		this.setHierarchicalUnit(null);
+		this.setSpecialty(null);
+		this.setProfessional(null);
+		this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(this.professionals);
+		this.maxEndDate = null;
+		this.minEndDate = null;
+	}
+
+	getDateWithPreviousMonth(isStartDate: boolean): Date {
+		const today = new Date();
+		if (isStartDate) {
+			today.setDate(1);
+			return subMonths(today, 1)
+		} else {
+			today.setDate(0);
+			return today;
+		}
+	}
+
+	isLastDayOfTheMonth(date: Date): boolean {
+		date.setDate(date.getDate() + 1);
+		const proximoDia = date;
+		return date.getMonth() !== proximoDia.getMonth();
 	}
 
 	clearAppointmentStateId(): void {
 		this.form.controls.appointmentStateId.setValue(null);
 	}
 
-	private getAppointmentStates() : AppointmentState[] {
+	private getAppointmentStates(): AppointmentState[] {
 		return [
 			{
 				id: APPOINTMENT_STATES_ID.ASSIGNED,
@@ -345,12 +400,25 @@ export class HomeComponent implements OnInit {
 				description: APPOINTMENT_STATES_DESCRIPTION.BOOKED
 			}]
 	}
+
+	private getReportFilters(): ReportFilters {
+		return {
+			startDate: this.form.controls.startDate.value,
+			endDate: this.form.controls.endDate.value,
+			specialtyId: this.form.controls.specialtyId.value,
+			professionalId: this.form.controls.professionalId.value,
+			hierarchicalUnitTypeId: this.form.controls.hierarchicalUnitTypeId.value,
+			hierarchicalUnitId: this.form.controls.hierarchicalUnitId.value,
+			includeHierarchicalUnitDescendants: this.form.controls.includeHierarchicalUnitDescendants.value,
+			appointmentStateId: this.form.controls.appointmentStateId.value
+		}
+	}
 }
 
 interface ReportForm {
 	reportType: FormControl<number>,
-	startDate: FormControl<Moment>,
-	endDate: FormControl<Moment>,
+	startDate: FormControl<Date>,
+	endDate: FormControl<Date>,
 	specialtyId: FormControl<number>,
 	professionalId: FormControl<number>,
 	hierarchicalUnitTypeId: FormControl<number>,
@@ -360,8 +428,8 @@ interface ReportForm {
 }
 
 export interface ReportFilters {
-	startDate: Moment;
-	endDate: Moment;
+	startDate: Date;
+	endDate: Date;
 	specialtyId?: number;
 	professionalId?: number;
 	hierarchicalUnitTypeId?: number;
