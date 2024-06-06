@@ -85,8 +85,8 @@ public class AppointmentConsultationSummaryStorageImpl implements AppointmentCon
 				"JOIN {h-schema}appointment apt ON (aa.appointment_id = apt.id) " +
 				"LEFT JOIN {h-schema}hierarchical_unit hu ON (d.hierarchical_unit_id = hu.id) " +
 				"LEFT JOIN {h-schema}hierarchical_unit_type hut on (hu.type_id = hut.id) " +
-				"JOIN {h-schema}patient p ON (apt.patient_id = p.id) " +
-				"JOIN {h-schema}person p2 ON (p.person_id = p2.id) " +
+				"LEFT JOIN {h-schema}patient p ON (apt.patient_id = p.id) " +
+				"LEFT JOIN {h-schema}person p2 ON (p.person_id = p2.id) " +
 				"LEFT JOIN {h-schema}clinical_specialty cs ON (d.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}healthcare_professional hp ON (hp.id = d.healthcare_professional_id) " +
 				whereCommon;
