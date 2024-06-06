@@ -1,11 +1,8 @@
-.filter {
-
+@import '../../../../../../../assets/styles/mat-mixins';
+.filters {
+	@include mat-form-field-background-white;
+	margin-top: 2%;
 	::ng-deep .mat-form-field {
-		margin: 3% 0 0 3%;
 		width: 15rem;
-	}
-
-	::ng-deep .mat-form-field-wrapper {
-		padding-bottom: 0;
 	}
 }
