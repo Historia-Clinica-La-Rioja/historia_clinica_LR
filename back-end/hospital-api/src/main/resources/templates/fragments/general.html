@@ -226,7 +226,7 @@
                     </div>
                     <div class="row-content">
                         <div class="data-title">Fecha y Hora</div>
-                        <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy | HH:mm') + ' hs'}"></div>
+                        <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(performedDate, 'HH:mm')} + ' hs.'"></div>
                     </div>
                 </div>
                 <div style="clear: both; margin-bottom: 10px;">
