@@ -5,6 +5,7 @@ import { Subject, forkJoin, switchMap } from 'rxjs';
 import { StudyInfo } from '../../services/study-results.service';
 import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 import { PrescripcionesService } from '../../services/prescripciones.service';
+import { ButtonService } from '../../services/button.service';
 
 @Component({
 	selector: 'app-control-select-template',
@@ -20,6 +21,7 @@ export class ControlSelectTemplateComponent implements OnInit {
 		readonly controlTemplatesService: ControlTemplatesService,
 		private procedureTemplatesService: ProcedureTemplatesService,
 		private prescripcionesService: PrescripcionesService,
+		readonly buttonService: ButtonService,
 
 	) { }
 
@@ -58,8 +60,12 @@ export class ControlSelectTemplateComponent implements OnInit {
 	}
 
 	changeValues($event: ResultTemplate) {
+		setTimeout(() => {
+			this.buttonService.activatePartialSaveButton();
+		})
 		this.controlTemplatesService.changeValues($event);
 	}
+
 	private getProcedureTemplatesService(idDiagnostic: number): any {
 		return this.procedureTemplatesService.findByDiagnosticReportId(idDiagnostic).pipe(
 			switchMap((practiceTemplates: ProcedureTemplateFullSummaryDto[]) => {
