@@ -730,7 +730,8 @@
                 "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
                 "HISTORIAL_TRIAGE": "Historial de triages",
                 "NUEVO_TRIAGE": "Nuevo triage",
-                "RISK_FACTORS_TOOLTIP": "Signos vitales y factores de riesgo"
+                "RISK_FACTORS_TOOLTIP": "Signos vitales y factores de riesgo",
+                "IDENTIFYNG_DETAIL": "Detalle identificatorio"
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",

@@ -23,6 +23,10 @@
                 </div>
             </div>
 
+            <app-title-description *ngIf="responseEmergencyCare?.patient?.typeId === TEMPORARY_EMERGENCY_CARE && responseEmergencyCare?.patient?.patientDescription" 
+                [title]="'ambulatoria.paciente.guardia.IDENTIFYNG_DETAIL'"
+                [text]="responseEmergencyCare.patient.patientDescription"></app-title-description>
+
             <mat-divider inset></mat-divider>
 
             <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">

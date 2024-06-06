@@ -10,7 +10,7 @@ import { ContextService } from '@core/services/context.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
-import { GUARDIA } from '@historia-clinica/constants/summaries';
+import { GUARDIA, PatientType } from '@historia-clinica/constants/summaries';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
 import { TriageDetails } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
@@ -61,6 +61,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	private hasRoleAdministrative: boolean;
 
 	availableActions: ActionInfo[] = [];
+	TEMPORARY_EMERGENCY_CARE = PatientType.EMERGENCY_CARE_TEMPORARY;
 
 	constructor(
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
