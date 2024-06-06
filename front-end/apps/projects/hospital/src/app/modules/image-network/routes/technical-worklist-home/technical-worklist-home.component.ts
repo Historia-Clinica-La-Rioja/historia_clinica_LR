@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AppFeature } from '@api-rest/api-model';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
   selector: 'app-technical-worklist-home',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TechnicalWorklistHomeComponent implements OnInit {
 
-  constructor() { }
+
+  isEnableQueueImageList = false;
+
+  constructor(
+    private readonly featureFlagService: FeatureFlagService
+  ) { }
 
   ngOnInit(): void {
+    this.featureFlagService.isActive(AppFeature.HABILITAR_SOLAPA_COLA_IMAGENES)
+    .subscribe(isEnabled => this.isEnableQueueImageList = isEnabled);
+
   }
 
 }

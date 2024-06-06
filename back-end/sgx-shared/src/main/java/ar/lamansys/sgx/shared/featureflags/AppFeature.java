@@ -217,6 +217,9 @@ public enum AppFeature implements Feature {
 	
 	@Label("Habilita el módulo de responsabilidad sanitaria")
 	HABILITAR_AREA_RESPONSABILIDAD_SANITARIA,
+
+	@Label("Indica si se muestra la seccion cola de imagenes para el rol tecnico")
+	HABILITAR_SOLAPA_COLA_IMAGENES
 	;
 
 	public boolean isActive() {

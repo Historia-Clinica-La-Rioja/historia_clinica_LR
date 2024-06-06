@@ -2076,24 +2076,6 @@ export interface GlobalCoordinatesDto {
     longitude: number;
 }
 
-export interface GetDiagnosticReportObservationDto {
-    id: number;
-    procedureParameterId: number;
-    representation: Representation;
-    snomedPt: string;
-    snomedSctid: string;
-    unitOfMeasureId: number;
-    value: string;
-}
-
-export interface GetDiagnosticReportObservationGroupDto {
-    diagnosticReportId: number;
-    id: number;
-    isPartialUpload: boolean;
-    observations: GetDiagnosticReportObservationDto[];
-    procedureTemplateId: number;
-}
-
 export interface GraphicDatasetInfoDto {
     intersections: GraphicDatasetIntersectionDto[];
     label: EAnthropometricGraphicLabel;
@@ -2894,6 +2876,17 @@ export interface MedicationInteroperabilityDto {
     statementId: string;
     status: string;
     unitTime: string;
+}
+
+export interface MedicineDoctorCompleteDto {
+    firstName: string;
+    identificationNumber: string;
+    identificationType: string;
+    lastName: string;
+    middleNames: string;
+    nameSelfDetermination: string;
+    otherLastNames: string;
+    professions: ProfessionCompleteDto[];
 }
 
 export interface MergedPatientSearchDto {
@@ -5382,6 +5375,7 @@ export const enum AppFeature {
     HABILITAR_ATENDER_TURNO_MANUAL = "HABILITAR_ATENDER_TURNO_MANUAL",
     HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO = "HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO",
     HABILITAR_AREA_RESPONSABILIDAD_SANITARIA = "HABILITAR_AREA_RESPONSABILIDAD_SANITARIA",
+    HABILITAR_SOLAPA_COLA_IMAGENES = "HABILITAR_SOLAPA_COLA_IMAGENES",
 }
 
 export const enum EAggressorRelationship {

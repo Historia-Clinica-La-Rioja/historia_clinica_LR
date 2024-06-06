@@ -1,5 +1,5 @@
 <app-content width="full">
-	<div>
+	<ng-container *ngIf="isEnableQueueImageList else workList">
 		<mat-tab-group>
 			<mat-tab label="{{ 'image-network.technical-section.WORKLIST' | translate }}">
 				<ng-template matTabContent>
@@ -12,5 +12,8 @@
 				</ng-template>
 			</mat-tab>
 		</mat-tab-group>
-	</div>
+	</ng-container>
+	<ng-template #workList>
+		<app-worklist-by-technical></app-worklist-by-technical>
+	</ng-template>
 </app-content>
