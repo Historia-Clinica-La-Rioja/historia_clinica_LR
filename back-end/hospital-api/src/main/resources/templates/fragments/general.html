@@ -738,17 +738,17 @@
     </div>
 
     <!-- Medicación habitual -->
-
-    <div th:fragment="medications (title)" th:if="${not #lists.isEmpty(medications)}">
+    <div th:fragment="medications(title)" th:if="${not #lists.isEmpty(medications)}">
         <p class="section-title" th:text="${title}"></p>
-        <div>
-            <dl class="section-data" th:each="medication,iter: ${medications}">
-                <dd><p th:text="${'- ' + medication.snomed.pt}"></p></dd>
-                <dl>
-                    <dd><strong th:if="${medication.note != null}">Observaciones: </strong><label  th:text="${medication.note}"></label></dd>
-                </dl>
-            </dl>
-        </div>
+        <dl class="section-data" th:each="medication,iter: ${medications}">
+            <dd>
+                <p class="wide_wrapped_text" th:text="${'- ' + medication.snomed.pt}"></p>
+            </dd>
+            <dd>
+                <strong th:if="${medication.note != null}">Observaciones: </strong>
+                <p class="wide_wrapped_text" th:text="${medication.note}"></p>
+            </dd>
+        </dl>
     </div>
 
     <!-- Otras circunstancias que prolongan la internación -->
