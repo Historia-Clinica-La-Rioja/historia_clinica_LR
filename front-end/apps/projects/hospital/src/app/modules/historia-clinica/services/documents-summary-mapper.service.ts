@@ -353,7 +353,7 @@ export class DocumentsSummaryMapperService {
     }
 
     hasObstetricEvent(obstetricEvent: ObstetricEventDto): boolean {
-        return !!(obstetricEvent.newborns.length && 
+        return !!(obstetricEvent.newborns.length || 
                 !!(obstetricEvent.currentPregnancyEndDate 
                 || obstetricEvent.gestationalAge 
                 || obstetricEvent.pregnancyTerminationType 
