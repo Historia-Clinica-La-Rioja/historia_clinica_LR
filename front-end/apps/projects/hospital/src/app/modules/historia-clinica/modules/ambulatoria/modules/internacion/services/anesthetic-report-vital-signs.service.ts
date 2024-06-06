@@ -72,6 +72,7 @@ export class AnestheticReportVitalSignsService {
 
     private timePickerData: TimePickerData = {
         hideLabel: true,
+        isRequired: true,
     }
 
     constructor(
@@ -79,8 +80,8 @@ export class AnestheticReportVitalSignsService {
         private readonly snackBarService: SnackBarService,
     ) {
         this.form = new FormGroup<MeasuringPointForm>({
-            measuringPointStartDate: new FormControl(null),
-            measuringPointStartTime: new FormControl(null),
+            measuringPointStartDate: new FormControl(null, Validators.required),
+            measuringPointStartTime: new FormControl(null, Validators.required),
             bloodPressureMax: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.bloodPressure), Validators.max(VITAL_SIGNS.MAX.bloodPressure), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
             bloodPressureMin: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.bloodPressure), Validators.max(VITAL_SIGNS.MAX.bloodPressure), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
             pulse: new FormControl(null, [Validators.min(VITAL_SIGNS.MIN.pulse), Validators.max(VITAL_SIGNS.MAX.pulse), Validators.pattern(PATTERN_INTEGER_NUMBER)]),
