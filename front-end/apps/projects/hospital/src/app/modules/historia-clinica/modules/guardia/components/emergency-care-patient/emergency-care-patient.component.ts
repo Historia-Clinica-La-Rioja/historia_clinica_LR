@@ -136,6 +136,15 @@ export class EmergencyCarePatientComponent implements OnDestroy {
 		control.reset();
 	}
 
+	setSelectedTemporaryPatientData(patientDescription: string) {
+		this.form.controls.patientDescription.setValue(patientDescription);
+
+		if (!patientDescription) {
+			this.hasToShowButtonsActions = true;
+			this.isAnEmergencyCareTemporaryPatient = false;
+		}
+	}
+
 	private buildForm(): FormGroup<EmergencyCarePatientForm> {
 		return new FormGroup<EmergencyCarePatientForm>({
 			patientId: new FormControl(null),

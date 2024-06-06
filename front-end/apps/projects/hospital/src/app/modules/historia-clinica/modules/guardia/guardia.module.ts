@@ -23,6 +23,7 @@ import { DocumentActionsComponent } from './components/document-actions/document
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
 import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
+import { EmergencyCareTemporaryPatientComponent } from './components/emergency-care-temporary-patient/emergency-care-temporary-patient.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
@@ -40,6 +41,7 @@ import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 // standalone
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
+import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/temporary-patient.component';
 
 @NgModule({
 	declarations: [
@@ -58,6 +60,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		AdministrativeTriageComponent,
 		AdultGynecologicalTriageComponent,
 		EmergencyCarePatientComponent,
+		EmergencyCareTemporaryPatientComponent,
 		PediatricTriageComponent,
 		TriageChipComponent,
 		TriageComponent,
@@ -84,6 +87,7 @@ import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient
 		PresentationModule,
 		// standalone
 		PatientSummaryComponent,
+		TemporaryPatientComponent,
 	],
 	exports: [
 		TriageDetailsComponent,
