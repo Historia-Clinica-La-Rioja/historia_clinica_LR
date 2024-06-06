@@ -28,6 +28,13 @@ public class AppActivitiesPublicApiPermissions implements ActivitiesPublicApiPer
 	}
 
 	@Override
+	public boolean canFetchHealthcareProfessionals(Integer institutionId) {
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_FACTURACION, institutionId)
+		);
+	}
+
+	@Override
 	public Optional<Integer> findInstitutionId(String refsetCode) {
 		return institutionRepository.findIdBySisaCode(refsetCode);
 	}
