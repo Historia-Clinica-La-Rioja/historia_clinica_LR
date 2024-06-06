@@ -1,0 +1,47 @@
+<div fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="column" fxLayoutGap="8px" data-id="measuring-point-register">
+        <span class="measuring-point-title" data-id="measuring-point-id">{{
+            'internaciones.anesthesic-report.vital-signs.measuring-point.MEDITION' | translate }} {{ index + 1}}</span>
+        <div fxLayout="row wrap" fxLayoutGap="16px" data-id="measuring-point-info">
+            <div fxLayout="row">
+                <span class="grey attribute-title">{{
+                    'internaciones.anesthesic-report.vital-signs.registered-point.MAX_BLOOD_PRESSURE' | translate
+                    }} <span class="attribute-value">{{ measuringPoint.bloodPressureMax ?
+                        measuringPoint.bloodPressureMax : "-" }}</span></span>
+            </div>
+            <div fxLayout="row">
+                <span class="grey attribute-title">{{
+                    'internaciones.anesthesic-report.vital-signs.registered-point.MIN_BLOOD_PRESSURE' | translate
+                    }} <span class="attribute-value">{{ measuringPoint.bloodPressureMin ?
+                        measuringPoint.bloodPressureMin : "-" }}</span></span>
+            </div>
+            <div fxLayout="row">
+                <span class="grey attribute-title">{{
+                    'internaciones.anesthesic-report.vital-signs.registered-point.PULSE' | translate }} <span
+                        class="attribute-value">{{ measuringPoint.pulse ? measuringPoint.pulse : "-" }}</span></span>
+            </div>
+            <div fxLayout="row">
+                <span class="grey attribute-title">{{
+                    'internaciones.anesthesic-report.vital-signs.registered-point.SATURATION' | translate }} <span
+                        class="attribute-value">{{ measuringPoint.saturation ? measuringPoint.saturation + '%' : "-"
+                        }}</span></span>
+            </div>
+            <div fxLayout="row">
+                <span class="grey attribute-title">{{
+                    'internaciones.anesthesic-report.vital-signs.registered-point.END_TIDAL' | translate }} <span
+                        class="attribute-value">{{ measuringPoint.endTidal ? measuringPoint.endTidal : "-"
+                        }}</span></span>
+            </div>
+        </div>
+        <div data-id="measuring-point-date">
+            <span class="mat-caption grey" *ngIf="measuringPoint.measuringPointStartDate">{{
+                measuringPoint.measuringPointStartDate | dateFormat:
+                'date'}}</span>
+            <span class="mat-caption grey"
+                *ngIf="measuringPoint.measuringPointStartDate && measuringPoint.measuringPointStartTime"> - </span>
+            <span class="mat-caption grey" *ngIf="measuringPoint.measuringPointStartTime">{{
+                measuringPoint.measuringPointStartTime |
+                viewDateDto:'time' | dateFormat: 'time'}}</span>
+        </div>
+    </div>
+</div>

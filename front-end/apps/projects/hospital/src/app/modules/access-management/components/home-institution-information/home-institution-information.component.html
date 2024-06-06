@@ -1,0 +1,19 @@
+<form [formGroup]="form">
+	<h2 [translate]="'access-management.reference-edition.ORIGIN'"></h2>
+	<div fxLayout="column">
+		<mat-form-field appearance="outline" fxLayoutGap="7px">
+			<mat-label [translate]="'access-management.reference-edition.PROVINCE'"></mat-label>
+			<input matInput id="province" formControlName="province">
+		</mat-form-field>
+
+		<mat-form-field appearance="outline" fxLayoutGap="7px">
+			<mat-label [translate]="'access-management.reference-edition.DEPARTMENT'"></mat-label>
+			<input matInput id="department" formControlName="department">
+		</mat-form-field>
+
+		<mat-form-field appearance="outline" fxLayoutGap="7px">
+			<mat-label [translate]="'access-management.reference-edition.PLACEHOLDER_INSTITUTION'"></mat-label>
+			<input matInput id="institution" formControlName="institution">
+		</mat-form-field>
+	</div>
+</form>

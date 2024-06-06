@@ -1,5 +1,6 @@
 package net.pladema.establishment.controller;
 
+import net.pladema.audit.controller.BackofficeViewClinicHistoryAuditStore;
 import net.pladema.imagenetwork.derivedstudies.repository.MoveStudiesRepository;
 import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
 import net.pladema.scheduledjobs.jobs.MoveStudiesJob;
@@ -20,17 +21,10 @@ import java.util.List;
 @RequestMapping("backoffice/movestudies")
 public class BackofficeMoveStudiesController extends AbstractBackofficeController<MoveStudies, Integer> {
 
-	private final MoveStudiesRepository repository;
 
-	public BackofficeMoveStudiesController(MoveStudiesRepository repository) {
-		super(repository);
-		this.repository = repository;
-	}
 
-	@Override
-	public Page<MoveStudies> getList(Pageable pageable, MoveStudies entity) {
-		List<MoveStudies> list = repository.listFailed();
-		return new PageImpl<>(list, pageable, list.size());
+	public BackofficeMoveStudiesController(BackofficeMoveStudiesStore store ) {
+		super(store);
 	}
 
 	@Override

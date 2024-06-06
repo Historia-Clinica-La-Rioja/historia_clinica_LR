@@ -47,6 +47,12 @@ public class CounterReferenceStorageImpl implements CounterReferenceStorage {
         return Optional.empty();
     }
 
+	@Override
+	public boolean existsCounterReference(Integer referenceId){
+		log.debug("Input parameter -> referenceId {}", referenceId);
+		return counterReferenceRepository.existsByReferenceId(referenceId);
+	}
+
     @Override
     public List<CounterReferenceProcedureBo> getProceduresByCounterReference(Integer counterReferenceId) {
         log.debug("Input parameter -> counterReferenceId {}", counterReferenceId);

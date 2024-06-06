@@ -1,0 +1,30 @@
+<form [formGroup]="form">
+    <div fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutGap="20px">
+            <div fxLayout="column" fxLayoutAlign="space-between start">
+                <mat-label [translate]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.MAX_BLOOD_PRESSURE'">
+                </mat-label>
+                <mat-form-field appearance="outline">
+                    <input id="maxBloodPressure" formControlName="maxBloodPressure" placeholder="00" type="number" matInput>
+                    <mat-error> {{ service.maxBloodPressureError$ | async }} </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="space-between start">
+                <mat-label [translate]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.MIN_BLOOD_PRESSURE'">
+                </mat-label>
+                <mat-form-field appearance="outline">
+                    <input id="maxBloodPressure" formControlName="minBloodPressure" placeholder="00" type="number" matInput>
+                    <mat-error> {{ service.minBloodPressureError$ | async }} </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="space-between start">
+            <mat-label [translate]="'internaciones.anesthesic-report.anesthesic-clinical-evaluation.HEMATOCRIT'">
+            </mat-label>
+            <mat-form-field appearance="outline">
+                <input id="hematocrit" formControlName="hematocrit" placeholder="00" type="number" matInput>
+                <mat-error> {{ service.hematocritError$ | async }} </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+</form>

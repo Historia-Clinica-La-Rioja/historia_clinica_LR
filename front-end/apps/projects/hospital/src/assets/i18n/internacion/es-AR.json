@@ -323,6 +323,228 @@
 				"NO_DATA": "No se registraron datos en el episodio"
 			}
 		},
+		"anesthesic-report": {
+			"SUCCESS": "Parte anestésico guardado correctamente",
+			"diagnosis": {
+				"TITLE": "Diagnósticos",
+				"MAIN_DIAGNOSIS": "Diagnóstico principal",
+				"OTHER_DIAGNOSIS": "Otros diagnósticos registrados",
+				"CONFIRMED": "(Confirmado)",
+				"PRESUMPTIVE": "(Presuntivo)"
+			},
+			"proposed-surgery": {
+				"TITLE": "Cirugía propuesta",
+				"ADD_PROPOSED_SURGERY": "+ Agregar cirugía propuesta",
+				"REGISTERED_PROPOSED_SURGERIES": "Cirugías propuestas registradas",
+				"INCLUDE_ALL": "Incluir todas las cirugías propuestas en el Parte Anestésico",
+				"ADD_SURGERY": "Agregar cirugía propuesta",
+				"PROPOSED_SURGERY": "Cirugía propuesta"
+			},
+			"anthropometric-data": {
+				"TITLE": "Datos antropométricos",
+				"BLOOD_TYPE": "Grupo sanguíneo",
+				"BLOOD_TYPE_PLACEHOLDER": "Tipo y factor",
+				"HEIGHT": "Talla (cm)",
+				"WEIGHT": "Peso (kg)",
+				"detail": {
+					"HEIGHT": "Talla",
+					"WEIGHT": "Peso"
+				}
+			},
+			"anesthesic-clinical-evaluation": {
+				"TITLE": "Evaluación clínica anestésica",
+				"MIN_BLOOD_PRESSURE": "Tensión arterial Min (mm/Hg)",
+				"MAX_BLOOD_PRESSURE": "Tensión arterial Max (mm/Hg)",
+				"HEMATOCRIT": "Hematocritos (%)",
+				"detail": {
+					"MIN_BLOOD_PRESSURE": "Tensión arterial Min",
+					"MAX_BLOOD_PRESSURE": "Tensión arterial Max",
+					"HEMATOCRIT": "Hematocritos"
+				}
+			},
+			"anesthetic-history": {
+				"TITLE": "Antecedentes anestésicos",
+				"PREVIOUS_ANESTHESIA": "El paciente se realizó algún tipo de anestesia previamente?",
+				"anesthetic-history-options": {
+					"YES": "Si",
+					"NO": "No",
+					"CANT_ANSWER": "No puede contestar",
+					"anesthetic-zone": {
+						"REGIONAL": "Regional",
+						"GENERAL": "General",
+						"BOTH": "Ambas"
+					}
+				}
+			},
+			"usual-medication": {
+				"TITLE": "Medicación habitual",
+				"REGISTERED_USUAL_MEDICATION": "Medicación habitual registrada",
+				"ADD_USUAL_MEDICATION": "+ Agregar medicación habitual",
+				"ADD_MEDICATION": "Agregar medicación habitual",
+				"USUAL_MEDICATION": "Medicación habitual"
+			},
+			"premedication-and-food-intake": {
+				"TITLE": "Premedicación e ingesta alimentaria",
+				"REGISTERED_PREMEDICATION": "Premedicación registrada",
+				"ADD_PREMEDICATION": "+ Agregar premedicación",
+				"ADD_PREMEDICATION_TITLE": "Agregar premedicación",
+				"PREMEDICATION": "Premedicación",
+				"DRUG": "Droga",
+				"DOSIS": "Dosis: ",
+				"DOSIS_PLACEHOLDER": "Ingresar dosis",
+				"UNIT": "Unidad: ",
+				"UNIT_PLACEHOLDER": "Ingresar unidad",
+				"VIA": "Via: ",
+				"VIA_PLACEHOLDER": "Ingresar via",
+				"LAST_FOOD_INTAKE": "Última ingesta de comida"
+			},
+			"anesthetic-plan": {
+				"TITLE": "Plan anestésico",
+				"ADD_PLAN_TITLE": "Agregar plan anestésico",
+				"ADD_PLAN": " + Agregar plan anestésico",
+				"MEDICATION": "Medicación",
+				"PLAN_RECORDS": "Plan anestésico registrado"
+			},
+			"analgesic-technique": {
+				"TITLE": "Técnica analgésica",
+				"ADD_TECHNIQUE_TITLE": "Agregar técnica analgésica",
+				"ADD_TECHNIQUE": " + Agregar técnica analgésica",
+				"MEDICATION": "Medicación",
+				"TECHNIQUE_RECORDS": "Técnica analgésica registrada",
+				"OPTION_YES": "Si",
+				"OPTION_NO":"No",
+				"CATETER_LABEL": "Cateter: ",
+				"INJECTION_LABEL": "Zona de inyección",
+				"INJECTION_ZONE": "Zona de inyección",
+				"AGENT":"Agente",
+				"CATETER_NOTE_LABEL":"Observaciones"
+			},
+			"anesthetic-technique": {
+				"TITLE": "Técnica anestésica",
+				"TYPE": "Tipo",
+				"ADD_TITLE": "Agregar técnica anestésica",
+				"ADD_ANESTHETIC_TECHNIQUE": " + Agregar técnica anestésica",
+				"TECHNIQUE_RECORDS": "Técnica anestésica registrada",
+				"TECHNIQUE_LABEL": "Tecnica",
+				"TRACHEAL_INTUBATION_LABEL": "Intubación traqueal",
+				"BREATHING_LABEL": "Respiración",
+				"CIRCUIT_LABEL": "Circuito",
+				"OPTION_YES": "Si",
+				"OPTION_NO":"No"
+			},
+			"fluid-administration": {
+				"TITLE": "Administración de líquidos",
+				"FLUID_RECORDS": "Liquidos registrados",
+				"ADD_FLUID": "+ Agregar liquido",
+				"ADD_TITLE": "Agregar liquido",
+				"LIQUID_LABEL": "Liquido",
+				"AMOUNT_LABEL": "Cantidad"
+			},
+			"drug": {
+				"HOUR": "Hora: ",
+				"UNIT_LABEL": "Unidad: ",
+				"UNIT_PLACEHOLDER": "Ingresar unidad",
+				"VIA_LABEL": "Via: ",
+				"VIA_PLACEHOLDER": "Ingresar via",
+				"DOSIS_LABEL": "Dosis: ",
+				"DOSIS_PLACEHOLDER": "Ingresar dosis",
+				"DRUG_LABEL": "Droga",
+				"VIA_TEXT_PLACEHOLDER": "Ingresar via"
+			},
+			"record": {
+				"TITLE": "Antecedentes",
+				"REGISTERED_RECORDS": "Antecedentes registrados",
+				"ADD_RECORD": "+ Agregar antecedente",
+				"ADD_RECORD_TITLE": "Agregar antecedente",
+				"RECORD": "Antecedente",
+				"OBSERVATIONS": "Observaciones: ",
+				"ADD_OBSERVATIONS": "Agregar observaciones",
+				"ASA": "ASA"
+			},
+			"anesthetic-agents":{
+				"TITLE": "Agentes anestésicos",
+				"REGISTERED_ANESTHETIC_AGENTS": "Agentes anestésicos registrados",
+				"ADD_ANESTHETIC_AGENT": "+ Agregar agente anestésico",
+				"LABEL": "Agente anestésico"
+			},
+			"non-anesthetic-drugs":{
+				"TITLE": "Drogas no anestésicas",
+				"REGISTERED_NON_ANESTHETIC_DRUGS": "Drogas no anestésicas registradas",
+				"ADD_NON_ANESTHETIC_DRUG": "+ Agregar droga no anestésica",
+				"LABEL": "Droga no anestésica"
+			},
+			"intrasurgical-anesthetic-procedures": {
+				"TITLE": "Procedimientos anestésicos intraquirúrgicos",
+				"options": {
+					"YES": "Si",
+					"NO": "No"
+				},
+				"VENOUS_ACCESS": "Acceso venoso",
+				"NASOGASTRIC_TUBE": "Sonda nasogastrica",
+				"URINARY_CATHETER": "Sonda vesical"
+			},
+			"antibiotic-prophylaxis":{
+				"TITLE": "Profilaxis antibiótica",
+				"REGISTERED_ANTIBIOTIC_PROPHYLAXIS": "Profilaxis antibióticas registradas",
+				"ADD_ANTIBIOTIC_PROPHYLAXIS": "+ Agregar profilaxis antibiótica",
+				"LABEL": "Profilaxis antibiótica"
+			},
+			"vital-signs": {
+				"TITLE": "Signos vitales durante la anestesia",
+				"DATE": "Fecha",
+				"TIME": "Hora",
+				"ANESTHESIA_START": "Comienzo anestesia",
+				"ANESTHESIA_END": "Fin anestesia",
+				"SURGERY_START": "Comienzo cirugía",
+				"SURGERY_END": "Fin cirugía",
+				"SUCCESS_ADD": "Punto de medición registrado correctamente",
+				"ERROR_ADD": "Ya existe un punto de medición registrado en ese horario",
+				"SUCCESS_EDIT": "Punto de medición editado correctamente",
+				"measuring-point": {
+					"ADD_MEASURING_POINT": "Agregar nuevo punto de medición",
+					"REGISTERED_MEASURING_POINTS": "Puntos de medición registrados",
+					"SURGERY_DATE": "Fecha cirugía",
+					"SURGERY_TIME": "Hora control",
+					"MAX_BLOOD_PRESSURE": "Tensión arterial Max",
+					"MIN_BLOOD_PRESSURE": "Tensión arterial Min",
+					"PULSE": "Pulso",
+					"SATURATION": "Saturación O2",
+					"END_TIDAL": "End Tidal CO2",
+					"REGISTER": "Registrar punto de medición",
+					"MEDITION": "Medición",
+					"EDIT_MEASURING_POINT": "Editar punto de medición"
+				},
+				"registered-point": {
+					"MAX_BLOOD_PRESSURE": "TA Max:",
+					"MIN_BLOOD_PRESSURE": "TA Min:",
+					"PULSE": "Pulso:",
+					"SATURATION": "Saturación O2:",
+					"END_TIDAL": "End Tidal CO2:"
+				}
+			},
+			"end-of-anesthesia-status": {
+				"TITLE": "Estado al finalizar la anestesia",
+				"sections": {
+					"PAINFUL_SENSITIVITY": "Sensibilidad dolorosa",
+					"CORNEAL_REFLEX": "Reflejo corneal",
+					"OBEY_ORDERS": "Obedece órdenes",
+					"TALK": "Conversa",
+					"RESPIRATORY_DEPRESSION": "Depresión respiratoria",
+					"CIRCULATORY_DEPRESSION": "Depresión circulatoria",
+					"VOMITING": "Vómitos",
+					"CURED": "Curarizado",
+					"TRACHEAL_CANNULA": "Cánula traqueal",
+					"PHARYNGEAL_CANNULA": "Cánula faringea",
+					"GOES_INSIDE": "Se interna",
+					"goes-inside-options": {
+						"FLOOR": "En piso",
+						"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva"
+					}
+				},
+				"OBSERVATIONS": "Observaciones: ",
+				"ADD_OBSERVATIONS": "Agregar observaciones"
+			}
+		},
 		"clinical-assessment-diagnosis": {
 			"TITLE": "Evaluación clínica de diagnósticos",
 			"SUBTITLE": "Completá los siguientes datos.",

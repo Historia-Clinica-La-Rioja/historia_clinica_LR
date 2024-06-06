@@ -15,6 +15,8 @@ import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRep
 import net.pladema.medicalconsultation.appointment.service.UpdateAppointmentOpeningHoursService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class UpdateAppointmentOpeningHoursServiceImpl implements UpdateAppointmentOpeningHoursService {
@@ -38,9 +40,9 @@ public class UpdateAppointmentOpeningHoursServiceImpl implements UpdateAppointme
 
 		if(appointmentBo.getAppointmentStateId().equals(AppointmentState.OUT_OF_DIARY)) {
 			if(appointmentBo.getPatientId() != null)
-				appointmentRepository.updateState(appointmentBo.getId(), AppointmentState.ASSIGNED, UserInfo.getCurrentAuditor());
+				appointmentRepository.updateState(appointmentBo.getId(), AppointmentState.ASSIGNED, UserInfo.getCurrentAuditor(), LocalDateTime.now());
 			else
-				appointmentRepository.updateState(appointmentBo.getId(), AppointmentState.BOOKED, UserInfo.getCurrentAuditor());
+				appointmentRepository.updateState(appointmentBo.getId(), AppointmentState.BOOKED, UserInfo.getCurrentAuditor(), LocalDateTime.now());
 		}
 
 		LOG.debug("Output -> {}", appointmentBo);

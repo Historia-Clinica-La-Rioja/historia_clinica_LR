@@ -92,6 +92,12 @@ public class EpicrisisBo extends SelfValidating<EpicrisisBo> implements IDocumen
 	
 	private boolean confirmed;
 
+	private Integer roomId;
+
+	private Integer sectorId;
+
+	private Integer medicalCoverageId;
+
 	@Override
     public Integer getPatientId() {
         if (patientInfo != null)

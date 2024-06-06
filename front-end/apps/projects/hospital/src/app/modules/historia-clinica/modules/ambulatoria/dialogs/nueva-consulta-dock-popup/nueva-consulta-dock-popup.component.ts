@@ -50,6 +50,8 @@ import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confir
 import { PrescriptionTypes } from '../../services/prescripciones.service';
 import { NewConsultationPersonalHistoriesService, PersonalHistory } from '../../services/new-consultation-personal-histories.service';
 import { NewConsultationPersonalHistoryFormComponent } from '../new-consultation-personal-history-form/new-consultation-personal-history-form.component';
+import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
+import * as _ from 'lodash';
 
 const TIME_OUT = 5000;
 
@@ -59,6 +61,8 @@ const TIME_OUT = 5000;
 	styleUrls: ['./nueva-consulta-dock-popup.component.scss']
 })
 export class NuevaConsultaDockPopupComponent implements OnInit {
+	showWarningViolenceSituation = false;
+	dataName: string[];
 	disableConfirmButton = false;
 	formEvolucion: UntypedFormGroup;
 	motivoNuevaConsultaService: MotivoNuevaConsultaService;
@@ -86,13 +90,18 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	readonly SEVERITY_CODES = SEVERITY_CODES;
 	collapsedAnthropometricDataSection = false;
 	collapsedRiskFactorsSection = false;
+	collapsedReferenceRequest = true;
 	isEnablePopUpConfirm: boolean = true;
+	boxMessageInfo: BoxMessageInformation;
 
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
 	episodeData: EpisodeData;
+	touchedConfirm = false;
+	referenceSituationViolence = null;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
+	@ViewChild('referenceRequest') sectionReference: ElementRef;
 
 	constructor(
 		@Inject(OVERLAY_DATA) public data: NuevaConsultaData,
@@ -127,8 +136,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
 	}
-
-
 
 	ngOnInit(): void {
 
@@ -191,6 +198,19 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
+	setBoxMessageInfo() {
+		this.boxMessageInfo = {
+			title: 'historia-clinica.include-previous-data-question.TITLE',
+			question: 'historia-clinica.include-previous-data-question.violence-situations.QUESTION',
+			message: this.translateService.instant('historia-clinica.include-previous-data-question.violence-situations.DESCRIPTION',
+				{ problem: this.dataName }),
+			viewError: this.touchedConfirm,
+			addButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.ADD',
+			discardButtonLabel: 'historia-clinica.include-previous-data-question.violence-situations.DISCARD',
+			showButtons: true
+		}
+	}
+
 
 	previousDataIsConfirmed(): Observable<boolean> {
 		if ((this.factoresDeRiesgoFormService.getShowPreloadedRiskFactorsData()) ||
@@ -207,6 +227,39 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			return dialogRef.afterClosed();
 		}
 		else return of(true);
+	}
+
+	previousAlertReference() {
+		const problems = this.ambulatoryConsultationProblemsService.getProblemas().map(p => ({
+			pt: p.snomed.pt,
+			sctid: p.snomed.sctid
+		}));
+		if(!this.touchedConfirm && this.showWarningViolenceSituation){
+			this.touchedConfirm = true;
+		}
+			this.snowstormService.areConceptsECLRelated(SnomedECL.VIOLENCE_PROBLEM, problems).subscribe(res => {
+				if (res.length) {
+					this.dataName = res.map(p=> ` "${p.pt}"`);
+					this.showWarningViolenceSituation = true;
+					this.collapsedReferenceRequest = false;
+					this.setBoxMessageInfo();
+					setTimeout(() => {
+						this.sectionReference.nativeElement.scrollIntoView({ behavior: 'smooth' });
+					}, 200);
+				} else {
+					this.showWarningViolenceSituation = false;
+					this.touchedConfirm = false;
+					this.save();
+				}
+			});
+	}
+
+	confirmForm(){
+		if(this.referenceSituationViolence === null){
+			this.previousAlertReference();
+		}else if(this.referenceSituationViolence || !this.referenceSituationViolence){
+			this.save();
+		}
 	}
 
 	save(): void {
@@ -255,6 +308,16 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		});
 	}
 
+	openReferenceDialog(event) {
+		if (event) {
+			this.ambulatoryConsultationReferenceService.openReferenceDialog();
+			this.referenceSituationViolence = true;
+		} else {
+			this.referenceSituationViolence = false;
+		}
+		this.showWarningViolenceSituation = false;
+	}
+
 	private openDialog(nonCompletedFields: string[], presentFields: string[], nuevaConsulta: CreateOutpatientDto): void {
 		const dialogRef = this.dialog.open(SuggestedFieldsPopupComponent, {
 			data: {
@@ -276,36 +339,43 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			return;
 		}
 
-		const filesToUpdate: Observable<number>[] = [];
+		const referencesToUpdate: Observable<number[]>[] = [];
 
 		references.forEach(reference => {
-			reference.referenceFiles.forEach(file => {
-				const obs = this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, file);
-				filesToUpdate.push(obs);
-			})
+			if (reference.referenceFiles.length > 0) {
+				const obs = this.referenceFileService.uploadReferenceFiles(this.data.idPaciente, reference.referenceFiles);
+				referencesToUpdate.push(obs);
+			}
 		});
 
-		if (filesToUpdate.length) {
-
-			forkJoin(filesToUpdate).subscribe((referenceFileId: number[]) => {
-				let indexRefFilesIds = 0;
-				references.forEach(
-					(reference: ReferenceInformation, index: number) => {
-						const filesAmount = reference.referenceFiles.length;
-						for (let i = indexRefFilesIds; i < indexRefFilesIds + filesAmount; i++) {
-							this.ambulatoryConsultationReferenceService.addFileIdAt(index, referenceFileId[i]);
+		if (referencesToUpdate.length) {
+			forkJoin(referencesToUpdate).subscribe((referenceFileIds: number[][]) => {
+				let hasError = false;
+				referenceFileIds.forEach((fileIds, index) => {
+					const reference = references[index];
+					const filesAmount = reference.referenceFiles.length;
+					for (let i = 0; i < filesAmount; i++) {
+						if (fileIds[i] === undefined || fileIds[i] === null) {
+							hasError = true;
+							break;
 						}
-						indexRefFilesIds += filesAmount;
+						this.ambulatoryConsultationReferenceService.addFileIdAt(index, fileIds[i]);
 					}
-				);
-				this.goToCreateConsultation(nuevaConsulta);
+				});
+				if (!hasError) {
+					this.goToCreateConsultation(nuevaConsulta);
+				} else {
+					this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPLOAD_FILES');
+					this.errorToUploadReferenceFiles();
+					hasError = false;
+				}
 			}, _ => {
 				this.snackBarService.showError('ambulatoria.paciente.nueva-consulta.messages.ERROR_TO_UPLOAD_FILES');
 				this.errorToUploadReferenceFiles();
 			});
-		}
-		else
+		} else {
 			this.goToCreateConsultation(nuevaConsulta);
+		}
 	}
 
 	private createConsultation(nuevaConsulta: CreateOutpatientDto) {
@@ -319,7 +389,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			res => {
 				res.orderIds.forEach((orderId) => {
 					this.openNewEmergencyCareStudyConfirmationDialog([orderId]);
-				  });
+				});
 				this.snackBarService.showSuccess('ambulatoria.paciente.nueva-consulta.messages.SUCCESS', { duration: TIME_OUT });
 				this.dockPopupRef.close(mapToFieldsToUpdate(nuevaConsulta));
 				if (this.thereAreProblemsToSnvsReport()) {
@@ -464,6 +534,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
+			involvedHealthcareProfessionalIds: this.episodeData.involvedHealthcareProfessionalIds,
 		};
 	}
 
@@ -579,7 +650,6 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			disableClose: true,
 		});
 	}
-	
 	addPersonalHistory(): void {
 		this.dialog.open(NewConsultationPersonalHistoryFormComponent, {
 			data: {

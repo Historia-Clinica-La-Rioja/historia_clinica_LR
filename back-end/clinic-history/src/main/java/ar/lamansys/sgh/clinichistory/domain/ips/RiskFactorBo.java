@@ -44,6 +44,9 @@ public class RiskFactorBo extends SelfValidating<RiskFactorBo> {
     @Valid
     private ClinicalObservationBo cardiovascularRisk;
 
+    @Valid
+    private ClinicalObservationBo hematocrit;
+
     public boolean hasValues(){
         return (systolicBloodPressure != null ||
                 diastolicBloodPressure != null ||
@@ -54,11 +57,12 @@ public class RiskFactorBo extends SelfValidating<RiskFactorBo> {
                 bloodOxygenSaturation != null ||
                 bloodGlucose != null ||
                 glycosylatedHemoglobin != null ||
-                cardiovascularRisk != null);
+                cardiovascularRisk != null ||
+                hematocrit != null);
     }
 
 	public boolean isEmpty() {
 		return systolicBloodPressure == null && diastolicBloodPressure == null && meanPressure == null && temperature == null && heartRate == null && respiratoryRate == null
-				&& bloodOxygenSaturation == null && bloodGlucose == null && glycosylatedHemoglobin == null & cardiovascularRisk == null;
+				&& bloodOxygenSaturation == null && bloodGlucose == null && glycosylatedHemoglobin == null && cardiovascularRisk == null && hematocrit == null;
 	}
 }

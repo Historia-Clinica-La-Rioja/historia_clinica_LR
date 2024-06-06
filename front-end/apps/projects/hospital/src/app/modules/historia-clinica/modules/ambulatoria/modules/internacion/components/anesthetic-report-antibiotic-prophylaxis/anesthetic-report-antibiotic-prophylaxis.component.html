@@ -1,0 +1,13 @@
+<div fxLayout="column" fxLayoutGap="2vh">
+    <app-titled-content-card *ngIf="!service.isEmpty()"
+        title="{{ 'internaciones.anesthesic-report.antibiotic-prophylaxis.REGISTERED_ANTIBIOTIC_PROPHYLAXIS' }}">
+        <app-medication-background-list [service]="service"></app-medication-background-list>
+    </app-titled-content-card>
+
+    <div>
+        <button id="add-agent" mat-button color="primary" class="antibiotic-prophylaxis-button"
+            (click)="addAntibioticProphylaxis()">
+            {{ 'internaciones.anesthesic-report.antibiotic-prophylaxis.ADD_ANTIBIOTIC_PROPHYLAXIS' | translate }}
+        </button>
+    </div>
+</div>

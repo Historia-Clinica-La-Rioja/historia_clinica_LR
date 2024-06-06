@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EReferenceRegulationState, ReferenceCompleteDataDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { NO_INSTITUTION } from '../../../home/home.component';
@@ -18,7 +18,6 @@ export class PopupActionsComponent {
 	}
 
 	@Input() reportCompleteData: ReferenceCompleteDataDto;
-	@Output() newState = new EventEmitter<boolean>();
 
 	constructor(
 		readonly contextService: ContextService,

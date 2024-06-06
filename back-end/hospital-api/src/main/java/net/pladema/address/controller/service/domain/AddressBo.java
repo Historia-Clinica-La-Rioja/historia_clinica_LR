@@ -22,11 +22,17 @@ public class AddressBo {
 
 	private Short countryId;
 
+	private String countryName;
+
 	private Short provinceId;
 
 	private Short departmentId;
 
-    public AddressBo (AddressVo addressVo){
+	private String departmentName;
+
+	private String bahraCode;
+
+	public AddressBo (AddressVo addressVo){
         this.id = addressVo.getId();
         this.street = addressVo.getStreet();
         this.number = addressVo.getNumber();
@@ -44,7 +50,8 @@ public class AddressBo {
 					 String apartment, String postcode,
 					 Integer cityId, String cityDescription,
 					 Short countryId, Short provinceId,
-					 Short departmentId) {
+					 Short departmentId, String departmentName,
+					 String countryName, String bahraCode) {
     	this.id = id;
     	this.street = street;
     	this.number = number;
@@ -56,5 +63,8 @@ public class AddressBo {
 		this.countryId = countryId;
 		this.provinceId = provinceId;
 		this.departmentId = departmentId;
+		this.departmentName = departmentName;
+		this.countryName = countryName;
+		this.bahraCode = bahraCode;
 	}
 }

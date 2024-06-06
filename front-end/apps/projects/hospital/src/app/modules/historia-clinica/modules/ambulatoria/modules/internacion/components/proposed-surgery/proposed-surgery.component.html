@@ -1,0 +1,13 @@
+<div fxLayout="column" fxLayoutGap="2vh">
+    <app-titled-content-card *ngIf="!service.isEmpty()"
+        title="{{ 'internaciones.anesthesic-report.proposed-surgery.REGISTERED_PROPOSED_SURGERIES' }}">
+        <app-proposed-surgery-background-list [service]="service"></app-proposed-surgery-background-list>
+    </app-titled-content-card>
+
+    <div>
+        <button id="add-proposed-surgery" mat-button color="primary" class="proposed-surgery-button"
+            (click)="addProposedSurgery()">
+            {{ 'internaciones.anesthesic-report.proposed-surgery.ADD_PROPOSED_SURGERY' | translate }}
+        </button>
+    </div>
+</div>

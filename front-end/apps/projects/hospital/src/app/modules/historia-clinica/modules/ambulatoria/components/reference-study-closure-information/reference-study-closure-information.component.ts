@@ -42,6 +42,5 @@ export class ReferenceStudyClosureInformationComponent implements OnInit {
 export interface ReportReference {
 	doctor: ProfessionalCompleteDto;
 	observations: string;
-	closureTypeDescription: string;
 	date: DateTimeDto;
 }

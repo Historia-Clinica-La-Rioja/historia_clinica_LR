@@ -47,7 +47,7 @@ public class SharedServiceRequestPortImpl implements SharedServiceRequestPort {
 	public List<ReferenceServiceRequestProcedureDto> getProceduresByServiceRequestIds(List<Integer> serviceRequestIds) {
 		var servicesRequestsProcedures =  serviceRequestStorage.getProceduresByServiceRequestIds(serviceRequestIds);
 		var result = servicesRequestsProcedures.stream().map(sp -> new ReferenceServiceRequestProcedureDto(sp.getServiceRequestId(),
-						new SharedSnomedDto(sp.getProcedure().getId(), sp.getProcedure().getSctid(), sp.getProcedure().getPt())))
+						new SharedSnomedDto(sp.getProcedure().getId(), sp.getProcedure().getSctid(), sp.getProcedure().getPt()), sp.getCategory()))
 				.collect(Collectors.toList());
 		log.debug("Output result -> {} ",  result);
 		return result;

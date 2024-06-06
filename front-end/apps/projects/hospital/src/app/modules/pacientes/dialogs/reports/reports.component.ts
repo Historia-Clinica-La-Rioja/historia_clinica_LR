@@ -1,9 +1,10 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ActionDisplays, TableModel} from "@presentation/components/table/table.component";
-import {ConsultationsDto} from "@api-rest/api-model";
-import {DateFormat, momentFormat, momentParseDate} from "@core/utils/moment.utils";
-import {PatientReportsService} from "@api-rest/services/patient-reports.service";
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { ActionDisplays, TableModel } from "@presentation/components/table/table.component";
+import { ConsultationsDto } from "@api-rest/api-model";
+import { PatientReportsService } from "@api-rest/services/patient-reports.service";
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 
 @Component({
 	selector: 'app-reports',
@@ -21,7 +22,9 @@ export class ReportsComponent implements OnInit {
 	constructor(
 		private readonly dialogRef: MatDialogRef<ReportsComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: { patientId: number, patientName: string },
-		private readonly patientReportsService: PatientReportsService
+		private readonly patientReportsService: PatientReportsService,
+		private readonly dateFormatPipe: DateFormatPipe,
+		private readonly isoToDatePipe: IsoToDatePipe,
 	) {
 	}
 
@@ -36,6 +39,7 @@ export class ReportsComponent implements OnInit {
 	}
 
 	private buildTable(data: ConsultationsDto[]): TableModel<ConsultationsDto> {
+		const consultationsData = data.map(consultationDto => this.toConsultationDtoWithIsoDate(consultationDto));
 		return {
 			columns: [
 				{
@@ -60,7 +64,9 @@ export class ReportsComponent implements OnInit {
 				{
 					columnDef: 'date',
 					header: 'pacientes.reports.table.columns.DATE',
-					text: (row) => momentFormat(momentParseDate(String(row.consultationDate)), DateFormat.VIEW_DATE)
+					text: (row) => {
+						return this.dateFormatPipe.transform(row.consultationDate, 'date')
+					}
 				},
 				{
 					columnDef: 'specialty',
@@ -73,7 +79,7 @@ export class ReportsComponent implements OnInit {
 					text: (row) => row.completeProfessionalName
 				},
 			],
-			data,
+			data: consultationsData,
 			enablePagination: true
 		};
 	}
@@ -97,6 +103,13 @@ export class ReportsComponent implements OnInit {
 				this.patientReportsService.getAnnexPdf(oc, this.data.patientName).subscribe();
 			}
 		})
+	}
+
+	private toConsultationDtoWithIsoDate(consultationDto: ConsultationsDto): ConsultationsDto {
+		return {
+			...consultationDto,
+			consultationDate: this.isoToDatePipe.transform(consultationDto.consultationDate.toString())
+		}
 	}
 
 }

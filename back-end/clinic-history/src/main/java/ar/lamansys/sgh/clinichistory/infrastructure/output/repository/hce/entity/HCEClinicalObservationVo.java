@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ObservationStatus;
 import lombok.*;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -23,6 +24,8 @@ public class HCEClinicalObservationVo {
 	private String value;
 
 	private LocalDateTime effectiveTime;
+
+	private Long documentId;
 
 	@Override
 	public boolean equals(Object o) {

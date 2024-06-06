@@ -1,0 +1,12 @@
+<section>
+	<img mat-card-md-image mat-card-avatar class="mat-card-patient-image" src="../../../../../assets/images/empty-profile.png">
+	<div fxLayout="column">
+		<span *ngIf="detail.patientFullName">{{detail.patientFullName}}</span>
+		<div>
+			<span *ngIf="detail.identificationNumber" [translate]="'turnos.group-appointment.DNI'" [translateParams]="{DNI: detail.identificationNumber}"></span>
+			<span *ngIf="detail.patientId" [translate]="'turnos.group-appointment.ID'" [translateParams]="{ID: detail.patientId}"></span>
+		</div>
+	</div>
+	<app-colored-label [description]="appointmentStateDescription" [color]="appointmentStateColor"></app-colored-label>
+	<button mat-stroked-button color="primary" (click)="openDetails()">{{'turnos.group-appointment.SEE_DETAIL' | translate}}</button>
+</section>

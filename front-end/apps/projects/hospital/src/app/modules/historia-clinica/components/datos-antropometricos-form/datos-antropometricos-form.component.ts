@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
@@ -26,6 +26,8 @@ export class DatosAntropometricosFormComponent {
 			null, this.internacionMasterDataService, this.translateService, this.datePipe); // Quitar el null si vamos a precargar datos
 	antropometricos = this.datosAntropometricosNuevaConsultaService.form;
 	onChangeSub: Subscription;
+
+	@Input() patientId: number;
 
 	constructor(
 		private formBuilder: FormBuilder,

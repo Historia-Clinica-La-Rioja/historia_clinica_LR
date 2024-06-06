@@ -18,6 +18,6 @@ public class FetchDescendantsByHierarchicalUnitId {
 
 	public List<Integer> run(Integer hierarchicalUnitId) {
 		log.debug("Input parameters -> hierarchicalUnitId {}", hierarchicalUnitId);
-		return hierarchicalUnitStorage.fetchAllDescendantIdsByHierarchicalUnitId(hierarchicalUnitId);
+		return hierarchicalUnitStorage.fetchAllDescendantIdsByHierarchicalUnitId(List.of(hierarchicalUnitId));
 	}
 }

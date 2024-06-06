@@ -4,12 +4,13 @@
         "UNSELECTED_DOCUMENT": "Seleccione un documento para ver el detalle del mismo.",
         "NO_DOCUMENTS": "No hay documentos pendientes para firmar.",
         "card-information": {
-            "NO_SNOMED_CONCEPT": "Problema no informado",
+            "NO_SNOMED_CONCEPT": "No informado",
             "PROBLEM": "Diagnóstico/problema",
             "CREATED": "Creación",
             "PROFESSIONAL": "Profesional",
             "PATIENT": "Paciente",
-            "ATTENTION_TYPE": "Tipo de atención"
+            "ATTENTION_TYPE": "Tipo de atención",
+			"SIGN_STATUS": "Estado de firma"
         },
         "dialogs": {
             "cuil": {

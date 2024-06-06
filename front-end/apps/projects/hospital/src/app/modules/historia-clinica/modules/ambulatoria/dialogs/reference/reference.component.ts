@@ -9,6 +9,8 @@ import { ReferenceMasterDataService } from '@api-rest/services/reference-master-
 import { PRIORITY } from '../../constants/reference-masterdata';
 import { VALIDATIONS } from '@core/utils/form.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-reference',
@@ -26,6 +28,8 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	updateSpecialtiesAndCarelineFields = false;
 	clearCarelinesAndSpecialties = false;
 	priorities$: Observable<MasterDataDto[]>;
+	regulationRequired = false;
+	boxMessageInfo: BoxMessageInformation;
 
 	PRIORITY = PRIORITY;
 
@@ -35,7 +39,8 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly dialogRef: MatDialogRef<ReferenceComponent>,
 		private changeDetector: ChangeDetectorRef,
-		private readonly referenceMasterData: ReferenceMasterDataService
+		private readonly referenceMasterData: ReferenceMasterDataService,
+		private readonly translateService: TranslateService
 	) { }
 
 	ngOnInit(): void {
@@ -49,6 +54,13 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 				const lowPriority = priorities.find(priority => priority.id === PRIORITY.LOW);
 				this.formReference.controls.priority.setValue(lowPriority);
 			}));
+
+		this.boxMessageInfo = {
+			message: '',
+			showButtons: false
+		}
+		this.translateService.get('ambulatoria.paciente.nueva-consulta.solicitud-referencia.REGULATION_REQUIRED')
+			.subscribe( message => this.boxMessageInfo.message = message );
 	}
 
 	ngAfterContentChecked(): void {
@@ -122,6 +134,10 @@ export class ReferenceComponent implements OnInit, AfterContentChecked {
 	onProvinceSelectionChange(province: number) {
 		this.formReference.controls.provinceId.setValue(province);
 		this.clearCarelinesAndSpecialties = true;
+	}
+
+	onRegulationRequiredChange(value : boolean){
+		this.regulationRequired = value;
 	}
 
 	activateDepartamentsAndInstitution() {

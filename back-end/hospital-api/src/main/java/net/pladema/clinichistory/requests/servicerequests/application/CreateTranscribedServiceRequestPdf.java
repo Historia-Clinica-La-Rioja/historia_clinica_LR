@@ -1,11 +1,17 @@
 package net.pladema.clinichistory.requests.servicerequests.application;
 
-import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.files.pdf.PdfService;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
+import static ar.lamansys.sgx.shared.files.pdf.EPDFTemplate.FORM_REPORT;
+import static ar.lamansys.sgx.shared.files.pdf.EPDFTemplate.RECIPE_ORDER_TABLE;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgx.shared.featureflags.AppFeature;
+import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
+import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.GeneratedBlobBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
@@ -13,8 +19,6 @@ import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 import net.pladema.reports.service.domain.FormVBo;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 
 
 @Slf4j
@@ -24,19 +28,19 @@ public class CreateTranscribedServiceRequestPdf {
 
     private final GetTranscribedServiceRequest getTranscribedServiceRequest;
     private final PatientExternalService patientExternalService;
-    private final PdfService pdfService;
+    private final GeneratedPdfResponseService generatedPdfResponseService;
     private final CreateDeliveryOrderBaseForm createDeliveryOrderBaseForm;
     private final CreateDeliveryOrderFormContext createDeliveryOrderFormContext;
     private final AppointmentService appointmentService;
 
-    public StoredFileBo run(Integer institutionId, Integer patientId, Integer transcribedServiceRequestId, Integer appointmentId) {
+    public GeneratedBlobBo run(Integer institutionId, Integer patientId, Integer transcribedServiceRequestId, Integer appointmentId) {
         log.debug("Input parameters -> institutionId {}, patientId {}, transcribedServiceRequestId {}", institutionId, patientId, transcribedServiceRequestId);
 
         TranscribedServiceRequestBo transcribedServiceRequestBo = getTranscribedServiceRequest.run(transcribedServiceRequestId);
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         PatientMedicalCoverageBo patientMedicalCoverage = appointmentService.getMedicalCoverageFromAppointment(appointmentId);
 
-        StoredFileBo storedFileBo = AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION.isActive()
+        var storedFileBo = AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION.isActive()
                 ? this.createTranscribedDeliveryOrderForm(patientId, transcribedServiceRequestId, transcribedServiceRequestBo, patientDto, patientMedicalCoverage)
                 : this.createRecipeOrderTable(transcribedServiceRequestId, transcribedServiceRequestBo, patientDto, patientMedicalCoverage);
 
@@ -44,23 +48,22 @@ public class CreateTranscribedServiceRequestPdf {
         return storedFileBo;
     }
 
-    private StoredFileBo createTranscribedDeliveryOrderForm(Integer patientId, Integer transcribedServiceRequestId, TranscribedServiceRequestBo transcribedServiceRequestBo, BasicPatientDto patientDto, PatientMedicalCoverageBo patientMedicalCoverage) {
+    private GeneratedBlobBo createTranscribedDeliveryOrderForm(Integer patientId, Integer transcribedServiceRequestId, TranscribedServiceRequestBo transcribedServiceRequestBo, BasicPatientDto patientDto, PatientMedicalCoverageBo patientMedicalCoverage) {
 
         FormVBo baseFormV = createDeliveryOrderBaseForm.run(patientId, transcribedServiceRequestBo, patientDto);
         FormVBo formV = completeFormV(baseFormV, transcribedServiceRequestBo, patientMedicalCoverage);
         Map<String, Object> context = createDeliveryOrderFormContext.run(formV, transcribedServiceRequestBo);
-        String template = "form_report";
 
-        return new StoredFileBo(pdfService.generate(template, context),
-                MediaType.APPLICATION_PDF_VALUE,
-                this.resolveNameFile(patientDto, transcribedServiceRequestId));
+		return generatedPdfResponseService.generatePdf(FORM_REPORT,
+			context,
+			this.resolveNameFile(patientDto, transcribedServiceRequestId)
+		);
     }
 
     private FormVBo completeFormV(FormVBo formV, TranscribedServiceRequestBo transcribedServiceRequest, PatientMedicalCoverageBo medicalCoverage) {
 
         formV.setEstablishment(transcribedServiceRequest.getInstitutionName());
         formV.setCompleteProfessionalName(transcribedServiceRequest.getHealthcareProfessionalName());
-        formV.setProblems(transcribedServiceRequest.getHealthCondition().getPt());
 
         if (medicalCoverage != null) {
             formV.setMedicalCoverage(medicalCoverage.getMedicalCoverageName());
@@ -71,15 +74,14 @@ public class CreateTranscribedServiceRequestPdf {
         return formV;
     }
 
-    private StoredFileBo createRecipeOrderTable(Integer transcribedServiceRequestId, TranscribedServiceRequestBo transcribedServiceRequestBo, BasicPatientDto patientDto, PatientMedicalCoverageBo patientMedicalCoverage) {
+    private GeneratedBlobBo createRecipeOrderTable(Integer transcribedServiceRequestId, TranscribedServiceRequestBo transcribedServiceRequestBo, BasicPatientDto patientDto, PatientMedicalCoverageBo patientMedicalCoverage) {
 
         var context = createRecipeOrderTableContext(transcribedServiceRequestBo, patientDto, patientMedicalCoverage);
 
-        String template = "recipe_order_table";
-
-        return new StoredFileBo(pdfService.generate(template, context),
-                MediaType.APPLICATION_PDF_VALUE,
-                this.resolveNameFile(patientDto, transcribedServiceRequestId));
+		return generatedPdfResponseService.generatePdf(RECIPE_ORDER_TABLE,
+				context,
+				this.resolveNameFile(patientDto, transcribedServiceRequestId)
+		);
     }
 
     private Map<String, Object> createRecipeOrderTableContext(TranscribedServiceRequestBo transcribedServiceRequest,
@@ -103,7 +105,7 @@ public class CreateTranscribedServiceRequestPdf {
     }
 
     private String resolveNameFile(BasicPatientDto patientDto, Integer serviceRequestId) {
-        return String.format("%s%s.pdf", patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationNumber().concat("_") : "", serviceRequestId);
+        return String.format("%s%s", patientDto.getIdentificationNumber() != null ? patientDto.getIdentificationNumber().concat("_") : "", serviceRequestId);
     }
 
 }

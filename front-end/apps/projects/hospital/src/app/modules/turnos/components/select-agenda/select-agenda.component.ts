@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatOptionSelectionChange } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,11 +20,16 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BlockAgendaRangeComponent } from '@turnos/dialogs/block-agenda-range/block-agenda-range.component';
 import { AppointmentsFacadeService } from '@turnos/services/appointments-facade.service';
 import { AgendaFilters, AgendaOptionsData, AgendaSearchService } from '../../services/agenda-search.service';
+import { dateISOParseDate } from '@core/utils/moment.utils';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-select-agenda',
 	templateUrl: './select-agenda.component.html',
-	styleUrls: ['./select-agenda.component.scss']
+	styleUrls: ['./select-agenda.component.scss'],
+	providers: [
+		DateFormatPipe
+	]
 })
 export class SelectAgendaComponent implements OnInit, OnDestroy {
 
@@ -50,13 +54,13 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 		public readonly route: ActivatedRoute,
 		private readonly diaryService: DiaryService,
 		private readonly dialog: MatDialog,
-		private readonly datePipe: DatePipe,
 		private snackBarService: SnackBarService,
 		private contextService: ContextService,
 		private readonly dailyAppointmentService: DailyAppointmentService,
 		private readonly agendaSearchService: AgendaSearchService,
 		private readonly appointmentsFacadeService: AppointmentsFacadeService,
 		private childrenOutlets: ChildrenOutletContexts,
+		private readonly dateFormatPipe: DateFormatPipe
 	) {
 	}
 
@@ -68,7 +72,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 			if (data?.agendas) {
 				this.loadAgendas(data.agendas, data.idAgendaSelected);
 				this.filters = data.filteredBy;
-				
+
 			} else this.agendas = null;
 		});
 		this.route.queryParams.subscribe(qp => {
@@ -84,7 +88,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	changeAgendaSelected(event: MatOptionSelectionChange, agenda: DiaryListDto): void {
 		if (event.isUserInput) {
-			this.agendaSelected ={
+			this.agendaSelected = {
 				diaryList: agenda,
 				startDate: null,
 				endDate: null
@@ -99,9 +103,9 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	private loadAgendas(diaries: DiaryListDto[], idAgendaSelected?: number): void {
-		this.agendas= [];
+		this.agendas = [];
 		delete this.agendaSelected;
-		diaries.forEach( diary => {
+		diaries.forEach(diary => {
 			this.agendas.push({
 				diaryList: diary,
 				endDate: null,
@@ -115,7 +119,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 			});
 			if (!this.agendaSelected) {
 				this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
-			} else 
+			} else
 				this.currentAgenda = this.agendaSelected.diaryList;
 		}
 	}
@@ -155,12 +159,15 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	}
 
 	deleteAgenda(): void {
-		const content = this.agendaSelected.diaryList.alias ? `¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.diaryList.alias} (${this.agendaSelected.diaryList.clinicalSpecialtyName}) <br>
-						Desde ${this.datePipe.transform(this.agendaSelected.diaryList.startDate, 'dd/MM/yyyy')}, hasta
-						${this.datePipe.transform(this.agendaSelected.diaryList.endDate, 'dd/MM/yyyy')} ` :
-						`¿Seguro desea eliminar su agenda? <br> ${this.agendaSelected.diaryList.clinicalSpecialtyName} <br>
-						Desde ${this.datePipe.transform(this.agendaSelected.diaryList.startDate, 'dd/MM/yyyy')}, hasta
-						${this.datePipe.transform(this.agendaSelected.diaryList.endDate, 'dd/MM/yyyy')} `;
+
+		const agendaName = this.agendaSelected.diaryList.alias ? `${this.agendaSelected.diaryList.alias} (${this.agendaSelected.diaryList.clinicalSpecialtyName})` : this.agendaSelected.diaryList.clinicalSpecialtyName;
+
+		const startDate = dateISOParseDate(this.agendaSelected.diaryList.startDate);
+		const endDate = dateISOParseDate(this.agendaSelected.diaryList.endDate);
+
+		const content = `¿Seguro desea eliminar su agenda? <br> ${agendaName} <br>
+						Desde ${this.dateFormatPipe.transform(startDate, 'date')} hasta
+						${this.dateFormatPipe.transform(endDate, 'date')} `
 		const dialogRef = this.dialog.open(ConfirmDialogComponent,
 			{
 				data: {
@@ -230,6 +237,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 export interface DiaryList {
 	diaryList: DiaryListDto;
-    endDate: Date;
-    startDate: Date;
+	endDate: Date;
+	startDate: Date;
 }

@@ -1,0 +1,101 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+    <span mat-dialog-title
+       > {{ this.data.presentationConfig.title }} </span>
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div mat-dialog-content>
+    <ng-container *ngIf="!data.premedicationService.snomedConcept else drug">
+        <app-concepts-search *ngIf="!data.searchConceptsLocallyFF else drugTypeaheadSearch"
+            [label]="this.data.presentationConfig.label"
+            (search)="data.premedicationService.openSearchDialog($event)">
+        </app-concepts-search>
+
+        <ng-template #drugTypeaheadSearch>
+            <app-concept-typeahead-search [ecl]="data.premedicationService.getECL()"
+                [placeholder]="this.data.presentationConfig.label"
+                (conceptSelected)="data.premedicationService.setConcept($event)">
+            </app-concept-typeahead-search>
+        </ng-template>
+    </ng-container>
+</div>
+
+<ng-template #drug>
+    <form [formGroup]="form" (ngSubmit)="addDrug()">
+        <div fxLayout="column" fxLayoutGap="5px">
+            <mat-label [translate]="'internaciones.anesthesic-report.drug.DRUG_LABEL'"></mat-label>
+            <mat-form-field appearance="outline">
+                <input id="drug-input" matInput type="text" formControlName="snomed" name="snomed" readonly
+                    matTooltip="{{ data.premedicationService.snomedConcept.pt }}">
+                <button id="clear-drug" mat-button matSuffix color="warn" mat-icon-button
+                    (click)="data.premedicationService.resetForm()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <div fxLayout="row wrap" fxLayoutAlign="space-between">
+                <div fxLayout="column" data-id="dosis-data" class="input-width">
+                    <mat-label
+                        [translate]="'internaciones.anesthesic-report.drug.DOSIS_LABEL'"></mat-label>
+                    <mat-form-field appearance="outline">
+                        <input id="dosis-input" matInput type="number" formControlName="dosis" name="dosis"
+                            placeholder="{{ 'internaciones.anesthesic-report.drug.DOSIS_PLACEHOLDER' | translate }}">
+                        <mat-error> {{ data.premedicationService.dosisError$ | async }} </mat-error>
+                        <mat-error *ngIf="hasError(form, 'required', 'dosis')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" data-id="unit-data" class="input-width">
+                    <mat-label
+                        [translate]="'internaciones.anesthesic-report.drug.UNIT_LABEL'"></mat-label>
+                    <mat-form-field appearance="outline">
+                        <input id="unit-input" matInput type="text" formControlName="unit" name="unit"
+                            placeholder="{{ 'internaciones.anesthesic-report.drug.UNIT_PLACEHOLDER' | translate }}">
+                        <mat-error *ngIf="hasError(form, 'required', 'unit')">
+                            <span translate="forms.REQUIRED"></span>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <mat-label [translate]="'internaciones.anesthesic-report.drug.VIA_LABEL'"></mat-label>
+            <mat-form-field appearance="outline">
+                <mat-select formControlName="via" placeholder="{{ 'internaciones.anesthesic-report.drug.VIA_PLACEHOLDER' | translate }}">
+                    <mat-option id="via" name="via"
+                        *ngFor="let via of viasArray" [value]="via">
+                        {{via.description}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError(form, 'required', 'via')">
+                    <span translate="forms.REQUIRED"></span>
+                </mat-error>
+            </mat-form-field>
+
+
+            <div *ngIf="anotherViaEnabled"  fxLayout="column" data-id="viaNote-data" >
+                <mat-form-field appearance="outline">
+                    <input id="unit-input" matInput type="text" formControlName="viaNote" name="viaNote"
+                        placeholder="{{ 'internaciones.anesthesic-report.drug.VIA_TEXT_PLACEHOLDER' | translate }}">
+                    <mat-error *ngIf="!form.valid">
+                        <span translate="forms.REQUIRED"></span>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="column">
+                <mat-label [translate]="'internaciones.anesthesic-report.drug.HOUR'"></mat-label>
+                <app-time-picker [timePickerData]="timePickerData" [submitted]="submittedForm" (timeSelected)="onSelectedTime($event)"></app-time-picker>
+            </div>
+
+            <div align="end">
+                <button id="submit_drug" mat-raised-button color="primary" type="submit">
+                    <span class="uppercase" [translate]="'buttons.ADD'"></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</ng-template>

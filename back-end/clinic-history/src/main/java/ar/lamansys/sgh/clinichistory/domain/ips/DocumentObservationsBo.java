@@ -38,4 +38,9 @@ public class DocumentObservationsBo implements Serializable {
         this.currentIllnessNote = source.getCurrentIllnessNote();
         this.indicationsNote = source.getIndicationsNote();
     }
+
+	public Boolean isEmpty() {
+		return otherNote == null && physicalExamNote == null && studiesSummaryNote == null && evolutionNote == null && clinicalImpressionNote == null &&
+				currentIllnessNote == null && indicationsNote == null;
+	}
 }

@@ -6,10 +6,12 @@ import ar.lamansys.refcounterref.application.port.ReferenceHealthConditionStorag
 import ar.lamansys.refcounterref.application.port.ReferenceStorage;
 import ar.lamansys.refcounterref.application.port.ReferenceStudyStorage;
 import ar.lamansys.refcounterref.domain.enums.EReferenceCounterReferenceType;
+import ar.lamansys.refcounterref.domain.enums.EReferenceRegulationState;
 import ar.lamansys.refcounterref.domain.enums.EReferenceStatus;
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceDataBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceStudyBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceSummaryBo;
 import ar.lamansys.refcounterref.domain.referenceproblem.ReferenceProblemBo;
 import ar.lamansys.refcounterref.domain.snomed.SnomedBo;
@@ -23,6 +25,8 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,7 +87,8 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		if (referenceBo.getStudy() != null)
 			saveReferenceOrder(referenceBo, orderIds, reference, referenceId);
 		saveReferenceRegulationState(reference, referenceBo);
-		referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
+		if (referenceBo.getFileIds() != null)
+			referenceCounterReferenceFileStorage.updateReferenceCounterReferenceId(referenceId, referenceBo.getFileIds());
 	}
 
 	private void saveReferenceRegulationState(Reference reference, CompleteReferenceBo referenceBo) {
@@ -126,7 +131,7 @@ public class ReferenceStorageImpl implements ReferenceStorage {
     @Override
     public List<ReferenceProblemBo> getReferencesProblems(Integer patientId, List<Short> loggedUserRoleIds) {
         log.debug("Input parameters -> patientId {}, loggedUserRoleIds {}", patientId, loggedUserRoleIds);
-        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId, loggedUserRoleIds);
+        return referenceHealthConditionRepository.getReferencesProblemsByPatientId(patientId, loggedUserRoleIds, EReferenceRegulationState.REJECTED.getId());
     }
 
 	@Override
@@ -200,14 +205,15 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 		var referencesProblems = referenceHealthConditionRepository.getReferencesProblems(referenceIds);
 		var files = referenceCounterReferenceFileStorage.getFilesByReferenceCounterReferenceIdsAndType(referenceIds, EReferenceCounterReferenceType.REFERENCIA);
 		var referencesStudiesIds = references.stream().filter(r -> r.getServiceRequestId() != null).collect(Collectors.toMap(ReferenceDataBo::getServiceRequestId, ReferenceDataBo::getId));
-		Map<Integer, SnomedBo> referencesProcedures = referenceStudyStorage.getReferencesProcedures(referencesStudiesIds);
+		Map<Integer, Pair<SnomedBo, String>> referencesProcedures = referenceStudyStorage.getReferencesProcedures(referencesStudiesIds);
 		return references.stream()
 				.peek(ref -> {
 					ref.setProblems(referencesProblems.stream()
 							.filter(rp -> rp.getReferenceId().equals(ref.getId()))
 							.map(rp -> rp.getSnomed().getPt()).collect(Collectors.toList()));
 					ref.setFiles(files.get(ref.getId()));
-					ref.setProcedure(referencesProcedures.get(ref.getId()));
+					ref.setProcedure(referencesProcedures.get(ref.getId()) != null ? referencesProcedures.get(ref.getId()).getLeft() : null);
+					ref.setProcedureCategory(referencesProcedures.get(ref.getId()) != null ? referencesProcedures.get(ref.getId()).getRight() : null);
 					ref.setProfessionalFullName(sharedPersonPort.getCompletePersonNameById(ref.getProfessionalPersonId()));
 					ref.setDestinationClinicalSpecialties(referenceClinicalSpecialtyRepository.getClinicalSpecialtiesByReferenceId(ref.getId()));
 				}).collect(Collectors.toList());
@@ -281,6 +287,22 @@ public class ReferenceStorageImpl implements ReferenceStorage {
 	public void deleteAndUpdateStatus(Integer referenceId, Short statusId){
 		log.debug("Input parameters -> referenceId {}, statusId {}", referenceId, statusId);
 		referenceRepository.deleteAndUpdateStatus(referenceId, statusId);
+	}
+
+	@Override
+	public Optional<Integer> getReferenceEncounterTypeId(Integer referenceId){
+		log.debug("Input parameters -> referenceId {}", referenceId);
+		Optional<Integer> result = Optional.ofNullable(referenceRepository.getReferenceEncounterTypeId(referenceId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<ReferenceStudyBo> getReferenceStudy (Integer referenceId){
+		log.debug("Input parameteres -> referenceId {}", referenceId);
+		Optional<ReferenceStudyBo> result = referenceRepository.getReferenceStudy(referenceId);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }

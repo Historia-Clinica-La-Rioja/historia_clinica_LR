@@ -25,11 +25,11 @@ export class FeatureFlagService {
 	 * Permite filtrar una lista según los feature flags activos.
 	 * La lista debe contener objetos que tengan el atributo featureFlag de tipo AppFeature.
 	 */
-	public filterItems$<T extends { featureFlag?: AppFeature }>(items: T[]): Observable<T[]> {
+	public filterItems$<T extends { featureFlag?: AppFeature[] }>(items: T[]): Observable<T[]> {
 		return this.publicService.getInfo().pipe(map(info => {
 			return items.filter(item => {
 				if (item.featureFlag) {
-					return info.features.some(ffActive => ffActive === item.featureFlag);
+					return info.features.some(ffActive => item.featureFlag.includes(ffActive));
 				}
 				return true;
 			});

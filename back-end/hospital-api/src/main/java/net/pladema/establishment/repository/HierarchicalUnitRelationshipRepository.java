@@ -36,7 +36,8 @@ public interface HierarchicalUnitRelationshipRepository extends SGXAuditableEnti
 			"FROM HierarchicalUnitRelationship hur " +
 			"JOIN HierarchicalUnit hu ON (hur.hierarchicalUnitParentId = hu.id) " +
 			"WHERE hur.hierarchicalUnitChildId = :hierarchicalUnitId " +
-			"AND hur.deleteable.deleted = false")
+			"AND hur.deleteable.deleted = false " +
+			"ORDER BY hu.alias ASC")
 	List<HierarchicalUnit> findParentsIdsByHierarchicalUnitChildId(@Param("hierarchicalUnitId") Integer hierarchicalUnitId);
 
 	@Modifying

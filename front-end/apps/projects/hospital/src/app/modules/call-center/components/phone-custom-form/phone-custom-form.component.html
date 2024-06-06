@@ -1,0 +1,17 @@
+<div fxLayout="column" fxLayoutGap="5px">
+    <span>{{"call-center.new-appointment.custom-form.phone.TITLE" | translate}}</span>
+    <form [formGroup]="form" fxLayout="row" fxLayoutGap="5px">
+        
+        <mat-form-field appearance="outline" fxFlex="30%">
+            <input matInput type="text" [placeholder]="'call-center.new-appointment.custom-form.phone.PLACEHOLDER_PREFIX' | translate" formControlName="prefix" (blur)="onTouched()">
+            <mat-error *ngIf="hasError(form, 'required', 'prefix')">{{ "forms.REQUIRED" | translate }}</mat-error>
+            <mat-error *ngIf="hasError(form, 'maxlength', 'prefix')" [translate]="'forms.MAX_LENGTH_ERROR'" [translateParams]="{max: MAX_LENGTH_PREFIX}"></mat-error>
+		</mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="70%">
+            <input matInput type="text" [placeholder]="'call-center.new-appointment.custom-form.phone.PLACEHOLDER_NUMBER' | translate" formControlName="number" (blur)="onTouched()">
+            <mat-error *ngIf="hasError(form, 'required', 'number')">{{ "forms.REQUIRED" | translate }}</mat-error>
+            <mat-error *ngIf="hasError(form, 'maxlength', 'number')" [translate]="'forms.MAX_LENGTH_ERROR'" [translateParams]="{max: MAX_LENGTH_NUMBER}"></mat-error>
+		</mat-form-field>
+    </form>
+</div>

@@ -23,6 +23,7 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 	isLoading = false;
 	loadingReport = false;
 	disabled = true;
+	markAsTouched = false;
 	validDate = false;
 	validProsthesis = true;
 
@@ -118,24 +119,31 @@ export class SurgicalReportDockPopupComponent implements OnInit {
 	}
 
 	save(): void {
-		this.surgicalReport.confirmed = true;
-		this.isLoading = true;
-		if (this.data.surgicalReportId) {
-			this.openEditReason();
-			this.isLoading = false;
-			return;
-		}
-
-		this.surgicalReportService.saveSurgicalReport(this.data.internmentEpisodeId, this.surgicalReport).subscribe(
-			saved => {
-				this.snackBarService.showSuccess('Parte quirúrgico generado correctamente');
-				this.dockPopupRef.close(this.setFieldsToUpdate());
-			},
-			error => {
-				this.snackBarService.showError(error.text)
+		if (!this.disabled) {
+			this.surgicalReport.confirmed = true;
+			this.isLoading = true;
+			if (this.data.surgicalReportId) {
+				this.openEditReason();
+				this.isLoading = false;
+				return;
 			}
-		);
 
+			this.surgicalReportService.saveSurgicalReport(this.data.internmentEpisodeId, this.surgicalReport).subscribe(
+				saved => {
+					this.snackBarService.showSuccess('Parte quirúrgico generado correctamente');
+					this.dockPopupRef.close(this.setFieldsToUpdate());
+				},
+				error => {
+					this.snackBarService.showError("Error al generar parte quirúrgico. " + error.errors[0])
+					this.isLoading = false;
+					this.dockPopupRef.close();
+				}
+			);
+		}
+		else {
+			this.markAsTouched = true;
+			this.snackBarService.showError('Faltan completar campos en el formulario');
+		}
 	}
 
 	private openEditReason() {

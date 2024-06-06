@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto;
 
+import ar.lamansys.sgh.publicapi.domain.PersonInfoExtendedBo;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
 import lombok.Builder;
@@ -23,4 +24,5 @@ public class SingleAttentionInfoDto {
 	private ProfessionalDto responsibleDoctor;
 	private SingleDiagnosticDto singleDiagnosticDto;
 	private DateTimeDto attentionDateWithTime;
+	private PersonExtendedInfoDto personExtendedInfo;
 }

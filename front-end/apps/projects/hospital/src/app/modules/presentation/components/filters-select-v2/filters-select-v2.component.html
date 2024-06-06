@@ -4,7 +4,7 @@
 			<mat-label>{{filter?.name | translate}}</mat-label>
 			<mat-select [id]="filter.key" [formControlName]="filter.key">
 				<mat-option *ngFor="let option of filter.options" [value]="option" (click)="emitSearchCriteria()">
-					{{option?.description}} {{option?.name}}
+					{{option?.description | translate}} {{option?.name | translate}}
 				</mat-option>
 			</mat-select>
 			<button *ngIf="filterForm.get(filter.key).value" mat-button matSuffix color="warn" mat-icon-button

@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public enum ESchoolLevel {
 
-	NURSERY_SCHOOL(1, "NURSERY_SCHOOL"),
-	KINDERGARTEN(2, "KINDERGARTEN"),
-	ELEMENTARY_SCHOOL(3, "ELEMENTARY_SCHOOL"),
-	HIGH_SCHOOL(4, "HIGH_SCHOOL");
+	NURSERY_SCHOOL(1, "Maternal"),
+	KINDERGARTEN(2, "Inicial"),
+	ELEMENTARY_SCHOOL(3, "Primario"),
+	HIGH_SCHOOL(4, "Secundario");
 
 	private Short id;
 

@@ -1,7 +1,7 @@
 <app-content>
 	<h2 id="title" class="page-title" [translate]="'access-management.home.TITLE'"></h2>
 
-	<mat-tab-group>
+	<mat-tab-group #tabGroup (selectedTabChange)="tabChanged($event.index)" [selectedIndex]="tabsService.selectedIndex">
 		<mat-tab label="{{'access-management.home.tabs.REQUESTS' | translate | uppercase}}">
 			<ng-template matTabContent>
 				<app-reference-report></app-reference-report>

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, AbstractControl } from '@angular/forms';
-import { momentFormat, DateFormat, momentParseDate } from '@core/utils/moment.utils';
 import { Subscription } from 'rxjs';
 import { ClinicalSpecialtyDto } from '@api-rest/api-model';
 import { HistoricalProblemsFacadeService, Professional, Problem } from '../../services/historical-problems-facade.service';
@@ -42,9 +41,14 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 				this.form.controls.specialty.setValue(data?.specialty);
 				this.form.controls.professional.setValue(data?.professional);
 				this.form.controls.problem.setValue(data?.problem);
-				this.form.controls.consultationDate.setValue(data?.consultationDate ? momentParseDate(data.consultationDate) : null);
+				this.form.controls.consultationDate.setValue(data?.consultationDate);
 				this.form.controls.referenceState.setValue(data?.referenceStateId);
 			});
+	}
+
+	dateChanged(date: Date) {
+		this.form.controls.consultationDate.setValue(date);
+		this.sendAllFiltersOnFilterChange()
 	}
 
 	public sendAllFiltersOnFilterChange() {
@@ -56,7 +60,7 @@ export class HistoricalProblemsFiltersComponent implements OnInit, OnDestroy {
 			specialty: this.form.value.specialty,
 			professional: this.form.value.professional,
 			problem: this.form.value.problem,
-			consultationDate: this.form.value.consultationDate ? momentFormat(this.form.value.consultationDate, DateFormat.API_DATE) : null,
+			consultationDate: this.form.value.consultationDate,
 			referenceStateId: this.form.value.referenceState,
 		};
 	}
@@ -85,6 +89,6 @@ export class HistoricalProblemsFilter {
 	specialty: number;
 	professional: number;
 	problem: string;
-	consultationDate?: string;
+	consultationDate?: Date;
 	referenceStateId: REFERENCE_STATES;
 }

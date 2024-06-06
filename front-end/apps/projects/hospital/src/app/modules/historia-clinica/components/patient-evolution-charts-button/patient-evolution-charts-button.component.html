@@ -1,0 +1,4 @@
+<app-button [text]="'historia-clinica.evolution-charts.SHOW_EVOLUTION_CHART_BUTTON'"
+    [disabled]="!(patientEvolutionChartsService.isEnabledPatientEvolutionCharts$ | async)"
+    (clicked)="patientEvolutionChartsService.openEvolutionChartDialog()"
+    ></app-button>

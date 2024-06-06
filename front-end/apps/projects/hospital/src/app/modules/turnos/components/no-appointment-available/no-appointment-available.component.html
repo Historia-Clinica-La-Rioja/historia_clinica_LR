@@ -1,0 +1,9 @@
+<div class="no-data mat-typography" fxLayout="column" fxLayoutGap="16px">
+	<span class="title">{{'turnos.home.messages.NO_APPOINTMENT-AVAILABLE' | translate }}</span>
+    <span>{{'turnos.home.messages.SUGGESTION' | translate }}</span>
+
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="16px">
+        <button mat-stroked-button color="primary" [disabled]="redirectionDisabled" (click)="redirectToSearchInCareNetwork()">{{'turnos.home.SEARCH_IN_CARE_NETWORK' | translate}}</button>
+        <button mat-stroked-button color="primary" (click)="openRegisterUnsatisfiedDemand()" [disabled]="isRegisterButtonDisabled">{{'turnos.home.actions.REGISTER_UNSATISFIED_DEMAND' | translate}}</button>
+    </div>
+</div>

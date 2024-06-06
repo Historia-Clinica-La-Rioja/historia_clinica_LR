@@ -6,6 +6,8 @@ import net.pladema.patient.infrastructure.output.repository.entity.EMergeTable;
 
 import net.pladema.patient.infrastructure.output.repository.entity.MergedPatientItem;
 
+import net.pladema.violencereport.application.UpdateOldSituationIds;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ public class MigratePatientStorageImpl implements MigratePatientStorage {
 
 	@PersistenceContext
 	private final EntityManager entityManager;
-
+	private final UpdateOldSituationIds updateOldSituationIds;
 	private final MergedPatientItemRepository mergedPatientItemRepository;
 	private final SharedDocumentPort sharedDocumentPort;
 
@@ -41,7 +43,7 @@ public class MigratePatientStorageImpl implements MigratePatientStorage {
 		List<MergedPatientItem> mpis = mergedPatientItemRepository.findAllByInactivePatientId(inactivePatientId);
 		mpis.forEach(mpi -> migrate(mpi.getMergedIdValue(), mpi.getOldPatientId(), mpi.getMergedTableName()));
 		mergedPatientItemRepository.deleteAll(mpis);
-
+		updateOldSituationIds.run(inactivePatientId);
 		sharedDocumentPort.rebuildFilesFromPatient(inactivePatientId);
 	}
 

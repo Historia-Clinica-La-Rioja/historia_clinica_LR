@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { ReferenceCounterReferenceFileDto, ReferenceDataDto } from '@api-rest/api-model';
-import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { IDENTIFIER_CASES } from '../../../hsi-components/identifier-cases/identifier-cases.component';
 import { Position } from '@presentation/components/identifier/identifier.component';
@@ -39,6 +38,5 @@ export class ReferenceCompleteDataComponent {
 interface ReferenceCompleteData {
 	dto: ReferenceDataDto;
 	priority: string;
-	closureType: ColoredIconText;
 	problems: string;
 }

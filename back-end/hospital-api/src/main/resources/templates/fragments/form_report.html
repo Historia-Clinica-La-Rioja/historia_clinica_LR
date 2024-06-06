@@ -38,9 +38,6 @@
             vertical-align: middle;
         }
 
-        .space {
-            height: 25px;
-        }
 
         .border-bottom, .authorization-title, .total-billing-data {
             border-bottom: 1px solid black;
@@ -126,9 +123,6 @@
             text-align: left;
         }
 
-        .cant-code .space, .concept .space, .unitary .space, .total .space {
-            height: 130px;
-        }
 
         .unitary {
             width: 90px;
@@ -196,6 +190,33 @@
         .diagnosis::first-letter {
             text-transform: uppercase;
         }
+
+        .row-flex {
+            box-sizing: border-box;
+            border-width: 1px;
+            width: 100%;
+            display: table;
+        }
+
+
+        .column-flex {
+            padding: 10px;
+            width: 15%;
+            border-style: solid;
+            border-width: 1px;
+            display: table-cell;
+        }
+
+        .column-flex-concept {
+            padding: 10px;
+            width: 53%;
+            border-style: solid;
+            border-width: 1px;
+            display: table-cell;
+            text-align: center
+        }
+
+
     </style>
 </head>
 
@@ -272,26 +293,25 @@
             <div class="code">&nbsp;</div>
         </div>
     </div>
-    <div class="row">
-        <div class="cant-code">
+    <div class="row-flex">
+        <div class="column-flex cant-code">
             <div>18. CANT. ó CÓD.</div>
-            <div class="space">&nbsp;</div>
+            <div>&nbsp;</div>
         </div>
-        <div class="concept">
+        <div class="column-flex-concept">
             <div class="concept-title">19. CONCEPTO</div>
-            <div class="space"><p class="rp-concept">Rp/</p>
-                <div th:each="study, iter: ${studies}">
-                    <span th:text="${!iter.last} ? ${study} + ',' : ${study}"></span>
-                </div>
+            <p class="rp-concept">Rp/</p>
+            <div th:each="study, iter: ${studies}">
+                <div th:text="${!iter.last} ? ${study} + ',' : ${study}"></div>
             </div>
         </div>
-        <div class="unitary">
+        <div class="column-flex unitary">
             <div>20. UNITARIO</div>
-            <div class="space">&nbsp;</div>
+            <div>&nbsp;</div> 
         </div>
-        <div class="total">
+        <div class="column-flex total">
             <div>21. TOTAL</div>
-            <div class="space">&nbsp;</div>
+            <div>&nbsp;</div>
         </div>
     </div>
     <div class="row-whitout-padding">

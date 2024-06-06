@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.pladema.terminology.cache.controller.dto.ETerminologyKind;
 import net.pladema.terminology.cache.infrastructure.output.repository.entity.SnomedCacheFile;
 
 
@@ -32,12 +33,10 @@ public interface SnomedCacheFileRepository extends JpaRepository<SnomedCacheFile
 
 	@Transactional(readOnly = true)
 	@Query("SELECT scf FROM SnomedCacheFile scf " +
-			" WHERE scf.ingestedOn IS NULL " +
-			" OR scf.ingestedError IS NOT NULL " +
-			" OR scf.ingestedOn IS NOT NULL " +
-			" AND scf.conceptsLoaded IS NULL " +
+			" WHERE scf.kind = :kind " +
+			" AND scf.ingestedOn IS NULL " +
 			" ORDER BY scf.createdOn ASC")
-	List<SnomedCacheFile> findToProcessByAge();
+	List<SnomedCacheFile> findToProcessByAge(@Param("kind") ETerminologyKind kind);
 
 	@Transactional
 	@Modifying
@@ -47,8 +46,8 @@ public interface SnomedCacheFileRepository extends JpaRepository<SnomedCacheFile
 
 	@Transactional(readOnly = true)
 	@Query("SELECT scf FROM SnomedCacheFile scf WHERE scf.id = (" +
-			"SELECT MAX(sc.id) FROM SnomedCacheFile sc WHERE sc.ingestedOn IS NOT NULL AND sc.ingestedError IS NULL AND sc.conceptsLoaded IS NOT NULL AND sc.ecl = scf.ecl" +
+			"SELECT MAX(sc.id) FROM SnomedCacheFile sc WHERE sc.ingestedOn IS NOT NULL AND sc.ingestedError IS NULL AND sc.conceptsLoaded IS NOT NULL AND sc.ecl = scf.ecl AND sc.kind =:kind" +
 			")")
-	List<SnomedCacheFile> lastSuccessfulByECL();
+	List<SnomedCacheFile> lastSuccessfulByECL(@Param("kind") ETerminologyKind kind);
 
 }

@@ -41,4 +41,12 @@ public interface CareLineInstitutionRepository extends JpaRepository<CareLineIns
 			"AND cli.institutionId = :institutionId " +
 			"AND cli.deleted IS FALSE")
 	Integer careLineIsAvailableInInstitution(@Param("careLineId") Integer careLineId, @Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT cl.procedure " +
+			"FROM CareLineInstitution cli " +
+			"JOIN CareLine cl ON (cli.careLineId = cl.id) " +
+			"WHERE cli.id = :careLineInstitutionId ")
+	boolean careLineAcceptPractices(@Param("careLineInstitutionId") Integer careLineInstitutionId);
+
 }

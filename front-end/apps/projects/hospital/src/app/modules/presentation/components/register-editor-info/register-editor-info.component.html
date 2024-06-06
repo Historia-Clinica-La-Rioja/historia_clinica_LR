@@ -10,12 +10,12 @@
 
 	<div *ngIf="(registerEditorCase === registerEditorCasesDate )else DETE_HOUR">
 		<span class="grey">
-			{{ registerEditor.date | date:dateFormats.MEDIUM_TIME }}
+			{{ registerEditor.date | dateFormat: 'date'}}
 		</span>
 	</div>
 	<ng-template #DETE_HOUR>
 		<span class="grey">
-			{{ registerEditor.date | date:dateFormats.SHORT }}
+			{{ registerEditor.date | dateFormat: 'datetime'}}
 		</span>
 	</ng-template>
 </div>

@@ -20,6 +20,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class GuardiaComponent implements OnInit {
 
 	@Input() emergencyCareEpisodeInProgress: EmergencyCareEpisodeInProgressDto;
+	@Input() isEmergencyCareTemporalPatient: boolean = false;
 	factoresDeRiesgoSummary: SummaryHeader = FACTORES_DE_RIESGO;
 
 	readonly triages = Triages;

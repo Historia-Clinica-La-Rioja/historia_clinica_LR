@@ -1,5 +1,6 @@
 package net.pladema.medicalconsultation.appointment.controller.dto;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,6 @@ public class EmptyAppointmentDto {
 	private String clinicalSpecialtyName;
 	private String alias;
 	private String doctorFullName;
+	private SnomedDto practice;
 
 }

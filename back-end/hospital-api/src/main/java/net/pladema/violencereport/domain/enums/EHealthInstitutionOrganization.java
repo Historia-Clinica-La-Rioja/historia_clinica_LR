@@ -6,18 +6,18 @@ import lombok.Getter;
 @Getter
 public enum EHealthInstitutionOrganization {
 
-	MEDICAL_CLINIC(1, "MEDICAL_CLINIC"),
-	PEDIATRICS(2, "PEDIATRICS"),
-	GYNECOLOGY_OBSTETRICS(3, "GYNECOLOGY_OBSTETRICS"),
-	SOCIAL_WORK(4, "SOCIAL_WORK"),
-	MENTAL_HEALTH(5, "MENTAL_HEALTH"),
-	NURSING(6, "NURSING"),
+	MEDICAL_CLINIC(1, "Clínica médica"),
+	PEDIATRICS(2, "Pediatría"),
+	GYNECOLOGY_OBSTETRICS(3, "Ginecología/obstetricia"),
+	SOCIAL_WORK(4, "Trabajo social"),
+	MENTAL_HEALTH(5, "Salud mental"),
+	NURSING(6, "Enfermería"),
 	SAPS(7, "SAPS"),
 	EDA(8, "EDA"),
-	EMERGENCY_CARE(9, "EMERGENCY_CARE"),
-	COMMITTEE(10, "COMMITTEE"),
-	MANAGEMENT(11, "MANAGEMENT"),
-	OTHERS(12, "OTHERS");
+	EMERGENCY_CARE(9, "Guardia"),
+	COMMITTEE(10, "Comité contra las violencias"),
+	MANAGEMENT(11, "Dirección"),
+	OTHERS(12, "Otros");
 
 	private Short id;
 

@@ -21,8 +21,10 @@ import ar.lamansys.sgx.shared.files.infrastructure.output.repository.FileInfo;
 import net.pladema.UnitRepository;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
 import net.pladema.snowstorm.services.loadCsv.UpdateConceptsResultBo;
+import net.pladema.terminology.cache.controller.dto.ETerminologyKind;
 import net.pladema.terminology.cache.controller.dto.TerminologyCSVDto;
 import net.pladema.terminology.cache.controller.dto.TerminologyECLStatusDto;
+import net.pladema.terminology.cache.controller.dto.TerminologyQueueItemDto;
 import net.pladema.terminology.cache.infrastructure.output.SnomedCacheFileIngestor;
 import net.pladema.terminology.cache.infrastructure.output.SnomedCacheFileStorage;
 import net.pladema.terminology.cache.infrastructure.output.SnowmedCacheFileDownloadService;
@@ -36,10 +38,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @ExtendWith(MockitoExtension.class)
 class TerminologyCacheControllerTest extends UnitRepository {
-	private static final TerminologyCSVDto ALLERGY_CSV = new TerminologyCSVDto(SnomedECL.ALLERGY, "http://lamansys.ar/ecl/ALLERGY.csv");
-	private static final TerminologyCSVDto DIAGNOSIS_CSV = new TerminologyCSVDto(SnomedECL.DIAGNOSIS, "http://lamansys.ar/ecl/ECL.csv");
-	private static final TerminologyCSVDto PROCEDURE_CSV = new TerminologyCSVDto(SnomedECL.PROCEDURE, "http://lamansys.ar/ecl/PROCEDURE.csv");
-	private static final TerminologyCSVDto BAD_CSV = new TerminologyCSVDto(SnomedECL.FAMILY_RECORD, "http://lamansys.ar/ecl/picture.png");
+	private static final TerminologyCSVDto ALLERGY_CSV = new TerminologyCSVDto(SnomedECL.ALLERGY, "http://lamansys.ar/ecl/ALLERGY_SYN.csv", ETerminologyKind.SYNONYM);
+
+	private static final TerminologyCSVDto ALLERGY_TERM_CSV = new TerminologyCSVDto(SnomedECL.ALLERGY, "http://lamansys.ar/ecl/ALLERGY_TERM.csv", ETerminologyKind.TERMINOLOGY);
+	private static final TerminologyCSVDto DIAGNOSIS_CSV = new TerminologyCSVDto(SnomedECL.DIAGNOSIS, "http://lamansys.ar/ecl/ECL.csv", ETerminologyKind.TERMINOLOGY);
+	private static final TerminologyCSVDto PROCEDURE_CSV = new TerminologyCSVDto(SnomedECL.PROCEDURE, "http://lamansys.ar/ecl/PROCEDURE.csv", ETerminologyKind.TERMINOLOGY);
+	private static final TerminologyCSVDto BAD_CSV = new TerminologyCSVDto(SnomedECL.FAMILY_RECORD, "http://lamansys.ar/ecl/picture.png", ETerminologyKind.TERMINOLOGY);
 
 
 	@Autowired
@@ -77,11 +81,7 @@ class TerminologyCacheControllerTest extends UnitRepository {
 
 		controller.addCSV(DIAGNOSIS_CSV);
 
-		var queue = controller.getQueue();
-
-		assertThat(queue).hasSize(1);
-
-		var queueItem = queue.get(0);
+		var queueItem = assertThatTerminologyQueueHasSize(1).get(0);
 
 		assertThat(queueItem)
 				.hasFieldOrPropertyWithValue("url", "http://lamansys.ar/ecl/ECL.csv")
@@ -94,18 +94,14 @@ class TerminologyCacheControllerTest extends UnitRepository {
 	@Test
 	void addCSV_Download_WithError() {
 
-		controller.addCSV(ALLERGY_CSV);
+		controller.addCSV(ALLERGY_TERM_CSV);
 
-		downloadFail(ALLERGY_CSV.url, "Imposible leer");
+		downloadFail(ALLERGY_TERM_CSV.url, "Imposible leer");
 
-		var queue = controller.getQueue();
-
-		assertThat(queue).hasSize(1);
-
-		var queueItem = queue.get(0);
+		var queueItem = assertThatTerminologyQueueHasSize(1).get(0);
 
 		assertThat(queueItem)
-				.hasFieldOrPropertyWithValue("url", "http://lamansys.ar/ecl/ALLERGY.csv")
+				.hasFieldOrPropertyWithValue("url", "http://lamansys.ar/ecl/ALLERGY_TERM.csv")
 				.hasFieldOrPropertyWithValue("ecl", SnomedECL.ALLERGY)
 				.hasFieldOrPropertyWithValue("downloadedError", "Imposible leer")
 		;
@@ -116,18 +112,15 @@ class TerminologyCacheControllerTest extends UnitRepository {
 
 		controller.addCSV(ALLERGY_CSV);
 
-		assertThat(controller.getQueue())
-				.hasSize(1);
+		assertThatQueueHasSize(1, 0);
 
 		downloadJob(ALLERGY_CSV.url, 18L);
 
-		assertThat(controller.getQueue())
-				.hasSize(1);
+		assertThatQueueHasSize(1, 0);
 
-		ingestJob(ALLERGY_CSV.ecl, 18L);
+		ingestJob(ALLERGY_CSV.ecl, 18L, ALLERGY_CSV.kind);
 
-		assertThat(controller.getQueue())
-				.isEmpty();
+		assertThatQueueHasSize(0, 0);
 
 	}
 
@@ -137,66 +130,65 @@ class TerminologyCacheControllerTest extends UnitRepository {
 		controller.addCSV(ALLERGY_CSV);
 		controller.addCSV(DIAGNOSIS_CSV);
 
-		assertThat(controller.getQueue())
-				.hasSize(2);
+		assertThatQueueHasSize(1, 1);
 
 		downloadJob(ALLERGY_CSV.url, 18L);
-		ingestJob(ALLERGY_CSV.ecl, 18L);
+		ingestJob(ALLERGY_CSV.ecl, 18L, ALLERGY_CSV.kind);
 
-		assertThat(controller.getQueue())
-				.hasSize(1);
+		assertThatQueueHasSize(0, 1);
 
 		downloadJob(DIAGNOSIS_CSV.url, 19L);
-		ingestJobFail(DIAGNOSIS_CSV.ecl, 19L);
+		ingestJobFail(DIAGNOSIS_CSV.ecl, 19L, DIAGNOSIS_CSV.kind);
 
 		ingestJob.execute();
 
-		assertThat(controller.getQueue())
-				.hasSize(1);
+		assertThatQueueHasSize(0, 0);
 
 	}
 
 	@Test
 	void addCSV_getStatus() {
 
-		assertThat(controller.getStatus())
+		assertThat(controller.getStatus(ETerminologyKind.TERMINOLOGY))
+				.hasSize(SnomedECL.values().length);
+		assertThat(controller.getStatus(ETerminologyKind.SYNONYM))
 				.hasSize(SnomedECL.values().length);
 
-		assertThat(controller.getQueue()).hasSize(0);
+		assertThatQueueHasSize(0, 0);
 		controller.addCSV(ALLERGY_CSV);
-		assertThat(controller.getQueue()).hasSize(1);
+		assertThatQueueHasSize(1, 0);
 		controller.addCSV(DIAGNOSIS_CSV);
-		assertThat(controller.getQueue()).hasSize(2);
+		assertThatQueueHasSize(1, 1);
 		controller.addCSV(BAD_CSV);
-		assertThat(controller.getQueue()).hasSize(3);
+		assertThatQueueHasSize(1, 2);
 
-		downloadJob(ALLERGY_CSV.url, 13L); // allergy
-		assertThat(controller.getQueue()).hasSize(3);
+		downloadJob(ALLERGY_CSV.url, 13L); // allergy syn
+		assertThatQueueHasSize(1, 2);
 
 		downloadJob(DIAGNOSIS_CSV.url, 14L); // diagnosis
-		assertThat(controller.getQueue()).hasSize(3);
+		assertThatQueueHasSize(1, 2);
 
 		downloadJob(BAD_CSV.url, 15L); // bad csv
-		assertThat(controller.getQueue()).hasSize(3);
+		assertThatQueueHasSize(1, 2);
 
-		ingestJob(ALLERGY_CSV.ecl, 13L);
-		assertThat(controller.getQueue()).hasSize(2);
-		ingestJob(DIAGNOSIS_CSV.ecl, 14L);
-		assertThat(controller.getQueue()).hasSize(1);
-		ingestJobFail(BAD_CSV.ecl, 15L); // bad csv
-		assertThat(controller.getQueue()).hasSize(1);
+		ingestJob(ALLERGY_CSV.ecl, 13L, ALLERGY_CSV.kind);
+		assertThatQueueHasSize(0, 2);
+		ingestJob(DIAGNOSIS_CSV.ecl, 14L, DIAGNOSIS_CSV.kind);
+		assertThatQueueHasSize(0, 1);
+		ingestJobFail(BAD_CSV.ecl, 15L, BAD_CSV.kind); // bad csv
+		assertThatQueueHasSize(0, 0);
 
 		controller.addCSV(ALLERGY_CSV);
-		assertThat(controller.getQueue()).hasSize(2);
+		assertThatQueueHasSize(1, 0);
 
 		controller.addCSV(PROCEDURE_CSV);
-		assertThat(controller.getQueue()).hasSize(3);
+		assertThatQueueHasSize(1, 1);
 
 
-		var statusFound = controller.getStatus();
+		var statusFound = controller.getStatus(ETerminologyKind.TERMINOLOGY);
 
 		assertThat(getEclStatus(statusFound, SnomedECL.ALLERGY).successful)
-				.hasFieldOrProperty("id");
+				.isNull();
 		assertThat(getEclStatus(statusFound, SnomedECL.DIAGNOSIS).successful)
 				.hasFieldOrProperty("id");
 		assertThat(getEclStatus(statusFound, BAD_CSV.ecl).successful)
@@ -204,6 +196,27 @@ class TerminologyCacheControllerTest extends UnitRepository {
 		assertThat(getEclStatus(statusFound, SnomedECL.PROCEDURE).successful)
 				.isNull();
 
+		var statusSynonimFound = controller.getStatus(ETerminologyKind.SYNONYM);
+
+		assertThat(getEclStatus(statusSynonimFound, SnomedECL.ALLERGY).successful)
+				.hasFieldOrProperty("id");
+		assertThat(getEclStatus(statusSynonimFound, SnomedECL.DIAGNOSIS).successful)
+				.isNull();
+		assertThat(getEclStatus(statusSynonimFound, BAD_CSV.ecl).successful)
+				.isNull();
+		assertThat(getEclStatus(statusSynonimFound, SnomedECL.PROCEDURE).successful)
+				.isNull();
+	}
+
+	private List<TerminologyQueueItemDto> assertThatTerminologyQueueHasSize(int expected) {
+		var queue = controller.getQueue(ETerminologyKind.TERMINOLOGY);
+		assertThat(queue).hasSize(expected);
+		return queue;
+	}
+
+	private void assertThatQueueHasSize(int expectedSyn, int expectedTerm) {
+		assertThat(controller.getQueue(ETerminologyKind.TERMINOLOGY)).hasSize(expectedTerm);
+		assertThat(controller.getQueue(ETerminologyKind.SYNONYM)).hasSize(expectedSyn);
 	}
 
 	private void downloadJob(String url, Long fileId) {
@@ -218,15 +231,15 @@ class TerminologyCacheControllerTest extends UnitRepository {
 		downloadJob.execute();
 	}
 
-	private void ingestJob(SnomedECL ecl, Long fileId) {
-		when(snomedCacheFileIngestor.run(eq(fileId), eq(ecl.name())))
-				.thenReturn(newUpdateConceptsResultBo("ECL"));
+	private void ingestJob(SnomedECL ecl, Long fileId, ETerminologyKind kind) {
+		when(snomedCacheFileIngestor.run(eq(fileId), eq(ecl.name()), eq(kind)))
+				.thenReturn(newUpdateConceptsResultBo());
 
 		ingestJob.execute();
 	}
 
-	private void ingestJobFail(SnomedECL ecl, Long fileId) {
-		when(snomedCacheFileIngestor.run(eq(fileId), eq(ecl.name())))
+	private void ingestJobFail(SnomedECL ecl, Long fileId, ETerminologyKind kind) {
+		when(snomedCacheFileIngestor.run(eq(fileId), eq(ecl.name()), eq(kind)))
 				.thenThrow(new RuntimeException("Failed to parse CSV file: (line 28) invalid char between encapsulated token and delimiter"));
 		ingestJob.execute();
 	}
@@ -251,12 +264,12 @@ class TerminologyCacheControllerTest extends UnitRepository {
 		return fileInfo;
 	}
 
-	private static UpdateConceptsResultBo newUpdateConceptsResultBo(String ecl) {
+	private static UpdateConceptsResultBo newUpdateConceptsResultBo() {
 		return new UpdateConceptsResultBo(
-				ecl,
 				3, // cargados
 				1, // erroneos
-				Collections.emptyList()
+				Collections.emptyList(), // errors
+				0
 		);
 	}
 }

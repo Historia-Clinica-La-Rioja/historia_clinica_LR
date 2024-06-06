@@ -33,8 +33,11 @@ public interface ReferenceHealthConditionRepository extends JpaRepository<Refere
             "WHERE hc.patientId = :patientId " +
             "AND (r.deleteable.deleted = FALSE OR r.deleteable.deleted IS NULL) " +
             "AND rhc.pk.referenceId NOT IN (SELECT cr.referenceId FROM CounterReference cr) " +
-			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:loggedUserRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE))")
-    List<ReferenceProblemBo> getReferencesProblemsByPatientId(@Param("patientId") Integer patientId, @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds);
+			"AND (cl.id IS NULL OR cl.classified IS FALSE OR (clr.roleId IN (:loggedUserRoleIds) AND cl.classified IS TRUE AND clr.deleteable.deleted IS FALSE)) " +
+			"AND r.regulationStateId <> :regulationStateId ")
+    List<ReferenceProblemBo> getReferencesProblemsByPatientId(@Param("patientId") Integer patientId,
+															  @Param("loggedUserRoleIds") List<Short> loggedUserRoleIds,
+															  @Param("regulationStateId") Short regulationStateId);
 
     @Transactional(readOnly = true)
     @Query(value = "SELECT rhc.pk.referenceId " +

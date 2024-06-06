@@ -27,6 +27,7 @@ public class ProblemType implements Serializable {
 	public static final String PERSONAL_HISTORY = "00000002";
 	public static final String POSTOPERATIVE_DIAGNOSIS = "406521002";
 	public static final String PREOPERATIVE_DIAGNOSIS = "406520001";
+	public static final String OTHER_HISTORY = "00000003";
 
 
 	@Id

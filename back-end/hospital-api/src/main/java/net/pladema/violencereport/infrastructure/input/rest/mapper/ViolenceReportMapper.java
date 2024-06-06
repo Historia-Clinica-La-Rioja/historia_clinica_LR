@@ -11,8 +11,10 @@ import net.pladema.violencereport.domain.ViolenceReportActorBo;
 import net.pladema.violencereport.domain.ViolenceReportAggressorBo;
 import net.pladema.violencereport.domain.ViolenceReportBo;
 
+import net.pladema.violencereport.domain.ViolenceReportFilterOptionBo;
 import net.pladema.violencereport.domain.ViolenceReportImplementedActionsBo;
 import net.pladema.violencereport.domain.ViolenceReportSituationBo;
+import net.pladema.violencereport.domain.ViolenceReportSituationEvolutionBo;
 import net.pladema.violencereport.domain.ViolenceReportVictimBo;
 import net.pladema.violencereport.domain.enums.EAggressorRelationship;
 import net.pladema.violencereport.domain.enums.ECriminalRecordStatus;
@@ -38,7 +40,9 @@ import net.pladema.violencereport.domain.enums.EViolenceTowardsUnderageType;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportActorDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportDto;
 
+import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportFilterOptionDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationDto;
+import net.pladema.violencereport.infrastructure.input.rest.dto.ViolenceReportSituationEvolutionDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.aggressordetail.ViolenceReportAggressorDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.episodedetail.ViolenceEpisodeDetailDto;
 import net.pladema.violencereport.infrastructure.input.rest.dto.episodedetail.ViolenceTowardsUnderageDto;
@@ -369,5 +373,15 @@ public interface ViolenceReportMapper {
 	@Mapping(target = "aggressorData", source = "aggressors", qualifiedByName = "toViolenceReportAggressorDtoList")
 	@Mapping(target = "implementedActions", source = "implementedActions", qualifiedByName = "toViolenceReportImplementedActionsDto")
 	ViolenceReportDto toViolenceReportDto(ViolenceReportBo violenceReportBo);
+
+	@Named("toViolenceReportSituationEvolutionDto")
+	ViolenceReportSituationEvolutionDto toViolenceReportSituationEvolutionDto(ViolenceReportSituationEvolutionBo violenceReportSituationEvolutionBo);
+
+	@IterableMapping(qualifiedByName = "toViolenceReportSituationEvolutionDto")
+	@Named("toViolenceReportSituationEvolutionDtoList")
+	List<ViolenceReportSituationEvolutionDto> toViolenceReportSituationEvolutionDtoList(List<ViolenceReportSituationEvolutionBo> violenceReportSituationEvolutionBos);
+
+	@Named("toViolenceReportFilterOptionDto")
+	ViolenceReportFilterOptionDto toViolenceReportFilterOptionDto(ViolenceReportFilterOptionBo violenceReportFilterOptionBo);
 
 }

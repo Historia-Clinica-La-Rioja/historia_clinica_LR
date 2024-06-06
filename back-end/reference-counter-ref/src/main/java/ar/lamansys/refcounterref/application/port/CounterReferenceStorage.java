@@ -15,4 +15,5 @@ public interface CounterReferenceStorage {
 
     List<CounterReferenceProcedureBo> getProceduresByCounterReference(Integer counterReferenceId);
 
+	boolean existsCounterReference(Integer referenceId);
 }

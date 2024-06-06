@@ -6,14 +6,14 @@ import lombok.Getter;
 @Getter
 public enum ESecurityForceType {
 
-	EX_COMBATANT(1, "EX_COMBATANT"),
-	ARMED_FORCES(2, "ARMED_FORCES"),
-	FEDERAL_POLICE(3, "FEDERAL_POLICE"),
-	PROVINCIAL_POLICE(4, "PROVINCIAL_POLICE"),
-	PRIVATE_SECURITY(5, "PRIVATE_SECURITY"),
-	PENITENTIARY_SERVICE(6, "PENITENTIARY_SERVICE"),
-	OTHER(7, "OTHER"),
-	NO_INFORMATION(8, "NO_INFORMATION"),;
+	EX_COMBATANT(1, "Excombatient"),
+	ARMED_FORCES(2, "Fuerzas armadas"),
+	FEDERAL_POLICE(3, "Policía federal"),
+	PROVINCIAL_POLICE(4, "Policía provincial"),
+	PRIVATE_SECURITY(5, "Seguridad privada"),
+	PENITENTIARY_SERVICE(6, "Servicio penitenciario"),
+	OTHER(7, "Otras"),
+	NO_INFORMATION(8, "Sin información"),;
 
 	private Short id;
 

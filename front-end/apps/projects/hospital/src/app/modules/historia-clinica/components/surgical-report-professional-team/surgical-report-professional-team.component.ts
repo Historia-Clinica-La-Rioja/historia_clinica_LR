@@ -78,6 +78,18 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 		this.surgicalReport.healthcareProfessionals = this.healthcareProfessionals;
 	}
 
+	isEmpty(): boolean {
+		return !this.surgicalReport.healthcareProfessionals.find(p =>
+			p.type === EProfessionType.SURGEON ||
+			p.type === EProfessionType.SURGEON_ASSISTANT ||
+			p.type === EProfessionType.ANESTHESIOLOGIST ||
+			p.type === EProfessionType.CARDIOLOGIST ||
+			p.type === EProfessionType.SURGICAL_INSTRUMENT_TECHNICIAN ||
+			p.type === EProfessionType.OBSTETRICIAN ||
+			p.type === EProfessionType.PEDIATRICIAN
+		);
+	}
+
 	private mapToDocumentHealthcareProfessionalDto(professional: HCEHealthcareProfessionalDto, type: EProfessionType): DocumentHealthcareProfessionalDto {
 		return {
 			healthcareProfessional: professional,

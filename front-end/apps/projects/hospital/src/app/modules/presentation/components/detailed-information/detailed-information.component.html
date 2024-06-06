@@ -1,13 +1,13 @@
 <section>
-    <h1 class="bold">{{detailedInformation.title | translate}}</h1>
+    <h2 class="bold">{{detailedInformation.title | translate}}</h2>
     <div *ngFor="let oneColumn of detailedInformation.oneColumn">
         <div *ngIf="oneColumn.value.length" class="column-container">
             <header class="bold">
                 <mat-icon fontSet="material-icons-outlined">{{oneColumn.icon}}</mat-icon>
-                <span>{{oneColumn.title | translate}}</span>
+                <span class="capitalize-first-letter">{{oneColumn.title | translate}}</span>
             </header>
             <div class="one-column">
-                <p *ngFor="let value of oneColumn.value">{{value}}</p>
+                <p *ngFor="let value of oneColumn.value" class="capitalize-first-letter">{{value | translate}}</p>
             </div>
         </div>
     </div>
@@ -16,10 +16,10 @@
         <div *ngIf="twoColumn.value.length" class="column-container">
             <header class="bold">
                 <mat-icon fontSet="material-icons-outlined">{{twoColumn.icon}}</mat-icon>
-                <span>{{twoColumn.title | translate}}</span>
+                <span class="capitalize-first-letter">{{twoColumn.title | translate}}</span>
             </header>
             <div class="two-columns">
-                <p *ngFor="let value of twoColumn.value">{{value}}</p>
+                <p *ngFor="let value of twoColumn.value" class="capitalize-first-letter">{{value | translate}}</p>
             </div>
         </div>
     </div>
@@ -28,10 +28,10 @@
         <div *ngIf="threeColumn.value.length" class="column-container">
             <header class="bold">
                 <mat-icon fontSet="material-icons-outlined">{{threeColumn.icon}}</mat-icon>
-                <span>{{threeColumn.title | translate}}</span>
+                <span class="capitalize-first-letter">{{threeColumn.title | translate}}</span>
             </header>
             <div class="three-columns">
-                <p *ngFor="let value of threeColumn.value">{{value}}</p>
+                <p *ngFor="let value of threeColumn.value" class="capitalize-first-letter">{{value | translate}}</p>
             </div>
         </div>
     </div>

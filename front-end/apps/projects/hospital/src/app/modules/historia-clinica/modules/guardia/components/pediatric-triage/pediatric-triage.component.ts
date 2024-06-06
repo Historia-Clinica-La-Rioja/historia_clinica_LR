@@ -3,11 +3,9 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { MasterDataDto, NewEffectiveClinicalObservationDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
-import { newMoment } from '@core/utils/moment.utils';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { EffectiveObservation, FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Moment } from 'moment';
 import { Observable } from 'rxjs';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 
@@ -64,11 +62,11 @@ export class PediatricTriageComponent implements OnInit {
 			breathing: this.formBuilder.group({
 				bloodOxygenSaturation: this.formBuilder.group({
 					value: [null, Validators.min(FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation)],
-					effectiveTime: [newMoment()]
+					effectiveTime: [new Date()]
 				}),
 				respiratoryRate: this.formBuilder.group({
 					value: [null, Validators.min(FACTORES_DE_RIESGO.MIN.respiratoryRate)],
-					effectiveTime: [newMoment()]
+					effectiveTime: [new Date()]
 				}),
 				respiratoryRetractionId: [null],
 				stridor: [null]
@@ -76,7 +74,7 @@ export class PediatricTriageComponent implements OnInit {
 			circulation: this.formBuilder.group({
 				heartRate: this.formBuilder.group({
 					value: [null, Validators.min(FACTORES_DE_RIESGO.MIN.heartRate)],
-					effectiveTime: [newMoment()]
+					effectiveTime: [new Date()]
 				}),
 				perfusionId: [null]
 			}),
@@ -103,7 +101,7 @@ export class PediatricTriageComponent implements OnInit {
 		}
 	}
 
-	setRiskFactorEffectiveTime(newEffectiveTime: Moment, form: AbstractControl, field: string): void {
+	setRiskFactorEffectiveTime(newEffectiveTime: Date, form: AbstractControl, field: string): void {
 		(form.get(field) as UntypedFormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
 

@@ -7,25 +7,17 @@ import { SystemExtensionComponent } from '@extensions/routes/extension/extension
 
 import { HomeComponent } from './home.component';
 import { InstitucionesComponent } from './routes/instituciones/instituciones.component';
-import { ProfileComponent } from './routes/profile/profile.component';
-import { SettingsComponent } from './routes/settings/settings.component';
 import { ManageKeysComponent } from './routes/manage-keys/manage-keys.component';
-import { UpdatePasswordComponent } from "../auth/components/update-password/update-password.component";
+import { ProfileComponent } from './routes/profile/profile.component';
+import { SETTINGS_ROUTES } from './routes/settings';
+import { UpdatePasswordComponent } from '../auth/components/update-password/update-password.component';
 import {
 	UpdatePasswordSuccessComponent
-} from "../auth/components/update-password-success/update-password-success.component";
+} from '../auth/components/update-password-success/update-password-success.component';
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
+import { MANAGER_ROLES } from './constants/menu';
+import { RouteMenuComponent } from '@presentation/components/route-menu/route-menu.component';
 
-export const PUBLIC_API_ROLES = [
-	ERole.API_FACTURACION,
-	ERole.API_TURNOS,
-	ERole.API_PACIENTES,
-	ERole.API_RECETAS,
-	ERole.API_SIPPLUS,
-	ERole.API_USERS,
-	ERole.API_IMAGENES,
-	ERole.API_ORQUESTADOR,
-];
 
 export enum HomeRoutes {
 	Home = '',						// pantalla inicial
@@ -35,9 +27,8 @@ export enum HomeRoutes {
 	UserKeys = 'user-keys', 		// API Keys del usuario
 	Auditoria = 'auditoria',
 	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
+	CallCenter = 'centro-de-llamadas', // Centro de llamadas
 }
-
-const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL];
 
 const routes: Routes = [
 	{
@@ -53,14 +44,18 @@ const routes: Routes = [
 			{ path: `${HomeRoutes.Extension}/:menuItemId`, component: SystemExtensionComponent },
 			{
 				path: HomeRoutes.Settings,
-				component: SettingsComponent,
-				canActivate: [FeatureFlagGuard, RoleGuard],
+				component: RouteMenuComponent,
+				canActivate: [ FeatureFlagGuard, RoleGuard ],
 				data: {
 					featureFlag: AppFeature.HABILITAR_CONFIGURACION,
-					allowedRoles: [ERole.ROOT],
-					needsRoot: true
+					allowedRoles: [ ERole.ROOT ],
+					needsRoot: true,
+					label: { key: 'app.menu.CONFIGURACION' },
+					icon: 'settings',
 				},
+				children: SETTINGS_ROUTES,
 			},
+
 			{ path: 'update-password', component: UpdatePasswordComponent },
 			{ path: 'update-password-success', component: UpdatePasswordSuccessComponent },
 			{ path: 'web-components/:wcId', component: RoutedExternalComponent },
@@ -76,6 +71,15 @@ const routes: Routes = [
 					featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO,
 					allowedRoles: MANAGER_ROLES,
 					needsRoot: true
+				},
+			},
+			{
+				path: HomeRoutes.CallCenter,
+				loadChildren: () => import('@call-center/call-center.module').then(m => m.CallCenterModule),
+				canActivate: [RoleGuard],
+				data: {
+					allowedRoles: [ERole.GESTOR_CENTRO_LLAMADO],
+					needsRoot: true,
 				},
 			},
 		]

@@ -76,8 +76,7 @@
 							{{patient?.otherLastNames}}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="12%">
-						<span *ngIf="patient.lastName else noData">{{patient?.birthdate | date: 'dd/MM/yyyy'
-							}}</span>
+						<span *ngIf="patient.birthdate else noData">{{patient?.birthdate | isoToDate | dateFormat: 'date' }}</span>
 					</div>
 					<div fxLayoutAlign="start center" class="content" fxFlex="15%">
 						<span
@@ -109,8 +108,8 @@
 			<div *ngIf="isLoadingRequestUnmerge" fxFlex="80%">
 				<mat-progress-bar class="progress-bar" mode="indeterminate"></mat-progress-bar>
 			</div>
-			<button mat-raised-button color="primary"
-				(click)="unlink()" [disabled]="isLoadingRequestUnmerge">{{'pacientes.audit.BUTTON_UNLINK' |
+			<button mat-raised-button color="primary" (click)="unlink()"
+				[disabled]="isLoadingRequestUnmerge">{{'pacientes.audit.BUTTON_UNLINK' |
 				translate | uppercase}}</button>
 		</div>
 

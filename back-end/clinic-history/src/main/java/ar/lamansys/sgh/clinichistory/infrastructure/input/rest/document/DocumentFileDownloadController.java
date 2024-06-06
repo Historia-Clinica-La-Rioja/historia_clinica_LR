@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document;
 
+import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.FetchDocumentLazyFileById;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.mapper.DocumentMapper;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.generateFile.ClinicalSpecialtyFinder;
@@ -27,7 +28,7 @@ import java.util.function.Function;
 @RequestMapping("/institutions/{institutionId}/documents")
 public class DocumentFileDownloadController {
 
-    private final FetchDocumentFileById fetchDocumentFileById;
+	private final FetchDocumentLazyFileById fetchDocumentLazyFileById;
 
 	private final FetchAllDocumentInfo fetchAllDocumentInfo;
 
@@ -35,11 +36,13 @@ public class DocumentFileDownloadController {
 
 	private final DocumentMapper documentMapper;
 
-	public DocumentFileDownloadController(FetchDocumentFileById fetchDocumentFileById,
-										  FetchAllDocumentInfo fetchAllDocumentInfo,
-										  DocumentMapper documentMapper,
-										  ClinicalSpecialtyFinder clinicalSpecialtyFinder){
-		this.fetchDocumentFileById = fetchDocumentFileById;
+	public DocumentFileDownloadController(
+			FetchDocumentLazyFileById fetchDocumentLazyFileById,
+			FetchAllDocumentInfo fetchAllDocumentInfo,
+			DocumentMapper documentMapper,
+			ClinicalSpecialtyFinder clinicalSpecialtyFinder
+	){
+		this.fetchDocumentLazyFileById = fetchDocumentLazyFileById;
 		this.fetchAllDocumentInfo = fetchAllDocumentInfo;
 		this.documentMapper = documentMapper;
 		this.clinicalSpecialtyDtoFunction = clinicalSpecialtyFinder::getClinicalSpecialty;
@@ -51,14 +54,15 @@ public class DocumentFileDownloadController {
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "id") Long id)
 	{
-        var storedFileBo = fetchDocumentFileById.run(id);
 
-		return StoredFileResponse.sendFile(storedFileBo);
+		return StoredFileResponse.sendStoredBlob(//DocumentService.downloadFile
+				fetchDocumentLazyFileById.run(id)
+		);
     }
 
 
 	@GetMapping(value = "/{id}/info")
-	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR')")
+	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, PRESCRIPTOR, ABORDAJE_VIOLENCIAS')")
 	public ResponseEntity<DocumentDto> getInfo(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "id") Long id)

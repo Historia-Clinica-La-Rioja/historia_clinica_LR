@@ -1,20 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { InternmentEpisodeProcessDto, PersonPhotoDto } from '@api-rest/api-model';
-import { PatientGenderService } from '@core/services/patient-gender.service';
-import { PatientNameService } from '@core/services/patient-name.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
 import { Color } from '@presentation/colored-label/colored-label.component';
+import { PatientGenderService } from '@core/services/patient-gender.service';
+import { PatientNameService } from '@core/services/patient-name.service';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
 import { Observable } from 'rxjs';
-import { PatientBasicData } from '../patient-card/patient-card.component';
+import { PatientBasicData, getAge } from '@presentation/utils/patient.utils';
 
 const NO_DOCUMENT_TYPE = 'No posee';
+
 @Component({
 	selector: 'app-patient-card-header',
 	templateUrl: './patient-card-header.component.html',
 	styleUrls: ['./patient-card-header.component.scss']
 })
-export class PatientCardHeaderComponent implements OnInit {
+export class PatientCardHeaderComponent {
 
 	@Input() patient: PatientBasicData;
 	@Input() set personPhoto(personPhotoDto: PersonPhotoDto) {
@@ -26,6 +27,7 @@ export class PatientCardHeaderComponent implements OnInit {
 	@Input() emergencyCareEpisodeInProgress: boolean;
 	@Input() showAdditionalInformation: boolean;
 	@Input() personalAdditionalInformation: AdditionalInfo[];
+
 	decodedPhoto$: Observable<string>;
 
 	constructor(
@@ -36,9 +38,6 @@ export class PatientCardHeaderComponent implements OnInit {
 
 	Color = Color;
 
-	ngOnInit(): void {
-	}
-
 	public viewPatientName(): string {
 		let name = this.patientNameService.getPatientName(this.patient?.firstName, this.patient?.nameSelfDetermination)
 		if (name == this.patient?.firstName && (this.patient?.middleNames !== null && this.patient?.middleNames !== undefined))
@@ -46,11 +45,14 @@ export class PatientCardHeaderComponent implements OnInit {
 		return name;
 	}
 
-	public viewGenderAge(): string {
+	public setGender(): string {
 		let gender = this.patientGenderService.getPatientGender(this.patient?.gender, this.patient?.selfPerceivedGender);
-		gender = gender ? gender : 'Sin género';
-		const age = (this.patient?.age) || (this.patient?.age === 0) ? (this.patient.age + ' años') : 'Sin edad';
-		return gender + ' · ' + age;
+		gender = gender ? gender : 'presentation.patient.gender.NO_GENDER';
+		return gender;
+	}
+
+	public getAge(): string{
+		return getAge(this.patient);
 	}
 
 	public viewIDAndIdentificationTypeAndNumber(): string {

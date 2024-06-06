@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { SnomedECL, TerminologyCSVDto } from '@api-rest/api-model';
+import { SnomedECL } from '@api-rest/api-model';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { delay, of } from 'rxjs';
@@ -13,7 +13,7 @@ import { delay, of } from 'rxjs';
 })
 export class SnomedCacheFormComponent implements OnInit {
 	@Input() terminologyName: SnomedECL;
-	@Output() add = new EventEmitter<TerminologyCSVDto>();
+	@Output() add = new EventEmitter<string>();
 
 	form: UntypedFormGroup;
 	loading = false;
@@ -29,16 +29,14 @@ export class SnomedCacheFormComponent implements OnInit {
 		this.form = this.formBuilder.group({
 			url: ['', Validators.required],
 		});
-		this.urlPlaceholder = `https://lamansys.nyc3.digitaloceanspaces.com/snomed/${this.terminologyName}.csv`
+		this.urlPlaceholder = `https://lamansys.com/snomed/${this.terminologyName}.csv`
 	}
 
 	submit() {
 		if (!this.form.valid) {
 			return;
 		}
-		let terminology: TerminologyCSVDto = {url: this.form.controls.url.value, ecl: this.terminologyName}
-
-		this.add.emit(terminology)
+		this.add.emit(this.form.controls.url.value)
 		this.loading = true;
 		of(false).pipe(delay(1000)).subscribe(v => {
 			this.loading = v;

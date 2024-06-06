@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnesthesiaZone;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPreviousAnesthesiaState;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
 import ar.lamansys.sgx.shared.masterdata.domain.EnumWriter;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -31,5 +33,17 @@ public class HCEMasterDataController {
     public ResponseEntity<Collection<MasterDataDto>> getPersonalHistoryTypes() {
         log.debug("Return all personal history types");
         return ResponseEntity.ok().body(EnumWriter.writeList(EPersonalHistoryType.getAll()));
+    }
+
+    @GetMapping(value = "/health/anesthesia-state")
+    public ResponseEntity<Collection<MasterDataDto>> getAnesthesiaStateOptions() {
+        log.debug("Return all anesthesia state options");
+        return ResponseEntity.ok().body(EnumWriter.writeList(EPreviousAnesthesiaState.getAll()));
+    }
+
+    @GetMapping(value = "/health/anesthesia-zone")
+    public ResponseEntity<Collection<MasterDataDto>> getAnesthesiaZoneOptions() {
+        log.debug("Return all anesthesia zone options");
+        return ResponseEntity.ok().body(EnumWriter.writeList(EAnesthesiaZone.getAll()));
     }
 }

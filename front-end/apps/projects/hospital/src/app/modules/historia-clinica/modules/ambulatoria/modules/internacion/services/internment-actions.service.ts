@@ -10,6 +10,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { DiagnosisDto, HealthConditionDto } from "@api-rest/api-model";
 import { Subject, take } from 'rxjs';
 import { SurgicalReportDockPopupComponent } from '@historia-clinica/components/surgical-report-dock-popup/surgical-report-dock-popup.component';
+import { AnestheticReportDockPopupComponent } from '@historia-clinica/components/anesthetic-report-dock-popup/anesthetic-report-dock-popup.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -35,6 +36,9 @@ export class InternmentActionsService {
 
 	surgicalReportSubject = new Subject<InternmentFields>();
 	surgicalReport$ = this.surgicalReportSubject.asObservable();
+
+	anestheticReportSubject = new Subject<InternmentFields>();
+	anestheticReport$ = this.anestheticReportSubject.asObservable();
 
 	popUpOpenSubject = new Subject<boolean>();
 	popUpOpen$ = this.popUpOpenSubject.asObservable();
@@ -92,7 +96,8 @@ export class InternmentActionsService {
 				mainDiagnosis: this.mainDiagnosis,
 				diagnosticos: this.diagnosticos,
 				evolutionNoteId: documentId,
-				documentType: documentType
+				documentType: documentType,
+				patientId: this.patientId
 			});
 			this.popUpOpenSubject.next(true);
 			this.dialogRefSubject.next(this.dialogRef);
@@ -153,6 +158,31 @@ export class InternmentActionsService {
 				this.medicalDischargeSubject.next(medicalDischarge);
 			this.popUpOpenSubject.next(false);
 		});
+	}
+
+	openAnestheticReport() {
+		if (!this.dialogRef) {
+			this.dialogRef = this.dockPopupService.open(AnestheticReportDockPopupComponent, {
+				autoFocus: false,
+				disableClose: true,
+				patientId: this.patientId,
+				internmentEpisodeId: this.internmentEpisodeId,
+				mainDiagnosis: this.mainDiagnosis,
+				diagnosis: this.diagnosticos,
+			});
+			this.popUpOpenSubject.next(true);
+			this.dialogRefSubject.next(this.dialogRef);
+			this.dialogRef.afterClosed().pipe(take(1)).subscribe((fieldsToUpdate) => {
+				delete this.dialogRef;
+				this.popUpOpenSubject.next(false);
+				this.anestheticReportSubject.next(fieldsToUpdate);
+				this.dialogRefSubject.next(this.dialogRef);
+			});
+		} else {
+			if (this.dialogRef.isMinimized()) {
+				this.dialogRef.maximize();
+			}
+		}
 	}
 
 	openSurgicalReport(id?: number): void {

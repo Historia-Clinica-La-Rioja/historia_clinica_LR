@@ -9,6 +9,8 @@ import java.util.Optional;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.AppointmentDataDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.DocumentAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.dto.PublicAppointmentListDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
+import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
@@ -26,7 +28,7 @@ public interface SharedAppointmentPort {
 
 	void cancelAppointment(Integer institutionId, Integer appointmentId, String reason);
 
-	SavedBookingAppointmentDto saveBooking(BookingAppointmentDto bookingAppointmentDto, BookingPersonDto bookingPersonDto, String email);
+	SavedBookingAppointmentDto saveBooking(BookingAppointmentDto bookingAppointmentDto, BookingPersonDto bookingPersonDto, String email) throws ProfessionalAlreadyBookedException, BookingPersonMailNotExistsException;
 
 	boolean existsEmail(String email);
 
@@ -49,10 +51,8 @@ public interface SharedAppointmentPort {
 
 	Optional<AppointmentDataDto> getNearestAppointmentData(List<Integer> appointments);
 
-	Boolean openingHourAllowedProtectedAppointments(Integer appointmentId, Integer diaryId);
-
 	Integer getDiaryId(Integer appointmentId);
 
-	void updateAppointmentPhoneNumber(Integer appointmentId, String phonePrefix, String phoneNumber);
+	Integer getInstitutionId(Integer diaryId);
 
 }

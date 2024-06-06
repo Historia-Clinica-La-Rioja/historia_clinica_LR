@@ -1,8 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { UntypedFormBuilder, Validators, UntypedFormGroup, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Moment } from 'moment';
-import * as moment from 'moment';
+
 import { EAuditType, ERole } from '@api-rest/api-model';
 import {
 	APatientDto,
@@ -32,6 +31,8 @@ import { NavigationService } from '@pacientes/services/navigation.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { Observable } from 'rxjs';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
+import { fixDate } from '@core/utils/date/format';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -50,7 +51,7 @@ export class NewPatientComponent implements OnInit {
 	public form: UntypedFormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
-	public today: Moment = moment();
+	public today = newDate();
 	public hasError = hasError;
 	public genders: GenderDto[];
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
@@ -114,7 +115,7 @@ export class NewPatientComponent implements OnInit {
 					genderId: [Number(params.genderId), [Validators.required]],
 					identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
 					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
-					birthDate: [params.birthDate ? moment(params.birthDate) : null, [Validators.required]],
+					birthDate: [params.birthDate ? dateISOParseDate(params.birthDate) : null, [Validators.required]],
 
 					// Person extended
 					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
@@ -326,7 +327,7 @@ export class NewPatientComponent implements OnInit {
 
 	private mapToPersonRequest(): APatientDto {
 		const patient: APatientDto = {
-			birthDate: this.form.controls.birthDate.value.toDate(),
+			birthDate: fixDate(this.form.controls.birthDate.value),
 			firstName: this.form.controls.firstName.value,
 			genderId: this.form.controls.genderId.value,
 			identificationTypeId: this.form.controls.identificationTypeId.value,
@@ -334,6 +335,7 @@ export class NewPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value && this.form.controls.middleNames.value.length ? this.form.controls.middleNames.value : null,
 			otherLastNames: this.form.controls.otherLastNames.value && this.form.controls.otherLastNames.value.length ? this.form.controls.otherLastNames.value : null,
+			personAge: null,
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,

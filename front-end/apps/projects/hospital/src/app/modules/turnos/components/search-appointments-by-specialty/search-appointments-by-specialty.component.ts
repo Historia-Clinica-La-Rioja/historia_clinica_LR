@@ -2,21 +2,24 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
-import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, SharedSnomedDto, TimeDto } from '@api-rest/api-model';
+import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, SharedSnomedDto, TimeDto, UnsatisfiedAppointmentDemandDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 import { SearchCriteria } from '../search-criteria/search-criteria.component';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { PracticesService } from '@api-rest/services/practices.service';
-import { SearchAppointmentInformation, SearchAppointmentsInfoService } from '@access-management/services/search-appointment-info.service';
+import { SearchAppointmentInformation, SearchAppointmentsInfoService, SearchCriteriaValues } from '@access-management/services/search-appointment-info.service';
 import { TabsLabel } from '@turnos/constants/tabs';
 import { TabsService } from '@turnos/services/tabs.service';
+import { UnsatisfiedDemandService } from '@api-rest/services/unsatisfied-demand.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { processErrors } from '@core/utils/form.utils';
+import { datePlusDays } from '@core/utils/date.utils';
 
 const PAGE_MIN_SIZE = 5;
 const ONE_ELEMENT = 1;
+const PLUS_DAY = 21;
 
 @Component({
 	selector: 'app-search-appointments-by-specialty',
@@ -36,7 +39,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	patientId: number;
 	showClinicalSpecialtyError = false;
 	showPracticeError = false;
-	private today: Date;
+	today: Date;
 	MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	MODALITY_PATIENT_VIRTUAL_ATTENTION = EAppointmentModality.PATIENT_VIRTUAL_ATTENTION;
 	isEnableTelemedicina: boolean;
@@ -45,13 +48,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	practices: SharedSnomedDto[];
 	externalInformation: SearchAppointmentInformation;
 	externalSetValueSpecialty: TypeaheadOption<string>;
-	showCareNetworkSection = false;
-
-	dateSearchFilter = (d: Moment): boolean => {
-		const parsedDate = d?.toDate();
-		parsedDate?.setHours(0, 0, 0, 0);
-		return parsedDate >= this.today;
-	};
+	resetRegisterDemandButtonDisabled = false;
+	redirectionDisabled = false;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -61,6 +59,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		private readonly practicesService: PracticesService,
 		private readonly searchAppointmentsInfoService: SearchAppointmentsInfoService,
 		private readonly tabsService: TabsService,
+		private readonly unsatisfiedDemandService: UnsatisfiedDemandService,
+		private readonly snackBarService: SnackBarService
 	) { this.featureFlagService.isActive(AppFeature.HABILITAR_TELEMEDICINA).subscribe(isEnabled => this.isEnableTelemedicina = isEnabled) }
 
 	ngOnInit(): void {
@@ -82,18 +82,17 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			fridayControl: [true, Validators.nullValidator],
 			saturdayControl: [false, Validators.nullValidator],
 			sundayControl: [false, Validators.nullValidator],
-			searchInitialDate: [moment(), Validators.required],
-			searchEndingDate: [{ value: moment().add(21, "days"), disabled: true }, Validators.required],
+			searchInitialDate: [this.today, Validators.required],
+			searchEndingDate: [{ value: datePlusDays(this.today, PLUS_DAY), disabled: true }, Validators.required],
 			modality: [this.MODALITY_ON_SITE_ATTENTION, Validators.required],
 			practice: [null],
 		});
 
 		this.externalInformation = this.searchAppointmentsInfoService.getSearchAppointmentInfo();
-
 		if (!this.externalInformation) {
 			this.setClinicalSpecialtiesTypeaheadOptions();
 			this.setPractices();
-		} 
+		}
 		else this.setReferenceInformation();
 	}
 
@@ -146,35 +145,38 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.form.controls.clinicalSpecialty.setValue(clinicalSpecialty);
 			this.showClinicalSpecialtyError = false;
 		} else {
-			this.emptyAppointments = [];
-			this.emptyAppointmentsFiltered = [];
+			this.emptyAppointments = null;
+			this.emptyAppointmentsFiltered = null;
 		}
 	}
 
-	updateSearchEndingDate(changedValue) {
-		if (changedValue.value) {
-			const newInitialDate = changedValue.value.clone();
-			this.form.controls.searchEndingDate.setValue(newInitialDate.add(21, "days"));
-		}
+	updateSearchEndingDate(selectedDate: Date) {
+		this.form.controls.searchInitialDate.setValue(selectedDate);
+		this.form.controls.searchEndingDate.setValue(datePlusDays(selectedDate, PLUS_DAY));
+	}
+
+	getSelectedDaysOfWeek(): number[] {
+		const selectedDaysOfWeek = [];
+		if (this.form.value.mondayControl)
+			selectedDaysOfWeek.push(1);
+		if (this.form.value.tuesdayControl)
+			selectedDaysOfWeek.push(2);
+		if (this.form.value.wednesdayControl)
+			selectedDaysOfWeek.push(3);
+		if (this.form.value.thursdayControl)
+			selectedDaysOfWeek.push(4);
+		if (this.form.value.fridayControl)
+			selectedDaysOfWeek.push(5);
+		if (this.form.value.saturdayControl)
+			selectedDaysOfWeek.push(6);
+		if (this.form.value.sundayControl)
+			selectedDaysOfWeek.push(0);
+		return selectedDaysOfWeek;
 	}
 
 	submit() {
 		if (this.form.valid) {
-			const selectedDaysOfWeek = [];
-			if (this.form.value.mondayControl)
-				selectedDaysOfWeek.push(1);
-			if (this.form.value.tuesdayControl)
-				selectedDaysOfWeek.push(2);
-			if (this.form.value.wednesdayControl)
-				selectedDaysOfWeek.push(3);
-			if (this.form.value.thursdayControl)
-				selectedDaysOfWeek.push(4);
-			if (this.form.value.fridayControl)
-				selectedDaysOfWeek.push(5);
-			if (this.form.value.saturdayControl)
-				selectedDaysOfWeek.push(6);
-			if (this.form.value.sundayControl)
-				selectedDaysOfWeek.push(0);
+			const selectedDaysOfWeek = this.getSelectedDaysOfWeek();
 			const searchAppointmentDto = this.buildAppointmentSearch(selectedDaysOfWeek);
 			this.diaryService.generateEmptyAppointments(searchAppointmentDto).subscribe(emptyAppointments => {
 				this.emptyAppointments = emptyAppointments;
@@ -182,7 +184,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 				if (this.paginator) {
 					this.paginator.pageSize = PAGE_MIN_SIZE;
 				}
-				this.showCareNetworkSection = this.externalInformation?.enableSectionToSearchAppointmentInOtherTab;
+				this.resetRegisterDemandButtonDisabled = !this.resetRegisterDemandButtonDisabled;
 			});
 		}
 		else {
@@ -192,14 +194,18 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 			if (!this.form.value.pratice && this.form.controls.practice.hasValidator(Validators.required)) {
 				this.showPracticeError = true;
-				this.emptyAppointments = [];
-				this.emptyAppointmentsFiltered = [];
+				this.emptyAppointments = null;
+				this.emptyAppointmentsFiltered = null;
 			}
 		}
 	}
 
 	onPageChange($event) {
 		this.emptyAppointmentsFiltered = this.emptyAppointments.slice($event.pageIndex * $event.pageSize, $event.pageIndex * $event.pageSize + $event.pageSize);
+	}
+
+	clearSearchAppointment() {
+		this.clearLists();
 	}
 
 	clearInformation() {
@@ -209,33 +215,75 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	clearResults() {
 		this.externalInformation = null;
-		this.externalSetValueSpecialty = null;
+		this.externalSetValueSpecialty = { compareValue: null, value: null };
 		this.resetControls();
 		this.clearLists();
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
-		this.showCareNetworkSection = false;
 		this.setPractices();
-	}
-
-	setCriteria(selectedCriteria: SearchCriteria) {
-		this.selectedSearchCriteria = selectedCriteria;
 		this.setValidators();
 	}
 
+	resetDataAndSetCriteria(selectedCriteria: SearchCriteria) {
+		this.selectedSearchCriteria = selectedCriteria;
+		this.resetEmptyAppointments();
+		this.setValidators();
+	}
+
+	resetEmptyAppointments() {
+		this.emptyAppointments = null;
+		this.emptyAppointmentsFiltered = null;
+	}
+
 	setPractice(practice: SharedSnomedDto) {
-        if (practice)
-            this.form.controls.practice.setValue(practice.id);
-        else {
-            this.form.controls.practice.setValue(null);
-            this.emptyAppointments = [];
-            this.emptyAppointmentsFiltered = [];
-        }
-        this.showPracticeError = false;
-    }
+		if (practice)
+			this.form.controls.practice.setValue(practice.id);
+		else {
+			this.form.controls.practice.setValue(null);
+			this.emptyAppointments = null;
+			this.emptyAppointmentsFiltered = null;
+		}
+		this.showPracticeError = false;
+	}
 
 	searchAppointmentsInCareNetwork() {
 		this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
 		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
+	}
+
+	sendPreloadedData() {
+		if (this.externalInformation) {
+			this.searchAppointmentsInfoService.loadInformation(this.patientId, this.externalInformation.referenceCompleteData);
+		} else {
+			const values: SearchCriteriaValues = {
+				careModality: this.form.controls.modality.value,
+				searchCriteria: this.selectedSearchCriteria,
+				startDate: this.form.controls.searchInitialDate.value,
+			}
+			this.searchAppointmentsInfoService.setSearchCriteria(values);
+		}
+		this.tabsService.setTab(TabsLabel.CARE_NETWORK);
+	}
+
+	saveRegisterUnsatisfiedDemand() {
+		this.unsatisfiedDemandService.saveUnsatisfiedAppointmentDemand(this.prepareRegisterUnsatisfiedDemand()).subscribe(res => {
+			this.snackBarService.showSuccess('turnos.home.messages.SUCCESS_REGISTER_UNSATISFIED_DEMAND')
+		}, error => processErrors(error, (msg) => {
+			this.snackBarService.showError(msg);
+		}));
+	}
+
+	prepareRegisterUnsatisfiedDemand(): UnsatisfiedAppointmentDemandDto {
+		const selectedDaysOfWeek = this.getSelectedDaysOfWeek();
+		return {
+			aliasOrSpecialtyName: this.form.controls.clinicalSpecialty.value,
+			daysOfWeek: selectedDaysOfWeek,
+			endSearchTime: this.form.controls.endingTime.value,
+			endingSearchDate: dateToDateDto(new Date(this.form.controls.searchEndingDate.value)),
+			initialSearchDate: dateToDateDto(new Date(this.form.controls.searchInitialDate.value)),
+			initialSearchTime: this.form.controls.initialTime.value,
+			modality: this.form.controls.modality.value,
+			practiceId: this.form.controls.practice.value,
+		}
 	}
 
 	private setValidators() {
@@ -244,6 +292,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.form.controls.clinicalSpecialty.updateValueAndValidity();
 			this.form.controls.practice.removeValidators(Validators.required);
 			this.form.controls.practice.updateValueAndValidity();
+			this.form.controls.practice.setValue(null);
 		}
 		else {
 			this.form.controls.practice.addValidators(Validators.required);
@@ -269,21 +318,24 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	private setReferenceInformation(): void {
-        const { patientId, formInformation } = this.externalInformation;
-        this.patientId = patientId;
-        const { searchCriteria, clinicalSpecialties, practice } = formInformation;
-        this.setCriteria(searchCriteria);
-        if (clinicalSpecialties?.length) {
-            this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
-            if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
-                this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
-        }
-        if (practice) {
-            this.practices = [practice];
-            this.setPractice(practice);
-        }
-        this.searchAppointmentsInfoService.clearInfo();
-    }
+		const { patientId, formInformation } = this.externalInformation;
+		this.patientId = patientId;
+		const { searchCriteria, clinicalSpecialties, practice } = formInformation;
+		this.resetDataAndSetCriteria(searchCriteria);
+		if (clinicalSpecialties?.length) {
+			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
+			if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
+				this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
+		}
+		if (practice) {
+			this.practices = [practice];
+			this.setPractice(practice);
+		}
+		if (!this.externalInformation.referenceCompleteData.careLine.id) {
+			this.redirectionDisabled = true;
+		}
+		this.searchAppointmentsInfoService.clearInfo();
+	}
 
 	private clearLists() {
 		this.emptyAppointments = null;

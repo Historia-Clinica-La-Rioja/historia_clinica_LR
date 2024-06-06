@@ -36,6 +36,8 @@ public class CounterReferenceDocumentBo {
 
     private final LocalDate performedDate;
 
+	private Integer medicalCoverageId;
+
     public CounterReferenceDocumentBo(Long id,
                                       CounterReferenceBo counterReferenceBo,
                                       Integer encounterId,
@@ -53,6 +55,7 @@ public class CounterReferenceDocumentBo {
         this.medications = counterReferenceBo.getMedications();
         this.allergies = counterReferenceBo.getAllergies();
         this.performedDate = performedDate;
+		this.medicalCoverageId = counterReferenceBo.getPatientMedicalCoverageId();
     }
 
 }

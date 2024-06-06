@@ -10,7 +10,7 @@ export function formatDateOnlyISO(date: Date): string {
 }
 
 
-const fixDate = (date: Date | Moment): Date => {
+export const fixDate = (date: Date | Moment): Date => {
 	if (isMoment(date)) {
 		return (date as Moment).toDate();
 	}

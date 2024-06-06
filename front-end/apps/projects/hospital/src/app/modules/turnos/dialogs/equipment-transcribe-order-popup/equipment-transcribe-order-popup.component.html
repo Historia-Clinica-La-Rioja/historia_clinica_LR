@@ -5,39 +5,24 @@
     </button>
 </div>
 <form [formGroup]="transcribeOrderForm">
-
-    <!-- STUDY SELECTION -->
-    <app-concept-typeahead-search *ngIf="!selectedStudy else studySelectedField"
-        [placeholder]="'image-network.appointments.medical-order.STUDY' | translate" [debounceTime]="0"
-        [ecl]="this.studyECL" [appearanceOutline]="true" (conceptSelected)="handleStudySelected($event)">
-    </app-concept-typeahead-search>
-
-    <ng-template #studySelectedField>
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label [translate]="'image-network.appointments.medical-order.STUDY'"></mat-label>
-            <input formControlName="study" type="text" matInput readonly matTooltip="{{ this.getStudyDisplayName() }}">
-            <button mat-button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
-                <mat-icon>close</mat-icon>
-            </button>
-        </mat-form-field>
-    </ng-template>
-
     <!-- PROBLEM SELECTION -->
-    <app-concept-typeahead-search *ngIf="!selectedProblem else problemSelectedField"
-        [placeholder]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM' | translate" [debounceTime]="0"
-        [ecl]="this.problemECL" [appearanceOutline]="true" (conceptSelected)="handleProblemSelected($event)">
-    </app-concept-typeahead-search>
-
-    <ng-template #problemSelectedField>
-        <mat-form-field appearance="outline" class="full-width">
-            <mat-label [translate]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM'"></mat-label>
-            <input formControlName="assosiatedProblem" type="text" matInput readonly
-                matTooltip="{{ this.getProblemDisplayName() }}">
-            <button mat-button matSuffix color="warn" mat-icon-button (click)="resetProblemSelector()">
-                <mat-icon>close</mat-icon>
-            </button>
-        </mat-form-field>
-    </ng-template>
+    <div class="margin-problem">
+        <app-concept-typeahead-search *ngIf="!selectedProblem else problemSelectedField"
+            [placeholder]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM' | translate" [debounceTime]="0"
+            [ecl]="this.problemECL" [appearanceOutline]="true" (conceptSelected)="handleProblemSelected($event)">
+        </app-concept-typeahead-search>
+    
+        <ng-template #problemSelectedField>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label [translate]="'image-network.appointments.medical-order.ASSOCIATED_PROBLEM'"></mat-label>
+                <input formControlName="assosiatedProblem" type="text" matInput readonly
+                    matTooltip="{{ this.getProblemDisplayName() }}">
+                <button mat-button matSuffix color="warn" mat-icon-button (click)="resetProblemSelector()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </ng-template>
+    </div>
 
     <!-- PROFESSIONAL SELECTION -->
     <mat-form-field appearance="outline" class="full-width">
@@ -58,11 +43,22 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-        <textarea matInput type="text" id="observations-input" name="observations"
-            formControlName="observations"
+        <textarea matInput type="text" id="observations-input" name="observations" formControlName="observations"
             placeholder="{{'image-network.appointments.medical-order.OBSERVATIONS' | translate }}">
         </textarea>
     </mat-form-field>
+
+    <ng-container *ngIf="associatedStudies.length > 0">
+        <app-titled-content-card title="{{'image-network.appointments.medical-order.STUDY_RECORDS'}}">
+            <app-study-list-transcribed [studyList]="associatedStudies"
+                (removeEvent)="removeStudy($event)"></app-study-list-transcribed>
+        </app-titled-content-card>
+    </ng-container>
+
+    <button id="add-study" class="add-studies-margin" mat-button color="primary" (click)="addStudy()">
+        {{ 'image-network.appointments.medical-order.ADD_STUDY' | translate }}
+    </button>
+
 
     <mat-divider></mat-divider>
 

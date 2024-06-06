@@ -30,4 +30,6 @@ public class UpdateAppointmentDateDto {
 	@Nullable
 	private String patientEmail;
 
+	@Nullable
+	private Short recurringAppointmentTypeId;
 }

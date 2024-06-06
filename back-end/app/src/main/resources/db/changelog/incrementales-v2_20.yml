@@ -1,0 +1,568 @@
+databaseChangeLog: 
+    - logicalFilePath: incrementales-v2_20
+        
+    - changeSet:
+        id: add-column-appointment
+        comment: Add column recurring_appointment_type_id
+        author: fdemuguruza
+        changes:
+          - addColumn:
+              tableName: appointment
+              columns:
+                - column:
+                    name: recurring_appointment_type_id
+                    type: smallint
+                    defaultValue: 1
+                - column:
+                    name: appointment_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: appointment
+              constraintName: FK_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
+
+    - changeSet:
+        id: customAppointment-createTable
+        comment: Create table custom_appointment
+        author: fdemuguruza
+        changes:
+          - createTable:
+              tableName: custom_appointment
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_custom_appointment
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: repeat_every
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: day_week_id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: true
+                    name: end_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: custom_appointment
+              constraintName: FK_custom_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
+
+    - changeSet:
+        id: createTable-document_involved_professional
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: document_involved_professional
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_document_involved_professional
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      references: document(id)
+                      foreignKeyName: FK_document_document_involved_professional
+                      nullable: false
+                    name: document_id
+                    type: bigint
+                - column:
+                    constraints:
+                      references: healthcare_professional(id)
+                      foreignKeyName: FK_healthcare_professional_document_involved_professional
+                      nullable: false
+                    name: healthcare_professional_id
+                    type: int
+          - addUniqueConstraint:
+              columnNames: document_id, healthcare_professional_id
+              constraintName: UQ_document_involved_professional
+              tableName: document_involved_professional
+
+    - changeSet:
+        id: createTable-percentiles
+        comment: Create table percentiles
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: percentiles
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_percentiles
+                    name: id
+                    type: int
+                - column:
+                    name: x_value
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: l
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: m
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: s
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd
+                    type: float
+                - column:
+                    name: p3
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p10
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p25
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p50
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p75
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p90
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: p97
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: anthropometric_graphic_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: gender_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: time_period_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: gender_id
+              baseTableName: percentiles
+              constraintName: FK_percentiles_gender_id
+              referencedColumnNames: id
+              referencedTableName: gender
+
+    - changeSet:
+        id: createTable-z_score
+        comment: Create table z_score
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: z_score
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_z_score
+                    name: id
+                    type: int
+                - column:
+                    name: x_value
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: l
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: m
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: s
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd
+                    type: float
+                - column:
+                    name: sd3_negative
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd2_negative
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd1_negative
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd0
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd1
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd2
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sd3
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: anthropometric_graphic_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: gender_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: time_period_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: gender_id
+              baseTableName: z_score
+              constraintName: FK_z_score_gender_id
+              referencedColumnNames: id
+              referencedTableName: gender
+
+    - changeSet:
+        id: percentiles-load-data
+        comment: Fill table percentiles
+        author: fsimaro
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/load_percentiles.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
+    - changeSet:
+        id: z_score-load-data
+        comment: Fill table z_score
+        author: fsimaro
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/load_z_score.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
+
+    - changeSet:
+        id: addColumn-procedure_template__status
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: procedure_template_status
+              columns:
+                - column:
+                    name: id
+                    type: smallint
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_procedure_template_status
+                - column:
+                    name: description
+                    type: text
+          - sql:
+              sql: |-
+                INSERT INTO procedure_template_status VALUES (1, 'Borrador'), (2, 'Activa'), (3, 'Inactiva');
+          - addColumn:
+              tableName: procedure_template
+              columns:
+                - column:
+                    name: status_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      references: procedure_template_status(id)
+                      foreignKeyName: FK_procedure_template_status_id
+                    defaultValueNumeric: 1
+    
+    - changeSet:
+        id: addColumns-related-to-signature-status-to-document_involved_professional
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: document_involved_professional
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: signature_status_id
+                    type: smallint
+                    defaultValue: 1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: status_update_date
+                    type: date
+                    defaultValueDate: ${date.now}
+
+    - changeSet:
+        id: createTable-expired_appointment_reason
+        comment: Create table expired_appointment_reason
+        author: bchacon
+        changes:
+          - createTable:
+              tableName: expired_appointment_reason
+              columns:
+                - column:
+                    name: appointment_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_expired_appointment_reason
+                      foreignKeyName: FK_expired_appointment_reason_appointment_id
+                      references: appointment(id)
+                - column:
+                    name: type_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: reason
+                    type: text
+
+
+    - changeSet:
+        id: create-move-studies-view
+        comment: create view v_all_move_studies
+        author: amurrie
+        changes:
+          - createView:
+              - viewName: v_all_move_studies
+              - replaceIfExists:  true
+              - fullDefinition: false
+              - selectQuery: |-
+                  ( select ms.id as id_move, p2.first_name , p2.last_name ,p2.identification_number, ms.image_id , a.date_type_id as appoinment_date ,a.hour as appoinment_time, ms.status, ms.result, ms.institution_id, m.acronym
+                    from public.move_studies ms
+                    join public.appointment a on ms.appointment_id =a.id
+                    join public.patient p on a.patient_id = p.id
+                    join public.person p2 on p.person_id = p2.id
+                    join public.equipment_appointment_assn  ep on ep.appointment_id= a.id
+                    join public.equipment_diary   ed on ed.id = ep.equipment_diary_id
+                    join public.equipment e   on e.id = ed.equipment_id
+                    join public.modality m on m.id = e.modality_id)
+
+    - changeSet:
+        id: createTable-transcribed_service_request_diagnostic_report
+        author: mromero
+        changes:
+          - createTable:
+              tableName: transcribed_service_request_diagnostic_report
+              columns:
+                - column:
+                    constraints:
+                      foreignKeyName: FK_transcribed_service_request_id_transcribed_service_request
+                      references: transcribed_service_request(id)
+                      nullable: false
+                    name: transcribed_service_request_id
+                    type: int
+                - column:
+                    constraints:
+                      foreignKeyName: FK_diagnostic_report_id_diagnostic_report
+                      references: diagnostic_report(id)
+                      nullable: false
+                    name: diagnostic_report_id
+                    type: int
+          - addPrimaryKey:
+              clustered: true
+              columnNames: transcribed_service_request_id, diagnostic_report_id
+              constraintName: PK_transcribed_service_request_diagnostic_report
+              tableName: transcribed_service_request_diagnostic_report
+              validate: true
+
+    - changeSet:
+        id: migrate-study_id-transcribed_service_request_diagnostic_report
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO transcribed_service_request_diagnostic_report(transcribed_service_request_id, diagnostic_report_id)
+                SELECT tsr.id, tsr.study_id
+                FROM transcribed_service_request tsr;
+
+    - changeSet:
+        id: dropColumn-study_id-transcribed_service_request
+        author: mromero
+        changes:
+          - dropColumn:
+              tableName: transcribed_service_request
+              columnName: study_id
+
+    - changeSet:
+        id: addColumn-observations-transcribed_service_request
+        author: mromero
+        changes:
+          - addColumn:
+              tableName: transcribed_service_request
+              columns:
+                - column:
+                    constraints:
+                      nullable: true
+                    name: observations
+                    type: text
+
+    - changeSet:
+        id: update-observations-transcribed_service_request-diagnostic_report
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                UPDATE transcribed_service_request tsr 
+                  SET observations = (SELECT dr.observations
+                                      FROM transcribed_service_request_diagnostic_report tsrdr
+                                      JOIN diagnostic_report dr ON (tsrdr.diagnostic_report_id = dr.id)
+                                      WHERE tsr.id = tsrdr.transcribed_service_request_id);
+
+    - changeSet:
+        id: dropColumn-observations-diagnostic_report
+        author: mromero
+        changes:
+          - dropColumn:
+              tableName: diagnostic_report
+              columnName: observations
+
+    - changeSet:
+        id: v_attention-updateView
+        comment: Update v_attention view to correctly support emergency care episodes
+        author: lmanterola
+        changes:
+          - createView:
+              viewName: v_attention
+              fullDefinition: false
+              replaceIfExists: true
+              selectQuery: |-
+                SELECT d.id as id, oc.patient_id as patient_id, oc.institution_id as institution_id, oc.clinical_specialty_id as clinical_speciality_id,
+                        oc.start_date as performed_date, d.source_id as encounter_id, d.source_type_id as scope_id, oc.doctor_id as doctor_id,
+                        oc.created_by as created_by, oc.created_on as created_on, oc.updated_by as updated_by, oc.updated_on as updated_on,
+                        oc.deleted_by as deleted_by, oc.deleted_on as deleted_on, oc.deleted as deleted
+                FROM outpatient_consultation as oc
+                JOIN document as d ON (oc.id = d.source_id and d.source_type_id = 1)
+                    UNION ALL
+                SELECT d.id as id, ie.patient_id, ie.institution_id , ie.clinical_specialty_id , ie.entry_date, d.source_id, d.source_type_id, hpg.healthcare_professional_id,
+                        d.created_by, d.created_on, ie.updated_by, d.updated_on, d.deleted_by, d.deleted_on, d.deleted
+                FROM internment_episode as ie
+                JOIN document AS d ON (ie.id = d.source_id and d.source_type_id = 0)
+                JOIN healthcare_professional_group AS hpg ON (ie.id = hpg.internment_episode_id and hpg.responsible)
+                    UNION ALL
+                SELECT d.id as id, dc.patient_id, dc.institution_id , dc.clinical_specialty_id , dc.performed_date, d.source_id, d.source_type_id, dc.doctor_id,
+                        dc.created_by, dc.created_on, dc.updated_by, dc.updated_on, dc.deleted_by, dc.deleted_on, dc.deleted
+                FROM odontology_consultation as dc
+                JOIN document as d ON (dc.id = d.source_id and d.source_type_id = 6)
+                    UNION ALL
+                SELECT d.id as id, vc.patient_id, vc.institution_id , vc.clinical_specialty_id , vc.performed_date, d.source_id, d.source_type_id, vc.doctor_id,
+                        vc.created_by, vc.created_on, vc.updated_by, vc.updated_on, vc.deleted_by, vc.deleted_on, vc.deleted
+                FROM vaccine_consultation as vc
+                JOIN document as d ON (vc.id = d.source_id and d.source_type_id = 5)
+                    UNION ALL
+                SELECT d.id AS id, ecen.patient_id, ecen.institution_id, ecen.clinical_specialty_id, ecen.start_date, d.source_id, d.source_type_id, ecen.doctor_id,
+                        ecen.created_by, ecen.created_on, ecen.updated_by, ecen.updated_on, ecen.deleted_by, ecen.deleted_on, ecen.deleted
+                FROM emergency_care_evolution_note ecen
+                JOIN document d ON (d.id = ecen.document_id AND d.source_type_id = 4)

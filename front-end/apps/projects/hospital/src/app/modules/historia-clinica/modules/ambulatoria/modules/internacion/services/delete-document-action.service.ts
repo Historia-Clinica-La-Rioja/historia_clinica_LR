@@ -73,7 +73,7 @@ export class DeleteDocumentActionService {
 		this.evolutionNoteService.deleteEvolutionDiagnosis(documentId, internmentEpisodeId, reason).subscribe(
 			success => {
 				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
-				this.updateFieldsSubject.next({evolutionClinical: true,diagnosis: true, mainDiagnosis: true});
+				this.updateFieldsSubject.next({evolutionClinical: true,diagnosis: true, mainDiagnosis: true, allergies: true, riskFactors: true,medications: true, bloodType: true,heightAndWeight: true, immunizations: true});
 			},
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}

@@ -37,7 +37,23 @@ div.spinner {
 		}
 
 		.cal-event-title {
+            @include space-between;
 			color: black;
+
+            div {
+                margin-left: 1rem;
+                @include align-center;
+
+                span {
+                    font-size: 1.15em;
+                }
+            }
+
+            article {
+                min-width: 77%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
 		}
 
 		.today.mat-button-toggle-appearance-standard {

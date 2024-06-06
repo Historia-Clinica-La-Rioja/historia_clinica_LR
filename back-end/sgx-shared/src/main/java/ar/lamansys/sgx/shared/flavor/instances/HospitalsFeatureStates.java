@@ -40,7 +40,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_GENERACION_ASINCRONICA_DOCUMENTOS_PDF, false);
 		map.put(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, false);
 		map.put(AppFeature.HABILITAR_MAIL_RESERVA_TURNO, false);
-		map.put(AppFeature.LIBERAR_API_RESERVA_TURNOS, false);
+		map.put(AppFeature.LIBERAR_API_RESERVA_TURNOS, true);
 		map.put(AppFeature.BACKOFFICE_MOSTRAR_ABM_RESERVA_TURNOS, false);
 		map.put(AppFeature.OCULTAR_LISTADO_PROFESIONES_WEBAPP, true);
 		map.put(AppFeature.HABILITAR_MODULO_ENF_EN_DESARROLLO, false);
@@ -65,9 +65,21 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_OBLIGATORIEDAD_UNIDADES_JERARQUICAS, false);
 		map.put(AppFeature.HABILITAR_FIRMA_DIGITAL, false);
 		map.put(AppFeature.HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION, false);
-		map.put(AppFeature.ENABLE_VIOLENCE_REPORT_DEVELOPMENT, false);
 		map.put(AppFeature.HABILITAR_TURNOS_CENTRO_LLAMADO, false);
 		map.put(AppFeature.HABILITAR_AUDITORIA_DE_ACCESO_EN_HC, false);
+		map.put(AppFeature.HABILITAR_MONITOREO_CIPRES, false);
+		map.put(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_AGENDA_DINAMICA, false);
+		map.put(AppFeature.ROLES_API_PUBLICA_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_FIRMA_CONJUNTA, false);
+		map.put(AppFeature.HABILITAR_ACTUALIZACION_AGENDA, false);
+		map.put(AppFeature.HABILITAR_ADMINISTRADOR_DATOS_PERSONALES, false);
+		map.put(AppFeature.HABILITAR_ANEXO_II_MENDOZA, false);
+		map.put(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS, false);
+		map.put(AppFeature.HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL, false);
+		map.put(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,false);
 		map.put(AppFeature.HABILITAR_CUESTIONARIOS, false);
 	}
 

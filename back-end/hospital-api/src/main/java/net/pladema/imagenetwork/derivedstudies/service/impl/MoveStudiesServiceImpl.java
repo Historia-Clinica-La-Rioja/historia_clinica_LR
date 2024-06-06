@@ -196,6 +196,8 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 		moveStudyBO.setPriorityMax(moveStudy.getPriorityMax());
 		moveStudyBO.setResult(moveStudy.getResult());
 		moveStudyBO.setSizeImage(moveStudy.getSizeImage());
+		moveStudyBO.setBeginOfMove(moveStudy.getBeginOfMove());
+		moveStudyBO.setEndOfMove(moveStudy.getEndOfMove());
 		return moveStudyBO;
 	}
 }

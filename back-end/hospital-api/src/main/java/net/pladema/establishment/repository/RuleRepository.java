@@ -47,7 +47,8 @@ public interface RuleRepository extends SGXAuditableEntityJPARepository<Rule, In
 			"AND r.deleteable.deleted IS FALSE " +
 			"AND igr.deleteable.deleted IS FALSE " +
 			"AND igi.deleteable.deleted IS FALSE" )
-	List<Rule> findRegulatedRuleByClinicalSpecialtyIdInInstitution(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds, @Param("institutionId") Integer institutionId);
+	List<Rule> findRegulatedRuleByClinicalSpecialtyIdInInstitution(@Param("clinicalSpecialtyIds") List<Integer> clinicalSpecialtyIds,
+																   @Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT r " +
@@ -60,6 +61,7 @@ public interface RuleRepository extends SGXAuditableEntityJPARepository<Rule, In
 			"AND r.deleteable.deleted IS FALSE " +
 			"AND igr.deleteable.deleted IS FALSE " +
 			"AND igi.deleteable.deleted IS FALSE" )
-	Optional<Rule> findRegulatedRuleBySnomedIdInInstitution(@Param("snomedId") Integer snomedId, @Param("institutionId") Integer institutionId);
+	Optional<Rule> findRegulatedRuleBySnomedIdInInstitution(@Param("snomedId") Integer snomedId,
+															@Param("institutionId") Integer institutionId);
 
 }

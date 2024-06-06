@@ -53,7 +53,13 @@
 			],
 			"@shared-appointment-access-management/*": [
 				"projects/hospital/src/app/modules/shared-appointment-access-management/*"
-			]
+			],
+			"@call-center/*": [
+				"projects/hospital/src/app/modules/call-center/*"
+			],
+			"@charts/*": [
+				"projects/hospital/src/app/modules/charts/*"
+			],
 		},
 		"importHelpers": true,
 		"target": "es2020",

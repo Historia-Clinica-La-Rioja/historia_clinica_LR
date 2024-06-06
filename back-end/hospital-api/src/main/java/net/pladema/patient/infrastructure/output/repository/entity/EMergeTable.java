@@ -37,7 +37,9 @@ public enum EMergeTable {
 	PHARMACO("indication","Pharmaco", "id"),
 	DIET("indication","Diet", "id"),
 	OTHER_INDICATION("indication","OtherIndication", "id"),
-	PARENTERAL_PLAN("indication","ParenteralPlan", "id");
+	PARENTERAL_PLAN("indication","ParenteralPlan", "id"),
+	VIOLENCE_REPORT("violence_report","ViolenceReport", "id"),
+	SURGICAL_REPORT("surgical_report", "SurgicalReport", "id");
 
 	private String tableName;
 	private String entityName;

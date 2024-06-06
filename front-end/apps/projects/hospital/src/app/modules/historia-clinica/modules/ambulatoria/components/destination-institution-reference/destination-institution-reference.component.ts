@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 import { AddressDto, ClinicalSpecialtyDto, InstitutionBasicInfoDto } from '@api-rest/api-model';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
-import { InstitutionService } from '@api-rest/services/institution.service';
+import { ContextInstitutionService } from '@api-rest/services/context-institution.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { ReferenceOriginInstitutionService } from '../../services/reference-origin-institution.service';
-import { UntypedFormGroup } from '@angular/forms';
 import { DiaryAvailableAppointmentsSearchService } from '@turnos/services/diary-available-appointments-search.service';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
 	selector: 'app-destination-institution-reference',
@@ -43,10 +43,10 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 	clinicalSpecialties: ClinicalSpecialtyDto[];
 
 	constructor(
-		private readonly institutionService: InstitutionService,
+		private readonly contextInstitutionService: ContextInstitutionService,
 		private readonly adressMasterData: AddressMasterDataService,
 		private readonly referenceOriginInstitutionService: ReferenceOriginInstitutionService,
-		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
+		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService
 	) { }
 
 	ngOnInit() {
@@ -120,14 +120,14 @@ export class DestinationInstitutionReferenceComponent implements OnInit {
 		this.defaultInstitution = this.clearTypeahead();
 		if (departmentId) {
 			if (this.practiceOrProcedure) {
-				this.institutionService.getInstitutionsByReferenceByPracticeFilter
+				this.contextInstitutionService.getInstitutionsByReferenceByPracticeFilter
 					(this.formReference.controls.practiceOrProcedure.value.id, departmentId, this.careLineId, this.clinicalSpecialties?.map(clinicalSpecialty => clinicalSpecialty.id)).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 						this.institutions = this.toTypeaheadOptions(institutions, 'name');
 						this.institutionsDisable = false;
 					});
 			}
 			else {
-				this.institutionService.getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId, this.specialtyIds, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
+				this.contextInstitutionService.getInstitutionsByReferenceByClinicalSpecialtyFilter(departmentId, this.specialtyIds, this.careLineId).subscribe((institutions: InstitutionBasicInfoDto[]) => {
 					this.institutions = this.toTypeaheadOptions(institutions, 'name');
 					this.institutionsDisable = false;
 				});

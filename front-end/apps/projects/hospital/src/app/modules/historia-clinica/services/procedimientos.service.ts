@@ -22,7 +22,7 @@ export class ProcedimientosService {
 	private readonly columns: ColumnConfig[];
 	private readonly tableColumnConfig: TableColumnConfig[];
 	private data: any[];
-	private readonly ECL = SnomedECL.PROCEDURE;
+	private ECL = SnomedECL.PROCEDURE;
 	private hasProcedure = new BehaviorSubject<boolean>(true);
 
 	emitter = new Subject();
@@ -88,6 +88,10 @@ export class ProcedimientosService {
 	setAndAddConcept(selectedConcept: SnomedDto): void {
 		this.setConcept(selectedConcept)
 		this.addToList();
+	}
+
+	setECL(SnomedECL): void {
+		this.ECL = SnomedECL;
 	}
 
 	add(procedimiento: Procedimiento): boolean {

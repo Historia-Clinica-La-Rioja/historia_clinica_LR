@@ -54,9 +54,9 @@
 			</em>
 		</div>
 		<div fxLayout="column" fxFlex="50" fxFlex.lt-md="100" fxLayoutGap="20px">
-			<div *appHasRole="['ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE', 'ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR']">
-				<div *ngIf="createUsersIsEnable">
-					<mat-card class="box user-data">
+			<div >
+				<div >
+					<mat-card class="box user-data" *ngIf="hasRoleToViewUserData">
 						<mat-card-header>
 							<mat-card-title>
 								<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
@@ -92,7 +92,7 @@
 									<div fxLayout="row" fxLayoutGap="5px">
 										<strong [translate]="'pacientes.user_data.LAST_ACCESS'"></strong>
 										<span *ngIf="userData.lastLogin else noInformation">
-											{{userData.lastLogin | date: 'dd/MM/yyyy - HH:mm'}} hs
+											{{userData.lastLogin.toString() | isoToDate | dateFormat: 'datetime'}}
 										</span>
 									</div>
 									<div fxLayout="row">
@@ -196,8 +196,7 @@
 				</app-resumen-de-guardia>
 
 				<app-booking-appointments *appHasRole="['ADMINISTRATIVO']"
-					[identificationNumber]="personalInformation?.identificationNumber"
-					(newAppointmentRequired)="newAppointment()">
+					[identificationNumber]="personalInformation?.identificationNumber">
 				</app-booking-appointments>
 
 				<app-assigned-appointments *appHasRole="['ADMINISTRATIVO']" [patientId]="patientId"

@@ -1,0 +1,62 @@
+<div data-id="vital-signs-section">
+    <app-iconed-titled-section icon="assignment"
+        title="internaciones.anesthesic-report.vital-signs.TITLE"></app-iconed-titled-section>
+    <div class="vital-signs-container" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
+        <div *ngIf="vitalSigns.startAndEndProceduresDateTime" class="section-description" fxLayout="column" fxLayoutGap="8px">
+            <div data-id="anesthesia-start" *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaStartDate || vitalSigns.startAndEndProceduresDateTime.anesthesiaStartTime">
+                <app-title-description-list
+                    title="historia-clinica.anesthetic-report.summary.ANESTHESIA_START"></app-title-description-list>
+                <div>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaStartDate">{{ vitalSigns.startAndEndProceduresDateTime.anesthesiaStartDate | dateFormat : 'date' }}</span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaStartDate && vitalSigns.startAndEndProceduresDateTime.anesthesiaStartTime"> - </span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaStartTime">{{ vitalSigns.startAndEndProceduresDateTime.anesthesiaStartTime | dateFormat : 'time' }}</span>
+                </div>
+            </div>
+    
+            <div data-id="anesthesia-end" *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaEndDate || vitalSigns.startAndEndProceduresDateTime.anesthesiaEndTime">
+                <app-title-description-list
+                    title="historia-clinica.anesthetic-report.summary.ANESTHESIA_END"></app-title-description-list>
+                <div>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaEndDate">{{ vitalSigns.startAndEndProceduresDateTime.anesthesiaEndDate | dateFormat : 'date' }}</span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaEndDate && vitalSigns.startAndEndProceduresDateTime.anesthesiaEndTime"> - </span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.anesthesiaEndTime">{{ vitalSigns.startAndEndProceduresDateTime.anesthesiaEndTime | dateFormat : 'time' }}</span>
+                </div>
+            </div>
+    
+            <div data-id="surgery-start" *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryStartDate || vitalSigns.startAndEndProceduresDateTime.surgeryStartTime">
+                <app-title-description-list
+                    title="historia-clinica.anesthetic-report.summary.SURGERY_START"></app-title-description-list>
+                <div>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryStartDate">{{ vitalSigns.startAndEndProceduresDateTime.surgeryStartDate | dateFormat : 'date' }}</span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryStartDate && vitalSigns.startAndEndProceduresDateTime.surgeryStartTime"> - </span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryStartTime">{{ vitalSigns.startAndEndProceduresDateTime.surgeryStartTime | dateFormat : 'time' }}</span>
+                </div>
+            </div>
+    
+            <div data-id="surgery-end" *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryEndDate || vitalSigns.startAndEndProceduresDateTime.surgeryEndTime">
+                <app-title-description-list
+                    title="historia-clinica.anesthetic-report.summary.SURGERY_END"></app-title-description-list>
+                <div>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryEndDate">{{ vitalSigns.startAndEndProceduresDateTime.surgeryEndDate | dateFormat : 'date' }}</span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryEndDate && vitalSigns.startAndEndProceduresDateTime.surgeryEndTime"> - </span>
+                    <span *ngIf="vitalSigns.startAndEndProceduresDateTime.surgeryEndTime">{{ vitalSigns.startAndEndProceduresDateTime.surgeryEndTime | dateFormat : 'time' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-description">
+            <button *ngIf="vitalSigns.chart" class="btn" mat-stroked-button color="primary" (click)="showChart()">
+                <span class="material-icons-outlined btn-icon">collections</span>
+                <span >{{ 'historia-clinica.anesthetic-report.summary.SEE_CHARTS' | translate }} </span>
+            </button>
+        </div>
+
+        <div *ngIf="vitalSigns.measuringPoints.length">
+            <mat-divider class="divider"></mat-divider>
+            <div *ngFor="let measuringPoint of vitalSigns.measuringPoints, index as index">
+                <app-measuring-point-summary [measuringPoint]="measuringPoint" [index]="index"></app-measuring-point-summary>
+                <mat-divider class="divider"></mat-divider>
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,4 +60,15 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 	Optional<Room> findBySectorIdAndRoomNumberAndDescription(@Param("sectorId") Integer sectorId,
 															 @Param("description") String description,
 															 @Param("roomNumber") String roomNumber);
+	@Query(" SELECT r.roomNumber " +
+			"FROM Room r " +
+			"WHERE r.id = :roomId")
+	String getRoomNumber(@Param("roomId") Integer roomId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT r.sectorId " +
+			"FROM Room r " +
+			"WHERE r.id = :roomId")
+	Integer getSectorId(@Param("roomId") Integer roomId);
+
 }

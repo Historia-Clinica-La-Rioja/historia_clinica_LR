@@ -24,7 +24,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { MapperService } from '../../../presentation/services/mapper.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PersonService } from '@api-rest/services/person.service';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { PersonalInformation } from '@presentation/components/personal-information/personal-information.component';
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { ContextService } from '@core/services/context.service';
@@ -91,6 +91,7 @@ export class ProfileComponent implements OnInit {
 	userRoles: string[] = [];
 	roles: RoleDto[] = [];
 	assignableRoles: RoleDto[] = [];
+	hasRoleToViewUserData = false;
 	userId: number = null;
 	rolesByUser: UserRoleDto[] = [];
 	patientId: number;
@@ -206,6 +207,7 @@ export class ProfileComponent implements OnInit {
 								});
 						this.permissionService.hasContextAssignments$(ROLES_TO_VIEW_USER_DATA).subscribe(hasRoleToViewUserData => {
 							if (hasRoleToViewUserData) {
+								this.hasRoleToViewUserData = true;
 								this.checkIfProfessional();
 								if (this.createUsersIsEnable) {
 									this.userService.getUserData(this.personId)

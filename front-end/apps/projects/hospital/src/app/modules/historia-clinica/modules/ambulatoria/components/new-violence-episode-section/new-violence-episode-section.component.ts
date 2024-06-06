@@ -22,7 +22,8 @@ export class NewViolenceEpisodeSectionComponent implements OnInit {
 
 	form: FormGroup;
 
-	ecl: SnomedECL = SnomedECL.EVENT;
+	eclModality: SnomedECL = SnomedECL.VIOLENCE_MODALITY;
+	eclType: SnomedECL = SnomedECL.VIOLENCE_TYPE;
 
 	violenceSituations: SnomedDto[] = [];
 	violenceModalities: SnomedDto[] = [];

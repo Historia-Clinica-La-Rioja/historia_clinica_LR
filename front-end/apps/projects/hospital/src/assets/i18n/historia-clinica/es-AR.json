@@ -53,10 +53,18 @@
 			"CARDIOVASCULAR_RISK": "Riesgo cardiovascular (%)"
 		},
 		"include-previous-data-question": {
+			"TITLE":"Aviso",
 			"DESCRIPTION": "Últimos {{dataName}} cargados previamente el {{date}}",
 			"QUESTION": "¿Desea incluirlos en la consulta?",
-			"ADD": "SI, INCLUIRLOS",
-			"DISCARD": "NO, DESCARTARLOS"
+			"ADD": "Si, incluirlos",
+			"DISCARD": "No, descartarlos",
+			"ERROR": "Respuesta requerida",
+			"violence-situations": {
+                "DESCRIPTION": "Se incluyó el problema{{problem}}, se recomienda incluir una solicitud de referencia para un equipo especializado en abordaje de violencias.",
+                "QUESTION": "¿Desea incluir una solicitud de referencia en la consulta?",
+				"ADD": "Si, incluir",
+				"DISCARD": "No, descartar"
+			}
 		},
 		"template-concept-search": {
 			"TEMPLATE_OPTION_GROUP": "Plantillas",
@@ -88,6 +96,11 @@
 			"OBSERVACIONES": "Observaciones",
 			"SUSPENDIDO": "Suspendido"
 		},
+		"anesthesia-form": {
+			"ADD_ANESTHESIA": "Agregar anestesia",
+			"SEARCH_PLACEHOLDER": "Buscar anestesia",
+			"ANESTHESIA": "Anestesia"
+		},
 		"hierarhical-unit-section": {
 			"TITLE": "Unidad jerárquica",
 			"IS_A_REPLACEMENT": "Es un reemplazo",
@@ -100,6 +113,44 @@
 			"SELECT": "Seleccionar motivo",
 			"OBSERVATIONS": "Observaciones",
 			"GO_TO_PATIENT": "Ver historia clinica"
+		},
+		"evolution-charts": {
+			"SHOW_EVOLUTION_CHART_BUTTON":" ver graficos de evoluciones"
+		},
+		"evolution-charts-popup": {
+			"TITLE": "Información antropométrica | Gráficos de evolución {{gender}}",
+			"MESSAGE": "Seleccione un gráfico para visualizar su evolución",
+			"evolution-charts-select": {
+				"INPUT_TITLE": "Gráfico",
+				"PLACEHOLDER": "Ej: Talla para la edad"
+			},
+			"evolution-charts-type-select": {
+				"INPUT_TITLE": "Tipo",
+				"PLACEHOLDER": "Ej Gráficos en percentilos"
+			}
+		},
+		"anesthetic-report": {
+			"summary": {
+				"VIA": "Via ",
+				"DOSE": "Dosis: ",
+				"UNIT": "Unidad: ",
+				"TECHNIQUE": "Técnica: ",
+				"BREATHING": "Respiración: ",
+				"CIRCUIT": "Circuito: ",
+				"TRACHEAL_INTUBATION": "Intubación traqueal: ",
+				"QUANTITY_USED": "Cantidad utilizada: ",
+				"NO_INFORMATION": "Sin información",
+				"YES": "Si",
+				"NO": "No",
+				"SEE_CHARTS": "Ver gráficos",
+				"ANESTHESIA_START": "Comienzo Anestesia",
+				"ANESTHESIA_END": "Fin Anestesia",
+				"SURGERY_START": "Comienzo Cirugía",
+				"SURGERY_END": "Fin Cirugía",
+				"FLOOR": "En piso",
+				"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva",
+				"OBSERVATIONS": "Observaciones"
+			}
 		}
 
 	}

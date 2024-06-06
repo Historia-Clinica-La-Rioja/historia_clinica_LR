@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import net.pladema.snowstorm.services.domain.semantics.SnomedECL;
+import net.pladema.terminology.cache.controller.dto.ETerminologyKind;
 import net.pladema.terminology.cache.controller.dto.TerminologyCSVDto;
 import net.pladema.terminology.cache.controller.dto.TerminologyECLStatusDto;
 import net.pladema.terminology.cache.controller.dto.TerminologyQueueItemDto;
@@ -31,6 +32,7 @@ import net.pladema.terminology.cache.infrastructure.output.repository.entity.Sno
 public class TerminologyCacheController {
 	private final SnomedCacheFileRepository snomedCacheFileRepository;
 
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	@PostMapping
 	public @ResponseBody TerminologyQueueItemDto addCSV(
 			@RequestBody TerminologyCSVDto terminologyCSVDto
@@ -43,18 +45,22 @@ public class TerminologyCacheController {
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-	@GetMapping
-	public @ResponseBody List<TerminologyQueueItemDto> getQueue() {
-		var pendingItems = snomedCacheFileRepository.findToProcessByAge();
+	@GetMapping("/{kind}")
+	public @ResponseBody List<TerminologyQueueItemDto> getQueue(
+			@PathVariable(name = "kind") ETerminologyKind kind
+	) {
+		var pendingItems = snomedCacheFileRepository.findToProcessByAge(kind);
 		return pendingItems.stream().map(
 				TerminologyQueueItemDto::fromEntity
 		).collect(Collectors.toList());
 	}
 
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
-	@GetMapping("/status")
-	public List<TerminologyECLStatusDto> getStatus() {
-		var eclStatusList = snomedCacheFileRepository.lastSuccessfulByECL();
+	@GetMapping("/{kind}/status")
+	public List<TerminologyECLStatusDto> getStatus(
+			@PathVariable(name = "kind") ETerminologyKind kind
+	) {
+		var eclStatusList = snomedCacheFileRepository.lastSuccessfulByECL(kind);
 
 		return Arrays.stream(SnomedECL.values())
 				.sorted()
@@ -88,7 +94,8 @@ public class TerminologyCacheController {
 	private static SnomedCacheFile entity(TerminologyCSVDto terminologyCSVDto) {
 		return new SnomedCacheFile(
 				terminologyCSVDto.ecl.toString(),
-				terminologyCSVDto.url
+				terminologyCSVDto.url,
+				terminologyCSVDto.kind
 		);
 	}
 

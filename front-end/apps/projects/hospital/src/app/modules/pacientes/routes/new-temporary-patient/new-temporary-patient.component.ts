@@ -7,11 +7,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AddressMasterDataService } from '@api-rest/services/address-master-data.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
-import { Moment } from 'moment';
-import * as moment from 'moment';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ContextService } from '@core/services/context.service';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { MatDialog } from '@angular/material/dialog';
 import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
 import { MapperService } from '@core/services/mapper.service';
@@ -41,7 +39,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
 	public isSubmitButtonDisabled = false;
-	public today: Moment = moment();
+	public today = newDate();
 	public hasError = hasError;
 	public genders: GenderDto[];
 	public gendersId: string[];
@@ -106,9 +104,9 @@ export class NewTemporaryPatientComponent implements OnInit {
 					lastName: [params.lastName],
 					otherLastNames: [params.otherLastNames],
 					identificationTypeId: [Number(params.identificationTypeId)],
-					identificationNumber: [params.identificationNumber, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)],
+					identificationNumber: [params.identificationNumber, [Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number), Validators.pattern(/^\S*$/)]],
 					genderId: [Number(params.genderId)],
-					birthDate: [params.birthDate ? momentParseDate(params.birthDate) : undefined],
+					birthDate: [params.birthDate ? dateISOParseDate(params.birthDate) : undefined],
 
 					// Person extended
 					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
@@ -298,6 +296,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value,
 			otherLastNames: this.form.controls.otherLastNames.value,
+			personAge: null,
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value,

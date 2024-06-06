@@ -407,6 +407,7 @@ public class SaveViolenceReport {
 
 	private ViolenceReport parseViolenceReport(ViolenceReportBo violenceReportBo) {
 		ViolenceReport violenceReport = new ViolenceReport();
+		violenceReport.setInstitutionId(violenceReportBo.getInstitutionId());
 		violenceReport.setPatientId(violenceReportBo.getPatientId());
 		violenceReport.setSituationId(violenceReportBo.getSituationId());
 		violenceReport.setEvolutionId(violenceReportBo.getEvolutionId());

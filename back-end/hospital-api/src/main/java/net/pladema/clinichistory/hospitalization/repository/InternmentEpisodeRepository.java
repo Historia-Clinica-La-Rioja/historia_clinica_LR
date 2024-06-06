@@ -290,4 +290,20 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
 											   @Param("patientId") Integer patientId,
 											   @Param("date") LocalDateTime date,
 											   Pageable pageable);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT r.sectorId " +
+			"FROM InternmentEpisode ie " +
+			"JOIN Bed b ON (ie.bedId = b.id) " +
+			"JOIN Room r ON (b.roomId = r.id) " +
+			"WHERE ie.id = :internmentEpisodeId ")
+	Integer getInternmentEpisodeSectorId(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT b.roomId " +
+			"FROM InternmentEpisode ie " +
+			"JOIN Bed b ON (ie.bedId = b.id)" +
+			"WHERE ie.id = :internmentEpisodeId")
+	Integer getInternmentEpisodeRoomId(@Param("internmentEpisodeId") Integer internmentEpisodeId);
+	
 }

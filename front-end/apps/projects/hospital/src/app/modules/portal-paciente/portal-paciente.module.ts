@@ -31,7 +31,10 @@ import { HistoricalProblemsFacadeService } from '@historia-clinica/modules/ambul
 		PresentationModule,
 		HistoriaClinicaModule,
 	],
-	providers: [AmbulatoriaSummaryFacadeService,HistoricalProblemsFacadeService]
+	providers: [
+		AmbulatoriaSummaryFacadeService,
+		HistoricalProblemsFacadeService,
+	]
 })
 export class PortalPacienteModule {
 }

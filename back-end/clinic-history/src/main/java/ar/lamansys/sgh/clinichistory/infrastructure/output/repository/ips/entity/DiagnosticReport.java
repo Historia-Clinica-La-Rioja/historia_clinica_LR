@@ -3,23 +3,29 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entit
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.DiagnosticReportStatus;
 import ar.lamansys.sgx.shared.auditable.listener.SGXAuditListener;
 import ar.lamansys.sgx.shared.migratable.SGXDocumentEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
-@Table(name = "diagnostic_report")
-@EntityListeners(SGXAuditListener.class)
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@EntityListeners(SGXAuditListener.class)
+@Table(name = "diagnostic_report")
+@Entity
 public class DiagnosticReport extends SGXAuditableEntity<Integer> implements SGXDocumentEntity {
 
 	@Id
@@ -50,9 +56,6 @@ public class DiagnosticReport extends SGXAuditableEntity<Integer> implements SGX
 
 	@Column(name = "note_id")
 	private Long noteId;
-
-	@Column(name = "observations", columnDefinition = "TEXT")
-	private String observations;
 
 	public DiagnosticReport(Integer patientId, Integer snomedId, String cie10Codes,
 							Long noteId, Integer healthConditionId) {

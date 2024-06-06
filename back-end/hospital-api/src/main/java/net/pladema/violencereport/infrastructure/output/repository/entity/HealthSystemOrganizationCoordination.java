@@ -26,7 +26,7 @@ public class HealthSystemOrganizationCoordination implements Serializable {
 	@EmbeddedId
 	private HealthSystemOrganizationCoordinationPK pk;
 
-	@Column(name = "other_health_system_organization")
+	@Column(name = "other_health_system_organization", length = 100)
 	private String otherHealthSystemOrganization;
 
 }

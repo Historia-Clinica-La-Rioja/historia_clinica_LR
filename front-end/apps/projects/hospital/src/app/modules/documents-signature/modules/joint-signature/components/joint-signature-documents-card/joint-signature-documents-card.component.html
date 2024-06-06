@@ -1,0 +1,39 @@
+<section>
+	<header>
+		<h2 translate="firma-conjunta.LIST_DOCUMENTS" class="bold"></h2>
+		<div fxLayout="row" fxLayoutGap="10px">
+			<app-button [color]="'warn'" [isLoading]="false" [text]="'firma-conjunta.reject-signature.BUTTON_REJECT'"
+				[buttonType]="'mat-stroked-button'" [disabled]="!selectedDocumentsId?.length"
+				(clicked)="openPopUpRejectSignature()"></app-button>
+			<app-button [color]="'primary'" [isLoading]="false" [text]="'firma-conjunta.BUTTON_SIGN_DOCUMENT'"
+				[buttonType]="'mat-raised-button'" [disabled]="!selectedDocumentsId?.length" (clicked)="openSingDocument()"></app-button>
+		</div>
+	</header>
+	<div class="spinner" *ngIf="isLoading">
+		<mat-spinner color="primary"></mat-spinner>
+	</div>
+	<app-selectable-card *ngIf="!isLoading"
+		[dataList]="documents"
+		[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
+		[hasHeader]="!!selectedDocumentId"
+		[isDownloadable]="false"
+        [detailedInformation]="detailedInformation"
+		(selectedId)="seeDetails($event)"
+		(selectedDataList)="selectedIds($event)">
+		<span translate="digital-signature.UNSELECTED_DOCUMENT" *ngIf="!selectedDocumentId"	class="no-detailed-information"></span>
+		<div class="header-information" *ngIf="!!selectedDocumentId">
+			<app-header-attention-detail
+				[setDocumentId]="selectedDocumentId"
+				[details]="headerInformation"
+				[title]="'firma-conjunta.TITLE_HEADER'">
+			</app-header-attention-detail>
+		</div>
+	</app-selectable-card>
+	<mat-paginator #paginator
+		(page)="handlePageEvent($event)"
+		[length]="elementsAmount"
+		[pageSize]="pageSize"
+		[pageSizeOptions]="PAGE_SIZE_OPTIONS"
+		[showFirstLastButtons]="true">
+	</mat-paginator>
+</section>

@@ -1,9 +1,11 @@
 package ar.lamansys.refcounterref.infraestructure.input.service.mapper;
 
 import ar.lamansys.refcounterref.domain.reference.CompleteReferenceBo;
+import ar.lamansys.refcounterref.domain.reference.ReferenceBo;
 import ar.lamansys.refcounterref.domain.reference.ReferenceRequestBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.CompleteReferenceDto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
@@ -29,5 +31,8 @@ public interface ReferenceMapper {
 		@Mapping(target = "closureTypeId", source="closureType.id")
 		@Mapping(target = "closureTypeDescription", source="closureType.description")
 		ReferenceRequestDto fromReferenceRequestBo(ReferenceRequestBo referenceRequestBo);
+
+		@Named("fromReferenceDto")
+		ReferenceBo fromReferenceDto(ReferenceDto referenceDto);
 
 }

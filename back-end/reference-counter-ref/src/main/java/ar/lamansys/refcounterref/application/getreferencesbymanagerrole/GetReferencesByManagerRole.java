@@ -24,6 +24,8 @@ public class GetReferencesByManagerRole {
 		var managerUserId = UserInfo.getCurrentAuditor();
 		if (sharedLoggedUserPort.hasLocalManagerRoleOrRegionalManagerRole(managerUserId))
 			filter.setManagerUserId(managerUserId);
+		if (sharedLoggedUserPort.hasDomainManagerRole(managerUserId))
+			filter.setDomainManager(true);
 		return referenceReportStorage.fetchReferencesReport(filter, pageable);
 	}
 

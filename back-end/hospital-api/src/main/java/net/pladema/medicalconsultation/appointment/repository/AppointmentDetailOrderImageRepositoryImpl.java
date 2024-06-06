@@ -49,12 +49,9 @@ public class AppointmentDetailOrderImageRepositoryImpl implements AppointmentDet
 	@Transactional(readOnly = true)
 	public AppointmentOrderDetailImageBO getOrderTranscribedDetailImage(Integer appointmentId) {
 
-		String sqlString = "SELECT aoi.transcribed_order_id, dr.observations, tsr.creation_date, s.pt, tsr.healthcare_professional_name " +
+		String sqlString = "SELECT aoi.transcribed_order_id, tsr.observations, tsr.creation_date, tsr.healthcare_professional_name " +
 				"FROM {h-schema}appointment_order_image aoi " +
 				"JOIN {h-schema}transcribed_service_request tsr ON aoi.transcribed_order_id = tsr.id " +
-				"JOIN {h-schema}diagnostic_report dr ON tsr.study_id = dr.id " +
-				"JOIN {h-schema}health_condition hc ON dr.health_condition_id = hc.id " +
-				"JOIN {h-schema}snomed s ON hc.snomed_id = s.id " +
 				"WHERE  aoi.appointment_id = :appointmentId";
 
 		javax.persistence.Query query = entityManager.createNativeQuery(sqlString);
@@ -88,8 +85,7 @@ public class AppointmentDetailOrderImageRepositoryImpl implements AppointmentDet
 		result.setIdServiceRequest((Integer) row[0]);
 		result.setObservations((String) row[1]);
 		result.setCreationDate(((Timestamp) row[2]).toLocalDateTime());
-		result.setHealthCondition((String) row[3]);
-		result.setProfessionalOrderTranscribed((String) row[4]);
+		result.setProfessionalOrderTranscribed((String) row[3]);
 
 		return result;
 	}

@@ -16,8 +16,6 @@ export class MedicalOrderInputComponent implements OnInit {
     @Input() disabled?: boolean;
 	@Output() selectionChange = new EventEmitter<medicalOrderInfo>();
     form: FormGroup;
-
-    
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
     transcribedOrder: InfoTranscribeOrderPopup = null;

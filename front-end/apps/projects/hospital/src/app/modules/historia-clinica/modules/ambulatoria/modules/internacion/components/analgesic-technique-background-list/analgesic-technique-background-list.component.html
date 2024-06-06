@@ -1,0 +1,26 @@
+<div *ngFor="let analgesicTechnique of analgesicTechniqueList; index as i; last as isLastElement">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" class="break-text">
+        <div fxLayout="column" fxLayoutGap="10px">
+            <span class="bold-text">{{ analgesicTechnique.snomed.pt | titlecase }}</span>
+            <span>{{'internaciones.anesthesic-report.analgesic-technique.INJECTION_ZONE' | translate}}: {{ analgesicTechnique.injectionNote }}</span>
+            <div fxLayout="row" fxLayoutGap="10px">
+                <span *ngIf="analgesicTechnique.dosis">
+                    {{ 'internaciones.anesthesic-report.premedication-and-food-intake.DOSIS' | translate }} {{
+                        analgesicTechnique.dosis }} </span>
+                <span *ngIf="analgesicTechnique.unit">
+                    {{ 'internaciones.anesthesic-report.premedication-and-food-intake.UNIT' | translate }} {{
+                        analgesicTechnique.unit }}</span>
+            </div>
+            <span>{{ 'internaciones.anesthesic-report.analgesic-technique.CATETER_LABEL' | translate }}
+                <span *ngIf="analgesicTechnique.cateter" > {{ 'internaciones.anesthesic-report.analgesic-technique.OPTION_YES' | translate }}</span>
+                <span *ngIf="!analgesicTechnique.cateter" > {{ 'internaciones.anesthesic-report.analgesic-technique.OPTION_NO' | translate }}</span>
+            </span>
+        </div>
+        <ng-container>
+            <button mat-icon-button color="warn" (click)="service.remove(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </ng-container>
+    </div>
+    <mat-divider class="separation" inset *ngIf="!isLastElement"></mat-divider>
+</div>

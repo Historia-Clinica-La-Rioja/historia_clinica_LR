@@ -26,11 +26,10 @@
         }
 
         .wide_wrapped_text {
+  /*          max-width: 90%;
+            display: flex;*/
+            /*margin-left: 3px;*/
             word-wrap: break-word;
-            text-align: justify;
-            text-justify: inter-word;
-            white-space: pre-wrap;
-            font-size: 13.21px;
         }
 
         @page {
@@ -161,6 +160,10 @@
             width: 100%;
             word-wrap: break-word;
         }
+
+        .width-row {
+            width: 80%;
+        }
     </style>
 </head>
 
@@ -199,21 +202,18 @@
                     <div class="data-title">Fecha :</div>
                     <div class="data-text" th:text="${#temporals.format(performedDate, 'dd-MM-yyyy HH:mm')}"></div>
                 </div>
-                <div class="row-content">
+                <div class="row-content width-row">
                     <div class="data-title-span">Estudios :</div>
                     <div th:if="${not #lists.isEmpty(diagnosticReportList)}">
-                        <span class="comma-list" th:each="diagnosticReport,iter: ${diagnosticReportList}">
-                            <span class="data-text" th:text="${diagnosticReport.snomed.pt}"></span>
-                        </span>
+                        <div class="comma-list width-row">
+                              <span  th:each="diagnosticReport,iter: ${diagnosticReportList}">
+                                <span class="data-text wide_wrapped_text" th:text="${diagnosticReport.snomed.pt}"></span>
+                             </span>
+                        </div>
                     </div>
-                    <div th:if="${transcribedDiagnosticReport != null}">
-                        <span class="data-text" th:text="${transcribedDiagnosticReport.studyName}"></span>
-                    </div>
-                    <div th:if="${transcribedDiagnosticReport == null && #lists.isEmpty(diagnosticReportList)}">
+                    <div th:if="${#lists.isEmpty(diagnosticReportList)}">
                         <span class="data-text" th:text="${' - '}"></span>
                     </div>
-
-        
                 </div>
             </div>
             <div style="clear: both;padding-top: 1px">

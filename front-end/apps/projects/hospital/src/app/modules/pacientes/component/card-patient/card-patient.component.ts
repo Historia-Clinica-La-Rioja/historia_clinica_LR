@@ -17,8 +17,8 @@ import { Observable, of } from 'rxjs';
 import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
 import { ROUTE_EMPADRONAMIENTO, ROUTE_UNLINK_PATIENT } from '../../../auditoria/routes/home/home.component';
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
-import { momentParseDateTime, newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
+import { differenceInYears } from 'date-fns';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -106,7 +106,7 @@ export class CardPatientComponent {
 
 		return this.patientData?.map((patient: any) => {
 			let header;
-			if ((this.router.url.includes(ROUTE_EMPADRONAMIENTO) || this.router.url.includes(ROUTE_UNLINK_PATIENT) ) && this.nameSelfDeterminationFF) {
+			if ((this.router.url.includes(ROUTE_EMPADRONAMIENTO) || this.router.url.includes(ROUTE_UNLINK_PATIENT)) && this.nameSelfDeterminationFF) {
 				header = [{ title: this.patientNameService.getFullName(patient.person.firstName, null, patient.person?.middleNames) + ' ' + this.getLastNames(patient), value: patient.nameSelfDetermination ? patient.nameSelfDetermination + " (autopercibido)" : " " }];
 			} else {
 				header = [{ title: " ", value: this.patientNameService.getFullName(patient.person.firstName, patient.person.nameSelfDetermination, patient.person?.middleNames) + ' ' + this.getLastNames(patient) }];
@@ -155,7 +155,7 @@ export class CardPatientComponent {
 				display: 'ambulatoria.card-patient.VIEW_BUTTON',
 				do: `${this.routePrefix}paciente/profile/${idPatient}`
 			});
-		if (auditor && !this.router.url.includes(ROUTE_EMPADRONAMIENTO) )
+		if (auditor && !this.router.url.includes(ROUTE_EMPADRONAMIENTO))
 			valueActions.push({
 				display: 'pacientes.audit.LABEL_BUTTON_AUDIT',
 				do: `home/auditoria/desvincular-pacientes/${idPatient}`
@@ -177,14 +177,16 @@ export class CardPatientComponent {
 					birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
 					identificationNumber: patient.person.identificationNumber,
 					identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
+					personAge: patient.person.personAge
 				}
 
 			})
 
-		function calculateAge(birthDate: string): number {
-				const todayDate: Moment = newMoment();
-				const birthDateDate: Moment = momentParseDateTime(birthDate);
-				return todayDate.diff(birthDateDate, 'years');
+			function calculateAge(birthDate: string): number {
+				const today = newDate();
+				const birth = dateISOParseDate(birthDate)
+				const result = differenceInYears(today, birth)
+				return result;
 			}
 
 		} else {

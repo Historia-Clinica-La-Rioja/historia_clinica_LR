@@ -1,7 +1,22 @@
 import { AppFeature, ERole } from '@api-rest/api-model';
 import { MenuItemDef } from '@core/core-model';
 
-const MANAGER_ROLES = [ERole.GESTOR_DE_ACCESO_DE_DOMINIO, ERole.GESTOR_DE_ACCESO_REGIONAL, ERole.GESTOR_DE_ACCESO_LOCAL];
+export const MANAGER_ROLES = [
+	ERole.GESTOR_DE_ACCESO_DE_DOMINIO,
+	ERole.GESTOR_DE_ACCESO_REGIONAL,
+	ERole.GESTOR_DE_ACCESO_LOCAL,
+];
+
+export const PUBLIC_API_ROLES = [
+	ERole.API_FACTURACION,
+	ERole.API_TURNOS,
+	ERole.API_PACIENTES,
+	ERole.API_RECETAS,
+	ERole.API_SIPPLUS,
+	ERole.API_USERS,
+	ERole.API_IMAGENES,
+	ERole.API_ORQUESTADOR,
+];
 
 export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 	{
@@ -9,7 +24,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'home',
 		id: 'home',
 		url: '/home',
-		options: {exact: true},
+		options: { exact: true },
 	},
 	{
 		text: 'app.menu.CONFIGURACION',
@@ -19,7 +34,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [
 			ERole.ROOT,
 		],
-		featureFlag: AppFeature.HABILITAR_CONFIGURACION
+		featureFlag: [AppFeature.HABILITAR_CONFIGURACION]
 	},
 	{
 		text: 'app.menu.AUDIT',
@@ -29,7 +44,7 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		permissions: [
 			ERole.AUDITOR_MPI
 		],
-		featureFlag: AppFeature.HABILITAR_MODULO_AUDITORIA
+		featureFlag: [AppFeature.HABILITAR_MODULO_AUDITORIA]
 	},
 	{
 		text: 'app.menu.ACCESS_MANAGEMENT',
@@ -37,7 +52,16 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'access-management',
 		url: '/home/gestion-de-accesos',
 		permissions: MANAGER_ROLES,
-		featureFlag: AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO
+		featureFlag: [AppFeature.HABILITAR_REPORTE_REFERENCIAS_EN_DESARROLLO]
+	},
+	{
+		text: 'app.menu.CALL_CENTER',
+		icon: 'calendar_today',
+		id: 'call-center',
+		url: '/home/centro-de-llamadas',
+		permissions: [
+			ERole.GESTOR_CENTRO_LLAMADO
+		],
 	},
 ];
 
@@ -47,6 +71,6 @@ export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'home',
 		id: 'home',
 		url: '/home',
-		options: {exact: true},
+		options: { exact: true },
 	},
 ];

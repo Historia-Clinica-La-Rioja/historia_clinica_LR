@@ -198,21 +198,12 @@
                         <th scope="col">Observaciones </th>
                     </tr>
                     </thead>
-                    <tbody th:if="${!request.isTranscribed()}">
+                    <tbody>
                         <tr th:each="order,iter: ${request.diagnosticReports}">
                             <td class="centered-cell" th:text="${(iter.index + 1)}"></td>
                             <td th:text="${#strings.defaultString(order.healthCondition.cie10codes, '-')}"></td>
                             <td th:text="${order.healthCondition.snomed.pt}"></td>
                             <td th:text="${order.snomed.pt}"></td>
-                            <td th:text="${#strings.defaultString(request.observations, '-')}"></td>
-                        </tr>
-                    </tbody>
-                    <tbody th:if="${request.isTranscribed()}">
-                        <tr>
-                            <td class="centered-cell" th:text="${(1)}"></td>
-                            <td th:text="${#strings.defaultString(request.cie10Codes[0], '-')}"></td>
-                            <td th:text="${request.healthCondition.pt}"></td>
-                            <td th:text="${request.study.pt}"></td>
                             <td th:text="${#strings.defaultString(request.observations, '-')}"></td>
                         </tr>
                     </tbody>

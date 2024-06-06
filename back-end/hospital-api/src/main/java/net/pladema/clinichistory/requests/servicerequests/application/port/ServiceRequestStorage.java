@@ -4,6 +4,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestP
 
 import java.util.List;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
+import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 
 public interface ServiceRequestStorage {
 
@@ -12,4 +13,6 @@ public interface ServiceRequestStorage {
 	TranscribedServiceRequestBo getTranscribedServiceRequest(Integer transcribedServiceRequestId);
 
 	void cancelServiceRequest(Integer serviceRequestId);
+
+    List<String> getDiagnosticReportsFrom(EquipmentAppointmentBo equipmentAppointmentBo);
 }

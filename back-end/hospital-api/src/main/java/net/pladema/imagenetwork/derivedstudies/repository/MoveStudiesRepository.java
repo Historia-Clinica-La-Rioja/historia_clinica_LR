@@ -2,6 +2,8 @@ package net.pladema.imagenetwork.derivedstudies.repository;
 
 import net.pladema.imagenetwork.derivedstudies.repository.entity.MoveStudies;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +22,21 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"WHERE mo.status != :status " +
 			"ORDER BY mo.orchestratorId ")
 	List<MoveStudies> getListMoveStudies(@Param("status") String status);
+
+	@Override
+	@Transactional(readOnly = true)
+	@Query("SELECT mo " +
+			"FROM MoveStudies AS mo " +
+			"WHERE mo.result != '200' " +
+			"ORDER BY mo.orchestratorId ")
+	Page<MoveStudies> findAll(Pageable pageable);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT mo " +
+			"FROM MoveStudies AS mo " +
+			"WHERE mo.result != '200' " +
+			"AND mo.imageId LIKE :imageId")
+	Page<MoveStudies> findByImageId(@Param("imageId") String imageId, Pageable pageable);
 
 	@Transactional
 	@Modifying

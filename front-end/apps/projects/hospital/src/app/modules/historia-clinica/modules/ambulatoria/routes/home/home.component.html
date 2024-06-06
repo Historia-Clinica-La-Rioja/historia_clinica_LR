@@ -110,15 +110,12 @@
 					</div>
 				</div>
 
-				<div fxLayout="row">
-					<mat-form-field appearance="outline" fxFlex="30" fxFlex.lt-md="100">
-						<mat-label [translate]="'pacientes.form.BIRTH_DATE'"></mat-label>
-						<input formControlName="birthDate" id="birthDate" matInput [min]="minDate" [max]="today"
-							[matDatepicker]="picker2">
-						<mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-						<mat-datepicker #picker2></mat-datepicker>
-						<mat-error translate="forms.INVALID_DATE"></mat-error>
-					</mat-form-field>
+				<div fxLayout="column">
+					<span [translate]="'pacientes.form.BIRTH_DATE'"></span>
+					<app-datepicker
+						[minDate]="minDate" [maxDate]="today"
+						(selectDate)="setSelectedDate($event)">
+					</app-datepicker>
 				</div>
 
 				<div>

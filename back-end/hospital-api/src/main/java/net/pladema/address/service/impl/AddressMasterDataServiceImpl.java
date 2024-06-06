@@ -7,6 +7,7 @@ import net.pladema.address.repository.CountryRepository;
 import net.pladema.address.repository.DepartmentRepository;
 import net.pladema.address.repository.ProvinceRepository;
 import net.pladema.address.repository.entity.Department;
+import net.pladema.address.repository.projections.AddressProjection;
 import net.pladema.address.service.AddressMasterDataService;
 
 import net.pladema.snowstorm.repository.entity.SnomedGroupType;
@@ -114,5 +115,14 @@ public class AddressMasterDataServiceImpl implements AddressMasterDataService {
 		if (clinicalSpecialtyIds != null && !clinicalSpecialtyIds.isEmpty())
 			return departmentRepository.findAllByClinicalSpecialtyIdAndPracticeSnomedId(clinicalSpecialtyIds, practiceSnomedId, SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, clazz);
 		return departmentRepository.findAllByPractice(practiceSnomedId, SnomedECL.PROCEDURE.toString(), SnomedGroupType.SEARCH_GROUP, clazz);
+	}
+
+
+	@Override
+	public <T> Collection<T> getDepartmentsByInstitutions() {
+		LOG.debug("Fetch departments by institutions domain");
+		Collection<T> result = departmentRepository.findAllByInstitutions();
+		LOG.debug("Output result -> {} ", result);
+		return result;
 	}
 }

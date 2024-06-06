@@ -1,7 +1,7 @@
 <app-new-consultation-expansion-section id="diagnosticos"
 	*appHasRole="['ESPECIALISTA_MEDICO', 'ENFERMERO_ADULTO_MAYOR','PROFESIONAL_DE_SALUD', 'ESPECIALISTA_EN_ODONTOLOGIA']"
 	[title]="'ambulatoria.paciente.surgical-report.diagnosis.TITLE' | translate" icon="error_outlined"
-	[collapsed]="false" [hideBorder]="false">
+	[collapsed]="false" [hideBorder]="false" [isEmpty]="isEmpty()">
 
 	<mat-form-field appearance="outline">
 		<mat-select id="diagnosis-select"

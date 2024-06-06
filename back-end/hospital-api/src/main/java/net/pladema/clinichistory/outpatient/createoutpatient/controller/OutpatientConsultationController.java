@@ -113,6 +113,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         BasicPatientDto patientDto = patientExternalService.getBasicDataFromPatient(patientId);
         outpatient.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
         outpatient.setPatientId(patientId);
+		outpatient.setMedicalCoverageId(patientMedicalCoverageId);
 
         List<ReasonBo> reasons = outpatientConsultationMapper.fromListReasonDto(createOutpatientDto.getReasons());
         outpatient.setReasons(reasons);

@@ -7,8 +7,9 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitaliz
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
-import net.pladema.emergencycare.controller.EmergencyCareEpisodeMedicalDischargeController;
 import net.pladema.emergencycare.repository.DischargeTypeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeDischargeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
@@ -20,44 +21,36 @@ import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEpisodeDischargeService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EmergencyCareEpisodeMedicalDischargeController.class);
-
     private final EmergencyCareEpisodeDischargeRepository emergencyCareEpisodeDischargeRepository;
-    private final DocumentFactory documentFactory;
-    private final DischargeTypeRepository dischargeTypeRepository;
-    private final DocumentService documentService;
-    private final DocumentHealthConditionRepository documentHealthConditionRepository;
-    private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
-    private final DateTimeProvider dateTimeProvider;
-	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
 
-    EmergencyCareEpisodeDischargeServiceImpl(EmergencyCareEpisodeDischargeRepository emergencyCareEpisodeDischargeRepository, DocumentFactory documentFactory,
-                                             DischargeTypeRepository dischargeTypeRepository, DocumentService documentService, DocumentHealthConditionRepository documentHealthConditionRepository, EmergencyCareEpisodeRepository emergencyCareEpisodeRepository, DateTimeProvider dateTimeProvider,
-											 EmergencyCareEpisodeService emergencyCareEpisodeService) {
-        this.emergencyCareEpisodeDischargeRepository = emergencyCareEpisodeDischargeRepository;
-        this.documentFactory = documentFactory;
-        this.dischargeTypeRepository = dischargeTypeRepository;
-        this.documentService = documentService;
-        this.documentHealthConditionRepository = documentHealthConditionRepository;
-        this.emergencyCareEpisodeRepository = emergencyCareEpisodeRepository;
-        this.dateTimeProvider = dateTimeProvider;
-		this.emergencyCareEpisodeService = emergencyCareEpisodeService;
-    }
+    private final DocumentFactory documentFactory;
+
+    private final DischargeTypeRepository dischargeTypeRepository;
+
+    private final DocumentService documentService;
+
+    private final DocumentHealthConditionRepository documentHealthConditionRepository;
+
+    private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
+
+    private final DateTimeProvider dateTimeProvider;
+
+	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
 
     @Override
     public boolean newMedicalDischarge(MedicalDischargeBo medicalDischarge,Integer institutionId) {
-        LOG.debug("Medical discharge service -> medicalDischargeBo {}", medicalDischarge);
+        log.debug("Medical discharge service -> medicalDischargeBo {}", medicalDischarge);
         validateMedicalDischarge(medicalDischarge, institutionId);
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
         emergencyCareEpisodeDischargeRepository.save(newDischarge);
@@ -67,7 +60,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 
     @Override
     public EpisodeDischargeBo getDischarge(Integer episodeId) {
-        LOG.debug("Get discharge -> episodeId {}", episodeId);
+        log.debug("Get discharge -> episodeId {}", episodeId);
         EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(episodeId)
                 .orElseThrow(()->new NotFoundException("episode-discharge-not-found", "Episode discharge not found"));
         DischargeType dischargeType = dischargeTypeRepository.findById(emergencyCareDischarge.getDischargeTypeId())
@@ -77,13 +70,13 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(documentId);
         List<SnomedBo> problems = resultQuery.stream().map( r -> new SnomedBo(r.getSnomed())).collect(Collectors.toList());
         episodeDischargeBo.setProblems(problems);
-        LOG.debug("output -> episodeDischargeBo {}", episodeDischargeBo);
+        log.debug("output -> episodeDischargeBo {}", episodeDischargeBo);
         return episodeDischargeBo;
     }
 
 	@Override
 	public boolean hasMedicalDischarge(Integer episodeId) {
-		LOG.debug("Get discharge -> episodeId {}", episodeId);
+		log.debug("Get discharge -> episodeId {}", episodeId);
 		EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(episodeId).orElse(null);
 		return emergencyCareDischarge != null && emergencyCareDischarge.getMedicalDischargeOn() != null;
 	}
@@ -106,7 +99,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 	}
 
     private EmergencyCareVo assertExistEmergencyCareEpisode(Integer episodeId, Integer institutionId) {
-        return emergencyCareEpisodeRepository.getEpisode(episodeId, institutionId)
+        return emergencyCareEpisodeRepository.getEpisodeByEpisodeAndInstitutionId(episodeId, institutionId)
                 .orElseThrow(() -> new NotFoundException("El episodio de guardia no existe", "El episodio de guardia no existe"));
     }
 

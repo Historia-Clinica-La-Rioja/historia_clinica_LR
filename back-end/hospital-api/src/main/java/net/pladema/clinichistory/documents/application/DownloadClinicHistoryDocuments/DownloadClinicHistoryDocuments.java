@@ -54,6 +54,8 @@ public class DownloadClinicHistoryDocuments {
 	public StoredFileBo run (List<Long> ids, Integer institutionId) throws DocumentException, IOException {
 		log.debug("Input parameters -> ids", ids);
 		List<CHDocumentBo> documents = clinicHistoryStorage.getClinicHistoryDocuments(ids);
+		if (documents.isEmpty())
+			return null;
 		Integer patientId = documents.stream().findFirst().get().getPatientId();
 		List<InputStream> inputStreams = new ArrayList<>();
 		LinkedHashMap<Pair<Integer, ECHEncounterType>, List<CHDocumentBo>> documentsByEpisode = mapDocumentsByEpisode(documents);

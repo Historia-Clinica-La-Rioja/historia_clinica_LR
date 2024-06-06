@@ -46,6 +46,11 @@ export class SurgicalReportDiagnosisComponent {
 
 	}
 
+
+	isEmpty(): boolean {
+		return !this.surgicalReport.preoperativeDiagnosis?.length && !this.surgicalReport.surgeryProcedures?.length;
+    }
+
 	private compare(first, second): boolean {
 		return first.snomed.sctid === second.snomed.sctid;
 	}
@@ -83,6 +88,7 @@ export class SurgicalReportDiagnosisComponent {
 
 	deleteProcedure(index: number): void {
 		this.surgicalReport.surgeryProcedures = removeFrom(this.surgicalReport.surgeryProcedures, index);
+		this.procedureService.remove(index);
 	}
 
 	private changeSurgeryProcedure(procedures): void {
@@ -96,4 +102,5 @@ export class SurgicalReportDiagnosisComponent {
 			type: type
 		}
 	}
+
 }

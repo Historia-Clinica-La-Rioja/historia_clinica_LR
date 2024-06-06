@@ -1,6 +1,14 @@
 package net.pladema.establishment.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+
+import lombok.RequiredArgsConstructor;
+
+import net.pladema.establishment.application.port.InstitutionalGroupStorage;
+
+import net.pladema.establishment.service.domain.InstitutionalGroupBo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +23,7 @@ import net.pladema.establishment.service.InstitutionService;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 import net.pladema.establishment.service.domain.InstitutionBo;
 
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class InstitutionServiceImpl implements InstitutionService {
@@ -29,11 +38,7 @@ public class InstitutionServiceImpl implements InstitutionService {
 
 	private final AddressService addressService;
 
-	public InstitutionServiceImpl(InstitutionRepository institutionRepository, InstitutionBoMapper institutionBoMapper, AddressService addressService) {
-		this.institutionRepository = institutionRepository;
-		this.institutionBoMapper = institutionBoMapper;
-		this.addressService = addressService;
-	}
+	private final InstitutionalGroupStorage institutionalGroupStorage;
 
 	@Override
 	public List<InstitutionBasicInfoBo> getInstitutionsByImageSectors(){
@@ -94,4 +99,14 @@ public class InstitutionServiceImpl implements InstitutionService {
 			return institutionRepository.getAllByDepartmentAndClinicalSpecialtyAndPractice(departmentId, clinicalSpecialtyIds, practiceSnomedId);
 		return institutionRepository.getByDepartmentAndPractice(departmentId, practiceSnomedId);
 	}
+
+	@Override
+	public List<InstitutionBasicInfoBo> getInstitutionsByManagerUser(Integer userId) {
+		log.debug("Input parameters -> userId {}", userId);
+		List<Integer> institutionalGroupsIds = institutionalGroupStorage.getInstitutionalGroupsByUserId(userId).stream().map(InstitutionalGroupBo::getId).collect(Collectors.toList());
+		List<InstitutionBasicInfoBo> result = institutionRepository.getInstitutionsRelatedToInstitutionalGroups(institutionalGroupsIds);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 }

@@ -9,45 +9,53 @@ import ar.lamansys.sgh.clinichistory.domain.document.OrderImageFileReducedBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import net.pladema.establishment.controller.dto.InstitutionBasicInfoDto;
 import net.pladema.establishment.controller.dto.OrderImageFileInfoDto;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
-@Getter
-@AllArgsConstructor
 public class EquipmentAppointmentListDto {
 
-	private final Integer id;
+	private Integer id;
 
-	private final AppointmentBasicPatientDto patient;
+	private AppointmentBasicPatientDto patient;
 
-	private final String date;
+	private String date;
 
-	private final String hour;
+	private String hour;
 
-	private final boolean overturn;
+	private boolean overturn;
 
-	private final Integer healthInsuranceId;
+	private Integer healthInsuranceId;
 
-	private final String medicalCoverageName;
+	private String medicalCoverageName;
 
-	private final String medicalCoverageAffiliateNumber;
+	private String medicalCoverageAffiliateNumber;
 
-	private final Short appointmentStateId;
+	private Short appointmentStateId;
 
-	private final boolean isProtected;
+	private boolean isProtected;
 
-	private final InstitutionBasicInfoDto derivedTo;
+	private InstitutionBasicInfoDto derivedTo;
 
-	private final Short reportStatusId;
+	private Short reportStatusId;
 
-	private final String studyName;
+	@Deprecated
+	private String studyName;
 
-	private final Integer serviceRequestId;
+	@Nullable
+	private List<String> studies;
 
-	private final Integer transcribedServiceRequestId;
+	private Integer serviceRequestId;
+
+	private Integer transcribedServiceRequestId;
 
 	@Nullable
 	private List<OrderImageFileInfoDto> transcribedOrderAttachedFiles;

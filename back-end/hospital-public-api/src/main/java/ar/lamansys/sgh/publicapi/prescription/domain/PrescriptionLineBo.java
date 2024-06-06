@@ -1,15 +1,11 @@
 package ar.lamansys.sgh.publicapi.prescription.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 import java.util.Objects;
 
-@NoArgsConstructor
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 @AllArgsConstructor
-@ToString
 @Getter
 public class PrescriptionLineBo {
 	private Integer prescriptionLineNumber;
@@ -21,8 +17,7 @@ public class PrescriptionLineBo {
 	private Double dayDosis;
 	private Double duration;
 	private String presentation;
-
-	Integer presentationQuantity;
+	private Integer presentationQuantity;
 	private Double quantity;
 
 	@Override

@@ -20,7 +20,7 @@
 								{{patientMedicalCoverage.affiliateNumber}}
 							</span>
 						</div>
-						<div>Vig. {{patientMedicalCoverage.validDate | date: 'dd/MM/yyyy'}}</div>
+						<div>Vig. {{patientMedicalCoverage.validDate | dateFormat: 'date'}}</div>
 						<div>
 							<button mat-icon-button color="primary" (click)="openAddHealthInsurance(patientMedicalCoverage)">
 								<mat-icon>edit</mat-icon>
@@ -67,7 +67,7 @@
 						</div>
 						<div fxLayout="row">
 							<div fxLayout="column" fxLayoutAlign="space-between center">
-								<span>Vig. {{patientPrivateHealthInsurance.validDate | date: 'dd/MM/yyyy'}}</span>
+								<span>Vig. {{patientPrivateHealthInsurance.validDate | dateFormat: 'date'}}</span>
 								<div class="capitalize-first-letter">
 									{{getDatesText(patientPrivateHealthInsurance)}}
 								</div>

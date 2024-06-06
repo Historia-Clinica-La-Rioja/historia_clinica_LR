@@ -80,6 +80,12 @@ public class AnamnesisBo extends SelfValidating<AnamnesisBo> implements IDocumen
 
 	private String modificationReason;
 
+	private Integer roomId;
+
+	private Integer sectorId;
+
+	private Integer medicalCoverageId;
+
     @Override
     public Integer getPatientId() {
         if (patientInfo != null)

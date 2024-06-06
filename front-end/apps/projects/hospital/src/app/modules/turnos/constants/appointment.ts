@@ -222,3 +222,31 @@ export interface COLOR {
 	id: number,
 	color: string,
 }
+export enum APPOINTMENT_CANCEL_OPTIONS {
+	CURRENT_TURN = 1,
+	CURRENT_AND_NEXTS_TURNS = 2,
+	ALL_TURNS = 3
+}
+
+export enum RECURRING_APPOINTMENT_OPTIONS {
+	NO_REPEAT = 1,
+	EVERY_WEEK = 2,
+	CUSTOM = 3
+}
+
+export const getAppointmentLabelColor = (appointmentStateId: number): string => {
+	if (appointmentStateId === APPOINTMENT_STATES_ID.ASSIGNED)
+		return Color.BLUE;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.ABSENT)
+		return Color.RED;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.CONFIRMED)
+		return Color.YELLOW;
+		
+	if (appointmentStateId === APPOINTMENT_STATES_ID.SERVED)
+		return Color.GREEN;
+
+	if (appointmentStateId === APPOINTMENT_STATES_ID.BOOKED)
+		return Color.RED;
+}

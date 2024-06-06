@@ -10,13 +10,15 @@ import { PATTERN_INTEGER_NUMBER, PATTERN_NUMBER_WITH_DECIMALS } from '@core/util
 import { DATOS_ANTROPOMETRICOS } from '@historia-clinica/constants/validation-constants';
 import { atLeastOneValueInFormGroup } from '@core/utils/form.utils';
 import { TranslateService } from '@ngx-translate/core';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
 
+export type AnthropometricDataKey = keyof AnthropometricData;
 export interface DatosAntropometricos {
 	bloodType?: ClinicalObservationDto;
 	bmi?: ClinicalObservationDto;
 	height: ClinicalObservationDto;
 	weight: ClinicalObservationDto;
-	headCircumference: ClinicalObservationDto;
+	headCircumference?: ClinicalObservationDto;
 }
 
 export class DatosAntropometricosNuevaConsultaService {
@@ -33,6 +35,9 @@ export class DatosAntropometricosNuevaConsultaService {
 	private dateList: string[] = [];
 	private readonly atLeastOneValueInFormGroup = atLeastOneValueInFormGroup;
 
+	private antropometricDataSubject = new Subject<AnthropometricData>();
+	antropometricData$ = this.antropometricDataSubject.asObservable();
+	antropometricData: AnthropometricData;
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
@@ -49,7 +54,8 @@ export class DatosAntropometricosNuevaConsultaService {
 			weight: [null, [Validators.min(DATOS_ANTROPOMETRICOS.MIN.weight), Validators.max(DATOS_ANTROPOMETRICOS.MAX.weight), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]]
 		});
 
-		this.form.controls.headCircumference.valueChanges.subscribe(_ => {
+		this.form.controls.headCircumference.valueChanges.subscribe(headCircumference => {
+			this.addFieldChanges('headCircumference', headCircumference);
 			if (this.form.controls.headCircumference.hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.headCircumference }).subscribe(
 					(errorMsg: string) => this.headCircumferenceErrorSource.next(errorMsg)
@@ -70,7 +76,8 @@ export class DatosAntropometricosNuevaConsultaService {
 			}
 		});
 
-		this.form.controls.height.valueChanges.subscribe(_ => {
+		this.form.controls.height.valueChanges.subscribe(height => {
+			this.addFieldChanges('height', height);
 			if (this.form.controls.height.hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.height }).subscribe(
 					(errorMsg: string) => this.heightErrorSource.next(errorMsg)
@@ -91,7 +98,8 @@ export class DatosAntropometricosNuevaConsultaService {
 			}
 		});
 
-		this.form.controls.weight.valueChanges.subscribe(_ => {
+		this.form.controls.weight.valueChanges.subscribe(weight => {
+			this.addFieldChanges('weight', weight);
 			if (this.form.controls.weight.hasError('min')) {
 				this.translateService.get('forms.MIN_ERROR', { min: DATOS_ANTROPOMETRICOS.MIN.weight }).subscribe(
 					(errorMsg: string) => this.weightErrorSource.next(errorMsg)
@@ -192,10 +200,15 @@ export class DatosAntropometricosNuevaConsultaService {
 	}
 
 	getDate(): string {
-		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+		return this.datePipe?.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
 	}
 
 	hasAtLeastOneValueLoaded(): boolean {
 		return this.atLeastOneValueInFormGroup(this.form);
+	}
+
+	private addFieldChanges(fieldName: AnthropometricDataKey, value: string) {
+		this.antropometricData = { ...this.antropometricData, [fieldName]: value };
+		this.antropometricDataSubject.next(this.antropometricData);
 	}
 }

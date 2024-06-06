@@ -1,0 +1,7 @@
+<div fxLayoutGap="10px" fxLayoutAlign="start center">
+    <div class="circle" [ngClass]="{'high': priority?.id == PRIORITY.HIGH, 
+                                    'medium': priority?.id == PRIORITY.MEDIUM, 
+                                    'low': priority?.id == PRIORITY.LOW }">
+    </div>
+    <span>{{priority?.description}}</span>
+</div>

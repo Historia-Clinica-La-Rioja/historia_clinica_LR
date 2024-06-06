@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.MethodNotSupportedException;
 import org.apache.tomcat.util.http.fileupload.impl.IOFileUploadException;
@@ -42,6 +43,9 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorDto;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgx.shared.files.exception.FileServiceEnumException;
 import ar.lamansys.sgx.shared.files.exception.FileServiceException;
+import ar.lamansys.sgx.shared.filestorage.application.BucketObjectAccessException;
+import ar.lamansys.sgx.shared.filestorage.application.BucketObjectException;
+import ar.lamansys.sgx.shared.filestorage.application.BucketObjectNotFoundException;
 import ar.lamansys.sgx.shared.strings.StringValidatorException;
 import net.pladema.medicalconsultation.diary.service.domain.OverturnsLimitException;
 import net.pladema.sgx.healthinsurance.service.exceptions.PrivateHealthInsuranceServiceException;
@@ -213,13 +217,34 @@ public class RestExceptionHandler {
 		return new ApiErrorMessageDto("IOException", ex.getMessage());
 	}
 
+	@ExceptionHandler(ClientAbortException.class)
+	protected ResponseEntity<Object> handleClientAbortException(ClientAbortException ex, WebRequest request) {
+		var requestDescription = request.getDescription(false);
+	 	LOG.warn("ClientAbortException occurred: {}", requestDescription);
+		return ResponseEntity.noContent().build();
+	}
+
 	@ExceptionHandler({ FileServiceException.class })
 	public ResponseEntity<ApiErrorMessageDto> handleFileServiceException(FileServiceException ex) {
-		LOG.error("FileServiceException exception -> {}", ex.getMessage());
+		LOG.error("FileServiceException exception -> {}", ex.getMessage(), ex);
 		var error = new ApiErrorMessageDto(ex.getCodeInfo(), ex.getMessage());
 		return new ResponseEntity<>(error, FileServiceEnumException.INSUFFICIENT_STORAGE.equals(ex.getCode()) ?
 				HttpStatus.INSUFFICIENT_STORAGE : HttpStatus.BAD_REQUEST);
 	}
+
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler({
+			BucketObjectNotFoundException.class,
+			BucketObjectAccessException.class
+	})
+	public ApiErrorMessageDto handleBucketObjectException(BucketObjectException boe) {
+		LOG.debug("BucketObjectException {} -> {}", boe.errorCode, boe.path, boe);
+		return new ApiErrorMessageDto(
+				boe.errorCode,
+				"No se pudo acceder al archivo"
+		);
+	}
+
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
 	@ExceptionHandler({ RestorePasswordNotificationException.class })
 	protected ApiErrorMessageDto handleRestorePasswordNotificationException(RestorePasswordNotificationException ex) {

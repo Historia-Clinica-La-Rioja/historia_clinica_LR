@@ -1,0 +1,61 @@
+<mat-card>
+    <span class="measuring-point-title" [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.ADD_MEASURING_POINT'"></span>
+
+    <form [formGroup]="form">
+        <div fxLayout="column" fxLayoutGap="16px" class="measuring-point-form">
+            <div fxLayout="row wrap" fxLayoutGap="24px" data-id="measure-point">
+                <app-datepicker [title]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_DATE'" (selectDate)="setSelectedDate($event)"></app-datepicker>
+                <div fxLayout="column" fxLayoutGap="10px">
+                    <mat-label class="form-input-title" [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.SURGERY_TIME'"></mat-label>
+                    <app-time-picker data-id="measuring-point-start-time" [timePickerData]="timePickerData" (timeSelected)="setMeasuringPointStartTime($event)"></app-time-picker>
+                </div>
+            </div>
+
+            <div fxLayout="row wrap" fxLayoutGap="24px">
+                <div fxLayout="column" fxLayoutGap="10px" data-id="blood-pressure-max">
+                    <mat-label [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.MAX_BLOOD_PRESSURE'"></mat-label>
+                    <mat-form-field appearance="outline" class="imput-width">
+                        <input formControlName="bloodPressureMax" placeholder="mm de hg" type="number" matInput>
+                        <mat-error> {{ service.bloodPressureMaxError$ | async }} </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" fxLayoutGap="10px" data-id="blood-pressure-min">
+                    <mat-label [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.MIN_BLOOD_PRESSURE'"></mat-label>
+                    <mat-form-field appearance="outline" class="imput-width">
+                        <input formControlName="bloodPressureMin" placeholder="mm de hg" type="number" matInput>
+                        <mat-error> {{ service.bloodPressureMinError$ | async }} </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div fxLayout="column" fxLayoutGap="10px"  data-id="pulse">
+                <mat-label [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.PULSE'"></mat-label>
+                <mat-form-field appearance="outline" class="imput-width">
+                    <input formControlName="pulse" placeholder="lat/min" type="number" matInput>
+                    <mat-error> {{ service.pulseError$ | async }} </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="column" fxLayoutGap="10px"  data-id="saturation">
+                <mat-label [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.SATURATION'"></mat-label>
+                <mat-form-field appearance="outline" class="imput-width">
+                    <input formControlName="saturation" placeholder="%" type="number" matInput>
+                    <mat-error> {{ service.saturationError$ | async }} </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="column" fxLayoutGap="10px"  data-id="end-tidal">
+                <mat-label [translate]="'internaciones.anesthesic-report.vital-signs.measuring-point.END_TIDAL'"></mat-label>
+                <mat-form-field appearance="outline" class="imput-width">
+                    <input formControlName="endTidal" placeholder="Número" type="number" matInput>
+                    <mat-error> {{ service.endTidalError$ | async }} </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <button mat-stroked-button type="submit" color="primary" class="register-button" (click)="registerMeasuringPoint()">
+            <span> {{'internaciones.anesthesic-report.vital-signs.measuring-point.REGISTER' | translate}}</span>
+        </button>
+    </form>
+</mat-card>

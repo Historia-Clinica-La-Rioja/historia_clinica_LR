@@ -1,7 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DetailedInformation } from '../detailed-information/detailed-information.component';
+import { ColoredIconText } from '../colored-icon-text/colored-icon-text.component';
 
 const INPUT_NODE_NAME: string = "INPUT";
+
+export interface SelectableCardIds {
+	id: number,
+	relatedId?: number
+}
 
 @Component({
   selector: 'app-selectable-card',
@@ -15,11 +21,11 @@ export class SelectableCardComponent {
 	@Input() noDataMessage: string = 'presentation.selectable-card.NO_DATA'
 	@Input() isDownloadable: boolean = true;
 	@Input() detailedInformation: DetailedInformation;
+	@Input() hasHeader: boolean = false;
 
 	@Output() selectedDataList: EventEmitter<number[]> = new EventEmitter();
-	@Output() downloadId: EventEmitter<number> = new EventEmitter();
-	@Output() selectedId: EventEmitter<number> = new EventEmitter();
-
+	@Output() downloadId: EventEmitter<SelectableCardIds> = new EventEmitter();
+	@Output() selectedId: EventEmitter<SelectableCardIds> = new EventEmitter();
 	private isAllSelected: boolean = false;
 	private selectedIds: number[] = [];
 
@@ -38,23 +44,23 @@ export class SelectableCardComponent {
 	}
 
 	checkboxSelect(id: number) {
-		(!this.selectedIds.includes(id))    
+		(!this.selectedIds.includes(id))
 		? this.selectedIds.push(id)
-		: this.selectedIds.splice(this.selectedIds.indexOf(id), 1); 
-		
+		: this.selectedIds.splice(this.selectedIds.indexOf(id), 1);
+
 		const item: ItemListCard = this.dataList.find(item => item.id === id);
 		item.checked = !item.checked;
 		this.selectedDataList.emit(this.selectedIds);
 	}
-	
-	download(id: number) {
-		this.downloadId.emit(id);
+
+	download(id: number, relatedId: number) {
+		this.downloadId.emit({id, relatedId});
 	}
 
-	seeDetails(id: number, event: any) {
+	seeDetails(id: number, relatedId: number, event: any) {
 		(event.target.nodeName === INPUT_NODE_NAME)
 			? event.stopPropagation()
-			: this.selectedId.emit(id);
+			: this.selectedId.emit({id, relatedId});
 	}
 
 	private toggleAllCheckboxes(value: boolean) {
@@ -64,13 +70,16 @@ export class SelectableCardComponent {
 
 export interface ItemListCard {
 	id: number,
-	icon: string,
+	relatedId?: number,
+	icon?: string,
 	title: string,
 	options: ItemListOption[],
+	coloredIconTextOption?: ItemListOption,
 	checked?: boolean
 }
 
 export interface ItemListOption {
 	title: string,
-	value: string[],
+	value?: string[] | ColoredIconText,
+	isImportant?: boolean
 }

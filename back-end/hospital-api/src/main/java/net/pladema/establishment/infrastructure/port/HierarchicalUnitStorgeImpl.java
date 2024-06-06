@@ -11,6 +11,7 @@ import net.pladema.establishment.service.domain.HierarchicalUnitBo;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -35,8 +36,19 @@ public class HierarchicalUnitStorgeImpl implements HierarchicalUnitStorage {
 	}
 
 	@Override
-	public List<Integer> fetchAllDescendantIdsByHierarchicalUnitId(Integer hierarchicalUnitId) {
-		log.debug("Fetch all hierarchical units descendants by hierarchical unit id {} ", hierarchicalUnitId);
-		return hierarchicalUnitRepository.getAllDescendantIdsByHierarchicalUnitId(hierarchicalUnitId);
+	public List<Integer> fetchAllDescendantIdsByHierarchicalUnitId(List<Integer> hierarchicalUnitIds) {
+		log.debug("Fetch all hierarchical units descendants by hierarchical unit ids {} ", hierarchicalUnitIds);
+		List<Integer> allDescendantIds = new ArrayList<>();
+		if (!hierarchicalUnitIds.isEmpty()){
+			allDescendantIds.addAll(hierarchicalUnitIds);
+			hierarchicalUnitIds.forEach(
+					hierarchicalUnitId -> allDescendantIds.addAll(
+							fetchAllDescendantIdsByHierarchicalUnitId(
+									hierarchicalUnitRepository.getAllDescendantIdsByHierarchicalUnitId(hierarchicalUnitId)
+							)
+					)
+			);
+		}
+		return allDescendantIds;
 	}
 }

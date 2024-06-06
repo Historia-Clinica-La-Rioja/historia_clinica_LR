@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 import java.util.List;
 
 @Slf4j
@@ -15,6 +17,7 @@ public class ApproveReferencesByRuleId {
 
 	private final HistoricReferenceRegulationStorage historicReferenceRegulationStorage;
 
+	@Transactional
 	public void run(Integer ruleId, List<Integer> institutionIds){
 		log.debug("Input parameters -> ruleId {}", ruleId);
 		historicReferenceRegulationStorage.approveReferencesByRuleId(ruleId, institutionIds);

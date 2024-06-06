@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 
 
@@ -7,15 +8,19 @@ import { ThemePalette } from '@angular/material/core';
 	templateUrl: './button.component.html',
 	styleUrls: ['./button.component.scss']
 })
-export class ButtonComponent {
+export class ButtonComponent implements AfterViewInit {
 
 	@Input() color?: ThemePalette = 'primary';
-	@Input() isLoading?= false;
+	@Input() isLoading? = false;
 	@Input() text = '';
-	@Input() buttonType?= ButtonType.STOKED
-	@Input() disabled?= false;
+	@Input() buttonType? = ButtonType.STOKED
+	@Input() disabled? = false;
 
 	@Output() clicked = new EventEmitter();
+
+	constructor(
+		@Inject(DOCUMENT) private document: Document
+	) { }
 
 	ngAfterViewInit() {
 		this.getButtonDimensions();
@@ -25,9 +30,12 @@ export class ButtonComponent {
 		this.clicked.emit('Clicked!')
 	}
 
-	private getButtonDimensions(){
-		document.getElementById("button").style.width = document.getElementById("button").offsetWidth.toString() + 'px';
-		document.getElementById("button").style.height = document.getElementById("button").offsetHeight.toString() + 'px';
+	private getButtonDimensions() {
+		const button: HTMLElement = this.document.getElementById("button");
+		if (button) {
+			button.style.width = `${button.offsetWidth.toString()} px`;
+			button.style.height = `${button.offsetHeight.toString()} px`;
+		}
 	}
 }
 

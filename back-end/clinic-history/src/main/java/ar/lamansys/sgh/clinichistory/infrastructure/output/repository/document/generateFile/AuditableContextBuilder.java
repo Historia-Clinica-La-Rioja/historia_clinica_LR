@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.
 
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DentalActionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.RiskFactorMapper;
@@ -28,13 +29,6 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.Code128Writer;
-import net.pladema.assets.service.AssetsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.ZoneId;
@@ -43,9 +37,14 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
+import net.pladema.assets.service.AssetsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AuditableContextBuilder {
@@ -71,6 +70,16 @@ public class AuditableContextBuilder {
 
 	private final SharedPersonPort sharedPersonPort;
 
+	private final Function<Integer, String> sectorNameFunction;
+
+	private final Function<Integer, String> roomNumberFunction;
+
+	private final Function<Integer, String> doctorsOfficeDescriptionFunction;
+
+	private final Function<Integer, String> shockRoomDescriptionFunction;
+	
+	private final DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder;
+
 	@Value("${prescription.domain.number}")
 	private Integer recipeDomain;
 
@@ -86,7 +95,12 @@ public class AuditableContextBuilder {
 			AssetsService assetsService,
 			SharedStaffPort sharedStaffPort,
 			SharedDiagnosticImagingOrder sharedDiagnosticImagingOrder,
-			SharedPersonPort sharedPersonPort) {
+			SharedPersonPort sharedPersonPort,
+			SectorFinder sectorFinder,
+			RoomFinder roomFinder,
+			DoctorsOfficeFinder doctorsOfficeFinder,
+			ShockRoomFinder shockRoomFinder,
+			DocumentInvolvedProfessionalFinder documentInvolvedProfessionalFinder) {
 		this.sharedImmunizationPort = sharedImmunizationPort;
 		this.localDateMapper = localDateMapper;
 		this.sharedInstitutionPort = sharedInstitutionPort;
@@ -94,15 +108,19 @@ public class AuditableContextBuilder {
 		this.sharedDiagnosticImagingOrder = sharedDiagnosticImagingOrder;
 		this.logger = LoggerFactory.getLogger(getClass());
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
-		this.authorFromDocumentFunction = (Long documentId) -> documentAuthorFinder.getAuthor(documentId);
-		this.clinicalSpecialtyDtoFunction = (Integer specialtyId) ->
-				clinicalSpecialtyFinder.getClinicalSpecialty(specialtyId);
+		this.authorFromDocumentFunction = documentAuthorFinder::getAuthor;
+		this.clinicalSpecialtyDtoFunction = clinicalSpecialtyFinder::getClinicalSpecialty;
 		this.riskFactorMapper = riskFactorMapper;
 		this.featureFlagsService = featureFlagsService;
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
 		this.assetsService = assetsService;
 		this.personContactInfoFunction = sharedPersonPort::getPersonContactInfoById;
 		this.sharedPersonPort = sharedPersonPort;
+		this.sectorNameFunction = sectorFinder::getSectorName;
+		this.roomNumberFunction = roomFinder::getRoomNumber;
+		this.doctorsOfficeDescriptionFunction = doctorsOfficeFinder::getDoctorsOfficeDescription;
+		this.shockRoomDescriptionFunction = shockRoomFinder::getShockRoomDescription;
+		this.documentInvolvedProfessionalFinder = documentInvolvedProfessionalFinder;
 	}
 
 	public <T extends IDocumentBo> Map<String,Object> buildContext(T document, Integer patientId){
@@ -124,6 +142,11 @@ public class AuditableContextBuilder {
 			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 			return contextMap;
 		}
+		if (document.getDocumentType() == DocumentType.ANESTHETIC_REPORT) {
+			this.addAnestheticReportData(contextMap, document);
+			logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
+			return contextMap;
+		}
 		addDocumentInfo(contextMap, document);
 		logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
 		return contextMap;
@@ -131,6 +154,7 @@ public class AuditableContextBuilder {
 	private void addPatientInfo(Map<String,Object> contextMap, Integer patientId, Short documentType) {
 		var patientDto = basicDataFromPatientLoader.apply(patientId);
 		contextMap.put("patient", patientDto);
+		contextMap.put("patientAge", calculatePatientAge(patientDto));
 
 		contextMap.put("selfPerceivedFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		if (documentType == DocumentType.DIGITAL_RECIPE) {
@@ -175,10 +199,27 @@ public class AuditableContextBuilder {
 		contextMap.put("riskFactors", riskFactorMapper.toRiskFactorsReportDto(document.getRiskFactors()));
 		contextMap.put("otherRiskFactors", document.getOtherRiskFactors());
 		contextMap.put("notes", document.getNotes());
-		contextMap.put("author", authorFromDocumentFunction.apply(document.getId()));
+
+		var author = authorFromDocumentFunction.apply(document.getId());
+		contextMap.put("author", author);
+
+		var involvedProfessionals = documentInvolvedProfessionalFinder.find(document.getInvolvedHealthcareProfessionalIds());
+		contextMap.put("involvedProfessionals", involvedProfessionals);
+
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
+		contextMap.put("appLogo", generatePdfImage("pdf/hsi-footer-118x21.png"));
+		contextMap.put("institutionLogo", generatePdfImage("pdf/hsi-header-250x72.png"));
+		contextMap.put("encounterId", document.getEncounterId());
+		contextMap.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
+		contextMap.put("sector", sectorNameFunction.apply(document.getSectorId()));
+		contextMap.put("room", roomNumberFunction.apply(document.getRoomId()));
+		contextMap.put("doctorsOffice", doctorsOfficeDescriptionFunction.apply(document.getDoctorsOfficeId()));
+		contextMap.put("shockRoom", shockRoomDescriptionFunction.apply(document.getShockRoomId()));
+
+		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
+		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> contextMap.put("patientCoverage", sharedPatientMedicalCoverageBo));
 	}
 
 	private <T extends IDocumentBo> void addRecipeContextDocumentData(Map<String, Object> ctx, T document) {
@@ -191,32 +232,45 @@ public class AuditableContextBuilder {
 
 		ctx.put("contactInfo", personContactInfoFunction.apply(((BasicPatientDto) ctx.get("patient")).getPerson().getId()));
 
-		var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
-		patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> ctx.put("patientCoverage", sharedPatientMedicalCoverageBo));
-
 		var date = document.getPerformedDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		ctx.put("requestDate", date);
 		ctx.put("institution",sharedInstitutionPort.fetchInstitutionById(document.getInstitutionId()));
 	}
 
 	private <T extends IDocumentBo> void addImageReportData(Map<String, Object> ctx, T document) {
+
 		ctx.put("diagnosticReportList", document.getDiagnosticReports());
-		ctx.put("transcribedDiagnosticReport", document.getTranscribedDiagnosticReport());
 		ctx.put("institutionHeader",sharedInstitutionPort.fetchInstitutionDataById(document.getInstitutionId()));
 		ctx.put("institutionAddress",sharedInstitutionPort.fetchInstitutionAddress(document.getInstitutionId()));
 		ctx.put("author", authorFromDocumentFunction.apply(document.getId()));
 
-		Optional.ofNullable(document.getDiagnosticReports())
-				.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingOrderAuthorId(document.getEncounterId()))
-				.ifPresent(professionalId -> ctx.put("authorOrder", sharedStaffPort.getProfessionalComplete(professionalId)));
-
-		Optional.ofNullable(document.getTranscribedDiagnosticReport())
-				.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingTranscribedOrderAuthor(l.getServiceRequestId()))
-				.ifPresent(professional -> ctx.put("authorTranscribedOrder", professional));
+		setAuthorOrder(ctx, document);
 
 		ctx.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		ctx.put("evolutionNote", document.getEvolutionNote());
 		ctx.put("conclusions", document.getConclusions());
+	}
+
+	private <T extends IDocumentBo> void setAuthorOrder(Map<String, Object> ctx, T document) {
+		var diagnosticReports = document.getDiagnosticReports();
+		if (!diagnosticReports.isEmpty()) {
+			document.getDiagnosticReports()
+					.stream()
+					.findFirst()
+					.flatMap(l -> sharedDiagnosticImagingOrder.getDiagnosticImagingOrderAuthorId(document.getEncounterId()))
+					.ifPresent(professionalId -> ctx.put("authorOrder", sharedStaffPort.getProfessionalComplete(professionalId)));
+
+			document.getDiagnosticReports()
+					.stream()
+					.findFirst()
+					.map(DiagnosticReportBo::getEncounterId)
+					.flatMap(sharedDiagnosticImagingOrder::getDiagnosticImagingTranscribedOrderAuthor)
+					.ifPresent(professionalName -> ctx.put("authorTranscribedOrder", professionalName));
+		}
+	}
+
+	private <T extends IDocumentBo> void addAnestheticReportData(Map<String, Object> ctx, T document) {
+		ctx.put("chart", document.getAnestheticChart());
 	}
 
 	private <T extends IDocumentBo> void addDigitalRecipeContextDocumentData(Map<String, Object> ctx, T document) {
@@ -304,5 +358,17 @@ public class AuditableContextBuilder {
 			throw new RuntimeException(e);
 		}
 	}
+
+	private String calculatePatientAge(BasicPatientDto patientDto) {
+		if (patientDto.getPerson() == null || patientDto.getPerson().getPersonAge() == null)
+			return "";
+		var personAge = patientDto.getPerson().getPersonAge();
+		if (personAge.getTotalDays() < 46)
+			return personAge.getTotalDays() + " días";
+		if (personAge.getYears() > 0)
+			return personAge.getYears() + (personAge.getYears() == 1 ? " año" : " años");
+		return personAge.getMonths() + (personAge.getMonths() == 1 ? " mes " : " meses ") + personAge.getDays() + (personAge.getDays() == 1 ? " día" : " días" );
+	}
+
 }
 

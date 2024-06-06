@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <title>Anesthetic Report</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Bootstrap core CSS -->
+    <th:block th:include="fragments/bootstrap-css.html :: style-inline"></th:block>
+    <style>
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
+
+        .img-container {
+            width: 700px;
+            height: 420px;
+        }
+    </style>
+</head>
+<body>
+<br/>
+<div class="img-container">
+    <img th:src="${chart != null ? chart : _ }" alt=""/>
+</div>
+<br/>
+</body>
+<footer class="footer-dark">
+</footer>
+</html>

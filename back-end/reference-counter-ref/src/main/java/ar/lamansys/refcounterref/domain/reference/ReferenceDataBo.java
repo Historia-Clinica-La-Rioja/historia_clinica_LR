@@ -24,6 +24,12 @@ public class ReferenceDataBo {
 
 	private Integer patientId;
 
+	private Integer patientMedicalCoverageId;
+
+	private Integer encounterId;
+
+	private Boolean consultation;
+
     private LocalDateTime date;
 
 	private ReferenceInstitutionBo institutionOrigin;
@@ -41,6 +47,8 @@ public class ReferenceDataBo {
 	private Integer serviceRequestId;
 
 	private SnomedBo procedure;
+
+	private String procedureCategory;
 
 	private Integer professionalPersonId;
 
@@ -82,19 +90,23 @@ public class ReferenceDataBo {
 		this.serviceRequestId = serviceRequestId;
 	}
 
-	public ReferenceDataBo(Integer id, Integer patientId, LocalDateTime date, String note,
+	public ReferenceDataBo(Integer id, Integer patientId, Integer patientMedicalCoverageId, Integer encounterId,
+						   Boolean consultation, LocalDateTime date, String note,
 						   Integer careLineId, String careLineDescription,
 						   Integer clinicalSpecialtyOriginId, String clinicalSpecialtyOriginName,
-						   Integer institutionOriginId, String institutionOriginName,
-						   Integer institutionDestinationId, String institutionDestinationName,
+						   Integer institutionOriginId, String institutionOriginName, Short departmentOriginId, String departmentOriginName, String provinceOriginName,
+						   Integer institutionDestinationId, String institutionDestinationName, Short departmentDestinationId, String departmentDestinationName,
 						   Integer professionalPersonId, Integer priorityId, Short closureType,
 						   String phonePrefix, String phoneNumber, Integer serviceRequestId,
 						   Integer createdBy, Short statusId, Short regulationStateId) {
 		this.id = id;
 		this.patientId = patientId;
+		this.patientMedicalCoverageId = patientMedicalCoverageId;
+		this.encounterId = encounterId;
+		this.consultation = consultation;
 		this.date = date;
-		this.institutionOrigin = new ReferenceInstitutionBo(institutionOriginId, institutionOriginName);
-		this.institutionDestination = new ReferenceInstitutionBo(institutionDestinationId, institutionDestinationName);
+		this.institutionOrigin = new ReferenceInstitutionBo(institutionOriginId, institutionOriginName, departmentOriginId, departmentOriginName, provinceOriginName);
+		this.institutionDestination = new ReferenceInstitutionBo(institutionDestinationId, institutionDestinationName, departmentDestinationId, departmentDestinationName);
 		this.note = note;
 		this.careLine = new CareLineBo(careLineId, careLineDescription);
 		this.clinicalSpecialtyOrigin = new ClinicalSpecialtyBo(clinicalSpecialtyOriginId, clinicalSpecialtyOriginName);

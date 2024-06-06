@@ -165,18 +165,53 @@ public enum AppFeature implements Feature {
 	@Label("Indica si está habilitado utilizar nuevo formato PDF para la generación de órdenes de prestación")
 	HABILITAR_NUEVO_FORMATO_PDF_ORDENES_PRESTACION,
 
-	@Label("Indica si están habilitados los reportes de violencias en desarrollo")
-	ENABLE_VIOLENCE_REPORT_DEVELOPMENT,
-
 	@Label("Indica si está habilitada la funcionalidad para asignar turnos desde el módulo centro de llamado")
 	HABILITAR_TURNOS_CENTRO_LLAMADO,
 
 	@Label("Indica si esta habilitada la auditoria de acceso a la historia clinica de un paciente")
 	HABILITAR_AUDITORIA_DE_ACCESO_EN_HC,
 
+	@Label("Indica si esta habilitada la pantalla de monitoreo de integreación con CIPRES")
+	HABILITAR_MONITOREO_CIPRES,
+
+	@Label("Indica si está habilitado generar el documento parte anestésico en internación")
+	HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO,
+
+	@Label("Permite flexibilidad a la hora de manipular franjas horarias de las agendas")
+	HABILITAR_AGENDA_DINAMICA,
+
+	@Label("Indica si está habilitada la gestión de Roles de API Pública")
+	ROLES_API_PUBLICA_EN_DESARROLLO,
+
+	@Label("Habilita turnos recurrentes")
+	HABILITAR_RECURRENCIA_EN_DESARROLLO,
+
+	@Label("Habilita la firma conjunta de documentos")
+	HABILITAR_FIRMA_CONJUNTA,
+	
+	@Label("Permite la actualización de la agenda cada 5 minutos")
+	HABILITAR_ACTUALIZACION_AGENDA,
+
+	@Label("Permite el uso del Administrador de datos personales")
+	HABILITAR_ADMINISTRADOR_DATOS_PERSONALES,
+
+	@Label("Habilita el formato Anexo II requerido para Mendoza")
+	HABILITAR_ANEXO_II_MENDOZA,
+
+	@Label("Habilita los gráficos de evoluciones antropométricas")
+	HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO,
+	
+	@Label("Permite la visualización de si un profesional cubre o no la obra social en turnos")
+	HABILITAR_VISTA_COBERTURA_TURNOS,
+	
+	@Label("Habilita el límite de 1 turno por profesional por persona en reserva online")
+	HABILITAR_LIMITE_TURNOS_PERSONA_PROFESIONAL,
+	
+	@Label("Indica si se muestra el botón 'Agregar nota de Evolución' para el rol ENFERMERO en las acciones de guardia")
+	HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO,
+
 	@Label("Indica si el módulo de cuestionarios está activo")
 	HABILITAR_CUESTIONARIOS,
-
 	;
 
 	public boolean isActive() {

@@ -39,6 +39,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	//En lugar de pasar el id puedo pasar el episodio entero porque ya lo voy a estar calculando desde antes en ambulatoria
 	@Input() episodeId: number;
 	@Input() showNewTriage: boolean = false;
+	@Input() isEmergencyCareTemporalPatient: boolean = false;
 
 	guardiaSummary: SummaryHeader = GUARDIA;
 	readonly STATES = EstadosEpisodio;
@@ -56,6 +57,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	lastTriage: Triage;
 
 	private hasEmergencyCareRelatedRole: boolean;
+	private hasNurseRole: boolean;
 	private hasRoleAdministrative: boolean;
 
 	availableActions: ActionInfo[] = [];
@@ -85,10 +87,10 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe(
 			(userRoles: ERole[]) => {
-				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA
+				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA
 				]);
 				this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
-
+				this.hasNurseRole = anyMatch<ERole>(userRoles, [ERole.ENFERMERO]);
 				this.setEpisodeState();
 			}
 		);
@@ -230,7 +232,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.availableActions = [];
 				// Following code within this function must be in this order
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote) {
+				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote && !this.isEmergencyCareTemporalPatient) {
 					let action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.MEDICAL_DISCHARGE_BUTTON',
 						id: 'medical_discharge',
@@ -257,7 +259,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if ((this.hasEmergencyCareRelatedRole) && this.episodeState === this.STATES.EN_ESPERA) {
+				if ((this.hasEmergencyCareRelatedRole || this.hasNurseRole) && this.episodeState === this.STATES.EN_ESPERA) {
 					let action: ActionInfo = {
 						label: 'guardia.home.episodes.episode.actions.atender.TITLE',
 						id: 'attend',
@@ -266,7 +268,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
+				if ((this.hasEmergencyCareRelatedRole || this.hasNurseRole) && this.episodeState === this.STATES.EN_ATENCION) {
 					let action: ActionInfo = {
 						label: 'Pasar a espera',
 						id: 'a-en-espera',

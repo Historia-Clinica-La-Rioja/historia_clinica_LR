@@ -32,14 +32,14 @@ public class ReferenceFileController {
     private final CreateReferenceFile createReferenceFile;
     private final DeleteFiles deleteFiles;
 
-    @PostMapping(value = "/patient/{patientId}/uploadFile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/patient/{patientId}/uploadFiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
-    public Integer uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
+    public List<Integer> uploadFile(@PathVariable(name = "institutionId") Integer institutionId,
                               @PathVariable(name = "patientId") Integer patientId,
-                              @RequestPart("file") MultipartFile file) throws IOException {
-        log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
-        var result = createReferenceFile.run(institutionId, patientId, file);
+                              @RequestPart("files") MultipartFile[] files) throws IOException {
+        log.debug("Input parameters -> institutionId {}, patientId {}, files {}", institutionId, patientId, files);
+        var result = createReferenceFile.run(institutionId, patientId, files);
         log.debug(OUTPUT, result);
         return result;
     }

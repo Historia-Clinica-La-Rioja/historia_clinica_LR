@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public enum EViolenceFrequency {
 
-	FIRST_TIME(1, "MOTHER"),
-	SOMETIMES(2, "SOMETIMES"),
-	FREQUENT(3, "FREQUENT"),
-	NO_INFORMATION(4, "NO_INFORMATION");
+	FIRST_TIME(1, "Primera vez"),
+	SOMETIMES(2, "Alguna vez anterior"),
+	FREQUENT(3, "Con frecuencia"),
+	NO_INFORMATION(4, "Sin información");
 
 	private Short id;
 

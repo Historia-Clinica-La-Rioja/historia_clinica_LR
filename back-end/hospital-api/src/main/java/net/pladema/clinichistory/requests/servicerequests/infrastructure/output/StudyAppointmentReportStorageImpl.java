@@ -6,12 +6,16 @@ import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentReportSnomedConceptRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.DocumentReportSnomedConcept;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.application.port.StudyAppointmentReportStorage;
@@ -20,6 +24,7 @@ import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmen
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListTranscribedDiagnosticReportInfoService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.TranscribedServiceRequestBo;
 import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.imagenetwork.derivedstudies.service.MoveStudiesService;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
@@ -30,10 +35,6 @@ import net.pladema.person.service.PersonService;
 import net.pladema.user.repository.UserPersonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -183,11 +184,10 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 		obs.setConfirmed(createFile);
 
 		Integer originInstitutionId =moveStudiesService.getInstitutionByAppointmetId(appointmentId);
-		if (originInstitutionId != null && originInstitutionId != obs.getInstitutionId())
+		if (originInstitutionId != null && !originInstitutionId.equals(obs.getInstitutionId()))
 			obs.setInstitutionId(originInstitutionId);
 
-		obs.setDiagnosticReports(diagnosticReportInfoService.getByAppointmentId(appointmentId) != null ? List.of(diagnosticReportInfoService.getByAppointmentId(appointmentId)) : null);
-		obs.setTranscribedDiagnosticReport(transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId));
+		obs.setDiagnosticReports(this.getDiagnosticReports(appointmentId));
 
 		obs.setPatientId(appointmentRepository.getPatientByAppointmentId(appointmentId));
 		BasicPatientDto bpd = patientExternalService.getBasicDataFromPatient(obs.getPatientId());
@@ -207,6 +207,21 @@ public class StudyAppointmentReportStorageImpl implements StudyAppointmentReport
 
 	private void deletedOldSnomedConcepts(Long reportDocumentId) {
 		documentReportSnomedConceptRepository.deleteByReportDocumentId(reportDocumentId);
+	}
+
+	private List<DiagnosticReportBo> getDiagnosticReports(Integer appointmentId) {
+
+		DiagnosticReportBo diagnosticReportFromOrder = diagnosticReportInfoService.getByAppointmentId(appointmentId);
+		if (diagnosticReportFromOrder != null)
+			return List.of(diagnosticReportFromOrder);
+
+		List<DiagnosticReportBo> transcribedDiagnosticReports = transcribedDiagnosticReportInfoService.getByAppointmentId(appointmentId)
+				.map(TranscribedServiceRequestBo::getDiagnosticReports)
+				.orElse(List.of());
+		if (!transcribedDiagnosticReports.isEmpty())
+			return transcribedDiagnosticReports;
+
+		return List.of();
 	}
 
 }

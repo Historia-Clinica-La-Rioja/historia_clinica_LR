@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportService;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
@@ -87,13 +89,16 @@ public class ReportsController {
 
 	private final FetchNominalAppointmentDetail fetchNominalAppointmentDetail;
 
+	private final SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService;
+
     public ReportsController(NominalDetailExcelService nominalDetailExcelService, ConsultationSummaryReport consultationSummaryReport,
 							 QueryFactory queryFactory, LocalDateMapper localDateMapper,
 							 PdfService pdfService, AnnexReportService annexReportService,
 							 FormReportService formReportService, ReportsMapper reportsMapper,
 							 FetchConsultations fetchConsultations, FeatureFlagsService featureFlagsService,
 							 FetchNominalConsultationDetail fetchNominalConsultationDetail,
-							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail){
+							 FetchNominalAppointmentDetail fetchNominalAppointmentDetail,
+							 SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService){
         this.nominalDetailExcelService = nominalDetailExcelService;
         this.consultationSummaryReport = consultationSummaryReport;
         this.queryFactory = queryFactory;
@@ -106,6 +111,7 @@ public class ReportsController {
 		this.featureFlagsService = featureFlagsService;
 		this.fetchNominalAppointmentDetail = fetchNominalAppointmentDetail;
 		this.fetchNominalConsultationDetail = fetchNominalConsultationDetail;
+		this.sharedAppointmentAnnexPdfReportService = sharedAppointmentAnnexPdfReportService;
 	}
 
     @GetMapping(value = "/{institutionId}/monthly")
@@ -195,18 +201,10 @@ public class ReportsController {
             @PathVariable Integer institutionId,
             @RequestParam(name = "appointmentId") Integer appointmentId)
             throws PDFDocumentException {
-        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        AnnexIIBo reportDataBo = annexReportService.getAppointmentData(appointmentId);
-        AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
-		reportDataDto.setRnos(reportDataBo.getRnos());
-        Map<String, Object> context = annexReportService.createAppointmentContext(reportDataDto);
-
-        LOG.debug(OUTPUT, reportDataDto);
-
+		var report = sharedAppointmentAnnexPdfReportService.run(appointmentId) ;
 		return StoredFileResponse.sendFile(
-				pdfService.generate("annex_report", context),
-				annexReportService.createConsultationFileName(appointmentId.longValue(), now),
+				report.getPdf(),
+				report.getFilename(),
 				MediaType.APPLICATION_PDF
 		);
     }
@@ -224,6 +222,8 @@ public class ReportsController {
         Map<String, Object> context = annexReportService.createConsultationContext(reportDataDto);
         LOG.debug(OUTPUT, reportDataDto);
 
+		setFlavor(context);
+
 		return StoredFileResponse.sendFile(
 				pdfService.generate("annex_report", context),
 				annexReportService.createConsultationFileName(documentId, now),
@@ -231,7 +231,14 @@ public class ReportsController {
 		);
     }
 
-    @GetMapping("/{institutionId}/appointment-formv")
+	private void setFlavor(Map<String, Object> context) {
+		if (featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA))
+			context.put("flavor", "mdz");
+		else
+			context.put("flavor", "pba");
+	}
+
+	@GetMapping("/{institutionId}/appointment-formv")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
     public ResponseEntity<Resource> getFormVAppointmentReport(
             @PathVariable Integer institutionId,

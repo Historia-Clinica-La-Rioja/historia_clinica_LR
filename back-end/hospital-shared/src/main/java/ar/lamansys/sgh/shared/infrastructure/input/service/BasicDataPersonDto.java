@@ -46,7 +46,7 @@ public class BasicDataPersonDto implements Serializable {
 
 	private String selfPerceivedGender;
 
-    private Short age;
+    private PersonAgeDto personAge;
 
     private LocalDate birthDate;
 
@@ -113,4 +113,7 @@ public class BasicDataPersonDto implements Serializable {
 	public Short getGenderId() {
 		return gender != null ? gender.getId(): null;
 	}
+
+	public Short getAge() { return this.personAge != null ? this.personAge.getYears() : null; }
+
 }

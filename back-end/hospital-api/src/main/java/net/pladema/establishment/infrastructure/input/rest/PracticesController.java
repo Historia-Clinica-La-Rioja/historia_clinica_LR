@@ -10,6 +10,8 @@ import net.pladema.establishment.application.practices.GetPracticesByActiveDiari
 import net.pladema.establishment.application.institutionpractices.GetPracticesByInstitution;
 import net.pladema.establishment.application.institutionpractices.GetPracticesFromInstitutions;
 
+import net.pladema.establishment.application.practices.GetPracticesByDepartmentId;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +37,10 @@ public class PracticesController {
 
 	private final GetPracticesFromInstitutionsByCareLineId getPracticesFromInstitutionsByCareLineId;
 
+	private final GetPracticesByDepartmentId getPracticesByDepartmentId;
+
 	@GetMapping("/institution/{institutionId}/by-institution")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA') || hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
 	public ResponseEntity<List<SharedSnomedDto>> getPractices(@PathVariable(name = "institutionId") Integer institutionId) {
 		log.debug("Input parameters -> institutionId {} ", institutionId);
 		List<SharedSnomedDto> result = getPracticesByInstitution.run(institutionId);
@@ -67,6 +71,15 @@ public class PracticesController {
 		log.debug("Input parameteres -> careLineId {}", careLineId);
 		List<SharedSnomedDto> result = getPracticesFromInstitutionsByCareLineId.run(careLineId);
 		log.debug("Get practices from domain -> ", result);
+		return ResponseEntity.ok().body(result);
+	}
+
+	@GetMapping("/department/{departmentId}")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public ResponseEntity<List<SharedSnomedDto>> getAllByDepartmentId(@PathVariable(name = "departmentId") Short departmentId) {
+		log.debug("Input parameteres -> departmentId {}", departmentId);
+		List<SharedSnomedDto> result = getPracticesByDepartmentId.run(departmentId);
+		log.debug("Practices from department -> {}", result);
 		return ResponseEntity.ok().body(result);
 	}
 

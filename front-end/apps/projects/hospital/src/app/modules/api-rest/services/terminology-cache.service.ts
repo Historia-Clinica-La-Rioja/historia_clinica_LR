@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { TerminologyQueueItemDto, TerminologyCSVDto, TerminologyECLStatusDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
-
+import { Observable } from 'rxjs';
+import {
+	TerminologyQueueItemDto,
+	TerminologyCSVDto,
+	TerminologyECLStatusDto,
+	ETerminologyKind,
+} from '@api-rest/api-model';
 import { environment } from '@environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,12 +18,12 @@ export class TerminologyCacheService {
 		private readonly http: HttpClient,
 	) { }
 
-	public getQueue(): Observable<TerminologyQueueItemDto[]> {
-		return this.http.get<TerminologyQueueItemDto[]>(`${environment.apiBase}/terminology/cache`);
+	public getQueue(kind: ETerminologyKind): Observable<TerminologyQueueItemDto[]> {
+		return this.http.get<TerminologyQueueItemDto[]>(`${environment.apiBase}/terminology/cache/${kind}`);
 	}
 
-	public getStatus(): Observable<TerminologyECLStatusDto[]> {
-		return this.http.get<TerminologyECLStatusDto[]>(`${environment.apiBase}/terminology/cache/status`);
+	public getStatus(kind: ETerminologyKind): Observable<TerminologyECLStatusDto[]> {
+		return this.http.get<TerminologyECLStatusDto[]>(`${environment.apiBase}/terminology/cache/${kind}/status`);
 	}
 
 	public addCsv(newCsv: TerminologyCSVDto): Observable<TerminologyQueueItemDto> {

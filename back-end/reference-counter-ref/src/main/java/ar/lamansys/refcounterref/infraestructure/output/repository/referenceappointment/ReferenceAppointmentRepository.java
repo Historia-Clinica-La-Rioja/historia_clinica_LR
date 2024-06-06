@@ -57,10 +57,21 @@ public interface ReferenceAppointmentRepository extends SGXAuditableEntityJPARep
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo(ra.pk.referenceId, ra.pk.appointmentId) " +
 			"FROM ReferenceAppointment ra " +
-			"WHERE ra.pk.referenceId IN (:referenceIds)" +
+			"JOIN Appointment a ON (ra.pk.appointmentId = a.id) " +
+			"WHERE ra.pk.referenceId IN (:referenceIds) " +
+			"AND a.appointmentStateId <> :appointmentStateId " +
+			"AND ra.deleteable.deleted = false")
+	List<ReferenceAppointmentBo> getAppointmentIdsByReferenceIds(@Param("referenceIds") List<Integer> referenceIds,
+																 @Param("appointmentStateId") Short appointmentStateId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentBo(ra.pk.referenceId, ra.pk.appointmentId) " +
+			"FROM ReferenceAppointment ra " +
+			"JOIN Appointment a ON (ra.pk.appointmentId = a.id) " +
+			"WHERE ra.pk.referenceId IN (:referenceIds) " +
 			"AND ra.deleteable.deleted = false")
 	List<ReferenceAppointmentBo> getAppointmentIdsByReferenceIds(@Param("referenceIds") List<Integer> referenceIds);
-
+	
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT new ar.lamansys.refcounterref.domain.referenceappointment.ReferenceAppointmentSummaryBo(ra.pk.referenceId, a.appointmentStateId, cr.closureTypeId) " +
 			"FROM ReferenceAppointment ra " +

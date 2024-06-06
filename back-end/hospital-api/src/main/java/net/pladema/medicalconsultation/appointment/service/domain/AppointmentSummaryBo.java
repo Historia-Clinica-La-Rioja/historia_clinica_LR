@@ -6,6 +6,7 @@ import lombok.Setter;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -39,11 +40,16 @@ public class AppointmentSummaryBo {
 
 	private String professionalNameSelfDetermination;
 
+	private Integer authorPersonId;
+
+	private LocalDateTime createdOn;
+
 	public AppointmentSummaryBo(Integer id, Short stateId, Integer institutionId,
 								String institutionName, LocalDate date, LocalTime hour,
 								String phonePrefix, String phoneNumber, String patientEmail, String professionalFirstName,
 								String professionalMiddleNames, String professionalLastName,
-								String professionalOtherLastNames, String professionalNameSelfDetermination) {
+								String professionalOtherLastNames, String professionalNameSelfDetermination,
+								Integer authorPersonId, LocalDateTime createdOn) {
 		this.id = id;
 		this.institution = new InstitutionBasicInfoBo(institutionId, institutionName);
 		this.stateId = stateId;
@@ -57,6 +63,8 @@ public class AppointmentSummaryBo {
 		this.professionalLastName = professionalLastName;
 		this.professionalOtherLastNames = professionalOtherLastNames;
 		this.professionalNameSelfDetermination = professionalNameSelfDetermination;
+		this.authorPersonId = authorPersonId;
+		this.createdOn = createdOn;
 	}
 
 }

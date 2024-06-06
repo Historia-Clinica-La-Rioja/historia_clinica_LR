@@ -4,6 +4,7 @@ import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.pladema.establishment.application.rules.determineregulatedreference.exceptions.RuleException;
 import net.pladema.establishment.controller.service.exceptions.HierarchicalUnitStaffException;
 
 import org.springframework.context.MessageSource;
@@ -37,4 +38,12 @@ public class EstablishmentExceptionHandler {
 		log.debug("HierarchicalUnitStaffException exception -> {}", ex.getMessage());
 		return buildErrorMessage(ex.getMessage(), locale);
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RuleException.class })
+	protected ApiErrorMessageDto handleRuleException(RuleException ex) {
+		log.debug("RuleException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
+	}
+
 }

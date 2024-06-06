@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { AbstractControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { CareLineDto, ClinicalSpecialtyDto, PracticeDto, ReferenceProblemDto } from '@api-rest/api-model';
 import { CareLineService } from '@api-rest/services/care-line.service';
@@ -10,6 +10,7 @@ import { PracticesService } from '@api-rest/services/practices.service';
 import { CareLineInstitutionPracticeService } from '@api-rest/services/care-line-institution-practice.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
+import { InstitutionsRulesService } from '../../services/institutions-rules.service';
 
 @Component({
 	selector: 'app-carelines-and-specialties-reference',
@@ -44,6 +45,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		this.setProblems = problems.map(problem => problem.snomed.sctid);
 		this.setCareLines();
 	}
+	@Output() regulationRequiredChange = new EventEmitter<boolean>();
 
 	constructor(
 		private readonly careLineService: CareLineService,
@@ -52,7 +54,7 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly practicesService: PracticesService,
 		private readonly careLineInstitutionPracticeService: CareLineInstitutionPracticeService,
-
+		private readonly institutionsRulesService: InstitutionsRulesService
 	) { }
 
 	ngOnInit() {
@@ -135,6 +137,31 @@ export class CarelinesAndSpecialtiesReferenceComponent implements OnInit {
 	onPracticeSelectionChange($event: any) {
 		const practice = this.originalPractices.find((p: PracticeDto) => p.id === $event);
 		this.formReference.controls.practiceOrProcedure.setValue(practice);
+		this.regulationRequiredEmmiter();
+	}
+
+	onSpecialtySelectionChange() {
+		if(this.formReference.value.consultation)
+			this.regulationRequiredEmmiter();
+	}
+
+	private regulationRequiredEmmiter(){
+		const specialtiesIds = this.getClinicalSpecialtiesIds();
+		const practiceId = this.formReference.getRawValue().practiceOrProcedure?.id;
+		const isConsultation = this.formReference.value.consultation;
+
+		if ((isConsultation && specialtiesIds.length) || (!isConsultation && practiceId)){
+			this.institutionsRulesService.validateRegulation(specialtiesIds,practiceId).subscribe(value =>{
+				this.regulationRequiredChange.emit(value);
+			});
+		}
+		else {
+			this.regulationRequiredChange.emit(false);
+		}
+	}
+
+	private getClinicalSpecialtiesIds(): number[] {
+		return this.formReference.value.clinicalSpecialties?.map(specialty => specialty.id)
 	}
 
 	clear(control: AbstractControl) {

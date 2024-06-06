@@ -1,10 +1,18 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
+import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -19,27 +27,33 @@ import net.pladema.person.repository.PersonRepository;
 @Service
 public class BookingPersonServiceImpl implements BookingPersonService {
 
-    private final BookingPersonRepository bookingPersonRepository;
+	private final String CANCEL_BOOKING_REASON = "Turno cancelado por paciente";
+
+	private final BookingPersonRepository bookingPersonRepository;
 
     private final AppointmentRepository appointmentRepository;
 
     private final PersonRepository personRepository;
 
+	private final HistoricAppointmentStateRepository historicAppointmentStateRepository;
+
     public BookingPersonServiceImpl(
             BookingPersonRepository bookingPersonRepository,
             AppointmentRepository appointmentRepository,
-            PersonRepository personRepository
+            PersonRepository personRepository,
+			HistoricAppointmentStateRepository historicAppointmentStateRepository
     ) {
         this.bookingPersonRepository = bookingPersonRepository;
         this.appointmentRepository = appointmentRepository;
         this.personRepository = personRepository;
+		this.historicAppointmentStateRepository = historicAppointmentStateRepository;
     }
 
     @Override
-    public Integer save(BookingPersonBo bookingPersonBo) {
+    public BookingPerson save(BookingPersonBo bookingPersonBo) {
         BookingPerson bp = mapTo(bookingPersonBo);
         bp = bookingPersonRepository.save(bp);
-        return bp.getId();
+        return bp;
     }
 
     @Override
@@ -63,17 +77,30 @@ public class BookingPersonServiceImpl implements BookingPersonService {
 
     @Override
     public Optional<BookingPerson> findByEmail(String email) {
-        return bookingPersonRepository.findByEmail(email);
+		final int AUX_PAGEABLE_PAGE_NUMBER = 0;
+		final int AUX_PAGEABLE_PAGE_SIZE = 1;
+		Pageable pageable = PageRequest.of(AUX_PAGEABLE_PAGE_NUMBER, AUX_PAGEABLE_PAGE_SIZE);
+		Page<BookingPerson> page = bookingPersonRepository.findByEmail(email, pageable);
+		List<BookingPerson> content = page.getContent();
+		if (content.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(content.get(0));
+		}
     }
 
     @Override
     public void deleteByUuid(String uuid) {
         bookingPersonRepository.findByUuid(uuid).ifPresent(
-                id -> appointmentRepository.updateState(
+                id -> {
+					appointmentRepository.updateState(
                         id,
                         AppointmentState.CANCELLED,
-                        UserInfo.getCurrentAuditor()
-                )
+                        UserInfo.getCurrentAuditor(),
+						LocalDateTime.now()
+                );
+				historicAppointmentStateRepository.save(new HistoricAppointmentState(id, AppointmentState.CANCELLED, CANCEL_BOOKING_REASON));
+				}
         );
     }
 
@@ -102,6 +129,8 @@ public class BookingPersonServiceImpl implements BookingPersonService {
 				.genderId(bookingPerson.getGenderId())
 				.idNumber(bookingPerson.getIdentificationNumber())
 				.lastName(bookingPerson.getLastName())
+				.phoneNumber(bookingPerson.getPhoneNumber())
+				.phonePrefix(bookingPerson.getPhonePrefix())
 				.build();
 
     }

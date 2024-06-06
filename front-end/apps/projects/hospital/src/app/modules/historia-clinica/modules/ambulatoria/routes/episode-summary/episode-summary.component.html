@@ -9,8 +9,11 @@
 				<app-patient-card-header [patient]="patient" [personPhoto]="personPhoto">
 				</app-patient-card-header>
 				<mat-divider class="header-divider" [vertical]="true"></mat-divider>
-				<div fxLayout="column" fxLayoutAlign="center start">
-					<h2>Episodio de Guardia N° {{emergencyCareEpisodeInProgress.id}}</h2>
+				<div fxLayout="column" fxLayoutAlign="space-between start">
+					<h2 class="nro-episode">Episodio de Guardia N° {{emergencyCareEpisodeInProgress.id}}</h2>
+					<app-identifier-cases [identifierCase]="identiferCases.INSTITUTION"
+						[description]="responseEmergencyCareDto.institutionName">
+					</app-identifier-cases>
 					<span *ngIf="responseEmergencyCareDto" class="color-disabled">Finalizado
 						{{responseEmergencyCareDto.endDate | viewDateDto: 'localdatetime' | date : 'short' }}</span>
 				</div>

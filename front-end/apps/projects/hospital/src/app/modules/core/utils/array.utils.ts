@@ -26,3 +26,7 @@ export const pushIfNotExists = <T>(data: T[], obj: T, compareFunction: (obj1: T,
 export const sortBy = (field: string) => <T>(data: T[]): T[] => {
 	return data?.sort((a, b) => a[field] < b[field] ? -1 : 1);
 };
+
+export const getArrayCopyWithoutElementAtIndex = <T>(arr: T[], index: number): T[] => {
+	return arr.slice(0, index).concat(arr.slice(index + 1));
+};

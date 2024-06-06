@@ -1,0 +1,17 @@
+@mixin background-primary($theme) {
+    $palette-primary: map-get($theme, primary);
+    .background-primary {
+        background-color: mat-color($palette-primary, 100);
+        border-radius: 10px;
+    }
+
+    .title-warning{
+        color: mat-color($palette-primary);
+        font-weight: 500;
+        font-size: large;
+    }
+
+    .error-border{
+        border:1px solid red;
+    }
+}

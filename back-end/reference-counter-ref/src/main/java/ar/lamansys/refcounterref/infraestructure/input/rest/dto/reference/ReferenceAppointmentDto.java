@@ -22,4 +22,8 @@ public class ReferenceAppointmentDto {
 
 	private String professionalFullName;
 
+	private String authorFullName;
+
+	private DateTimeDto createdOn;
+
 }

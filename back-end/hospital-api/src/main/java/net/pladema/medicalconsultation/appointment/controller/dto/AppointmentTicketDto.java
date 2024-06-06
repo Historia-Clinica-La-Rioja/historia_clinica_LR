@@ -40,7 +40,7 @@ public class AppointmentTicketDto {
 
 		institution = bo.getInstitution().toUpperCase(Locale.ROOT);
 		if (bo.getDocumentNumber() != null)
-			documentNumber = decimalFormat.format(Integer.parseInt(bo.getDocumentNumber())).replaceAll(",", ".");
+			documentNumber = decimalFormat.format(Long.parseLong(bo.getDocumentNumber())).replaceAll(",", ".");
 		else
 			documentNumber = null;
 		patientFullName = bo.getPatientFullName().toUpperCase(Locale.ROOT);

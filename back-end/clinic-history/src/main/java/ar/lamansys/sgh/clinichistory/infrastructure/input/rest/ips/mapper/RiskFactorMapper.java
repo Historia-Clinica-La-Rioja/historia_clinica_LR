@@ -36,5 +36,4 @@ public interface RiskFactorMapper {
     @Mapping(target = "riskFactorObservation", source = "riskFactor")
 	RiskFactorObservationDto fromRiskFactorObservationBo(RiskFactorObservationBo riskFactorObservationBo);
 
-
 }

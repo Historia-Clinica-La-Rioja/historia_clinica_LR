@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, DoctorInfoDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
-import { CompletarEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/completar-estudio/completar-estudio.component';
 import { VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -17,10 +16,12 @@ import { capitalize } from '@core/utils/core.utils';
 import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
 import { ReferenceCompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/components/reference-complete-study/reference-complete-study.component';
 import { ReportReference } from '@historia-clinica/modules/ambulatoria/components/reference-study-closure-information/reference-study-closure-information.component';
-import { REQUESTED_REFERENCE, getColoredIconText } from '@access-management/utils/reference.utils';
+import { getColoredIconText } from '@access-management/utils/reference.utils';
 import { Color } from '@presentation/colored-label/colored-label.component';
 import { PrescriptionStatus } from '@historia-clinica/modules/ambulatoria/components/reference-request-data/reference-request-data.component';
 import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/services/ambulatoria-summary-facade.service';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { CompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/complete-study/complete-study.component';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -59,6 +60,7 @@ export class StudyComponent implements OnInit {
 
 	private sameOrderStudies: Map<Number, StudyInformation[]>;
 
+
 	constructor(
 		private readonly prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
@@ -71,17 +73,17 @@ export class StudyComponent implements OnInit {
 
 	contentBuilder(diagnosticReport: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): Content {
 		const reportImageCase = diagnosticReport as DiagnosticWithTypeReportInfoDto
+		const associatedStudiesTranscribed: string[] = reportImageCase.infoOrderInstances?.associatedStudies?.map(study => capitalize(study))
 		const prescriptionStatus =  diagnosticReport.statusId ? this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId) :
 		this.prescripcionesService.renderStatusDescriptionStudyImage(reportImageCase.infoOrderInstances.status)
 		const updateDate = diagnosticReport.creationDate;
-		const closureType = diagnosticReport?.referenceRequestDto?.closureTypeId;
-		const isReferenceStudyPending = diagnosticReport?.referenceRequestDto && !closureType;
+		const isReferenceStudyPending = diagnosticReport?.referenceRequestDto;
 		return {
 			status: {
 				description: prescriptionStatus,
 				cssClass: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? 'red' : 'blue'
 			},
-			description: capitalize(diagnosticReport.snomed.pt),
+			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(', ') : capitalize(diagnosticReport.snomed.pt),
 			extra_info: diagnosticReport.healthCondition ? [{
 				title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
 				content:  diagnosticReport.healthCondition.snomed.pt,
@@ -149,15 +151,18 @@ export class StudyComponent implements OnInit {
 					disableClose: true,
 				});
 		} else {
-			newCompleteStudy = this.dialog.open(CompletarEstudioComponent,
-				{
-					data: {
-						diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
-						patientId: this.patientId
-					},
-					width: '45%',
-					disableClose: true,
-				});
+				newCompleteStudy = this.dialog.open(CompleteStudyComponent,
+					{
+						data: {
+							diagnosticReport: this.sameOrderStudies.has(reportOrder) ? this.sameOrderStudies.get(reportOrder) : [diagnosticReport],
+							patientId: this.patientId,
+							order: diagnosticReport.serviceRequestId,
+							creationDate: diagnosticReport.creationDate,
+							status: this.getPrescriptionStatus(diagnosticReport.statusId)
+						},
+						width: '50%',
+						disableClose: true,
+					});
 		}
 
 		newCompleteStudy.afterClosed().subscribe((completed: any) => {
@@ -199,10 +204,13 @@ export class StudyComponent implements OnInit {
 			this.dialog.open(VerResultadosEstudioComponent,
 				{
 					data: {
-						diagnosticReport,
+						diagnosticReport: diagnosticReport,
 						patientId: this.patientId,
+						order: diagnosticReport.serviceRequestId,
+						creationDate: diagnosticReport.creationDate,
+						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
-					width: '35%',
+					width: '50%',
 				});
 		}
 	}
@@ -211,10 +219,27 @@ export class StudyComponent implements OnInit {
 		this.prescripcionesService.downloadPrescriptionPdf(this.patientId, [serviceRequestId], PrescriptionTypes.STUDY);
 	}
 
+	confirmDeleteStudy(studyToDelete: DiagnosticReportInfoDto): void {
+		const dialogConfirmDeleteStudy = this.dialog.open(ConfirmDialogComponent,
+			{
+				data: {
+					title: 'ambulatoria.paciente.studies.dialog.TITLE_DELETE_STUDY_CONFIRM',
+					okButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.menu_items.DELETE',
+					cancelButtonLabel: 'ambulatoria.paciente.problemas.nueva_opened_confirm_dialog.CANCEL_BUTTON',
+					showMatIconError: true,
+					okBottonColor: 'warn'
+				}
+			}
+		);
+		dialogConfirmDeleteStudy.afterClosed().subscribe( result => {
+			if (result) this.deleteStudy(studyToDelete)
+		});
+	}
+
 	deleteStudy(studyToDelete: DiagnosticReportInfoDto): void {
 		let deleteQuery = this.sameOrderStudies.has(studyToDelete.serviceRequestId) ?
-			this.sameOrderStudies.get(studyToDelete.serviceRequestId).map(report => this.prescripcionesService.deleteStudy(this.patientId, report.diagnosticInformation.id))
-			: this.prescripcionesService.deleteStudy(this.patientId, studyToDelete.id);
+		this.sameOrderStudies.get(studyToDelete.serviceRequestId).map(report => this.prescripcionesService.deleteStudy(this.patientId, report.diagnosticInformation.id))
+		: this.prescripcionesService.deleteStudy(this.patientId, studyToDelete.id);
 		forkJoin(deleteQuery).subscribe(
 			() => {
 				this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.toast_messages.DELETE_STUDY_SUCCESS');
@@ -263,7 +288,7 @@ export class StudyComponent implements OnInit {
 		return {
 			dto: reference,
 			priority: reference.priority,
-			coloredIconText: getColoredIconText(REQUESTED_REFERENCE)
+			coloredIconText: getColoredIconText(reference.closureTypeDescription)
 		}
 	}
 
@@ -271,7 +296,6 @@ export class StudyComponent implements OnInit {
 		return {
 			doctor: diagnosticReport.referenceRequestDto.professionalInfo,
 			observations: diagnosticReport.observations,
-			closureTypeDescription: diagnosticReport.referenceRequestDto.closureTypeDescription,
 			date: diagnosticReport.referenceRequestDto.closureDateTime
 		}
 	}

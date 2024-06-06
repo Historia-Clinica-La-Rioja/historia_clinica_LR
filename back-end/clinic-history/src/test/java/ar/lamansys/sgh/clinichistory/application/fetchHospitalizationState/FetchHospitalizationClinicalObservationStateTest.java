@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,7 +40,7 @@ class FetchHospitalizationClinicalObservationStateTest {
 	void test_getRiskFactorsGeneralState_complete() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 2;
-		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
+		when(hchClinicalObservationRepository.getGeneralState(anyInt(), anyList()))
 				.thenReturn(new MapClinicalObservationVo(mockRiskFactorsVo(quantity)));
 		Last2RiskFactorsBo last2RiskFactorsBo = clinicalObservationGeneralStateService.getLast2RiskFactorsGeneralState(internmentEpisodeId);
 
@@ -60,7 +62,7 @@ class FetchHospitalizationClinicalObservationStateTest {
 	void test_getRiskFactorsGeneralState_partial() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 1;
-		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
+		when(hchClinicalObservationRepository.getGeneralState(anyInt(), anyList()))
 				.thenReturn(new MapClinicalObservationVo(mockRiskFactorsVo(quantity)));
 		Last2RiskFactorsBo last2RiskFactorsBo = clinicalObservationGeneralStateService.getLast2RiskFactorsGeneralState(internmentEpisodeId);
 
@@ -80,7 +82,7 @@ class FetchHospitalizationClinicalObservationStateTest {
 	void test_getRiskFactorsGeneralState_empty() {
 		Integer internmentEpisodeId = 1;
 		int quantity = 0;
-		when(hchClinicalObservationRepository.getGeneralState(internmentEpisodeId))
+		when(hchClinicalObservationRepository.getGeneralState(anyInt(), anyList()))
 				.thenReturn(new MapClinicalObservationVo(mockRiskFactorsVo(quantity)));
 		Last2RiskFactorsBo last2RiskFactorsBo =  clinicalObservationGeneralStateService.getLast2RiskFactorsGeneralState(internmentEpisodeId);
 

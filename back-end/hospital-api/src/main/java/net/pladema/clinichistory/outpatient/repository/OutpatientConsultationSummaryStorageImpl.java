@@ -8,9 +8,8 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBasicDataBo;
+
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -91,48 +90,6 @@ public class OutpatientConsultationSummaryStorageImpl implements OutpatientConsu
         );
         return result;
     }
-
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly = true)
-	@Override
-	public List<OutpatientBasicDataBo> getOutpatientConsultationsToCipres(Integer limit) {
-		String sqlString =" SELECT oc.id, d.id, oc.startDate, cs.sctidCode, i.sisaCode, oc.patientId, pe.id, " +
-				"pe.identificationTypeId, pe.identificationNumber, pe.genderId " +
-				"FROM OutpatientConsultation oc " +
-				"JOIN ClinicalSpecialty cs ON (oc.clinicalSpecialtyId = cs.id) " +
-				"JOIN Institution i ON (oc.institutionId = i.id) " +
-				"JOIN Document d ON (oc.id = d.sourceId) " +
-				"JOIN Patient p ON (oc.patientId = p.id) " +
-				"JOIN Person pe ON (p.personId = pe.id) " +
-				"WHERE oc.billable = TRUE " +
-				"AND d.statusId = '" + DocumentStatus.FINAL + "' " +
-				"AND d.typeId = " + DocumentType.OUTPATIENT +
-				"AND d.sourceTypeId = " + SourceType.OUTPATIENT +
-				"AND oc.id NOT IN (SELECT ce.encounterId FROM CipresEncounter ce) " +
-				"AND pe.genderId IS NOT NULL " +
-				"AND pe.identificationNumber IS NOT NULL " +
-				"AND pe.identificationTypeId IS NOT NULL ";
-
-		List<Object[]> queryResult = entityManager.createQuery(sqlString)
-				.setMaxResults(limit)
-				.getResultList();
-		List<OutpatientBasicDataBo> result = new ArrayList<>();
-		queryResult.forEach(a ->
-				result.add(new OutpatientBasicDataBo(
-						(Integer)a[0],
-						(Long)a[1],
-						(LocalDate)a[2],
-						(String) a[3],
-						(String) a[4],
-						(Integer) a[5],
-						(Integer)a[6],
-						(Short)a[7],
-						(String)a[8],
-						(Short)a[9])
-				)
-		);
-		return result;
-	}
 
 	@Override
 	public List<ProcedureSummaryBo> getProceduresByOutpatientIds(List<Integer> outpatientIds) {

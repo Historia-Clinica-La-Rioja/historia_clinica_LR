@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -10,7 +11,9 @@ export class ContextService {
 	public institutionId$: Observable<number> = this.institutionSource.asObservable();
 
 
-	constructor() { }
+	constructor(
+		private extensionService: WCExtensionsService,
+	) { }
 
 	/**
 	 * Retorna el id de la institución del contexto
@@ -27,6 +30,7 @@ export class ContextService {
 		this._institutionId = id;
 		localStorage.setItem("INSTITUTION_ID", id.toString());
 		this.institutionSource.next(id);
+		this.extensionService.fetchExtensions();
 	}
 
 }

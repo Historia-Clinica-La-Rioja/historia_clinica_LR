@@ -2,9 +2,9 @@ package net.pladema.cipres.application.getconsultations;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.OutpatientConsultationDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.interoperability.cipres.CipresOutpatientConsultationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAnthropometricDataDto;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedOutpatientConsultationPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedCipresOutpatientConsultationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedRiskFactorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedDto;
 import lombok.RequiredArgsConstructor;
@@ -28,26 +28,28 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GetConsultations {
 
-	private final SharedOutpatientConsultationPort sharedOutpatientConsultationPort;
+	private final SharedCipresOutpatientConsultationPort sharedCipresOutpatientConsultationPort;
 
 	public List<OutpatientConsultationBo> run() {
-		var consultations = sharedOutpatientConsultationPort.getOutpatientConsultationsToCipres();
+		var consultations = sharedCipresOutpatientConsultationPort.getOutpatientConsultations();
 		var result = consultations.stream().map(this::mapToOutpatientConsultationBo).collect(Collectors.toList());
 		log.debug("Output size {} -> ", result.size());
 		return result;
 	}
 
-	private OutpatientConsultationBo mapToOutpatientConsultationBo(OutpatientConsultationDto consultation) {
+	private OutpatientConsultationBo mapToOutpatientConsultationBo(CipresOutpatientConsultationDto consultation) {
 		 return OutpatientConsultationBo.builder()
 				 .id(consultation.getId())
 				 .date(consultation.getDate())
 				 .patient(mapToBasicPatientDataBo(consultation.getPatient()))
+				 .clinicalSpecialtyId(consultation.getClinicalSpecialtyId())
 				 .clinicalSpecialtySctid(consultation.getClinicalSpecialtySctid())
 				 .anthropometricData(mapToAnthropometricDataBo(consultation.getAnthropometricData()))
 				 .riskFactor(mapToSharedRiskFactorBo(consultation.getRiskFactor()))
 				 .problems(consultation.getProblems().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
 				 .procedures(consultation.getProcedures().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
 				 .medications(consultation.getMedications().stream().map(this::mapToSnomedBo).collect(Collectors.toList()))
+				 .institutionId(consultation.getInstitutionId())
 				 .institutionSisaCode(consultation.getInstitutionSisaCode())
 				 .build();
 	}

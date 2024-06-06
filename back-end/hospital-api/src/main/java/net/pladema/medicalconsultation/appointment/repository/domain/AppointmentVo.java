@@ -27,16 +27,8 @@ public class AppointmentVo {
 	private Integer observationBy;
 
 	private DiaryLabel diaryLabel;
-
-	public AppointmentVo(Appointment appointment) {
-		this.appointment = appointment;
-		this.medicalAttentionTypeId = null;
-		this.stateChangeReason = null;
-		this.diaryId = null;
-		this.observation = null;
-		this.observationBy = null;
-		this.diaryLabel = null;
-	}
+	
+	private Short recurringAppointmentTypeId;
 
 	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy) {
 		this.appointment = appointment;
@@ -46,6 +38,7 @@ public class AppointmentVo {
 		this.observation = observation;
 		this.observationBy = observationBy;
 		this.diaryLabel = null;
+		this.recurringAppointmentTypeId = null;
 	}
 
 	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String observation, Integer observationBy) {
@@ -56,9 +49,10 @@ public class AppointmentVo {
 		this.observationBy = observationBy;
 		this.stateChangeReason = null;
 		this.diaryLabel = null;
+		this.recurringAppointmentTypeId = null;
 	}
 
-	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy, DiaryLabel diaryLabel) {
+	public AppointmentVo(Integer diaryId, Appointment appointment, Short medicalAttentionTypeId, String stateChangeReason, String observation, Integer observationBy, DiaryLabel diaryLabel, Short recurringAppointmentTypeId) {
 		this.appointment = appointment;
 		this.stateChangeReason = stateChangeReason;
 		this.medicalAttentionTypeId = medicalAttentionTypeId;
@@ -66,6 +60,7 @@ public class AppointmentVo {
 		this.observation = observation;
 		this.observationBy = observationBy;
 		this.diaryLabel = diaryLabel;
+		this.recurringAppointmentTypeId = recurringAppointmentTypeId;
 	}
 
 	public Integer getId() {

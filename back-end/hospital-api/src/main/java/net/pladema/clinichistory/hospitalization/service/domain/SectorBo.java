@@ -13,7 +13,14 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class SectorBo implements Serializable {
 
-    private Integer id;
+	private Integer id;
 
-    private String description;
+	private String description;
+
+	private Short type;
+
+	public SectorBo(Integer id, String description) {
+		this.id = id;
+		this.description = description;
+	}
 }

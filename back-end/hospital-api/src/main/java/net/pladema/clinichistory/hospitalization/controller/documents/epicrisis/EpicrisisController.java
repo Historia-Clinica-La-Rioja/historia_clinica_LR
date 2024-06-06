@@ -89,6 +89,9 @@ public class EpicrisisController {
                 .ifPresentOrElse(epicrisis::setPatientInfo,() -> new NotFoundException("El paciente no existe", "El paciente no existe"));
         epicrisis.setEncounterId(internmentEpisodeId);
         epicrisis.setInstitutionId(institutionId);
+		epicrisis.setRoomId(internmentEpisodeService.getInternmentEpisodeRoomId(internmentEpisodeId));
+		epicrisis.setSectorId(internmentEpisodeService.getInternmentEpisodeSectorId(internmentEpisodeId));
+		internmentEpisodeService.getMedicalCoverage(internmentEpisodeId).ifPresent(medicalCoverage -> epicrisis.setMedicalCoverageId(medicalCoverage.getId()));
         createEpicrisisService.execute(epicrisis, false);
 
         LOG.debug(OUTPUT, Boolean.TRUE);

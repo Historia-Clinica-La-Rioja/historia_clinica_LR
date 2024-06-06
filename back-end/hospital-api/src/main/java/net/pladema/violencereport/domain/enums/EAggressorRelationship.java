@@ -6,20 +6,20 @@ import lombok.Getter;
 @Getter
 public enum EAggressorRelationship {
 
-	PARTNER(1, "PARTNER"),
-	EX_PARTNER(2, "EX_PARTNER"),
-	FATHER(3, "FATHER"),
-	STEPFATHER(4, "STEPFATHER"),
-	MOTHER(5, "MOTHER"),
-	STEPMOTHER(6, "STEPMOTHER"),
-	SON(7, "SON"),
-	DAUGHTER(8, "DAUGHTER"),
-	SIBLING(9, "SIBLING"),
-	SUPERIOR(10, "SUPERIOR"),
-	ACQUAINTANCE(11, "ACQUAINTANCE"),
-	NO_RELATIONSHIP(12, "NO_RELATIONSHIP"),
-	NO_INFORMATION(13, "NO_INFORMATION"),
-	DOES_NOT_ANSWER(14, "DOES_NOT_ANSWER"),;
+	PARTNER(1, "Pareja/novio/a"),
+	EX_PARTNER(2, "Ex pareja"),
+	FATHER(3, "Padre"),
+	STEPFATHER(4, "Progenitor afín (padrastro)"),
+	MOTHER(5, "Madre"),
+	STEPMOTHER(6, "Progenitora afín (madrastra)"),
+	SON(7, "Hijo"),
+	DAUGHTER(8, "Hija"),
+	SIBLING(9, "Hermano/a"),
+	SUPERIOR(10, "Superior jerárquico"),
+	ACQUAINTANCE(11, "Otra/o conocida/o"),
+	NO_RELATIONSHIP(12, "Sin vínculo"),
+	NO_INFORMATION(13, "Sin información"),
+	DOES_NOT_ANSWER(14, "No contesta"),;
 
 	private Short id;
 

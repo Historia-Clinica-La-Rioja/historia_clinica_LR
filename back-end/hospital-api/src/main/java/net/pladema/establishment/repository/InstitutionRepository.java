@@ -40,7 +40,7 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"JOIN City c ON (a.cityId = c.id) " +
 			"WHERE c.departmentId = :departmentId " +
 			"ORDER BY i.name ")
-	List<InstitutionBasicInfoBo> findByDeparmentId(@Param("departmentId") Short departmentId);
+	List<InstitutionBasicInfoBo> findByDepartmentId(@Param("departmentId") Short departmentId);
 
 	@Query("SELECT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) "+
 			"FROM Institution i " +
@@ -200,4 +200,15 @@ public interface InstitutionRepository extends JpaRepository<Institution, Intege
 			"AND dp.deleteable.deleted IS FALSE ")
 	List<InstitutionBasicInfoBo> getByDepartmentAndPractice(@Param("departmentId") Short departmentId,
 															@Param("practiceSnomedId") Integer practiceSnomedId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.establishment.service.domain.InstitutionBasicInfoBo(i.id, i.name) " +
+			"FROM Institution i " +
+		  	"JOIN InstitutionalGroupInstitution igi ON (igi.institutionId = i.id) " +
+		  	"JOIN InstitutionalGroup ig ON (ig.id = igi.institutionalGroupId) " +
+		  	"WHERE ig.id IN :institutionalGroupsIds " +
+		  	"AND ig.deleteable.deleted IS FALSE " +
+		  	"AND igi.deleteable.deleted IS FALSE")
+	List<InstitutionBasicInfoBo> getInstitutionsRelatedToInstitutionalGroups(@Param("institutionalGroupsIds") List<Integer> institutionalGroupsIds);
+
 }

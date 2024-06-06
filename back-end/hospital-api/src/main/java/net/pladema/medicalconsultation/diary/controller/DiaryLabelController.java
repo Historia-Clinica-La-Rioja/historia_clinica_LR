@@ -28,7 +28,7 @@ public class DiaryLabelController {
 	public static final String OUTPUT = "Output -> {}";
 
 	@GetMapping("/labels")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ENFERMERO, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<List<DiaryLabelDto>> getDiaryLabels(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "diaryId") Integer diaryId) {

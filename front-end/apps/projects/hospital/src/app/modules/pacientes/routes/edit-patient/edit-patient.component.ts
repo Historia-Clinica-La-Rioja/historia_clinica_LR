@@ -6,8 +6,6 @@ import {
 	BMPatientDto, BMPersonDto, CompletePatientDto, EAuditType, EducationLevelDto, ERole, EthnicityDto, GenderDto,
 	IdentificationTypeDto, PatientMedicalCoverageDto, PatientType, PersonOccupationDto, RoleAssignmentDto, SelfPerceivedGenderDto
 } from '@api-rest/api-model';
-import * as moment from 'moment';
-import { Moment } from 'moment';
 
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,7 +25,7 @@ import { MapperService } from '@core/services/mapper.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { DatePipeFormat } from '@core/utils/date.utils';
 import { hasError, scrollIntoError, updateControlValidator, VALIDATIONS } from '@core/utils/form.utils';
-import { momentParseDate } from '@core/utils/moment.utils';
+import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { PATIENT_TYPE } from '@core/utils/patient.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { EditIdentificationNumberComponent, PersonBasicDataResponseCustom } from '@pacientes/dialogs/edit-identification-number/edit-identification-number.component';
@@ -70,7 +68,7 @@ export class EditPatientComponent implements OnInit {
 	public form: UntypedFormGroup;
 	public personResponse: BMPatientDto;
 	public formSubmitted = false;
-	public today: Moment = moment();
+	public today = newDate();
 	public hasError = hasError;
 	public genders: GenderDto[];
 	public selfPerceivedGenders: SelfPerceivedGenderDto[];
@@ -602,6 +600,7 @@ export class EditPatientComponent implements OnInit {
 			lastName: this.form.controls.lastName.value,
 			middleNames: this.form.controls.middleNames.value && this.form.controls.middleNames.value.length ? this.form.controls.middleNames.value : null,
 			otherLastNames: this.form.controls.otherLastNames.value && this.form.controls.otherLastNames.value.length ? this.form.controls.otherLastNames.value : null,
+			personAge: null,
 			// Person extended
 			cuil: this.form.controls.cuil.value,
 			email: this.form.controls.email.value && this.form.controls.email.value.length ? this.form.controls.email.value : null,
@@ -762,7 +761,7 @@ export class EditPatientComponent implements OnInit {
 
 
 		if (data.personData.birthDate) {
-			this.form.controls.birthDate.setValue(momentParseDate(data.personData.birthDate));
+			this.form.controls.birthDate.setValue(dateISOParseDate(data.personData.birthDate));
 			this.form.controls.birthDate.disable();
 		} else {
 			this.form.controls.birthDate.setValue(null);

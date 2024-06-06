@@ -61,4 +61,16 @@ public interface DoctorsOfficeRepository extends SGXAuditableEntityJPARepository
 	Optional<DoctorsOffice> findByInstitutionIdAndDescription(@Param("institutionId") Integer institutionId,
 															  @Param("description") String description,
 															  @Param("sectorId") Integer sectorId);
+
+    @Transactional(readOnly = true)
+	@Query(" SELECT do.description " +
+			"FROM DoctorsOffice do " +
+			"WHERE do.id = :doctorsOfficeId")
+	String getDescription(@Param("doctorsOfficeId") Integer doctorsOfficeId);
+
+	@Transactional(readOnly = true)
+	@Query(" SELECT do.sectorId " +
+			"FROM DoctorsOffice do " +
+			"WHERE do.id = :doctorsOfficeId")
+	Integer getSectorId(@Param("doctorsOfficeId") Integer doctorsOfficeId);
 }

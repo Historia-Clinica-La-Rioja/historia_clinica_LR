@@ -10,6 +10,7 @@ import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.repository.entity.PatientType;
 import net.pladema.patient.service.domain.LimitedPatientSearchBo;
 import net.pladema.patient.service.domain.MergedPatientSearch;
+import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 import net.pladema.person.repository.domain.PersonSearchResultVo;
@@ -60,5 +61,7 @@ public interface PatientService {
 	void assertHasActiveEncountersByPatientId(Integer patientId);
 
 	List<Patient> getLongTermTemporaryPatientIds(LocalDateTime maxDate, Short limit);
+
+	Optional<PatientGenderAgeBo> getPatientGenderAge(Integer patientId);
 
 }

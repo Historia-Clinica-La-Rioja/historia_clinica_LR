@@ -7,6 +7,8 @@ import net.pladema.medicalconsultation.appointment.service.exceptions.NotifyPati
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.UpdateAppointmentDateException;
 import net.pladema.medicalconsultation.diary.service.exception.DiaryNotFoundException;
 
+import net.pladema.medicalconsultation.appointment.service.impl.exceptions.RecurringAppointmentException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,5 +58,11 @@ public class AppointmentExceptionHandler {
 		);
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ RecurringAppointmentException.class })
+	protected ApiErrorMessageDto handleRecurringAppointmentOverturnException(RecurringAppointmentException ex, Locale locale) {
+		log.debug("RecurringAppointmentOverturnException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(null, ex.getMessage());
+	}
 }
 

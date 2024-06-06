@@ -1,10 +1,12 @@
 package net.pladema.reports.controller.mapper;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
+import net.pladema.reports.controller.dto.AnnexIIProcedureDto;
 import net.pladema.reports.controller.dto.ConsultationsDto;
 import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.service.domain.AnnexIIBo;
+import net.pladema.reports.service.domain.AnnexIIProcedureBo;
 import net.pladema.reports.service.domain.ConsultationsBo;
 import net.pladema.reports.service.domain.FormVBo;
 import org.mapstruct.IterableMapping;
@@ -28,4 +30,6 @@ public interface ReportsMapper {
     @Named("fromListConsultationsBo")
     @IterableMapping(qualifiedByName = "fromConsultationsBo")
     List<ConsultationsDto> fromListConsultationsBo(List<ConsultationsBo> consultationsBos);
+
+    List<AnnexIIProcedureDto> fromListAnnexIIProcedureBo(List<AnnexIIProcedureBo> procedures);
 }

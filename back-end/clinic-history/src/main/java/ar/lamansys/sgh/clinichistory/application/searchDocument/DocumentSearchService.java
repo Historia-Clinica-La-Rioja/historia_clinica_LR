@@ -5,6 +5,6 @@ import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentS
 
 public interface DocumentSearchService {
 
-    DocumentHistoricBo historicalListDocuments(Integer internmentEpisodeId, DocumentSearchFilterBo searchFilter);
+    DocumentHistoricBo getListHistoricalDocuments(Integer internmentEpisodeId, DocumentSearchFilterBo searchFilter);
 
 }

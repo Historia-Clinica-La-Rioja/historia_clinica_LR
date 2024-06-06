@@ -14,6 +14,7 @@ import net.pladema.cipres.domain.OutpatientConsultationBo;
 import net.pladema.cipres.domain.RiskFactorBo;
 import net.pladema.cipres.domain.SnomedBo;
 
+import net.pladema.cipres.infrastructure.output.repository.CipresEncounterRepository;
 import net.pladema.cipres.infrastructure.output.rest.domain.consultation.CipresConsultationPayload;
 
 import net.pladema.cipres.infrastructure.output.rest.domain.consultation.CipresDatosClinicosPayload;
@@ -32,10 +33,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,65 +46,68 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 
 	private static final String BLANK = "";
 
-	public CipresEncounterStorageImpl(CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig) {
-		super(cipresRestTemplate, cipresWSConfig);
+	private static final String NOT_FOUND_CLINICAL_SPECIALTY_ID = "No se encontró identificador para la especialidad clinica con snomed sctid: ";
+
+	private static final String NOT_FOUND_ESTABLISHMENT_ID = "No se encontró identificador de establecimiento con código sisa: ";
+
+	public CipresEncounterStorageImpl(CipresRestTemplate cipresRestTemplate, CipresWSConfig cipresWSConfig,
+									  CipresEncounterRepository cipresEncounterRepository) {
+		super(cipresRestTemplate, cipresWSConfig, cipresEncounterRepository);
 	}
 
 	@Override
-	public Optional<String> getClinicalSpecialtiyBySnomedCode(String snomedCode) {
+	public Optional<String> getClinicalSpecialtyBySnomedCode(String snomedCode, Integer encounterId, Integer cipresEncounterId) {
 		String url = String.join("?codigoSnomed=", cipresWSConfig.getClinicalSpecialtiesUrl(), snomedCode);
 		ResponseEntity<CipresEntityResponse[]> response = null;
 		try {
 			response = restClient.exchangeGet(url, CipresEntityResponse[].class);
-		} catch (RestTemplateApiException e) {
-			log.debug("Fallo en la comunicación al intentar obtener el identificador de especialidad", e);
-		}
-		if (isSuccessfulResponse(response))
+			if (isSuccessfulResponse(response))
 				return Optional.of(response.getBody()[0].getId());
+			this.saveStatusError(cipresEncounterId, encounterId, NOT_FOUND_CLINICAL_SPECIALTY_ID + snomedCode, HttpStatus.BAD_REQUEST.value());
+		} catch (RestTemplateApiException e) {
+			log.debug("Error al intentar obtener el identificador de especialidad", e);
+			this.saveStatusError(cipresEncounterId, encounterId,  e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
+		} catch (ResourceAccessException e) {
+			this.handleResourceAccessException(e, encounterId, cipresEncounterId);
+		}
 		return Optional.empty();
 	}
 
 	@Override
-	public Optional<CipresEstablishmentResponse> getEstablishmentBySisaCode(String sisaCode) {
+	public Optional<CipresEstablishmentResponse> getEstablishmentBySisaCode(String sisaCode, Integer encounterId, Integer cipresEncounterId) {
 		String url = String.join( "?codigoRefes=", cipresWSConfig.getDependenciesUrl(), sisaCode);
 		ResponseEntity<CipresEstablishmentResponse[]> response = null;
 		try {
 			response = restClient.exchangeGet(url, CipresEstablishmentResponse[].class);
+			if (isSuccessfulResponse(response))
+				return Optional.of(response.getBody()[0]);
+			saveStatusError(cipresEncounterId, encounterId, NOT_FOUND_ESTABLISHMENT_ID + sisaCode, HttpStatus.BAD_REQUEST.value());
 		} catch (RestTemplateApiException e) {
-			log.debug("Fallo en la comunicación al intentar obtener el identificador del establecimiento", e);
+			log.debug("Error al intentar obtener el identificador del establecimiento", e);
+			saveStatusError(cipresEncounterId, encounterId,  e.mapErrorBody(CipresRegisterResponse.class).getDetail(), e.getStatusCode().value());
+		} catch (ResourceAccessException e) {
+			handleResourceAccessException(e, encounterId, cipresEncounterId);
 		}
-		if (isSuccessfulResponse(response))
-			return Optional.of(response.getBody()[0]);
 		return Optional.empty();
 	}
 	
 	@Override
-	public CipresEncounterBo createOutpatientConsultation(OutpatientConsultationBo consultation,
-                                                          String clinicalSpecialtyIRI,
-														  String establishmentIRI) {
+	public CipresEncounterBo makeAndSendOutpatientConsultation(OutpatientConsultationBo consultation,
+														       String clinicalSpecialtyIRI,
+														       String establishmentIRI) {
 		String url = cipresWSConfig.getConsultationUrl();
 		ResponseEntity<CipresEntityResponse> response = null;
 		CipresConsultationPayload body = mapToCipresConsultationPayload(consultation, clinicalSpecialtyIRI, establishmentIRI);
 		try {
 			response = restClient.exchangePost(url, body, CipresEntityResponse.class);
 		} catch (RestTemplateApiException e) {
-			log.warn("Error al intentar crear la consulta");
-			return mapCipresEncounterResponse(consultation.getId(), e.getStatusCode().value(), e.mapErrorBody(CipresRegisterResponse.class), null);
+			log.debug("Error al intentar crear la consulta con id: ", consultation.getId());
+			return new CipresEncounterBo(consultation.getId(),e.mapErrorBody(CipresRegisterResponse.class).getDetail() + " - " + body.toString(), (short) e.getStatusCode().value());
 		} catch (ResourceAccessException e){
-			log.warn("Fallo en la comunicación - API SALUD");
-			return mapCipresEncounterResponse(consultation.getId(), HttpStatus.SERVICE_UNAVAILABLE.value(), null, null);
+			log.debug("Fallo en la comunicación - API SALUD");
+			return new CipresEncounterBo(consultation.getId(), e.getMessage(), (short) HttpStatus.INTERNAL_SERVER_ERROR.value());
 		}
-		return mapCipresEncounterResponse(consultation.getId(), response.getStatusCodeValue(), null, Integer.parseInt(response.getBody().getId()));
-	}
-	
-	public CipresEncounterBo mapCipresEncounterResponse(Integer encounterId, Integer responseCode,
-														CipresRegisterResponse response, Integer encounterApiId) {
-		CipresEncounterBo cipresEncounter = new CipresEncounterBo();
-		cipresEncounter.setEncounterId(encounterId);
-		cipresEncounter.setResponseCode(responseCode.shortValue());
-		cipresEncounter.setStatus(response == null ? " " : "Error=" + response.getDetail());
-		cipresEncounter.setEncounterApiId(encounterApiId);
-		return cipresEncounter;
+		return new CipresEncounterBo(consultation.getId(), Integer.parseInt(response.getBody().getId()), " ", (short) response.getStatusCode().value());
 	}
 
 	private CipresConsultationPayload mapToCipresConsultationPayload(OutpatientConsultationBo oc,
@@ -112,7 +115,7 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 																	 String establishmentIRI) {
 		return CipresConsultationPayload.builder()
 				.idPaciente(oc.getApiPatientId())
-				.fecha(LocalDate.parse(oc.getDate()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+				.fecha(LocalDateTime.parse(oc.getDate()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
 				.especialidad(clinicalSpecialtyIRI)
 				.motivoConsulta(CipresMasterData.CONSULTATION_REASON)
 				.contactoMedicoPaciente(CipresMasterData.PATIENT_MEDICAL_CONTACT)
@@ -149,10 +152,6 @@ public class CipresEncounterStorageImpl extends CipresStorage implements CipresE
 		if (riskFactorBo != null && riskFactorBo.getDiastolicBloodPressure() != null && riskFactorBo.getSystolicBloodPressure() != null)
 			return StringUtils.leftPad(riskFactorBo.getSystolicBloodPressure(), 3, "0") + "/" + StringUtils.leftPad(riskFactorBo.getDiastolicBloodPressure(), 3, "0");
 		return BLANK;
-	}
-
-	private <T> boolean isSuccessfulResponse(ResponseEntity<T[]> response) {
-		return response != null && response.getBody() != null && response.getBody().length > 0;
 	}
 
 }

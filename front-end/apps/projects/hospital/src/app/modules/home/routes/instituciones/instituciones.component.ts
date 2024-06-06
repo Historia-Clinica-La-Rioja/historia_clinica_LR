@@ -16,6 +16,8 @@ import { WCExtensionsService } from '@extensions/services/wc-extensions.service'
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { WCParams } from '@extensions/components/ui-external-component/ui-external-component.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
+import { itemHasAnyRole } from '@core/services/permissions.service';
+import { BACKOFFICE_ROLES } from '@core/components/backoffice/backoffice.component';
 
 @Component({
 	selector: 'app-instituciones',
@@ -115,12 +117,7 @@ export class InstitucionesComponent {
 	}
 
 	hasAccessToBackoffice(allRoles: RoleAssignmentDto[]) {
-		return allRoles
-			.filter((ra) => ra.role === ERole.ROOT ||
-				ra.role === ERole.ADMINISTRADOR ||
-				ra.role === ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE ||
-				ra.role === ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO ||
-				ra.role === ERole.AUDITORIA_DE_ACCESO).length > 0;
+		return itemHasAnyRole(BACKOFFICE_ROLES, allRoles.map(r => r.role));
 	}
 
 	hasAccessToWebappInstitutions(allRoles: RoleAssignmentDto[]) {

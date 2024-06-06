@@ -11,17 +11,17 @@ import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ClinicalObservationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EObservationLab;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.ERiskFactor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class ClinicalObservationService {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ClinicalObservationService.class);
 
     public static final String OUTPUT = "Output -> {}";
 
@@ -33,18 +33,8 @@ public class ClinicalObservationService {
 
     private final SnomedService snomedService;
 
-    public ClinicalObservationService(ObservationRiskFactorRepository observationRiskFactorRepository,
-									  ObservationLabRepository observationLabRepository,
-									  DocumentService documentService,
-									  SnomedService snomedService) {
-        this.observationRiskFactorRepository = observationRiskFactorRepository;
-        this.observationLabRepository = observationLabRepository;
-        this.documentService = documentService;
-        this.snomedService = snomedService;
-    }
-
     public RiskFactorBo loadRiskFactors(Integer patientId, Long documentId, Optional<RiskFactorBo> optRiskFactors) {
-        LOG.debug("Input parameters -> documentId {}, patientId {}, optRiskFactors {}", documentId, patientId, optRiskFactors);
+        log.debug("Input parameters -> documentId {}, patientId {}, optRiskFactors {}", documentId, patientId, optRiskFactors);
         optRiskFactors.ifPresent(RiskFactor -> {
             if(mustSaveClinicalObservation(RiskFactor.getSystolicBloodPressure())){
 				if (RiskFactor.getSystolicBloodPressure().getId() == null) {
@@ -165,13 +155,24 @@ public class ClinicalObservationService {
                 else
 					documentService.createDocumentRiskFactor(documentId, RiskFactor.getCardiovascularRisk().getId());
             }
+			if(mustSaveClinicalObservation(RiskFactor.getHematocrit())) {
+				if (RiskFactor.getHematocrit().getId() == null) {
+					ObservationRiskFactor hematocrit = createObservationRiskFactor(patientId,
+							RiskFactor.getHematocrit(), ERiskFactor.HEMATOCRIT);
+					if (documentId != null)
+						documentService.createDocumentRiskFactor(documentId, hematocrit.getId());
+					RiskFactor.setHematocrit(createObservationFromRiskFactor(hematocrit));
+				}
+				else
+					documentService.createDocumentRiskFactor(documentId, RiskFactor.getHematocrit().getId());
+			}
         });
-        LOG.debug(OUTPUT, optRiskFactors);
+        log.debug(OUTPUT, optRiskFactors);
         return optRiskFactors.orElse(null);
     }
 
     public AnthropometricDataBo loadAnthropometricData(Integer patientId, Long documentId, Optional<AnthropometricDataBo> optAnthropometricData) {
-        LOG.debug("Input parameters -> documentId {}, patientId {}, optAnthropometricData {}", documentId, patientId, optAnthropometricData);
+        log.debug("Input parameters -> documentId {}, patientId {}, optAnthropometricData {}", documentId, patientId, optAnthropometricData);
         optAnthropometricData.ifPresent(anthropometricData -> {
 			ClinicalObservationBo heightBo = anthropometricData.getHeight();
             if(mustSaveClinicalObservation(heightBo)) {
@@ -207,16 +208,16 @@ public class ClinicalObservationService {
                 anthropometricData.setBloodType(createObservationFromLab(bloodType));
             }
         });
-        LOG.debug(OUTPUT, optAnthropometricData);
+        log.debug(OUTPUT, optAnthropometricData);
         return optAnthropometricData.orElse(null);
     }
 
     public RiskFactorObservationBo getObservationById(Integer riskFactorObservationId) {
-        LOG.debug("Input parameter -> riskFactorObservationId {}", riskFactorObservationId);
+        log.debug("Input parameter -> riskFactorObservationId {}", riskFactorObservationId);
         return observationRiskFactorRepository.findById(riskFactorObservationId)
 				.map(observationRiskFactor -> {
 					RiskFactorObservationBo result = new RiskFactorObservationBo(observationRiskFactor);
-					LOG.debug(OUTPUT, result);
+					log.debug(OUTPUT, result);
 					return result;
 				}).get();
     }
@@ -230,46 +231,46 @@ public class ClinicalObservationService {
 	}
 
     private ObservationRiskFactor createObservationRiskFactor(Integer patientId, ClinicalObservationBo observation, ERiskFactor eRiskFactor) {
-        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eRiskFactor {}", patientId, observation, eRiskFactor);
+        log.debug("Input parameters -> patientId {}, ClinicalObservation {}, eRiskFactor {}", patientId, observation, eRiskFactor);
         Integer snomedId = snomedService.getLatestIdBySctid(eRiskFactor.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
         ObservationRiskFactor observationRiskFactor = observationRiskFactorRepository.save(
                 new ObservationRiskFactor(patientId, observation.getValue(), snomedId, eRiskFactor, observation.getEffectiveTime()));
-        LOG.debug(OUTPUT, observationRiskFactor);
+        log.debug(OUTPUT, observationRiskFactor);
         return observationRiskFactor;
     }
 
     private ObservationLab createObservationLab(Integer patientId, ClinicalObservationBo observation, EObservationLab eObservationLab) {
-        LOG.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}", patientId, observation, eObservationLab);
+        log.debug("Input parameters -> patientId {}, ClinicalObservation {}, eLab {}", patientId, observation, eObservationLab);
         Integer snomedId = snomedService.getLatestIdBySctid(eObservationLab.getSctidCode())
                 .orElseThrow(() -> new EntityNotFoundException("{snomed.not.found}"));
         ObservationLab observationLab = observationLabRepository.save(
                 new ObservationLab(patientId, observation.getValue(), snomedId, observation.getEffectiveTime()));
-        LOG.debug(OUTPUT, observationLab);
+        log.debug(OUTPUT, observationLab);
         return observationLab;
     }
 
     private ClinicalObservationBo createObservationFromRiskFactor(ObservationRiskFactor riskFactor) {
-        LOG.debug("Input parameters -> riskFactor {}", riskFactor);
+        log.debug("Input parameters -> riskFactor {}", riskFactor);
         ClinicalObservationBo result = new ClinicalObservationBo(riskFactor.getId(), riskFactor.getValue(), riskFactor.getEffectiveTime());
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
     }
 
     private ClinicalObservationBo createObservationFromLab(ObservationLab lab) {
-        LOG.debug("Input parameters -> ObservationLab {}", lab);
+        log.debug("Input parameters -> ObservationLab {}", lab);
         ClinicalObservationBo result = new ClinicalObservationBo(lab.getId(), lab.getValue(), lab.getEffectiveTime());
-        LOG.debug(OUTPUT, result);
+        log.debug(OUTPUT, result);
         return result;
     }
 
 	private ObservationRiskFactor mapToObservationRiskFactor(ClinicalObservationBo bo) {
-		LOG.debug("Input parameters -> ClinicalObservationBo {}", bo);
+		log.debug("Input parameters -> ClinicalObservationBo {}", bo);
 		ObservationRiskFactor result = new ObservationRiskFactor();
 		result.setId(bo.getId());
 		result.setValue(bo.getValue());
 		result.setEffectiveTime(bo.getEffectiveTime());
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 	

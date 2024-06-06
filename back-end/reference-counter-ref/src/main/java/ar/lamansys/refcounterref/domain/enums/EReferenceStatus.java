@@ -13,7 +13,8 @@ public enum EReferenceStatus {
 
 	ACTIVE(1, "Activa"),
 	ERROR(2, "Erronea"),
-	CANCELLED(3, "Cancelada");
+	CANCELLED(3, "Cancelada"),
+	MODIFIED(4, "Modificada");
 
 	private final Short id;
 	private final String value;

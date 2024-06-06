@@ -33,11 +33,13 @@ public interface HierarchicalUnitRepository extends SGXAuditableEntityJPAReposit
 	List<HierarchicalUnitBo> getAllByInstitutionId(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
-	@Query(value = "SELECT hu " +
+	@Query(value = "SELECT (CASE WHEN COUNT(hu.id) > 0 THEN TRUE ELSE FALSE END) " +
 			"FROM HierarchicalUnit  hu " +
 			"WHERE hu.alias = :alias " +
+			"AND hu.institutionId = :institutionId " +
 			"AND hu.deleteable.deleted IS FALSE")
-	Optional<HierarchicalUnit> findByAlias(@Param("alias") String alias);
+	boolean existsByAliasAndInstitutionId(@Param("alias") String alias,
+										@Param("institutionId") Integer institutionId);
 
 	@Transactional
 	@Modifying

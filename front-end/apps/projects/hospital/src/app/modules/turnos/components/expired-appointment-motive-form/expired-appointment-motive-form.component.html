@@ -1,0 +1,20 @@
+<mat-card>
+    <form [formGroup]="expiredAppointmentForm" fxLayout="column" fxLayoutGap="10px">
+        <span>{{ 'turnos.new-appointment.MOTIVE_STEP_3' | translate }}</span>
+        <mat-form-field appearance="outline">
+            <mat-select formControlName="id">
+                <mat-option *ngFor="let expiredReason of expiredReasons" [value]="expiredReason.id">
+                    {{ expiredReason.description }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <textarea matInput type="text" formControlName="motive"
+                [placeholder]="'turnos.new-appointment.MOTIVE_STEP_3' | translate"></textarea>
+            <mat-error *ngIf="hasError(expiredAppointmentForm, 'required', 'motive')" [translate]="'forms.REQUIRED'">
+            </mat-error>
+            <mat-error *ngIf="hasError(expiredAppointmentForm, 'pattern', 'motive')"
+                [translate]="'forms.REQUIRED'"></mat-error>
+        </mat-form-field>
+    </form>
+</mat-card>

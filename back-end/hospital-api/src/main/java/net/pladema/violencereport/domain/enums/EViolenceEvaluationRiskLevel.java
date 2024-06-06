@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public enum EViolenceEvaluationRiskLevel {
 
-	LOW(1, "LOW"),
-	MEDIUM(2, "MEDIUM"),
-	HIGH(3, "HIGH");
+	LOW(1, "Bajo"),
+	MEDIUM(2, "Medio"),
+	HIGH(3, "Alto");
 
 	private Short id;
 

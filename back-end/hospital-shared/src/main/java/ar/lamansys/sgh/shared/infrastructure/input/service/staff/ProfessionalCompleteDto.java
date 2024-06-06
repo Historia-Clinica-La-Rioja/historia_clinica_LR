@@ -44,4 +44,10 @@ public class ProfessionalCompleteDto {
 			return String.format("%s %s %s", name, lastName, otherLastNames);
 		return String.format("%s %s", name, lastName);
 	}
+
+	public String getProfessionsAsString() {
+		String result = professions.stream().map(ProfessionCompleteDto::getDescription).collect(Collectors.joining(", "));
+		return !result.isEmpty() ? result : "-";
+	}
+
 }

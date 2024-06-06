@@ -67,8 +67,13 @@ export const DOCUMENTS: SummaryHeader = {
 	matIcon: 'assignment'
 };
 
-export const VIOLENCE_SITUATION: SummaryHeader = {
+export const VIOLENCE_SITUATION_LIST: SummaryHeader = {
 	title: 'ambulatoria.paciente.violence-situations.violence-situation-list.TITLE',
+	matIcon: 'history'
+}
+
+export const VIOLENCE_SITUATION_HISTORY: SummaryHeader = {
+	title: 'ambulatoria.paciente.violence-situations.violence-situation-history.TITLE',
 	matIcon: 'history'
 }
 

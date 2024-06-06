@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {
 	AllergyConditionDto,
 	AnamnesisDto,
+	AppFeature,
 	DiagnosisDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationProcedureDto, ImmunizationDto,
 	MasterDataInterface,
 	MedicationDto,
@@ -13,7 +14,6 @@ import { AnamnesisService } from '@api-rest/services/anamnesis.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { getError, hasError } from '@core/utils/form.utils';
-import { dateToMoment } from "@core/utils/moment.utils";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
@@ -25,6 +25,8 @@ import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/internal/operators/map';
 import { ComponentEvaluationManagerService } from '../../../../services/component-evaluation-manager.service';
 import { DocumentActionReasonComponent } from '../document-action-reason/document-action-reason.component';
+import { AnthropometricData } from '@historia-clinica/services/patient-evolution-charts.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 @Component({
 	selector: 'app-anamnesis-dock-popup',
@@ -61,6 +63,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 	anthropometricDataSubject = new BehaviorSubject<boolean>(true);
 	observationsSubject = new BehaviorSubject<boolean>(true);
 	minDate = MIN_DATE;
+	anthropometricData: AnthropometricData;
+	isEvolutionChartsFFActive = false;
 	@ViewChild('errorsView') errorsView: ElementRef;
 
 	constructor(
@@ -73,6 +77,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService,
 		private readonly dialog: MatDialog,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.mainDiagnosis = data.mainDiagnosis;
 		this.diagnosticos = data.diagnosticos;
@@ -111,11 +116,11 @@ export class AnamnesisDockPopupComponent implements OnInit {
 			bloodTypes$.subscribe(bloodTypes => this.bloodTypes = bloodTypes);
 		}
 
-		this.form.get('anthropometricData').valueChanges.pipe(
-			map(formData => Object.values(formData)),
-			map(formValues => formValues.every(value => value === null))
-		).subscribe(allFormValuesAreNull => {
+		this.form.get('anthropometricData').valueChanges.subscribe(formData => {
+			const formValues = Object.values(formData);
+			const allFormValuesAreNull = formValues.every(value => value === null);
 			this.anthropometricDataSubject.next(allFormValuesAreNull);
+			this.anthropometricData = formData;
 		});
 
 		this.form.get('observations').valueChanges.pipe(
@@ -124,6 +129,8 @@ export class AnamnesisDockPopupComponent implements OnInit {
 		).subscribe(allFormValuesAreNull => {
 			this.observationsSubject.next(allFormValuesAreNull);
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_GRAFICOS_EVOLUCIONES_ANTROPOMETRICAS_EN_DESARROLLO).subscribe(isEvolutionChartsActive => this.isEvolutionChartsFFActive = isEvolutionChartsActive);
 	}
 
 	save(): void {
@@ -266,7 +273,7 @@ export class AnamnesisDockPopupComponent implements OnInit {
 				if (this.anamnesis.riskFactors[key].value != undefined) {
 					this.form.controls.riskFactors.patchValue({ [key]: { value: this.anamnesis.riskFactors[key].value } });
 					const date: Date = new Date(this.anamnesis.riskFactors[key].effectiveTime);
-					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: dateToMoment(date) } });
+					this.form.controls.riskFactors.patchValue({ [key]: { effectiveTime: date } });
 				}
 			});
 		}

@@ -1,6 +1,5 @@
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { newMoment } from '@core/utils/moment.utils';
-import { Moment } from 'moment';
+import { newDate } from '@core/utils/moment.utils';
 import { EffectiveClinicalObservationDto, HCELast2RiskFactorsDto } from '@api-rest/api-model';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -9,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { PATTERN_NUMBER_WITH_DECIMALS, PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS } from '@core/utils/pattern.utils';
 import { TranslateService } from '@ngx-translate/core';
+import { fixDate } from '@core/utils/date/format';
 
 export interface FactoresDeRiesgo {
 	bloodOxygenSaturation?: EffectiveClinicalObservationDto;
@@ -57,39 +57,39 @@ export class FactoresDeRiesgoFormService {
 		this.form = this.formBuilder.group({
 			heartRate: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.heartRate), Validators.max(FACTORES_DE_RIESGO.MAX.heartRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			respiratoryRate: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.respiratoryRate), Validators.max(FACTORES_DE_RIESGO.MAX.respiratoryRate), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			temperature: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.temperature), Validators.max(FACTORES_DE_RIESGO.MAX.temperature), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			bloodOxygenSaturation: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.bloodOxygenSaturation), Validators.max(FACTORES_DE_RIESGO.MAX.bloodOxygenSaturation), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			systolicBloodPressure: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.systolicBloodPressure), Validators.max(FACTORES_DE_RIESGO.MAX.systolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			diastolicBloodPressure: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.diastolicBloodPressure), Validators.max(FACTORES_DE_RIESGO.MAX.diastolicBloodPressure), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			bloodGlucose: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.bloodGlucose), Validators.max(FACTORES_DE_RIESGO.MAX.bloodGlucose), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			glycosylatedHemoglobin: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.glycosylatedHemoglobin), Validators.max(FACTORES_DE_RIESGO.MAX.glycosylatedHemoglobin), Validators.pattern(PATTERN_NUMBER_WITH_MAX_2_DECIMAL_DIGITS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			}),
 			cardiovascularRisk: this.formBuilder.group({
 				value: [null, [Validators.min(FACTORES_DE_RIESGO.MIN.cardiovascularRisk), Validators.max(FACTORES_DE_RIESGO.MAX.cardiovascularRisk), Validators.pattern(PATTERN_NUMBER_WITH_DECIMALS)]],
-				effectiveTime: [newMoment()],
+				effectiveTime: [newDate()],
 			})
 		});
 
@@ -283,7 +283,7 @@ export class FactoresDeRiesgoFormService {
 		});
 	}
 
-	setRiskFactorEffectiveTime(newEffectiveTime: Moment, formField: string): void {
+	setRiskFactorEffectiveTime(newEffectiveTime: Date, formField: string): void {
 		this.riskFactorsSubject.next(true);
 		(this.form.controls[formField] as UntypedFormGroup).controls.effectiveTime.setValue(newEffectiveTime);
 	}
@@ -371,7 +371,7 @@ export class FactoresDeRiesgoFormService {
 
 	discardPreloadedRiskFactorsData() {
 		this.notShowPreloadedRiskFactorsData = false;
-		const defaultValue = { value: null, effectiveTime: newMoment() };
+		const defaultValue = { value: null, effectiveTime: newDate() };
 		Object.keys(this.form.controls).forEach((key: string) => {
 			this.form.patchValue({ [key]: defaultValue });
 		});
@@ -388,7 +388,7 @@ export class FactoresDeRiesgoFormService {
 	}
 
 	getDate(): string {
-		return this.datePipe.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
+		return this.datePipe?.transform(Math.max.apply(null, this.dateList.map((date) => new Date(date))), DatePipeFormat.SHORT);
 	}
 
 	hasAtLeastOneValueLoaded(): boolean {
@@ -403,7 +403,7 @@ export class FactoresDeRiesgoFormService {
 
 	getEffectiveObservation(controlValue): EffectiveObservation {
 		return controlValue?.value ?
-			{ value: controlValue.value, effectiveTime: controlValue.effectiveTime.toDate() }
+			{ value: controlValue.value, effectiveTime: fixDate(controlValue.effectiveTime) }
 			: undefined;
 	}
 
@@ -421,7 +421,7 @@ export class FactoresDeRiesgoFormService {
 		};
 
 		function isNull(formGroupValues: any): boolean {
-			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Moment }) => el.value === null);
+			return Object.values(formGroupValues).every((el: { value: number, effectiveTime: Date }) => el.value === null);
 		}
 	}
 }

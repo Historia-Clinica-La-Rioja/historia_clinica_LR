@@ -11,7 +11,7 @@ const slotedInfoMapper = (element: WCInfo, slot: Slot, baseUrl: string): SlotedI
 	title: element.title,
 });
 
-const wcNameIs = (name: string) => (slotedInfo: SlotedInfo) => slotedInfo.componentName === name;
+// const wcNameIs = (name: string) => (slotedInfo: SlotedInfo) => slotedInfo.componentName === name;
 const wcSlotIs = (slot: Slot) => (slotedInfo: SlotedInfo) => slotedInfo.slot === slot;
 
 export class SlotsStorageService {
@@ -48,10 +48,6 @@ export class SlotsStorageService {
 		}
 		if (!webCompontentInfo.componentName) {
 			console.warn(`Extension ${webCompontentInfo.slot} no tiene componentName`);
-			return;
-		}
-		if (this.valuesToEmit.find(wcNameIs(webCompontentInfo.componentName))) {
-			console.warn(`WebComponent ${webCompontentInfo.componentName} ya está definido`);
 			return;
 		}
 		this.valuesToEmit.push(slotedInfoMapper(webCompontentInfo, slot, baseUrl))

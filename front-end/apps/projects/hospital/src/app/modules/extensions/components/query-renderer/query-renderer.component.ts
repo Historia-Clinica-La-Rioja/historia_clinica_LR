@@ -5,24 +5,11 @@ import { BehaviorSubject, combineLatest, of, merge } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { ChartOptions } from 'chart.js';
 import { getDisplayedColumns, flattenColumns } from './utils';
-import * as moment from "moment";
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { AppFeature } from '@api-rest/api-model';
-import { buildFullDate, DateFormat, momentParse, newMoment, MONTHS_OF_YEAR } from '@core/utils/moment.utils';
+import { MONTHS_OF_YEAR, } from '@core/utils/moment.utils';
+import { isValid, parseISO } from 'date-fns';
 
-
-const formatColumnDate = (tableData: any[], columns: string[]): any[] => {
-	const dateFormatter = (x) => !x ? x : moment(x).format('DD/MM/YYYY');
-	columns.forEach(column => {
-		tableData = tableData.map(row => {
-			return {
-				...row,
-				[column]: dateFormatter(row[column]),
-			}
-		})
-	});
-	return tableData;
-};
 
 const parseDate = (value: string, granularity: string): string => {
 	const year = value.slice(0, 4);
@@ -43,7 +30,7 @@ const parseDate = (value: string, granularity: string): string => {
 };
 
 const isDate = (value: string): boolean => {
-	return moment(value, moment.ISO_8601, true).isValid();
+	return isValid(parseISO(value))
 
 }
 
@@ -193,7 +180,7 @@ export class QueryRendererComponent {
 			}
 
 			if (this.chartType === 'line' || this.chartType === 'bar') {
-				let title = (pivotConfig.y.length>1) ? item.title.charAt(0).toUpperCase() + item.title.slice(1, -5) : item.title;
+				let title = (pivotConfig.y.length > 1) ? item.title.charAt(0).toUpperCase() + item.title.slice(1, -5) : item.title;
 				return {
 					label: title,
 					data: item.series.map(({ value }) => value)
@@ -213,16 +200,16 @@ export class QueryRendererComponent {
 
 		this.noData = !this.chartData?.length;
 
-		if(!this.noData) {
+		if (!this.noData) {
 			if (this.chartType === 'pie' || this.chartType === 'doughnut') {
 				this.loadPieData();
 			}
 		}
 	}
 
-	getGranularityDate(xConfig : string) : string {
+	getGranularityDate(xConfig: string): string {
 		const x = xConfig.split(".");
-		if(x.length > 2 )
+		if (x.length > 2)
 			return x[2].toString();
 		return null;
 	}
@@ -252,21 +239,21 @@ export class QueryRendererComponent {
 		if (this.showPercentage) {
 			this.chartOptions.plugins.tooltip = {
 
-					callbacks: {
-						label: function (context) {
-							let label = context.label || ' ';
-							if (label) {
-								label += ': ';
-							}
-							label += context.formattedValue + '%'
-							return label;
+				callbacks: {
+					label: function (context) {
+						let label = context.label || ' ';
+						if (label) {
+							label += ': ';
 						}
+						label += context.formattedValue + '%'
+						return label;
 					}
 				}
-			this.chartData = this.groupSmallData ? [{data: this.percentageGroupData}] : [{data: this.percentageData}];
+			}
+			this.chartData = this.groupSmallData ? [{ data: this.percentageGroupData }] : [{ data: this.percentageData }];
 		} else {
 			this.chartOptions.plugins.tooltip.callbacks.label = undefined;
-			this.chartData = this.groupSmallData ? [{data: this.originalGroupData}] : [{data: this.originalData}];
+			this.chartData = this.groupSmallData ? [{ data: this.originalGroupData }] : [{ data: this.originalData }];
 		}
 	}
 
@@ -283,10 +270,6 @@ export class QueryRendererComponent {
 	}
 
 	updateTableData(resultSet, pivotConfig) {
-		this.tableData = formatColumnDate(
-			resultSet.tablePivot(pivotConfig),
-			['Referencias.fecha_consulta', 'Referencias.fecha_turno']
-		);
 		this.displayedColumns = getDisplayedColumns(
 			resultSet.tableColumns(pivotConfig)
 		);
@@ -303,8 +286,6 @@ export class QueryRendererComponent {
 			this.deleteColumn('Referencias.profesional_auto_det');
 			this.deleteColumn('Referencias.profesional_turno_auto_det');
 		}
-
-		this.deleteRepetedRows();
 	}
 
 	deleteColumn(column) {
@@ -316,64 +297,6 @@ export class QueryRendererComponent {
 			this.tableData.forEach(row => {
 				delete row[column];
 			});
-		}
-	}
-
-	deleteRepetedRows() {
-		let ids: number[] = [];
-		let table = [];
-		let data = [];
-		const today: moment.Moment = newMoment();
-
-		if (this.displayedColumns.includes("Referencias.id")) {
-			this.tableData.forEach(row => {
-				const id = row['Referencias.id'];
-				if (!ids.includes(id)) {
-					ids.push(id);
-				}
-				this.formatRow(row);
-			})
-
-			ids.forEach(id => {
-				table.push(this.tableData.filter(row => {
-					return id === row['Referencias.id'];
-				}))
-			})
-
-			table.forEach(arr => {
-				let fut = arr.filter(row => {
-					const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-					return today.isBefore(rowDate);
-				})
-				let aux;
-				if (fut.length) {
-					fut.forEach(row => {
-						if (!aux)
-							aux = row;
-						else {
-							const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-							const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-							if (rowDate.isBefore(auxDate))
-								aux = row;
-						}
-					})
-				}
-				else {
-					arr.forEach(row => {
-						if (!aux)
-							aux = row;
-						else {
-							const rowDate = buildFullDate(row['Referencias.hora_turno'], momentParse(row['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-							const auxDate = buildFullDate(aux['Referencias.hora_turno'], momentParse(aux['Referencias.fecha_turno'], DateFormat.VIEW_DATE));
-							if (auxDate.isBefore(rowDate))
-								aux = row;
-						}
-					})
-				}
-				data.push(aux);
-			})
-
-			this.tableData = data;
 		}
 	}
 

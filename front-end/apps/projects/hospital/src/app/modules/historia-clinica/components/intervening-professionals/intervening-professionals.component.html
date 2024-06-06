@@ -1,0 +1,12 @@
+<div fxLayout="column" fxLayoutGap="10px">
+    <span class="title">{{ 'ambulatoria.paciente.nueva-consulta.intervening-professionals.TITLE' | translate }}</span>
+    <app-typeahead id="typeahead-professional" [titleInput]="'turnos.home.PROFESSIONAL_SEARCH' | translate"
+        [options]="professionalsTypeaheadOption" [externalSetValue]="initValueProfessional" (selectionChange)="setInterveningProfessional($event)">
+    </app-typeahead>
+    <div fxLayout="column" fxLayoutGap="2vh" data-id="added-professional-list">
+        <app-titled-content-card *ngIf="professionalsService.hasProfessional$ | async"
+            title="{{ 'ambulatoria.paciente.nueva-consulta.intervening-professionals.ADDED_PROFESSIONAL' }}">
+            <app-professional-list [service]="professionalsService"></app-professional-list>
+        </app-titled-content-card>
+    </div>
+</div>

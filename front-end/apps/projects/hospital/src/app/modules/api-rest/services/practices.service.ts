@@ -17,8 +17,9 @@ export class PracticesService {
 		private readonly contextService: ContextService,
 	) { }
 
-	get(): Observable<SharedSnomedDto[]> {
-		const url = `${this.PREFIX_URL}/institution/${this.contextService.institutionId}/by-institution`;
+	get(institutionId?: number): Observable<SharedSnomedDto[]> {
+		const institutionIdPathVariable = institutionId || this.contextService.institutionId;
+		const url = `${this.PREFIX_URL}/institution/${institutionIdPathVariable}/by-institution`;
 		return this.http.get<SharedSnomedDto[]>(url);
 	}
 
@@ -38,5 +39,10 @@ export class PracticesService {
 			return this.http.get<SharedSnomedDto[]>(url)
 		const params: HttpParams = new HttpParams().append('careLineId', careLineId);
 		return this.http.get<SharedSnomedDto[]>(url, { params });
+	}
+
+	getAllByDepartment(departmentId: number): Observable<SharedSnomedDto[]> {
+		const url =  `${environment.apiBase}/practices/department/${departmentId}`;
+		return this.http.get<SharedSnomedDto[]>(url);
 	}
 }

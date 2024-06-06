@@ -557,7 +557,7 @@
 		<div fxLayaout="row" fxLayoutAlign="start center"  *ngIf="completeDataPatient?.patientLastEditInfoDto?.updatedBy">
 			<p class="grey" *ngIf="completeDataPatient?.patientLastEditInfoDto?.wasEdited ">{{'pacientes.edit.EDIT_BY' | translate}} </p>
 			<p class="grey" *ngIf="!completeDataPatient?.patientLastEditInfoDto?.wasEdited ">{{'pacientes.new.CREATE_BY' | translate}} </p>
-			<p class="grey">{{completeDataPatient.patientLastEditInfoDto.updatedBy}} - {{completeDataPatient.patientLastEditInfoDto.updatedOn | date: 'dd/MM/yyyy - HH:mm'}}</p>
+			<p class="grey">{{completeDataPatient.patientLastEditInfoDto.updatedBy}} - {{completeDataPatient.patientLastEditInfoDto.updatedOn.toString() | isoToDate | dateFormat: 'datetime'}}</p>
 		</div>
 	</section>
 </app-content>

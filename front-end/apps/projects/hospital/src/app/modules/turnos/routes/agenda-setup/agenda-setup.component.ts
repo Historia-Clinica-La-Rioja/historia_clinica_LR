@@ -9,7 +9,7 @@ import { Observable, filter, map, switchMap } from 'rxjs';
 
 import { getError, hasError, processErrors, scrollIntoError } from '@core/utils/form.utils';
 import { ContextService } from '@core/services/context.service';
-import { currentWeek, DateFormat, momentFormat, momentParseDate, momentParseTime } from '@core/utils/moment.utils';
+import { dateISOParseDate, dateParseTime } from '@core/utils/moment.utils';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { SectorService } from '@api-rest/services/sector.service';
@@ -40,6 +40,7 @@ import { DiaryCareLineService } from '@api-rest/services/diary-care-line.service
 import { PracticesService } from '@api-rest/services/practices.service';
 import { ChipsOption } from '@presentation/components/chips-autocomplete/chips-autocomplete.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const ROUTE_APPOINTMENT = 'turnos';
 const ROUTE_AGENDAS = "agenda";
@@ -87,7 +88,6 @@ export class AgendaSetupComponent implements OnInit {
 	professionalsWithoutResponsibility = [];
 	editingDiaryId = null;
 	private readonly routePrefix;
-	private mappedCurrentWeek = {};
 	lineOfCareAndPercentageOfProtectedAppointmentsValid = true;
 	loadSavedData = false;
 	temporary = false;
@@ -99,6 +99,8 @@ export class AgendaSetupComponent implements OnInit {
 	private fieldHierarchicalUnitRequired = false;
 	colorList: COLOR[] = Object.assign([], DIARY_LABEL_COLORS);
 	diaryLabels: DiaryLabelDto[] = [];
+	diaryStartDate: Date;
+	diaryEndDate: Date;
 
 	constructor(
 		private readonly el: ElementRef,
@@ -131,9 +133,6 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		currentWeek().forEach(day => {
-			this.mappedCurrentWeek[day.day()] = day;
-		});
 
 		this.form = new UntypedFormGroup({
 			sectorId: new UntypedFormControl(null, [Validators.required]),
@@ -200,7 +199,6 @@ export class AgendaSetupComponent implements OnInit {
 							this.hierarchicalUnits = response;
 							this.setValuesFromExistingAgenda(diary);
 						});
-						this.minDate = momentParseDate(diary.startDate).toDate();
 						this.disableNotEditableControls();
 						this.validateLineOfCare();
 					});
@@ -322,8 +320,8 @@ export class AgendaSetupComponent implements OnInit {
 		});
 
 		this.form.controls.healthcareProfessionalId.setValue(diary.healthcareProfessionalId);
-		this.form.controls.startDate.setValue(momentParseDate(diary.startDate));
-		this.form.controls.endDate.setValue(momentParseDate(diary.endDate));
+		this.diaryStartDate = dateISOParseDate(diary.startDate);
+		this.diaryEndDate = dateISOParseDate(diary.endDate);
 		this.form.controls.appointmentDuration.setValue(diary.appointmentDuration);
 
 		this.agendaHorarioService.setAppointmentDuration(diary.appointmentDuration);
@@ -361,7 +359,7 @@ export class AgendaSetupComponent implements OnInit {
 			this.showPractices = true;
 			this.practicesSelected = diary.practicesInfo.map(p => { return this.toChipsOptions(p) });
 			this.setPractices();
-			this.getCarelinesByPractices(diary.practicesInfo.map(p => { return p.id }));
+			this.getCarelinesByPracticesAndSpecialty(diary.practicesInfo.map(p => { return p.id }), diary.clinicalSpecialtyId);
 			this.validationsPractices();
 		}
 
@@ -382,6 +380,7 @@ export class AgendaSetupComponent implements OnInit {
 
 	private setSpecialityId(healthcareProfesionalId) {
 		this.specialityId = healthcareProfesionalId;
+		this.form.controls.healthcareProfessionalSpecialtyId.setValue(healthcareProfesionalId);
 	}
 
 	private setAlias(alias) {
@@ -407,8 +406,8 @@ export class AgendaSetupComponent implements OnInit {
 		this.openingTime = getHours(this.form.getRawValue().doctorOffice.openingTime);
 		this.closingTime = getHours(this.form.getRawValue().doctorOffice.closingTime);
 		function getHours(time: string): number {
-			const hours = momentParseTime(time);
-			return Number(hours.hours());
+			const hours = dateParseTime(time);
+			return Number(hours.getHours());
 		}
 	}
 
@@ -478,8 +477,8 @@ export class AgendaSetupComponent implements OnInit {
 			return;
 		}
 
-		const startDate = momentFormat(formValue.startDate, DateFormat.API_DATE);
-		const endDate = momentFormat(formValue.endDate, DateFormat.API_DATE);
+		const startDate = toApiFormat(formValue.startDate);
+		const endDate = toApiFormat(formValue.endDate);
 
 		const ocupations$: Observable<OccupationDto[]> = this.diaryOpeningHoursService
 			.getAllWeeklyDoctorsOfficeOcupation(formValue.doctorOffice.id, this.editingDiaryId, startDate, endDate);
@@ -510,8 +509,8 @@ export class AgendaSetupComponent implements OnInit {
 			predecessorProfessionalId: this.form.get("professionalReplacedId").value,
 			hierarchicalUnitId: this.form.get("temporaryReplacement").value ? this.form.get("hierarchicalUnitTemporary").value : this.form.get("hierarchicalUnit").value,
 
-			startDate: momentFormat(this.form.value.startDate, DateFormat.API_DATE),
-			endDate: momentFormat(this.form.value.endDate, DateFormat.API_DATE),
+			startDate: toApiFormat(this.form.value.startDate),
+			endDate: toApiFormat(this.form.value.endDate),
 
 			automaticRenewal: this.autoRenew,
 			includeHoliday: this.holidayWork,
@@ -672,8 +671,8 @@ export class AgendaSetupComponent implements OnInit {
 	}
 
 	setCarelinesBySpecialty() {
+		const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
 		if (this.form.controls.diaryType.value === this.CONSULTATION) {
-			const specialtyId = this.form.get("healthcareProfessionalSpecialtyId").value;
 			this.diaryCareLine.getPossibleCareLinesForDiary(specialtyId).subscribe(careLines => {
 				this.careLines = careLines;
 				this.checkCareLinesSelected();
@@ -683,6 +682,9 @@ export class AgendaSetupComponent implements OnInit {
 			} else {
 				this.form.controls.alias.setValue(this.alias);
 			}
+		}
+		else{
+			this.getCarelinesByPracticesAndSpecialty(this.form.value.practices,specialtyId);
 		}
 	}
 
@@ -720,18 +722,28 @@ export class AgendaSetupComponent implements OnInit {
 	setDiaryPracticesAndGetCarelines(selected: ChipsOption<SnomedDto>[]) {
 		const result: number[] = selected.map(s => s.value.id);
 		this.form.controls.practices.setValue(result);
-		this.getCarelinesByPractices(result);
+		this.getCarelinesByPracticesAndSpecialty(result, this.form.controls.healthcareProfessionalSpecialtyId.value);
 	}
 
-	getCarelinesByPractices(practicesId: number[]) {
+	getCarelinesByPracticesAndSpecialty(practicesId: number[], clinicalSpecialtyId: number) {
 		if (practicesId.length) {
-			this.diaryCareLine.getPossibleCareLinesForDiaryByPractices(practicesId).subscribe(carelines => {
+			this.diaryCareLine.getPossibleCareLinesForDiaryByPracticesAndSpecialty(practicesId, clinicalSpecialtyId).subscribe(carelines => {
 				this.careLines = carelines;
 				this.checkCareLinesSelected();
 			});
 		}
 		else
 			this.careLines = [];
+	}
+
+	setSelectedStartDate(selectDate: Date) {
+		this.form.controls.startDate.setValue(selectDate);
+		this.setAllWeeklyDoctorsOfficeOcupation();
+	}
+
+	setSelectedEndDate(selectDate: Date) {
+		this.form.controls.endDate.setValue(selectDate);
+		this.setAllWeeklyDoctorsOfficeOcupation();
 	}
 
 	private checkCareLinesSelected() {

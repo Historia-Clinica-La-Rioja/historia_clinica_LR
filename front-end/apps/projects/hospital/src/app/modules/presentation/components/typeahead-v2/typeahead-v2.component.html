@@ -1,0 +1,21 @@
+<form [formGroup]="typeaheadService.form">
+	<mat-form-field fxFlex=100% appearance="outline" class="typeahead-input" [hideRequiredMarker]="true">
+		<mat-label>{{titleInput}}</mat-label>
+		<input type="text" placeholder="{{ placeholder }}" formControlName="searchValue"
+			#trigger="matAutocompleteTrigger" matInput [matAutocomplete]="auto"
+			(keyup.backspace)="typeaheadService.clear()">
+		<mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+
+			<mat-option *ngFor="let option of typeaheadService.optionfilter$ | async" [disabled]="option.disabled"
+				[value]="option.viewValue ? option.viewValue : option.compareValue"
+				(onSelectionChange)="typeaheadService.select(option)">
+				<span class="mat-body">{{ option.viewValue ? option.viewValue : option.compareValue }}</span>
+			</mat-option>
+		</mat-autocomplete>
+
+		<button *ngIf="typeaheadService.form.value?.searchValue?.length && !disabled" id="clear" type="button"
+			color="warn" mat-icon-button matSuffix (click)="typeaheadService.clear()">
+			<mat-icon>close</mat-icon>
+		</button>
+	</mat-form-field>
+</form>

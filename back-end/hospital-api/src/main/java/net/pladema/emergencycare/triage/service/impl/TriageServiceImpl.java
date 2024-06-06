@@ -21,6 +21,10 @@ import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.emergencycare.triage.service.domain.TriageBo;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
+import net.pladema.establishment.repository.RoomRepository;
+import net.pladema.medicalconsultation.doctorsoffice.repository.DoctorsOfficeRepository;
+import net.pladema.medicalconsultation.shockroom.infrastructure.repository.ShockroomRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -53,6 +57,12 @@ public class TriageServiceImpl implements TriageService {
 
 	private final DocumentService documentService;
 
+	private final ShockroomRepository shockroomRepository;
+
+	private final RoomRepository roomRepository;
+
+	private final DoctorsOfficeRepository doctorsOfficeRepository;
+
     public TriageServiceImpl(TriageRepository triageRepository,
                              TriageDetailsRepository triageDetailsRepository,
                              TriageRiskFactorsRepository triageRiskFactorsRepository,
@@ -60,7 +70,10 @@ public class TriageServiceImpl implements TriageService {
                              EmergencyCareEpisodeRepository emergencyCareEpisodeRepository,
 							 EmergencyCareEpisodeStateService emergencyCareEpisodeStateService,
 							 DocumentFactory documentFactory,
-							 DocumentService documentService) {
+							 DocumentService documentService,
+							 ShockroomRepository shockroomRepository,
+							 RoomRepository roomRepository,
+							 DoctorsOfficeRepository doctorsOfficeRepository) {
         super();
         this.triageRepository = triageRepository;
         this.triageDetailsRepository = triageDetailsRepository;
@@ -70,6 +83,9 @@ public class TriageServiceImpl implements TriageService {
         this.emergencyCareEpisodeStateService = emergencyCareEpisodeStateService;
 		this.documentFactory = documentFactory;
 		this.documentService = documentService;
+		this.shockroomRepository = shockroomRepository;
+		this.roomRepository = roomRepository;
+		this.doctorsOfficeRepository = doctorsOfficeRepository;
     }
 
     @Override
@@ -133,6 +149,8 @@ public class TriageServiceImpl implements TriageService {
         triageBo.setTriageId(triage.getId());
 		triageBo.setInstitutionId(institutionId);
 		triageBo.setEncounterId(triageBo.getEmergencyCareEpisodeId());
+		triageBo.setMedicalCoverageId(emergencyCareEpisodeRepository.getPatientMedicalCoverageIdByEpisodeId(triageBo.getEmergencyCareEpisodeId()));
+		setTriagePlace(triageBo);
 
         consumer.accept(triageBo);
 
@@ -194,4 +212,24 @@ public class TriageServiceImpl implements TriageService {
         emergencyCareEpisodeRepository.updateTriageCategoryId(episodeId, triageCategoryId);
         return true;
     }
+
+	private void setTriagePlace(TriageBo triage) {
+		Integer shockRoomId = emergencyCareEpisodeRepository.getEmergencyCareEpisodeShockroomId(triage.getEmergencyCareEpisodeId());
+		Integer roomId = emergencyCareEpisodeRepository.getRoomId(triage.getEmergencyCareEpisodeId());
+		Integer doctorsOfficeId = emergencyCareEpisodeRepository.getEmergencyCareEpisodeDoctorsOfficeId(triage.getEmergencyCareEpisodeId());
+		if (shockRoomId != null) {
+			triage.setShockRoomId(shockRoomId);
+			triage.setSectorId(shockroomRepository.getSectorId(shockRoomId));
+		}
+
+		if (roomId != null) {
+			triage.setRoomId(roomId);
+			triage.setSectorId(roomRepository.getSectorId(roomId));
+		}
+
+		if (doctorsOfficeId != null) {
+			triage.setDoctorsOfficeId(doctorsOfficeId);
+			triage.setSectorId(doctorsOfficeRepository.getSectorId(doctorsOfficeId));
+		}
+	}
 }

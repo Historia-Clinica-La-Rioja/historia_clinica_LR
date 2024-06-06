@@ -45,6 +45,7 @@
 				"TITLE": "Agregar terminología a importar"
 			},
 			"TERMINOLOGIES_LIST": "Lista de terminologías",
+			"SYNONYMS_LIST": "Lista de sinónimos",
 			"DOWNLOADED_FILE": "Archivo descargado",
 			"NO_FILE": "Archivo no existe",
 			"UPDATE": "Actualizar",

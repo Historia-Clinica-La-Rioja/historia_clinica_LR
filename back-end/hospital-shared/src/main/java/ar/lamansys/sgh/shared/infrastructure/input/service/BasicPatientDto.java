@@ -49,4 +49,5 @@ public class BasicPatientDto implements Serializable {
 	public GenderDto getGender() { return person != null ? person.getGenderId() != null ? person.getGender(): null: null; }
 
 	public LocalDate getBirthDate() { return person != null ? person.getBirthDate(): null; }
+
 }

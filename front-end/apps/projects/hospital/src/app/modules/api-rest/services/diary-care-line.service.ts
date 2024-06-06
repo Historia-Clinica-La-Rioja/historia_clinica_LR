@@ -24,10 +24,12 @@ export class DiaryCareLineService {
 		return this.http.get<CareLineDto[]>(url);
 	}
 
-	getPossibleCareLinesForDiaryByPractices(practicesId: number[]): Observable<CareLineDto[]> {
+	getPossibleCareLinesForDiaryByPracticesAndSpecialty(practicesId: number[], clinicalSpecialtyId: number): Observable<CareLineDto[]> {
 		const url = `${this.BASE_URL}/${this.contextService.institutionId}/diary-care-lines/practices`;
 		let params = new HttpParams();
 		params = params.append('practicesId', practicesId.join(', '));
+		if (clinicalSpecialtyId)
+			params = params.append('clinicalSpecialtyId', clinicalSpecialtyId);
 		return this.http.get<CareLineDto[]>(url, { params });
 	}
 }

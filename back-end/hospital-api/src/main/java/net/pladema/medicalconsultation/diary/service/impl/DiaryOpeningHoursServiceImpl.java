@@ -251,7 +251,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
         return validDaysWeek;
     }
 
-    /**
+	/**
      *
      * @param openingHours rangos de horarios para un mismo día de semana ordenados
      * @return lista acotada de {@code openingHours} uniendo rangos de tiempo superpuestos

@@ -1,0 +1,19 @@
+<div class="container" fxLayout="column">
+    <div class="sliders">
+        <ng-container *ngFor="let img of imgList; let i = index">
+            <div class="slider" *ngIf="currentIndex == i">
+                <img class="img" [src]="img">
+            </div>
+        </ng-container>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="24px" *ngIf="imgList.length > 1">
+        <button class="btn" mat-raised-button color="primary" [disabled]="prevBtnDisabled" (click)="getPrev()">
+            <span class="material-icons-outlined first-element">arrow_back</span>
+            <span>{{ 'buttons.PREVIOUS' | translate | uppercase }} </span>
+        </button>
+        <button class="btn" mat-raised-button color="primary" [disabled]="nextBtnDisabled" (click)="getNext()">
+            <span class="first-element">{{ 'buttons.NEXT' | translate | uppercase }} </span>
+            <span class="material-icons-outlined">arrow_forward</span>
+        </button>
+    </div>
+</div>

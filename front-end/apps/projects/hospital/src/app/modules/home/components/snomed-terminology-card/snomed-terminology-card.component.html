@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="delete-btn" *ngIf="uploadedTerminologyData.loadStatus == terminologyLoadStatus.NOT_LOADED" style="width: 85px;">
-            <button mat-raised-button color="warn" (click)="delete(uploadedTerminologyData.data.id)">{{'buttons.DELETE' | translate}}</button>
+            <button mat-raised-button color="warn" (click)="onDelete.emit()">{{'buttons.DELETE' | translate}}</button>
         </div>
     </mat-card-content>
 </mat-card>

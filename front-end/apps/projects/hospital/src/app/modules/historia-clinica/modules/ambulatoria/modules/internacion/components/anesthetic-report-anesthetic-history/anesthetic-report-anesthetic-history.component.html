@@ -1,0 +1,38 @@
+<span>{{ 'internaciones.anesthesic-report.anesthetic-history.PREVIOUS_ANESTHESIA' | translate }}</span>
+<form [formGroup]="form" class="anesthetic-history-form">
+    <mat-radio-group data-id="anesthetic-history" fxLayout="column" fxLayoutGap="16px"
+        formControlName="previousAnesthesiaState" (change)="onPreviousAnesthesiaStateSelected($event)">
+        <mat-radio-button [value]="previousAnesthesiaStates.YES">
+            {{ 'internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.YES' | translate }}
+        </mat-radio-button>
+
+        <div class="anesthesia-zones-group" *ngIf="viewZoneOptions">
+            <mat-radio-group data-id="anesthetic-history-zone" fxLayout="column" fxLayoutGap="16px"
+                formControlName="anesthesiaZone" (change)="onAnesthesiaZoneSelected($event)">
+                <mat-radio-button [value]="anesthesiaZone.REGIONAL" checked>
+                    {{
+                    'internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.REGIONAL'
+                    | translate }}
+                </mat-radio-button>
+                <mat-radio-button [value]="anesthesiaZone.GENERAL">
+                    {{
+                    'internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.GENERAL'
+                    | translate }}
+                </mat-radio-button>
+                <mat-radio-button [value]="anesthesiaZone.BOTH">
+                    {{
+                    'internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.anesthetic-zone.BOTH'
+                    | translate }}
+                </mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <mat-radio-button [value]="previousAnesthesiaStates.NO">
+            {{ 'internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.NO' | translate }}
+        </mat-radio-button>
+        <mat-radio-button [value]="previousAnesthesiaStates.CANT_ANSWER">
+            {{ 'internaciones.anesthesic-report.anesthetic-history.anesthetic-history-options.CANT_ANSWER' | translate
+            }}
+        </mat-radio-button>
+    </mat-radio-group>
+</form>

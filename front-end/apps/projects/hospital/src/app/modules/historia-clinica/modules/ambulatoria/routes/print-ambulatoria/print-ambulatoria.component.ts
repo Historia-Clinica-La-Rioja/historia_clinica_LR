@@ -7,7 +7,7 @@ import { ECHDocumentType } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { AdditionalInfo } from '@pacientes/pacientes.model';
-import { PatientBasicData } from '@presentation/components/patient-card/patient-card.component';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { MapperService } from '@presentation/services/mapper.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateFormat, momentFormat } from '@core/utils/moment.utils';

@@ -65,6 +65,16 @@ public class EmergencyCareEvolutionNoteDocumentBo implements IDocumentBo {
 
 	private LocalDateTime performedDate;
 
+	private Integer medicalCoverageId;
+
+	private Integer shockRoomId;
+
+	private Integer roomId;
+
+	private Integer doctorsOfficeId;
+
+	private Integer sectorId;
+
 	@Override
 	public Integer getPatientId() {
 		if (patientInfo != null)

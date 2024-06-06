@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.TranscribedDiagnosticReportInfoDto;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 
 @Getter
@@ -25,6 +24,9 @@ import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModa
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateAppointmentDto {
+
+	@Nullable
+	private Integer id;
 
     @NotNull
     private Integer diaryId;
@@ -64,9 +66,6 @@ public class CreateAppointmentDto {
 	private EAppointmentModality modality;
 
 	@Nullable
-	private TranscribedDiagnosticReportInfoDto transcribedOrderData;
-
-	@Nullable
 	private DiagnosticReportInfoDto orderData;
 	
 	@Nullable
@@ -74,5 +73,14 @@ public class CreateAppointmentDto {
 
 	@Nullable
 	private Integer referenceId;
+
+	@Nullable
+	private Short appointmentOptionId;
+
+	@Nullable
+	private Short expiredReasonId;
+
+	@Nullable
+	private String expiredReasonText;
 
 }

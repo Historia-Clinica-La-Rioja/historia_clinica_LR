@@ -7,16 +7,22 @@ import {
 	AppointmentShortSummaryDto,
 	AssignedAppointmentDto,
 	BookedAppointmentDto,
+	BookingDto,
 	CreateAppointmentDto,
 	DetailsOrderImageDto,
 	EquipmentAppointmentListDto,
+	CreateCustomAppointmentDto,
+	CustomRecurringAppointmentDto,
 	ExternalPatientCoverageDto,
 	HierarchicalUnitDto,
 	InstitutionBasicInfoDto,
 	PatientAppointmentHistoryDto,
+	SavedBookingAppointmentDto,
 	StudyIntanceUIDDto,
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
+	RecurringTypeDto,
+	WeekDayDto,
 } from '@api-rest/api-model';
 import { Observable, of } from 'rxjs';
 
@@ -24,28 +30,26 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { ContextService } from '@core/services/context.service';
 import { DownloadService } from '@core/services/download.service';
-import {
-	DateFormat,
-	momentFormat,
-} from '@core/utils/moment.utils';
-
 import { environment } from '@environments/environment';
-import * as moment from 'moment';
+import { toFileFormat } from '@api-rest/mapper/date.mapper';
+import { fixDate } from '@core/utils/date/format';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AppointmentsService {
 
-	private readonly BASE_URL: string;
+	private BASE_URL: string;
 
-	constructor(
-		private http: HttpClient,
-		private contextService: ContextService,
-		private downloadService: DownloadService
-	) {
-		this.BASE_URL = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments`;
-	}
+    constructor(
+        private http: HttpClient,
+        private contextService: ContextService,
+        private downloadService: DownloadService
+    ) {
+        this.contextService.institutionId$.subscribe(institutionId => 
+            this.BASE_URL = `${environment.apiBase}/institutions/${institutionId}/medicalConsultations/appointments`
+        )
+    }
 
 
 	create(appointment: CreateAppointmentDto): Observable<number> {
@@ -269,9 +273,10 @@ export class AppointmentsService {
 	}
 
 	getAppointmentReport(url: string, appointmentData: any, pdfName: string): Observable<any> {
+		const date = fixDate(appointmentData.date);
 		const appointmentId: number = appointmentData.appointmentId;
 		const fullNamePatient: string = appointmentData.patient.fullName.replace(' ', '');
-		const appointmentDate: string = momentFormat(moment(appointmentData.date), DateFormat.FILE_DATE);
+		const appointmentDate: string = toFileFormat(date);
 		const fileName = `${pdfName}_${fullNamePatient}_${appointmentDate}.pdf`;
 
 		return this.downloadService.downloadPdfWithRequestParams(url, fileName, { appointmentId });
@@ -342,5 +347,52 @@ export class AppointmentsService {
 	getAppoinmentOrderDetail(appointmentId: number, isOrderTranscribed: boolean): Observable<AppointmentOrderDetailImageDto>{
 		const url = `${this.BASE_URL}/${appointmentId}/detailOrderImage/transcribed-order/${isOrderTranscribed}`;
 		return this.http.get<AppointmentOrderDetailImageDto>(url);
+	}
+
+	bookAppointment(bookingDto: BookingDto): Observable<SavedBookingAppointmentDto>{
+		const url = `${this.BASE_URL}/third-party`;
+		return this.http.post<SavedBookingAppointmentDto>(url, bookingDto);
+	}
+	
+	getRecurringAppointmentType(): Observable<RecurringTypeDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/recurring-appointment-type`;
+		return this.http.get<RecurringTypeDto[]>(url);
+	}
+
+	getWeekDay(): Observable<WeekDayDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/week-day`;
+		return this.http.get<WeekDayDto[]>(url);
+	}
+
+	everyWeekSave(createAppointmentDto: CreateAppointmentDto): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/every-week-save`;
+		return this.http.post<boolean>(url, createAppointmentDto);
+	}
+
+	customSave(createCustomAppointmentDto: CreateCustomAppointmentDto): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/custom-save`;
+		return this.http.post<boolean>(url, createCustomAppointmentDto);
+	}
+
+	noRepeat(appointmentId: number): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/no-repeat`;
+		return this.http.put<boolean>(url, {});
+	}
+
+	cancelRecurringAppointments(appointmentId: number, cancelAllAppointments: boolean): Observable<boolean> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/cancel-recurring-appointments`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('cancelAllAppointments', cancelAllAppointments);
+		return this.http.put<boolean>(url, {}, { params: queryParams });
+	}
+
+	getCustomAppointment(appointmentId: number): Observable<CustomRecurringAppointmentDto> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/custom-appointment`;
+		return this.http.get<CustomRecurringAppointmentDto>(url);
+	}
+
+	createExpiredAppointment(createAppointmentDto: CreateAppointmentDto): Observable<number> {
+		const url = `${this.BASE_URL}/expired`;
+		return this.http.post<number>(url, createAppointmentDto);
 	}
 }

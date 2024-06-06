@@ -1,5 +1,5 @@
 <app-summary-card [header]="documentsSummary">
-	<ng-container *ngIf="this.documentHistoric?.documents.length !== 0 || searchTriggered; else noData">
+	<ng-container *ngIf="this.documentHistoric?.documents?.length !== 0 || searchTriggered; else noData">
 		<div class="search-form" id="header">
 			<form fxLayout="row" fxLayoutGap="10px" id="document-search-form" [formGroup]="form" (ngSubmit)="search()">
 				<div style="padding-left: 16px;">
@@ -120,112 +120,117 @@
 					</div>
 				</mat-list-option>
 			</mat-selection-list>
-			<div *ngIf="viewEvolutionNote()" class="content" fxLayout="row" fxLayoutAlign="space-between">
-				<div fxFlex="70%">
-					<ng-container>
-						<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center" *ngIf="activeDocument.document.notes">
-							<mat-icon mat-list-icon fontSet="material-icons-outlined">assignment</mat-icon>
-							<div class="mat-body-strong" [translate]="'internaciones.documents-summary.CLINICAL_EVALUATION'"></div>
-						</div>
-						<div>
-							<section *ngIf="activeDocument.document.notes?.currentIllnessNote">
-								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></div>
-								<div class="mat-body-strong text">{{activeDocument.document.notes.currentIllnessNote}}</div>
-							</section>
-
-							<section *ngIf="activeDocument.document.notes?.physicalExamNote">
-								<div class="mat-body"
-									 [translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></div>
-								<div class="mat-body-strong text"> {{activeDocument.document.notes.physicalExamNote}}</div>
-							</section>
-
-							<section *ngIf="activeDocument.document.notes?.studiesSummaryNote">
-								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></div>
-								<div class="mat-body-strong text">{{activeDocument.document.notes.studiesSummaryNote}}</div>
-							</section>
-
-							<section *ngIf="activeDocument.document.notes?.evolutionNote">
-								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></div>
-								<div class="mat-body-strong text">{{activeDocument.document.notes.evolutionNote}}</div>
-							</section>
-
-							<section *ngIf="activeDocument.document.notes?.clinicalImpressionNote">
-								<div class="mat-body"
-									 [translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></div>
-								<div class="mat-body-strong text">{{activeDocument.document.notes.clinicalImpressionNote}}</div>
-							</section>
-
-							<section *ngIf="activeDocument.document.notes?.indicationsNote">
-								<div class="mat-body" [translate]="'internaciones.epicrisis.observations.INDICATIONS_NOTE'"></div>
-								<div class="mat-body-strong text">{{activeDocument.document.notes.indicationsNote}}</div>
-							</section>
-
-							<section *ngIf="activeDocument.document.notes?.otherNote">
-								<div class="mat-body" [translate]="'internaciones.anamnesis.observations.OTHERS'"></div>
-								<div class="mat-body-strong text">{{activeDocument.document.notes.otherNote}}</div>
-							</section>
-							<button *ngIf="!activeDocument.document.confirmed && !isPopUpOpen" id="edit-draft-button" type="button"  class="edit-draft-button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
-								<span [translate]="'internaciones.epicrisis.buttons.EDIT_DRAFT'">
-								</span>
-							</button>
-						</div>
-					</ng-container>
-
-					<section *ngIf="activeDocument.document.procedures.length > 0">
-						<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-							<mat-icon mat-list-icon fontSet="material-icons-outlined">library_add</mat-icon>
-							<div class="mat-body-strong" [translate]="'internaciones.anamnesis.procedimientos.PROCEDIMIENTOS'"></div>
-						</div>
-						<div *ngFor="let procedure of activeDocument.document.procedures" class="subcontent">
-							<div *ngIf="procedure.performedDate" class="mat-body-strong">
-								{{procedure.procedure}} - {{procedure.performedDate | date: 'dd/MM/yy'}}
+			<ng-container *ngIf="!(activeDocument?.document.documentType === 'Parte anestésico')">
+				<div *ngIf="viewEvolutionNote()" class="content" fxLayout="row" fxLayoutAlign="space-between">
+					<div fxFlex="70%">
+						<ng-container>
+							<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center" *ngIf="activeDocument.document.notes">
+								<mat-icon mat-list-icon fontSet="material-icons-outlined">assignment</mat-icon>
+								<div class="mat-body-strong" [translate]="'internaciones.documents-summary.CLINICAL_EVALUATION'"></div>
 							</div>
-							<div *ngIf="!procedure.performedDate" class="mat-body-strong">
-								{{procedure.procedure}}
+							<div>
+								<section *ngIf="activeDocument.document.notes?.currentIllnessNote">
+									<div class="mat-body" [translate]="'internaciones.anamnesis.observations.CURRENT_DISEASE'"></div>
+									<div class="mat-body-strong text">{{activeDocument.document.notes.currentIllnessNote}}</div>
+								</section>
+
+								<section *ngIf="activeDocument.document.notes?.physicalExamNote">
+									<div class="mat-body"
+											[translate]="'internaciones.anamnesis.observations.PHYSICAL_EXAMINATION'"></div>
+									<div class="mat-body-strong text"> {{activeDocument.document.notes.physicalExamNote}}</div>
+								</section>
+
+								<section *ngIf="activeDocument.document.notes?.studiesSummaryNote">
+									<div class="mat-body" [translate]="'internaciones.anamnesis.observations.STUDIES_PROCEDURES'"></div>
+									<div class="mat-body-strong text">{{activeDocument.document.notes.studiesSummaryNote}}</div>
+								</section>
+
+								<section *ngIf="activeDocument.document.notes?.evolutionNote">
+									<div class="mat-body" [translate]="'internaciones.anamnesis.observations.PATIENT_PROGRESS'"></div>
+									<div class="mat-body-strong text">{{activeDocument.document.notes.evolutionNote}}</div>
+								</section>
+
+								<section *ngIf="activeDocument.document.notes?.clinicalImpressionNote">
+									<div class="mat-body"
+											[translate]="'internaciones.anamnesis.observations.CLINICAL_IMPRESSION'"></div>
+									<div class="mat-body-strong text">{{activeDocument.document.notes.clinicalImpressionNote}}</div>
+								</section>
+
+								<section *ngIf="activeDocument.document.notes?.indicationsNote">
+									<div class="mat-body" [translate]="'internaciones.epicrisis.observations.INDICATIONS_NOTE'"></div>
+									<div class="mat-body-strong text">{{activeDocument.document.notes.indicationsNote}}</div>
+								</section>
+
+								<section *ngIf="activeDocument.document.notes?.otherNote">
+									<div class="mat-body" [translate]="'internaciones.anamnesis.observations.OTHERS'"></div>
+									<div class="mat-body-strong text">{{activeDocument.document.notes.otherNote}}</div>
+								</section>
+								<button *ngIf="!activeDocument.document.confirmed && !isPopUpOpen" id="edit-draft-button" type="button"  class="edit-draft-button" mat-flat-button color="primary" (click)="editDraftEpicrisis(activeDocument.document)">
+									<span [translate]="'internaciones.epicrisis.buttons.EDIT_DRAFT'">
+									</span>
+								</button>
 							</div>
-						</div>
-					</section>
+						</ng-container>
 
-					<section *ngIf="activeDocument.document.editedOn">
-						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
-							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
-							<span>{{ activeDocument.document.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
-						</div>
-					</section>
+						<section *ngIf="activeDocument.document.procedures.length > 0">
+							<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+								<mat-icon mat-list-icon fontSet="material-icons-outlined">library_add</mat-icon>
+								<div class="mat-body-strong" [translate]="'internaciones.anamnesis.procedimientos.PROCEDIMIENTOS'"></div>
+							</div>
+							<div *ngFor="let procedure of activeDocument.document.procedures" class="subcontent">
+								<div *ngIf="procedure.performedDate" class="mat-body-strong">
+									{{procedure.procedure}} - {{ procedure.performedDate | isoToDate | dateFormat: 'date'}}
+								</div>
+								<div *ngIf="!procedure.performedDate" class="mat-body-strong">
+									{{procedure.procedure}}
+								</div>
+							</div>
+						</section>
+
+						<section *ngIf="activeDocument.document.editedOn">
+							<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+								<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+								<span>{{ activeDocument.document.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+							</div>
+						</section>
+					</div>
+
+					<div *ngIf="!isPopUpOpen" style="padding: 16px;">
+						<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit && activeDocument.document.confirmed" (click)="edit(activeDocument.document)">
+							<mat-icon>edit</mat-icon>
+						</button>
+						<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
+							<mat-icon>delete</mat-icon>
+						</button>
+					</div>
 				</div>
 
-				<div *ngIf="!isPopUpOpen" style="padding: 16px;">
-					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit && activeDocument.document.confirmed" (click)="edit(activeDocument.document)">
-						<mat-icon>edit</mat-icon>
-					</button>
-					<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
-						<mat-icon>delete</mat-icon>
-					</button>
+				<div *ngIf="(activeDocument && !viewEvolutionNote() )" class="no-notes content mat-body-strong" fxLayout="row" fxLayoutAlign="space-between center">
+					<div fxLayout="column" fxLayoutGap="10px">
+						<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
+						<section *ngIf="activeDocument.document.editedOn">
+							<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
+								<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+								<span>{{ activeDocument.document.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+							</div>
+						</section>
+					</div>
+					<div *ngIf="!isPopUpOpen">
+						<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
+							<mat-icon>edit</mat-icon>
+						</button>
+						<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
+							<mat-icon>delete</mat-icon>
+						</button>
+					</div>
 				</div>
-			</div>
-
-			<div *ngIf="(activeDocument && !viewEvolutionNote() )" class="no-notes content mat-body-strong" fxLayout="row" fxLayoutAlign="space-between center">
-				<div fxLayout="column" fxLayoutGap="10px">
-					<span>{{"internaciones.documents-summary.WITHOUT_OBSERVATIONS" | translate}}</span>
-					<section *ngIf="activeDocument.document.editedOn">
-						<div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
-							<span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
-							<span>{{ activeDocument.document.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
-						</div>
-					</section>
-				</div>
-				<div *ngIf="!isPopUpOpen">
-					<button type="button" mat-button color="primary" *ngIf="activeDocument.canDoAction.edit" (click)="edit(activeDocument.document)">
-						<mat-icon>edit</mat-icon>
-					</button>
-					<button type="button" mat-button color="warn" *ngIf="activeDocument.canDoAction.delete" (click)="delete(activeDocument.document)">
-						<mat-icon>delete</mat-icon>
-					</button>
-				</div>
-			</div>
+			</ng-container>
+			<ng-container *ngIf="activeDocument?.document.documentType === 'Parte anestésico'">
+				<app-anesthetic-report-document-summary class="anesthetic-report" [documentId]="activeDocument.document.id" [internmentEpisodeId]="internmentEpisodeId"></app-anesthetic-report-document-summary>
+			</ng-container>
 		</div>
 		<div
-			*ngIf="this.documentHistoric && !this.documentHistoric.documents.length">
+			*ngIf="this.documentHistoric && !this.documentHistoric.documents?.length">
 			<div class="no-data-styles">
 				<span [translate]="'internaciones.documents-summary.NO_FILTERED_PROBLEMS'"></span>
 			</div>

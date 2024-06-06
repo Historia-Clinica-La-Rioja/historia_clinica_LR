@@ -1,0 +1,50 @@
+<div fxLayout="row" fxLayoutGap="5px" fxLayout.lt-md="column" fxLayoutAlign="space-between start">
+
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="25%">
+
+		<app-identifier-cases [identifierCase]="identiferCases.DATE"
+			[description]="availableAppointment.date | date: 'fullDate'">
+		</app-identifier-cases>
+
+		<app-identifier-cases [identifierCase]="identiferCases.HOUR"
+				[description]="availableAppointment.date | dateFormat: 'time'">
+		</app-identifier-cases>
+
+	</div>
+
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="20%">
+
+		<app-identifier-cases [identifierCase]="identiferCases.INSTITUTION"
+			[description]="availableAppointment.institutionName">
+		</app-identifier-cases>
+
+		<app-identifier-cases *ngIf="availableAppointment.departmentDescription" [identifierCase]="identiferCases.DISTRICT"
+			[description]="availableAppointment.departmentDescription">
+		</app-identifier-cases>
+
+	</div>
+
+	<div fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="center start" fxFlex="20%">
+		<app-identifier-cases [identifierCase]="identiferCases.PROFESSIONAL" [description]="availableAppointment.professionalFullName"></app-identifier-cases>
+		<span *ngIf="availableAppointment.jointDiary"> ({{'turnos.appointment-result-view.JOINT_DIARY' | translate}}) </span>
+	</div>
+
+	<div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="10px" fxFlex="20%">
+
+		<app-identifier-cases *ngIf="availableAppointment.practiceDescription" [identifierCase]="identiferCases.PRACTICE"
+			[description]="availableAppointment.practiceDescription">
+		</app-identifier-cases>
+
+		<app-identifier-cases *ngIf="availableAppointment.clinicalSpecialtyName" [identifierCase]="identiferCases.SPECIALTY"
+			[description]="availableAppointment.clinicalSpecialtyName">
+		</app-identifier-cases>
+
+		<app-identifier-cases [identifierCase]="identiferCases.ROOM" [description]="availableAppointment.doctorOffice">
+		</app-identifier-cases>
+
+	</div>
+	<div fxFlex="15%">
+		<ng-content></ng-content>
+	</div>
+
+</div>
