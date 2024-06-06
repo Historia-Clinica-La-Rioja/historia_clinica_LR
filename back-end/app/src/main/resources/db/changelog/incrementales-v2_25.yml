@@ -42,3 +42,40 @@ databaseChangeLog:
                         type: varchar(128)
                         constraints:
                             nullable: true
+        
+    - changeSet:
+        id: createTable-institution_responsibility_area
+        comment: Create table institution_responsibility_area
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: institution_responsibility_area
+              columns:
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_institution_responsibility_area_institution_id
+                      references: institution(id)
+                - column:
+                    name: order_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                - column:
+                    name: latitude
+                    type: float
+                    constraints:
+                      nullable: false
+                - column:
+                    name: longitude
+                    type: float
+                    constraints:
+                      nullable: false
+          - addPrimaryKey:
+              clustered: true
+              columnNames: institution_id, order_id
+              constraintName: PK_institution_responsibility_area
+              tableName: institution_responsibility_area
+              validate: true
