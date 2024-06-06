@@ -2,6 +2,8 @@ import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl,
 import { ElementRef } from '@angular/core';
 import { DateFormat, toHourMinute } from './date.utils';
 import { format } from 'date-fns';
+import { EVENT_CODE_NUMBERS } from './core.utils';
+import { TimeDto } from '@api-rest/api-model';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
@@ -74,6 +76,12 @@ export function futureTimeValidationDate(control: UntypedFormControl): Validatio
 	return null;
 }
 
+export function futureTimeDtoValidationDate(control: UntypedFormControl): ValidationErrors | null {
+    const time: TimeDto = control.value;
+    const today: Date = new Date();
+    return compareTimeDtoWithDate(time, today) == 1 ? { futureTime: true } : null;
+}
+
 export function beforeTimeValidation(date: Date) {
 	return (control: UntypedFormControl): ValidationErrors | null => {
 		const time: string = control.value;
@@ -99,6 +107,13 @@ export function beforeTimeValidationDate(date: Date) {
 	};
 }
 
+export function beforeTimeDtoValidationDate(date: Date) {
+    return (control: UntypedFormControl): ValidationErrors | null => {
+        const time: TimeDto = control.value;
+        return compareTimeDtoWithDate(time, date) == -1 ? { beforeTime: true } : null;
+    };
+}
+
 export function beforeTimeDateValidation(date: string) {
 	return (control: UntypedFormControl): ValidationErrors | null => {
 		const time: string = control.value;
@@ -111,6 +126,29 @@ export function beforeTimeDateValidation(date: string) {
 		}
 		return null;
 	};
+}
+
+function compareTimeDtoWithDate(time: TimeDto, referenceDate: Date): number {
+	// -1 -> time is before referenceDate, 0 -> time = referenceDate, 1 -> time is after referenceDate
+    if (!time) return 0;
+
+    const referenceTime = {
+        hours: referenceDate.getHours(),
+        minutes: referenceDate.getMinutes(),
+        seconds: referenceDate.getSeconds()
+    };
+
+    if (time.hours > referenceTime.hours) return 1;
+    if (time.hours < referenceTime.hours) return -1;
+
+    if (time.minutes > referenceTime.minutes) return 1;
+    if (time.minutes < referenceTime.minutes) return -1;
+
+    const timeSeconds = time.seconds ?? 0;
+    if (timeSeconds > referenceTime.seconds) return 1;
+    if (timeSeconds < referenceTime.seconds) return -1;
+
+    return 0;
 }
 
 function isValidTime(time: string) {

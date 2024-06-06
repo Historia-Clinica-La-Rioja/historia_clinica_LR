@@ -4,16 +4,13 @@
 	<form [formGroup]="form" (submit)="confirm()">
 
 		<div fxLayout="row" fxLayoutGap="5px" formGroupName="dateTime">
-			<app-datepicker id="date" [minDate]="episodeCreatedOn"
+			<app-datepicker [title]="'guardia.episode.medical_discharge.form.DATE' | translate" id="date" [minDate]="episodeCreatedOn"
 				[maxDate]="today" [dateToSetInDatepicker]="today" (selectDate)="dischargedDateChanged($event)">
 			</app-datepicker>
 
 
-			<mat-form-field appearance="outline">
-				<input matInput id="time" type="text" formControlName="time" pattern="{{TIME_PATTERN}}"
-					placeholder="{{'guardia.episode.medical_discharge.form.TIME' | translate}}">
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'pattern', 'time')" translate="forms.TIME_FORMAT">
-				</mat-error>
+			<div appearance="outline">
+				<app-time-picker id="time" [timePickerData]="timePickerData" (timeSelected)="dischargedTimeChanged($event)"></app-time-picker>
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED">
 				</mat-error>
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')"
@@ -21,7 +18,7 @@
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')"
 					translate="guardia.episode.medical_discharge.form.INVALID_TIME">
 				</mat-error>
-			</mat-form-field>
+			</div>
 		</div>
 
 		<div id="problemas" style="padding-bottom: 15px">
@@ -70,7 +67,7 @@
 								[minDate]="minDate" [maxDate]="problemasService.getFechaInicioMax()" [dateToSetInDatepicker]="today"
 								(selectDate)="problemStartDateChanged($event)">
 							</app-datepicker>
-	
+
 							<app-datepicker id="fecha_fin" title="guardia.episode.medical_discharge.problems.FECHA_FIN" [minDate]="problemasService.getForm().controls.fechaInicio.value"
 								[maxDate]="today" (selectDate)="problemEndDateChanged($event)">
 							</app-datepicker>
