@@ -166,7 +166,7 @@ export class CompleteInfoComponent implements OnInit {
 					disableClose: false,
 					data: {
 						title: 'ambulatoria.complete-info.TITLE',
-						contentBold: 'ambulatoria.complete-info.CONTENT',
+						content: 'ambulatoria.complete-info.CONTENT',
 						okButtonLabel: 'ambulatoria.complete-info.OK_BUTTON',
 						cancelButtonLabel: 'ambulatoria.complete-info.CANCEL'
 					},

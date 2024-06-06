@@ -309,13 +309,24 @@ export class StudyComponent implements OnInit {
 
 	private getPrescriptionStatus(diagnosticReportStatusId:string): PrescriptionStatus {
 		const prescriptionStatus = this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReportStatusId);
+		this.setCssClass(prescriptionStatus)
 		return {
 			description: prescriptionStatus,
-			color: prescriptionStatus === this.translateService.instant('ambulatoria.paciente.studies.study_state.PENDING') ? Color.RED : Color.BLUE,
+			color: this.setColor(prescriptionStatus)
 		}
 	}
 
 	private setCssClass(prescriptionStatus: string): string {
+		switch (prescriptionStatus) {
+			case STUDY_STATUS.REGISTERED.description:
+				return Color.RED;
+			case STUDY_STATUS.PARTIAL.description:
+				return Color.YELLOW;
+			default: return Color.BLUE;
+		}
+	}
+
+	private setColor(prescriptionStatus: string): Color {
 		switch (prescriptionStatus) {
 			case STUDY_STATUS.REGISTERED.description:
 				return Color.RED;
