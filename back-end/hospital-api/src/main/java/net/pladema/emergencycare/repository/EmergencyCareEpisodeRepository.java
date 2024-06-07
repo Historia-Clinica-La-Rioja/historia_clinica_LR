@@ -267,4 +267,13 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 			"WHERE ece.id = :episodeId")
     EmergencyCareEpisodeNotificationBo getSchedulerNotificationData(@Param("episodeId") Integer episodeId);
 
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE EmergencyCareEpisode ece " +
+					"SET ece.patientDescription = :patientDescription, " +
+					"ece.updateable.updatedOn = CURRENT_TIMESTAMP " +
+					"WHERE ece.id = :episodeId")
+	void updatePatientDescription(@Param("episodeId") Integer episodeId,
+					 			  @Param("patientDescription") String patientDescription);
+
 }

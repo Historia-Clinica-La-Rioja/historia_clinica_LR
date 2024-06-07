@@ -224,6 +224,18 @@ public class EmergencyCareEpisodeController {
 		return ResponseEntity.ok().body(result);
 	}
 
+	@PutMapping("/{emergencyCareEpisodeId}/updatePatientDescription")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public ResponseEntity<Boolean> updatePatientDescription(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "emergencyCareEpisodeId") Integer emergencyCareEpisodeId,
+			@RequestBody String patientDescription) {
+		LOG.debug("Update emergency care patient description -> institutionId {}, emergencyCareEpisodeId {}, patientDescription {}", institutionId, emergencyCareEpisodeId, patientDescription);
+		Boolean result = emergencyCareEpisodeService.updatePatientDescription(emergencyCareEpisodeId, patientDescription);
+		LOG.debug("Output -> {}", result);
+		return ResponseEntity.ok().body(result);
+	}
+
     private List<Integer> getRiskFactorIds(NewRiskFactorsObservationDto riskFactorsObservationDto){
         LOG.debug("Input parameter -> riskFactorsObservationDto {}", riskFactorsObservationDto);
         List<Integer> result = new ArrayList<>();

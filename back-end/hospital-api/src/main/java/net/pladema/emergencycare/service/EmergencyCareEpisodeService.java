@@ -49,4 +49,6 @@ public interface  EmergencyCareEpisodeService {
 
 	Optional<LocalDateTime> getCreatedOn(Integer episodeId);
 
+	Boolean updatePatientDescription(Integer episodeId, String patientDescription);
+
 }

@@ -263,6 +263,15 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		return result;
 	}
 
+	@Override
+	public Boolean updatePatientDescription(Integer episodeId, String patientDescription) {
+		log.debug("Input parameters -> episodeId {}, patientDescription {}", episodeId, patientDescription);
+		emergencyCareEpisodeRepository.updatePatientDescription(episodeId, patientDescription);
+		var result = Boolean.TRUE;
+		log.debug("Output -> result {}", result);
+		return result;
+	}
+
     private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId){
 		if (episodePersisted.getPatientId() == null || !episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId()))
 			assertValidPatient(episodeToUpdate.getPatient(), institutionId);
