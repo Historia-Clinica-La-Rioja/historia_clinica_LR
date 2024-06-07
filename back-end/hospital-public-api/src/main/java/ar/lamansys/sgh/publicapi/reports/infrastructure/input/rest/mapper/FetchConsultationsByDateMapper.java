@@ -9,7 +9,7 @@ import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.Consultat
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.ConsultationItemWithDateDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.HierarchicalUnitDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.IdentificationDto;
-import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.MedicalCoverageDto;
+import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.MedicalCoverageNameDto;
 import ar.lamansys.sgh.publicapi.reports.infrastructure.input.rest.dto.SnomedClinicalSpecialtyDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;
@@ -60,7 +60,7 @@ public class FetchConsultationsByDateMapper {
 						.identificationType(consultationBo.getIdentification().getIdentificationType())
 						.identificationNumber(consultationBo.getIdentification().getIdentificationNumber())
 						.build())
-				.medicalCoverage(MedicalCoverageDto.builder()
+				.medicalCoverage(MedicalCoverageNameDto.builder()
 						.name(consultationBo.getMedicalCoverage().getName())
 						.rnos(consultationBo.getMedicalCoverage().getRnos())
 						.build())

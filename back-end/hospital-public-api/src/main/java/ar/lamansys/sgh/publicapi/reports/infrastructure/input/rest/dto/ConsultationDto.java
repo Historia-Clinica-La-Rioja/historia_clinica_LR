@@ -19,7 +19,7 @@ public class ConsultationDto {
 	private HierarchicalUnitDto hierarchicalUnit;
 	private SnomedClinicalSpecialtyDto clinicalSpecialty;
 	private IdentificationDto identification;
-	private MedicalCoverageDto medicalCoverage;
+	private MedicalCoverageNameDto medicalCoverage;
 	private String officialGender;
 	private DateDto birthdate;
 	private Integer age;

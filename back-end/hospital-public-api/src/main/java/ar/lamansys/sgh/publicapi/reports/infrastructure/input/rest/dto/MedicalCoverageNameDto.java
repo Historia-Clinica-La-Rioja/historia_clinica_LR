@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class MedicalCoverageDto {
+public class MedicalCoverageNameDto {
 	String name;
 	Integer rnos;
 }

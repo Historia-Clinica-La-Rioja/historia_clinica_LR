@@ -7,5 +7,7 @@ public interface ActivitiesPublicApiPermissions {
 
 	boolean canFetchHealthcareProfessionals(Integer institutionId);
 
+	boolean canFetchAllMedicalCoverages();
+
 	Optional<Integer> findInstitutionId(String refsetCode);
 }
