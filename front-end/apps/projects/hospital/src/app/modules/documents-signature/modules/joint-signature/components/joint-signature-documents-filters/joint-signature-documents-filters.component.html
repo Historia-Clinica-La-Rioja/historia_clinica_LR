@@ -1,0 +1,23 @@
+<div data-id="filters" class="filters" fxLayout="row" fxLayoutAlign="space-evenly center">
+	<app-filters-select-v2 data-id="states-filter" [setFilters]="filter"
+		(selectedFilters)="handleFilterChange($event)">
+	</app-filters-select-v2>
+
+	<app-date-range-picker data-id="dates-filter" [dateRange]="initialDateRange"
+		(dateRangeChange)="setDatesFilter($event)" [label]="'firma-conjunta.FILTER_DATES'"></app-date-range-picker>
+
+	<mat-form-field id="search-patient-first-name" appearance="outline">
+		<mat-label>{{'firma-conjunta.FILTER_NAME_PATIENT' |
+			translate}}</mat-label>
+		<input matInput id="patient-first-name" [(ngModel)]="selectedFilterOptions.patientFirstName">
+	</mat-form-field>
+	<mat-form-field id="search-patient-last-name" appearance="outline">
+		<mat-label>{{'firma-conjunta.FILTER_LAST_NAME_PATIENT' |
+			translate}}</mat-label>
+		<input matInput id="patient-lastName" [(ngModel)]="selectedFilterOptions.patientLastName">
+	</mat-form-field>
+	
+	<button mat-stroked-button color="primary" btn-block type="button" (click)="emitFilters()">
+		<span> {{'buttons.FILTER' | translate}}</span>
+	</button>
+</div>

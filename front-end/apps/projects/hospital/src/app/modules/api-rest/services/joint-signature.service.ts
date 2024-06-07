@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DocumentElectronicSignatureProfessionalStatusDto, EElectronicSignatureStatus, ElectronicSignatureInvolvedDocumentDto, GenericMasterDataDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { DocumentElectronicSignatureProfessionalStatusDto, EElectronicSignatureStatus, ElectronicJointSignatureInvolvedDocumentListFilterDto, ElectronicSignatureInvolvedDocumentDto, GenericMasterDataDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -15,11 +15,12 @@ export class JointSignatureService {
 	constructor(private readonly http: HttpClient,
 		private readonly contextService: ContextService) { }
 
-	getProfessionalInvolvedDocumentList(pageSize: number, pageNumber: number, filter?: string): Observable<PageDto<ElectronicSignatureInvolvedDocumentDto>> {
+	getProfessionalInvolvedDocumentList(pageSize: number, pageNumber: number, filter?: ElectronicJointSignatureInvolvedDocumentListFilterDto): Observable<PageDto<ElectronicSignatureInvolvedDocumentDto>> {
 		const url = `${this.BASE_URL}/get-involved-document-list`;
 		let queryParam = new HttpParams().append('pageNumber', pageNumber).append('pageSize', pageSize);
-		if (filter)
-			queryParam = queryParam.append('filter', filter);
+		if (filter){
+			queryParam = queryParam.append('filter', JSON.stringify(filter));
+		}
 		return this.http.get<PageDto<ElectronicSignatureInvolvedDocumentDto>>(url, { params: queryParam });
 	}
 

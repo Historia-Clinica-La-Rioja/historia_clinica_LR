@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, ViewChild, } from '@angular/core';
+import { Component, Input, ViewChild, } from '@angular/core';
 import { Detail } from '@presentation/components/details-section-custom/details-section-custom.component';
 import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { buildHeaderInformation, buildItemListCard } from '../../mappers/joint-signature.mapper';
-import { DocumentDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { DocumentDto, ElectronicJointSignatureInvolvedDocumentListFilterDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
 import { JointSignatureService } from '@api-rest/services/joint-signature.service';
 import { map, tap } from 'rxjs';
 import { INITIAL_PAGE, PAGE_SIZE, PAGE_SIZE_OPTIONS } from '../../constants/joint-signature.constants';
@@ -20,15 +20,15 @@ import { DocumentSignatureService } from '../../../../services/document-signatur
 	templateUrl: './joint-signature-documents-card.component.html',
 	styleUrls: ['./joint-signature-documents-card.component.scss']
 })
-export class JointSignatureDocumentsCardComponent implements OnInit {
+export class JointSignatureDocumentsCardComponent {
 	@ViewChild('paginator') paginator: MatPaginator;
 
-	@Input() set setFilter(filter: string) {
+	@Input() set setFilter(filter: ElectronicJointSignatureInvolvedDocumentListFilterDto) {
 		this.filter = filter;
 		this.setDocuments(this.INITIAL_PAGE);
 	};
 
-	filter: string;
+	filter: ElectronicJointSignatureInvolvedDocumentListFilterDto;
 	headerInformation: Detail[] = [];
 	isLoading: boolean;
 	documents: ItemListCard[] = [];
@@ -49,10 +49,6 @@ export class JointSignatureDocumentsCardComponent implements OnInit {
 		private readonly documentService: DocumentService,
 		private readonly documentSignatureService: DocumentSignatureService
 	) { }
-
-	ngOnInit(): void {
-		this.setDocuments(this.INITIAL_PAGE);
-	}
 
 	setDocuments(pageIndex: number): void {
 		this.isLoading = true;
