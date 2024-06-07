@@ -1,137 +1,154 @@
 <mat-card class="card-size">
-	<mat-card-content>
-		<app-emergency-care-patient [emergencyCarePatientData]="emergencyCarePatientData" (selectedPatientData)="setPatientData($event)"></app-emergency-care-patient>
+	<mat-card-content fxLayout="column" fxLayoutGap="32px">
+		<app-emergency-care-patient [emergencyCarePatientData]="emergencyCarePatientData"
+			(selectedPatientData)="setPatientData($event)"></app-emergency-care-patient>
 
-		<form fxLayout="column" fxLayoutGap="10px" id="admisionForm" [formGroup]="form" class="form">
-			<h2 [translate]="'guardia.administrative_admision.EPISODE_DETAILS'"></h2>
-			<div id="motivos" fxLayout="column" fxLayoutGap="10px">
-				<span>{{'guardia.administrative_admision.reasons.TITLE' | translate}}</span>
-				<mat-form-field appearance="outline">
-					<textarea matInput type="text" formControlName="reason"
-						placeholder="{{'guardia.administrative_admision.reasons.PLACEHOLDER' | translate}}"></textarea>
-					<mat-error *ngIf="hasError(form, 'required', 'reason')" [translate]="'forms.REQUIRED'">
-					</mat-error>
-					<mat-error *ngIf="hasError(form, 'pattern', 'reason')" [translate]="'forms.REQUIRED'"></mat-error>
-				</mat-form-field>
+		<form fxLayout="column" fxLayoutGap="32px" id="admisionForm" [formGroup]="form" class="form">
+			<div id="episode-details" fxLayout="column" fxLayoutGap="8px">
+				<h2 [translate]="'guardia.administrative_admision.EPISODE_DETAILS'"></h2>
+
+				<div fxLayout="column" fxLayoutGap="16px">
+					<div id="motivos" fxLayout="column" fxLayoutGap="8px">
+						<span>{{'guardia.administrative_admision.reasons.TITLE' | translate}}</span>
+						<mat-form-field appearance="outline">
+							<textarea matInput type="text" formControlName="reason"
+								placeholder="{{'guardia.administrative_admision.reasons.PLACEHOLDER' | translate}}"></textarea>
+							<mat-error *ngIf="hasError(form, 'required', 'reason')" [translate]="'forms.REQUIRED'">
+							</mat-error>
+							<mat-error *ngIf="hasError(form, 'pattern', 'reason')"
+								[translate]="'forms.REQUIRED'"></mat-error>
+						</mat-form-field>
+					</div>
+
+					<mat-form-field appearance="outline">
+						<mat-select formControlName="emergencyCareTypeId" name="emergencyCareTypeId" id="emergencyCareTypeId"
+							placeholder="{{'guardia.administrative_admision.form.EMERGENCY_CARE_TYPE' | translate}}">
+							<mat-option *ngFor="let emergencyCareType of (emergencyCareType$ | async )"
+								[value]="emergencyCareType.id">
+								{{emergencyCareType.description}}
+							</mat-option>
+						</mat-select>
+						<button id="clear_emergency_care_type" type="button" mat-button *ngIf="form.value.emergencyCareTypeId"
+							matSuffix color="warn" mat-icon-button
+							(click)="clear(form.controls.emergencyCareTypeId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline">
+						<mat-select formControlName="emergencyCareEntranceTypeId" name="emergencyCareEntranceTypeId"
+							id="emergencyCareEntranceTypeId"
+							placeholder="{{'guardia.administrative_admision.form.EMERGENCY_CARE_ENTRANCE_TYPE' | translate}}"
+							(selectionChange)="setAmbulanceCompanyIdStatus()">
+							<mat-option *ngFor="let emergencyCareEntranceType of (emergencyCareEntranceType$ | async )"
+								[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
+							</mat-option>
+						</mat-select>
+						<button id="clear_emergency_care_entrance" type="button" mat-button
+							*ngIf="form.value.emergencyCareEntranceTypeId" matSuffix color="warn" mat-icon-button
+							(click)="clear(form.controls.emergencyCareEntranceTypeId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+
+					<mat-form-field appearance="outline"
+						*ngIf="form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_CON_MEDICO || form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_SIN_MEDICO">
+						<input formControlName="ambulanceCompanyId"
+							placeholder="{{'guardia.administrative_admision.form.AMBULANCE_COMPANY_ID' | translate }}" matInput>
+						<mat-error *ngIf="hasError(form, 'maxlength', 'ambulanceCompanyId')" translate="forms.MAX_LENGTH_ERROR"
+							[translateParams]="{max: AMBULANCE.COMPANY_ID.max_length}"></mat-error>
+					</mat-form-field>
+
+					<mat-form-field *ngIf="false" appearance="outline">
+						<mat-select formControlName="doctorsOfficeId" name="doctorsOfficeId" id="doctorsOfficeId"
+							matTooltip="{{'guardia.administrative_admision.form.waiting_room.DESCRIPTION' | translate}}"
+							placeholder="{{'guardia.administrative_admision.form.waiting_room.PLACEHOLDER' | translate}}">
+							<mat-option *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id">
+								{{office.description}}
+							</mat-option>
+						</mat-select>
+						<button id="clear_waiting_room" type="button" mat-button *ngIf="form.value.doctorsOfficeId" matSuffix
+							color="warn" mat-icon-button
+							(click)="clear(form.controls.doctorsOfficeId); $event.stopPropagation()">
+							<mat-icon>close</mat-icon>
+						</button>
+					</mat-form-field>
+
+					<span *ngIf="!isDoctorOfficeEditable" class="in-attention"
+						translate="guardia.episode.edit.IN_ATTENTION_PATIENT"></span>
+
+				</div>
 			</div>
 
+			<div fxLayout="column" fxLayoutGap="16px">	
+				<h2 [translate]="'Intervención policial'"></h2>
+				<mat-radio-group formControlName="hasPoliceIntervention" name="policeIntervention"
+					id="policeInterventionRadio" (change)="onChange()">
+					<mat-radio-button id="policeIntervention" [value]="true" [checked]="form.value.hasPoliceIntervention">
+						Si
+					</mat-radio-button>
+					<mat-radio-button id="withoutPoliceIntervention" [value]="false"
+						[checked]="form.value.hasPoliceIntervention == false">
+						No
+					</mat-radio-button>
+				</mat-radio-group>
+			
 
-			<mat-form-field appearance="outline">
-				<mat-select formControlName="emergencyCareTypeId" name="emergencyCareTypeId" id="emergencyCareTypeId"
-					placeholder="{{'guardia.administrative_admision.form.EMERGENCY_CARE_TYPE' | translate}}">
-					<mat-option *ngFor="let emergencyCareType of (emergencyCareType$ | async )"
-						[value]="emergencyCareType.id">
-						{{emergencyCareType.description}}
-					</mat-option>
-				</mat-select>
-				<button id="clear_emergency_care_type" type="button" mat-button *ngIf="form.value.emergencyCareTypeId"
-					matSuffix color="warn" mat-icon-button
-					(click)="clear(form.controls.emergencyCareTypeId); $event.stopPropagation()">
-					<mat-icon>close</mat-icon>
-				</button>
-			</mat-form-field>
+				<div fxLayout="column" fxLayoutGap="16px" *ngIf="form.value.hasPoliceIntervention">
 
-			<mat-form-field appearance="outline">
-				<mat-select formControlName="emergencyCareEntranceTypeId" name="emergencyCareEntranceTypeId"
-					id="emergencyCareEntranceTypeId"
-					placeholder="{{'guardia.administrative_admision.form.EMERGENCY_CARE_ENTRANCE_TYPE' | translate}}"
-					(selectionChange)="setAmbulanceCompanyIdStatus()">
-					<mat-option *ngFor="let emergencyCareEntranceType of (emergencyCareEntranceType$ | async )"
-						[value]="emergencyCareEntranceType.id">{{emergencyCareEntranceType.description}}
-					</mat-option>
-				</mat-select>
-				<button id="clear_emergency_care_entrance" type="button" mat-button
-					*ngIf="form.value.emergencyCareEntranceTypeId" matSuffix color="warn" mat-icon-button
-					(click)="clear(form.controls.emergencyCareEntranceTypeId); $event.stopPropagation()">
-					<mat-icon>close</mat-icon>
-				</button>
-			</mat-form-field>
+					<div fxLayout="column" fxLayoutGap="8px">
+						<span translate="guardia.administrative_admision.form.police_intervention.CALL_DETAIL"></span>
 
-			<mat-form-field appearance="outline"
-				*ngIf="form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_CON_MEDICO || form.value.emergencyCareEntranceTypeId === EMERGENCY_CARE_ENTRANCE_TYPE.AMBULANCIA_SIN_MEDICO">
-				<input formControlName="ambulanceCompanyId"
-					placeholder="{{'guardia.administrative_admision.form.AMBULANCE_COMPANY_ID' | translate }}" matInput>
-				<mat-error *ngIf="hasError(form, 'maxlength', 'ambulanceCompanyId')" translate="forms.MAX_LENGTH_ERROR"
-					[translateParams]="{max: AMBULANCE.COMPANY_ID.max_length}"></mat-error>
-			</mat-form-field>
+						<div fxLayout="row" fxLayoutGap="5px">
+							<app-datepicker id="callDate" [minDate]="minDate" [maxDate]="today"
+								[dateToSetInDatepicker]="initData?.callDate" (selectDate)="dateChanged($event)">
+							</app-datepicker>
 
-			<mat-form-field *ngIf="false" appearance="outline">
-				<mat-select formControlName="doctorsOfficeId" name="doctorsOfficeId" id="doctorsOfficeId"
-					matTooltip="{{'guardia.administrative_admision.form.waiting_room.DESCRIPTION' | translate}}"
-					placeholder="{{'guardia.administrative_admision.form.waiting_room.PLACEHOLDER' | translate}}">
-					<mat-option *ngFor="let office of (doctorsOffices$ | async )" [value]="office.id">
-						{{office.description}}
-					</mat-option>
-				</mat-select>
-				<button id="clear_waiting_room" type="button" mat-button *ngIf="form.value.doctorsOfficeId" matSuffix
-					color="warn" mat-icon-button
-					(click)="clear(form.controls.doctorsOfficeId); $event.stopPropagation()">
-					<mat-icon>close</mat-icon>
-				</button>
-			</mat-form-field>
-			<span *ngIf="!isDoctorOfficeEditable" class="in-attention"
-				translate="guardia.episode.edit.IN_ATTENTION_PATIENT"></span>
+							<mat-form-field appearance="outline">
+								<input matInput id="time" type="text" formControlName="callTime" pattern="{{TIME_PATTERN}}"
+									placeholder="{{'guardia.administrative_admision.form.police_intervention.TIME' | translate}}">
+								<mat-error *ngIf="hasError(form, 'pattern', 'callTime')">La hora debe cumplir con el formato
+									de
+									24
+									hs y tener dos digitos para la hora y los minutos respectivamente</mat-error>
+							</mat-form-field>
+						</div>
+					</div>
 
-			<h2 [translate]="'Intervención policial'"></h2>
-			<mat-radio-group formControlName="hasPoliceIntervention" name="policeIntervention"
-				id="policeInterventionRadio" (change)="onChange()">
-				<mat-radio-button id="policeIntervention" [value]="true" [checked]="form.value.hasPoliceIntervention">
-					Si
-				</mat-radio-button>
-				<mat-radio-button id="withoutPoliceIntervention" [value]="false"
-					[checked]="form.value.hasPoliceIntervention == false">
-					No
-				</mat-radio-button>
-			</mat-radio-group>
+					<div fxLayout="column" fxLayoutGap="8px">
 
-			<ng-container *ngIf="form.value.hasPoliceIntervention">
-				<span translate="guardia.administrative_admision.form.police_intervention.CALL_DETAIL"></span>
+						<span translate="guardia.administrative_admision.form.police_intervention.police_officer.TITLE"></span>
 
-				<div fxLayout="row" fxLayoutGap="5px">
-					<app-datepicker id="callDate" [minDate]="minDate" [maxDate]="today" [dateToSetInDatepicker]="initData?.callDate"
-						(selectDate)="dateChanged($event)">
-					</app-datepicker>
-
-					<mat-form-field appearance="outline">
-						<input matInput id="time" type="text" formControlName="callTime" pattern="{{TIME_PATTERN}}"
-							placeholder="{{'guardia.administrative_admision.form.police_intervention.TIME' | translate}}">
-						<mat-error *ngIf="hasError(form, 'pattern', 'callTime')">La hora debe cumplir con el formato de
-							24
-							hs y tener dos digitos para la hora y los minutos respectivamente</mat-error>
-					</mat-form-field>
+						<mat-form-field appearance="outline">
+							<input formControlName="plateNumber"
+								placeholder="{{'guardia.administrative_admision.form.police_intervention.police_officer.PLATE_NUMBER' | translate }}"
+								matInput>
+							<mat-error *ngIf="hasError(form, 'maxlength', 'plateNumber')" translate="forms.MAX_LENGTH_ERROR"
+								[translateParams]="{max: POLICE_OFFICER.PLATE_NUMBER.max_length}"></mat-error>
+						</mat-form-field>
+					</div>
+					<div fxLayout="row" fxLayoutGap="5px">
+						<mat-form-field appearance="outline">
+							<input formControlName="firstName"
+								placeholder="{{'guardia.administrative_admision.form.police_intervention.police_officer.NAME' | translate }}"
+								matInput>
+							<mat-error *ngIf="hasError(form, 'maxlength', 'firstName')" translate="forms.MAX_LENGTH_ERROR"
+								[translateParams]="{max: PERSON.MAX_LENGTH.firstName}"></mat-error>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<input formControlName="lastName"
+								placeholder="{{'guardia.administrative_admision.form.police_intervention.police_officer.LAST_NAME' | translate }}"
+								matInput>
+							<mat-error *ngIf="hasError(form, 'maxlength', 'lastName')" translate="forms.MAX_LENGTH_ERROR"
+								[translateParams]="{max: PERSON.MAX_LENGTH.firstName}"></mat-error>
+						</mat-form-field>
+					</div>
 				</div>
-
-				<span translate="guardia.administrative_admision.form.police_intervention.police_officer.TITLE"></span>
-
-				<mat-form-field appearance="outline">
-					<input formControlName="plateNumber"
-						placeholder="{{'guardia.administrative_admision.form.police_intervention.police_officer.PLATE_NUMBER' | translate }}"
-						matInput>
-					<mat-error *ngIf="hasError(form, 'maxlength', 'plateNumber')" translate="forms.MAX_LENGTH_ERROR"
-						[translateParams]="{max: POLICE_OFFICER.PLATE_NUMBER.max_length}"></mat-error>
-				</mat-form-field>
-				<div fxLayout="row" fxLayoutGap="5px">
-
-					<mat-form-field appearance="outline">
-						<input formControlName="firstName"
-							placeholder="{{'guardia.administrative_admision.form.police_intervention.police_officer.NAME' | translate }}"
-							matInput>
-						<mat-error *ngIf="hasError(form, 'maxlength', 'firstName')" translate="forms.MAX_LENGTH_ERROR"
-							[translateParams]="{max: PERSON.MAX_LENGTH.firstName}"></mat-error>
-					</mat-form-field>
-					<mat-form-field appearance="outline">
-						<input formControlName="lastName"
-							placeholder="{{'guardia.administrative_admision.form.police_intervention.police_officer.LAST_NAME' | translate }}"
-							matInput>
-						<mat-error *ngIf="hasError(form, 'maxlength', 'lastName')" translate="forms.MAX_LENGTH_ERROR"
-							[translateParams]="{max: PERSON.MAX_LENGTH.firstName}"></mat-error>
-					</mat-form-field>
-				</div>
-			</ng-container>
+			</div>
 
 		</form>
 	</mat-card-content>
-	<mat-card-actions id="actions" class="card-actions" fxLayout="row" fxLayoutAlign="space-between">
+	<mat-card-actions id="actions" fxLayout="row" fxLayoutAlign="space-between">
 		<app-button text="buttons.BACK" (clicked)="goBack()"></app-button>
 		<app-button buttonType="{{buttonType.RAISED}}" text="{{submitLabel}}" (clicked)="continue()"></app-button>
 	</mat-card-actions>
