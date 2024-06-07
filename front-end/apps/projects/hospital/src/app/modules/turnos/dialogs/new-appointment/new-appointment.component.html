@@ -9,7 +9,7 @@
 			<mat-icon>close</mat-icon>
 		</button>
 	</div>
-	<div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign="space-between start">
+    <div fxLayout="row" fxLayout.xs="column" class="mat-h3" fxLayoutGap="1rem" fxLayoutAlign="space-between start">
 		<div fxLayout="row" fxLayout.xs="column" fxFlex="62">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
@@ -26,10 +26,13 @@
 			<app-modality-label *ngIf="viewModalityLabel$ | async " [modality]="modalitySelected"></app-modality-label>
 		</div>
 	</div>
-	<app-box-message class="mat-h3" *ngIf="data.expiredAppointment" [boxMessageInfo]="boxMessageInfo"></app-box-message>
 </div>
 
 <div mat-dialog-content class="dialog-content">
+
+    <div class=" box-message">
+        <app-box-message class="mat-h3" *ngIf="data.expiredAppointment" [boxMessageInfo]="boxMessageInfo"></app-box-message>
+    </div>
 
 	<mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom" (selectionChange)="onStepChange($event)">
 		<mat-step [stepControl]="modalityForm" label="{{'turnos.new-appointment.STEP_0' | translate}}" [editable]="editableStepModality">
