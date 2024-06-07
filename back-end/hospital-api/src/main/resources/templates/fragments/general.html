@@ -178,11 +178,11 @@
                     <div style="clear: both;">
                         <div class="row-content">
                             <div class="data-title">Edad</div>
-                            <div class="data-text" th:text="${patient.person.age}"></div>
+                            <div class="data-text" th:text="${patient.person.age}?: 'Sin información'"></div>
                         </div>
                         <div class="row-content">
                             <div class="data-title">Fecha Nac.</div>
-                            <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')}"></div>
+                            <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')?: 'Sin información'}"></div>
                         </div>
                     </div>
                 </div>
