@@ -10,10 +10,12 @@
 </div>
 
 <ng-template #typeaheadSearch>
-	<app-concept-typeahead-search *ngIf="!diagnosis else completedDiagnosis" [ecl]="eclFilter"
-		[placeholder]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
-		(conceptSelected)="openSearchDialogSnomed($event)">
-	</app-concept-typeahead-search>
+    <div class="concept-typeahead">
+        <app-concept-typeahead-search *ngIf="!diagnosis else completedDiagnosis" [ecl]="eclFilter"
+            [placeholder]="'internaciones.anamnesis.diagnosticos.DIAGNOSIS'"
+            (conceptSelected)="openSearchDialogSnomed($event)">
+        </app-concept-typeahead-search>
+    </div>
 </ng-template>
 
 <form [formGroup]="form">
