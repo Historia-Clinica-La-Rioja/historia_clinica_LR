@@ -37,7 +37,8 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	@Override
 	public Optional<ExternalPatientCoverageDto> getActiveEpisodeMedicalCoverage(Integer internmentEpisodeId) {
 		log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
-		Optional<ExternalPatientCoverageDto> result = internmentEpisodeService.getMedicalCoverage(internmentEpisodeId).map(this::mapToExternalPatientCoverageDto);
+		Optional<ExternalPatientCoverageDto> result = internmentEpisodeService.getMedicalCoverage(internmentEpisodeId)
+				.map(this::mapToExternalPatientCoverageDto);
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -73,6 +74,15 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	public LocalDate getEntryLocalDate(Integer intermentEpisodeId) {
 		log.debug("Input parameters -> intermentEpisodeId {}", intermentEpisodeId);
 		var result = internmentEpisodeService.getEntryDate(intermentEpisodeId).toLocalDate();
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<Integer> getPatientMedicalCoverageId(Integer internmentEpisodeId) {
+		log.debug("Input parameters -> internmentEpisodeId {}", internmentEpisodeId);
+		Optional<Integer> result = internmentEpisodeService.getMedicalCoverage(internmentEpisodeId)
+				.map(PatientMedicalCoverageBo::getId);
 		log.debug("Output -> {}", result);
 		return result;
 	}

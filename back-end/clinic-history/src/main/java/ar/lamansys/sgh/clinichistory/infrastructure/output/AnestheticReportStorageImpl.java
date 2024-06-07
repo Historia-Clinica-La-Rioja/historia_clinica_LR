@@ -96,6 +96,7 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
                 .anestheticChart(anestheticReport.getAnestheticChart())
                 .confirmed(document.isConfirmed())
                 .initialDocumentId(document.getInitialDocumentId())
+                .patientMedicalCoverageId(anestheticReport.getPatientMedicalCoverageId())
                 .build();
     }
 

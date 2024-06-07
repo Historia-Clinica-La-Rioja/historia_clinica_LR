@@ -15,4 +15,6 @@ public interface SharedHospitalizationPort {
 	BasicPatientDto getPatientInfo(Integer internmentEpisodeId);
 
 	LocalDate getEntryLocalDate(Integer internmentEpisodeId);
+
+    Optional<Integer> getPatientMedicalCoverageId(Integer internmentEpisodeId);
 }

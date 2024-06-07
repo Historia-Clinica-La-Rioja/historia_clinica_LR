@@ -118,6 +118,11 @@ public class AnestheticReportBo implements IDocumentBo {
     }
 
     @Override
+    public Integer getMedicalCoverageId() {
+        return patientMedicalCoverageId;
+    }
+
+    @Override
     public void accept(DocumentVisitor documentVisitor) {
         documentVisitor.visitAnestheticReport(this);
     }

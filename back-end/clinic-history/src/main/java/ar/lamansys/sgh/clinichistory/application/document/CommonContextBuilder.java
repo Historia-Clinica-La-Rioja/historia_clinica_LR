@@ -8,6 +8,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.InstitutionInfoDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.institution.SharedInstitutionPort;
+import ar.lamansys.sgh.shared.infrastructure.input.service.medicalcoverage.PatientMedicalCoverageService;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -38,13 +39,16 @@ public class CommonContextBuilder {
 
     private final AssetsService assetsService;
 
+    private final PatientMedicalCoverageService patientMedicalCoverageService;
+
     public CommonContextBuilder(
             SharedPatientPort sharedPatientPort,
             DocumentAuthorFinder documentAuthorFinder,
             ClinicalSpecialtyFinder clinicalSpecialtyFinder,
             FeatureFlagsService featureFlagsService,
             SharedInstitutionPort sharedInstitutionPort,
-            AssetsService assetsService) {
+            AssetsService assetsService,
+            PatientMedicalCoverageService patientMedicalCoverageService) {
         this.sharedInstitutionPort = sharedInstitutionPort;
         this.logger = LoggerFactory.getLogger(getClass());
         this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
@@ -52,6 +56,7 @@ public class CommonContextBuilder {
         this.clinicalSpecialtyDtoFunction = clinicalSpecialtyFinder::getClinicalSpecialty;
         this.featureFlagsService = featureFlagsService;
         this.assetsService = assetsService;
+        this.patientMedicalCoverageService = patientMedicalCoverageService;
     }
 
     public void run(IDocumentBo document, Map<String, Object> contextMap) {
@@ -73,6 +78,10 @@ public class CommonContextBuilder {
 
         var author = authorFromDocumentFunction.apply(document.getId());
         contextMap.put("author", author);
+
+        var patientCoverage = patientMedicalCoverageService.getCoverage(document.getMedicalCoverageId());
+
+        patientCoverage.ifPresent(sharedPatientMedicalCoverageBo -> contextMap.put("patientCoverage", sharedPatientMedicalCoverageBo));
 
         logger.debug("Built context for patient {} and document {} is {}", patientId, document.getId(), contextMap);
     }

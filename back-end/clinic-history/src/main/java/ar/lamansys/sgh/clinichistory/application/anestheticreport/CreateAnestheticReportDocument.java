@@ -100,7 +100,6 @@ public class CreateAnestheticReportDocument {
 
     private void completeValuesAnestheticReport(AnestheticReportBo anestheticReport) {
 
-
         Integer encounterId = anestheticReport.getEncounterId();
 
         Optional.ofNullable(sharedHospitalizationPort.getPatientInfo(encounterId))
@@ -110,8 +109,8 @@ public class CreateAnestheticReportDocument {
                     anestheticReport.setPatientId(patientInfo.getId());
                 });
 
-        sharedHospitalizationPort.getActiveEpisodeMedicalCoverage(encounterId)
-                .ifPresent(externalPatientCoverageDto -> anestheticReport.setPatientMedicalCoverageId(externalPatientCoverageDto.getMedicalCoverage().getId()));
+        sharedHospitalizationPort.getPatientMedicalCoverageId(encounterId)
+                .ifPresent(anestheticReport::setPatientMedicalCoverageId);
 
         LocalDate entryDate = sharedHospitalizationPort.getEntryLocalDate(encounterId);
         anestheticReport.setPatientInternmentAge(entryDate);

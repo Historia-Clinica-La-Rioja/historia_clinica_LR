@@ -8,6 +8,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.enums.EAnestheticSubstanceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProcedureTypeEnum;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalizationPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class FillOutAnestheticReport {
 
     private final DocumentService documentService;
     private final AnestheticReportStorage anestheticReportStorage;
+    private final SharedHospitalizationPort sharedHospitalizationPort;
 
     public AnestheticReportBo run(AnestheticReportBo document) {
         log.debug("Input parameters -> document {}", document);
@@ -72,6 +74,8 @@ public class FillOutAnestheticReport {
 
         this.setAnestheticChart(document);
 
+        this.setPatientMedicalCoverageId(document);
+
         log.debug("Output -> anestheticReport {}", document);
         return document;
     }
@@ -87,5 +91,10 @@ public class FillOutAnestheticReport {
             String chart = anestheticReportStorage.getAntestheticChart(document.getId());
             document.setAnestheticChart(chart);
         }
+    }
+
+    private void setPatientMedicalCoverageId(AnestheticReportBo document) {
+        sharedHospitalizationPort.getPatientMedicalCoverageId(document.getEncounterId())
+                .ifPresent(document::setPatientMedicalCoverageId);
     }
 }
