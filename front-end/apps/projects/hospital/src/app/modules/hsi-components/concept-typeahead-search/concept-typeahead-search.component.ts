@@ -27,7 +27,6 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 	@Input() clearButton = false;
 	@Input() buttonMessage = '';
 	@Input() showSearchIcon = false;
-	@Input() showOptionSelected = false;
 	@Input() preload: string = null;
 
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
@@ -77,8 +76,6 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 			};
 			if (!this.enableSubmitButton) {
 				this.conceptSelected.emit(this.snomedConcept);
-				if (!this.showOptionSelected)
-					this.clear();
 			}
 		}
 	}
