@@ -16,7 +16,7 @@ public class ImageQueueBo {
     private final Integer appointmentId;
     private final Integer patientId;
     private final LocalDateTime createdOn;
-    private final Short modalityId;
+    private final Integer modalityId;
     private final Integer equipmentId;
     private final EImageMoveStatus imageMoveStatus;
     private final Integer serviceRequestId;
@@ -27,7 +27,7 @@ public class ImageQueueBo {
     @Setter
     private ImageQueuePatientBo patient;
 
-    public ImageQueueBo(Integer id, Integer appointmentId, Date createdOn, Integer patientId, Short modalityId, Integer equipmentId,
+    public ImageQueueBo(Integer id, Integer appointmentId, Date createdOn, Integer patientId, Integer modalityId, Integer equipmentId,
                         Integer serviceRequestId, Integer studyId, Integer transcribedServiceRequestId, String status) {
         this.id = id;
         this.appointmentId = appointmentId;

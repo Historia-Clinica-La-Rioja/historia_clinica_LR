@@ -19,7 +19,7 @@ public class ImageQueueListDto {
     Integer appointmentId;
     ImageQueuePatientDataDto patient;
     DateTimeDto createdOn;
-    Short modalityId;
+    Integer modalityId;
     Integer equipmentId;
     EImageMoveStatus imageMoveStatus;
     String result;

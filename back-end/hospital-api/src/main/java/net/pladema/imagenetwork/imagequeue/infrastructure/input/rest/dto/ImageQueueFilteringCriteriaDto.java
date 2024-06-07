@@ -19,7 +19,7 @@ public class ImageQueueFilteringCriteriaDto {
     @NotNull
     private DateDto to;
     private Integer equipmentId;
-    private Short modalityId;
+    private Integer modalityId;
     @NotNull
     private List<EImageMoveStatus> statusList;
     private String name;

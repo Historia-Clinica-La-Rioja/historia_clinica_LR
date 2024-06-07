@@ -128,8 +128,8 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"	mo.appointmentId, " +
 			"	mo.moveDate, " +
 			"	a.patientId, " +
-			"	a.modalityId, " +
-			" 	ed.equipmentId, " +
+			"	e.modalityId, " +
+			" 	e.id, " +
 			"	aoi.orderId, " +
 			"	aoi.studyId, " +
 			"	aoi.transcribedOrderId, " +
@@ -139,7 +139,7 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"JOIN AppointmentOrderImage aoi ON (aoi.pk.appointmentId = mo.appointmentId) " +
 			"JOIN Appointment a ON (mo.appointmentId = a.id) " +
 			"JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
-			"JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId) " +
+			"JOIN Equipment e ON (e.id = eaa.pk.equipmentDiaryId) " +
 			"WHERE (mo.institutionId = :institutionId) " +
 			"AND (mo.result IS NULL or mo.result != :resultNot) " +
 			"AND (mo.moveDate BETWEEN :from AND :to) " +

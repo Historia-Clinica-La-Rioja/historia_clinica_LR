@@ -19,7 +19,7 @@ public class ImageQueueFilteringCriteriaBo {
     @Getter
     private LocalDate to;
     private Integer equipmentId;
-    private Short modalityId;
+    private Integer modalityId;
     @Getter
     private List<EImageMoveStatus> statusList;
     private String name;
@@ -31,7 +31,7 @@ public class ImageQueueFilteringCriteriaBo {
         return Optional.ofNullable(equipmentId);
     }
 
-    public Optional<Short> getModalityId() {
+    public Optional<Integer> getModalityId() {
         return Optional.ofNullable(modalityId);
     }
 

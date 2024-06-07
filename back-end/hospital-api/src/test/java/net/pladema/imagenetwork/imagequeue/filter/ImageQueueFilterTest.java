@@ -95,7 +95,7 @@ public class ImageQueueFilterTest {
     @Test
     public void filterByImageMoveAttributes() {
         Integer equipmentId  = 10;
-        Short modalityId = 1;
+        Integer modalityId = 1;
         List<EImageMoveStatus> statusList = List.of(EImageMoveStatus.ERROR,EImageMoveStatus.PENDING);
 
         filteringCriteria.setEquipmentId(equipmentId);
@@ -239,13 +239,13 @@ public class ImageQueueFilterTest {
 
     private List<ImageQueueBo> buildInitialQueue() {
         return List.of(
-                new ImageQueueBo(1,1,Date.from(Instant.now()),1,(short) 1,10,1,
+                new ImageQueueBo(1,1,Date.from(Instant.now()),1, 1,10,1,
                         1,null,"ERROR"),
-                new ImageQueueBo(2,1,Date.from(Instant.now()),2,(short) 1,10,1,
+                new ImageQueueBo(2,1,Date.from(Instant.now()),2, 1,10,1,
                         1,null,"PENDING"),
-                new ImageQueueBo(3,1,Date.from(Instant.now()),3,(short) 1,11,1,
+                new ImageQueueBo(3,1,Date.from(Instant.now()),3, 1,11,1,
                         1,null,"ERROR"),
-                new ImageQueueBo(4,1,Date.from(Instant.now()),null,(short) 2,10,1,
+                new ImageQueueBo(4,1,Date.from(Instant.now()),null, 2,10,1,
                         1,null,"ERROR")
         );
     }
