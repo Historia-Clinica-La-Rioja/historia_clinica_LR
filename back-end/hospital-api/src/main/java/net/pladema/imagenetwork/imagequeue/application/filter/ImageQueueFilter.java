@@ -77,7 +77,9 @@ public class ImageQueueFilter {
                 (Objects.nonNull(iq.getPatientLastName()) && containsNormalized(iq.getPatientLastName(),name)) ||
                 (!isFFSelfPerceivedDataOn && Objects.nonNull(iq.getPatientMiddleNames()) && containsNormalized(iq.getPatientMiddleNames(),name)) ||
                 (Objects.nonNull(iq.getOtherLastNames()) && containsNormalized(iq.getOtherLastNames(),name)) ||
-                (isFFSelfPerceivedDataOn && Objects.nonNull(iq.getNameSelfDetermination()) && containsNormalized(iq.getNameSelfDetermination(),name));
+                (isFFSelfPerceivedDataOn && Objects.nonNull(iq.getNameSelfDetermination()) && containsNormalized(iq.getNameSelfDetermination(),name)) ||
+                (isFFSelfPerceivedDataOn && Objects.isNull(iq.getNameSelfDetermination()) && Objects.nonNull(iq.getPatientFirstName()) && containsNormalized(iq.getPatientFirstName(),name)) ||
+                (isFFSelfPerceivedDataOn && Objects.isNull(iq.getNameSelfDetermination()) && Objects.nonNull(iq.getPatientMiddleNames()) && containsNormalized(iq.getPatientMiddleNames(),name));
     }
 
     private Predicate<ImageQueueBo> predicateForIdentificationNumberMatch() {
