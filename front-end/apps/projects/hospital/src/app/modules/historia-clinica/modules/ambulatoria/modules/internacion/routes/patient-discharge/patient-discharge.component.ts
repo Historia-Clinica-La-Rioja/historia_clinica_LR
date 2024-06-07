@@ -178,7 +178,7 @@ export class PatientDischargeComponent implements OnInit {
 				.subscribe(response => {
 					this.snackBarService.showSuccess('internaciones.discharge.messages.SUCCESS');
 					this.router.navigate([`${this.routePrefix}${ROUTE_PROFILE}${this.patientId}`]);
-				}, _ => this.snackBarService.showError('internaciones.discharge.messages.ERROR'));
+				}, error => this.snackBarService.showError(error.text));
 		}
 	}
 

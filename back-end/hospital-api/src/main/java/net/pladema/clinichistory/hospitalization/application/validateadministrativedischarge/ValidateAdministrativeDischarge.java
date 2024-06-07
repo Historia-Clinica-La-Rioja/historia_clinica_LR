@@ -26,7 +26,7 @@ public class ValidateAdministrativeDischarge {
             var anestheticReportDraft = anestheticStorage.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId);
             boolean hasPendingDraft = anestheticReportDraft != null;
             if (hasPendingDraft)
-                throw new InternmentDocumentException(InternmentDocumentEnumException.HAVE_ANESTHETIC_REPORT_PENDING_DRAFT, "internmentEpisodeId");
+                throw new InternmentDocumentException(InternmentDocumentEnumException.HAS_DOCUMENT_PENDING_DRAFT, "Existe documentación pendiente de completar");
         }
     }
 }
