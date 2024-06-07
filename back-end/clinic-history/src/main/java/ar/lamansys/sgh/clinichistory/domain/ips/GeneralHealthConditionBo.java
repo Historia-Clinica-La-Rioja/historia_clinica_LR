@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EPersonalHistoryType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.domain.ReferableConceptVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.EProblemErrorReason;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,11 +65,18 @@ public class GeneralHealthConditionBo implements Serializable {
 	}
 
 	private void setHealthConditions(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
-		setMainDiagnosis(buildMainDiagnosis(healthConditionVos.stream().filter(HealthConditionVo::isMain).findAny()));
-		setDiagnosis(buildGeneralState(healthConditionVos,
+		Optional<HealthConditionVo> optionalHealthConditionVo = healthConditionVos.stream().filter(HealthConditionVo::isMain).findFirst();
+		if (optionalHealthConditionVo.isPresent()){
+			setMainDiagnosis(buildMainDiagnosis(optionalHealthConditionVo));
+			setDiagnosis(healthConditionVos.stream()
+					.filter(healthConditionVo -> isDifferentFromMainDiagnosis(getMainDiagnosis(),healthConditionVo))
+					.map(this::mapDiagnosis)
+					.map(this::setMainFalse)
+					.collect(Collectors.toList()));
+		}
+		else setDiagnosis(buildGeneralState(healthConditionVos,
 				HealthConditionVo::isSecondaryDiagnosis,
-				this::mapDiagnosis)
-		);
+				this::mapDiagnosis));
 		setPersonalHistories(buildReferableGeneralState(healthConditionVos,
 				HealthConditionVo::isPersonalHistory,
 				this::mapPersonalHistoryBo, referredConcepts,
@@ -226,4 +234,13 @@ public class GeneralHealthConditionBo implements Serializable {
 		return result;
 	}
 
+	public boolean isDifferentFromMainDiagnosis(HealthConditionBo mainDiagnosis, HealthConditionVo diagnosis) {
+		return diagnosis.getProblemId().equals(ProblemType.DIAGNOSIS) && !mainDiagnosis.getSnomed().getSctid().equals(diagnosis.getSnomed().getSctid());
+	}
+
+	private DiagnosisBo setMainFalse(DiagnosisBo diagnosisBo){
+		if (diagnosisBo.isMain())
+			diagnosisBo.setMain(false);
+		return diagnosisBo;
+	}
 }
