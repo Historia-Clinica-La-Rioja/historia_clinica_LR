@@ -248,13 +248,19 @@
 											{{ 'guardia.home.episodes.episode.actions.NUEVO_TRIAGE' | translate }}
 										</button>
 
-									<ng-container *appHasRole="rolesToEpisodeAttend">
-										<button id="atender" mat-menu-item
-											*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
-											(click)="atender(episode.id)">
-											{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
+										<ng-container *appHasRole="rolesToEpisodeAttend">
+											<button id="atender" mat-menu-item
+												*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
+												(click)="atender(episode.id)">
+												{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
+											</button>
+										</ng-container>
+
+										<button id="editPatientDescription" mat-menu-item
+											*ngIf="episode.patient?.typeId === EMERGENCY_CARE_TEMPORARY"
+											(click)="editPatientDescription(episode.id, episode.patient.patientDescription)">
+											{{ 'guardia.home.episodes.episode.actions.edit_patient_description.TITLE' | translate }}
 										</button>
-									</ng-container>
 
 									</mat-menu>
 								</div>

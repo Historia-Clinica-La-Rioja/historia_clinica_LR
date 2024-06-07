@@ -15,16 +15,17 @@ export class EmergencyCareTemporaryPatientService {
 		private readonly dialog: MatDialog,
 	) { }
 
-	openTemporaryPatient() {
+	openTemporaryPatient(preloadedReason?: string) {
+		const data = { ...REASON_POPUP_DATA, preloadedReason }
 		const dialogRef = this.dialog.open(ReasonPopUpComponent, {
-			data: REASON_POPUP_DATA,
+			data,
 			width: '514px',
 			autoFocus: false,
 			disableClose: true,
 		});
 
 		dialogRef.afterClosed()
-			.subscribe(patientDescription => 	this.patientDescriptionSubject.next(patientDescription));
+			.subscribe(patientDescription => this.patientDescriptionSubject.next(patientDescription));
 	}
 }
 

@@ -21,6 +21,9 @@ export class ReasonPopUpComponent implements OnInit {
 		this.form = new FormGroup<MotiveForm>({
 			motive: new FormControl(null, [Validators.required, Validators.pattern(NON_WHITESPACE_REGEX)]),
 		});
+
+		if (this.data.preloadedReason)
+			this.form.controls.motive.setValue(this.data.preloadedReason);
 	}
 
 	confirm() {
@@ -40,4 +43,5 @@ export interface ReasonPopupData {
 	title: string;
 	subtitle: string;
 	placeholder: string;
+	preloadedReason?: string;
 }
