@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AnestheticTechniqueDto, MasterDataDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
-import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
+import { getElementAtPosition, pushIfNotExists, removeFrom } from '@core/utils/array.utils';
+import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject, Observable } from 'rxjs';
+
+const BOTH_OPTIONS = 'Ambas'
+const SELECTED_ELEMENT = 0
 
 @Injectable({
 	providedIn: 'root'
@@ -22,6 +26,7 @@ export class AnestheticTechniqueService {
 	constructor(
 		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
+		private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
 	) {
 		this.form = new FormGroup<AnestheticTechniqueForm>({
 			snomed: new FormControl(null, Validators.required),
@@ -145,16 +150,35 @@ export class AnestheticTechniqueService {
 	setData(techniques: AnestheticTechniqueDto[]) {
 		this.anestheticTechniqueList = techniques.map(technique => ({
 			snomed: technique.snomed,
-			circuit: { id: technique.circuitId, description: '' },
-			technique: { id: technique.techniqueId, description: ''},
+			circuit: this.createTechniqueDetail(technique.circuitId, 'circuitTypes'),
+			technique: this.createTechniqueDetail(technique.techniqueId, 'anestheticTechniqueTypes'),
 			trachealIntubation: technique.trachealIntubation,
-			trachealIntubationMethod: { id: technique.trachealIntubationMethodIds[0], description: '' },
-			breathing: { id: technique.breathingId, description: '' },
+			trachealIntubationMethod: this.createTrachealIntubationMethod(technique.trachealIntubationMethodIds),
+			breathing: this.createTechniqueDetail(technique.breathingId, 'breathingTypes'),
 			trachealIntubationBothIds: technique.trachealIntubationMethodIds,
 		}));
 		this.dataEmitter.next(this.anestheticTechniqueList);
 	}
 
+	private createTechniqueDetail(id: number, type: string) {
+		return id ? {
+			id: id,
+			description: this.anestheticReportDocumentSummaryService.mapToMasterData(
+				this.anestheticReportDocumentSummaryService.getDataAnestheticTechniquesDraft()[type], id)
+		} : null;
+	}
+
+	private createTrachealIntubationMethod(ids: number[]) {
+		const id = getElementAtPosition(ids, SELECTED_ELEMENT);
+		return id ? {
+			id: id,
+			description: ids.length > 1
+				? BOTH_OPTIONS
+				: this.anestheticReportDocumentSummaryService.mapToMasterData(
+					this.anestheticReportDocumentSummaryService.getDataAnestheticTechniquesDraft().trachealIntubationTypes,
+					id)
+		} : null;
+	}
 }
 
 export interface AnestheticTechniqueForm {

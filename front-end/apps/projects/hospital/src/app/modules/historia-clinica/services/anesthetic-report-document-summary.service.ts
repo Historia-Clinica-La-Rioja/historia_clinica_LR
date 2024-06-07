@@ -172,7 +172,7 @@ export class AnestheticReportDocumentSummaryService {
                  ${this.getAnestheticTechniqueDescription(anestheticTechnique.circuitId, this.translateService.instant('historia-clinica.anesthetic-report.summary.CIRCUIT'), this.circuitTypes)}`
     }
 
-    private mapToMasterData(typesData: MasterDataDto[], itemId: number): string {
+    mapToMasterData(typesData: MasterDataDto[], itemId: number): string {
         return typesData.filter(item => item.id == itemId)[0].description;
     }
 
@@ -379,6 +379,15 @@ export class AnestheticReportDocumentSummaryService {
             ...ANTIBIOTIC_PROPHYLAXIS_DESCRIPTION_ITEM,
         }
     }
+
+	getDataAnestheticTechniquesDraft(): AnestheticTechnicsDraft{
+        return {
+			circuitTypes: this.circuitTypes,
+			breathingTypes: this.breathingTypes,
+			trachealIntubationTypes: this.trachealIncubationTypes,
+			anestheticTechniqueTypes: this.anestheticTechniquesTypes
+		}
+	}
 }
 
 export interface AnestheticReportViewFormat {
@@ -402,4 +411,11 @@ export interface AnestheticReportViewFormat {
     antibioticProphylaxis: DescriptionItemDataSummary,
     vitalSigns: VitalSignsData,
     endOfAnesthesiaStatus: EndOfAnesthesiaStatusData,
+}
+
+export interface AnestheticTechnicsDraft {
+	circuitTypes: MasterDataDto[],
+	breathingTypes: MasterDataDto[],
+	trachealIntubationTypes: MasterDataDto[],
+	anestheticTechniqueTypes: MasterDataDto[],
 }

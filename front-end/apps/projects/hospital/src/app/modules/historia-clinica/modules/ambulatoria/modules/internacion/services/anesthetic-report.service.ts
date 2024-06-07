@@ -182,7 +182,7 @@ export class AnestheticReportService {
         this.anestheticReportRecordService = new AnestheticReportRecordService(this.snomedService, this.snackBarService);
         this.anestheticPlanService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
         this.analgesicTechniqueService = new AnalgesicTechniqueService(this.snomedService, this.snackBarService, this.translateService);
-        this.anestheticTechniqueService = new AnestheticTechniqueService(this.snomedService, this.snackBarService)
+        this.anestheticTechniqueService = new AnestheticTechniqueService(this.snomedService, this.snackBarService, this.anestheticReportDocumentSummaryService)
         this.fluidAdministrationService = new FluidAdministrationService(this.snomedService, this.snackBarService)
         this.anestheticReportAnestheticAgentService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
         this.anestheticReportNonAnestheticDrugsService = new MedicationService(this.snomedService, this.snackBarService, this.translateService, this.anestheticReportDocumentSummaryService);
