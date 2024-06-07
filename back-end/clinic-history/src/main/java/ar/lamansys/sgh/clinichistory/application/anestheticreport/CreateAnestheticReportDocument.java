@@ -61,10 +61,20 @@ public class CreateAnestheticReportDocument {
 
         documentFactory.run(anestheticReport, anestheticReport.isConfirmed());
 
-        Integer result = anestheticReportStorage.save(anestheticReport);
+        Integer result = this.saveOrUpdate(anestheticReport);
 
         log.debug("Output -> saved anestheticReport id {}", result);
         return result;
+    }
+
+    private Integer saveOrUpdate(AnestheticReportBo anestheticReport) {
+        return this.isFirstTimeCreation(anestheticReport)
+                ? anestheticReportStorage.save(anestheticReport)
+                : anestheticReportStorage.updateDocumentId(anestheticReport);
+    }
+
+    private boolean isFirstTimeCreation(AnestheticReportBo anestheticReport) {
+        return anestheticReport.getBusinessObjectId() == null || anestheticReport.getPreviousDocumentId() == null;
     }
 
     private void generateChart(AnestheticReportBo anestheticReport) {

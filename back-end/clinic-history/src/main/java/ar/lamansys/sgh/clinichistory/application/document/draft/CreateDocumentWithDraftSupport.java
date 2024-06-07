@@ -28,7 +28,14 @@ public class CreateDocumentWithDraftSupport {
         log.debug("Input parameter -> newDocument {}", newDocument);
 
         this.setPreviousDocumentId(newDocument);
-        this.discardPreviousDocument(newDocument);
+
+        Long previousDocumentId = newDocument.getPreviousDocumentId();
+        if (previousDocumentId != null) {
+            IDocumentBo previousDocument = getLastDraftDocument.apply(previousDocumentId);
+            this.copyBasicInformation(newDocument, previousDocument);
+            discardPreviousDocument.run(previousDocument);
+        }
+
         this.setNullIdsDocumentElements(newDocument);
         Integer id = createNewDocument.apply(newDocument);
 
@@ -46,14 +53,12 @@ public class CreateDocumentWithDraftSupport {
         newDocument.setPreviousDocumentId(lastDocumentId);
     }
 
-    private void discardPreviousDocument(IDocumentBo newDocument) {
-        Long previousDocumentId = newDocument.getPreviousDocumentId();
-        if (previousDocumentId != null) {
-            IDocumentBo previousDocument = getLastDraftDocument.apply(newDocument.getPreviousDocumentId());
-            this.setInitialDocument(newDocument, previousDocument);
-            this.setPatientInfo(newDocument);
-            discardPreviousDocument.run(previousDocument);
-        }
+    private void copyBasicInformation(IDocumentBo newDocument, IDocumentBo previousDocument) {
+        this.setInitialDocument(newDocument, previousDocument);
+        newDocument.setBusinessObjectId(previousDocument.getBusinessObjectId());
+        newDocument.setPatientId(previousDocument.getPatientId());
+        this.setPatientInfo(newDocument);
+        previousDocument.setPatientInfo(newDocument.getPatientInfo());
     }
 
     private void setInitialDocument(IDocumentBo newDocument, IDocumentBo previousDocument) {
@@ -61,10 +66,10 @@ public class CreateDocumentWithDraftSupport {
         newDocument.setInitialDocumentId(initialDocumentId != null ? initialDocumentId : previousDocument.getId());
     }
 
-    private void setPatientInfo(IDocumentBo newDocument) {
-        Optional.ofNullable(setPatientInfo.apply(newDocument.getPatientId()))
+    private void setPatientInfo(IDocumentBo iDocumentBo) {
+        Optional.ofNullable(setPatientInfo.apply(iDocumentBo.getPatientId()))
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
-                .ifPresent(newDocument::setPatientInfo);
+                .ifPresent(iDocumentBo::setPatientInfo);
     }
 
 }

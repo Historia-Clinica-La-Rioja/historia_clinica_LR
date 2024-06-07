@@ -23,6 +23,7 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
     private final SharedStaffPort sharedStaffPort;
     private final DocumentService documentService;
 
+    @Override
     public Integer save(AnestheticReportBo anestheticReport) {
         log.trace("Input parameters -> anestheticReport {}", anestheticReport);
 
@@ -33,6 +34,15 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
 
         Integer result = anestheticReportRepository.save(entityToSave).getId();
 
+        log.trace("Output -> {}", result);
+        return result;
+    }
+
+    @Override
+    public Integer updateDocumentId(AnestheticReportBo anestheticReport) {
+        log.trace("Input parameters -> anestheticReport {}", anestheticReport);
+        anestheticReportRepository.updateDocumentId(anestheticReport.getId(), anestheticReport.getBusinessObjectId());
+        var result = anestheticReport.getBusinessObjectId();
         log.trace("Output -> {}", result);
         return result;
     }
@@ -58,7 +68,7 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
 
     private AnestheticReport mapToEntity(AnestheticReportBo anestheticReport) {
         return AnestheticReport.builder()
-                .id(anestheticReport.getAnestheticReportId())
+                .id(anestheticReport.getBusinessObjectId())
                 .institutionId(anestheticReport.getInstitutionId())
                 .patientId(anestheticReport.getPatientId())
                 .documentId(anestheticReport.getId())
@@ -77,7 +87,7 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
 
     private AnestheticReportBo build(Document document, AnestheticReport anestheticReport) {
         return AnestheticReportBo.builder()
-                .anestheticReportId(anestheticReport.getId())
+                .businessObjectId(anestheticReport.getId())
                 .id(document.getId())
                 .encounterId(document.getSourceId())
                 .institutionId(document.getInstitutionId())

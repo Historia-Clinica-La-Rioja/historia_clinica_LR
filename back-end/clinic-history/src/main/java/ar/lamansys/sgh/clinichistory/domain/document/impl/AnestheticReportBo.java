@@ -42,7 +42,7 @@ import lombok.ToString;
 @ToString
 public class AnestheticReportBo implements IDocumentBo {
 
-    private Integer anestheticReportId;
+    private Integer businessObjectId;
 
     private Long id;
 

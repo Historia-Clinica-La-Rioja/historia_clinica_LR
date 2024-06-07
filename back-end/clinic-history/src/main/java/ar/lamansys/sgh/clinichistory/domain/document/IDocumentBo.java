@@ -229,4 +229,8 @@ public interface IDocumentBo {
     default void setInstitutionId(Integer institutionId) {}
 
     default void setNotes(DocumentObservationsBo notes) {}
+
+    default void setBusinessObjectId(Integer businessObjectId) {}
+
+    default Integer getBusinessObjectId() { return null; }
 }
