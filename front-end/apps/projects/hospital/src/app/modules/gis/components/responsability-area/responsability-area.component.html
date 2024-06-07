@@ -1,0 +1,14 @@
+<div>
+    <h1 [translate]="'gis.responsability-area.TITLE'"></h1>
+    <span [translate]="'gis.responsability-area.DESCRIPTION'"></span>
+
+    <div class="actions m-top">
+        <button (click)="previousStepper()" mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
+        <app-button 
+            text="buttons.CONFIRM" 
+            [buttonType]="ButtonType.RAISED" 
+            [isLoading]="isSaving" 
+            (clicked)="confirm()">  
+        </app-button>
+    </div>
+</div>

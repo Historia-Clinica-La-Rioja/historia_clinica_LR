@@ -32,7 +32,7 @@ export class GisLayersService {
 			view: new View({
 				center: [0, 0],
 				zoom: 16,
-				minZoom: 12
+				minZoom: 12,
 			})
 		});
 		this.map.addLayer(this.vectorLayer);

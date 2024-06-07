@@ -23,8 +23,9 @@ interface InstitutionAddress {
 	coordinates: FormControl<string>;
 }
 
-export const INSTITUTION_ADDRESS_STEP = 0;
-const MAP_POSITION_INDEX = 1;
+const INSTITUTION_ADDRESS_STEP = 0;
+const MAP_POSITION_STEP = 1;
+const RESPONSABILITY_AREA_STEP = 2;
 
 @Component({
 	selector: 'app-home',
@@ -104,12 +105,15 @@ export class HomeComponent implements OnInit {
 		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) 
 			this.stepToInstitutionAddress();
 
-		if ($event.selectedIndex === MAP_POSITION_INDEX) 
+		if ($event.selectedIndex === MAP_POSITION_STEP) 
 			this.stepToMapPosition();
+
+		if ($event.selectedIndex === RESPONSABILITY_AREA_STEP)
+			this.stepToResponsabilityArea();
 	}
 
 	stepToMapPosition = () => {
-		this.currentStepperIndex = MAP_POSITION_INDEX;
+		this.currentStepperIndex = MAP_POSITION_STEP;
 		this.isLoading = true;
 		const address: string = this.toStringify();
 		this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
@@ -131,6 +135,10 @@ export class HomeComponent implements OnInit {
 		this.coordinatesCurrentValue = null;
 		this.showMap = false;
 		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+	}
+
+	stepToResponsabilityArea = () => {
+		this.currentStepperIndex = RESPONSABILITY_AREA_STEP;
 	}
 
 	setInstitutionData = () => {

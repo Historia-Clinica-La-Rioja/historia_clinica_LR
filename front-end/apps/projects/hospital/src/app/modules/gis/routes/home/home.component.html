@@ -80,15 +80,23 @@
                 <mat-step label="{{'gis.steppers.MAP_POSITION' | translate}}">
                     <app-institution-description 
                         *ngIf="institutionDescription" 
-                        (confirmed)="setInstitutionData()"
-                        (previous)="stepToInstitutionAddress()"
+                        (nextStep)="stepToResponsabilityArea()"
+                        (previousStep)="stepToInstitutionAddress()"
                         [setInstitutionDescription]="institutionDescription">
                     </app-institution-description>
+                </mat-step>
+                <mat-step label="{{'gis.steppers.RESPONSABILITY_AREA' | translate}}">
+                    <app-responsability-area
+                        [setInstitutionDescription]="institutionDescription"
+                        (previous)="stepToMapPosition()"
+                        (confirmed)="setInstitutionData()">
+                    </app-responsability-area>
                 </mat-step>
               </mat-stepper>
         </div>
 
-        <app-hide-show-toggle *ngIf="!isFirstTime && institutionDescription" 
+        <app-hide-show-toggle 
+            *ngIf="!isFirstTime && institutionDescription" 
             [header]="{icon: 'info', text: 'Ver detalles'}"
             [showBorder]="false">
             <div class="institution-description">
