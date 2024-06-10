@@ -36,7 +36,7 @@
         }
 
         .header-space {
-            height: 200px;
+            height: 220px;
         }
 
         /*FOOTER*/
@@ -136,6 +136,11 @@
         .element {
             padding-bottom: 6px;
         }
+
+        .section-explicit-list {
+            margin-bottom: 15px;
+        }
+
 	</style>
 </head>
 <body>
@@ -150,40 +155,38 @@
                     <div class="institution-data" th:text="${institution.email}"></div>
                 </div>
             </div>
+            <div class="section-title">Información general</div>
             <div>
-                <div class="section-title">Información general</div>
-                <div>
-                    <div class="row-content">
-                        <div class="data-title">Nombre y apellido del paciente</div>
-                        <div style="float: left; margin-right: 3px;">
-                            <div class="data-text" th:if="${patientCompleteName != null}" style="text-transform: uppercase;" th:text="${patientCompleteName}"></div>
-                            <div class="data-text" th:if="${patientCompleteName == null}">Sin información</div>
-                        </div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Documento</div>
-                        <div class="data-text" th:if="${patient.identificationNumber != null}" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
-                        <div class="data-text" th:if="${patient.identificationNumber == null}">Sin información</div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">N° HC</div>
-                        <div class="data-text" th:text="${patient.id}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">ID Encuentro</div>
-                        <div class="data-text" th:text="${encounterId}"></div>
+                <div class="row-content">
+                    <div class="data-title">Nombre y apellido del paciente</div>
+                    <div style="float: left; margin-right: 3px;">
+                        <div class="data-text" th:if="${patientCompleteName != null}" style="text-transform: uppercase;" th:text="${patientCompleteName}"></div>
+                        <div class="data-text" th:if="${patientCompleteName == null}">Sin información</div>
                     </div>
                 </div>
-                <div>
-                    <div style="clear: both;">
-                        <div class="row-content">
-                            <div class="data-title">Edad</div>
-                            <div class="data-text" th:text="${patient.person.age}?: 'Sin información'"></div>
-                        </div>
-                        <div class="row-content">
-                            <div class="data-title">Fecha Nac.</div>
-                            <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')?: 'Sin información'}"></div>
-                        </div>
+                <div class="row-content">
+                    <div class="data-title">Documento</div>
+                    <div class="data-text" th:if="${patient.identificationNumber != null}" th:text="${patient.identificationType + ' ' + patient.identificationNumber}"></div>
+                    <div class="data-text" th:if="${patient.identificationNumber == null}">Sin información</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">N° HC</div>
+                    <div class="data-text" th:text="${patient.id}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">ID Encuentro</div>
+                    <div class="data-text" th:text="${encounterId}"></div>
+                </div>
+            </div>
+            <div>
+                <div style="clear: both;">
+                    <div class="row-content">
+                        <div class="data-title">Edad</div>
+                        <div class="data-text" th:text="${patient.person.age}?: 'Sin información'"></div>
+                    </div>
+                    <div class="row-content">
+                        <div class="data-title">Fecha Nac.</div>
+                        <div class="data-text" th:text="${#temporals.format(patient.person.birthDate, 'dd/MM/yyyy')?: 'Sin información'}"></div>
                     </div>
                 </div>
             </div>
@@ -196,55 +199,53 @@
     <!-- Datos encuentro -->
     <div th:fragment="encounterData(type)">
         <div>
-            <div>
-                <div class="section-title">Episodio/Encuentro</div>
-                <div style="margin-bottom: 10px;">
-                    <div class="row-content">
-                        <div class="data-title">Institucion</div>
-                        <div class="data-text" th:text="${institution.name}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Sector/Servicio</div>
-                        <div class="data-text" th:if="${sector}" th:text="${sector}"></div>
-                        <div class="data-text" th:unless="${sector}">Sin información</div>
-                    </div>
-                    <div class="row-content" th:if="${doctorsOffice != null}">
-                        <div class="data-title">Consultorio</div>
-                        <div class="data-text" th:text="${doctorsOffice}"></div>
-                    </div>
-                    <div class="row-content" th:if="${room != null}">
-                        <div class="data-title">Habitación</div>
-                        <div class="data-text" th:text="${room}"></div>
-                    </div>
-                    <div class="row-content" th:if="${shockRoom != null}">
-                        <div class="data-title">Shockroom</div>
-                        <div class="data-text" th:text="${shockRoom}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Tipo</div>
-                        <div class="data-text" th:text="${type}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Fecha y Hora</div>
-                        <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(performedDate, 'HH:mm')} + ' hs.'"></div>
-                    </div>
+            <div class="section-title">Episodio/Encuentro</div>
+            <div style="margin-bottom: 10px;">
+                <div class="row-content">
+                    <div class="data-title">Institucion</div>
+                    <div class="data-text" th:text="${institution.name}"></div>
                 </div>
-                <div style="clear: both; margin-bottom: 10px;">
-                    <div style="overflow-wrap: break-word; width: 40%" class="row-content">
-                        <div class="data-title">Cobertura</div>
-                        <div class="data-text" th:if="${patientCoverage != null}" th:text="${patientCoverage.medicalCoverage.name}"></div>
-                        <div class="data-text" th:unless="${patientCoverage != null}">Sin información</div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">N° de credencial</div>
-                        <div class="data-text" th:if="${patientCoverage != null && patientCoverage.affiliateNumber != null}" th:text="${patientCoverage.affiliateNumber}"></div>
-                        <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.affiliateNumber != null}">Sin información</div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Plan</div>
-                        <div class="data-text" th:if="${patientCoverage != null && patientCoverage.planName != null}" th:text="${patientCoverage.planName}"></div>
-                        <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.planName != null}">Sin información</div>
-                    </div>
+                <div class="row-content">
+                    <div class="data-title">Sector/Servicio</div>
+                    <div class="data-text" th:if="${sector}" th:text="${sector}"></div>
+                    <div class="data-text" th:unless="${sector}">Sin información</div>
+                </div>
+                <div class="row-content" th:if="${doctorsOffice != null}">
+                    <div class="data-title">Consultorio</div>
+                    <div class="data-text" th:text="${doctorsOffice}"></div>
+                </div>
+                <div class="row-content" th:if="${room != null}">
+                    <div class="data-title">Habitación</div>
+                    <div class="data-text" th:text="${room}"></div>
+                </div>
+                <div class="row-content" th:if="${shockRoom != null}">
+                    <div class="data-title">Shockroom</div>
+                    <div class="data-text" th:text="${shockRoom}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Tipo</div>
+                    <div class="data-text" th:text="${type}"></div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Fecha y Hora</div>
+                    <div class="data-text" th:text="${#temporals.format(performedDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(performedDate, 'HH:mm')} + ' hs.'"></div>
+                </div>
+            </div>
+            <div style="clear: both; margin-bottom: 10px;">
+                <div style="overflow-wrap: break-word; width: 40%" class="row-content">
+                    <div class="data-title">Cobertura</div>
+                    <div class="data-text" th:if="${patientCoverage != null}" th:text="${patientCoverage.medicalCoverage.name}"></div>
+                    <div class="data-text" th:unless="${patientCoverage != null}">Sin información</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">N° de credencial</div>
+                    <div class="data-text" th:if="${patientCoverage != null && patientCoverage.affiliateNumber != null}" th:text="${patientCoverage.affiliateNumber}"></div>
+                    <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.affiliateNumber != null}">Sin información</div>
+                </div>
+                <div class="row-content">
+                    <div class="data-title">Plan</div>
+                    <div class="data-text" th:if="${patientCoverage != null && patientCoverage.planName != null}" th:text="${patientCoverage.planName}"></div>
+                    <div class="data-text" th:unless="${patientCoverage != null && patientCoverage.planName != null}">Sin información</div>
                 </div>
             </div>
             <div style="clear: both;">
@@ -1007,7 +1008,7 @@
     <!-- Datos Antropométricos parte anestésico -->
     <div th:fragment="antropometicDataAnestheticReport(message)" th:if="${anthropometricData != null && anthropometricData.hasMinimalValues()}">
         <p class="section-title" th:text="${message}"></p>
-        <div class="section-data">
+        <div class="section-data section-explicit-list">
             <div th:replace=" :: bloodType"></div>
             <div th:replace=" :: height"></div>
             <div th:replace=" :: weight"></div>
@@ -1017,7 +1018,7 @@
     <!-- Evaluación clínica anestésica -->
     <div th:fragment="anestheticClinicalEvaluation(message)" th:if="${riskFactors != null && riskFactors.hasAnestheticClinicalEvaluationValues()}">
         <p class="section-title" th:text="${message}"></p>
-        <div class="section-data">
+        <div class="section-data section-explicit-list">
             <div class="element" th:replace=" :: bloodPressure(showDate=false)"></div>
             <div class="element" th:replace=" :: rate(description='Hematocrito', typeRate=${riskFactors.hematocrit}, unitMeasure='%', showDate=false)"></div>
         </div>
@@ -1026,7 +1027,7 @@
     <!-- Antecedentes anestésicos -->
     <div th:fragment="anestheticHistory(message)" th:if="${anestheticHistory != null && anestheticHistory.hasStringValues}">
         <p class="section-title" th:text="${message}"></p>
-        <div class="section-data">
+        <div class="section-data section-explicit-list">
             <strong>¿El paciente se realizó algún tipo de anestesia previamente?</strong>
             <span th:text="${anestheticHistory.previousAnesthesiaState}"></span>
             <span th:text="${anestheticHistory.anesthesiaZone} ? ${'(' + anestheticHistory.anesthesiaZone + ')'} : _"></span>
@@ -1057,7 +1058,7 @@
     </div>
 
     <!-- Última hora ingesta alimentaria -->
-    <div th:fragment="foodInTake(message)" class="section-data" th:if="${foodIntake != null && foodIntake.performedTime != null}">
+    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${foodIntake != null && foodIntake.performedTime != null}">
         <p class="section-title" th:text="${preMedications == null || #lists.isEmpty(preMedications)} ? ${message} : _"></p>
         <strong>Última ingesta de comida: </strong>
         <span th:text="${#temporals.format(foodIntake.performedTime, 'HH:mm') + ' hs.'}"></span>
@@ -1066,7 +1067,7 @@
     <!-- Antecedentes (histories) -->
     <div th:fragment="histories(message)" th:if="${not #lists.isEmpty(histories) || (procedureDescription != null && procedureDescription.hasHistoryStringValues())}">
         <p class="section-title" th:text="${message}"></p>
-        <div class="section-data">
+        <div class="section-data section-explicit-list">
             <dl th:each="history,iter: ${histories}">
                 <dd><p class="wide_wrapped_text" th:text="${'- ' + history.snomed.pt}"></p></dd>
             </dl>
@@ -1134,7 +1135,7 @@
     <!-- Procedimientos anestésicos intraquirúrgicos -->
     <div th:fragment="intrasurgicalAnestheticProcedures(message)" th:if="${procedureDescription != null && procedureDescription.hasIntrasurgicalAnestheticProceduresValues()}">
         <p class="section-title" th:text="${message}"></p>
-        <div class="section-data">
+        <div class="section-data section-explicit-list">
             <dd th:if="${procedureDescription.venousAccess != null}">
                 <strong>Acceso venoso: </strong><span th:text="${procedureDescription.venousAccess} ? Si : No"></span>
             </dd>
@@ -1150,7 +1151,7 @@
     <!-- Estado al finalizar la anestesia -->
     <div th:fragment="postAnesthesiaStatus(message)" th:if="${postAnesthesiaStatus != null && postAnesthesiaStatus.hasValues()}">
         <p class="section-title" th:text="${message}"></p>
-        <div class="section-data">
+        <div class="section-data section-explicit-list">
             <dd th:if="${postAnesthesiaStatus.intentionalSensitivity != null}">
                 <strong>Sensibilidad dolorosa: </strong><span th:text="${postAnesthesiaStatus.intentionalSensitivity} ? Si : No"></span>
             </dd>
