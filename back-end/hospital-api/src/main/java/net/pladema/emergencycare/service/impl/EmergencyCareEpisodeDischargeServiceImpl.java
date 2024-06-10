@@ -10,6 +10,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
+import net.pladema.emergencycare.infrastructure.output.entity.EmergencyCareEpisodeDischargeOtherTypeDescription;
+import net.pladema.emergencycare.infrastructure.output.repository.EmergencyCareEpisodeDischargeOtherTypeDescriptionRepository;
 import net.pladema.emergencycare.repository.DischargeTypeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeDischargeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,6 +50,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
     private final DateTimeProvider dateTimeProvider;
 
 	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
+	private final EmergencyCareEpisodeDischargeOtherTypeDescriptionRepository emergencyCareEpisodeDischargeOtherTypeDescriptionRepository;
 
     @Override
     public boolean newMedicalDischarge(MedicalDischargeBo medicalDischarge,Integer institutionId) {
@@ -54,6 +58,10 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         validateMedicalDischarge(medicalDischarge, institutionId);
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
         emergencyCareEpisodeDischargeRepository.save(newDischarge);
+		if (newDischarge.getDischargeTypeId().equals(DischargeType.OTRO))
+			emergencyCareEpisodeDischargeOtherTypeDescriptionRepository.save(
+					new EmergencyCareEpisodeDischargeOtherTypeDescription(newDischarge.getEmergencyCareEpisodeId(),medicalDischarge.getOtherDischargeDescription())
+			);
         documentFactory.run(medicalDischarge, false);
         return true;
     }
@@ -82,7 +90,9 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 	}
 
 	private EmergencyCareDischarge toEmergencyCareDischarge(MedicalDischargeBo medicalDischarge ) {
-        return new EmergencyCareDischarge(medicalDischarge.getSourceId(),medicalDischarge.getMedicalDischargeOn(),medicalDischarge.getMedicalDischargeBy(),medicalDischarge.getAutopsy(), medicalDischarge.getDischargeTypeId());
+        return new EmergencyCareDischarge(medicalDischarge.getSourceId(),medicalDischarge.getMedicalDischargeOn(),
+				medicalDischarge.getMedicalDischargeBy(),medicalDischarge.getAutopsy(),
+				medicalDischarge.getDischargeTypeId());
     }
 
     private void validateMedicalDischarge(MedicalDischargeBo medicalDischarge, Integer institutionId) {
@@ -93,6 +103,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         assertMedicalDischargeIsAfterEpisodeCreationDate(medicalDischargeOn, emergencyCareVo.getCreatedOn());
         assertMedicalDischargeIsBeforeToday(medicalDischargeOn);
 		assertHasEvolutionNote(medicalDischarge.getEncounterId());
+		assertDischargeTypeAndDescription(medicalDischarge.getDischargeTypeId(), medicalDischarge.getOtherDischargeDescription());
     }
 
     private void assertNotAlreadyDischarged(Integer episodeId) {
@@ -116,4 +127,11 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         LocalDateTime today = dateTimeProvider.nowDateTime();
         Assert.isTrue( !medicalDischargeOn.isAfter(today), "care-episode.medical-discharge.exceeds-max-date");
     }
+
+	private void assertDischargeTypeAndDescription(Short dischargeTypeId, String otherDischargeDescription){
+		Assert.isTrue((!Objects.equals(dischargeTypeId, DischargeType.OTRO) && otherDischargeDescription == null) ||
+						(Objects.equals(dischargeTypeId, DischargeType.OTRO) && otherDischargeDescription != null)
+				,"El episodio debe contar con una descripción del tipo de egreso 'Otro' para iniciar el alta médica.");
+	}
+
 }

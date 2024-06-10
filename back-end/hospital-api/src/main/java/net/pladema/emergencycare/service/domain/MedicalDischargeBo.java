@@ -41,6 +41,8 @@ public class MedicalDischargeBo implements IDocumentBo {
 
     private Short dischargeTypeId;
 
+	private String otherDischargeDescription;
+
     @Override
     public short getDocumentType() {
         return DocumentType.EMERGENCY_CARE;

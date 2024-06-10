@@ -26,6 +26,7 @@ export interface AEmergencyCarePatientDto extends Serializable {
 
 export interface AMedicalDischargeDto extends MedicalDischargeDto {
     dischargeTypeId: number;
+    otherDischargeDescription?: string;
     problems: OutpatientProblemDto[];
 }
 
