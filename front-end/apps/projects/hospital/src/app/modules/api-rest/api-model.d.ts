@@ -2806,6 +2806,13 @@ export interface MeasuringPointDto {
     time: TimeDto;
 }
 
+export interface MedicalCoverageDataDto {
+    cuit: string;
+    name: string;
+    rnos: string;
+    type: string;
+}
+
 export interface MedicalCoverageDto {
     acronym: string;
     dateQuery: string;

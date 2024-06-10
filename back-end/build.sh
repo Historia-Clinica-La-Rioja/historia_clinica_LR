@@ -28,3 +28,5 @@ cp app/target/app*.jar .docker/app.jar
 
 echo "Building Backend: output"
 ls -lha .docker/
+
+./check.sh
