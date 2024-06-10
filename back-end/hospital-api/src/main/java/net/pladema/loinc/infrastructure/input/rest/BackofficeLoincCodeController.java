@@ -32,7 +32,9 @@ public class BackofficeLoincCodeController extends AbstractBackofficeController<
 					public Example<LoincCode> buildExample(LoincCode entity) {
 						ExampleMatcher customExampleMatcher = ExampleMatcher
 							.matching()
-							.withMatcher("code", ExampleMatcher.GenericPropertyMatcher::startsWith);
+							.withMatcher("code", ExampleMatcher.GenericPropertyMatcher::startsWith)
+							.withMatcher("description", x -> x.ignoreCase().contains())
+							.withMatcher("customDisplayName", x -> x.ignoreCase().contains());
 						return Example.of(entity, customExampleMatcher);
 					}
 				}
