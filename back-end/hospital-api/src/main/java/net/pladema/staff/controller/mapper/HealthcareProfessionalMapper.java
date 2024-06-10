@@ -19,7 +19,6 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.staff.LicenseNumberDt
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionCompleteDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.ProfessionalCompleteDto;
-import jdk.jfr.Name;
 import net.pladema.staff.controller.dto.HealthcareProfessionalDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.domain.LicenseNumberBo;
@@ -55,7 +54,7 @@ public interface HealthcareProfessionalMapper {
 	@IterableMapping(qualifiedByName = "toProfessionalDto")
 	List<ProfessionalDto> fromProfessionalBoList(List<HealthcareProfessionalBo> healthcareProfessionalBos);
 
-	@Name("toHealthcareProfessionalDto")
+	@Named("toHealthcareProfessionalDto")
 	@Mapping(target = "person.firstName", source = "firstName")
 	@Mapping(target = "person.lastName", source = "lastName")
 	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);

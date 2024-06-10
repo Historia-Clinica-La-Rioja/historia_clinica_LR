@@ -3,7 +3,6 @@ package net.pladema.electronicjointsignature.professionalsstatus.infrastructure.
 import ar.lamansys.sgh.clinichistory.domain.document.enums.EElectronicSignatureStatus;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
-import jdk.jfr.Name;
 import net.pladema.electronicjointsignature.professionalsstatus.domain.DocumentElectronicSignatureProfessionalStatusBo;
 import net.pladema.electronicjointsignature.professionalsstatus.infrastructure.input.dto.DocumentElectronicSignatureProfessionalStatusDto;
 
@@ -22,7 +21,7 @@ public interface DocumentElectronicSignatureProfessionalStatusMapper {
 	DocumentElectronicSignatureProfessionalStatusDto toDocumentElectronicSignatureProfessionalStatusDto (DocumentElectronicSignatureProfessionalStatusBo documentElectronicSignatureProfessionalStatusBo);
 
 	@IterableMapping(qualifiedByName = "toDocumentElectronicSignatureProfessionalStatusDto")
-	@Name("toDocumentElectronicSignatureProfessionalStatusDtoList")
+	@Named("toDocumentElectronicSignatureProfessionalStatusDtoList")
 	List<DocumentElectronicSignatureProfessionalStatusDto> toDocumentElectronicSignatureProfessionalStatusDtoList (List<DocumentElectronicSignatureProfessionalStatusBo> documentElectronicSignatureProfessionalStatusBoList);
 
 }
