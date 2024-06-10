@@ -8,7 +8,6 @@
 				[maxDate]="today" [dateToSetInDatepicker]="today" (selectDate)="dischargedDateChanged($event)">
 			</app-datepicker>
 
-
 			<div appearance="outline">
 				<app-time-picker id="time" [timePickerData]="timePickerData" (timeSelected)="dischargedTimeChanged($event)"></app-time-picker>
 				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED">
@@ -90,30 +89,46 @@
 			</app-new-document-section>
 		</div>
 
-		<div fxLayout="column" fxLayoutGap="6px">
-			<mat-label translate="guardia.episode.medical_discharge.form.AUTOPSY"></mat-label>
-			<mat-radio-group name="autopsy" id="autopsy" formControlName="autopsy" fxLayoutGap="20px">
-				<mat-radio-button id="autopsy" [value]="true">
-					<span translate="forms.YES"></span>
-				</mat-radio-button>
-				<mat-radio-button id="notAutopsy" [value]="false">
-					<span translate="forms.NO"></span>
-				</mat-radio-button>
-			</mat-radio-group>
-		</div>
-
 		<div fxLayout="column">
-			<mat-label style="margin-top: 15px;">{{ 'guardia.episode.medical_discharge.form.DISCHARGE_TYPE' |
-				translate}}</mat-label>
-			<mat-form-field appearance="outline">
-				<mat-label translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label>
-				<mat-select formControlName="dischargeTypeId" name="dischargeTypeId">
-					<mat-option *ngFor="let dischargeType of ( dischargeTypes$ | async )" [value]="dischargeType.id">
-						{{dischargeType.description}}
-					</mat-option>
-				</mat-select>
-				<mat-error translate="forms.REQUIRED"></mat-error>
-			</mat-form-field>
+		<strong><mat-label style= 'margin-top: 15px;' translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label></strong>
+			<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+				<mat-radio-group formControlName="dischargeTypeId" name="dischargeTypeId">
+					<div *ngFor="let dischargeType of (dischargeTypes$ | async)">
+					<mat-radio-button [value]="dischargeType.id">
+						{{ dischargeType.description }}
+					</mat-radio-button>
+					</div>
+				</mat-radio-group>
+			</div>
+
+			<div *ngIf="form.get('dischargeTypeId').value == dischargeTypesEnum.DEFUNCION">
+				<div fxLayout="column" fxLayoutGap="8px">
+					<strong><mat-label translate="guardia.episode.medical_discharge.form.AUTOPSY"></mat-label></strong>
+					<mat-form-field appearance="outline">
+						<mat-select formControlName="autopsy" placeholder="{{'guardia.episode.medical_discharge.form.SELECT_AUTOPSY' | translate }}">
+							<mat-option [value]="true">
+								<span translate="forms.YES"></span>
+							</mat-option>
+							<mat-option [value]="false">
+								<span translate="forms.NO"></span>
+							</mat-option>
+						</mat-select>
+						<mat-error *ngIf="form.get('autopsy').hasError('required')"
+							translate="forms.REQUIRED"></mat-error>
+					</mat-form-field>
+				</div>
+			  </div>
+
+			<div *ngIf="form.get('dischargeTypeId').value == dischargeTypesEnum.OTRO">
+				<mat-form-field appearance="outline">
+					<textarea formControlName="otherDischarge"
+						placeholder="{{'guardia.episode.medical_discharge.form.DISCHARGE_TYPE_INPUT' | translate }}"
+						rows="4" matInput type="text">
+               		 </textarea>
+					<mat-error *ngIf="form.get('otherDischarge').hasError('required')"
+						translate="forms.REQUIRED"></mat-error>
+				</mat-form-field>
+			</div>
 		</div>
 
 		<mat-card *ngIf="formSubmited && problemasService.getProblemas().length === 0">

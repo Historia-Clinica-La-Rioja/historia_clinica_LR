@@ -173,6 +173,7 @@ export class GuardiaMapperService {
 			),
 			dischargeTypeId: s.dischargeTypeId,
 			autopsy: s.autopsy,
+			otherDischarge : s.otherDischarge
 		}
 
 		function getDateTime(dateTime): Date {

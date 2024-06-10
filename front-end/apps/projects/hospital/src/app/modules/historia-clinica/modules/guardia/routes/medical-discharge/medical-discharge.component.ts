@@ -3,12 +3,11 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { ActivatedRoute, Router } from '@angular/router';
 import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface, ResponseEmergencyCareDto, TimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DischargeTypes } from '@api-rest/masterdata';
+import { DischargeTypes, medicalDischargeCustomOrder } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
-import { sortBy } from '@core/utils/array.utils';
 import { hasError, beforeTimeDtoValidationDate, futureTimeDtoValidationDate } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
@@ -33,6 +32,7 @@ export class MedicalDischargeComponent implements OnInit {
 	form: UntypedFormGroup;
 	diagnosticos: DiagnosisDto[] = [];
 	dischargeTypes$: Observable<MasterDataInterface<number>[]>;
+	dischargeTypesEnum = DischargeTypes;
 
 	problemasService: ProblemasService;
 	severityTypes: any[];
@@ -75,7 +75,12 @@ export class MedicalDischargeComponent implements OnInit {
 				time: [this.timePickerData.defaultTime],
 			}),
 			autopsy: [null],
-			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required]
+			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required],
+			otherDischarge: [null]
+		});
+
+		this.form.get('dischargeTypeId').valueChanges.subscribe(discharge => {
+			this.updateDischargeTypeValidators(discharge);
 		});
 
 		this.route.paramMap.subscribe(params => {
@@ -92,17 +97,43 @@ export class MedicalDischargeComponent implements OnInit {
 				this.patientId = dto.patient ? dto.patient.id : null;
 			});
 		});
-		const sortByDescription = sortBy('description');
-		this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType()
-			.pipe(
-				map((dischargeTypes) => sortByDescription(dischargeTypes))
-			);
+
+        this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType()
+            .pipe(
+                map(dischargeTypes => this.customOrderDischargeTypes(dischargeTypes))
+            );
 
 		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
 			this.severityTypes = healthConditionSeverities;
 			this.problemasService.setSeverityTypes(healthConditionSeverities);
 		});
 	}
+
+	private customOrderDischargeTypes(dischargeTypes: MasterDataInterface<number>[]): MasterDataInterface<number>[] {
+        return dischargeTypes.sort((firstDischargeType, secondDischargeType) => {
+            const firstIndex = medicalDischargeCustomOrder.indexOf(firstDischargeType.id);
+            const secondIndex = medicalDischargeCustomOrder.indexOf(secondDischargeType.id);
+            return firstIndex - secondIndex;
+        });
+    }
+
+	private updateDischargeTypeValidators(value: DischargeTypes): void {
+		const autopsyControl = this.form.get('autopsy');
+		const descriptionControl = this.form.get('otherDischarge');
+
+		this.setControlValidators(autopsyControl, value === this.dischargeTypesEnum.DEFUNCION);
+		this.setControlValidators(descriptionControl, value === this.dischargeTypesEnum.OTRO);
+	}
+
+	private setControlValidators(control, condition: boolean): void {
+		if (condition) {
+			control.setValidators([Validators.required]);
+		} else {
+		  control.setValue(null);
+		  control.clearValidators();
+		}
+		control.updateValueAndValidity();
+	  }
 
 	dischargedDateChanged(date: Date) {
 		this.form.controls.dateTime.get('date').setValue(date);
@@ -194,4 +225,5 @@ export class MedicalDischargeForm {
 	autopsy: boolean;
 	dischargeTypeId: number;
 	problems: any[];
+	otherDischarge: string;
 }

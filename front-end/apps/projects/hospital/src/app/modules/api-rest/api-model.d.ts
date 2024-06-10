@@ -28,6 +28,7 @@ export interface AMedicalDischargeDto extends MedicalDischargeDto {
     dischargeTypeId: number;
     otherDischargeDescription?: string;
     problems: OutpatientProblemDto[];
+	otherDischarge: string;
 }
 
 export interface APatientDto extends APersonDto {
