@@ -4,8 +4,8 @@ import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.ClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedures;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedication;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedure;
 import ar.lamansys.sgh.clinichistory.domain.ips.visitor.DiscardElementIpsVisitor;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ public class DiscardPreviousDocument {
     private final DocumentService documentService;
     private final HealthConditionService healthConditionService;
     private final ClinicalObservationService clinicalObservationService;
-    private final LoadProcedures loadProcedures;
-    private final LoadMedications loadMedications;
+    private final LoadProcedure loadProcedure;
+    private final LoadMedication loadMedication;
 
     public void run(IDocumentBo previousDocument) {
         log.debug("Input parameter -> previousDocument {}", previousDocument);
@@ -45,8 +45,8 @@ public class DiscardPreviousDocument {
         return new DiscardElementIpsVisitor(
                 healthConditionService,
                 clinicalObservationService,
-                loadMedications,
-                loadProcedures,
+                loadMedication,
+                loadProcedure,
                 documentBo.getId(),
                 documentBo.getPatientId(),
                 documentBo.getPatientInfo());

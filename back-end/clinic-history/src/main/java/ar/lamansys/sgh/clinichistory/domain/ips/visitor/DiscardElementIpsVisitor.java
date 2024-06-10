@@ -15,8 +15,9 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureDescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.ClinicalObservationService;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.HealthConditionService;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedications;
-import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedures;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadMedication;
+import ar.lamansys.sgh.clinichistory.domain.ips.services.LoadProcedure;
+
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionClinicalStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ConditionVerificationStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.MedicationStatementStatus;
@@ -24,7 +25,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -32,8 +32,8 @@ public class DiscardElementIpsVisitor implements IpsVisitor {
 
     private final HealthConditionService healthConditionService;
     private final ClinicalObservationService clinicalObservationService;
-    private final LoadMedications loadMedications;
-    private final LoadProcedures loadProcedures;
+    private final LoadMedication loadMedication;
+    private final LoadProcedure loadProcedure;
 
     private final Long documentId;
     private final Integer patientId;
@@ -46,7 +46,7 @@ public class DiscardElementIpsVisitor implements IpsVisitor {
                     dataBo.setId(null);
                     dataBo.setStatusId(ConditionClinicalStatus.DRAFT_DISCARDED);
                     dataBo.setVerificationId(ConditionVerificationStatus.DISCARDED);
-                    healthConditionService.loadDiagnosis(patientInfoBo, documentId, List.of(dataBo));
+                    healthConditionService.loadDiagnosis(patientInfoBo, documentId, dataBo);
                 });
     }
 
@@ -57,7 +57,7 @@ public class DiscardElementIpsVisitor implements IpsVisitor {
                     dataBo.setId(null);
                     dataBo.setStatusId(ConditionClinicalStatus.DRAFT_DISCARDED);
                     dataBo.setVerificationId(ConditionVerificationStatus.DISCARDED);
-                    healthConditionService.loadOtherHistories(patientInfoBo, documentId, List.of(dataBo));
+                    healthConditionService.loadOtherHistory(patientInfoBo, documentId, dataBo);
                 });
     }
 
@@ -67,7 +67,7 @@ public class DiscardElementIpsVisitor implements IpsVisitor {
                 .ifPresent(dataBo -> {
                     dataBo.setId(null);
                     dataBo.setStatusId(ProceduresStatus.DRAFT_DISCARDED);
-                    loadProcedures.run(patientId, documentId, List.of(dataBo));
+                    loadProcedure.run(patientId, documentId, dataBo);
                 });
     }
 
@@ -100,7 +100,7 @@ public class DiscardElementIpsVisitor implements IpsVisitor {
                 .ifPresent(dataBo -> {
                     dataBo.setId(null);
                     dataBo.setStatusId(MedicationStatementStatus.DRAFT_DISCARDED);
-                    loadMedications.run(patientId, documentId, List.of(dataBo));
+                    loadMedication.run(patientId, documentId, dataBo);
                 });
     }
 
