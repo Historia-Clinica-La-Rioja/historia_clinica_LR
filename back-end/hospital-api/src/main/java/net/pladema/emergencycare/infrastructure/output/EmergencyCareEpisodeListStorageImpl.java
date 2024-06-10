@@ -28,6 +28,8 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 
 	private FeatureFlagsService featureFlagsService;
 
+	private final Short undefinedEmergencyCareType = -1;
+
 	@Override
 	public Page<EmergencyCareBo> getAllEpisodeListByFilter(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
 		String sqlDataSelectStatement =
@@ -50,13 +52,17 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
 						"AND ece.institutionId = " + institutionId +
 						(filter.getTriageCategoryId() != null ? " AND ece.triageCategoryId = " + filter.getTriageCategoryId() : " ") +
-						(filter.getTypeId() != null ? " AND ece.emergencyCareTypeId = " + filter.getTypeId() : " ") +
 						(filter.getPatientId() != null ? " AND pa.id = " + filter.getPatientId() : " ") +
 						(filter.getIdentificationNumber() != null ? " AND LOWER(pe.identificationNumber) LIKE '%" + filter.getIdentificationNumber().toLowerCase() + "%'" : " ") +
 						(filter.getPatientFirstName() != null ? featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS) ? " AND ((petd.nameSelfDetermination IS NOT NULL AND LOWER(petd.nameSelfDetermination) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%') OR (petd.nameSelfDetermination IS NULL AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'))" : " AND LOWER(pe.firstName) LIKE '%" + filter.getPatientFirstName().toLowerCase() + "%'" : " ") +
 						(filter.getPatientLastName() != null ? " AND LOWER(pe.lastName) LIKE '%" + filter.getPatientLastName().toLowerCase() + "%'" : " ") +
 						(filter.getMustBeTemporal() != null && filter.getMustBeTemporal() ? " AND pa.typeId = " + EPatientType.TEMPORARY.getId() : " ") +
 						(filter.getMustBeEmergencyCareTemporal() != null && filter.getMustBeEmergencyCareTemporal() ? " AND pa.typeId = " + EPatientType.EMERGENCY_CARE_TEMPORARY.getId() : " ");
+
+
+		if (filter.getTypeId() != null) {
+			sqlWhereStatement += filter.getTypeId().equals(undefinedEmergencyCareType) ? " AND ece.emergencyCareTypeId is NULL " : " AND ece.emergencyCareTypeId = " + filter.getTypeId() + " ";
+		}
 
 		String sqlOrderByStatement = "ORDER BY ece.emergencyCareStateId, ece.triageCategoryId, ece.creationable.createdOn";
 
