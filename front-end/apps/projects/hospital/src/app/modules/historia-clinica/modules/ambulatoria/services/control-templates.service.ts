@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProcedureTemplateFullSummaryDto } from '@api-rest/api-model';
+import { AddDiagnosticReportObservationsCommandDto, ProcedureTemplateFullSummaryDto } from '@api-rest/api-model';
 import { BehaviorSubject } from 'rxjs';
 import { LoincObservationValue } from '../../../../hsi-components/loinc-form/loinc-input.model';
 
@@ -40,6 +40,42 @@ export class ControlTemplatesService {
 		return this.formTemplateValues
 	}
 
+	build(reportInfoId: number, isPartialUpload: boolean): AddDiagnosticReportObservationsCommandDto {
+		let template = this.getProcedureTemplateId(reportInfoId);
+
+		let formTemplateValues = this.getFormTemplateValues();
+
+		let reportObservations: AddDiagnosticReportObservationsCommandDto =
+			this.buildProcedureTemplateFullSummaryDto(reportInfoId, template, formTemplateValues, false);
+
+		return reportObservations;
+	}
+
+	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number, template, formTemplateValues, isPartialUpload?: boolean): AddDiagnosticReportObservationsCommandDto {
+		return {
+			isPartialUpload: isPartialUpload || false,
+			referenceClosure: null,
+			procedureTemplateId: template,
+			values: Object.keys(formTemplateValues).length > 0 ? this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic, formTemplateValues) : [],
+		}
+	}
+
+	private buildAddDiagnosticReportObservationsCommandDto(idDiagnostic: number, formTemplateValues): any {
+		let procedure = formTemplateValues[idDiagnostic];
+		return this.cleanProcedureParameterIds(procedure);
+	}
+
+	private cleanProcedureParameterIds(data): AddDiagnosticReportObservationsCommandDto {
+		return data?.map((item) => {
+			if (item) {
+				if (typeof item.procedureParameterId === 'string' && item.procedureParameterId.includes('_')) {
+					item.procedureParameterId = item.procedureParameterId.split('_')[0];
+				}
+				return item;
+			}
+		});
+	}
+
 	private setDiagnosticRelateTemplate(selectedProcedureTemplate: ProcedureTemplateFullSummaryDto, diagnosticId: number) {
 		const templateId = selectedProcedureTemplate?.id || null;
 
@@ -64,5 +100,5 @@ export interface ResultTemplate {
 
 
 interface ValueMap {
-	[idDiagnostic: string]: LoincObservationValue; //estsa bien que sea un string y
+	[idDiagnostic: string]: LoincObservationValue;
 }
