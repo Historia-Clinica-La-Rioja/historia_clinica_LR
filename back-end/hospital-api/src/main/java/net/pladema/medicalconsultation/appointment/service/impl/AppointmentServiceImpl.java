@@ -138,8 +138,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         log.debug("Input parameters -> diaryIds {}", diaryIds);
         Collection<AppointmentBo> result = new ArrayList<>();
         if (!diaryIds.isEmpty()) {
-            result = appointmentStorage.getAppointmentsByDiaries(diaryIds, from, to).stream().distinct()
-                    .collect(Collectors.toList());
+            result = appointmentStorage.getAppointmentsByDiaries(diaryIds, from, to);
         }
         result = setIsAppointmentProtected(result, diaryIds);
         log.debug("Result size {}", result.size());
@@ -151,9 +150,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Collection<AppointmentBo> getAppointmentsByEquipmentDiary(Integer equipmentDiaryId, LocalDate from, LocalDate to) {
         log.debug("Input parameters -> equipmentDiaryId {}", equipmentDiaryId);
         Collection<AppointmentBo> result = appointmentStorage.getAppointmentsByEquipmentDiary(equipmentDiaryId, from, to)
-                .stream()
-                .distinct()
-                .collect(Collectors.toList());
+                ;
 
         log.debug("Result size {}", result.size());
         log.trace(OUTPUT, result);
@@ -165,7 +162,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         log.debug("Input parameters -> equipmentDiaryId {} institutionId {}, from {} to {}", equipmentId, institutionId, from, to);
         Collection<EquipmentAppointmentBo> result = equipmentAppointmentStorage.getAppointmentsByEquipmentId(equipmentId, institutionId, from, to)
                 .stream()
-                .distinct()
                 .sorted(Comparator.comparing(EquipmentAppointmentBo::getDate, Comparator.nullsFirst(Comparator.naturalOrder())).thenComparing(EquipmentAppointmentBo::getHour))
                 .peek(e -> e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId())))
                 .peek(e -> e.setStudies(serviceRequestStorage.getDiagnosticReportsFrom(e.getDiagnosticReportId(),e.getTranscribedServiceRequestId())))
@@ -180,9 +176,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         log.debug("Input parameters -> diaryIds {}", healthcareProfessionalId);
         Collection<AppointmentBo> result = new ArrayList<>();
         if (healthcareProfessionalId != null) {
-            result = appointmentStorage.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, from, to).stream()
-                    .distinct()
-                    .collect(Collectors.toList());
+            result = appointmentStorage.getAppointmentsByProfessionalInInstitution(healthcareProfessionalId, institutionId, from, to);
             List<Integer> diaryIds = result.stream().map(AppointmentBo::getDiaryId).collect(Collectors.toList());
             result = setIsAppointmentProtected(result, diaryIds);
         }
