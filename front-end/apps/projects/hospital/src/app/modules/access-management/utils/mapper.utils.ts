@@ -123,10 +123,11 @@ export const specialtyToTypeaheadOption = (specialty: ClinicalSpecialtyDto): Typ
     }
 }
 
-export const mapToReferenceCompleteData = (referenceData: ReferenceDataDto): ReferenceCompleteData => {
+export const mapToReferenceCompleteData = (referenceData: ReferenceDataDto, state?: string): ReferenceCompleteData => {
 	return {
 		dto: referenceData,
 		priority: getPriority(referenceData.priority.id),
-		problems: referenceData.problems.join(', ')
+		problems: referenceData.problems.join(', '),
+		state
 	};
 }

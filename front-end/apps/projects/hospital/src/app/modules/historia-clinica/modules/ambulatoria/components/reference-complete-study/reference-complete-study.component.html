@@ -19,9 +19,13 @@
 			<mat-divider></mat-divider>
 			<mat-divider [vertical]="true"></mat-divider>
 
-			<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
-				[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference">
-			</app-reference-study>
+			<ng-container *ngIf="_reference.state==='WAITING_APPROVA'  else warningMessage ">
+
+				<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
+					[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference">
+				</app-reference-study>
+			</ng-container>
+
 		</div>
 	</mat-dialog-content>
 
@@ -31,7 +35,15 @@
 			(clicked)="completeStudy()">
 		</app-button>
 	</mat-dialog-actions>
+
 </ng-container>
+
+<ng-template #warningMessage>
+	<app-box-message [boxMessageInfo]="boxMessageInfo">
+
+	</app-box-message>
+</ng-template>
+
 
 <ng-template #spinner>
 	<div class="centered-spinner">

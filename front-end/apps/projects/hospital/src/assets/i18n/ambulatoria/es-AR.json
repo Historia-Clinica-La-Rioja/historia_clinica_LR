@@ -1127,7 +1127,8 @@
 			"UPLOAD_FILES": "Adjuntar archivos",
 			"OK_BUTTON": "Aceptar",
             "SPECIALTIES": "Especialidades",
-            "NO_PERMISSION": "El profesional no posee las especialidades de la referencia para realizar el cierre de la misma"
+            "NO_PERMISSION": "El profesional no posee las especialidades de la referencia para realizar el cierre de la misma",
+			"MENSSAGE_ERROR": "El estudio no puede ser completado porque la referencia del mismo aún está esperando aprobación."
 		},
 		"reference-study-closure-information":{
 			"TITLE": "Resultados del estudio",

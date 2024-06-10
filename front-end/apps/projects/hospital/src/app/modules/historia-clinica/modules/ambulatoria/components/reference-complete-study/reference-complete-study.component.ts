@@ -8,6 +8,7 @@ import { mapToReferenceCompleteData } from '@access-management/utils/mapper.util
 import { ReportReference } from '../reference-study-closure-information/reference-study-closure-information.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { ButtonService } from '../../services/button.service';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 
 @Component({
 	selector: 'app-reference-complete-study',
@@ -18,6 +19,7 @@ import { ButtonService } from '../../services/button.service';
 export class ReferenceCompleteStudyComponent implements OnInit {
 	_reference$: Observable<ReferenceCompleteData>;
 	buttonTypeFlat = ButtonType.FLAT;
+	boxMessageInfo: BoxMessageInformation;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -36,14 +38,22 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 	ngOnInit() {
 		const referenceId = this.data.referenceId;
 		this._reference$ = this.institutionaReferenceReportService.getReferenceDetail(referenceId).pipe(
-			map((ReferenceComplete: ReferenceCompleteDataDto) =>
-				mapToReferenceCompleteData(ReferenceComplete.reference)
+			map((referenceComplete: ReferenceCompleteDataDto) =>
+				mapToReferenceCompleteData(referenceComplete.reference, referenceComplete.regulation.state)
 			)
 		);
+
+		this.setBoxMessageInfo();
 	}
 
-	completeStudy(){
+	completeStudy() {
 		this.buttonService.submit();
+	}
+	private setBoxMessageInfo() {
+		this.boxMessageInfo = {
+			message: 'ambulatoria.reference-study-close.MENSSAGE_ERROR',
+			showButtons: false
+		};
 	}
 
 }
