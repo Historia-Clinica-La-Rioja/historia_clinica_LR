@@ -149,6 +149,7 @@ export class StudyComponent implements OnInit {
 						order: diagnosticReport.serviceRequestId,
 						patientId: this.patientId,
 						diagnosticReportId: diagnosticReport.id,
+						studies: studiesService,
 						status: this.getPrescriptionStatus(diagnosticReport.statusId)
 					},
 					width: '50%',

@@ -1128,7 +1128,13 @@
 			"OK_BUTTON": "Aceptar",
             "SPECIALTIES": "Especialidades",
             "NO_PERMISSION": "El profesional no posee las especialidades de la referencia para realizar el cierre de la misma",
-			"MENSSAGE_ERROR": "El estudio no puede ser completado porque la referencia del mismo aún está esperando aprobación."
+			"MENSSAGE_ERROR": "El estudio no puede ser completado porque la referencia del mismo aún está esperando aprobación.",
+			"warning-pop-up": {
+				"TITLE":"Algunos datos y archivos adjuntos no se guardarán",
+				"CONTENT": "Si completa parcialmente el estudio, la especialidad, el tipo de cierre, las observaciones y los archivos adjuntos no quedarán guardados. ¿Desea completar parcialmente de todos modos?",
+				"OK_BUTTON" : "Si, completar",
+				"CANCEL": "No completar"
+			}
 		},
 		"reference-study-closure-information":{
 			"TITLE": "Resultados del estudio",

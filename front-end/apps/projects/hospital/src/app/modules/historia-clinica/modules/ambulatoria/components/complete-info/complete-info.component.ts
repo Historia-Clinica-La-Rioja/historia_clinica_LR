@@ -53,7 +53,7 @@ export class CompleteInfoComponent implements OnInit {
 
 		this.buttonService.submitPartialSave$.subscribe(submitPartialSlave => {
 			if (submitPartialSlave)
-				this.existsAppointment();
+				this.savedPartialStudy();
 		});
 
 	}
@@ -61,7 +61,6 @@ export class CompleteInfoComponent implements OnInit {
 	setSelectedFilesEmiit($event: File[]) {
 		this.selectedFiles = $event;
 	}
-
 
 	private completeStudy() {
 		const completeRequest: CompleteRequestDto = {
@@ -131,8 +130,7 @@ export class CompleteInfoComponent implements OnInit {
 		this.dialogRef.close(simpleClose ? null : { completed });
 	}
 
-
-	private existsAppointment() {
+	private savedPartialStudy() {
 		if (this.formStudyClosure.valid) {
 			const warnignComponent = this.dialog.open(DiscardWarningComponent,
 				{

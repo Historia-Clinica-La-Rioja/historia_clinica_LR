@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AddDiagnosticReportObservationsCommandDto, ProcedureTemplateFullSummaryDto } from '@api-rest/api-model';
+import { AddDiagnosticReportObservationsCommandDto, ProcedureTemplateFullSummaryDto, ReferenceClosureDto } from '@api-rest/api-model';
 import { BehaviorSubject } from 'rxjs';
 import { LoincObservationValue } from '../../../../hsi-components/loinc-form/loinc-input.model';
 
@@ -40,21 +40,21 @@ export class ControlTemplatesService {
 		return this.formTemplateValues
 	}
 
-	build(reportInfoId: number, isPartialUpload: boolean): AddDiagnosticReportObservationsCommandDto {
+	build(reportInfoId: number, isPartialUpload: boolean, referenceClosureDto?: ReferenceClosureDto): AddDiagnosticReportObservationsCommandDto {
 		let template = this.getProcedureTemplateId(reportInfoId);
 
 		let formTemplateValues = this.getFormTemplateValues();
 
 		let reportObservations: AddDiagnosticReportObservationsCommandDto =
-			this.buildProcedureTemplateFullSummaryDto(reportInfoId, template, formTemplateValues, false);
+			this.buildProcedureTemplateFullSummaryDto(reportInfoId, template, formTemplateValues, isPartialUpload, referenceClosureDto);
 
 		return reportObservations;
 	}
 
-	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number, template, formTemplateValues, isPartialUpload?: boolean): AddDiagnosticReportObservationsCommandDto {
+	private buildProcedureTemplateFullSummaryDto(idDiagnostic: number, template, formTemplateValues, isPartialUpload: boolean, referenceClosureDto?: ReferenceClosureDto): AddDiagnosticReportObservationsCommandDto {
 		return {
-			isPartialUpload: isPartialUpload || false,
-			referenceClosure: null,
+			isPartialUpload: isPartialUpload,
+			referenceClosure: referenceClosureDto,
 			procedureTemplateId: template,
 			values: Object.keys(formTemplateValues).length > 0 ? this.buildAddDiagnosticReportObservationsCommandDto(idDiagnostic, formTemplateValues) : [],
 		}

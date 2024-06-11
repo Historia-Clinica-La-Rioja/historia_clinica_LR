@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ReferenceCompleteDataDto, ReferenceRequestDto } from '@api-rest/api-model';
+import { EReferenceRegulationState, ReferenceCompleteDataDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { PrescriptionStatus, ReferenceCompleteData } from '../reference-request-data/reference-request-data.component';
 import { InstitutionalReferenceReportService } from '@api-rest/services/institutional-reference-report.service';
 import { Observable, map } from 'rxjs';
@@ -9,6 +9,7 @@ import { ReportReference } from '../reference-study-closure-information/referenc
 import { ButtonType } from '@presentation/components/button/button.component';
 import { ButtonService } from '../../services/button.service';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { StudyInfo } from '../../services/study-results.service';
 
 @Component({
 	selector: 'app-reference-complete-study',
@@ -20,7 +21,7 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 	_reference$: Observable<ReferenceCompleteData>;
 	buttonTypeFlat = ButtonType.FLAT;
 	boxMessageInfo: BoxMessageInformation;
-
+	APPROVED = EReferenceRegulationState.APPROVED;
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
 			reference: ReferenceRequestDto;
@@ -30,6 +31,7 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 			reportReference: ReportReference;
 			status: PrescriptionStatus,
 			order: number,
+			studies: StudyInfo[];
 		},
 		private readonly institutionaReferenceReportService: InstitutionalReferenceReportService,
 		readonly buttonService: ButtonService,
@@ -49,6 +51,11 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 	completeStudy() {
 		this.buttonService.submit();
 	}
+
+	completePartialStudy() {
+		this.buttonService.submitPartialSave();
+	}
+
 	private setBoxMessageInfo() {
 		this.boxMessageInfo = {
 			message: 'ambulatoria.reference-study-close.MENSSAGE_ERROR',

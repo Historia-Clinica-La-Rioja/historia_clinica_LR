@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { ClinicalSpecialtyDto, CompleteRequestDto, MasterDataDto, ReferenceRequestDto } from '@api-rest/api-model';
+import { AddDiagnosticReportObservationsCommandDto, ClinicalSpecialtyDto, CompleteRequestDto, MasterDataDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { ReferenceMasterDataService } from '@api-rest/services/reference-master-data.service';
 import { ChangeEvent } from 'react';
 import { PrescripcionesService } from '../../services/prescripciones.service';
@@ -8,20 +8,24 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { ReferenceCompleteStudyComponent } from '../reference-complete-study/reference-complete-study.component';
 import { BehaviorSubject, Observable, forkJoin, map, of, tap } from 'rxjs';
-import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { ClinicalSpecialtyService } from '@api-rest/services/clinical-specialty.service';
 import { ButtonService } from '../../services/button.service';
+import { StudyInfo } from '../../services/study-results.service';
+import { ControlTemplatesService } from '../../services/control-templates.service';
+import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
 
 @Component({
 	selector: 'app-reference-study-close',
 	templateUrl: './reference-study-close.component.html',
-	styleUrls: ['./reference-study-close.component.scss']
+	styleUrls: ['./reference-study-close.component.scss'],
+	providers: [ControlTemplatesService]
 })
 export class ReferenceStudyCloseComponent implements OnInit {
 	@Input() patientId = 0;
 	@Input() reference: ReferenceRequestDto;
 	@Input() diagnosticReportId: number;
+	@Input() studies: StudyInfo[];
 
 	formReferenceClosure: FormGroup;
 	selectedFiles: File[] = [];
@@ -40,6 +44,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 		public dialogRef: MatDialogRef<ReferenceCompleteStudyComponent>,
 		public dialog: MatDialog,
 		readonly buttonService: ButtonService,
+		readonly controlTemplatesService: ControlTemplatesService,
 
 	) { }
 
@@ -71,7 +76,10 @@ export class ReferenceStudyCloseComponent implements OnInit {
 		});
 
 
-
+		this.buttonService.submitPartialSave$.subscribe(submitPartialSlave => {
+			if (submitPartialSlave)
+				this.savedPartialStudy();
+		});
 	}
 
 	removeSelectedFile(index: number) {
@@ -86,28 +94,77 @@ export class ReferenceStudyCloseComponent implements OnInit {
 		});
 	}
 
-	completeStudy() {
-		const completeRequest = this.buildRequest();
-		this.prescripcionesService.completeStudy(this.patientId, this.diagnosticReportId,
-			completeRequest, this.selectedFiles).subscribe(_ => {
-				this.snackBarService.showSuccess('ambulatoria.reference-study-close.SUCCESS');
-				this.closeModal(false, true);
-			}, error => {
-				this.dialog.open(DiscardWarningComponent, { data: getConfirmDataDialog() });
-				this.buttonService.resetLoading();
-				function getConfirmDataDialog() {
-					const keyPrefix = 'ambulatoria.reference-study-close';
-					return {
-						title: `${keyPrefix}.ERROR_TITLE`,
-						content: `${keyPrefix}.ERROR`,
-						okButtonLabel: `${keyPrefix}.OK_BUTTON`,
-						errorMode: true,
-						color: 'warn',
-						buttonClose: true,
-					};
-				}
+	private completeStudy() {
+		const completeRequest: CompleteRequestDto = this.buildRequest();
 
-			});
+		let isPartialUpload = false;
+
+		let reportObservations: AddDiagnosticReportObservationsCommandDto =
+			this.controlTemplatesService.build(this.diagnosticReportId, isPartialUpload, completeRequest.referenceClosure);
+
+		if (reportObservations?.procedureTemplateId && reportObservations?.values?.length > 0) {
+			return this.prescripcionesService.completeStudyTemplateWhithForm(this.patientId,
+				this.diagnosticReportId, completeRequest, this.selectedFiles, reportObservations).subscribe(_ => {
+					this.snackBarService.showSuccess('ambulatoria.reference-study-close.SUCCESS');
+					this.closeModal(false, true);
+				}, error => {
+					this.snackBarService.showError('ambulatoria.reference-study-close.ERROR_TITLE');
+					this.closeModal(false, false);
+				});
+		} else {
+			this.prescripcionesService.completeStudy(this.patientId, this.diagnosticReportId,
+				completeRequest, this.selectedFiles).subscribe(_ => {
+					this.snackBarService.showSuccess('ambulatoria.reference-study-close.SUCCESS');
+					this.closeModal(false, true);
+				}, error => {
+					this.snackBarService.showError('ambulatoria.reference-study-close.ERROR_TITLE');
+					this.closeModal(false, false);
+					this.buttonService.resetLoading();
+				});
+		}
+	}
+
+
+	private partialSave() {
+		const completeRequest: CompleteRequestDto = this.buildRequest();
+
+		let isPartialUpload = true;
+
+		let reportObservations: AddDiagnosticReportObservationsCommandDto =
+			this.controlTemplatesService.build(this.diagnosticReportId, isPartialUpload, completeRequest.referenceClosure);
+
+		if (reportObservations?.procedureTemplateId && reportObservations?.values?.length > 0) {
+			return this.prescripcionesService.partialStudyTemplateWhithForm(this.patientId,
+				this.diagnosticReportId, reportObservations).subscribe(_ => {
+					this.snackBarService.showSuccess('ambulatoria.complete-info.SUCCESS');
+					this.closeModal(false, true);
+				}, error => {
+					this.snackBarService.showSuccess('ambulatoria.complete-info.ERROR');
+					this.closeModal(false, false);
+				});
+		}
+	}
+
+	private savedPartialStudy() {
+
+		if (this.hasAnyFieldValue()) {
+			const warnignComponent = this.dialog.open(DiscardWarningComponent,
+				{
+					disableClose: false,
+					data: {
+						title: 'ambulatoria.reference-study-close.warning-pop-up.TITLE',
+						content: 'ambulatoria.reference-study-close.warning-pop-up.CONTENT',
+						okButtonLabel: 'ambulatoria.reference-study-close.warning-pop-up.OK_BUTTON',
+						cancelButtonLabel: 'ambulatoria.reference-study-close.warning-pop-up.CANCEL'
+					},
+					maxWidth: '500px'
+				});
+			warnignComponent.afterClosed().subscribe(confirmed =>
+				confirmed ? this.partialSave() : this.buttonService.resetLoadingPartialSave()
+			);
+		}
+		else
+			this.partialSave();
 	}
 
 	private closeModal(simpleClose: boolean, completed?: boolean): void {
@@ -122,7 +179,7 @@ export class ReferenceStudyCloseComponent implements OnInit {
 				clinicalSpecialtyId: this.formReferenceClosure.value.clinicalSpecialty.id,
 				counterReferenceNote: this.formReferenceClosure.value.description,
 				fileIds: [],
-				closureTypeId: this.formReferenceClosure.value.closureType.id
+				closureTypeId: this.formReferenceClosure.value.closureType?.id
 			}
 		}
 	}
@@ -132,6 +189,20 @@ export class ReferenceStudyCloseComponent implements OnInit {
 			const firstCS = clinicalSpecialties[0];
 			this.formReferenceClosure.controls.clinicalSpecialty.setValue(firstCS);
 		}
+	}
+
+	private hasAnyFieldValue(): boolean {
+		const controls = this.formReferenceClosure.controls;
+
+		for (const name in controls) {
+			if (controls.hasOwnProperty(name)) {
+				const control = controls[name];
+				if (control.value !== null && control.value !== '') {
+					return true;
+				}
+			}
+		}
+		return false || this.selectedFiles.length > 0;
 	}
 }
 

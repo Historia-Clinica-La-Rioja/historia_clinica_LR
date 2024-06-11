@@ -3,6 +3,9 @@
 
 		<h2>{{'ambulatoria.reference-study-close.TITLE'|translate}} </h2>
 
+		<app-control-select-template [studies]="studies" [patientId]="patientId">
+		</app-control-select-template>
+
 		<form [formGroup]="formReferenceClosure" class="counterreference-form" fxLayout="column">
 
 			<mat-form-field id="specialties" appearance="outline" class="closureTypes">
