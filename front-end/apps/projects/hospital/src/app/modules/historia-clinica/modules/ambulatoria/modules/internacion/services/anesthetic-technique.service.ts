@@ -111,7 +111,7 @@ export class AnestheticTechniqueService {
 				techniqueId: anestheticTechnique.technique ? anestheticTechnique.technique.id : null,
 				trachealIntubation: anestheticTechnique.trachealIntubation,
 				trachealIntubationMethodIds: anestheticTechnique?.trachealIntubationBothIds?.length > 0 ? anestheticTechnique.trachealIntubationBothIds :
-					anestheticTechnique?.trachealIntubationBothIds?.length == 0 && anestheticTechnique.trachealIntubation ? [anestheticTechnique.trachealIntubationMethod.id] : null,
+					(anestheticTechnique?.trachealIntubationBothIds?.length == 0 && anestheticTechnique.trachealIntubation) ? [anestheticTechnique.trachealIntubationMethod.id] : null,
 			}
 		}
 		)
@@ -136,7 +136,7 @@ export class AnestheticTechniqueService {
 	}
 
 	setTrachealIntubationMethodIds(TrachealMethods: MasterDataDto[]): void {
-		this.trachealIntubationBothIds = TrachealMethods ? TrachealMethods.map(tracheal => tracheal.id) : null
+		this.trachealIntubationBothIds = TrachealMethods ? TrachealMethods.map(tracheal => tracheal.id) : [];
 	}
 
 	private handleAddAnestheticTechnique(anestheticTechnique: AnestheticTechniqueData): boolean {
