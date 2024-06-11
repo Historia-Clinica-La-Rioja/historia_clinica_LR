@@ -31,6 +31,7 @@ const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
 const ROUTE_HOME = 'pacientes';
 const TIME_TO_PREVENT_SCROLL = 100;
+const ROUTE_GUARD = 'guardia/nuevo-episodio/administrativa';
 
 @Component({
 	selector: 'app-search',
@@ -216,7 +217,8 @@ export class SearchComponent implements OnInit {
 	}
 
 	back() {
-		this.router.navigate([this.routePrefix + ROUTE_HOME]);
+		const route = this.fromGuardModule ? ROUTE_GUARD : ROUTE_HOME;
+		this.router.navigate([this.routePrefix + route]);
 	}
 
 	submit() {

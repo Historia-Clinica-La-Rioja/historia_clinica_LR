@@ -16,7 +16,7 @@ import { MIN_DATE } from "@core/utils/date.utils";
 import { ButtonType } from '@presentation/components/button/button.component';
 import { EmergencyCarePatient } from '../../components/emergency-care-patient/emergency-care-patient.component';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
-//import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-admision-administrativa',
@@ -56,7 +56,7 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 		private readonly emergencyCareMasterData: EmergencyCareMasterDataService,
 		private formBuilder: UntypedFormBuilder,
 		private readonly doctorsOfficeService: DoctorsOfficeService,
-	//	private route: ActivatedRoute,,
+		private route: ActivatedRoute,
 		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 	) { }
 
@@ -65,12 +65,14 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		// this.route.queryParams
-		// 	.subscribe(params => {
-		// 		if(params.patientId){
-		// 			this.loadPatient(params.patientId);
-		// 		}
-		// });
+		this.route.queryParams
+			.subscribe(params => {
+				if(params.patientId){
+					this.emergencyCarePatientData = {
+						patientId : params.patientId
+					}
+				}
+		});
 		this.emergencyCareType$ = this.emergencyCareMasterData.getType();
 		this.emergencyCareEntranceType$ = this.emergencyCareMasterData.getEntranceType();
 		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);

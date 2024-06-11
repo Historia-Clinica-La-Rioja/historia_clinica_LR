@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Patient } from '@pacientes/component/search-patient/search-patient.component';
 import { SearchPatientDialogComponent } from '@pacientes/dialogs/search-patient-dialog/search-patient-dialog.component';
 import { PatientSummary } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
 import { BasicPatientDto, PatientMedicalCoverageDto, PersonPhotoDto } from '@api-rest/api-model';
@@ -71,8 +70,8 @@ export class EmergencyCarePatientComponent implements OnDestroy {
 		const dialogRef = this.dialog.open(SearchPatientDialogComponent);
 
 		dialogRef.afterClosed()
-			.subscribe((foundPatient: Patient) => {
-				if (foundPatient) {
+			.subscribe((foundPatient: any) => {
+				if (foundPatient && foundPatient != -1) {
 					this.hasToShowButtonsActions = false;
 					this.setPatientAndMedicalCoverages(foundPatient.basicData, foundPatient.photo);
 					this.isAnEmergencyCareTemporaryPatient = false;
@@ -190,8 +189,14 @@ export class EmergencyCarePatientComponent implements OnDestroy {
 	}
 
 	private preloadedFormData() {
-		const { patientId, patientMedicalCoverageId, patientDescription } = this._emergencyCarePatientData;
-		this.form.setValue({ patientId, patientMedicalCoverageId, patientDescription });
+		Object.keys(this.form.controls).forEach(
+			controlKey => {
+				const keyValue = this._emergencyCarePatientData[controlKey]
+				if(keyValue){
+					this.form.controls[controlKey].setValue(keyValue);
+				}
+			}
+		)
 	}
 
 }
