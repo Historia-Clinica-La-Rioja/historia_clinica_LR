@@ -12,6 +12,7 @@ import net.pladema.imagenetwork.imagequeue.domain.ImageQueueFilteringCriteriaBo;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -239,14 +240,18 @@ public class ImageQueueFilterTest {
 
     private List<ImageQueueBo> buildInitialQueue() {
         return List.of(
-                new ImageQueueBo(1,1,Date.from(Instant.now()),1, 1,10,1,
-                        1,null,"ERROR"),
-                new ImageQueueBo(2,1,Date.from(Instant.now()),2, 1,10,1,
-                        1,null,"PENDING"),
-                new ImageQueueBo(3,1,Date.from(Instant.now()),3, 1,11,1,
-                        1,null,"ERROR"),
-                new ImageQueueBo(4,1,Date.from(Instant.now()),null, 2,10,1,
-                        1,null,"ERROR")
+                new ImageQueueBo(1,1,1,1,10,1,
+                        1,null,"ERROR", Date.from(Instant.now()),null,
+                        LocalDate.now(), LocalTime.now(), "1234"  ),
+                new ImageQueueBo(2,1,2,1,10,1,
+                        1,null,"PENDING", Date.from(Instant.now()),null,
+                        LocalDate.now(), LocalTime.now(), "1234"),
+                new ImageQueueBo(3,1,3,1,11,1,
+                        1,null,"ERROR",Date.from(Instant.now()),null,
+                        LocalDate.now(), LocalTime.now(), "1234"),
+                new ImageQueueBo(4,1,null,2,10,1,
+                        1,null,"ERROR",Date.from(Instant.now()),null,
+                        LocalDate.now(), LocalTime.now(), "1234")
         );
     }
 

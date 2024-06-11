@@ -30,8 +30,8 @@ public class ImageQueueStorageImpl implements ImageQueueStorage {
     public List<ImageQueueBo> getStudiesInQueue(Integer institutionId, LocalDate from, LocalDate to) {
         return moveStudiesRepository.findImagesNotMovedByInstitutionId(
                 institutionId,
-                Date.from(from.atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                Date.from(to.plusDays(1L).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                from,
+                to,
                 RESULT_OK);
     }
 

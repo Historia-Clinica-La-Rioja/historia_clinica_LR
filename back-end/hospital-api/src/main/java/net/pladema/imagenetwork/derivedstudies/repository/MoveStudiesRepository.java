@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -127,14 +128,18 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 	@Query(" SELECT new net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo( " +
 			"	mo.id, " +
 			"	mo.appointmentId, " +
-			"	mo.moveDate, " +
 			"	a.patientId, " +
 			"	e.modalityId, " +
 			" 	e.id, " +
 			"	aoi.orderId, " +
 			"	aoi.studyId, " +
 			"	aoi.transcribedOrderId, " +
-			"	mo.status " +
+			"	mo.status, " +
+			"	mo.beginOfMove, " +
+			"	mo.endOfMove, " +
+			"	a.dateTypeId, " +
+			"	a.hour, " +
+			"	mo.imageId " +
 			") " +
 			"FROM MoveStudies mo " +
 			"JOIN AppointmentOrderImage aoi ON (aoi.pk.appointmentId = mo.appointmentId) " +
@@ -144,12 +149,12 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 			"JOIN Equipment e ON (e.id = ed.equipmentId) " +
 			"WHERE (mo.institutionId = :institutionId) " +
 			"AND (mo.result IS NULL or mo.result != :resultNot) " +
-			"AND (mo.moveDate BETWEEN :from AND :to) " +
+			"AND (a.dateTypeId BETWEEN :from AND :to) " +
 			"ORDER BY mo.id")
 	List<ImageQueueBo> findImagesNotMovedByInstitutionId(
 			@Param("institutionId") Integer institutionId,
-			@Param("from") Date from,
-			@Param("to") Date to,
+			@Param("from") LocalDate from,
+			@Param("to") LocalDate to,
 			@Param("resultNot") String resultNot
 	);
 
