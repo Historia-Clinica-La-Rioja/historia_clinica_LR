@@ -18,8 +18,9 @@ databaseChangeLog:
           - sqlCheck:
               expectedResult: 0
               sql: |
-                SELECT topic
-                FROM shockroom
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='shockroom' and column_name='topic'
 
     - changeSet:
         id: room_topic-addTopicColumn
@@ -38,8 +39,9 @@ databaseChangeLog:
           - sqlCheck:
               expectedResult: 0
               sql: |
-                SELECT topic
-                FROM room
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='room' and column_name='topic'
 
     - changeSet:
         id: addColumn-uuid-service-request

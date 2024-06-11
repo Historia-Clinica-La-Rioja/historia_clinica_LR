@@ -31,8 +31,15 @@ databaseChangeLog:
           - sqlCheck:
               expectedResult: 0
               sql: |
-                SELECT recurring_appointment_type_id, appointment_id
-                FROM appointment
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='appointment' and column_name='recurring_appointment_type_id'
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='appointment' and column_name2='appointment_id'
 
     - changeSet:
         id: customAppointment-createTable
@@ -119,7 +126,10 @@ databaseChangeLog:
           - onError: CONTINUE
           - sqlCheck:
               expectedResult: 0
-              sql: "SELECT COUNT(*) FROM custom_appointment"
+              sql: |
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='custom_appointment' and column_name='id'
 
     - changeSet:
         id: createTable-document_involved_professional

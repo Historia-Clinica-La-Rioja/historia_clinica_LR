@@ -369,5 +369,12 @@ databaseChangeLog:
           - sqlCheck:
               expectedResult: 0
               sql: |
-                SELECT phone_number, phone_prefix
-                FROM booking_person 
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='booking_person' and column_name='phone_prefix'
+          - sqlCheck:
+              expectedResult: 0
+              sql: |
+                SELECT COUNT(column_name)
+                FROM information_schema.columns
+                WHERE table_name='booking_person' AND column_name='phone_number'

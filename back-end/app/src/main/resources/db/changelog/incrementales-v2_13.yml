@@ -39,8 +39,9 @@ databaseChangeLog:
           - sqlCheck:
               expectedResult: 0
               sql: |
-                SELECT COUNT(*)
-                FROM diary_label
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='diary_label' and column_name='id'   
 
     - changeSet:
         id: add-label_id
@@ -62,8 +63,9 @@ databaseChangeLog:
           - sqlCheck:
               expectedResult: 0
               sql: |
-                SELECT diary_label_id
-                FROM appointment  
+                SELECT count(column_name)
+                FROM information_schema.columns
+                WHERE table_name='appointment' and column_name='diary_label_id'            
         
     - changeSet:
         id: addColumn-classified-care_line
