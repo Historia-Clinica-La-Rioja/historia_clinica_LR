@@ -2,9 +2,9 @@ package ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exc
 
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions.PublicApiAccessDeniedException;
 
-public class PatientAccessDeniedException extends PublicApiAccessDeniedException {
+public class PatientPersonAccessDeniedException extends PublicApiAccessDeniedException {
 
-	public PatientAccessDeniedException() {
+	public PatientPersonAccessDeniedException() {
 		super("PatientInformation", "FetchPatientPersonById");
 	}
 }

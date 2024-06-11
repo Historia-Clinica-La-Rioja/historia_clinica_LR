@@ -5,7 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionSpecialtyDto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionsDataDto;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
+
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionsDataBo;
 
 import org.springframework.stereotype.Component;
 
@@ -56,6 +61,65 @@ public class PrescriptionMapper {
 				.professionalPrescriptionDto(mapTo(prescriptionBo.getProfessionalPrescriptionBo()))
 				.prescriptionsLineDto(mapToPrescriptionLineDtoList(prescriptionBo.getPrescriptionsLineBo(), prescriptionBo.getDueDate()))
 				.build();
+	}
+
+	public PrescriptionsDataDto mapToPrescriptionsDataDto(PrescriptionsDataBo prescriptionsDataBo){
+		return PrescriptionsDataDto.builder()
+				.domain(prescriptionsDataBo.getDomain())
+				.prescriptionId(prescriptionsDataBo.getPrescriptionId())
+				.prescriptionDate(prescriptionsDataBo.getPrescriptionDate())
+				.dueDate(prescriptionsDataBo.getDueDate())
+				.link(prescriptionsDataBo.getLink())
+				.professionalData(mapToProfessionalDataDto(prescriptionsDataBo.getProfessionalData()))
+				.prescriptionSpecialty(mapToSpecialtyDto(prescriptionsDataBo.getPrescriptionSpecialty()))
+				.build();
+	}
+
+	private PrescriptionSpecialtyDto mapToSpecialtyDto(PrescriptionSpecialtyBo prescriptionSpecialtyBo){
+		return PrescriptionSpecialtyDto.builder()
+				.specialty(prescriptionSpecialtyBo.getSpecialty())
+				.snomedId(prescriptionSpecialtyBo.getSnomedId())
+				.build();
+	}
+
+	private ProfessionalPrescriptionDto mapToProfessionalDataDto(ProfessionalPrescriptionBo professionalPrescriptionBo){
+		return ProfessionalPrescriptionDto.builder()
+				.name(professionalPrescriptionBo.getName())
+				.lastName(professionalPrescriptionBo.getLastName())
+				.identificationType(professionalPrescriptionBo.getIdentificationType())
+				.identificationNumber(professionalPrescriptionBo.getIdentificationNumber())
+				.phoneNumber(professionalPrescriptionBo.getPhoneNumber())
+				.email(professionalPrescriptionBo.getEmail())
+				.professions(mapToProfessionsDto(professionalPrescriptionBo.getProfessions()))
+				.registrations(mapToRegistrationsDto(professionalPrescriptionBo.getRegistrations()))
+				.build();
+	}
+
+	private List<PrescriptionProfessionalRegistrationDto> mapToRegistrationsDto(List<PrescriptionProfessionalRegistrationBo> prescriptionProfessionalRegistrationBo){
+		List<PrescriptionProfessionalRegistrationDto> registrations = new ArrayList<>();
+
+		for(PrescriptionProfessionalRegistrationBo bo : prescriptionProfessionalRegistrationBo){
+			PrescriptionProfessionalRegistrationDto dto = PrescriptionProfessionalRegistrationDto.builder()
+					.registrationNumber(bo.getRegistrationNumber())
+					.registrationType(bo.getRegistrationType())
+					.build();
+			registrations.add(dto);
+		}
+		return registrations;
+	}
+
+	private List<PrescriptionProfessionDto> mapToProfessionsDto(List<PrescriptionProfessionBo> prescriptionProfessionBo){
+		List<PrescriptionProfessionDto> professions = new ArrayList<>();
+
+		for (PrescriptionProfessionBo bo : prescriptionProfessionBo) {
+			PrescriptionProfessionDto dto = PrescriptionProfessionDto.builder()
+					.profession(bo.getProfession())
+					.snomedId(bo.getSnomedId())
+					.build();
+			professions.add(dto);
+		}
+
+		return professions;
 	}
 
 	private List<PrescriptionLineDto> mapToPrescriptionLineDtoList(List<PrescriptionLineBo> prescriptionsLineBo, LocalDateTime dueDate) {

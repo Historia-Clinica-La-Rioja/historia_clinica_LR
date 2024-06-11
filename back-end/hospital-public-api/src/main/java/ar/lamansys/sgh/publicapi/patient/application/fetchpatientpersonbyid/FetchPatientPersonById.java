@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid;
 
-import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception.PatientNotExistsException;
-import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception.PatientAccessDeniedException;
+import ar.lamansys.sgh.publicapi.patient.application.exception.PatientNotExistsException;
+import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception.PatientPersonAccessDeniedException;
 import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
 
 import ar.lamansys.sgh.publicapi.patient.domain.PersonBo;
@@ -42,7 +42,7 @@ public class FetchPatientPersonById {
 
 	private void assertUserCanAccess() {
 		if (!patientInformationPublicApiPermission.canAccessPersonFromIdPatient()) {
-			throw new PatientAccessDeniedException();
+			throw new PatientPersonAccessDeniedException();
 		}
 	}
 

@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception;
+package ar.lamansys.sgh.publicapi.patient.application.exception;
 
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 

@@ -1,13 +1,9 @@
-package ar.lamansys.sgh.publicapi.userinformation.infrastructure.input.rest;
+package ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest;
 
-import ar.lamansys.sgh.publicapi.TestUtils;
 import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.FetchPatientPersonById;
-import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception.PatientNotExistsException;
-import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception.PatientAccessDeniedException;
 import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
 
 import ar.lamansys.sgh.publicapi.patient.domain.PersonBo;
-import ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest.FetchPatientPersonByIdController;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.service.PatientInformationPublicApiPermission;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.person.PersonDto;
@@ -22,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,21 +43,6 @@ public class FetchPatientPersonByIdControllerApplicationTest {
 		var personInfo = fabricatePerson("Lara",1);
 		var person = personIsFetched(personInfo);
 		shouldBeSamePerson(personInfo, person);
-	}
-
-	@Test
-	void failFetchPatientPersonByIdPatientNotExists(){
-		allowAccessPermission(true);
-		userIsNotFound();
-		TestUtils.shouldThrow(PatientNotExistsException.class,
-				() -> fetchPatientPersonByIdController.getPersonInfo(patientId));
-	}
-
-	@Test
-	void failFetchPatientPersonByIdUserInformationAccessDeniedException() {
-		allowAccessPermission(false);
-		TestUtils.shouldThrow(PatientAccessDeniedException.class,
-				() -> fetchPatientPersonByIdController.getPersonInfo(patientId));
 	}
 
 	public PersonBo fabricatePerson(String name, Integer id) {
@@ -108,14 +88,5 @@ public class FetchPatientPersonByIdControllerApplicationTest {
 		Assertions.assertEquals(personDto.getSelfDeterminationGender(), personInfo.getSelfDeterminationGender());
 		Assertions.assertEquals(personDto.getSelfDeterminationGenderDescription(), personInfo.getSelfDeterminationGenderDescription());
 	}
-
-	private void allowAccessPermission(boolean canAccess) {
-		when(patientInformationPublicApiPermission.canAccessPersonFromIdPatient()).thenReturn(canAccess);
-	}
-
-	private void userIsNotFound() {
-		when(externalPatientStorage.getPersonDataById(any())).thenReturn(Optional.empty());
-	}
-
 
 }

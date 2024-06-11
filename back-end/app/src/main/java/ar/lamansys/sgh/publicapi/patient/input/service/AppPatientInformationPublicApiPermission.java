@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.publicapi.patient.input.service;
 
+import ar.lamansys.sgh.publicapi.ApiConsumerCondition;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.service.PatientInformationPublicApiPermission;
 import lombok.AllArgsConstructor;
 import net.pladema.permissions.repository.enums.ERole;
@@ -11,11 +12,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class AppPatientInformationPublicApiPermission implements PatientInformationPublicApiPermission {
 	private final UserSessionStorage userSessionStorage;
+	private final ApiConsumerCondition apiConsumerCondition;
 
 	@Override
 	public boolean canAccessPersonFromIdPatient() {
 		return userSessionStorage.getRolesAssigned().anyMatch(
 				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
+		);
+	}
+
+	@Override
+	public boolean canAccessPrescriptionDataFromPatientIdNumber() {
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
+						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
 }
