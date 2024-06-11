@@ -24,7 +24,7 @@ public class CreateOutpatientDto {
 
     private List<@Valid OutpatientProblemDto> problems = new ArrayList<>();
 
-    private List<@Valid OutpatientProcedureDto> procedures = new ArrayList<>();
+    private List<@Valid CreateOutpatientProcedureDto> procedures = new ArrayList<>();
 
     @Nullable
     private ReferableItemDto<@Valid OutpatientPersonalHistoryDto> personalHistories;

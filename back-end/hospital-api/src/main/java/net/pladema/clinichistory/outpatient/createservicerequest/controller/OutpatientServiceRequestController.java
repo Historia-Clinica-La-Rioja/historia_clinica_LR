@@ -53,7 +53,11 @@ public class OutpatientServiceRequestController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	@Transactional // Transaccion compleja
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD')")
-	public List<Integer> create(@PathVariable(name = "institutionId") Integer institutionId, @PathVariable(name = "patientId") Integer patientId, @RequestBody @Valid PrescriptionDto serviceRequestListDto) {
+	public List<Integer> create(
+		@PathVariable(name = "institutionId") Integer institutionId,
+		@PathVariable(name = "patientId") Integer patientId,
+		@RequestBody @Valid PrescriptionDto serviceRequestListDto)
+	{
 		log.debug("Input parameters -> institutionId {} patientId {}, ServiceRequestListDto {}", institutionId, patientId, serviceRequestListDto);
 		Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 		Map<String, List<PrescriptionItemDto>> srGroupBy = serviceRequestListDto.getItems().stream().collect(Collectors.groupingBy(PrescriptionItemDto::getCategoryId));

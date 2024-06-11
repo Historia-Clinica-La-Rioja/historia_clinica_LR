@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,5 +33,9 @@ public enum EDiagnosticReportStatus {
 
     public String getDescription() {
         return description;
+    }
+
+    public Boolean isFinal() {
+    	return this.equals(FINAL);
     }
 }

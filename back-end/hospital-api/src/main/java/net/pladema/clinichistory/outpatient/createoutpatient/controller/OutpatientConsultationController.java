@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
@@ -19,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.CanBeMarkAsError;
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.MarkAsErrorAProblem;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientProcedureDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationServiceRequest;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
@@ -90,7 +93,10 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final CanBeMarkAsError canBeMarkAsError;
 
+    private final CreateOutpatientConsultationServiceRequest createOutpatientConsultationServiceRequest;
+
     @Override
+    @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             Integer institutionId,
@@ -134,12 +140,36 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 			orderIds = sharedReferenceCounterReference.saveReferences(mapToCompleteReferenceDto(createOutpatientDto.getReferences(), institutionId,
 					doctorId, patientMedicalCoverageId, patientId, newOutPatient.getId()));
         }
+
+		/**
+		 * Create a service request for each procedure
+		 */
+		createServiceRequest(doctorId, createOutpatientDto.getProcedures(), patientMedicalCoverageId, patientDto,
+			institutionId, newOutPatient.getId());
+
 		ConsultationResponseDto result = new ConsultationResponseDto(newOutPatient.getId(), orderIds);
         LOG.debug(OUTPUT, result);
         return  ResponseEntity.ok().body(result);
     }
 
-    @Override
+	private void createServiceRequest(Integer doctorId, List<CreateOutpatientProcedureDto> procedures,
+		Integer medicalCoverageId, BasicPatientDto patientDto, Integer institutionId, Integer newOutpatientConsultationId)
+	{
+		procedures.forEach(procedure -> {
+			if (procedure.getServiceRequest() != null) {
+				String categoryId = procedure.getServiceRequest().getCategoryId();
+				Integer healthConditionId = procedure.getServiceRequest().getHealthConditionId();
+				SnomedDto snomed = procedure.getSnomed();
+				Boolean createWithStatusFinal = procedure.getServiceRequest().getCreationStatus().isFinal();
+
+				createOutpatientConsultationServiceRequest.execute(doctorId, categoryId, patientDto, institutionId,
+					healthConditionId, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
+					createWithStatusFinal);
+			}
+		});
+	}
+
+	@Override
     @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO')")
     public ResponseEntity<Boolean> gettingVaccine(

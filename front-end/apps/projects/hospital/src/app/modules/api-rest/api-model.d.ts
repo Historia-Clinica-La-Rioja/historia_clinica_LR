@@ -1101,10 +1101,22 @@ export interface CreateOutpatientDto {
     patientMedicalCoverageId?: number;
     personalHistories?: ReferableItemDto<OutpatientPersonalHistoryDto>;
     problems: OutpatientProblemDto[];
-    procedures: OutpatientProcedureDto[];
+    procedures: CreateOutpatientProcedureDto[];
     reasons: OutpatientReasonDto[];
     references: ReferenceDto[];
     riskFactors?: OutpatientRiskFactorDto;
+}
+
+export interface CreateOutpatientProcedureDto {
+    performedDate?: string;
+    serviceRequest?: CreateOutpatientServiceRequestDto;
+    snomed: SnomedDto;
+}
+
+export interface CreateOutpatientServiceRequestDto {
+    categoryId: string;
+    creationStatus: CreationStatus;
+    healthConditionId: number;
 }
 
 export interface CreationableDto extends Serializable {
@@ -5561,6 +5573,11 @@ export const enum AppFeature {
     HABILITAR_TRIAGE_PARA_ADMINISTRATIVO = "HABILITAR_TRIAGE_PARA_ADMINISTRATIVO",
     HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO = "HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO",
     HABILITAR_RELACIONES_SNOMED = "HABILITAR_RELACIONES_SNOMED",
+}
+
+export const enum CreationStatus {
+    REGISTERED = "REGISTERED",
+    FINAL = "FINAL",
 }
 
 export const enum EAggressorRelationship {
