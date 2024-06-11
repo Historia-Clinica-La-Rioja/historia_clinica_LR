@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 public class MedicineDoctorCompleteDto {
 
+	private Integer professionalId;
 	private String firstName;
 	private String middleNames;
 	private String lastName;

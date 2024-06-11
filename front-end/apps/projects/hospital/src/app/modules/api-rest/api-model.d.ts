@@ -2906,6 +2906,7 @@ export interface MedicineDoctorCompleteDto {
     middleNames: string;
     nameSelfDetermination: string;
     otherLastNames: string;
+    professionalId: number;
     professions: ProfessionCompleteDto[];
 }
 

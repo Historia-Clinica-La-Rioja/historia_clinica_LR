@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.publicapi.activities.staff.application.exception.InstitutionNotExistsException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,8 +68,8 @@ public class FetchHealthcareProfessionalsByInstitutionTest {
 	@Test
 	void institutionNotFoundEmptyResult(){
 		when(activitiesPublicApiPermissions.findInstitutionId("1")).thenReturn(Optional.empty());
-		Assertions.assertTrue(fetchHealthcareProfessionalsByInstitutionController
-				.getProfessionalsByInstitution("1").isEmpty());
+		TestUtils.shouldThrow(InstitutionNotExistsException.class,
+				() -> fetchHealthcareProfessionalsByInstitutionController.getProfessionalsByInstitution("1"));
 	}
 
 	private void allowAccessPermission(boolean canAccess) {

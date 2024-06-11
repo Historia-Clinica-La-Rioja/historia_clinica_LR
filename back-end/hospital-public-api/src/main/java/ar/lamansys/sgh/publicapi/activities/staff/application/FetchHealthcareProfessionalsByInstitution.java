@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.activities.staff.application.exception.FetchHealthcareProfessionalsDeniedException;
+import ar.lamansys.sgh.publicapi.activities.staff.application.exception.InstitutionNotExistsException;
 import ar.lamansys.sgh.publicapi.activities.staff.application.port.out.FetchHealthcareProfessionalsByInstitutionStorage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.staff.MedicineDoctorCompleteDto;
 import lombok.AllArgsConstructor;
@@ -21,13 +22,15 @@ public class FetchHealthcareProfessionalsByInstitution {
 
 		var institutionId = activitiesPublicApiPermissions.findInstitutionId(refsetCode);
 
-		if(institutionId.isPresent()){
-			if(activitiesPublicApiPermissions.canFetchHealthcareProfessionals(institutionId.get()))
-				return fetchHealthcareProfessionalsByInstitutionStorage.fetch(institutionId.get());
-			else
-				throw new FetchHealthcareProfessionalsDeniedException();
+		if(institutionId.isEmpty()){
+			throw new InstitutionNotExistsException();
 		}
 
-		return List.of();
+		if(activitiesPublicApiPermissions.canFetchHealthcareProfessionals(institutionId.get())) {
+			return fetchHealthcareProfessionalsByInstitutionStorage.fetch(institutionId.get());
+		}
+
+		throw new FetchHealthcareProfessionalsDeniedException();
+
 	}
 }

@@ -103,6 +103,7 @@ public class HealthcareProfessionalExternalServiceImpl implements HealthcareProf
 		var person = personExternalService.getBasicDataPerson(professionalInfo.getPersonId());
 
 		return MedicineDoctorCompleteDto.builder()
+				.professionalId(professionalId)
 				.firstName(person.getFirstName())
 				.middleNames(person.getMiddleNames())
 				.lastName(person.getLastName())
