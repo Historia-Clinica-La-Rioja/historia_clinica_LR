@@ -182,10 +182,11 @@ export class EmergencyCarePatientComponent implements OnDestroy {
 
 	private setPatientData() {
 		this.preloadedFormData();
-		this.isAnEmergencyCareTemporaryPatient = !!this._emergencyCarePatientData.patientDescription || this._emergencyCarePatientData.patientTypeId === PatientType.EMERGENCY_CARE_TEMPORARY;
+		const patientId = this._emergencyCarePatientData.patientId;
+		this.isAnEmergencyCareTemporaryPatient = !!this._emergencyCarePatientData.patientDescription && (!patientId || this._emergencyCarePatientData.patientTypeId === PatientType.EMERGENCY_CARE_TEMPORARY);
 		this.hasToShowButtonsActions = false;
-		if (!this.isAnEmergencyCareTemporaryPatient && this._emergencyCarePatientData.patientId)
-			this.loadPatient(this._emergencyCarePatientData.patientId);
+		if (!this.isAnEmergencyCareTemporaryPatient && patientId)
+			this.loadPatient(patientId);
 	}
 
 	private preloadedFormData() {
