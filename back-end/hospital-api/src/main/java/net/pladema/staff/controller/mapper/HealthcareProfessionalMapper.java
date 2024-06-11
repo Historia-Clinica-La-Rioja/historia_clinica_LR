@@ -54,7 +54,7 @@ public interface HealthcareProfessionalMapper {
 	@IterableMapping(qualifiedByName = "toProfessionalDto")
 	List<ProfessionalDto> fromProfessionalBoList(List<HealthcareProfessionalBo> healthcareProfessionalBos);
 
-	@Named("toHealthcareProfessionalDto")
+	@Named("fromHealthcareProfessionalBo")
 	@Mapping(target = "person.firstName", source = "firstName")
 	@Mapping(target = "person.lastName", source = "lastName")
 	HealthcareProfessionalDto fromHealthcareProfessionalBo(HealthcareProfessionalBo healthcareProfessionalBo);

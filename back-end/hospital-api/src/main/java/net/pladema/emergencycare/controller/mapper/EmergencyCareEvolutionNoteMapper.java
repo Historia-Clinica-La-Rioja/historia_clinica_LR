@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Snomed
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDocumentDto;
 import net.pladema.emergencycare.controller.dto.EmergencyCareEvolutionNoteDto;
-import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEvolutionNoteDocumentBo;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
 
@@ -21,7 +20,7 @@ public interface EmergencyCareEvolutionNoteMapper {
 	@Named("fromEmergencyCareEvolutionNoteDto")
 	EmergencyCareEvolutionNoteDocumentBo fromEmergencyCareEvolutionNoteDto(EmergencyCareEvolutionNoteDto emergencyCareEvolutionNote);
 
-	@Named("toEmergencyCareEvolutionNoteDto")
+	@Named("toEmergencyCareEvolutionNoteDocumentDto")
 	@Mapping(target = "documentId", source = "id")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.mainDiagnosis", source = "mainDiagnosis")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.diagnosis", source = "diagnosis")
@@ -33,10 +32,11 @@ public interface EmergencyCareEvolutionNoteMapper {
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.allergies", source = "allergies")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.procedures", source = "procedures")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.evolutionNote", source = "evolutionNote")
+	@Mapping(target = "professional", source = "professional", qualifiedByName = "fromHealthcareProfessionalBo")
 	EmergencyCareEvolutionNoteDocumentDto toEmergencyCareEvolutionNoteDocumentDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNote);
 
-	@Named("toEmergencyCareEvolutionNoteListDto")
-	@IterableMapping(qualifiedByName = "toEmergencyCareEvolutionNoteDto")
+	@Named("toEmergencyCareEvolutionNoteDocumentListDto")
+	@IterableMapping(qualifiedByName = "toEmergencyCareEvolutionNoteDocumentDto")
 	List<EmergencyCareEvolutionNoteDocumentDto> toEmergencyCareEvolutionNoteDocumentListDto(List<EmergencyCareEvolutionNoteDocumentBo> emergencyCareEvolutionNotes);
 
 	@Named("toEmergencyCareEvolutionNoteDto")
