@@ -64,7 +64,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	enableReports = false
 
 	isEmergencyCareTemporaryPatient = false;
-	isAnestheticPartEnabled: boolean;
+	isAnestheticReportEnabledFF: boolean;
 	isEvolutionNoteEnabled: boolean;
 
 	@Input() patientId: number;
@@ -122,7 +122,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isEnabled =>
-			this.isAnestheticPartEnabled = isEnabled
+			this.isAnestheticReportEnabledFF = isEnabled
 		);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_NOTA_EVOLUCION_GUARDIA_ROL_ENFERMERO).subscribe(isEnabled =>
 			this.hasNurseRoleEvolutionNoteEnabled = isEnabled

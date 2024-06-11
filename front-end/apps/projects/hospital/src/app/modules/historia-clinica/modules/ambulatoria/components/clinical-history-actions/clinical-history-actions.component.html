@@ -78,12 +78,14 @@
 			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO']" class="actions" (click)="openSurgicalReport()">
 				{{'ambulatoria.paciente.card.buttons.actions.SURGICAL_REPORT' | translate}}
 			</button>
-			<button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
-				(click)="this.documentAnestheticPartDraft ? openAnestheticReportDraft() : openAnestheticReport()">
-				{{ this.documentAnestheticPartDraft
-				? ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT_DRAFT' | translate)
-				: ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate) }}
-			</button>
+            <ng-container *ngIf="isAnestheticReportEnabledFF">
+                <button mat-menu-item *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']" class="actions"
+                    (click)="this.documentAnestheticPartDraft ? openAnestheticReportDraft() : openAnestheticReport()">
+                    {{ this.documentAnestheticPartDraft
+                    ? ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT_DRAFT' | translate)
+                    : ('ambulatoria.paciente.card.buttons.actions.ANESTHETIC_REPORT' | translate) }}
+                </button>
+            </ng-container>
 		</ng-container>
 
 		<div *ngTemplateOutlet="showBothConsultation"></div>
