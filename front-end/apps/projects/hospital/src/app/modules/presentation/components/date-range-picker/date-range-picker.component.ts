@@ -55,6 +55,11 @@ export class DateRangePickerComponent implements OnInit {
 		const end = new Date(this.dateRangeForm.controls.end.value);
 		this.dateRangeChange.emit({ start, end });
 	}
+
+	delete() {
+		this.dateRangeForm.reset();
+		this.dateRangeChange.next(null);
+	}
 }
 
 interface DateRangeForm {

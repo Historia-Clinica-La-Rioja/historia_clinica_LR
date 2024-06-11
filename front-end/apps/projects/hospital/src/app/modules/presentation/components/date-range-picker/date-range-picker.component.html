@@ -7,5 +7,8 @@
 		</mat-date-range-input>
 		<mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
 		<mat-date-range-picker #dateRangePicker></mat-date-range-picker>
+		<button type="button" *ngIf="dateRangeForm.get('start').value" mat-icon-button matSuffix (click)="delete()">
+			<mat-icon color="warn">close</mat-icon>
+		</button>
 	</mat-form-field>
 </form>
