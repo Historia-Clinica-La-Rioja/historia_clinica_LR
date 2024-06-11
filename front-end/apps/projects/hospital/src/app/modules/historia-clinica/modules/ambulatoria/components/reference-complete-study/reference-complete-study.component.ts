@@ -9,6 +9,7 @@ import { ReportReference } from '../reference-study-closure-information/referenc
 import { ButtonType } from '@presentation/components/button/button.component';
 import { ButtonService } from '../../services/button.service';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { ResultPractice } from '../../dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { StudyInfo } from '../../services/study-results.service';
 
 @Component({
@@ -32,6 +33,7 @@ export class ReferenceCompleteStudyComponent implements OnInit {
 			status: PrescriptionStatus,
 			order: number,
 			studies: StudyInfo[];
+			resultsPractices: ResultPractice[];
 		},
 		private readonly institutionaReferenceReportService: InstitutionalReferenceReportService,
 		readonly buttonService: ButtonService,

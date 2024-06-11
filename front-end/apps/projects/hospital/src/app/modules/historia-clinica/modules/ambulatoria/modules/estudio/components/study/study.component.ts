@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DiagnosticReportInfoDto, DoctorInfoDto, ReferenceRequestDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { STUDY_STATUS } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
-import { VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
+import { ResultPractice, VerResultadosEstudioComponent } from '@historia-clinica/modules/ambulatoria/dialogs/ordenes-prescripciones/ver-resultados-estudio/ver-resultados-estudio.component';
 import { PrescripcionesService, PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/services/prescripciones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ReferenceStudy, Title } from '@presentation/components/indication/indication.component';
@@ -190,8 +190,8 @@ export class StudyComponent implements OnInit {
 	showStudyResults(diagnosticReport: DiagnosticReportInfoDto): void {
 
 		let idOrder: number = diagnosticReport.serviceRequestId;
-		let studiesService: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
-
+		let studies: StudyInfo[] = this.studyResultsService.getStudies(idOrder);
+		let resultsPractices: ResultPractice[] = this.studyResultsService.getTemplatesStudies(diagnosticReport.serviceRequestId, this.patientId);
 		if (diagnosticReport?.referenceRequestDto) {
 			this.dialog.open(ReferenceCompleteStudyComponent,
 				{
@@ -201,7 +201,8 @@ export class StudyComponent implements OnInit {
 						order: diagnosticReport.serviceRequestId,
 						patientId: this.patientId,
 						diagnosticReportId: diagnosticReport.id,
-						status: this.getPrescriptionStatus(diagnosticReport.statusId)
+						status: this.getPrescriptionStatus(diagnosticReport.statusId),
+						resultsPractices: resultsPractices,
 					},
 					width: '50%',
 					height: '55%',
@@ -212,7 +213,7 @@ export class StudyComponent implements OnInit {
 				{
 					data: {
 						diagnosticReport: diagnosticReport,
-						studies: studiesService,
+						studies: studies,
 						patientId: this.patientId,
 						order: diagnosticReport.serviceRequestId,
 						creationDate: diagnosticReport.creationDate,

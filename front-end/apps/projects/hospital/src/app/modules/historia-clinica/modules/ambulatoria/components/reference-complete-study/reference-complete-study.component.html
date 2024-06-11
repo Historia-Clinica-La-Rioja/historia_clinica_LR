@@ -22,7 +22,7 @@
 			<ng-container *ngIf="_reference.state===APPROVED  else warningMessage ">
 				<app-reference-study fxFlex="45%" [patientId]="data.patientId" [reference]="data.reference"
 					[diagnosticReportId]="data.diagnosticReportId" [reportReference]="data?.reportReference"
-					[studies]="data.studies">
+					[studies]="data.studies" [resultsPractices]="data.resultsPractices">
 				</app-reference-study>
 			</ng-container>
 
@@ -36,7 +36,7 @@
 			[isLoading]="buttonService.isLoadingPartialSave$ | async" (clicked)="completePartialStudy()">
 		</app-button>
 
-		<app-button [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
+		<app-button *ngIf="!data?.reportReference" [buttonType]='buttonTypeFlat' text='ambulatoria.reference-study-close.COMPLETE_BUTTON'
 			[isLoading]="buttonService.isLoading$ | async" [disabled]="(buttonService.formDisabled$ | async)"
 			(clicked)="completeStudy()">
 		</app-button>
