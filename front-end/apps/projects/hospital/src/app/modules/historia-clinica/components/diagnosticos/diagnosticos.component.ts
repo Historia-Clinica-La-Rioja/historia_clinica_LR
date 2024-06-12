@@ -5,7 +5,7 @@ import { HEALTH_CLINICAL_STATUS } from '@historia-clinica/modules/ambulatoria/mo
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { HEALTH_VERIFICATIONS } from '../../modules/ambulatoria/modules/internacion/constants/ids';
-import { DiagnosisCreationEditionComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
+import { DiagnosisCreationEditionComponent, DiagnosisMode } from '../../modules/ambulatoria/modules/internacion/dialogs/diagnosis-creation-edition/diagnosis-creation-edition.component';
 import { SelectMainDiagnosisComponent } from '../../modules/ambulatoria/modules/internacion/dialogs/select-main-diagnosis/select-main-diagnosis.component';
 
 @Component({
@@ -46,7 +46,7 @@ export class DiagnosticosComponent {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
 			data: {
-				type: 'CREATION',
+				diagnosisMode: DiagnosisMode.CREATION,
 				isMainDiagnosis: isMainDiagnosis
 			}
 		});

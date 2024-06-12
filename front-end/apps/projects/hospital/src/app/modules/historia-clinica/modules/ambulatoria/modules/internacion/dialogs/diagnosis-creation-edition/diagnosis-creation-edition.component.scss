@@ -1,7 +1,22 @@
-.error_message{
+.error_message {
 	font-size: 12px;
 }
 
 .concept-typeahead {
     margin-bottom: 15px;
+}
+
+.verification-title {
+	font-weight: 500;
+	margin-bottom: 8px;
+}
+
+.display-radio-buttons {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	
+	.margin-radio-buttons {
+		margin-bottom: 7px;
+	}
 }

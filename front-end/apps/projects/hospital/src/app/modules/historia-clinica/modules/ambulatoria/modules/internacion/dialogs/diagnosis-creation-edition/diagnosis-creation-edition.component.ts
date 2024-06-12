@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AppFeature, DiagnosisDto, HealthConditionDto, SnomedDto } from '@api-rest/api-model';
 import { SnomedECL } from '@api-rest/api-model'
@@ -14,55 +14,48 @@ import { HEALTH_CLINICAL_STATUS, HEALTH_VERIFICATIONS } from '../../constants/id
 })
 export class DiagnosisCreationEditionComponent implements OnInit {
 
-	snomedError = false;
-	form: UntypedFormGroup;
-	type: string;
-	selection = false;
+	readonly HEALTH_VERIFICATIONS = HEALTH_VERIFICATIONS;
+	readonly eclFilter = SnomedECL.DIAGNOSIS;
+	readonly DiagnosisMode = DiagnosisMode;
+	isSnomedError = false;
+	form: FormGroup<DiagnosisCreationEditForm>;
+	mode: DiagnosisMode;
 	diagnosis: DiagnosisDto;
 	hasPresumptiveOption: boolean;
-	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
-	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
-	PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 	searchConceptsLocallyFF = false;
-	eclFilter = SnomedECL.DIAGNOSIS;
 
-	constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+	constructor(
+		@Inject(MAT_DIALOG_DATA) public data: DiagnosisCreationEditionData,
 		public dialogRef: MatDialogRef<DiagnosisCreationEditionComponent>,
-		private formBuilder: UntypedFormBuilder,
 		private readonly featureFlagService: FeatureFlagService,
-		private snomedService: SnomedService) {
-		this.type = data.type;
+		private snomedService: SnomedService
+	) {
+		this.mode = data.diagnosisMode;
 		this.diagnosis = data.diagnosis;
 		this.hasPresumptiveOption = !data?.isMainDiagnosis;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
-
 	}
 
 	ngOnInit(): void {
-		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required],
-			validation: [false, Validators.required]
+		this.form = new FormGroup<DiagnosisCreationEditForm>({
+			snomed: new FormControl(null, Validators.required),
+			verificationId: new FormControl(HEALTH_VERIFICATIONS.CONFIRMADO, Validators.required)
 		});
+
 		if (this.diagnosis) {
 			this.form.controls.snomed.setValue(this.diagnosis.snomed.pt);
-			this.form.controls.validation.setValue(this.diagnosis.presumptive);
+			this.form.controls.verificationId.setValue(this.diagnosis.verificationId);
 		}
 	}
 
 	saveDiagnosis() {
-		this.snomedError = false;
+		this.isSnomedError = false;
 		if (this.form.valid) {
-			if (this.form.value.validation)
-				this.diagnosis.verificationId = this.PRESUMPTIVE;
-			else
-				this.diagnosis.verificationId = this.CONFIRMED;
-			this.diagnosis.presumptive = this.form.value.validation;
-			this.diagnosis.isAdded = true;
-			this.diagnosis.statusId = this.ACTIVE;
+			this.diagnosis = this.buildDiagnosisDto();
 			this.dialogRef.close(this.diagnosis);
 		}
 		else
-			this.snomedError = true;
+			this.isSnomedError = true;
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
@@ -96,8 +89,35 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 
 	resetForm(): void {
 		delete this.diagnosis;
-		this.snomedError = false;
-		this.form.reset({ validation: false });
+		this.isSnomedError = false;
+		this.form.reset({ verificationId: HEALTH_VERIFICATIONS.CONFIRMADO });
 	}
 
+	private buildDiagnosisDto(): DiagnosisDto {
+		return {
+			...this.diagnosis,
+			verificationId: this.form.value.verificationId,
+			presumptive: this.form.value.verificationId === HEALTH_VERIFICATIONS.PRESUNTIVO,
+			isAdded: true,
+			statusId: HEALTH_CLINICAL_STATUS.ACTIVO
+		}
+	}
+
+}
+
+export enum DiagnosisMode {
+	CREATION = 'CREATION',
+	EDITION = 'EDITION',
+}
+
+interface DiagnosisCreationEditionData {
+	diagnosisMode: DiagnosisMode;
+	isMainDiagnosis: boolean;
+	hasPresumtiveMainDiagnosis: boolean;
+	diagnosis: DiagnosisDto;
+}
+
+interface DiagnosisCreationEditForm {
+	snomed: FormControl<string>;
+	verificationId: FormControl<string>;
 }
