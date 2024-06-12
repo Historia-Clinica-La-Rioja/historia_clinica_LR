@@ -10,8 +10,11 @@ import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.provincialreports.programreports.repository.EpidemiologyOneConsultationDetail;
 
 import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.OdontologicalConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.RecoveryOdontologyConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.SumarOdontologyConsultationDetail;
 import net.pladema.provincialreports.reportformat.DateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,7 +142,7 @@ public class NewProgramReportsExcelService {
 
 		ISheet sheet = workbook.createSheet(title);
 
-		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 35, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId));
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 34, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId));
 
 		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
 
@@ -153,6 +156,55 @@ public class NewProgramReportsExcelService {
 		excelUtilsService.setMinimalHeaderDimensions(sheet);
 		excelUtilsService.setSheetDimensions(sheet);
 
+
+		return workbook;
+	}
+
+	public IWorkbook buildSumarOdontolgylExcelNew(String title, String[] headers, List<SumarOdontologyConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
+
+		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
+
+		excelUtilsService.createHeaderCellsStyle(workbook);
+
+		ISheet sheet = workbook.createSheet(title);
+
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 18, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle dataCellsStyle = excelUtilsService.getDataCellsStyle(workbook);
+
+		result.forEach(resultData -> {
+			IRow row = sheet.createRow(rowNumber.getAndIncrement());
+			fillSumarOdontologyRow(row, resultData, dataCellsStyle);
+		});
+
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
+
+		return workbook;
+	}
+	public IWorkbook buildRecoveryOdontolgylExcelNew(String title, String[] headers, List<RecoveryOdontologyConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
+
+		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
+
+		excelUtilsService.createHeaderCellsStyle(workbook);
+
+		ISheet sheet = workbook.createSheet(title);
+
+		excelUtilsService.fillRow(sheet, excelUtilsService.getHeaderDataWithoutObservation(headers, title, 18, excelUtilsService.periodStringFromLocalDates(startDate, endDate), institutionId));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+
+		ICellStyle dataCellsStyle = excelUtilsService.getDataCellsStyle(workbook);
+
+		result.forEach(resultData -> {
+			IRow row = sheet.createRow(rowNumber.getAndIncrement());
+			fillRecoveryOdontologyRow(row, resultData, dataCellsStyle);
+		});
+
+		excelUtilsService.setMinimalHeaderDimensions(sheet);
+		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
 	}
@@ -307,9 +359,6 @@ public class NewProgramReportsExcelService {
 	private void fillSumarGeneralRow(IRow row, SumarGeneralConsultationDetail content, ICellStyle style) {
 		AtomicInteger rowNumber = new AtomicInteger(0);
 
-		ICell cell = row.createCell(rowNumber.getAndIncrement());
-		cell.setCellValue(content.getInstitution());
-		cell.setCellStyle(style);
 
 		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
 		cell1.setCellValue(content.getOperativeUnit());
@@ -458,6 +507,184 @@ public class NewProgramReportsExcelService {
 		ICell cell37 = row.createCell(rowNumber.getAndIncrement());
 		cell37.setCellValue(content.getEvolution());
 		cell37.setCellStyle(style);
+
+	}
+	private void fillSumarOdontologyRow(IRow row, SumarOdontologyConsultationDetail content, ICellStyle style) {
+		AtomicInteger rowNumber = new AtomicInteger(0);
+
+
+
+		ICell cell0 = row.createCell(rowNumber.getAndIncrement());
+		cell0.setCellValue(content.getOperativeUnit());
+		cell0.setCellStyle(style);
+
+		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
+		cell1.setCellValue(content.getLender());
+		cell1.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getLenderDni());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(dateTools.reformatDateThree(content.getAttentionDate()));
+		cell3.setCellStyle(style);
+
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(content.getAttentionHour());
+		cell4.setCellStyle(style);
+
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(content.getPatientDni());
+		cell5.setCellStyle(style);
+
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(content.getPatientName());
+		cell6.setCellStyle(style);
+
+		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
+		cell7.setCellValue(content.getGender());
+		cell7.setCellStyle(style);
+
+		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
+		cell8.setCellValue(dateTools.reformatDateFive(content.getBirthDate()));
+		cell8.setCellStyle(style);
+
+		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
+		cell9.setCellValue(content.getAgeTurn());
+		cell9.setCellStyle(style);
+
+		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
+		cell10.setCellValue(content.getMedicalCoverage());
+		cell10.setCellStyle(style);
+
+		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
+		cell11.setCellValue(content.getDirection());
+		cell11.setCellStyle(style);
+
+		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
+		cell12.setCellValue(content.getNeighborhood());
+		cell12.setCellStyle(style);
+
+		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
+		cell13.setCellValue(content.getLocation());
+		cell13.setCellStyle(style);
+
+		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
+		cell14.setCellValue(content.getIndexCpo());
+		cell14.setCellStyle(style);
+
+		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
+		cell15.setCellValue(content.getIndexCeo());
+		cell15.setCellStyle(style);
+
+		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
+		cell16.setCellValue(content.getReasons());
+		cell16.setCellStyle(style);
+
+		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
+		cell17.setCellValue(content.getProcedures());
+		cell17.setCellStyle(style);
+
+		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
+		cell18.setCellValue(content.getDentalProcedures());
+		cell18.setCellStyle(style);
+
+		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
+		cell19.setCellValue(content.getProblems());
+		cell19.setCellStyle(style);
+
+		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
+		cell20.setCellValue(content.getDentistryDiagnostics());
+		cell20.setCellStyle(style);
+
+	}
+	private void fillRecoveryOdontologyRow(IRow row, RecoveryOdontologyConsultationDetail content, ICellStyle style) {
+		AtomicInteger rowNumber = new AtomicInteger(0);
+
+		ICell cell0 = row.createCell(rowNumber.getAndIncrement());
+		cell0.setCellValue(content.getOperativeUnit());
+		cell0.setCellStyle(style);
+
+		ICell cell1 = row.createCell(rowNumber.getAndIncrement());
+		cell1.setCellValue(content.getLender());
+		cell1.setCellStyle(style);
+
+		ICell cell2 = row.createCell(rowNumber.getAndIncrement());
+		cell2.setCellValue(content.getLenderDni());
+		cell2.setCellStyle(style);
+
+		ICell cell3 = row.createCell(rowNumber.getAndIncrement());
+		cell3.setCellValue(dateTools.reformatDateThree(content.getAttentionDate()));
+		cell3.setCellStyle(style);
+
+		ICell cell4 = row.createCell(rowNumber.getAndIncrement());
+		cell4.setCellValue(content.getAttentionHour());
+		cell4.setCellStyle(style);
+
+		ICell cell5 = row.createCell(rowNumber.getAndIncrement());
+		cell5.setCellValue(content.getPatientDni());
+		cell5.setCellStyle(style);
+
+		ICell cell6 = row.createCell(rowNumber.getAndIncrement());
+		cell6.setCellValue(content.getPatientName());
+		cell6.setCellStyle(style);
+
+		ICell cell7 = row.createCell(rowNumber.getAndIncrement());
+		cell7.setCellValue(content.getGender());
+		cell7.setCellStyle(style);
+
+		ICell cell8 = row.createCell(rowNumber.getAndIncrement());
+		cell8.setCellValue(dateTools.reformatDateFive(content.getBirthDate()));
+		cell8.setCellStyle(style);
+
+		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
+		cell9.setCellValue(content.getAgeTurn());
+		cell9.setCellStyle(style);
+
+		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
+		cell10.setCellValue(content.getMedicalCoverage());
+		cell10.setCellStyle(style);
+
+		ICell cell11 = row.createCell(rowNumber.getAndIncrement());
+		cell11.setCellValue(content.getDirection());
+		cell11.setCellStyle(style);
+
+		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
+		cell12.setCellValue(content.getNeighborhood());
+		cell12.setCellStyle(style);
+
+		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
+		cell13.setCellValue(content.getLocation());
+		cell13.setCellStyle(style);
+
+		ICell cell14 = row.createCell(rowNumber.getAndIncrement());
+		cell14.setCellValue(content.getIndexCpo());
+		cell14.setCellStyle(style);
+
+		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
+		cell15.setCellValue(content.getIndexCeo());
+		cell15.setCellStyle(style);
+
+		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
+		cell16.setCellValue(content.getReasons());
+		cell16.setCellStyle(style);
+
+		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
+		cell17.setCellValue(content.getProcedures());
+		cell17.setCellStyle(style);
+
+		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
+		cell18.setCellValue(content.getDentalProcedures());
+		cell18.setCellStyle(style);
+
+		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
+		cell19.setCellValue(content.getProblems());
+		cell19.setCellStyle(style);
+
+		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
+		cell20.setCellValue(content.getDentistryDiagnostics());
+		cell20.setCellStyle(style);
 
 	}
 }

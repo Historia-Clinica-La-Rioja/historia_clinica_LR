@@ -9,7 +9,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-public class OdontologicalConsultationDetail {
+
+public class SumarOdontologyConsultationDetail {
+
 
 	private String institution;
 
@@ -54,5 +56,6 @@ public class OdontologicalConsultationDetail {
 	private String problems;
 
 	private String dentistryDiagnostics;
+
 
 }

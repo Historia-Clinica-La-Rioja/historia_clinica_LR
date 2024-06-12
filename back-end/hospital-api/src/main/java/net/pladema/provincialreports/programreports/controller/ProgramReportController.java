@@ -231,7 +231,6 @@ public class ProgramReportController {
 		String filename = title + "." + wb.getExtension();
 		response.addHeader("Content-disposition", "attachment;filename=" + filename);
 		response.setContentType(wb.getContentType());
-
 		OutputStream out = response.getOutputStream();
 		wb.write(out);
 		out.close();

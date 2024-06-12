@@ -12,6 +12,7 @@ import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoCo
 import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.OdontologicalConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.SumarOdontologyConsultationDetail;
 import net.pladema.provincialreports.programreports.service.ProgramReportExcelService;
 import net.pladema.provincialreports.reportformat.DateFormat;
 
@@ -170,6 +171,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		setDimensions(sheet);
 		return wb;
 	}
+
 
 	private void createCellStyle(IWorkbook workbook){
 		basicStyle = workbook.createStyle();

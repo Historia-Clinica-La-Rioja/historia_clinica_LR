@@ -6,6 +6,7 @@ import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoCo
 import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.OdontologicalConsultationDetail;
+import net.pladema.provincialreports.programreports.repository.SumarOdontologyConsultationDetail;
 
 import java.util.List;
 
@@ -20,5 +21,6 @@ public interface ProgramReportExcelService {
 	IWorkbook buildExcelSumarGeneral(String title, String[] headers, List<SumarGeneralConsultationDetail> query);
 
 	IWorkbook buildExcelOdontological(String title, String[] headers, List<OdontologicalConsultationDetail> query);
+
 
 }
