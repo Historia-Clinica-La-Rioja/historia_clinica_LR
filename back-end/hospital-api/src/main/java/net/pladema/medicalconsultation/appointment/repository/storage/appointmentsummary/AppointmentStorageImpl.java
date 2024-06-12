@@ -71,7 +71,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, aa.pk.openingHoursId) " +
                         "FROM Appointment AS a " +
                         "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
-                        "JOIN DiaryOpeningHours AS doh ON (aa.pk.openingHoursId = doh.pk.openingHoursId) " +
+                        "JOIN DiaryOpeningHours AS doh ON (aa.pk.openingHoursId = doh.pk.openingHoursId AND aa.pk.diaryId = doh.pk.diaryId) " +
                         "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
                         "JOIN DoctorsOffice AS do ON (do.id = d.doctorsOfficeId) " +
                         "LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
@@ -112,7 +112,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, aa.pk.openingHoursId)" +
 						"FROM Appointment AS a " +
 						"JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
-						"JOIN DiaryOpeningHours AS doh ON (aa.pk.openingHoursId = doh.pk.openingHoursId)" +
+						"JOIN DiaryOpeningHours AS doh ON (aa.pk.openingHoursId = doh.pk.openingHoursId AND aa.pk.diaryId = doh.pk.diaryId)" +
 						"JOIN Diary d ON (d.id = aa.pk.diaryId ) " +
 						"LEFT JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
 						"LEFT JOIN Person p ON (us.pk.personId = p.id) " +
@@ -149,7 +149,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, eaa.pk.openingHoursId)" +
                         "FROM Appointment AS a " +
                         "JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
-                        "JOIN EquipmentDiaryOpeningHours AS edoh ON (eaa.pk.openingHoursId = edoh.pk.openingHoursId) " +
+                        "JOIN EquipmentDiaryOpeningHours AS edoh ON (eaa.pk.openingHoursId = edoh.pk.openingHoursId  AND edoh.pk.equpmentDiaryId = eaa.pk.equipmentDiaryId ) " +
                         "JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId) " +
                         "JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
                         "JOIN Person p ON (us.pk.personId = p.id) " +
