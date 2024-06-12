@@ -120,12 +120,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 						ERole.ROOT.getValue(),
 						ERole.ADMINISTRADOR.getValue())
 				.antMatchers(BACKOFFICE + "/**").hasAnyAuthority(
-					ERole.ROOT.getValue(),
 					ERole.ADMINISTRADOR.getValue(),
 					ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.getValue(),
 					ERole.ADMINISTRADOR_DE_ACCESO_DOMINIO.getValue(),
 					ERole.AUDITORIA_DE_ACCESO.getValue(),
-					ERole.ADMINISTRADOR_DE_DATOS_PERSONALES.getValue()
+					ERole.ADMINISTRADOR_DE_DATOS_PERSONALES.getValue(),
+					ERole.API_IMAGENES.getValue(),
+					ERole.ROOT.getValue()
 				)
 				.antMatchers(RECAPTCHA + "/**").permitAll()
 				.antMatchers("/oauth/**").permitAll()
