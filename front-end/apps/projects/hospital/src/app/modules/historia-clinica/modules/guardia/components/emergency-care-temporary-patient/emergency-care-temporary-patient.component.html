@@ -1,6 +1,6 @@
 <mat-card fxLayout="row" fxLayoutAlign="space-between">
     <app-temporary-patient [patientDescription]="patientDescription"></app-temporary-patient>
-    <app-button buttonType="{{BUTTON_TYPE_ICON}}" color="warn" matIcon="clear"
+    <app-button buttonType="{{BUTTON_TYPE_ICON}}" color="warn" matIcon="clear" *ngIf="canDeleteSelectedPatient"
         (clicked)="clearSelectedTemporaryPatient()">
     </app-button>
 </mat-card>

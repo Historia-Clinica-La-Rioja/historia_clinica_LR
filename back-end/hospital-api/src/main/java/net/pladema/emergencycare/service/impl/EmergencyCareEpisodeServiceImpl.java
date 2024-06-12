@@ -272,8 +272,12 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		return result;
 	}
 
-    private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId){
-		if (episodePersisted.getPatientId() == null || !episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId()))
+    private void updatePatient(EmergencyCareEpisode episodePersisted, EmergencyCareBo episodeToUpdate, Integer institutionId) {
+		if (episodeToUpdate.getPatient().getId() == null) {
+			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_ID_NULL, "Se debe especificar el id del paciente para la edicion del episodio de guardia");
+		}
+
+		if (!episodePersisted.getPatientId().equals(episodeToUpdate.getPatient().getId()))
 			assertValidPatient(episodeToUpdate.getPatient(), institutionId);
 		episodePersisted.setPatientId(episodeToUpdate.getPatient().getId());
 		episodePersisted.setPatientMedicalCoverageId(episodeToUpdate.getPatient().getPatientMedicalCoverageId());
@@ -425,12 +429,10 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 	}
 
 	private void assertTemporaryPatient(PatientECEBo patient) {
-		if (patient.getId() != null) {
-			boolean isATemporaryPatient = patientExternalService.getBasicDataFromPatient(patient.getId()).getTypeId().equals(EPatientType.EMERGENCY_CARE_TEMPORARY.getId());
-			boolean hasNotPatientDescription = patient.getPatientDescription() == null || patient.getPatientDescription().isEmpty();
-			if (isATemporaryPatient && hasNotPatientDescription) {
-				throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_DESCRIPTION, "No se puede editar un episodio de guardia con paciente temporal sin una descripcion identificatoria del paciente");
-			}
+		boolean isATemporaryPatient = patientExternalService.getBasicDataFromPatient(patient.getId()).getTypeId().equals(EPatientType.EMERGENCY_CARE_TEMPORARY.getId());
+		boolean hasNotPatientDescription = patient.getPatientDescription() == null || patient.getPatientDescription().isEmpty();
+		if (isATemporaryPatient && hasNotPatientDescription) {
+			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_DESCRIPTION, "No se puede editar un episodio de guardia con paciente temporal sin una descripcion identificatoria del paciente");
 		}
 	}
 }

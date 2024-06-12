@@ -11,6 +11,7 @@ export class EmergencyCareTemporaryPatientComponent {
   patientDescription: string;
   BUTTON_TYPE_ICON = ButtonType.ICON;
 
+  @Input() canDeleteSelectedPatient = true;
   @Input() set preloadedDescriptionPatient(patientDescription: string) {
     if (patientDescription) {
       this.patientDescription = patientDescription;

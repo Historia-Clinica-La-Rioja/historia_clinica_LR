@@ -3,7 +3,7 @@
 	<div *ngIf="initData">
 		<app-admision-administrativa [initData]=" initData" (confirm)="confirm($event)" (cancel)="openDialog()"
 			[isDoctorOfficeEditable]="isDoctorOfficeEditable" [isEmergencyCareTypeEditable]="false"
-			[submitLabel]="'buttons.CONFIRM'">
+			[isEpisodeCreation]="false" [submitLabel]="'buttons.CONFIRM'">
 		</app-admision-administrativa>
 	</div>
 </app-content>

@@ -48,6 +48,7 @@ export class AdmisionAdministrativaComponent implements OnInit, OnDestroy {
 	@Input() initData: AdministrativeAdmission;
 	@Input() isDoctorOfficeEditable = true;
 	@Input() isEmergencyCareTypeEditable = true;
+	@Input() isEpisodeCreation = true;
 	@Output() confirm = new EventEmitter<AdministrativeAdmission>();
 	@Output() cancel = new EventEmitter<void>();
 	@Input() submitLabel = 'buttons.CONTINUE';
