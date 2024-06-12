@@ -34,7 +34,8 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
     @Transactional(readOnly = true)
     @Query(value = "SELECT d.id " +
             "FROM Document d " +
-            "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId")
+            "WHERE d.sourceId = :sourceId AND d.sourceTypeId = :sourceTypeId "+
+			"ORDER BY d.id DESC ")
     List<Long> findBySourceIdAndSourceTypeId(@Param("sourceId") Integer sourceId, @Param("sourceTypeId") Short sourceTypeId );
 
 	@Transactional(readOnly = true)

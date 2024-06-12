@@ -27,7 +27,13 @@ public class EpisodeDischargeBo {
 
     private String ambulanceCompanyId;
 
-    public EpisodeDischargeBo(EmergencyCareDischarge emergencyCareDischarge, DischargeType dischargeType) {
+	private String medicalDischargeProfessionalName;
+	private String medicalDischargeProfessionalLastName;
+	private String otherDischargeDescription;
+
+    public EpisodeDischargeBo(EmergencyCareDischarge emergencyCareDischarge, DischargeType dischargeType,
+							  String medicalDischargeProfessionalName, String medicalDischargeProfessionalLastName,
+							  String otherDischargeDescription) {
         this.episodeId = emergencyCareDischarge.getEmergencyCareEpisodeId();
         this.medicalDischargeOn = emergencyCareDischarge.getMedicalDischargeOn();
         this.autopsy = emergencyCareDischarge.getAutopsy();
@@ -35,6 +41,9 @@ public class EpisodeDischargeBo {
         this.administrativeDischargeOn = emergencyCareDischarge.getAdministrativeDischargeOn();
         this.hospitalTransportId = emergencyCareDischarge.getHospitalTransportId();
         this.ambulanceCompanyId = emergencyCareDischarge.getAmbulanceCompanyId();
+		this.medicalDischargeProfessionalName = medicalDischargeProfessionalName;
+		this.medicalDischargeProfessionalLastName = medicalDischargeProfessionalLastName;
+		this.otherDischargeDescription = otherDischargeDescription;
     }
 
     public void setProblems(List<SnomedBo> problems) {

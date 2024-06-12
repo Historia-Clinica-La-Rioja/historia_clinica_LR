@@ -10,8 +10,8 @@ import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
+import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeDischargeOtherTypeDescriptionStorage;
 import net.pladema.emergencycare.infrastructure.output.entity.EmergencyCareEpisodeDischargeOtherTypeDescription;
-import net.pladema.emergencycare.infrastructure.output.repository.EmergencyCareEpisodeDischargeOtherTypeDescriptionRepository;
 import net.pladema.emergencycare.repository.DischargeTypeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeDischargeRepository;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
@@ -23,6 +23,10 @@ import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.staff.application.ports.HealthcareProfessionalStorage;
+
+import net.pladema.staff.domain.ProfessionalCompleteBo;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,7 +54,8 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
     private final DateTimeProvider dateTimeProvider;
 
 	private final EmergencyCareEpisodeService emergencyCareEpisodeService;
-	private final EmergencyCareEpisodeDischargeOtherTypeDescriptionRepository emergencyCareEpisodeDischargeOtherTypeDescriptionRepository;
+	private final EmergencyCareEpisodeDischargeOtherTypeDescriptionStorage ecedotDescriptionStorage;
+	private final HealthcareProfessionalStorage healthcareProfessionalStorage;
 
     @Override
     public boolean newMedicalDischarge(MedicalDischargeBo medicalDischarge,Integer institutionId) {
@@ -59,7 +64,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
         emergencyCareEpisodeDischargeRepository.save(newDischarge);
 		if (newDischarge.getDischargeTypeId().equals(DischargeType.OTRO))
-			emergencyCareEpisodeDischargeOtherTypeDescriptionRepository.save(
+			ecedotDescriptionStorage.save(
 					new EmergencyCareEpisodeDischargeOtherTypeDescription(newDischarge.getEmergencyCareEpisodeId(),medicalDischarge.getOtherDischargeDescription())
 			);
         documentFactory.run(medicalDischarge, false);
@@ -73,7 +78,15 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
                 .orElseThrow(()->new NotFoundException("episode-discharge-not-found", "Episode discharge not found"));
         DischargeType dischargeType = dischargeTypeRepository.findById(emergencyCareDischarge.getDischargeTypeId())
                 .orElseThrow(()->new NotFoundException("discharge-type-not-found", "Discharge type not found"));
-        EpisodeDischargeBo episodeDischargeBo = new EpisodeDischargeBo(emergencyCareDischarge, dischargeType);
+		ProfessionalCompleteBo professionalCompleteBo = healthcareProfessionalStorage.fetchProfessionalById(
+				emergencyCareDischarge.getMedicalDischargeByProfessional());
+        EpisodeDischargeBo episodeDischargeBo = new EpisodeDischargeBo(
+				emergencyCareDischarge,
+				dischargeType,
+				professionalCompleteBo.getFirstName(),
+				professionalCompleteBo.getLastName(),
+				getOtherDischargeDescription(emergencyCareDischarge.getEmergencyCareEpisodeId(), emergencyCareDischarge.getDischargeTypeId())
+		);
         Long documentId = documentService.getDocumentId(emergencyCareDischarge.getEmergencyCareEpisodeId(), SourceType.EMERGENCY_CARE).get(0);
         List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(documentId);
         List<SnomedBo> problems = resultQuery.stream().map( r -> new SnomedBo(r.getSnomed())).collect(Collectors.toList());
@@ -132,6 +145,14 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 		Assert.isTrue((!Objects.equals(dischargeTypeId, DischargeType.OTRO) && otherDischargeDescription == null) ||
 						(Objects.equals(dischargeTypeId, DischargeType.OTRO) && otherDischargeDescription != null)
 				,"El episodio debe contar con una descripción del tipo de egreso 'Otro' para iniciar el alta médica.");
+	}
+
+	private String getOtherDischargeDescription(Integer emergencyCareEpisodeId, Short dischargeTypeId){
+		if (dischargeTypeId.equals(DischargeType.OTRO))
+			return ecedotDescriptionStorage.getByEmergencyCareEpisodeId(emergencyCareEpisodeId)
+					.map(EmergencyCareEpisodeDischargeOtherTypeDescription::getDescription)
+					.orElse(null);
+		return null;
 	}
 
 }
