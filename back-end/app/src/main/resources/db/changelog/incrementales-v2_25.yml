@@ -154,3 +154,28 @@ databaseChangeLog:
                 ALTER TABLE document_prosthesis DROP CONSTRAINT "UQ_document_id_document_prosthesis";
                 ALTER TABLE user_key DROP CONSTRAINT "UQ_key";
 
+        
+    - changeSet:
+        id: appointment_patient_identity_accreditation_status-createTable
+        comment: Create table appointment_patient_identity_accreditation_status
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: appointment_patient_identity_accreditation_status
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_appointment_patient_identity_accreditation_status
+                      references: appointment(id)
+                      foreignKeyName: FK_appointment_patient_identity_accreditation_status_appointment
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_identity_accreditation_status_id
+                    type: smallint
+                - column:
+                    name: patient_identification_hash
+                    type: varchar(255)
