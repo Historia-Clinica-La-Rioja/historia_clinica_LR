@@ -21,12 +21,13 @@
 		</div>
 
 		<div id="problemas" style="padding-bottom: 15px">
-			<app-new-document-section sectionTitle="guardia.episode.medical_discharge.problems.TITLE">
-				<div concept-form>
-					<app-concepts-search *ngIf="!problemasService.getSnomedConcept() else problemaForm"
-						[label]="'guardia.episode.medical_discharge.problems.CONCEPT_LABEL'"
-						(search)="problemasService.openSearchDialog($event)">
-					</app-concepts-search>
+				<strong><mat-label style= 'margin-top: 15px;' translate="guardia.episode.medical_discharge.problems.TITLE"></mat-label></strong>
+				<div *ngFor="let problem of problems$ | async">
+					<mat-checkbox [checked]="selectedProblems.has(problem.id)" [disabled]="checkIfShouldDisable(problem)" (change)="toggleSelection(problem)">
+						{{ problem.snomed.pt }} |
+						{{ problem.presuntive ? ("guardia.episode.medical_discharge.problems.PRESUNTIVE" | translate) : ("guardia.episode.medical_discharge.problems.CONFIRMED" | translate) }}
+						{{ problem.main ? ("guardia.episode.medical_discharge.problems.MAIN" | translate) : "" }}
+					</mat-checkbox>
 				</div>
 
 				<ng-template #problemaForm>
@@ -90,7 +91,7 @@
 		</div>
 
 		<div fxLayout="column">
-		<strong><mat-label style= 'margin-top: 15px;' translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label></strong>
+			<strong><mat-label style= 'margin-top: 15px;' translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label></strong>
 			<div style="display: flex; flex-wrap: wrap; gap: 12px;">
 				<mat-radio-group formControlName="dischargeTypeId" name="dischargeTypeId">
 					<div *ngFor="let dischargeType of (dischargeTypes$ | async)">
@@ -121,20 +122,15 @@
 
 			<div *ngIf="form.get('dischargeTypeId').value == dischargeTypesEnum.OTRO">
 				<mat-form-field appearance="outline">
-					<textarea formControlName="otherDischarge"
+					<textarea formControlName="otherDischargeDescription"
 						placeholder="{{'guardia.episode.medical_discharge.form.DISCHARGE_TYPE_INPUT' | translate }}"
 						rows="4" matInput type="text">
                		 </textarea>
-					<mat-error *ngIf="form.get('otherDischarge').hasError('required')"
+					<mat-error *ngIf="form.get('otherDischargeDescription').hasError('required')"
 						translate="forms.REQUIRED"></mat-error>
 				</mat-form-field>
 			</div>
 		</div>
-
-		<mat-card *ngIf="formSubmited && problemasService.getProblemas().length === 0">
-			<mat-error class="mat-body-2">{{ 'guardia.episode.medical_discharge.REQUIRED_PROBLEM' | translate }}
-			</mat-error>
-		</mat-card>
 
 		<div fxLayoutGap="10px" fxLayout="row" fxLayoutAlign="flex-end" style="margin-top: 5px;">
 			<button mat-stroked-button class="uppercase" type="button" (click)="goToEpisodeDetails()">

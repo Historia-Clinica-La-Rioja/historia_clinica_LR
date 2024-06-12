@@ -157,7 +157,7 @@
 				}
 			},
 			"medical_discharge": {
-				"TITLE": "Alta Médica",
+				"TITLE": "Alta de paciente",
 				"PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
 				"form": {
 					"DATE": "Fecha",
@@ -171,22 +171,14 @@
 				},
 				"REQUIRED_PROBLEM": "Debe ingresar al menos un problema",
 				"messages": {
-					"SUCCESS": "El alta médica se guardó exitosamente",
-					"ERROR": "Ocurrió un error al intentar guardar el alta médica"
+					"SUCCESS": "El alta de paciente se creó exitosamente",
+					"ERROR": "Ocurrió un error al intentar guardar el alta de paciente"
 				},
 				"problems": {
-					"buttons": {
-						"ADD": "Agregar problema"
-					},
-					"CONCEPT_LABEL": "Problema",
-					"CRONICO": "Crónico",
-					"errors": {
-						"FECHA_FIN_MIN": "La fecha de fin no puede ser anterior a la fecha de inicio"
-					},
-					"FECHA_FIN": "Fecha fin",
-					"FECHA_INICIO": "Fecha inicio",
-					"TABLE_TITLE": "Problemas registrados",
-					"TITLE": "Problema"
+					"TITLE": "Problema/s asociado al alta:",
+					"PESUNTIVE": "Presuntivo",
+					"CONFIRMED": "Confirmado",
+					"MAIN": "(Principal)"
 				}
 			},
 			"triage": {

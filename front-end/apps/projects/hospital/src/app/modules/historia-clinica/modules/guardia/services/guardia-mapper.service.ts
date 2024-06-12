@@ -4,21 +4,21 @@ import { dateTimeDtoToDate, dateToDateDto, dateToTimeDto, dateDtoToDate, timeDto
 import {
 	AdministrativeDischargeDto,
 	AMedicalDischargeDto,
+	DiagnosesGeneralStateDto,
 	NewEffectiveClinicalObservationDto,
 	NewEmergencyCareDto,
 	NewRiskFactorsObservationDto,
 	PoliceInterventionDetailsDto,
+	ProblemTypeEnum,
 	ResponseEmergencyCareDto,
 	TriageListDto
 } from '@api-rest/api-model';
 import { parse } from 'date-fns';
-import { Problema } from '../../../services/problemas.service';
 import { MedicalDischargeForm } from '../routes/medical-discharge/medical-discharge.component';
 import { AdministrativeForm } from '../routes/administrative-discharge/administrative-discharge.component';
 import { AdministrativeAdmission } from './new-episode.service';
 import { EffectiveObservation, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TriageReduced } from '@pacientes/component/resumen-de-guardia/resumen-de-guardia.component';
-import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { toHourMinute } from '@core/utils/date.utils';
 
 @Injectable({
@@ -156,24 +156,23 @@ export class GuardiaMapperService {
 		};
 	}
 
-	private static _mapFormToAMedicalDischargeDto(s: MedicalDischargeForm): AMedicalDischargeDto {
-		const medicalDischargeOn = dateToDateTimeDtoUTC(getDateTime(s.dateTime));
+	private static _mapFormToAMedicalDischargeDto(form: MedicalDischargeForm): AMedicalDischargeDto {
+		const medicalDischargeOn = dateToDateTimeDtoUTC(getDateTime(form.dateTime));
 		return {
 			medicalDischargeOn,
-			problems: s.problems.map(
-				(problema: Problema) => {
+			problems: form.problems.map(
+				(problem: DiagnosesGeneralStateDto) => {
 					return {
-						severity: problema.codigoSeveridad,
-						chronic: problema.cronico,
-						endDate: problema.fechaFin ? toApiFormat(problema.fechaFin) : undefined,
-						snomed: problema.snomed,
-						startDate: problema.fechaInicio ? toApiFormat(problema.fechaInicio) : undefined
+						chronic: problem?.type === ProblemTypeEnum.CHRONIC,
+						snomed: problem.snomed,
+						statusId: problem?.statusId,
+						verificationId: problem?.verificationId
 					};
 				}
 			),
-			dischargeTypeId: s.dischargeTypeId,
-			autopsy: s.autopsy,
-			otherDischarge : s.otherDischarge
+			dischargeTypeId: form.dischargeTypeId,
+			autopsy: form.autopsy,
+			otherDischargeDescription : form.otherDischargeDescription
 		}
 
 		function getDateTime(dateTime): Date {

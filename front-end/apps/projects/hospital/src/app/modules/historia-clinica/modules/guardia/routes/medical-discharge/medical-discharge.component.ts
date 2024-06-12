@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AMedicalDischargeDto, DiagnosisDto, MasterDataInterface, ResponseEmergencyCareDto, TimeDto } from '@api-rest/api-model';
+import { AMedicalDischargeDto, DiagnosesGeneralStateDto, MasterDataInterface, ResponseEmergencyCareDto, TimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes, medicalDischargeCustomOrder } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
@@ -12,13 +12,11 @@ import { hasError, beforeTimeDtoValidationDate, futureTimeDtoValidationDate } fr
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SnomedService } from '@historia-clinica/services/snomed.service';
-import { ProblemasService } from '../../../../services/problemas.service';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { isSameDay } from 'date-fns';
 import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
+import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -30,12 +28,11 @@ export class MedicalDischargeComponent implements OnInit {
 	hasError = hasError;
 
 	form: UntypedFormGroup;
-	diagnosticos: DiagnosisDto[] = [];
 	dischargeTypes$: Observable<MasterDataInterface<number>[]>;
 	dischargeTypesEnum = DischargeTypes;
 
-	problemasService: ProblemasService;
-	severityTypes: any[];
+	selectedProblems: Map<number, DiagnosesGeneralStateDto> = new Map();
+	problems$: Observable<DiagnosesGeneralStateDto[]>;
 	today = new Date();
 	episodeCreatedOn: Date;
 	formSubmited = false;
@@ -58,15 +55,11 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly contextService: ContextService,
 		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
+		private readonly emergencyCareStateService : EmergencyCareStateService,
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
-		private readonly snomedService: SnomedService,
 		private readonly snackBarService: SnackBarService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
-		private readonly internacionMasterDataService: InternacionMasterDataService,
-
-	) {
-		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
-	}
+	) {}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
@@ -76,7 +69,7 @@ export class MedicalDischargeComponent implements OnInit {
 			}),
 			autopsy: [null],
 			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required],
-			otherDischarge: [null]
+			otherDischargeDescription: [null]
 		});
 
 		this.form.get('dischargeTypeId').valueChanges.subscribe(discharge => {
@@ -103,10 +96,16 @@ export class MedicalDischargeComponent implements OnInit {
                 map(dischargeTypes => this.customOrderDischargeTypes(dischargeTypes))
             );
 
-		this.internacionMasterDataService.getHealthSeverity().subscribe(healthConditionSeverities => {
-			this.severityTypes = healthConditionSeverities;
-			this.problemasService.setSeverityTypes(healthConditionSeverities);
-		});
+			this.problems$ = this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.episodeId).pipe(
+				map(problems => {
+					problems.forEach(problem => {
+						if (problem.main) {
+							this.selectedProblems.set(problem.id, problem);
+						}
+					});
+					return problems;
+				})
+			);
 	}
 
 	private customOrderDischargeTypes(dischargeTypes: MasterDataInterface<number>[]): MasterDataInterface<number>[] {
@@ -117,9 +116,18 @@ export class MedicalDischargeComponent implements OnInit {
         });
     }
 
+	checkIfShouldDisable(problem: DiagnosesGeneralStateDto): boolean {
+		return this.selectedProblems.size === 1 && this.selectedProblems.has(problem.id);
+	}
+
+    toggleSelection(problem: DiagnosesGeneralStateDto): void {
+		this.selectedProblems.has(problem.id) ?
+		this.selectedProblems.delete(problem.id) : this.selectedProblems.set(problem.id, problem);
+    }
+
 	private updateDischargeTypeValidators(value: DischargeTypes): void {
 		const autopsyControl = this.form.get('autopsy');
-		const descriptionControl = this.form.get('otherDischarge');
+		const descriptionControl = this.form.get('otherDischargeDescription');
 
 		this.setControlValidators(autopsyControl, value === this.dischargeTypesEnum.DEFUNCION);
 		this.setControlValidators(descriptionControl, value === this.dischargeTypesEnum.OTRO);
@@ -133,7 +141,7 @@ export class MedicalDischargeComponent implements OnInit {
 		  control.clearValidators();
 		}
 		control.updateValueAndValidity();
-	  }
+	}
 
 	dischargedDateChanged(date: Date) {
 		this.form.controls.dateTime.get('date').setValue(date);
@@ -143,20 +151,13 @@ export class MedicalDischargeComponent implements OnInit {
         this.form.controls.dateTime.get('time').setValue(time);
     }
 
-	problemStartDateChanged(date: Date) {
-		this.problemasService.getForm().controls.fechaInicio.setValue(date);
-	}
-
-	problemEndDateChanged(date: Date) {
-		this.problemasService.getForm().controls.fechaFin.setValue(date);
-	}
-
 	confirm(): void {
 		this.formSubmited = true;
 		this.isLoading = true;
-		if (this.form.valid && this.problemasService.getProblemas().length) {
-			const s: MedicalDischargeForm = { ... this.form.value, problems: this.problemasService.getProblemas() };
-			const medicalCoverageDto: AMedicalDischargeDto = this.guardiaMapperService.formToAMedicalDischargeDto(s);
+		const selectedProblemsList: DiagnosesGeneralStateDto[] = Array.from(this.selectedProblems.values());
+		if (this.form.valid && selectedProblemsList.length) {
+			const validForm: MedicalDischargeForm = { ... this.form.value, problems: selectedProblemsList };
+			const medicalCoverageDto: AMedicalDischargeDto = this.guardiaMapperService.formToAMedicalDischargeDto(validForm);
 			this.emergencyCareEspisodeDischargeService.newMedicalDischarge
 				(this.episodeId, medicalCoverageDto).subscribe(
 					saved => {
@@ -170,6 +171,9 @@ export class MedicalDischargeComponent implements OnInit {
 						this.snackBarService.showError(error.message ? error.message : 'guardia.episode.medical_discharge.messages.ERROR');
 					}
 				);
+		} else{
+			this.formSubmited = false;
+			this.isLoading = false;
 		}
 	}
 
@@ -224,6 +228,6 @@ export class MedicalDischargeForm {
 	};
 	autopsy: boolean;
 	dischargeTypeId: number;
-	problems: any[];
-	otherDischarge: string;
+	problems: DiagnosesGeneralStateDto[];
+	otherDischargeDescription: string;
 }

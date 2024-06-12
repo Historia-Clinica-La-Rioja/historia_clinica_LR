@@ -2,7 +2,6 @@ import {UntypedFormGroup, UntypedFormArray, AbstractControl, UntypedFormControl,
 import { ElementRef } from '@angular/core';
 import { DateFormat, toHourMinute } from './date.utils';
 import { format } from 'date-fns';
-import { EVENT_CODE_NUMBERS } from './core.utils';
 import { TimeDto } from '@api-rest/api-model';
 
 export const VALIDATIONS = {
