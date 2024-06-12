@@ -41,7 +41,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	activeAgendas: DiaryList[] = [];
 	expiredAgendas: DiaryList[] = [];
 	agendaFiltersSubscription: Subscription;
-	agendaIdSubscription: Subscription;
 	agendaSelectedSubscription: Subscription;
 	readonly dateFormats = DatePipeFormat;
 	filters: AgendaFilters;
@@ -66,14 +65,15 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.agendaSelectedSubscription = this.agendaSearchService.getAgendaSelected$().subscribe(agenda => {
-			this.agendaSelected = this.agendas?.find(a => a.diaryList.id === agenda?.id)
-		})
+			this.agendaSelected = this.agendas?.find(a => a.diaryList.id === agenda?.id);
+		});
 		this.agendaFiltersSubscription = this.agendaSearchService.getAgendas$().subscribe((data: AgendaOptionsData) => {
 			if (data?.agendas) {
 				this.loadAgendas(data.agendas, data.idAgendaSelected);
 				this.filters = data.filteredBy;
-
-			} else this.agendas = null;
+			} else {
+				this.agendas = null;
+			}
 		});
 		this.route.queryParams.subscribe(qp => {
 			this.patientId = Number(qp.idPaciente);
@@ -111,7 +111,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 				endDate: null,
 				startDate: null
 			});
-		})
+		});
 		this.categorizeAgendas(diaries);
 		if (idAgendaSelected) {
 			this.agendaSelected = this.agendas.find(agenda => {
@@ -119,23 +119,25 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 			});
 			if (!this.agendaSelected) {
 				this.router.navigate([`institucion/${this.contextService.institutionId}/turnos`]);
-			} else
+			} else {
 				this.currentAgenda = this.agendaSelected.diaryList;
+			}
 		}
 	}
 
 	private categorizeAgendas(diaries: DiaryListDto[]): void {
 		this.expiredAgendas = [];
 		this.activeAgendas = [];
-		if (diaries?.length)
+		if (diaries?.length) {
 			diaries.forEach(diary => {
 				const newDiary: DiaryList = {
 					diaryList: diary,
 					endDate: fromStringToDateByDelimeter(diary.endDate, '-'),
 					startDate: fromStringToDateByDelimeter(diary.startDate, '-')
-				}
-				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(newDiary) : this.activeAgendas.push(newDiary)
+				};
+				isAfter(startOfToday(), parseISO(diary.endDate)) ? this.expiredAgendas.push(newDiary) : this.activeAgendas.push(newDiary);
 			});
+		}
 	}
 
 	goToEditAgenda(): void {
@@ -148,18 +150,17 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 				data: {
 					selectedAgenda: result
 				}
-			})
+			});
 
 			dialogRef.afterClosed().subscribe(response => {
 				if (response) {
 					this.appointmentsFacadeService.loadAppointments();
 				}
 			});
-		})
+		});
 	}
 
 	deleteAgenda(): void {
-
 		const agendaName = this.agendaSelected.diaryList.alias ? `${this.agendaSelected.diaryList.alias} (${this.agendaSelected.diaryList.clinicalSpecialtyName})` : this.agendaSelected.diaryList.clinicalSpecialtyName;
 
 		const startDate = dateISOParseDate(this.agendaSelected.diaryList.startDate);
@@ -167,7 +168,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 
 		const content = `¿Seguro desea eliminar su agenda? <br> ${agendaName} <br>
 						Desde ${this.dateFormatPipe.transform(startDate, 'date')} hasta
-						${this.dateFormatPipe.transform(endDate, 'date')} `
+						${this.dateFormatPipe.transform(endDate, 'date')} `;
 		const dialogRef = this.dialog.open(ConfirmDialogComponent,
 			{
 				data: {
@@ -186,6 +187,7 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 							this.snackBarService.showSuccess('turnos.delete-agenda.messages.SUCCESS');
 							this.agendas = this.agendas.filter(agenda => agenda.diaryList.id !== this.agendaSelected.diaryList.id);
 							this.categorizeAgendas(this.agendas.map(agenda => agenda.diaryList));
+							this.agendaSearchService.search(this.filters.idProfesional);
 							this.router.navigateByUrl(`${this.routePrefix}/turnos`);
 						}
 					}, error => processErrors(error, (msg) => {
