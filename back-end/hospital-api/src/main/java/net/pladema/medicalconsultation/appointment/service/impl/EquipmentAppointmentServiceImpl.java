@@ -23,6 +23,7 @@ import net.pladema.medicalconsultation.appointment.service.EquipmentAppointmentS
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
+import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.modality.service.ModalityService;
 import net.pladema.modality.service.domain.ModalityBO;
@@ -95,7 +96,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 	}
 
 	@Override
-	public MqttMetadataBo publishWorkList(Integer institutionId, Integer appointmentId) {
+	public MqttMetadataBo publishWorkList(Integer institutionId, Integer appointmentId) throws AlreadyPublishedWorklistException {
 
 		AppointmentBo appointment = appointmentService.getEquipmentAppointment(appointmentId).orElse(null);
 		if (appointment == null){
@@ -134,7 +135,7 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 		boolean hasAlreadyPublishedWorkList = historicAppointmentStateRepository.hasHistoricallyConfirmedAtLeastOnes(appointmentId);
 		if (hasAlreadyPublishedWorkList) {
 			log.debug("Already published worklist from appointmentId {}", appointmentId);
-			return null;
+			throw  new AlreadyPublishedWorklistException();
 		}
 
 		String identificationNumber = basicDataPatient.getIdentificationNumber();
