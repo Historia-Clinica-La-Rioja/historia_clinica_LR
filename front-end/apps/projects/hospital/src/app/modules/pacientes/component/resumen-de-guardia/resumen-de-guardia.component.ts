@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ERole } from '@api-rest/api-model.d';
+import { ERole, VMedicalDischargeDto } from '@api-rest/api-model.d';
 import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { DischargeTypes } from '@api-rest/masterdata';
+import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { TriageService } from '@api-rest/services/triage.service';
@@ -22,6 +25,8 @@ import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
+import { TranslateService } from '@ngx-translate/core';
+import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -45,6 +50,14 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	readonly STATES = EstadosEpisodio;
 	episodeState: EstadosEpisodio;
 	withoutMedicalDischarge: boolean;
+
+	hasMedicalDischarge = false;
+	medicalDischargeData: VMedicalDischargeDto;
+	problemDescriptionText: string;
+	dischargeTypeDescriptionText: string;
+
+	registerEditor: RegisterEditor;
+	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
 
 	responseEmergencyCare: ResponseEmergencyCareDto;
 	emergencyCareType: EmergencyCareTypes;
@@ -80,10 +93,9 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
-	) {
-
-	}
-
+		private readonly emergencyCareEpisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
+		private readonly translate: TranslateService,
+	) {}
 
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe(
@@ -109,6 +121,13 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 			this.loadEpisode();
 			this.setEpisodeState();
+		});
+
+		this.emergencyCareEpisodeMedicalDischargeService.hasMedicalDischarge(this.episodeId).subscribe((hasMedicalDischarge) => {
+			if (hasMedicalDischarge) {
+				this.hasMedicalDischarge = true;
+				this.loadPatientDischarge();
+			}
 		});
 	}
 
@@ -235,7 +254,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION && hasEvolutionNote && !this.isEmergencyCareTemporalPatient) {
 					let action: ActionInfo = {
-						label: 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE_BUTTON',
+						label: 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.TITLE',
 						id: 'medical_discharge',
 						callback: this.goToMedicalDischarge.bind(this)
 					}
@@ -309,6 +328,40 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		}
 	}
 
+	private loadPatientDischarge(){
+		this.emergencyCareEpisodeMedicalDischargeService.getMedicalDischarge(this.episodeId)
+			.subscribe((data) => {
+				this.medicalDischargeData = data;
+				this.problemDescriptionText = data.snomedPtProblems.join(', ');
+				this.dischargeTypeDescriptionText = this.getDischargeTypeDescriptionText(data);
+				this.registerEditor = {
+					createdBy: data.medicalDischargeProfessionalName + ' ' + data.medicalDischargeProfessionalLastName,
+					date: dateTimeDtoToDate(data.medicalDischargeOn),
+				}
+			}
+		);
+	}
+
+	private getDischargeTypeDescriptionText(data: any): string {
+		const { dischargeType, otherDischargeDescription, autopsy } = data;
+		const { description, id } = dischargeType;
+
+		if (id === DischargeTypes.OTRO) {
+			const otherDischargeTranslation = this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE_OTHER');
+			return `${otherDischargeDescription} ${otherDischargeTranslation}`;
+		}
+
+		if (id === DischargeTypes.DEFUNCION) {
+			const deceasedTranslation = this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DECEASED');
+			const autopsyTranslation = autopsy
+			? this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.AUTOPSY_REQUESTED')
+			: this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.AUTOPSY_NOT_REQUESTED');
+
+			return `${deceasedTranslation}${autopsyTranslation}`;
+		}
+
+		return description;
+	}
 
 }
 

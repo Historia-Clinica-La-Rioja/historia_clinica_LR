@@ -727,12 +727,24 @@
                 "PATIENT_REQUIRED": "El episodio de guardia debe tener un paciente asociado",
                 "ADMINISTRATIVE_DISCHARGE_BUTTON": "Alta Administrativa",
                 "MEDICAL_DISCHARGE_BUTTON": "Alta médica",
-				"PATIENT_DISCHARGE_BUTTON":"Alta de paciente",
                 "NOT_ACTIVE": "El episodio de guardia no se encuentra activo",
                 "HISTORIAL_TRIAGE": "Historial de triages",
                 "NUEVO_TRIAGE": "Nuevo triage",
                 "RISK_FACTORS_TOOLTIP": "Signos vitales y factores de riesgo",
-                "IDENTIFYNG_DETAIL": "Detalle identificatorio"
+                "IDENTIFYNG_DETAIL": "Detalle identificatorio",
+				"PATIENT_DISCHARGE": {
+					"TITLE": "Alta de paciente",
+					"DISCHARGE": "Egreso",
+					"PROBLEM": "Problema",
+					"TYPE": "Tipo",
+					"PROFESSIONAL": "Profesional",
+					"ADMINISTRATIVE_DISCHARGE": "Alta administrativa",
+					"DISCHARGE_TYPE": "Tipo de egreso",
+					"DISCHARGE_TYPE_OTHER": "(Otro)",
+					"DECEASED": "Defunción",
+					"AUTOPSY_REQUESTED": ", con solicitud de autopsia",
+					"AUTOPSY_NOT_REQUESTED": ", sin solicitud de autopsia"
+				}
             },
             "vacunas": {
                 "TAB_LABEL": "Vacunas",
