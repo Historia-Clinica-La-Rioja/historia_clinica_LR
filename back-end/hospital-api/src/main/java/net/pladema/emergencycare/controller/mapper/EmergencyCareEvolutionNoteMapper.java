@@ -33,6 +33,7 @@ public interface EmergencyCareEvolutionNoteMapper {
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.procedures", source = "procedures")
 	@Mapping(target = "emergencyCareEvolutionNoteClinicalData.evolutionNote", source = "evolutionNote")
 	@Mapping(target = "professional", source = "professional", qualifiedByName = "fromHealthcareProfessionalBo")
+	@Mapping(target = "editor", source = "editor", qualifiedByName = "fromHealthcareProfessionalBo")
 	EmergencyCareEvolutionNoteDocumentDto toEmergencyCareEvolutionNoteDocumentDto(EmergencyCareEvolutionNoteDocumentBo emergencyCareEvolutionNote);
 
 	@Named("toEmergencyCareEvolutionNoteDocumentListDto")
