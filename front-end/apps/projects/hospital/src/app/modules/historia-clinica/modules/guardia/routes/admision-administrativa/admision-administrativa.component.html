@@ -1,6 +1,6 @@
 <mat-card class="card-size">
 	<mat-card-content fxLayout="column" fxLayoutGap="32px">
-		<app-emergency-care-patient [emergencyCarePatientData]="emergencyCarePatientData"
+		<app-emergency-care-patient [emergencyCarePatientData]="emergencyCarePatientData" [canDeleteSelectedPatient]="isEpisodeCreation"
 			(selectedPatientData)="setPatientData($event)"></app-emergency-care-patient>
 
 		<form fxLayout="column" fxLayoutGap="32px" id="admisionForm" [formGroup]="form" class="form">

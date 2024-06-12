@@ -38,6 +38,8 @@ export class EmergencyCarePatientComponent implements OnDestroy {
 			this.setPatientData();
 	};
 
+	@Input() canDeleteSelectedPatient = true;
+
 	@Output() selectedPatientData = new EventEmitter<EmergencyCarePatient>;
 
 	constructor(
@@ -182,7 +184,8 @@ export class EmergencyCarePatientComponent implements OnDestroy {
 	private setPatientData() {
 		this.preloadedFormData();
 		const patientId = this._emergencyCarePatientData.patientId;
-		this.isAnEmergencyCareTemporaryPatient = !!this._emergencyCarePatientData.patientDescription && (!patientId || this._emergencyCarePatientData.patientTypeId === PatientType.EMERGENCY_CARE_TEMPORARY);
+		const isTemporaryPatientType = this._emergencyCarePatientData.patientTypeId === PatientType.EMERGENCY_CARE_TEMPORARY;
+		this.isAnEmergencyCareTemporaryPatient = isTemporaryPatientType || (!patientId && !!this._emergencyCarePatientData.patientDescription);
 		this.hasToShowButtonsActions = false;
 		if (!this.isAnEmergencyCareTemporaryPatient && patientId)
 			this.loadPatient(patientId);
