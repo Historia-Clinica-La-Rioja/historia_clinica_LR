@@ -610,6 +610,7 @@ public class AppointmentsController {
 				mqttClientService.publish(data);
 				return ResponseEntity.ok().body(updateState.get());
 			}
+			log.warn("Not publishWorkList -> institutionId {},appointmentId {}", institutionId, appointmentId);
 			return ResponseEntity.ok().body(false);
 		} catch (AlreadyPublishedWorklistException e) {
 			return ResponseEntity.ok().body(updateState.get());
