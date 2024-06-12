@@ -7,7 +7,7 @@
 
         <div [ngClass]="boxMessageInfo?.title? 'content' : ''">
             <div fxLayout="column">
-                <span>{{boxMessageInfo?.message}}</span>
+                <span>{{boxMessageInfo?.message | translate}}</span>
                 <span class="bold" fxLayoutGap="2px">
                     {{boxMessageInfo?.question | translate}}
                 </span>

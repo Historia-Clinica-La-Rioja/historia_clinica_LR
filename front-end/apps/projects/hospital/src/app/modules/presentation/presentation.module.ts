@@ -11,6 +11,7 @@ import { AppMaterialModule } from '@material/app.material.module';
 import { AddObservationsComponent } from './components/add-observations/add-observations.component';
 import { AsignPatientButtonComponent } from './components/asign-patient-button/asign-patient-button.component';
 import { BarComponent } from './components/bar/bar.component';
+import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { ButtonComponent } from './components/button/button.component';
 import { CardComponent } from './components/card/card.component';
 import { CategoryHeaderDividerComponent } from './components/category-header-divider/category-header-divider.component';
@@ -127,6 +128,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		AddObservationsComponent,
 		AsignPatientButtonComponent,
 		BarComponent,
+		BoxMessageComponent,
 		ButtonComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,
@@ -259,6 +261,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		AddObservationsComponent,
 		AsignPatientButtonComponent,
 		BarComponent,
+		BoxMessageComponent,
 		ButtonComponent,
 		CardComponent,
 		CategoryHeaderDividerComponent,

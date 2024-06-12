@@ -47,10 +47,10 @@ import { SearchAppointmentCriteria } from '@turnos/components/search-appointment
 import { MODALITYS_TYPES } from '@turnos/constants/appointment';
 import { TranscribedOrderService } from '@turnos/services/transcribed-order.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.utils';
 import { getStudiesNames } from '@turnos/utils/appointment.utils';
 import { buildFullDateFromDate, dateISOParseDate } from '@core/utils/moment.utils';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 
 const ROUTE_SEARCH = 'pacientes/search';
 const TEMPORARY_PATIENT_ID = 3;

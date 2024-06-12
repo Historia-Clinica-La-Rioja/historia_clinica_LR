@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular';
 import { BoxMessageComponent } from './box-message.component';
 
 const meta: Meta<BoxMessageComponent> = {
-    title: 'Historia Clinica/BoxMessageComponent',
+    title: 'Presentation/BoxMessageComponent',
     component: BoxMessageComponent,
     tags: ['autodocs'],
 };

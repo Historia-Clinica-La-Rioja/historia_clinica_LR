@@ -9,8 +9,8 @@ import { ReferenceMasterDataService } from '@api-rest/services/reference-master-
 import { PRIORITY } from '../../constants/reference-masterdata';
 import { VALIDATIONS } from '@core/utils/form.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
-import { BoxMessageInformation } from '@historia-clinica/components/box-message/box-message.component';
 import { TranslateService } from '@ngx-translate/core';
+import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 
 @Component({
 	selector: 'app-reference',

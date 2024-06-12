@@ -45,7 +45,6 @@ import { FactoresDeRiesgoFormV2Component } from './components/factores-de-riesgo
 import { FactoresDeRiesgoSummaryComponent } from './components/factores-de-riesgo-summary/factores-de-riesgo-summary.component';
 import { HierarchicalUnitConsultationComponent } from './components/hierarchical-unit-consultation/hierarchical-unit-consultation.component';
 import { HistoriesSummaryComponent } from './components/histories-summary/histories-summary.component';
-import { BoxMessageComponent } from './components/box-message/box-message.component';
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
@@ -174,7 +173,6 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		AnthropometricDataSummaryComponent,
 		AntropometricosSummaryComponent,
 		BackgroundListComponent,
-		BoxMessageComponent,
         ClinicalEvaluationSummaryComponent,
 		ConceptsSearchComponent,
         DescriptionItemDataSummaryComponent,
@@ -192,7 +190,6 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
         ExternalCauseSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,
 		FactoresDeRiesgoFormComponent,
-		BoxMessageComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
 		ProcedureListComponent,
@@ -335,7 +332,6 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		FactoresDeRiesgoSummaryComponent,
 		InternacionAntecedentesPersonalesSummaryComponent,
 		FactoresDeRiesgoFormComponent,
-		BoxMessageComponent,
 		TemplateConceptTypeaheadSearchComponent,
 		NewConsultationExpansionSectionComponent,
 		ProcedureListComponent,
