@@ -63,6 +63,13 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 			ERole.GESTOR_CENTRO_LLAMADO
 		],
 	},
+	{
+		text: 'app.menu.API_KEYS',
+		icon: 'private_connectivity',
+		id: 'user-keys',
+		url: '/home/profile/user-keys',
+		permissions: PUBLIC_API_ROLES,
+	},
 ];
 
 export const NO_ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [

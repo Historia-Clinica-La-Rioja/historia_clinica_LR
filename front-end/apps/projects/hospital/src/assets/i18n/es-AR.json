@@ -4,6 +4,7 @@
 		"SHORT_NAME": "HSI",
 		"menu": {
 			"AMBULATORIA": "Historia Clínica",
+			"API_KEYS": "API Keys",
 			"CAMAS": "Camas",
 			"CONFIGURACION": "Configuración",
 			"GUARDIA": "Guardia",
