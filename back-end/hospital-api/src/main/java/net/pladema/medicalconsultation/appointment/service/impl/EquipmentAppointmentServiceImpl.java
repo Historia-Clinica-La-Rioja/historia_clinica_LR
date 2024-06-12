@@ -100,35 +100,42 @@ public class EquipmentAppointmentServiceImpl implements EquipmentAppointmentServ
 
 		AppointmentBo appointment = appointmentService.getEquipmentAppointment(appointmentId).orElse(null);
 		if (appointment == null){
+			log.warn("publishWorkList appointment is NULL institutionId: {}, appointmentId: {} ", institutionId, appointmentId);
 			return null;
 		}
 
 		Integer diaryId = appointment.getDiaryId();
 		CompleteEquipmentDiaryBo equipmentDiary = equipmentDiaryService.getEquipmentDiary(diaryId).orElse(null);
 		if (equipmentDiary == null){
+			log.warn("publishWorkList equipmentDiary is NULL diaryId: {}, institutionId {}, appointmentId {} ", diaryId, institutionId, appointmentId);
 			return null;
 		}
 
 		Integer equipmentId = equipmentDiary.getEquipmentId();
 		EquipmentBO equipmentBO =equipmentService.getEquipment(equipmentId);
 		if (equipmentBO == null){
+			log.warn("publishWorkList equipmentBO is NULL equipmentId: {}, institutionId: {}, appointmentId: {}", equipmentId, institutionId, appointmentId);
 			return null;
 		}
 
 		Integer orchestratorId = equipmentBO.getOrchestratorId();
 		OrchestratorBO orchestrator = orchestratorService.getOrchestrator(orchestratorId);
 		if (orchestrator == null){
+			log.warn("publishWorkList orchestratorBO is NULL orchestratorId: {}, institutionId: {}, appointmentId: {}", orchestratorId, institutionId, appointmentId);
 			return null;
 		}
 
-		ModalityBO modalityBO = modalityService.getModality(equipmentBO.getModalityId());
+		Integer modalityId = equipmentBO.getModalityId();
+		ModalityBO modalityBO = modalityService.getModality(modalityId);
 		if (modalityBO == null){
+			log.warn("publishWorkList modalityBO is NULL modalityId: {}, institutionId: {}, appointmentId: {}", modalityId, institutionId, appointmentId);
 			return null;
 		}
 
 		Integer patientId =appointment.getPatientId();
 		BasicPatientDto basicDataPatient = patientExternalService.getBasicDataFromPatient(patientId);
 		if (basicDataPatient == null){
+			log.warn("publishWorkList basicDataPatient NULL patientId: {}, institutionId: {}, appointmentId: {}", patientId, institutionId, appointmentId);
 			return null;
 		}
 
