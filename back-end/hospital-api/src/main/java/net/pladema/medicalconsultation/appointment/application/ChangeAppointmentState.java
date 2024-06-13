@@ -10,6 +10,7 @@ import net.pladema.medicalconsultation.appointment.application.port.AppointmentP
 import net.pladema.medicalconsultation.appointment.application.port.HistoricAppointmentStatePort;
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
 import net.pladema.medicalconsultation.appointment.infraestructure.output.internal.EncryptPatientIdentificationCode;
+import net.pladema.medicalconsultation.appointment.domain.enums.EPatientIdentityAccreditationStatus;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 
 import net.pladema.medicalconsultation.appointment.service.impl.AppointmentServiceImpl;
@@ -69,10 +70,10 @@ public class ChangeAppointmentState {
 
 	private void savePatientIdentificationStatusInfo(UpdateAppointmentStateBo updateAppointmentStateBo) {
 		String encryptedPatientIdentificationHash = null;
-		short patientIdentityAccreditationStatusId = 2; //NOT_GIVEN
+		short patientIdentityAccreditationStatusId = EPatientIdentityAccreditationStatus.NOT_GIVEN.getId();
 		if (updateAppointmentStateBo.getPatientIdentificationBarCode() != null) {
 			encryptedPatientIdentificationHash = encryptPatientIdentificationCode.run(updateAppointmentStateBo.getPatientIdentificationBarCode());
-			patientIdentityAccreditationStatusId = 1; //VALID
+			patientIdentityAccreditationStatusId = EPatientIdentityAccreditationStatus.VALID.getId();
 		}
 		appointmentPatientIdentityAccreditationStatusPort.save(updateAppointmentStateBo.getAppointmentId(), patientIdentityAccreditationStatusId, encryptedPatientIdentificationHash);
 	}
