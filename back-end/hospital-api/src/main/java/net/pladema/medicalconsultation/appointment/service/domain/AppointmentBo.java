@@ -107,6 +107,8 @@ public class AppointmentBo {
 
 	private boolean expiredRegister;
 
+	private Short patientIdentityAccreditationStatusId;
+
 	public AppointmentBo(Integer diaryId, Integer patientId, LocalDate date, LocalTime hour, Short modalityId, String patientEmail, String callId,
 						String applicantHealthcareProfessionalEmail) {
 		this.diaryId = diaryId;
@@ -183,6 +185,7 @@ public class AppointmentBo {
 				)
 				.parentAppointmentId(appointmentVo.getAppointment().getParentAppointmentId())
 				.updatedOn(appointmentVo.getAppointment().getUpdatedOn())
+				.patientIdentityAccreditationStatusId(appointmentVo.getPatientIdentityAccreditationStatusId())
 				.build();
 	}
 

@@ -17,6 +17,7 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateB
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.controller.dto.GroupAppointmentResponseDto;
+import net.pladema.medicalconsultation.appointment.domain.enums.EPatientIdentityAccreditationStatus;
 import net.pladema.medicalconsultation.appointment.infrastructure.input.rest.dto.UpdateAppointmentStateDto;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
@@ -97,7 +98,14 @@ public interface AppointmentMapper {
 	@Mapping(target = "hasAppointmentChilds", source = "appointmentBo.hasAppointmentChilds")
 	@Mapping(target = "parentAppointmentId", source = "appointmentBo.parentAppointmentId")
 	@Mapping(target = "updatedOn", source = "appointmentBo.updatedOn")
+	@Mapping(target = "patientIdentityAccreditationStatus", expression = "java(parsePatientIdentityAccreditationStatusId(appointmentBo))")
 	AppointmentDto toAppointmentDto(AppointmentBo appointmentBo);
+
+	default EPatientIdentityAccreditationStatus parsePatientIdentityAccreditationStatusId(AppointmentBo appointmentBo) {
+		if (appointmentBo.getPatientIdentityAccreditationStatusId() != null)
+			return EPatientIdentityAccreditationStatus.map(appointmentBo.getPatientIdentityAccreditationStatusId());
+		return null;
+	}
 
 	@Named("generateCallLink")
 	default String generateCallLink(String callId) {

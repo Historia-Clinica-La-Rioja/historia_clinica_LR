@@ -361,6 +361,7 @@ export interface AppointmentDto extends CreateAppointmentDto {
     observation?: string;
     observationBy?: string;
     parentAppointmentId?: number;
+    patientIdentityAccreditationStatus: EPatientIdentityAccreditationStatus;
     protected: boolean;
     recurringTypeDto: RecurringTypeDto;
     stateChangeReason?: string;
@@ -5724,6 +5725,11 @@ export const enum ENursingRecordStatus {
 
 export const enum EOdontologyTopicDto {
     NUEVA_CONSULTA = "NUEVA_CONSULTA",
+}
+
+export const enum EPatientIdentityAccreditationStatus {
+    VALID = "VALID",
+    NOT_GIVEN = "NOT_GIVEN",
 }
 
 export const enum EPatientMedicalCoverageCondition {

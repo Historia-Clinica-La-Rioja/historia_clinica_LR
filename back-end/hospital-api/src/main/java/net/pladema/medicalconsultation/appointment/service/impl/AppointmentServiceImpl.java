@@ -245,6 +245,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         return Boolean.TRUE;
     }
 
+	/**
+	 * @Deprecated Usar {@link net.pladema.medicalconsultation.appointment.application.GetAppointment}
+	 */
+	@Deprecated
     @Override
     public Optional<AppointmentBo> getAppointment(Integer appointmentId) {
         log.debug("Input parameters -> appointmentId {}", appointmentId);

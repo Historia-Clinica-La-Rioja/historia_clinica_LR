@@ -64,7 +64,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	List<Appointment> hasAppointment(@Param("dni") String dni, @Param("id") Integer id);
 
     @Transactional(readOnly = true)
-    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl, a.recurringAppointmentTypeId)" +
+    @Query( "SELECT NEW net.pladema.medicalconsultation.appointment.repository.domain.AppointmentVo(aa.pk.diaryId, a, doh.medicalAttentionTypeId, has.reason, ao.observation, ao.createdBy, dl, a.recurringAppointmentTypeId, apias.patientIdentityAccreditationStatusId)" +
             "FROM Appointment AS a " +
             "JOIN AppointmentAssn AS aa ON (a.id = aa.pk.appointmentId) " +
 			"LEFT JOIN AppointmentObservation AS ao ON (a.id = ao.appointmentId) " +
@@ -72,6 +72,7 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
             "JOIN Diary d ON (d.id = aa.pk.diaryId )" +
 			"LEFT JOIN DiaryOpeningHours  AS doh ON (doh.pk.diaryId = d.id AND doh.pk.openingHoursId = aa.pk.openingHoursId) " +
 			"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
+			"LEFT JOIN AppointmentPatientIdentityAccreditationStatus apias ON (apias.appointmentId = a.id) " +
             "WHERE a.id = :appointmentId " +
 			"AND a.deleteable.deleted = FALSE " +
             "AND ( has.pk.changedStateDate IS NULL OR has.pk.changedStateDate = " +

@@ -6,9 +6,12 @@ import net.pladema.medicalconsultation.appointment.application.port.AppointmentP
 
 import net.pladema.medicalconsultation.appointment.repository.AppointmentRepository;
 
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +32,16 @@ public class AppointmentPortImpl implements AppointmentPort {
 	@Override
 	public Short getAppointmentStateIdByAppointmentId(Integer appointmentId) {
 		return appointmentRepository.getAppointmentStateIdByAppointmentId(appointmentId);
+	}
+
+	@Override
+	public Optional<AppointmentBo> getAppointmentById(Integer appointmentId) {
+		return appointmentRepository.getAppointment(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
+	}
+
+	@Override
+	public Integer getRecurringAppointmentQuantityByAppointmentParentId(Integer appointmentParentId) {
+		return appointmentRepository.recurringAppointmentQuantityByParentId(appointmentParentId);
 	}
 
 }
