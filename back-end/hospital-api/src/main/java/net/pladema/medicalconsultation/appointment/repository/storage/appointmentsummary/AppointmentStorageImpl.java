@@ -120,7 +120,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"LEFT JOIN BookingAppointment ba ON a.id = ba.pk.appointmentId " +
 						"LEFT JOIN BookingPerson bp ON ba.pk.bookingPersonId = bp.id " +
 						"LEFT JOIN DiaryLabel dl ON (a.diaryLabelId = dl.id) " +
-						"WHERE aa.pk.diaryId IN (:diaryIds) AND (d.deleteable.deleted = false OR d.deleteable.deleted is null ) " +
+						"WHERE aa.pk.diaryId IN (:diaryIds) AND (d.deleteable.deleted = false OR d.deleteable.deleted is null) " +
 						(from!=null ? "AND a.dateTypeId >= :from " : "") +
 						(to!=null ? "AND a.dateTypeId <= :to " : "") +
 						"AND NOT a.appointmentStateId = " + AppointmentState.CANCELLED_STR +
@@ -149,7 +149,7 @@ public class AppointmentStorageImpl implements AppointmentStorage {
 						"pex.nameSelfDetermination, p.middleNames, p.otherLastNames, bp.email, dl, eaa.pk.openingHoursId)" +
                         "FROM Appointment AS a " +
                         "JOIN EquipmentAppointmentAssn AS eaa ON (a.id = eaa.pk.appointmentId) " +
-                        "JOIN EquipmentDiaryOpeningHours AS edoh ON (eaa.pk.openingHoursId = edoh.pk.openingHoursId  AND edoh.pk.equpmentDiaryId = eaa.pk.equipmentDiaryId ) " +
+                        "JOIN EquipmentDiaryOpeningHours AS edoh ON (eaa.pk.openingHoursId = edoh.pk.openingHoursId AND edoh.pk.equipmentDiaryId = eaa.pk.equipmentDiaryId) " +
                         "JOIN EquipmentDiary ed ON (ed.id = eaa.pk.equipmentDiaryId) " +
                         "JOIN UserPerson us ON (a.creationable.createdBy = us.pk.userId) " +
                         "JOIN Person p ON (us.pk.personId = p.id) " +
