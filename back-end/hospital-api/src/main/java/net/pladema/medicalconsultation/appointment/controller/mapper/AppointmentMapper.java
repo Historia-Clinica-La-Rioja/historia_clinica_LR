@@ -17,7 +17,7 @@ import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateB
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.controller.dto.GroupAppointmentResponseDto;
-import net.pladema.medicalconsultation.appointment.infraestructure.input.rest.dto.UpdateAppointmentStateDto;
+import net.pladema.medicalconsultation.appointment.infrastructure.input.rest.dto.UpdateAppointmentStateDto;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;

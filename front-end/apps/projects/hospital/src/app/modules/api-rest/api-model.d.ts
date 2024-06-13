@@ -5026,6 +5026,11 @@ export interface UpdateAppointmentDto {
     phonePrefix?: string;
 }
 
+export interface UpdateAppointmentStateDto {
+    patientIdentificationBarCode: string;
+    reason: string;
+}
+
 export interface UsageReportStatusDto {
     domainId: string;
     isAllowedToSend: boolean;

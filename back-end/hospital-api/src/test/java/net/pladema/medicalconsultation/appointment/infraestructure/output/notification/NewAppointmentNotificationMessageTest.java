@@ -5,6 +5,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
+import net.pladema.medicalconsultation.appointment.infrastructure.output.notification.NewAppointmentNotificationArgs;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.notification.NewAppointmentTemplateInput;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

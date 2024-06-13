@@ -17,8 +17,8 @@ import net.pladema.clinichistory.requests.transcribed.infrastructure.output.repo
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentOption;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentOption;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentAssnRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentOrderImageRepository;
 import net.pladema.medicalconsultation.appointment.repository.AppointmentObservationRepository;

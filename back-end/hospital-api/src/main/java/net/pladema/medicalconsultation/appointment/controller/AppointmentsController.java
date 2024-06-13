@@ -25,7 +25,7 @@ import net.pladema.medicalconsultation.appointment.application.createexpiredappo
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
-import net.pladema.medicalconsultation.appointment.infraestructure.input.rest.dto.UpdateAppointmentStateDto;
+import net.pladema.medicalconsultation.appointment.infrastructure.input.rest.dto.UpdateAppointmentStateDto;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
@@ -42,7 +42,7 @@ import net.pladema.medicalconsultation.appointment.controller.dto.CustomRecurrin
 import net.pladema.medicalconsultation.appointment.controller.dto.CreateCustomAppointmentDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.WeekDayDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.WeekDayMapper;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.service.CancelRecurringAppointment;
 import net.pladema.medicalconsultation.appointment.service.CreateCustomAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateEveryWeekAppointmentService;

@@ -2,7 +2,7 @@ package net.pladema.medicalconsultation.appointment.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.appointment.RecurringAppointmentType;
+import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentService;
 import net.pladema.medicalconsultation.appointment.service.CreateEveryWeekAppointmentService;
