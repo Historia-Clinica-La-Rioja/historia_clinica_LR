@@ -150,6 +150,7 @@ public class ClinicHistoryStorageImpl implements ClinicHistoryStorage {
 		result.setEncounterType(getEncounterType(row));
 		result.setDocumentType(getDocumentType(row));
 		result.setProblems(mapProblems(row.getHealthConditionSummary().getProblems()));
+		result.setTypeId(row.getDocumentTypeId());
 		return result;
 	}
 

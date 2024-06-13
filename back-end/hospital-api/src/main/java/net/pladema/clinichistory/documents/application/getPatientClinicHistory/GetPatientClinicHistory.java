@@ -1,5 +1,7 @@
 package net.pladema.clinichistory.documents.application.getPatientClinicHistory;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import net.pladema.clinichistory.documents.application.ClinicHistoryStorage;
 import net.pladema.clinichistory.documents.domain.CHDocumentSummaryBo;
 import net.pladema.clinichistory.documents.domain.CHSearchFilterBo;
@@ -15,6 +17,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GetPatientClinicHistory {
 
+	private static final List<Short> UNDEFINED_DOCUMENT_TYPES =
+			List.of(DocumentType.MEDICAL_IMAGE_REPORT, DocumentType.SURGICAL_HOSPITALIZATION_REPORT, DocumentType.SURGICAL_HOSPITALIZATION_REPORT, DocumentType.ANESTHETIC_REPORT);
+
 	private final ClinicHistoryStorage clinicHistoryStorage;
 
 	public GetPatientClinicHistory(ClinicHistoryStorage clinicHistoryStorage){
@@ -26,7 +31,8 @@ public class GetPatientClinicHistory {
 		var result = clinicHistoryStorage.getPatientClinicHistory(patientId, from, to)
 				.stream()
 				.filter(o -> filter.getEncounterTypeList().contains(o.getEncounterType())
-						&& (filter.getDocumentTypeList().isEmpty() || filter.getDocumentTypeList().contains(o.getDocumentType())))
+						&& (filter.getDocumentTypeList().isEmpty() || filter.getDocumentTypeList().contains(o.getDocumentType()))
+						&& !UNDEFINED_DOCUMENT_TYPES.contains(o.getTypeId()))
 				.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
