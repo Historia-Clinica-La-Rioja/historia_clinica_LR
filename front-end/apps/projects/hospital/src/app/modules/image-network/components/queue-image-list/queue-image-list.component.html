@@ -1,10 +1,13 @@
-<!-- <ng-container *ngIf=" imageList$ | async as imageList, else loading ">
-</ng-container> -->
 <ng-container *ngIf=" queueList.length > 0, else noData">
     <ng-container *ngFor="let image of queueList">
         <mat-list-item class="item-content">
             <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="25px" fxFlex="100">
                 <app-patient-summary fxFlex.gt-sm="20" [person]="image.person" [size]="size"></app-patient-summary>
+                <div fxFlex.gt-sm="10" class="uid-break">
+                    <mat-label matTooltip="UID de la imagen">
+                        {{image.uid}}
+                    </mat-label>
+                </div>
                 <div fxFlex.gt-sm="3">
                     <ng-container *ngIf="!image.serviceRequestId">
                         <app-tooltip-order
@@ -19,10 +22,15 @@
                 <app-colored-label class="personalized-label capitalize" fxFlex.xl="7" fxFlex.lg="9"
                     fxFlex.gt-sm="13" description={{image.status.description}} color="{{image.status.color}}"
                     [icon]="image.status.icon"></app-colored-label>
-                <div fxFlex.gt-sm="8" class="time-size">
-                    <span>
+                <div *ngIf="image.date" fxFlex.gt-sm="8" class="time-size">
+                    <mat-label  matTooltip="Último movimiento">
                         {{ image.date | dateFormat: 'datetime' }}
-                    </span>
+                    </mat-label>
+                </div>
+                <div fxFlex.gt-sm="8" class="time-size">
+                    <mat-label  matTooltip="Turno">
+                        {{ image.appointmentDate | dateFormat: 'datetime' }}
+                    </mat-label>
                 </div>
                 <div fxFlex.gt-sm="20" fxFlex.gt-md="25" fxLayout="row" fxLayoutGap="6px"
                     fxLayoutAlign="center baseline">
@@ -33,7 +41,7 @@
                     </app-button>
                     <!-- <app-button fxFlex="70" [buttonType]="ButtonType.RAISED"
                         [text]="'image-network.queue_list.INDEX'" [disabled]="true" (clicked)="doIndex()">
-                    </app-button> TODO: enable when be is available -->
+                    </app-button> TODO: enable when be is available-->
                 </div>
             </div>
         </mat-list-item>

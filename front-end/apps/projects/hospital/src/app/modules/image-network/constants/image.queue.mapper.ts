@@ -27,9 +27,11 @@ export const mapToListItemImageQueue = (items: ImageQueueListDto[], patientNameS
                 description: translateMappingStatus.get(item.imageMoveStatus),
                 color: item.imageMoveStatus === EIMAGE_QUEUE_ERROR ? Color.RED : Color.YELLOW,
             },
-            date: convertDateTimeDtoToDate(item.createdOn),
+            date: item.lastTriedOn ? convertDateTimeDtoToDate(item.lastTriedOn) : null,
+            appointmentDate: convertDateTimeDtoToDate(item.appointmentDateTime),
             serviceRequestId: item.serviceRequestId,
-            idMove: item.id
+            idMove: item.id,
+            uid:item.studyImageUID
         }
     })
 
