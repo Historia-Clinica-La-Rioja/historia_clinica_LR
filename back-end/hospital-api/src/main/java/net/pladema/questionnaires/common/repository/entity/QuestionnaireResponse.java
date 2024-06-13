@@ -74,6 +74,10 @@ public class QuestionnaireResponse extends SGXAuditableEntity<Integer> {
 	@Transient
 	private String questionnaireType;
 
+	@Setter
+	@Transient
+	private String questionnaireResult;
+
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "questionnaire_id", insertable = false, updatable = false)
