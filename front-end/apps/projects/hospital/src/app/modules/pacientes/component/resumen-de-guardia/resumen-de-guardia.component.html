@@ -132,15 +132,18 @@
 					{{ 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.TITLE' | translate }}
 				</h3>
 				<div *ngIf="medicalDischargeData">
-					<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="registerEditorCasesDateHour"></app-register-editor-info>
-					<app-title-description
-						[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PROBLEM' | translate"
-						[text]="problemDescriptionText">
-					</app-title-description>
-					<app-title-description
-						[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE' | translate"
-						[text]="dischargeTypeDescriptionText">
-					</app-title-description>
+					<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="registerEditorCasesDateHour">
+					</app-register-editor-info>
+					<div fxLayout="row" fxLayoutGap="8px">
+						<app-title-description fxFlex="50%"
+							[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PROBLEM' | translate"
+							[text]="problemDescriptionText">
+						</app-title-description>
+						<app-title-description fxFlex="50%"
+							[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE' | translate"
+							[text]="dischargeTypeDescriptionText">
+						</app-title-description>
+					</div>
 				</div>
 			</div>
 

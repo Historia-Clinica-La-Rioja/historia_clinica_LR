@@ -7,3 +7,15 @@ form{
 		@include form-radio-button;
 	}
 }
+
+#container {
+    padding: 24px;
+}
+
+.radio-buttons {
+    margin-left: 0 !important;
+}
+
+mat-card {
+	max-width: 704px;
+}
