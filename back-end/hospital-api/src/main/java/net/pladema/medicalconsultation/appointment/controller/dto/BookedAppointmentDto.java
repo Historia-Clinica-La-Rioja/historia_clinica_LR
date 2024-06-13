@@ -23,6 +23,6 @@ public class BookedAppointmentDto {
 
 	private String office;
 
-	private List<String> specialties;
+	private String clinicalSpecialtyName;
 
 }

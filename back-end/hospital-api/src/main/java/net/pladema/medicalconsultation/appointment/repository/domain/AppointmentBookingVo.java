@@ -26,7 +26,7 @@ public class AppointmentBookingVo {
 
 	private String office;
 
-	private List<String> specialties = new ArrayList<>();
+	private String clinicalSpecialtyName;
 
 	public AppointmentBookingVo(String professionalFirstName, String professionalMiddleNames, String professionalLastName, String professionalOtherLastNames, LocalDate date, LocalTime hour, String office, String specialty) {
 		this.professionalFirstName = professionalFirstName;
@@ -36,6 +36,6 @@ public class AppointmentBookingVo {
 		this.date = date;
 		this.hour = hour;
 		this.office = office;
-		this.specialties.add(specialty);
+		this.clinicalSpecialtyName = specialty;
 	}
 }

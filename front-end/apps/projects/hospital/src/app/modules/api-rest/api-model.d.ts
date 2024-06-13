@@ -679,11 +679,11 @@ export interface BlockDto {
 }
 
 export interface BookedAppointmentDto {
+    clinicalSpecialtyName: string;
     date: DateDto;
     hour: TimeDto;
     office: string;
     professionalName: string;
-    specialties: string[];
 }
 
 export interface BookingAppointmentDto {
