@@ -8,9 +8,7 @@
 			[title]="'ambulatoria.paciente.surgical-report.diagnosis.SURGERY'">
 			<div *ngFor="let proposedSurgery of surgicalReport.surgeryProcedures; index as i; last as isLast">
 				<div fxLayout="row" fxLayoutAlign="space-between center">
-					<div class="proposed-surgery-text">
-						<strong>{{ proposedSurgery.snomed.pt | titlecase }}</strong>
-					</div> 
+					<span>{{ proposedSurgery.snomed.pt }}</span>
 					<button type="button" mat-icon-button color="warn" (click)="deleteProcedure(i)">
 						<mat-icon>delete_outline</mat-icon>
 					</button>
