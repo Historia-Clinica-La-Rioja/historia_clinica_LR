@@ -363,8 +363,8 @@ export class DesempenoFisicoComponent implements OnInit {
 
   calculoMapping() {
     const scoreMapping = {
-      'F1': "bajo",
-      'F2': "alto",
+      'F1': 52,
+      'F2': 53,
     }
     return scoreMapping[this.selectedCalificacion] || undefined;
   }
@@ -454,8 +454,8 @@ export class DesempenoFisicoComponent implements OnInit {
 
         {
           "itemId": 88,
-          "optionId": totalScore,
-          "value": this.calculoMapping(),
+          "optionId": this.calculoMapping(),
+          "value": totalScore,
         },
 
 
