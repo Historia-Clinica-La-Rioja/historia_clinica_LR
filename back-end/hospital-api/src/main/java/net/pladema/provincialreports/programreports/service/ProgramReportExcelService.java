@@ -6,7 +6,6 @@ import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoCo
 import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.OdontologicalConsultationDetail;
-import net.pladema.provincialreports.programreports.repository.SumarOdontologyConsultationDetail;
 
 import java.util.List;
 

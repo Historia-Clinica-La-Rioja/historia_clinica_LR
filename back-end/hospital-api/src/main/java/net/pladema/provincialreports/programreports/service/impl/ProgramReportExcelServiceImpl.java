@@ -12,7 +12,6 @@ import net.pladema.provincialreports.programreports.repository.EpidemiologyTwoCo
 import net.pladema.provincialreports.programreports.repository.RecuperoGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.SumarGeneralConsultationDetail;
 import net.pladema.provincialreports.programreports.repository.OdontologicalConsultationDetail;
-import net.pladema.provincialreports.programreports.repository.SumarOdontologyConsultationDetail;
 import net.pladema.provincialreports.programreports.service.ProgramReportExcelService;
 import net.pladema.provincialreports.reportformat.DateFormat;
 
@@ -574,7 +573,7 @@ public class ProgramReportExcelServiceImpl implements ProgramReportExcelService 
 		cell31.setCellStyle(style);
 
 		ICell cell32 = row.createCell(rowNumber.getAndIncrement());
-		cell32.setCellValue(content.getHeadCircunference());
+		cell32.setCellValue(content.getHeadCircumference());
 		cell32.setCellStyle(style);
 
 		ICell cell33 = row.createCell(rowNumber.getAndIncrement());

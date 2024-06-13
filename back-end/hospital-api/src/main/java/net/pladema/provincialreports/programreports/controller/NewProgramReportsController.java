@@ -89,7 +89,7 @@ public class NewProgramReportsController {
 
 		String title = "Reporte de epidemiología - Notificación colectiva";
 
-		String[] headers = new String[]{"Diagnóstico/código", "Grupo", "Total"};
+		String[] headers = new String[]{"Diagnóstico/código", "Grupo de edad", "Total"};
 
 		try {
 			LocalDate startDate = LocalDate.parse(fromDate);
@@ -126,7 +126,7 @@ public class NewProgramReportsController {
 
 		logger.info("getRecuperoGeneralExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
 
-		String title = "Reporte de recupero - obras sociales";
+		String title = "Reporte de Recupero - Obras sociales";
 
 		String[] headers = new String[]{"Unidad Operativa", "Nombre de prestador", "DNI de prestador", "Fecha de atención", "Hora", "Cons. n°", "DNI de paciente", "Nombre de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Edad a hoy", "Obra/s social/es", "Domicilio", "Localidad", "Motivos", "Procedimientos", "Problemas", "Medicación", "Evolución"};
 		try {
@@ -164,26 +164,23 @@ public class NewProgramReportsController {
 	@GetMapping(value = "/{institutionId}/sumar-general")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
-
-		void getSumarGeneralExcelReport(
-
+	void getSumarGeneralExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = true) String fromDate,
-			@RequestParam(value = "toDate", required = true) String toDate,
+			@RequestParam(value = "fromDate") String fromDate,
+			@RequestParam(value = "toDate") String toDate,
 			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
 			@RequestParam(value = "doctorId", required = false) Integer doctorId,
 			HttpServletResponse response
-
-		) throws Exception{
+	) throws Exception {
 
 		logger.info("getSumarGeneralExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
 
-		String title = "Reporte de Sumar General";
+		String title = "Reporte de Sumar - General";
 
-		String [] headers = new String[]{"Unidad Operativa", "Prestador","DNI","Fecha de Atencion","Hora","Cons. N°","DNI Paciente","Nombre Paciente","Sexo","Genero","Nombre con el que se identifica",
-				"Fecha de nacimiento","Edad a fecha del turno","Edad a hoy","Etnia","Obra/s Social/es","Domicilio", "Barrio", "Localidad","Nivel de Instruccion","Situacion Laboral",
-				"Presión sistólica","Presión diastólica","Presion arterial media","Temperatura","Frecuencia cardiaca","Frecuencia respiratoria","Saturación de hemoglobina con oxigeno",
-				"Altura","Peso","Indice de Masa corporal","Perímetro cefálico","Motivos","Procedimientos","Problemas","Medicacion","Evolución"};
+		String [] headers = new String[]{"Unidad Operativa", "Nombre de prestador", "DNI de prestador", "Fecha de atención", "Hora", "DNI de paciente", "Nombre de paciente", "Sexo",
+				"Fecha de nacimiento", "Edad a fecha del turno", "Etnia", "Obra/s social/es", "Domicilio", "Barrio", "Localidad",
+				"Presión sistólica (mmHg)", "Presión diastólica (mmHg)", "Presión arterial media (mmHg)", "Temperatura (°C)", "Frecuencia cardíaca (lpm)", "Frecuencia respiratoria (rpm)", "Sat. de hemoglobina con oxígeno (%)",
+				"Altura (cm)", "Peso (kg)", "Índice de masa corporal (kg/m^2)", "Perímetro cefálico (cm)", "Motivos", "Procedimientos", "Problemas", "Medicación", "Evolución"};
 
 
 		try {
@@ -194,12 +191,12 @@ public class NewProgramReportsController {
 
 			IWorkbook wb = this.excelService.buildSumarGeneralExcel(title, headers, this.queryFactory.querySumarGeneral(institutionId, startDate, endDate, clinicalSpecialtyId, doctorId), institutionId, startDate, endDate);
 
-			String filename = "Sumar General - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programa Sumar - General - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
 
-			logger.debug("Writing Sumar General excel report to response with filename: {}", filename);
+			logger.debug("Writing 'sumar general' excel report to response with filename: {}", filename);
 
 			OutputStream outputStream = response.getOutputStream();
 			wb.write(outputStream);
@@ -207,53 +204,46 @@ public class NewProgramReportsController {
 			outputStream.flush();
 			response.flushBuffer();
 
-			logger.info("Successfully wrote Sumar General report for institutionId: {}", institutionId);
+			logger.info("Successfully wrote 'sumar general' report for institutionId: {}", institutionId);
 		} catch (Exception e) {
-			logger.error("Error generating Sumar General report for institutionId: {}", institutionId, e);
+			logger.error("Error generating 'sumar general' report for institutionId: {}", institutionId, e);
 			throw e;
 		}
 
 	}////////////////////////////////////////////////
 
-	@GetMapping(value = "/{institutionId}/sumar-odontology")
+	@GetMapping(value = "/{institutionId}/sumar-odontologico")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
 
-	void getSumarOdontologyExcelReport(
-
+	void getSumarOdontologicoExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = true) String fromDate,
-			@RequestParam(value = "toDate", required = true) String toDate,
-			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-			@RequestParam(value = "doctorId", required = false) Integer doctorId,
+			@RequestParam(value = "fromDate") String fromDate,
+			@RequestParam(value = "toDate") String toDate,
 			HttpServletResponse response
+	) throws Exception {
 
-	) throws Exception{
+		logger.info("getSumarOdontologicoExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
 
-		logger.info("getSumarOdontologyExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
+		String title = "Reporte de Sumar - Odontológico";
 
-		String title = "Reporte de Sumar Odontológico";
-
-		String [] headers = new String[]{"Unidad Operativa", "Prestador","DNI","Fecha de Atencion","Hora","DNI Paciente","Nombre Paciente","Sexo",
-				"Fecha de nacimiento","Edad a fecha del turno","Obra/s Social/es","Domicilio", "Barrio", "Localidad","CPO permanentes","CEO Temporales",
-				"Motivos","Procedimientos","Procedimientos de Odontología","Problemas","Diagnósticos de Odontología"};
-
-
-
+		String [] headers = new String[]{"Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Hora", "DNI de paciente", "Nombre de paciente", "Sexo",
+				"Fecha de nacimiento", "Edad a fecha del turno", "Obra/s social/es", "Domicilio", "Barrio", "Localidad", "Índice CPO - Permanentes", "Índice CEO - Temporales",
+				"Motivos", "Procedimientos", "Procedimientos de odontología", "Problemas", "Diagnósticos de odontología"};
 		try {
 			LocalDate startDate = LocalDate.parse(fromDate);
 			LocalDate endDate = LocalDate.parse(toDate);
 
 			logger.debug("Parsed dates - startDate: {}, endDate: {}", startDate, endDate);
 
-			IWorkbook wb = this.excelService.buildSumarOdontolgylExcelNew(title, headers, this.queryFactory.querySumarOdontologicoNew(institutionId, startDate, endDate, clinicalSpecialtyId, doctorId), institutionId, startDate, endDate);
+			IWorkbook wb = this.excelService.buildSumarOdontologicoExcel(title, headers, this.queryFactory.querySumarOdontologico(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
-			String filename = "Sumar Odontology - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Programa Sumar - Odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
 
-			logger.debug("Writing Sumar Odontology excel report to response with filename: {}", filename);
+			logger.debug("Writing 'sumar odontology' excel report to response with filename: {}", filename);
 
 			OutputStream outputStream = response.getOutputStream();
 			wb.write(outputStream);
@@ -261,36 +251,31 @@ public class NewProgramReportsController {
 			outputStream.flush();
 			response.flushBuffer();
 
-			logger.info("Successfully wrote Sumar Odontology report for institutionId: {}", institutionId);
+			logger.info("Successfully wrote 'sumar odontology' report for institutionId: {}", institutionId);
 		} catch (Exception e) {
-			logger.error("Error generating Sumar Odontology report for institutionId: {}", institutionId, e);
+			logger.error("Error generating 'sumar odontology' report for institutionId: {}", institutionId, e);
 			throw e;
 		}
 
 	}
 
-	@GetMapping(value = "/{institutionId}/recovery-odontology")
+	@GetMapping(value = "/{institutionId}/recupero-odontologico")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
 	public @ResponseBody
-
-	void getRecoveryOdontologyExcelReport(
-
+	void getRecuperoOdontologicoExcelReport(
 			@PathVariable Integer institutionId,
-			@RequestParam(value = "fromDate", required = true) String fromDate,
-			@RequestParam(value = "toDate", required = true) String toDate,
-			@RequestParam(value = "clinicalSpecialtyId", required = false) Integer clinicalSpecialtyId,
-			@RequestParam(value = "doctorId", required = false) Integer doctorId,
+			@RequestParam(value = "fromDate") String fromDate,
+			@RequestParam(value = "toDate") String toDate,
 			HttpServletResponse response
+	) throws Exception {
 
-	) throws Exception{
+		logger.info("getRecuperoOdontologicoExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
 
-		logger.info("getRecoveryOdontologyExcelReport start with institutionId: {}, fromDate: {}, toDate: {}", institutionId, fromDate, toDate);
+		String title = "Reporte de Recupero - Odontológico";
 
-		String title = "Reporte de Recupero Odontológico";
-
-		String [] headers = new String[]{"Unidad Operativa", "Prestador","DNI","Fecha de Atencion","Hora","DNI Paciente","Nombre Paciente","Sexo",
-				"Fecha de nacimiento","Edad a fecha del turno","Obra/s Social/es","Domicilio", "Barrio", "Localidad","CPO permanentes","CEO Temporales",
-				"Motivos","Procedimientos","Procedimientos de Odontología","Problemas","Diagnósticos de Odontología"};
+		String [] headers = new String[]{"Unidad Operativa", "Prestador", "DNI", "Fecha de atención", "Hora", "DNI de paciente", "Nombre de paciente", "Sexo",
+				"Fecha de nacimiento", "Edad a fecha del turno", "Obra/s social/es", "Domicilio", "Barrio", "Localidad", "Índice CPO - Permanentes", "Índice CEO - Temporales",
+				"Motivos", "Procedimientos", "Procedimientos de odontología", "Problemas", "Diagnósticos de odontología"};
 
 		try {
 			LocalDate startDate = LocalDate.parse(fromDate);
@@ -298,14 +283,14 @@ public class NewProgramReportsController {
 
 			logger.debug("Parsed dates - startDate: {}, endDate: {}", startDate, endDate);
 
-			IWorkbook wb = this.excelService.buildRecoveryOdontolgylExcelNew(title, headers, this.queryFactory.queryRecoveryOdontology(institutionId, startDate, endDate, clinicalSpecialtyId, doctorId), institutionId, startDate, endDate);
+			IWorkbook wb = this.excelService.buildRecuperoOdontologicoExcel(title, headers, this.queryFactory.queryRecuperoOdontologico(institutionId, startDate, endDate), institutionId, startDate, endDate);
 
-			String filename = "Recovery Odontology - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
+			String filename = "Recupero - Odontológico - " + excelUtilsService.getPeriodForFilenameFromDates(startDate, endDate) + "." + wb.getExtension();
 
 			response.addHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 			response.setContentType(wb.getContentType());
 
-			logger.debug("Writing Recovery Odontology excel report to response with filename: {}", filename);
+			logger.debug("Writing 'recupero odontológico' excel report to response with filename: {}", filename);
 
 			OutputStream outputStream = response.getOutputStream();
 			wb.write(outputStream);
@@ -313,9 +298,9 @@ public class NewProgramReportsController {
 			outputStream.flush();
 			response.flushBuffer();
 
-			logger.info("Successfully wrote Recovery Odontology report for institutionId: {}", institutionId);
+			logger.info("Successfully wrote 'recupero odontológico' report for institutionId: {}", institutionId);
 		} catch (Exception e) {
-			logger.error("Error generating Recovery Odontology report for institutionId: {}", institutionId, e);
+			logger.error("Error generating 'recupero odontológico' report for institutionId: {}", institutionId, e);
 			throw e;
 		}
 
