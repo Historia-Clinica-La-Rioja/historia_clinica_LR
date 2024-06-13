@@ -21,22 +21,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.provincialreports.programreports.repository.ProgramReportQueryFactory;
-import net.pladema.provincialreports.programreports.service.NewProgramReportsExcelService;
+import net.pladema.provincialreports.programreports.service.ProgramReportsExcelService;
 
 @RestController
-@RequestMapping("program-reports")
+@RequestMapping("programreports")
 @Tag(name = "Program reports", description = "Reportes de programa")
-public class NewProgramReportsController {
+public class ProgramReportsController {
 
-	private static final Logger logger = LoggerFactory.getLogger(NewProgramReportsController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProgramReportsController.class);
 
-	private final NewProgramReportsExcelService excelService;
+	private final ProgramReportsExcelService excelService;
 
 	private final ReportExcelUtilsService excelUtilsService;
 
 	private final ProgramReportQueryFactory queryFactory;
 
-	public NewProgramReportsController(NewProgramReportsExcelService excelService, ReportExcelUtilsService excelUtilsService, ProgramReportQueryFactory queryFactory) {
+	public ProgramReportsController(ProgramReportsExcelService excelService, ReportExcelUtilsService excelUtilsService, ProgramReportQueryFactory queryFactory) {
 		this.excelService = excelService;
 		this.excelUtilsService = excelUtilsService;
 		this.queryFactory = queryFactory;

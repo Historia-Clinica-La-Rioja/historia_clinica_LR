@@ -23,7 +23,7 @@ import net.pladema.provincialreports.reportformat.DateFormat;
 import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
 
 @Service
-public class NewProgramReportsExcelService {
+public class ProgramReportsExcelService {
 
 
 	@Autowired
@@ -32,7 +32,7 @@ public class NewProgramReportsExcelService {
 	@Autowired
 	public ReportExcelUtilsService excelUtilsService;
 
-	public NewProgramReportsExcelService(DateFormat dateTools) {
+	public ProgramReportsExcelService(DateFormat dateTools) {
 		this.dateTools = dateTools;
 	}
 
