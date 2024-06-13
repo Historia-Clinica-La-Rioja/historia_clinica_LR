@@ -14,8 +14,10 @@ import net.pladema.medicalconsultation.appointment.controller.dto.EquipmentAppoi
 import net.pladema.medicalconsultation.appointment.controller.dto.PatientAppointmentHistoryDto;
 import net.pladema.medicalconsultation.appointment.controller.dto.UpdateAppointmentDateDto;
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentDateBo;
+import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.controller.dto.GroupAppointmentResponseDto;
+import net.pladema.medicalconsultation.appointment.infraestructure.input.rest.dto.UpdateAppointmentStateDto;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
@@ -33,6 +35,7 @@ import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterB
 import net.pladema.medicalconsultation.diary.infrastructure.input.dto.FreeAppointmentSearchFilterDto;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 
+import org.mapstruct.Context;
 import org.mapstruct.IterableMapping;
 import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
 
@@ -159,4 +162,9 @@ public interface AppointmentMapper {
 
 	@Named("toGroupAppointmentDto")
 	GroupAppointmentResponseDto toGroupAppointmentDto(GroupAppointmentResponseBo groupAppointmentResponseBo);
+
+	@Mapping(target = "appointmentId", expression = "java(appointmentId)")
+	@Mapping(target = "appointmentStateId", expression = "java(appointmentStateId)")
+	@Named("fromUpdateAppointmentStateDto")
+	UpdateAppointmentStateBo fromUpdateAppointmentStateDto(UpdateAppointmentStateDto updateAppointmentStateDto, @Context Integer appointmentId, @Context Short appointmentStateId);
 }

@@ -20,9 +20,12 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exception
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.BookingDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SavedBookingAppointmentDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.SharedBookingPort;
+import net.pladema.medicalconsultation.appointment.application.ChangeAppointmentState;
 import net.pladema.medicalconsultation.appointment.application.createexpiredappointment.CreateExpiredAppointment;
 import net.pladema.medicalconsultation.appointment.controller.dto.AppointmentOrderDetailImageDto;
 import net.pladema.medicalconsultation.appointment.controller.mapper.DetailOrderImageMapper;
+import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
+import net.pladema.medicalconsultation.appointment.infraestructure.input.rest.dto.UpdateAppointmentStateDto;
 import net.pladema.medicalconsultation.appointment.service.CreateAppointmentLabel;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AlreadyPublishedWorklistException;
@@ -212,6 +215,8 @@ public class AppointmentsController {
 	private final FetchCustomAppointment fetchCustomAppointment;
 
 	private final CreateExpiredAppointment createExpiredAppointment;
+
+	private final ChangeAppointmentState changeAppointmentState;
 
 	@Value("${test.stress.disable.validation:false}")
 	private boolean disableValidation;
@@ -560,15 +565,14 @@ public class AppointmentsController {
 
 	@PutMapping(value = "/{appointmentId}/change-state")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO')")
-	public ResponseEntity<Boolean> changeState(
-			@PathVariable(name = "institutionId") Integer institutionId,
-			@ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
-			@ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
-			@RequestParam(name = "reason", required = false) String reason
-	) {
-		log.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}", institutionId, appointmentId, appointmentStateId);
-		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), reason);
-		boolean result = appointmentService.updateState(appointmentId, Short.parseShort(appointmentStateId), UserInfo.getCurrentAuditor(), reason);
+	public ResponseEntity<Boolean> changeState(@PathVariable(name = "institutionId") Integer institutionId,
+											   @ValidAppointmentDiary @PathVariable(name = "appointmentId") Integer appointmentId,
+											   @ValidAppointmentState @RequestParam(name = "appointmentStateId") String appointmentStateId,
+											   @RequestBody UpdateAppointmentStateDto updateAppointmentStateDto) {
+		log.debug("Input parameters -> institutionId {}, appointmentId {}, appointmentStateId {}, updateAppointmentStateDto {}", institutionId, appointmentId, appointmentStateId, updateAppointmentStateDto);
+		appointmentValidatorService.validateStateUpdate(institutionId, appointmentId, Short.parseShort(appointmentStateId), updateAppointmentStateDto.getReason());
+		UpdateAppointmentStateBo updateAppointmentStateBo = appointmentMapper.fromUpdateAppointmentStateDto(updateAppointmentStateDto, appointmentId, Short.parseShort(appointmentStateId));
+		boolean result = changeAppointmentState.run(updateAppointmentStateBo);
 		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}

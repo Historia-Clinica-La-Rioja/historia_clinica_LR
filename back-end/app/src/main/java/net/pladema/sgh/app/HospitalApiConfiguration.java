@@ -32,7 +32,7 @@ import net.pladema.EnableHospitalLib;
 @EnableHospitalPublicApi
 @EnableReferenceCounterReference
 @ServletComponentScan(basePackages = "net.pladema")
-@ComponentScan(basePackages = {"net.pladema.sgh.app"})
+@ComponentScan(basePackages = {"net.pladema.sgh.app", "ar.lamansys.sgh.internal"})
 @EnableJpaRepositories(basePackages = {"net.pladema.sgh.app"})
 @EntityScan(basePackages = {"net.pladema.sgh.app"})
 public class HospitalApiConfiguration {

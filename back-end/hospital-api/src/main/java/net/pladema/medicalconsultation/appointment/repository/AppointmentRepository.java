@@ -940,4 +940,15 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	void updateOverturnCharacteristic(@Param("appointmentId") Integer appointmentId,
 									  @Param("overturn") boolean overturn);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT a.parentAppointmentId " +
+			"FROM Appointment a " +
+			"WHERE a.id = :appointmentId")
+	Integer fetchAppointmentParentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT a.appointmentStateId " +
+			"FROM Appointment a " +
+			"WHERE a.id = :appointmentId")
+	Short getAppointmentStateIdByAppointmentId(@Param("appointmentId") Integer appointmentId);
 }

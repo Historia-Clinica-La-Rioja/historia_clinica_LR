@@ -1,0 +1,30 @@
+package net.pladema.medicalconsultation.appointment.infraestructure;
+
+import lombok.RequiredArgsConstructor;
+
+import net.pladema.medicalconsultation.appointment.application.port.AppointmentPatientIdentityAccreditationStatusPort;
+
+import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.AppointmentPatientIdentityAccreditationStatusRepository;
+
+import net.pladema.medicalconsultation.appointment.infraestructure.output.repository.entity.AppointmentPatientIdentityAccreditationStatus;
+
+import org.springframework.stereotype.Service;
+
+@RequiredArgsConstructor
+@Service
+public class AppointmentPatientIdentityAccreditationStatusPortImpl implements AppointmentPatientIdentityAccreditationStatusPort {
+
+	private final AppointmentPatientIdentityAccreditationStatusRepository appointmentPatientIdentityAccreditationStatusRepository;
+
+	@Override
+	public void save(Integer appointmentId, short patientIdentityAccreditationStatusId, String patientIdentificationHash) {
+		appointmentPatientIdentityAccreditationStatusRepository.save(new AppointmentPatientIdentityAccreditationStatus(appointmentId, patientIdentityAccreditationStatusId, patientIdentificationHash));
+	}
+
+	@Override
+	public void clearAppointmentPatientPreviousIdentificationHashByAppointmentId(Integer appointmentId) {
+		if (appointmentPatientIdentityAccreditationStatusRepository.existsById(appointmentId))
+			appointmentPatientIdentityAccreditationStatusRepository.deleteById(appointmentId);
+	}
+
+}

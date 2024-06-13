@@ -220,6 +220,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         return result;
     }
 
+	/**
+	 * @Deprecated Usar {@link net.pladema.medicalconsultation.appointment.application.ChangeAppointmentState}
+	 */
+	@Deprecated
     @Override
     @Transactional
     public boolean updateState(Integer appointmentId, short appointmentStateId, Integer userId, String reason) {
