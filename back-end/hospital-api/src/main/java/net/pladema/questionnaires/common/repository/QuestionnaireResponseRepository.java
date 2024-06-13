@@ -18,4 +18,16 @@ public interface QuestionnaireResponseRepository extends JpaRepository<Questionn
 			"WHERE qr.patientId = :patientId")
 	List<QuestionnaireResponse> findResponsesWithCreatedByDetails(@Param("patientId") Integer patientId, Sort sort);
 
+	@Query(value = "SELECT op.value " +
+			"FROM minsal_lr_questionnaire_response qr " +
+			"INNER JOIN minsal_lr_questionnaire q on qr.questionnaire_id=q.id " +
+			"INNER JOIN minsal_lr_answer a on a.questionnaire_response_id=qr.id " +
+			"INNER JOIN minsal_lr_item i on a.item_id=i.id " +
+			"LEFT JOIN minsal_lr_option op on a.option_id=op.id " +
+			"WHERE qr.id = :questionnaireResponseId " +
+			"ORDER BY i.id DESC " +
+			"LIMIT 1",
+	nativeQuery = true)
+	String findLastOptionValueByQuestionnaireResponseId(@Param("questionnaireResponseId") Integer questionnaireResponseId);
+
 }

@@ -66,6 +66,9 @@ public class GetAllController {
 
 				response.setCreatedByLicenseNumber(createdByProfessional.getLicenseNumber());
 				response.setUpdatedByLicenseNumber(updatedByProfessional.getLicenseNumber());
+
+				String finalResult = getAllService.getFinalQuestionnaireResult(response.getId());
+				response.setQuestionnaireResult(finalResult);
 			}
 			return new ResponseEntity<>(responses, HttpStatus.OK);
 		} catch (Exception e) {

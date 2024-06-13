@@ -44,4 +44,8 @@ public class GetAllService {
 		return questionnaireResponseRepository.findResponsesWithCreatedByDetails(patientId, sort);
 	}
 
+	public String getFinalQuestionnaireResult(Integer questionnaireResponseId) {
+		return questionnaireResponseRepository.findLastOptionValueByQuestionnaireResponseId(questionnaireResponseId);
+	}
+
 }
