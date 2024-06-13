@@ -6,7 +6,6 @@ import {
     required,
     maxLength,
     FormDataConsumer,
-    usePermissions,
     ReferenceInput,
     SelectInput,
     BooleanInput
@@ -14,7 +13,6 @@ import {
 } from 'react-admin';
 import SgxSelectInput from '../../../sgxSelectInput/SgxSelectInput';
 import CustomToolbar from '../../components/CustomToolbar';
-import { ROOT } from '../../roles';
 
 const CENTRO_DE_DIAGNOSTICO = 2;
 const InstitutionField = ({formData, ...res}) => {
@@ -28,10 +26,8 @@ const InstitutionField = ({formData, ...res}) => {
 }
 
 const GlobalPacsCreate = props => {
-    const { permissions } = usePermissions();
-    const userIsRoot = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ROOT.role)).length > 0;
     return(
-        <Create {...props} hasCreate={userIsRoot}>
+        <Create {...props}>
             <SimpleForm redirect="show" toolbar={<CustomToolbar/>}>
 
                 {/* Name */}

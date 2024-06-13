@@ -15,7 +15,7 @@ const institutions = (permissions: SGXPermissions) => ({
     show: InstitutionShow,
     list: permissions.hasAnyAssignment(...BASIC_BO_ROLES, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE) ? InstitutionList : undefined,
     create: permissions.hasAnyAssignment(...BASIC_BO_ROLES) ? InstitutionCreate : undefined,
-    edit: InstitutionEdit,
+    edit: permissions.hasAnyAssignment(...BASIC_BO_ROLES) ? InstitutionEdit : undefined,
     options: {
         submenu: 'facilities'
     }
