@@ -45,6 +45,14 @@ const ImageLvlPacCreate = props => {
                     required()]}
                 />
 
+                {/* URL del visualizador local*/}
+                <TextInput 
+                    source="localViewerUrl"
+                    helperText={"Ingrese la URL del visualizador local. Ej: http://www.prueba.com.ar/?patient-id={dni}"}
+                    validate={[maxLength(128)]}
+                />
+
+
             </SimpleForm>
         </Create>
     );
