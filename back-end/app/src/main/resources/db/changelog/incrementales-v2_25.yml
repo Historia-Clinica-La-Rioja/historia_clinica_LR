@@ -87,3 +87,15 @@ databaseChangeLog:
           - sql:
               sql: |-               
                 INSERT INTO discharge_type VALUES (15, 'Alta hospitalaria', false, true);
+
+    - changeSet:
+        id: emergency_care_discharge-addObservationColumn
+        comment: Create column observation in table emergency_care_discharge
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: observation
+                    type: text
+              tableName: emergency_care_discharge
