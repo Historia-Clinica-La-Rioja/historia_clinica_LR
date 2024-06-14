@@ -2,13 +2,21 @@
     <h1 [translate]="'gis.responsability-area.TITLE'"></h1>
     <span [translate]="'gis.responsability-area.DESCRIPTION'"></span>
 
+    <div class="m-top">
+        <app-box-message
+            *ngIf="showPolygonError"
+            [boxMessageInfo]="{message: 'gis.responsability-area.status.POLYGON_ERROR', showButtons: false, viewError: true}">
+        </app-box-message>
+    </div>
+
     <div class="actions m-top">
         <button (click)="previousStepper()" mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
+        <button (click)="saveAddressAndCoordinates(true)" mat-button mat-stroked-button color="primary">{{'gis.responsability-area.actions.SKIP' | translate | uppercase}}</button>
         <app-button 
             text="buttons.CONFIRM" 
             [buttonType]="ButtonType.RAISED" 
             [isLoading]="isSaving" 
-            (clicked)="confirm()">  
+            (clicked)="handleConfirm()">  
         </app-button>
     </div>
 </div>

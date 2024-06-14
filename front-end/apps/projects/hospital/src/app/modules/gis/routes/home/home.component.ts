@@ -13,6 +13,7 @@ import { finalize, forkJoin, map } from 'rxjs';
 import { InstitutionDescription } from '../../components/institution-description/institution-description.component';
 import { transformCoordinates } from '../../constants/coordinates.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { GisLayersService } from '../../services/gis-layers.service';
 
 interface InstitutionAddress {
     stateId: FormControl<number>;
@@ -66,7 +67,8 @@ export class HomeComponent implements OnInit {
 				private readonly addressMasterDataService: AddressMasterDataService,
 				private readonly institutionService: InstitutionService,
 				private readonly contextService: ContextService,
-				private readonly snackBarService: SnackBarService) {}
+				private readonly snackBarService: SnackBarService,
+				private readonly gisLayersService: GisLayersService) {}
 
 	ngOnInit(): void {
 		this.setInstitution();
@@ -112,7 +114,14 @@ export class HomeComponent implements OnInit {
 			this.stepToResponsabilityArea();
 	}
 
+	stepToInstitutionAddress = () => {
+		this.coordinatesCurrentValue = null;
+		this.showMap = false;
+		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+	}
+
 	stepToMapPosition = () => {
+		this.gisLayersService.removeDrawnPolygon();
 		this.currentStepperIndex = MAP_POSITION_STEP;
 		this.isLoading = true;
 		const address: string = this.toStringify();
@@ -131,14 +140,9 @@ export class HomeComponent implements OnInit {
 			});
 	}
 
-	stepToInstitutionAddress = () => {
-		this.coordinatesCurrentValue = null;
-		this.showMap = false;
-		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
-	}
-
 	stepToResponsabilityArea = () => {
 		this.currentStepperIndex = RESPONSABILITY_AREA_STEP;
+		this.gisLayersService.addPolygonInteraction();
 	}
 
 	setInstitutionData = () => {

@@ -11,17 +11,18 @@ export class MapComponent implements OnInit {
 	@Input() set setMap(coordinates: GlobalCoordinatesDto) {
 		this.coordinates = coordinates;
 	}	
+
+	constructor(private readonly gisLayersService: GisLayersService) {}
 	
 	ngOnInit(): void {
 		this.markPoint();
 	}
 	
 	coordinates: GlobalCoordinatesDto;
-	private readonly gisLayersService: GisLayersService = new GisLayersService();
 
 	markPoint = () => {
 		const position: number[] = this.gisLayersService.fromLonLat(this.coordinates);
-		this.gisLayersService.setMap();
+		this.gisLayersService.setUp();
 		this.gisLayersService.centerView(position);
 		this.gisLayersService.removeLocationPoint();
 		this.gisLayersService.addPoint(position);

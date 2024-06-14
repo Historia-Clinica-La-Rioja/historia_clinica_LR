@@ -15,14 +15,14 @@ import { ResponsabilityAreaComponent } from './components/responsability-area/re
 	declarations: [
     	HomeComponent,
      	MapComponent,
-      LoadingComponent,
-      InstitutionDescriptionComponent,
-      ResponsabilityAreaComponent
+		LoadingComponent,
+		InstitutionDescriptionComponent,
+		ResponsabilityAreaComponent
   	],
 	imports: [
 		CommonModule,
 		GisRoutingModule,
 		PresentationModule
-	]
+	],
 })
 export class GisModule { }
