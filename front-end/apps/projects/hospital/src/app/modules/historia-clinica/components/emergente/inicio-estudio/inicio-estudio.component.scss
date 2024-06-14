@@ -64,6 +64,113 @@
 mat-icon {
 
 	position: relative;
-	left: 3px;
 	bottom: 1.5px;
+	margin-right: 4px;
 }
+
+.element-light-color {
+	color: rgba(0, 0, 0, 0.54);
+}
+
+.header-filters {
+	padding: 6px 16px 0px;
+}
+
+.filter-button {
+	padding-bottom: 1.34em;
+}
+
+.buttonAdd {
+	margin-left: 96%;
+	position: relative;
+	bottom: 45px;
+}
+
+.box {
+	padding: 10px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	background-color: #f6fafb;
+	color: #2687c5;
+	font-weight: normal;
+	font-size: medium;
+}
+
+.iconMedical {
+	position: relative;
+	left: 3px;
+	bottom: -3px;
+	margin-right: 2px;
+	background-color: #f6fafb;
+
+}
+
+.buttonDescarga {
+
+	margin-left: 93%;
+	position: relative;
+	bottom: 25px;
+	color: #2687c5;
+
+}
+
+
+mat-card {
+
+	padding: 0%;
+}
+
+h3 {
+
+	padding-bottom: 0.34em;
+	margin-left: 2%;
+}
+
+ul {
+	list-style: none;
+}
+
+.fecha {
+
+    margin-bottom: -20px;
+	position: relative;
+	left: 64%;
+	bottom: 20px;
+	color: #a8a8a8;
+}
+
+
+.resultFrail {
+
+	color: #eb5757;
+	background-color: rgba(235, 87, 87, 0.2);
+	display: inline-block;
+	border-radius: 6px;
+    padding: 3px 8px;
+    width: fit-content;
+	position: relative;
+	top: 4px;
+}
+
+.resultEdmonton{
+	color: #1a59fd;
+    background-color: rgb(87 146 235 / 20%);
+    display: inline-block;
+    border-radius: 6px;
+    padding: 3px 8px;
+    width: fit-content;
+	position: relative;
+	top: 4px;
+}
+
+.resultPhysical{
+	color: #1a59fd;
+    background-color: rgba(113, 122, 36, 0.2);
+    display: inline-block;
+    border-radius: 6px;
+    padding: 3px 8px;
+    width: fit-content;
+	position: relative;
+	top: 4px;
+}
+

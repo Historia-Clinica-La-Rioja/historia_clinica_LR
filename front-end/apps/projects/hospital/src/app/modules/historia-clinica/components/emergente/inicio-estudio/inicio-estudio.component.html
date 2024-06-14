@@ -1,27 +1,120 @@
-<div class="masEstudios">
-  <mat-card class="box">
-    <mat-card-header class="mat-card-header header">
-      <div class="icon-container">
-        <img class="icon" src="/assets/images/icon_adultomayor.png" alt="icono">
-      </div>
-      <div class="title">
-        Evaluacion geriátrica
-      </div>
-    </mat-card-header>
+<app-content width="full">
+  <mat-card class="roll">
 
-    <div class="btnEstudios">
-      <button mat-icon-button color="primary" (click)="mostrarPopup()">
-        <mat-icon>add</mat-icon>
-        Agregar evaluación
-      </button>
-      <br>
-      <div class="botones">
-        <button mat-icon-button color="primary" (click)="mostrarPopupVerEstudios()">
-          <mat-icon>bar_chart</mat-icon>
-          Ver última evaluación
-        </button>
-      </div>
+    <!-- <app-no-data></app-no-data> -->
+
+    <!-- medical_services -->
+
+    <div class="box">
+
+      <mat-icon fontset="material-icons-outlined" class="iconMedical material-icons-outlined mat-icon-no-color ">
+        medical_services </mat-icon>
+      Evaluaciones geriatricas
+
     </div>
 
+    <div>
+      <button class="buttonAdd" mat-icon-button color="primary" (click)="mostrarPopup()">
+        <mat-icon>add_circle_outlined</mat-icon>
+      </button>
+    </div>
+
+    <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+      <button mat-button class="filter-button" color="primary">
+        <mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon> FILTRAR
+      </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+
+    <!-- FORMULARIOS -->
+
+    <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+      <button mat-button class="filter-button" color="primary">
+        <mat-icon fontSet="material-icons-outlined">receipt_long</mat-icon> TEST DE EDMONTON
+      </button>
+    </div>
+
+    <div class="latest-edmonton-questionnaires" *ngIf="this.lastEdmontonQuestionnaires.length > 0">
+      <ul>
+        <li *ngFor="let questionnaire of this.lastEdmontonQuestionnaires">
+
+          <div class="resultEdmonton">
+            {{ questionnaire.questionnaireResult | uppercase }}
+
+          </div>
+
+          <div class="fecha">
+
+            Fecha: {{ questionnaire.createdOn | date:'short' }}
+
+          </div>
+          <button class="buttonDescarga" mat-button (click)="downloadEdmontonPdf(questionnaire.id)">
+            <mat-icon color="primary" fontSet="material-icons-outlined">visibility</mat-icon>
+          </button>
+
+        </li>
+      </ul>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+      <button mat-button class="filter-button" color="primary">
+        <mat-icon fontSet="material-icons-outlined">elderly_woman</mat-icon> ESCALA DE FRAIL
+      </button>
+    </div>
+
+    <div class="latest-frail-questionnaires" *ngIf="this.lastFrailQuestionnaires.length > 0">
+      <ul>
+        <li *ngFor="let questionnaire of this.lastFrailQuestionnaires">
+
+          <div class="resultFrail">
+            {{ questionnaire.questionnaireResult | uppercase }}
+
+          </div>
+
+          <div class="fecha">
+
+            Fecha: {{ questionnaire.createdOn | date:'short' }}
+
+          </div>
+          <button class="buttonDescarga" mat-button (click)="downloadFrailPdf(questionnaire.id)">
+            <mat-icon color="primary" fontSet="material-icons-outlined">visibility</mat-icon>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <mat-divider></mat-divider>
+
+    <!-- <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+      <button mat-button class="filter-button" color="primary">
+        <mat-icon fontSet="material-icons-outlined">directions_run</mat-icon> PRUEBA CORTA DE DESEMPEÑO FISICO
+      </button>
+    </div>
+
+    <div class="latest-physical-questionnaires" *ngIf="this.lastPhysicalQuestionnaires.length > 0">
+      <ul>
+        <li *ngFor="let questionnaire of this.lastPhysicalQuestionnaires">
+
+          
+          <div class="resultPhysical">
+            {{ questionnaire.questionnaireResult | uppercase }}
+
+          </div>
+
+          <div class="fecha">
+
+            Fecha: {{ questionnaire.createdOn | date:'short' }} -->
+
+          <!-- </div> -->
+          <!-- <button class="buttonDescarga" mat-button (click)="downloadPhysicalPdf(questionnaire.id)">
+            <mat-icon color="primary" fontSet="material-icons-outlined">visibility</mat-icon>
+          </button>
+        </li>
+      </ul>  
+    </div> -->
+    <mat-divider></mat-divider>
   </mat-card>
-</div>
+
+</app-content>

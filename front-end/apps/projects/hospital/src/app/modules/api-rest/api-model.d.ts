@@ -1451,6 +1451,7 @@ export interface QuestionnairesResponses {
     updatedByLicenseNumber: string;
     questionnaireTypeId: number;
     questionnaireType: string;
+    questionnaireResult: string;
     deleted: boolean;
     updatedOn: string;
     createdOn: string;
