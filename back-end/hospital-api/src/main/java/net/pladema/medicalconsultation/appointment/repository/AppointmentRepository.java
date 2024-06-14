@@ -575,15 +575,17 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 
 	@Transactional(readOnly = true)
 	@Query( "SELECT new net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo(p.id, p.personId, " +
-			"doi.completedOn, doi.observations, i.id, i.name) " +
+			"doi.completedOn, doi.observations, i.id, i.name, psil.localViewerUrl, pe.identificationNumber) " +
 			"FROM DetailsOrderImage doi " +
 			"JOIN EquipmentAppointmentAssn eaa ON eaa.pk.appointmentId = doi.appointmentId " +
 			"JOIN EquipmentDiary ed ON eaa.pk.equipmentDiaryId = ed.id " +
 			"JOIN Equipment e ON ed.equipmentId = e.id " +
+			"LEFT JOIN PacServerImageLvl psil on (e.pacServerId = psil.id) " +
 			"JOIN Sector s ON s.id = e.sectorId " +
 			"JOIN Institution i ON i.id = s.institutionId " +
 			"JOIN Appointment a ON eaa.pk.appointmentId = a.id " +
 			"JOIN Patient p ON a.patientId = p.id " +
+			"LEFT JOIN Person pe ON (p.personId = pe.id) " +
 			"WHERE a.id = :appointmentId " +
 			"AND a.appointmentStateId = " + AppointmentState.SERVED + " " +
 			"AND (a.deleteable.deleted = FALSE OR a.deleteable.deleted IS NULL)" )

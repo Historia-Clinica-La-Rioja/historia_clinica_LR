@@ -5,13 +5,17 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.servicerequests.infrastructure.input.service.EDiagnosticImageReportStatus;
 import net.pladema.establishment.service.domain.InstitutionBasicInfoBo;
+import org.apache.poi.util.StringUtil;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
 @ToString
 public class StudyAppointmentBo {
+
+	private final static String DNI_CHAR_SEQUENCE_TO_REPLACE = "{dni}";
 
 	private Integer patientId;
 	private Integer personId;
@@ -24,9 +28,10 @@ public class StudyAppointmentBo {
 	private Integer sizeImage;
 	private Boolean isAvailableInPACS;
 	private String imageId;
+	private String localViewerUrl;
 
 	public StudyAppointmentBo(Integer patientId, Integer personId, LocalDateTime completedOn, String technicianObservations,
-							  Integer completionInstitutionId, String completionInstitutionName) {
+							  Integer completionInstitutionId, String completionInstitutionName, String localViewerUrl, String identificationNumber) {
 		this.patientId = patientId;
 		this.personId = personId;
 		this.actionTime = completedOn;
@@ -34,5 +39,14 @@ public class StudyAppointmentBo {
 		this.technicianObservations = technicianObservations;
 		this.completionInstitution = new InstitutionBasicInfoBo(completionInstitutionId, completionInstitutionName);
 		this.isAvailableInPACS = false;
+		this.localViewerUrl = completeLocalViewerUrl(localViewerUrl,identificationNumber);
+	}
+
+	private String completeLocalViewerUrl(String localViewerUrl, String identificationNumber) {
+		if (Objects.isNull(localViewerUrl)) {
+			return null;
+		}
+		String dni = Objects.isNull(identificationNumber) ? "" : identificationNumber;
+		return localViewerUrl.toLowerCase().replace(DNI_CHAR_SEQUENCE_TO_REPLACE,dni);
 	}
 }

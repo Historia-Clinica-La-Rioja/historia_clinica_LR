@@ -9,3 +9,16 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE user_role SET institution_id = -1 WHERE role_id = 47;
+
+    - changeSet:
+        id: add-column-local_viewer_url-to-pac_server_image_lvl
+        author: fzudaire
+        changes:
+            - addColumn:
+                tableName: pac_server_image_lvl
+                columns:
+                    - column:
+                        name: local_viewer_url
+                        type: varchar(128)
+                        constraints:
+                            nullable: true
