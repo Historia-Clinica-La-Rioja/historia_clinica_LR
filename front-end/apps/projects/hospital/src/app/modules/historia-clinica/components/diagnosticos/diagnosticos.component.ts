@@ -26,28 +26,27 @@ export class DiagnosticosComponent {
 	};
 	@Input() mainDiagnosis: HealthConditionDto;
 	@Input() type: string;
+	@Input() hasPresumtiveMainDiagnosis = false;
 	@Output() diagnosisChange = new EventEmitter();
 	@Output() mainDiagnosisChange = new EventEmitter();
-
-	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
-	ACTIVE = HEALTH_CLINICAL_STATUS.ACTIVO;
 
 	constructor(
 		public dialog: MatDialog,
 		private snackBarService: SnackBarService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
-
 	) { }
 
 	private isMainDiagnosis(diagnosis: DiagnosisDto): boolean {
 		return !this.diagnosticos.find(currentDiagnosis => currentDiagnosis.snomed.pt === diagnosis.snomed.pt) && diagnosis.snomed.pt != this.mainDiagnosis?.snomed.pt
 	}
+
 	openCreationDialog(isMainDiagnosis: boolean) {
 		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
 			data: {
 				diagnosisMode: DiagnosisMode.CREATION,
-				isMainDiagnosis: isMainDiagnosis
+				isMainDiagnosis: isMainDiagnosis,
+				hasPresumtiveMainDiagnosis: this.hasPresumtiveMainDiagnosis,
 			}
 		});
 
@@ -57,9 +56,6 @@ export class DiagnosticosComponent {
 
 					if (isMainDiagnosis) {
 						this.componentEvaluationManagerService.mainDiagnosis = diagnosis;
-						diagnosis.presumptive = false;
-						diagnosis.verificationId = this.CONFIRMED;
-						diagnosis.statusId = this.ACTIVE;
 						this.mainDiagnosis = diagnosis;
 						this.mainDiagnosisChange.emit(this.mainDiagnosis);
 					}
@@ -80,7 +76,7 @@ export class DiagnosticosComponent {
 			width: '450px',
 			data: {
 				currentMainDiagnosis: this.mainDiagnosis,
-				otherDiagnoses: this.diagnosticos.filter(d => d.statusId === this.ACTIVE)
+				otherDiagnoses: this.diagnosticos.filter(d => d.statusId === HEALTH_CLINICAL_STATUS.ACTIVO)
 			}
 		});
 
@@ -93,9 +89,8 @@ export class DiagnosticosComponent {
 					this.diagnosticos.splice(this.diagnosticos.indexOf(potentialNewMainDiagnosis), 1);
 					this.mainDiagnosis = potentialNewMainDiagnosis;
 					this.mainDiagnosis.isAdded = true;
-					this.mainDiagnosis.verificationId = this.CONFIRMED;
-					this.mainDiagnosis.statusId = this.ACTIVE;
-					(<DiagnosisDto>this.mainDiagnosis).presumptive = false;
+					if (!this.hasPresumtiveMainDiagnosis)
+						this.setMainDiagnosisStatus();
 					this.mainDiagnosisChange.emit(this.mainDiagnosis);
 
 				}
@@ -133,5 +128,18 @@ export class DiagnosticosComponent {
 			return;
 		}
 		this.diagnosticos.forEach(t => (t.isAdded = completed));
+	}
+
+	updateDiagnosis(diagnosisToUpdate: DiagnosisDto) {
+		const indexToUpdate = this.diagnosticos.findIndex(diagnosis => diagnosis.snomed.sctid === diagnosisToUpdate.snomed.sctid);
+
+		if (indexToUpdate !== -1)
+			this.diagnosticos[indexToUpdate] = diagnosisToUpdate;
+	}
+
+	private setMainDiagnosisStatus() {
+		this.mainDiagnosis.verificationId = HEALTH_VERIFICATIONS.CONFIRMADO;
+		this.mainDiagnosis.statusId = HEALTH_CLINICAL_STATUS.ACTIVO;
+		(<DiagnosisDto>this.mainDiagnosis).presumptive = false;
 	}
 }

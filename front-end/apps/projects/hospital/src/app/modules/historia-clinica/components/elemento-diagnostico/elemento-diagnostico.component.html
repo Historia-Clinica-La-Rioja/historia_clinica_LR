@@ -8,7 +8,7 @@
 		</div>
 		<span *ngIf="diagnosis.statusId == ACTIVE else remissionDiagnosis"
 			[translate]="'internaciones.anamnesis.diagnosticos.ACTIVE'"></span>
-		<span *ngIf="diagnosis.presumptive else confirmedDiagnosis"
+		<span *ngIf="diagnosis.verificationId == PRESUMTIVE else confirmedDiagnosis"
 			[translate]="'internaciones.anamnesis.diagnosticos.PRESUMPTIVE'"></span>
 		<ng-template #confirmedDiagnosis>
 			<span *ngIf="diagnosis.verificationId == CONFIRMED else discardedDiagnosis"

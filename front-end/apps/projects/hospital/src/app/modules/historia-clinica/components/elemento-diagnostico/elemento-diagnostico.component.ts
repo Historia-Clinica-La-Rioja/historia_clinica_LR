@@ -18,6 +18,7 @@ export class ElementoDiagnosticoComponent {
 	isMain: boolean;
 
 	@Output() removeDiagnosis = new EventEmitter();
+	@Output() editedDiagnosis = new EventEmitter<DiagnosisDto>();
 	@Output() checkDiagnosis = new EventEmitter();
 	@Input() type = ' ';
 
@@ -26,15 +27,23 @@ export class ElementoDiagnosticoComponent {
 	RESOLVED = HEALTH_CLINICAL_STATUS.RESUELTO;
 	CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 	DISCARDED = HEALTH_VERIFICATIONS.DESCARTADO;
+	PRESUMTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
 
 	constructor(public dialog: MatDialog) { }
 
 	openDiagnosisEditionDialog() {
-		this.dialog.open(DiagnosisCreationEditionComponent, {
+		const dialogRef = this.dialog.open(DiagnosisCreationEditionComponent, {
 			width: '450px',
 			data: {
 				diagnosisMode: DiagnosisMode.EDITION,
 				diagnosis: this.diagnosis
+			}
+		});
+
+		dialogRef.afterClosed().subscribe(diagnosis => {
+			if (diagnosis) {
+				this.diagnosis = diagnosis;
+				this.editedDiagnosis.emit(this.diagnosis);
 			}
 		});
 	}

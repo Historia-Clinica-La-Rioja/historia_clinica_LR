@@ -32,7 +32,7 @@ export class DiagnosisCreationEditionComponent implements OnInit {
 	) {
 		this.mode = data.diagnosisMode;
 		this.diagnosis = data.diagnosis;
-		this.hasPresumptiveOption = !data?.isMainDiagnosis;
+		this.hasPresumptiveOption = data.hasPresumtiveMainDiagnosis || !data?.isMainDiagnosis;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => this.searchConceptsLocallyFF = isOn);
 	}
 
