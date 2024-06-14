@@ -778,6 +778,7 @@ const messages = {
                 domain: 'Dominio',
                 port: 'Puerto',
                 sectorId: 'Sector',
+                localViewerUrl: 'URL del visualizador local'
             },
             createRelated: 'Crear Servidor PACS'
         },
