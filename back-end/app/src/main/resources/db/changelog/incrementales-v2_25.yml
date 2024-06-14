@@ -42,7 +42,7 @@ databaseChangeLog:
                         type: varchar(128)
                         constraints:
                             nullable: true
-        
+
     - changeSet:
         id: createTable-institution_responsibility_area
         comment: Create table institution_responsibility_area
@@ -79,3 +79,11 @@ databaseChangeLog:
               constraintName: PK_institution_responsibility_area
               tableName: institution_responsibility_area
               validate: true
+
+    - changeSet:
+        id: insert-alta-hospitalaria-discharge-type-in-table-discharge_type
+        author: tomasbecher
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO discharge_type VALUES (15, 'Alta hospitalaria', false, true);
