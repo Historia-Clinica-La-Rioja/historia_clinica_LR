@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.hibernate.annotations.Where;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -26,6 +28,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(SGXAuditListener.class)
+@Where(clause = "deleted=false")
 public class HierarchicalUnitSector extends SGXAuditableEntity<Integer> implements Serializable {
 
 	private static final long serialVersionUID = -1832876231321092835L;

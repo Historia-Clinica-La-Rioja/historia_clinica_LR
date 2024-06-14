@@ -3,12 +3,16 @@ package net.pladema.establishment.controller;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSectorValidator;
 import net.pladema.establishment.repository.SectorRepository;
+import net.pladema.establishment.repository.entity.Institution;
 import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
+import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
 import net.pladema.sgx.backoffice.rest.SingleAttributeBackofficeQueryAdapter;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +48,23 @@ public class BackofficeSectorController extends AbstractBackofficeController<Sec
 	
 	public BackofficeSectorController(SectorRepository sectorRepository,
 									  BackofficeSectorValidator sectorValidator) {
-		super(new BackofficeRepository<>(sectorRepository,
-				new SingleAttributeBackofficeQueryAdapter<>("description")), sectorValidator);
+
+		super(
+				new BackofficeRepository<>(
+						sectorRepository,
+						new BackofficeQueryAdapter<>(){
+							@Override
+							public Example<Sector> buildExample(Sector entity){
+								entity.setDeleted(false);
+								ExampleMatcher matcher = ExampleMatcher
+										.matching()
+										.withMatcher("description", x -> x.ignoreCase().contains());
+								return Example.of(entity, matcher);
+							}
+						}
+				)
+				, sectorValidator
+		);
 	}
 
 }
