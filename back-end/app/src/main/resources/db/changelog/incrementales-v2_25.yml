@@ -141,3 +141,16 @@ databaseChangeLog:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_document_id" ON outpatient_consultation (document_id);
 
+    - changeSet:
+        id: delete-duplicated-indexes
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                DROP INDEX IF EXISTS "IDX_appointment_assn_appointment_id";
+                DROP INDEX IF EXISTS "IDX_document_health_condition_document_id";
+                DROP INDEX IF EXISTS "IDX_document_health_condition_health_condition_id";
+                ALTER TABLE document_prosthesis DROP CONSTRAINT "UQ_document_id_document_prosthesis";
+                ALTER TABLE user_key DROP CONSTRAINT "UQ_key";
+
