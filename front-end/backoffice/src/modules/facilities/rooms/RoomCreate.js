@@ -29,7 +29,7 @@ const RoomCreate = props => {
                     source="sectorId"
                     reference="sectors"
                     sort={{ field: 'description', order: 'ASC' }}
-                    filterToQuery={searchText => ({description: searchText})}
+                    perPage={100}
                 >
                     <AutocompleteInput optionText="description" optionValue="id" options={{ disabled: true }} />
                 </ReferenceInput>

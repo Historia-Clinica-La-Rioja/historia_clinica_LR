@@ -1,5 +1,5 @@
 import React from 'react';
-import { AutocompleteInput, Create, ReferenceInput, SimpleForm, SelectInput } from 'react-admin';
+import { AutocompleteInput, Create, ReferenceInput, SimpleForm } from 'react-admin';
 import CustomToolbar from '../../components/CustomToolbar';
 
 const HierarchicalUnitSectorCreate = props => {
@@ -20,8 +20,9 @@ const HierarchicalUnitSectorCreate = props => {
                     sort={{ field: 'description', order: 'ASC' }}
                     label="resources.hierarchicalunitsectors.fields.sectorId"
                     filter={{ institutionId: props?.location?.state?.record.institutionId }}
+                    perPage={100}
                 >
-                    <SelectInput optionText="description" optionValue="id"/>
+                    <AutocompleteInput optionText="description" optionValue="id"/>
                 </ReferenceInput>
             </SimpleForm>
 

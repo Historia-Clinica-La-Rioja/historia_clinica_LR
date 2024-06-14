@@ -199,6 +199,7 @@ const ShowServiceSectorData = ({ record }) => {
                     reference="clinicalservicesectors"
                     target="sectorId"
                     sort={{ field: 'description', order: 'DESC' }}
+                    perPage={100}
                 >
                     <Datagrid rowClick="show">
                         <TextField source="description" />
@@ -219,6 +220,7 @@ const ShowServiceSectorData = ({ record }) => {
                     reference="clinicalservicesectors"
                     target="sectorId"
                     sort={{ field: 'description', order: 'DESC' }}
+                    perPage={100}
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
@@ -262,10 +264,11 @@ const SectorShow = props => (
                 target= { "sectorId" }
                 sort={{ field: 'description', order: 'DESC' }}
                 filter={{ deleted: false }}
+                perPage={100}
             >
                 <Datagrid rowClick="show">
                     <TextField source="description" />
-                    <ReferenceField source="sectorTypeId"  link={false}  reference="sectortypes">
+                    <ReferenceField source="sectorTypeId" link={false} reference="sectortypes">
                         <TextField source="description" />
                     </ReferenceField>
                     <EditButton />
@@ -278,6 +281,7 @@ const SectorShow = props => (
                 reference="pacserversimagelvl"
                 target= { "sectorId" }
                 sort={{ field: 'name', order: 'DESC' }}
+                perPage={100}
             >
                 <Datagrid rowClick="show">
                     <TextField source="name" />
@@ -298,6 +302,7 @@ const SectorShow = props => (
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
                 filter={{ deleted: false }}
+                perPage={100}
             >
                 <Datagrid rowClick="show"
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}} >Sin consultorios definidos</p>}>
@@ -313,6 +318,7 @@ const SectorShow = props => (
                 reference="orchestrator"
                 target="sectorId"
                 sort={{ field: 'name', order: 'DESC' }}
+                perPage={100}
                 >
                 <Datagrid rowClick={UserIsAdmin()?"show":""}>
                     <TextField source="name"/>
@@ -329,6 +335,7 @@ const SectorShow = props => (
                 reference="equipment"
                 target="sectorId"
                 sort={{ field: 'aeTitle', order: 'DESC' }}
+                perPage={100}
             >
                 <Datagrid rowClick={UserIsAdmin()?"show":""}>
                     <TextField source="name" />
@@ -357,6 +364,7 @@ const SectorShow = props => (
                 reference="rooms"
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
+                perPage={100}
             >
                 <Datagrid rowClick="show"
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin habitaciones definidas</p>}>
@@ -377,6 +385,7 @@ const SectorShow = props => (
                 target="sectorId"
                 sort={{ field: 'description', order: 'DESC' }}
                 filter={{ deleted: false }}
+                perPage={100}
             >
                 <Datagrid rowClick="show"
                           empty={<p style={{paddingLeft:10, marginTop:0, color:'#8c8c8c'}}>Sin Shockrooms definidos</p>}>

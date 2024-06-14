@@ -31,6 +31,7 @@ const ClinicalServiceSectorCreate = props => (
                 reference="clinicalservices"
                 sort={{ field: 'name', order: 'ASC' }}
                 filterToQuery={searchToFilter}
+                perPage={100}
             >
                 <AutocompleteInput optionText="name" optionValue="id" validate={[required()]} />
             </ReferenceInput>
