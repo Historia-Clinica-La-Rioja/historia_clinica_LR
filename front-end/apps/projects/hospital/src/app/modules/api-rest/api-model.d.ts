@@ -4712,6 +4712,7 @@ export interface StudyAppointmentDto {
     imageId?: string;
     informerObservations?: InformerObservationDto;
     isAvailableInPACS: boolean;
+    localViewerUrl?: string;
     patientFullName: string;
     patientId: number;
     sizeImage?: number;
