@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { LatestStudiesComponent } from '../pop-up/latest-studies/latest-studies.component';
 import { EdmontonService } from '@api-rest/services/edmonton.service';
 import { FrailService } from '@api-rest/services/fragility-test.service';
+import { PhysicalPerformanceService } from '@api-rest/services/physical-performance.service';
+
 
 @Component({
   selector: 'app-adulto-mayor',
@@ -18,25 +20,29 @@ export class AdultoMayorComponent implements OnInit {
   patientId: number;
   private readonly routePrefix;
   patientData: BasicPatientDto | undefined;
-  lastEdmontonQuestionnaires: QuestionnairesResponses[] = [];  
-  lastThreeFrailQuestionnaires: QuestionnairesResponses[] = [];  
+  lastEdmontonQuestionnaires: QuestionnairesResponses[] = [];
+  lastFrailQuestionnaires: QuestionnairesResponses[] = [];
+  lastPhysicalQuestionnaires: QuestionnairesResponses[] = [];
 
   constructor(
     private dialog: MatDialog,
     private readonly contextService: ContextService,
     private readonly route: ActivatedRoute,
-    private edmontonService: EdmontonService, 
-    private frailService: FrailService  
+    private edmontonService: EdmontonService,
+    private frailService: FrailService,
+    private PhysicalPerformanceService: PhysicalPerformanceService
   ) {
     this.routePrefix = `${this.contextService.institutionId}`;
     this.route.paramMap.subscribe(params => {
       this.patientId = Number(params.get('idPaciente'));
+
     });
   }
 
   ngOnInit(): void {
     this.loadLastEdmontonQuestionnaires();
-    this.loadLastThreeFrailQuestionnaires();
+    this.loadLastFrailQuestionnaires();
+    this.loadLastPhysicalQuestionnaires();
   }
 
   loadLastEdmontonQuestionnaires(): void {
@@ -51,6 +57,19 @@ export class AdultoMayorComponent implements OnInit {
         });
 
         this.lastEdmontonQuestionnaires = edmontonQuestionnaires.slice(0, 3);
+        this.lastEdmontonQuestionnaires.forEach(q => {
+          if (q.questionnaireResult === "0 - 4 : Individuo sano") {
+            q['questionnaireResult'] = "Individuo Sano"
+          } else if (q.questionnaireResult === "5 - 6 : Vulnerable") {
+            q['questionnaireResult'] = "Vulnerable"
+          } else if (q.questionnaireResult === "7 - 8 : Fragilidad leve") {
+            q['questionnaireResult'] = "Fragilidad leve"
+          } else if (q.questionnaireResult === "9 - 10 : Fragilidad moderada") {
+            q['questionnaireResult'] = "Fragilidad moderada"
+          } else if (q.questionnaireResult === ">= 11 : Fragilidad severa") {
+            q['questionnaireResult'] = "Fragilidad severa"
+          }
+        })
       },
       (error) => {
         console.error('Error fetching Edmonton questionnaires:', error);
@@ -58,7 +77,7 @@ export class AdultoMayorComponent implements OnInit {
     );
   }
 
-  loadLastThreeFrailQuestionnaires(): void {
+  loadLastFrailQuestionnaires(): void {
     this.frailService.getAllByPatientId(this.patientId).subscribe(
       (questionnaires: QuestionnairesResponses[]) => {
         const frailQuestionnaires = questionnaires.filter(
@@ -69,7 +88,38 @@ export class AdultoMayorComponent implements OnInit {
           return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
         });
 
-        this.lastThreeFrailQuestionnaires = frailQuestionnaires.slice(0, 3);
+        this.lastFrailQuestionnaires = frailQuestionnaires.slice(0, 3);
+        this.lastFrailQuestionnaires.forEach(q => {
+          if (q.questionnaireResult === "3-5: Persona frágil") {
+            q['questionnaireResult'] = "Persona frágil"
+          } else if (q.questionnaireResult === "0-2: Persona pre-frágil") {
+            q['questionnaireResult'] = "Persona pre-frágil"
+          }
+        });
+
+      },
+      (error) => {
+        console.error('Error fetching Frail questionnaires:', error);
+      }
+    );
+  }
+
+  loadLastPhysicalQuestionnaires(): void {
+    this.PhysicalPerformanceService.getAllByPatientId(this.patientId).subscribe(
+      (questionnaires: QuestionnairesResponses[]) => {
+        const physicalQuestionnaires = questionnaires.filter(
+          (questionnaire) => questionnaire.questionnaireTypeId === 4
+        );
+
+        physicalQuestionnaires.sort((a, b) => {
+          return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
+        });
+
+        this.lastPhysicalQuestionnaires = physicalQuestionnaires.slice(0, 3);
+        // this.lastPhysicalQuestionnaires.forEach(q => {
+        //   if(q.questionnaireResult === "Desempeño fisico bajo") {
+        //   } else (q.questionnaireResult === "Desempeño fisico alto")
+        // })
       },
       (error) => {
         console.error('Error fetching Frail questionnaires:', error);
@@ -91,6 +141,18 @@ export class AdultoMayorComponent implements OnInit {
 
   downloadFrailPdf(questionnaireId: number): void {
     this.frailService.getPdf(questionnaireId).subscribe(
+      (pdfBlob: Blob) => {
+        const url = window.URL.createObjectURL(pdfBlob);
+        window.open(url);
+      },
+      (error) => {
+        console.error('Error downloading the questionnaire PDF:', error);
+      }
+    );
+  }
+
+  downloadPhysicalPdf(questionnaireId: number): void {
+    this.PhysicalPerformanceService.physicalPerformancePdf(questionnaireId).subscribe(
       (pdfBlob: Blob) => {
         const url = window.URL.createObjectURL(pdfBlob);
         window.open(url);
