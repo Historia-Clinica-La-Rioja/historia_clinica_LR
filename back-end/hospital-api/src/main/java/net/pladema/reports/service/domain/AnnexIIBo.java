@@ -65,6 +65,8 @@ public class AnnexIIBo {
 	private Boolean showProcedures;
 	private Integer missingProcedures;
 
+	private Short patientIdentityAccreditationStatusId;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();

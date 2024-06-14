@@ -292,6 +292,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		ctx.put("procedureLinesTotal", reportDataDto.getProceduresTotal());
 		ctx.put("showProcedureLines", reportDataDto.getShowProcedures());
 		ctx.put("missingProcedures", reportDataDto.getMissingProcedures());
+		ctx.put("patientIdentityAccreditationStatus", reportDataDto.getPatientIdentityAccreditationStatusId());
 
         return ctx;
     }

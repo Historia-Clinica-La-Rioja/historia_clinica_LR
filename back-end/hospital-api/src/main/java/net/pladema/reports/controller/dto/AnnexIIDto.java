@@ -58,4 +58,7 @@ public class AnnexIIDto {
 	private Boolean showProcedures;
 
 	private Integer missingProcedures;
+
+	private Short patientIdentityAccreditationStatusId;
+
 }

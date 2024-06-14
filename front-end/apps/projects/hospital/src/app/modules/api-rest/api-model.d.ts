@@ -246,6 +246,7 @@ export interface AnnexIIDto {
     missingProcedures: number;
     patientAge: number;
     patientGender: string;
+    patientIdentityAccreditationStatusId: number;
     problems: string;
     procedures: AnnexIIProcedureDto[];
     proceduresEgressDate: Date;

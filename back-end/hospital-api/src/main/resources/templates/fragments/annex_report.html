@@ -630,6 +630,12 @@
             <div class="border-bottom">Firma del Beneficiario</div>
         </div>
     </div>
+    <div th:if="${ patientIdentityAccreditationStatus != null }">
+        <div class="table">
+            <div th:if="${ patientIdentityAccreditationStatus == 1 }">Validación digital presencial mediante acreditación de identidad</div>
+            <div th:if="${ patientIdentityAccreditationStatus == 2 }">No se ha validado presencialidad en forma digital</div>
+        </div>
+    </div>
 
 </div>
 
