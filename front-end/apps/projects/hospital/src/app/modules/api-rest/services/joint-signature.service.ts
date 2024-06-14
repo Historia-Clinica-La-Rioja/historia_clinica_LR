@@ -25,7 +25,7 @@ export class JointSignatureService {
 	}
 
 	getDocumentElectronicSignatureProfessionalStatus(documentId: number): Observable<DocumentElectronicSignatureProfessionalStatusDto[]> {
-		const URL = this.BASE_URL + `/document/${documentId}/get-professionals-status`
+		const URL =  `${environment.apiBase}/institution/${this.contextService.institutionId}/document/${documentId}/electronic-joint-signature/get-professionals-status`
 		return this.http.get<DocumentElectronicSignatureProfessionalStatusDto[]>(URL);
 	}
 
@@ -39,7 +39,7 @@ export class JointSignatureService {
 		return this.http.put<number>(url, documentIds);
 	}
 
-	getElectronicJointSignatureDocumentPossibleStatusesController(): Observable<GenericMasterDataDto<EElectronicSignatureStatus>[]> {
+	getElectronicJointSignatureDocumentPossibleStatuses(): Observable<GenericMasterDataDto<EElectronicSignatureStatus>[]> {
 		const url = `${environment.apiBase}/electronic-joint-signature/master-data/get-document-possible-statuses`;
 		return this.http.get<GenericMasterDataDto<EElectronicSignatureStatus>[]>(url);
 	}

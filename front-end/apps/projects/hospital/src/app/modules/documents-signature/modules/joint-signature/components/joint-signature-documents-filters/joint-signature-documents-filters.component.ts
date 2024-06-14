@@ -6,6 +6,7 @@ import { SIGNATURE_STATUS_FILTER, SIGNATURE_STATUS_KEY } from '../../constants/j
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { Filter, SelectedFilterOption } from '@presentation/components/filters/filters.component';
 import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
+import { getElementAtPosition } from '@core/utils/array.utils';
 
 @Component({
   selector: 'app-joint-signature-documents-filters',
@@ -14,34 +15,34 @@ import { DateRange } from '@presentation/components/date-range-picker/date-range
 })
 export class JointSignatureDocumentsFiltersComponent {
   @Output() selectedFilters = new EventEmitter<ElectronicJointSignatureInvolvedDocumentListFilterDto>();
-  selectedFilterOptions: ElectronicJointSignatureInvolvedDocumentListFilterDto = {};
-  filter: Filter[] = SIGNATURE_STATUS_FILTER;
+  selectedFilterOptions: ElectronicJointSignatureInvolvedDocumentListFilterDto = {} as ElectronicJointSignatureInvolvedDocumentListFilterDto;
+  statesFiltersOptions: Filter[] = SIGNATURE_STATUS_FILTER;
 	initialDateRange: DateRange;
 
   constructor(private joinSignatureService: JointSignatureService) {
-    this.joinSignatureService.getElectronicJointSignatureDocumentPossibleStatusesController().subscribe(documentsState => {
+    this.joinSignatureService.getElectronicJointSignatureDocumentPossibleStatuses().subscribe(documentsState => {
       let filterAux = SIGNATURE_STATUS_FILTER;
-      filterAux[0].options = documentsState;
-      filterAux[0].defaultValue = documentsState.filter(s => s.id === EElectronicSignatureStatus.PENDING).map(s => s.id);;
-      this.filter = deepClone(filterAux);
+      getElementAtPosition(filterAux,0).options = documentsState;
+      getElementAtPosition(filterAux,0).defaultValue = documentsState.filter(s => s.id === EElectronicSignatureStatus.PENDING).map(s => s.id);;
+      this.statesFiltersOptions = deepClone(filterAux);
       this.selectedFilterOptions.electronicSignaturesStatusIds = [EElectronicSignatureStatus.PENDING];
-      this.emitFilters();
+      this.emitFilters(this.selectedFilterOptions);
     })
   }
 
-  handleFilterChange(event: SelectedFilterOption[]): void {
+  setStatesFilter(event: SelectedFilterOption[]): void {
 		this.selectedFilterOptions.electronicSignaturesStatusIds = event.length ? event.find(filter => filter.key === SIGNATURE_STATUS_KEY).value : null;
 	}
 
-  setDatesFilter(event) {
+  setDatesFilter(event: DateRange) {
     this.selectedFilterOptions.startDate = event? dateToDateDto(event.start): null;
     this.selectedFilterOptions.endDate = event? dateToDateDto(event.end): null;
   }
   
-  emitFilters(){
-    this.selectedFilterOptions.patientFirstName = this.selectedFilterOptions.patientFirstName? this.selectedFilterOptions.patientFirstName: null;
-    this.selectedFilterOptions.patientLastName = this.selectedFilterOptions.patientLastName? this.selectedFilterOptions.patientLastName: null;
-    this.selectedFilters.emit(deepClone(this.selectedFilterOptions));
+  emitFilters(selectedFilterOptions: ElectronicJointSignatureInvolvedDocumentListFilterDto){
+    selectedFilterOptions.patientFirstName = this.selectedFilterOptions.patientFirstName? this.selectedFilterOptions.patientFirstName: null;
+    selectedFilterOptions.patientLastName = this.selectedFilterOptions.patientLastName? this.selectedFilterOptions.patientLastName: null;
+    this.selectedFilters.emit(deepClone(selectedFilterOptions));
   }
 
 }

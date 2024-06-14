@@ -1,6 +1,6 @@
 <div data-id="filters" class="filters" fxLayout="row" fxLayoutAlign="space-evenly center">
-	<app-filters-select-v2 data-id="states-filter" [setFilters]="filter"
-		(selectedFilters)="handleFilterChange($event)">
+	<app-filters-select-v2 data-id="states-filter" [setFilters]="statesFiltersOptions"
+		(selectedFilters)="setStatesFilter($event)">
 	</app-filters-select-v2>
 
 	<app-date-range-picker data-id="dates-filter" [dateRange]="initialDateRange"
@@ -17,7 +17,7 @@
 		<input matInput id="patient-lastName" [(ngModel)]="selectedFilterOptions.patientLastName">
 	</mat-form-field>
 	
-	<button mat-stroked-button color="primary" btn-block type="button" (click)="emitFilters()">
+	<button mat-stroked-button color="primary" btn-block type="button" (click)="emitFilters(selectedFilterOptions)">
 		<span> {{'buttons.FILTER' | translate}}</span>
 	</button>
 </div>
