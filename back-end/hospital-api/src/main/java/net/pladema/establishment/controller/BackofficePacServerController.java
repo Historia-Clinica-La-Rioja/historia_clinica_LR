@@ -6,18 +6,14 @@ import static net.pladema.sgx.backoffice.permissions.NewBackofficePermissionBuil
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgx.auth.twoWayEncryption.infrastructure.output.TwoWayEncryptionService;
 import net.pladema.establishment.repository.PacServerRepository;
 import net.pladema.establishment.repository.entity.PacServer;
 import net.pladema.permissions.repository.enums.ERole;
-import net.pladema.permissions.service.LoggedUserService;
-import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
 import net.pladema.sgx.backoffice.rest.NewAbstractBackofficeController;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
@@ -25,7 +21,6 @@ import net.pladema.sgx.session.application.port.UserSessionStorage;
 
 @RestController
 @RequestMapping("backoffice/pacservers")
-@PreAuthorize("hasAnyAuthority('ROOT')")
 public class BackofficePacServerController extends NewAbstractBackofficeController<PacServer, Integer> {
 
 	private final int SERVIDOR_CENTRAL = 1;
