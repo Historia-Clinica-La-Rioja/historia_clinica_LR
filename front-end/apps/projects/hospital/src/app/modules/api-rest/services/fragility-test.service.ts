@@ -20,7 +20,7 @@ export class FrailService {
   }
 
   getFrailSummary(institutionId: number, patientId: number, questionnaireId: number): Observable<FrailSummary> {
-    const url = `${environment.apiBase}/institution/${institutionId}/patient/${patientId}/hce/general-state/summary/frail/${questionnaireId}`;
+    const url = `${environment.apiBase}/institution/{institutionId}/questionnaire/{questionnaireResponseId}/answers`;
     return this.http.get<FrailSummary>(url);
   }
 
