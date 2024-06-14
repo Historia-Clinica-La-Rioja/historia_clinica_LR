@@ -2,13 +2,7 @@ package net.pladema.clinichistory.outpatient.createoutpatient.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentException;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientDocumentExceptionEnum;
-import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
-import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
-
-import net.pladema.clinichistory.requests.servicerequests.service.domain.CompleteDiagnosticReportBo;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -19,7 +13,15 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.S
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientConsultationServiceRequestException;
+import net.pladema.clinichistory.requests.servicerequests.application.AddDiagnosticReportObservations;
+import net.pladema.clinichistory.requests.servicerequests.application.port.ServiceRequestStorage;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.AddObservationsCommandVo;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportObservationException;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.InvalidProcedureTemplateChangeException;
+import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
+import net.pladema.clinichistory.requests.servicerequests.service.domain.CompleteDiagnosticReportBo;
 import net.pladema.clinichistory.requests.servicerequests.service.domain.ServiceRequestBo;
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
@@ -32,19 +34,29 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 	private final CreateServiceRequestService createServiceRequestService;
 	private final CompleteDiagnosticReportService completeDiagnosticReportService;
 	private final ServiceRequestStorage serviceRequestStorage;
-
 	private final HospitalApiPublisher hospitalApiPublisher;
+	private final AddDiagnosticReportObservations addDiagnosticReportObservations;
 
 	/**
-	 * Creates a service request for the procedures of a new outpatient consultation.
+	 * Create outpatient consultation service request
+	 * ==============================================
+	 *
+	 * This use case creates a service request for the procedures of a new outpatient consultation. This permits
+	 * the creation of service requests directly from the consultation form. The alternative is to create
+	 * the service request from the "estudios" tab.
+	 * Observations attached to the service request are also supported. See below.
+	 *
 	 * If the consultation has many procedures, this method must be called once for
 	 * each of them.
 	 *
-	 * Very similar to other callers of CreateServiceRequestService#execute.
-	 * It creates a ServiceRequestBo and then calls the create service request use case.
+	 * It works similarly to other callers of CreateServiceRequestService#execute: It creates a ServiceRequestBo
+	 * and then calls the create service request use case.
 	 * If createAsFinal is true, the new diagnostic reports (linked to the new service request)
 	 * will be marked as complete (status=FINAL). Otherwise, its status will be
 	 * pending (status=REGISTERED).
+	 *
+	 * Data model
+	 * ===============================================
 	 *
 	 * Example of what the db looks like after this use case is executed (this consultation has only one procedure):
 	 *
@@ -68,14 +80,18 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 	 * 		service_request -> outpatient_consultation (via (source_id,source_type))
 	 * 		service_request <- document <- document_diagnostic_report -> diagnostic_report
 	 *
+	 * Observations
+	 * ===============================================
+	 * The procedures of the outpatient consultation may have observations attached that must
+	 * be stored by this use case. This is similar to the use case that's called from the "completar resultados" form
+	 * of a service request. See ServiceRequestController.addObservations.
+	 *
 	 */
 	@Override
 	public Integer execute(Integer doctorId, String categoryId, BasicPatientDto patientDto, Integer institutionId,
 		Integer healthConditionId, Integer medicalCoverageId, Integer outpatientConsultationId,
-		String snomedSctid, String snomedPt, Boolean createAsFinal
-	)
-	{
-
+		String snomedSctid, String snomedPt, Boolean createAsFinal, Optional<AddObservationsCommandVo> addObservationsCommand
+	) throws CreateOutpatientConsultationServiceRequestException {
 		log.debug("execute -> institutionId {}, doctorId {}, patientDto {}, categoryId {}, " +
 						"medicalCoverageId {}, outpatientConsultationId {}, snomedSctid {}, snomedPt {}, healthConditionId {}",
 				institutionId,
@@ -99,35 +115,61 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 			snomedPt,
 			healthConditionId
 		);
+
 		Integer newServiceRequestId = createServiceRequestService.execute(serviceRequestBo);
 		hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId));
-		if (createAsFinal) {
-			transitionToFinal(newServiceRequestId, patientDto.getId(), institutionId, outpatientConsultationId);
+
+		//Fetch the diagnostic report created as part of the service request
+		Integer newDiagnosticReportId = getCreatedDiagnosticReportId(newServiceRequestId, outpatientConsultationId);
+
+		//If the procedures come with observations add them to the diagnostic report
+		if (addObservationsCommand.isPresent()) {
+			var command = addObservationsCommand.get();
+			addObservations(newDiagnosticReportId, command, outpatientConsultationId);
 		}
+
+		//Advance the diagnostic report's status if necessary
+		if (createAsFinal) {
+			transitionToFinal(newDiagnosticReportId, patientDto.getId(), institutionId, outpatientConsultationId);
+		}
+
 		log.debug("Output -> {}", newServiceRequestId);
 		return newServiceRequestId;
 	}
 
 	/**
-	 * Advance the new diagnostic report to status=FINAL
-	 * @param serviceRequestId
+	 * Add observations to the newly created diagnostic report
 	 */
-	private void transitionToFinal(Integer serviceRequestId, Integer patientId, Integer institutionId, Integer outpatientConsultationId) {
-		var createdDiagnosticReports = serviceRequestStorage.getProceduresByServiceRequestIds(List.of(serviceRequestId));
-		Integer diagnosticReportId = createdDiagnosticReports.stream()
-		.map(diagnosticReport -> diagnosticReport.getDiagnosticReportId())
-		.findFirst()
-		.orElseThrow(() -> creationError(outpatientConsultationId));
+	private void addObservations(Integer diagnosticReportId, AddObservationsCommandVo addObservationsCommand, Integer outpatientConsultationId) throws CreateOutpatientConsultationServiceRequestException {
+		try {
+			addDiagnosticReportObservations.run(diagnosticReportId, addObservationsCommand);
+		}
+		catch (InvalidProcedureTemplateChangeException e) {
+			throw translateException(e, outpatientConsultationId, diagnosticReportId);
+		}
+		catch (DiagnosticReportObservationException e) {
+			throw translateException(e, outpatientConsultationId, diagnosticReportId);
+		}
+	}
 
+	/**
+	 * Advance the new diagnostic report to status=FINAL
+	 */
+	private void transitionToFinal(Integer diagnosticReportId, Integer patientId, Integer institutionId, Integer outpatientConsultationId) {
 		//There are no observations, reference or link for this diagnostic report
 		CompleteDiagnosticReportBo completeDiagnosticReportBo = new CompleteDiagnosticReportBo();
 		completeDiagnosticReportService.run(patientId, diagnosticReportId, completeDiagnosticReportBo, institutionId);
 	}
 
-	private CreateOutpatientDocumentException creationError(Integer outpatientConsultationId) {
-		var error = new CreateOutpatientDocumentException(CreateOutpatientDocumentExceptionEnum.SERVICE_REQUEST_CREATION_FAILED);
-		error.addError(String.format("Error al crear la orden. Id consulta: %s", outpatientConsultationId));
-		return error;
+	private Integer getCreatedDiagnosticReportId(Integer serviceRequestId, Integer outpatientConsultationId) throws CreateOutpatientConsultationServiceRequestException {
+		var createdDiagnosticReports = serviceRequestStorage.getProceduresByServiceRequestIds(List.of(serviceRequestId));
+		return createdDiagnosticReports
+		.stream()
+		.map(diagnosticReport -> diagnosticReport.getDiagnosticReportId())
+		.findFirst()
+		.orElseThrow(() ->
+			CreateOutpatientConsultationServiceRequestException
+			.diagnosticReportCreationFailed(serviceRequestId, outpatientConsultationId));
 	}
 
 	private ServiceRequestBo buildServiceRequestBo(
@@ -186,4 +228,13 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
+	private CreateOutpatientConsultationServiceRequestException translateException(InvalidProcedureTemplateChangeException e, Integer outpatientConsultationId, Integer diagnosticReportId) {
+		return CreateOutpatientConsultationServiceRequestException
+			.invalidDiagnosticReportTemplateChange(outpatientConsultationId, diagnosticReportId);
+	}
+
+	private CreateOutpatientConsultationServiceRequestException translateException(DiagnosticReportObservationException e, Integer outpatientConsultationId, Integer diagnosticReportId) {
+		return CreateOutpatientConsultationServiceRequestException
+			.diagnosticReportObservationException(e.getCode(), e.getDomainObjectName(), e.getDomainObjectId(), outpatientConsultationId);
+	}
 }

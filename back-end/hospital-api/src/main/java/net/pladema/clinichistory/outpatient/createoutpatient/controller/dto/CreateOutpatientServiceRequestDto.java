@@ -3,8 +3,11 @@ package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 import lombok.Getter;
 import lombok.Setter;
 import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus;
+import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.AddDiagnosticReportObservationsCommandDto;
 
 import javax.annotation.Nullable;
+
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -21,4 +24,6 @@ public class CreateOutpatientServiceRequestDto {
 	private Integer healthConditionId;
 	private String categoryId;
 	private CreationStatus creationStatus;
+	@Nullable
+	private AddDiagnosticReportObservationsCommandDto observations;
 }

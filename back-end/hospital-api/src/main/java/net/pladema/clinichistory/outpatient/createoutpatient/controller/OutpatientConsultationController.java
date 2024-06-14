@@ -29,10 +29,13 @@ import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpa
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientConsultationServiceRequestException;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.outpatientReason.OutpatientReasonService;
 import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
 import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ErrorProblemDto;
 import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ProblemInfoDto;
+import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportObservationsMapper;
+import net.pladema.clinichistory.requests.servicerequests.domain.observations.AddObservationsCommandVo;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
@@ -55,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -95,13 +99,15 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final CreateOutpatientConsultationServiceRequest createOutpatientConsultationServiceRequest;
 
+    private final DiagnosticReportObservationsMapper diagnosticReportObservationsMapper;
+
     @Override
     @Transactional
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, PRESCRIPTOR')")
     public ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             Integer institutionId,
             Integer patientId,
-            CreateOutpatientDto createOutpatientDto) {
+            CreateOutpatientDto createOutpatientDto) throws CreateOutpatientConsultationServiceRequestException {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, createOutpatientDto {}", institutionId, patientId, createOutpatientDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 
@@ -152,21 +158,34 @@ public class OutpatientConsultationController implements OutpatientConsultationA
         return  ResponseEntity.ok().body(result);
     }
 
+	/**
+	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
+	 */
 	private void createServiceRequest(Integer doctorId, List<CreateOutpatientProcedureDto> procedures,
 		Integer medicalCoverageId, BasicPatientDto patientDto, Integer institutionId, Integer newOutpatientConsultationId)
+		throws CreateOutpatientConsultationServiceRequestException
 	{
-		procedures.forEach(procedure -> {
+		for (int i = 0; i < procedures.size(); i++) {
+			var procedure = procedures.get(i);
 			if (procedure.getServiceRequest() != null) {
+
 				String categoryId = procedure.getServiceRequest().getCategoryId();
 				Integer healthConditionId = procedure.getServiceRequest().getHealthConditionId();
 				SnomedDto snomed = procedure.getSnomed();
 				Boolean createWithStatusFinal = procedure.getServiceRequest().getCreationStatus().isFinal();
+				var addObservationsCommand = Optional
+					.ofNullable(
+						procedure
+						.getServiceRequest()
+						.getObservations()
+					)
+					.map(x -> diagnosticReportObservationsMapper.fromDto(x));
 
 				createOutpatientConsultationServiceRequest.execute(doctorId, categoryId, patientDto, institutionId,
-					healthConditionId, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
-					createWithStatusFinal);
+						healthConditionId, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
+						createWithStatusFinal, addObservationsCommand);
 			}
-		});
+		}
 	}
 
 	@Override

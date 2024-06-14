@@ -9,6 +9,7 @@ import net.pladema.clinichistory.outpatient.createoutpatient.controller.constrai
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
+import net.pladema.clinichistory.outpatient.createoutpatient.service.exceptions.CreateOutpatientConsultationServiceRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public interface OutpatientConsultationAPI {
     ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") @HasAppointment Integer patientId,
-            @RequestBody @Valid CreateOutpatientDto createOutpatientDto) throws IOException, PDFDocumentException;
+            @RequestBody @Valid CreateOutpatientDto createOutpatientDto) throws IOException, PDFDocumentException, CreateOutpatientConsultationServiceRequestException;
 
     @PostMapping("/gettingVaccine")
     ResponseEntity<Boolean> gettingVaccine(

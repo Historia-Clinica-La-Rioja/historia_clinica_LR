@@ -1117,6 +1117,7 @@ export interface CreateOutpatientServiceRequestDto {
     categoryId: string;
     creationStatus: CreationStatus;
     healthConditionId: number;
+    observations?: AddDiagnosticReportObservationsCommandDto;
 }
 
 export interface CreationableDto extends Serializable {
