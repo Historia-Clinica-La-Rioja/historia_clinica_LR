@@ -123,3 +123,12 @@ databaseChangeLog:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_person_file_person_id" ON person_file(person_id);
 
+    - changeSet:
+        id: createIndexSignatureStatusId-document_file
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_file_signature_status_id" ON document_file(signature_status_id);
+
