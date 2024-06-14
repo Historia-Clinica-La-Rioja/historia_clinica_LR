@@ -132,3 +132,12 @@ databaseChangeLog:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_document_file_signature_status_id" ON document_file(signature_status_id);
 
+    - changeSet:
+        id: createIndexDocumentId-outpatient_consultation
+        author: fsimaro
+        dbms: postgresql
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_outpatient_consultation_document_id" ON outpatient_consultation (document_id);
+
