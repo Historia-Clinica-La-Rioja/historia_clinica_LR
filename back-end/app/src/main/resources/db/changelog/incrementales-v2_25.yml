@@ -1,3 +1,11 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_25 
 
+    - changeSet:
+        id: role-api_anexo-level-change
+        context: "!schema-only"
+        author: efernandez
+        changes:
+          - sql:
+              sql: |-
+                UPDATE user_role SET institution_id = -1 WHERE role_id = 47;

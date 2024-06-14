@@ -16,22 +16,15 @@ import net.pladema.sgx.session.application.port.UserSessionStorage;
 @Service
 public class AppAnnexReportByEncounterPublicApiPermissions implements AnnexReportByEncounterPublicApiPermissionsPort {
 	private final UserSessionStorage userSessionStorage;
-	private final InstitutionRepository institutionRepository;
 	private final ApiConsumerCondition apiConsumerCondition;
 
-
 	@Override
-	public boolean canAccess(Integer institutionId) {
+	public boolean canAccess() {
 		return userSessionStorage.getRolesAssigned().anyMatch(
 				roleAssignment ->
-					roleAssignment.isAssigment(ERole.API_ANEXO, institutionId)
+					roleAssignment.isAssigment(ERole.API_ANEXO, -1)
 					|| apiConsumerCondition.isRole(roleAssignment)
 		);
-	}
-
-	@Override
-	public Optional<Integer> findInstitutionId(String refsetCode) {
-		return institutionRepository.findIdBySisaCode(refsetCode);
 	}
 
 }
