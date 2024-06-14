@@ -221,7 +221,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
 	/**
-	 * @Deprecated Usar {@link net.pladema.medicalconsultation.appointment.application.ChangeAppointmentState}
+	 * @Deprecated Usar {@link net.pladema.medicalconsultation.appointment.application.ChangeAppointmentState} para turnos que NO son de imágenes
 	 */
 	@Deprecated
     @Override

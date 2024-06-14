@@ -10,6 +10,7 @@ import net.pladema.medicalconsultation.appointment.application.port.AppointmentP
 import net.pladema.medicalconsultation.appointment.application.port.HistoricAppointmentStatePort;
 import net.pladema.medicalconsultation.appointment.domain.UpdateAppointmentStateBo;
 import net.pladema.medicalconsultation.appointment.infraestructure.output.internal.EncryptPatientIdentificationCode;
+import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.domain.enums.EPatientIdentityAccreditationStatus;
 import net.pladema.medicalconsultation.appointment.repository.entity.AppointmentState;
 
@@ -39,13 +40,23 @@ public class ChangeAppointmentState {
 	@Transactional
 	public boolean run(UpdateAppointmentStateBo updateAppointmentStateBo) {
 		log.debug("Input parameters -> updateAppointmentStatusBo {}", updateAppointmentStateBo);
-		appointmentPort.updateAppointmentState(updateAppointmentStateBo.getAppointmentId(), updateAppointmentStateBo.getAppointmentStateId());
-		checkIfPreviousStateIsConfirmed(updateAppointmentStateBo);
-		checkIfNewStateIsConfirmed(updateAppointmentStateBo);
+		checkAndHandleOnSiteAttention(updateAppointmentStateBo);
 		checkAndHandleRecurringAppointment(updateAppointmentStateBo);
+		appointmentPort.updateAppointmentState(updateAppointmentStateBo.getAppointmentId(), updateAppointmentStateBo.getAppointmentStateId());
 		historicAppointmentStatePort.save(updateAppointmentStateBo);
 		log.debug("Output -> {}", Boolean.TRUE);
 		return Boolean.TRUE;
+	}
+
+	private void checkAndHandleOnSiteAttention(UpdateAppointmentStateBo updateAppointmentStateBo) {
+		Short appointmentModalityId = appointmentPort.getAppointmentModalityById(updateAppointmentStateBo.getAppointmentId());
+		if (appointmentModalityId.equals(EAppointmentModality.ON_SITE_ATTENTION.getId()))
+			handleOnSiteAttention(updateAppointmentStateBo);
+	}
+
+	private void handleOnSiteAttention(UpdateAppointmentStateBo updateAppointmentStateBo) {
+		checkAndHandleIfPreviousStateWasConfirmed(updateAppointmentStateBo);
+		checkAndHandleIfNewStateIsConfirmed(updateAppointmentStateBo);
 	}
 
 	private void checkAndHandleRecurringAppointment(UpdateAppointmentStateBo updateAppointmentStateBo) {
@@ -59,13 +70,13 @@ public class ChangeAppointmentState {
 			appointmentService.checkRemainingChildAppointments(appointmentParentId);
 	}
 
-	private void checkIfNewStateIsConfirmed(UpdateAppointmentStateBo updateAppointmentStateBo) {
-		if (mustSavePatientIdentificationStatusInfo(updateAppointmentStateBo))
+	private void checkAndHandleIfNewStateIsConfirmed(UpdateAppointmentStateBo updateAppointmentStateBo) {
+		if (mustModifyPatientIdentificationStatusInfo(updateAppointmentStateBo.getAppointmentStateId()))
 			savePatientIdentificationStatusInfo(updateAppointmentStateBo);
 	}
 
-	private boolean mustSavePatientIdentificationStatusInfo(UpdateAppointmentStateBo updateAppointmentStateBo) {
-		return updateAppointmentStateBo.getAppointmentStateId().equals(AppointmentState.CONFIRMED) && featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA);
+	private boolean mustModifyPatientIdentificationStatusInfo(Short appointmentStateId) {
+		return appointmentStateId.equals(AppointmentState.CONFIRMED) && featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA);
 	}
 
 	private void savePatientIdentificationStatusInfo(UpdateAppointmentStateBo updateAppointmentStateBo) {
@@ -78,9 +89,9 @@ public class ChangeAppointmentState {
 		appointmentPatientIdentityAccreditationStatusPort.save(updateAppointmentStateBo.getAppointmentId(), patientIdentityAccreditationStatusId, encryptedPatientIdentificationHash);
 	}
 
-	private void checkIfPreviousStateIsConfirmed(UpdateAppointmentStateBo updateAppointmentStateBo) {
+	private void checkAndHandleIfPreviousStateWasConfirmed(UpdateAppointmentStateBo updateAppointmentStateBo) {
 		Short previousAppointmentState = appointmentPort.getAppointmentStateIdByAppointmentId(updateAppointmentStateBo.getAppointmentId());
-		if (previousAppointmentState.equals(AppointmentState.CONFIRMED))
+		if (mustModifyPatientIdentificationStatusInfo(previousAppointmentState))
 			appointmentPatientIdentityAccreditationStatusPort.clearAppointmentPatientPreviousIdentificationHashByAppointmentId(updateAppointmentStateBo.getAppointmentId());
 	}
 

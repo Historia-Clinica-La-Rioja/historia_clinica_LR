@@ -16,4 +16,6 @@ public interface AppointmentPort {
 
 	Integer getRecurringAppointmentQuantityByAppointmentParentId(Integer appointmentParentId);
 
+	Short getAppointmentModalityById(Integer appointmentId);
+
 }

@@ -44,4 +44,9 @@ public class AppointmentPortImpl implements AppointmentPort {
 		return appointmentRepository.recurringAppointmentQuantityByParentId(appointmentParentId);
 	}
 
+	@Override
+	public Short getAppointmentModalityById(Integer appointmentId) {
+		return appointmentRepository.getModalityById(appointmentId);
+	}
+
 }
