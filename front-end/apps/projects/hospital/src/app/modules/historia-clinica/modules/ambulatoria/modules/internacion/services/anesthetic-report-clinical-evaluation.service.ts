@@ -51,27 +51,27 @@ export class AnestheticReportClinicalEvaluationService {
 	}
 
     private handleFormChanges() {
-		this.handleFormControlChanges('minBloodPressure', 'minBloodPressureSource');
-		this.handleFormControlChanges('maxBloodPressure', 'maxBloodPressureSource');
-		this.handleFormControlChanges('hematocrit', 'hematocritSource');
+		this.handleFormControlChanges('minBloodPressure', 'bloodPressure', 'minBloodPressureSource');
+		this.handleFormControlChanges('maxBloodPressure', 'bloodPressure', 'maxBloodPressureSource');
+		this.handleFormControlChanges('hematocrit', 'hematocrit', 'hematocritSource');
 
 	}
 
-	private handleFormControlChanges(controlName: string, errorSource: string) {
+	private handleFormControlChanges(controlName: string, constantName: string, errorSource: string) {
 		this.form.controls[controlName].valueChanges.subscribe(_ => {
-			this.checkErrors(controlName, errorSource);
+			this.checkErrors(controlName, constantName, errorSource);
 		});
 	}
 
-	private checkErrors(controlName: string, errorSource: string) {
+	private checkErrors(controlName: string, constantName: string, errorSource: string) {
 		const control = this.form.controls[controlName];
 		if (control.hasError('min')) {
-			this.translateService.get('forms.MIN_ERROR', { min: CLINICAL_EVALUATION.MIN[controlName] }).subscribe(
+			this.translateService.get('forms.MIN_ERROR', { min: CLINICAL_EVALUATION.MIN[constantName] }).subscribe(
 				(errorMsg: string) => { this[errorSource].next(errorMsg); }
 			);
 		}
 		else if (control.hasError('max')) {
-			this.translateService.get('forms.MAX_ERROR', { max: CLINICAL_EVALUATION.MAX[controlName] }).subscribe(
+			this.translateService.get('forms.MAX_ERROR', { max: CLINICAL_EVALUATION.MAX[constantName] }).subscribe(
 				(errorMsg: string) => { this[errorSource].next(errorMsg); }
 			);
 		}
