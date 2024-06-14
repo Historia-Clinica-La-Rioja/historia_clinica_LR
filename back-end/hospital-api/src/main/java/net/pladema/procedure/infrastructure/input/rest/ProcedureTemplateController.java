@@ -2,6 +2,7 @@ package net.pladema.procedure.infrastructure.input.rest;
 
 import net.pladema.procedure.application.FindProcedureTemplatesAvailableForDiagnosticReport;
 
+import net.pladema.procedure.application.FindProcedureTemplatesAvailableForSnomedConcept;
 import net.pladema.procedure.application.FindProcedureTempleteFullSummary;
 import net.pladema.procedure.application.exceptions.ProcedureTemplateNotFoundException;
 import net.pladema.procedure.infrastructure.input.rest.dto.fullsummary.ProcedureTemplateFullSummaryDto;
@@ -12,6 +13,7 @@ import net.pladema.procedure.infrastructure.input.rest.mapper.ProcedureTemplateS
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class ProcedureTemplateController {
 
 	private final FindProcedureTemplatesAvailableForDiagnosticReport findProcedureTemplatesAvailableForDiagnosticReport;
+	private final FindProcedureTemplatesAvailableForSnomedConcept findProcedureTemplatesAvailableForSnomedConcept;
 	private final FindProcedureTempleteFullSummary findProcedureTempleteFullSummary;
 	private final ProcedureTemplateSummaryMapper procedureTemplateSummaryMapper;
 
@@ -49,6 +52,22 @@ public class ProcedureTemplateController {
 		var result = procedureTemplateSummaryMapper.toProcedureTemplateFullSummaryDto(
 				findProcedureTempleteFullSummary.run(procedureTemplateId)
 		);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/snomed")
+	public List<ProcedureTemplateShortSummaryDto> findAvailableForSnomedConcept (
+		@RequestParam(name="sctid") String sctid,
+		@RequestParam(name="pt") String pt
+	)
+	{
+		log.debug("Input parameter -> sctid {} pt {}", sctid, pt);
+		var templates = findProcedureTemplatesAvailableForSnomedConcept.run(sctid, pt);
+		var result = templates
+			.stream()
+			.map(procedureTemplate -> ProcedureTemplateShortSummaryDto.fromVo(procedureTemplate))
+			.collect(Collectors.toList());
 		log.debug("Output -> {}", result);
 		return result;
 	}

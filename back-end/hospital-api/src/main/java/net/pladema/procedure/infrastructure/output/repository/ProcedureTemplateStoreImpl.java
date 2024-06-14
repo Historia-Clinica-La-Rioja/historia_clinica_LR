@@ -74,6 +74,16 @@ public class ProcedureTemplateStoreImpl implements ProcedureTemplateStore {
 		);
 	}
 
+	@Override
+	public List<ProcedureTemplateVo> findAvailableForSnomedId(Integer snomedId) {
+		return procedureTemplateSnomedRepository
+		.findProcedureTemplateBySnomedId(snomedId)
+		.stream()
+		.filter(ProcedureTemplate::isActive)
+		.map(procedureTemplateMapper::toProcedureTemplateVo)
+		.collect(Collectors.toList());
+	}
+
 	private List<ProcedureParameterFullSummaryVo> buildParameters(Integer procedureTemplateId) {
 		List<ProcedureParameter> parameters = procedureParameterRepository.findByProcedureTemplateId(procedureTemplateId);
 		var parameterIds = parameters.stream().map(ProcedureParameter::getId).collect(Collectors.toList());
