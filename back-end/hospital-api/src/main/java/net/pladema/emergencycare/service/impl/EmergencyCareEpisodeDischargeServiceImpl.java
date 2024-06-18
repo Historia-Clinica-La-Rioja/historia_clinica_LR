@@ -82,7 +82,8 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 				dischargeType,
 				professionalCompleteBo.getFirstName(),
 				professionalCompleteBo.getLastName(),
-				getOtherDischargeDescription(emergencyCareDischarge.getEmergencyCareEpisodeId(), emergencyCareDischarge.getDischargeTypeId())
+				getOtherDischargeDescription(emergencyCareDischarge.getEmergencyCareEpisodeId(), emergencyCareDischarge.getDischargeTypeId()),
+				emergencyCareDischarge.getObservation()
 		);
         List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(emergencyCareDischarge.getDocumentId());
         List<SnomedBo> problems = resultQuery.stream().map( r -> new SnomedBo(r.getSnomed())).collect(Collectors.toList());

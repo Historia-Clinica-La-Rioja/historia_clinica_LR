@@ -5074,6 +5074,7 @@ export interface VMedicalDischargeDto extends MedicalDischargeDto {
     dischargeType: MasterDataDto;
     medicalDischargeProfessionalLastName: string;
     medicalDischargeProfessionalName: string;
+    observation: string;
     otherDischargeDescription: string;
     snomedPtProblems: string[];
 }

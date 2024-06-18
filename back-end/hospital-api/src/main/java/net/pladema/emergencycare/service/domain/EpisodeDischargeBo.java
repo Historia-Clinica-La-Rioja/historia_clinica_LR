@@ -31,9 +31,11 @@ public class EpisodeDischargeBo {
 	private String medicalDischargeProfessionalLastName;
 	private String otherDischargeDescription;
 
+	private String observation;
+
     public EpisodeDischargeBo(EmergencyCareDischarge emergencyCareDischarge, DischargeType dischargeType,
 							  String medicalDischargeProfessionalName, String medicalDischargeProfessionalLastName,
-							  String otherDischargeDescription) {
+							  String otherDischargeDescription, String observation) {
         this.episodeId = emergencyCareDischarge.getEmergencyCareEpisodeId();
         this.medicalDischargeOn = emergencyCareDischarge.getMedicalDischargeOn().minusHours(3);
         this.autopsy = emergencyCareDischarge.getAutopsy();
@@ -44,6 +46,7 @@ public class EpisodeDischargeBo {
 		this.medicalDischargeProfessionalName = medicalDischargeProfessionalName;
 		this.medicalDischargeProfessionalLastName = medicalDischargeProfessionalLastName;
 		this.otherDischargeDescription = otherDischargeDescription;
+		this.observation = observation;
     }
 
     public void setProblems(List<SnomedBo> problems) {

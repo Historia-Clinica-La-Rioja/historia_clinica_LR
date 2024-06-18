@@ -23,4 +23,6 @@ public class VMedicalDischargeDto extends MedicalDischargeDto {
 
 	private String otherDischargeDescription;
 
+	private String observation;
+
 }
