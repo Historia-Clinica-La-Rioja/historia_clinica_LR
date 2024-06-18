@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AMedicalDischargeDto, BasicPatientDto, DiagnosesGeneralStateDto, MasterDataInterface, PersonPhotoDto, ResponseEmergencyCareDto, TimeDto } from '@api-rest/api-model';
+import { AMedicalDischargeDto, BasicPatientDto, DiagnosesGeneralStateDto, ERole, MasterDataInterface, PersonPhotoDto, ResponseEmergencyCareDto, SnomedDto, TimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
@@ -20,6 +20,10 @@ import { EmergencyCareStateService } from '@api-rest/services/emergency-care-sta
 import { PatientService } from '@api-rest/services/patient.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
+import { PermissionsService } from '@core/services/permissions.service';
+import { MedicalDischargeByNurse } from '../../components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
+
+const HEALTCARE_PROFESSIONALS = [ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD];
 
 @Component({
 	selector: 'app-medical-discharge',
@@ -48,6 +52,7 @@ export class MedicalDischargeComponent implements OnInit {
 
 	timePickerData = this.buildTimePickerData();
 	minDate = MIN_DATE;
+	isNurse = false;
 
 	constructor(
 		private readonly router: Router,
@@ -62,6 +67,7 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly snackBarService: SnackBarService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private readonly permissionService: PermissionsService,
 	) {}
 
 	ngOnInit(): void {
@@ -72,7 +78,8 @@ export class MedicalDischargeComponent implements OnInit {
 			}),
 			autopsy: [null],
 			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required],
-			otherDischargeDescription: [null]
+			otherDischargeDescription: [null],
+			observations: [null],
 		});
 
 		this.form.controls.dischargeTypeId.valueChanges.subscribe(discharge => {
@@ -102,6 +109,10 @@ export class MedicalDischargeComponent implements OnInit {
         this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType();
 
 		this.loadProblems();
+
+		this.permissionService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.isNurse = !userRoles.some(userRole =>  HEALTCARE_PROFESSIONALS.includes(userRole));
+		});
 
 	}
 
@@ -272,6 +283,22 @@ export class MedicalDischargeComponent implements OnInit {
 			}
 		);
 	}
+
+	setMedicalDischargeByNurse(medicalDischargeByNurse: MedicalDischargeByNurse) {
+		this.form.controls.dischargeTypeId.setValue(medicalDischargeByNurse.dischargeTypeId);
+		this.form.controls.observations.setValue(medicalDischargeByNurse.observations);
+		const selectedProblemsByNurse = this.buildSelectedProblems(medicalDischargeByNurse.problem);
+		this.selectedProblems.set(selectedProblemsByNurse.key, selectedProblemsByNurse.value);
+	}
+
+	private buildSelectedProblems(medicalDischargeByNurseProblem: SnomedDto): {key: number, value: DiagnosesGeneralStateDto} {
+		return {
+			key: Number(medicalDischargeByNurseProblem.sctid),
+			value: {
+				main: false, snomed: medicalDischargeByNurseProblem
+			}
+		}
+	}
 }
 
 export class MedicalDischargeForm {
@@ -283,4 +310,5 @@ export class MedicalDischargeForm {
 	dischargeTypeId: number;
 	problems: DiagnosesGeneralStateDto[];
 	otherDischargeDescription: string;
+	observations: string;
 }

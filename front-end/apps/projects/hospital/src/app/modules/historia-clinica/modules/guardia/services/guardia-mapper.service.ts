@@ -164,7 +164,8 @@ export class GuardiaMapperService {
 			problems: _mapProblems(form.problems),
 			dischargeTypeId: form.dischargeTypeId,
 			autopsy: form.autopsy,
-			otherDischargeDescription : form.otherDischargeDescription
+			otherDischargeDescription: form.otherDischargeDescription,
+			observation: form.observations
 		}
 
 		function getDateTime(dateTime): Date {

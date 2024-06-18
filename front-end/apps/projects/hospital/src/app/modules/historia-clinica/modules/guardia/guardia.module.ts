@@ -25,6 +25,7 @@ import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care
 import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
 import { EmergencyCareTemporaryPatientComponent } from './components/emergency-care-temporary-patient/emergency-care-temporary-patient.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
+import { MedicalDischargeByNurseComponent } from './components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
 import { TriageComponent } from './components/triage/triage.component';
@@ -61,6 +62,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		AdultGynecologicalTriageComponent,
 		EmergencyCarePatientComponent,
 		EmergencyCareTemporaryPatientComponent,
+		MedicalDischargeByNurseComponent,
 		PediatricTriageComponent,
 		TriageChipComponent,
 		TriageComponent,
@@ -74,7 +76,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareEvolutionsComponent,
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,
- 		AttentionPlaceDialogComponent,
+		AttentionPlaceDialogComponent,
 	],
 	imports: [
 		CommonModule,

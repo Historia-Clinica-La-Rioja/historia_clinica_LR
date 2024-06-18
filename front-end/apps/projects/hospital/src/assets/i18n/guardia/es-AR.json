@@ -179,7 +179,10 @@
 					"PRESUMPTIVE": "Presuntivo",
 					"CONFIRMED": "Confirmado",
 					"MAIN": "(Principal)"
-				}
+				},
+				"NURSING_PROBLEM_TITLE": "Diagnóstico o Problema",
+				"ADDITIONAL_OBSERVATIONS": "Observaciones adicionales",
+				"OBSERVATIONS_PLACEHOLDER": "Escriba aquí..."
 			},
 			"triage": {
 				"HISTORIAL": "Historial de triages",
