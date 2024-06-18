@@ -101,7 +101,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 	private EmergencyCareDischarge toEmergencyCareDischarge(MedicalDischargeBo medicalDischarge ) {
         return new EmergencyCareDischarge(medicalDischarge.getSourceId(),medicalDischarge.getMedicalDischargeOn(),
 				medicalDischarge.getMedicalDischargeBy(),medicalDischarge.getAutopsy(),
-				medicalDischarge.getDischargeTypeId());
+				medicalDischarge.getDischargeTypeId(), medicalDischarge.getObservation());
     }
 
     private void validateMedicalDischarge(MedicalDischargeBo medicalDischarge, Integer institutionId) {

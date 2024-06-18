@@ -21,4 +21,7 @@ public class AMedicalDischargeDto extends MedicalDischargeDto {
 
 	@Nullable
 	private String otherDischargeDescription;
+
+	@Nullable
+	private String observation;
 }
