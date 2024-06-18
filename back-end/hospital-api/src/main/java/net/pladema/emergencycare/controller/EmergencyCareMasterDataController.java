@@ -56,6 +56,13 @@ public class EmergencyCareMasterDataController {
                 .fromListDischargeTypeBo(dischargeTypeMasterDataService.getAllEmergencyCareDischargeTypes()));
     }
 
+	@GetMapping(value = "/dischargeType/nursing")
+	public ResponseEntity<Collection<MasterDataDto>> getNursingDischargeType() {
+		LOG.debug("{}", "All emergency care discharge types");
+		return ResponseEntity.ok().body(dischargeTypeMasterDataMapper
+				.fromListDischargeTypeBo(dischargeTypeMasterDataService.getAllNursingEmergencyCareDischargeTypes()));
+	}
+
 	@GetMapping(value = "/emergency-episode-sector-type")
 	public ResponseEntity<Collection<MasterDataDto>> getEmergencyEpisodeSectorType() {
 		LOG.debug("{}", "All emergency episode sector types");

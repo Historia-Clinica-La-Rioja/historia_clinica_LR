@@ -36,7 +36,14 @@ public class DischargeTypeMasterDataServiceImpl implements DischargeTypeMasterDa
 				.map(DischargeTypeBo::new).collect(Collectors.toList());
     }
 
-    private List<DischargeTypeBo> mapToDischargeTypeBos(List<DischargeType> data) {
+	@Override
+	public List<DischargeTypeBo> getAllNursingEmergencyCareDischargeTypes() {
+		LOG.debug("No input parameters");
+		return EDischargeType.getAllNurseEmergencyCareDischargeTypes().stream()
+				.map(DischargeTypeBo::new).collect(Collectors.toList());
+	}
+
+	private List<DischargeTypeBo> mapToDischargeTypeBos(List<DischargeType> data) {
         List<DischargeTypeBo> result = data
                 .stream()
                 .map(DischargeTypeBo::new)

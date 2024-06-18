@@ -20,7 +20,8 @@ public enum EDischargeType {
 	DISCHARGE_TO_HOSPITALIZATION(11, "Alta a internación", false, true),
 	DISCHARGE_TO_HOME_HOSPITALIZATION(12, "Alta a internación domiciliaria", false, true),
 	DISCHARGE_TO_HOME_FOLLOW_UP(13, "Alta a seguimiento domiciliario", false, true),
-	LEAVE_WITHOUT_MEDICAL_DISCHARGE(14, "Retiro sin alta médica (fuga)", false, true);
+	LEAVE_WITHOUT_MEDICAL_DISCHARGE(14, "Retiro sin alta médica (fuga)", false, true),
+	HOSPITAL_DISCHARGE(15, "Alta hospitalaria", false, true);
 
 	private final Short id;
 	private final String description;
@@ -41,6 +42,10 @@ public enum EDischargeType {
 				EDischargeType.TRANSFER_TO_THIRD_LEVEL, EDischargeType.DECEASE, EDischargeType.VOLUNTARY_LEAVE,
 				EDischargeType.LEAVE_WITHOUT_MEDICAL_DISCHARGE, EDischargeType.CANCELLATION,
 				EDischargeType.SUSPENSION, EDischargeType.OTHER);
+	}
+
+	public static List<EDischargeType> getAllNurseEmergencyCareDischargeTypes(){
+		return List.of(EDischargeType.HOSPITAL_DISCHARGE, EDischargeType.VOLUNTARY_LEAVE, EDischargeType.LEAVE_WITHOUT_MEDICAL_DISCHARGE);
 	}
 
 }
