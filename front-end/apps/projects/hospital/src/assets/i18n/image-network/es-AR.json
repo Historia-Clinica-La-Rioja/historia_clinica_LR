@@ -77,6 +77,7 @@
             },
             "details_study": {
                 "DETAILS_STUDY": "Detalle de estudio",
+                "VIEW_LOCAL_STUDY": "Ver estudio local",
                 "BACK_TO_WORKLIST": "Volver al listado de informes",
                 "GO_TO_HC": "ver historia clinica",
                 "SAVE_DRAFT": "guardar como borrador",
