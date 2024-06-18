@@ -132,7 +132,7 @@ ul {
 
 .fecha {
 
-    margin-bottom: -20px;
+	margin-bottom: -20px;
 	position: relative;
 	left: 64%;
 	bottom: 20px;
@@ -142,35 +142,29 @@ ul {
 
 .resultFrail {
 
-	color: #eb5757;
-	background-color: rgba(235, 87, 87, 0.2);
 	display: inline-block;
 	border-radius: 6px;
-    padding: 3px 8px;
-    width: fit-content;
+	padding: 3px 8px;
+	width: fit-content;
 	position: relative;
 	top: 4px;
 }
 
-.resultEdmonton{
-	color: #1a59fd;
-    background-color: rgb(87 146 235 / 20%);
-    display: inline-block;
-    border-radius: 6px;
-    padding: 3px 8px;
-    width: fit-content;
+.resultEdmonton {
+	display: inline-block;
+	border-radius: 6px;
+	padding: 3px 8px;
+	width: fit-content;
 	position: relative;
 	top: 4px;
 }
 
-.resultPhysical{
-	color: #1a59fd;
-    background-color: rgba(113, 122, 36, 0.2);
-    display: inline-block;
-    border-radius: 6px;
-    padding: 3px 8px;
-    width: fit-content;
+.resultPhysical {
+	display: inline-block;
+	border-radius: 6px;
+	padding: 3px 8px;
+	width: fit-content;
 	position: relative;
 	top: 4px;
+ 
 }
-
