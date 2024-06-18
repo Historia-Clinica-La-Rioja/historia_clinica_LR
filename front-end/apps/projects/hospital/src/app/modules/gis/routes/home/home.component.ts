@@ -142,7 +142,7 @@ export class HomeComponent implements OnInit {
 
 	stepToResponsabilityArea = () => {
 		this.currentStepperIndex = RESPONSABILITY_AREA_STEP;
-		this.gisLayersService.addPolygonInteraction();
+		this.gisLayersService.addPolygonInteractionAndControl();
 	}
 
 	setInstitutionData = () => {

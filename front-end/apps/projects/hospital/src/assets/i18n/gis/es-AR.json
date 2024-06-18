@@ -28,7 +28,9 @@
             "TITLE": "3. Definir área de responsabilidad",
             "DESCRIPTION": "Haga clic en el mapa para definir los puntos del área de responsabilidad. Complete el polígono haciendo clic en el primer punto nuevamente.",
             "actions": {
-                "SKIP": "Omitir por ahora"
+                "SKIP": "Omitir por ahora",
+                "UNDO": "Deshacer",
+                "DELETE": "Borrar y crear nuevo polígono"
             },
             "status": {
                 "POLYGON_ERROR": "Para poder Confirmar, debe completar el polígono primero."

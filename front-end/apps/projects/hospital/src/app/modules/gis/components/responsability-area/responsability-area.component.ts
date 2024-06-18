@@ -23,13 +23,19 @@ export class ResponsabilityAreaComponent {
 	institutionDescription: InstitutionDescription;
 	ButtonType = ButtonType;
 	showPolygonError = false;
+	showUndo = false;
+	showRemoveAndCreate = false;
 	constructor(private readonly gisService: GisService,
 				private readonly gisLayersService: GisLayersService,
 				private readonly snackBarService: SnackBarService
-	) {}
+	) {
+		this.gisLayersService.showUndo$.subscribe((undo: boolean) => this.showUndo = undo);
+		this.gisLayersService.showRemoveAndCreate$.subscribe((removeAndCreate: boolean) => this.showRemoveAndCreate = removeAndCreate);
+	}
 
 	previousStepper = () => {
 		this.previous.emit(true);
+		this.gisLayersService.setActions(false, false);
 	}
 
 	handleConfirm = () => {
@@ -38,9 +44,11 @@ export class ResponsabilityAreaComponent {
 
 		this.saveAddressAndCoordinates(false);
 		this.saveInstitutionArea();
+		this.gisLayersService.setActions(false, false);
 	}
 
 	saveAddressAndCoordinates = (removeDrawnPolygon: boolean) => {
+		this.gisLayersService.setActions(false, false);
 		this.isSaving = true;
 		forkJoin(
 			[
@@ -53,6 +61,14 @@ export class ResponsabilityAreaComponent {
 			removeDrawnPolygon ? this.gisLayersService.removeDrawnPolygon(): null;
 			this.confirmed.emit(true);
 		});
+	}
+
+	removeLastPoint = () => {
+		this.gisLayersService.removeLastPoint();
+	}
+
+	removeAndCreate = () => {
+		this.gisLayersService.removeAndCreate();
 	}
 
 	private saveInstitutionArea = () => {

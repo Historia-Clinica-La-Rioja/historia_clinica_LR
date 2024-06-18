@@ -10,13 +10,13 @@ import Icon from 'ol/style/Icon';
 import Modify from 'ol/interaction/Snap.js';
 import Draw from 'ol/interaction/Draw.js';
 import Snap from 'ol/interaction/Snap.js';
-// import GeoJSON from 'ol/format/GeoJSON.js'
 import { EGeometry } from '../constants/geometry';
 import { FlatStyleLike } from 'ol/style/flat';
 import { Injectable } from '@angular/core';
 import Polygon from 'ol/geom/Polygon';
 import { Coordinate } from 'ol/coordinate';
-// import Polygon from 'ol/geom/Polygon';
+import Control from 'ol/control/Control';
+import { BehaviorSubject } from 'rxjs';
 
 const LOCATION_POINT = '../../../../assets/icons/gis_location_point.svg';
 
@@ -39,9 +39,13 @@ export class GisLayersService {
 	drawnPolygon: Feature;
 	isPolygonCompleted = false;
 	polygonCoordinates: Coordinate[][] = [];
+	control: Control;
+	showUndo$ = new BehaviorSubject<boolean>(false);
+	showRemoveAndCreate$ = new BehaviorSubject<boolean>(false);
 
 	setUp = () => {
 		this.setMap();
+		this.detectWhenDrawStart();
 		this.detectWhenDrawFinish();
 	}
 	
@@ -87,9 +91,9 @@ export class GisLayersService {
 		});
 	}
 
-	addPolygonInteraction = () => {
-		this.map?.addInteraction(this.draw);
-		this.map?.addInteraction(this.snap);
+	addPolygonInteractionAndControl = () => {
+		this.addPolygonInteraction();
+		this.addControl('undo');
 	}
 
 	removeDrawnPolygon = () => {
@@ -97,6 +101,32 @@ export class GisLayersService {
 		this.source.removeFeature(this.drawnPolygon);
 		this.drawnPolygon = null;
 		this.isPolygonCompleted = false;
+	}
+
+	removeLastPoint = () => {
+		this.draw.removeLastPoint();
+	}
+
+	removeAndCreate = () => {
+		this.removeDrawnPolygon();
+		this.addPolygonInteraction();
+		this.setActions(false, false);
+	}
+
+	addControl = (id: string) => {
+		const locationOnRef = document.getElementById(id);
+		this.control = new Control({element: locationOnRef});
+		this.map?.addControl(this.control);
+	}
+
+	setActions = (undo: boolean, removeAndCreate: boolean) => {
+		this.showUndo$.next(undo);
+		this.showRemoveAndCreate$.next(removeAndCreate);
+	}
+
+	private addPolygonInteraction = () => {
+		this.map?.addInteraction(this.draw);
+		this.map?.addInteraction(this.snap);
 	}
 
 	private createLocationPoint = (coords: number[]): Feature => {
@@ -126,6 +156,12 @@ export class GisLayersService {
 			this.drawnPolygon = event.feature;
 			const geometry: Polygon = this.drawnPolygon.getGeometry() as Polygon;
 			this.polygonCoordinates = geometry.getCoordinates();
+			this.setActions(false, true)
+			this.addControl('removeAndCreate');
 		});
+	}
+
+	private detectWhenDrawStart = () => {
+		this.draw.on('drawstart', (_) => this.setActions(true, false));
 	}
 }
