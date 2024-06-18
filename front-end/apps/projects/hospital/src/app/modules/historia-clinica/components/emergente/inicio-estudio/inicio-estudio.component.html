@@ -1,10 +1,6 @@
 <app-content width="full">
   <mat-card class="roll">
 
-    <!-- <app-no-data></app-no-data> -->
-
-    <!-- medical_services -->
-
     <div class="box">
 
       <mat-icon fontset="material-icons-outlined" class="iconMedical material-icons-outlined mat-icon-no-color ">
@@ -57,6 +53,8 @@
         </li>
       </ul>
     </div>
+    <app-no-data *ngIf="this.lastEdmontonQuestionnaires.length === 0"></app-no-data>
+
     <mat-divider></mat-divider>
 
     <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
@@ -85,6 +83,8 @@
         </li>
       </ul>
     </div>
+    <app-no-data *ngIf="this.lastFrailQuestionnaires.length === 0"></app-no-data>
+
     <mat-divider></mat-divider>
 
     <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
@@ -112,6 +112,8 @@
         </li>
       </ul>
     </div>
+    <app-no-data *ngIf="this.lastPhysicalQuestionnaires.length === 0"></app-no-data>
+
     <mat-divider></mat-divider>
   </mat-card>
 
