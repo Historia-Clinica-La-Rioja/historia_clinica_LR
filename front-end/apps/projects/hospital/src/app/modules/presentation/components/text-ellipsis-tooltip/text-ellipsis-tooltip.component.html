@@ -1,6 +1,6 @@
 <ng-container *ngIf="showTooltip else noTooltip">
-    <span [matTooltip]="_text">{{ truncateText }}</span>
+    <span [matTooltip]="_text">{{ truncateText | translate }}</span>
 </ng-container>
 <ng-template #noTooltip>
-    <span>{{ truncateText }}</span>
+    <span>{{ truncateText | translate}}</span>
 </ng-template>

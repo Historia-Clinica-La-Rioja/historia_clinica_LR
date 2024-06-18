@@ -743,7 +743,10 @@
 					"DISCHARGE_TYPE_OTHER": "(Otro)",
 					"DECEASED": "Defunción",
 					"AUTOPSY_REQUESTED": ", con solicitud de autopsia",
-					"AUTOPSY_NOT_REQUESTED": ", sin solicitud de autopsia"
+					"AUTOPSY_NOT_REQUESTED": ", sin solicitud de autopsia",
+                    "ADDITIONAL_OBSERVATIONS": "Observaciones adicionales",
+                    "PENDING": "Pendiente",
+                    "PERFORMED": "Realizada"
 				}
             },
             "vacunas": {
