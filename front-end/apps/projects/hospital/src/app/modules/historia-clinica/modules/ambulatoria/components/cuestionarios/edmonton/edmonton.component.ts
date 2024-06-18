@@ -323,7 +323,7 @@ return scoreTotalMapping[this.calificationTotal] || undefined;
   }
 
   onSubmit(): void {
-    if (navigator.onLine) {
+     if (navigator.onLine) {
       this.goOnline();
       Swal.fire({
         icon: 'question',
@@ -353,12 +353,11 @@ return scoreTotalMapping[this.calificationTotal] || undefined;
                 Swal.fire({
                   icon: 'success',
                   iconColor: '#2687c5',
-                  title: 'Enviado con éxito',
-                  text: 'El formulario ha sido enviado correctamente.',
+                  title: 'Enviado exitosamente',
                   confirmButtonColor: '#2687c5',
                   confirmButtonText: 'Aceptar',
-                  allowOutsideClick: false,
-
+                }).then(() => {
+                  window.location.reload();
                 });
               }, 2000);
             },
