@@ -1,10 +1,9 @@
-<div>
+<div class="m-top">
     <h1 [translate]="'gis.responsability-area.TITLE'"></h1>
     <span [translate]="'gis.responsability-area.DESCRIPTION'"></span>
 
-    <div class="m-top">
+    <div class="m-top" *ngIf="showPolygonError">
         <app-box-message
-            *ngIf="showPolygonError"
             [boxMessageInfo]="{message: 'gis.responsability-area.status.POLYGON_ERROR', showButtons: false, viewError: true}">
         </app-box-message>
     </div>

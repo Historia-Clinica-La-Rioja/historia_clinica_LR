@@ -1,9 +1,9 @@
 <app-content width="full">
     <section class="container">
         <div class="institution-address-container" *ngIf="isFirstTime">
-            <mat-stepper linear #stepper (selectionChange)="changeStep($event)" [selectedIndex]="currentStepperIndex">
+            <mat-stepper [labelPosition]="'bottom'" linear #stepper (selectionChange)="changeStep($event)" [selectedIndex]="currentStepperIndex">
                 <mat-step label="{{'gis.steppers.INSTITUTION_DATA' | translate}}" [stepControl]="institutionAddressForm" [completed]="institutionAddressForm.valid">
-                    <h1 [translate]="'gis.institution-data.TITLE'"></h1>
+                    <h1 class="m-top" [translate]="'gis.institution-data.TITLE'"></h1>
                     <form [formGroup]="institutionAddressForm">
                         <app-title-description-list 
                             *ngIf="institution"
@@ -78,7 +78,7 @@
                   </form>
                 </mat-step>
                 <mat-step label="{{'gis.steppers.MAP_POSITION' | translate}}">
-                    <app-institution-description 
+                    <app-institution-description
                         *ngIf="institutionDescription" 
                         (nextStep)="stepToResponsabilityArea()"
                         (previousStep)="stepToInstitutionAddress()"
@@ -95,14 +95,9 @@
               </mat-stepper>
         </div>
 
-        <app-hide-show-toggle 
-            *ngIf="!isFirstTime && institutionDescription" 
-            [header]="{icon: 'info', text: 'Ver detalles'}"
-            [showBorder]="false">
-            <div class="institution-description">
-                <app-institution-description [setInstitutionDescription]="institutionDescription" [showActions]="false"></app-institution-description>
-            </div>
-        </app-hide-show-toggle>
+        <div *ngIf="!isFirstTime && institutionDescription"  class="institution-description">
+            <app-institution-description [setInstitutionDescription]="institutionDescription" [showActions]="false"></app-institution-description>
+        </div>
 
         <div class="map-container">
             <app-loading *ngIf="isLoading"></app-loading>

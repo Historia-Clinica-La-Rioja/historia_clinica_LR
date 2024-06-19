@@ -35,6 +35,7 @@ export class ResponsabilityAreaComponent {
 
 	previousStepper = () => {
 		this.previous.emit(true);
+		this.showPolygonError = false;
 		this.gisLayersService.setActions(false, false);
 	}
 
