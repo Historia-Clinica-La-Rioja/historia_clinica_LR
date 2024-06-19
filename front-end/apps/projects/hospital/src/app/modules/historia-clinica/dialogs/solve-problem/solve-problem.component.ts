@@ -54,9 +54,9 @@ export class SolveProblemComponent implements OnInit {
 		this.problemId = this.dataDto.id;
 		this.today = this.toFormatDate(format(new Date(), DateFormat.VIEW_DATE));
 		this.form = this.formBuilder.group({
-			snomed: [null, Validators.required],
+			snomed: [{value: null, disabled: true}, Validators.required],
 			severidad: [null],
-			cronico: [null, Validators.required],
+			cronico: [{value: null, disabled: true}, Validators.required],
 			fechaInicio: [null, Validators.required],
 			fechaFin: [null, Validators.required]
 		});
