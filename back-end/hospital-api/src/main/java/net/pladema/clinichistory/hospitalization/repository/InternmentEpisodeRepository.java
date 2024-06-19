@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.processepisode.InternmentEpisodeProcessVo;
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
+import net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo;
 
 @Repository
 public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpisode, Integer> {
@@ -83,7 +83,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
     boolean haveAnamnesis(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
     @Transactional(readOnly = true)
-    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo(" +
+    @Query("SELECT NEW net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo(" +
             "ie.id as internmentEpisodeId, " +
             "pt.id as patientId, ps.firstName, ps.lastName, petd.nameSelfDetermination, ps.identificationTypeId, ps.identificationNumber, ps.birthDate, " +
             "b.id as bedId, b.bedNumber, " +
@@ -118,6 +118,14 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             " ORDER BY ie.creationable.createdOn DESC")
     List<InternmentEpisodeProcessVo> internmentEpisodeInProcess(@Param("patientId") Integer patientId);
 
+	@Transactional(readOnly = true)
+	@Query("SELECT (case when count(ie.id) > 0 then true else false end) " +
+			"FROM InternmentEpisode ie " +
+			"WHERE ie.patientId = :patientId " +
+			"AND ie.statusId = " + InternmentEpisodeStatus.ACTIVE + " " +
+			"AND ie.institutionId = :institutionId")
+	boolean hasIntermentEpisodeActiveInInstitution(@Param("patientId") Integer patientId, @Param("institutionId") Integer institutionId);
+
     @Transactional(readOnly = true)
     @Query("SELECT ie.entryDate " +
             "FROM InternmentEpisode ie " +
@@ -151,6 +159,7 @@ public interface InternmentEpisodeRepository extends JpaRepository<InternmentEpi
             "WHERE ie.id = :internmentEpisodeId and ie.institutionId = :institutionId")
     Optional<InternmentEpisode> getInternmentEpisode(@Param("internmentEpisodeId")  Integer internmentEpisodeId, @Param("institutionId") Integer institutionId);
 
+	@Transactional(readOnly = true)
 	List<InternmentEpisode> findByBedId(Integer bedId);
 
     @Transactional

@@ -5,7 +5,7 @@ import net.pladema.clinichistory.hospitalization.repository.domain.processepisod
 import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 import net.pladema.clinichistory.hospitalization.service.domain.BasicListedPatientBo;
-import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeBo;
+import net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentEpisodeProcessBo;
 
 import org.slf4j.Logger;

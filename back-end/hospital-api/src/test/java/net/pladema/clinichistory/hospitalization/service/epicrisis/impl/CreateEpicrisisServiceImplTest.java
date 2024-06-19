@@ -33,19 +33,13 @@ import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import javax.validation.ConstraintViolationException;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
@@ -139,7 +133,6 @@ class CreateEpicrisisServiceImplTest extends UnitRepository {
     void setUp(){
         var internmentEpisodeService = new InternmentEpisodeServiceImpl(
 				internmentEpisodeRepository,
-				dateTimeProvider,
 				evolutionNoteDocumentRepository,
 				patientDischargeRepository,
 				medicalCoveragePlanRepository,

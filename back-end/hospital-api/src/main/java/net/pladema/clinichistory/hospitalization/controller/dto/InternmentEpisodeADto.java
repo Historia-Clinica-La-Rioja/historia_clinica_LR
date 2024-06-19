@@ -7,9 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.featureflags.controller.constraints.SGHNotNull;
-
-import static ar.lamansys.sgx.shared.featureflags.AppFeature.RESPONSIBLE_DOCTOR_REQUIRED;
 
 @Getter
 @Setter
@@ -31,7 +28,6 @@ public class InternmentEpisodeADto {
 
     private Integer patientMedicalCoverageId;
 
-    @SGHNotNull(message = "{internment.responsible.doctor.required}", ffs = {RESPONSIBLE_DOCTOR_REQUIRED})
     private Integer responsibleDoctorId;
 
     @Nullable

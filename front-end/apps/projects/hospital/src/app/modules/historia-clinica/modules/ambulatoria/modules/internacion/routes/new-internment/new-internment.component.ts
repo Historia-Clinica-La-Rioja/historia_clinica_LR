@@ -199,7 +199,7 @@ export class NewInternmentComponent implements OnInit {
 								this.router.navigate([url]);
 								this.snackBarService.showSuccess('internaciones.new-internment.messages.SUCCESS');
 							}
-						}, _ => this.snackBarService.showError('internaciones.new-internment.messages.ERROR'));
+						}, error => this.snackBarService.showError(error.text || 'internaciones.new-internment.messages.ERROR'));
 				}
 			});
 		});

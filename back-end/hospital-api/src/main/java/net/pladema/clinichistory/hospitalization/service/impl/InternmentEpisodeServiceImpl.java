@@ -4,7 +4,6 @@ import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
-import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
@@ -24,10 +23,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.DischargeType;
 import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNoteDocument;
@@ -42,8 +41,6 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.clinichistory.hospitalization.service.domain.EpisodeDocumentTypeBo;
 import net.pladema.clinichistory.hospitalization.service.domain.InternmentSummaryBo;
 import net.pladema.clinichistory.hospitalization.service.domain.PatientDischargeBo;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeEnumException;
-import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.GeneratePdfException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.InternmentEpisodeNotFoundException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.MoreThanOneConsentDocumentException;
@@ -79,14 +76,11 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
     private static final String INPUT_PARAMETERS = "Input parameters -> {}";
     private static final String INTERNMENT_NOT_FOUND = "internmentepisode.not.found";
     private static final String LOGGING_OUTPUT = "Output -> {}";
-    private static final short ACTIVE = 1;
     private static final String WRONG_ID_EPISODE = "wrong-id-episode";
 	private static final String SURGICAL = "Quirúrgico";
 	private static final String ADMISSION = "Ingreso a internación";
 
     private final InternmentEpisodeRepository internmentEpisodeRepository;
-
-    private final DateTimeProvider dateTimeProvider;
 
     private final EvolutionNoteDocumentRepository evolutionNoteDocumentRepository;
 
@@ -139,26 +133,6 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		log.debug(LOGGING_OUTPUT, result);
 		return result;
 	}
-
-	@Override
-	public InternmentEpisode addInternmentEpisode(InternmentEpisode internmentEpisode, Integer institutionId) {
-		log.debug("Input parameters -> internmentEpisode {}, institutionId {}", internmentEpisode, institutionId);
-		 validateInternmentEpisode(internmentEpisode, institutionId);
-		internmentEpisode.setInstitutionId(institutionId);
-		internmentEpisode.setStatusId(ACTIVE);
-		InternmentEpisode result = internmentEpisodeRepository.save(internmentEpisode);
-		log.debug(LOGGING_OUTPUT, result);
-		return result;
-	}
-
-    private void validateInternmentEpisode(InternmentEpisode internmentEpisode, Integer institutionId) {
-        if (internmentEpisode.getEntryDate() == null)
-            throw new CreateInternmentEpisodeException(CreateInternmentEpisodeEnumException.INVALID_ENTRY_DATE, "La fecha de alta de una internacion es obligatorio");
-        if (dateTimeProvider.nowDateTime().minusDays(1).toLocalDate().atStartOfDay().isAfter(internmentEpisode.getEntryDate()))
-            throw new CreateInternmentEpisodeException(CreateInternmentEpisodeEnumException.INVALID_ENTRY_DATE, "La fecha de alta de una internacion no debe ser previa al dia anterior");
-        if (dateTimeProvider.nowDateTime().isBefore(internmentEpisode.getEntryDate()))
-            throw new CreateInternmentEpisodeException(CreateInternmentEpisodeEnumException.INVALID_ENTRY_DATE, "La fecha de alta de una internacion no debe ser superior a la actual");
-    }
 
 	@Override
 	public boolean haveAnamnesis(Integer internmentEpisodeId) {

@@ -28,6 +28,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
 import net.pladema.clinichistory.hospitalization.application.port.AnestheticStorage;
+import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.establishment.service.InstitutionService;
 import net.pladema.patient.service.PatientService;
@@ -51,7 +52,6 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import net.pladema.UnitRepository;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
 import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeRepository;
-import net.pladema.clinichistory.hospitalization.repository.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.repository.PatientDischargeRepository;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.service.anamnesis.AnamnesisValidator;
@@ -131,7 +131,6 @@ class CreateAnamnesisServiceImplTest extends UnitRepository {
 	public void setUp() {
 		var internmentEpisodeService = new InternmentEpisodeServiceImpl(
 				internmentEpisodeRepository,
-				dateTimeProvider,
 				evolutionNoteDocumentRepository,
 				patientDischargeRepository,
 				medicalCoveragePlanRepository,
