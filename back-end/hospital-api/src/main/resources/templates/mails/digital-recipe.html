@@ -3,14 +3,14 @@
 <head th:replace="fragments/header :: header"></head>
 <body>
     <p>Esta receta corresponde a:</p>
-    <p>
+    <p th:if="${args.patient}">
         <strong>Paciente:</strong>
-        <span th:text="${args.patient.person.completeName(selfPerceivedFF)}">Juan Perez</span>
+        <span th:text="${args.patient.person.completeName(args.selfPerceivedFF)}">Juan Perez</span>
     </p>
 
 
-    <p th:if="${args.patient.identificationNumber}">
-        <strong th:if="${args.patient.identificationType + ': '}">DNI:</strong>
+    <p th:if="${args.patient != null && args.patient.identificationNumber != null}">
+        <strong th:text="${args.patient.identificationType + ': '}">:</strong>
         <span th:text="${args.patient.identificationNumber}">99.999.999</span>
     </p>
 

@@ -10,6 +10,6 @@ public class NewMedicationRequestTemplateInput extends NotificationTemplateInput
 	public final static String TEMPLATE_ID = "digital-recipe";
 
 	public NewMedicationRequestTemplateInput(NewMedicationRequestNotificationArgs args, String subject) {
-		super(TEMPLATE_ID, args, AppFeature.HABILITAR_RECETA_DIGITAL, args.getResources(), subject);
+		super(TEMPLATE_ID, args, AppFeature.HABILITAR_RECETA_DIGITAL, args.resources, subject);
 	}
 }
