@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
+import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeService;
 import net.pladema.clinichistory.hospitalization.service.ResponsibleContactService;
 import net.pladema.clinichistory.hospitalization.domain.exceptions.CreateInternmentEpisodeEnumException;
 import net.pladema.clinichistory.hospitalization.service.impl.exceptions.CreateInternmentEpisodeException;
@@ -25,6 +26,7 @@ public class CreateInternmentEpisode {
 
     private final FeatureFlagsService featureFlagsService;
     private final InternmentEpisodeStorage internmentEpisodeStorage;
+    private final InternmentEpisodeService internmentEpisodeService;
     private final BedExternalService bedExternalService;
     private final HealthcareProfessionalExternalService healthcareProfessionalExternalService;
     private final ResponsibleContactService responsibleContactService;
@@ -61,6 +63,10 @@ public class CreateInternmentEpisode {
         boolean hasIntermentEpisodeActiveInInstitution = internmentEpisodeStorage.hasIntermentEpisodeActiveInInstitution(episodeBo.getPatientId(), episodeBo.getInstitutionId());
         if (hasIntermentEpisodeActiveInInstitution)
             throw new CreateInternmentEpisodeException(CreateInternmentEpisodeEnumException.HAS_INTERNMENT_EPISODE_ACTIVE_IN_INSTITUTION, "El paciente ya posee un episodio activo de internación en la institución");
+
+        boolean bedIsOccupied = internmentEpisodeService.existsActiveForBedId(episodeBo.getBedId());
+        if (bedIsOccupied)
+            throw new CreateInternmentEpisodeException(CreateInternmentEpisodeEnumException.OCCUPIED_BED, "La cama seleccionada para asignar, ya fue ocupada");
 
     }
 
