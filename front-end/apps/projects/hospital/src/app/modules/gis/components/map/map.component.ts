@@ -8,8 +8,11 @@ import { GlobalCoordinatesDto } from '@api-rest/api-model';
 	styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
-	@Input() set setMap(coordinates: GlobalCoordinatesDto) {
+	@Input() set setMapCoordinates(coordinates: GlobalCoordinatesDto) {
 		this.coordinates = coordinates;
+	}
+	@Input() set setMapArea(area: GlobalCoordinatesDto[]) {
+		this.area = area;
 	}	
 
 	constructor(private readonly gisLayersService: GisLayersService) {}
@@ -19,6 +22,7 @@ export class MapComponent implements OnInit {
 	}
 	
 	coordinates: GlobalCoordinatesDto;
+	area: GlobalCoordinatesDto[];
 
 	markPoint = () => {
 		const position: number[] = this.gisLayersService.fromLonLat(this.coordinates);
@@ -26,6 +30,7 @@ export class MapComponent implements OnInit {
 		this.gisLayersService.centerView(position);
 		this.gisLayersService.removeLocationPoint();
 		this.gisLayersService.addPoint(position);
+		this.gisLayersService.markPolygon(this.area);
 	}
 
 }

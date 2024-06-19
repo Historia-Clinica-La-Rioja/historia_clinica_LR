@@ -17,6 +17,7 @@ import Polygon from 'ol/geom/Polygon';
 import { Coordinate } from 'ol/coordinate';
 import Control from 'ol/control/Control';
 import { BehaviorSubject } from 'rxjs';
+import GeoJSON from 'ol/format/GeoJSON.js';
 
 const LOCATION_POINT = '../../../../assets/icons/gis_location_point.svg';
 
@@ -122,6 +123,31 @@ export class GisLayersService {
 	setActions = (undo: boolean, removeAndCreate: boolean) => {
 		this.showUndo$.next(undo);
 		this.showRemoveAndCreate$.next(removeAndCreate);
+	}
+
+	markPolygon = (area: GlobalCoordinatesDto[]) => {
+		const polygon = this.createPolygon(area);
+		const source = new VectorSource({
+			features: new GeoJSON().readFeatures(polygon),
+		});
+		const layer = new VectorLayer({
+			source: source,
+		});
+		this.map.addLayer(layer);
+	}
+
+	private createPolygon = (area: GlobalCoordinatesDto[]) => {
+		const coordinates = area.map((area: GlobalCoordinatesDto) => [area.longitude, area.latitude]);
+		const polygon = {
+			'type': 'Feature',
+			'geometry': {
+				'type': 'Polygon',
+				'coordinates': [
+					coordinates
+				],
+			},
+		}
+		return polygon;
 	}
 
 	private addPolygonInteraction = () => {

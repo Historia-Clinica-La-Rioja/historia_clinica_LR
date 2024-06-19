@@ -46,4 +46,9 @@ export class GisService {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sanitary-responsibility-area/save-institution-responsibility-area`;
 		return this.http.post<number>(url, area);
 	}
+
+	getInstitutionArea = (): Observable<GlobalCoordinatesDto[]> => {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sanitary-responsibility-area/get-institution-responsibility-area`;
+		return this.http.get<GlobalCoordinatesDto[]>(url);
+	}
 }

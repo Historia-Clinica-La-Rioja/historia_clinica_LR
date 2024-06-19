@@ -106,7 +106,7 @@
 
         <div class="map-container">
             <app-loading *ngIf="isLoading"></app-loading>
-            <app-map *ngIf="showMap" [setMap]="coordinatesCurrentValue"></app-map>
+            <app-map *ngIf="showMap" [setMapCoordinates]="coordinatesCurrentValue" [setMapArea]="area"></app-map>
         </div>
     </section>
 </app-content>

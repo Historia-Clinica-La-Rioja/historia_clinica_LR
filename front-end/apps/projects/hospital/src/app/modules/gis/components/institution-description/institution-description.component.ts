@@ -7,7 +7,7 @@ export interface InstitutionDescription {
 	address: GetSanitaryResponsibilityAreaInstitutionAddressDto,
 	title: string,
 	institution: string,
-	coordinates: GlobalCoordinatesDto
+	coordinates: GlobalCoordinatesDto,
 }
 
 @Component({

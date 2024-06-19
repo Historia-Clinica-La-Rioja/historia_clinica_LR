@@ -63,6 +63,8 @@ export class HomeComponent implements OnInit {
 
 	currentStepperIndex = INSTITUTION_ADDRESS_STEP;
 
+	area: GlobalCoordinatesDto[] = [];
+
 	constructor(private readonly gisService: GisService,
 				private readonly addressMasterDataService: AddressMasterDataService,
 				private readonly institutionService: InstitutionService,
@@ -148,8 +150,10 @@ export class HomeComponent implements OnInit {
 	setInstitutionData = () => {
 		forkJoin([
 			this.gisService.getInstitutionCoordinatesByInstitutionId(),
-			this.gisService.getInstitutionAddressById()
-		]).subscribe(([coordinates, address]: [GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto]) => {
+			this.gisService.getInstitutionAddressById(),
+			this.gisService.getInstitutionArea()
+		]).subscribe(([coordinates, address, area]: [GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto[]]) => {
+			this.area = area;
 			this.coordinatesCurrentValue = coordinates;
 			this.address = address;
 			this.isFirstTime = !this.hasCoordinates();
@@ -232,7 +236,7 @@ export class HomeComponent implements OnInit {
 				department: this.departments.find(department => department.value.id === this.institutionAddressForm.value.departmentId).value,
 				city: this.cities.find(city => city.value.id === this.institutionAddressForm.value.cityId).value,
 			},
-			coordinates: this.coordinatesCurrentValue
+			coordinates: this.coordinatesCurrentValue,
 		}
 	}
 
@@ -247,7 +251,7 @@ export class HomeComponent implements OnInit {
 				department: this.address.department,
 				city: this.address.city,
 			},
-			coordinates: this.coordinatesCurrentValue
+			coordinates: this.coordinatesCurrentValue,
 		}
 	}
 
