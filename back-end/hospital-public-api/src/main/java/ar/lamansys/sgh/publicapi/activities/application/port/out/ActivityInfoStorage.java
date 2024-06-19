@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.application.port.out;
+package ar.lamansys.sgh.publicapi.activities.application.port.out;
 
 import java.util.List;
 
@@ -8,8 +8,6 @@ import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
 import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
 
 public interface ActivityInfoStorage {
-
-	void processActivity(String refsetCode, Long activityId);
 
 	List<ProcedureInformationBo> getProceduresByActivity(String refsetCode, Long activityId);
 

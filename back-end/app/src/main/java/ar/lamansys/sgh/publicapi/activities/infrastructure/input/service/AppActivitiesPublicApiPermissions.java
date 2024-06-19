@@ -44,5 +44,21 @@ public class AppActivitiesPublicApiPermissions implements ActivitiesPublicApiPer
 		return institutionRepository.findIdBySisaCode(refsetCode);
 	}
 
+	@Override
+	public boolean canAccessActivityInfo(Integer institutionId){
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_FACTURACION, institutionId)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
+
+	@Override
+	public boolean canAccessProcessActivityInfo(Integer institutionId){
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_FACTURACION, institutionId)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
+
 
 }

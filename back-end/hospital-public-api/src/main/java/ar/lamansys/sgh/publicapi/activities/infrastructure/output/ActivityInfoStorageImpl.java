@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.publicapi.infrastructure.output;
+package ar.lamansys.sgh.publicapi.activities.infrastructure.output;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.publicapi.application.port.out.ActivityInfoStorage;
+import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
 import ar.lamansys.sgh.publicapi.domain.BedRelocationInfoBo;
 import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
 import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
@@ -32,19 +32,9 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 	private static final short PARENTERAL = 0;
 	private static final short PHARMACO = 1;
 	private static final short VACCINE = 2;
-	private static final short OTHER = 3;
 
 	private final EntityManager entityManager;
-	private final AttentionReadsRepository attentionReadsRepository;
 	private final LocalDateMapper localDateMapper;
-
-	@Override
-	public void processActivity(String refsetCode, Long activityId) {
-		LOG.debug("update ActivityInfoStorage -> refsetCode {}, activityId {}", refsetCode, activityId);
-		List<AttentionReads> toUpdate = attentionReadsRepository.findByAttentionId(activityId);
-		toUpdate.forEach(ar -> ar.setProcessed(true));
-		LOG.trace("Updated -> {}", attentionReadsRepository.saveAll(toUpdate));
-	}
 
 	@Override
 	public List<ProcedureInformationBo> getProceduresByActivity(String refsetCode, Long activityId) {

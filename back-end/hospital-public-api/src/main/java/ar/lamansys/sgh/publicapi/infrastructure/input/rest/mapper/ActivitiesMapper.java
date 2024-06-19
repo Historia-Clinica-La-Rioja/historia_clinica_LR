@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
 import ar.lamansys.sgh.publicapi.domain.PersonInfoExtendedBo;
 import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DiagnosesDto;
@@ -20,6 +21,7 @@ import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SingleDiagnosticD
 
 import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SnomedCIE10Dto;
 
+import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SupplyInformationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 
 import org.springframework.stereotype.Component;
@@ -197,6 +199,14 @@ public class ActivitiesMapper {
 				.build();
 	}
 
+	public SupplyInformationDto mapTo(SupplyInformationBo supplyInformationBo){
+		return SupplyInformationDto.builder()
+				.supplyType(supplyInformationBo.getSupplyType())
+				.status(supplyInformationBo.getStatus())
+				.snomed(mapTo(supplyInformationBo.getSnomedBo()))
+				.administrationTime(supplyInformationBo.getAdministrationTime())
+		.build();
+	}
 
 	public ProcedureInformationDto mapTo(ProcedureInformationBo procedureInformationBo) {
 		return ProcedureInformationDto.builder()
