@@ -2,7 +2,7 @@
     <div body fxLayout="column" fxLayoutGap="20px">
         <app-new-consultation-expansion-section id="diagnosis-expansion-section"
             [title]="'internaciones.anesthesic-report.diagnosis.TITLE' | translate" icon="assignment"
-            [collapsed]="!mainDiagnosis" [isEmpty]="!mainDiagnosis" [hideBorder]="true">
+            [collapsed]="!mainDiagnosis && !diagnosis" [isEmpty]="!mainDiagnosis && !diagnosis" [hideBorder]="true">
             <app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
                 [(listDiagnosis)]="diagnosis" [type]="'PARTE ANESTESICO'"></app-diagnosticos>
         </app-new-consultation-expansion-section>

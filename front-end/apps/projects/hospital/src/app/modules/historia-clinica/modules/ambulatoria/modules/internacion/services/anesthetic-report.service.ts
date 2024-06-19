@@ -17,7 +17,7 @@ import { MedicationData, MedicationService } from './medicationService';
 import { UntypedFormBuilder } from '@angular/forms';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, forkJoin } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, forkJoin } from 'rxjs';
 import { scrollIntoError } from '@core/utils/form.utils';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
 import { AnestheticHistoryDto, AnestheticReportDto, DiagnosisDto, HealthConditionDto, MasterDataDto, PostAnesthesiaStatusDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
@@ -32,6 +32,8 @@ const TIME_OUT = 5000;
 })
 export class AnestheticReportService {
 
+    private diagnosisSource = new Subject();
+	diagnosis$ = this.diagnosisSource.asObservable();
     anesthesicReportProposedSurgeryService: AnestheticReportProposedSurgeryService;
     anesthesicReportAnthropometricDataService: AnestheticReportAnthropometricDataService;
     anestheticReportClinicalEvaluationService: AnestheticReportClinicalEvaluationService;
@@ -139,6 +141,7 @@ export class AnestheticReportService {
 				const dataPremedication = result[0]
 				const data = result[1]
 
+                this.diagnosisSource.next(data.diagnosis);
 				this.anesthesicReportProposedSurgeryService.setData(data.surgeryProcedures);
 				this.anesthesicReportAnthropometricDataService.setData(data.anthropometricData);
 				this.anestheticReportClinicalEvaluationService.setData(data.riskFactors);

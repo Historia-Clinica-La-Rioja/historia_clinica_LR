@@ -168,7 +168,6 @@ export class InternmentActionsService {
 				patientId: this.patientId,
 				internmentEpisodeId: this.internmentEpisodeId,
 				mainDiagnosis: this.mainDiagnosis,
-				diagnosis: this.diagnosticos,
 				anestheticPartId: id,
 				isDraft: !!isDraft
 			});

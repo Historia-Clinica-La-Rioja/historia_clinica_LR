@@ -27,14 +27,11 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
     ) {
         this.mainDiagnosis = data.mainDiagnosis;
-        this.diagnosis = data.diagnosis;
 
 		this.anesthethicReportHandlerService.createAnestheticReportServiceInstances();
     }
 
     ngOnInit(): void {
-        this.componentEvaluationManagerService.mainDiagnosis = this.mainDiagnosis;
-		this.componentEvaluationManagerService.diagnosis = this.diagnosis;
         this.anesthethicReportHandlerService.getIsAnestheticReportLoading().subscribe(isLoading=> {
             this.isLoading = isLoading;
         })
@@ -42,8 +39,11 @@ export class AnestheticReportDockPopupComponent implements OnInit {
             this.isLoadingDraft = isLoadingDraft;
         })
 
-		this.anesthethicReportHandlerService.loadAnestheticPreviousData(this.data)
-
+		this.anesthethicReportHandlerService.loadAnestheticPreviousData(this.data);
+        this.anesthethicReportHandlerService.diagnosis$.subscribe((diagnosis: DiagnosisDto[]) => {
+            this.diagnosis = diagnosis;
+            this.componentEvaluationManagerService.diagnosis = this.diagnosis;
+        })
     }
 
     save(isDraft: boolean): void {
