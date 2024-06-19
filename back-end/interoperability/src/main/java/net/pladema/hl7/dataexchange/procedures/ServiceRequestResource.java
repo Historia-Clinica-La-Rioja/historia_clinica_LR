@@ -1,18 +1,13 @@
 package net.pladema.hl7.dataexchange.procedures;
 
-import net.pladema.hl7.concept.administration.CoverageResource;
-import net.pladema.hl7.concept.administration.LocationResource;
-import net.pladema.hl7.concept.administration.PatientResource;
-import net.pladema.hl7.concept.administration.PractitionerResource;
-import net.pladema.hl7.dataexchange.IResourceFhir;
-import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
-import net.pladema.hl7.dataexchange.model.domain.ServiceRequestVo;
-import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
-import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
-import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
-import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
-
-import net.pladema.hl7.supporting.terminology.coding.CodingValueSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.hl7.fhir.r4.model.Annotation;
 import org.hl7.fhir.r4.model.BaseResource;
@@ -32,13 +27,18 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import net.pladema.hl7.concept.administration.CoverageResource;
+import net.pladema.hl7.concept.administration.LocationResource;
+import net.pladema.hl7.concept.administration.PatientResource;
+import net.pladema.hl7.concept.administration.PractitionerResource;
+import net.pladema.hl7.dataexchange.IResourceFhir;
+import net.pladema.hl7.dataexchange.model.adaptor.FhirCode;
+import net.pladema.hl7.dataexchange.model.domain.ServiceRequestVo;
+import net.pladema.hl7.supporting.conformance.InteroperabilityCondition;
+import net.pladema.hl7.supporting.exchange.database.FhirPersistentStore;
+import net.pladema.hl7.supporting.terminology.coding.CodingProfile;
+import net.pladema.hl7.supporting.terminology.coding.CodingSystem;
+import net.pladema.hl7.supporting.terminology.coding.CodingValueSet;
 
 @Service
 @Conditional(InteroperabilityCondition.class)
@@ -65,14 +65,26 @@ public class ServiceRequestResource extends IResourceFhir {
 		return ResourceType.ServiceRequest;
 	}
 
-	public List<ServiceRequest> fetch(Integer id, String identificationNumber) {
-		List<ServiceRequestVo> serviceRequestList = store.getServiceRequest(id,identificationNumber);
+	public List<ServiceRequest> fetchByPatientIdentificationNumber(String patientIdentificationNumber) {
+		List<ServiceRequestVo> serviceRequestList = store.getServiceRequestByPatientIdentificationNumber(patientIdentificationNumber);
+		return buildServiceRequest(serviceRequestList);
+	}
 
-		Map<ResourceType, Reference> references = new HashMap<>();
+	public List<ServiceRequest> fetchByIdAndPatientIdentificationNumber(Integer serviceRequestId, String patientIdentificationNumber) {
+		List<ServiceRequestVo> serviceRequestList = store.getServiceRequestByIdAndPatientIdentificationNumber(serviceRequestId, patientIdentificationNumber);
+		return buildServiceRequest(serviceRequestList);
+	}
+
+	private List<ServiceRequest> buildServiceRequest(List<ServiceRequestVo> serviceRequestList) {
+		Map<String, Reference> patientCache = new HashMap<>();
+		Map<String, Reference> coverageCache = new HashMap<>();
+		Map<String, Reference> practitionerCache = new HashMap<>();
+		Map<Integer, Reference> locationCache = new HashMap<>();
 
 		List<ServiceRequest> resources = new ArrayList<>();
-
-		for (ServiceRequestVo serviceRequest : serviceRequestList) {
+		//Skip old service requests that don't have an uuid.
+		var serviceRequestsWithUuid = serviceRequestList.stream().filter(s -> s.hasUuid()).collect(Collectors.toList());
+		for (ServiceRequestVo serviceRequest : serviceRequestsWithUuid) {
 			ServiceRequest resource = new ServiceRequest();
 
 			resource.setMeta(new Meta().setProfile(List.of(new CanonicalType(CodingProfile.ServiceRequest.BASEURL))));
@@ -81,7 +93,7 @@ public class ServiceRequestResource extends IResourceFhir {
 			resource.setId(serviceRequest.getDiagnosticReportUuid().toString());
 			resource.addIdentifier(newIdentifier(resource));
 			resource.setRequisition(newIdentifier(resource,domainNumber + "-" + serviceRequest.getServiceRequestUuid().toString()));
-			
+
 			resource.setStatus(getStatusFromServiceRequest(serviceRequest.getServiceRequestStatus()));
 			resource.setIntent(getIntentFromServiceRequest(serviceRequest.getIntentId()));
 			resource.setCategory(Collections.singletonList(getCategory(serviceRequest.getCategoryId())));
@@ -90,50 +102,74 @@ public class ServiceRequestResource extends IResourceFhir {
 			resource.setCode(newCodeableConcept(CodingSystem.SNOMED,new FhirCode(serviceRequest.getSnomedId(),serviceRequest.getSnomedPt())));
 			resource.setReasonCode(Collections.singletonList(newCodeableConcept(CodingSystem.SNOMED, new FhirCode(serviceRequest.getProblemId(),serviceRequest.getProblemPt()))));
 
-			if (!references.containsKey(ResourceType.Patient)) {
-				Patient resourcePatient = patientResource.fetch(serviceRequest.getPatientId().toString(), new EnumMap<>(ResourceType.class));
+			/**
+			 * Patient reference
+			 * ======================================
+			 */
+			String patientId = serviceRequest.getPatientId().toString();
+			if (!patientCache.containsKey(patientId)){
+				Patient resourcePatient = patientResource.fetch(patientId, new EnumMap<>(ResourceType.class));
 				Reference patientReference = newReference(fullDomainUrl(resourcePatient));
 				patientReference.setDisplay(resourcePatient.getNameFirstRep().getText());
 				patientReference.setResource(resourcePatient);
 				resource.setSubject(patientReference);
-				references.put(ResourceType.Patient, patientReference);
+				patientCache.put(patientId, patientReference);
 			} else {
-				resource.setSubject(references.get(ResourceType.Patient));
+				resource.setSubject(patientCache.get(patientId));
 			}
 
-			if (!references.containsKey(ResourceType.Coverage)) {
-				if (serviceRequest.getMedicalCoverageId() != null) {
-					Coverage resourceCoverage = coverageResource.fetch(serviceRequest.getMedicalCoverageId().toString(), references);
+			/**
+			 * Coverage reference
+			 * ======================================
+			 */
+			if (serviceRequest.getMedicalCoverageId() != null) {
+				String medicalCoverageId = serviceRequest.getMedicalCoverageId().toString();
+				if (!coverageCache.containsKey(medicalCoverageId)) {
+					//Adapt the reference cache to the coverageResource.fetch interface
+					Coverage resourceCoverage = coverageResource.fetch(
+						medicalCoverageId,
+						adaptCacheForCoverage(patientId, patientCache)
+					);
 					Reference coverageReference = newReference(fullDomainUrl(resourceCoverage));
 					coverageReference.setDisplay(resourceCoverage.getPayorFirstRep().getDisplay());
 					coverageReference.setResource(resourceCoverage);
 					resource.setInsurance(List.of(coverageReference));
-					references.put(ResourceType.Coverage, coverageReference);
+					coverageCache.put(medicalCoverageId, coverageReference);
+				} else {
+					resource.setInsurance(List.of(coverageCache.get(medicalCoverageId)));
 				}
-			} else {
-				resource.setInsurance(List.of(references.get(ResourceType.Coverage)));
 			}
 
-			if (!references.containsKey(ResourceType.Practitioner)) {
-				Practitioner resourcePractitioner = practitionerResource.fetch(serviceRequest.getDoctorId().toString(), new EnumMap<>(ResourceType.class));
+			/**
+			 * Practitioner reference
+			 * ======================================
+			 */
+			String doctorId = serviceRequest.getDoctorId().toString();
+			if (!practitionerCache.containsKey(doctorId)) {
+				Practitioner resourcePractitioner = practitionerResource.fetch(doctorId, new EnumMap<>(ResourceType.class));
 				Reference practitionerReference = newReference(fullDomainUrl(resourcePractitioner));
 				practitionerReference.setDisplay(resourcePractitioner.getNameFirstRep().getText());
 				practitionerReference.setResource(resourcePractitioner);
 				resource.setRequester(practitionerReference);
-				references.put(ResourceType.Practitioner, practitionerReference);
+				practitionerCache.put(doctorId, practitionerReference);
 			} else {
-				resource.setRequester(references.get(ResourceType.Practitioner));
+				resource.setRequester(practitionerCache.get(doctorId));
 			}
 
-			if (!references.containsKey(ResourceType.Location)) {
-				Location resourceLocation = locationResource.fetchByOrganization(store.getOrganizationFromId(serviceRequest.getInstitutionId()));
+			/**
+			 * Location reference
+			 * ======================================
+			 */
+			Integer institutionId = serviceRequest.getInstitutionId();
+			if (!locationCache.containsKey(institutionId)) {
+				Location resourceLocation = locationResource.fetchByOrganization(store.getOrganizationFromId(institutionId));
 				Reference locationReference = newReference(fullDomainUrl(resourceLocation));
 				locationReference.setDisplay(resourceLocation.getName());
 				locationReference.setResource(resourceLocation);
 				resource.setLocationReference(List.of(locationReference));
-				references.put(ResourceType.Location, locationReference);
+				locationCache.put(institutionId, locationReference);
 			} else {
-				resource.setLocationReference(List.of(references.get(ResourceType.Location)));
+				resource.setLocationReference(List.of(locationCache.get(institutionId)));
 			}
 
 			resource.addNote(new Annotation(new MarkdownType(serviceRequest.getDescription())));
@@ -141,6 +177,12 @@ public class ServiceRequestResource extends IResourceFhir {
 			resources.add(resource);
 		}
 		return resources;
+	}
+
+	private Map<ResourceType, Reference> adaptCacheForCoverage(String patientId, Map<String, Reference> referencesCache) {
+		Map<ResourceType, Reference> ret = new HashMap<>();
+		ret.put(ResourceType.Patient, referencesCache.get(patientId));
+		return ret;
 	}
 
 	private ServiceRequest.ServiceRequestStatus getStatusFromServiceRequest(String id) {

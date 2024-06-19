@@ -264,7 +264,7 @@
 		</query>
 	</named-native-query>
 	
-	<named-native-query name="HCE.getServiceRequest" result-set-mapping="HCE.getServiceRequestResult">
+	<named-native-query name="HCE.getServiceRequestByIdAndPatientIdentificationNumber" result-set-mapping="HCE.getServiceRequestResult">
 		<query>
 			with temporal as (
 			select sr.id, sr.status_id as serviceRequestStatus, sr.intent_id,
@@ -284,6 +284,37 @@
 			left join person per on ( p.person_id = per.id )
 			where (sr.id = :serviceRequestId)
 			and (per.identification_type_id = 1)
+			and (per.identification_number = :identificationNumber)
+			)
+			select t.id, t.serviceRequestStatus, t.intent_id, t.categoryId, t.diagnosticReportId,
+			t.patient_id, t.institution_id, t.request_date, t.doctor_id, t.problemId, t.problemPt,
+			t.medical_coverage_id, t.description, t.link, t.diagnosticReportStatus,
+			s.sctid, s.pt, t.serviceRequestUuid, t.diagnosticReportUuid
+			from temporal t
+			left join snomed s on ( t.diagnosticReportSnomedId = s.id )
+		</query>
+	</named-native-query>
+
+	<!-- Same as getServiceRequestByIdAndPatientIdentificationNumber but filtering solely by patient id -->
+	<named-native-query name="HCE.getServiceRequestByPatientIdentificationNumber" result-set-mapping="HCE.getServiceRequestResult">
+		<query>
+			with temporal as (
+			select sr.id, sr.status_id as serviceRequestStatus, sr.intent_id,
+			sr.category_id as categoryId, dr.id as diagnosticReportId, sr.patient_id,
+			sr.institution_id, sr.request_date, sr.doctor_id, s.sctid as problemId,
+			s.pt as problemPt, sr.medical_coverage_id, n.description, dr.link,
+			dr.status_id as diagnosticReportStatus, dr.snomed_id as diagnosticReportSnomedId,
+			sr.uuid as serviceRequestUuid, dr.uuid as diagnosticReportUuid
+			from service_request sr
+			join document d on ( sr.id = d.source_id and d.source_type_id = 3 )
+			join document_diagnostic_report ddr ON ( d.id = ddr.document_id )
+			join diagnostic_report dr ON ( ddr.diagnostic_report_id = dr.id )
+			left join note n on ( sr.note_id = n.id )
+			left join health_condition hc on ( dr.health_condition_id = hc.id )
+			left join snomed s on ( hc.snomed_id = s.id )
+			left join patient p on ( sr.patient_id = p.id )
+			left join person per on ( p.person_id = per.id )
+			where (per.identification_type_id = 1)
 			and (per.identification_number = :identificationNumber)
 			)
 			select t.id, t.serviceRequestStatus, t.intent_id, t.categoryId, t.diagnosticReportId,

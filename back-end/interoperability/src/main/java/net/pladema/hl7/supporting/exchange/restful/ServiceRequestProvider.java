@@ -1,6 +1,5 @@
 package net.pladema.hl7.supporting.exchange.restful;
 
-import ar.lamansys.sgx.shared.fhir.application.port.FhirPermissionsPort;
 import ca.uhn.fhir.rest.annotation.RequiredParam;
 import ca.uhn.fhir.rest.annotation.Search;
 import ca.uhn.fhir.rest.server.IResourceProvider;
@@ -46,18 +45,41 @@ public class ServiceRequestProvider implements IResourceProvider {
 		return ServiceRequest.class;
 	}
 
-	@GetMapping(value = "/ServiceRequest")
+	@GetMapping(value = "/ServiceRequest", params = {ServiceRequest.SP_IDENTIFIER, ServiceRequest.SP_SUBJECT})
 	@Search
-	public Bundle getServiceRequest(
-			@RequiredParam(name = ServiceRequest.SP_IDENTIFIER) IdType id,
+	public Bundle getServiceRequestByIdAndIdentificationNumber(
+			@RequiredParam(name = ServiceRequest.SP_IDENTIFIER) IdType serviceRequestIdAndDomainNumber,
 			@RequiredParam(name = ServiceRequest.SP_SUBJECT) String patientIdentificationNumber) {
-		log.debug("Input parameters -> id {}, patientIdentificationNumber {}",id,patientIdentificationNumber);
+		log.debug("Input parameters -> id {}, patientIdentificationNumber {}",serviceRequestIdAndDomainNumber,patientIdentificationNumber);
 		try {
-			String ide = id.getIdPart();
+			String ide = serviceRequestIdAndDomainNumber.getIdPart();
 			String[] parts = ide.split("-");
 			assertFormatOrderId(parts);
 			assertDomainNumber(parts[0]);
-			Bundle response = bundleResource.assembleServiceRequest(Integer.parseInt(parts[1]), patientIdentificationNumber);
+			Integer serviceRequestId = Integer.parseInt(parts[1]);
+			Bundle response = bundleResource.buildBundleGetServiceRequestByIdAndPatientIdentification(serviceRequestId, patientIdentificationNumber);
+			log.debug("Bundle -> {}", response);
+			return response;
+		} catch (ServiceRequestException|NumberFormatException ex) {
+			OperationOutcome outcome = new OperationOutcome();
+			outcome.addIssue()
+					.setSeverity(OperationOutcome.IssueSeverity.ERROR)
+					.setCode(OperationOutcome.IssueType.INVALID)
+					.setDiagnostics(ex.getMessage());
+			throw new InvalidRequestException("Get failed", outcome);
+		}
+	}
+
+	/**
+	 * Returns all service requests assigned to the given patient
+	 */
+	@GetMapping(value = "/ServiceRequest", params = {ServiceRequest.SP_SUBJECT})
+	@Search
+	public Bundle getServiceRequestByIdentificationNumber(
+			@RequiredParam(name = ServiceRequest.SP_SUBJECT) String patientIdentificationNumber) {
+		log.debug("Input parameters -> patientIdentificationNumber {}", patientIdentificationNumber);
+		try {
+			Bundle response = bundleResource.buildBundleGetServiceRequestsByPatientIdentification(patientIdentificationNumber);
 			log.debug("Bundle -> {}", response);
 			return response;
 		} catch (ServiceRequestException ex) {

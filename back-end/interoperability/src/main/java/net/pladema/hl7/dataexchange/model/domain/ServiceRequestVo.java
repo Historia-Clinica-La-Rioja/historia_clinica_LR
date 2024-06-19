@@ -71,4 +71,8 @@ public class ServiceRequestVo {
 		this.serviceRequestStatus = serviceRequestStatus;
 		this.diagnosticReportStatus = diagnosticReportStatus;
 	}
+
+	public boolean hasUuid() {
+		return this.getServiceRequestUuid() != null;
+	}
 }
