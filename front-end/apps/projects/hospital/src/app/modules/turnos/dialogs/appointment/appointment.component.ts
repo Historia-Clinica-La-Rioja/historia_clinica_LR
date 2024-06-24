@@ -39,6 +39,8 @@ import {
 	UpdateAppointmentDateDto,
 	UpdateAppointmentDto,
 	ItsCoveredResponseDto,
+	GenderDto,
+	IdentificationTypeDto,
 } from '@api-rest/api-model.d';
 
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
@@ -90,6 +92,8 @@ import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { sameHourAndMinute, timeDifference, toHourMinuteSecond } from '@core/utils/date.utils';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { pushIfNotExists } from '@core/utils/array.utils';
+import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
+import { PatientInformationScan } from '@pacientes/pacientes.model';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -202,6 +206,10 @@ export class AppointmentComponent implements OnInit {
 	HABILITAR_VISTA_COBERTURA_TURNOS: boolean = false;
 	waitingTime: string;
 	HABILITAR_ATENDER_TURNO_MANUAL: boolean = false;
+	patientInformationScan: string;
+	genderOptions: GenderDto[];
+	identifyTypeArray: IdentificationTypeDto[];
+	HABILITAR_ANEXO_II_MENDOZA = false;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -357,6 +365,12 @@ export class AppointmentComponent implements OnInit {
 			this.formDate.get('recurringType').setValidators([Validators.required]);
 			this.setCustomAppointment();
 		}
+
+		this.personMasterDataService.getIdentificationTypes().subscribe(
+			identificationTypes => { this.identifyTypeArray = identificationTypes; });
+
+		this.personMasterDataService.getGenders().subscribe(
+			genders => { this.genderOptions = genders; });
 	}
 
 	setCustomAppointment() {
@@ -413,6 +427,7 @@ export class AppointmentComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_RECURRENCIA_EN_DESARROLLO).subscribe((isOn: boolean) => this.isHabilitarRecurrencia = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_VISTA_COBERTURA_TURNOS).subscribe((isOn: boolean) => this.HABILITAR_VISTA_COBERTURA_TURNOS = isOn);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_ATENDER_TURNO_MANUAL).subscribe((isOn: boolean) => this.HABILITAR_ATENDER_TURNO_MANUAL = isOn);
+		this.featureFlagService.isActive(AppFeature.HABILITAR_ANEXO_II_MENDOZA).subscribe((isOn: boolean) => this.HABILITAR_ANEXO_II_MENDOZA = isOn);
 	}
 
 	private checkInputUpdatePermissions() {
@@ -958,7 +973,11 @@ export class AppointmentComponent implements OnInit {
 			});
 		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
 			if (upDateState)
-				this.updateState(newStateId);
+				if(this.HABILITAR_ANEXO_II_MENDOZA && this.hasRoleAdmin$ ){
+					this.openScanPatientDialog(newStateId);
+				}else{
+					this.updateState(newStateId);
+				}					
 		});
 	}
 
@@ -971,6 +990,21 @@ export class AppointmentComponent implements OnInit {
 				this.updateState(newStateId);
 			}
 		}
+	}
+
+	public openScanPatientDialog(newStateId: APPOINTMENT_STATES_ID): void {
+		const dialogRef =  this.dialog.open(ScanPatientComponent, {
+			width: "32%",
+			height: "600px",
+			data: {
+				genderOptions: this.genderOptions,
+				identifyTypeArray: this.identifyTypeArray,
+			}
+		});
+		dialogRef.afterClosed().subscribe((patientInformationScan: PatientInformationScan) => {
+			this.patientInformationScan = patientInformationScan?.identifNumber;
+			this.updateState(newStateId);
+		});
 	}
 
 	private checkIfAbsent(newStateId: APPOINTMENT_STATES_ID) {
@@ -1098,7 +1132,7 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	private submitNewState(newStateId: APPOINTMENT_STATES_ID, motive?: string): void {
-		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive)
+		this.appointmentFacade.changeState(this.data.appointmentData.appointmentId, newStateId, motive, this.patientInformationScan)
 			.subscribe(() => {
 				const appointmentInformation = { id: this.data.appointmentData.appointmentId, stateId: newStateId, date: this.selectedDate };
 				this.dialogRef.close(appointmentInformation);

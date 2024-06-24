@@ -271,8 +271,8 @@ export class AppointmentsFacadeService {
 			);
 	}
 
-	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string): Observable<boolean> {
-		return this.appointmentService.changeState(appointmentId, newStateId, motivo)
+	changeState(appointmentId: number, newStateId: APPOINTMENT_STATES_ID, motivo?: string, patientInformationScan?: string): Observable<boolean> {
+		return this.appointmentService.changeState(appointmentId, newStateId, motivo, patientInformationScan)
 			.pipe(
 				map((response: boolean) => {
 					if (response) {

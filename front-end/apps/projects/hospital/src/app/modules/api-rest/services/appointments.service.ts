@@ -107,7 +107,7 @@ export class AppointmentsService {
 		});
 	}
 
-	changeState(appointmentId: number, appointmentStateId: number, reason?: string): Observable<boolean> {
+	changeState(appointmentId: number, appointmentStateId: number, reason?: string,patientInformationScan?: string): Observable<boolean> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/change-state`;
 		return this.http.put<boolean>(url, {}, { params: this.getChangeStateParams(appointmentStateId, reason) });
 	}
@@ -117,12 +117,16 @@ export class AppointmentsService {
 		return this.http.put<boolean>(url, {}, { params: this.getChangeStateParams(appointmentStateId, reason) });
 	}
 
-	private getChangeStateParams(appointmentStateId: number, reason?: string): HttpParams {
+	private getChangeStateParams(appointmentStateId: number, reason?: string, patientInformationScan?: string ): HttpParams{
 		let queryParams: HttpParams = new HttpParams();
 		queryParams = queryParams.append('appointmentStateId', JSON.stringify(appointmentStateId));
 
 		if (reason) {
 			queryParams = queryParams.append('reason', reason);
+		}
+
+		if(patientInformationScan){
+			queryParams = queryParams.append('patientIdentificationBarCode', patientInformationScan);
 		}
 
 		return queryParams
