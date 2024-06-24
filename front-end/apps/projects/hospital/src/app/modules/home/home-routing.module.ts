@@ -35,10 +35,9 @@ const routes: Routes = [
 			{
 				path: HomeRoutes.Settings,
 				component: RouteMenuComponent,
-				canActivate: [ FeatureFlagGuard, RoleGuard ],
+				canActivate: [ RoleGuard ],
 				data: {
-					featureFlag: AppFeature.HABILITAR_CONFIGURACION,
-					allowedRoles: [ ERole.ROOT ],
+					allowedRoles: [ ERole.ROOT, ERole.ADMINISTRADOR ],
 					needsRoot: true,
 					label: { key: 'app.menu.CONFIGURACION' },
 					icon: 'settings',

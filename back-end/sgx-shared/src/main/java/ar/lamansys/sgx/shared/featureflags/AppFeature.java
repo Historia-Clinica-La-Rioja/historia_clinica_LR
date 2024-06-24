@@ -33,9 +33,6 @@ public enum AppFeature implements Feature {
 	@Label("Indica si esta habilitado el módulo de Portal de Paciente")
 	HABILITAR_MODULO_PORTAL_PACIENTE,
 
-	@Label("Indica si esta habilitado el menu configuracion")
-	HABILITAR_CONFIGURACION,
-
 	@Label("Indica si está habilitado el Bus de Interoperabilidad")
 	HABILITAR_BUS_INTEROPERABILIDAD,
 

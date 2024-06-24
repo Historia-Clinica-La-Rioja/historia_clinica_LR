@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.appointment.infrastructure.output.notifi
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,7 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 		String professionalName = bookingPersonService.getProfessionalName(newAppointmentNotification.diaryId)
 				.orElseThrow(()-> new NewAppointmentNotificationException(NewAppointmentNotificationEnumException.PROFESSIONAL_NAME_NOT_FOUND, String.format("No se encontro el profesional de la agenda con id ",newAppointmentNotification.diaryId)));
 		InstitutionBo institutionBo = institutionService.get(diaryService.getInstitution(newAppointmentNotification.diaryId));
-		String day = StringUtils.capitalize(new SimpleDateFormat("EEEE dd 'de' MMMM 'de' YYYY").format(Date.valueOf(newAppointmentNotification.dateTypeId)));
+
 		String medicalCoverage = (newAppointmentNotification.patientMedicalCoverageId !=null) ? patientMedicalCoverageService.getCoverage(newAppointmentNotification.patientMedicalCoverageId)
 				.map(r-> r.getMedicalCoverage().getName()).orElse(null) : null;
 		String identificationNumber = patientService.getIdentificationNumber(newAppointmentNotification.patientId).orElse(null);
@@ -53,7 +54,7 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 		// se resuelven los argumentos que requiere el mensaje a enviar a partir del BO
 		notificationArgs
 				.professionalFullName(professionalName)
-				.day(day)
+				.day(buildDayArg(newAppointmentNotification.dateTypeId))
 				.time(String.format("%s", newAppointmentNotification.hour))
 				.institution(institutionBo.getName())
 				.recomendation("...")
@@ -78,4 +79,7 @@ public class NewAppointmentNotificationImpl implements NewAppointmentNotificatio
 				});
 	}
 
+	public static String buildDayArg(LocalDate date) {
+		return StringUtils.capitalize(new SimpleDateFormat("EEEE dd 'de' MMMM 'de' YYYY").format(Date.valueOf(date)));
+	}
 }

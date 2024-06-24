@@ -43,9 +43,8 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		id: 'home_settings',
 		url: '/home/settings',
 		permissions: [
-			ERole.ROOT,
+			ERole.ROOT, ERole.ADMINISTRADOR
 		],
-		featureFlag: [AppFeature.HABILITAR_CONFIGURACION]
 	},
 	{
 		text: 'app.menu.AUDIT',

@@ -1,5 +1,8 @@
 package net.pladema.medicalconsultation.appointment.service.impl;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import ar.lamansys.sgh.shared.HospitalSharedAutoConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,13 +55,17 @@ public class SendVirtualAppointmentEmailServiceImpl implements SendVirtualAppoin
 	private VirtualConsultationAppointmentTemplateArgs generateArgs(AppointmentBo appointment, String healthcareProfessionalName) {
 		Person patient = personService.findByPatientId(appointment.getPatientId()).orElseThrow(() -> new IllegalStateException("No se encontró el paciente solicitado"));
 		String clinicalSpecialtyDescription = clinicalSpecialtyService.getClinicalSpecialtyNameByDiaryId(appointment.getDiaryId());
-		VirtualConsultationAppointmentTemplateArgs args = new VirtualConsultationAppointmentTemplateArgs();
-		args.setPatientName(patient.getLastName() + " " + patient.getFirstName());
-		args.setDate(appointment.getDate().toString() + " " + appointment.getHour().toString() + ".hs");
-		args.setProfessionalName(healthcareProfessionalName);
-		args.setClinicalSpecialty(clinicalSpecialtyDescription);
-		args.setCallLink(HospitalSharedAutoConfiguration.JITSI_DOMAIN_URL + "/" + appointment.getCallId());
-		return args;
+		return VirtualConsultationAppointmentTemplateArgs.builder()
+				.patientName(patient.getLastName() + " " + patient.getFirstName())
+				.date(buildDateArg(appointment.getDate(), appointment.getHour()))
+				.professionalName(healthcareProfessionalName)
+				.clinicalSpecialty(clinicalSpecialtyDescription)
+				.callLink(HospitalSharedAutoConfiguration.JITSI_DOMAIN_URL + "/" + appointment.getCallId())
+				.build();
+	}
+
+	public static String buildDateArg(LocalDate date, LocalTime hour) {
+		return date.toString() + " " + hour.toString() + ".hs";
 	}
 
 }

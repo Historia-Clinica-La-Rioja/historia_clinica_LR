@@ -3192,6 +3192,12 @@ export interface NominatimRequestResponseDto {
     responseCode: ENominatimResponseCode;
 }
 
+export interface NotificationTemplateRenderDto extends AbstractMasterdataDto<string> {
+    body: string;
+    id: string;
+    sendingEnabled: boolean;
+}
+
 export interface NotifyPatientDto {
     appointmentId: number;
     doctorName: string;
@@ -5643,7 +5649,6 @@ export const enum AppFeature {
     HABILITAR_EDITAR_PACIENTE_COMPLETO = "HABILITAR_EDITAR_PACIENTE_COMPLETO",
     HABILITAR_MODULO_GUARDIA = "HABILITAR_MODULO_GUARDIA",
     HABILITAR_MODULO_PORTAL_PACIENTE = "HABILITAR_MODULO_PORTAL_PACIENTE",
-    HABILITAR_CONFIGURACION = "HABILITAR_CONFIGURACION",
     HABILITAR_BUS_INTEROPERABILIDAD = "HABILITAR_BUS_INTEROPERABILIDAD",
     HABILITAR_ODONTOLOGY = "HABILITAR_ODONTOLOGY",
     HABILITAR_REPORTES = "HABILITAR_REPORTES",
