@@ -250,8 +250,6 @@ export class AnestheticReportVitalSignsService {
     }
 
     private clearForm() {
-        this.form.controls.measuringPointStartDate.setValue(null);
-        this.form.controls.measuringPointStartTime.setValue(null);
         this.form.controls.bloodPressureMax.setValue(null);
         this.form.controls.bloodPressureMin.setValue(null);
         this.form.controls.pulse.setValue(null);
