@@ -33,14 +33,14 @@ const ELEMENT_DATA: RutasPeriodic[] = [
   },
   {
     Miniature1: IMAGE_ITEM + "DR2.jpg",
-    Miniature2: IMAGE_ITEM + "DT1.jpg",
+    Miniature2: IMAGE_ITEM + "DT-EPOC.jpg",
     IconDR: ICON + "DR-active-icon.png",
     IconDT: ICON + "DT-active-icon.png",
     Orden: 2,
     Nombre: " EPOC",
     pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/EPOC-RutaAsistencial.pdf",
     routerLink: '../../../assets/rutas-lr/', 
-    pdfDT: null,
+    pdfDT: PDF_BASE_PATH + "documentos-tecnicos-pdf/EPOC-RutaAsistencial-DocumentoTecnico.pdf",
   },
   {
     Miniature1: IMAGE_ITEM + "DR1.jpg",
