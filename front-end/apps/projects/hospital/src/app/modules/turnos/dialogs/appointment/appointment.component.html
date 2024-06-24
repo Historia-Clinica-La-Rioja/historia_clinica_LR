@@ -291,7 +291,7 @@
 
 		<section gdArea="state-observations">
 
-			<section id="state">
+			<section id="state" fxLayout="column" fxLayoutGap="10px">
 				<span class="mat-body-strong strong-size">{{'turnos.appointment.APPOINTMENT_STATE' | translate}}</span>
 				<div class="appointment-actions" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
 
@@ -338,7 +338,9 @@
 							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 					</button>
 				</div>
-
+				<app-colored-icon-text *ngIf="HABILITAR_ANEXO_II_MENDOZA && selectedModality.value === ON_SITE_ATTENTION"
+					[coloredIconText]="scanMenssage"
+				></app-colored-icon-text>
 
 				<div class="observation-section" data-id="absent-motive" *ngIf="absentAppointment">
 					<span class="mat-body-strong strong-size"

@@ -299,6 +299,10 @@
 				"CANCEL": "Si, actualizar cobertura",
 				"CONFIRM": "No, confirmar turno",
 				"QUESTION": "¿Desea actualizarla ahora?"
+			},
+			"scaned_identification": {
+				"MESSAGE_SUCCESS": "Validación digital presencial mediante acreditación de identidad",
+				"MESSAGE_PENDING": "No se ha validado presencialidad en forma digital"
 			}
 		},
 		"report": {

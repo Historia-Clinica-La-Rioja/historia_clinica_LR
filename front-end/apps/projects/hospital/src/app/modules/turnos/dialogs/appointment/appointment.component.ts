@@ -10,9 +10,11 @@ import {
 	APPOINTMENT_CANCEL_OPTIONS,
 	APPOINTMENT_STATES_ID,
 	getAppointmentState,
+	getScanStatusCustom,
 	MAX_LENGTH_MOTIVE,
 	modality,
 	MODALITYS_TYPES,
+	SCAN_COMPLETED,
 } from '../../constants/appointment';
 import {
 	RECURRING_APPOINTMENT_OPTIONS,
@@ -94,6 +96,7 @@ import { ButtonType } from '@presentation/components/button/button.component';
 import { pushIfNotExists } from '@core/utils/array.utils';
 import { ScanPatientComponent } from '@pacientes/dialogs/scan-patient/scan-patient.component';
 import { PatientInformationScan } from '@pacientes/pacientes.model';
+import { ColoredIconText } from '@presentation/components/colored-icon-text/colored-icon-text.component';
 
 const TEMPORARY_PATIENT = 3;
 const REJECTED_PATIENT = 6;
@@ -117,6 +120,7 @@ const enum itsCovered {
 })
 export class AppointmentComponent implements OnInit {
 	readonly SECOND_OPINION_VIRTUAL_ATTENTION = EAppointmentModality.SECOND_OPINION_VIRTUAL_ATTENTION;
+	readonly ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;
 	readonly appointmentStatesIds = APPOINTMENT_STATES_ID;
 	readonly TEMPORARY_PATIENT = TEMPORARY_PATIENT;
 	readonly BELL_LABEL = BELL_LABEL;
@@ -208,8 +212,10 @@ export class AppointmentComponent implements OnInit {
 	HABILITAR_ATENDER_TURNO_MANUAL: boolean = false;
 	patientInformationScan: string;
 	genderOptions: GenderDto[];
-	identifyTypeArray: IdentificationTypeDto[];
+	identificationTypeList: IdentificationTypeDto[];
 	HABILITAR_ANEXO_II_MENDOZA = false;
+	TYPE_DNI: string;
+	scanMenssage: ColoredIconText = SCAN_COMPLETED;
 
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: {
@@ -313,6 +319,7 @@ export class AppointmentComponent implements OnInit {
 							}
 						});
 				}
+				this.scanMenssage =	 getScanStatusCustom(this.appointment.patientIdentityAccreditationStatus);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
 				this.selectedModality = MODALITYS_TYPES.find(m => m.value === this.appointment.modality);
@@ -367,10 +374,12 @@ export class AppointmentComponent implements OnInit {
 		}
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
-			identificationTypes => { this.identifyTypeArray = identificationTypes; });
+			identificationTypes => { 
+				this.identificationTypeList = identificationTypes;
+				this.TYPE_DNI = this.identificationTypeList.find(type => type.description === 'DNI').description; });
 
 		this.personMasterDataService.getGenders().subscribe(
-			genders => { this.genderOptions = genders; });
+			genders => { this.genderOptions = genders; });	
 	}
 
 	setCustomAppointment() {
@@ -973,7 +982,7 @@ export class AppointmentComponent implements OnInit {
 			});
 		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
 			if (upDateState)
-				if(this.HABILITAR_ANEXO_II_MENDOZA && this.hasRoleAdmin$ ){
+				if(this.HABILITAR_ANEXO_II_MENDOZA && this.hasRoleAdmin$ && this.patientSummary.identification.type === this.TYPE_DNI ){
 					this.openScanPatientDialog(newStateId);
 				}else{
 					this.updateState(newStateId);
@@ -998,11 +1007,14 @@ export class AppointmentComponent implements OnInit {
 			height: "600px",
 			data: {
 				genderOptions: this.genderOptions,
-				identifyTypeArray: this.identifyTypeArray,
+				identificationTypeList: this.identificationTypeList,
 			}
 		});
 		dialogRef.afterClosed().subscribe((patientInformationScan: PatientInformationScan) => {
 			this.patientInformationScan = patientInformationScan?.identifNumber;
+			if(this.patientInformationScan){
+				this.scanMenssage = SCAN_COMPLETED;
+			}
 			this.updateState(newStateId);
 		});
 	}
