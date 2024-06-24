@@ -121,18 +121,7 @@ public class ProgramReportsExcelService {
 
 		excelUtilsService.createHeaderCellsStyle(workbook);
 
-		for (SumarGeneralConsultationDetail imc : result) {
-			Double peso = imc.getWeight() != null ? Double.valueOf(imc.getWeight()) : null;
-			Double altura = imc.getHeight() != null ? Double.valueOf(imc.getHeight()) : null;
-			Double imcResult;
-			if (peso != null && altura != null) {
-				imcResult = peso / (altura * altura);
-				DecimalFormat df = new DecimalFormat("##.##");
-				String imcFormat = df.format(imcResult * 10000);
-				SumarGeneralConsultationDetail consultationDetailRecuperoSumar = new SumarGeneralConsultationDetail(imcFormat);
-				imc.setBmi(consultationDetailRecuperoSumar.getBmi());
-			}
-		}
+		result.forEach(this::calculateAndSetBmiForSumarGeneral);
 
 		ISheet sheet = workbook.createSheet(title);
 
@@ -202,6 +191,18 @@ public class ProgramReportsExcelService {
 		excelUtilsService.setSheetDimensions(sheet);
 
 		return workbook;
+	}
+
+	private void calculateAndSetBmiForSumarGeneral(SumarGeneralConsultationDetail consultationDetail) {
+		Double weight = consultationDetail.getWeight() != null ? Double.valueOf(consultationDetail.getWeight()) : null;
+		Double height = consultationDetail.getHeight() != null ? Double.valueOf(consultationDetail.getHeight()) : null;
+		if (weight != null && height != null) {
+			double bmiResult = weight / (height * height);
+			DecimalFormat df = new DecimalFormat("##.##");
+			String formattedBmi = df.format(bmiResult * 10000);
+			SumarGeneralConsultationDetail bmiDetail = new SumarGeneralConsultationDetail(formattedBmi);
+			consultationDetail.setBmi(bmiDetail.getBmi());
+		}
 	}
 
 	public void fillEpidemiologyOneRow(IRow row, EpidemiologyOneConsultationDetail content, ICellStyle style) {
