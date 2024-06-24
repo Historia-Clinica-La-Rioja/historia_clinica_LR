@@ -25,8 +25,9 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { APPOINTMENT_STATES_ID } from '@turnos/constants/appointment';
 import { CancelAppointmentComponent } from '../cancel-appointment/cancel-appointment.component';
+import { ParamsToSearchPerson } from '@pacientes/component/search-create/search-create.component';
 
-const ROUTE_SEARCH = 'pacientes/search';
+const ROUTE_SEARCH = 'pacientes';
 const TEMPORARY_PATIENT_ID = 3;
 
 @Component({
@@ -195,13 +196,14 @@ export class ConfirmBookingComponent implements OnInit {
 	}
 
 	goCreatePatient() {
+		const paramsToSearchPerson: ParamsToSearchPerson = {
+			identificationTypeId: this.formSearch.controls.identifType.value,
+			identificationNumber: this.formSearch.controls.identifNumber.value,
+			genderId: this.formSearch.controls.gender.value
+		};
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 			{
-				queryParams: {
-					identificationTypeId: this.formSearch.controls.identifType.value,
-					identificationNumber: this.formSearch.controls.identifNumber.value,
-					genderId: this.formSearch.controls.gender.value
-				}
+				queryParams: paramsToSearchPerson
 			});
 	}
 

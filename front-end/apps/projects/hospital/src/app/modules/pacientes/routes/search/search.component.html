@@ -161,7 +161,7 @@
 		</div>
 
 		<ng-template #patientCard>
-			<app-card-patient [patientData]="patientData"  [genderTableView]="genders" [identificationTypes]="identificationTypes" *ngIf="patientData?.length > 0 else noInfo"></app-card-patient>
+			<app-card-patient [patientData]="patientData"  [genderTableView]="genderOptions" [identificationTypes]="identifyTypeArray" *ngIf="patientData?.length > 0 else noInfo"></app-card-patient>
 		</ng-template>
 
 			<div class="new-patient-button" fxLayoutAlign="end none" >

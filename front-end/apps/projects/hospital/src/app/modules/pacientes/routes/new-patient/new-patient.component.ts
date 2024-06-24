@@ -27,12 +27,12 @@ import { MedicalCoverageComponent, PatientMedicalCoverage } from '@pacientes/dia
 import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
-import { NavigationService } from '@pacientes/services/navigation.service';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { fixDate } from '@core/utils/date/format';
+import { toParamsToSearchPerson } from '@pacientes/utils/search.utils';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -98,7 +98,6 @@ export class NewPatientComponent implements OnInit {
 		private dialog: MatDialog,
 		private mapperService: MapperService,
 		private patientMedicalCoverageService: PatientMedicalCoverageService,
-		public navigationService: NavigationService,
 		private permissionsService: PermissionsService,
 
 	) {
@@ -106,22 +105,22 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.navigationService.saveURL(this.router.url);
 		this.route.queryParams
-			.subscribe(params => {
-				this.fromGuardModule = params.fromGuardModule;
+			.pipe(take(1), map(params => toParamsToSearchPerson(params)))
+			.subscribe(paramsToSearchPerson => {
+				this.fromGuardModule = paramsToSearchPerson.fromGuardModule;
 				this.form = this.formBuilder.group({
-					firstName: [params.firstName ? params.firstName : null, [Validators.required]],
-					middleNames: [params.middleNames ? params.middleNames : null],
-					lastName: [params.lastName ? params.lastName : null, [Validators.required]],
-					otherLastNames: [params.otherLastNames ? params.otherLastNames : null],
-					genderId: [Number(params.genderId), [Validators.required]],
-					identificationNumber: [params.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
-					identificationTypeId: [Number(params.identificationTypeId), [Validators.required]],
-					birthDate: [params.birthDate ? dateISOParseDate(params.birthDate) : null, [Validators.required]],
+					firstName: [paramsToSearchPerson.firstName ? paramsToSearchPerson.firstName : null, [Validators.required]],
+					middleNames: [paramsToSearchPerson.middleNames ? paramsToSearchPerson.middleNames : null],
+					lastName: [paramsToSearchPerson.lastName ? paramsToSearchPerson.lastName : null, [Validators.required]],
+					otherLastNames: [paramsToSearchPerson.otherLastNames ? paramsToSearchPerson.otherLastNames : null],
+					genderId: [Number(paramsToSearchPerson.genderId), [Validators.required]],
+					identificationNumber: [paramsToSearchPerson.identificationNumber, [Validators.required, Validators.maxLength(VALIDATIONS.MAX_LENGTH.identif_number)]],
+					identificationTypeId: [Number(paramsToSearchPerson.identificationTypeId), [Validators.required]],
+					birthDate: [paramsToSearchPerson.birthDate ? dateISOParseDate(paramsToSearchPerson.birthDate) : null, [Validators.required]],
 
 					// Person extended
-					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
+					cuil: [paramsToSearchPerson.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phonePrefix: [],
 					phoneNumber: [],
@@ -153,9 +152,9 @@ export class NewPatientComponent implements OnInit {
 					pamiDoctor: [],
 					pamiDoctorPhoneNumber: []
 				});
-				this.lockFormField(params);
-				this.patientType = params.typeId;
-				this.personPhoto = { imageData: params.photo ? params.photo : null };
+				this.lockFormField(paramsToSearchPerson);
+				this.patientType = paramsToSearchPerson.typeId;
+				this.personPhoto = { imageData: paramsToSearchPerson.photo ? paramsToSearchPerson.photo : null };
 
 				this.form.get("addressCountryId").valueChanges.subscribe(
 					countryId => {
@@ -324,11 +323,11 @@ export class NewPatientComponent implements OnInit {
 	}
 
 	private getMessagesSuccess(): string {
-		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT' ;
+		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT';
 	}
 
 	private getMessagesError(): string {
-		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
+		return this.hasInstitutionalAdministrativeRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT';
 	}
 
 	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
@@ -391,7 +390,7 @@ export class NewPatientComponent implements OnInit {
 
 			},
 			// Select for an audict
-			auditType:EAuditType.UNAUDITED,
+			auditType: EAuditType.UNAUDITED,
 			fileIds: []
 		};
 
@@ -471,8 +470,8 @@ export class NewPatientComponent implements OnInit {
 
 	updatePhoneValidators() {
 		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.form, 'phonePrefix', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);

@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { PermissionsService } from '@core/services/permissions.service';
 
-const ROUTE_SEARCH = 'pacientes/search';
+const ROUTE_SEARCH = 'pacientes';
 
 @Component({
 	selector: 'app-search-patient',

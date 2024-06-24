@@ -16,8 +16,9 @@ import { MapperService } from '@core/services/mapper.service';
 import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { PermissionsService } from '@core/services/permissions.service';
-import { Observable } from 'rxjs';
+import { Observable, map, take } from 'rxjs';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
+import { toParamsToSearchPerson } from '@pacientes/utils/search.utils';
 
 const TEMPORARY_PATIENT = 3;
 const ROUTE_HOME = 'pacientes';
@@ -94,6 +95,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 	ngOnInit(): void {
 
 		this.route.queryParams
+			.pipe(take(1), map(params => toParamsToSearchPerson(params)))
 			.subscribe(params => {
 				this.identityVerificationStatus = Number(params.identityVerificationStatus);
 				this.comments = params.comments;
@@ -109,7 +111,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 					birthDate: [params.birthDate ? dateISOParseDate(params.birthDate) : undefined],
 
 					// Person extended
-					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER),Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
+					cuil: [params.cuil, [Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.cuil)]],
 					mothersLastName: [],
 					phonePrefix: [],
 					phoneNumber: [],
@@ -236,7 +238,8 @@ export class NewTemporaryPatientComponent implements OnInit {
 				this.setProvinces();
 			});
 		setTimeout(() => {
-			this.startView.nativeElement.scrollIntoView();}, TIME_TO_PREVENT_SCROLL);
+			this.startView.nativeElement.scrollIntoView();
+		}, TIME_TO_PREVENT_SCROLL);
 
 		this.permissionsService.hasContextAssignments$([ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR]).subscribe(hasInstitutionalAdministratorRole => this.hasInstitutionalAdministratorRole = hasInstitutionalAdministratorRole);
 
@@ -270,11 +273,11 @@ export class NewTemporaryPatientComponent implements OnInit {
 
 	}
 	private getMessagesSuccess(): string {
-		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT' ;
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.SUCCESS_PERSON' : 'pacientes.new.messages.SUCCESS_PATIENT';
 	}
 
 	private getMessagesError(): string {
-		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT' ;
+		return this.hasInstitutionalAdministratorRole ? 'pacientes.new.messages.ERROR_PERSON' : 'pacientes.new.messages.ERROR_PATIENT';
 	}
 
 	subscribeFinishUploadFiles(filesId$: Observable<number[]>) {
@@ -446,10 +449,10 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.showOtherSelfPerceivedGender();
 	}
 
-	updatePhoneValidators(){
-		if (this.form.controls.phoneNumber.value||this.form.controls.phonePrefix.value) {
-			updateControlValidator(this.form, 'phoneNumber', [Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
-			updateControlValidator(this.form, 'phonePrefix',[Validators.required,Validators.pattern(PATTERN_INTEGER_NUMBER) ,Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
+	updatePhoneValidators() {
+		if (this.form.controls.phoneNumber.value || this.form.controls.phonePrefix.value) {
+			updateControlValidator(this.form, 'phoneNumber', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phone)]);
+			updateControlValidator(this.form, 'phonePrefix', [Validators.required, Validators.pattern(PATTERN_INTEGER_NUMBER), Validators.maxLength(VALIDATIONS.MAX_LENGTH.phonePrefix)]);
 		} else {
 			updateControlValidator(this.form, 'phoneNumber', []);
 			updateControlValidator(this.form, 'phonePrefix', []);
@@ -465,7 +468,7 @@ export class NewTemporaryPatientComponent implements OnInit {
 		this.gendersId = [];
 		this.genders.forEach(
 			(gender: GenderDto) => {
-				this.gendersId.push("op_sexo_"+gender.description.toLowerCase());
+				this.gendersId.push("op_sexo_" + gender.description.toLowerCase());
 			}
 		);
 	}

@@ -51,8 +51,9 @@ import { EAppointmentExpiredReasons } from '@turnos/utils/expired-appointment.ut
 import { getStudiesNames } from '@turnos/utils/appointment.utils';
 import { buildFullDateFromDate, dateISOParseDate } from '@core/utils/moment.utils';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { ParamsToSearchPerson } from '@pacientes/component/search-create/search-create.component';
 
-const ROUTE_SEARCH = 'pacientes/search';
+const ROUTE_SEARCH = 'pacientes';
 const TEMPORARY_PATIENT_ID = 3;
 const MEDICAL_ORDER_PENDING_STATUS = '1';
 const MEDICAL_ORDER_CATEGORY_ID = '363679005'
@@ -106,7 +107,7 @@ export class NewAppointmentComponent implements OnInit {
 	boxMessageInfo: BoxMessageInformation;
 	expiredAppointmentForm: FormGroup<ExpiredAppointmentForm>;
 	fullDate: Date
-	
+
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: NewAppointmentData,
 		public dialogRef: MatDialogRef<NewAppointmentComponent>,
@@ -418,13 +419,14 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	goCreatePatient() {
+		const paramsToSearchPerson: ParamsToSearchPerson = {
+			identificationTypeId: this.formSearch.controls.identifType.value,
+			identificationNumber: this.formSearch.controls.identifNumber.value,
+			genderId: this.formSearch.controls.gender.value
+		}
 		this.router.navigate([this.routePrefix + ROUTE_SEARCH],
 			{
-				queryParams: {
-					identificationTypeId: this.formSearch.controls.identifType.value,
-					identificationNumber: this.formSearch.controls.identifNumber.value,
-					genderId: this.formSearch.controls.gender.value
-				}
+				queryParams: paramsToSearchPerson
 			});
 	}
 
@@ -574,7 +576,7 @@ export class NewAppointmentComponent implements OnInit {
 	}
 
 	private addAppointment(newAppointment: CreateAppointmentDto): Observable<number> {
-        this.transcribedOrderService.resetTranscribedOrder();
+		this.transcribedOrderService.resetTranscribedOrder();
 		if (this.data.isEquipmentAppointment) {
 			let medicalOrder = this.appointmentInfoForm.get('medicalOrder').get('appointmentMedicalOrder').value;
 			let orderId = medicalOrder?.serviceRequestId;
