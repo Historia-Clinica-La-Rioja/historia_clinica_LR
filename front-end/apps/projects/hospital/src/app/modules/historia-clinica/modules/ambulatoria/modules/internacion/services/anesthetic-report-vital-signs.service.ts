@@ -54,7 +54,7 @@ export class AnestheticReportVitalSignsService {
 	private vitalSignsIsEmpty$ = this.vitalSignsIsEmptySource.asObservable();
 
     private isSectionEmptySource = new BehaviorSubject<boolean>(true);
-	isSectionEmpty$ = this.vitalSignsIsEmptySource.asObservable();
+	isSectionEmpty$ = this.isSectionEmptySource.asObservable();
 
     private bloodPressureMaxSource = new Subject<string | void>();
 	private _bloodPressureMax$ = this.bloodPressureMaxSource.asObservable();
