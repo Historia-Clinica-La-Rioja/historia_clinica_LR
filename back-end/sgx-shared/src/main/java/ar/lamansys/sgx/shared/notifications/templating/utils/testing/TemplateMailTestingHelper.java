@@ -1,5 +1,6 @@
 package ar.lamansys.sgx.shared.notifications.templating.utils.testing;
 
+import static ar.lamansys.sgx.shared.templating.utils.SpringTemplateUtils.createHtmlTemplateEngine;
 import static ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateTestingUtils.GENERIC_RECIPIENT;
 import static ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateTestingUtils.createExpectedResultAsserter;
 
@@ -15,14 +16,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class TemplateMailTestingHelper<T> {
 	private final MessageSource messageSource;
-	protected ApplicationContext applicationContext;
+	protected final ApplicationContext applicationContext;
 
     public MailMessageBo renderTemplate(Domain domain, String scenario, NotificationTemplateInput<T> notificationArgs) throws TemplateException {
 		var mailTemplateEngine = new MailTemplateEngine(
 				domain.value,
 				messageSource,
-				"classpath:/templates/mails/",
-				applicationContext
+				createHtmlTemplateEngine(
+					"classpath:/templates/mails/",
+					applicationContext
+				)
 		);
 		var mail = mailTemplateEngine.process(GENERIC_RECIPIENT, notificationArgs);
 		var mailBodyResultAsserter = createExpectedResultAsserter("mail-body", notificationArgs.templateId);

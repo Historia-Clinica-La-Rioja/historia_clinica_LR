@@ -8,6 +8,10 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import ar.lamansys.sgx.shared.filestorage.infrastructure.output.repository.nfs.FileConfiguration;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SpringTemplateUtils {
 
 	public static SpringTemplateEngine createJsonTemplateEngine(
@@ -20,6 +24,22 @@ public class SpringTemplateUtils {
 						applicationContext
 				)
 		);
+	}
+
+	public static SpringTemplateEngine createCustomizableHtmlTemplateEngine(
+			String kind,
+			FileConfiguration fileConfiguration,
+			ApplicationContext applicationContext
+	) {
+
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		String templatesFolder = String.format("%s/templates/%s/", fileConfiguration.getDocumentsLocation().getAbsolutePath(), kind);
+		log.warn("Enabling custom templates folder at {}", templatesFolder);
+		templateEngine.addTemplateResolver(htmlTemplateResolver(String.format("file:%s", templatesFolder), applicationContext));
+
+		templateEngine.addTemplateResolver(htmlTemplateResolver(String.format("classpath:/templates/%s/", kind), applicationContext));
+		templateEngine.addDialect(new Java8TimeDialect());
+		return templateEngine;
 	}
 
 	public static SpringTemplateEngine createHtmlTemplateEngine(
