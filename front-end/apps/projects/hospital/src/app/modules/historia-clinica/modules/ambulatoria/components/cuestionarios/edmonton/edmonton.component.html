@@ -41,24 +41,6 @@
         <mat-radio-button color="primary" value="J">Mala</mat-radio-button>
       </mat-radio-group>
     </div><br>
-
-    <div class="text">
-      <h3 class="tipos" id="6"><mat-list-item>Rendimiento funcional</mat-list-item></h3>
-      <p>
-        Me gustaria que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando yo diga "YA", por
-        favor párese
-        y camine a un ritmo cómodo y seguro a la marca del suelo (aproximadamente a 3 metors de distancia), regrese a su
-        silla y se sienta.
-      </p>
-      <mat-radio-group id="7" name="RendimientoFuncOption" [(ngModel)]="selectedRendimientoFuncOption"
-        (change)="parametersOptions()">
-        <mat-radio-button color="primary" value="Z">0 a 10 segundos</mat-radio-button>
-        <mat-radio-button color="primary" value="Z2">11 a 20 segundos </mat-radio-button>
-        <mat-radio-button color="primary" value="Z3">Más de 20 segundos, paciente no quiere o requiere
-          ayuda</mat-radio-button>
-      </mat-radio-group>
-    </div>
-
     
     <div class="text">
       <h3 class="tipos" id="8"><mat-list-item>Independencia funcional</mat-list-item></h3>
@@ -141,8 +123,22 @@
       </mat-radio-group>
     </div>
 
-    
-
+    <div class="text">
+      <h3 class="tipos" id="6"><mat-list-item>Rendimiento funcional</mat-list-item></h3>
+      <p>
+        Me gustaria que se sentara en esta silla con su espalda y brazos relajados. Luego, cuando yo diga "YA", por
+        favor párese
+        y camine a un ritmo cómodo y seguro a la marca del suelo (aproximadamente a 3 metors de distancia), regrese a su
+        silla y se sienta.
+      </p>
+      <mat-radio-group id="7" name="RendimientoFuncOption" [(ngModel)]="selectedRendimientoFuncOption"
+        (change)="parametersOptions()">
+        <mat-radio-button color="primary" value="Z">0 a 10 segundos</mat-radio-button>
+        <mat-radio-button color="primary" value="Z2">11 a 20 segundos </mat-radio-button>
+        <mat-radio-button color="primary" value="Z3">Más de 20 segundos, paciente no quiere o requiere
+          ayuda</mat-radio-button>
+      </mat-radio-group>
+    </div>
 
     <!-- PUNTAJE -->
     <div class="text">

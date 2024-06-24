@@ -57,13 +57,12 @@ export class EdmontonComponent {
       (selectedHealthStatusOptionDos === 'H' ? 0 : selectedHealthStatusOptionDos === 'I' ? 1 : selectedHealthStatusOptionDos === 'J' ? 2 : 0) +
       (selectedFunctionIndOption === 'K' ? 0 : selectedFunctionIndOption === 'L' ? 1 : selectedFunctionIndOption === 'M' ? 2 : 0) +
       (selectedSupportSocOption === 'N' ? 0 : selectedSupportSocOption === 'N2' ? 1 : selectedSupportSocOption === 'O' ? 2 : 0) +
-      (selectedMedicationOption === 'P' ? 1 : selectedMedicationOption === 'Q' ? 0 : 0) +
-      (selectedMedicationOptionDos === 'R' ? 1 : selectedMedicationOptionDos === 'S' ? 0 : 0) +
-      (selectedNutritionOption === 'T' ? 1 : selectedNutritionOption === 'U' ? 0 : 0) +
-      (selectedAnimoOption === 'V' ? 1 : selectedAnimoOption === 'W' ? 0 : 0) +
-      (selectedContingenciaOption === 'X' ? 1 : selectedContingenciaOption === 'Y' ? 0 : 0) +
+      (selectedMedicationOption === 'P' ? 0 : selectedMedicationOption === 'Q' ? 1 : 0) +
+      (selectedMedicationOptionDos === 'R' ? 0 : selectedMedicationOptionDos === 'S' ? 1 : 0) +
+      (selectedNutritionOption === 'T' ? 0 : selectedNutritionOption === 'U' ? 1 : 0) +
+      (selectedAnimoOption === 'V' ? 0 : selectedAnimoOption === 'W' ? 1 : 0) +
+      (selectedContingenciaOption === 'X' ? 0 : selectedContingenciaOption === 'Y' ? 1 : 0) +
       (selectedRendimientoFuncOption === 'Z' ? 0 : selectedRendimientoFuncOption === 'Z2' ? 1 : selectedRendimientoFuncOption === 'Z3' ? 2 : 0);
-
 
     this.scoreTotal = scoreFinal;
 
@@ -230,7 +229,7 @@ export class EdmontonComponent {
   }
 
   mappingtotalScore() {
-    const scoreTotalMapping = { 
+    const scoreTotalMapping = {
       'A1': 21,
       'A2': 22,
       'A3': 23,
@@ -238,13 +237,13 @@ export class EdmontonComponent {
       'A5': 25,
     }
 
-return scoreTotalMapping[this.calificationTotal] || undefined;
+    return scoreTotalMapping[this.calificationTotal] || undefined;
 
   }
 
- construirDatos() {
+  construirDatos() {
 
-     const datos = {
+    const datos = {
       "questionnaireId": 1,
       "answers": [
 
@@ -314,7 +313,7 @@ return scoreTotalMapping[this.calificationTotal] || undefined;
         },
       ]
     }
-     return datos;
+    return datos;
   }
 
   ngOnInit(): void {
