@@ -491,14 +491,14 @@ export class DesempenoFisicoComponent implements OnInit {
               Swal.close();
               this.enviarFormulario();
               document.getElementById('contenidoData').style.display = 'none';
-
-
               Swal.fire({
                 icon: 'success',
                 iconColor: '#2687c5',
                 title: 'Enviado exitosamente',
                 confirmButtonColor: '#2687c5',
                 confirmButtonText: 'Aceptar',
+              }).then(() => {
+                window.location.reload();
               });
             }, 2000);
           }
@@ -507,9 +507,6 @@ export class DesempenoFisicoComponent implements OnInit {
       }
     });
   }
-
-
-
   enviarFormulario(): void {
     this.physicalService.createPhysical(this.patientId, this.construirDatos()).subscribe();
   }

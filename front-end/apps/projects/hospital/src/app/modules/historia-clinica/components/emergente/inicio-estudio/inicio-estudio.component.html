@@ -1,10 +1,6 @@
 <app-content width="full">
   <mat-card class="roll">
 
-    <!-- <app-no-data></app-no-data> -->
-
-    <!-- medical_services -->
-
     <div class="box">
 
       <mat-icon fontset="material-icons-outlined" class="iconMedical material-icons-outlined mat-icon-no-color ">
@@ -40,7 +36,7 @@
       <ul>
         <li *ngFor="let questionnaire of this.lastEdmontonQuestionnaires">
 
-          <div class="resultEdmonton">
+          <div class="resultEdmonton" [ngStyle]="getResultStyleEdmonton(questionnaire.questionnaireResult)">
             {{ questionnaire.questionnaireResult | uppercase }}
 
           </div>
@@ -57,6 +53,8 @@
         </li>
       </ul>
     </div>
+    <app-no-data *ngIf="this.lastEdmontonQuestionnaires.length === 0"></app-no-data>
+
     <mat-divider></mat-divider>
 
     <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
@@ -69,7 +67,7 @@
       <ul>
         <li *ngFor="let questionnaire of this.lastFrailQuestionnaires">
 
-          <div class="resultFrail">
+          <div class="resultFrail" [ngStyle]="getResultStyleFrail(questionnaire.questionnaireResult)">
             {{ questionnaire.questionnaireResult | uppercase }}
 
           </div>
@@ -85,9 +83,11 @@
         </li>
       </ul>
     </div>
+    <app-no-data *ngIf="this.lastFrailQuestionnaires.length === 0"></app-no-data>
+
     <mat-divider></mat-divider>
 
-    <!-- <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
+    <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
       <button mat-button class="filter-button" color="primary">
         <mat-icon fontSet="material-icons-outlined">directions_run</mat-icon> PRUEBA CORTA DE DESEMPEÑO FISICO
       </button>
@@ -97,23 +97,23 @@
       <ul>
         <li *ngFor="let questionnaire of this.lastPhysicalQuestionnaires">
 
-          
-          <div class="resultPhysical">
+          <div class="resultPhysical" [ngStyle]="getResultStylePhysical(questionnaire.questionnaireResult)">
             {{ questionnaire.questionnaireResult | uppercase }}
 
           </div>
 
           <div class="fecha">
 
-            Fecha: {{ questionnaire.createdOn | date:'short' }} -->
-
-          <!-- </div> -->
-          <!-- <button class="buttonDescarga" mat-button (click)="downloadPhysicalPdf(questionnaire.id)">
+            Fecha: {{ questionnaire.createdOn | date:'short' }}
+          </div>
+          <button class="buttonDescarga" mat-button (click)="downloadPhysicalPdf(questionnaire.id)">
             <mat-icon color="primary" fontSet="material-icons-outlined">visibility</mat-icon>
           </button>
         </li>
-      </ul>  
-    </div> -->
+      </ul>
+    </div>
+    <app-no-data *ngIf="this.lastPhysicalQuestionnaires.length === 0"></app-no-data>
+
     <mat-divider></mat-divider>
   </mat-card>
 

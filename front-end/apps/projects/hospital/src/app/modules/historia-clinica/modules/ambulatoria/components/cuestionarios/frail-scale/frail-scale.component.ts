@@ -169,6 +169,7 @@ export class FrailScaleComponent implements OnInit {
       confirmButtonText: 'Enviar',
       confirmButtonColor: '#2687c5',
       denyButtonText: 'Cancelar',
+      allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({

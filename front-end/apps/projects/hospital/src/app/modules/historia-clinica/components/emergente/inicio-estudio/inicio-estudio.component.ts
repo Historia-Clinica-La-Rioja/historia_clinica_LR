@@ -4,7 +4,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { BasicPatientDto, QuestionnairesResponses } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { ActivatedRoute } from '@angular/router';
-import { LatestStudiesComponent } from '../pop-up/latest-studies/latest-studies.component';
 import { EdmontonService } from '@api-rest/services/edmonton.service';
 import { FrailService } from '@api-rest/services/fragility-test.service';
 import { PhysicalPerformanceService } from '@api-rest/services/physical-performance.service';
@@ -18,11 +17,11 @@ import { PhysicalPerformanceService } from '@api-rest/services/physical-performa
 export class AdultoMayorComponent implements OnInit {
 
   patientId: number;
-  private readonly routePrefix;
   patientData: BasicPatientDto | undefined;
   lastEdmontonQuestionnaires: QuestionnairesResponses[] = [];
   lastFrailQuestionnaires: QuestionnairesResponses[] = [];
   lastPhysicalQuestionnaires: QuestionnairesResponses[] = [];
+  routePrefix: string;
 
   constructor(
     private dialog: MatDialog,
@@ -51,11 +50,9 @@ export class AdultoMayorComponent implements OnInit {
         const edmontonQuestionnaires = questionnaires.filter(
           (questionnaire) => questionnaire.questionnaireTypeId === 1
         );
-
         edmontonQuestionnaires.sort((a, b) => {
           return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
         });
-
         this.lastEdmontonQuestionnaires = edmontonQuestionnaires.slice(0, 3);
         this.lastEdmontonQuestionnaires.forEach(q => {
           if (q.questionnaireResult === "0 - 4 : Individuo sano") {
@@ -76,6 +73,24 @@ export class AdultoMayorComponent implements OnInit {
       }
     );
   }
+
+  getResultStyleEdmonton(result: string): { [key: string]: string } {
+    switch (result) {
+      case 'Individuo Sano':
+        return { backgroundColor: '#b1efb7', color: '#549e2e' };
+      case 'Vulnerable':
+        return { backgroundColor: '#fff7a9', color: '#9e882e' };
+      case 'Fragilidad leve':
+        return { backgroundColor: '#fff7a9', color: '#9e882e' };
+      case 'Fragilidad moderada':
+        return { backgroundColor: '#ffce99', color: '#9e662e' };
+      case 'Fragilidad severa':
+        return { backgroundColor: '#fbdddd', color: '#eb5757' };
+      default:
+        return { color: '#549e2e' };
+    }
+  }
+
 
   loadLastFrailQuestionnaires(): void {
     this.frailService.getAllByPatientId(this.patientId).subscribe(
@@ -104,27 +119,50 @@ export class AdultoMayorComponent implements OnInit {
     );
   }
 
+  getResultStyleFrail(result: string): { [key: string]: string } {
+    switch (result) {
+      case 'Persona frágil':
+        return { backgroundColor: '#fbdddd', color: '#eb5757' };
+      case 'Persona pre-frágil':
+        return { backgroundColor: '#b1efb7', color: '#549e2e' };
+      default:
+        return { color: '#549e2e' };
+    }
+  }
+
   loadLastPhysicalQuestionnaires(): void {
     this.PhysicalPerformanceService.getAllByPatientId(this.patientId).subscribe(
       (questionnaires: QuestionnairesResponses[]) => {
         const physicalQuestionnaires = questionnaires.filter(
           (questionnaire) => questionnaire.questionnaireTypeId === 4
         );
-
         physicalQuestionnaires.sort((a, b) => {
           return new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime();
         });
-
         this.lastPhysicalQuestionnaires = physicalQuestionnaires.slice(0, 3);
-        // this.lastPhysicalQuestionnaires.forEach(q => {
-        //   if(q.questionnaireResult === "Desempeño fisico bajo") {
-        //   } else (q.questionnaireResult === "Desempeño fisico alto")
-        // })
+        this.lastPhysicalQuestionnaires.forEach(q => {
+          if (q.questionnaireResult === "0 - 7: Desempeño físico bajo") {
+            q['questionnaireResult'] = "Desempeño físico bajo"
+          } else if (q.questionnaireResult === "8 - 12: Desempeño físico alto") {
+            q['questionnaireResult'] = "Desempeño físico alto"
+          }
+        })
       },
       (error) => {
-        console.error('Error fetching Frail questionnaires:', error);
+        console.error('Error fetching physical questionnaires:', error);
       }
     );
+  }
+
+  getResultStylePhysical(result: string): { [key: string]: string } {
+    switch (result) {
+      case 'Desempeño físico bajo':
+        return { backgroundColor: '#fbdddd', color: '#eb5757' };
+      case 'Desempeño físico alto':
+        return { backgroundColor: '#b1efb7', color: '#549e2e' };
+      default:
+        return { color: '#549e2e' };
+    }
   }
 
   downloadEdmontonPdf(questionnaireId: number): void {
@@ -162,7 +200,7 @@ export class AdultoMayorComponent implements OnInit {
       }
     );
   }
-  
+
   mostrarPopup(): void {
     const dialogRef = this.dialog.open(EstudiosPopupComponent, {
       width: '800px',
@@ -171,18 +209,6 @@ export class AdultoMayorComponent implements OnInit {
       },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-    });
-  }
-
-  mostrarPopupVerEstudios(): void {
-    const dialogRef = this.dialog.open(LatestStudiesComponent, {
-      width: '800px',
-      data: {
-        patientId: this.patientId,
-        institutionId: this.routePrefix,
-      }
-    });
     dialogRef.afterClosed().subscribe(result => {
     });
   }
