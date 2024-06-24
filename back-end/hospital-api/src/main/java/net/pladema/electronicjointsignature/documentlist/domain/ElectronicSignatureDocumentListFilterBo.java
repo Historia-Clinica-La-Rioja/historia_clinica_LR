@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @ToString
@@ -20,9 +20,9 @@ public class ElectronicSignatureDocumentListFilterBo {
 
 	private List<Short> signatureStatusIds;
 
-	private LocalDateTime startDate;
+	private LocalDate startDate;
 
-	private LocalDateTime endDate;
+	private LocalDate endDate;
 
 	private String patientFirstName;
 

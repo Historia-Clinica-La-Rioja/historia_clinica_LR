@@ -35,7 +35,9 @@ public class GetProfessionalInvolvedDocumentListStorage {
 				"AND dip.healthcareProfessionalId = :healthcareProfessionalId " +
 				(filter.getSignatureStatusIds() != null && !filter.getSignatureStatusIds().isEmpty() ? "AND dip.signatureStatusId IN :signatureStatusIds " : "") +
 				(filter.getStartDate() != null && filter.getEndDate() != null ? "AND d.creationable.createdOn BETWEEN :startDate AND :endDate " : "") +
-				(filter.getPatientFirstName() != null ? (filter.isSelfDeterminationNameFFActive() ? "AND UPPER(pe.nameSelfDetermination) " : "AND UPPER(p3.firstName) ") + "LIKE '%" + filter.getPatientFirstName().toUpperCase() + "%' " : "") +
+				(filter.getPatientFirstName() != null ?
+						(filter.isSelfDeterminationNameFFActive() ? "AND ((pe.nameSelfDetermination != NULL AND UPPER(pe.nameSelfDetermination) LIKE '%" + filter.getPatientFirstName().toUpperCase() + "%') OR (pe.nameSelfDetermination = NULL AND UPPER(p3.firstName) LIKE '%" + filter.getPatientFirstName().toUpperCase() + "%')) " :
+								"AND UPPER(p3.firstName) LIKE '%" + filter.getPatientFirstName().toUpperCase() + "%' ") : "") +
 				(filter.getPatientLastName() != null ? "AND UPPER(p3.lastName) LIKE '%" + filter.getPatientLastName().toUpperCase() + "%' " : "");
 		String queryString = "SELECT NEW net.pladema.electronicjointsignature.documentlist.domain.ElectronicSignatureInvolvedDocumentBo(dip.id, d.id, d.typeId, p2.personId, up.pk.personId, " +
 				"d.creationable.createdOn, dip.signatureStatusId, dip.statusUpdateDate) " +
@@ -110,8 +112,11 @@ public class GetProfessionalInvolvedDocumentListStorage {
 	}
 
 	private void setQueryStartAndEndDate(ElectronicSignatureDocumentListFilterBo filter, Query result) {
-		result.setParameter("startDate", filter.getStartDate());
-		result.setParameter("endDate", filter.getEndDate());
+		final int LAST_HOUR = 23;
+		final int LAST_MINUTE = 59;
+		final int LAST_SECOND = 59;
+		result.setParameter("startDate", filter.getStartDate().atStartOfDay());
+		result.setParameter("endDate", filter.getEndDate().atTime(LAST_HOUR, LAST_MINUTE, LAST_SECOND));
 	}
 
 }
