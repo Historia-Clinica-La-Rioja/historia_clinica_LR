@@ -1,8 +1,7 @@
 <app-content >
 
 	<h1>{{ 'guardia.episode.medical_discharge.TITLE' | translate}}</h1>
-	<mat-card fxLayout="column" fxLayoutGap="32px" fxLayout.md="" id="container">
-
+	<mat-card class="container" fxLayout="column" fxLayoutGap="32px">
 
 		<app-patient-summary *ngIf="patientSummary" [person]="patientSummary"></app-patient-summary>
 
@@ -17,13 +16,9 @@
 
 			<div appearance="outline">
 				<app-time-picker id="time" [timePickerData]="timePickerData" (timeSelected)="dischargedTimeChanged($event)"></app-time-picker>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')" translate="forms.REQUIRED">
-				</mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')"
-					translate="forms.MAX_TIME_ERROR"></mat-error>
-				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')"
-					translate="guardia.episode.medical_discharge.form.INVALID_TIME">
-				</mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'required', 'time')">{{ "forms.REQUIRED" | translate }}</mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'futureTime', 'time')">{{ "forms.MAX_TIME_ERROR" | translate }}</mat-error>
+				<mat-error *ngIf="hasError(form.get('dateTime'), 'beforeTime', 'time')">{{ "guardia.episode.medical_discharge.form.INVALID_TIME" | translate }}</mat-error>
 			</div>
 		</div>
 
@@ -127,15 +122,15 @@
 			<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="48px">
 
 				<div fxLayout="column">
-					<mat-radio-group style="margin-bottom: 12px;" formControlName="dischargeTypeId" name="dischargeTypeId">
+					<mat-radio-group class="radio-buttons" formControlName="dischargeTypeId" name="dischargeTypeId">
 						<div *ngFor="let dischargeType of (dischargeTypes$ | async); let i = index" [ngClass]="{'second-column': i >= 8}">
-							<mat-radio-button *ngIf="i < 8" [value]="dischargeType.id" color="primary" class="radio-buttons" style="margin-bottom: 12px;">
+							<mat-radio-button *ngIf="i < 8" [value]="dischargeType.id" color="primary" class="radio-buttons">
 								{{ dischargeType.description }}
 							</mat-radio-button>
 						</div>
 					</mat-radio-group>
 
-					<div *ngIf="form.get('dischargeTypeId').value == dischargeTypesEnum.DEFUNCION">
+					<div *ngIf="form.value.dischargeTypeId == dischargeTypesEnum.DEFUNCION">
 						<div fxLayout="column" fxLayoutGap="8px">
 							<strong><mat-label translate="guardia.episode.medical_discharge.form.AUTOPSY"></mat-label></strong>
 							<mat-form-field appearance="outline">
@@ -147,8 +142,7 @@
 										<span translate="forms.NO"></span>
 									</mat-option>
 								</mat-select>
-								<mat-error *ngIf="form.get('autopsy').hasError('required')"
-									translate="forms.REQUIRED"></mat-error>
+								<mat-error *ngIf="hasError(form, 'required', 'autopsy')">{{ "forms.REQUIRED" | translate }}</mat-error>
 							</mat-form-field>
 						</div>
 					</div>
@@ -157,19 +151,18 @@
 				<div fxLayout="column">
 					<mat-radio-group formControlName="dischargeTypeId" name="dischargeTypeId">
 						<div *ngFor="let dischargeType of (dischargeTypes$ | async); let i = index">
-							<mat-radio-button *ngIf="i >= 8" [value]="dischargeType.id" color="primary" class="radio-buttons" style="margin-bottom: 12px;">
+							<mat-radio-button *ngIf="i >= 8" [value]="dischargeType.id" color="primary" class="radio-buttons">
 								{{ dischargeType.description }}
 							</mat-radio-button>
 						</div>
 					</mat-radio-group>
-					<div *ngIf="form.get('dischargeTypeId').value == dischargeTypesEnum.OTRO">
+					<div *ngIf="form.value.dischargeTypeId == dischargeTypesEnum.OTRO">
 						<mat-form-field appearance="outline">
 							<textarea formControlName="otherDischargeDescription"
 								placeholder="{{'guardia.episode.medical_discharge.form.DISCHARGE_TYPE_INPUT' | translate }}"
 								rows="4" matInput type="text">
 								</textarea>
-							<mat-error *ngIf="form.get('otherDischargeDescription').hasError('required')"
-								translate="forms.REQUIRED"></mat-error>
+							<mat-error *ngIf="hasError(form, 'required', 'otherDischargeDescription')">{{ "forms.REQUIRED" | translate }}</mat-error>
 						</mat-form-field>
 					</div>
 				</div>

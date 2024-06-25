@@ -3,12 +3,12 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { ActivatedRoute, Router } from '@angular/router';
 import { AMedicalDischargeDto, BasicPatientDto, DiagnosesGeneralStateDto, MasterDataInterface, PersonPhotoDto, ResponseEmergencyCareDto, TimeDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DischargeTypes, medicalDischargeCustomOrder } from '@api-rest/masterdata';
+import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
-import { hasError, beforeTimeDtoValidationDate, futureTimeDtoValidationDate } from '@core/utils/form.utils';
+import { hasError, beforeTimeValidationDate, futureTimeValidationDate } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -46,12 +46,7 @@ export class MedicalDischargeComponent implements OnInit {
 	private episodeId: number;
 	private patientId: number;
 
-	timePickerData : TimePickerData = {
-        defaultTime : {
-			hours: this.today.getHours(),
-			minutes: this.today.getMinutes(),
-		}
-    };
+	timePickerData = this.buildTimePickerData();
 	minDate = MIN_DATE;
 
 	constructor(
@@ -80,7 +75,7 @@ export class MedicalDischargeComponent implements OnInit {
 			otherDischargeDescription: [null]
 		});
 
-		this.form.get('dischargeTypeId').valueChanges.subscribe(discharge => {
+		this.form.controls.dischargeTypeId.valueChanges.subscribe(discharge => {
 			this.updateDischargeTypeValidators(discharge);
 		});
 
@@ -104,21 +99,19 @@ export class MedicalDischargeComponent implements OnInit {
 			});
 		});
 
-        this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType()
-            .pipe(
-                map(dischargeTypes => this.customOrderDischargeTypes(dischargeTypes))
-            );
+        this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType();
 
-			this.problems$ = this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.episodeId).pipe(
-				map(problems => {
-					problems.forEach(problem => {
-						if (problem.main) {
-							this.selectedProblems.set(problem.id, problem);
-						}
-					});
-					return problems;
-				})
-			);
+		this.loadProblems();
+
+	}
+
+	private buildTimePickerData(): TimePickerData {
+		return {
+			defaultTime: {
+				hours: this.today.getHours(),
+				minutes: this.today.getMinutes(),
+			}
+		};
 	}
 
 	private loadPatient(patientId: number) {
@@ -156,13 +149,20 @@ export class MedicalDischargeComponent implements OnInit {
 		}
 	}
 
-	private customOrderDischargeTypes(dischargeTypes: MasterDataInterface<number>[]): MasterDataInterface<number>[] {
-        return dischargeTypes.sort((firstDischargeType, secondDischargeType) => {
-            const firstIndex = medicalDischargeCustomOrder.indexOf(firstDischargeType.id);
-            const secondIndex = medicalDischargeCustomOrder.indexOf(secondDischargeType.id);
-            return firstIndex - secondIndex;
-        });
-    }
+	private loadProblems() {
+		this.problems$ = this.emergencyCareStateService.getEmergencyCareEpisodeDiagnoses(this.episodeId).pipe(
+			map(problems => this.selectMainProblem(problems))
+		);
+	}
+
+	private selectMainProblem(problems: DiagnosesGeneralStateDto[]): DiagnosesGeneralStateDto[] {
+		problems.forEach(problem => {
+			if (problem.main) {
+				this.selectedProblems.set(problem.id, problem);
+			}
+		});
+		return problems;
+	}
 
 	checkIfShouldDisable(problem: DiagnosesGeneralStateDto): boolean {
 		return this.selectedProblems.size === 1 && this.selectedProblems.has(problem.id);
@@ -181,12 +181,12 @@ export class MedicalDischargeComponent implements OnInit {
 		this.setControlValidators(descriptionControl, value === this.dischargeTypesEnum.OTRO);
 	}
 
-	private setControlValidators(control, condition: boolean): void {
+	private setControlValidators(control: AbstractControl, condition: boolean) {
 		if (condition) {
 			control.setValidators([Validators.required]);
 		} else {
-		  control.setValue(null);
-		  control.clearValidators();
+			control.setValue(null);
+			control.clearValidators();
 		}
 		control.updateValueAndValidity();
 	}
@@ -196,15 +196,15 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	dischargedTimeChanged(time: TimeDto) {
-        this.form.controls.dateTime.get('time').setValue(time);
+		this.form.controls.dateTime.get('time').setValue(time);
     }
 
 	confirm(): void {
 		this.formSubmited = true;
 		this.isLoading = true;
-		const selectedProblemsList: DiagnosesGeneralStateDto[] = Array.from(this.selectedProblems.values());
-		if (this.form.valid && selectedProblemsList.length) {
-			const validForm: MedicalDischargeForm = { ... this.form.value, problems: selectedProblemsList };
+		const selectedProblems: DiagnosesGeneralStateDto[] = Array.from(this.selectedProblems.values());
+		if (this.form.valid && selectedProblems.length) {
+			const validForm: MedicalDischargeForm = { ... this.form.value, problems: selectedProblems };
 			const medicalCoverageDto: AMedicalDischargeDto = this.guardiaMapperService.formToAMedicalDischargeDto(validForm);
 			this.emergencyCareEspisodeDischargeService.newMedicalDischarge
 				(this.episodeId, medicalCoverageDto).subscribe(
@@ -232,10 +232,12 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	private setDateTimeValidation(episodeCreatedOn: Date): void {
-		const dateControl: UntypedFormGroup = (this.form.controls.dateTime) as UntypedFormGroup;
-		const timeControl: AbstractControl = dateControl.controls.time;
-		timeControl.setValidators([Validators.required, beforeTimeDtoValidationDate(episodeCreatedOn),
-			futureTimeDtoValidationDate]);
+		const dateTimeControl: UntypedFormGroup = (this.form.controls.dateTime) as UntypedFormGroup;
+		const dateControl: AbstractControl = dateTimeControl.controls.date;
+		const timeControl: AbstractControl = dateTimeControl.controls.time;
+
+		timeControl.setValidators([Validators.required, beforeTimeValidationDate(episodeCreatedOn,dateControl.value),
+			futureTimeValidationDate()]);
 
 		this.form.get('dateTime.date').valueChanges.subscribe(
 			selectedDate => {
@@ -255,13 +257,13 @@ export class MedicalDischargeComponent implements OnInit {
 
 				function beforeTodayValidation(): void {
 					const existingValidators = timeControl.validator;
-					timeControl.setValidators([existingValidators, futureTimeDtoValidationDate]);
+					timeControl.setValidators([existingValidators, futureTimeValidationDate()]);
 					timeControl.updateValueAndValidity();
 				}
 
 				function afterEpisodeCreationValidation(): void {
 					const existingValidators = timeControl.validator;
-					timeControl.setValidators([existingValidators, beforeTimeDtoValidationDate(episodeCreatedOn)]);
+					timeControl.setValidators([existingValidators, beforeTimeValidationDate(episodeCreatedOn,dateControl.value)]);
 					timeControl.updateValueAndValidity();
 				}
 			}

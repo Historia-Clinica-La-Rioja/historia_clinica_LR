@@ -8,6 +8,7 @@ import {
 	NewEffectiveClinicalObservationDto,
 	NewEmergencyCareDto,
 	NewRiskFactorsObservationDto,
+	OutpatientProblemDto,
 	PoliceInterventionDetailsDto,
 	ProblemTypeEnum,
 	ResponseEmergencyCareDto,
@@ -160,16 +161,7 @@ export class GuardiaMapperService {
 		const medicalDischargeOn = dateToDateTimeDtoUTC(getDateTime(form.dateTime));
 		return {
 			medicalDischargeOn,
-			problems: form.problems.map(
-				(problem: DiagnosesGeneralStateDto) => {
-					return {
-						chronic: problem?.type === ProblemTypeEnum.CHRONIC,
-						snomed: problem.snomed,
-						statusId: problem?.statusId,
-						verificationId: problem?.verificationId
-					};
-				}
-			),
+			problems: _mapProblems(form.problems),
 			dischargeTypeId: form.dischargeTypeId,
 			autopsy: form.autopsy,
 			otherDischargeDescription : form.otherDischargeDescription
@@ -181,6 +173,17 @@ export class GuardiaMapperService {
 			date.setHours(time.hours);
 			date.setMinutes(time.minutes);
 			return date;
+		}
+
+		function _mapProblems(problems: DiagnosesGeneralStateDto[]): OutpatientProblemDto[] {
+			return problems.map((problem: DiagnosesGeneralStateDto) => {
+				return {
+					chronic: problem?.type === ProblemTypeEnum.CHRONIC,
+					snomed: problem.snomed,
+					statusId: problem?.statusId,
+					verificationId: problem?.verificationId
+				};
+			});
 		}
 
 	}

@@ -137,7 +137,7 @@
 					<div fxLayout="row" fxLayoutGap="8px">
 						<app-title-description fxFlex="50%"
 							[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PROBLEM' | translate"
-							[text]="problemDescriptionText">
+							[text]="problemDescriptionText | stringSeparator">
 						</app-title-description>
 						<app-title-description fxFlex="50%"
 							[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE' | translate"

@@ -53,7 +53,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	hasMedicalDischarge = false;
 	medicalDischargeData: VMedicalDischargeDto;
-	problemDescriptionText: string;
+	problemDescriptionText: string[];
 	dischargeTypeDescriptionText: string;
 
 	registerEditor: RegisterEditor;
@@ -332,12 +332,12 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		this.emergencyCareEpisodeMedicalDischargeService.getMedicalDischarge(this.episodeId)
 			.subscribe((data) => {
 				this.medicalDischargeData = data;
-				this.problemDescriptionText = data.snomedPtProblems.join(', ');
+				this.problemDescriptionText = data.snomedPtProblems;
 				this.dischargeTypeDescriptionText = this.getDischargeTypeDescriptionText(data);
 				this.registerEditor = {
-					createdBy: data.medicalDischargeProfessionalName + ' ' + data.medicalDischargeProfessionalLastName,
+					createdBy: `${data.medicalDischargeProfessionalName} ${data.medicalDischargeProfessionalLastName}`,
 					date: dateTimeDtoToDate(data.medicalDischargeOn),
-				}
+				};
 			}
 		);
 	}

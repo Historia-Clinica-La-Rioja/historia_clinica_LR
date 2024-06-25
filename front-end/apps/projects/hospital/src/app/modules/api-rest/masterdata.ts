@@ -22,19 +22,3 @@ export enum DischargeTypes {
 	ALTA_A_SEGUIMIENTO_DOMICILIARIO = 13,
 	RETIRO_SIN_ALTA_MEDICA_FUGA = 14
 }
-
-export const medicalDischargeCustomOrder: DischargeTypes[] = [
-    DischargeTypes.ALTA_MEDICA,
-    DischargeTypes.ALTA_A_INTERNACION,
-    DischargeTypes.ALTA_A_INTERNACION_DOMICILIARIA,
-    DischargeTypes.ALTA_A_SEGUIMIENTO_DOMICILIARIO,
-    DischargeTypes.TRASLADO_A_OTRO_HOSPITAL,
-    DischargeTypes.TRASLADO_A_OTRO_TIPO_DE_INSTITUCION,
-    DischargeTypes.TRASLADO_A_TERCER_NIVEL,
-    DischargeTypes.DEFUNCION,
-    DischargeTypes.RETIRO_VOLUNTARIO,
-    DischargeTypes.RETIRO_SIN_ALTA_MEDICA_FUGA,
-    DischargeTypes.CANCELANCION,
-    DischargeTypes.SUSPENCION,
-    DischargeTypes.OTRO
-];

@@ -1,6 +1,12 @@
 
 @import '../../../../../../../assets/styles/mat-mixins';
 @import '../../../../../../../assets/styles/mixins';
+
+.container {
+	padding: 24px;
+	max-width: 704px;
+}
+
 form{
 	@include mat-form-field-background-white;
 	mat-radio-button {
@@ -8,14 +14,9 @@ form{
 	}
 }
 
-#container {
-    padding: 24px;
-}
-
-.radio-buttons {
-    margin-left: 0 !important;
-}
-
-mat-card {
-	max-width: 704px;
+.radio-buttons,
+.radio-buttons > mat-radio-button,
+.radio-buttons > mat-radio-group {
+	margin-left: 0 !important;
+	margin-bottom: 12px;
 }
