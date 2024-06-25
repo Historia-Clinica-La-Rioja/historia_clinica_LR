@@ -14,7 +14,7 @@
 		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon  && (snomedConcept == null)">
 			<mat-icon>search</mat-icon>
 		</button>
-		<button *ngIf="clearButton && (snomedConcept != null)" id="clear" type="button" mat-button matSuffix color="warn" mat-icon-button
+		<button *ngIf="clearButton && (snomedConcept != null)" id="clear" type="button"  matSuffix color="warn" mat-icon-button
 			(click)="clear()">
 			<mat-icon>close</mat-icon>
 		</button><button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit"
@@ -23,3 +23,4 @@
 		</button>
 	</mat-form-field>
 </form>
+

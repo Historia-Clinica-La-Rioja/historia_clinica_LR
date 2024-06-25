@@ -34,7 +34,7 @@
 					</mat-option>
 				</mat-optgroup>
 			</mat-select>
-			<button id="clear_equipment_diary_selected" type="button" mat-button *ngIf="diarySelected" matSuffix
+			<button id="clear_equipment_diary_selected" type="button"  *ngIf="diarySelected" matSuffix
 				color="warn" mat-icon-button (click)="clear(); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
 			</button>
@@ -66,3 +66,4 @@
 </div>
 
 <app-equipment-diary *ngIf="diarySelected" [diaryId]="diarySelected?.diaryList.id"></app-equipment-diary>
+

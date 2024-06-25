@@ -27,7 +27,7 @@
             <mat-form-field appearance="outline">
                 <input id="anesthesia-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{data.anesthesiaService.getSnomedConcept().pt }}">
-                <button id="clear-anesthesia" mat-button matSuffix color="warn" mat-icon-button
+                <button id="clear-anesthesia"  matSuffix color="warn" mat-icon-button
                     (click)="data.anesthesiaService.resetForm()">
                     <mat-icon>close</mat-icon>
                 </button>
@@ -41,3 +41,4 @@
         </div>
     </form>
 </ng-template>
+

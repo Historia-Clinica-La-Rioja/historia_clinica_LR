@@ -8,7 +8,6 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 const REFRESH_TIME = 5 * 60 * 1000;
 
 @Injectable()
-
 export class WorklistFacadeService {
 
     private appointmentsEmitter = new BehaviorSubject<EquipmentAppointmentListDto[]>([]);
@@ -22,7 +21,7 @@ export class WorklistFacadeService {
     startDate: string = null;
     endDate: string = null;
 
-    intervalo: NodeJS.Timer;
+    intervalo: NodeJS.Timeout;
 
     nameSelfDeterminationFF = false;
 

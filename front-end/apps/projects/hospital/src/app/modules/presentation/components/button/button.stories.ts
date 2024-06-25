@@ -71,7 +71,7 @@ export const ButtonTypeStroked: Story = {
 	args: {
 		color: 'primary',
 		text: 'nueva consulta',
-		buttonType: ButtonType.STOKED,
+		buttonType: ButtonType.STROKED,
 		isLoading: false,
 		disabled: false,
 	},

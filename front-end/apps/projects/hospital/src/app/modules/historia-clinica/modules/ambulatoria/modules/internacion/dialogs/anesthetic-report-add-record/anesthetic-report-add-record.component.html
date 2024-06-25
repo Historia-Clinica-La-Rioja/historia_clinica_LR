@@ -30,7 +30,7 @@
             <mat-form-field appearance="outline">
                 <input data-id="record-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{ data.anestheticReportRecordService.snomedConcept.pt }}">
-                <button data-id="clear-record" mat-button matSuffix color="warn" mat-icon-button
+                <button data-id="clear-record"  matSuffix color="warn" mat-icon-button
                     (click)="data.anestheticReportRecordService.resetForm()">
                     <mat-icon>close</mat-icon>
                 </button>

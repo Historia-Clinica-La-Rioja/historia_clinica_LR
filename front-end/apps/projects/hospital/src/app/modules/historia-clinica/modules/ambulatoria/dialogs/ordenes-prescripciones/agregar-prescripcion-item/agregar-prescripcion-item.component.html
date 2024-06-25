@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="space-between start">
     <h1 mat-dialog-title>{{ data.titleLabel | translate}}</h1>
-    <button id="close-modal" mat-button mat-icon-button aria-label="close" [matDialogClose]="false">
+    <button id="close-modal"  mat-icon-button aria-label="close" [matDialogClose]="false">
         <mat-icon>close</mat-icon>
     </button>
 </div>
@@ -31,7 +31,7 @@
 			<mat-form-field appearance="outline">
 				<mat-label class="capitalize-first-letter">{{data.searchSnomedLabel | translate}}</mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" #snomed (keyup.enter)="setConcept(snomed.value)">
-				<button mat-button matSuffix color="primary" mat-icon-button type="button" (click)="setConcept(snomed.value)">
+				<button  matSuffix color="primary" mat-icon-button type="button" (click)="setConcept(snomed.value)">
 					<mat-icon *ngIf="! snomedConcept">search</mat-icon>
 					<mat-icon *ngIf="snomedConcept">edit</mat-icon>
 				</button>
@@ -157,3 +157,4 @@
 		<span class="uppercase">{{'buttons.ADD' | translate}}</span>
 	</button>
 </div>
+

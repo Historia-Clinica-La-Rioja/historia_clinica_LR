@@ -78,7 +78,7 @@
 						(selectionChange)="setAsociatedCoverageData($event)"></app-medical-order-input>
 
 					<mat-form-field appearance="outline">
-						<button type="button" mat-button matSuffix color="warn" mat-icon-button
+						<button type="button"  matSuffix color="warn" mat-icon-button
 							*ngIf="formEdit.value.newCoverageData"
 							(click)="clearCoverageData(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -292,3 +292,4 @@
 			dateFormat:'datetime'}}</span>
 	</div>
 </ng-template>
+

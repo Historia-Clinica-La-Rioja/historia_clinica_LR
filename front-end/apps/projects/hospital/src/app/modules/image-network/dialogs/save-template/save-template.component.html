@@ -11,7 +11,7 @@
             <mat-label [translate]="'image-network.worklist.details_study.NAME_TEMPLATE'"></mat-label>
             <input id="input" name="input" matInput type="text" formControlName="templateName">
             <mat-error *ngIf="hasError(form, 'required','templateName')" [translate]="'forms.REQUIRED'"></mat-error>
-            <button id="clear" type="button" mat-button *ngIf="form.controls.templateName && !hideIcon" matSuffix color="warn" mat-icon-button
+            <button id="clear" type="button"  *ngIf="form.controls.templateName && !hideIcon" matSuffix color="warn" mat-icon-button
             (click)="clear()">
             <mat-icon>close</mat-icon>
             </button>

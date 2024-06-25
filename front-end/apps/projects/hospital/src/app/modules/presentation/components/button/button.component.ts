@@ -13,12 +13,13 @@ export class ButtonComponent implements AfterViewInit {
 	@Input() color?: ThemePalette = 'primary';
 	@Input() isLoading? = false;
 	@Input() text = '';
-	@Input() buttonType? = ButtonType.STOKED
+	@Input() buttonType? = ButtonType.STROKED
 	@Input() disabled? = false;
 	@Input() matIcon?: string;
 
 	@Output() clicked = new EventEmitter();
 
+	ButtonType = ButtonType;
 	constructor(
 		@Inject(DOCUMENT) private document: Document
 	) { }
@@ -43,6 +44,6 @@ export class ButtonComponent implements AfterViewInit {
 export enum ButtonType {
 	RAISED = 'mat-raised-button',
 	FLAT = 'mat-flat-button',
-	STOKED = 'mat-stroked-button',
+	STROKED = 'mat-stroked-button',
 	ICON = 'mat-icon-button'
 }

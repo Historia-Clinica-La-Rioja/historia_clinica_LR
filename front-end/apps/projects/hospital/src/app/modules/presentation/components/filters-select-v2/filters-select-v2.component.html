@@ -7,10 +7,11 @@
 					{{option?.description | translate}} {{option?.name | translate}}
 				</mat-option>
 			</mat-select>
-			<button *ngIf="filterForm.get(filter.key).value" mat-button matSuffix color="warn" mat-icon-button
+			<button *ngIf="filterForm.get(filter.key).value"  matSuffix color="warn" mat-icon-button
 				(click)="clear(filter.key); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
 			</button>
 		</mat-form-field>
 	</ng-container>
 </form>
+

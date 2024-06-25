@@ -50,7 +50,7 @@
                             {{province.description}}
                         </mat-option>
                     </mat-select>
-                    <button id="clear_address_province" type="button" mat-button *ngIf="form.value.addressProvinceId"
+                    <button id="clear_address_province" type="button" *ngIf="form.value.addressProvinceId"
                         matSuffix color="warn" mat-icon-button (click)="resetAllLocaltyControls($event)">
                         <mat-icon>close</mat-icon>
                     </button>
@@ -67,7 +67,7 @@
                             {{department.description}}
                         </mat-option>
                     </mat-select>
-                    <button id="clear_address_departament" type="button" mat-button *ngIf="form.value.addressDepartment"
+                    <button id="clear_address_departament" type="button" *ngIf="form.value.addressDepartment"
                         matSuffix color="warn" mat-icon-button (click)="resetDepartmentControl($event)">
                         <mat-icon>close</mat-icon>
                     </button>
@@ -132,7 +132,7 @@
                             {{institution.text}}
                         </mat-option>
                     </mat-select>
-                    <button id="clear_segurity-force-types" type="button" mat-button
+                    <button id="clear_segurity-force-types" type="button" 
                         *ngIf="form.value.securityForceType" matSuffix color="warn" mat-icon-button
                         (click)="resetSecurityForceTypesControl($event)">
                         <mat-icon>close</mat-icon>
@@ -153,7 +153,7 @@
                         {{relation.text}}
                     </mat-option>
                 </mat-select>
-                <button id="clear_aggressor-relation" type="button" mat-button *ngIf="form.value.aggressorRelation"
+                <button id="clear_aggressor-relation" type="button"  *ngIf="form.value.aggressorRelation"
                     matSuffix color="warn" mat-icon-button (click)="resetAggressorRelationControl($event)">
                     <mat-icon>close</mat-icon>
                 </button>

@@ -38,7 +38,7 @@
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY' | translate}}
 					</mat-label>
 					<input formControlName="studySelection" matInput type="text" readonly matTooltip="{{ this.getStudyDisplayName() }}">
-					<button mat-button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
+					<button  matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
 						<mat-icon>close</mat-icon>
 					</button>
 				</mat-form-field>
@@ -100,7 +100,7 @@
 						<span class="color-primary" [translate]="'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.UPDATE_COVERAGE'"></span>
 					</mat-option>
 				</mat-select>
-				<button id="clear-medical-coverage" type="button" mat-button *ngIf="form.value.patientMedicalCoverage" matSuffix
+				<button id="clear-medical-coverage" type="button"  *ngIf="form.value.patientMedicalCoverage" matSuffix
 						color="warn" mat-icon-button (click)="clear(form.controls.patientMedicalCoverage); $event.stopPropagation()">
 					<mat-icon>close</mat-icon>
 				</button>
@@ -150,3 +150,4 @@
 
 
 </form>
+

@@ -53,7 +53,7 @@
 				</mat-option>
 			</mat-optgroup>
 		</mat-select>
-		<button id="clear_agenda_selected" type="button" mat-button *ngIf="agendaSelected" matSuffix color="warn"
+		<button id="clear_agenda_selected" type="button"  *ngIf="agendaSelected" matSuffix color="warn"
 			mat-icon-button (click)="clear(agendaSelected); $event.stopPropagation()">
 			<mat-icon>close</mat-icon>
 		</button>
@@ -97,3 +97,4 @@
 </ng-container>
 
 <router-outlet></router-outlet>
+

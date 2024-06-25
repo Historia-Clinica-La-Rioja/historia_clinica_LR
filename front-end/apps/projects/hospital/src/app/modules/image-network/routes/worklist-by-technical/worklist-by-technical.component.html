@@ -15,7 +15,7 @@
                                     {{modality.description}}
                                 </mat-option>
                             </mat-select>
-                            <button *ngIf="filtersForm.controls.modality.value" mat-button matSuffix color="warn"
+                            <button *ngIf="filtersForm.controls.modality.value"  matSuffix color="warn"
                                 mat-icon-button (click)="cleanModalityInput(); $event.stopPropagation()">
                                 <mat-icon>close</mat-icon>
                             </button>
@@ -156,3 +156,4 @@
         <app-no-data *appHasRole="['TECNICO']" [message]="mssg"></app-no-data>
     </ng-template>
 </section>
+

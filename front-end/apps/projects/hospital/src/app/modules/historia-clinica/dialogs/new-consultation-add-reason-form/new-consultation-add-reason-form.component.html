@@ -27,7 +27,7 @@
             <mat-form-field appearance="outline">
                 <input id="motivo-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{ data.reasonService.getSnomedConcept().pt }}">
-                <button id="clear-motivo" mat-button matSuffix color="warn" mat-icon-button
+                <button id="clear-motivo"  matSuffix color="warn" mat-icon-button
                     (click)="data.reasonService.resetForm()">
                     <mat-icon>close</mat-icon>
                 </button>

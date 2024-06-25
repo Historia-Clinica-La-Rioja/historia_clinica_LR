@@ -280,7 +280,7 @@
 								{{country.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_country" type="button" mat-button *ngIf="form.value.addressCountryId"
+						<button id="clear_address_country" type="button"  *ngIf="form.value.addressCountryId"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressCountryId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -294,7 +294,7 @@
 								{{province.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_province" type="button" mat-button
+						<button id="clear_address_province" type="button" 
 							*ngIf="form.value.addressProvinceId" matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressProvinceId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -309,7 +309,7 @@
 								{{department.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_departament" type="button" mat-button
+						<button id="clear_address_departament" type="button" 
 							*ngIf="form.value.addressDepartmentId" matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressDepartmentId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -323,7 +323,7 @@
 								{{city.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_city" type="button" mat-button *ngIf="form.value.addressCityId"
+						<button id="clear_address_city" type="button"  *ngIf="form.value.addressCityId"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.addressCityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -494,7 +494,7 @@
 								{{ethnicity.pt | titlecase}}
 							</mat-option>
 						</mat-select>
-						<button id="clear_address_ethnicity" type="button" mat-button *ngIf="form.value.ethnicityId"
+						<button id="clear_address_ethnicity" type="button"  *ngIf="form.value.ethnicityId"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.ethnicityId.reset(); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -516,7 +516,7 @@
 							</mat-option>
 
 						</mat-select>
-						<button id="clear-occupation" type="button" mat-button *ngIf="form.controls.occupationId.value"
+						<button id="clear-occupation" type="button"  *ngIf="form.controls.occupationId.value"
 							matSuffix color="warn" mat-icon-button
 							(click)="form.controls.occupationId.reset(); $event.stopPropagation(); currentOccupationDescription = ''">
 							<mat-icon>close</mat-icon>
@@ -537,7 +537,7 @@
 								{{educationLevel.description}}
 							</mat-option>
 						</mat-select>
-						<button id="clear-educationLevel" type="button" mat-button
+						<button id="clear-educationLevel" type="button" 
 							*ngIf="form.controls.educationLevelId.value" matSuffix color="warn" mat-icon-button
 							(click)="form.controls.educationLevelId.reset(); $event.stopPropagation(); currentEducationLevelDescription = ''">
 							<mat-icon>close</mat-icon>
@@ -561,3 +561,4 @@
 		</div>
 	</section>
 </app-content>
+

@@ -31,7 +31,7 @@
                 </mat-label>
                 <input id="antecedentes-familiares-input" matInput type="text" formControlName="snomed" readonly
                     matTooltip="{{ data.familyHistoryService.getSnomedConcept().pt }}">
-                <button id="clear-antecedente" mat-button matSuffix color="warn" mat-icon-button
+                <button id="clear-antecedente"  matSuffix color="warn" mat-icon-button
                     (click)="data.familyHistoryService.resetForm()">
                     <mat-icon>close</mat-icon>
                 </button>

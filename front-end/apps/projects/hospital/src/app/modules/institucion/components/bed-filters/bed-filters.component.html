@@ -6,7 +6,7 @@
                 {{sector.sectorDescription | translate}}
             </mat-option>
         </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.sector.value" matSuffix color="warn"
+        <button id="clear-specialty" type="button"  *ngIf="form.controls.sector.value" matSuffix color="warn"
             mat-icon-button (click)="clear(form.controls.sector); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
@@ -19,7 +19,7 @@
                 {{service.serviceDescription | translate}}
             </mat-option>
         </mat-select>
-        <button id="clear-specialty" type="button" mat-button *ngIf="form.controls.service.value" matSuffix
+        <button id="clear-specialty" type="button"  *ngIf="form.controls.service.value" matSuffix
             color="warn" mat-icon-button (click)="clear(form.controls.service); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
@@ -36,7 +36,7 @@
 		    </mat-select-trigger>
 		    <mat-option *ngFor="let h of hierarchicalUnits$ | async" [value]="h">{{h.name}}</mat-option>
 		</mat-select>
-        <button id="clear-hierarchicalUnits" type="button" mat-button *ngIf="form.controls.hierarchicalUnits.value?.length" matSuffix
+        <button id="clear-hierarchicalUnits" type="button"  *ngIf="form.controls.hierarchicalUnits.value?.length" matSuffix
                 color="warn" mat-icon-button (click)="clear(form.controls.hierarchicalUnits); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
@@ -47,9 +47,10 @@
         <input matInput id="date" [matDatepicker]="myDatepicker" formControlName="probableDischargeDate" (dateChange)="sendAllFiltersOnFilterChange()">
         <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
         <mat-datepicker #myDatepicker></mat-datepicker>
-        <button id="clear-probable-discharge-date" type="button" mat-button *ngIf="form.controls.probableDischargeDate.value" matSuffix
+        <button id="clear-probable-discharge-date" type="button"  *ngIf="form.controls.probableDischargeDate.value" matSuffix
             color="warn" mat-icon-button (click)="clear(form.controls.probableDischargeDate); $event.stopPropagation()">
             <mat-icon>close</mat-icon>
         </button>
     </mat-form-field>
 </form>
+

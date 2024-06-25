@@ -35,7 +35,7 @@
                             {{opt.text}}
                         </mat-option>
                     </mat-select>
-                    <button id="clear_violence-situation-area" type="button" mat-button *ngIf="form.value.area?.length"
+                    <button id="clear_violence-situation-area" type="button"  *ngIf="form.value.area?.length"
                         matSuffix color="warn" mat-icon-button
                         (click)="form.controls.area.reset(); $event.stopPropagation()">
                         <mat-icon>close</mat-icon>
@@ -81,7 +81,7 @@
                             {{opt.text}}
                         </mat-option>
                     </mat-select>
-                    <button id="clear_violence-situation-establishments" type="button" mat-button
+                    <button id="clear_violence-situation-establishments" type="button" 
                         *ngIf="form.value.articulationEstablishmentList?.length" matSuffix color="warn" mat-icon-button
                         (click)="form.controls.articulationEstablishmentList.reset(); $event.stopPropagation()">
                         <mat-icon>close</mat-icon>
@@ -206,7 +206,7 @@
                         {{opt.text}}
                     </mat-option>
                 </mat-select>
-                <button id="clear_violence-situation-organizations" type="button" mat-button
+                <button id="clear_violence-situation-organizations" type="button" 
                     *ngIf="form.value.agencyComplaint?.length" matSuffix color="warn" mat-icon-button
                     (click)="form.controls.agencyComplaint.reset(); $event.stopPropagation()">
                     <mat-icon>close</mat-icon>
@@ -250,7 +250,7 @@
                         {{opt.text}}
                     </mat-option>
                 </mat-select>
-                <button id="clear_violence-situation-organizations-extended" type="button" mat-button
+                <button id="clear_violence-situation-organizations-extended" type="button" 
                     *ngIf="form.value.institutionComplaintsOrganizations?.length" matSuffix color="warn" mat-icon-button
                     (click)="form.controls.institutionComplaintsOrganizations.reset(); $event.stopPropagation()">
                     <mat-icon>close</mat-icon>

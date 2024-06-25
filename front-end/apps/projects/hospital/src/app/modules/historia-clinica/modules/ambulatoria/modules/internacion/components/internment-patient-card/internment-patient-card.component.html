@@ -23,7 +23,7 @@
 					{{sector.sectorDescription | translate}}
 				</mat-option>
 			</mat-select>
-			<button id="clear-filter-sector" type="button" mat-button *ngIf="formFilter.controls.sector.value" matSuffix
+			<button id="clear-filter-sector" type="button"  *ngIf="formFilter.controls.sector.value" matSuffix
 				color="warn" mat-icon-button
 				(click)="clearFilterField(formFilter.controls.sector); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
@@ -37,7 +37,7 @@
 					{{room.roomNumber | translate}}
 				</mat-option>
 			</mat-select>
-			<button id="clear-filter-room" type="button" mat-button *ngIf="formFilter.controls.room.value" matSuffix
+			<button id="clear-filter-room" type="button"  *ngIf="formFilter.controls.room.value" matSuffix
 				color="warn" mat-icon-button
 				(click)="clearFilterField(formFilter.controls.room); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
@@ -110,3 +110,4 @@
 <ng-template #noInfo>
 	<app-no-data></app-no-data>
 </ng-template>
+

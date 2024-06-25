@@ -20,7 +20,7 @@
 
 			<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-			<button id="clear-indication-type" type="button" mat-button matSuffix
+			<button id="clear-indication-type" type="button"  matSuffix
 				*ngIf="form.value.indicationType" color="warn" mat-icon-button
 				(click)="clearFilterField(form.controls.indicationType); $event.stopPropagation()">
 				<mat-icon>close</mat-icon>
@@ -90,7 +90,7 @@
 
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-						<button id="clear-interval" type="button" mat-button matSuffix
+						<button id="clear-interval" type="button"  matSuffix
 							*ngIf="form.controls.interval.value" color="warn" mat-icon-button
 							(click)="clearFilterField(form.controls.interval); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -113,7 +113,7 @@
 
 							<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-							<button id="clear-frequency-hour" type="button" mat-button matSuffix
+							<button id="clear-frequency-hour" type="button"  matSuffix
 								*ngIf="form.controls.frequencyHour.value" color="warn" mat-icon-button
 								(click)="clearFilterField(form.controls.frequencyHour); $event.stopPropagation()">
 								<mat-icon>close</mat-icon>
@@ -137,7 +137,7 @@
 
 						<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-						<button id="clear-start-time" type="button" mat-button matSuffix
+						<button id="clear-start-time" type="button"  matSuffix
 							*ngIf="form.controls.startTime.value" color="warn" mat-icon-button
 							(click)="clearFilterField(form.controls.startTime); $event.stopPropagation()">
 							<mat-icon>close</mat-icon>
@@ -161,7 +161,7 @@
 
 					<mat-error [translate]="'forms.REQUIRED'"></mat-error>
 
-					<button id="clear-start-time" type="button" mat-button matSuffix
+					<button id="clear-start-time" type="button"  matSuffix
 						*ngIf="form.controls.startTime.value" color="warn" mat-icon-button
 						(click)="clearFilterField(form.controls.startTime); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
@@ -190,3 +190,4 @@
 		<span [translate]="'buttons.CONFIRM'"></span>
 	</button>
 </div>
+

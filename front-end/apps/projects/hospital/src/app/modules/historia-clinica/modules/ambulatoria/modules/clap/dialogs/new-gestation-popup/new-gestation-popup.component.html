@@ -4,7 +4,7 @@
 		<h1 mat-dialog-title>{{ 'ambulatoria.paciente.clap.NEW_GESTATION' | translate }}</h1>
 		<span>{{ 'ambulatoria.paciente.clap.LABEL_DIALOG_GESTATION' | translate }}</span>
 	</div>
-	<button type="button" mat-button mat-icon-button mat-dialog-close>
+	<button type="button"  mat-icon-button mat-dialog-close>
 		<mat-icon>close</mat-icon>
 	</button>
 </div>
@@ -20,3 +20,4 @@
 <div mat-dialog-actions>
 	<button  mat-raised-button color="primary" [disabled]="(data?.includes(valueGestation) || (valueGestation < min || valueGestation > max))" [mat-dialog-close]="valueGestation"> {{ 'ambulatoria.paciente.clap.CREATE' | translate }}</button>
 </div>
+

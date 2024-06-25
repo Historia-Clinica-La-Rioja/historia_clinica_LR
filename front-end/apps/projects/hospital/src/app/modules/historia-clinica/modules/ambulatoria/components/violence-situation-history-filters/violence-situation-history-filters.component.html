@@ -8,7 +8,7 @@
 			Situación #{{vn.description}}
 		</mat-option>
 		</mat-select>
-		<button id="clear-situation-number" type="button" mat-button *ngIf="situationId.value" matSuffix
+		<button id="clear-situation-number" type="button"  *ngIf="situationId.value" matSuffix
 				color="warn"
 				mat-icon-button
 				(click)="resetControl($event, situationId)">
@@ -25,7 +25,7 @@
 			{{t.description}}
 		</mat-option>
 		</mat-select>
-		<button id="clear-type" type="button" mat-button *ngIf="typeId.value" matSuffix
+		<button id="clear-type" type="button"  *ngIf="typeId.value" matSuffix
 				color="warn"
 				mat-icon-button
 				(click)="resetControl($event, typeId)">
@@ -42,7 +42,7 @@
 			{{m.description}}
 		</mat-option>
 		</mat-select>
-		<button id="clear-modality" type="button" mat-button *ngIf="modalityId.value" matSuffix
+		<button id="clear-modality" type="button"  *ngIf="modalityId.value" matSuffix
 				color="warn"
 				mat-icon-button
 				(click)="resetControl($event, modalityId)">
@@ -59,7 +59,7 @@
 			{{i.description}}
 		</mat-option>
 		</mat-select>
-		<button id="clear-institution" type="button" mat-button *ngIf="institutionId.value" matSuffix
+		<button id="clear-institution" type="button"  *ngIf="institutionId.value" matSuffix
 				color="warn"
 				mat-icon-button
 				(click)="resetControl($event, institutionId)">
@@ -69,3 +69,4 @@
 
 	  <button mat-raised-button color="primary" (click)="applyFilters()">{{'buttons.APPLY_FILTERS' | translate}}</button>
 </form>
+

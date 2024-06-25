@@ -10,7 +10,7 @@
 								{{field.label | translate}}
 							</mat-option>
 						</mat-select>
-						<button id="clear-filter-field" type="button" mat-button *ngIf="form.value.field" matSuffix
+						<button id="clear-filter-field" type="button"  *ngIf="form.value.field" matSuffix
 								color="warn"
 								mat-icon-button
 								(click)="resetFilter(form.controls.field)">
@@ -46,7 +46,7 @@
 								   name="text"
 								   formControlName="text"
 								   type="text">
-							<button id="clear-filter-text" type="button" mat-button *ngIf="form.value.text" matSuffix
+							<button id="clear-filter-text" type="button"  *ngIf="form.value.text" matSuffix
 									color="warn"
 									mat-icon-button
 									(click)="setFilterValueAndSearchIfEmptyForm(form.controls.text, ''); $event.stopPropagation()">
@@ -261,3 +261,4 @@
 		<app-no-data></app-no-data>
 	</ng-template>
 </app-summary-card>
+

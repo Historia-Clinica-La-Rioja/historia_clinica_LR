@@ -36,7 +36,7 @@
 					{{'ambulatoria.paciente.internment-order.create-order-dialog.STUDY' | translate}}
 				</mat-label>
 				<input formControlName="studySelection" matInput type="text" readonly matTooltip="{{ this.getStudyDisplayName() }}">
-				<button mat-button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
+				<button  matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
 					<mat-icon>close</mat-icon>
 				</button>
 			</mat-form-field>
@@ -124,5 +124,6 @@
 		</mat-dialog-actions>
 	</mat-dialog-content>
 </ng-template>
+
 
 

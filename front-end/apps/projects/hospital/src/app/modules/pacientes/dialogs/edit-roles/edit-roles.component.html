@@ -15,7 +15,7 @@
 					<div class="form-input" [formGroupName]="formChild">
 						<div class="form-input">
 							<mat-form-field appearance="outline">
-								<button type="button" mat-button matSuffix color="warn" mat-icon-button
+								<button type="button"  matSuffix color="warn" mat-icon-button
 									*ngIf="hasValue(formChild)" (click)="clear(formChild); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
@@ -48,3 +48,4 @@
 		</button>
 	</div>
 </div>
+

@@ -130,7 +130,7 @@
 							{{province.description}}
 						</mat-option>
 					</mat-select>
-					<button id="clear_address_province" type="button" mat-button
+					<button id="clear_address_province" type="button"
 						*ngIf="form.value.addressProvinceId" matSuffix color="warn" mat-icon-button
 						(click)="resetAllLocaltyControls($event)">
 						<mat-icon>close</mat-icon>
@@ -147,7 +147,7 @@
 							{{department.description}}
 						</mat-option>
 					</mat-select>
-					<button id="clear_address_departament" type="button" mat-button
+					<button id="clear_address_departament" type="button"
 						*ngIf="form.value.addressDepartmentId" matSuffix color="warn" mat-icon-button
 						(click)="resetDepartmentControl($event)">
 						<mat-icon>close</mat-icon>
@@ -166,7 +166,7 @@
 							{{opt.text}}
 						</mat-option>
 					</mat-select>
-					<button id="clear_relation_person_violence_situation" type="button" mat-button
+					<button id="clear_relation_person_violence_situation" type="button"
 						*ngIf="form.value.relationPersonViolenceSituation" matSuffix color="warn" mat-icon-button
 						(click)="form.controls.relationPersonViolenceSituation.reset(); $event.stopPropagation()">
 						<mat-icon>close</mat-icon>
@@ -186,3 +186,4 @@
 	</form>
 
 </app-new-consultation-expansion-section>
+

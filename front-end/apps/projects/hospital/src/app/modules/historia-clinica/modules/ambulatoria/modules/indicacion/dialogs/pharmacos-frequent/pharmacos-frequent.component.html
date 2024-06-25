@@ -23,7 +23,7 @@
 					<mat-icon>search</mat-icon>
 				</button>
 
-				<button type="button" id="clear-filter-sector" *ngIf="formFilter.value.description" mat-button matSuffix
+				<button type="button" id="clear-filter-sector" *ngIf="formFilter.value.description"  matSuffix
 					color="warn" mat-icon-button
 					(click)="clearFilterField(formFilter.controls.description); $event.stopPropagation()">
 					<mat-icon>close</mat-icon>
@@ -42,3 +42,4 @@
 		showFirstLastButtons>
 	</mat-paginator>
 </div>
+

@@ -36,7 +36,7 @@
                     *ngIf="!data?.editing">
                 <input id="snomed-input-new-consultation" matInput type="text" formControlName="snomed" name="snomed"
                     readonly *ngIf="data?.editing">
-                <button id="clear" mat-button matSuffix color="warn" mat-icon-button
+                <button id="clear"  matSuffix color="warn" mat-icon-button
                     (click)="data.ambulatoryConsultationProblemsService.resetForm()" *ngIf="!data?.editing">
                     <mat-icon>close</mat-icon>
                 </button>

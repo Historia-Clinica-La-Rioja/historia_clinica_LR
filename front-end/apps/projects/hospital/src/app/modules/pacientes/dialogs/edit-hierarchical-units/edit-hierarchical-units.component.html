@@ -22,7 +22,7 @@
                     </mat-select>
                     <mat-error *ngIf="huControls.hasError('required', 'hierarchicalUnit')"
                         [translate]="'forms.REQUIRED'"></mat-error>
-                    <button type="button" mat-button matSuffix color="warn" mat-icon-button
+                    <button type="button"  matSuffix color="warn" mat-icon-button
                         (click)="clear(i); $event.stopPropagation()">
                         <mat-icon>close</mat-icon>
                     </button>

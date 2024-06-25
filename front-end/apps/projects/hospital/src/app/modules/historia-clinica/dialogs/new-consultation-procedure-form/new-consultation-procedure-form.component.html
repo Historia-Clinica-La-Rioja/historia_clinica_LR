@@ -29,7 +29,7 @@
                 </mat-label>
                 <input id="procedimiento-input" matInput type="text" formControlName="snomed" name="snomed" readonly
                     matTooltip="{{data.procedureService.getSnomedConcept().pt }}">
-                <button id="clear-procedimiento" mat-button matSuffix color="warn" mat-icon-button
+                <button id="clear-procedimiento"  matSuffix color="warn" mat-icon-button
                     (click)="data.procedureService.resetForm()">
                     <mat-icon>close</mat-icon>
                 </button>

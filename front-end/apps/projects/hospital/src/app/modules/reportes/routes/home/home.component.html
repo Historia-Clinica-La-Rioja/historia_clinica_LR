@@ -159,7 +159,7 @@
 									</mat-option>
 								</mat-select>
 								<button *ngIf="form.value.appointmentStateId" id="clear-appointment-state" type="button"
-									mat-button matSuffix color="warn" mat-icon-button
+									 matSuffix color="warn" mat-icon-button
 									(click)="clearAppointmentStateId(); $event.stopPropagation()">
 									<mat-icon>close</mat-icon>
 								</button>
@@ -186,3 +186,4 @@
 		<app-ui-component [uiComponent]="cubeReportData" (close)="resetCubeReport()"></app-ui-component>
 	</div>
 </app-content>
+
