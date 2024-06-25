@@ -81,8 +81,8 @@ public class HealthConditionService {
         log.debug("Input parameters -> patientInfo {}, documentId {}, mainDiagnosis {}", patientInfo, documentId, mainDiagnosis);
         mainDiagnosis.ifPresent(md -> {
             HealthCondition healthCondition = buildMainDiagnoses(patientInfo, md);
-            if(healthCondition.getId()==null)
-				healthCondition = save(healthCondition);
+			healthCondition.setId(null);
+			healthCondition = save(healthCondition);
             md.setId(healthCondition.getId());
             md.setVerificationId(healthCondition.getVerificationStatusId());
             md.setStatusId(healthCondition.getStatusId());
@@ -110,21 +110,14 @@ public class HealthConditionService {
         log.debug("Input parameters -> patientInfo {}, documentId {}, diagnosis {}", patientInfo, documentId, diagnosis);
         diagnosis.forEach(d -> {
             HealthCondition healthCondition = buildDiagnoses(patientInfo, d);
-			if(healthCondition.getId() == null) {
-				healthCondition = save(healthCondition);
-				d.setId(healthCondition.getId());
-				d.setVerificationId(healthCondition.getVerificationStatusId());
-				d.setStatusId(healthCondition.getStatusId());
-				d.setVerification(getVerification(d.getVerificationId()));
-				d.setStatus(getStatus(d.getStatusId()));
-				healthConditionRepository.setMain(healthCondition.getId(), false);
-			}
-			else{
-				HealthCondition hc = getById(healthCondition.getId());
-				hc.setVerificationStatusId(healthCondition.getVerificationStatusId());
-				hc.setMain(false);
-				save(hc);
-			}
+			healthCondition.setId(null);
+			healthCondition = save(healthCondition);
+			d.setId(healthCondition.getId());
+			d.setVerificationId(healthCondition.getVerificationStatusId());
+			d.setStatusId(healthCondition.getStatusId());
+			d.setVerification(getVerification(d.getVerificationId()));
+			d.setStatus(getStatus(d.getStatusId()));
+			healthConditionRepository.setMain(healthCondition.getId(), false);
             documentService.createDocumentHealthCondition(documentId, healthCondition.getId());
         });
 
