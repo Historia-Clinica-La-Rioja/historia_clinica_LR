@@ -43,6 +43,8 @@ public class RecuperoGeneralConsultationDetail {
 
 	private String location;
 
+	private String bodyMassIndex; // aparece en la query pero está en desuso
+
 	private String reasons;
 
 	private String procedures;

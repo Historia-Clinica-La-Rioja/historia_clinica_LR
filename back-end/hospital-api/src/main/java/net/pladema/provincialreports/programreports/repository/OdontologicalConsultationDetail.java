@@ -37,6 +37,8 @@ public class OdontologicalConsultationDetail {
 
 	private String direction;
 
+	private String neighborhood;
+
 	private String location;
 
 	private String indexCpo;

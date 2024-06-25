@@ -51,6 +51,8 @@ public class SumarGeneralConsultationDetail {
 
 	private String direction;
 
+	private String neighborhood;
+
 	private String location;
 
 	private String educationLevel;
@@ -77,7 +79,7 @@ public class SumarGeneralConsultationDetail {
 
 	private String bmi;
 
-	private String headCircunference;
+	private String headCircumference;
 
 	private String reasons;
 
@@ -89,7 +91,7 @@ public class SumarGeneralConsultationDetail {
 
 	private String evolution;
 
-	public SumarGeneralConsultationDetail(String institution, Integer clinicalSpecialtyId, String operativeUnit, Integer professionalId, String lender, String lenderDni, String attentionDate, String hour, String consultationNumber, String patientDni, String patientName, String gender, String selfPerceivedGender, String selfPerceivedName, String birthDate, String ageTurn, String ageToday, String ethnicity, String medicalCoverage, String direction, String location, String educationLevel, String occupation, String systolicBloodPressure, String diastolicBloodPressure, String meanArterialPressure, String temperature, String heartRate, String respirationRate, String oxygenSaturationHemoglobin, String height, String weight, String headCircunference, String reasons, String procedures, String problems, String medication, String evolution) {
+	public SumarGeneralConsultationDetail(String institution, Integer clinicalSpecialtyId, String operativeUnit, Integer professionalId, String lender, String lenderDni, String attentionDate, String hour, String consultationNumber, String patientDni, String patientName, String gender, String selfPerceivedGender, String selfPerceivedName, String birthDate, String ageTurn, String ageToday, String ethnicity, String medicalCoverage, String direction, String neighborhood, String location, String educationLevel, String occupation, String systolicBloodPressure, String diastolicBloodPressure, String meanArterialPressure, String temperature, String heartRate, String respirationRate, String oxygenSaturationHemoglobin, String height, String weight, String headCircumference, String reasons, String procedures, String problems, String medication, String evolution) {
 		this.institution = institution;
 		this.clinicalSpecialtyId = clinicalSpecialtyId;
 		this.operativeUnit = operativeUnit;
@@ -110,6 +112,7 @@ public class SumarGeneralConsultationDetail {
 		this.ethnicity = ethnicity;
 		this.medicalCoverage = medicalCoverage;
 		this.direction = direction;
+		this.neighborhood = neighborhood;
 		this.location = location;
 		this.educationLevel = educationLevel;
 		this.occupation = occupation;
@@ -122,7 +125,7 @@ public class SumarGeneralConsultationDetail {
 		this.oxygenSaturationHemoglobin = oxygenSaturationHemoglobin;
 		this.height = height;
 		this.weight = weight;
-		this.headCircunference = headCircunference;
+		this.headCircumference = headCircumference;
 		this.reasons = reasons;
 		this.procedures = procedures;
 		this.problems = problems;

@@ -82,6 +82,7 @@ public class ProgramReportQueryFactory {
 
 	}
 
+
 	@SuppressWarnings("unchecked")
 	public List<SumarGeneralConsultationDetail> querySumarGeneral(Integer institutionId, LocalDate start, LocalDate end, Integer clinicalSpecialtyId, Integer doctorId) {
 
