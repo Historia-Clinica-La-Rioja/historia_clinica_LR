@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
- 
+
+
 
 @Component({
   selector: 'app-input-desempeno',
@@ -13,7 +14,7 @@ export class InputDesempenoComponent {
   @Output() optionChange = new EventEmitter<string>();
   @Output() counterChange = new EventEmitter<number>();
   selectedoptionA: string;
-
+  
   
 
   onOptionChange(): void {
@@ -23,5 +24,8 @@ export class InputDesempenoComponent {
   onCounterChange(): void {
     this.counterChange.emit(this.counterValue);
   }
-}
+  onKeyPress(event: KeyboardEvent): void {
+    event.preventDefault();
+  }
+ }
 

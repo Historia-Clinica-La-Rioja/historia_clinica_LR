@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { PhysicalPerformanceService } from '@api-rest/services/physical-performance.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+
 @Component({
   selector: 'app-desempeno-fisico',
   templateUrl: './desempeno-fisico.component.html',
@@ -38,6 +39,7 @@ export class DesempenoFisicoComponent implements OnInit {
   patientId: number;
   questionnaireId: number;
   selectedCalificacion: string;
+  
 
   constructor(private physicalService: PhysicalPerformanceService,
 
