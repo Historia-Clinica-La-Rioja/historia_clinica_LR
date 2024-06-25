@@ -273,7 +273,7 @@
 						</ng-template>
 					</mat-tab>
 
-					<section>
+					<section *appFeatureFlag="'HABILITAR_CUESTIONARIOS'">
 						<mat-tab id="tab_adultomayor" *ngIf="isAdultoMayor()">
 							<ng-template mat-tab-label>
 								<span>ADULTO MAYOR</span>
