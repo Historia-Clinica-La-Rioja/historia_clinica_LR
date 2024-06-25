@@ -16,9 +16,7 @@
                 </div>
             </div>
             <div class="requeriment">
-                Se recomienda posicionarse al lado del paciente al momento de comenzar cada una de las pruebas para
-                evitar
-                posibles caídas durante su ejecución.
+                Se recomienda que el profesional interviniente demuestre la acción a realizar.
             </div>
 
             <!-- PRIMERA SECCION -->
@@ -97,8 +95,8 @@
 
                 <img class="icon" [src]="iconImageSource2" alt="iconActive">
 
-                Si el participante no se rehusa a realizar la prueba,
-                complete la siguiente casilla con el tiempo que obtuvo la medición
+                ¿Mantuvo la posición al menos por 10 segundos? 
+                Si el participante no se rehúsa a realizar la prueba, complete la siguiente casilla con el tiempo que obtuvo la medición
 
             </div>
 
@@ -144,7 +142,7 @@
             <div class="counter3" id="CT4" name="counter4" *ngIf="!isCounterDisabled4()">
                 <label for="number">Tiempo en segundos:</label>
                 <input type="number" [(ngModel)]="counterC2" (change)="calculePoints()" class="chart" name="Num" id="80"
-                    value="D4" min="0" />(Máx.15)
+                    value="D4" min="0" />
             </div>
 
             <mat-radio-group id="79" name="marcha1" [(ngModel)]="selectedoptionC">
@@ -172,7 +170,7 @@
             <div class="counter3" id="CT5" name="counter5" *ngIf="!isCounterDisabled4() && !isCounterDisabled5() ">
                 <label for="number">Tiempo en segundos:</label>
                 <input id="82" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" class="chart" name="Num"
-                    min="0" value="E4" />(Máx.15)
+                    min="0" value="E4" />
 
             </div>
 
@@ -189,7 +187,7 @@
             <!-- TERCERA SECCION -->
 
             <div>
-                <h3 class="title-test">LEVANTARSE DE UNA SILLA</h3>
+                <h3 class="title-test">PRUEBA DE LEVANTARSE CINCO VECES DE UNA SILLA</h3>
             </div>
 
             <!-- SEXTA CONSULTA -->
