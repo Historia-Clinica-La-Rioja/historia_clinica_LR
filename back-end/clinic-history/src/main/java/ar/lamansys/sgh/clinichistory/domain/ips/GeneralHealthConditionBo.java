@@ -65,18 +65,13 @@ public class GeneralHealthConditionBo implements Serializable {
 	}
 
 	private void setHealthConditions(List<HealthConditionVo> healthConditionVos, List<ReferableConceptVo> referredConcepts) {
-		Optional<HealthConditionVo> optionalHealthConditionVo = healthConditionVos.stream().filter(HealthConditionVo::isMain).findFirst();
-		if (optionalHealthConditionVo.isPresent()){
-			setMainDiagnosis(buildMainDiagnosis(optionalHealthConditionVo));
-			setDiagnosis(healthConditionVos.stream()
-					.filter(healthConditionVo -> isDifferentFromMainDiagnosis(getMainDiagnosis(),healthConditionVo))
-					.map(this::mapDiagnosis)
-					.map(this::setMainFalse)
-					.collect(Collectors.toList()));
-		}
-		else setDiagnosis(buildGeneralState(healthConditionVos,
-				HealthConditionVo::isSecondaryDiagnosis,
-				this::mapDiagnosis));
+		var mainDiagnosis = healthConditionVos.stream().filter(HealthConditionVo::isMain).findFirst();
+		healthConditionVos = healthConditionVos.stream().filter(hc -> !hc.equals(mainDiagnosis.orElse(new HealthConditionVo()))).collect(Collectors.toList());
+		setMainDiagnosis(buildMainDiagnosis(mainDiagnosis));
+		setDiagnosis(buildGeneralState(healthConditionVos,
+				HealthConditionVo::isDiagnosis,
+				this::mapDiagnosis)
+		);
 		setPersonalHistories(buildReferableGeneralState(healthConditionVos,
 				HealthConditionVo::isPersonalHistory,
 				this::mapPersonalHistoryBo, referredConcepts,
@@ -142,7 +137,7 @@ public class GeneralHealthConditionBo implements Serializable {
         result.setVerification(healthConditionVo.getVerification());
         result.setSnomed(new SnomedBo(healthConditionVo.getSnomed()));
         result.setPresumptive(healthConditionVo.isPresumptive());
-        result.setMain(healthConditionVo.isMain());
+        result.setMain(false);
 		result.setType(ProblemTypeEnum.map(healthConditionVo.getProblemId()));
         log.debug(OUTPUT, result);
         return result;
