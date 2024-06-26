@@ -47,6 +47,9 @@ public class EmergencyCareDischarge {
     @Column(name = "ambulance_company_id", length = 15)
     private String ambulanceCompanyId;
 
+	@Column(name = "document_id")
+	private Long documentId;
+
     public EmergencyCareDischarge(Integer emergencyCareEpisodeId, LocalDateTime medicalDischargeOn, Integer medicalDischargeByUser, Boolean autopsy, Short dischargeTypeId) {
         this.emergencyCareEpisodeId = emergencyCareEpisodeId;
         this.medicalDischargeOn = medicalDischargeOn;

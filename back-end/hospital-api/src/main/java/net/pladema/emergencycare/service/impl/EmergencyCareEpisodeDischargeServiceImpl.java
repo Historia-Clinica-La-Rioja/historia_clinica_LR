@@ -1,11 +1,9 @@
 package net.pladema.emergencycare.service.impl;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentHealthConditionRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import io.jsonwebtoken.lang.Assert;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionVo;
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +43,6 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 
     private final DischargeTypeRepository dischargeTypeRepository;
 
-    private final DocumentService documentService;
-
     private final DocumentHealthConditionRepository documentHealthConditionRepository;
 
     private final EmergencyCareEpisodeRepository emergencyCareEpisodeRepository;
@@ -62,12 +58,13 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
         log.debug("Medical discharge service -> medicalDischargeBo {}", medicalDischarge);
         validateMedicalDischarge(medicalDischarge, institutionId);
         EmergencyCareDischarge newDischarge = toEmergencyCareDischarge(medicalDischarge);
-        emergencyCareEpisodeDischargeRepository.save(newDischarge);
+		newDischarge = emergencyCareEpisodeDischargeRepository.save(newDischarge);
 		if (newDischarge.getDischargeTypeId().equals(DischargeType.OTRO))
 			ecedotDescriptionStorage.save(
 					new EmergencyCareEpisodeDischargeOtherTypeDescription(newDischarge.getEmergencyCareEpisodeId(),medicalDischarge.getOtherDischargeDescription())
 			);
-        documentFactory.run(medicalDischarge, false);
+        newDischarge.setDocumentId(documentFactory.run(medicalDischarge, false));
+		emergencyCareEpisodeDischargeRepository.save(newDischarge);
         return true;
     }
 
@@ -87,8 +84,7 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 				professionalCompleteBo.getLastName(),
 				getOtherDischargeDescription(emergencyCareDischarge.getEmergencyCareEpisodeId(), emergencyCareDischarge.getDischargeTypeId())
 		);
-        Long documentId = documentService.getDocumentId(emergencyCareDischarge.getEmergencyCareEpisodeId(), SourceType.EMERGENCY_CARE).get(0);
-        List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(documentId);
+        List<HealthConditionVo> resultQuery = documentHealthConditionRepository.getHealthConditionFromDocument(emergencyCareDischarge.getDocumentId());
         List<SnomedBo> problems = resultQuery.stream().map( r -> new SnomedBo(r.getSnomed())).collect(Collectors.toList());
         episodeDischargeBo.setProblems(problems);
         log.debug("output -> episodeDischargeBo {}", episodeDischargeBo);
