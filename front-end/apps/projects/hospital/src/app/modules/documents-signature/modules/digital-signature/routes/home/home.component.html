@@ -15,16 +15,16 @@
             </button>
         </div>
     </header>
-    <app-selectable-card
+    <app-summary-card-multiple-sign
         *ngIf="!isLoading else loading"
         [dataList]="documents"
         [noDataMessage]="'digital-signature.NO_DOCUMENTS'"
-        (selectedDataList)="selectedIds($event)"
         (downloadId)="download($event)"
         [detailedInformation]="detailedInformation"
-        (selectedId)="seeDetails($event)">
+		(selectedIdOnChange)="seeDetails($event)"
+		(checkedIdsOnChange)="selectedIds($event)">
         <span translate="digital-signature.UNSELECTED_DOCUMENT" class="unselected-document-message"></span>
-    </app-selectable-card>
+    </app-summary-card-multiple-sign>
 	<mat-paginator #paginator
                (page)="handlePageEvent($event)"
                [length]="elementsAmount"

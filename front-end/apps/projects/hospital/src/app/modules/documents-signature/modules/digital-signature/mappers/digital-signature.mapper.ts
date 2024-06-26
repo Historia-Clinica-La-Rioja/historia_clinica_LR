@@ -1,49 +1,39 @@
 import { DigitalSignatureDocumentDto } from "@api-rest/api-model"
-import { getDocumentType } from "@core/constants/summaries"
-import { dateTimeToViewDateHourMinuteSecond } from "@core/utils/date.utils"
-import { ItemListCard, ItemListOption } from "@presentation/components/selectable-card/selectable-card.component"
+import { SummaryItem } from "../../../components/summary-list-multiple-sign/summary-list-multiple-sign.component"
+import { SummaryMultipleSignData } from "../../../components/summary-multiple-sign/summary-multiple-sign.component"
+import { ShowMoreConceptsPipe } from "@presentation/pipes/show-more-concepts.pipe"
+import { capitalize, capitalizeSentence } from "@core/utils/core.utils"
+import { RegisterEditor } from "@presentation/components/register-editor-info/register-editor-info.component"
 
-export const buildItemListCard = (documents: DigitalSignatureDocumentDto[]): ItemListCard[] => {
+export const buildSummaryItemCard = (documents: DigitalSignatureDocumentDto[]): SummaryItem[] => {
 	return documents.map(document => {
 		return {
 			id: document.documentId,
-			icon: getDocumentType(document.documentTypeDto.id).icon,
-			title: document.documentTypeDto.description,
-			options: buildItemListOption(document)
+			data: buildSummaryMultipleSignData(document)
 		}
 	})
 }
 
-export const buildItemListOption = (document: DigitalSignatureDocumentDto): ItemListOption[] => {
-	return [
-		{
-			title: 'digital-signature.card-information.PROBLEM',
-			value: document.snomedConcepts.length ? buildValues(document) : ['digital-signature.card-information.NO_SNOMED_CONCEPT']
-		},
-		{
-			title: 'digital-signature.card-information.CREATED',
-			value: [dateTimeToViewDateHourMinuteSecond(new Date(document.createdOn))],
-		},
-		{
-			title: 'digital-signature.card-information.PROFESSIONAL',
-			value: [document.professionalFullName]
-		},
-		{
-			title: 'digital-signature.card-information.PATIENT',
-			value: [document.patientFullName],
-		},
-		{
-			title: 'digital-signature.card-information.ATTENTION_TYPE',
-			value: [document.sourceTypeDto.description]
-		},
-	]
+export const buildSummaryMultipleSignData = (document: DigitalSignatureDocumentDto): SummaryMultipleSignData => {
+	const showMoreConceptsPipe = new ShowMoreConceptsPipe();
+	return {
+		title: document.documentTypeDto.description,
+		patient: capitalizeSentence(document.patientFullName),
+		problem: buildValues(document).length ? capitalize(showMoreConceptsPipe.transform(buildValues(document))) : 'digital-signature.card-information.NO_SNOMED_CONCEPT',
+		registerEditor: buildRegisterEditor(document)
+	}
+}
+
+export const buildRegisterEditor = (document: DigitalSignatureDocumentDto): RegisterEditor => {
+	return {
+		createdBy: capitalizeSentence(document.professionalFullName),
+		date: new Date(document.createdOn)
+	}
 }
 
 export const buildValues = (document: DigitalSignatureDocumentDto): string[] => {
 	return document.snomedConcepts.map(sc => {
-		if (sc.isMainHealthCondition)
-			return ` ${sc.pt}` + ' (Principal)'
-		return ` ${sc.pt}`
+		return sc.pt
 	})
 }
 

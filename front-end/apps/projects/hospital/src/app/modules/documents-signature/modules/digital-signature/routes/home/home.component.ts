@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppFeature, DigitalSignatureDocumentDto, DocumentDto, LoggedUserDto, PageDto } from '@api-rest/api-model.d';
 import { DigitalSignatureService } from '@api-rest/services/digital-signature.service';
-import { ItemListCard, SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
+import { SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
 import { DocumentService } from '@api-rest/services/document.service';
 import { finalize } from 'rxjs';
 import { AccountService } from '@api-rest/services/account.service';
@@ -13,8 +13,9 @@ import { DetailedInformation } from '@presentation/components/detailed-informati
 import { URL_DOCUMENTS_SIGNATURE } from '../../../../routes/home/home.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { DocumentSignatureService } from '../../../../services/document-signature.service';
-import { TextDialog, buildItemListCard, buildTextOption } from '../../mappers/digital-signature.mapper';
+import { TextDialog, buildSummaryItemCard, buildTextOption } from '../../mappers/digital-signature.mapper';
 import { PageEvent } from '@angular/material/paginator';
+import { SummaryItem } from '../../../../components/summary-list-multiple-sign/summary-list-multiple-sign.component';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +24,7 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class HomeComponent implements OnInit {
 
-    documents: ItemListCard[] = [];
+    documents: SummaryItem[] = [];
     digitalSignatureDocuments: DigitalSignatureDocumentDto[] = [];
     isLoading: boolean = true;
     selectedDocumentsId: number[] = [];
@@ -84,7 +85,7 @@ export class HomeComponent implements OnInit {
 				if (!this.elementsAmount)
 					this.elementsAmount = documents.totalElementsAmount;
                 this.digitalSignatureDocuments = documents.content;
-                this.documents = buildItemListCard(this.digitalSignatureDocuments);
+                this.documents = buildSummaryItemCard(this.digitalSignatureDocuments);
             });
 	}
 
@@ -114,8 +115,8 @@ export class HomeComponent implements OnInit {
         this.documentService.downloadUnnamedFile(ids.id);
     }
 
-    seeDetails(ids: SelectableCardIds): void {
-        this.documentService.getDocumentInfo(ids.id)
+    seeDetails(id: number): void {
+        this.documentService.getDocumentInfo(id)
             .subscribe((document: DocumentDto) => {
 				this.detailedInformation = this.documentSignatureService.buildDetailedInformation(document)
 			});
