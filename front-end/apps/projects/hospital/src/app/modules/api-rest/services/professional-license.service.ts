@@ -14,9 +14,13 @@ import { Observable } from 'rxjs';
 	providedIn: 'root'
 })
 export class ProfessionalLicenseService {
-	private URL_PREFIX = `${environment.apiBase}/institution/${this.contextService.institutionId}/professional-license-number/healthcareprofessional`;
+	private URL_PREFIX: string;
 
-	constructor(private http: HttpClient, private contextService: ContextService) { }
+	constructor(private http: HttpClient, private readonly contextService: ContextService) { 
+		this.contextService.institutionId$.subscribe(institutionId => 
+            this.URL_PREFIX = `${environment.apiBase}/institution/${institutionId}/professional-license-number/healthcareprofessional`
+        )
+    }
 
 	saveProfessionalLicensesNumber(healthcareProfessionalId: number, professionalLicenses: ProfessionalLicenseNumberDto[]): Observable<number> {
 		const url = this.URL_PREFIX + `/${healthcareProfessionalId}`;
