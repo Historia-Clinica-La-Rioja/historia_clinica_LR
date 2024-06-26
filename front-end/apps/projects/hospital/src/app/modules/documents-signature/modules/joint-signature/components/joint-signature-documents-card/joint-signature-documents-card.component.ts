@@ -11,10 +11,10 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
 import { DocumentService } from '@api-rest/services/document.service';
 import { DocumentSignatureService } from '../../../../services/document-signature.service';
-import { SummaryItem } from 'projects/hospital/src/app/modules/hsi-components/summary-list/summary-list.component';
-import { ElectronicJointSignatureInvolvedDocumentListFilterDto, ElectronicSignatureInvolvedDocumentDto, PageDto, DocumentDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { DocumentDto, ElectronicJointSignatureInvolvedDocumentListFilterDto, ElectronicSignatureInvolvedDocumentDto, PageDto, RejectDocumentElectronicJointSignatureDto } from '@api-rest/api-model';
+import { SummaryItem } from '../../../../components/summary-list-multiple-sign/summary-list-multiple-sign.component';
+import { buildHeaderInformation, buildSummaryItemCard } from '../../mappers/joint-signature.mapper';
 import { SelectableCardIds } from '@presentation/components/selectable-card/selectable-card.component';
-import { buildSummaryItemCard, buildHeaderInformation } from '../../mappers/joint-signature.mapper';
 
 @Component({
 	selector: 'app-joint-signature-documents-card',

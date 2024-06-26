@@ -9,7 +9,7 @@ import { JointSignatureDocumentsCardComponent } from './components/joint-signatu
 import { RejectSignatureComponent } from './dialogs/reject-signature/reject-signature.component';
 import { JointSignatureDocumentsComponent } from './components/joint-signature-documents/joint-signature-documents.component';
 import { JointSignatureDocumentsFiltersComponent } from './components/joint-signature-documents-filters/joint-signature-documents-filters.component';
-import { SummaryAttentionCardComponent } from '../../../hsi-components/summary-attention-card/summary-attention-card.component';
+import { DocumentsSignatureModule } from '../../documents-signature.module';
 
 @NgModule({
 	declarations: [
@@ -22,9 +22,9 @@ import { SummaryAttentionCardComponent } from '../../../hsi-components/summary-a
 	imports: [
 		CommonModule,
 		HeaderAttentionDetailComponent,
-		SummaryAttentionCardComponent,
 		JointSignatureRoutingModule,
 		PresentationModule,
+		DocumentsSignatureModule
 	],
 	providers: [
 		ShowMoreConceptsPipe

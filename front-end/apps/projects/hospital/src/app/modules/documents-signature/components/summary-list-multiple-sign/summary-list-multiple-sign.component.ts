@@ -1,18 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PresentationModule } from '@presentation/presentation.module';
-import { SummaryMultipleSignComponent, SummaryMultipleSignData } from '../summary-multiple-sign/summary-multiple-sign.component';
+import { SummaryMultipleSignData } from '../summary-multiple-sign/summary-multiple-sign.component';
 
 const INPUT_NODE_NAME: string = "INPUT";
 
 @Component({
-	selector: 'app-summary-list',
-	templateUrl: './summary-list.component.html',
-	styleUrls: ['./summary-list.component.scss'],
-	standalone: true,
-	imports: [PresentationModule, SummaryMultipleSignComponent]
+	selector: 'app-summary-list-multiple-sign',
+	templateUrl: './summary-list-multiple-sign.component.html',
+	styleUrls: ['./summary-list-multiple-sign.component.scss']
 })
 
-export class SummaryListComponent {
+export class SummaryListMultipleSignComponent {
+
 
 	@Input() dataList: SummaryItem[];
 	@Input() noDataMessage: string = 'presentation.selectable-card.NO_DATA'
@@ -24,7 +22,7 @@ export class SummaryListComponent {
 	selectedIds: number[] = [];
 	isAllSelected: boolean = false;
 
-	constructor() { }
+	constructor() {}
 
 	selectAll(): void {
 		if (this.isAllSelected) {

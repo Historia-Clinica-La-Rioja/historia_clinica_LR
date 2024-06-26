@@ -5,10 +5,9 @@ import { dateToViewDate } from "@core/utils/date.utils"
 import { Detail } from "@presentation/components/details-section-custom/details-section-custom.component"
 import { ShowMoreConceptsPipe } from "@presentation/pipes/show-more-concepts.pipe"
 import { capitalize, capitalizeSentence } from "@core/utils/core.utils"
-import { SummaryItem } from "../../../../hsi-components/summary-list/summary-list.component"
-import { SummaryMultipleSignData } from "../../../../hsi-components/summary-multiple-sign/summary-multiple-sign.component"
-import { SummaryAttentionData } from "../../../../hsi-components/summary-attention/summary-attention.component"
 import { RegisterEditor } from "@presentation/components/register-editor-info/register-editor-info.component"
+import { SummaryMultipleSignData } from "../../../components/summary-multiple-sign/summary-multiple-sign.component"
+import { SummaryItem } from "../../../components/summary-list-multiple-sign/summary-list-multiple-sign.component"
 
 export const buildSummaryItemCard = (documents: ElectronicSignatureInvolvedDocumentDto[]): SummaryItem[] => {
 	return documents.map(document => {
@@ -20,19 +19,13 @@ export const buildSummaryItemCard = (documents: ElectronicSignatureInvolvedDocum
 }
 
 export const buildSummaryMultipleSignData = (document: ElectronicSignatureInvolvedDocumentDto): SummaryMultipleSignData => {
-	return {
-		attentionData: buildSummaryAttentionData(document),
-		signStatus: document.signatureStatus
-	}
-}
-
-export const buildSummaryAttentionData = (document: ElectronicSignatureInvolvedDocumentDto): SummaryAttentionData => {
 	const showMoreConceptsPipe = new ShowMoreConceptsPipe();
 	return {
 		title: getDocumentType(document.documentTypeId).title,
 		patient: capitalizeSentence(document.patientCompleteName),
 		problem: document.problems.length ? capitalize(showMoreConceptsPipe.transform(document.problems)) : 'digital-signature.card-information.NO_SNOMED_CONCEPT',
-		registerEditor: buildRegisterEditor(document)
+		registerEditor: buildRegisterEditor(document),
+		signStatus: document.signatureStatus
 	}
 }
 

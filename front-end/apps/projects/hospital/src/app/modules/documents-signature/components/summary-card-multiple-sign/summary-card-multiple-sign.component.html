@@ -1,11 +1,11 @@
 <section class="container">
-	<app-summary-list class="summary-list"
+	<app-summary-list-multiple-sign class="summary-list"
 		[dataList]="dataList"
 		[noDataMessage]="noDataMessage"
 		[enableCheckboxes]="enableCheckboxes"
 		(selectedId)="selectedId($event)"
 		(checkedIds)="checkedIds($event)">
-	</app-summary-list>
+	</app-summary-list-multiple-sign>
 	<div *ngIf="detailedInformation || hasHeader" class="detailed-information">
 		<ng-content select=".header-information"></ng-content>
 		<mat-divider></mat-divider>

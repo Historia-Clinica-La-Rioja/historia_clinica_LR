@@ -1,21 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
-import { PresentationModule } from '@presentation/presentation.module';
-import { SummaryItem, SummaryListComponent } from '../summary-list/summary-list.component';
+import { SummaryItem } from '../summary-list-multiple-sign/summary-list-multiple-sign.component';
 
 @Component({
-	selector: 'app-summary-attention-card',
-	templateUrl: './summary-attention-card.component.html',
-	styleUrls: ['./summary-attention-card.component.scss'],
-	standalone: true,
-	imports: [
-		PresentationModule,
-		TranslateModule,
-		SummaryListComponent
-	]
+	selector: 'app-summary-card-multiple-sign',
+	templateUrl: './summary-card-multiple-sign.component.html',
+	styleUrls: ['./summary-card-multiple-sign.component.scss']
 })
-export class SummaryAttentionCardComponent {
+
+export class SummaryCardMultipleSignComponent {
 
 	@Input() dataList: SummaryItem[];
 	@Input() enableCheckboxes: boolean = true;
@@ -26,7 +19,7 @@ export class SummaryAttentionCardComponent {
 	@Output() checkedIdsOnChange: EventEmitter<number[]> = new EventEmitter();
 	@Output() selectedIdOnChange: EventEmitter<number> = new EventEmitter();
 
-	constructor() {}
+	constructor() { }
 
 	selectedId(id: number): void {
 		this.selectedIdOnChange.emit(id);

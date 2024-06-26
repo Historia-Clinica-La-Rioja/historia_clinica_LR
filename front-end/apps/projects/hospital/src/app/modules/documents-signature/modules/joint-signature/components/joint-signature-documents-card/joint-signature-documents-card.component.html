@@ -15,7 +15,7 @@
 	<div class="spinner" *ngIf="isLoading">
 		<mat-spinner color="primary"></mat-spinner>
 	</div>
-	<app-summary-attention-card *ngIf="!isLoading"
+	<app-summary-card-multiple-sign *ngIf="!isLoading"
 		[dataList]="documents"
 		[noDataMessage]="'digital-signature.NO_DOCUMENTS'"
 		[hasHeader]="!!selectedDocumentId"
@@ -30,7 +30,7 @@
 				[title]="'firma-conjunta.TITLE_HEADER'">
 			</app-header-attention-detail>
 		</div>
-	</app-summary-attention-card>
+	</app-summary-card-multiple-sign>
 	<mat-paginator #paginator
 		(page)="handlePageEvent($event)"
 		[length]="elementsAmount"
