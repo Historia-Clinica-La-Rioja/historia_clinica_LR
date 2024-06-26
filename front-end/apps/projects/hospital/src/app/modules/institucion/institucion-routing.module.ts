@@ -65,7 +65,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'firma-digital/documentos',
-				loadChildren: () => import('../digital-signature/digital-signature.module').then(m => m.DigitalSignatureModule),
+				loadChildren: () => import('../documents-signature/modules/digital-signature/digital-signature.module').then(m => m.DigitalSignatureModule),
 				canActivate: [FeatureFlagGuard],
 				data: { featureFlag: AppFeature.HABILITAR_FIRMA_DIGITAL }
 			},

@@ -10,9 +10,9 @@ import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/d
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { DetailedInformation } from '@presentation/components/detailed-information/detailed-information.component';
-import { URL_DOCUMENTS_SIGNATURE } from '../../../documents-signature/routes/home/home.component';
+import { URL_DOCUMENTS_SIGNATURE } from '../../../../routes/home/home.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
-import { DocumentSignatureService } from '../../../documents-signature/services/document-signature.service';
+import { DocumentSignatureService } from '../../../../services/document-signature.service';
 import { TextDialog, buildItemListCard, buildTextOption } from '../../mappers/digital-signature.mapper';
 import { PageEvent } from '@angular/material/paginator';
 
