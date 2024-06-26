@@ -3,6 +3,8 @@ package ar.lamansys.sgh.publicapi.infrastructure.output;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -20,9 +22,15 @@ import lombok.ToString;
 @NoArgsConstructor
 public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 
+	private static final long serialVersionUID = -6679381181034040311L;
+
 	@Id
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+
+	@Column(name = "medicationStatementId")
+	private Integer medicationStatementId;
 
 	//this field is the sctid, not the actual id of the snomed table
 	@Column(name = "snomed_id")
@@ -58,7 +66,7 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 	@Column(name = "observations")
 	private String observations;
 
-	public MedicationStatementCommercial(Integer id,
+	public MedicationStatementCommercial(Integer medicationStatementId,
 										 String snomedId,
 										 String commercialName,
 										 String commercialPresentation,
@@ -70,7 +78,7 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 										 String pharmacyName,
 										 String pharmacistName,
 										 String observations) {
-		this.id = id;
+		this.medicationStatementId = medicationStatementId;
 		this.snomedId = snomedId;
 		this.commercialName = commercialName;
 		this.commercialPresentation = commercialPresentation;

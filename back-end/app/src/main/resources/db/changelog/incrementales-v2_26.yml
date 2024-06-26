@@ -277,3 +277,44 @@ databaseChangeLog:
                     name: all_diagnoses
                     type: boolean
                     defaultValue: ${boolean.true}
+
+    - changeSet:
+        id: addColumn-new_id-medication_statement_commercial
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: medication_statement_commercial
+              columns:
+                - column:
+                    autoIncrement: true
+                    name: new_id
+                    type: int
+
+    - changeSet:
+        id: drop-id-medication_statement_commercial
+        author: mmalyvarni
+        changes:
+          - renameColumn:
+              columnDataType: int
+              oldColumnName: id
+              newColumnName: medication_statement_id
+              tableName: medication_statement_commercial
+          - dropPrimaryKey:
+              constraintName: PK_medication_statement_commercial
+              dropIndex: true
+              tableName: medication_statement_commercial
+
+    - changeSet:
+        id: adapt-id-medication_statement_commercial
+        comment: Adapta el id de la tabla medication_statement_commercial
+        author: mmalyvarni
+        changes:
+          - renameColumn:
+              columnDataType: int
+              newColumnName: id
+              oldColumnName: new_id
+              tableName: medication_statement_commercial
+          - addPrimaryKey:
+              columnNames: id
+              constraintName: PK_medication_statement_commercial
+              tableName: medication_statement_commercial
