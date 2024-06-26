@@ -79,10 +79,16 @@
             </mat-radio-group>
 
 
-            <div class="counter" id="CT2" *ngIf="!isCounterDisabled2()">
-                <label for="75">Tiempo en segundos:</label>
-                <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" value="B2" min="0" class="chart" />
+            <div class="counter" id="CT1B" *ngIf="selectedoptionB === '1B'">
+                <label for="75">Tiempo en segundos (1B):</label>
+                <input id="75" type="number" [(ngModel)]="counterA2" value="" min="10" class="chart" />
             </div>
+
+            <div class="counter" id="CT2B" *ngIf="selectedoptionB === '2B'">
+                <label for="75">Tiempo en segundos (2B):</label>
+                <input id="75" type="number" [(ngModel)]="counterTest2B" value="" max="10" min="0" class="chart" />
+            </div>
+
 
             <!-- TERCERA CONSULTA -->
 

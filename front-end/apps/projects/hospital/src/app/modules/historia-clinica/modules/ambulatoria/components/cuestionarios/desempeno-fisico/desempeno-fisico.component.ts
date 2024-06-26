@@ -10,7 +10,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./desempeno-fisico.component.scss']
 })
 export class DesempenoFisicoComponent implements OnInit {
-
+  counterTest2B: number = 0;
   selectedoptionA: string = '';
   selectedoptionB: string = '';
   selectedoptionC: string = '';
