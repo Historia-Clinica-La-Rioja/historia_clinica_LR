@@ -1116,7 +1116,8 @@ export interface CreateOutpatientProcedureDto {
 export interface CreateOutpatientServiceRequestDto {
     categoryId: string;
     creationStatus: CreationStatus;
-    healthConditionId: number;
+    healthConditionPt: string;
+    healthConditionSctid: string;
     observations?: AddDiagnosticReportObservationsCommandDto;
 }
 

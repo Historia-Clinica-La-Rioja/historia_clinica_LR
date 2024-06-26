@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface CreateOutpatientConsultationServiceRequest {
 
 	Integer execute(Integer doctorId, String categoryId, BasicPatientDto patientDto, Integer institutionId,
-					Integer healthConditionId, Integer medicalCoverageId, Integer outpatientConsultationId, String snomedSctid,
+					String healthConditionSctid, String healthConditionPt, Integer medicalCoverageId, Integer outpatientConsultationId, String snomedSctid,
 					String snomedPt, Boolean createAsFinal, Optional<AddObservationsCommandVo> addObservationsCommand) throws CreateOutpatientConsultationServiceRequestException;
 }

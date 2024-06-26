@@ -21,7 +21,13 @@ public class CreateOutpatientServiceRequestDto {
 			return this.equals(FINAL);
 		}
 	}
-	private Integer healthConditionId;
+
+	/**
+	 * See CreateOutpatientConsultationServiceRequestImpl#findHealthCondition to understand the health condition
+	 * params.
+	 */
+	private String healthConditionSctid;
+	private String healthConditionPt;
 	private String categoryId;
 	private CreationStatus creationStatus;
 	@Nullable

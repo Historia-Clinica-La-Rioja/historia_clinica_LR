@@ -18,6 +18,7 @@ public class CreateOutpatientConsultationServiceRequestException extends Excepti
 	}
 
 	private CreateOutpatientConsultationServiceRequestException(String code, Map<String, Object> params) {
+		super(String.format("code: %s params: %s", code, params));
 		this.code = code;
 		this.params = params;
 	}
@@ -42,15 +43,34 @@ public class CreateOutpatientConsultationServiceRequestException extends Excepti
 		);
 	}
 
-	public static CreateOutpatientConsultationServiceRequestException diagnosticReportObservationException(String code,
-		String domainObjectName, Object domainObjectValue, Integer outpatientConsultationId
-	)
-	{
+	public static CreateOutpatientConsultationServiceRequestException diagnosticReportObservationException(
+		String code,
+		String domainObjectName,
+		Object domainObjectValue,
+		Integer outpatientConsultationId
+	) {
 		Map<String, Object> params = new HashMap<>();
 		params.put(domainObjectName, domainObjectValue);
 		params.put("outpatientConsultationId", outpatientConsultationId);
 		return new CreateOutpatientConsultationServiceRequestException(
 				code,
+				params
+		);
+	}
+
+	public static CreateOutpatientConsultationServiceRequestException healthConditionNotFound(
+		Integer institutionId,
+		Integer patientId,
+		String healthConditionSctid,
+		String healthConditionPt)
+	{
+		Map<String, Object> params = new HashMap<>();
+		params.put("institutionId", institutionId);
+		params.put("patientId", patientId);
+		params.put("healthConditionSctid", healthConditionSctid);
+		params.put("healthConditionPt", healthConditionPt);
+		return new CreateOutpatientConsultationServiceRequestException(
+				"invalid-health-condition",
 				params
 		);
 	}

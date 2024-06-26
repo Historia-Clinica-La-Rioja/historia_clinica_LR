@@ -107,7 +107,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
     public ResponseEntity<ConsultationResponseDto> createOutpatientConsultation(
             Integer institutionId,
             Integer patientId,
-            CreateOutpatientDto createOutpatientDto) throws CreateOutpatientConsultationServiceRequestException {
+            CreateOutpatientDto createOutpatientDto) {
         LOG.debug("Input parameters -> institutionId {}, patientId {}, createOutpatientDto {}", institutionId, patientId, createOutpatientDto);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
 
@@ -150,8 +150,13 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 		/**
 		 * Create a service request for each procedure
 		 */
-		createServiceRequest(doctorId, createOutpatientDto.getProcedures(), patientMedicalCoverageId, patientDto,
-			institutionId, newOutPatient.getId());
+		try {
+			createServiceRequest(doctorId, createOutpatientDto.getProcedures(), patientMedicalCoverageId, patientDto,
+				institutionId, newOutPatient.getId());
+		} catch (CreateOutpatientConsultationServiceRequestException e) {
+			//Translate to runtime exception to rollback the transaction
+			throw new RuntimeException(e);
+		}
 
 		ConsultationResponseDto result = new ConsultationResponseDto(newOutPatient.getId(), orderIds);
         LOG.debug(OUTPUT, result);
@@ -170,7 +175,8 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 			if (procedure.getServiceRequest() != null) {
 
 				String categoryId = procedure.getServiceRequest().getCategoryId();
-				Integer healthConditionId = procedure.getServiceRequest().getHealthConditionId();
+				String healthConditionSctid = procedure.getServiceRequest().getHealthConditionSctid();
+				String healthConditionPt = procedure.getServiceRequest().getHealthConditionPt();
 				SnomedDto snomed = procedure.getSnomed();
 				Boolean createWithStatusFinal = procedure.getServiceRequest().getCreationStatus().isFinal();
 				var addObservationsCommand = Optional
@@ -182,7 +188,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 					.map(x -> diagnosticReportObservationsMapper.fromDto(x));
 
 				createOutpatientConsultationServiceRequest.execute(doctorId, categoryId, patientDto, institutionId,
-						healthConditionId, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
+						healthConditionSctid, healthConditionPt, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
 						createWithStatusFinal, addObservationsCommand);
 			}
 		}

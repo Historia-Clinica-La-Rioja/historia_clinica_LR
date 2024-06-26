@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHealthConditionPort;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
@@ -26,6 +28,8 @@ import net.pladema.clinichistory.requests.servicerequests.service.domain.Service
 import net.pladema.events.EHospitalApiTopicDto;
 import net.pladema.events.HospitalApiPublisher;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -36,6 +40,7 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 	private final ServiceRequestStorage serviceRequestStorage;
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final AddDiagnosticReportObservations addDiagnosticReportObservations;
+	private final SharedHealthConditionPort sharedHealthConditionPort;
 
 	/**
 	 * Create outpatient consultation service request
@@ -88,12 +93,14 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 	 *
 	 */
 	@Override
+	@Transactional
 	public Integer execute(Integer doctorId, String categoryId, BasicPatientDto patientDto, Integer institutionId,
-		Integer healthConditionId, Integer medicalCoverageId, Integer outpatientConsultationId,
+		String healthConditionSctid, String healthConditionPt, Integer medicalCoverageId, Integer outpatientConsultationId,
 		String snomedSctid, String snomedPt, Boolean createAsFinal, Optional<AddObservationsCommandVo> addObservationsCommand
 	) throws CreateOutpatientConsultationServiceRequestException {
 		log.debug("execute -> institutionId {}, doctorId {}, patientDto {}, categoryId {}, " +
-						"medicalCoverageId {}, outpatientConsultationId {}, snomedSctid {}, snomedPt {}, healthConditionId {}",
+						"medicalCoverageId {}, outpatientConsultationId {}, snomedSctid {}, snomedPt {}, " +
+						 "healthConditionSctid {}, healthConditionPt {}",
 				institutionId,
 				doctorId,
 				patientDto,
@@ -102,7 +109,8 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 				outpatientConsultationId,
 				snomedSctid,
 				snomedPt,
-				healthConditionId
+				healthConditionSctid,
+				healthConditionPt
 		);
 		ServiceRequestBo serviceRequestBo = buildServiceRequestBo(
 			institutionId,
@@ -113,7 +121,8 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 			outpatientConsultationId,
 			snomedSctid,
 			snomedPt,
-			healthConditionId
+			healthConditionSctid,
+			healthConditionPt
 		);
 
 		Integer newServiceRequestId = createServiceRequestService.execute(serviceRequestBo);
@@ -125,7 +134,7 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 		//If the procedures come with observations add them to the diagnostic report
 		if (addObservationsCommand.isPresent()) {
 			var command = addObservationsCommand.get();
-			addObservations(newDiagnosticReportId, command, outpatientConsultationId);
+			addObservations(newDiagnosticReportId, command, outpatientConsultationId, institutionId, patientDto.getId());
 		}
 
 		//Advance the diagnostic report's status if necessary
@@ -140,9 +149,10 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 	/**
 	 * Add observations to the newly created diagnostic report
 	 */
-	private void addObservations(Integer diagnosticReportId, AddObservationsCommandVo addObservationsCommand, Integer outpatientConsultationId) throws CreateOutpatientConsultationServiceRequestException {
+	private void addObservations(Integer diagnosticReportId, AddObservationsCommandVo addObservationsCommand,
+		Integer outpatientConsultationId, Integer institutionId, Integer patientId) throws CreateOutpatientConsultationServiceRequestException {
 		try {
-			addDiagnosticReportObservations.run(diagnosticReportId, addObservationsCommand);
+			addDiagnosticReportObservations.run(diagnosticReportId, addObservationsCommand, institutionId, patientId);
 		}
 		catch (InvalidProcedureTemplateChangeException e) {
 			throw translateException(e, outpatientConsultationId, diagnosticReportId);
@@ -181,27 +191,18 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 			Integer outpatientConsultationId,
 			String snomedSctid,
 			String snomedPt,
-			Integer healthConditionId)
+			String healthConditionSctid,
+			String healthConditionPt) throws CreateOutpatientConsultationServiceRequestException
 	{
-		log.debug("buildServiceRequestBo -> institutionId {}, doctorId {}, patientDto {}, categoryId {}, " +
-		 "medicalCoverageId {}, outpatientConsultationId {}, snomedSctid {}, snomedPt {}, healthConditionId {}",
-				institutionId,
-				doctorId,
-				patientDto,
-				categoryId,
-				medicalCoverageId,
-				outpatientConsultationId,
-				snomedSctid,
-				snomedPt,
-				healthConditionId
-		 );
 
 		/**
 		 * A single diagnostic report created from the outpatient consultation procedures
 		 */
 		var diagnosticReport = new DiagnosticReportBo();
 		diagnosticReport.setSnomed(new SnomedBo(snomedSctid, snomedPt));
-		diagnosticReport.setHealthConditionId(healthConditionId);
+		diagnosticReport.setHealthConditionId(
+			findHealthCondition(institutionId, patientDto.getId(), healthConditionSctid, healthConditionPt)
+		);
 
 		var result = ServiceRequestBo.builder()
 				.patientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
@@ -218,6 +219,30 @@ public class CreateOutpatientConsultationServiceRequestImpl implements CreateOut
 
 		log.debug("Output -> {}", result);
 		return result;
+	}
+
+	/**
+	 * Looks up the patient's health condition that matches the snomed term.
+	 * The selected health condition must already exist.
+	 * The possible health conditions are those assigned to the patient via outpatient consultations (the one being
+	 * created during this use case, or others created before).
+	 * The frontend sends the sctid, pt pair to indicate the health condition. It can't send the health condition
+	 * id directly because the condition could be a new one assigned in the consultation being created.
+	 *
+	 * @param institutionId
+	 * @param patientId
+	 * @param healthConditionSctid
+	 * @param healthConditionPt
+	 * @return
+	 */
+	private Integer findHealthCondition(Integer institutionId, Integer patientId, String healthConditionSctid, String healthConditionPt) throws CreateOutpatientConsultationServiceRequestException {
+		return sharedHealthConditionPort
+		.getLatestHealthConditionByPatientIdAndInstitutionIdAndSnomedConcept(
+			institutionId, patientId, healthConditionSctid, healthConditionPt
+		).orElseThrow(() ->
+			CreateOutpatientConsultationServiceRequestException
+				.healthConditionNotFound(institutionId, patientId, healthConditionSctid, healthConditionPt)
+		);
 	}
 
 	private EHospitalApiTopicDto getTopicToPublish(String categoryId) {
