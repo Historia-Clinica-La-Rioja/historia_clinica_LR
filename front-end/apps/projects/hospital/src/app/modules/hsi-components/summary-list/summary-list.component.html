@@ -9,12 +9,12 @@
     <div class="cards-container">
         <mat-list-option *ngFor="let data of dataList" id="selected-card"
             (click)="handleOptionClick(data.id, $event)">
-            <div fxLayout="row" fxLayoutAlign="space-between start" >
-                <header>
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <header fxFlex="15%">
                     <input class="checkbox" *ngIf="enableCheckboxes" type="checkbox" [checked]="data.checked" [value]="data.id"
                         (change)="stopEvent($event); checkboxSelect(data.id)">
                 </header>
-                <app-summary-multiple-sign [data]="data.data" *ngIf="data.data"></app-summary-multiple-sign>
+                <app-summary-multiple-sign fxFlex [data]="data.data" *ngIf="data.data"></app-summary-multiple-sign>
             </div>
         </mat-list-option>
     </div>

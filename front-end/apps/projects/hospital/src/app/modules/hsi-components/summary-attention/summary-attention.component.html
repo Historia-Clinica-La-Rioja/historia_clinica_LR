@@ -1,7 +1,7 @@
 
-<h2 class="title capitalize-first-letter bold">{{data.title | translate}}</h2>
+<h2>{{data.title | translate}}</h2>
 
-<div fxLayout="column" fxLayoutGap="10px" class="identifiers">
+<div fxLayout="column" fxLayoutGap="10px">
 	<app-identifier-cases *ngIf="data.problem"
 		[identifierCase]="identiferCases.PROBLEM"
 		[description]="data.problem | translate">
@@ -10,12 +10,11 @@
 		[identifierCase]="identiferCases.PATIENT"
 		[description]="data.patient">
 	</app-identifier-cases>
+	<app-register-editor-info
+		[registerEditor]="data.registerEditor"
+		[registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR"
+		[position]="Position.COLUMN">
+	</app-register-editor-info>
 </div>
 
-<app-register-editor-info
-	[registerEditor]="data.registerEditor"
-	[registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
-</app-register-editor-info>
-
-<ng-content></ng-content>
-
+<ng-content class="content"></ng-content>
