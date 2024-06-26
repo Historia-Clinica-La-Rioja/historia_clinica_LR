@@ -35,7 +35,7 @@ public class EpisodeDischargeBo {
 							  String medicalDischargeProfessionalName, String medicalDischargeProfessionalLastName,
 							  String otherDischargeDescription) {
         this.episodeId = emergencyCareDischarge.getEmergencyCareEpisodeId();
-        this.medicalDischargeOn = emergencyCareDischarge.getMedicalDischargeOn();
+        this.medicalDischargeOn = emergencyCareDischarge.getMedicalDischargeOn().minusHours(3);
         this.autopsy = emergencyCareDischarge.getAutopsy();
         this.dischargeType = new DischargeTypeBo(dischargeType);
         this.administrativeDischargeOn = emergencyCareDischarge.getAdministrativeDischargeOn();
