@@ -58,6 +58,7 @@ export class TimePickerComponent implements OnInit {
         if (this.submitted) {
             this.touchAndValidateForm();
         }
+        this.setDefaultTimeAndEmitValue();
     }
 
     private touchAndValidateForm() {
