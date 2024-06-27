@@ -7,7 +7,7 @@ import ar.lamansys.sgh.clinichistory.application.anestheticreport.chart.image.Ge
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.chart.image.enums.EImageFileExtension;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.validations.AnestheticReportValidator;
-import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
+import ar.lamansys.sgh.clinichistory.application.document.CommonDocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
@@ -24,7 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +40,7 @@ public class CreateAnestheticReportDocument {
     private final GetChartImage getChartImage;
     private final SharedHospitalizationPort sharedHospitalizationPort;
     private final AnestheticReportValidator anestheticReportValidator;
-    @Qualifier(value = "common_document_factory")
-    private final DocumentFactory documentFactory;
+    private final CommonDocumentFactory documentFactory;
     private final AnestheticReportStorage anestheticReportStorage;
     private final ParsePointsToTimeSeries parsePointsToTimeSeries;
     private final GenerateAnestheticChart generateAnestheticChart;

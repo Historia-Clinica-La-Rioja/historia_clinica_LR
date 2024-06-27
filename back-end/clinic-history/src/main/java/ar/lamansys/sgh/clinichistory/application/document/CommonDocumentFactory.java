@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
 import ar.lamansys.sgh.clinichistory.application.createDocument.DocumentFactory;
-import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
+import ar.lamansys.sgh.clinichistory.application.document.visitors.SaveComponentsVisitor;
 import ar.lamansys.sgh.clinichistory.application.createDocumentFile.CreateDocumentFile;
 import ar.lamansys.sgh.clinichistory.application.notes.NoteService;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
@@ -13,7 +13,6 @@ import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.snvs.application.ports.patient.PatientStorage;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +25,7 @@ import java.util.Optional;
 @Service(value = "common_document_factory")
 public class CommonDocumentFactory implements DocumentFactory {
 
-    @Qualifier(value = "save_components_visitor")
-    private final DocumentVisitor saveComponentsVisitor;
+    private final SaveComponentsVisitor saveComponentsVisitor;
     private final DocumentService documentService;
     private final CreateDocumentFile createDocumentFile;
     private final NoteService noteService;

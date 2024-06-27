@@ -6,12 +6,11 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
-import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
+import ar.lamansys.sgh.clinichistory.application.document.visitors.GenerateDocumentContextVisitor;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import ar.lamansys.sgh.clinichistory.domain.document.event.GenerateFilePort;
@@ -31,8 +30,7 @@ public class GenerateFilePortImpl implements GenerateFilePort {
 
 	private final FileService fileService;
 	private final PdfService pdfService;
-	@Qualifier(value = "generate_document_context_visitor")
-	private final DocumentVisitor generateDocumentContext;
+	private final GenerateDocumentContextVisitor generateDocumentContext;
 
 	@Override
 	public Optional<DocumentFile> save(OnGenerateDocumentEvent event) {

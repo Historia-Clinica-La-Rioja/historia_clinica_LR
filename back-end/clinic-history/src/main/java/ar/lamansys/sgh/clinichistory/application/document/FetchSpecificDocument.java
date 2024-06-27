@@ -1,12 +1,11 @@
 package ar.lamansys.sgh.clinichistory.application.document;
 
+import ar.lamansys.sgh.clinichistory.application.document.visitors.FillOutDocumentVisitor;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.enums.EDocumentInstanceSupplier;
-import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,8 +17,7 @@ import java.util.function.Supplier;
 public class FetchSpecificDocument {
 
     private final FetchDocument fetchDocument;
-    @Qualifier(value = "fill_out_document_visitor")
-    private final DocumentVisitor fillOutDocumentVisitor;
+    private final FillOutDocumentVisitor fillOutDocumentVisitor;
 
     public Optional<IDocumentBo> run(Long documentId) {
         log.debug("Input parameters -> documentId {}", documentId);
