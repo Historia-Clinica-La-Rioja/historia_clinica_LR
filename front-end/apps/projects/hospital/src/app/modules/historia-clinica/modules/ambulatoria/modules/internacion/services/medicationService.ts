@@ -5,7 +5,6 @@ import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { pushIfNotExists, removeFrom } from '@core/utils/array.utils';
 import { NoWhitespaceValidator } from '@core/utils/form.utils';
 import { PREMEDICATION } from '@historia-clinica/constants/validation-constants';
-import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { SnomedSemanticSearch, SnomedService } from '@historia-clinica/services/snomed.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -36,7 +35,6 @@ export class MedicationService {
         private readonly snomedService: SnomedService,
         private readonly snackBarService: SnackBarService,
 		private readonly translateService: TranslateService,
-		private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
     ) {
         this.form = new FormGroup<MedicationForm>({
             snomed: new FormControl(null, Validators.required),
@@ -183,22 +181,27 @@ export class MedicationService {
 		return this._dosisError$;
 	}
 
-	setData(medications: AnestheticSubstanceDto[], preMediactionVias: MasterDataDto[]): void {
+	setData(medications: AnestheticSubstanceDto[], viasType: MasterDataDto[]): void {
 		let newList = medications.map(medication => ({
 			snomed: medication.snomed,
 			dosis: medication.dosage ? medication.dosage.quantity.value : null,
 			unit: medication.dosage ? medication.dosage.quantity.unit : null,
 			via: {
 				id: medication.viaId,
-				description: medication.viaNote ? medication.viaNote : this.anestheticReportDocumentSummaryService.getAnestheticReportViaDescription(preMediactionVias, medication.viaId) },
+				description: medication.viaId ? this.getViaDescription(viasType, medication.viaId) : null,
+			},
 			time: medication.dosage ? medication.dosage.startDateTime.time : null,
-			viaNote: medication.viaNote ? medication.viaNote : this.anestheticReportDocumentSummaryService.getAnestheticReportViaDescription(preMediactionVias, medication.viaId)
+			viaNote: medication.viaNote,
 		}));
 
 		this.medicationList = [...newList];
 
 		this.dataEmitter.next(this.medicationList);
 		this.isEmptySource.next(this.isEmpty());
+	}
+
+	private getViaDescription(viasArray: MasterDataDto[], viaId: number): string {
+		return viasArray.filter(via => via.id == viaId)[0].description;
 	}
 }
 
