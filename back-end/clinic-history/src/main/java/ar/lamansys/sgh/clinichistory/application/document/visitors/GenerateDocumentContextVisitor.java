@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Service(value = "generate_document_context_visitor")
+@Service
 public class GenerateDocumentContextVisitor implements DocumentVisitor {
 
     private final AnestheticReportVisitorMethods anestheticReportVisitorMethods;

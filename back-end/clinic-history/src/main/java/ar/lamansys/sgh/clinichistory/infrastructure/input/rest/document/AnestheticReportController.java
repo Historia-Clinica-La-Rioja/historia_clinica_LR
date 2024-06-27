@@ -9,7 +9,6 @@ import ar.lamansys.sgh.clinichistory.application.anestheticreport.GetAnestheticR
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.AnestheticReportDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.mapper.AnestheticReportMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -29,8 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AnestheticReportController {
 
     private final AnestheticReportMapper anestheticReportMapper;
-    @Qualifier("anesthetic_report")
-    private final CreateDocumentWithDraftSupport createDocumentWithDraftSupport;
+    private final CreateDocumentWithDraftSupport supportAnestheticReport;
     private final GetAnestheticReport getAnestheticReport;
 
     @PostMapping("/close")
@@ -42,7 +40,7 @@ public class AnestheticReportController {
         AnestheticReportBo anestheticReport = anestheticReportMapper.fromAnestheticReportDto(anestheticReportDto);
         anestheticReport.setInstitutionId(institutionId);
         anestheticReport.setConfirmed(true);
-        Integer anestheticReportId = createDocumentWithDraftSupport.run(anestheticReport);
+        Integer anestheticReportId = supportAnestheticReport.run(anestheticReport);
 
         log.trace("Output -> {}", anestheticReportId);
         return ResponseEntity.ok().body(anestheticReportId);
@@ -57,7 +55,7 @@ public class AnestheticReportController {
         AnestheticReportBo anestheticReport = anestheticReportMapper.fromAnestheticReportDto(anestheticReportDto);
         anestheticReport.setInstitutionId(institutionId);
         anestheticReport.setConfirmed(false);
-        Integer anestheticReportId = createDocumentWithDraftSupport.run(anestheticReport);
+        Integer anestheticReportId = supportAnestheticReport.run(anestheticReport);
 
         log.trace("Output -> {}", anestheticReportId);
         return ResponseEntity.ok().body(anestheticReportId);

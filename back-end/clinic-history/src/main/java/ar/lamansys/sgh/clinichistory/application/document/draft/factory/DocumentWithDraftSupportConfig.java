@@ -12,7 +12,7 @@ public class DocumentWithDraftSupportConfig {
 
     private final AnestheticReportDraftSupportFactory anestheticReportDraftSupportFactory;
 
-    @Bean(name = "anesthetic_report")
+    @Bean
     public CreateDocumentWithDraftSupport supportAnestheticReport() {
         return anestheticReportDraftSupportFactory.build();
     }

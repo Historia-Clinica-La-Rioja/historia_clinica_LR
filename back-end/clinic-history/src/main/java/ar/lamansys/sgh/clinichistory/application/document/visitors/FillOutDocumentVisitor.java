@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service(value = "fill_out_document_visitor")
+@Service
 public class FillOutDocumentVisitor implements DocumentVisitor {
 
     private final AnestheticReportVisitorMethods anestheticReportVisitorMethods;

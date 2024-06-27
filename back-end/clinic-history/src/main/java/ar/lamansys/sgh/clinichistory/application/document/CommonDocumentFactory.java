@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service(value = "common_document_factory")
+@Service
 public class CommonDocumentFactory implements DocumentFactory {
 
     private final SaveComponentsVisitor saveComponentsVisitor;

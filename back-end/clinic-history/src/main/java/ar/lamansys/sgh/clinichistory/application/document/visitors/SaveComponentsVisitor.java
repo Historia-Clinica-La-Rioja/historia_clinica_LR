@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service(value = "save_components_visitor")
+@Service
 public class SaveComponentsVisitor implements DocumentVisitor {
 
     private final AnestheticReportVisitorMethods anestheticReportVisitorMethods;
