@@ -11,6 +11,15 @@ import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.Pres
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
 
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionsDataBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateMultipleBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateMultipleMedicationBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.DispensedMedicationBo;
+
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateMultipleDto;
+
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.ChangePrescriptionStateMultipleMedicationDto;
+
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.DispensedMedicationDto;
 
 import org.springframework.stereotype.Component;
 
@@ -237,6 +246,43 @@ public class PrescriptionMapper {
 				.provinceCode(institutionPrescriptionBo.getProvinceCode() != null ? institutionPrescriptionBo.getProvinceCode() : null)
 				.sisaCode(institutionPrescriptionBo.getSisaCode() != null ? institutionPrescriptionBo.getSisaCode() : null)
 				.build();
+	}
+
+	public ChangePrescriptionStateMultipleBo toChangePrescriptionStateMedicationBo(ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto, String identificationNumber) {
+		return ChangePrescriptionStateMultipleBo.builder()
+				.prescriptionId(changePrescriptionStateMultipleDto.getPrescriptionId())
+				.pharmacyName(changePrescriptionStateMultipleDto.getPharmacyName())
+				.pharmacistName(changePrescriptionStateMultipleDto.getPharmacistName())
+				.pharmacistRegistration(changePrescriptionStateMultipleDto.getPharmacistRegistration())
+				.changeDate(localDateMapper.fromStringToLocalDateTime(changePrescriptionStateMultipleDto.getChangeDate()))
+				.changePrescriptionStateLineMedicationList(toChangePrescriptionStateMultipleMedicationBoList(changePrescriptionStateMultipleDto))
+				.identificationNumber(identificationNumber)
+				.build();
+	}
+
+	private List<ChangePrescriptionStateMultipleMedicationBo> toChangePrescriptionStateMultipleMedicationBoList(ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) {
+		return changePrescriptionStateMultipleDto.getChangePrescriptionStateLineMedicationList().stream()
+				.map(this::toChangePrescriptionStateMultipleMedicationBo)
+				.collect(Collectors.toList());
+	}
+
+	private ChangePrescriptionStateMultipleMedicationBo toChangePrescriptionStateMultipleMedicationBo(ChangePrescriptionStateMultipleMedicationDto line) {
+		return ChangePrescriptionStateMultipleMedicationBo.builder()
+				.prescriptionLine(line.getPrescriptionLine())
+				.prescriptionStateId(line.getPrescriptionStateId())
+				.dispensedMedicationBos(toDispensedMedicationBoList(line))
+				.observations(line.getObservations())
+				.build();
+	}
+
+	private List<DispensedMedicationBo> toDispensedMedicationBoList(ChangePrescriptionStateMultipleMedicationDto line) {
+		return line.getDispensedMedicationDtos().stream()
+				.map(this::toDispensedMedicationBo)
+				.collect(Collectors.toList());
+	}
+
+	private DispensedMedicationBo toDispensedMedicationBo(DispensedMedicationDto medication) {
+		return new DispensedMedicationBo(medication.getSnomedId(), medication.getCommercialName(), medication.getCommercialPresentation(), medication.getSoldUnits(), medication.getBrand(), medication.getPrice(), medication.getAffiliatePayment(), medication.getMedicalCoveragePayment(), medication.getPharmacistName(), medication.getPharmacyName(), medication.getObservations());
 	}
 
 }

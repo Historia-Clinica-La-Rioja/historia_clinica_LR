@@ -4,6 +4,12 @@ import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.except
 import ar.lamansys.sgh.publicapi.digitalsignature.application.port.out.exception.DigitalSignatureCallbackException;
 
 import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnnexReportByEncounterException;
+import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionLineCancellationWrongPharmacyNameException;
+import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionLineDoesNotExistsException;
+import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionLineInvalidStateChangeException;
+import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationBlankFieldException;
+import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationIncorrectPaymentException;
+import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationInvalidSoldUnitsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
@@ -185,6 +191,48 @@ public class HospitalPublicApiExceptionHandler {
 				"dispense-error",
 				"Error dispensando"
 		);
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PrescriptionMedicationBlankFieldException.class })
+	protected ApiErrorMessageDto handlePrescriptionMedicationBlankFieldException(PrescriptionMedicationBlankFieldException ex) {
+		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PrescriptionMedicationInvalidSoldUnitsException.class })
+	protected ApiErrorMessageDto handlePrescriptionMedicationInvalidSoldUnitsException(PrescriptionMedicationInvalidSoldUnitsException ex) {
+		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PrescriptionMedicationIncorrectPaymentException.class })
+	protected ApiErrorMessageDto handlePrescriptionMedicationIncorrectPaymentException(PrescriptionMedicationIncorrectPaymentException ex) {
+		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PrescriptionLineCancellationWrongPharmacyNameException.class })
+	protected ApiErrorMessageDto handlePrescriptionLineCancellationWrongPharmacyNameException(PrescriptionLineCancellationWrongPharmacyNameException ex) {
+		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PrescriptionLineInvalidStateChangeException.class })
+	protected ApiErrorMessageDto handlePrescriptionLineInvalidStateChangeException(PrescriptionLineInvalidStateChangeException ex) {
+		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PrescriptionLineDoesNotExistsException.class })
+	protected ApiErrorMessageDto handlePrescriptionLineDoesNotExistsException(PrescriptionLineDoesNotExistsException ex) {
+		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
 	}
 
 	// Errores de API Pública | Red de Imágenes
