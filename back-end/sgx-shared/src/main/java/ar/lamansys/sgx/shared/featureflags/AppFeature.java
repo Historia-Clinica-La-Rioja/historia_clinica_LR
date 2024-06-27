@@ -219,7 +219,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_AREA_RESPONSABILIDAD_SANITARIA,
 
 	@Label("Indica si se muestra la seccion cola de imagenes para el rol tecnico")
-	HABILITAR_SOLAPA_COLA_IMAGENES
+	HABILITAR_SOLAPA_COLA_IMAGENES,
+
+	@Label("Habilita la creación del triage para el rol administrativo")
+	HABILITAR_TRIAGE_PARA_ADMINISTRATIVO
 	;
 
 	public boolean isActive() {
