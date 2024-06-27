@@ -10,6 +10,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { InstitutionDescriptionComponent } from './components/institution-description/institution-description.component';
 import { ResponsabilityAreaComponent } from './components/responsability-area/responsability-area.component';
 import { InstitutionDescriptionStepComponent } from './components/institution-description-step/institution-description-step.component';
+import { InstitutionDescriptionDetailComponent } from './components/institution-description-detail/institution-description-detail.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { InstitutionDescriptionStepComponent } from './components/institution-de
 		LoadingComponent,
 		InstitutionDescriptionComponent,
 		ResponsabilityAreaComponent,
-  		InstitutionDescriptionStepComponent
+  		InstitutionDescriptionStepComponent,
+    	InstitutionDescriptionDetailComponent
   	],
 	imports: [
 		CommonModule,

@@ -104,10 +104,10 @@
             </mat-stepper>
         </mat-card>
 
-        <app-institution-description 
+        <app-institution-description-detail
             *ngIf="!isFirstTime && institutionDescription" 
             [setInstitutionDescription]="institutionDescription">
-        </app-institution-description>
+        </app-institution-description-detail>
 
         <div class="map-container">
             <app-loading *ngIf="isLoading"></app-loading>
