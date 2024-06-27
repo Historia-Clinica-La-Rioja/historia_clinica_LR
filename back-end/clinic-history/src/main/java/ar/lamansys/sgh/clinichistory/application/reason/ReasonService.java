@@ -12,4 +12,6 @@ public interface ReasonService {
 	List<ReasonBo> fetchFromDocumentId(Long documentId);
 
 	Optional<ReasonBo> getByReasonId(String reasonId);
+
+	List<ReasonBo> fetchFromEmergencyCareEvolutionNoteId(Integer emergencyCareEvolutionNoteId);
 }
