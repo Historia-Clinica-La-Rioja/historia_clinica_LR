@@ -421,3 +421,46 @@ databaseChangeLog:
               columnNames: id
               constraintName: PK_medication_statement_commercial
               tableName: medication_statement_commercial
+
+    - changeSet:
+        id: dropView-v_clinic_history_13
+        author: fsimaro
+        dbms: "postgresql"
+        changes:
+          - dropView:
+              viewName: v_clinic_history
+
+    - changeSet:
+        id: update-triage_category-name-length
+        author: fsimaro
+        changes:
+          - modifyDataType:
+              columnName:  name
+              newDataType:  varchar(25)
+              tableName:  triage_category
+
+    - changeSet:
+        id: triage_category_modify-data
+        comment: Carga de datos triage_category
+        author: fsimaro
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                UPDATE triage_category SET name = 'Nivel 1', color_code = '#F00' WHERE id = 1;
+                UPDATE triage_category SET name = 'Nivel 2', color_code = '#FF5C02' WHERE id = 2;
+                UPDATE triage_category SET name = 'Nivel 3', color_code = '#ECBE00' WHERE id = 3;
+                UPDATE triage_category SET name = 'Nivel 4', color_code = '#009B68' WHERE id = 4;
+                UPDATE triage_category SET name = 'Nivel 5', color_code = '#3F4B9D' WHERE id = 5;
+                UPDATE triage_category SET name = 'Triage pendiente', color_code = '#D5D5D5' WHERE id = 6;
+
+    - changeSet:
+        id: createView-v_clinic_history_14
+        author: fsimaro
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/create_v_clinic_history.sql
+              relativeToChangelogFile: true
+              splitStatements: false
+
