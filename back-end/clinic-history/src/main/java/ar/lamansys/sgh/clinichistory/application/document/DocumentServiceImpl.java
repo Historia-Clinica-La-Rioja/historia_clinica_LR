@@ -157,7 +157,6 @@ public class DocumentServiceImpl implements DocumentService {
 	private final DocumentReferableConceptRepository documentReferableConceptRepository;
 
     @Override
-    @Deprecated
     public Optional<Document> findById(Long documentId) {
         log.debug(LOGGING_DOCUMENT_ID, documentId);
         Optional<Document> result = documentRepository.findById(documentId);

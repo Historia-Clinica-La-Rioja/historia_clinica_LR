@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -100,7 +100,7 @@ public class CreateAnestheticReportDocument {
 
         Integer encounterId = anestheticReport.getEncounterId();
 
-        Optional.ofNullable(sharedHospitalizationPort.getPatientInfo(encounterId))
+        sharedHospitalizationPort.getPatientInfo(encounterId)
                 .map(patientDto -> new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()))
                 .ifPresent(patientInfo -> {
                     anestheticReport.setPatientInfo(patientInfo);

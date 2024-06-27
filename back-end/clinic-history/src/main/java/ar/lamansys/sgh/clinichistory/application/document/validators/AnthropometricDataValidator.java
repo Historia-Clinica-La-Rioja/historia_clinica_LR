@@ -37,7 +37,7 @@ public class AnthropometricDataValidator {
         int anthropometricValue = Integer.parseInt(clinicalObservationBo.getValue());
         if (anthropometricValue >= MIN_HEIGHT_VALUE && anthropometricValue <= MAX_HEIGHT_VALUE)
             return;
-        throw new ConstraintViolationException(String.format("%s: La medición debe estar entre %s y %s", "altura", MIN_HEIGHT_VALUE, MAX_HEIGHT_VALUE), Collections.emptySet());
+        throw new ConstraintViolationException(String.format("altura: La medición debe estar entre %s y %s", MIN_HEIGHT_VALUE, MAX_HEIGHT_VALUE), Collections.emptySet());
     }
 
     private void validWeightClinicalObservation(ClinicalObservationBo clinicalObservationBo) {
@@ -46,6 +46,6 @@ public class AnthropometricDataValidator {
         double anthropometricValue = Double.parseDouble(clinicalObservationBo.getValue());
         if (anthropometricValue >= MIN_WEIGHT_VALUE && anthropometricValue <= MAX_WEIGHT_VALUE)
             return;
-        throw new ConstraintViolationException(String.format("%s: La medición debe estar entre %s y %s", "peso", MIN_WEIGHT_VALUE, MAX_WEIGHT_VALUE), Collections.emptySet());
+        throw new ConstraintViolationException(String.format("peso: La medición debe estar entre %s y %s", MIN_WEIGHT_VALUE, MAX_WEIGHT_VALUE), Collections.emptySet());
     }
 }

@@ -61,11 +61,10 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	}
 
 	@Override
-	public BasicPatientDto getPatientInfo(Integer intermentEpisodeId) {
+	public Optional<BasicPatientDto> getPatientInfo(Integer intermentEpisodeId) {
 		log.debug("Input parameters -> intermentEpisodeId {}", intermentEpisodeId);
 		var result = internmentEpisodeService.getPatient(intermentEpisodeId)
-				.map(patientExternalService::getBasicDataFromPatient)
-				.orElse(null);
+				.map(patientExternalService::getBasicDataFromPatient);
 		log.debug("Output -> {}", result);
 		return result;
 	}

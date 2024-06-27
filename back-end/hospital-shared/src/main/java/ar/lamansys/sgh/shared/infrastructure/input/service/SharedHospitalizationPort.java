@@ -12,7 +12,7 @@ public interface SharedHospitalizationPort {
 
 	Optional<Integer> getInternmentEpisodeId(Integer institutionId, Integer patientId);
 
-	BasicPatientDto getPatientInfo(Integer internmentEpisodeId);
+	Optional<BasicPatientDto> getPatientInfo(Integer internmentEpisodeId);
 
 	LocalDate getEntryLocalDate(Integer internmentEpisodeId);
 
