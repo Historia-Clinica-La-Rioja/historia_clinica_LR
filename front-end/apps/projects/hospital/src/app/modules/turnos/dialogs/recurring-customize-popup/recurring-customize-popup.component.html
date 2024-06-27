@@ -72,7 +72,7 @@
     
     <ng-template #endDate>
         <div class="container end-date">
-            <span>{{dateToSetInDatepicker | date:'EEEE, MMMM d, y' | uppercase }}</span>
+            <span>{{dateToSetInDatepicker | dateFormat :'date' }}</span>
         </div>
     </ng-template>
 </div>
