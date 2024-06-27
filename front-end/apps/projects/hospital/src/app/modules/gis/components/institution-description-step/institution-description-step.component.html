@@ -1,0 +1,16 @@
+<div>
+    <h1 class="m-top" [translate]="'gis.map-position.TITLE'"></h1>
+    <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
+    <div class="actions m-top">
+        <app-button
+            (clicked)="previousStepper()"
+            [text]="'buttons.BACK'">
+        </app-button>
+        <app-button
+            (clicked)="next()"
+            [disabled]="!institutionDescription.coordinates?.latitude"
+            [text]="'buttons.NEXT'"
+            [buttonType]="ButtonType.RAISED">
+        </app-button>
+    </div>
+</div>

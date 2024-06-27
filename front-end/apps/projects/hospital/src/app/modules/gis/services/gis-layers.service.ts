@@ -2,30 +2,33 @@ import { Map, View } from 'ol';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import { OSM, Vector as VectorSource} from 'ol/source';
+import { Vector as VectorSource, XYZ} from 'ol/source';
 import { GlobalCoordinatesDto } from '@api-rest/api-model';
-import { fromLonLat } from 'ol/proj';
-import Style, { StyleLike } from 'ol/style/Style';
+import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
 import Modify from 'ol/interaction/Snap.js';
 import Draw from 'ol/interaction/Draw.js';
 import Snap from 'ol/interaction/Snap.js';
-import { EGeometry } from '../constants/geometry';
-import { FlatStyleLike } from 'ol/style/flat';
+import { EGeometry } from '../constants/geometry.utils';
 import { Injectable } from '@angular/core';
 import Polygon from 'ol/geom/Polygon';
 import { Coordinate } from 'ol/coordinate';
 import Control from 'ol/control/Control';
 import { BehaviorSubject } from 'rxjs';
 import GeoJSON from 'ol/format/GeoJSON.js';
+import { OpenlayersService } from './openlayers.service';
 
 const LOCATION_POINT = '../../../../assets/icons/gis_location_point.svg';
+const IGN_MAP = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class GisLayersService {
 
+	XYZ = new XYZ({
+		url: IGN_MAP,
+	});
 	source = new VectorSource();
 	vector = new VectorLayer({
 		source: this.source,
@@ -40,9 +43,12 @@ export class GisLayersService {
 	drawnPolygon: Feature;
 	isPolygonCompleted = false;
 	polygonCoordinates: Coordinate[][] = [];
-	control: Control;
+	undoControl: Control;
+	removeAndCreateControl: Control;
 	showUndo$ = new BehaviorSubject<boolean>(false);
 	showRemoveAndCreate$ = new BehaviorSubject<boolean>(false);
+
+	constructor(private readonly openLayersService: OpenlayersService) {}
 
 	setUp = () => {
 		this.setMap();
@@ -51,11 +57,12 @@ export class GisLayersService {
 	}
 	
 	setMap = () => {
+		this.clearMap();
 		this.map = new Map({
 			target: 'map',
 			layers: [
 				new TileLayer({
-					source: new OSM(),
+					source: this.XYZ
 				}),
 				this.vector
 			],
@@ -68,33 +75,18 @@ export class GisLayersService {
 		this.map.addInteraction(new Modify({source: this.source}));
 	}
 
-	addPoint = (position: number[]) => {
+	addPoint = (position: Coordinate) => {
 		this.locationPoint = this.createLocationPoint(position);
-		this.vector?.getSource().addFeature(this.locationPoint);
+		this.openLayersService.addFeature(this.vector, this.locationPoint);
 	}
 
 	removeLocationPoint = () => {
-		this.vector?.getSource().removeFeature(this.locationPoint);
+		this.openLayersService.removeFeature(this.vector, this.locationPoint);
 	}
 
-	centerView = (position: number[]) => {
-		this.map.getView().setCenter(position);
-	}
-
-	fromLonLat = (value: GlobalCoordinatesDto) => {
-		return fromLonLat([value.longitude, value.latitude]);
-	}
-
-	createVectorLayer = (vectorSource: VectorSource, style?: StyleLike | FlatStyleLike): VectorLayer<VectorSource<Feature>> => {
-		return new VectorLayer({
-			source: vectorSource,
-			style
-		});
-	}
-
-	addPolygonInteractionAndControl = () => {
-		this.addPolygonInteraction();
-		this.addControl('undo');
+	addPolygonInteraction = () => {
+		this.map?.addInteraction(this.draw);
+		this.map?.addInteraction(this.snap);
 	}
 
 	removeDrawnPolygon = () => {
@@ -111,16 +103,22 @@ export class GisLayersService {
 	removeAndCreate = () => {
 		this.removeDrawnPolygon();
 		this.addPolygonInteraction();
-		this.setActions(false, false);
+		this.toggleActions(false, false);
 	}
 
-	addControl = (id: string) => {
-		const locationOnRef = document.getElementById(id);
-		this.control = new Control({element: locationOnRef});
-		this.map?.addControl(this.control);
+	addControls = (undo: Control, removeAndCreate: Control) => {
+		this.undoControl = undo;
+		this.removeAndCreateControl = removeAndCreate;
+		this.map?.addControl(this.undoControl);
+		this.map?.addControl(this.removeAndCreateControl);
 	}
 
-	setActions = (undo: boolean, removeAndCreate: boolean) => {
+	removeControls = () => {
+		this.map?.removeControl(this.undoControl);
+		this.map?.removeControl(this.removeAndCreateControl);
+	}
+
+	toggleActions = (undo: boolean, removeAndCreate: boolean) => {
 		this.showUndo$.next(undo);
 		this.showRemoveAndCreate$.next(removeAndCreate);
 	}
@@ -136,23 +134,17 @@ export class GisLayersService {
 		this.map.addLayer(layer);
 	}
 
-	private createPolygon = (area: GlobalCoordinatesDto[]) => {
-		const coordinates = area.map((area: GlobalCoordinatesDto) => [area.longitude, area.latitude]);
-		const polygon = {
-			'type': 'Feature',
-			'geometry': {
-				'type': 'Polygon',
-				'coordinates': [
-					coordinates
-				],
-			},
-		}
-		return polygon;
+	private clearMap = () => {
+		this.removeDrawnPolygon();
+		this.map?.getLayers().getArray().forEach(layer => this.map.removeLayer(layer));
+		this.map?.getInteractions().getArray().forEach(interaction => this.map.removeInteraction(interaction));
 	}
 
-	private addPolygonInteraction = () => {
-		this.map?.addInteraction(this.draw);
-		this.map?.addInteraction(this.snap);
+	private createPolygon = (area: GlobalCoordinatesDto[]) => {
+		const coordinates = area.map((area: GlobalCoordinatesDto) => [area.longitude, area.latitude]);
+		const polygon = this.openLayersService.createPolygon();
+		polygon.geometry.coordinates = [coordinates];
+		return polygon;
 	}
 
 	private createLocationPoint = (coords: number[]): Feature => {
@@ -182,12 +174,11 @@ export class GisLayersService {
 			this.drawnPolygon = event.feature;
 			const geometry: Polygon = this.drawnPolygon.getGeometry() as Polygon;
 			this.polygonCoordinates = geometry.getCoordinates();
-			this.setActions(false, true)
-			this.addControl('removeAndCreate');
+			this.toggleActions(false, true)
 		});
 	}
 
 	private detectWhenDrawStart = () => {
-		this.draw.on('drawstart', (_) => this.setActions(true, false));
+		this.draw.on('drawstart', (_) => this.toggleActions(true, false));
 	}
 }

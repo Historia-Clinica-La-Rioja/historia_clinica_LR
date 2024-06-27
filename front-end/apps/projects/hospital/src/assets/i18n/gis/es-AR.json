@@ -1,8 +1,9 @@
 {
     "gis": {
+        "TITLE": "Áreas sanitarias",
         "steppers": {
-            "INSTITUTION_DATA": "Datos de la institución",
-            "MAP_POSITION": "Posicionar en el mapa",
+            "ADDRESS": "Domicilio",
+            "GEOPOSITION": "Geoposición",
             "RESPONSABILITY_AREA": "Área de responsabilidad"
         },
         "address": {
@@ -14,19 +15,22 @@
             "HOUSE_NUMBER": "Número"
         },
         "institution-data": {
-            "TITLE": "1. Datos de la institución",
+            "TITLE": "1. Domicilio",
             "STREET_PLACEHOLDER": "Ej: Calle San Martín",
             "HOUSE_NUMBER_PLACEHOLDER": "Ej: 813"
         },
         "map-position": {
-            "TITLE": "2. Posicionar en mapa",
+            "TITLE": "2. Geoposición en mapa",
             "COORDINATES": "Coordenadas",
             "SEARCHING": "Buscando...",
             "ERROR": "No se ha encontrado la ubicación"
         },
         "responsability-area": {
-            "TITLE": "3. Definir área de responsabilidad",
-            "DESCRIPTION": "Haga clic en el mapa para definir los puntos del área de responsabilidad. Complete el polígono haciendo clic en el primer punto nuevamente.",
+            "TITLE": "3. Área de responsabilidad",
+            "DESCRIPTION_1": "Haga clic en el mapa para definir los puntos del área de responsabilidad.",
+            "DESCRIPTION_2": "Complete el polígono haciendo clic en el primer punto nuevamente.",
+            "DESCRIPTION_3": "Una vez completado, puede modificar el área haciendo clic en el perímetro de la misma.",
+            "DESCRIPTION_4": "Para \"Confirmar\" debe completar el polígono.",
             "actions": {
                 "SKIP": "Omitir por ahora",
                 "UNDO": "Deshacer",

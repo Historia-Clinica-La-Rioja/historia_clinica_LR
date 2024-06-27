@@ -1,18 +1,25 @@
 <div class="m-top">
-    <h1 [translate]="'gis.responsability-area.TITLE'"></h1>
-    <span [translate]="'gis.responsability-area.DESCRIPTION'"></span>
-
-    <div class="m-top" *ngIf="showPolygonError">
-        <app-box-message
-            [boxMessageInfo]="{message: 'gis.responsability-area.status.POLYGON_ERROR', showButtons: false, viewError: true}">
-        </app-box-message>
+    <h1 class="m-top" [translate]="'gis.responsability-area.TITLE'"></h1>
+    <div class="description">
+        <span [translate]="'gis.responsability-area.DESCRIPTION_1'"></span>
+        <span [translate]="'gis.responsability-area.DESCRIPTION_2'"></span>
+        <span [translate]="'gis.responsability-area.DESCRIPTION_3'"></span>
+        <span [translate]="'gis.responsability-area.DESCRIPTION_4'"></span>
     </div>
 
     <div class="actions m-top">
-        <button (click)="previousStepper()" mat-button mat-stroked-button color="primary">{{'buttons.BACK' | translate | uppercase}}</button>
-        <button (click)="saveAddressAndCoordinates(true)" mat-button mat-stroked-button color="primary">{{'gis.responsability-area.actions.SKIP' | translate | uppercase}}</button>
+        <app-button
+            (clicked)="previousStepper()"
+            [text]="'buttons.BACK'">
+        </app-button>
+        <app-button
+            [isLoading]="isSaving" 
+            [text]="'gis.responsability-area.actions.SKIP'"
+            (clicked)="saveAddressAndCoordinates(true)">
+        </app-button>
         <app-button 
-            text="buttons.CONFIRM" 
+            [disabled]="!gisLayersService.isPolygonCompleted"
+            [text]="'buttons.CONFIRM'" 
             [buttonType]="ButtonType.RAISED" 
             [isLoading]="isSaving" 
             (clicked)="handleConfirm()">  
@@ -20,11 +27,10 @@
     </div>
 </div>
 
-<button [ngClass]="!showUndo ? 'hide' : ''" (click)="removeLastPoint()" mat-stroked-button color="primary" class="map-action" id="undo">
-    <mat-icon>undo</mat-icon>
+<button [ngClass]="!showUndo ? 'hide' : ''" (click)="removeLastPoint()" mat-stroked-button color="primary" class="map-action" #undoRef id="undo">
     <span [translate]="'gis.responsability-area.actions.UNDO'"></span>
 </button>
 
-<button [ngClass]="!showRemoveAndCreate ? 'hide' : ''" (click)="removeAndCreate()" mat-stroked-button color="primary" class="map-action" id="removeAndCreate">
+<button [ngClass]="!showRemoveAndCreate ? 'hide' : ''" (click)="removeAndCreate()" mat-stroked-button color="primary" class="map-action" #removeAndCreateRef id="removeAndCreate">
     <span [translate]="'gis.responsability-area.actions.DELETE'"></span>
 </button>

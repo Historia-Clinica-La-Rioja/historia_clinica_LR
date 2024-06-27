@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { GlobalCoordinatesDto, SaveInstitutionAddressDto, SaveInstitutionResponsibilityAreaDto } from '@api-rest/api-model';
 import { GisService } from '@api-rest/services/gis.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -6,13 +6,14 @@ import { finalize, forkJoin } from 'rxjs';
 import { InstitutionDescription } from '../institution-description/institution-description.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { GisLayersService } from '../../services/gis-layers.service';
+import Control from 'ol/control/Control';
 
 @Component({
 	selector: 'app-responsability-area',
 	templateUrl: './responsability-area.component.html',
 	styleUrls: ['./responsability-area.component.scss']
 })
-export class ResponsabilityAreaComponent {
+export class ResponsabilityAreaComponent implements AfterViewInit {
 
 	@Input() set setInstitutionDescription(institutionDescription: InstitutionDescription) {
 		this.institutionDescription = institutionDescription;
@@ -22,34 +23,36 @@ export class ResponsabilityAreaComponent {
 	isSaving = false;
 	institutionDescription: InstitutionDescription;
 	ButtonType = ButtonType;
-	showPolygonError = false;
 	showUndo = false;
 	showRemoveAndCreate = false;
-	constructor(private readonly gisService: GisService,
-				private readonly gisLayersService: GisLayersService,
+
+	@ViewChild('undoRef') undoRef;
+	@ViewChild('removeAndCreateRef') removeAndCreateRef;
+	
+	constructor(public readonly gisLayersService: GisLayersService,
+				private readonly gisService: GisService,
 				private readonly snackBarService: SnackBarService
 	) {
 		this.gisLayersService.showUndo$.subscribe((undo: boolean) => this.showUndo = undo);
 		this.gisLayersService.showRemoveAndCreate$.subscribe((removeAndCreate: boolean) => this.showRemoveAndCreate = removeAndCreate);
 	}
 
+	ngAfterViewInit(): void {
+		this.gisLayersService.addControls(new Control({element: this.undoRef._elementRef.nativeElement}), new Control({element: this.removeAndCreateRef._elementRef.nativeElement}));
+	}
+
 	previousStepper = () => {
 		this.previous.emit(true);
-		this.showPolygonError = false;
-		this.gisLayersService.setActions(false, false);
 	}
 
 	handleConfirm = () => {
-		if (!this.gisLayersService.isPolygonCompleted) 
-			return this.setPolygonError();
-
 		this.saveAddressAndCoordinates(false);
 		this.saveInstitutionArea();
-		this.gisLayersService.setActions(false, false);
+		this.gisLayersService.toggleActions(false, false);
 	}
 
 	saveAddressAndCoordinates = (removeDrawnPolygon: boolean) => {
-		this.gisLayersService.setActions(false, false);
+		this.gisLayersService.toggleActions(false, false);
 		this.isSaving = true;
 		forkJoin(
 			[
@@ -90,10 +93,6 @@ export class ResponsabilityAreaComponent {
 			)
 		);
 		return coordinates;
-	}
-
-	private setPolygonError = () => {
-		this.showPolygonError = true;
 	}
 
 	private mapToSaveInstitutionAddressDto = (): SaveInstitutionAddressDto => {

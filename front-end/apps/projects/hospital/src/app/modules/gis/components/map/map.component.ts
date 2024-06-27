@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GisLayersService } from '../../services/gis-layers.service';
 import { GlobalCoordinatesDto } from '@api-rest/api-model';
+import { OpenlayersService } from '../../services/openlayers.service';
+import { Coordinate } from 'ol/coordinate';
 
 @Component({
 	selector: 'app-map',
@@ -15,7 +17,9 @@ export class MapComponent implements OnInit {
 		this.area = area;
 	}	
 
-	constructor(private readonly gisLayersService: GisLayersService) {}
+	constructor(private readonly gisLayersService: GisLayersService,
+				private readonly openLayersService: OpenlayersService
+	) {}
 	
 	ngOnInit(): void {
 		this.markPoint();
@@ -25,12 +29,11 @@ export class MapComponent implements OnInit {
 	area: GlobalCoordinatesDto[];
 
 	markPoint = () => {
-		const position: number[] = this.gisLayersService.fromLonLat(this.coordinates);
+		const position: Coordinate = this.openLayersService.fromLonLat(this.coordinates);
 		this.gisLayersService.setUp();
-		this.gisLayersService.centerView(position);
+		this.openLayersService.centerView(this.gisLayersService.map, position);
 		this.gisLayersService.removeLocationPoint();
 		this.gisLayersService.addPoint(position);
 		this.gisLayersService.markPolygon(this.area);
 	}
-
 }

@@ -9,6 +9,7 @@ import { MapComponent } from './components/map/map.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { InstitutionDescriptionComponent } from './components/institution-description/institution-description.component';
 import { ResponsabilityAreaComponent } from './components/responsability-area/responsability-area.component';
+import { InstitutionDescriptionStepComponent } from './components/institution-description-step/institution-description-step.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { ResponsabilityAreaComponent } from './components/responsability-area/re
      	MapComponent,
 		LoadingComponent,
 		InstitutionDescriptionComponent,
-		ResponsabilityAreaComponent
+		ResponsabilityAreaComponent,
+  		InstitutionDescriptionStepComponent
   	],
 	imports: [
 		CommonModule,

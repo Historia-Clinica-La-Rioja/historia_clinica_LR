@@ -25,7 +25,7 @@ interface InstitutionAddress {
 }
 
 const INSTITUTION_ADDRESS_STEP = 0;
-const MAP_POSITION_STEP = 1;
+const GEOPOSITION_STEP = 1;
 const RESPONSABILITY_AREA_STEP = 2;
 
 @Component({
@@ -62,6 +62,8 @@ export class HomeComponent implements OnInit {
 	isLoading = false;
 
 	currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+	RESPONSABILITY_AREA_STEP = RESPONSABILITY_AREA_STEP;
+	GEOPOSITION_STEP = GEOPOSITION_STEP;
 
 	area: GlobalCoordinatesDto[] = [];
 
@@ -73,7 +75,6 @@ export class HomeComponent implements OnInit {
 				private readonly gisLayersService: GisLayersService) {}
 
 	ngOnInit(): void {
-		this.setInstitution();
 		this.setUpInstitutionAddressForm();
 		this.setInstitutionData();
 	}
@@ -106,10 +107,13 @@ export class HomeComponent implements OnInit {
 	}
 
 	changeStep = ($event) => {
+		this.gisLayersService.toggleActions(false, false);
+		this.gisLayersService.removeControls();
+
 		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) 
 			this.stepToInstitutionAddress();
 
-		if ($event.selectedIndex === MAP_POSITION_STEP) 
+		if ($event.selectedIndex === GEOPOSITION_STEP) 
 			this.stepToMapPosition();
 
 		if ($event.selectedIndex === RESPONSABILITY_AREA_STEP)
@@ -117,6 +121,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	stepToInstitutionAddress = () => {
+		this.institutionDescription = null;
 		this.coordinatesCurrentValue = null;
 		this.showMap = false;
 		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
@@ -124,7 +129,7 @@ export class HomeComponent implements OnInit {
 
 	stepToMapPosition = () => {
 		this.gisLayersService.removeDrawnPolygon();
-		this.currentStepperIndex = MAP_POSITION_STEP;
+		this.currentStepperIndex = GEOPOSITION_STEP;
 		this.isLoading = true;
 		const address: string = this.toStringify();
 		this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
@@ -144,15 +149,25 @@ export class HomeComponent implements OnInit {
 
 	stepToResponsabilityArea = () => {
 		this.currentStepperIndex = RESPONSABILITY_AREA_STEP;
-		this.gisLayersService.addPolygonInteractionAndControl();
+		this.gisLayersService.addPolygonInteraction();
+	}
+
+	removeLastPoint = () => {
+		this.gisLayersService.removeLastPoint();
+	}
+
+	removeAndCreate = () => {
+		this.gisLayersService.removeAndCreate();
 	}
 
 	setInstitutionData = () => {
 		forkJoin([
+			this.institutionService.getInstitutions([this.contextService.institutionId]),
 			this.gisService.getInstitutionCoordinatesByInstitutionId(),
 			this.gisService.getInstitutionAddressById(),
 			this.gisService.getInstitutionArea()
-		]).subscribe(([coordinates, address, area]: [GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto[]]) => {
+		]).subscribe(([institutions, coordinates, address, area]: [InstitutionDto[], GlobalCoordinatesDto, GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto[]]) => {
+			this.institution = institutions[0];
 			this.area = area;
 			this.coordinatesCurrentValue = coordinates;
 			this.address = address;
@@ -196,10 +211,6 @@ export class HomeComponent implements OnInit {
 				cityName: this.cityCurrentValue.description
 			}
 		)
-	}
-
-	private setInstitution = () => {
-		this.institutionService.getInstitutions([this.contextService.institutionId]).subscribe((institutions: InstitutionDto[]) => this.institution = institutions[0]);
 	}
 
 	private setUpInstitutionAddressForm = () => {
