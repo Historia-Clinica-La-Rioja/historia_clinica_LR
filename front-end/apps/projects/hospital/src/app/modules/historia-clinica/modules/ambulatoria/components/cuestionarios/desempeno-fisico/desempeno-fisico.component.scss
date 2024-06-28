@@ -117,11 +117,9 @@ p {
 
 .counter2 {
 
-    margin: auto;
-    display: table;
     position: relative;
-    left: 30px;
-    bottom: 33px;
+    left: 29%;
+    bottom: 24px;
 }
 
 .counter3 {
@@ -139,17 +137,20 @@ p {
     bottom: 76px
 }
 
-.radio2 {
+.radio-container {
     position: relative;
-    bottom: 99px;
-    right: 60px;
-    margin-left: 20%;
+    margin-top: 20px; 
+}
+
+
+.radio2 {
+    margin-left: 6%;
+    position: relative;
     display: flex;
     justify-content: space-evenly;
-
-
-
+    bottom: 104px;
 }
+
 
 .radio3 {
     padding: 2%;
