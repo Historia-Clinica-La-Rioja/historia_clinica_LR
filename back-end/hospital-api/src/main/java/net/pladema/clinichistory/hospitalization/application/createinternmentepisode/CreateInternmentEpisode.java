@@ -64,8 +64,8 @@ public class CreateInternmentEpisode {
         if (hasIntermentEpisodeActiveInInstitution)
             throw new CreateInternmentEpisodeException(CreateInternmentEpisodeEnumException.HAS_INTERNMENT_EPISODE_ACTIVE_IN_INSTITUTION, "El paciente ya posee un episodio activo de internación en la institución");
 
-        boolean bedIsOccupied = internmentEpisodeService.existsActiveForBedId(episodeBo.getBedId());
-        if (bedIsOccupied)
+        boolean bedFreeAndAvailable = bedExternalService.isBedFreeAndAvailable(episodeBo.getBedId());
+        if (!bedFreeAndAvailable)
             throw new CreateInternmentEpisodeException(CreateInternmentEpisodeEnumException.OCCUPIED_BED, "La cama seleccionada para asignar, ya fue ocupada");
 
     }

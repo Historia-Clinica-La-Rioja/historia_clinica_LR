@@ -8,7 +8,7 @@ import net.pladema.establishment.repository.entity.Bed;
 public interface BedExternalService {
 
 	BedDto updateBedStatusOccupied(Integer id);
-    
-    public Optional<Bed> freeBed(Integer bedId);
+    Optional<Bed> freeBed(Integer bedId);
+    boolean isBedFreeAndAvailable(Integer bedId);
     
 }

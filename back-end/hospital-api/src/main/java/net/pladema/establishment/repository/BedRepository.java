@@ -100,5 +100,11 @@ public interface BedRepository extends JpaRepository<Bed, Integer> {
 			+ " ( b.free = true OR (b.free = false AND ie.statusId = "+ ACTIVE + " OR s.sectorTypeId = 3) "
 			+ " AND NOT EXISTS (SELECT pd.id FROM PatientDischarge pd where pd.internmentEpisodeId = ie.id AND pd.physicalDischargeDate IS NOT NULL) )")
 	Stream<BedInfoVo> getBedInfo(@Param("bedId") Integer bedId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT CASE WHEN count(*) > 0 THEN TRUE ELSE FALSE END " +
+			"FROM Bed b " +
+			"WHERE b.id = :bedId AND b.free IS TRUE AND b.available IS TRUE ")
+	boolean isBedFreeAndAvailable(@Param("bedId") Integer bedId);
 	
 }

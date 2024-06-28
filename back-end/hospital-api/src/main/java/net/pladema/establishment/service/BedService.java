@@ -29,4 +29,5 @@ public interface BedService {
 
 	void updateBedNurse(Integer userId, Integer bedId);
 
+	boolean isBedFreeAndAvailable(Integer bedId);
 }

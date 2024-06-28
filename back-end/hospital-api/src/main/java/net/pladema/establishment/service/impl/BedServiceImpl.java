@@ -160,6 +160,14 @@ public class BedServiceImpl implements BedService {
 		);
 	}
 
+	@Override
+	public boolean isBedFreeAndAvailable(Integer bedId) {
+		log.debug("Input parameters -> bedId {}", bedId);
+		var result = bedRepository.isBedFreeAndAvailable(bedId);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
 	private void updatePreviousHistoricInchargeNurseBed(Integer bedId) {
 		List<HistoricInchargeNurseBed> historic = historicInchargeNurseBedRepository.getLatestHistoricInchargeNurseBedByBedId(bedId, PageRequest.of(0, 1));
 		if (!historic.isEmpty()) {
