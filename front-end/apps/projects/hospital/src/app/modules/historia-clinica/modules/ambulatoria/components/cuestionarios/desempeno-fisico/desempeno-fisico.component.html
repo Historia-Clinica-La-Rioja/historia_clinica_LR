@@ -112,7 +112,7 @@
             <div class="counter2" id="CT3" name="counter3" *ngIf="!isCounterDisabled3() && !isCounterDisabledCounterC() && selectedoptionB2 === '2C'">
                 <label for="number">Tiempo en segundos:</label>
                 <input id="77" type="number" [(ngModel)]="counterB2" value="4C" (change)="calculePoints()" class="chart"
-                    name="Num" max="15" min="0" value="B2" />(Máx.15)
+                    name="Num" max="15" min="0" value="B2" (keypress)="onKeyPress($event)" />(Máx.15)
             </div>
 
             <mat-radio-group id="76" name="balance3" [disabled]="isSubmitDisabled3()" [(ngModel)]="selectedoptionB2"
