@@ -11,13 +11,15 @@ import { Observable } from 'rxjs';
 })
 export class ViolenceReportService {
 
-	private readonly BASE_URL: string;
+	private BASE_URL: string;
 
 	constructor(
 		private http: HttpClient, private readonly contextService: ContextService,
 		private downloadService: DownloadService
 	) {
-		this.BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}/violence-report/patient/`;
+		this.contextService.institutionId$.subscribe(institutionId => 
+            this.BASE_URL = `${environment.apiBase}/institution/${institutionId}/violence-report/patient/`
+        )
 	}
 
 	saveNewViolenceReport(newViolenceReport: ViolenceReportDto, patientId: number) {
