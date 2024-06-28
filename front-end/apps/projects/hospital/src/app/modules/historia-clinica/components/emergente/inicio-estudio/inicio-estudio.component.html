@@ -27,9 +27,10 @@
     <!-- FORMULARIOS -->
 
     <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
-      <button mat-button class="filter-button" color="primary">
+      <button mat-button class="filter-button" color="primary" disabled>
         <mat-icon fontSet="material-icons-outlined">receipt_long</mat-icon> TEST DE EDMONTON
       </button>
+      
     </div>
 
     <div class="latest-edmonton-questionnaires" *ngIf="this.lastEdmontonQuestionnaires.length > 0">
@@ -58,7 +59,7 @@
     <mat-divider></mat-divider>
 
     <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
-      <button mat-button class="filter-button" color="primary">
+      <button mat-button class="filter-button" color="primary" disabled>
         <mat-icon fontSet="material-icons-outlined">elderly_woman</mat-icon> ESCALA DE FRAIL
       </button>
     </div>
@@ -88,7 +89,7 @@
     <mat-divider></mat-divider>
 
     <div class="header-filters" fxLayout="row" fxLayoutGap="15px">
-      <button mat-button class="filter-button" color="primary">
+      <button mat-button class="filter-button" color="primary" disabled>
         <mat-icon fontSet="material-icons-outlined">directions_run</mat-icon> PRUEBA CORTA DE DESEMPEÑO FISICO
       </button>
     </div>
