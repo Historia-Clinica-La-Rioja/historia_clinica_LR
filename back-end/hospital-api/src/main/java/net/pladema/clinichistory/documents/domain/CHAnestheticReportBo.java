@@ -17,14 +17,25 @@ import java.util.stream.Stream;
 @ToString
 public class CHAnestheticReportBo extends CHDocumentBo {
 
+    private String problems;
+    private String medicines;
+    private String bloodType;
+    private String anthropometricData;
+    private String riskFactors;
+
     public CHAnestheticReportBo(VClinicHistory entity, ECHEncounterType encounterType, ECHDocumentType documentType) {
         super(entity, encounterType, documentType);
         CHDocumentSummary summary = entity.getHealthConditionSummary();
+        this.problems = summary.getProblems();
+        this.medicines = summary.getMedicines();
+        this.bloodType = summary.getBloodType();
+        this.anthropometricData = summary.getAnthropometricData();
+        this.riskFactors = summary.getRiskFactors();
     }
 
     @Override
     public List<ClinicalRecordBo> getClinicalRecords() {
-        List<String> terms = Stream.of("")
+        List<String> terms = Stream.of(problems, bloodType, anthropometricData, riskFactors, medicines)
                 .filter(term -> term != null && !term.isBlank())
                 .map(this::doCharReplacement)
                 .collect(Collectors.toList());
