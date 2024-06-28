@@ -22,89 +22,8 @@
 			</div>
 		</div>
 
-		<div id="problemas" style="padding-bottom: 15px">
-				<strong><mat-label style= 'margin-top: 15px;' translate="guardia.episode.medical_discharge.problems.TITLE"></mat-label></strong>
-				<div *ngFor="let problem of problems$ | async">
-					<mat-checkbox [checked]="selectedProblems.has(problem.id)" [disabled]="checkIfShouldDisable(problem)" (change)="toggleSelection(problem)">
-						{{ problem.snomed.pt }} |
-						{{ problem.presuntive ? ("guardia.episode.medical_discharge.problems.PRESUNTIVE" | translate) : ("guardia.episode.medical_discharge.problems.CONFIRMED" | translate) }}
-						{{ problem.main ? ("guardia.episode.medical_discharge.problems.MAIN" | translate) : "" }}
-					</mat-checkbox>
-				</div>
-
-				<ng-template #problemaForm>
-					<form [formGroup]="problemasService.getForm()" (ngSubmit)="problemasService.addToList()"
-						fxLayout="column">
-
-						<mat-form-field appearance="outline">
-							<mat-label translate="guardia.episode.medical_discharge.problems.CONCEPT_LABEL">
-							</mat-label>
-							<input id="snomed-input" matInput type="text" formControlName="snomed" name="snomed"
-								readonly matTooltip="{{ problemasService.getSnomedConcept().pt }}">
-							<button id="clear"  matSuffix color="warn" mat-icon-button
-								(click)="problemasService.resetForm()">
-								<mat-icon>close</mat-icon>
-							</button>
-						</mat-form-field>
-
-						<mat-form-field appearance="outline">
-							<mat-label [translate]="'ambulatoria.paciente.nueva-consulta.problemas.SEVERIDAD'">
-							</mat-label>
-							<mat-select id="severity-select" formControlName="severidad">
-								<mat-option *ngFor="let severityType of severityTypes" [value]="severityType.code">
-									{{severityType.display}}
-								</mat-option>
-							</mat-select>
-							<mat-error translate="forms.REQUIRED"></mat-error>
-						</mat-form-field>
-
-						<mat-checkbox id="cronico-checkbox" formControlName="cronico">
-							<span translate="guardia.episode.medical_discharge.problems.CRONICO"></span>
-						</mat-checkbox>
-
-						<div fxLayout="row">
-
-							<app-datepicker id="fecha_inicio"
-								title="guardia.episode.medical_discharge.problems.FECHA_INICIO"
-								[minDate]="minDate" [maxDate]="problemasService.getFechaInicioMax()" [dateToSetInDatepicker]="today"
-								(selectDate)="problemStartDateChanged($event)">
-							</app-datepicker>
-
-							<app-datepicker id="fecha_fin" title="guardia.episode.medical_discharge.problems.FECHA_FIN" [minDate]="problemasService.getForm().controls.fechaInicio.value"
-								[maxDate]="today" (selectDate)="problemEndDateChanged($event)">
-							</app-datepicker>
-						</div>
-
-						<div align="end">
-							<button id="submit_problema" class="uppercase" mat-raised-button color="primary"
-								type="submit">
-								<span translate="guardia.episode.medical_discharge.problems.buttons.ADD"></span>
-							</button>
-						</div>
-
-					</form>
-				</ng-template>
-
-				<app-document-section-table data-display
-					tableTitle="guardia.episode.medical_discharge.problems.TABLE_TITLE"
-					[columns]="problemasService.getColumns()" [data]="problemasService.getProblemas()">
-				</app-document-section-table>
-			</app-new-document-section>
-		</div>
-
-		<div fxLayout="column">
-			<strong><mat-label style= 'margin-top: 15px;' translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label></strong>
-			<div style="display: flex; flex-wrap: wrap; gap: 12px;">
-				<mat-radio-group formControlName="dischargeTypeId" name="dischargeTypeId">
-					<div *ngFor="let dischargeType of (dischargeTypes$ | async)">
-					<mat-radio-button [value]="dischargeType.id">
-						{{ dischargeType.description }}
-					</mat-radio-button>
-					</div>
-				</mat-radio-group>
-			</div>
-
-			<div *ngIf="form.get('dischargeTypeId').value == dischargeTypesEnum.DEFUNCION">
+		<div fxLayout="column" fxLayoutGap="16px">
+				<strong><mat-label translate="guardia.episode.medical_discharge.problems.TITLE"></mat-label></strong>
 				<div fxLayout="column" fxLayoutGap="8px">
 					<div *ngFor="let problem of problems$ | async">
 						<mat-checkbox color="primary" [checked]="selectedProblems.has(problem.id)" [disabled]="checkIfShouldDisable(problem)" (change)="toggleSelection(problem)">
@@ -161,8 +80,9 @@
 							<textarea formControlName="otherDischargeDescription"
 								placeholder="{{'guardia.episode.medical_discharge.form.DISCHARGE_TYPE_INPUT' | translate }}"
 								rows="4" matInput type="text">
-								</textarea>
-							<mat-error *ngIf="hasError(form, 'required', 'otherDischargeDescription')">{{ "forms.REQUIRED" | translate }}</mat-error>
+							</textarea>
+							<mat-error *ngIf="hasError(form, 'required', 'otherDischargeDescription') ||
+											hasError(form, 'whitespace', 'otherDischargeDescription')">{{ "forms.REQUIRED" | translate }}</mat-error>
 						</mat-form-field>
 					</div>
 				</div>

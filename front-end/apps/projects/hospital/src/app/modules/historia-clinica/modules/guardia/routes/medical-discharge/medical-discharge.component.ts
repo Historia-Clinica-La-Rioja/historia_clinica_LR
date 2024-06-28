@@ -8,7 +8,7 @@ import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
-import { hasError, beforeTimeValidationDate, futureTimeValidationDate } from '@core/utils/form.utils';
+import { hasError, beforeTimeValidationDate, futureTimeValidationDate, NoWhitespaceValidator} from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -183,7 +183,10 @@ export class MedicalDischargeComponent implements OnInit {
 
 	private setControlValidators(control: AbstractControl, condition: boolean) {
 		if (condition) {
-			control.setValidators([Validators.required]);
+			const validators = control === this.form.get('otherDischargeDescription')
+			  ? [Validators.required, NoWhitespaceValidator()]
+			  : [Validators.required];
+			control.setValidators(validators);
 		} else {
 			control.setValue(null);
 			control.clearValidators();
