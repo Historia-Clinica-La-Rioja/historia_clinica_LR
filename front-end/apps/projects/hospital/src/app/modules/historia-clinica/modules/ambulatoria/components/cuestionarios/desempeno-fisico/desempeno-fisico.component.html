@@ -74,8 +74,7 @@
 
             </div>
 
-            <mat-radio-group id="74" name="balance2" [disabled]="isSubmitDisabled()" [(ngModel)]="selectedoptionB"
-                (change)="calculePoints()">
+            <mat-radio-group id="74" name="balance2" [disabled]="isSubmitDisabled()" [(ngModel)]="selectedoptionB" (change)="calculePoints()">
                 <div class="radio">
                     <mat-radio-button value="1B" color="primary">Si</mat-radio-button>
                     <mat-radio-button value="2B" color="primary">No</mat-radio-button>
@@ -83,16 +82,16 @@
                 </div>
             </mat-radio-group>
 
-
-            <div class="counter" id="CT2" *ngIf="!isCounterDisabled2() && selectedoptionB === '1B'">
-                <label for="75">Tiempo en segundos 1b:</label>
-                <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" value="B2" min="10" class="chart" />
+            <div *ngIf="!isCounterDisabled2()">
+                <div class="counter" id="CT2" *ngIf="selectedoptionB === '1B'">
+                    <label for="75">Tiempo en segundos 1b:</label>
+                    <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" min="10" class="chart" />
+                </div>
+                <div class="counter" id="CT2" *ngIf="selectedoptionB === '2B'">
+                    <label for="75">Tiempo en segundos 2b:</label>
+                    <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" max="9" class="chart" />
+                </div>
             </div>
-            <div class="counter" id="CT2" *ngIf="!isCounterDisabled2() && selectedoptionB === '2B'">
-                <label for="75">Tiempo en segundos 2b:</label>
-                <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" value="B2" max="9" class="chart" />
-            </div>
-
             <!-- TERCERA CONSULTA -->
 
             <div>

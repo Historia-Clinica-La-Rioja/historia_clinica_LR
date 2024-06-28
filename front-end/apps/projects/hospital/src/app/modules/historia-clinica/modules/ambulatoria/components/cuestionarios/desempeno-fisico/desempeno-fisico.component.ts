@@ -72,6 +72,7 @@ export class DesempenoFisicoComponent implements OnInit {
     )
   }
 
+  
   isCounterDisabled(): boolean {
     return !(
 
@@ -79,13 +80,13 @@ export class DesempenoFisicoComponent implements OnInit {
 
     )
   }
+
   isCounterDisabled2(): boolean {
-    return !(
-
-      this.selectedoptionB == '1B' || this.selectedoptionB === '2B'
-
-    )
-
+    if (this.selectedoptionA === '2A' || this.selectedoptionA === '3A') {
+      return true; 
+    } else {
+      return false; 
+    }
   }
 
   isSubmitDisabled3(): boolean {
@@ -102,11 +103,18 @@ export class DesempenoFisicoComponent implements OnInit {
     )
   }
 
+  isCounterDisabledA(): boolean {
+    return !(
+      this.selectedoptionB === '1A'
+    )
+  }
+
   isCounterDisabledCounterC(): boolean {
     return !(
       this.selectedoptionB2 !== '1C'
     )
   }
+
 
   isCounterDisabled4(): boolean {
     return !(
