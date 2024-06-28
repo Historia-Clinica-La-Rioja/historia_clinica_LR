@@ -21,13 +21,6 @@ public class DiagnosisBo extends HealthConditionBo implements IpsBo {
         super(snomed);
     }
 
-	public DiagnosisBo(HealthConditionBo healthConditionBo) {
-		super(healthConditionBo.getSnomed());
-		this.setVerificationId(healthConditionBo.getVerificationId());
-		this.setVerification(healthConditionBo.getVerification());
-		this.setMain(healthConditionBo.isMain());
-	}
-
     public boolean isPresumptive() {
         if (getVerificationId() != null && ConditionVerificationStatus.isDownState(getVerificationId()))
             return false;
@@ -57,6 +50,18 @@ public class DiagnosisBo extends HealthConditionBo implements IpsBo {
 
 	private boolean specificEquals(ClinicalTerm bo){
 		return super.equals(bo)&&((DiagnosisBo)bo).isPresumptive()==isPresumptive();
+	}
+
+	public DiagnosisBo(HealthConditionBo healthCondition) {
+		super(healthCondition.getSnomed());
+		this.setVerificationId(healthCondition.getVerificationId());
+		this.setVerification(healthCondition.getVerification());
+		this.setMain(healthCondition.isMain());
+		this.setStatusId(healthCondition.getStatusId());
+		this.setStatus(healthCondition.getStatus());
+		this.setCie10codes(healthCondition.getCie10codes());
+		this.setId(healthCondition.getId());
+		this.setPatientId(healthCondition.getPatientId());
 	}
 
     @Override

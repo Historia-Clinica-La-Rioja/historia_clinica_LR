@@ -62,6 +62,9 @@ public interface HealthConditionMapper {
     @Named("toDiagnosesGeneralStateDto")
     DiagnosesGeneralStateDto toDiagnosesGeneralStateDto(HealthConditionBo healthConditionBo);
 
+	@Named("toDiagnosesGeneralStateDtoFromDiagnosisBo")
+	DiagnosesGeneralStateDto toDiagnosesGeneralStateDtoFromDiagnosisBo(DiagnosisBo diagnosisBo);
+
     @Named("toHealthConditionNewConsultationDto")
     HealthConditionNewConsultationDto toHealthConditionNewConsultationDto(HealthConditionNewConsultationBo bo);
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.FamilyHistoryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ImmunizationBo;
@@ -41,6 +42,10 @@ public interface InternmentStateMapper {
     @Named("toListDiagnosesGeneralStateDto")
     @IterableMapping(qualifiedByName = "toDiagnosesGeneralStateDto")
     List<DiagnosesGeneralStateDto> toListDiagnosesGeneralStateDto(List<HealthConditionBo> diagnoses);
+
+	@Named("toListDiagnosesGeneralStateDto")
+	@IterableMapping(qualifiedByName = "toDiagnosesGeneralStateDtoFromDiagnosisBo")
+	List<DiagnosesGeneralStateDto> toListDiagnosesGeneralStateDtoFromDiagnosisBoList(List<DiagnosisBo> diagnoses);
 
     @Named("toListInternmentMedicationDto")
     @IterableMapping(qualifiedByName = "toMedicationDto")
