@@ -50,6 +50,15 @@ export class DesempenoFisicoComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  onKeyPress(event: KeyboardEvent): void {
+    event.preventDefault();
+  }
+
+   // Método genérico para reiniciar contadores
+   resetCounter(counterName: string): void {
+    this[counterName] = undefined; // o null, según prefieras
+  }
+
 
   onInputDesempenoChange(option: string, counter: number, inputType: string): void {
     if (inputType === 'A') {
