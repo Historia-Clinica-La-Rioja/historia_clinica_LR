@@ -26,6 +26,7 @@ export class EdmontonComponent {
   submitted: boolean = false;
   calificationTotal: any;
   scoreTotal: number;
+  scoreFinal: any;
 
   constructor(
     private edmontonService: EdmontonService,
@@ -79,6 +80,7 @@ export class EdmontonComponent {
     }
 
     return scoreFinal;
+  
   }
 
   parametersOptions(): void {
@@ -242,8 +244,20 @@ export class EdmontonComponent {
   }
 
   construirDatos() {
+    const score = this.calculateTotal(
+      this.selectedCognitiveOption,
+      this.selectedHealthStatusOption,
+      this.selectedHealthStatusOptionDos,
+      this.selectedFunctionIndOption,
+      this.selectedSupportSocOption,
+      this.selectedMedicationOption,
+      this.selectedMedicationOptionDos,
+      this.selectedNutritionOption,
+      this.selectedAnimoOption,
+      this.selectedContingenciaOption,
+      this.selectedRendimientoFuncOption
 
-    const datos = {
+    ); const datos = {
       "questionnaireId": 1,
       "answers": [
 
@@ -309,10 +323,10 @@ export class EdmontonComponent {
         {
           "itemId": 22,
           "optionId": this.mappingtotalScore(),
-          "value": "",
+          "value": score,
         },
       ]
-    }
+    };
     return datos;
   }
 
@@ -322,7 +336,7 @@ export class EdmontonComponent {
   }
 
   onSubmit(): void {
-     if (navigator.onLine) {
+    if (navigator.onLine) {
       this.goOnline();
       Swal.fire({
         icon: 'question',
@@ -402,6 +416,9 @@ export class EdmontonComponent {
   enviarFormulario(): void {
     const questionnaireData = this.construirDatos();
     this.edmontonService.createEdmonton(this.patientId, questionnaireData).subscribe();
+
+
+    console.log(this.enviarFormulario, this.edmontonService, "enviado")
   }
 }
 
