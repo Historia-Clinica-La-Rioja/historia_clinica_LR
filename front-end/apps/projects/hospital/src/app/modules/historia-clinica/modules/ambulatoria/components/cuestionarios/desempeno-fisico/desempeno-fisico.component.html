@@ -248,7 +248,7 @@
 
             <div class="counter4" id="CT6" name="counter6" *ngIf="!isCounterDisabled6() && !isCounterDisabled7()">
                 <label for="number">Tiempo en segundos:</label>
-                <input id="86" type="number"  value="F4" [(ngModel)]="counterE1" (change)="onInputDesempenoChange2($event)" class="chart" />
+                <input id="86" type="number"  value="F4" min="0" [(ngModel)]="counterE1" (change)="onInputDesempenoChange2($event)" class="chart" />
              </div>
 
             <!-- RESULTADO FINAL -->
