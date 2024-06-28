@@ -192,6 +192,18 @@ const HierarchicalUnitStaff = (props) => {
         ) : null;
 }
 
+const ClosestService = (props) => {
+    const record = useRecordContext(props);
+    return record.typeId !== SERVICE ?
+    (
+        <Labeled label="resources.hierarchicalunits.fields.closestService">
+            <ReferenceField source="closestServiceId" reference="hierarchicalunits">
+                <TextField source="alias"/>
+            </ReferenceField>
+        </Labeled>
+    ) : null;
+}
+
 const HierarchicalUnitShow = props => {
     const userIsInstitutionalAdmin = UserIsInstitutionalAdmin();
     return (
@@ -204,6 +216,7 @@ const HierarchicalUnitShow = props => {
                 <ReferenceField source="typeId" reference="hierarchicalunittypes" link={ false }>
                     <TextField source="description" />
                 </ReferenceField>
+                <ClosestService {...props}/>
                 <ServiceField {...props} />
                 <ReferenceField source="hierarchicalUnitIdToReport" link={userIsInstitutionalAdmin} reference="hierarchicalunits">
                     <TextField source="alias"/>

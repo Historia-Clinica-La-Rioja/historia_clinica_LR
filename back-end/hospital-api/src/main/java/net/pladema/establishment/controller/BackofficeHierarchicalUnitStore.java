@@ -33,6 +33,8 @@ public class BackofficeHierarchicalUnitStore implements BackofficeStore<Hierarch
 
 	private final BackofficeAuthoritiesValidator authoritiesValidator;
 
+	private static final Integer SERVICE = 8;
+
 	@Override
 	public Page<HierarchicalUnit> findAll(HierarchicalUnit example, Pageable pageable) {
 		List<HierarchicalUnit> entitiesByExample = null;
@@ -71,9 +73,22 @@ public class BackofficeHierarchicalUnitStore implements BackofficeStore<Hierarch
 		if (entity.getId() == null && entity.getHierarchicalUnitIdToReport() != null) {
 			HierarchicalUnit entitySaved = repository.save(entity);
 			hierarchicalUnitRelationshipRepository.save(createHierarchicalUnitRelationshipEntity(entitySaved.getId(), entitySaved.getHierarchicalUnitIdToReport(), entitySaved.getCreatedBy(), entitySaved.getCreatedOn()));
+			if(entitySaved.getTypeId().equals(SERVICE)) {
+				entitySaved.setClosestServiceId(entitySaved.getId());
+				return repository.save(entitySaved);
+			}
 			return entitySaved;
+
 		}
-		return repository.save(entity);
+
+		entity = repository.save(entity);
+
+		if(entity.getTypeId().equals(SERVICE)) {
+			entity.setClosestServiceId(entity.getId());
+			return repository.save(entity);
+		}
+
+		return entity;
 	}
 
 	private HierarchicalUnitRelationship createHierarchicalUnitRelationshipEntity(Integer hierarchicalUnitChildId,

@@ -1,5 +1,25 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_25 
+    - logicalFilePath: incrementales-v2_25
+
+    - changeSet:
+        id: addColumn_closest_service
+        author: lmanterola
+        changes:
+          - addColumn:
+              tableName: hierarchical_unit
+              columns:
+                - column:
+                    name: closest_service_id
+                    type: int
+          - addForeignKeyConstraint:
+              baseColumnNames: closest_service_id
+              baseTableName: hierarchical_unit
+              constraintName: FK_closest_service_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: hierarchical_unit
+              validate: true
 
     - changeSet:
         id: role-api_anexo-level-change

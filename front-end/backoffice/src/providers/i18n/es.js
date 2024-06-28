@@ -866,6 +866,7 @@ const messages = {
         },
         hierarchicalunits: {
             name: 'Unidad jerárquica |||| Unidades jerárquicas',
+            closestServiceId: 'Tu vieja',
             fields: {
                 id: 'Id',
                 institutionId: 'Institución',
@@ -873,7 +874,9 @@ const messages = {
                 typeId: 'Tipo',
                 alias: 'Alias',
                 clinicalSpecialtyId: 'Servicio',
-                hierarchicalUnitIdToReport: 'Productividad asociada a'
+                hierarchicalUnitIdToReport: 'Productividad asociada a',
+                closestServiceId: 'Servicio inmediato superior',
+                closestService: 'Servicio inmediato superior'
             },
             createRelated: 'Crear Unidad jerárquica'
         },
@@ -881,7 +884,7 @@ const messages = {
             name: 'Relación entre unidades jerárquicas',
             fields : {
                 hierarchicalUnitChildId: 'Unidad jerárquica hija',
-                hierarchicalUnitParentId: 'Unidad jerárquica padre',
+                hierarchicalUnitParentId: 'Unidad jerárquica padre'
             },
             parents : {
                 name: 'Unidades jerárquicas padres',
@@ -891,7 +894,11 @@ const messages = {
                 name: 'Unidades jerárquicas hijas',
                 createRelated: 'Crear unidad hija'
             },
-            createRelated: 'Asociar Unidad jeárquica'
+            closestService: {
+                name: 'Servicio inmediato superior',
+                addRelated: 'Asociar servicio inmediato superior'
+            },
+            createRelated: 'Asociar Unidad jerárquica'
         },
         hierarchicalunitstaff: {
             name: 'Usuarios',
