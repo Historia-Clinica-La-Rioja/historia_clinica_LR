@@ -38,7 +38,7 @@
                 Si el participante no logró completarlo, finaliza la prueba de balance.
 
             </div>
-            <mat-radio-group id="72" name="balance1" [(ngModel)]="selectedoptionA" (change)="calculePoints()">
+            <mat-radio-group id="72" name="balance1" [(ngModel)]="selectedoptionA" (change)="calculePoints(); resetCounter('counterA1')">
                 <div class="radio">
                     <mat-radio-button value="1A" color="primary">Si</mat-radio-button>
                     <mat-radio-button value="2A" color="primary">No</mat-radio-button>
@@ -55,7 +55,7 @@
                
                 <div class="counter" id="CT2" *ngIf="!isCounterDisabled() && selectedoptionA === '2A'">
                     <label for="73">Tiempo en segundos:</label>
-                    <input id="73" type="number" name="Num2" [(ngModel)]="counterA1" value="2A" min="0" max="9" class="chart-b" />
+                    <input id="73" type="number" name="Num2" [(ngModel)]="counterA1" value="2A" min="0" max="9" class="chart-b" (keypress)="onKeyPress($event)" />
                 </div>
 
             <!-- SEGUNDA CONSULTA -->
@@ -74,7 +74,7 @@
 
             </div>
 
-            <mat-radio-group id="74" name="balance2" [disabled]="isSubmitDisabled()" [(ngModel)]="selectedoptionB" (change)="calculePoints()">
+            <mat-radio-group id="74" name="balance2" [disabled]="isSubmitDisabled()" [(ngModel)]="selectedoptionB" (change)="calculePoints(); resetCounter('counterA2')">
                 <div class="radio">
                     <mat-radio-button value="1B" color="primary">Si</mat-radio-button>
                     <mat-radio-button value="2B" color="primary">No</mat-radio-button>
@@ -85,11 +85,11 @@
             <div *ngIf="!isCounterDisabled2()">
                 <div class="counter" id="CT2" *ngIf="selectedoptionB === '1B'">
                     <label for="75">Tiempo en segundos 1b:</label>
-                    <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" min="10" class="chart" />
+                    <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" min="10" class="chart" (keypress)="onKeyPress($event)"/>
                 </div>
                 <div class="counter" id="CT2" *ngIf="selectedoptionB === '2B'">
                     <label for="75">Tiempo en segundos 2b:</label>
-                    <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" max="9" class="chart" />
+                    <input id="75" type="number" name="Num2" [(ngModel)]="counterA2" max="9" class="chart" (keypress)="onKeyPress($event)"/>
                 </div>
             </div>
             <!-- TERCERA CONSULTA -->
