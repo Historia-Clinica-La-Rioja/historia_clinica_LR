@@ -1093,7 +1093,8 @@
 				"CLINICAL_NOTES": "Notas clínicas",
 				"EPICRISIS": "Epicrisis",
 				"MEDICAL_PRESCRIPTIONS": "Prescripciones médicas",
-				"REPORTS": "Informes de los resultados de los estudios complementarios"
+				"REPORTS": "Informes de los resultados de los estudios complementarios",
+                "ANESTHETIC_REPORTS": "Partes anestésicos"
 			},
 			"encounter-list": {
 				"header": {
