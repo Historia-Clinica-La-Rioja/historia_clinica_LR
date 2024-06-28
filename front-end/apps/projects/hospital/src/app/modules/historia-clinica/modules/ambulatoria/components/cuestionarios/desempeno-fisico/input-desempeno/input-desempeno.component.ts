@@ -23,5 +23,10 @@ export class InputDesempenoComponent {
   onCounterChange(): void {
     this.counterChange.emit(this.counterValue);
   }
+  
+  onKeyPress(event: KeyboardEvent): void {
+    event.preventDefault();
+  }
+
 }
 
