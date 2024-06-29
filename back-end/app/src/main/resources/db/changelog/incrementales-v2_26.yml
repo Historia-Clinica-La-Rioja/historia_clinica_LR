@@ -15,4 +15,120 @@ databaseChangeLog:
               - sql:
                     sql: |-
                         ALTER TABLE appointment_order_image ALTER COLUMN id SET DATA TYPE BIGINT;
+    
+    - changeSet:
+        id: parameterized_form-createTable
+        comment: Create table parameterized_form
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameterized_form
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parameterized_form
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: name
+                    type: varchar(255)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: status_id
+                    type: smallint
+                    defaultValue: 1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: outpatient_enabled
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: internment_enabled
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: emergency_care_enabled
+                    type: boolean
+                    defaultValue: ${boolean.false}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: parameterized_form_parameter-createTable
+        comment: Create table parameterized_form_parameter
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: parameterized_form_parameter
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_parameterized_form_parameter
+                    name: id
+                    type: int
+                - column:
+                    name: parameterized_form_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: parameterized_form(id)
+                      foreignKeyName: FK_parameterized_form_parameter_form_id
+                - column:
+                    name: parameter_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: parameter(id)
+                      foreignKeyName: FK_parameterized_form_parameter_parameter_id
+                - column:
+                    constraints:
+                      nullable: false
+                    name: order_number
+                    type: smallint
 
