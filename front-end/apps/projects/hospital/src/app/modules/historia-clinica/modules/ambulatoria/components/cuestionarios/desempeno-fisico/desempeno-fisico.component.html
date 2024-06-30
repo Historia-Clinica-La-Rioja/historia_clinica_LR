@@ -145,18 +145,18 @@
 
             </div>
 
-            <div class="counter3" id="CT4" name="counter4" *ngIf="!isCounterDisabled4()">
-                <label for="number">Tiempo en segundos:</label>
-                <input type="number" [(ngModel)]="counterC2" (change)="calculePoints()" class="chart" name="Num" id="80"
-                    value="D4" min="0" />
-            </div>
-
             <mat-radio-group id="79" name="marcha1" [(ngModel)]="selectedoptionC">
                 <div class="radio3">
                     <mat-radio-button value="D1" color="primary">Accede a la prueba</mat-radio-button>
                     <mat-radio-button value="D3" color="primary">Se rehúsa</mat-radio-button>
                 </div>
             </mat-radio-group>
+
+            <div class="counter3" id="CT4" name="counter4" *ngIf="!isCounterDisabled4() && selectedoptionC === 'D1'">
+                <label for="number">Tiempo en segundos:</label>
+                <input type="number" [(ngModel)]="counterC2" (change)="calculePoints()" class="chart" name="Num" id="80"
+                    value="D4" min="0" />
+            </div>
 
             <!-- QUINTA CONSULTA -->
 
@@ -172,14 +172,6 @@
 
             </div>
 
-
-            <div class="counter3" id="CT5" name="counter5" *ngIf="!isCounterDisabled4() && !isCounterDisabled5() ">
-                <label for="number">Tiempo en segundos:</label>
-                <input id="82" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" class="chart" name="Num"
-                    min="0" value="E4" />
-
-            </div>
-
             <mat-radio-group id="81" name="marcha2" [(ngModel)]="selectedoptionD" [disabled]="isSubmitDisabled4()"
                 (change)="calculePoints()">
                 <div class="radio3">
@@ -187,6 +179,14 @@
                     <mat-radio-button value="E3" color="primary">Se rehúsa</mat-radio-button>
                 </div>
             </mat-radio-group>
+
+            <div class="counter3" id="CT5" name="counter5" *ngIf="!isCounterDisabled4() && !isCounterDisabled5() && selectedoptionD === 'E1' ">
+                <label for="number">Tiempo en segundos:</label>
+                <input id="82" type="number" [(ngModel)]="counterC3" (change)="calculePoints()" class="chart" name="Num"
+                    min="0" value="E4" />
+
+            </div>
+
 
 
 
