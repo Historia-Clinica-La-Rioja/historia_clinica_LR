@@ -26,7 +26,7 @@ export class FrailScaleComponent implements OnInit {
     private frailService: FrailService,
     @Inject(MAT_DIALOG_DATA) public data: any,
 
-  ){ 
+  ) {
     this.patientId = data.patientId
   }
 
@@ -56,15 +56,13 @@ export class FrailScaleComponent implements OnInit {
 
     if (totalScore >= 3) {
       this.selectedCalificacion = 'B5';
-      totalScore = 50;
-    } else if(totalScore >= 0 && totalScore <= 2) {
+    } else if (totalScore >= 0 && totalScore <= 2) {
       this.selectedCalificacion = 'A5';
-      totalScore = 49;
     }
 
     return totalScore;
   }
-  
+
   mappingFatibility() {
     const fatibilityMap = {
       'A': 42,
@@ -88,8 +86,8 @@ export class FrailScaleComponent implements OnInit {
 
   mappingAmbulation() {
     const ambulationMap = {
-      'A2' : 20,
-      'B2' : 19,
+      'A2': 20,
+      'B2': 19,
     };
 
     return ambulationMap[this.selectedAmbulation] || undefined;
@@ -97,8 +95,8 @@ export class FrailScaleComponent implements OnInit {
 
   mappingWeightloss() {
     const weightlossMap = {
-      'A4' : 47,
-      'B4' : 48,
+      'A4': 47,
+      'B4': 48,
     };
 
     return weightlossMap[this.selectedWeightLoss] || undefined;
@@ -107,11 +105,20 @@ export class FrailScaleComponent implements OnInit {
 
   mappingComorbidity() {
     const comorbidityMap = {
-      'A3' : 20,
-      'B3' : 19,
+      'A3': 20,
+      'B3': 19,
     };
 
     return comorbidityMap[this.selectedComorbidityCount] || undefined;
+  }
+
+  mappingPoints() {
+    const pointFrail = {
+      'A5': 49,
+      'B5': 50
+
+    }
+    return pointFrail[this.selectedCalificacion] || undefined;
   }
 
 
@@ -147,18 +154,18 @@ export class FrailScaleComponent implements OnInit {
         },
         {
           itemId: 70,
-          optionId: totalScore,
-          value: "",
+          optionId: this.mappingPoints(),
+          value: totalScore,
         },
       ],
     };
     return datos;
   }
 
-  
+
   submitForm(): void {
     this.submitted = true;
-  
+
     Swal.fire({
       icon: 'question',
       iconColor: '#2687c5',
@@ -182,7 +189,7 @@ export class FrailScaleComponent implements OnInit {
             Swal.showLoading();
             setTimeout(() => {
               Swal.close();
-              this.enviarFormulario(); 
+              this.enviarFormulario();
 
               Swal.fire({
                 icon: 'success',
@@ -195,7 +202,7 @@ export class FrailScaleComponent implements OnInit {
               });
             }, 2000);
           }
-          
+
         });
       } else if (result.isDenied) {
         Swal.fire({
@@ -209,7 +216,7 @@ export class FrailScaleComponent implements OnInit {
       }
     });
   }
-  
+
   enviarFormulario(): void {
     this.frailService.createFrail(this.patientId, this.construirDatos()).subscribe();
   }
