@@ -82,11 +82,12 @@ export class DocumentsSummaryMapperService {
         return date ? { date: dateTimeDtoToDate(date), format: DateFormat.DATE } : null;
     }
 
-    mapToAnthropometricData(antropometricData: AnthropometricDataDto): AnthropometricData {
+    mapToAnthropometricData(anthropometricData: AnthropometricDataDto): AnthropometricData {
         return {
-            ...(antropometricData.height && { height: [this.toDescriptionItemData(antropometricData.height.value)] }),
-            ...(antropometricData.bloodType && { bloodType:[ this.toDescriptionItemData(antropometricData.bloodType.value)] }),
-            ...(antropometricData.weight && { weight: [this.toDescriptionItemData(`${antropometricData.weight.value} ${VITAL_SIGNS_AND_RISK_FACTORS.KG}`)] }),
+            ...(anthropometricData.height && { height: [this.toDescriptionItemData(`${anthropometricData.height.value} ${VITAL_SIGNS_AND_RISK_FACTORS.CENTIMETERS}`)] }),
+            ...(anthropometricData.bloodType && { bloodType:[ this.toDescriptionItemData(anthropometricData.bloodType.value)] }),
+            ...(anthropometricData.weight && { weight: [this.toDescriptionItemData(`${anthropometricData.weight.value} ${VITAL_SIGNS_AND_RISK_FACTORS.KG}`)] }),
+            ...(anthropometricData.headCircumference && { headCircunference: [this.toDescriptionItemData(`${anthropometricData.headCircumference.value} ${VITAL_SIGNS_AND_RISK_FACTORS.CENTIMETERS}`)] }),
         }
     }
 

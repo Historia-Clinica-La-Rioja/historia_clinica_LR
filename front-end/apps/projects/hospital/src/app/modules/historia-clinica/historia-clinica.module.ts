@@ -322,6 +322,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 	exports: [
 		// components
 		AlergiasSummaryComponent,
+        AnthropometricDataSummaryComponent,
 		AntecedentesFamiliaresSummaryComponent,
 		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,

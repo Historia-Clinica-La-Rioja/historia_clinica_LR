@@ -38,6 +38,7 @@ export interface AnthropometricData {
     bloodType: DescriptionItemData[],
     height: DescriptionItemData[],
     weight: DescriptionItemData[],
+    headCircunference?: DescriptionItemData[],
 }
 
 export interface VitalSignsAndRiskFactorsData {

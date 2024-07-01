@@ -7,6 +7,7 @@ export const VITAL_SIGNS_AND_RISK_FACTORS = {
     MILIMITERS:'mm',
     MINUTE: '/min',
     TEMPERATURE: '°',
+    CENTIMETERS: 'cm',
 }
 
 export const ANESTHESIC_CLINICAL_EVALUATION = {

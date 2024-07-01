@@ -350,7 +350,8 @@
 				"WEIGHT": "Peso (kg)",
 				"detail": {
 					"HEIGHT": "Talla",
-					"WEIGHT": "Peso"
+					"WEIGHT": "Peso",
+                    "HEAD_CIRCUNFERENCE": "Perímetro cefálico"
 				}
 			},
 			"anesthesic-clinical-evaluation": {

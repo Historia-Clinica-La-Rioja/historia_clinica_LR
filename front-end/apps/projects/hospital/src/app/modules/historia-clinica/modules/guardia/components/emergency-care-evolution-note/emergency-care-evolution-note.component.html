@@ -15,6 +15,9 @@
 
         <app-evolutions-summary data-id="evolution-summary" *ngIf="evolutionNoteSummary.evolution"
             [evolution]="evolutionNoteSummary.evolution"></app-evolutions-summary>
+            
+        <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="evolutionNoteSummary.anthropometricData"
+            [anthropometricData]="evolutionNoteSummary.anthropometricData"></app-anthropometric-data-summary>
     </div>
 </div>
 
