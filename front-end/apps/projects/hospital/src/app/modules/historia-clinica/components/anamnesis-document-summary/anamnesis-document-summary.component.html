@@ -14,8 +14,8 @@
         </ng-container>
 
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
-            <app-diagnosis-summary data-id="diagnosis-summary" *ngIf="summary.anamnesis.mainDiagnosis || summary.anamnesis.diagnosis"
-                [diagnosis]="summary.anamnesis.diagnosis" [mainDiagnosis]="summary.anamnesis.mainDiagnosis"></app-diagnosis-summary>
+            <app-diagnosis-evolution-summary data-id="diagnosis-summary" *ngIf="summary.anamnesis.mainDiagnosis || summary.anamnesis.diagnosis"
+                [diagnosis]="summary.anamnesis.diagnosis" [mainDiagnosis]="summary.anamnesis.mainDiagnosis"></app-diagnosis-evolution-summary>
 
             <app-clinical-evaluation-summary data-id="clinical-evaluation-summary" *ngIf="summary.anamnesis.clinicalEvaluation"
                 [clinicalEvaluation]="summary.anamnesis.clinicalEvaluation"></app-clinical-evaluation-summary>

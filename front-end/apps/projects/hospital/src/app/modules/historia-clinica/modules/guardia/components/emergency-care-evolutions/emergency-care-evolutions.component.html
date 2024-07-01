@@ -29,17 +29,15 @@
 				</mat-list-option>
 			</mat-selection-list>
 
-			<div *ngIf="activeDocument" class="content" fxLayout="row" fxLayoutAlign="space-between start">
-				<div *ngIf="activeDocument.summary.title === 'TRIAGE' else evolutionNote">
-					<app-triage-details [triage]="activeDocument.content" [emergencyCareType]="emergencyCareType"
-						showRiskFactors='true'>
-					</app-triage-details>
-				</div>
-				<ng-template #evolutionNote>
-					<app-emergency-care-evolution-note [content]="activeDocument.content"></app-emergency-care-evolution-note>
-				</ng-template>
-				<app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId" (resetActiveDocument)="activeDocument = undefined"></app-document-actions>
-			</div>
+            <div *ngIf="activeDocument && (activeDocument.summary.title === 'TRIAGE')" class="content" fxLayout="row" fxLayoutAlign="space-between start">
+                <app-triage-details [triage]="activeDocument.content" [emergencyCareType]="emergencyCareType"
+                    showRiskFactors='true'>
+                </app-triage-details>
+                <app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId" (resetActiveDocument)="activeDocument = undefined"></app-document-actions>
+            </div>
+            <div *ngIf="activeDocument && (activeDocument.summary.title === 'NOTA DE EVOLUCION MEDICA')" class="summary">
+                <app-emergency-care-evolution-note [content]="activeDocument.content"></app-emergency-care-evolution-note>
+            </div>
 
 		</div>
 		<div *ngIf="this.documentHistoric && !this.documentHistoric.length">

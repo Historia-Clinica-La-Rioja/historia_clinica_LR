@@ -1,9 +1,16 @@
+<div *ngIf="evolutionNoteSummary" FxLayoutAlign="start" fxLayout="column"
+    fxLayoutGap="20px" class="evolution-note-container" data-id="evolution-note-summary">
 
+    <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+        <app-diagnosis-evolution-summary data-id="diagnosis-summary" *ngIf="evolutionNoteSummary.mainDiagnosis || evolutionNoteSummary.diagnosis"
+            [diagnosis]="evolutionNoteSummary.diagnosis" [mainDiagnosis]="evolutionNoteSummary.mainDiagnosis"></app-diagnosis-evolution-summary>
+    </div>
+</div>
+
+<!-- 
 <app-titled-content *ngIf="especialidadContent?.length" icon="medical_services" title="Especialidad" [content]="especialidadContent"></app-titled-content>
 
 <app-titled-content *ngIf="motivosContent?.length" icon="sms_failed" title="Motivos de Consulta" [content]="motivosContent"></app-titled-content>
-
-<app-titled-content *ngIf="diagnosticosContent?.length" icon="report" title="Diagnósticos" [content]="diagnosticosContent"></app-titled-content>
 
 <app-titled-single-content *ngIf="evolucionContent?.length" icon="chat" title="Evolución" [content]="evolucionContent"></app-titled-single-content>
 
@@ -23,4 +30,4 @@
     <span class="grey" [translate]="'guardia.EDITED'"></span>
     <app-register-editor-info class="register-editor-width" [registerEditor]="registerEvolutionNoteEdition"
         registerEditorCase="REGISTER_EDITOR_CASE"></app-register-editor-info>
-</div>
+</div> -->

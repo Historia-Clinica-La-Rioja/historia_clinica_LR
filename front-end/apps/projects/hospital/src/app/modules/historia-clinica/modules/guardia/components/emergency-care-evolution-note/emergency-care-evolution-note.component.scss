@@ -1,7 +1,7 @@
-h3 {
-	font-weight: 500;
-}
-
-.register-editor-width {
-	width: 65%;
+.evolution-note-container {
+    overflow-y: auto; 
+	overflow-x: hidden; 
+	height: 100%;
+	margin: 0 24px;
+	font-size: 16px;
 }

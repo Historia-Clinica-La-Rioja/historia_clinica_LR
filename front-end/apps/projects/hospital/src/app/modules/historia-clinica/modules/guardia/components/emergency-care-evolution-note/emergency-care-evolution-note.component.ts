@@ -1,10 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { DateTimeDto, EmergencyCareEvolutionNoteDocumentDto, HealthcareProfessionalDto, OutpatientFamilyHistoryDto, OutpatientMedicationDto, OutpatientProcedureDto } from '@api-rest/api-model';
-import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
-import { HEALTH_VERIFICATIONS } from '../../../ambulatoria/modules/internacion/constants/ids';
-import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
-import { PatientNameService } from '@core/services/patient-name.service';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
+import { EmergencyCareEvolutionNoteDocumentDto } from '@api-rest/api-model';
+import { EvolutionNoteAsViewFormat, EvolutionNoteSummaryService } from '../../services/evolution-note-summary.service';
 
 @Component({
 	selector: 'app-emergency-care-evolution-note',
@@ -12,9 +8,18 @@ import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 	styleUrls: ['./emergency-care-evolution-note.component.scss']
 })
 export class EmergencyCareEvolutionNoteComponent {
+    
+    @Input() set content(evolutionNote: EmergencyCareEvolutionNoteDocumentDto) {
+        this.evolutionNoteSummary = this.evolutionNoteSummaryService.mapEvolutionNoteAsViewFormat(evolutionNote);
+    }
 
+    evolutionNoteSummary: EvolutionNoteAsViewFormat;
 
-	@Input() set content(newContent: EmergencyCareEvolutionNoteDocumentDto) {
+    constructor(
+		private readonly evolutionNoteSummaryService: EvolutionNoteSummaryService
+	) { }
+
+	/* @Input() set content(newContent: EmergencyCareEvolutionNoteDocumentDto) {
 		this.internacionMasterDataService.getAllergyCriticality().subscribe(
 			c => {
 				this.criticalityTypes = c;
@@ -25,7 +30,6 @@ export class EmergencyCareEvolutionNoteComponent {
 		)
 		this.especialidadContent = [newContent.clinicalSpecialtyName];
 		this.motivosContent = newContent.emergencyCareEvolutionNoteClinicalData.reasons.map(r => r.snomed.pt)
-		this.diagnosticosContent = this.toDiagnostico(newContent.emergencyCareEvolutionNoteClinicalData.mainDiagnosis, newContent.emergencyCareEvolutionNoteClinicalData.diagnosis)
 		this.evolucionContent = newContent.emergencyCareEvolutionNoteClinicalData.evolutionNote ? [newContent.emergencyCareEvolutionNoteClinicalData.evolutionNote] : null;
 		this.antropometricosContent = this.toAntropometricosContent(newContent.emergencyCareEvolutionNoteClinicalData.anthropometricData);
 		this.medicacionContent = this.toMedications(newContent.emergencyCareEvolutionNoteClinicalData.medications);
@@ -44,7 +48,6 @@ export class EmergencyCareEvolutionNoteComponent {
 
 	especialidadContent;
 	motivosContent;
-	diagnosticosContent;
 	evolucionContent;
 	antropometricosContent;
 	medicacionContent;
@@ -154,23 +157,6 @@ export class EmergencyCareEvolutionNoteComponent {
 		return allergies.content.map(a => `${a.snomed.pt} - ${this.criticalityTypes.find(c => c.id === a.criticalityId).display}`);
 	}
 
-	private toDiagnostico(mainDiagnosis, otherDiagnosis): string[] {
-
-		const principal = [`${mainDiagnosis.snomed.pt} (Principal) - ${getVerification(mainDiagnosis.verificationId)}`]
-		const others = otherDiagnosis.map(r => `${r.snomed.pt} - ${getVerification(r.verificationId)}`);
-
-		return principal.concat(others);
-
-		function getVerification(verificationId: string): string {
-			let verification = HEALTH_VERIFICATIONS.DESCARTADO;
-			if (verificationId === HEALTH_VERIFICATIONS.CONFIRMADO) {
-				verification = 'Confirmado'
-			} else if (verificationId === HEALTH_VERIFICATIONS.PRESUNTIVO)
-				verification = 'Presuntivo';
-			return verification;
-		}
-	}
-
 	private setRegisterEvolutionNoteEdition(performedDate: DateTimeDto, professional: HealthcareProfessionalDto) {
 		const { firstName, lastName } = professional.person;
 		const nameSelfDetermination = professional.nameSelfDetermination;
@@ -183,5 +169,5 @@ export class EmergencyCareEvolutionNoteComponent {
 			date: dateTimeDtoToDate(performedDate),
 			createdBy: professionalFullName,
 		}
-	}
+	} */
 }

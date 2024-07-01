@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 
 @Component({
-    selector: 'app-diagnosis-summary',
+    selector: 'app-diagnosis-evolution-summary',
     templateUrl: './diagnosis-summary.component.html',
     styleUrls: ['./diagnosis-summary.component.scss']
 })

@@ -7,10 +7,10 @@
         <mat-divider></mat-divider>
 
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
-            <app-diagnosis-summary data-id="diagnosis-summary"
+            <app-diagnosis-evolution-summary data-id="diagnosis-summary"
                 *ngIf="summary.anestheticReport.mainDiagnosis || summary.anestheticReport.diagnosis"
                 [diagnosis]="summary.anestheticReport.diagnosis"
-                [mainDiagnosis]="summary.anestheticReport.mainDiagnosis"></app-diagnosis-summary>
+                [mainDiagnosis]="summary.anestheticReport.mainDiagnosis"></app-diagnosis-evolution-summary>
 
             <app-description-item-data-summary *ngIf="summary.anestheticReport.proposedSurgeries"
                 data-id="proposed-surgery-summary"

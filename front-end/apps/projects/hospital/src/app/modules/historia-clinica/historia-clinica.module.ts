@@ -326,6 +326,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		PatientProblemsSummaryComponent,
 		AntropometricosSummaryComponent,
 		ConceptsSearchComponent,
+		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
 		EffectiveTimeComponent,
 		MedicacionSummaryComponent,
