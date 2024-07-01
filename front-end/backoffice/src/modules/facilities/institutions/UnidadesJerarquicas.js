@@ -57,6 +57,7 @@ const updateHUResponsablesValues = (originalArray) => {
 }
 
 const toHierarchicalUnitCustomNodes = (nodesDto, hierarchicalUnitTypes) => {
+  console.log(nodesDto);
   return nodesDto.map(n => {
     return {
       id: n.id.toString(),
@@ -68,6 +69,7 @@ const toHierarchicalUnitCustomNodes = (nodesDto, hierarchicalUnitTypes) => {
           Clasificación: hierarchicalUnitTypes.content.find(t => t.id === n.typeId).description,
           Usuarios: n.usersAmount,
           Responsables: n.responsable,
+          "Servicio inmediato superior": nodesDto.find(t => t.id === n.closestServiceId)?.alias, 
         }
       }
     }
