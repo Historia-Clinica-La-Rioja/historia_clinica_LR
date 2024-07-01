@@ -146,6 +146,7 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
+import { SurgicalReportDocumentSummaryComponent } from './components/surgical-report-document-summary/surgical-report-document-summary.component';
 @NgModule({
 	declarations: [
 		// components
@@ -310,6 +311,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		//pipes
 		ShowTitleByPatientDataPipe,
   		SummaryAttentionComponent,
+  		SurgicalReportDocumentSummaryComponent,
 	],
 	imports: [
 		CommonModule,

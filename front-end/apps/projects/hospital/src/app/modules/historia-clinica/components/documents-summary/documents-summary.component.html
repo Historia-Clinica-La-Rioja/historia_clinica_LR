@@ -210,6 +210,11 @@
                     [activeDocument]="activeDocument" [isPopUpOpen]="isPopUpOpen"
                     (resetActiveDocument)="resetActiveDocument()"></app-epicrisis-document-summary>
             </ng-container>
+			<ng-container *ngIf="activeDocument?.document.documentType === DOCUMENT_TYPES.SURGICAL_REPORT">
+                <app-surgical-report-document-summary class="document-summary" [internmentEpisodeId]="internmentEpisodeId"
+                    [activeDocument]="activeDocument" [isPopUpOpen]="isPopUpOpen"
+                    (resetActiveDocument)="resetActiveDocument()"></app-surgical-report-document-summary>
+            </ng-container>
 		</div>
 		<div
 			*ngIf="this.documentHistoric && !this.documentHistoric.documents?.length">

@@ -311,4 +311,5 @@ enum DocumentTypes {
     NURSE_EVOLUTION_NOTE = 'Nota de evolución de enfermería',
     ANAMNESIS = 'Anamnesis',
     EPICRISIS = 'Epicrisis',
+	SURGICAL_REPORT = 'Parte quirúrgico de internación',
 }

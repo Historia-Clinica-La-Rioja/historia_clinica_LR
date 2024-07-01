@@ -1,0 +1,12 @@
+<div class="surgical-report-content">
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+        fxLayoutGap="20px">
+
+        <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
+            [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+        <mat-divider></mat-divider>
+</div>
+    <ng-template #loader>
+        <mat-spinner color="primary" class="loader"></mat-spinner>
+    </ng-template>
+</div>
