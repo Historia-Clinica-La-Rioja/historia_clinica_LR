@@ -1,13 +1,10 @@
-package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
+package ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.pladema.clinichistory.requests.service.domain.EDiagnosticReportStatus;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.AddDiagnosticReportObservationsCommandDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.AddDiagnosticReportObservationsCommandDto;
 
 import javax.annotation.Nullable;
-
-import java.util.Optional;
 
 @Getter
 @Setter

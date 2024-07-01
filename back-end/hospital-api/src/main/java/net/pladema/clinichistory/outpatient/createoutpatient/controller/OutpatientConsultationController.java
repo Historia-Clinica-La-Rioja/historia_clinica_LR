@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.HealthConditionNewConsultationDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedReferenceCounterReference;
@@ -21,11 +22,12 @@ import net.pladema.clinichistory.outpatient.application.markaserroraproblem.CanB
 import net.pladema.clinichistory.outpatient.application.markaserroraproblem.MarkAsErrorAProblem;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.CreateOutpatientProcedureDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.dto.OutpatientUpdateImmunizationDto;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationService;
-import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientConsultationServiceRequest;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.SharedCreateConsultationServiceRequest;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.CreateOutpatientDocumentService;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientBo;
 import net.pladema.clinichistory.outpatient.createoutpatient.service.domain.OutpatientDocumentBo;
@@ -35,7 +37,6 @@ import net.pladema.clinichistory.outpatient.domain.ProblemErrorBo;
 import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ErrorProblemDto;
 import net.pladema.clinichistory.outpatient.infrastructure.input.dto.ProblemInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.DiagnosticReportObservationsMapper;
-import net.pladema.clinichistory.requests.servicerequests.domain.observations.AddObservationsCommandVo;
 import net.pladema.medicalconsultation.appointment.controller.service.AppointmentExternalService;
 import net.pladema.patient.controller.service.PatientExternalService;
 import net.pladema.staff.controller.service.HealthcareProfessionalExternalServiceImpl;
@@ -97,7 +98,7 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 
     private final CanBeMarkAsError canBeMarkAsError;
 
-    private final CreateOutpatientConsultationServiceRequest createOutpatientConsultationServiceRequest;
+    private final SharedCreateConsultationServiceRequest sharedCreateConsultationServiceRequest;
 
     private final DiagnosticReportObservationsMapper diagnosticReportObservationsMapper;
 
@@ -168,28 +169,28 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 	 */
 	private void createServiceRequest(Integer doctorId, List<CreateOutpatientProcedureDto> procedures,
 		Integer medicalCoverageId, BasicPatientDto patientDto, Integer institutionId, Integer newOutpatientConsultationId)
-		throws CreateOutpatientConsultationServiceRequestException
 	{
 		for (int i = 0; i < procedures.size(); i++) {
 			var procedure = procedures.get(i);
-			if (procedure.getServiceRequest() != null) {
+			CreateOutpatientServiceRequestDto procedureServiceRequest = procedure.getServiceRequest();
+			if (procedureServiceRequest != null) {
 
-				String categoryId = procedure.getServiceRequest().getCategoryId();
-				String healthConditionSctid = procedure.getServiceRequest().getHealthConditionSctid();
-				String healthConditionPt = procedure.getServiceRequest().getHealthConditionPt();
+				String categoryId = procedureServiceRequest.getCategoryId();
+				String healthConditionSctid = procedureServiceRequest.getHealthConditionSctid();
+				String healthConditionPt = procedureServiceRequest.getHealthConditionPt();
 				SnomedDto snomed = procedure.getSnomed();
-				Boolean createWithStatusFinal = procedure.getServiceRequest().getCreationStatus().isFinal();
-				var addObservationsCommand = Optional
-					.ofNullable(
-						procedure
-						.getServiceRequest()
-						.getObservations()
-					)
+				Boolean createWithStatusFinal = procedureServiceRequest.getCreationStatus().isFinal();
+				Optional<SharedAddObservationsCommandVo> addObservationsCommand = Optional
+					.ofNullable(procedureServiceRequest.getObservations())
 					.map(x -> diagnosticReportObservationsMapper.fromDto(x));
 
-				createOutpatientConsultationServiceRequest.execute(doctorId, categoryId, patientDto, institutionId,
+				Integer patientId = patientDto.getId();
+				Short patientGenderId = patientDto.getPerson().getGender().getId();
+				Short patientAge = patientDto.getPerson().getAge();
+
+				sharedCreateConsultationServiceRequest.createOutpatientServiceRequest(doctorId, categoryId, institutionId,
 						healthConditionSctid, healthConditionPt, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
-						createWithStatusFinal, addObservationsCommand);
+						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
 			}
 		}
 	}

@@ -1,12 +1,12 @@
-package net.pladema.clinichistory.requests.servicerequests.domain.observations;
+package ar.lamansys.sgh.shared.domain.servicerequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.pladema.clinichistory.requests.servicerequests.service.domain.ReferenceRequestClosureBo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -15,10 +15,12 @@ import java.util.function.BiFunction;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddObservationsCommandVo {
+public class SharedAddObservationsCommandVo {
 	@Setter
 	@Getter
 	@ToString
+	@AllArgsConstructor
+	@NoArgsConstructor
 	public static class Observation {
 		private Integer procedureParameterId;
 		private @Getter String value;
@@ -38,8 +40,28 @@ public class AddObservationsCommandVo {
 		}
 	}
 
+	@Getter
+	@Setter
+	@NoArgsConstructor
+	@AllArgsConstructor
+	@ToString
+	public static class SharedReferenceRequestClosureBo {
+
+		private Integer referenceId;
+		private Integer clinicalSpecialtyId;
+		private String counterReferenceNote;
+		private Short closureTypeId;
+		private List<Integer> fileIds;
+
+	}
+
 	private Boolean isPartialUpload;
 	private Integer procedureTemplateId;
 	private List<Observation> values;
-	private ReferenceRequestClosureBo referenceClosure;
+	private SharedReferenceRequestClosureBo referenceClosure;
+
+	public void addValue(Integer procedureParameterId, String value, Short unitOfMeasureId, String snomedSctid, String snomedPt) {
+		if (this.values == null) values = new ArrayList<>();
+		values.add(new Observation(procedureParameterId, value, unitOfMeasureId, snomedSctid, snomedPt));
+	}
 }

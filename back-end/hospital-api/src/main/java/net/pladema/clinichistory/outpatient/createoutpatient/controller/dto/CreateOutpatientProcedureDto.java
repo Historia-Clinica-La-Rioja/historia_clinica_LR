@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.outpatient.createoutpatient.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import com.fasterxml.jackson.annotation.JsonFormat;

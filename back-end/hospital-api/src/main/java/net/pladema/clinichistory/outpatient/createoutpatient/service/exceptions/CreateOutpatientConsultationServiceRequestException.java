@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class CreateOutpatientConsultationServiceRequestException extends Exception {
+public class CreateOutpatientConsultationServiceRequestException extends RuntimeException {
 
 	private String code;
 	private Map<String, Object> params;

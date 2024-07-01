@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.requests.servicerequests.controller.dto.observations;
+package ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import lombok.Getter;

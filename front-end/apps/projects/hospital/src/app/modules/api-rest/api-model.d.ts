@@ -3342,6 +3342,7 @@ export interface OdontologyPersonalHistoryDto {
 
 export interface OdontologyProcedureDto extends Serializable {
     performedDate?: DateDto;
+    serviceRequest?: CreateOutpatientServiceRequestDto;
     snomed: SnomedDto;
 }
 

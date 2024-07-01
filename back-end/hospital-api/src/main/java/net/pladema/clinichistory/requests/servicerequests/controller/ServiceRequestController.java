@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import net.pladema.clinichistory.requests.servicerequests.application.GetDiagnosticReportResults;
 import net.pladema.clinichistory.requests.servicerequests.domain.DiagnosticReportResultsBo;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,7 +52,7 @@ import net.pladema.clinichistory.requests.servicerequests.controller.dto.Diagnos
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.DiagnosticReportInfoWithFilesDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyWithoutOrderReportInfoDto;
-import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.AddDiagnosticReportObservationsCommandDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.AddDiagnosticReportObservationsCommandDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.observations.GetDiagnosticReportObservationGroupDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CompleteDiagnosticReportMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.CreateServiceRequestMapper;
@@ -61,7 +63,6 @@ import net.pladema.clinichistory.requests.servicerequests.controller.mapper.Stud
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyOrderReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyWithoutOrderReportInfoMapper;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.GetDiagnosticReportObservationGroupBo;
-import net.pladema.clinichistory.requests.servicerequests.domain.observations.AddObservationsCommandVo;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.DiagnosticReportObservationException;
 import net.pladema.clinichistory.requests.servicerequests.domain.observations.exceptions.InvalidProcedureTemplateChangeException;
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportRDIService;
@@ -373,7 +374,7 @@ public class ServiceRequestController {
 				diagnosticReportId,
 				observations);
 
-		AddObservationsCommandVo observationsBo = diagnosticReportObservationsMapper.fromDto(observations);
+		SharedAddObservationsCommandVo observationsBo = diagnosticReportObservationsMapper.fromDto(observations);
 		addDiagnosticReportObservations.run(diagnosticReportId, observationsBo, institutionId, patientId);
 
 		log.debug(OUTPUT, "endpoint doesn't provide output");
