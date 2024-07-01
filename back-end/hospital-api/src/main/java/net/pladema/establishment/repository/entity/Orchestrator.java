@@ -60,4 +60,8 @@ public class Orchestrator {
 	@Column(name = "number_to_move", nullable = false)
 	private Integer numberToMove ;
 
+	@Column(name = "massive_retry", nullable = false)
+	private Boolean massiveRetry;
+
+
 }
