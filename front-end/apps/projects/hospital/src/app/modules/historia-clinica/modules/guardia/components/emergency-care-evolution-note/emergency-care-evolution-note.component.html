@@ -21,12 +21,13 @@
 
         <app-referred-item-summary data-id="family-histories-summary" *ngIf="evolutionNoteSummary.familyHistories"
             [referredItem]="evolutionNoteSummary.familyHistories"></app-referred-item-summary>
+
+        <app-description-item-data-summary data-id="usual-medication-summary" *ngIf="evolutionNoteSummary.medications"
+            [descriptionItemDataSummary]="evolutionNoteSummary.medications"></app-description-item-data-summary>
     </div>
 </div>
 
 <!-- 
-<app-titled-content *ngIf="medicacionContent?.length" icon="event_available" title="Medicación habitual" [content]="medicacionContent"></app-titled-content>
-
 <app-titled-content *ngIf="procedimientosContent?.length" icon="library_add" title="Procedimientos" [content]="procedimientosContent"></app-titled-content>
 
 <app-titled-content *ngIf="factoresContent?.length" icon="favorite_outlined" title="Signos vitales y factores de riesgo" [content]="factoresContent"></app-titled-content>

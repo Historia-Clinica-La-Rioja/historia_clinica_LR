@@ -30,6 +30,8 @@ export class EvolutionNoteSummaryService {
                 { anthropometricData: this.documentsSummaryService.mapToAnthropometricData(evolutionNote.emergencyCareEvolutionNoteClinicalData.anthropometricData)} ),
             ...(this.documentsSummaryService.hasReferredItemContent(evolutionNote.emergencyCareEvolutionNoteClinicalData.familyHistories) && 
                 { familyHistories: this.documentsSummaryService.mapFamilyHistoriesToReferredDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.familyHistories)} ),
+            ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.medications.length && 
+                { medications: this.documentsSummaryService.mapMedicationsToDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.medications)} ),
         }
     }
 }
@@ -42,4 +44,5 @@ export interface EvolutionNoteAsViewFormat {
     evolution: DescriptionItemData[],
     anthropometricData: AnthropometricData,
     familyHistories: ReferredDescriptionItemData,
+    medications: DescriptionItemDataSummary,
 }

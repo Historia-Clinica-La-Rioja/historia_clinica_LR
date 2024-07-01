@@ -28,7 +28,6 @@ export class EmergencyCareEvolutionNoteComponent {
 					this.alergiasContent = ['guardia.no_refer.ALLERGIES'];
 			}
 		)
-		this.medicacionContent = this.toMedications(newContent.emergencyCareEvolutionNoteClinicalData.medications);
 		this.procedimientosContent = this.toProcedimientos(newContent.emergencyCareEvolutionNoteClinicalData.procedures);
 		this.factoresContent = this.toRiskFactors(newContent.emergencyCareEvolutionNoteClinicalData.riskFactors);
 
@@ -41,7 +40,6 @@ export class EmergencyCareEvolutionNoteComponent {
 
 	private criticalityTypes: any[];
 
-	medicacionContent;
 	procedimientosContent;
 	factoresContent;
 	alergiasContent;
@@ -53,14 +51,6 @@ export class EmergencyCareEvolutionNoteComponent {
 		private readonly patientNameService: PatientNameService,
 	) { }
 
-	private toMedications(medications): string[] {
-		return medications.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);;
-
-		function map(m: OutpatientMedicationDto): string[] {
-			return [m.snomed.pt, m.note]
-		}
-
-	}
 
 	private toProcedimientos(procedures): string[] {
 		return procedures.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);;
