@@ -109,13 +109,15 @@
 
             </div>
 
-            <mat-radio-group id="76" name="balance3" [disabled]="isSubmitDisabled3()" [(ngModel)]="selectedoptionB2"
-                (change)="calculePoints()">
-                <div class="radio2">
-                    <mat-radio-button value="2C" color="primary">Accede a la prueba</mat-radio-button>
-                    <mat-radio-button value="1C" color="primary">Se rehúsa</mat-radio-button>
-                </div>
-            </mat-radio-group>
+            <div class="radio-container">
+                <mat-radio-group id="76" name="balance3" [disabled]="isSubmitDisabled3()" [(ngModel)]="selectedoptionB2"
+                    (change)="calculePoints()">
+                    <div class="radio2">
+                        <mat-radio-button value="2C" color="primary">Accede a la prueba</mat-radio-button>
+                        <mat-radio-button value="1C" color="primary">Se rehúsa</mat-radio-button>
+                    </div>
+                </mat-radio-group>
+            </div>
 
 
             <!-- SEGUNDA SECCION -->
