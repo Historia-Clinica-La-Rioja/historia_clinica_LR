@@ -36,4 +36,24 @@ public interface ParameterRepository extends JpaRepository<Parameter, Integer> {
 			"FROM Parameter p " +
 			"WHERE p.description = :description ")
 	List<Integer> getParametersIdsByDescription(@Param("description") String description);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT puom.pk.unitOfMeasureId " +
+					"FROM Parameter p " +
+					"JOIN ParameterUnitOfMeasure puom ON puom.pk.parameterId = p.id " +
+					"WHERE p.loincId = :loincId ")
+	List<Integer> getParameterUnitsOfMeasureByLoincId(@Param("loincId") Integer loincId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT puom.pk.unitOfMeasureId " +
+					"FROM Parameter p " +
+					"JOIN ParameterUnitOfMeasure puom ON (puom.pk.parameterId = p.id) " +
+					"WHERE p.description = :description ")
+	List<Integer> getParameterUnitsOfMeasureByDescription(@Param("description") String description);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT COUNT(1) > 0 " +
+					"FROM Parameter p " +
+					"WHERE p.id = :id AND p.typeId = 1")
+	Boolean isANumericParameter(@Param("id") Integer id);
 }

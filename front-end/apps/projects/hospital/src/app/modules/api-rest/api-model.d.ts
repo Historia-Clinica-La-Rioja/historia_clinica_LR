@@ -3487,6 +3487,14 @@ export interface ParameterTypeDto {
     id: number;
 }
 
+export interface ParameterizedFormParameterDto {
+    id: number;
+    orderNumber: number;
+    parameterId: number;
+    parameterizedFormId: number;
+    unitsOfMeasureIds: number[];
+}
+
 export interface ParenteralPlanDto extends IndicationDto {
     dosage: NewDosageDto;
     frequency: FrequencyDto;

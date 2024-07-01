@@ -9,6 +9,7 @@ import net.pladema.establishment.repository.ParameterUnitOfMeasureRepository;
 import net.pladema.establishment.repository.entity.Parameter;
 import net.pladema.establishment.repository.entity.ParameterTextOption;
 import net.pladema.establishment.repository.entity.ParameterUnitOfMeasure;
+import net.pladema.loinc.infrastructure.output.repository.LoincCodeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
 import org.springframework.data.domain.Example;
@@ -31,6 +32,7 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 	private final ParameterRepository parameterRepository;
 	private final ParameterTextOptionRepository parameterTextOptionRepository;
 	private final ParameterUnitOfMeasureRepository parameterUnitOfMeasureRepository;
+	private final LoincCodeRepository loincCodeRepository;
 
 	@Override
 	public Page<ParameterDto> findAll(ParameterDto example, Pageable pageable) {
@@ -46,7 +48,8 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 		Stream<ParameterDto> resultStream = parameterRepository.findAll()
 				.stream()
 				.map(this::mapEntityToDto)
-				.peek(dto -> dto.setTextOptions(parameterTextOptionRepository.getDescriptionsFromParameterId(dto.getId())));
+				.peek(dto -> dto.setTextOptions(parameterTextOptionRepository.getDescriptionsFromParameterId(dto.getId())))
+				.peek(this::setLoincDescription);
 
 		return groupParametersAndSetUnitsOfMeasure(resultStream);
 	}
@@ -56,7 +59,8 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 		 Stream<ParameterDto> resultStream = parameterRepository.findAllById(ids)
 				.stream()
 				.map(this::mapEntityToDto)
-				.peek(dto -> dto.setTextOptions(parameterTextOptionRepository.getDescriptionsFromParameterId(dto.getId())));
+				.peek(dto -> dto.setTextOptions(parameterTextOptionRepository.getDescriptionsFromParameterId(dto.getId())))
+				 .peek(this::setLoincDescription);
 
 		 return groupParametersAndSetUnitsOfMeasure(resultStream);
 	}
@@ -231,6 +235,18 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 				parameter.getTypeId(),
 				parameter.getInputCount(),
 				parameter.getSnomedGroupId());
+	}
+
+	private void setLoincDescription(ParameterDto dto) {
+		if (dto.getLoincId() != null) {
+			loincCodeRepository.findById(dto.getLoincId()).ifPresent(loinc -> {
+				if (loinc.getCustomDisplayName() != null) {
+					dto.setDescription(loinc.getCustomDisplayName());
+				}
+				else
+					dto.setDescription(loinc.getDescription());
+			});
+		}
 	}
 
 }
