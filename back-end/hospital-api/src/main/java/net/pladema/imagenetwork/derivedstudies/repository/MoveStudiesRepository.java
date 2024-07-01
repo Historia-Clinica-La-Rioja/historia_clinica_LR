@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -161,5 +162,19 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 							   @Param("status") String status,
 							   @Param("result") String result,
 							   @Param("attemptsNumbers") Integer attemptsNumbers);
+
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.status = :updateStatus, mo.attempsNumber = :attemptsNumbers " +
+			"WHERE mo.result != :result "+
+			"AND mo.status = :status "+
+			"AND mo.orchestratorId = :orchestratorId "+
+			"AND DATE(mo.moveDate) = :date")
+	void updateFailedCurrentDate(@Param("date") LocalDate date,
+								 @Param("orchestratorId")Integer orchestratorId,
+								 @Param("status") String status,
+								 @Param("result") String result,
+								 @Param("updateStatus") String updateStatus,
+								 @Param("attemptsNumbers") Integer attemptsNumbers);
 
 }

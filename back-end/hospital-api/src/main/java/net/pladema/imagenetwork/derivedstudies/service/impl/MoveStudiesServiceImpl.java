@@ -1,9 +1,15 @@
 package net.pladema.imagenetwork.derivedstudies.service.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import org.springframework.stereotype.Service;
 
@@ -29,9 +35,19 @@ import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryServ
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.scheduledjobs.jobs.MoveStudiesJob;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class MoveStudiesServiceImpl implements MoveStudiesService {
+
+	private static final String FINISHED = "FINISHED";
+
+	private static final String PENDING = "PENDING";
+
+	private static final String RESULT_OK = "200";
+
+	private static final Integer ZERO_ATTEMPTS = 0;
 
 	private final MoveStudiesRepository moveStudiesRepository;
 	private final AppointmentService appointmentService;
@@ -106,6 +122,13 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			appointmentOrderImageService.setImageId(moveStudy.getAppointmentId(), imageId);
 			moveStudiesRepository.updateImageId(idMove,imageId);
 		}
+	}
+
+	@Transactional
+	public void updateFailedCurrentDate(Integer orchestratorId){
+		ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+		LocalDate localDate = now.toLocalDate();
+		moveStudiesRepository.updateFailedCurrentDate(localDate,orchestratorId,FINISHED,RESULT_OK,PENDING,ZERO_ATTEMPTS);
 	}
 
 	@Override
