@@ -24,6 +24,7 @@ import { EmergencyCareEvolutionsComponent } from './components/emergency-care-ev
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
 import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
 import { EmergencyCareTemporaryPatientComponent } from './components/emergency-care-temporary-patient/emergency-care-temporary-patient.component';
+import { EvolutionsSummaryComponent } from './components/evolutions-summary/evolutions-summary.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { MedicalDischargeByNurseComponent } from './components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
@@ -63,6 +64,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCarePatientComponent,
 		EmergencyCareTemporaryPatientComponent,
 		MedicalDischargeByNurseComponent,
+        EvolutionsSummaryComponent,
 		PediatricTriageComponent,
 		TriageChipComponent,
 		TriageComponent,

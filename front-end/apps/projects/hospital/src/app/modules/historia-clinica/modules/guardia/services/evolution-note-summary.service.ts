@@ -21,6 +21,8 @@ export class EvolutionNoteSummaryService {
                 { diagnosis: this.documentsSummaryService.mapDiagnosisToDescriptionItemData(evolutionNote.emergencyCareEvolutionNoteClinicalData.diagnosis)} ),
             ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.reasons.length && 
                 { reasons: this.documentsSummaryService.mapReasonsToDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.reasons)} ),
+            ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.evolutionNote && 
+                { evolution: [this.documentsSummaryService.toDescriptionItemData(evolutionNote.emergencyCareEvolutionNoteClinicalData.evolutionNote)]} ),
         }
     }
 }
@@ -29,4 +31,5 @@ export interface EvolutionNoteAsViewFormat {
     mainDiagnosis: DescriptionItemData[],
     diagnosis: DescriptionItemData[],
     reasons: DescriptionItemDataSummary,
+    evolution: DescriptionItemData[],
 }

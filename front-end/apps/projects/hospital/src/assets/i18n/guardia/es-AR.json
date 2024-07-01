@@ -255,10 +255,13 @@
 		},
 		"EDITED": "(Editado) -",
         "documents-summary": {
-                "reasons": {
-                    "TITLE": "Motivo de consulta",
-                    "REGISTERED_REASONS": "Motivos de consulta registrados"
-                }
+            "reasons": {
+                "TITLE": "Motivo de consulta",
+                "REGISTERED_REASONS": "Motivos de consulta registrados"
+            },
+            "evolutions": {
+                "TITLE": "Evolución"
+            }
         }
 	}
 }

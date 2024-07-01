@@ -1,13 +1,17 @@
-<div *ngIf="evolutionNoteSummary" FxLayoutAlign="start" fxLayout="column"
-    fxLayoutGap="20px" class="evolution-note-container" data-id="evolution-note-summary">
+<div *ngIf="evolutionNoteSummary" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="20px"
+    class="evolution-note-container" data-id="evolution-note-summary">
 
     <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
         <app-description-item-data-summary *ngIf="evolutionNoteSummary.reasons" data-id="reasons-summary"
             [descriptionItemDataSummary]="evolutionNoteSummary.reasons"></app-description-item-data-summary>
-            
-        <app-diagnosis-evolution-summary data-id="diagnosis-summary" *ngIf="evolutionNoteSummary.mainDiagnosis || evolutionNoteSummary.diagnosis"
-            [diagnosis]="evolutionNoteSummary.diagnosis" [mainDiagnosis]="evolutionNoteSummary.mainDiagnosis"></app-diagnosis-evolution-summary>
-            
+
+        <app-diagnosis-evolution-summary data-id="diagnosis-summary"
+            *ngIf="evolutionNoteSummary.mainDiagnosis || evolutionNoteSummary.diagnosis"
+            [diagnosis]="evolutionNoteSummary.diagnosis"
+            [mainDiagnosis]="evolutionNoteSummary.mainDiagnosis"></app-diagnosis-evolution-summary>
+
+        <app-evolutions-summary data-id="evolution-summary" *ngIf="evolutionNoteSummary.evolution"
+            [evolution]="evolutionNoteSummary.evolution"></app-evolutions-summary>
     </div>
 </div>
 
