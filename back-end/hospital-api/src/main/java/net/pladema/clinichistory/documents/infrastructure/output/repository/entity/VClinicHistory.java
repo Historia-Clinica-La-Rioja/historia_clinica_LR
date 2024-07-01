@@ -115,6 +115,20 @@ public class VClinicHistory {
 			@AttributeOverride( name = "referenceCounterReference", column = @Column(name = "reference_counter_reference")),
 			@AttributeOverride( name = "counterReferenceClosure", column = @Column(name = "counter_reference_closure")),
 			@AttributeOverride( name = "notes", column = @Column(name = "notes")),
+			@AttributeOverride( name = "surgeryProcedures", column = @Column(name = "surgery_procedures")),
+			@AttributeOverride( name = "anestheticHistory", column = @Column(name = "anesthetic_history")),
+			@AttributeOverride( name = "preMedications", column = @Column(name = "pre_medications")),
+			@AttributeOverride( name = "histories", column = @Column(name = "histories")),
+			@AttributeOverride( name = "anestheticPlans", column = @Column(name = "anesthetic_plans")),
+			@AttributeOverride( name = "analgesicTechniques", column = @Column(name = "analgesic_techniques")),
+			@AttributeOverride( name = "anestheticTechniques", column = @Column(name = "anesthetic_techniques")),
+			@AttributeOverride( name = "fluidAdministrations", column = @Column(name = "fluid_administrations")),
+			@AttributeOverride( name = "anestheticAgents", column = @Column(name = "anesthetic_agents")),
+			@AttributeOverride( name = "nonAnestheticDrugs", column = @Column(name = "non_anesthetic_drugs")),
+			@AttributeOverride( name = "intrasurgicalAnestheticProcedures", column = @Column(name = "intrasurgical_anesthetic_procedures")),
+			@AttributeOverride( name = "antibioticProphylaxis", column = @Column(name = "antibiotic_prophylaxis")),
+			@AttributeOverride( name = "vitalSignsAnesthesia", column = @Column(name = "vital_signs_anesthesia")),
+			@AttributeOverride( name = "postAnesthesiaStatus", column = @Column(name = "post_anesthesia_status")),
 	})
 	private CHDocumentSummary healthConditionSummary;
 
