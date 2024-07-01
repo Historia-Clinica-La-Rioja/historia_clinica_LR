@@ -69,7 +69,7 @@
 
         <div class="itemcontainer" th:each="respuesta : ${answers[0]}">
             <h4>Prueba de balance</h4>
-            <p>· Párese con los pies uno al lado del otro: ¿mantuvo la posición al menos 10 segundos? si el participante no logró completarlo, finaliza la prueba de balance.</p>
+            <p>· Párese con los pies uno al lado del otro: ¿mantuvo la posición al menos 10 segundos? Si el participante no logró completarlo, finaliza la prueba de balance.</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 20}"></input>
                 Sí
@@ -87,12 +87,12 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[1]}">
             <p>Tiempo registrado (segundos)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value + ' s.'}"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
             </label>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[2]}">
-            <p>· Párese en posición semi tándem: ¿mantuvo la posición al menos 10 segundos? si el participante no logró completarlo, finaliza la prueba de balance.</p>
+            <p>· Párese en posición semi tándem: ¿mantuvo la posición al menos 10 segundos? Si el participante no logró completarlo, finaliza la prueba de balance.</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 20}"></input>
                 Sí
@@ -110,12 +110,16 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[3]}">
             <p>Tiempo registrado (segundos)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value + ' s.'}"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
             </label>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[4]}">
-            <p>· Párese en posición tándem: ¿mantuvo la posición al menos 10 segundos?</p>
+            <p>· Párese en posición tándem: si el paciente accede a realizar la prueba, el tiempo registrado se ve posteriormente. </p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId != 51}"></input>
+                Accede a la prueba
+            </label><br></br>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
                 Se niega
@@ -125,16 +129,20 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[5]}">
             <p>Tiempo registrado (segundos)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value + ' s.'}"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
             </label>
         </div>
 
-        <p style="text-align: right; margin-top: 3em;">1/2</p>
+        <p style="text-align: right; margin-top: 1em;">1/2</p>
 
         <div class="itemcontainer" th:each="respuesta : ${answers[6]}">
             <h4>Velocidad de marcha</h4>
-            <p>En esta oportunidad, la prueba requiere medir el tiempo en segundos para la realización de la prueba de velocidad de marcha en una distancia de 4 metros.</p>
+            <p>La prueba requiere medir el tiempo en segundos para la realización de la prueba de velocidad de marcha en una distancia de 4 metros.</p>
             <p>· Primera medición: tiempo requerido para recorrer la distancia. Si el participante no logra completarla, finaliza la prueba.</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId != 51}"></input>
+                Accede a la prueba
+            </label><br></br>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
                 Se niega
@@ -144,12 +152,16 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[7]}">
             <p>Tiempo registrado (segundos)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value + ' s.'}" ></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
             </label>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[8]}">
             <p>· Segunda medición: tiempo requerido para recorrer la distancia.</p>
+            <label>
+                <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId != 51}"></input>
+                Accede a la prueba
+            </label><br></br>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 51}"></input>
                 Se niega
@@ -159,7 +171,7 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[9]}">
             <p>Tiempo registrado (segundos)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value + ' s.'}"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
             </label>
         </div>
         
@@ -167,7 +179,7 @@
 
         <div class="itemcontainer" th:each="respuesta : ${answers[10]}">
             <h4>Prueba de levantarse cinco veces de un asiento</h4>
-            <p>· Prueba previa (no se califica): ¿el paciente se levanta sin apoyarse en sus brazos? si el participante no logra completarlo, finaliza la prueba.</p>
+            <p>· Prueba previa (no se califica): ¿el paciente se levanta sin apoyarse en sus brazos? Si el participante no logra completarlo, finaliza la prueba.</p>
             <label>
                 <input type="checkbox" disabled="disabled" readonly="readonly" th:checked="${respuesta.answerId == 20}"></input>
                 Sí
@@ -201,11 +213,11 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[12]}">
             <p>Tiempo registrado (segundos)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value + ' s.'}"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != '' and respuesta.value != '0' ? respuesta.value + ' s.' : 'No registrado'}"></p>
             </label>
         </div>
 
-        <div class="itemcontainer" th:each="respuesta : ${answers[13]}">
+        <div class="itemcontainer" style="margin-top: 13em;" th:each="respuesta : ${answers[13]}">
             <h4>Resultado de evaluación</h4>
             <p>
                 <span class="bold-text">El puntaje final de la prueba es: </span>
@@ -224,7 +236,7 @@
 
         <hr></hr>
 
-        <p style="text-align: right; margin-top: 2.5em;">2/2</p>
+        <p style="text-align: right;">2/2</p>
 
     </div>
     <!-- Bootstrap's script -->

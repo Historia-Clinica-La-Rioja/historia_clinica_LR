@@ -351,14 +351,14 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[16]}">
             <p>Horas diarias afuera de casa</p>
             <label>
-                <p style="font-weight: normal;" th:text="${answers[16].value}" name="opt50"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' horas' : 'No registrado'}" name="opt50"></p>
             </label>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[17]}">
             <p>Edad (años)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${answers[17].value}" name="opt51"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' años' : 'No registrado'}" name="opt51"></p>
             </label><br></br>
         </div>
         <hr></hr>
@@ -403,14 +403,14 @@
         <div class="itemcontainer" th:each="respuesta : ${answers[20]}">
             <p>Horas diarias afuera de casa</p>
             <label>
-                <p style="font-weight: normal;" th:text="${answers[20].value}" name="opt58"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' horas' : 'No registrado'}" name="opt58"></p>
             </label><br></br>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[21]}">
             <p>Edad (años)</p>
             <label>
-                <p style="font-weight: normal;" th:text="${respuesta.value}" name="opt59"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value + ' años' : 'No registrado'}" name="opt59"></p>
             </label><br></br>
         </div>
         <hr></hr>
@@ -440,14 +440,14 @@
             <h4>Hermanos</h4>
             <p>Vivos</p>
             <label>
-                <p style="font-weight: normal;" th:text="${answers[23].value}" name="opt64"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value : 'No registrado'}" name="opt64"></p>
             </label><br></br>
         </div>
         <hr></hr>
         <div class="itemcontainer" th:each="respuesta : ${answers[24]}">
             <p>Fallecidos</p>
             <label>
-                <p style="font-weight: normal;" th:text="${answers[24].value}" name="opt65"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value : 'No registrado'}" name="opt65"></p>
             </label><br></br>
         </div>
 
@@ -457,7 +457,7 @@
             <h4>Vivienda</h4>
             <p>Número de cuartos</p>
             <label>
-                <p style="font-weight: normal;" th:text="${answers[25].value}" name="opt66"></p>
+                <p style="font-weight: normal;" th:text="${respuesta.value != null and respuesta.value != 0 ? respuesta.value : 'No registrado'}" name="opt66"></p>
             </label><br></br>
         </div>
         <hr></hr>
