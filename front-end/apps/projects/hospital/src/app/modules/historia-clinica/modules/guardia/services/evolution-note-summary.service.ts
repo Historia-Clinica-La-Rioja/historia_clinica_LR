@@ -15,6 +15,8 @@ export class EvolutionNoteSummaryService {
 
     mapEvolutionNoteAsViewFormat(evolutionNote: EmergencyCareEvolutionNoteDocumentDto): EvolutionNoteAsViewFormat {
         return {
+            ...(evolutionNote.clinicalSpecialtyName && 
+                { specialty: [this.documentsSummaryService.toDescriptionItemData(evolutionNote.clinicalSpecialtyName)]} ),
             ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.mainDiagnosis && 
                 { mainDiagnosis: [{ description: this.documentsSummaryService.mapDescriptionAndStatusToString(evolutionNote.emergencyCareEvolutionNoteClinicalData.mainDiagnosis) }] }),
             ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.diagnosis.length && 
@@ -28,6 +30,7 @@ export class EvolutionNoteSummaryService {
 }
 
 export interface EvolutionNoteAsViewFormat {
+    specialty: DescriptionItemData[],
     mainDiagnosis: DescriptionItemData[],
     diagnosis: DescriptionItemData[],
     reasons: DescriptionItemDataSummary,

@@ -2,6 +2,9 @@
     class="evolution-note-container" data-id="evolution-note-summary">
 
     <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+        <app-specialty-summary data-id="specialty-summary" *ngIf="evolutionNoteSummary.specialty"
+            [specialty]="evolutionNoteSummary.specialty"></app-specialty-summary>
+        
         <app-description-item-data-summary *ngIf="evolutionNoteSummary.reasons" data-id="reasons-summary"
             [descriptionItemDataSummary]="evolutionNoteSummary.reasons"></app-description-item-data-summary>
 
@@ -16,12 +19,6 @@
 </div>
 
 <!-- 
-<app-titled-content *ngIf="especialidadContent?.length" icon="medical_services" title="Especialidad" [content]="especialidadContent"></app-titled-content>
-
-<app-titled-content *ngIf="motivosContent?.length" icon="sms_failed" title="Motivos de Consulta" [content]="motivosContent"></app-titled-content>
-
-<app-titled-single-content *ngIf="evolucionContent?.length" icon="chat" title="Evolución" [content]="evolucionContent"></app-titled-single-content>
-
 <app-titled-content *ngIf="antropometricosContent?.length" icon="accessibility" title="Datos antropométricos" [content]="antropometricosContent"></app-titled-content>
 
 <app-titled-content *ngIf="antecedentesFamiliaresContent?.length" icon="report" title="Antencedentes familiares" [content]="antecedentesFamiliaresContent"></app-titled-content>

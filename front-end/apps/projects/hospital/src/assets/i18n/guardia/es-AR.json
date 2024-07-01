@@ -261,6 +261,9 @@
             },
             "evolutions": {
                 "TITLE": "Evolución"
+            },
+            "specialty": {
+                "TITLE": "Especialidad"
             }
         }
 	}

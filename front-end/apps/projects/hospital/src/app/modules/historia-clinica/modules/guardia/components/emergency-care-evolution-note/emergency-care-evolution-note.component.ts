@@ -28,9 +28,6 @@ export class EmergencyCareEvolutionNoteComponent {
 					this.alergiasContent = ['guardia.no_refer.ALLERGIES'];
 			}
 		)
-		this.especialidadContent = [newContent.clinicalSpecialtyName];
-		this.motivosContent = newContent.emergencyCareEvolutionNoteClinicalData.reasons.map(r => r.snomed.pt)
-		this.evolucionContent = newContent.emergencyCareEvolutionNoteClinicalData.evolutionNote ? [newContent.emergencyCareEvolutionNoteClinicalData.evolutionNote] : null;
 		this.antropometricosContent = this.toAntropometricosContent(newContent.emergencyCareEvolutionNoteClinicalData.anthropometricData);
 		this.medicacionContent = this.toMedications(newContent.emergencyCareEvolutionNoteClinicalData.medications);
 		this.procedimientosContent = this.toProcedimientos(newContent.emergencyCareEvolutionNoteClinicalData.procedures);
@@ -46,9 +43,6 @@ export class EmergencyCareEvolutionNoteComponent {
 
 	private criticalityTypes: any[];
 
-	especialidadContent;
-	motivosContent;
-	evolucionContent;
 	antropometricosContent;
 	medicacionContent;
 	procedimientosContent;
