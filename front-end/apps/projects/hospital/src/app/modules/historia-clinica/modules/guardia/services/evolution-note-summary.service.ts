@@ -32,6 +32,8 @@ export class EvolutionNoteSummaryService {
                 { familyHistories: this.documentsSummaryService.mapFamilyHistoriesToReferredDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.familyHistories)} ),
             ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.medications.length && 
                 { medications: this.documentsSummaryService.mapMedicationsToDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.medications)} ),
+            ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.procedures.length && 
+                { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.procedures)} ),
         }
     }
 }
@@ -45,4 +47,5 @@ export interface EvolutionNoteAsViewFormat {
     anthropometricData: AnthropometricData,
     familyHistories: ReferredDescriptionItemData,
     medications: DescriptionItemDataSummary,
+    procedures: DescriptionItemDataSummary,
 }

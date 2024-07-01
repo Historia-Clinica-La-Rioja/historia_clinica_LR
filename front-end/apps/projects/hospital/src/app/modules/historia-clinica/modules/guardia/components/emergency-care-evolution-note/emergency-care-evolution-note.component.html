@@ -24,18 +24,8 @@
 
         <app-description-item-data-summary data-id="usual-medication-summary" *ngIf="evolutionNoteSummary.medications"
             [descriptionItemDataSummary]="evolutionNoteSummary.medications"></app-description-item-data-summary>
+        
+        <app-description-item-data-summary data-id="procedures-summary" *ngIf="evolutionNoteSummary.procedures"
+            [descriptionItemDataSummary]="evolutionNoteSummary.procedures"></app-description-item-data-summary>
     </div>
 </div>
-
-<!-- 
-<app-titled-content *ngIf="procedimientosContent?.length" icon="library_add" title="Procedimientos" [content]="procedimientosContent"></app-titled-content>
-
-<app-titled-content *ngIf="factoresContent?.length" icon="favorite_outlined" title="Signos vitales y factores de riesgo" [content]="factoresContent"></app-titled-content>
-
-<app-titled-content *ngIf="alergiasContent?.length" icon="cancel" title="Alergias" [content]="alergiasContent"></app-titled-content>
-
-<div *ngIf="!!registerEvolutionNoteEdition" fxLayout="row" fxLayoutGap="5px">
-    <span class="grey" [translate]="'guardia.EDITED'"></span>
-    <app-register-editor-info class="register-editor-width" [registerEditor]="registerEvolutionNoteEdition"
-        registerEditorCase="REGISTER_EDITOR_CASE"></app-register-editor-info>
-</div> -->
