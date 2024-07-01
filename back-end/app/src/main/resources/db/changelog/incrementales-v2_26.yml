@@ -460,7 +460,7 @@ databaseChangeLog:
         changes:
           - sqlFile:
               encoding: UTF-8
-              path: data/create_v_clinic_history.sql
+              path: data/v_clinic_history/create_v_clinic_history_14.sql
               relativeToChangelogFile: true
               splitStatements: false
 
@@ -859,4 +859,14 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: via
               validate: true
+
+    - changeSet:
+        id: replaceView-v_clinic_history_15
+        author: mromero
+        changes:
+          - sqlFile:
+              encoding: UTF-8
+              path: data/v_clinic_history/create_v_clinic_history_15.sql
+              relativeToChangelogFile: true
+              splitStatements: false
 
