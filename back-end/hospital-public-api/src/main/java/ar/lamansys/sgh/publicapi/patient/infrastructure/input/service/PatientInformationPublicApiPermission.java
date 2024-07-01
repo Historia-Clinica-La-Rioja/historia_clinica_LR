@@ -4,4 +4,6 @@ public interface PatientInformationPublicApiPermission {
 	boolean canAccessPersonFromIdPatient();
 
 	boolean canAccessPrescriptionDataFromPatientIdNumber();
+
+	boolean canAccessAppointmentsDataFromPatientIdNumber();
 }

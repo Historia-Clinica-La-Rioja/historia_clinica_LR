@@ -327,10 +327,10 @@ public class HospitalPublicApiExceptionHandler {
 		return new ApiErrorMessageDto("El formato de la fecha es invalido", ex.getMessage());
 	}
 
-	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ SaveExternalBookingException.class })
 	protected ApiErrorMessageDto handleSaveExternalBookingException(SaveExternalBookingException ex) {
-		logger.error("DigitalSignatureCallbackException exception -> {}", ex.getMessage());
+		logger.error("SaveExternalBookingException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 

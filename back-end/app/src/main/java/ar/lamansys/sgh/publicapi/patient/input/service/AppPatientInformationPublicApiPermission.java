@@ -28,4 +28,12 @@ public class AppPatientInformationPublicApiPermission implements PatientInformat
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
+
+	@Override
+	public boolean canAccessAppointmentsDataFromPatientIdNumber(){
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
 }

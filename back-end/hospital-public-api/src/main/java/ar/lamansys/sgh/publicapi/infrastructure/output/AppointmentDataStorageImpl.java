@@ -10,24 +10,24 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import ar.lamansys.sgh.publicapi.domain.AppointmentCancellationBo;
-import ar.lamansys.sgh.publicapi.domain.AppointmentStatusBo;
+import ar.lamansys.sgh.publicapi.patient.domain.AppointmentCancellationBo;
+import ar.lamansys.sgh.publicapi.patient.domain.AppointmentStatusBo;
 
-import ar.lamansys.sgh.publicapi.domain.EncounterModeBo;
+import ar.lamansys.sgh.publicapi.patient.domain.EncounterModeBo;
 
-import ar.lamansys.sgh.publicapi.domain.GenderSelfDeterminationBo;
+import ar.lamansys.sgh.publicapi.patient.domain.GenderSelfDeterminationBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.application.port.out.AppointmentStorage;
-import ar.lamansys.sgh.publicapi.domain.AppointmentDataBo;
-import ar.lamansys.sgh.publicapi.domain.AppointmentMedicalCoverageBo;
-import ar.lamansys.sgh.publicapi.domain.AppointmentsByUserBo;
+import ar.lamansys.sgh.publicapi.patient.domain.AppointmentDataBo;
+import ar.lamansys.sgh.publicapi.patient.domain.AppointmentMedicalCoverageBo;
+import ar.lamansys.sgh.publicapi.patient.domain.AppointmentsByUserBo;
 import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
-import ar.lamansys.sgh.publicapi.domain.DoctorBo;
-import ar.lamansys.sgh.publicapi.domain.InstitutionBo;
-import ar.lamansys.sgh.publicapi.domain.PatientDataBo;
+import ar.lamansys.sgh.publicapi.patient.domain.DoctorBo;
+import ar.lamansys.sgh.publicapi.patient.domain.InstitutionBo;
+import ar.lamansys.sgh.publicapi.patient.domain.PatientDataBo;
 
 @Service
 public class AppointmentDataStorageImpl implements AppointmentStorage {

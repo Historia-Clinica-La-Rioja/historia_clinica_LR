@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ar.lamansys.sgh.publicapi.appointment.application.FetchAvailabilityByProfessionalAndCoverage;
+import ar.lamansys.sgh.publicapi.appointment.application.fetchavailabilitybyprofessionalandcoverage.FetchAvailabilityByProfessionalAndCoverage;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

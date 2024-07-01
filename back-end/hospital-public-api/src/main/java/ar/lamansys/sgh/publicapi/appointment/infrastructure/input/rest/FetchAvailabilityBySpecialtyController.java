@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ar.lamansys.sgh.publicapi.appointment.application.FetchAvailabilityBySpecialty;
+import ar.lamansys.sgh.publicapi.appointment.application.fetchavailabilitybyspeciality.FetchAvailabilityBySpecialty;
 import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalAvailabilityDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

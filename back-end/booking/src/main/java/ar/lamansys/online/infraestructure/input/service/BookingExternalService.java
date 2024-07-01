@@ -136,7 +136,7 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	@Override
-	public List<BookingHealthInsuranceDto> fetchAllMedicalCoverages() {
+	public List<BookingHealthInsuranceDto> fetchMedicalCoverages() {
 		List<BookingHealthInsuranceDto> result = fetchHealthcareInsurances.run().stream()
 				.map(insurance -> new BookingHealthInsuranceDto(insurance.getId(), insurance.getName()))
 				.collect(Collectors.toList());
@@ -145,7 +145,7 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	@Override
-	public List<PracticeDto> fetchPracticesBySpecialtyAndHealthInsurance(Integer clinicalSpecialtyId, Integer medicalCoverageId, boolean all) {
+	public List<PracticeDto> fetchBookingPracticesBySpecialtyAndHealthInsurance(Integer clinicalSpecialtyId, Integer medicalCoverageId, boolean all) {
 		var practiceBo= fetchPracticesBySpecialtyAndHealthInsurance.run(clinicalSpecialtyId, medicalCoverageId, all);
 		List<PracticeDto> result = practiceBo.stream()
 				.map((PracticeBo t) -> new PracticeDto(t.getId(), t.getDescription(), t.getCoverage(), t.getCoverageText(), t.getSnomedId()))
@@ -157,7 +157,7 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	@Override
-	public List<PracticeDto> fetchPracticesByProfessionalAndHealthInsurance(Integer healthcareProfessionalId, Integer medicalCoverageId, Integer clinicalSpecialtyId, boolean all) {
+	public List<PracticeDto> fetchBookingPracticesByProfessionalAndHealthInsurance(Integer healthcareProfessionalId, Integer medicalCoverageId, Integer clinicalSpecialtyId, boolean all) {
 		var practiceBo= fetchPracticesByProfessionalAndHealthInsurance.run(healthcareProfessionalId, medicalCoverageId, clinicalSpecialtyId, all);
 		List<PracticeDto> result = practiceBo.stream()
 				.map((PracticeBo t) -> new PracticeDto(t.getId(), t.getDescription(), t.getCoverage(), t.getCoverageText(), t.getSnomedId()))
@@ -168,7 +168,7 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	@Override
-	public List<BookingSpecialtyDto> fetchSpecialties() {
+	public List<BookingSpecialtyDto> fetchBookingSpecialties() {
 		List<BookingSpecialtyBo> practices = fetchSpecialties.run();
 		List<BookingSpecialtyDto> result = practices.stream()
 				.map(b -> new BookingSpecialtyDto(b.getId(), b.getDescription()))
@@ -178,7 +178,7 @@ public class BookingExternalService implements SharedBookingPort {
 	}
 
 	@Override
-	public List<BookingSpecialtyDto> fetchSpecialtiesByProfessional(Integer healthcareProfessionalId) {
+	public List<BookingSpecialtyDto> fetchBookingSpecialtiesByProfessional(Integer healthcareProfessionalId) {
 		List<BookingSpecialtyBo> practices = fetchSpecialtiesByProfessional.run(healthcareProfessionalId);
 		List<BookingSpecialtyDto> result = practices.stream()
 				.map(b -> new BookingSpecialtyDto(b.getId(), b.getDescription()))
