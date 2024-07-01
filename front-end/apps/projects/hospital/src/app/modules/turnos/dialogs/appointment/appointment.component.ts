@@ -996,7 +996,11 @@ export class AppointmentComponent implements OnInit {
 			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
 				this.confirmChangeState(newStateId);
 			} else {
-				this.updateState(newStateId);
+				if(this.HABILITAR_ANEXO_II_MENDOZA && this.hasRoleAdmin$ && this.patientSummary.identification.type === this.TYPE_DNI && this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED){
+					this.openScanPatientDialog(newStateId);
+				}else{
+					this.updateState(newStateId);
+				}
 			}
 		}
 	}
@@ -1007,11 +1011,11 @@ export class AppointmentComponent implements OnInit {
 			height: "600px",
 			data: {
 				genderOptions: this.genderOptions,
-				identificationTypeList: this.identificationTypeList,
+				identifyTypeArray: this.identificationTypeList,
 			}
 		});
 		dialogRef.afterClosed().subscribe((patientInformationScan: PatientInformationScan) => {
-			this.patientInformationScan = patientInformationScan?.identifNumber;
+			this.patientInformationScan = patientInformationScan?.infoRawBarCodeScan;
 			if(this.patientInformationScan){
 				this.scanMenssage = SCAN_COMPLETED;
 			}

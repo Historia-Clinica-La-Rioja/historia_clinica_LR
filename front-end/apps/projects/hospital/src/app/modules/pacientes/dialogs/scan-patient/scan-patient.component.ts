@@ -64,7 +64,7 @@ export class ScanPatientComponent implements OnInit {
 	}
 
 	public captureInformation(valueForm): void {
-
+		const infoRawBarCodeScan = valueForm.target.value;
 		let valueFormArray: string[];
 		if (valueForm.target.value.includes(DATA_SPLIT_SPANISH))
 			valueFormArray = valueForm.target.value.split(DATA_SPLIT_SPANISH);
@@ -78,7 +78,8 @@ export class ScanPatientComponent implements OnInit {
 					valueFormArray[DNI_V2.GENDER],
 					valueFormArray[DNI_V2.NAMES],
 					valueFormArray[DNI_V2.LAST_NAMES],
-					valueFormArray[DNI_V2.BIRTH_DATE]
+					valueFormArray[DNI_V2.BIRTH_DATE],
+					infoRawBarCodeScan,
 				);
 			}
 			else if (valueFormArray?.length === AMOUNT_DATA_DNI_V1) {
@@ -87,7 +88,8 @@ export class ScanPatientComponent implements OnInit {
 					valueFormArray[DNI_V1.GENDER],
 					valueFormArray[DNI_V1.NAMES],
 					valueFormArray[DNI_V1.LAST_NAMES],
-					valueFormArray[DNI_V1.BIRTH_DATE]
+					valueFormArray[DNI_V1.BIRTH_DATE],
+					infoRawBarCodeScan,
 				);
 			}
 
@@ -134,7 +136,7 @@ export class ScanPatientComponent implements OnInit {
 		return IDENTIF_TYPE ? IDENTIF_TYPE.id : undefined;
 	}
 
-	private loadPatientInformationScan(identifNumber: string, gender: string, allNames: string, allLastNames: string, birthDate: string): void {
+	private loadPatientInformationScan(identifNumber: string, gender: string, allNames: string, allLastNames: string, birthDate: string, infoRawBarCodeScan: string): void {
 		let names: Names;
 		if (this.canBeAName(allNames))
 			names = this.splitNames(allNames);
@@ -149,7 +151,8 @@ export class ScanPatientComponent implements OnInit {
 			firstName: names?.first,
 			middleNames: names?.second,
 			lastName: lastNames?.first,
-			otherLastNames: lastNames?.second
+			otherLastNames: lastNames?.second,
+			infoRawBarCodeScan: infoRawBarCodeScan,
 		}
 	}
 }

@@ -49,4 +49,5 @@ export interface PatientInformationScan {
 	lastName: string;
 	otherLastNames: string;
 	birthDate: string;
+	infoRawBarCodeScan:string;
 }
