@@ -253,6 +253,12 @@
 			"ALLERGIES": "No refiere alergias",
 			"FAMILY_HISTORIES": "No refiere antecedentes familiares"
 		},
-		"EDITED": "(Editado) -"
+		"EDITED": "(Editado) -",
+        "documents-summary": {
+                "reasons": {
+                    "TITLE": "Motivo de consulta",
+                    "REGISTERED_REASONS": "Motivos de consulta registrados"
+                }
+        }
 	}
 }

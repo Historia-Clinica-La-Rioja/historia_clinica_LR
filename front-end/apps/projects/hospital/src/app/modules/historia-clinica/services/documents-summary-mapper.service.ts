@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientReasonDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
@@ -8,7 +8,7 @@ import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/in
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
-import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender } from '@historia-clinica/constants/document-summary.constants';
+import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender, REASONS_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
@@ -194,6 +194,13 @@ export class DocumentsSummaryMapperService {
         return {
             summary: this.mapMedicationsToDescriptionItemData(medications),
             ...USUAL_MEDICATIONS_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapReasonsToDescriptionItemDataSummary(reasons: OutpatientReasonDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapProceduresToDescriptionItemData(reasons),
+            ...REASONS_DESCRIPTION_ITEM,
         }
     }
 

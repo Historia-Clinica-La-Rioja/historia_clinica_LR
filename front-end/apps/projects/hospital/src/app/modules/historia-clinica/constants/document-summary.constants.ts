@@ -109,6 +109,12 @@ export const ANTIBIOTIC_PROPHYLAXIS_DESCRIPTION_ITEM = {
     icon: 'assignment',
 }
 
+export const REASONS_DESCRIPTION_ITEM = {
+    title: 'guardia.documents-summary.reasons.TITLE',
+    subtitle: 'guardia.documents-summary.reasons.REGISTERED_REASONS',
+    icon: 'feedback',
+}
+
 export const HEADER_DATA_SCOPE = {
     dataId: "scope",
     identifierCase: IDENTIFIER_CASES.SCOPE,
