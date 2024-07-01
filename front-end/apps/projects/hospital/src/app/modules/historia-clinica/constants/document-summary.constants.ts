@@ -10,6 +10,18 @@ export const VITAL_SIGNS_AND_RISK_FACTORS = {
     CENTIMETERS: 'cm',
 }
 
+export const CRITICITY_ID = {
+    LOW: 1,
+    HIGH: 2,
+    UNABLE_TO_EVALUATE: 3,
+}
+
+export const CRITICITY_DESCRIPTION = {
+    [CRITICITY_ID.LOW]: "Criticidad baja",
+    [CRITICITY_ID.HIGH]: "Criticidad alta",
+    [CRITICITY_ID.UNABLE_TO_EVALUATE]: "Incapaz de evaluar",
+}
+
 export const ANESTHESIC_CLINICAL_EVALUATION = {
     PERCENTAJE: '%',
 }

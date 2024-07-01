@@ -32,5 +32,8 @@
         <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
             *ngIf="evolutionNoteSummary.vitalSignsAndRiskFactors"
             [vitalSignsAndRiskFactors]="evolutionNoteSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+
+        <app-referred-item-summary data-id="allergies-summary" *ngIf="evolutionNoteSummary.allergies"
+            [referredItem]="evolutionNoteSummary.allergies"></app-referred-item-summary>
     </div>
 </div>

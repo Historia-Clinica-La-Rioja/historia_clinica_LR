@@ -36,6 +36,8 @@ export class EvolutionNoteSummaryService {
                 { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.procedures)} ),
             ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.riskFactors && 
                 { vitalSignsAndRiskFactors: this.documentsSummaryService.mapToVitalSignsAndRiskFactors(evolutionNote.emergencyCareEvolutionNoteClinicalData.riskFactors)} ),
+            ...(this.documentsSummaryService.hasReferredItemContent(evolutionNote.emergencyCareEvolutionNoteClinicalData.allergies) && 
+                { allergies: this.documentsSummaryService.mapAllergiesToReferredDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.allergies)} ),
         }
     }
 }
@@ -51,4 +53,5 @@ export interface EvolutionNoteAsViewFormat {
     medications: DescriptionItemDataSummary,
     procedures: DescriptionItemDataSummary,
     vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
+    allergies: ReferredDescriptionItemData,
 }

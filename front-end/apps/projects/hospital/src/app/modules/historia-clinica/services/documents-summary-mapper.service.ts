@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
@@ -8,7 +8,7 @@ import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/in
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
-import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender, REASONS_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
+import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender, REASONS_DESCRIPTION_ITEM, CRITICITY_DESCRIPTION } from '@historia-clinica/constants/document-summary.constants';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
@@ -107,7 +107,19 @@ export class DocumentsSummaryMapperService {
     }
 
     mapAllergiesToDescriptionItemData(allergies: AllergyConditionDto[]): DescriptionItemData[] {
-        return allergies.map(allergie => this.toDescriptionItemData(allergie.snomed.pt));
+        return allergies.map(allergy => this.toDescriptionItemData(allergy.snomed.pt));
+    }
+
+    mapOutpatientAllergiesToDescriptionItemData(allergies: OutpatientAllergyConditionDto[]): DescriptionItemData[] {
+        return allergies.map(allergy => this.toDescriptionItemData(this.getAllergyDescription(allergy), this.mapStringToDateToShow(allergy.startDate)));
+    }
+
+    getAllergyDescription(allergy: OutpatientAllergyConditionDto): string {
+        return `${allergy.snomed.pt} (${this.mapAllergiesCriticityIdToDescription(allergy.criticalityId)})`
+    }
+
+    mapAllergiesCriticityIdToDescription(criticityId: number): string {
+        return CRITICITY_DESCRIPTION[criticityId];
     }
 
     mapVaccinesToDescriptionItemData(vaccines: ImmunizationDto[]): DescriptionItemData[] {
@@ -170,6 +182,13 @@ export class DocumentsSummaryMapperService {
         }
     }
 
+    mapOutpatientAllergiesToDescriptionItemDataSummary(allergies: OutpatientAllergyConditionDto[]): DescriptionItemDataSummary {
+        return {
+            summary: this.mapOutpatientAllergiesToDescriptionItemData(allergies),
+            ...ALLERGIES_DESCRIPTION_ITEM,
+        }
+    }
+
     mapVaccinesToDescriptionItemDataSummary(vaccines: ImmunizationDto[]): DescriptionItemDataSummary {
         return {
             summary: this.mapVaccinesToDescriptionItemData(vaccines),
@@ -199,6 +218,14 @@ export class DocumentsSummaryMapperService {
                 summary: this.mapHistoriesToDescriptionItemData(familyHistories.content),
                 ...FAMILY_HISTORIES_DESCRIPTION_ITEM,
             }
+        }
+    }
+
+    mapAllergiesToReferredDescriptionItemDataSummary(allergies: ReferableItemDto<OutpatientAllergyConditionDto>): ReferredDescriptionItemData {
+        return {
+            isReferred: this.isReferred(allergies),
+            notReferredText: this.translateService.instant('guardia.documents-summary.allergies.NOT_REFERRED'),
+            content: this.mapOutpatientAllergiesToDescriptionItemDataSummary(allergies.content),
         }
     }
 

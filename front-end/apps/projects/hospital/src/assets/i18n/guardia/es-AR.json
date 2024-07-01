@@ -267,6 +267,9 @@
             },
             "family-histories": {
                 "NOT_REFERRED": "No refiere antecedentes familiares"
+            },
+            "allergies": {
+                "NOT_REFERRED": "No refiere alergias"
             }
         }
 	}

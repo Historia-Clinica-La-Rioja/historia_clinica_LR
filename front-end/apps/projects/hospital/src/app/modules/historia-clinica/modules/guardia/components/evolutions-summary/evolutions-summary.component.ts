@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 
 @Component({
     selector: 'app-evolutions-summary',
@@ -7,6 +8,6 @@ import { Component, Input } from '@angular/core';
 })
 export class EvolutionsSummaryComponent {
 
-    @Input() evolution: string;
+    @Input() evolution: DescriptionItemData[];
     constructor() { }
 }
