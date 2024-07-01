@@ -50,6 +50,15 @@ export class DesempenoFisicoComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  onKeyPress(event: KeyboardEvent): void {
+    event.preventDefault();
+  }
+
+   // Método genérico para reiniciar contadores
+   resetCounter(counterName: string): void {
+    this[counterName] = undefined; // o null, según prefieras
+  }
+
 
   onInputDesempenoChange(option: string, counter: number, inputType: string): void {
     if (inputType === 'A') {
@@ -72,6 +81,7 @@ export class DesempenoFisicoComponent implements OnInit {
     )
   }
 
+  
   isCounterDisabled(): boolean {
     return !(
 
@@ -79,13 +89,13 @@ export class DesempenoFisicoComponent implements OnInit {
 
     )
   }
+
   isCounterDisabled2(): boolean {
-    return !(
-
-      this.selectedoptionB == '1B' || this.selectedoptionB === '2B'
-
-    )
-
+    if (this.selectedoptionA === '2A' || this.selectedoptionA === '3A') {
+      return true; 
+    } else {
+      return false; 
+    }
   }
 
   isSubmitDisabled3(): boolean {
@@ -102,11 +112,18 @@ export class DesempenoFisicoComponent implements OnInit {
     )
   }
 
+  isCounterDisabledA(): boolean {
+    return !(
+      this.selectedoptionB === '1A'
+    )
+  }
+
   isCounterDisabledCounterC(): boolean {
     return !(
       this.selectedoptionB2 !== '1C'
     )
   }
+
 
   isCounterDisabled4(): boolean {
     return !(
