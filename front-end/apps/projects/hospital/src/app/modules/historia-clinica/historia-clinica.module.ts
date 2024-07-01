@@ -69,6 +69,7 @@ import { ProcedimientosFormComponent } from './components/procedimientos-form/pr
 import { ProfessionalAndDescriptionComponent } from './components/professional-and-description/professional-and-description.component';
 import { ProfessionalListComponent } from './components/professional-list/professional-list.component';
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
+import { ReferredItemSummaryComponent } from './components/referred-item-summary/referred-item-summary.component';
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
 import { SurgicalReportAnesthesiaComponent } from './components/surgical-report-anesthesia/surgical-report-anesthesia.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
@@ -244,6 +245,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		ProfessionalListComponent,
 		ReasonListComponent,
 		ReferenceRequestListComponent,
+        ReferredItemSummaryComponent,
 		TemplateConceptTypeaheadSearchComponent,
         VitalSignsAndRiskFactorsSummaryComponent,
 		VitalSignsSummaryComponent,
@@ -352,6 +354,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		ViolenceModalitiesListComponent,
 		ProfessionalListComponent,
 		PatientEvolutionChartsButtonComponent,
+        ReferredItemSummaryComponent,
 		// dialogs
 		AddMemberMedicalTeamComponent,
 		ConceptsSearchDialogComponent,

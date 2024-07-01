@@ -18,14 +18,13 @@
             
         <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="evolutionNoteSummary.anthropometricData"
             [anthropometricData]="evolutionNoteSummary.anthropometricData"></app-anthropometric-data-summary>
+
+        <app-referred-item-summary data-id="family-histories-summary" *ngIf="evolutionNoteSummary.familyHistories"
+            [referredItem]="evolutionNoteSummary.familyHistories"></app-referred-item-summary>
     </div>
 </div>
 
 <!-- 
-<app-titled-content *ngIf="antropometricosContent?.length" icon="accessibility" title="Datos antropométricos" [content]="antropometricosContent"></app-titled-content>
-
-<app-titled-content *ngIf="antecedentesFamiliaresContent?.length" icon="report" title="Antencedentes familiares" [content]="antecedentesFamiliaresContent"></app-titled-content>
-
 <app-titled-content *ngIf="medicacionContent?.length" icon="event_available" title="Medicación habitual" [content]="medicacionContent"></app-titled-content>
 
 <app-titled-content *ngIf="procedimientosContent?.length" icon="library_add" title="Procedimientos" [content]="procedimientosContent"></app-titled-content>

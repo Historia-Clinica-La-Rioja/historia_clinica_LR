@@ -264,6 +264,9 @@
             },
             "specialty": {
                 "TITLE": "Especialidad"
+            },
+            "family-histories": {
+                "NOT_REFERRED": "No refiere antecedentes familiares"
             }
         }
 	}

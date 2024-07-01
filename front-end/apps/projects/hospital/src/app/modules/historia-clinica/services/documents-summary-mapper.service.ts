@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientReasonDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
-import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, ReferredDescriptionItemData, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
@@ -114,7 +114,7 @@ export class DocumentsSummaryMapperService {
         return vaccines.map(vaccine => this.toDescriptionItemData(vaccine.snomed.pt, this.mapStringToDateToShow(vaccine.administrationDate)));
     }
 
-    mapHistoriesToDescriptionItemData(histories: HealthHistoryConditionDto[]): DescriptionItemData[] {
+    mapHistoriesToDescriptionItemData(histories: HealthHistoryConditionDto[] | OutpatientFamilyHistoryDto []): DescriptionItemData[] {
         return histories.map(history => this.toDescriptionItemData(history.snomed.pt,  this.mapStringToDateToShow(history.startDate)));
     }    
     
@@ -188,6 +188,17 @@ export class DocumentsSummaryMapperService {
         return {
             summary: this.mapHistoriesToDescriptionItemData(familyHistories),
             ...FAMILY_HISTORIES_DESCRIPTION_ITEM,
+        }
+    }
+
+    mapFamilyHistoriesToReferredDescriptionItemDataSummary(familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>): ReferredDescriptionItemData {
+        return {
+            isReferred: this.isReferred(familyHistories),
+            notReferredText: this.translateService.instant('guardia.documents-summary.family-histories.NOT_REFERRED'),
+            content: {
+                summary: this.mapHistoriesToDescriptionItemData(familyHistories.content),
+                ...FAMILY_HISTORIES_DESCRIPTION_ITEM,
+            }
         }
     }
 
@@ -367,4 +378,13 @@ export class DocumentsSummaryMapperService {
                 || obstetricEvent.pregnancyTerminationType 
                 || obstetricEvent.previousPregnancies)));
     }
+
+    hasReferredItemContent<T>(item: ReferableItemDto<T>): boolean {
+        return !(item.isReferred == null)
+    }
+
+    isReferred<T>(item: ReferableItemDto<T>): boolean {
+        return item.isReferred
+    }
+
 }

@@ -28,11 +28,9 @@ export class EmergencyCareEvolutionNoteComponent {
 					this.alergiasContent = ['guardia.no_refer.ALLERGIES'];
 			}
 		)
-		this.antropometricosContent = this.toAntropometricosContent(newContent.emergencyCareEvolutionNoteClinicalData.anthropometricData);
 		this.medicacionContent = this.toMedications(newContent.emergencyCareEvolutionNoteClinicalData.medications);
 		this.procedimientosContent = this.toProcedimientos(newContent.emergencyCareEvolutionNoteClinicalData.procedures);
 		this.factoresContent = this.toRiskFactors(newContent.emergencyCareEvolutionNoteClinicalData.riskFactors);
-		this.antecedentesFamiliaresContent = this.toAntecedentesFamiliares(newContent.emergencyCareEvolutionNoteClinicalData.familyHistories);
 
 		if (!!newContent.editor) {
 			this.setRegisterEvolutionNoteEdition(newContent.editedOn, newContent.editor);
@@ -43,12 +41,10 @@ export class EmergencyCareEvolutionNoteComponent {
 
 	private criticalityTypes: any[];
 
-	antropometricosContent;
 	medicacionContent;
 	procedimientosContent;
 	factoresContent;
 	alergiasContent;
-	antecedentesFamiliaresContent;
 	registerEvolutionNoteEdition: RegisterEditor;
 	REGISTER_EDITOR_CASE = REGISTER_EDITOR_CASES.DATE_HOUR;
 
@@ -56,37 +52,6 @@ export class EmergencyCareEvolutionNoteComponent {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly patientNameService: PatientNameService,
 	) { }
-
-	private toAntecedentesFamiliares(familyHistories): string[] {
-		if (familyHistories.isReferred === false)
-			this.antecedentesFamiliaresContent = ['guardia.no_refer.FAMILY_HISTORIES'];
-		return familyHistories.content?.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);
-
-		function map(m: OutpatientFamilyHistoryDto): string[] {
-			return [m.snomed.pt, m.startDate ? `Desde ${m.startDate}` : null]
-		}
-	}
-
-	private toAntropometricosContent(anthropometricData): string[] {
-		const result = [];
-		const bloodValue = anthropometricData?.bloodType?.value;
-		if (bloodValue) {
-			result.push(`Grupo y factor sanguineo: ${bloodValue}`)
-		}
-		const height = anthropometricData?.height?.value;
-		if (height) {
-			result.push(`Altura: ${height}cm`)
-		}
-		const weight = anthropometricData?.weight?.value;
-		if (weight) {
-			result.push(`Peso: ${weight}Kg`)
-		}
-		const headCircumference = anthropometricData?.headCircumference?.value;
-		if (headCircumference) {
-			result.push(`Perímetro cefálico: ${headCircumference}cm`)
-		}
-		return result;
-	}
 
 	private toMedications(medications): string[] {
 		return medications.map(map).reduce((acumulado, actual) => acumulado.concat(actual), []);;
