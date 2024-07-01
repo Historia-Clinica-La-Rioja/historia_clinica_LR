@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { EmergencyCareEvolutionNoteDocumentDto } from '@api-rest/api-model';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
-import { AnthropometricData, ReferredDescriptionItemData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ReferredDescriptionItemData, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 
 @Injectable({
@@ -34,6 +34,8 @@ export class EvolutionNoteSummaryService {
                 { medications: this.documentsSummaryService.mapMedicationsToDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.medications)} ),
             ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.procedures.length && 
                 { procedures: this.documentsSummaryService.mapProceduresToDescriptionItemDataSummary(evolutionNote.emergencyCareEvolutionNoteClinicalData.procedures)} ),
+            ...(evolutionNote.emergencyCareEvolutionNoteClinicalData.riskFactors && 
+                { vitalSignsAndRiskFactors: this.documentsSummaryService.mapToVitalSignsAndRiskFactors(evolutionNote.emergencyCareEvolutionNoteClinicalData.riskFactors)} ),
         }
     }
 }
@@ -48,4 +50,5 @@ export interface EvolutionNoteAsViewFormat {
     familyHistories: ReferredDescriptionItemData,
     medications: DescriptionItemDataSummary,
     procedures: DescriptionItemDataSummary,
+    vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
 }

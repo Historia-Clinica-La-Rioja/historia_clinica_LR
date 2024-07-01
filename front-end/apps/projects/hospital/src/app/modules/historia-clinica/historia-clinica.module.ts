@@ -352,6 +352,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		PersonalHistoriesSummaryComponent,
 		ViolenceSituationsListComponent,
 		ViolenceModalitiesListComponent,
+        VitalSignsAndRiskFactorsSummaryComponent,
 		ProfessionalListComponent,
 		PatientEvolutionChartsButtonComponent,
         ReferredItemSummaryComponent,

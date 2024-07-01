@@ -4,7 +4,7 @@
     <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
         <app-specialty-summary data-id="specialty-summary" *ngIf="evolutionNoteSummary.specialty"
             [specialty]="evolutionNoteSummary.specialty"></app-specialty-summary>
-        
+
         <app-description-item-data-summary *ngIf="evolutionNoteSummary.reasons" data-id="reasons-summary"
             [descriptionItemDataSummary]="evolutionNoteSummary.reasons"></app-description-item-data-summary>
 
@@ -15,8 +15,9 @@
 
         <app-evolutions-summary data-id="evolution-summary" *ngIf="evolutionNoteSummary.evolution"
             [evolution]="evolutionNoteSummary.evolution"></app-evolutions-summary>
-            
-        <app-anthropometric-data-summary data-id="anthropometric-data-summary" *ngIf="evolutionNoteSummary.anthropometricData"
+
+        <app-anthropometric-data-summary data-id="anthropometric-data-summary"
+            *ngIf="evolutionNoteSummary.anthropometricData"
             [anthropometricData]="evolutionNoteSummary.anthropometricData"></app-anthropometric-data-summary>
 
         <app-referred-item-summary data-id="family-histories-summary" *ngIf="evolutionNoteSummary.familyHistories"
@@ -24,8 +25,12 @@
 
         <app-description-item-data-summary data-id="usual-medication-summary" *ngIf="evolutionNoteSummary.medications"
             [descriptionItemDataSummary]="evolutionNoteSummary.medications"></app-description-item-data-summary>
-        
+
         <app-description-item-data-summary data-id="procedures-summary" *ngIf="evolutionNoteSummary.procedures"
             [descriptionItemDataSummary]="evolutionNoteSummary.procedures"></app-description-item-data-summary>
+
+        <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
+            *ngIf="evolutionNoteSummary.vitalSignsAndRiskFactors"
+            [vitalSignsAndRiskFactors]="evolutionNoteSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
     </div>
 </div>
