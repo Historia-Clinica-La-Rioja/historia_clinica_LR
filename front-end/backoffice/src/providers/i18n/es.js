@@ -794,7 +794,8 @@ const messages = {
                 executionEndTime:'Hora de fin de ejecución',
                 weightDays:'Peso asignado a la cantidad dias',
                 weightSize:'Peso asignado al tamaño',
-                weightPriority:'Peso asignado a la prioridad'
+                weightPriority:'Peso asignado a la prioridad',
+                massiveRetry: 'Reintentar movimiento masivo'
 
             },
             parameter:'Parámetros de configuración ',

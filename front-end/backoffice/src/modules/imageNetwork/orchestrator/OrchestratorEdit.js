@@ -7,6 +7,7 @@ import {
     SimpleForm,
     TextInput,
     NumberInput,
+    BooleanInput,
     regex,
     maxLength
 } from 'react-admin';
@@ -34,7 +35,7 @@ const OrchestratorEdit = (props) => {
                 <FormDataConsumer>
                     {formDataProps => (<SectorField {...formDataProps} source="sectorId"  />)}
                 </FormDataConsumer>
-
+                <BooleanInput label="resources.orchestrator.fields.massiveRetry"source="massiveRetry" />
                 <SectionTitle label="resources.orchestrator.parameter"/>
 
                 <NumberInput source="attempsNumber"  validate={[required()]} defaultValue="3"/>

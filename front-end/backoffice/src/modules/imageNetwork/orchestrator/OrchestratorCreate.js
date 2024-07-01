@@ -8,6 +8,7 @@ import {
     AutocompleteInput,
     ReferenceInput,
     NumberInput,
+    BooleanInput,
     regex,
 } from 'react-admin';
 
@@ -41,7 +42,7 @@ const OrchestratorCreate = props => {
                            >
                                <AutocompleteInput optionText="description" optionValue="id"/>
                            </ReferenceInput>
-
+                           <BooleanInput label="resources.orchestrator.fields.massiveRetry" source="massiveRetry" defaultValue={false}/>
                            <SectionTitle label="resources.orchestrator.parameter"/>
 
                            <NumberInput source="attempsNumber"  validate={[required()]} defaultValue="3"/>
