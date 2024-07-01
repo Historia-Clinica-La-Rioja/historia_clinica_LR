@@ -11,6 +11,7 @@ import {
 	ProfessionalPersonDto,
 	PageDto,
 	EmergencyCareEpisodeFilterDto,
+	AppFeature,
 } from '@api-rest/api-model';
 import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
@@ -38,6 +39,7 @@ import { AttentionPlace, PatientType } from '@historia-clinica/constants/summari
 import { UntypedFormBuilder } from '@angular/forms';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -71,7 +73,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
 	hasEmergencyCareRelatedRole: boolean;
+	private hasAdministrativeRole: boolean;
 	rolesToEpisodeAttend: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+	isAdministrativeAndHasTriageFFInFalse: boolean;
 
 	private static calculateWaitingTime(dateTime: DateTimeDto): number {
 		const creationDate = dateTimeDtoToDate(dateTime);
@@ -97,6 +101,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		private readonly guardiaRouterService: GuardiaRouterService,
 		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
 		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
+		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
 	}
@@ -111,7 +116,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
+			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
 		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
+			this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+		);
 	}
 
 	loadEpisodes(pageNumber: number): void {
@@ -133,6 +142,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 						this.getFullProfessionalName(episode.relatedProfessional);
 				});
 			}, _ => this.loading = false);
+	}
+
+	showActionsButton(episode : Episode): boolean{
+		return !this.isAdministrativeAndHasTriageFFInFalse ||
+		episode.patient?.typeId === this.EMERGENCY_CARE_TEMPORARY;
 	}
 
 	private getFilterData(): EmergencyCareEpisodeFilterDto {
@@ -256,7 +270,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			},
 			waitingTime: minWaitingTime,
 			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined,
-			
+
 		};
 	}
 
@@ -278,10 +292,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	editPatientDescription(episodeId: number, preloadedReason: string) {
 		this.patientDescriptionSubscription = this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(patientDescription => {
-			if (patientDescription) 
+			if (patientDescription)
 				this.updatePatientDescription(episodeId, patientDescription);
 		});
-		this.emergencyCareTemporaryPatientService.openTemporaryPatient(preloadedReason);	
+		this.emergencyCareTemporaryPatientService.openTemporaryPatient(preloadedReason);
 	}
 
 	private updatePatientDescription(episodeId: number, patientDescription: string) {
@@ -289,7 +303,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			next: () => {
 				this.snackBarService.showSuccess('guardia.home.episodes.episode.actions.edit_patient_description.SUCCESS');
 				const updatedEpisode = this.episodes.find(episode => episode.id === episodeId);
-				updatedEpisode.patient.patientDescription = patientDescription;					
+				updatedEpisode.patient.patientDescription = patientDescription;
 			},
 			error: () => this.snackBarService.showError('guardia.home.episodes.episode.actions.edit_patient_description.ERROR')
 		});

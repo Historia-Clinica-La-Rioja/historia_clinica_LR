@@ -56,6 +56,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	hasMedicalDischarge: boolean;
 	hasInternmentEpisodeInThisInstitution = false;
 	hasMedicalRole = false;
+	hasAdministrativeRole = false;
 	hasNurseRoleEvolutionNoteEnabled = false;
 	hasInternmentActionsToDo = true;
 	internmentEpisode: InternmentEpisodeProcessDto;
@@ -66,6 +67,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	isEmergencyCareTemporaryPatient = false;
 	isAnestheticReportEnabledFF: boolean;
 	isEvolutionNoteEnabled: boolean;
+	isAdministrativeAndHasTriageFFInFalse: boolean;
+	hasGuardButtons: boolean;
 
 	@Input() patientId: number;
 	@Input()
@@ -151,6 +154,16 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		});
 
 		this.internmentActions.dialogRef$.subscribe(dialogRef => this.popUpOpen.next(dialogRef));
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
+			this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+		)
+
+		this.hasGuardButtons = this.hasGuardOptionButtons();
+	}
+
+	private hasGuardOptionButtons(): boolean{
+		return (!this.isAdministrativeAndHasTriageFFInFalse || this.isEvolutionNoteEnabled);
 	}
 
 	setInternmentInformation(internmentId: number) {
@@ -182,6 +195,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			this.currentUserIsAllowedToMakeBothConsultation = (anyMatch<ERole>(userRoles, [ERole.ENFERMERO]) &&
 				(anyMatch<ERole>(userRoles, [ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO])))
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
+			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
 		});
 	}
 

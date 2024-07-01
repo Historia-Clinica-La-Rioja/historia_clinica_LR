@@ -83,48 +83,49 @@
 
             </div>
 
-            <mat-divider inset></mat-divider>
+			<ng-container *ngIf="!isAdministrativeAndHasTriageFFInFalse">
+				<mat-divider inset></mat-divider>
 
-            <app-last-triage [triage]="lastTriage" [emergencyCareType]="emergencyCareType">
-            </app-last-triage>
+				<app-last-triage [triage]="lastTriage" [emergencyCareType]="emergencyCareType">
+				</app-last-triage>
 
-			<div fxLayout="row" fxLayoutAlign="flex-end center" *ngIf="withoutMedicalDischarge && showNewTriage">
-                <button id="new_triage" mat-raised-button color="primary" (click)="newTriage()">
-                    {{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate | uppercase }}
-                </button>
-            </div>
+				<div fxLayout="row" fxLayoutAlign="flex-end center" *ngIf="withoutMedicalDischarge && showNewTriage">
+					<button id="new_triage" mat-raised-button color="primary" (click)="newTriage()">
+						{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate | uppercase }}
+					</button>
+				</div>
 
-            <div id="history">
-                <h3 class="bold" style="margin-bottom: 0">
-                    {{ 'ambulatoria.paciente.guardia.HISTORIAL_TRIAGE' | translate }}
-                </h3>
-                <div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
-                    fxLayoutGap="10px">
-                    <mat-card class="triage-list-item" *ngFor="let triage of triagesHistory; index as i">
-                        <mat-card-content>
-                            <div fxLayout="row" fxLayoutAlign="space-between">
+				<div id="history">
+					<h3 class="bold" style="margin-bottom: 0">
+						{{ 'ambulatoria.paciente.guardia.HISTORIAL_TRIAGE' | translate }}
+					</h3>
+					<div *ngIf="triagesHistory?.length else noInfo" style="margin-top: 16px" fxLayout="column"
+						fxLayoutGap="10px">
+						<mat-card class="triage-list-item" *ngFor="let triage of triagesHistory; index as i">
+							<mat-card-content>
+								<div fxLayout="row" fxLayoutAlign="space-between">
 
-                                <div id="left-side">
-                                    <span style="margin-right: 20px">
-                                        {{ triage.creationDate | dateFormat: 'datetime' }}
-                                    </span>
-                                    <app-triage-chip [category]="triage.category"></app-triage-chip>
-                                </div>
+									<div id="left-side">
+										<span style="margin-right: 20px">
+											{{ triage.creationDate | dateFormat: 'datetime' }}
+										</span>
+										<app-triage-chip [category]="triage.category"></app-triage-chip>
+									</div>
 
-                                <div id="right-side">
-                                    <span>
-                                        {{ fullNamesHistoryTriage[i] }}
-                                    </span>
-                                    <span *ngIf="triage.doctorsOfficeDescription">
-                                        • {{ triage.doctorsOfficeDescription }}
-                                    </span>
-                                </div>
-
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-            </div>
+									<div id="right-side">
+										<span>
+											{{ fullNamesHistoryTriage[i] }}
+										</span>
+										<span *ngIf="triage.doctorsOfficeDescription">
+											• {{ triage.doctorsOfficeDescription }}
+										</span>
+									</div>
+								</div>
+							</mat-card-content>
+						</mat-card>
+					</div>
+				</div>
+			</ng-container>
 
 			<div *ngIf="hasMedicalDischarge">
 				<mat-divider inset></mat-divider>
@@ -132,32 +133,32 @@
 					{{ 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.TITLE' | translate }}
 				</h3>
 				<div *ngIf="medicalDischargeData" fxLayout="column" fxLayoutGap="25px">
-                    <div>
-                        <app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="registerEditorCasesDateHour">
-                        </app-register-editor-info>
-                        <div fxLayout="row" fxLayoutGap="8px">
-                            <app-title-description fxFlex="50%"
-                                [title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PROBLEM' | translate"
-                                [text]="problemDescriptionText | stringSeparator">
-                            </app-title-description>
-                            <app-title-description fxFlex="50%"
-                                [title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE' | translate"
-                                [text]="dischargeTypeDescriptionText">
-                            </app-title-description>
-                            <app-title-description fxFlex="50%" [title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.ADMINISTRATIVE_DISCHARGE' | translate"
-                                [text]="episodeState !== STATES.CON_ALTA_ADMINISTRATIVA ? 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PENDING' : 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PERFORMED'">
-                            </app-title-description>
-                        </div>
-                    </div>
-                    <app-title-description *ngIf="medicalDischargeData.observation" class="wrap-reason"
+					<div>
+						<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="registerEditorCasesDateHour">
+						</app-register-editor-info>
+						<div fxLayout="row" fxLayoutGap="8px">
+							<app-title-description fxFlex="50%"
+								[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PROBLEM' | translate"
+								[text]="problemDescriptionText | stringSeparator">
+							</app-title-description>
+							<app-title-description fxFlex="50%"
+								[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE' | translate"
+								[text]="dischargeTypeDescriptionText">
+							</app-title-description>
+							<app-title-description fxFlex="50%" [title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.ADMINISTRATIVE_DISCHARGE' | translate"
+								[text]="episodeState !== STATES.CON_ALTA_ADMINISTRATIVA ? 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PENDING' : 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PERFORMED'">
+							</app-title-description>
+						</div>
+					</div>
+					<app-title-description *ngIf="medicalDischargeData.observation" class="wrap-reason"
 							[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.ADDITIONAL_OBSERVATIONS' | translate"
 							[text]="medicalDischargeData.observation">
 					</app-title-description>
 				</div>
 			</div>
 
-        </div>
-    </mat-card-content>
+		</div>
+	</mat-card-content>
 </app-summary-card>
 
 <ng-template #noInfo>

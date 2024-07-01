@@ -20,14 +20,16 @@
 	</ng-template>
 
 	<mat-menu #menu="matMenu">
-
-		<div *ngIf="anyEmergencyCareAction" id="emergencyCare">
+		<div *ngIf="anyEmergencyCareAction && hasGuardButtons" id="emergencyCare">
 			<mat-label class="actions-labels color-grey">
 				GUARDIA
 			</mat-label>
-			<button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions">
-				{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
-			</button>
+
+			<ng-container *ngIf="!isAdministrativeAndHasTriageFFInFalse">
+				<button mat-menu-item id="new_triage" color="primary" (click)="newTriage()" class="actions">
+					{{ 'ambulatoria.paciente.guardia.NUEVO_TRIAGE' | translate }}
+				</button>
+			</ng-container>
 
 			<ng-container *ngIf="isEvolutionNoteEnabled">
 				<button *ngIf="episode.emergencyCareState.id === EstadosEpisodio.EN_ATENCION" mat-menu-item

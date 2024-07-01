@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ERole, VMedicalDischargeDto } from '@api-rest/api-model.d';
+import { ERole, AppFeature, VMedicalDischargeDto } from '@api-rest/api-model.d';
 import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
@@ -10,6 +10,7 @@ import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-c
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { TriageService } from '@api-rest/services/triage.service';
 import { ContextService } from '@core/services/context.service';
+import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
@@ -75,6 +76,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	availableActions: ActionInfo[] = [];
 	TEMPORARY_EMERGENCY_CARE = PatientType.EMERGENCY_CARE_TEMPORARY;
 
+	isAdministrativeAndHasTriageFFInFalse: boolean;
+
 	constructor(
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly triageService: TriageService,
@@ -94,7 +97,9 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		private readonly emergencyCareEpisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly translate: TranslateService,
+		private readonly featureFlagService: FeatureFlagService
 	) {}
+
 
 	ngOnInit(): void {
 		this.permissionsService.contextAssignments$().subscribe(
@@ -126,6 +131,10 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.loadPatientDischarge();
 			}
 		});
+
+		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
+			this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasRoleAdministrative)
+		);
 	}
 
 	newTriage() {
