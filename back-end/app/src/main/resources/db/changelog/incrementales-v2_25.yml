@@ -99,3 +99,17 @@ databaseChangeLog:
                     name: observation
                     type: text
               tableName: emergency_care_discharge
+    
+    - changeSet:
+        id: addColumn_massive_retry
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: massive_retry
+                    type: boolean
+                    defaultValue: ${boolean.false}
