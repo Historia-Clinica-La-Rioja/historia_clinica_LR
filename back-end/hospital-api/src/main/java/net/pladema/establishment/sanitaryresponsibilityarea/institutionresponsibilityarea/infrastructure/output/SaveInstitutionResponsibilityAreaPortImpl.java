@@ -23,6 +23,7 @@ public class SaveInstitutionResponsibilityAreaPortImpl implements SaveInstitutio
 
 	@Override
 	public void run(SaveInstitutionResponsibilityAreaBo saveInstitutionResponsibilityAreaBo) {
+		institutionResponsibilityAreaRepository.deleteAllFromInstitution(saveInstitutionResponsibilityAreaBo.getInstitutionId());
 		institutionResponsibilityAreaRepository.saveAll(parseToInstitutionResponsibilityAreaList(saveInstitutionResponsibilityAreaBo));
 	}
 
