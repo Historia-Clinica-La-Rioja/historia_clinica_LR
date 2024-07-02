@@ -61,7 +61,9 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 			]
 		).pipe(finalize(() => this.isSaving = false))
 		.subscribe((_) => {
-			this.snackBarService.showSuccess("gis.status.UPDATE_DATA_SUCCESS");
+			if (!this.gisLayersService.isPolygonCompleted)
+				this.snackBarService.showSuccess("gis.status.UPDATE_DATA_SUCCESS");
+			
 			removeDrawnPolygon ? this.gisLayersService.removeDrawnPolygon(): null;
 			this.confirmed.emit(true);
 		});
@@ -76,7 +78,8 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 	}
 
 	private saveInstitutionArea = () => {
-		this.gisService.saveInstitutionArea(this.mapToSaveInstitutionResponsibilityAreaDto()).subscribe();
+		this.gisService.saveInstitutionArea(this.mapToSaveInstitutionResponsibilityAreaDto())
+			.subscribe((_) => this.snackBarService.showSuccess("gis.status.UPDATE_RESPONSABILITY_AREA_SUCCESS"));
 	}
 
 	private mapToSaveInstitutionResponsibilityAreaDto = (): SaveInstitutionResponsibilityAreaDto => {

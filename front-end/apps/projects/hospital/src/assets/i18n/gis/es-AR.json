@@ -44,7 +44,8 @@
             "TITLE": "Detalle de la institución"
         },
         "status": {
-            "UPDATE_DATA_SUCCESS": "Datos de la institución actualizados"
+            "UPDATE_DATA_SUCCESS": "Datos de la institución actualizados",
+            "UPDATE_RESPONSABILITY_AREA_SUCCESS": "Área de responsabilidad definida con éxito"
         }
     }
 }
