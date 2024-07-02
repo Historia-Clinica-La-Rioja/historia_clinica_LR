@@ -1,12 +1,5 @@
-package ar.lamansys.odontology.domain.consultation;
+package ar.lamansys.nursing.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import lombok.AllArgsConstructor;
@@ -14,9 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Optional;
+
 @Getter
 @Setter
-public class CreateOdontologyConsultationServiceRequestBo {
+public class CreateNursingConsultationServiceRequestBo {
 
 	@Getter
 	@Setter
@@ -31,12 +26,12 @@ public class CreateOdontologyConsultationServiceRequestBo {
 		private String snomedPt;
 	}
 	/**
-	*
-	* Service request data
-	*
-	* See CreateConsultationServiceRequestImpl#findHealthCondition to understand the health condition
-	* params.
-	*/
+	 *
+	 * Service request data
+	 *
+	 * See CreateConsultationServiceRequestImpl#findHealthCondition to understand the health condition
+	 * params.
+	 */
 	private String healthConditionSctid;
 	private String healthConditionPt;
 	private String categoryId;
@@ -45,8 +40,8 @@ public class CreateOdontologyConsultationServiceRequestBo {
 	private String snomedPt;
 
 	/**
-	* Observations data
-	*/
+	 * Observations data
+	 */
 	private Boolean isPartialUpload;
 
 	private Integer procedureTemplateId;

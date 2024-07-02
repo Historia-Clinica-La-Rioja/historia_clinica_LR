@@ -1,8 +1,13 @@
 package ar.lamansys.nursing.infrastructure.input.rest;
 
 import ar.lamansys.nursing.application.CreateNursingConsultation;
+import ar.lamansys.nursing.domain.CreateNursingConsultationServiceRequestBo;
 import ar.lamansys.nursing.infrastructure.input.rest.dto.NursingConsultationDto;
+import ar.lamansys.nursing.infrastructure.input.rest.dto.NursingProcedureDto;
 import ar.lamansys.nursing.infrastructure.input.rest.mapper.NursingConsultationMapper;
+import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +22,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -49,9 +58,65 @@ public class NursingConsultationController {
         nursingConsultationBo.setInstitutionId(institutionId);
         nursingConsultationBo.setPatientId(patientId);
 
-        createNursingConsultation.run(nursingConsultationBo);
+        createNursingConsultation.run(nursingConsultationBo, toConsultationServiceRequestsBo(nursingConsultationDto.getProcedures()));
 
         return true;
     }
+
+	/**
+	 * Maps the service request and observations data from the DTO to one or more BOs
+	 * Creates a list of {@link CreateOdontologyConsultationServiceRequestBo} for each procedure.
+	 * @param procedures
+	 * @return
+	 */
+	private List<CreateNursingConsultationServiceRequestBo> toConsultationServiceRequestsBo(List<NursingProcedureDto> procedures) {
+		return procedures.stream().map(procedure -> {
+					CreateOutpatientServiceRequestDto procedureServiceRequest = procedure.getServiceRequest();
+
+					if (procedureServiceRequest != null) {
+						var ret = new CreateNursingConsultationServiceRequestBo();
+						ret.setCategoryId(procedureServiceRequest.getCategoryId());
+						ret.setHealthConditionSctid(procedureServiceRequest.getHealthConditionSctid());
+						ret.setHealthConditionPt(procedureServiceRequest.getHealthConditionPt());
+						ret.setCreationStatusIsFinal(procedureServiceRequest.getCreationStatus().isFinal());
+						ret.setSnomedSctid(procedure.getSnomed().getSctid());
+						ret.setSnomedPt(procedure.getSnomed().getPt());
+						if (procedureServiceRequest.getObservations() != null) {
+							var observationsDto = procedureServiceRequest.getObservations();
+							var observationData = new SharedAddObservationsCommandVo();
+							observationData.setIsPartialUpload(observationsDto.getIsPartialUpload());
+							observationData.setProcedureTemplateId(observationsDto.getProcedureTemplateId());
+							if (observationsDto.getReferenceClosure() != null)
+								observationData.setReferenceClosure(mapReferenceClosure(observationsDto.getReferenceClosure()));
+							if (observationsDto.getValues() != null) {
+								var valuesDto = observationsDto.getValues();
+								valuesDto.forEach(value -> {
+									observationData.addValue(
+											value.getProcedureParameterId(),
+											value.getValue(),
+											value.getUnitOfMeasureId(),
+											value.getSnomedSctid(),
+											value.getSnomedPt()
+									);
+								});
+							}
+							ret.setSharedAddObservationsCommandVo(observationData);
+						}
+						return ret;
+					}
+					return null;
+				})
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+	}
+	private SharedAddObservationsCommandVo.SharedReferenceRequestClosureBo mapReferenceClosure(ReferenceClosureDto referenceClosure) {
+		return new SharedAddObservationsCommandVo.SharedReferenceRequestClosureBo(
+				referenceClosure.getReferenceId(),
+				referenceClosure.getClinicalSpecialtyId(),
+				referenceClosure.getCounterReferenceNote(),
+				referenceClosure.getClosureTypeId(),
+				referenceClosure.getFileIds()
+		);
+	}
 
 }

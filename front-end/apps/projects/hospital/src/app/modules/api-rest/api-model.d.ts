@@ -3173,6 +3173,7 @@ export interface NursingProblemDto extends Serializable {
 
 export interface NursingProcedureDto extends Serializable {
     performedDate?: string;
+    serviceRequest?: CreateOutpatientServiceRequestDto;
     snomed: SnomedDto;
 }
 

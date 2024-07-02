@@ -115,6 +115,18 @@ public class CreateOutpatientConsultationServiceRequestImpl implements SharedCre
 				patientAge, SourceType.ODONTOLOGY);
 	}
 
+	@Override
+	@Transactional
+	public Integer createNursingServiceRequest(Integer doctorId, String categoryId, Integer institutionId, String healthConditionSctid,
+												  String healthConditionPt, Integer medicalCoverageId, Integer outpatientConsultationId, String snomedSctid,
+												  String snomedPt, Boolean createAsFinal, Optional<SharedAddObservationsCommandVo> addObservationsCommand,
+												  Integer patientId, Short patientGenderId, Short patientAge)
+	{
+		return execute(doctorId, categoryId, institutionId, healthConditionSctid, healthConditionPt, medicalCoverageId,
+				outpatientConsultationId, snomedSctid, snomedPt, createAsFinal, addObservationsCommand, patientId, patientGenderId,
+				patientAge, SourceType.NURSING);
+	}
+
 	private Integer execute(Integer doctorId, String categoryId, Integer institutionId, String healthConditionSctid,
 		String healthConditionPt, Integer medicalCoverageId, Integer outpatientConsultationId, String snomedSctid,
 		String snomedPt, Boolean createAsFinal, Optional<SharedAddObservationsCommandVo> addObservationsCommand,
