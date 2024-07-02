@@ -2963,6 +2963,21 @@ export interface MedicineFinancingStatusDto extends Serializable {
     id: number;
 }
 
+export interface MedicineGroupMedicineDto extends Serializable {
+    conceptPt: string;
+    financed: boolean;
+    id: number;
+    medicineGroupId: number;
+    medicineId: number;
+}
+
+export interface MedicineGroupProblemDto extends Serializable {
+    conceptPt: string;
+    id: number;
+    medicineGroupId: number;
+    problemId: number;
+}
+
 export interface MergedPatientSearchDto {
     auditType: EAuditType;
     idPatient: number;

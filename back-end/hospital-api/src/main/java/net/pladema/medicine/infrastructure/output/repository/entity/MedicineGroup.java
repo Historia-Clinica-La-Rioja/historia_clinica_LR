@@ -15,8 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,7 +22,7 @@ import java.io.Serializable;
 @EntityListeners(SGXAuditListener.class)
 @Table(name = "medicine_group")
 @Entity
-public class MedicineGroup extends SGXAuditableEntity<Integer> {
+public class MedicineGroup extends SGXAuditableEntity<Integer>  {
 
 	@Id
 	@Column(name = "id")
@@ -48,5 +46,8 @@ public class MedicineGroup extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "message")
 	private String message;
+
+	@Column(name = "all_diagnoses", nullable = false)
+	private Boolean allDiagnoses;
 
 }

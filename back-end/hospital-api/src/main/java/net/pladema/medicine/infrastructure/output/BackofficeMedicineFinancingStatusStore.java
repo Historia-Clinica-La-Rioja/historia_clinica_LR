@@ -1,4 +1,4 @@
-package net.pladema.medicine.infrastructure.input.rest;
+package net.pladema.medicine.infrastructure.output;
 
 import net.pladema.medicine.infrastructure.output.repository.MedicineFinancingStatusRepository;
 import lombok.AllArgsConstructor;

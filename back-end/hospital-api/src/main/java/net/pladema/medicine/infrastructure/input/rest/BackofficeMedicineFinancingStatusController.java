@@ -1,6 +1,7 @@
 package net.pladema.medicine.infrastructure.input.rest;
 
 import net.pladema.medicine.infrastructure.input.rest.dto.MedicineFinancingStatusDto;
+import net.pladema.medicine.infrastructure.output.BackofficeMedicineFinancingStatusStore;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 import org.springframework.web.bind.annotation.RequestMapping;
