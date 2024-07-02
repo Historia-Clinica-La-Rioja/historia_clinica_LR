@@ -1,4 +1,3 @@
-
 const sectorMessages = {
     name: 'Sector |||| Sectores',
     fields: {
@@ -1107,13 +1106,19 @@ const messages = {
             }
         },
         medicinegroups: {
-            name: "Grupo de fármacos |||| Grupos de fármacos",
+            name: 'Grupo de fármacos |||| Grupos de fármacos',
             fields: {
-                name: "Nombre del grupo",
-                requiresAudit: "Requiere auditoría",
-                outpatient: "Ambulatoria",
-                emergencyCare: "Guardia", 
-                internment: "Internación"
+                name: 'Nombre del grupo',
+                requiresAudit: 'Requiere auditoría',
+                outpatient: 'Ambulatoria',
+                emergencyCare: 'Guardia', 
+                internment: 'Internación',
+                addpharmaco: 'Agregar fármaco',
+                addproblem: 'Agregar problema'
+            },
+            tabs: {
+                pharmacos: 'Fármacos',
+                diagnoses: 'Diagnósticos/Problemas'
             },
             createRelated: 'Crear Grupo de fármacos'
         },
@@ -1141,6 +1146,15 @@ const messages = {
             associatedParameters: 'Parámetros asociados',
             order: 'Orden',
             formName: 'Nombre de formulario'
+        },
+        medicinegroupmedicines: {
+            name: 'asociación de fármaco a grupo de fármacos'
+        },
+        medicinegroupproblems: {
+            name: 'asociación de problema/diagnósticos a grupo de fármacos',
+            fields: {
+                conceptPt: 'Nombre'
+            }
         }
     }
 };

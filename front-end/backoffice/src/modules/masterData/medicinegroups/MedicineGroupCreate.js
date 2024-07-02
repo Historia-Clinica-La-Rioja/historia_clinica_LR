@@ -20,6 +20,9 @@ const MedicineGroupCreate = props => (
             <BooleanInput source="outpatient" initialValue={false}/>
             <BooleanInput source="emergencyCare" initialValue={false}/>
             <BooleanInput source="internment" initialValue={false}/>
+            <span>Diagnósticos y problemas</span>
+            <br/>
+            <BooleanInput label="Incluir todos" source="allDiagnoses" initialValue={true}/>
             <span>Mensaje para indicaciones</span>
             <br/>
             <TextInput source="message" label="Ejemplo de indicaciones"/>
