@@ -6,7 +6,7 @@ import { TimeDto } from '@api-rest/api-model';
 
 export const VALIDATIONS = {
 	MAX_LENGTH: {
-		identif_number: 11,
+		identif_number: 20,
 		cuil: 11,
 		gender: 40,
 		phonePrefix:10,
