@@ -77,6 +77,14 @@ export const ButtonTypeStroked: Story = {
 	},
 };
 
+export const ButtonTypeBasic: Story = {
+	args: {
+		color: 'primary',
+		text: 'nueva consulta',
+		buttonType: ButtonType.BASIC,
+	},
+};
+
 
 export const Loading: Story = {
 	args: {

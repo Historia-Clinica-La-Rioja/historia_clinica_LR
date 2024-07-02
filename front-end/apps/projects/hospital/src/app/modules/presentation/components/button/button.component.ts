@@ -45,5 +45,6 @@ export enum ButtonType {
 	RAISED = 'mat-raised-button',
 	FLAT = 'mat-flat-button',
 	STROKED = 'mat-stroked-button',
-	ICON = 'mat-icon-button'
+	ICON = 'mat-icon-button',
+	BASIC = 'mat-button',
 }
