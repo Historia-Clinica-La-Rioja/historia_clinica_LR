@@ -10,6 +10,8 @@ import net.pladema.medicalconsultation.appointment.infrastructure.output.reposit
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class AppointmentPatientIdentityAccreditationStatusPortImpl implements AppointmentPatientIdentityAccreditationStatusPort {
@@ -25,6 +27,12 @@ public class AppointmentPatientIdentityAccreditationStatusPortImpl implements Ap
 	public void clearAppointmentPatientPreviousIdentificationHashByAppointmentId(Integer appointmentId) {
 		if (appointmentPatientIdentityAccreditationStatusRepository.existsById(appointmentId))
 			appointmentPatientIdentityAccreditationStatusRepository.deleteById(appointmentId);
+	}
+
+	@Override
+	public boolean patientIdentityAlreadyAccredited(Integer appointmentId) {
+		Optional<AppointmentPatientIdentityAccreditationStatus> accreditationStatus = appointmentPatientIdentityAccreditationStatusRepository.findById(appointmentId);
+		return accreditationStatus.isPresent() && accreditationStatus.get().getPatientIdentificationHash() != null;
 	}
 
 }

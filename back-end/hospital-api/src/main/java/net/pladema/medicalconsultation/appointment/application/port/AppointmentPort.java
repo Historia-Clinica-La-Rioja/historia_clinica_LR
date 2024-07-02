@@ -10,8 +10,6 @@ public interface AppointmentPort {
 
 	Integer getAppointmentParentId(Integer appointmentId);
 
-	Short getAppointmentStateIdByAppointmentId(Integer appointmentId);
-
 	Optional<AppointmentBo> getAppointmentById(Integer appointmentId);
 
 	Integer getRecurringAppointmentQuantityByAppointmentParentId(Integer appointmentParentId);

@@ -30,11 +30,6 @@ public class AppointmentPortImpl implements AppointmentPort {
 	}
 
 	@Override
-	public Short getAppointmentStateIdByAppointmentId(Integer appointmentId) {
-		return appointmentRepository.getAppointmentStateIdByAppointmentId(appointmentId);
-	}
-
-	@Override
 	public Optional<AppointmentBo> getAppointmentById(Integer appointmentId) {
 		return appointmentRepository.getAppointment(appointmentId).stream().findFirst().map(AppointmentBo::fromAppointmentVo);
 	}

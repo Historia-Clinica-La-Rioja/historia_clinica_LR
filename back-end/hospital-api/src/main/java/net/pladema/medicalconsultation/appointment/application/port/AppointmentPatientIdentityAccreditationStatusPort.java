@@ -6,4 +6,6 @@ public interface AppointmentPatientIdentityAccreditationStatusPort {
 
 	void clearAppointmentPatientPreviousIdentificationHashByAppointmentId(Integer appointmentId);
 
+	boolean patientIdentityAlreadyAccredited(Integer appointmentId);
+
 }

@@ -948,12 +948,6 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 	Integer fetchAppointmentParentId(@Param("appointmentId") Integer appointmentId);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT a.appointmentStateId " +
-			"FROM Appointment a " +
-			"WHERE a.id = :appointmentId")
-	Short getAppointmentStateIdByAppointmentId(@Param("appointmentId") Integer appointmentId);
-
-	@Transactional(readOnly = true)
 	@Query("SELECT a.modalityId " +
 			"FROM Appointment a " +
 			"WHERE a.id = :appointmentId")

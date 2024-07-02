@@ -55,8 +55,10 @@ public class ChangeAppointmentState {
 	}
 
 	private void handleOnSiteAttention(UpdateAppointmentStateBo updateAppointmentStateBo) {
-		checkAndHandleIfPreviousStateWasConfirmed(updateAppointmentStateBo);
-		checkAndHandleIfNewStateIsConfirmed(updateAppointmentStateBo);
+		if (mustAddPatientIdentificationStatusInfo(updateAppointmentStateBo))
+			savePatientIdentificationStatusInfo(updateAppointmentStateBo);
+		if (mustRemovePatientIdentificationStatusInfo(updateAppointmentStateBo.getAppointmentStateId()))
+			appointmentPatientIdentityAccreditationStatusPort.clearAppointmentPatientPreviousIdentificationHashByAppointmentId(updateAppointmentStateBo.getAppointmentId());
 	}
 
 	private void checkAndHandleRecurringAppointment(UpdateAppointmentStateBo updateAppointmentStateBo) {
@@ -70,13 +72,13 @@ public class ChangeAppointmentState {
 			appointmentService.checkRemainingChildAppointments(appointmentParentId);
 	}
 
-	private void checkAndHandleIfNewStateIsConfirmed(UpdateAppointmentStateBo updateAppointmentStateBo) {
-		if (mustModifyPatientIdentificationStatusInfo(updateAppointmentStateBo.getAppointmentStateId()))
-			savePatientIdentificationStatusInfo(updateAppointmentStateBo);
+	private boolean mustAddPatientIdentificationStatusInfo(UpdateAppointmentStateBo updateAppointmentStateBo) {
+		boolean patientIdentityAlreadyAccredited = appointmentPatientIdentityAccreditationStatusPort.patientIdentityAlreadyAccredited(updateAppointmentStateBo.getAppointmentId());
+		return updateAppointmentStateBo.getAppointmentStateId().equals(AppointmentState.CONFIRMED) && featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA) && !patientIdentityAlreadyAccredited;
 	}
 
-	private boolean mustModifyPatientIdentificationStatusInfo(Short appointmentStateId) {
-		return appointmentStateId.equals(AppointmentState.CONFIRMED) && featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA);
+	private boolean mustRemovePatientIdentificationStatusInfo(Short appointmentStateId) {
+		return appointmentStateId.equals(AppointmentState.ASSIGNED) && featureFlagsService.isOn(AppFeature.HABILITAR_ANEXO_II_MENDOZA);
 	}
 
 	private void savePatientIdentificationStatusInfo(UpdateAppointmentStateBo updateAppointmentStateBo) {
@@ -87,12 +89,6 @@ public class ChangeAppointmentState {
 			patientIdentityAccreditationStatusId = EPatientIdentityAccreditationStatus.VALID.getId();
 		}
 		appointmentPatientIdentityAccreditationStatusPort.save(updateAppointmentStateBo.getAppointmentId(), patientIdentityAccreditationStatusId, encryptedPatientIdentificationHash);
-	}
-
-	private void checkAndHandleIfPreviousStateWasConfirmed(UpdateAppointmentStateBo updateAppointmentStateBo) {
-		Short previousAppointmentState = appointmentPort.getAppointmentStateIdByAppointmentId(updateAppointmentStateBo.getAppointmentId());
-		if (mustModifyPatientIdentificationStatusInfo(previousAppointmentState))
-			appointmentPatientIdentityAccreditationStatusPort.clearAppointmentPatientPreviousIdentificationHashByAppointmentId(updateAppointmentStateBo.getAppointmentId());
 	}
 
 }
