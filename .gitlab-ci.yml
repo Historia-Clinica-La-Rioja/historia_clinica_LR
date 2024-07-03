@@ -1,8 +1,16 @@
+stages:
+  - build
+  - dockerize
+  - quality
+  - publish-docker-image
+
 include:
   - project: 'lamansys/cicd'
-    ref: gian
     file:
-      - '/gitlab/integration.yml'
+      - 'gitlab/stages/build-full.yml'
+  - project: 'lamansys/cicd'
+    file:
+      - 'gitlab/stages/quality-backend.yml'
 
 build_frontend:
   extends: .build_frontend_base
