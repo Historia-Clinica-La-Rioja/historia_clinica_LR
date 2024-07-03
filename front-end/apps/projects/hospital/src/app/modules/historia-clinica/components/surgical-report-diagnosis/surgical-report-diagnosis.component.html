@@ -3,6 +3,11 @@
 	[title]="'ambulatoria.paciente.surgical-report.diagnosis.PRE_SURGERY' | translate" icon="error_outlined"
 	[collapsed]="false" [hideBorder]="true" [isEmpty]="isEmpty()">
 
-	<app-diagnosticos id="diagnosis" [showTitle]="false" [(mainDiagnosis)]="mainDiagnosis"
-	[(listDiagnosis)]="surgicalReport.preoperativeDiagnosis" [type]="'PARTE QUIRURGICO'"></app-diagnosticos>
+	<app-diagnosticos id="diagnosis" [showTitle]="false"
+		[(mainDiagnosis)]="mainDiagnosis"
+		[(listDiagnosis)]="diagnosis"
+		[type]="'PARTE QUIRURGICO'"
+		(mainDiagnosisChange)="changeDiagnosis()"
+		(diagnosisChange)="changeDiagnosis()">
+	</app-diagnosticos>
 </app-new-consultation-expansion-section>

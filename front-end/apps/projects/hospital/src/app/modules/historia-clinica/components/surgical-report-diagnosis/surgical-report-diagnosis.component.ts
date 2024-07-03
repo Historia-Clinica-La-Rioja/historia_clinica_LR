@@ -18,10 +18,16 @@ export class SurgicalReportDiagnosisComponent implements OnInit{
 	) {}
 
 	ngOnInit(){
+		this.surgicalReport.mainDiagnosis = this.mainDiagnosis;
 		this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
 	}
 
 	isEmpty(): boolean {
 		return !this.surgicalReport.preoperativeDiagnosis?.length;
     }
+
+	changeDiagnosis(): void {
+		this.surgicalReport.mainDiagnosis = this.mainDiagnosis;
+		this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
+	}
 }

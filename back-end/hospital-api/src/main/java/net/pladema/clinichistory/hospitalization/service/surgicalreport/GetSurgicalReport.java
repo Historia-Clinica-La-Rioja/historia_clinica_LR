@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.surgicalreport;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosisBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.GeneralHealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SurgicalReportRepository;
@@ -36,6 +37,7 @@ public class GetSurgicalReport {
 		result.setEncounterId(document.getSourceId());
 		result.setInstitutionId(document.getInstitutionId());
 		GeneralHealthConditionBo generalHealthConditionBo = documentService.getHealthConditionFromDocument(documentId);
+		result.setMainDiagnosis(new DiagnosisBo(generalHealthConditionBo.getMainDiagnosis()));
 		result.setPreoperativeDiagnosis(generalHealthConditionBo.getPreoperativeDiagnosis());
 		result.setPostoperativeDiagnosis(generalHealthConditionBo.getPostoperativeDiagnosis());
 		List<ProcedureBo> procedures = documentService.getProcedureStateFromDocument(documentId);

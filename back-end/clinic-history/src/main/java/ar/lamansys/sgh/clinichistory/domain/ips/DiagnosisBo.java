@@ -20,6 +20,13 @@ public class DiagnosisBo extends HealthConditionBo {
         super(snomed);
     }
 
+	public DiagnosisBo(HealthConditionBo healthConditionBo) {
+		super(healthConditionBo.getSnomed());
+		this.setVerificationId(healthConditionBo.getVerificationId());
+		this.setVerification(healthConditionBo.getVerification());
+		this.setMain(healthConditionBo.isMain());
+	}
+
     public boolean isPresumptive() {
         if (getVerificationId() != null && ConditionVerificationStatus.isDownState(getVerificationId()))
             return false;

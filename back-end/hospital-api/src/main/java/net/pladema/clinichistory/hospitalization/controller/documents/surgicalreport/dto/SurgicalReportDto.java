@@ -27,6 +27,9 @@ public class SurgicalReportDto implements Serializable {
 	private boolean confirmed = false;
 
 	@Nullable
+	private DiagnosisDto mainDiagnosis;
+
+	@Nullable
 	private @Valid List<DiagnosisDto> preoperativeDiagnosis = new ArrayList<>();
 
 	@Nullable

@@ -50,6 +50,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		frozenSectionBiopsies: [],
 		healthcareProfessionals: [],
 		modificationReason: undefined,
+		mainDiagnosis: undefined,
 		postoperativeDiagnosis: [],
 		preoperativeDiagnosis: [],
 		procedures: [],
@@ -103,12 +104,13 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 			})
 		}
 	}
+
 	ngOnInit(): void {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFF = isOn;
 		})
 	}
-	
+
 	setDisabled(): void {
 		this.disabled = !this.validDate || !this.validProsthesis;
 	}
@@ -127,12 +129,12 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		if (!this.disabled) {
 			this.surgicalReport.confirmed = true;
 			this.isLoading = true;
+			this.surgicalReport.preoperativeDiagnosis = this.filterCheckedDiagnosis(this.surgicalReport.preoperativeDiagnosis);
 			if (this.data.surgicalReportId) {
 				this.openEditReason();
 				this.isLoading = false;
 				return;
 			}
-
 			this.surgicalReportService.saveSurgicalReport(this.data.internmentEpisodeId, this.surgicalReport).subscribe(
 				saved => {
 					this.snackBarService.showSuccess('Parte quirúrgico generado correctamente');
@@ -149,6 +151,10 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 			this.markAsTouched = true;
 			this.snackBarService.showError('Faltan completar campos en el formulario');
 		}
+	}
+
+	private filterCheckedDiagnosis(diagnosis: DiagnosisDto[]): DiagnosisDto[] {
+		return diagnosis.filter(d => d.isAdded);
 	}
 
 	private openEditReason() {

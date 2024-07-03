@@ -39,6 +39,9 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	private LocalDate patientInternmentAge;
 
 	@Nullable
+	private DiagnosisBo mainDiagnosis;
+
+	@Nullable
 	private @Valid List<DiagnosisBo> preoperativeDiagnosis = new ArrayList<>();
 
 	@Nullable
