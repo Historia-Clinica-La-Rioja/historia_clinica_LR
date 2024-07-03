@@ -56,7 +56,7 @@ public interface DocumentFileRepository extends SGXAuditableEntityJPARepository<
 	@Query(value = " SELECT EXISTS (" +
 			"	SELECT 1 " +
 			"	FROM document_file df " +
-			"	WHERE df.signatureStatusId > 0" +
+			"	WHERE df.signature_status_id > 0" +
 			")", nativeQuery = true)
 	boolean documentsWereAlreadySigned();
 
