@@ -13,7 +13,6 @@ import { DescriptionItemDataSummary } from '@historia-clinica/components/descrip
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
 const PRESUMPTIVE = HEALTH_VERIFICATIONS.PRESUNTIVO;
-const INFO_DIVIDER = ' | ';
 
 @Injectable({
     providedIn: 'root'
@@ -154,7 +153,9 @@ export class DocumentsSummaryMapperService {
     }
 
     private getMedicationDescription(medication: MedicationDto): string {
-        return medication.note ? `${medication.snomed.pt} ${this.isSuspended(medication)} ${INFO_DIVIDER} ${medication.note}` : `${medication.snomed.pt} ${this.isSuspended(medication)}`;
+        return medication.note ? `${medication.snomed.pt} ${this.isSuspended(medication)}
+${medication.note}`
+            : `${medication.snomed.pt} ${this.isSuspended(medication)}`;
     }
 
     private isSuspended(medication: MedicationDto): string {
