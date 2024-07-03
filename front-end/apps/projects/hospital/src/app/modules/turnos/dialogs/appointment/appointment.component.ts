@@ -1002,8 +1002,9 @@ export class AppointmentComponent implements OnInit {
 			} else {
 				if(this.HABILITAR_ANEXO_II_MENDOZA && this.hasRoleAdmin$
 					 && this.patientSummary.identification.type === this.TYPE_DNI 
-					 && this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED 
-					 && this.selectedModality.value === this.ON_SITE_ATTENTION){
+					 && (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED || 
+						  this.selectedState === APPOINTMENT_STATES_ID.ABSENT )
+					 && this.selectedModality.value === this.ON_SITE_ATTENTION ){
 					this.openScanPatientDialog(newStateId);
 				}else{
 					this.updateState(newStateId);
