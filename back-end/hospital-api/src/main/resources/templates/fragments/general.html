@@ -1071,13 +1071,13 @@
             <dl th:each="history,iter: ${histories}">
                 <dd><p class="wide_wrapped_text" th:text="${'- ' + history.snomed.pt}"></p></dd>
             </dl>
-            <dd th:if="${procedureDescription != null}">
+            <dd th:if="${procedureDescription != null && procedureDescription.note != null}">
                 <strong>Observaciones: </strong>
-                <p class="wide_wrapped_text" th:text="${procedureDescription.note} ? ${procedureDescription.note} : _"></p>
+                <p class="wide_wrapped_text" th:text="${procedureDescription.note}"></p>
             </dd>
-            <dd th:if="${procedureDescription != null}">
+            <dd th:if="${procedureDescription != null && procedureDescription.asa != null}">
                 <strong>ASA: </strong>
-                <span th:text="${procedureDescription.asa} ? ${procedureDescription.asa} : _"></span>
+                <span th:text="${procedureDescription.asa}"></span>
             </dd>
         </div>
     </div>
