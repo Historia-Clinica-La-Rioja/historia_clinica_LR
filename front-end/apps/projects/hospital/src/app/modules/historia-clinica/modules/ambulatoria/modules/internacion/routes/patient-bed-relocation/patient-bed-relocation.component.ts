@@ -13,14 +13,21 @@ import {
 	PatientBedRelocationDto,
 	BedInfoDto,
 	PatientMedicalCoverageDto,
-	PersonPhotoDto
+	PersonPhotoDto, ApiErrorMessageDto
 } from '@api-rest/api-model';
 import { map } from 'rxjs/operators';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { scrollIntoError, hasError, futureTimeValidation, MinTimeValidator, TIME_PATTERN } from '@core/utils/form.utils';
+import {
+	scrollIntoError,
+	hasError,
+	futureTimeValidation,
+	MinTimeValidator,
+	TIME_PATTERN,
+	processErrors
+} from '@core/utils/form.utils';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { ContextService } from '@core/services/context.service';
 import { BedService } from '@api-rest/services/bed.service';
@@ -189,10 +196,10 @@ export class PatientBedRelocationComponent implements OnInit {
 								const url = this.routePrefix + ROUTE_PROFILE + this.patientId;
 								this.router.navigate([url]);
 								this.snackBarService.showSuccess('internaciones.bed-relocation.messages.SUCCESS');
-							} else {
-								this.snackBarService.showError('internaciones.bed-relocation.messages.ERROR_DATE');
 							}
-						}, _ => this.snackBarService.showError('internaciones.bed-relocation.messages.ERROR'));
+						}, (error: ApiErrorMessageDto) => {
+							processErrors(error, (msg) => this.snackBarService.showError(msg));
+						});
 				}
 			});
 		});

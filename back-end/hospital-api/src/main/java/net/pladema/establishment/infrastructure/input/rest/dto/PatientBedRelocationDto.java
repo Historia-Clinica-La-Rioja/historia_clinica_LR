@@ -1,4 +1,4 @@
-package net.pladema.establishment.controller.dto;
+package net.pladema.establishment.infrastructure.input.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
