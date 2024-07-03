@@ -1,14 +1,14 @@
-package ar.lamansys.sgx.shared.templating.utils.testing;
+package ar.lamansys.sgx.shared.notifications.templating.utils.testing;
 
-import static ar.lamansys.sgx.shared.templating.utils.testing.TemplateTestingUtils.GENERIC_RECIPIENT;
-import static ar.lamansys.sgx.shared.templating.utils.testing.TemplateTestingUtils.createExpectedResultAsserter;
+import static ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateTestingUtils.GENERIC_RECIPIENT;
+import static ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateTestingUtils.createExpectedResultAsserter;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 
 import ar.lamansys.sgx.shared.emails.domain.MailMessageBo;
-import ar.lamansys.sgx.shared.templating.MailTemplateEngine;
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.engine.impl.MailTemplateEngine;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
 import lombok.AllArgsConstructor;
 

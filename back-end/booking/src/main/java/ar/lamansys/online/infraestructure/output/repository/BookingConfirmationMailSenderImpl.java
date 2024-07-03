@@ -3,11 +3,9 @@ package ar.lamansys.online.infraestructure.output.repository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import javax.mail.MessagingException;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedSnomedPort;
 
-import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.online.BookingAutoConfiguration;
@@ -26,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class BookingConfirmationMailSenderImpl implements BookingConfirmationMailSender {
 	private static final String RECOMMENDATION = "- Presentarse 15 min antes con el carnet de la Obra Social.\n";
-//	private static final String SUBJECT = "Confirmación de turno online";
 	private static final String ROUTE = "home/cancelacion?code=";
 
 	private final BookingAutoConfiguration bookingAutoConfiguration;
@@ -84,8 +81,6 @@ public class BookingConfirmationMailSenderImpl implements BookingConfirmationMai
 	}
 
 	private String getInstitution(BookingBo bookingBo) {
-		if (bookingBo.isOnlineBooking())
-			return "Sanatorio Tandil - Sarmiento 770";
 		return bookingAppointmentStorage.getInstitutionAddress(bookingBo.bookingAppointment.getDiaryId());
 	}
 

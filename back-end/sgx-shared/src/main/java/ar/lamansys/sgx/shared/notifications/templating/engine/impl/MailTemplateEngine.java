@@ -1,6 +1,6 @@
-package ar.lamansys.sgx.shared.templating;
+package ar.lamansys.sgx.shared.notifications.templating.engine.impl;
 
-import static ar.lamansys.sgx.shared.templating.SpringTemplateUtils.createHtmlTemplateEngine;
+import static ar.lamansys.sgx.shared.templating.utils.SpringTemplateUtils.createHtmlTemplateEngine;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.emails.domain.MailMessageBo;
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
-import ar.lamansys.sgx.shared.templating.domain.NotificationEnv;
+import ar.lamansys.sgx.shared.notifications.templating.INotificationTemplateEngine;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.domain.NotificationEnv;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,12 +1,12 @@
-package ar.lamansys.sgx.shared.templating;
+package ar.lamansys.sgx.shared.notifications.templating.engine.impl;
 
 import java.util.function.Supplier;
 
 import org.springframework.context.MessageSource;
 
-import ar.lamansys.sgx.shared.templating.domain.NotificationContext;
-import ar.lamansys.sgx.shared.templating.domain.NotificationEnv;
-import ar.lamansys.sgx.shared.templating.impl.NotificationTemplateEngine;
+import ar.lamansys.sgx.shared.notifications.templating.engine.NotificationTemplateEngine;
+import ar.lamansys.sgx.shared.notifications.templating.domain.NotificationContext;
+import ar.lamansys.sgx.shared.notifications.templating.domain.NotificationEnv;
 
 
 public class TextTemplateEngine extends NotificationTemplateEngine<String> {

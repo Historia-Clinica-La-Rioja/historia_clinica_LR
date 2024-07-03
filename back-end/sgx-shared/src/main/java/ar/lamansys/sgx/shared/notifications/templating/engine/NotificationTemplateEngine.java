@@ -1,14 +1,14 @@
-package ar.lamansys.sgx.shared.templating.impl;
+package ar.lamansys.sgx.shared.notifications.templating.engine;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
-import ar.lamansys.sgx.shared.templating.INotificationTemplateEngine;
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
-import ar.lamansys.sgx.shared.templating.domain.NotificationContext;
-import ar.lamansys.sgx.shared.templating.domain.NotificationEnv;
+import ar.lamansys.sgx.shared.notifications.templating.INotificationTemplateEngine;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.domain.NotificationContext;
+import ar.lamansys.sgx.shared.notifications.templating.domain.NotificationEnv;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
 
 public abstract class NotificationTemplateEngine<T> implements INotificationTemplateEngine<T> {

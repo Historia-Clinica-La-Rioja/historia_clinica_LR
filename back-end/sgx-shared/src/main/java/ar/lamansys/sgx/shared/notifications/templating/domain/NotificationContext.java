@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.templating.domain;
+package ar.lamansys.sgx.shared.notifications.templating.domain;
 
 import java.util.Locale;
 import java.util.Map;

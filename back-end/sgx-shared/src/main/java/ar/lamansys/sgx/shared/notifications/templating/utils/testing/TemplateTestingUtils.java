@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.templating.utils.testing;
+package ar.lamansys.sgx.shared.notifications.templating.utils.testing;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

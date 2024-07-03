@@ -1,7 +1,7 @@
 package net.pladema.medicalconsultation.virtualConsultation.infrastructure.output.notification;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
 
 public class VirtualConsultationAppointmentTemplateInput extends NotificationTemplateInput<VirtualConsultationAppointmentTemplateArgs> {
 

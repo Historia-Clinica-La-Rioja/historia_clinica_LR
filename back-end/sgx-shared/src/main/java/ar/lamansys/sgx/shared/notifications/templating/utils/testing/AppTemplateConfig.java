@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.templating.utils.testing;
+package ar.lamansys.sgx.shared.notifications.templating.utils.testing;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

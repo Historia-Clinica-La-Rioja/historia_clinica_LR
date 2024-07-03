@@ -145,6 +145,99 @@ classDiagram
 
 ```
 
+## Renderizado del mensaje
+
+Para la construcción del mensaje a enviar se utilizan algún [Template Engine](https://en.wikipedia.org/wiki/Template_processor) adecuado para el canal.
+
+> A template engine is software designed to combine _templates_ with a _data model_ to produce result documents.
+
+### Template Engine Diagram
+```mermaid
+graph LR
+    TF[Hi %s, you have %s messages] -->|"input(Template)"| TE((Template engine))
+    TD["[Huguito, 5]"] -->|"input(Data)"| TE
+    TE --> |output| O>Hi Huguito, you have 5 messages]
+```
+
+### Notification Template Input
+
+La entrada de un _Template Engine_ se modela con una clase que extienda de [NotificationTemplateInput](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/NotificationTemplateInput.java) que tendrá la responsabilidad de combinar una plantilla con sus argumentos necesarios para que cada _NotificationTemplateEngine_ pueda renderizar esa plantilla.
+
+Por ejemplo, en [NewAppointmentTemplateInput](../hospital-api/src/main/java/net/pladema/medicalconsultation/appointment/infraestructure/output/notification/NewAppointmentTemplateInput.java) se define el `templateId="new-appointment"` y sus argumentos de tipo [NewAppointmentNotificationArgs](../hospital-api/src/main/java/net/pladema/medicalconsultation/appointment/infraestructure/output/notification/NewAppointmentNotificationArgs.java).
+
+### Notification Template Engines
+
+Cada implementación de [NotificationTemplateEngine](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/impl/NotificationTemplateEngine.java) tiene la responsabilidad de generar un mensaje a partir de:
+* `input` los datos de entrada contenidos en un _Notification Template Input_ 
+* `recipient` los datos del _Recipient_
+* Información provista por servicios globales, Feature Flags, propiedades, etc.
+
+1. Template
+   1. `input.templateId`: identificador de la plantilla
+   2. `locale`: idioma del _Recipient_
+2. Data
+   1. `input.args`: DTO específico de la plantilla
+   2. `recipient`: datos del destinatario, como su nombre de pila
+   3. `env`: datos del ambiente, como su dominio público (`https://hsi...`).
+
+#### HTML Template Engine
+
+Sin dudas la implementación de _Notification Template Engine_ más importante es la que permite producir HTML renderizado en el back-end. Para esto Spring provee la **infraestructura** necesaria para utilizar diferentes _Template Engines_, como se explica en [Template Engines for Spring](https://www.baeldung.com/spring-template-engines). Se definió que este proyecto utilice Thymeleaf para producir el HTML de las notificaciones, ya que además es la herramienta utilizada también para la generación de PDFs (desde HTML).
+
+Se puede entender que el uso de Thymeleaf permitirá invocar `String org.thymeleaf.ITemplateEngine.process(final String template, final IContext context)` donde `template` identifica la plantilla (_Template_) y `context` contiene los datos (_Data_) a utilizar. Particularmente se deberá instanciar la clase `SpringTemplateEngine` que implementa este método, para esto se ofrece la clase utilitaria [ar.lamansys.sgx.shared.templating.utils.SpringTemplateUtils](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/SpringTemplateUtils.java) donde el método `createHtmlTemplateEngine(String templatePrefix, ...)` obliga definir el prefijo que permitirá obtener la plantilla a partir del `templateId`.
+
+##### HTML Template Engine Testing
+
+Se provee el [HTMLTemplateEngineTest](../sgx-shared/src/test/java/ar/lamansys/sgx/shared/templating/HTMLTemplateEngineTest.java) donde se pone a prueba el funcionamiento del _HTMLTemplateEngine_.
+
+## Notification Template Testing
+
+Para contar con una cobertura completa del funcionamiento de plantillas para las notificaciones se deberá validar el resultado de cada implementación de _NotificationTemplateInput_ para cada _NotificationChannelManager_.
+
+| NotificationTemplateInput   | EmailChannelManager |
+|-----------------------------|---------------------|
+| `new-appointment`           | [NewAppointmentNotificationMessageTest](../hospital-api/src/test/java/net/pladema/medicalconsultation/appointment/infraestructure/output/notification/NewAppointmentNotificationMessageTest.java) |
+
+Para poder implementar estos tests de manera más ágil se provee [TemplateTestingUtils.createExpectedResultAsserter](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/utils/testing/TemplateTestingUtils.java) que permitirá comparar el mensaje generado con un archivo guardado en `resources`.
+
+
+
+Sería interesante contar con un test unitario por cada clase que extiende de _NotificationTemplateInput_ al menos para validar que el HTML generado sea el esperado. En este punto se podría comparar con un archivo HTML guardado entre los recursos de los tests, todo dentro del módulo correspondiente. 
+
+```java
+// back-end/hospital-api/src/main/java/[...]/NewAppointmentTemplateInput.java
+class NewAppointmentNotificationMessageTest() {
+    private BiConsumer<String, String> mailBodyResultAsserter;
+    // ...
+    @BeforeEach
+    void setUp() {
+        // ...
+        this.mailBodyResultAsserter = createExpectedResultAsserter(
+                "mail-body",                            // channel
+                NewAppointmentTemplateInput.TEMPLATE_ID // template
+        );
+    }
+    @Test
+    void minimalRequiredData() {
+        var mail = this.renderMessage();
+        // Will compare mail body with resources/templates/notifications/{channel}/{template}-{scenario}.html placed in same module.
+        // In this example, module = hospital-api, so file will be found at hospital-api/src/test/resources/templates/notifications/mail-body/new-appointment-requiredArgs.html
+        mailBodyResultAsserter.accept(
+                "requiredArgs",    // scenario 
+                mail.body       // result
+        );
+    }
+}
+```
+
+Además se puede visualizar en un navegador el archivo guardado realizando los siguientes pasos:
+
+```shell
+npx http-server -p 5001 back-end
+```
+
+Luego se puede abrir en un navegador la URL: http://127.0.0.1:5001/hospital-api/src/test/resources/templates/notifications/mail-body/new-appointment-requiredArgs.html
+
 ## Exception Handling
 
 El análisis de los posibles problemas y cómo deberían manejarse se puede realizar por responsabilidad:
@@ -154,46 +247,3 @@ El análisis de los posibles problemas y cómo deberían manejarse se puede real
 3. Notification Sender: es tan normal la ocurrencia de errores en esta etapa como insalvables por lo que simplemente se deberá registrar el error en el log.
    1. Notification Template Engines: el uso de DTOs para estructurar los argumentos mitigaría la posibilidad de errores en esta etapa. 
    2. Notification Channels: podrían aparecer errores de conexión o de aplicación en este punto.
-
-## Notification Template Input
-
-Cada clase que extiende de [NotificationTemplateInput](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/NotificationTemplateInput.java) tiene la responsabilidad de modelar una plantilla con su DTO de argumentos necesarios para que cada _NotificationTemplateEngine_ pueda renderizar la plantilla.
-
-Por ejemplo, en [NewAppointmentTemplateInput](../hospital-api/src/main/java/net/pladema/medicalconsultation/appointment/infraestructure/output/notification/NewAppointmentTemplateInput.java) se define el `templateId` que luego en el caso del [MailTemplateEngine](../sgx-shared/src/main/java/ar/lamansys/sgx/shared/templating/MailTemplateEngine.java) resolverá usar la plantilla para HTML ubicada en `classpath:/templates/mails/new-appointment.html`. Las plantillas HTML se implementan con `SpringTemplateEngine` y [thymeleaf](https://www.thymeleaf.org/).
-
-Al buscar las plantillas en el `classpath` se permite que cada módulo tenga sus plantillas siempre que respete la ubicación, de esta manera:
-
-1. NewAppointmentTemplateInput.java y "new-appointment.html" en "hospital-api"
-2. [ConfirmarReservaTemplateInput.java](../booking/src/main/java/ar/lamansys/online/infraestructure/notification/message/ConfirmarReservaTemplateInput.java) y "email-confirmar-reserva.html" en "booking"
-
-Además el módulo "app" puede ofrecer fragmentos como `header` y `footer` para uso en común por las plantillas. 
-
-> Thymeleaf Fragments to reuse some common parts of a site
-
-Por último vale la pena remarcar que _MailTemplateEngine_ permite configurar la ubicación de las plantillas, por lo que un dominio podría pisar el 100% de las plantillas y sus fragmentos usados por el sistema.
-
-## Notification Template Testing
-
-Sería interesante contar con un test unitario por cada clase que extiende de _NotificationTemplateInput_ al menos para validar que el HTML generado sea el esperado. En este punto se podría comparar con un archivo HTML guardado entre los recursos de los tests, todo dentro del módulo correspondiente. 
-
-```java
-class NewConfirmationTemplateInputTest() {
-    @Test
-    void minimalRequiredData() {
-        var recipient = minimalRequiredDataRecipient();
-        var dto = new NewConfirmationTemplateInput(minimalRequiredDataDto());
-        var htmlContent = templateEngine.process(recipient, dto);
-        assertEquals(htmlContent, loadFileContent(NewConfirmationTemplateInput.templateId ,"minimalRequiredData.html"));
-    }
-}
-```
-
-Además esto permitiría observar visualmente el archivo HTML guardado para confirmar que se ve correctamente, usando:
-
-```shell
-npx http-server -p 5001 hospital-api/src/test/resources/render/mails/new-appointment
-```
-
-Lo que permitiría ver el mail renderizado en `http://localhost:5001/minimalRequiredData.html`.
-
-Otra opción sería generar una imagen con el renderizado y comparar visualmente, o mas sencillo usar MD5.

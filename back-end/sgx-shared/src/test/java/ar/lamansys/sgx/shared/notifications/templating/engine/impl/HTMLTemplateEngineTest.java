@@ -1,8 +1,8 @@
-package ar.lamansys.sgx.shared.templating;
+package ar.lamansys.sgx.shared.notifications.templating.engine.impl;
 
-import static ar.lamansys.sgx.shared.templating.utils.testing.TemplateTestingUtils.classpathFileContent;
+import static ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateTestingUtils.classpathFileContent;
 import static org.assertj.core.api.Assertions.assertThat;
-import static ar.lamansys.sgx.shared.templating.SpringTemplateUtils.createHtmlTemplateEngine;
+import static ar.lamansys.sgx.shared.templating.utils.SpringTemplateUtils.createHtmlTemplateEngine;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 
@@ -17,7 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
-import ar.lamansys.sgx.shared.templating.domain.NotificationEnv;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.domain.NotificationEnv;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
 import lombok.AllArgsConstructor;
 

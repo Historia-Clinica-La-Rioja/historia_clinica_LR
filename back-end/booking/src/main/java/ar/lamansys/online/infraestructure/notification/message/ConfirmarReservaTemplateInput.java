@@ -1,7 +1,7 @@
 package ar.lamansys.online.infraestructure.notification.message;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
 
 public class ConfirmarReservaTemplateInput extends NotificationTemplateInput<ConfirmarReservaNotificationArgs> {
 	public static final String TEMPLATE_ID = "email-confirmar-reserva";

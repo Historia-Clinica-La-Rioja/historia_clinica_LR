@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.templating;
+package ar.lamansys.sgx.shared.notifications.templating;
 
 import ar.lamansys.sgx.shared.notifications.domain.RecipientBo;
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;

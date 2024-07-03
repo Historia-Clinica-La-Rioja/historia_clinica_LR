@@ -1,9 +1,9 @@
 package net.pladema.user.infrastructure.output.notification;
 
 import ar.lamansys.sgx.shared.templating.exceptions.TemplateException;
-import ar.lamansys.sgx.shared.templating.utils.testing.AppTemplateConfig;
+import ar.lamansys.sgx.shared.notifications.templating.utils.testing.AppTemplateConfig;
 
-import ar.lamansys.sgx.shared.templating.utils.testing.TemplateMailTestingHelper;
+import ar.lamansys.sgx.shared.notifications.templating.utils.testing.TemplateMailTestingHelper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

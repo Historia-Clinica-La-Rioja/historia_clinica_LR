@@ -1,7 +1,7 @@
 package net.pladema.medicalconsultation.appointment.infrastructure.output.notification;
 
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
 
 /**
  * Define el nombre del template y los argumentos que se requieren como input para renderizar el mensaje.

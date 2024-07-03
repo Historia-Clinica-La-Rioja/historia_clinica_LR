@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.templating;
+package ar.lamansys.sgx.shared.notifications.templating;
 
 import java.util.Collections;
 import java.util.List;

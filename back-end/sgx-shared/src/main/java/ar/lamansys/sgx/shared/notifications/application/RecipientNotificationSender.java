@@ -1,6 +1,6 @@
 package ar.lamansys.sgx.shared.notifications.application;
 
-import ar.lamansys.sgx.shared.templating.NotificationTemplateInput;
+import ar.lamansys.sgx.shared.notifications.templating.NotificationTemplateInput;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

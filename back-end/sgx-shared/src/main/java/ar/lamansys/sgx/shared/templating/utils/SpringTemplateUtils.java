@@ -1,4 +1,4 @@
-package ar.lamansys.sgx.shared.templating;
+package ar.lamansys.sgx.shared.templating.utils;
 
 import java.nio.charset.StandardCharsets;
 
