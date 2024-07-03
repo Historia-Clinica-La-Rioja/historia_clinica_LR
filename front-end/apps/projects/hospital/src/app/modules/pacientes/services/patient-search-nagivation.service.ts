@@ -137,8 +137,11 @@ export class PatientSearchNagivationService {
 	}
 
 	private goToCreatePerson() {
+		let encryptedPerson = btoa(JSON.stringify(this.paramsToSearchPerson));
 		this.router.navigate([`${this.routePrefix}${ROUTE_NEW}`], {
-			queryParams: this.paramsToSearchPerson
+			queryParams: {
+				person: encryptedPerson
+			}
 		});
 	}
 

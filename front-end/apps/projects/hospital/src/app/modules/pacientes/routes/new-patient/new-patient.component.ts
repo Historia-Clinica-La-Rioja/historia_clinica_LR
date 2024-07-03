@@ -106,7 +106,10 @@ export class NewPatientComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.route.queryParams
-			.pipe(take(1), map(params => toParamsToSearchPerson(params)))
+			.pipe(take(1), map(params => {
+				let decodedParams = JSON.parse(atob(params.person));
+				return toParamsToSearchPerson(decodedParams)
+			}))
 			.subscribe(paramsToSearchPerson => {
 				this.fromGuardModule = paramsToSearchPerson.fromGuardModule;
 				this.form = this.formBuilder.group({
