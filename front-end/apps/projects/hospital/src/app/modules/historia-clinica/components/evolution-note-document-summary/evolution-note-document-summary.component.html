@@ -1,5 +1,5 @@
 <div class="evolution-note-container" data-id="evolution-note-summary">
-    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
+    <div *ngIf="(documentSummary$ | async) as summary, else loader" class="summary-content" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
         fxLayoutGap="20px">
         <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
             [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"

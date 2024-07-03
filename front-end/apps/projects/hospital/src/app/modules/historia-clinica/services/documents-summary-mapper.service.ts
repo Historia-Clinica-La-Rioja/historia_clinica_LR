@@ -49,6 +49,25 @@ export class DocumentsSummaryMapperService {
         }
     }
 
+    mapEmergencyCareToHeaderDescription(header: HospitalizationDocumentHeaderDto, title: string, canEdit?: boolean, canDelete?: boolean, canDownload?: boolean): HeaderDescription {
+        return {
+            title,
+            edit: canEdit,
+            delete: canDelete,
+            download: canDownload,
+            headerDescriptionData: {
+                scope: header.sourceTypeName,
+                specialty: header.clinicalSpecialtyName,
+                dateTime: this.dateFormatPipe.transform(dateTimeDtotoLocalDate(header.createdOn), 'datetime'),
+                professional: header.professionalName,
+                institution: header.institutionName,
+                sector: header.bed?.room.sector.description,
+                room: header.bed?.room.description,
+                bed: header.bed?.bedNumber,
+            },
+        }
+    }
+
     toDescriptionItemData(description: string,  dateToShow?: DateToShow): DescriptionItemData {
         return {
             description,

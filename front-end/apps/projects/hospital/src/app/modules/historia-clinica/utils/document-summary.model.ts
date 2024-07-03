@@ -20,6 +20,7 @@ export interface HeaderDescription {
     title: string,
     edit?: boolean,
     delete?: boolean,
+    download?: boolean,
     headerDescriptionData: HeaderDescriptionData,
 }
 

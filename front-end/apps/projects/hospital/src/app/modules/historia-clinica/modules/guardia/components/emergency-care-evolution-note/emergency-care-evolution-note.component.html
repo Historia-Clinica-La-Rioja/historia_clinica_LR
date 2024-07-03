@@ -1,39 +1,57 @@
 <div *ngIf="evolutionNoteSummary" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="20px"
     class="evolution-note-container" data-id="evolution-note-summary">
 
-    <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
-        <app-specialty-summary data-id="specialty-summary" *ngIf="evolutionNoteSummary.specialty"
-            [specialty]="evolutionNoteSummary.specialty"></app-specialty-summary>
+    <div *ngIf="(documentSummary$ | async) as headerDescription, else loader" class="summary-content" fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="20px">
+        <app-document-summary-header data-id="summary-header" [headerData]="headerDescription"
+            [isPopUpOpen]="isPopUpOpened" (editDocument)="editDocument()" (downloadDocument)="downloadDocument()"></app-document-summary-header>
+        <mat-divider></mat-divider>
 
-        <app-description-item-data-summary *ngIf="evolutionNoteSummary.reasons" data-id="reasons-summary"
-            [descriptionItemDataSummary]="evolutionNoteSummary.reasons"></app-description-item-data-summary>
+        <ng-container *ngIf="_evolutionNote.content.editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ _evolutionNote.content.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </ng-container>
 
-        <app-diagnosis-evolution-summary data-id="diagnosis-summary"
-            *ngIf="evolutionNoteSummary.mainDiagnosis || evolutionNoteSummary.diagnosis"
-            [diagnosis]="evolutionNoteSummary.diagnosis"
-            [mainDiagnosis]="evolutionNoteSummary.mainDiagnosis"></app-diagnosis-evolution-summary>
+        <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-specialty-summary data-id="specialty-summary" *ngIf="evolutionNoteSummary.specialty"
+                [specialty]="evolutionNoteSummary.specialty"></app-specialty-summary>
 
-        <app-evolutions-summary data-id="evolution-summary" *ngIf="evolutionNoteSummary.evolution"
-            [evolution]="evolutionNoteSummary.evolution"></app-evolutions-summary>
+            <app-description-item-data-summary *ngIf="evolutionNoteSummary.reasons" data-id="reasons-summary"
+                [descriptionItemDataSummary]="evolutionNoteSummary.reasons"></app-description-item-data-summary>
 
-        <app-anthropometric-data-summary data-id="anthropometric-data-summary"
-            *ngIf="evolutionNoteSummary.anthropometricData"
-            [anthropometricData]="evolutionNoteSummary.anthropometricData"></app-anthropometric-data-summary>
+            <app-diagnosis-evolution-summary data-id="diagnosis-summary"
+                *ngIf="evolutionNoteSummary.mainDiagnosis || evolutionNoteSummary.diagnosis"
+                [diagnosis]="evolutionNoteSummary.diagnosis"
+                [mainDiagnosis]="evolutionNoteSummary.mainDiagnosis"></app-diagnosis-evolution-summary>
 
-        <app-referred-item-summary data-id="family-histories-summary" *ngIf="evolutionNoteSummary.familyHistories"
-            [referredItem]="evolutionNoteSummary.familyHistories"></app-referred-item-summary>
+            <app-evolutions-summary data-id="evolution-summary" *ngIf="evolutionNoteSummary.evolution"
+                [evolution]="evolutionNoteSummary.evolution"></app-evolutions-summary>
 
-        <app-description-item-data-summary data-id="usual-medication-summary" *ngIf="evolutionNoteSummary.medications"
-            [descriptionItemDataSummary]="evolutionNoteSummary.medications"></app-description-item-data-summary>
+            <app-anthropometric-data-summary data-id="anthropometric-data-summary"
+                *ngIf="evolutionNoteSummary.anthropometricData"
+                [anthropometricData]="evolutionNoteSummary.anthropometricData"></app-anthropometric-data-summary>
 
-        <app-description-item-data-summary data-id="procedures-summary" *ngIf="evolutionNoteSummary.procedures"
-            [descriptionItemDataSummary]="evolutionNoteSummary.procedures"></app-description-item-data-summary>
+            <app-referred-item-summary data-id="family-histories-summary" *ngIf="evolutionNoteSummary.familyHistories"
+                [referredItem]="evolutionNoteSummary.familyHistories"></app-referred-item-summary>
 
-        <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
-            *ngIf="evolutionNoteSummary.vitalSignsAndRiskFactors"
-            [vitalSignsAndRiskFactors]="evolutionNoteSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+            <app-description-item-data-summary data-id="usual-medication-summary" *ngIf="evolutionNoteSummary.medications"
+                [descriptionItemDataSummary]="evolutionNoteSummary.medications"></app-description-item-data-summary>
 
-        <app-referred-item-summary data-id="allergies-summary" *ngIf="evolutionNoteSummary.allergies"
-            [referredItem]="evolutionNoteSummary.allergies"></app-referred-item-summary>
+            <app-description-item-data-summary data-id="procedures-summary" *ngIf="evolutionNoteSummary.procedures"
+                [descriptionItemDataSummary]="evolutionNoteSummary.procedures"></app-description-item-data-summary>
+
+            <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
+                *ngIf="evolutionNoteSummary.vitalSignsAndRiskFactors"
+                [vitalSignsAndRiskFactors]="evolutionNoteSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+
+            <app-referred-item-summary data-id="allergies-summary" *ngIf="evolutionNoteSummary.allergies"
+                [referredItem]="evolutionNoteSummary.allergies"></app-referred-item-summary>
+        </div>
+
     </div>
+
+    <ng-template #loader>
+        <mat-spinner color="primary" class="loader"></mat-spinner>
+    </ng-template>
 </div>

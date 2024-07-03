@@ -332,6 +332,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
         DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
+		DocumentSummaryHeaderComponent,
 		EffectiveTimeComponent,
 		MedicacionSummaryComponent,
 		FactoresDeRiesgoSummaryComponent,

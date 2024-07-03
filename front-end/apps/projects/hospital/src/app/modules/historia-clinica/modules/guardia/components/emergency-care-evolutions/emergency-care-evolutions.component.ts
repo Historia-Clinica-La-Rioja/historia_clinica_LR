@@ -1,9 +1,7 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { DOCUMENTS, } from '../../../../constants/summaries';
-import { UntypedFormGroup, } from '@angular/forms';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto, } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
-import { DocumentActionsService, DocumentSearch } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
+import { DocumentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 import { PatientNameService } from "@core/services/patient-name.service";
 import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service';
 import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
@@ -33,9 +31,6 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 	selectedTriage;
 	emergencyCareType: EmergencyCareTypes | string;
 
-	public documentsToShow: DocumentSearch[] = [];
-	public readonly documentsSummary = DOCUMENTS;
-	public form: UntypedFormGroup;
 	public activeDocument: Item;
 
 	public searchTriggered = false;
@@ -47,17 +42,14 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly emergencyCareDocumentSearchService: EmergencyCareDocumentSearchService,
 		private readonly newTriageService: NewTriageService,
-		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService
+		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
+        private changeDetectorRef: ChangeDetectorRef,
 	) {
 	}
 
 	ngOnChanges() {
-		if (this.documentHistoric) {
-			/* 	this.updateDocuments(); */
-		}
-		this.activeDocument = undefined;
+		this.resetActiveDocument();
 	}
-
 
 	ngOnInit(): void {
 		this.emergencyCareEpisodeService.getAdministrative(this.emergencyCareId)
@@ -79,18 +71,24 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 		this.activeDocument = d
 	}
 
+    resetActiveDocument() {
+        this.activeDocument = undefined;
+    }
+
 	getFullName(firstName: string, nameSelfDetermination: string): string {
 		return this.patientNameService.getPatientName(firstName, nameSelfDetermination)
 	};
 
 	private getHistoric() {
+        this.resetActiveDocument();
 		this.emergencyCareDocumentSearchService.get(this.emergencyCareId)
 			.subscribe((docs: EmergencyCareHistoricDocumentDto) => {
 				const triages = docs.triages.map(map);
 				const evolutionsNotes = docs.evolutionNotes.map(evolutionNotesMapper);
 				const allDocs = triages.concat(evolutionsNotes);
 				this.documentHistoric = allDocs.sort((a, b) => b.summary.createdOn.getTime() - a.summary.createdOn.getTime() );
-			})
+                this.changeDetectorRef.detectChanges();
+			})        
 
 		function evolutionNotesMapper(en: EmergencyCareEvolutionNoteDocumentDto): Item {
 			return {

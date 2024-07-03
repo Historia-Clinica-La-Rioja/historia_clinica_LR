@@ -33,10 +33,11 @@
                 <app-triage-details [triage]="activeDocument.content" [emergencyCareType]="emergencyCareType"
                     showRiskFactors='true'>
                 </app-triage-details>
-                <app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId" (resetActiveDocument)="activeDocument = undefined"></app-document-actions>
+                <app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId" (resetActiveDocument)="resetActiveDocument()"></app-document-actions>
             </div>
             <div *ngIf="activeDocument && (activeDocument.summary.title === 'NOTA DE EVOLUCION MEDICA')" class="summary">
-                <app-emergency-care-evolution-note [content]="activeDocument.content"></app-emergency-care-evolution-note>
+                <app-emergency-care-evolution-note [content]="activeDocument" [episodeId]="emergencyCareId"
+                    [patientId]="patientId" (resetActiveDocument)="activeDocument = undefined"></app-emergency-care-evolution-note>
             </div>
 
 		</div>
