@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ParameterizedFormParameterRepository extends JpaRepository<ParameterizedFormParameter, Integer> {
@@ -43,4 +44,13 @@ public interface ParameterizedFormParameterRepository extends JpaRepository<Para
 			"AND pfp.parameterId = :parameterId ")
 	Boolean alreadyExistsParameterizedFormParameters(@Param("parameterizedFormId") Integer parameterizedFormId,
 													 @Param("parameterId") Integer parameterId);
+
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT pfp " +
+			"FROM ParameterizedFormParameter pfp " +
+			"WHERE pfp.parameterizedFormId = :parameterizedFormId " +
+			"AND pfp.orderNumber = :orderNumber")
+	Optional<ParameterizedFormParameter> findByParameterizedFormIdAndOrder(@Param("parameterizedFormId") Integer parameterizedFormId,
+																		   @Param("orderNumber") Short orderNumber);
 }
