@@ -2663,6 +2663,14 @@ export interface InstitutionalGroupTypeDto extends Serializable {
     value: string;
 }
 
+export interface InternmentAnthropometricDataDto extends Serializable {
+    bloodType?: EffectiveClinicalObservationDto;
+    bmi?: EffectiveClinicalObservationDto;
+    headCircumference?: EffectiveClinicalObservationDto;
+    height?: EffectiveClinicalObservationDto;
+    weight?: EffectiveClinicalObservationDto;
+}
+
 export interface InternmentEpisodeADto {
     bedId: number;
     dischargeDate: Date;

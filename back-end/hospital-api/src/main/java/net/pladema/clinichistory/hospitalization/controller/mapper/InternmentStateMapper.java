@@ -21,6 +21,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.Last2Risk
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.MedicationDto;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
+import net.pladema.clinichistory.hospitalization.controller.dto.InternmentAnthropometricDataDto;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -67,12 +68,12 @@ public interface InternmentStateMapper {
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     InternmentGeneralStateDto toInternmentGeneralStateDto(HospitalizationGeneralState interment);
 
-    @Named("toAnthropometricDataDto")
-    AnthropometricDataDto toAnthropometricDataDto(AnthropometricDataBo anthropometricData);
+    @Named("toInternmentAnthropometricDataDto")
+    InternmentAnthropometricDataDto toInternmentAnthropometricDataDto(AnthropometricDataBo anthropometricData);
 
-	@Named("toListAnthropometricDataDto")
-	@IterableMapping(qualifiedByName = "toAnthropometricDataDto")
-	List<AnthropometricDataDto> toListAnthropometricDataDto(List<AnthropometricDataBo> anthropometricData);
+	@Named("toListInternmentAnthropometricDataDto")
+	@IterableMapping(qualifiedByName = "toInternmentAnthropometricDataDto")
+	List<InternmentAnthropometricDataDto> toListInternmentAnthropometricDataDto(List<AnthropometricDataBo> anthropometricData);
 
 	@Named("toHealthConditionDto")
     HealthConditionDto toHealthConditionDto(HealthConditionBo mainDiagnosis);
