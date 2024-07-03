@@ -4,9 +4,10 @@ mat-divider {
 
 .container {
     width: 100%;
-    
+
     article {
         display: flex;
+		font-weight: 500;
         cursor: pointer;
     }
 
@@ -23,14 +24,14 @@ mat-divider {
 
 .unselected {
     article {
-        font-size: 1.1rem;
+        font-size: 18px;
         color: rgba(0, 0, 0, 0.38);
     }
 }
 
 .selected {
     article {
-        font-size: 1.25rem;
+        font-size: 20px;
     }
 }
 
