@@ -47,9 +47,9 @@ code_freeze:
     - apt-get update
     - apt-get install -y maven
     - ./scripts/run-code-freeze.sh
+  when: manual
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      when: manual
+    - if: $ADD_CF == "true" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 generar_release:
   stage: publish-docker-image
@@ -60,3 +60,54 @@ generar_release:
     - /^rc-.*$/ 
   when: manual
 
+.dockerize_dockerhub:
+  stage: publish-docker-image
+  extends: .dockerize_folder
+  variables:
+    CI_REGISTRY: "index.docker.io"
+    CI_REGISTRY_IMAGE: "historiaclinica"
+    CI_REGISTRY_USER: $DOCKERHUB_REGISTRY_USER
+    CI_REGISTRY_PASSWORD: $DOCKERHUB_REGISTRY_PASSWORD
+
+dockerize_app_dockerhub:
+  extends: .dockerize_dockerhub
+  variables:
+    IMAGE_NAME: hsi
+    IMAGE_VERSION: ${CI_COMMIT_TAG}
+    DOCKER_FOLDER: "ci/docker/entrega/nginx-jar"
+  dependencies:
+    - build_backend
+    - build_frontend
+  before_script:
+    - mv -v back-end/.docker/* ${DOCKER_FOLDER}/
+    - mv -v front-end/.docker/* ${DOCKER_FOLDER}/
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      exists:
+        - ci/docker/entrega/nginx-jar/Dockerfile
+      when: manual
+
+dockerize_app_dockerhub_latest:
+  extends: dockerize_app_dockerhub
+  variables:
+    IMAGE_VERSION: latest
+
+dockerize_cubejs_dockerhub:
+  extends: .dockerize_dockerhub
+  variables:
+    IMAGE_NAME: cubejs
+    IMAGE_VERSION: ${CI_COMMIT_TAG}
+    DOCKER_FOLDER: "cubejs/entrega"
+  before_script:
+    - mv -rv cubejs/schema cubejs/entrega
+    - mv -v cubejs/cube.js cubejs/entrega
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      exists:
+        - cubejs/entrega/Dockerfile
+      when: manual
+
+dockerize_cubejs_dockerhub_latest:
+  extends: dockerize_cubejs_dockerhub
+  variables:
+    IMAGE_VERSION: latest
