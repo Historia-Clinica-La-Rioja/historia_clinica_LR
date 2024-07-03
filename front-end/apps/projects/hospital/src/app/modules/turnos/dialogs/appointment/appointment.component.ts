@@ -319,7 +319,7 @@ export class AppointmentComponent implements OnInit {
 							}
 						});
 				}
-				this.scanMenssage =	 getScanStatusCustom(this.appointment.patientIdentityAccreditationStatus);
+				this.scanMenssage = getScanStatusCustom(this.appointment.patientIdentityAccreditationStatus);
 				this.phoneNumber = this.formatPhonePrefixAndNumber(this.data.appointmentData.phonePrefix, this.data.appointmentData.phoneNumber);
 				this.checkInputUpdatePermissions();
 				this.selectedModality = MODALITYS_TYPES.find(m => m.value === this.appointment.modality);
@@ -374,12 +374,13 @@ export class AppointmentComponent implements OnInit {
 		}
 
 		this.personMasterDataService.getIdentificationTypes().subscribe(
-			identificationTypes => { 
+			identificationTypes => {
 				this.identificationTypeList = identificationTypes;
-				this.TYPE_DNI = this.identificationTypeList.find(type => type.description === 'DNI').description; });
+				this.TYPE_DNI = this.identificationTypeList.find(type => type.description === 'DNI').description;
+			});
 
 		this.personMasterDataService.getGenders().subscribe(
-			genders => { this.genderOptions = genders; });	
+			genders => { this.genderOptions = genders; });
 	}
 
 	setCustomAppointment() {
@@ -982,15 +983,11 @@ export class AppointmentComponent implements OnInit {
 			});
 		dialogRefConfirmation.afterClosed().subscribe((upDateState: boolean) => {
 			if (upDateState)
-				if(this.HABILITAR_ANEXO_II_MENDOZA && this.hasRoleAdmin$ 
-					&& this.patientSummary.identification.type === this.TYPE_DNI 
-					&& (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED || 
-						this.selectedState === APPOINTMENT_STATES_ID.ABSENT
-					&& this.selectedModality.value === this.ON_SITE_ATTENTION) ){
+				if (this.isAptToScan()) {
 					this.openScanPatientDialog(newStateId);
-				}else{
+				} else {
 					this.updateState(newStateId);
-				}					
+				}
 		});
 	}
 
@@ -1000,21 +997,33 @@ export class AppointmentComponent implements OnInit {
 			if (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED && newStateId === APPOINTMENT_STATES_ID.CONFIRMED && this.coverageIsNotUpdate()) {
 				this.confirmChangeState(newStateId);
 			} else {
-				if(this.HABILITAR_ANEXO_II_MENDOZA && this.hasRoleAdmin$
-					 && this.patientSummary.identification.type === this.TYPE_DNI 
-					 && (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED || 
-						  this.selectedState === APPOINTMENT_STATES_ID.ABSENT )
-					 && this.selectedModality.value === this.ON_SITE_ATTENTION ){
+				if (this.isAptToScan(newStateId)) {
 					this.openScanPatientDialog(newStateId);
-				}else{
+				} else {
 					this.updateState(newStateId);
 				}
 			}
 		}
 	}
 
+	private isAptToScan(newStateId?: APPOINTMENT_STATES_ID): boolean {
+		const isCommonConditionsMet = this.HABILITAR_ANEXO_II_MENDOZA
+			&& this.hasRoleAdmin$
+			&& this.patientSummary.identification.type === this.TYPE_DNI
+			&& this.selectedModality.value === this.ON_SITE_ATTENTION
+			&& (this.selectedState === APPOINTMENT_STATES_ID.ASSIGNED || this.selectedState === APPOINTMENT_STATES_ID.ABSENT);
+
+		if (newStateId) {
+			return isCommonConditionsMet
+				&& newStateId !== APPOINTMENT_STATES_ID.ABSENT
+				&& newStateId !== APPOINTMENT_STATES_ID.ASSIGNED
+				&& !this.appointment.patientIdentityAccreditationStatus;
+		}
+		return isCommonConditionsMet;
+	}
+
 	public openScanPatientDialog(newStateId: APPOINTMENT_STATES_ID): void {
-		const dialogRef =  this.dialog.open(ScanPatientComponent, {
+		const dialogRef = this.dialog.open(ScanPatientComponent, {
 			width: "32%",
 			height: "600px",
 			data: {
@@ -1024,7 +1033,7 @@ export class AppointmentComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe((patientInformationScan: PatientInformationScan) => {
 			this.patientInformationScan = patientInformationScan?.infoRawBarCodeScan;
-			if(this.patientInformationScan){
+			if (this.patientInformationScan) {
 				this.scanMenssage = SCAN_COMPLETED;
 			}
 			this.updateState(newStateId);

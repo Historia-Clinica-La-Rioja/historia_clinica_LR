@@ -338,7 +338,7 @@
 							matTooltip="{{getAppointmentState(appointmentStatesIds.SERVED).description}}"></mat-icon>
 					</button>
 				</div>
-				<app-colored-icon-text *ngIf="HABILITAR_ANEXO_II_MENDOZA && selectedModality?.value === ON_SITE_ATTENTION && selectedState !== appointmentStatesIds.ASSIGNED && selectedState !== appointmentStatesIds.ABSENT "
+				<app-colored-icon-text *ngIf="HABILITAR_ANEXO_II_MENDOZA && selectedModality?.value === ON_SITE_ATTENTION && selectedState !== appointmentStatesIds.ASSIGNED && appointment.patientIdentityAccreditationStatus "
 					[coloredIconText]="scanMenssage"
 				></app-colored-icon-text>
 
