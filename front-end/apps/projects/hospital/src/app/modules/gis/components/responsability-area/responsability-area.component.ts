@@ -18,8 +18,10 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 	@Input() set setInstitutionDescription(institutionDescription: InstitutionDescription) {
 		this.institutionDescription = institutionDescription;
 	}
+	@Input() editMode: boolean = false;
 	@Output() confirmed = new EventEmitter<boolean>();
 	@Output() previous = new EventEmitter<boolean>();
+	@Output() cancelSelected = new EventEmitter<boolean>();
 	isSaving = false;
 	institutionDescription: InstitutionDescription;
 	ButtonType = ButtonType;
@@ -33,6 +35,7 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 				private readonly gisService: GisService,
 				private readonly snackBarService: SnackBarService
 	) {
+		this.gisLayersService.addPolygonInteraction();
 		this.gisLayersService.showUndo$.subscribe((undo: boolean) => this.showUndo = undo);
 		this.gisLayersService.showRemoveAndCreate$.subscribe((removeAndCreate: boolean) => this.showRemoveAndCreate = removeAndCreate);
 	}
@@ -46,12 +49,13 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 	}
 
 	handleConfirm = () => {
-		this.saveAddressAndCoordinates(false);
+		this.saveAddressAndCoordinates();
 		this.saveInstitutionArea();
-		this.gisLayersService.toggleActions(false, false);
 	}
-
-	saveAddressAndCoordinates = (removeDrawnPolygon: boolean) => {
+	
+	saveAddressAndCoordinates = () => {
+		this.gisLayersService.removeDrawnPolygon();
+		this.gisLayersService.removeAreaLayer();
 		this.gisLayersService.toggleActions(false, false);
 		this.isSaving = true;
 		forkJoin(
@@ -63,8 +67,6 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 		.subscribe((_) => {
 			if (!this.gisLayersService.isPolygonCompleted)
 				this.snackBarService.showSuccess("gis.status.UPDATE_DATA_SUCCESS");
-			
-			removeDrawnPolygon ? this.gisLayersService.removeDrawnPolygon(): null;
 			this.confirmed.emit(true);
 		});
 	}
@@ -75,6 +77,13 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 
 	removeAndCreate = () => {
 		this.gisLayersService.removeAndCreate();
+	}
+
+	cancel = () => {
+		this.gisLayersService.removeDrawnPolygon();
+		this.gisLayersService.toggleActions(false, false);
+		this.gisLayersService.removeControls();
+		this.cancelSelected.emit(true);
 	}
 
 	private saveInstitutionArea = () => {

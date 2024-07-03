@@ -13,9 +13,15 @@
             [text]="'buttons.BACK'">
         </app-button>
         <app-button
+            *ngIf="!editMode"
             [isLoading]="isSaving" 
             [text]="'gis.responsability-area.actions.SKIP'"
-            (clicked)="saveAddressAndCoordinates(true)">
+            (clicked)="saveAddressAndCoordinates()">
+        </app-button>
+        <app-button
+            *ngIf="editMode"
+            (clicked)="cancel()"
+            [text]="'buttons.CANCEL'">
         </app-button>
         <app-button 
             [disabled]="!gisLayersService.isPolygonCompleted"

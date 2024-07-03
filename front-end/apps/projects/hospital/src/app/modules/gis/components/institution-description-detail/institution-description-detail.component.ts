@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { InstitutionDescription } from '../institution-description/institution-description.component';
 
 @Component({
@@ -12,9 +12,10 @@ export class InstitutionDescriptionDetailComponent {
 		this.institutionDescription = institutionDescription;
 	}
 	institutionDescription: InstitutionDescription;
+	@Output() stepperEdit = new EventEmitter<boolean>();
 
 	edit = () => {
-
+		this.stepperEdit.emit(true);
 	}
 
 }

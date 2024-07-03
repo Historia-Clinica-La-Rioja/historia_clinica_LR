@@ -12,9 +12,14 @@ import { Coordinate } from 'ol/coordinate';
 export class MapComponent implements OnInit {
 	@Input() set setMapCoordinates(coordinates: GlobalCoordinatesDto) {
 		this.coordinates = coordinates;
+		if (this.gisLayersService.getMap())
+			this.centerViewPoint();
 	}
 	@Input() set setMapArea(area: GlobalCoordinatesDto[]) {
+		this.gisLayersService.removeAreaLayer();
 		this.area = area;
+		if (this.gisLayersService.getMap())
+			this.gisLayersService.setPolygon(this.area);
 	}	
 
 	constructor(private readonly gisLayersService: GisLayersService,
@@ -22,18 +27,22 @@ export class MapComponent implements OnInit {
 	) {}
 	
 	ngOnInit(): void {
-		this.markPoint();
+		this.setUpMap();
 	}
 	
 	coordinates: GlobalCoordinatesDto;
 	area: GlobalCoordinatesDto[];
 
-	markPoint = () => {
-		const position: Coordinate = this.openLayersService.fromLonLat(this.coordinates);
+	private setUpMap = () => {
 		this.gisLayersService.setUp();
-		this.openLayersService.centerView(this.gisLayersService.map, position);
+		this.centerViewPoint();
+		this.gisLayersService.setPolygon(this.area);
+	}
+
+	private centerViewPoint = () => {
+		const position: Coordinate = this.openLayersService.fromLonLat(this.coordinates);
+		this.openLayersService.centerView(this.gisLayersService.getMap(), position);
 		this.gisLayersService.removeLocationPoint();
 		this.gisLayersService.addPoint(position);
-		this.gisLayersService.markPolygon(this.area);
 	}
 }

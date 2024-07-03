@@ -12,13 +12,19 @@ export class InstitutionDescriptionStepComponent {
 	@Input() set setInstitutionDescription(institutionDescription: InstitutionDescription) {
 		this.institutionDescription = institutionDescription;
 	}
+	@Input() editMode: boolean = false;
 	institutionDescription: InstitutionDescription;
 	@Output() nextStep = new EventEmitter<boolean>();
 	@Output() previousStep = new EventEmitter<boolean>();
+	@Output() cancelSelected = new EventEmitter<boolean>();
 	ButtonType = ButtonType;
 	
 	next = () => {
 		this.nextStep.emit(true);
+	}
+
+	cancel = () => {
+		this.cancelSelected.emit(true);
 	}
 
 	previousStepper = () => {

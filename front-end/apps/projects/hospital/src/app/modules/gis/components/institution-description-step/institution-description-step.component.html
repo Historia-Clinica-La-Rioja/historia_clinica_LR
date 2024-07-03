@@ -7,6 +7,11 @@
             [text]="'buttons.BACK'">
         </app-button>
         <app-button
+            *ngIf="editMode"
+            (clicked)="cancel()"
+            [text]="'buttons.CANCEL'">
+        </app-button>
+        <app-button
             (clicked)="next()"
             [disabled]="!institutionDescription.coordinates?.latitude"
             [text]="'buttons.NEXT'"

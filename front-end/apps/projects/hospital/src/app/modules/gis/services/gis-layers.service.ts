@@ -47,6 +47,7 @@ export class GisLayersService {
 	removeAndCreateControl: Control;
 	showUndo$ = new BehaviorSubject<boolean>(false);
 	showRemoveAndCreate$ = new BehaviorSubject<boolean>(false);
+	areaLayer;
 
 	constructor(private readonly openLayersService: OpenlayersService) {}
 
@@ -85,8 +86,12 @@ export class GisLayersService {
 	}
 
 	addPolygonInteraction = () => {
-		this.map?.addInteraction(this.draw);
-		this.map?.addInteraction(this.snap);
+		if (!this.areaLayer) {
+			this.map?.addInteraction(this.draw);
+			this.map?.addInteraction(this.snap);
+		} else {
+			this.toggleActions(false, true);
+		}
 	}
 
 	removeDrawnPolygon = () => {
@@ -102,6 +107,7 @@ export class GisLayersService {
 
 	removeAndCreate = () => {
 		this.removeDrawnPolygon();
+		this.removeAreaLayer();
 		this.addPolygonInteraction();
 		this.toggleActions(false, false);
 	}
@@ -123,21 +129,30 @@ export class GisLayersService {
 		this.showRemoveAndCreate$.next(removeAndCreate);
 	}
 
-	markPolygon = (area: GlobalCoordinatesDto[]) => {
+	setPolygon = (area: GlobalCoordinatesDto[]) => {
+		if (!area.length) return;
+
 		const polygon = this.createPolygon(area);
 		const source = new VectorSource({
 			features: new GeoJSON().readFeatures(polygon),
 		});
-		const layer = new VectorLayer({
-			source: source,
-		});
-		this.map.addLayer(layer);
+		this.areaLayer = new VectorLayer();
+		this.areaLayer.setSource(source);
+		this.map.addLayer(this.areaLayer);
+	}
+
+	removeAreaLayer = () => {
+		this.map?.removeLayer(this.areaLayer);
+		this.areaLayer = null;
+	}
+
+	getMap = (): Map => {
+		return this.map;
 	}
 
 	private clearMap = () => {
 		this.removeDrawnPolygon();
 		this.map?.getLayers().getArray().forEach(layer => this.map.removeLayer(layer));
-		this.map?.getInteractions().getArray().forEach(interaction => this.map.removeInteraction(interaction));
 	}
 
 	private createPolygon = (area: GlobalCoordinatesDto[]) => {
@@ -162,7 +177,7 @@ export class GisLayersService {
 		return feature;
 	}
 	
-	private removePolygonInteraction = () => {
+	removePolygonInteraction = () => {
 		this.map?.removeInteraction(this.draw);
 		this.map?.removeInteraction(this.snap);
 	}
@@ -174,7 +189,7 @@ export class GisLayersService {
 			this.drawnPolygon = event.feature;
 			const geometry: Polygon = this.drawnPolygon.getGeometry() as Polygon;
 			this.polygonCoordinates = geometry.getCoordinates();
-			this.toggleActions(false, true)
+			this.toggleActions(false, true);
 		});
 	}
 

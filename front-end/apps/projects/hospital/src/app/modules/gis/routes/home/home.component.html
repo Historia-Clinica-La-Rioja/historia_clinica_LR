@@ -1,7 +1,7 @@
 <app-content width="full">
     <h2 class="m-top">{{'gis.TITLE' | translate}}</h2>
     <section class="container">
-        <mat-card class="institution-address-container" *ngIf="isFirstTime">
+        <mat-card class="institution-address-container" *ngIf="stepperMode">
             <mat-stepper [labelPosition]="'bottom'" linear #stepper (selectionChange)="changeStep($event)" [selectedIndex]="currentStepperIndex">
                 <mat-step label="{{'gis.steppers.ADDRESS' | translate}}" [stepControl]="institutionAddressForm" [completed]="institutionAddressForm.valid">
                     <h1 class="m-top" [translate]="'gis.institution-data.TITLE'"></h1>
@@ -77,6 +77,11 @@
                 
                         <div class="actions">
                             <app-button
+                                *ngIf="editMode"
+                                (clicked)="cancel()"
+                                [text]="'buttons.CANCEL'">
+                            </app-button>
+                            <app-button
                                 (clicked)="stepToMapPosition()"
                                 [disabled]="institutionAddressForm.invalid"
                                 [text]="'buttons.NEXT'"
@@ -89,6 +94,8 @@
                     <app-institution-description-step
                         *ngIf="institutionDescription" 
                         (nextStep)="stepToResponsabilityArea()"
+                        [editMode]="editMode"
+                        (cancelSelected)="cancel()"
                         (previousStep)="stepToInstitutionAddress()"
                         [setInstitutionDescription]="institutionDescription">
                     </app-institution-description-step>
@@ -97,7 +104,9 @@
                     <app-responsability-area 
                         *ngIf="currentStepperIndex === RESPONSABILITY_AREA_STEP"
                         [setInstitutionDescription]="institutionDescription"
+                        [editMode]="editMode"
                         (previous)="stepToMapPosition()"
+                        (cancelSelected)="cancel()"
                         (confirmed)="setInstitutionData()">
                     </app-responsability-area>
                 </mat-step>
@@ -105,7 +114,8 @@
         </mat-card>
 
         <app-institution-description-detail
-            *ngIf="!isFirstTime && institutionDescription" 
+            *ngIf="!stepperMode && institutionDescription" 
+            (stepperEdit)="edit()"
             [setInstitutionDescription]="institutionDescription">
         </app-institution-description-detail>
 

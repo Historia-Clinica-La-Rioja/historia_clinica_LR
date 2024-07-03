@@ -58,7 +58,8 @@ export class HomeComponent implements OnInit {
 	coordinatesCurrentValue: GlobalCoordinatesDto;
 
 	showMap = false;
-	isFirstTime = false;
+	editMode = false;
+	stepperMode = false;
 	isLoading = false;
 
 	currentStepperIndex = INSTITUTION_ADDRESS_STEP;
@@ -149,15 +150,6 @@ export class HomeComponent implements OnInit {
 
 	stepToResponsabilityArea = () => {
 		this.currentStepperIndex = RESPONSABILITY_AREA_STEP;
-		this.gisLayersService.addPolygonInteraction();
-	}
-
-	removeLastPoint = () => {
-		this.gisLayersService.removeLastPoint();
-	}
-
-	removeAndCreate = () => {
-		this.gisLayersService.removeAndCreate();
 	}
 
 	setInstitutionData = () => {
@@ -171,7 +163,7 @@ export class HomeComponent implements OnInit {
 			this.area = area;
 			this.coordinatesCurrentValue = coordinates;
 			this.address = address;
-			this.isFirstTime = !this.hasCoordinates();
+			this.stepperMode = !this.hasCoordinates();
 			this.showMap = this.hasCoordinates();
 			if (this.hasCoordinates()) {
 				this.mapToInstitutionDescriptionDetailed('gis.detailed-information.TITLE');
@@ -180,6 +172,20 @@ export class HomeComponent implements OnInit {
 				this.setStates();
 			}
 		})
+	}
+
+	edit = () => {
+		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
+		this.stepperMode = true;
+		this.editMode = true;
+		this.setInstitutionAddressFormData();
+		this.setStates();
+	}
+
+	cancel = () => {
+		this.editMode = false;
+		this.stepperMode = false;
+		this.setInstitutionData();
 	}
 
 	get street(): string {
