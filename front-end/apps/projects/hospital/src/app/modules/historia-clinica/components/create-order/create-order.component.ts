@@ -31,15 +31,12 @@ export class CreateOrderComponent implements OnInit {
 		this.data.createOrderService.setDate(date);
 	}
 
-	setConcept(healthProblem: SnomedDto) {
-		if (healthProblem === null)
-			this.data.createOrderService.resetForm();
-		else
-			this.data.createOrderService.setConcept(healthProblem);
+	setConcept(conceptProblem: SnomedDto) {
+		this.data.createOrderService.setConcept(conceptProblem);
 	}
 
-	setProblem($event: SnomedDto) {
-		this.data.createOrderService.setProblem($event);
+	setProblem(healthProblem: SnomedDto) {
+		this.data.createOrderService.setProblem(healthProblem);
 	}
 
 	setStudyCategory(studyCategoryId: number | string) {

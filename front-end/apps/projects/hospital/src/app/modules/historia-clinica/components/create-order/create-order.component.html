@@ -1,9 +1,8 @@
 <form [formGroup]="data.createOrderService.getForm()">
 	<div>
 		<h3>{{'historia-clinica.create-order.PROCEDURE' | translate}}</h3>
-
 		<app-concept-typeahead-search [ecl]="PROCEDURE" [appearanceOutline]="true" [placeholder]="'Busqueda'"
-			[showSearchIcon]="true" [placeholder]="'historia-clinica.create-order.PROCEDURE'" [appearanceOutline]="true"
+			[showSearchIcon]="true"
 			[placeholder]="'historia-clinica.new-consultation-procedure-form.SEARCH_PLACEHOLDER'" [clearButton]="true"
 			(conceptSelected)="setConcept($event)">
 		</app-concept-typeahead-search>
