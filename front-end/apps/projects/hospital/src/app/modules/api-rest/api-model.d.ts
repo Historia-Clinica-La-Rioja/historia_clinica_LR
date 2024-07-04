@@ -1589,6 +1589,16 @@ export interface ElectronicSignatureInvolvedDocumentDto {
     signatureStatus: EElectronicSignatureStatus;
 }
 
+export interface EmergencyCareDocumentHeaderDto {
+    bed?: BedDto;
+    clinicalSpecialtyName: string;
+    createdOn: DateTimeDto;
+    id: number;
+    institutionName: string;
+    professionalName: string;
+    sourceTypeName: string;
+}
+
 export interface EmergencyCareDto extends Serializable {
     ambulanceCompanyId: string;
     emergencyCareType: MasterDataDto;

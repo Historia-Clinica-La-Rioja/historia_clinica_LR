@@ -24,7 +24,7 @@ import net.pladema.emergencycare.controller.exceptions.SaveEmergencyCareEpisodeE
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.controller.mapper.TriageRiskFactorMapper;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
-import net.pladema.emergencycare.infrastructure.input.dto.EmergencyCareEpisodeFilterDto;
+import net.pladema.emergencycare.controller.dto.EmergencyCareEpisodeFilterDto;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;

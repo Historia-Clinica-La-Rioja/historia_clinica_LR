@@ -1,4 +1,4 @@
-package net.pladema.emergencycare.infrastructure.input.dto;
+package net.pladema.emergencycare.controller.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

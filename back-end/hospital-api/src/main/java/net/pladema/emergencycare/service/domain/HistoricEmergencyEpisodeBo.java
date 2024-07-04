@@ -1,16 +1,15 @@
 package net.pladema.emergencycare.service.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class HistoricEmergencyEpisodeBo {
 
     private Integer emergencyCareEpisodeId;

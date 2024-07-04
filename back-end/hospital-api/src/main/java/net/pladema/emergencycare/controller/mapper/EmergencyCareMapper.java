@@ -4,7 +4,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Snomed
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
 import net.pladema.emergencycare.controller.dto.*;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
-import net.pladema.emergencycare.infrastructure.input.dto.EmergencyCareEpisodeFilterDto;
+import net.pladema.emergencycare.controller.dto.EmergencyCareEpisodeFilterDto;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareEntrance;
