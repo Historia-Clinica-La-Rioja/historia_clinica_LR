@@ -37,7 +37,6 @@ import { NewConsultationAddProblemFormComponent } from '@historia-clinica/dialog
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
-import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { finalize, forkJoin, Observable, of } from 'rxjs';
 import { NewConsultationFamilyHistoryFormComponent } from '../new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { PreviousDataComponent } from '../previous-data/previous-data.component';
@@ -54,6 +53,8 @@ import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
+import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
+import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 
 const TIME_OUT = 5000;
 
@@ -76,6 +77,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	antecedentesFamiliaresNuevaConsultaService: AntecedentesFamiliaresNuevaConsultaService;
 	personalHistoriesNewConsultationService: NewConsultationPersonalHistoriesService;
 	alergiasNuevaConsultaService: AlergiasNuevaConsultaService;
+	createOrderService: CreateOrderService;
 	apiErrors: string[] = [];
 	public today = new Date();
 	fixedSpecialty = true;
@@ -177,6 +179,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
+		this.createOrderService = new CreateOrderService(this.snackBarService);
 	}
 
 	ngOnInit(): void {
@@ -580,7 +583,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 					};
 				}
 			),
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null}}),
+			procedures: this.createOrderService.getOrderForNewConsultation(),
 			reasons: this.motivoNuevaConsultaService.getMotivosConsulta(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
@@ -739,10 +742,12 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	addProcedure(): void {
-		this.dialog.open(NewConsultationProcedureFormComponent, {
+		const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.idPaciente, this.hceGeneralStateService);
+		this.dialog.open(AddProcedureComponent, {
 			data: {
-				procedureService: this.procedimientoNuevaConsultaService,
-				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+				patientId: this.data.idPaciente,
+				createOrderService: this.createOrderService,
+				problems: problems,
 			},
 			autoFocus: false,
 			width: '35%',

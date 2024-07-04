@@ -111,11 +111,11 @@
 
 		<app-new-consultation-expansion-section id="procedimientos"
 			[title]="'ambulatoria.paciente.nueva-consulta.procedimientos.TITLE' | translate" icon="library_add"
-			[isEmpty]="procedimientoNuevaConsultaService.isEmpty()">
+			[isEmpty]="createOrderService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
-				<app-titled-content-card *ngIf="!procedimientoNuevaConsultaService.isEmpty()"
+				<app-titled-content-card *ngIf="!createOrderService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' }}">
-					<app-procedure-list [service]="procedimientoNuevaConsultaService"></app-procedure-list>
+					<app-procedure-list [service]="createOrderService"> </app-procedure-list>
 				</app-titled-content-card>
 
 				<div>
@@ -149,7 +149,7 @@
 			<app-allergy-list [service]="alergiasNuevaConsultaService"></app-allergy-list>
 		</app-concepts-list>
 
-		<app-new-consultation-expansion-section id="solicitud-referencia" 
+		<app-new-consultation-expansion-section id="solicitud-referencia"
 			[title]="'ambulatoria.paciente.nueva-consulta.solicitud-referencia.TITLE' | translate" icon="forum"
 			[isEmpty]="ambulatoryConsultationReferenceService.isEmpty()" [(collapsed)]="collapsedReferenceRequest">
 			<div fxLayout="column" fxLayoutGap="2vh" #referenceRequest>
@@ -188,7 +188,7 @@
 	<div actions id="buttons" align="end">
 		<div class="actions">
 			<app-button
-				[buttonType]="ButtonType.RAISED" 
+				[buttonType]="ButtonType.RAISED"
 				[text]="'buttons.CONFIRM'"
 				[disabled]="disableConfirmButton"
 				[isLoading]="isSaving"
