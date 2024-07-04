@@ -18,6 +18,7 @@ import net.pladema.clinichistory.requests.servicerequests.infrastructure.output.
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepositoryImpl;
+import net.pladema.clinichistory.requests.servicerequests.repository.ListDiagnosticReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
 import org.assertj.core.api.Assertions;
@@ -34,6 +35,9 @@ class GetDiagnosticReportResultsTest extends UnitRepository {
     private DiagnosticReportStorage diagnosticReportStorage;
     private GetDiagnosticReportInfoRepository getDiagnosticReportInfoRepository;
 
+    @MockBean
+    private ListDiagnosticReportRepository listDiagnosticReportRepository;
+
     @Autowired
     DiagnosticReportFileRepository diagnosticReportFileRepository;
 
@@ -46,7 +50,7 @@ class GetDiagnosticReportResultsTest extends UnitRepository {
     @BeforeEach
     void setUp(){
         getDiagnosticReportInfoRepository = new GetDiagnosticReportInfoRepositoryImpl(entityManager);
-        diagnosticReportStorage = new DiagnosticReportStorageImpl(getDiagnosticReportInfoRepository, diagnosticReportFileRepository);
+        diagnosticReportStorage = new DiagnosticReportStorageImpl(getDiagnosticReportInfoRepository, diagnosticReportFileRepository, listDiagnosticReportRepository);
         getDiagnosticReportResults = new GetDiagnosticReportResults(diagnosticReportStorage);
 
         save(new DiagnosticReportStatus(DiagnosticReportStatus.REGISTERED, "Registrado"));

@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
+import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceRequestDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +8,6 @@ import net.pladema.clinichistory.requests.servicerequests.domain.DiagnosticRepor
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.HealthConditionInfoDto;
@@ -57,6 +57,28 @@ public class DiagnosticReportInfoMapper {
 		result.setSourceId(diagnosticReportBo.getSourceId());
 		result.setCoverageDto(patientMedicalCoverage);
 		result.setReferenceRequestDto(referenceRequestDto);
+		log.debug("Output: {}", result);
+		return result;
+	}
+
+	@Named("parseTo")
+	public DiagnosticReportInfoDto parseTo(DiagnosticReportResultsBo resultsBo, ProfessionalDto professionalDto, PatientMedicalCoverageDto patientMedicalCoverage, ReferenceRequestDto referenceRequestDto){
+		log.debug("Input parameters -> resultsBo {}, professionalDto {}, patientMedicalCoverage {}, referenceRequestDto {}", resultsBo, professionalDto, patientMedicalCoverage, referenceRequestDto);
+		DiagnosticReportInfoDto result = new DiagnosticReportInfoDto();
+		result.setId(resultsBo.getId());
+		result.setSnomed(SnomedDto.from(resultsBo.getSnomed()));
+		result.setHealthCondition(HealthConditionInfoDto.from(resultsBo.getHealthCondition()));
+		result.setObservations(resultsBo.getObservations());
+		result.setStatusId(resultsBo.getStatusId());
+		result.setDoctor(DoctorInfoDto.from(professionalDto));
+		result.setServiceRequestId(resultsBo.getEncounterId());
+		result.setCreationDate(resultsBo.getEffectiveTime());
+		result.setCategory(resultsBo.getCategory());
+		result.setSource(resultsBo.getSource());
+		result.setSourceId(resultsBo.getSourceId());
+		result.setCoverageDto(patientMedicalCoverage);
+		result.setReferenceRequestDto(referenceRequestDto);
+		result.setObservationsFromServiceRequest(resultsBo.getObservationsFromServiceRequest());
 		log.debug("Output: {}", result);
 		return result;
 	}

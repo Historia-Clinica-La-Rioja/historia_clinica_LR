@@ -9,12 +9,12 @@ import net.pladema.staff.controller.dto.ProfessionalDto;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
+@Component
 public class StudyOrderReportInfoMapper {
 
     @Named("parseToDto")
-    public StudyOrderReportInfoDto parseToDto(StudyOrderReportInfoBo studyOrderReportInfoBo, ProfessionalDto professionalDto){
+    public StudyOrderReportInfoDto parseToDto(StudyOrderReportInfoBo studyOrderReportInfoBo, ProfessionalDto professionalDto) {
         log.trace("Input -> StudyOrderReportInfoBo {}", studyOrderReportInfoBo);
         StudyOrderReportInfoDto result = new StudyOrderReportInfoDto();
 
@@ -35,6 +35,7 @@ public class StudyOrderReportInfoMapper {
         result.setServiceRequestId(studyOrderReportInfoBo.getServiceRequestId());
         result.setDiagnosticReportId(studyOrderReportInfoBo.getDiagnosticReportId());
 		result.setHasActiveAppointment(studyOrderReportInfoBo.getHasActiveAppointment());
+        result.setObservationsFromServiceRequest(studyOrderReportInfoBo.getObservationsFromServiceRequest());
         log.trace("Output: {}", result);
         return result;
     }

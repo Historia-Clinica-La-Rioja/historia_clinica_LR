@@ -4829,6 +4829,7 @@ export interface StudyOrderReportInfoDto {
     healthCondition: string;
     imageId?: string;
     isAvailableInPACS: boolean;
+    observationsFromServiceRequest: string;
     serviceRequestId: number;
     snomed: string;
     source: string;

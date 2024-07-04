@@ -13,9 +13,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReportInfoService {
 
     private final ListStudyOrderReportRepository listStudyOrderReportRepository;
@@ -49,6 +49,7 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
         result.setServiceRequestId((Integer) row[9]);
         result.setDiagnosticReportId((Integer) row[10]);
         result.setHasActiveAppointment((Boolean) row[11]);
+        result.setObservationsFromServiceRequest((String) row[12]);
         log.trace("Output -> {}", result);
         return result;
     }

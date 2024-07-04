@@ -68,7 +68,6 @@ import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagno
 import net.pladema.clinichistory.requests.servicerequests.service.CompleteDiagnosticReportService;
 import net.pladema.clinichistory.requests.servicerequests.service.CreateServiceRequestService;
 import net.pladema.clinichistory.requests.servicerequests.service.DeleteDiagnosticReportService;
-import net.pladema.clinichistory.requests.servicerequests.service.DiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListDiagnosticReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyOrderReportInfoService;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyWithoutOrderReportInfoService;
@@ -113,7 +112,6 @@ public class ServiceRequestController {
     private final CompleteDiagnosticReportMapper completeDiagnosticReportMapper;
     private final UploadDiagnosticReportCompletedFileService uploadDiagnosticReportCompletedFileService;
     private final UpdateDiagnosticReportFileService updateDiagnosticReportFileService;
-    private final DiagnosticReportInfoService diagnosticReportInfoService;
     private final FileMapper fileMapper;
 	private final HospitalApiPublisher hospitalApiPublisher;
 	private final PatientMedicalCoverageService patientMedicalCoverageService;
@@ -262,8 +260,8 @@ public class ServiceRequestController {
 						"category {}, categoriesToBeExcluded {}",
                 institutionId, patientId, status, study, healthCondition, category, categoriesToBeExcluded);
 
-        List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getListIncludingConfidential(new DiagnosticReportFilterBo(
-                patientId, status, study, healthCondition, category, categoriesToBeExcluded), institutionId);
+        List<DiagnosticReportResultsBo> resultService = listDiagnosticReportInfoService.getListIncludingConfidential(new DiagnosticReportFilterBo(
+                patientId, status, study, healthCondition, category, categoriesToBeExcluded,  null, null), institutionId);
 
         List<DiagnosticReportInfoDto> result = resultService.stream()
                 .map(diagnosticReportBo -> {
@@ -293,7 +291,7 @@ public class ServiceRequestController {
 				institutionId, patientId, status, category);
 
 		List<DiagnosticReportBo> resultService = listDiagnosticReportInfoService.getMedicalOrderList(new DiagnosticReportFilterBo(
-				patientId, status, null, null, category, null));
+				patientId, status, null, null, category, null, null, null));
 
 		List<DiagnosticReportInfoDto> result = resultService.stream()
 				.map(diagnosticReportBo -> {
