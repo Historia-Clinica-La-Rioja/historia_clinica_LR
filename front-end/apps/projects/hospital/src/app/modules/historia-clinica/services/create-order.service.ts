@@ -44,6 +44,16 @@ export class CreateOrderService {
 
 	setProblem(healthProblem: SnomedDto) {
 		this.form.controls.snomed.setValue(healthProblem);
+		this.form.controls.snomed.setValue(selectedConcept);
+	}
+
+	setProblem(healthProblem: SnomedDto) {
+		this.form.patchValue({
+			serviceRequest: {
+				healthConditionPt: healthProblem.pt,
+				healthConditionSctid: healthProblem.sctid
+			}
+		})
 	}
 
 	setStudyCategory(studyCategoryId: number | string) {
