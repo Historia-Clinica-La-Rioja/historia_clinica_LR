@@ -29,7 +29,7 @@ export class DocumentSignatureService {
                 },
                 {
                     icon: 'chat',
-                    title: 'digital-signature.detailed-documents.CLINICAL_EVALUATION',
+                    title: 'digital-signature.detailed-documents.EVOLUTION',
                     value: this.buildObservations(document.notes)
                 },
                 {
@@ -145,7 +145,7 @@ export class DocumentSignatureService {
 		if (observation?.indicationsNote)
 			observationsFiltered.push(`Indicaciones: ${observation.indicationsNote}`);
 		if (observation?.otherNote)
-			observationsFiltered.push(`Otras observaciones: ${observation.otherNote}`);
+			observationsFiltered.push(`${observation.otherNote}`);
 		if (observation?.physicalExamNote)
 			observationsFiltered.push(`Examen físico: ${observation.physicalExamNote}`);
 		if (observation?.studiesSummaryNote)
