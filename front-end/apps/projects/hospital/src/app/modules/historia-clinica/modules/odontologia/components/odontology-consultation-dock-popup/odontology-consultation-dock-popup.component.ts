@@ -11,14 +11,13 @@ import { hasError, scrollIntoError } from '@core/utils/form.utils';
 import { NewConsultationAddReasonFormComponent } from '@historia-clinica/dialogs/new-consultation-add-reason-form/new-consultation-add-reason-form.component';
 import { NewConsultationAllergyFormComponent } from '@historia-clinica/dialogs/new-consultation-allergy-form/new-consultation-allergy-form.component';
 import { NewConsultationMedicationFormComponent } from '@historia-clinica/dialogs/new-consultation-medication-form/new-consultation-medication-form.component';
-import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { HCEPersonalHistory } from '@historia-clinica/modules/ambulatoria/dialogs/reference/reference.component';
 import { AlergiasNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service';
 import { ReferenceInformation } from '@historia-clinica/modules/ambulatoria/services/ambulatory-consultation-reference.service';
 import { MedicacionesNuevaConsultaService } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { NewConsultationPersonalHistoriesService } from '@historia-clinica/modules/ambulatoria/services/new-consultation-personal-histories.service';
-import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto, toOdontologyProcedureDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
+import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -44,6 +43,11 @@ import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/service
 import { NewConsultationPersonalHistoryFormComponent } from '@historia-clinica/modules/ambulatoria/dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
+import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
+import { CreateOrderService } from '@historia-clinica/services/create-order.service';
+import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
+import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
+import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -68,6 +72,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	proceduresNewConsultationService: ActionsNewConsultationService;
 	otherProceduresService: ProcedimientosService;
 	odontologyReferenceService: OdontologyReferenceService;
+	createOrderService: CreateOrderService;
+	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
 
 	searchConceptsLocallyFFIsOn = false;
 	episodeData: EpisodeData;
@@ -120,6 +126,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly el: ElementRef,
 		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
+		private readonly hceGeneralStateService: HceGeneralStateService,
+		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
@@ -132,6 +140,8 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
 		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.odontologyReferenceService = new OdontologyReferenceService(this.dialog, this.data, this.otherDiagnosticsNewConsultationService);
+		this.createOrderService  = new CreateOrderService(this.snackBarService);
+		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 	}
 
 	ngOnInit(): void {
@@ -205,9 +215,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	}
 
 	addProcedure() {
-		this.dialog.open(NewConsultationProcedureFormComponent, {
+		const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.patientId, this.hceGeneralStateService);
+		this.dialog.open(AddProcedureComponent, {
 			data: {
+				createOrderService: this.createOrderService,
+				patientId: this.data.patientId,
 				procedureService: this.otherProceduresService,
+				problems: problems,
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
@@ -358,7 +372,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			evolutionNote: this.form.value.evolution,
 			medications: this.medicationsNewConsultationService.getMedicaciones().map(toOdontologyMedicationDto),
 			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
-			procedures: this.otherProceduresService.getProcedimientos().map(toOdontologyProcedureDto),
+			procedures: this.createOrderService.getOrderForOdontologyConsultation(),
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			dentalActions,

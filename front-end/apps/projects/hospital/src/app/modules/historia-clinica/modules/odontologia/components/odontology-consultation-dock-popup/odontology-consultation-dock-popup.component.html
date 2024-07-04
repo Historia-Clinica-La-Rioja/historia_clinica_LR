@@ -46,11 +46,11 @@
 
 		<app-new-consultation-expansion-section id="other_procedures"
 			[title]="'odontologia.odontology-consultation-dock-popup.OTHER_PROCEDURES_TITLE' | translate"
-			icon="library_add" [isEmpty]="otherProceduresService.isEmpty()">
+			icon="library_add" [isEmpty]="createOrderService.isEmpty()">
 			<div fxLayout="column" fxLayoutGap="2vh">
-				<app-titled-content-card *ngIf="!otherProceduresService.isEmpty()"
+				<app-titled-content-card *ngIf="!createOrderService.isEmpty()"
 					title="{{ 'ambulatoria.paciente.nueva-consulta.procedimientos.TABLE_TITLE' }}">
-					<app-procedure-list [service]="otherProceduresService"></app-procedure-list>
+					<app-procedure-list [service]="createOrderService"></app-procedure-list>
 				</app-titled-content-card>
 
 				<div>
