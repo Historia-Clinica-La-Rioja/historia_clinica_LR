@@ -16,7 +16,7 @@ export class NursingPatientConsultationService {
 	) {
 	}
 
-	createNursingPatientConsultation(nursingConsultationDto: NursingConsultationDto, patientId: number): Observable<boolean> {
+	createNursingPatientConsultation(nursingConsultationDto: NursingConsultationDto, patientId: number): Observable<any> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/patient/${patientId}/nursing/consultation`;
 		return this.http.post<boolean>(url, nursingConsultationDto);
 	}

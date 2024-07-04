@@ -9,7 +9,6 @@ import { NursingPatientConsultationService } from '@api-rest/services/nursing-pa
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { hasError, scrollIntoError } from '@core/utils/form.utils';
-import { NewConsultationProcedureFormComponent } from '@historia-clinica/dialogs/new-consultation-procedure-form/new-consultation-procedure-form.component';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
 import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
@@ -27,9 +26,14 @@ import { NuevaConsultaData } from '../nueva-consulta-dock-popup/nueva-consulta-d
 import { EpisodeData } from '@historia-clinica/components/episode-data/episode-data.component';
 import { HierarchicalUnitService } from '@historia-clinica/services/hierarchical-unit.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { finalize } from 'rxjs';
+import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
+import { CreateOrderService } from '@historia-clinica/services/create-order.service';
+import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
+import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
+import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
+import { PrescriptionTypes } from '../../services/prescripciones.service';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -68,6 +72,10 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	problems: ClinicalTermDto[];
 	searchConceptsLocallyFFIsOn = false;
 	episodeData: EpisodeData;
+	createOrderService: CreateOrderService;
+	ambulatoryConsultationProblemsService: AmbulatoryConsultationProblemsService;
+	private readonly snvsMasterDataService: SnvsMasterDataService;
+
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 
 
@@ -102,6 +110,8 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
+		this.createOrderService = new CreateOrderService(this.snackBarService);
+		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 	}
 
 	setProblem() {
@@ -209,10 +219,12 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 	}
 
 	addProcedure(): void {
-		this.dialog.open(NewConsultationProcedureFormComponent, {
+		const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.idPaciente, this.hceGeneralStateService);
+		this.dialog.open(AddProcedureComponent, {
 			data: {
-				procedureService: this.procedimientoNuevaConsultaService,
-				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
+				patientId: this.data.idPaciente,
+				createOrderService: this.createOrderService,
+				problems: problems,
 			},
 			autoFocus: false,
 			width: '35%',
@@ -240,7 +252,10 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.nursingPatientConsultationService.createNursingPatientConsultation(nursingConsultationDto, this.data.idPaciente)
 			.pipe(finalize(() => this.disableConfirmButton = false))
 			.subscribe(
-				_ => {
+				res => {
+					res.orderIds.forEach((orderId: number) => {
+						this.openNewEmergencyCareStudyConfirmationDialog([orderId]);
+					});
 					this.snackBarService.showSuccess('ambulatoria.paciente.new-nursing-consultation.messages.SUCCESS');
 					this.dockPopupRef.close(mapToFieldsToUpdate(nursingConsultationDto));
 				},
@@ -287,7 +302,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			evolutionNote: this.formEvolucion.value?.evolucion,
 			problem: this.formEvolucion.value?.clinicalProblem,
-			procedures: this.procedimientoNuevaConsultaService.getProcedimientos().map(p => {return {...p, performedDate: p.performedDate? toApiFormat(p.performedDate) : null}}),
+			procedures: this.createOrderService.getOrderForNewConsultation(),
 			riskFactors: this.factoresDeRiesgoFormService.getFactoresDeRiesgo(),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
@@ -308,4 +323,19 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		control.reset();
 	}
 
+	private openNewEmergencyCareStudyConfirmationDialog(order: number[]) {
+		this.dialog.open(ConfirmarPrescripcionComponent,
+			{
+				disableClose: true,
+				data: {
+					titleLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.STUDY_TITLE',
+					downloadButtonLabel: 'ambulatoria.paciente.ordenes_prescripciones.confirm_prescription_dialog.DOWNLOAD_BUTTON_STUDY',
+					successLabel: 'ambulatoria.paciente.ordenes_prescripciones.toast_messages.POST_STUDY_SUCCESS',
+					prescriptionType: PrescriptionTypes.STUDY,
+					patientId: this.data.idPaciente,
+					prescriptionRequest: order,
+				},
+				width: '35%',
+			});
+	}
 }
