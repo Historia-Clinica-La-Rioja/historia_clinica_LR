@@ -113,6 +113,9 @@ export class HomeComponent implements OnInit {
 					&& report.id != REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING
 					&& report.id != REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
 		});
+		if (!this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO)){
+			this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
+		}
 		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
 			this.hierarchicalUnits = hierarchicalUnits;
 			this.hierarchicalUnitsTypeahead = hierarchicalUnits.map(hu => this.toHierarchicalUnitTypeahead(hu));

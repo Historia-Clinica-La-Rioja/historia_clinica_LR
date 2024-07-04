@@ -30,6 +30,7 @@ import net.pladema.reports.application.fetchnominalemergencycarepisodedetail.Fet
 import net.pladema.reports.domain.ReportSearchFilterBo;
 
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -354,6 +355,9 @@ public class ReportsController {
 	public ResponseEntity<Resource> getNominalECEDetailReport(@PathVariable Integer institutionId,
 															  @RequestParam String searchFilter) throws Exception {
 		log.debug("Input parameters -> institutionId {}, searchFilter {}" , institutionId, searchFilter);
+
+		if (!featureFlagsService.isOn(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO))
+			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 
 		String title = "DNG";
 		ReportSearchFilterBo filter = parseFilter(institutionId, searchFilter);
