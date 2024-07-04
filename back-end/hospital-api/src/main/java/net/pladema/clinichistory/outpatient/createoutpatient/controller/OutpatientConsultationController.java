@@ -152,8 +152,9 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 		 * Create a service request for each procedure
 		 */
 		try {
-			createServiceRequest(doctorId, createOutpatientDto.getProcedures(), patientMedicalCoverageId, patientDto,
+			List<Integer> orderIdsFromProcedures = createServiceRequest(doctorId, createOutpatientDto.getProcedures(), patientMedicalCoverageId, patientDto,
 				institutionId, newOutPatient.getId());
+			orderIds.addAll(orderIdsFromProcedures);
 		} catch (CreateOutpatientConsultationServiceRequestException e) {
 			//Translate to runtime exception to rollback the transaction
 			throw new RuntimeException(e);
@@ -167,9 +168,10 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 	/**
 	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
 	 */
-	private void createServiceRequest(Integer doctorId, List<CreateOutpatientProcedureDto> procedures,
+	private List<Integer> createServiceRequest(Integer doctorId, List<CreateOutpatientProcedureDto> procedures,
 		Integer medicalCoverageId, BasicPatientDto patientDto, Integer institutionId, Integer newOutpatientConsultationId)
 	{
+		List<Integer> orderIds = new ArrayList<>();
 		for (int i = 0; i < procedures.size(); i++) {
 			var procedure = procedures.get(i);
 			CreateOutpatientServiceRequestDto procedureServiceRequest = procedure.getServiceRequest();
@@ -188,11 +190,13 @@ public class OutpatientConsultationController implements OutpatientConsultationA
 				Short patientGenderId = patientDto.getPerson().getGender().getId();
 				Short patientAge = patientDto.getPerson().getAge();
 
-				sharedCreateConsultationServiceRequest.createOutpatientServiceRequest(doctorId, categoryId, institutionId,
+				Integer orderId = sharedCreateConsultationServiceRequest.createOutpatientServiceRequest(doctorId, categoryId, institutionId,
 						healthConditionSctid, healthConditionPt, medicalCoverageId, newOutpatientConsultationId, snomed.getSctid(), snomed.getPt(),
 						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+				orderIds.add(orderId);
 			}
 		}
+		return orderIds;
 	}
 
 	@Override

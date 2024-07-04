@@ -6,6 +6,7 @@ import ar.lamansys.nursing.infrastructure.input.rest.dto.NursingConsultationDto;
 import ar.lamansys.nursing.infrastructure.input.rest.dto.NursingProcedureDto;
 import ar.lamansys.nursing.infrastructure.input.rest.mapper.NursingConsultationMapper;
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ConsultationResponseDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterreference.ReferenceClosureDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.servicerequest.dto.CreateOutpatientServiceRequestDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,7 +49,7 @@ public class NursingConsultationController {
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping
     @PreAuthorize("hasPermission(#institutionId, 'ENFERMERO')")
-    public boolean createConsultation(
+    public ConsultationResponseDto createConsultation(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "patientId") Integer patientId,
             @RequestBody @Valid NursingConsultationDto nursingConsultationDto) {
@@ -58,9 +59,9 @@ public class NursingConsultationController {
         nursingConsultationBo.setInstitutionId(institutionId);
         nursingConsultationBo.setPatientId(patientId);
 
-        createNursingConsultation.run(nursingConsultationBo, toConsultationServiceRequestsBo(nursingConsultationDto.getProcedures()));
-
-        return true;
+        var newConsultation = createNursingConsultation.run(nursingConsultationBo, toConsultationServiceRequestsBo(nursingConsultationDto.getProcedures()));
+		ConsultationResponseDto result = new ConsultationResponseDto(newConsultation.getEncounterId(), newConsultation.getOrderIds());
+        return result;
     }
 
 	/**

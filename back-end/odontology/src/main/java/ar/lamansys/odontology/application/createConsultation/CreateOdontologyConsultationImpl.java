@@ -189,19 +189,21 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
 		publisher.run(patientId, consultationBo.getInstitutionId(), EOdontologyTopicDto.NUEVA_CONSULTA);
 
-		ConsultationResponseBo result = new ConsultationResponseBo(encounterId, orderIds);
+
 
 		/**
 		 * Create a service request for each procedure
 		 */
 		BasicPatientDto patientDto = sharedPatientPort.getBasicDataFromPatient(patientId);
-		createServiceRequest(
+		List<Integer> orderIdsFromProcedures = createServiceRequest(
 			doctorInfoBo.getId(),
 			serviceRequestsToCreate,
 			consultationBo.getPatientMedicalCoverageId(),
 			patientDto,
 			consultationBo.getInstitutionId(),
 			encounterId);
+		orderIds.addAll(orderIdsFromProcedures);
+		ConsultationResponseBo result = new ConsultationResponseBo(encounterId, orderIds);
 
 		LOG.debug("Output -> result {}", result);
 		return result;
@@ -209,8 +211,10 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 
 	/**
 	 * Try to create a service request (and a diagnostic report with its observations) for each procedure
+	 *
+	 * @return
 	 */
-	private void createServiceRequest(
+	private List<Integer> createServiceRequest(
 			Integer doctorId,
 			List<CreateOdontologyConsultationServiceRequestBo> procedures,
 			Integer medicalCoverageId,
@@ -218,6 +222,7 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 			Integer institutionId,
 			Integer newConsultationId)
 	{
+		List<Integer> orderIds = new ArrayList<>();
 		for (int i = 0; i < procedures.size(); i++) {
 			var procedure = procedures.get(i);
 			if (procedure != null) {
@@ -233,11 +238,13 @@ public class CreateOdontologyConsultationImpl implements CreateOdontologyConsult
 				Short patientGenderId = patientDto.getPerson().getGender().getId();
 				Short patientAge = patientDto.getPerson().getAge();
 
-				sharedCreateConsultationServiceRequest.createOdontologyServiceRequest(doctorId, categoryId, institutionId,
+				Integer orderId = sharedCreateConsultationServiceRequest.createOdontologyServiceRequest(doctorId, categoryId, institutionId,
 						healthConditionSctid, healthConditionPt, medicalCoverageId, newConsultationId, snomed.getSctid(), snomed.getPt(),
 						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+				orderIds.add(orderId);
 			}
 		}
+		return orderIds;
 	}
 
 	private void setPatientMedicalCoverageIfEmpty(ConsultationBo consultationBo, DoctorInfoBo doctorInfoBo) {

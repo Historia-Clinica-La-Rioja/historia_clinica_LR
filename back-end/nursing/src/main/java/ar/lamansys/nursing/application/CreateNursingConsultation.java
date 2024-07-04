@@ -3,11 +3,13 @@ package ar.lamansys.nursing.application;
 import static ar.lamansys.nursing.domain.NursingConsultationInfoBo.newNursingConsultationInfoBo;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import ar.lamansys.nursing.domain.CreateNursingConsultationServiceRequestBo;
 
+import ar.lamansys.nursing.domain.NursingConsultationResponseBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgh.shared.domain.servicerequest.SharedAddObservationsCommandVo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
@@ -65,7 +67,7 @@ public class CreateNursingConsultation {
     }
 
     @Transactional
-    public void run(
+    public NursingConsultationResponseBo run(
     	NursingConsultationBo nursingConsultationBo,
     	List<CreateNursingConsultationServiceRequestBo> serviceRequestsToCreate)
 	{
@@ -100,16 +102,18 @@ public class CreateNursingConsultation {
 		 * Create a service request for each procedure
 		 */
 		BasicPatientDto patientDto = sharedPatientPort.getBasicDataFromPatient(nursingConsultationBo.getPatientId());
-		createServiceRequest(
+		List<Integer> orderIds = createServiceRequest(
 				doctorInfoBo.getId(),
 				serviceRequestsToCreate,
 				nursingConsultationBo.getPatientMedicalCoverageId(),
 				patientDto,
 				nursingConsultationBo.getInstitutionId(),
 				encounterId);
+
+		return new NursingConsultationResponseBo(encounterId, orderIds);
     }
 
-	private void createServiceRequest(
+	private List<Integer> createServiceRequest(
 		Integer doctorId,
 		List<CreateNursingConsultationServiceRequestBo> procedures,
 		Integer medicalCoverageId,
@@ -118,6 +122,7 @@ public class CreateNursingConsultation {
 		Integer newConsultationId
 	)
 	{
+		List<Integer> orderIds = new ArrayList<>();
 		for (int i = 0; i < procedures.size(); i++) {
 			var procedure = procedures.get(i);
 			if (procedure != null) {
@@ -133,11 +138,13 @@ public class CreateNursingConsultation {
 				Short patientGenderId = patientDto.getPerson().getGender().getId();
 				Short patientAge = patientDto.getPerson().getAge();
 
-				sharedCreateConsultationServiceRequest.createNursingServiceRequest(doctorId, categoryId, institutionId,
+				Integer orderId = sharedCreateConsultationServiceRequest.createNursingServiceRequest(doctorId, categoryId, institutionId,
 						healthConditionSctid, healthConditionPt, medicalCoverageId, newConsultationId, snomed.getSctid(), snomed.getPt(),
 						createWithStatusFinal, addObservationsCommand, patientId, patientGenderId, patientAge);
+				orderIds.add(orderId);
 			}
 		}
+		return orderIds;
 	}
 
 	private void setPatientMedicalCoverageIfEmpty(NursingConsultationBo nursingConsultationBo, DoctorInfoBo doctorInfoBo) {
