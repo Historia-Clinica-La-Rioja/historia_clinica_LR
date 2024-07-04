@@ -32,20 +32,19 @@ export class CreateOrderService {
 	}
 
 	setConcept(selectedConcept: SnomedDto) {
-		this.snomedConcept = selectedConcept;
-		this.form.controls.snomed.setValue(selectedConcept);
-	}
-
-	setProblem(healthProblem: SnomedDto) {
 		this.hasProcedure.next(this.isEmpty());
+		this.snomedConcept = selectedConcept;
 		this.form.patchValue({
 			serviceRequest: {
-				healthConditionPt: healthProblem.pt,
-				healthConditionSctid: healthProblem.sctid
+				healthConditionPt: selectedConcept.pt,
+				healthConditionSctid: selectedConcept.sctid
 			}
 		})
 	}
 
+	setProblem(healthProblem: SnomedDto) {
+		this.form.controls.snomed.setValue(healthProblem);
+	}
 
 	setStudyCategory(studyCategoryId: number | string) {
 		this.form.patchValue({
@@ -92,7 +91,7 @@ export class CreateOrderService {
 	resetForm() {
 		this.hasProcedure.next(this.isEmpty());
 		delete this.snomedConcept;
-		this.form.reset();
+		this.form.patchValue({ snomed: null });
 	}
 
 	getForm(): UntypedFormGroup {
