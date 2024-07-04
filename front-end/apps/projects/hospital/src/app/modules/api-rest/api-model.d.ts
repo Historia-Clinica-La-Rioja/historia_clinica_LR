@@ -1190,6 +1190,7 @@ export interface DiagnosticReportInfoDto {
     id: number;
     link?: string;
     observations?: string;
+    observationsFromServiceRequest?: string;
     referenceRequestDto?: ReferenceRequestDto;
     serviceRequestId: number;
     snomed: SnomedDto;

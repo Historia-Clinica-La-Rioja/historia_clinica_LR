@@ -2,7 +2,6 @@ package net.pladema.clinichistory.requests.servicerequests.application.port;
 
 import java.util.List;
 import net.pladema.clinichistory.requests.servicerequests.domain.ServiceRequestProcedureInfoBo;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
 
 public interface ServiceRequestStorage {
 

@@ -1,6 +1,5 @@
-package net.pladema.clinichistory.requests.servicerequests.service;
+package net.pladema.clinichistory.requests.servicerequests.application;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.DiagnosticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentFileRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
@@ -13,12 +12,14 @@ import ar.lamansys.sgh.clinichistory.mocks.DocumentsTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.HealthConditionTestMocks;
 import ar.lamansys.sgh.clinichistory.mocks.SnomedTestMocks;
 import net.pladema.UnitRepository;
+import net.pladema.clinichistory.requests.servicerequests.application.port.DiagnosticReportStorage;
+import net.pladema.clinichistory.requests.servicerequests.domain.DiagnosticReportResultsBo;
+import net.pladema.clinichistory.requests.servicerequests.infrastructure.output.DiagnosticReportStorageImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.DiagnosticReportFileRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepository;
 import net.pladema.clinichistory.requests.servicerequests.repository.GetDiagnosticReportInfoRepositoryImpl;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.DiagnosticReportFile;
 import net.pladema.clinichistory.requests.servicerequests.repository.entity.ServiceRequest;
-import net.pladema.clinichistory.requests.servicerequests.service.impl.DiagnosticReportInfoServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,9 +28,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.persistence.EntityManager;
 
-class DiagnosticReportInfoServiceImplTest extends UnitRepository {
+class GetDiagnosticReportResultsTest extends UnitRepository {
 
-    private DiagnosticReportInfoService diagnosticReportInfoService;
+    private GetDiagnosticReportResults getDiagnosticReportResults;
+    private DiagnosticReportStorage diagnosticReportStorage;
     private GetDiagnosticReportInfoRepository getDiagnosticReportInfoRepository;
 
     @Autowired
@@ -44,7 +46,8 @@ class DiagnosticReportInfoServiceImplTest extends UnitRepository {
     @BeforeEach
     void setUp(){
         getDiagnosticReportInfoRepository = new GetDiagnosticReportInfoRepositoryImpl(entityManager);
-        diagnosticReportInfoService = new DiagnosticReportInfoServiceImpl(getDiagnosticReportInfoRepository, diagnosticReportFileRepository);
+        diagnosticReportStorage = new DiagnosticReportStorageImpl(getDiagnosticReportInfoRepository, diagnosticReportFileRepository);
+        getDiagnosticReportResults = new GetDiagnosticReportResults(diagnosticReportStorage);
 
         save(new DiagnosticReportStatus(DiagnosticReportStatus.REGISTERED, "Registrado"));
         save(new DiagnosticReportStatus(DiagnosticReportStatus.FINAL, "Final"));
@@ -80,7 +83,7 @@ class DiagnosticReportInfoServiceImplTest extends UnitRepository {
         save(drf2);
         save(drf3);
 
-        DiagnosticReportBo result = diagnosticReportInfoService.run(diagnosticReportId);
+        DiagnosticReportResultsBo result = getDiagnosticReportResults.run(diagnosticReportId);
         Assertions.assertThat(result.getFiles()).hasSize(3);
     }
 

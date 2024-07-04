@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import net.pladema.clinichistory.requests.servicerequests.application.GetDiagnosticReportResults;
+import net.pladema.clinichistory.requests.servicerequests.domain.DiagnosticReportResultsBo;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -121,6 +123,7 @@ public class ServiceRequestController {
 	private final GetDiagnosticReportObservationGroup getDiagnosticReportObservationGroup;
 	private final AddDiagnosticReportObservations addDiagnosticReportObservations;
 	private final DiagnosticReportObservationsMapper diagnosticReportObservationsMapper;
+	private final GetDiagnosticReportResults getDiagnosticReportResults;
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -231,7 +234,7 @@ public class ServiceRequestController {
         log.debug(COMMON_INPUT, institutionId, patientId, diagnosticReportId);
 
 
-        DiagnosticReportBo resultService = diagnosticReportInfoService.run(diagnosticReportId);
+        DiagnosticReportResultsBo resultService = getDiagnosticReportResults.run(diagnosticReportId);
         ProfessionalDto professionalDto = healthcareProfessionalExternalService.findProfessionalByUserId(resultService.getUserId());
 		ReferenceRequestDto reference = sharedReferenceCounterReference.getReferenceByServiceRequestId(resultService.getEncounterId()).orElse(null);
 		DiagnosticReportInfoDto driDto = diagnosticReportInfoMapper.parseTo(
