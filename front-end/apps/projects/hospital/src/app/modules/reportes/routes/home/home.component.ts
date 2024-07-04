@@ -105,6 +105,9 @@ export class HomeComponent implements OnInit {
 			this.specialtiesTypeaheadOptions$ = this.getSpecialtiesTypeaheadOptions$(professionals);
 			this.professionalsTypeahead = professionals.map(d => this.toProfessionalTypeahead(d));
 		});
+		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO).subscribe(isOn => {
+			if (!isOn) this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
+		})
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			if (!anyMatch<ERole>(userRoles, [ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ERole.ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, ERole.PERSONAL_DE_ESTADISTICA]))
 				this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.MONTHLY
@@ -113,9 +116,6 @@ export class HomeComponent implements OnInit {
 					&& report.id != REPORT_TYPES_ID.NOMINAL_DIAGNOSTIC_IMAGING
 					&& report.id != REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
 		});
-		if (!this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO)){
-			this.REPORT_TYPES = this.REPORT_TYPES.filter(report => report.id != REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
-		}
 		this.hierarchicalUnitsService.getByInstitution().subscribe(hierarchicalUnits => {
 			this.hierarchicalUnits = hierarchicalUnits;
 			this.hierarchicalUnitsTypeahead = hierarchicalUnits.map(hu => this.toHierarchicalUnitTypeahead(hu));
