@@ -239,7 +239,7 @@
     <!-- Profesional -->
     <div th:fragment="professionalData">
         <div>
-            <div class="section-title">Profesional responsable</div>
+            <div class="section-title">Profesional originante</div>
             <div>
                 <div class="row-content">
                     <div class="data-title">Nombre y apellido</div>
@@ -265,7 +265,7 @@
     <div th:fragment="involvedProfessionalsData">
         <div th:if="${involvedProfessionals != null && !involvedProfessionals.isEmpty()}">
             <div>
-                <div class="section-title">Profesionales intervinientes</div>
+                <div class="section-title">Profesionales responsables</div>
                 <div th:each="involvedProfessional, iter: ${involvedProfessionals}">
                     <div class="row-content">
                         <div class="data-title">Nombre y apellido</div>
