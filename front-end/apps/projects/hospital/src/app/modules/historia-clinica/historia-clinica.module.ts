@@ -19,6 +19,7 @@ import { AntropometricosSummaryComponent } from './components/antropometricos-su
 import { BackgroundListComponent } from './components/background-list/background-list.component';
 import { ClinicalEvaluationSummaryComponent } from './components/clinical-evaluation-summary/clinical-evaluation-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
+import { CreateOrderComponent } from './components/create-order/create-order.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
@@ -96,6 +97,7 @@ import { AddAnthropometricComponent } from './dialogs/add-anthropometric/add-ant
 import { AddInmunizationComponent } from './dialogs/add-inmunization/add-inmunization.component';
 import { AddMemberMedicalTeamComponent } from './dialogs/add-member-medical-team/add-member-medical-team.component';
 import { AddRiskFactorsComponent } from './dialogs/add-risk-factors/add-risk-factors.component';
+import { AddProcedureComponent } from './dialogs/add-procedure/add-procedure.component';
 import { AuditAccessRegisterComponent } from './dialogs/audit-access-register/audit-access-register.component';
 import { BedAssignmentComponent } from './dialogs/bed-assignment/bed-assignment.component';
 import { ConceptsSearchDialogComponent } from './dialogs/concepts-search-dialog/concepts-search-dialog.component';
@@ -181,6 +183,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		BackgroundListComponent,
         ClinicalEvaluationSummaryComponent,
 		ConceptsSearchComponent,
+		CreateOrderComponent,
         DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
@@ -264,6 +267,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		AddAnthropometricComponent,
 		AddInmunizationComponent,
 		AddMemberMedicalTeamComponent,
+		AddProcedureComponent,
 		AddRiskFactorsComponent,
 		ConceptsSearchDialogComponent,
 		EffectiveTimeDialogComponent,
