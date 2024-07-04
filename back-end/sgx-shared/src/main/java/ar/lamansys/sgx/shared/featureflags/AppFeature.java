@@ -222,7 +222,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_SOLAPA_COLA_IMAGENES,
 
 	@Label("Habilita la creación del triage para el rol administrativo")
-	HABILITAR_TRIAGE_PARA_ADMINISTRATIVO
+	HABILITAR_TRIAGE_PARA_ADMINISTRATIVO,
+	
+	@Label("Habilita el reporte detalle nominal de atenciones en guardia")
+	HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO
 	;
 
 	public boolean isActive() {
