@@ -7,6 +7,12 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ar.lamansys.sgx.shared.repositories.QueryPart;
+import net.pladema.staff.domain.HealthcareProfessionalSearchBo;
+import net.pladema.staff.repository.domain.HealthcareProfessionalSearchQuery;
+import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
+import net.pladema.staff.service.domain.HealthcareProfessionalBo;
+
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -86,6 +92,18 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		result.forEach(professional -> professional.setProfessions(buildProfessions(professional.getPersonId())));
 		log.trace("execute result query -> {}", result);
 		return result;
+	}
+
+	@Override
+	public List<HealthcareProfessionalBo> fetchAllProfessionalsByFilter(HealthcareProfessionalSearchBo searchCriteria, List<Short> professionalERolIds) {
+		HealthcareProfessionalSearchQuery healthcareProfessionalSearchQuery = new HealthcareProfessionalSearchQuery(searchCriteria, professionalERolIds);
+		QueryPart queryPart = buildQuery(healthcareProfessionalSearchQuery);
+		Query query = entityManager.createNativeQuery(queryPart.toString());
+		queryPart.configParams(query);
+		List<HealthcareProfessionalVo> professionals = healthcareProfessionalSearchQuery.construct(query.getResultList());
+		return professionals.stream()
+				.map(HealthcareProfessionalBo::new)
+				.collect(Collectors.toList());
 	}
 
 	private List<ProfessionBo> buildProfessions(Integer personId) {
@@ -178,4 +196,12 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		return new LicenseNumberBo((Integer) row[0], (String) row[1], (ELicenseNumberTypeBo) row[2]);
 	}
 
+	private QueryPart buildQuery(HealthcareProfessionalSearchQuery healthcareProfessionalSearchQuery){
+		return new QueryPart("SELECT ")
+				.concatPart(healthcareProfessionalSearchQuery.select())
+				.concat(" FROM ")
+				.concatPart(healthcareProfessionalSearchQuery.from())
+				.concat(" WHERE ")
+				.concatPart(healthcareProfessionalSearchQuery.where());
+	}
 }

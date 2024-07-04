@@ -1,7 +1,13 @@
 package net.pladema.staff.infrastructure.input.rest;
 
 import ar.lamansys.sgx.shared.security.UserInfo;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.staff.application.GetAllProfessionalsAndTechnicians;
+import net.pladema.staff.application.fetchprofessionalsbyfilter.FetchProfessionalsByFilter;
 import net.pladema.staff.application.gethealthcareprofessional.GetHealthcareProfessional;
 import net.pladema.staff.application.gethealthcareprofessionalbyuserid.GetHealthcareProfessionalByUserId;
 import net.pladema.staff.application.getUserIdByHealthcareProfessionalId.GetUserIdByHealthcareProfessionalId;
@@ -12,11 +18,9 @@ import net.pladema.staff.controller.dto.ExternalTemporaryHealthcareProfessionalD
 import net.pladema.staff.controller.dto.HealthcareProfessionalCompleteDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import net.pladema.staff.controller.mapper.HealthcareProfessionalMapper;
-import net.pladema.staff.domain.ExternalTemporaryHealthcareProfessionalBo;
+import net.pladema.staff.domain.HealthcareProfessionalSearchBo;
 import net.pladema.staff.service.HealthcareProfessionalService;
 import net.pladema.staff.service.domain.HealthcareProfessionalBo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,17 +29,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/healthcareprofessional")
 //@Api(value = "Healthcare professionals", tags = { "Healthcare professionals" })
 public class HealthcareProfessionalController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(HealthcareProfessionalController.class);
 	public static final String OUTPUT = "Output -> {}";
 
 	private final HealthcareProfessionalService healthcareProfessionalService;
@@ -52,41 +59,25 @@ public class HealthcareProfessionalController {
 	private final GetAllProfessionalsAndTechnicians getAllProfessionalsAndTechnicians;
 
 	private final SaveExternalTemporaryProfessional saveExternalTemporaryProfessional;
-
-	public HealthcareProfessionalController(HealthcareProfessionalService healthcareProfessionalService,
-											HealthcareProfessionalMapper healthcareProfessionalMapper,
-											GetHealthcareProfessional getHealthcareProfessional,
-											SaveHealthcareProfessional saveHealthcareProfessional,
-											GetHealthcareProfessionalByUserId getHealthcareProfessionalByUserId,
-											GetUserIdByHealthcareProfessionalId getUserIdByHealthcareProfessionalId,
-											GetAllProfessionalsAndTechnicians getAllProfessionalsAndTechnicians,
-											SaveExternalTemporaryProfessional saveExternalTemporaryProfessional) {
-		this.healthcareProfessionalService = healthcareProfessionalService;
-		this.healthcareProfessionalMapper = healthcareProfessionalMapper;
-		this.getHealthcareProfessional = getHealthcareProfessional;
-		this.saveHealthcareProfessional = saveHealthcareProfessional;
-		this.getHealthcareProfessionalByUserId = getHealthcareProfessionalByUserId;		
-		this.getUserIdByHealthcareProfessionalId = getUserIdByHealthcareProfessionalId;
-		this.getAllProfessionalsAndTechnicians = getAllProfessionalsAndTechnicians;
-		this.saveExternalTemporaryProfessional = saveExternalTemporaryProfessional;
-	}
+	private final FetchProfessionalsByFilter fetchProfessionalsByFilter;
+	private final ObjectMapper jackson;
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
 	public List<ProfessionalDto> getAll() {
 		List<HealthcareProfessionalBo> professionals = healthcareProfessionalService.getAllProfessional();
-		LOG.debug("Get all professional => {}", professionals);
+		log.debug("Get all professional => {}", professionals);
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
 	@GetMapping("/get-all-professionals-and-technicians")
 	public List<ProfessionalDto> getAllProfessionalsAndTechnicians() {
-		LOG.debug("No input parameters");
+		log.debug("No input parameters");
 		List<HealthcareProfessionalBo> professionals = getAllProfessionalsAndTechnicians.run();
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -94,25 +85,25 @@ public class HealthcareProfessionalController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<ProfessionalDto> get(@PathVariable(name = "institutionId") Integer institutionId,
 											   @PathVariable(name = "personId") Integer personId) {
-		LOG.debug("Input parameters -> {}", personId);
+		log.debug("Input parameters -> {}", personId);
 		ProfessionalDto result = healthcareProfessionalMapper.fromProfessionalBo(getHealthcareProfessional.execute(personId));
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping(value = "/{healthcareProfessionalId}")
 	public ResponseEntity<Integer> getUserIdByHealthcareProfessionalId(@PathVariable(name = "healthcareProfessionalId") Integer healthcareProfessionalId) {
-		LOG.debug("Input parameters -> {}", healthcareProfessionalId);
+		log.debug("Input parameters -> {}", healthcareProfessionalId);
 		Integer result = getUserIdByHealthcareProfessionalId.execute(healthcareProfessionalId);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping("/by-user-logged")
 	public ResponseEntity<Integer> getProfessionalIdByUser() {
-		LOG.debug("No input parameters");
+		log.debug("No input parameters");
 		Integer result = getHealthcareProfessionalByUserId.execute(UserInfo.getCurrentAuditor());
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -120,9 +111,9 @@ public class HealthcareProfessionalController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<Integer> save(@PathVariable(name = "institutionId") Integer institutionId,
 										  @RequestBody HealthcareProfessionalCompleteDto professionalDto) {
-		LOG.debug("Input parameters -> {}", professionalDto);
+		log.debug("Input parameters -> {}", professionalDto);
 		Integer result = saveHealthcareProfessional.run(healthcareProfessionalMapper.fromHealthcareProfessionalCompleteDto(professionalDto));
-		LOG.debug(OUTPUT,result);
+		log.debug(OUTPUT,result);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -131,19 +122,40 @@ public class HealthcareProfessionalController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR')")
 	public ResponseEntity<Integer> createTemporal(@PathVariable(name = "institutionId") Integer institutionId,
 										@RequestBody ExternalTemporaryHealthcareProfessionalDto temporaryProfessionalDto) {
-		LOG.debug("Input parameters -> temporaryProfessionalDto {}", temporaryProfessionalDto);
+		log.debug("Input parameters -> temporaryProfessionalDto {}", temporaryProfessionalDto);
 		Integer result = saveExternalTemporaryProfessional.run(healthcareProfessionalMapper.fromExternalTemporaryHealthcareProfessionalDto(temporaryProfessionalDto));
-		LOG.debug(OUTPUT,result);
+		log.debug(OUTPUT,result);
 		return ResponseEntity.ok().body(result);
 	}
 
 	@GetMapping(value = "/department/{departmentId}")
 	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
 	public List<ProfessionalDto> getAllByDepartment(@PathVariable("departmentId") Short departmentId) {
-		LOG.debug("Input parameter -> departmentId {}", departmentId);
+		log.debug("Input parameter -> departmentId {}", departmentId);
 		List<HealthcareProfessionalBo> professionals = healthcareProfessionalService.getAllProfessionalsByDepartment(departmentId);
 		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(professionals);
-		LOG.debug(OUTPUT, result);
+		log.debug(OUTPUT, result);
 		return result;
+	}
+
+	@GetMapping(value = "/by-filter")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public List<ProfessionalDto> getAllByFilter(@RequestParam String searchFilter) {
+		log.debug("Input parameter getAllByFilter -> filter {}", searchFilter);
+		List<ProfessionalDto> result = healthcareProfessionalMapper.fromProfessionalBoList(
+				fetchProfessionalsByFilter.execute(parseFilter(searchFilter))
+		);
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	private HealthcareProfessionalSearchBo parseFilter(String filter) {
+		HealthcareProfessionalSearchBo searchFilter = null;
+		try {
+			searchFilter = jackson.readValue(filter, HealthcareProfessionalSearchBo.class);
+		} catch (IOException e) {
+			log.error(String.format("Error mapping filter: %s", filter), e);
+		}
+		return searchFilter;
 	}
 }
