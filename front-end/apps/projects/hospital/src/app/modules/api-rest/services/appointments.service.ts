@@ -389,7 +389,12 @@ export class AppointmentsService {
 
 	getCustomAppointment(appointmentId: number): Observable<CustomRecurringAppointmentDto> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/appointments/${appointmentId}/custom-appointment`;
-		return this.http.get<CustomRecurringAppointmentDto>(url).pipe(map(dto => { return { ...dto, endDate: dateISOParseDate(dto.endDate.toString()) } }));
+		return this.http.get<CustomRecurringAppointmentDto>(url).pipe(map(dto => { 
+			return {
+				...dto,
+				endDate: (dto.endDate && dateISOParseDate(dto.endDate.toString())) || null
+			} 
+		}));
 	}
 
 	createExpiredAppointment(createAppointmentDto: CreateAppointmentDto): Observable<number> {
