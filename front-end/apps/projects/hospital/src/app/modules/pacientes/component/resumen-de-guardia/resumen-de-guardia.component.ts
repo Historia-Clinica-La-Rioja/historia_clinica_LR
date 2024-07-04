@@ -72,6 +72,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	private hasEmergencyCareRelatedRole: boolean;
 	private hasRoleAdministrative: boolean;
+	private hasRoleAbleToSeeTriage: boolean;
 
 	availableActions: ActionInfo[] = [];
 	TEMPORARY_EMERGENCY_CARE = PatientType.EMERGENCY_CARE_TEMPORARY;
@@ -102,13 +103,9 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 
 	ngOnInit(): void {
-		this.permissionsService.contextAssignments$().subscribe(
-			(userRoles: ERole[]) => {
-				this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO]);
-				this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
-				this.setEpisodeState();
-			}
-		);
+		this.setRolesAndEpisodeState();
+
+		this.checkAdministrativeFF();
 
 		this.newEmergencyCareEvolutionNoteService.new$.subscribe(() => this.calculateAvailableActions());
 
@@ -131,10 +128,24 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.loadPatientDischarge();
 			}
 		});
+	}
 
+	private setRolesAndEpisodeState(){
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ENFERMERO]);
+			this.hasRoleAdministrative = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
+			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+       		this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
+			this.setEpisodeState();
+		});
+	}
+
+	private checkAdministrativeFF(){
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
-			this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasRoleAdministrative)
-		);
+			this.hasRoleAbleToSeeTriage
+			? this.isAdministrativeAndHasTriageFFInFalse = false
+			: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasRoleAdministrative)
+		)
 	}
 
 	newTriage() {

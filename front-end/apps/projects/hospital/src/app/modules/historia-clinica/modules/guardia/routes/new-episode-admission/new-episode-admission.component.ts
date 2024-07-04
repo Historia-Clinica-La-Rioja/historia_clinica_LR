@@ -26,6 +26,7 @@ export class NewEpisodeAdmissionComponent implements OnInit {
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;
 	private isAdministrativeAndHasTriageFFInFalse : boolean;
 	private hasAdministrativeRole: boolean;
+	private hasRoleAbleToSeeTriage: boolean;
 
 	constructor(private readonly newEpisodeService: NewEpisodeService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
@@ -44,13 +45,26 @@ export class NewEpisodeAdmissionComponent implements OnInit {
 			this.initData = this.newEpisodeService.getAdministrativeAdmission();
 		}
 
-		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
-		});
+		this.setRoles();
 
+		this.checkAdministrativeFF();
+	}
+
+	private setRoles(){
+		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
+			const administrativeRoles = [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES];
+			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, administrativeRoles);
+			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+       		this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
+		});
+	}
+
+	private checkAdministrativeFF(){
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
-			this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
-		);
+			this.hasRoleAbleToSeeTriage
+			? this.isAdministrativeAndHasTriageFFInFalse = false
+			: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+		)
 	}
 
 	confirm(administrativeAdmission: AdministrativeAdmission): void {

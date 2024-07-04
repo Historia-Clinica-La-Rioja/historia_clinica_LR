@@ -74,6 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	hasEmergencyCareRelatedRole: boolean;
 	private hasAdministrativeRole: boolean;
+	private hasRoleAbleToSeeTriage: boolean;
 	rolesToEpisodeAttend: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
 	isAdministrativeAndHasTriageFFInFalse: boolean;
 
@@ -114,13 +115,26 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.loadEpisodes(this.FIRST_PAGE);
 		this.triageCategories$ = this.filterService.getTriageCategories();
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
+		this.setRoles();
+		this.checkAdministrativeFF();
+	}
+
+	private setRoles(){
 		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
 			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
 			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
+
+			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
+       		this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
 		});
+	}
+
+	private checkAdministrativeFF(){
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
-			this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
-		);
+			this.hasRoleAbleToSeeTriage
+			? this.isAdministrativeAndHasTriageFFInFalse = false
+			: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+		)
 	}
 
 	loadEpisodes(pageNumber: number): void {
