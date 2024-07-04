@@ -1,0 +1,47 @@
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title [translate]="'historia-clinica.new-consultation-procedure-form.ADD_PROCEDURE'"></span>
+	<button mat-icon-button (click)="close()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<mat-stepper labelPosition="bottom" #stepper>
+
+	<mat-step>
+		<div>
+			<ng-template matStepLabel>{{'historia-clinica.add_procedure.PROCEDURE' | translate}}</ng-template>
+
+			<app-create-order [data]="data" [studyCategoryOptions]="studyCategoryOptions"
+				[problems]="data.problems"></app-create-order>
+
+			<div fxLayoutAlign="end center">
+				<button [disabled]="!data.createOrderService.areRequiredFieldsCompleted()" id="next" mat-raised-button
+					matStepperNext color="primary">
+					<span class="uppercase"> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
+				</button>
+			</div>
+		</div>
+	</mat-step>
+
+	<mat-step>
+		<div>
+			<ng-template matStepLabel>{{'historia-clinica.add_procedure.RESULT' | translate}}</ng-template>
+
+			<h1>{{'historia-clinica.add_procedure.TITLE_OPTIONS' | translate}} </h1>
+			<mat-radio-group aria-label="Select an option" fxLayout="column" fxLayoutGap="15px"
+				(change)="setCreationStatus($event)">
+				<mat-radio-button value="FINAL">{{'historia-clinica.add_procedure.FINAL' | translate}}</mat-radio-button>
+				<mat-radio-button value="REGISTERED">{{'historia-clinica.add_procedure.REGISTERED' |
+					translate}}</mat-radio-button>
+			</mat-radio-group>
+		</div>
+
+		<div fxLayoutAlign="end center" class="margin-top">
+			<button [disabled]="!data.createOrderService.isValidForm()" id="add_order" mat-raised-button mat-button
+				matStepperNext color="primary" (click)="addOrder()" class="uppercase">
+				<span class="uppercase">{{'historia-clinica.add_procedure.ADD_PROCEDURE' | translate}}</span>
+			</button>
+		</div>
+	</mat-step>
+
+</mat-stepper>
