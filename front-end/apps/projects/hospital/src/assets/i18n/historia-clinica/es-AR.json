@@ -153,6 +153,20 @@
 				"OBSERVATIONS": "Observaciones"
 			}
 		},
+		"create-order": {
+			"PROCEDURE": "Procedimiento",
+			"CATEGORY": "Categoría del estudio",
+			"HEALTH_PROBLEM": "Problema"
+		},
+		"add_procedure": {
+			"TITLE_OPTIONS": "Resultados de estudio",
+			"PROCEDURE": "Procedimiento",
+			"RESULT": "Resultados",
+			"NEXT": "Siguiente",
+			"FINAL": "No requiere carga de resultados",
+			"REGISTERED": "Los resultados quedarán pendientes de carga",
+			"ADD_PROCEDURE": "Agregar procedimiento"
+		},
 		"surgical-report": {
 			"summary": {
 				"DESCRIPTION": "Descripción",
