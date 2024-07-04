@@ -11,6 +11,7 @@ import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { toOutpatientMedicationDto, toOutpatientAnthropometricDataDto, toOutpatientFamilyHistoryDto, toOutpatientRiskFactorDto } from '@historia-clinica/mappers/emergency-care-evolution-note.mapper';
 import { EvolutionNoteEditionService } from '@historia-clinica/modules/guardia/services/evolution-note-edition.service';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-nota-de-evolucion-dock-popup',
@@ -42,6 +43,8 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	diagnosis;
 	isAllergyNoRefer: boolean = true;
 	isFamilyHistoriesNoRefer: boolean = true;
+	disabled = true;
+	markAsTouched = false;
 
 	constructor(
 		public dockPopupRef: DockPopupRef,
@@ -77,9 +80,15 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 	}
 
 	save() {
-		this.disableConfirmButton = true;
-		const emergencyCareEvolutionNoteDto = this.buildEmergencyCareEvolutionNoteDto();
-		this.persist(emergencyCareEvolutionNoteDto)
+		if (this.form.value.evolutionNote) {
+			this.disableConfirmButton = true;
+			const emergencyCareEvolutionNoteDto = this.buildEmergencyCareEvolutionNoteDto();
+			this.persist(emergencyCareEvolutionNoteDto)
+		}
+		else {
+			this.markAsTouched = true;
+			this.snackBarService.showError('La nota de evolución de guardia debe tener una evolución');
+		}
 	}
 
 	private buildEmergencyCareEvolutionNoteDto(): EmergencyCareEvolutionNoteDto {
@@ -89,7 +98,6 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		const anthropometricData = toOutpatientAnthropometricDataDto(value.anthropometricData);
 		const familyHistories = toOutpatientFamilyHistoryDto(value.familyHistories?.data);
 		const riskFactors = toOutpatientRiskFactorDto(value.riskFactors);
-
 		return {
 			clinicalSpecialtyId: value.clinicalSpecialty?.clinicalSpecialty.id,
 			reasons: value.reasons?.motivo || [],
@@ -101,7 +109,7 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 				isReferred: (this.isFamilyHistoriesNoRefer && (value.familyHistories?.data || []).length === 0) ? null: this.isFamilyHistoriesNoRefer,
 				content: familyHistories,
 			},
-			procedures: value.procedures?.data || [],
+			procedures: value.procedures?.data.map(p => {return {...p, performedDate: p.performedDate ? toApiFormat(p.performedDate) : null}}) || [],
 			medications,
 			riskFactors,
 			allergies: {
@@ -154,7 +162,6 @@ export class NotaDeEvolucionDockPopupComponent implements OnInit {
 		this.setDiagnosis(evolutionNoteData.mainDiagnosis, evolutionNoteData.diagnosis);
 		this.evolutionNoteEditionService.loadFormByEvolutionNoteData(this.form, evolutionNoteData);
 	}
-
 }
 
 export interface NotaDeEvolucionData {
