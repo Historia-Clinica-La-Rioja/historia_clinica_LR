@@ -5,6 +5,7 @@ import java.util.List;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
+import ar.lamansys.sgh.publicapi.activities.staff.application.exception.InstitutionNotExistsException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +26,9 @@ public class FetchProcedureByActivity {
 
 	public List<ProcedureInformationBo> run(String refsetCode, Long activityId) {
 		var institutionId = activitiesPublicApiPermissions.findInstitutionId(refsetCode);
-		assertUserCanAccess(institutionId.get());
+
+		institutionId.ifPresent(this::assertUserCanAccess);
+
 		log.debug("Input parameters -> refsetCode {}, activityId {}", refsetCode, activityId);
 		var result = activityInfoStorage.getProceduresByActivity(refsetCode, activityId);
 		log.debug("Output -> {}", result);

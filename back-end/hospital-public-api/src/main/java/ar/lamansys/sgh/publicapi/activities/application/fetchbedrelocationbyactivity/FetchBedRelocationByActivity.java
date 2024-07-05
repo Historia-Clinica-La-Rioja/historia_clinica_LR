@@ -22,7 +22,9 @@ public class FetchBedRelocationByActivity {
 
 	public List<BedRelocationInfoBo> run(String refsetCode, Long activityId) {
 		var institutionId = activitiesPublicApiPermissions.findInstitutionId(refsetCode);
-		assertUserCanAccess(institutionId.get());
+
+		institutionId.ifPresent(this::assertUserCanAccess);
+
 		log.debug("Input parameters -> refsetCode {}, activityId {}", refsetCode, activityId);
 		List<BedRelocationInfoBo> result = activityInfoStorage.getBedRelocationsByActivity(refsetCode, activityId);
 		log.debug("Output -> {}", result);
