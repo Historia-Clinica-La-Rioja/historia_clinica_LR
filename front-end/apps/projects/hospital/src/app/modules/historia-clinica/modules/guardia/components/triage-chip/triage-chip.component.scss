@@ -1,6 +1,33 @@
 .triage-chip {
-	width: fit-content;
-	padding: 1.5px 8px;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 19px 6px 16px;
 	border-radius: 5px;
 	white-space: nowrap;
+	color: white;
+}
+
+.fill {
+	width: 90%;
+	height: 30px;
+	padding: 0px 0px 0px 19px;
+}
+
+.nivel-1 { background-color: #FF0000; }
+
+.nivel-2 { background-color: #FF5C02; }
+
+.nivel-3 {
+	background-color: #ECBE00;
+	color: black;
+}
+
+.nivel-4 { background-color: #009B68; }
+
+.nivel-5 { background-color: #3F4B9D; }
+
+.nivel-6 {
+	background-color: #D5D5D5;
+	color: black;
 }
