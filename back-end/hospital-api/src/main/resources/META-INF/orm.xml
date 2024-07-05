@@ -761,13 +761,15 @@
 	<named-native-query name="ProgramReports.RecuperoOdontologicoConsultationDetail" result-set-mapping="ProgramReports.RecuperoOdontologicoConsultationDetailResult">
 		<query>
 			SELECT
-			CONCAT(ins.name, ' (SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution,
+			CONCAT(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution,
 			cs.name AS operativeUnit,
 			CONCAT(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) AS lender,
 			p.identification_number AS lenderDni,
 			CASE
-			WHEN (EXTRACT(HOUR FROM oc.created_on)) &lt; 3 THEN (oc.performed_date - 1)
-			ELSE oc.performed_date
+			WHEN EXTRACT(HOUR FROM oc.created_on) &lt; 3 THEN
+			(oc.performed_date - 1)
+			ELSE
+			oc.performed_date
 			END AS attentionDate,
 			CONCAT(EXTRACT(HOUR FROM oc.created_on AT TIME ZONE 'UTC-3'), ':', EXTRACT(MINUTE FROM oc.created_on AT TIME ZONE 'UTC-3')) AS attentionHour,
 			pp.identification_number AS patientDni,
@@ -780,30 +782,33 @@
 			ELSE
 			CONCAT((EXTRACT(YEAR FROM oc.performed_date) - EXTRACT(YEAR FROM pp.birth_date)), ' años, ', (EXTRACT(MONTH FROM oc.performed_date) - EXTRACT(MONTH FROM pp.birth_date)), ' meses')
 			END AS ageTurn,
-			CONCAT(mc.name, ' (RNOS: ', hi.rnos, ')') AS medicalCoverage,
-			CONCAT(a.street, ' N° ', a.number, CASE WHEN a.floor IS NOT NULL THEN CONCAT(' Piso: ', a.floor, ' Departamento: ', a.apartment) END) AS direction,
+			CONCAT(mc.name, '(RNOS: ', hi.rnos, ')') AS medicalCoverage,
+			CONCAT(a.street, ' N° ', a.number,
+			CASE WHEN a.floor IS NOT NULL THEN
+			CONCAT(' Piso: ', a.floor, ' Departamento: ', a.apartment)
+			END) AS direction,
 			a.quarter AS neighborhood,
 			c.description AS location,
 			CONCAT(oci.permanent_c, '|', oci.permanent_p, '|', oci.permanent_o) AS indexCpo,
 			CONCAT(oci.temporary_c, '|', oci.temporary_e, '|', oci.temporary_o) AS indexCeo,
-			(SELECT STRING_AGG(r.description, ', ')
+			(SELECT string_agg(r.description, ', ')
 			FROM odontology_consultation_reason ocr
 			INNER JOIN odontology_reason r ON ocr.reason_id = r.id
 			WHERE ocr.odontology_consultation_id = oc.id) AS reasons,
-			(SELECT STRING_AGG(CONCAT(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ')
+			(SELECT string_agg(CONCAT(s_proc.pt, '(', ps.description, ' | SNOMED: ', s_proc.sctid, ' | CIE10: ', proc.cie10_codes, ')'), ', ')
 			FROM document_procedure dp
 			INNER JOIN procedures proc ON dp.procedure_id = proc.id
 			INNER JOIN procedures_status ps ON proc.status_id = ps.id
 			INNER JOIN snomed s_proc ON proc.snomed_id = s_proc.id
 			WHERE dp.document_id = d.id) AS procedures,
-			(SELECT STRING_AGG(CONCAT(s_p.pt, '(SNOMED: ', s_p.sctid, ' | CIE10: ', op.cie10_codes, ')[diente: ', stp.pt, ' | sctid: ', stp.sctid, '][superficie: ', sfp.pt, ' | sctid', sfp.sctid, ']'), ', ')
+			(SELECT string_agg(CONCAT(s_p.pt, '(SNOMED: ', s_p.sctid, ' | CIE10: ', op.cie10_codes, ')[diente: ', stp.pt, ' | sctid: ', stp.sctid, '][superficie: ', sfp.pt, ' | sctid', sfp.sctid, ']'), ', ')
 			FROM document_odontology_procedure dop
 			INNER JOIN odontology_procedure op ON dop.odontology_procedure_id = op.id
 			INNER JOIN snomed s_p ON op.snomed_id = s_p.id
 			LEFT JOIN snomed stp ON op.tooth_id = stp.id
 			LEFT JOIN snomed sfp ON op.surface_id = sfp.id
 			WHERE dop.document_id = d.id) AS dentalProcedures,
-			(SELECT STRING_AGG(CONCAT(s_prob.pt, ' (', ccs.description, ' &amp; ', cvs.description, ' - Fecha: ', hc.start_date, ' - Tipo: ', pt.description, ')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			(SELECT string_agg(CONCAT(s_prob.pt, ' (', ccs.description, ' &amp; ', cvs.description, ' - Fecha: ', hc.start_date, ' - Tipo: ', pt.description, ')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
 			FROM document_health_condition dhc
 			INNER JOIN health_condition hc ON dhc.health_condition_id = hc.id
 			INNER JOIN problem_type pt ON hc.problem_id = pt.id
@@ -811,7 +816,7 @@
 			INNER JOIN condition_clinical_status ccs ON hc.status_id = ccs.id
 			INNER JOIN condition_verification_status cvs ON hc.verification_status_id = cvs.id
 			WHERE dhc.document_id = d.id AND hc.problem_id &lt;> '57177007') AS problems,
-			(SELECT STRING_AGG(CONCAT(s_d.pt, '(SNOMED: ', s_d.sctid, ' | CIE10: ', od.cie10_codes, ')[diente: ', std.pt, ' | sctid: ', std.sctid, '][superficie: ', sfd.pt, ' | sctid', sfd.sctid, ']'), ', ')
+			(SELECT string_agg(CONCAT(s_d.pt, '(SNOMED: ', s_d.sctid, ' | CIE10: ', od.cie10_codes, ')[diente: ', std.pt, ' | sctid: ', std.sctid, '][superficie: ', sfd.pt, ' | sctid', sfd.sctid, ']'), ', ')
 			FROM document_odontology_diagnostic dod
 			INNER JOIN odontology_diagnostic od ON dod.odontology_diagnostic_id = od.id
 			INNER JOIN snomed s_d ON od.snomed_id = s_d.id
@@ -837,7 +842,7 @@
 			LEFT JOIN city c ON a.city_id = c.id
 			LEFT JOIN document d ON d.source_id = oc.id AND d.source_type_id = 6
 			WHERE oc.created_on BETWEEN :startDate AND :endDate
-			AND (pmc.id IS NULL OR LOWER(mc.name) LIKE '%sumar %')
+			AND (pmc.id IS NOT NULL AND NOT (LOWER(mc.name) LIKE '%sumar%'))
 			AND ins.id = :institutionId
 			ORDER BY
 			oc.created_on;
