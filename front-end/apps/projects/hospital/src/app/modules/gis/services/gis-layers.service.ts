@@ -6,9 +6,7 @@ import { Vector as VectorSource, XYZ} from 'ol/source';
 import { GlobalCoordinatesDto } from '@api-rest/api-model';
 import Style from 'ol/style/Style';
 import Icon from 'ol/style/Icon';
-import Modify from 'ol/interaction/Snap.js';
-import Draw from 'ol/interaction/Draw.js';
-import Snap from 'ol/interaction/Snap.js';
+import {Draw, Modify, Snap} from 'ol/interaction.js';
 import { EGeometry } from '../constants/geometry.utils';
 import { Injectable } from '@angular/core';
 import Polygon from 'ol/geom/Polygon';
@@ -40,6 +38,7 @@ export class GisLayersService {
 		type: EGeometry.POLYGON,
 	});
 	snap = new Snap({source: this.source});
+	modify = new Modify({source: this.source});
 	drawnPolygon: Feature;
 	isPolygonCompleted = false;
 	polygonCoordinates: Coordinate[][] = [];
@@ -55,6 +54,7 @@ export class GisLayersService {
 		this.setMap();
 		this.detectWhenDrawStart();
 		this.detectWhenDrawFinish();
+		this.detectWhenModifyFinish();
 	}
 	
 	setMap = () => {
@@ -73,7 +73,6 @@ export class GisLayersService {
 				minZoom: 12,
 			})
 		});
-		this.map.addInteraction(new Modify({source: this.source}));
 	}
 
 	addPoint = (position: Coordinate) => {
@@ -86,10 +85,12 @@ export class GisLayersService {
 	}
 
 	addPolygonInteraction = () => {
+		this.map?.addInteraction(this.modify);
 		if (!this.areaLayer) {
 			this.map?.addInteraction(this.draw);
 			this.map?.addInteraction(this.snap);
 		} else {
+			this.isPolygonCompleted = true;
 			this.toggleActions(false, true);
 		}
 	}
@@ -105,7 +106,7 @@ export class GisLayersService {
 		this.draw.removeLastPoint();
 	}
 
-	removeAndCreate = () => {
+	removeAndAddInteraction = () => {
 		this.removeDrawnPolygon();
 		this.removeAreaLayer();
 		this.addPolygonInteraction();
@@ -139,15 +140,24 @@ export class GisLayersService {
 		this.areaLayer = new VectorLayer();
 		this.areaLayer.setSource(source);
 		this.map.addLayer(this.areaLayer);
+		this.isPolygonCompleted = true;
+		this.polygonCoordinates = polygon.geometry.coordinates;
+		this.modify = new Modify({source: source});
+		this.detectWhenModifyFinish();
 	}
 
 	removeAreaLayer = () => {
+		this.areaLayer?.getSource().clear();
 		this.map?.removeLayer(this.areaLayer);
 		this.areaLayer = null;
 	}
 
 	getMap = (): Map => {
 		return this.map;
+	}
+
+	removeModifyInteraction = () => {
+		this.map?.removeInteraction(this.modify);
 	}
 
 	private clearMap = () => {
@@ -177,7 +187,7 @@ export class GisLayersService {
 		return feature;
 	}
 	
-	removePolygonInteraction = () => {
+	private removePolygonInteraction = () => {
 		this.map?.removeInteraction(this.draw);
 		this.map?.removeInteraction(this.snap);
 	}
@@ -190,10 +200,24 @@ export class GisLayersService {
 			const geometry: Polygon = this.drawnPolygon.getGeometry() as Polygon;
 			this.polygonCoordinates = geometry.getCoordinates();
 			this.toggleActions(false, true);
+			this.addModifyInteraction();
 		});
+	}
+
+	private detectWhenModifyFinish = () => {
+		this.modify.on('modifyend', (event) => {
+			this.drawnPolygon = event.features.item(0);
+			const geometry: Polygon = this.drawnPolygon.getGeometry() as Polygon;
+			this.polygonCoordinates = geometry.getCoordinates();
+		})
 	}
 
 	private detectWhenDrawStart = () => {
 		this.draw.on('drawstart', (_) => this.toggleActions(true, false));
+	}
+
+	private addModifyInteraction = () => {
+		this.modify = new Modify({source: this.source});
+		this.map?.addInteraction(this.modify);
 	}
 }

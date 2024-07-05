@@ -110,6 +110,7 @@ export class HomeComponent implements OnInit {
 	changeStep = ($event) => {
 		this.gisLayersService.toggleActions(false, false);
 		this.gisLayersService.removeControls();
+		this.gisLayersService.removeModifyInteraction();
 
 		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) 
 			this.stepToInstitutionAddress();

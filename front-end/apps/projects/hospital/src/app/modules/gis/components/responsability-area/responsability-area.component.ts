@@ -75,8 +75,8 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 		this.gisLayersService.removeLastPoint();
 	}
 
-	removeAndCreate = () => {
-		this.gisLayersService.removeAndCreate();
+	removeAndAddInteraction = () => {
+		this.gisLayersService.removeAndAddInteraction();
 	}
 
 	cancel = () => {
