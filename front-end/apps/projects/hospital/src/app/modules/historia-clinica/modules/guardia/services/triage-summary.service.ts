@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { TriageDocumentDto } from '@api-rest/api-model';
+import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
+import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
+import { Item } from '../components/emergency-care-evolutions/emergency-care-evolutions.component';
 /* import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service'; */
 
 @Injectable({
@@ -8,15 +10,17 @@ import { TriageDocumentDto } from '@api-rest/api-model';
 export class TriageSummaryService {
 
     constructor(
-        /* private readonly documentsSummaryService: DocumentsSummaryMapperService, */
+        private readonly documentsSummaryService: DocumentsSummaryMapperService,
     ) { }
 
-    mapTriageAsViewFormat(triage: TriageDocumentDto): TriageAsViewFormat {
+    mapTriageAsViewFormat(triage: Item): TriageAsViewFormat {
         return {
+            ...(triage.content.reasons.length && 
+                { reasons: this.documentsSummaryService.mapReasonsToDescriptionItemDataSummary(triage.content.reasons)} ),
         }
     }
 }
 
 export interface TriageAsViewFormat {
-
+    reasons: DescriptionItemDataSummary,
 }

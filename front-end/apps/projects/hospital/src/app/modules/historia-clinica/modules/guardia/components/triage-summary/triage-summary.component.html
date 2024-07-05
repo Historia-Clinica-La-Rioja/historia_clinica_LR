@@ -14,6 +14,8 @@
         </ng-container> -->
 
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-description-item-data-summary *ngIf="triageSummary.reasons" data-id="reasons-summary"
+                [descriptionItemDataSummary]="triageSummary.reasons"></app-description-item-data-summary>
         </div>
 
     </div>

@@ -5,7 +5,6 @@ import { DocumentActionsService } from "@historia-clinica/modules/ambulatoria/mo
 import { PatientNameService } from "@core/services/patient-name.service";
 import { DeleteDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/delete-document-action.service';
 import { EditDocumentActionService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/edit-document-action.service';
-import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareTypes } from '../../constants/masterdata';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
@@ -125,7 +124,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 					docId: doc.documentId,
 					docFileName: doc.fileName
 				},
-				content: GuardiaMapperService._mapTriageListDtoToTriage(doc.triage)
+				content: doc.triage,
 			}
 		}
 	}

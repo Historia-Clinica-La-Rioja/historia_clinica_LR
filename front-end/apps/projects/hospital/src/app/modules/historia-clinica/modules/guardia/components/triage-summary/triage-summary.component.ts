@@ -44,8 +44,7 @@ import { TriageCategory } from '../triage-chip/triage-chip.component';
 
     private fetchSummaryInfo(){
         if (this._triage && this._episodeId) {
-            this.triageSummary = this.triageSummaryService.mapTriageAsViewFormat(this._triage.content);
-            
+            this.triageSummary = this.triageSummaryService.mapTriageAsViewFormat(this._triage);
             let header$ = this.documentSummaryService.getEmergencyCareDocumentHeader(this._triage.summary.docId, this._episodeId);
             this.documentSummary$ = header$.pipe(map((headerData) => {
                 return this.documentSummaryMapperService.mapEmergencyCareToHeaderDescription(headerData, this.documentName, false, false, true);
