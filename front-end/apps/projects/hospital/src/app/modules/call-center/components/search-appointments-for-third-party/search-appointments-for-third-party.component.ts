@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClinicalSpecialtyDto, DepartmentDto, DiaryAvailableAppointmentsDto, InstitutionBasicInfoDto, ProfessionalDto, SharedSnomedDto } from '@api-rest/api-model';
+import { ProfessionalFilters } from '@api-rest/services/healthcare-professional.service';
 import { SearchAppointmentsForThirdPartyDataService } from '@call-center/services/search-appointments-for-third-party-data.service';
 import { getFiltersToSearch } from '@call-center/utils/search-appointments-third-party';
 import { datePlusDays } from '@core/utils/date.utils';
@@ -26,6 +27,8 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 		criteriaSearch: false,
 		department: false
 	};
+
+	professionalFilters: ProfessionalFilters;
 
 	availableAppointments: DiaryAvailableAppointmentsDto[] = [];
 	today = new Date();
@@ -63,10 +66,12 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	setDepartment(department: DepartmentDto) {
+		this.professionalFilters = { departmentId: department?.id};
 		this.showValidations.department = false;
 		this.form.controls.departmentId.setValue(department?.id);
 		this.resetResults();
 		this.searchAppointmentsForThirdPartyDataService.setDepartmentIdAndTypeaheadOptions(department?.id);
+		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
 		if (!department) {
 			const excludeControls = ['startDate', 'endDate'];
 			this.clearForm(this.form.controls, excludeControls);
@@ -74,9 +79,11 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	setInstitution(institution: InstitutionBasicInfoDto) {
+		this.professionalFilters.institutionId = institution?.id;
 		this.form.controls.institutionId.setValue(institution?.id);
 		this.resetResults();
 		this.searchAppointmentsForThirdPartyDataService.setInstitutionIdAndTypeaheadOptions(institution?.id);
+		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
 		if (!institution) {
 			const excludeControls = ['startDate', 'endDate', 'departmentId'];
 			this.clearForm(this.form.controls, excludeControls);
@@ -84,9 +91,11 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	setSpecialty(specialty: ClinicalSpecialtyDto) {
+		this.professionalFilters.clinicalSpecialtyId = specialty?.id;
 		this.resetResults();
 		this.form.controls.specialtyId.setValue(specialty?.id);
 		this.showValidations.criteriaSearch = false;
+		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
 	}
 
 	setProfessional(professional: ProfessionalDto) {
@@ -96,9 +105,11 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	setPractice(practice: SharedSnomedDto) {
+		this.professionalFilters.practiceId = practice?.id;
 		this.resetResults();
 		this.form.controls.practiceId.setValue(practice?.id);
 		this.showValidations.criteriaSearch = false;
+		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
 	}
 
 	resetResults() {

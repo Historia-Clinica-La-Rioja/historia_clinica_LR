@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ProfessionalDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
@@ -40,4 +40,19 @@ export class HealthcareProfessionalService {
 		const url = `${environment.apiBase}/healthcareprofessional/department/${departmentId}`;
 		return this.http.get<ProfessionalDto[]>(url);
 	}
+
+	getAllUsingfilters(filters: ProfessionalFilters): Observable<ProfessionalDto[]> {
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('searchFilter', JSON.stringify(filters));
+
+		const url = `${environment.apiBase}/healthcareprofessional/by-filter`;
+		return this.http.get<ProfessionalDto[]>(url, { params: queryParams });
+	}
+}
+
+export interface ProfessionalFilters {
+	departmentId: number,
+	institutionId?: number,
+	clinicalSpecialtyId?: number,
+	practiceId?: number,
 }

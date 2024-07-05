@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import { InstitutionBasicInfoDto, ClinicalSpecialtyDto, ProfessionalDto, SharedSnomedDto } from "@api-rest/api-model";
 import { AddressProjection, AddressMasterDataService } from "@api-rest/services/address-master-data.service";
 import { ClinicalSpecialtyService } from "@api-rest/services/clinical-specialty.service";
-import { HealthcareProfessionalByInstitutionService } from "@api-rest/services/healthcare-professional-by-institution.service";
-import { HealthcareProfessionalService } from "@api-rest/services/healthcare-professional.service";
+import { ProfessionalFilters, HealthcareProfessionalService } from "@api-rest/services/healthcare-professional.service";
 import { InstitutionService } from "@api-rest/services/institution.service";
 import { PracticesService } from "@api-rest/services/practices.service";
 import { TypeaheadOption } from "@presentation/components/typeahead/typeahead.component";
@@ -27,7 +26,6 @@ export class SearchAppointmentsForThirdPartyDataService {
 		private readonly institutionService: InstitutionService,
 		private readonly clinicalSpecialtyService: ClinicalSpecialtyService,
 		private readonly practicesService: PracticesService,
-		private readonly healthCareProfessionalByInstitutionService: HealthcareProfessionalByInstitutionService,
 		private readonly healthCareProfessionalService: HealthcareProfessionalService,
 	) { }
 
@@ -53,7 +51,6 @@ export class SearchAppointmentsForThirdPartyDataService {
 
 	private setTypeaheadsOptions(id: number, filterBy: FILTER_BY) {
 		this.setSpecialtyTypeaheadOption(id, filterBy);
-		this.setProfessionalTypeaheadOptions(id, filterBy);
 		this.setPracticesTypeaheadOptions(id, filterBy);
 	}
 
@@ -68,12 +65,20 @@ export class SearchAppointmentsForThirdPartyDataService {
 			.subscribe(specialties => this.specialtyTypeaheadOptions = specialties);
 	}
 
-	private setProfessionalTypeaheadOptions(id: number, filterBy: FILTER_BY) {
-		const methodName = filterBy === FILTER_BY.DEPARTMENT ? METHOD_NAMES.PROFESSIONALS_BY_DEPARTMENT : METHOD_NAMES.PROFESSIONALS_BY_INSTITUTION;
-		const service = filterBy === FILTER_BY.DEPARTMENT ? this.healthCareProfessionalService : this.healthCareProfessionalByInstitutionService;
-
-		this.getTypeaheadOptionsObservable<ProfessionalDto>(service, methodName, id, 'fullName')
-			.subscribe(healthCareProfessionals => this.professionalTypeaheadOptions = healthCareProfessionals);
+	setProfessionalTypeaheadOptions(filters: ProfessionalFilters) {
+		this.healthCareProfessionalService[METHOD_NAMES.PROFESSIONALS_BY_FILTERS](filters)
+		.pipe(
+			map((list: ProfessionalDto[]) => {
+				const modifiedList = list.map(professional => ({
+					...professional,
+					fullName: `${professional.firstName} ${professional.lastName}`
+				}));
+				return listToTypeaheadOptions(modifiedList, 'fullName');
+			})
+		)
+		.subscribe(healthCareProfessionals => {
+			this.professionalTypeaheadOptions = healthCareProfessionals;
+		});
 	}
 
 	private setPracticesTypeaheadOptions(id: number, filterBy: FILTER_BY) {
@@ -103,9 +108,8 @@ enum METHOD_NAMES {
 	CLINICAL_SPECIALTIES_BY_DEPARTMENT = 'getClinicalSpecialtiesByDepartmentId',
 	PRACTICES_BY_INSTITUTION = 'get',
 	PRACTICES_BY_DEPARTMENT = 'getAllByDepartment',
-	PROFESSIONALS_BY_INSTITUTION = 'getAllByDestinationInstitution',
-	PROFESSIONALS_BY_DEPARTMENT = 'getAllByDepartment',
+	PROFESSIONALS_BY_FILTERS = 'getAllUsingfilters',
 	INSTITUTIONS = "findByDepartmentId"
 }
 
-type Service = ClinicalSpecialtyService | PracticesService | HealthcareProfessionalByInstitutionService | HealthcareProfessionalService | InstitutionService;
+type Service = ClinicalSpecialtyService | PracticesService | HealthcareProfessionalService | InstitutionService;
