@@ -275,7 +275,8 @@
                 "NOT_REFERRED": "No refiere alergias"
             },
             "document-name": {
-                "EVOLUTION_NOTE": "Nota de evolución médica"
+                "EVOLUTION_NOTE": "Nota de evolución médica",
+                "TRIAGE": "Triage"
             }
         }
 	}

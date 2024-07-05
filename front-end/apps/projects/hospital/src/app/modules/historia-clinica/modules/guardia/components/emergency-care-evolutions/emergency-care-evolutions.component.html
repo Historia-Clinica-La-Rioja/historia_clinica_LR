@@ -16,15 +16,13 @@
 				</mat-list-option>
 			</mat-selection-list>
 
-            <div *ngIf="activeDocument && (activeDocument.summary.title === 'internaciones.documents-summary.document-name.TRIAGE')" class="content" fxLayout="row" fxLayoutAlign="space-between start">
-                <app-triage-details [triage]="activeDocument.content" [emergencyCareType]="emergencyCareType"
-                    showRiskFactors='true'>
-                </app-triage-details>
-                <app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId" (resetActiveDocument)="resetActiveDocument()"></app-document-actions>
+            <div *ngIf="activeDocument && (activeDocument.summary.title === 'TRIAGE')" class="summary">
+                <app-triage-summary [content]="activeDocument" [episodeId]="emergencyCareId"></app-triage-summary>
+                <!-- <app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId" (resetActiveDocument)="resetActiveDocument()"></app-document-actions> -->
             </div>
             <div *ngIf="activeDocument && (activeDocument.summary.title === 'internaciones.documents-summary.document-name.DOCTOR_EVOLUTION_NOTE')" class="summary">
                 <app-emergency-care-evolution-note [content]="activeDocument" [episodeId]="emergencyCareId"
-                    [patientId]="patientId" (resetActiveDocument)="activeDocument = undefined"></app-emergency-care-evolution-note>
+                    [patientId]="patientId" (resetActiveDocument)="resetActiveDocument()"></app-emergency-care-evolution-note>
             </div>
 
 		</div>

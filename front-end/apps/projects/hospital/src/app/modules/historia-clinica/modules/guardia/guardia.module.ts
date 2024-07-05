@@ -33,6 +33,7 @@ import { PediatricTriageComponent } from './components/pediatric-triage/pediatri
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
 import { TriageComponent } from './components/triage/triage.component';
 import { TriageDetailsComponent } from './components/triage-details/triage-details.component';
+import { TriageSummaryComponent } from './components/triage-summary/triage-summary.component';
 import { ReasonsFormComponent } from './components/reasons-form/reasons-form.component';
 import { SpecialtySummaryComponent } from './components/specialty-summary/specialty-summary.component';
 // dialogs
@@ -74,6 +75,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		TriageChipComponent,
 		TriageComponent,
 		TriageDetailsComponent,
+        TriageSummaryComponent,
 		ReasonsFormComponent,
         SpecialtySummaryComponent,
 		// dialogs
