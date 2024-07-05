@@ -106,6 +106,8 @@ public class BackofficeSnomedGroupValidator implements BackofficePermissionValid
 	}
 
 	private void checkPracticeGroup(SnomedGroup entity) {
+		if (entity.getGroupType() == null)
+			throw new BackofficeValidationException("El campo tipo de grupo es obligatorio.");
 		if (!entity.getGroupType().equals(SnomedGroupType.SEARCH_GROUP))
 			return;
 		String procedure = SnomedECL.PROCEDURE.toString();
