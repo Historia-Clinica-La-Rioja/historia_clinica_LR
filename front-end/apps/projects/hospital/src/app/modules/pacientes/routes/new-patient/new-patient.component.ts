@@ -107,8 +107,11 @@ export class NewPatientComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.queryParams
 			.pipe(take(1), map(params => {
-				let decodedParams = JSON.parse(atob(params.person));
-				return toParamsToSearchPerson(decodedParams)
+				if (typeof params?.person === 'string') {
+					let decodedParams = JSON.parse(atob(params?.person));
+					return toParamsToSearchPerson(decodedParams);
+				}
+				else return toParamsToSearchPerson(params);
 			}))
 			.subscribe(paramsToSearchPerson => {
 				this.fromGuardModule = paramsToSearchPerson.fromGuardModule;
