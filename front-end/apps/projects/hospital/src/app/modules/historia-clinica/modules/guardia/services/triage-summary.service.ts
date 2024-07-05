@@ -4,6 +4,7 @@ import { DocumentsSummaryMapperService } from '@historia-clinica/services/docume
 import { Item } from '../components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { TriageCategory } from '../components/triage-chip/triage-chip.component';
 import { TriageCategoryDto } from '@api-rest/api-model';
+import { VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +21,8 @@ export class TriageSummaryService {
                 { triageLevel: this.mapTriageCategoryDtoToTriageCategory(triage.content.category)} ),
             ...(triage.content.reasons.length && 
                 { reasons: this.documentsSummaryService.mapReasonsToDescriptionItemDataSummary(triage.content.reasons)} ),
+            ...(triage.content.riskFactors && 
+                { vitalSignsAndRiskFactors: this.documentsSummaryService.mapToVitalSignsAndRiskFactors(triage.content.riskFactors)} ),
         }
     }
 
@@ -34,4 +37,5 @@ export class TriageSummaryService {
 export interface TriageAsViewFormat {
     triageLevel: TriageCategory,
     reasons: DescriptionItemDataSummary,
+    vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
 }

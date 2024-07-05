@@ -11,6 +11,10 @@
 
             <app-description-item-data-summary *ngIf="triageSummary.reasons" data-id="reasons-summary"
                 [descriptionItemDataSummary]="triageSummary.reasons"></app-description-item-data-summary>
+
+            <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
+                *ngIf="triageSummary.vitalSignsAndRiskFactors"
+                [vitalSignsAndRiskFactors]="triageSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
         </div>
     </div>
 
