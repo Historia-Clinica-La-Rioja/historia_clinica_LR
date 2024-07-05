@@ -15,6 +15,13 @@
             <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
                 *ngIf="triageSummary.vitalSignsAndRiskFactors"
                 [vitalSignsAndRiskFactors]="triageSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+
+            <div data-id="observations-summary" *ngIf="triageSummary.observations">
+                <app-iconed-titled-section icon="assignment" title="guardia.documents-summary.observations.TITLE"></app-iconed-titled-section>
+                <div class="text-container section-description">
+                    <span>{{triageSummary.observations}}</span>
+                </div>
+            </div>
         </div>
     </div>
 

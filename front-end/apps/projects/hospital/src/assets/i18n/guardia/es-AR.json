@@ -280,6 +280,9 @@
             },
             "triage-level": {
                 "TITLE": "Nivel de triage"
+            },
+            "observations": {
+                "TITLE": "Observaciones"
             }
         }
 	}

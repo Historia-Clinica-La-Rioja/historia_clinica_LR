@@ -23,6 +23,8 @@ export class TriageSummaryService {
                 { reasons: this.documentsSummaryService.mapReasonsToDescriptionItemDataSummary(triage.content.reasons)} ),
             ...(triage.content.riskFactors && 
                 { vitalSignsAndRiskFactors: this.documentsSummaryService.mapToVitalSignsAndRiskFactors(triage.content.riskFactors)} ),
+            ...(triage.content.notes && 
+                { observations: triage.content.notes} ),
         }
     }
 
@@ -38,4 +40,5 @@ export interface TriageAsViewFormat {
     triageLevel: TriageCategory,
     reasons: DescriptionItemDataSummary,
     vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
+    observations: string,
 }
