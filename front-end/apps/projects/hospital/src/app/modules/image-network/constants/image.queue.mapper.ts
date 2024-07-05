@@ -3,7 +3,7 @@ import { PatientSummary } from "../../hsi-components/patient-summary/patient-sum
 import { ItemImageQueue } from "../components/image-table-technical/image-table-technical.component"
 import { Color } from "@presentation/colored-label/colored-label.component"
 import { PatientNameService } from "@core/services/patient-name.service"
-import { convertDateTimeDtoToDate } from "@api-rest/mapper/date-dto.mapper"
+import { convertDateTimeDtoToDate, dateTimeDtoToDate } from "@api-rest/mapper/date-dto.mapper"
 
 
 export const EIMAGE_QUEUE_ERROR = EImageMoveStatus.ERROR
@@ -28,7 +28,7 @@ export const mapToListItemImageQueue = (items: ImageQueueListDto[], patientNameS
                 color: item.imageMoveStatus === EIMAGE_QUEUE_ERROR ? Color.RED : Color.YELLOW,
             },
             date: item.lastTriedOn ? convertDateTimeDtoToDate(item.lastTriedOn) : null,
-            appointmentDate: convertDateTimeDtoToDate(item.appointmentDateTime),
+            appointmentDate: dateTimeDtoToDate(item.appointmentDateTime),
             serviceRequestId: item.serviceRequestId,
             idMove: item.id,
             uid:item.studyImageUID
