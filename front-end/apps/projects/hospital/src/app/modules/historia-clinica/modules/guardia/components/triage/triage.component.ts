@@ -2,13 +2,15 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
 import { DoctorsOfficeDto, ERole, OutpatientReasonDto, TriageListDto } from '@api-rest/api-model';
-import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
+import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { Observable, forkJoin, take } from 'rxjs';
 import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID } from '../../constants/masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ToFormGroup } from '@core/utils/form.utils';
 import { toOutpatientReasons } from '../../utils/mapper';
 import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
+import { TriageCategory } from '../triage-chip/triage-chip.component';
+import { MatSelectChange } from '@angular/material/select';
 
 const ROLE_ALLOWED_NOT_TO_DEFINE_TRIAGE_LEVEL = [ERole.ADMINISTRATIVO];
 const WITHOUT_TRIAGE_CATEGORY_ID = 6;
@@ -21,8 +23,9 @@ const WITHOUT_TRIAGE_CATEGORY_ID = 6;
 export class TriageComponent implements OnInit {
 
 	triageForm = this.buildTriageForm();
+	triageLevel: TriageCategory;
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
-	triageCategories: TriageCategoryDto[];
+	triageCategories: TriageCategory[];
 	lastTriageReasons: MotivoConsulta[] = [];
 
 	@Input() cancelFunction: () => void;
@@ -52,7 +55,8 @@ export class TriageComponent implements OnInit {
 				this.triageForm.controls.triageCategoryId.setValue(WITHOUT_TRIAGE_CATEGORY_ID);
 			else {
 				this.triageCategories = this.triageCategories.filter(category => category.id != WITHOUT_TRIAGE_CATEGORY_ID);
-				this.triageForm.controls.triageCategoryId.setValue(this.triageCategories.find(category => category.id === TRIAGE_LEVEL_V_ID).id);
+				this.triageLevel = this.triageCategories.find(category => category.id === TRIAGE_LEVEL_V_ID);
+				this.triageForm.controls.triageCategoryId.setValue(this.triageLevel.id);
 			}
 		});
 
@@ -66,6 +70,10 @@ export class TriageComponent implements OnInit {
 	setSelectedReasons(reasons: MotivoConsulta[]) {
 		const outpatientReasons = toOutpatientReasons(reasons);
 		this.triageForm.controls.reasons.setValue(outpatientReasons);
+	}
+
+	changeTriageLevel(triageLevelSelected: MatSelectChange) {
+		this.triageLevel = this.triageCategories.find(category => category.id === triageLevelSelected.value);
 	}
 
 	private subscribeToFormChanges() {

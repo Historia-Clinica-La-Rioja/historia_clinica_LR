@@ -208,10 +208,8 @@
 								</div>
 
 								<div id="triage" fxFlex="25%" fxLayout="column">
-									<div class="triage-chip"
-										[ngStyle]="{'color':episode.triage.emergencyCareEpisodeListTriageDto.id === triages.AMARILLO_NIVEL_3 || episode.triage.emergencyCareEpisodeListTriageDto.id === triages.GRIS_SIN_TRIAGE ? 'black' : 'white' }"
-										[style.background-color]="episode.triage.emergencyCareEpisodeListTriageDto.color">{{ episode.triage.emergencyCareEpisodeListTriageDto.name }}</div>
-										<span class="mat-small" *ngIf="episode.triage.reasons" matTooltip="{{episode.triage.reasons | stringSeparator }}"> {{ episode.triage.reasons | showMoreConcepts}}</span>
+									<app-triage-chip [category]="episode.triage.emergencyCareEpisodeListTriageDto"></app-triage-chip>
+									<span class="mat-small" *ngIf="episode.triage.reasons" matTooltip="{{episode.triage.reasons | stringSeparator }}"> {{ episode.triage.reasons | showMoreConcepts}}</span>
 									<span class="mat-small">{{ episode.type?.description }}</span>
 								</div>
 

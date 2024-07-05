@@ -1,10 +1,13 @@
 <form [formGroup]="triageForm" class="page" fxLayout="column" fxFlex="grow shrink initial">
 	<mat-form-field class="simple-form-field" appearance="outline">
 		<mat-label [translate]="'guardia.triage.LEVEL'"></mat-label>
-		<mat-select formControlName="triageCategoryId">
-			<mat-option id="triageCategoryId"
+		<mat-select formControlName="triageCategoryId" (selectionChange)="changeTriageLevel($event)">
+			<mat-select-trigger *ngIf="triageLevel">
+				<app-triage-chip [category]="triageLevel" [isFilled]="true"></app-triage-chip>
+			</mat-select-trigger>
+			<mat-option id="triageCategoryId" class="triage-options"
 			            *ngFor="let triageCategory of triageCategories" [value]="triageCategory.id">
-				{{triageCategory.description}}
+				<app-triage-chip [category]="triageCategory" [isFilled]="true"></app-triage-chip>
 			</mat-option>
 		</mat-select>
 	</mat-form-field>

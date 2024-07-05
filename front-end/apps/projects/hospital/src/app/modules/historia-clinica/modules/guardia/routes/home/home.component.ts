@@ -27,7 +27,7 @@ import { PatientService } from '@api-rest/services/patient.service';
 import { map, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
-import { TriageCategoryDto, TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
+import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
@@ -40,6 +40,7 @@ import { UntypedFormBuilder } from '@angular/forms';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
+import { TriageCategory } from '../../components/triage-chip/triage-chip.component';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -69,7 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	patientsPhotos: PatientPhotoDto[];
 	elementsAmount: number;
 
-	triageCategories$: Observable<TriageCategoryDto[]>;
+	triageCategories$: Observable<TriageCategory[]>;
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
 	hasEmergencyCareRelatedRole: boolean;
