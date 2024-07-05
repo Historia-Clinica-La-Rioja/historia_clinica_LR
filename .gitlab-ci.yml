@@ -8,9 +8,17 @@ include:
   - project: 'lamansys/cicd'
     file:
       - 'gitlab/stages/build-full.yml'
-  - project: 'lamansys/cicd'
-    file:
       - 'gitlab/stages/quality-backend.yml'
+
+workflow:
+  # https://medium.com/devops-with-valentine/fix-gitlab-ci-duplicate-pipelines-in-merge-requests-when-using-rules-9a1486994f3a
+  # Rule are evaluated in the order they appear. 
+  # So if a merge request pipeline is detected, this is “killed” with the when: never configuration.
+  # If the first rule does not match, the next one will always match, enabling all other pipelines.
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - when: always
 
 build_frontend:
   extends: .build_frontend_base
