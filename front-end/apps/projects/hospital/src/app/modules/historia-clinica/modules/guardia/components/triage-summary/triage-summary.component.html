@@ -6,18 +6,12 @@
             [isPopUpOpen]="isPopUpOpened" (downloadDocument)="downloadDocument()"></app-document-summary-header>
         <mat-divider></mat-divider>
 
-        <!-- <ng-container *ngIf="_evolutionNote.content.editedOn">
-            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
-                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
-                <span>{{ _evolutionNote.content.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
-            </div>
-        </ng-container> -->
-
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+            <app-triage-level-summary data-id="triage-level-summary" [triageLevel]="triageSummary.triageLevel"></app-triage-level-summary>
+
             <app-description-item-data-summary *ngIf="triageSummary.reasons" data-id="reasons-summary"
                 [descriptionItemDataSummary]="triageSummary.reasons"></app-description-item-data-summary>
         </div>
-
     </div>
 
     <ng-template #loader>
