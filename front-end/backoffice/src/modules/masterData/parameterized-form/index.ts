@@ -5,7 +5,7 @@ import ParameterizedFormEdit from "./ParameterizedFormEdit";
 import ParameterizedFormList from "./ParameterizedFormList";
 import ParameterizedFormShow from "./ParameterizedFormShow";
 
-const parameterizedForm =  (permissions: SGXPermissions) => {
+const parameterizedform =  (permissions: SGXPermissions) => {
     const hasPermission = permissions.hasAnyAssignment(...BASIC_BO_ROLES) && permissions.isOn('HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
     return {
         list: hasPermission ? ParameterizedFormList : undefined,
@@ -18,4 +18,4 @@ const parameterizedForm =  (permissions: SGXPermissions) => {
     }
 };
 
-export default parameterizedForm;
+export default parameterizedform;

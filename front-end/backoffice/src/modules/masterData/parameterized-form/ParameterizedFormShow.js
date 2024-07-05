@@ -8,6 +8,7 @@ import {
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { SectionTitle } from '../../components';
+import AssociatedParameters from './AssociatedParameters';
 
 const FormScopes = props => {
     const record = useRecordContext(props);
@@ -40,9 +41,11 @@ const FormScopes = props => {
 const ParameterizedFormShow = props => (
     <Show {...props} hasEdit={false}>
         <SimpleShowLayout>
-            <SectionTitle label="resources.formparameter.formName" />
+            <SectionTitle label="resources.parameterizedform.formName" />
             <TextField source="name" label=""></TextField>
-            <FormScopes />           
+            <FormScopes />
+            <br />
+            <AssociatedParameters />
         </SimpleShowLayout>
     </Show>
 );

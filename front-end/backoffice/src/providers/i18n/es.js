@@ -1134,6 +1134,13 @@ const messages = {
             outpatient: 'Ambulatorio',
             emergencyCare: 'Guardia',
             internment: 'Internación'
+        },
+        parameterizedformparameter: {
+            name: '',
+            button: 'Asociar parámetro',
+            associatedParameters: 'Parámetros asociados',
+            order: 'Orden',
+            formName: 'Nombre de formulario'
         }
     }
 };
