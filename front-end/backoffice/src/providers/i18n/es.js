@@ -1116,6 +1116,24 @@ const messages = {
                 internment: "Internación"
             },
             createRelated: 'Crear Grupo de fármacos'
+        },
+        parameterizedform: {
+            name: "Formulario Configurable |||| Formularios Configurables",
+            statusId: {
+                draft: 'Borrador',
+                active: 'Activo',
+                inactive: 'Inactivo',
+                activate: 'Activar',
+                deactivate: 'Desactivar'
+            },
+            formName: 'Nombre del formulario',
+            scope: 'Ámbito',
+            status: 'Estado',
+            excludeInactive: 'Excluir inactivos',
+            description: 'Descripción',
+            outpatient: 'Ambulatorio',
+            emergencyCare: 'Guardia',
+            internment: 'Internación'
         }
     }
 };
