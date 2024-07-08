@@ -33,7 +33,7 @@ public class Triage  extends SGXAuditableEntity<Integer> {
 	@Column(name = "emergency_care_episode_id", nullable = false)
 	private Integer emergencyCareEpisodeId;
 
-	@Column(name = "notes")
+	@Column(name = "notes", columnDefinition = "TEXT")
 	private String notes;
 
 	@Column(name = "triage_category_id", nullable = false)
