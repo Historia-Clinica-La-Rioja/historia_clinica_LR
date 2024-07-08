@@ -18,6 +18,7 @@ import CreateRelatedButton from '../../components/CreateRelatedButton';
 import SectionTitle from '../../components/SectionTitle';
 import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
 import UnidadesJerarquicas from './UnidadesJerarquicas';
+import { Grid, Divider } from '@material-ui/core';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -98,26 +99,94 @@ const InstitutionShow = props => {
     return (
         <Show actions={<InstitutionShowActions />} {...props}>
             <SimpleShowLayout>
-                <TextField source="id" />
-                <TextField source="name" />
-                <TextField source="website" />
-                <TextField source="phone" />
-                <TextField source="email" />
-                <TextField source="cuit" />
-                <TextField source="sisaCode" />
-                <ReferenceField source="dependencyId" reference="dependencies" link={false}>
-                    <TextField source="description" />
-                </ReferenceField>
-                <TextField source="provinceCode" />
-                <ReferenceField source="addressId" reference="addresses" link={'show'}>
-                    <TextField source="cityId"/>
-                </ReferenceField>
-                <ReferenceField label="Latitud" source="addressId" reference="addresses" link={false}>
-                    <TextField  source="latitude" />
-                </ReferenceField>
-                <ReferenceField label="Longitud" source="addressId" reference="addresses" link={false}>
-                    <TextField  source="longitude" />
-                </ReferenceField>
+                <Grid container spacing={2}>
+                    {/* Primer fila */}
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                        <TextField source="name" label="Nombre"/>
+                        </SimpleShowLayout>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <TextField source="id" />
+                        </SimpleShowLayout>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <TextField source="sisaCode" label="Código SISA"/>
+                        </SimpleShowLayout>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <ReferenceField source="addressId" reference="addresses" link={'show'} label="Dirección">
+                                <TextField source="cityId"/>
+                            </ReferenceField>
+                        </SimpleShowLayout>
+                    </Grid> 
+                    
+                    <Grid item xs={12}><Divider /></Grid>
+
+                    {/* Segunda fila */}
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <TextField source="phone" label="Teléfono"/>
+                        </SimpleShowLayout>
+                    </Grid>
+                    
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <TextField source="email" />
+                        </SimpleShowLayout>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <ReferenceField source="dependencyId" reference="dependencies" link={false} label="Dependencia">
+                                <TextField source="description" />
+                            </ReferenceField>
+                        </SimpleShowLayout>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <ReferenceField label="Latitud" source="addressId" reference="addresses" link={false}>
+                                <TextField  source="latitude" />
+                            </ReferenceField>
+    
+                            <ReferenceField label="Longitud" source="addressId" reference="addresses" link={false}>
+                                <TextField  source="longitude" />
+                            </ReferenceField>
+                        </SimpleShowLayout>
+
+                    </Grid>
+                    
+                    <Grid item xs={12}><Divider /></Grid>
+
+                    {/* Tercer fila */}
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <TextField source="website" label="Sitio web" />
+                        </SimpleShowLayout>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <TextField source="cuit" />
+                        </SimpleShowLayout>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <SimpleShowLayout>
+                            <TextField source="provinceCode" />
+                        </SimpleShowLayout>
+                    </Grid>
+                      
+                </Grid>
                 <SectionTitle label="resources.institutions.fields.sectors"/>
                 <CreateRelatedButton
                     reference="sectors"
