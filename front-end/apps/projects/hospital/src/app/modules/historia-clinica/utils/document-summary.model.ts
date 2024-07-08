@@ -199,3 +199,14 @@ export interface CustomDiagnosesData {
 	title: string,
 	diagnoses?: DescriptionItemData[],
 }
+export interface AppearanceData {
+    temperature?: DescriptionItemData[];
+    noConsolationCrying: DescriptionItemData[],
+    muscularTone: DescriptionItemData[],
+}
+
+export interface TitleDescriptionListItem {
+    title: string,
+    icon: string,
+    description: DescriptionItemDataInfo[],
+}

@@ -28,6 +28,7 @@ import { DatetimeRelativeComponent } from './components/datetime-relative/dateti
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
 import { DetailsSectionCustomComponent } from './components/details-section-custom/details-section-custom.component';
+import { DescriptionItemColumnComponent } from './components/description-item-column/description-item-column.component';
 import { DescriptionItemComponent } from './components/description-item/description-item.component';
 import { DockPopupComponent } from './components/dock-popup/dock-popup.component';
 import { DocumentSectionComponent } from './components/document-section/document-section.component';
@@ -143,6 +144,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		ContentTitleComponent,
 		DatepickerComponent,
 		DateRangePickerComponent,
+        DescriptionItemColumnComponent,
     	DescriptionItemComponent,
 		DatetimeRelativeComponent,
 		DetailBoxComponent,
@@ -282,6 +284,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		DetailBoxComponent,
 		DetailedInformationComponent,
 		DetailsSectionCustomComponent,
+        DescriptionItemColumnComponent,
     	DescriptionItemComponent,
 		DockPopupComponent,
 		DocumentSectionComponent,

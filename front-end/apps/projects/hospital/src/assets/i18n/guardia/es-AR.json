@@ -283,6 +283,12 @@
             },
             "observations": {
                 "TITLE": "Observaciones"
+            },
+            "appearance": {
+                "TITLE": "Apariencia",
+                "TEMPERATURE": "Temperatura",
+                "CRYING_EXCESSIVE": "Llanto sin consuelo",
+                "MUSCULAR_TONE": "Tono muscular"
             }
         }
 	}

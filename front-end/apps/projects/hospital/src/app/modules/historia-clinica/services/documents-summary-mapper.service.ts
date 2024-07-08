@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
-import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, ReferredDescriptionItemData, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
+import { AnthropometricData, ClinicalEvaluationData, DescriptionItemDataInfo, ExternalCauseData, HeaderDescription, HeaderIdentifierData, NewBornsData, NewBornsSummary, ObstetricEventData, ObstetricEventInfo, ReferredDescriptionItemData, TitleDescriptionListItem, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
@@ -445,4 +445,37 @@ ${medication.note}`
         return item.isReferred
     }
 
+    mapAppearencesToTitleDescriptionListItem(appearance: TriageAppearanceDto): TitleDescriptionListItem {
+        let appearanceDescription = [];
+
+        appearance.bodyTemperature ? appearanceDescription.push({
+            title: 'guardia.documents-summary.appearance.TEMPERATURE',
+            dataId: 'temperature-section',
+            descriptionData: [this.toDescriptionItemData(appearance.bodyTemperature.description)],
+        }) : null;
+
+        appearance.cryingExcessive ? appearanceDescription.push({
+            title: 'guardia.documents-summary.appearance.CRYING_EXCESSIVE',
+            dataId: 'cryingExcessive-section',
+            descriptionData: appearance.cryingExcessive ? this.mapBooleanToDescription(appearance.cryingExcessive) : [],
+        })  : null;
+
+        appearance.muscleHypertonia ? appearanceDescription.push({
+            title: 'guardia.documents-summary.appearance.MUSCULAR_TONE',
+            dataId: 'muscular-tone-section',
+            descriptionData: [this.toDescriptionItemData(appearance.muscleHypertonia?.description)],
+        }) : null;
+
+        return {
+            title: 'guardia.documents-summary.appearance.TITLE',
+            icon: 'monitor_heart',
+            description: appearanceDescription,
+        }
+    }
+
+    private mapBooleanToDescription(value: boolean): DescriptionItemData[] {
+        return value ?
+            [ this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.YES')) ]
+            : [ this.toDescriptionItemData(this.translateService.instant('historia-clinica.anesthetic-report.summary.NO')) ]
+    }
 }
