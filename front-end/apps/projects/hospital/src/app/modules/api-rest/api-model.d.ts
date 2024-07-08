@@ -854,6 +854,11 @@ export interface ClinicalTermDto extends Serializable {
     statusId?: string;
 }
 
+export interface CommercialMedicationDto {
+    commercial: SharedSnomedDto;
+    generic: SharedSnomedDto;
+}
+
 export interface Comparable<T> {
 }
 
