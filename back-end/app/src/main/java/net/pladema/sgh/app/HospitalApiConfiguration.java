@@ -18,6 +18,7 @@ import ar.lamansys.sgx.auth.EnableAuth;
 import ar.lamansys.sgx.cubejs.EnableCubeJs;
 import ar.lamansys.sgx.shared.EnableSharedLibrary;
 import net.pladema.EnableHospitalLib;
+import snomed.relations.cache.configuration.EnableSnomedRelationsCacheAutoConfiguration;
 
 @Configuration
 @EnableBooking
@@ -31,6 +32,7 @@ import net.pladema.EnableHospitalLib;
 @EnableSharedLibrary
 @EnableHospitalPublicApi
 @EnableReferenceCounterReference
+@EnableSnomedRelationsCacheAutoConfiguration
 @ServletComponentScan(basePackages = "net.pladema")
 @ComponentScan(basePackages = {"net.pladema.sgh.app", "ar.lamansys.sgh.internal"})
 @EnableJpaRepositories(basePackages = {"net.pladema.sgh.app"})
