@@ -225,7 +225,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_TRIAGE_PARA_ADMINISTRATIVO,
 	
 	@Label("Habilita el reporte detalle nominal de atenciones en guardia")
-	HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO
+	HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la caché de relaciones de snomed")
+	HABILITAR_RELACIONES_SNOMED
 	;
 
 	public boolean isActive() {

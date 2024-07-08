@@ -86,6 +86,7 @@ public class HospitalsFeatureStates implements InitialFeatureStates {
 		map.put(AppFeature.HABILITAR_SOLAPA_COLA_IMAGENES, false);
 		map.put(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO, true);
 		map.put(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO, false);
+		map.put(AppFeature.HABILITAR_RELACIONES_SNOMED, false);
 	}
 
 	@Override
