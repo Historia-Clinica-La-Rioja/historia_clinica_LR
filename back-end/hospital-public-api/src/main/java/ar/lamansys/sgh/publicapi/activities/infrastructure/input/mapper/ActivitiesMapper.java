@@ -24,6 +24,10 @@ import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SnomedCIE10
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SupplyInformationDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ProblemTypeEnum;
 
+import lombok.AllArgsConstructor;
+
+import lombok.EqualsAndHashCode;
+
 import org.springframework.stereotype.Component;
 
 import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
@@ -237,13 +241,25 @@ public class ActivitiesMapper {
 				.build();
 	}
 
+	@AllArgsConstructor
+	@EqualsAndHashCode
+	private class AttentionGroupKey {
+		Long encounterId;
+		String scope;
+	}
+
 	public List<AttentionInfoDto> groupDiagnosis(List<SingleAttentionInfoDto> resultBo) {
 		List<AttentionInfoDto> result = new ArrayList<>();
 
-		Map<Long, List<SingleAttentionInfoDto>> groupedAttentions = resultBo.stream()
+		/**
+		 * Attentions are grouped by (encounter, scope)
+		 * See {@link ar.lamansys.sgh.publicapi.domain.ScopeEnum}
+		 * This pair can be traced to the fields document.source_id and document.source_type_id
+		 */
+		Map<AttentionGroupKey, List<SingleAttentionInfoDto>> groupedAttentions = resultBo.stream()
 				.filter(res -> res.getSingleDiagnosticDto().getDiagnosis().getPt() != null)
 				.filter(res -> res.getSingleDiagnosticDto().getUpdatedOn() != null)
-				.collect(groupingBy(SingleAttentionInfoDto::getEncounterId));
+				.collect(groupingBy(attention -> new AttentionGroupKey(attention.getEncounterId(), attention.getScope())));
 
 		for(var key : groupedAttentions.keySet()) {
 			var list = groupedAttentions.get(key);
