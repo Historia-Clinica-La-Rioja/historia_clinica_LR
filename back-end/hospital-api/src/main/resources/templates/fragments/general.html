@@ -74,6 +74,13 @@
             -fs-table-paginate: paginate;
         }
 
+        .professionals-table {
+            width: auto;
+            margin-left: -25px;
+            border-collapse: separate;
+            border-spacing: 25px 0;
+        }
+
         /*TEXT FORMAT*/
         .data-text {
             font-weight: 400;
@@ -284,21 +291,24 @@
         <div th:if="${involvedProfessionals != null && !involvedProfessionals.isEmpty()}">
             <div>
                 <div class="section-title">Profesionales responsables</div>
-                <div th:each="involvedProfessional, iter: ${involvedProfessionals}">
-                    <div class="row-content">
-                        <div class="data-title">Nombre y apellido</div>
-                        <div class="data-text" style="text-transform: uppercase;" th:if="${nameSelfDeterminationFF}" th:text="${involvedProfessional.nameSelfDetermination + ' ' + involvedProfessional.lastName}"></div>
-                        <div class="data-text" style="text-transform: uppercase;" th:unless="${nameSelfDeterminationFF}" th:text="${involvedProfessional.firstName + ' ' + involvedProfessional.lastName}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Profesión</div>
-                        <div class="data-text" th:if="${involvedProfessional.professions != null && !involvedProfessional.professions.isEmpty()}" th:text="${involvedProfessional.getProfessionsAsString()}"></div>
-                    </div>
-                    <div class="row-content">
-                        <div class="data-title">Matricula</div>
-                        <div class="data-text" th:text="${involvedProfessional.completeLicenseInfo.isEmpty() ? '-' : involvedProfessional.completeLicenseInfo}"></div>
-                    </div>
-                </div>
+                <table class="professionals-table">
+                    <thead>
+                        <tr>
+                            <th class="data-title">Nombre y apellido</th>
+                            <th class="data-title">Profesión</th>
+                            <th class="data-title">Matrícula</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="involvedProfessional, iter : ${involvedProfessionals}">
+                            <td class="data-text" style="text-transform: uppercase;" th:if="${nameSelfDeterminationFF}" th:text="${involvedProfessional.nameSelfDetermination + ' ' + involvedProfessional.lastName}"></td>
+                            <td class="data-text" style="text-transform: uppercase;" th:unless="${nameSelfDeterminationFF}" th:text="${involvedProfessional.firstName + ' ' + involvedProfessional.lastName}"></td>
+                            <td class="data-text" th:if="${involvedProfessional.professions != null && !involvedProfessional.professions.isEmpty()}" th:text="${involvedProfessional.getProfessionsAsString()}"></td>
+                            <td class="data-text" th:if="${involvedProfessional.completeLicenseInfo.isEmpty()}" th:text="'-'"></td>
+                            <td class="data-text" th:unless="${involvedProfessional.completeLicenseInfo.isEmpty()}" th:text="${involvedProfessional.completeLicenseInfo}"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div style="clear: both;">
                 <hr class="line"></hr>
