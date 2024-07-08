@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -16,6 +17,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.DocumentHealthcareProfessionalBo
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.EProfessionType;
 import ar.lamansys.sgx.shared.exceptions.SelfValidating;
 import lombok.Getter;
 import lombok.Setter;
@@ -114,6 +116,33 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	@Override
 	public Short getDocumentSource() {
 		return SourceType.HOSPITALIZATION;
+	}
+
+	public List<DocumentHealthcareProfessionalBo> getSurgicalTeam() {
+		if (healthcareProfessionals == null)
+			return null;
+		return healthcareProfessionals.stream()
+                .filter(professionalBo -> !(EProfessionType.PATHOLOGIST.equals(professionalBo.getProfessionType())
+                        || EProfessionType.TRANSFUSIONIST.equals(professionalBo.getProfessionType())))
+                .collect(Collectors.toList());
+	}
+
+	public DocumentHealthcareProfessionalBo getPathologist() {
+		if (healthcareProfessionals == null)
+			return null;
+		return healthcareProfessionals.stream()
+				.filter(professionalBo -> EProfessionType.PATHOLOGIST.equals(professionalBo.getProfessionType()))
+				.findFirst()
+				.orElse(null);
+	}
+
+	public DocumentHealthcareProfessionalBo getTransfusionist() {
+		if (healthcareProfessionals == null)
+			return null;
+		return healthcareProfessionals.stream()
+				.filter(professionalBo -> EProfessionType.TRANSFUSIONIST.equals(professionalBo.getProfessionType()))
+				.findFirst()
+				.orElse(null);
 	}
 
 }

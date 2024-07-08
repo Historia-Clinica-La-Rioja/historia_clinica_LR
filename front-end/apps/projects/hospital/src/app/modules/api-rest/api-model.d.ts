@@ -4917,12 +4917,15 @@ export interface SurgicalReportDto extends Serializable {
     healthcareProfessionals?: DocumentHealthcareProfessionalDto[];
     mainDiagnosis?: DiagnosisDto;
     modificationReason?: string;
+    pathologist?: DocumentHealthcareProfessionalDto;
     postoperativeDiagnosis?: DiagnosisDto[];
     preoperativeDiagnosis?: DiagnosisDto[];
     procedures?: HospitalizationProcedureDto[];
     prosthesisDescription?: string;
     startDateTime?: DateTimeDto;
     surgeryProcedures?: HospitalizationProcedureDto[];
+    surgicalTeam?: DocumentHealthcareProfessionalDto[];
+    transfusionist?: DocumentHealthcareProfessionalDto;
 }
 
 export interface TemplateNamesDto {

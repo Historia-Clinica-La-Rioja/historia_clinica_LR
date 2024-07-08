@@ -70,5 +70,15 @@ public class SurgicalReportDto implements Serializable {
 	private @Valid List<DocumentHealthcareProfessionalDto> healthcareProfessionals = new ArrayList<>();
 
 	@Nullable
+	private @Valid List<DocumentHealthcareProfessionalDto> surgicalTeam = new ArrayList<>();
+
+	@Nullable
+	private @Valid DocumentHealthcareProfessionalDto pathologist;
+
+	@Nullable
+	private @Valid DocumentHealthcareProfessionalDto transfusionist;
+
+	@Nullable
 	private String modificationReason;
+
 }

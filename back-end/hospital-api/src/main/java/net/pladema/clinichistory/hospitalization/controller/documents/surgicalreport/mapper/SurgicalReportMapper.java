@@ -19,5 +19,9 @@ public interface SurgicalReportMapper {
 	
 	@Named("fromSurgicalReportBo")
 	@Mapping(target = "healthcareProfessionals", source = "healthcareProfessionals", qualifiedByName = "toDocumentHealthcareProfessionalDtoList")
+	@Mapping(target = "surgicalTeam", source = "surgicalTeam", qualifiedByName = "toDocumentHealthcareProfessionalDtoList")
+	@Mapping(target = "pathologist", source = "pathologist", qualifiedByName = "toDocumentHealthcareProfessionalDocumentDto")
+	@Mapping(target = "transfusionist", source = "transfusionist", qualifiedByName = "toDocumentHealthcareProfessionalDocumentDto")
 	SurgicalReportDto fromSurgicalReportBo(SurgicalReportBo surgicalReportBo);
+
 }
