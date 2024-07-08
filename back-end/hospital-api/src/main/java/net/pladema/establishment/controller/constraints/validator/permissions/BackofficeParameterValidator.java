@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import net.pladema.establishment.controller.dto.ParameterDto;
 import net.pladema.establishment.repository.ParameterRepository;
 import net.pladema.establishment.repository.entity.Parameter;
+import net.pladema.parameterizedform.infrastructure.output.repository.ParameterizedFormParameterRepository;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class BackofficeParameterValidator implements BackofficePermissionValidator<ParameterDto, Integer> {
 
 	private final ParameterRepository parameterRepository;
+	private final ParameterizedFormParameterRepository parameterizedFormParameterRepository;
 
 	@Override
 	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
@@ -53,6 +55,11 @@ public class BackofficeParameterValidator implements BackofficePermissionValidat
 		Optional<Parameter> oldParameterOp = parameterRepository.findById(id);
 		if (oldParameterOp.isPresent()) {
 			Parameter oldParameter = oldParameterOp.get();
+
+			if (parameterizedFormParameterRepository.isAssociatedAnActiveParameterizedForm(oldParameter.getId())) {
+				throw new BackofficeValidationException("No puede editarse el parametro porque esta asociado a un formulario");
+			}
+
 			if (entity.getLoincId() != null && !entity.getLoincId().equals(oldParameter.getLoincId())) {
 				assertLoincId(entity);
 			}
