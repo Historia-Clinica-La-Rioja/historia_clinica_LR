@@ -8,7 +8,7 @@ include:
   - project: 'lamansys/cicd'
     file:
       - 'gitlab/stages/build-full.yml'
-      - 'gitlab/stages/quality-backend.yml'
+      - 'gitlab/stages/quality-full.yml'
 
 workflow:
   # https://medium.com/devops-with-valentine/fix-gitlab-ci-duplicate-pipelines-in-merge-requests-when-using-rules-9a1486994f3a
