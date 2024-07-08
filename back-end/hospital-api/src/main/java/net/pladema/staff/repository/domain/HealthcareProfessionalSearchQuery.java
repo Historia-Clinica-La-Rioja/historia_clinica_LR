@@ -62,20 +62,19 @@ public class HealthcareProfessionalSearchQuery {
 
 	public QueryPart where() {
 
-		String whereClause = " c.department_id = " + departmentId + " " +
-				" AND ur.role_id in (" + professionalERolIds + ") " +
-				" AND hp.deleted = false " +
-				" AND ur.deleted = false " ;
+		String whereClause = " c.department_id = " + departmentId + " " + " AND ur.role_id in (" + professionalERolIds + ") " + " AND hp.deleted = false " + " AND ur.deleted = false ";
 
-		if (institutionId != null)
-			whereClause = whereClause + " AND i.id = " + institutionId + " ";
+		if (institutionId != null) whereClause = whereClause + " AND i.id = " + institutionId + " ";
 
-		if (clinicalSpecialtyId != null)
-			whereClause = whereClause + " AND cs.id = " + clinicalSpecialtyId + " ";
+		if (clinicalSpecialtyId != null || practiceId != null) {
+			whereClause = whereClause + " AND d.end_date >= CURRENT_DATE ";
 
-		if (practiceId != null) {
-			whereClause = whereClause + " AND dp.snomed_id = " + practiceId + " " +
-					"AND (dp.deleted = false OR dp.deleted IS NULL) ";
+			if (clinicalSpecialtyId != null)
+				whereClause = whereClause + " AND cs.id = " + clinicalSpecialtyId + " ";
+
+			if (practiceId != null) {
+				whereClause = whereClause + " AND dp.snomed_id = " + practiceId + " " + "AND (dp.deleted = false OR dp.deleted IS NULL) ";
+			}
 		}
 
 		return new QueryPart(whereClause);

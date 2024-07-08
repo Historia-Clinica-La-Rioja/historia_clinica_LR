@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
 import ar.lamansys.sgx.shared.repositories.QueryPart;
+import lombok.RequiredArgsConstructor;
 import net.pladema.staff.domain.HealthcareProfessionalSearchBo;
 import net.pladema.staff.repository.domain.HealthcareProfessionalSearchQuery;
 import net.pladema.staff.repository.domain.HealthcareProfessionalVo;
@@ -24,15 +26,13 @@ import net.pladema.staff.domain.ProfessionalCompleteBo;
 import net.pladema.staff.service.domain.ClinicalSpecialtyBo;
 import net.pladema.staff.service.domain.ELicenseNumberTypeBo;
 
-@Service
 @Slf4j
+@RequiredArgsConstructor
+@Service
 public class HealthcareProfessionalStorageImpl implements HealthcareProfessionalStorage {
 
 	private final EntityManager entityManager;
-
-	public HealthcareProfessionalStorageImpl(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
+	private final SharedPersonPort sharedPersonPort;
 
 	@Override
 	public ProfessionalCompleteBo fetchProfessionalByUserId(Integer userId) {
@@ -102,7 +102,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 		queryPart.configParams(query);
 		List<HealthcareProfessionalVo> professionals = healthcareProfessionalSearchQuery.construct(query.getResultList());
 		return professionals.stream()
-				.map(HealthcareProfessionalBo::new)
+				.map(this::mapToHealthcareProfessionalBo)
 				.collect(Collectors.toList());
 	}
 
@@ -203,5 +203,16 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 				.concatPart(healthcareProfessionalSearchQuery.from())
 				.concat(" WHERE ")
 				.concatPart(healthcareProfessionalSearchQuery.where());
+	}
+
+	private HealthcareProfessionalBo mapToHealthcareProfessionalBo(HealthcareProfessionalVo hcp) {
+		String completePersonName = sharedPersonPort.parseCompletePersonName(
+				hcp.getFirstName(),
+				hcp.getMiddleNames(),
+				hcp.getLastName(),
+				hcp.getOtherLastNames(),
+				hcp.getNameSelfDetermination()
+		);
+		return new HealthcareProfessionalBo(hcp, completePersonName);
 	}
 }
