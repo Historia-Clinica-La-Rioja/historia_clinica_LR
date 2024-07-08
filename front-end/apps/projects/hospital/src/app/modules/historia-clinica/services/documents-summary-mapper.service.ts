@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto, TriageBreathingDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
@@ -470,6 +470,40 @@ ${medication.note}`
             title: 'guardia.documents-summary.appearance.TITLE',
             icon: 'monitor_heart',
             description: appearanceDescription,
+        }
+    }
+
+    mapBreathingToTitleDescriptionListItem(breathing: TriageBreathingDto): TitleDescriptionListItem {
+        let breathingDescription = [];
+
+        breathing.respiratoryRetraction ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.RESPIRATORY_RETRACTION',
+            dataId: 'respiratory-retraction-section',
+            descriptionData: [this.toDescriptionItemData(breathing.respiratoryRetraction.description)],
+        }) : null;
+
+        breathing.stridor ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.STRIDOR',
+            dataId: 'stridor-section',
+            descriptionData: breathing.stridor ? this.mapBooleanToDescription(breathing.stridor) : [],
+        })  : null;
+
+        breathing.respiratoryRate ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.RESPIRATORY_RATE',
+            dataId: 'respiratory-rate-section',
+            descriptionData: [this.toDescriptionItemData(`${breathing.respiratoryRate?.value}${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)],
+        }) : null;
+
+        breathing.bloodOxygenSaturation ? breathingDescription.push({
+            title: 'guardia.documents-summary.breathing.BLOOD_OXYGEN_SATURATION',
+            dataId: 'saturation-section',
+            descriptionData: [this.toDescriptionItemData(`${breathing.bloodOxygenSaturation?.value}${VITAL_SIGNS_AND_RISK_FACTORS.PERCENTAJE}`)],
+        }) : null;
+
+        return {
+            title: 'guardia.documents-summary.breathing.TITLE',
+            icon: 'monitor_heart',
+            description: breathingDescription,
         }
     }
 

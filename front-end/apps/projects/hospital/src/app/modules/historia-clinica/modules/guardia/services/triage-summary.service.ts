@@ -26,7 +26,9 @@ export class TriageSummaryService {
             ...(triage.content.notes && 
                 { observations: triage.content.notes} ),
             ...(triage.content.appearance && 
-                { appearance: this.documentsSummaryService.mapAppearencesToTitleDescriptionListItem(triage.content.appearance)} )
+                { appearance: this.documentsSummaryService.mapAppearencesToTitleDescriptionListItem(triage.content.appearance)} ),
+            ...(triage.content.breathing && 
+                { breathing: this.documentsSummaryService.mapBreathingToTitleDescriptionListItem(triage.content.breathing)} )
         }
     }
 
@@ -44,4 +46,5 @@ export interface TriageAsViewFormat {
     vitalSignsAndRiskFactors: VitalSignsAndRiskFactorsData,
     observations: string,
     appearance: TitleDescriptionListItem,
+    breathing: TitleDescriptionListItem,
 }

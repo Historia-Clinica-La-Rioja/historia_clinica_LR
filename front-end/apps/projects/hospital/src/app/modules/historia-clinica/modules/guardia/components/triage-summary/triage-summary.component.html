@@ -23,8 +23,11 @@
                 </div>
             </div>
 
-            <app-appearance-summary data-id="appearance-summary" *ngIf="triageSummary.appearance?.description.length"
-                [appearance]="triageSummary.appearance"></app-appearance-summary>
+            <app-titled-grid-summary data-id="appearance-summary" *ngIf="triageSummary.appearance?.description.length"
+                [itemsList]="triageSummary.appearance"></app-titled-grid-summary>
+
+            <app-titled-grid-summary data-id="breathing-summary" *ngIf="triageSummary.breathing?.description.length"
+                [itemsList]="triageSummary.breathing"></app-titled-grid-summary>
         </div>
     </div>
 

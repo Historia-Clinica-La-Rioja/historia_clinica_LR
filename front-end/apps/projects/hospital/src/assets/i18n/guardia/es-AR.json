@@ -289,6 +289,13 @@
                 "TEMPERATURE": "Temperatura",
                 "CRYING_EXCESSIVE": "Llanto sin consuelo",
                 "MUSCULAR_TONE": "Tono muscular"
+            },
+            "breathing": {
+                "TITLE": "Respiración",
+                "BLOOD_OXYGEN_SATURATION": "Saturación de oxígeno",
+                "RESPIRATORY_RATE": "Frecuencia respiratoria",
+                "RESPIRATORY_RETRACTION": "Respiración con tiraje",
+                "STRIDOR": "Respiración con estridor"
             }
         }
 	}
