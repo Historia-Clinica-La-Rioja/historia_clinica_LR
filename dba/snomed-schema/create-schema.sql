@@ -4,19 +4,17 @@ create schema snomedct;
 set schema 'snomedct';
 
 /*create table concept*/
-drop table if exists concept cascade;
-create table concept(
+CREATE TABLE concept(
   id varchar(18) not null,
   effectivetime char(8) not null,
   active char(1) not null,
   moduleid varchar(18) not null,
   definitionstatusid varchar(18) not null,
-  PRIMARY KEY(id, effectivetime)
+  CONSTRAINT PK_concept PRIMARY KEY(id, effectivetime)
 );
 
 /*create table description*/
-drop table if exists description cascade;
-create table description(
+CREATE TABLE description(
   id varchar(18) not null,
   effectivetime char(8) not null,
   active char(1) not null,
@@ -26,12 +24,11 @@ create table description(
   typeid varchar(18) not null,
   term text not null,
   casesignificanceid varchar(18) not null,
-  PRIMARY KEY(id, effectivetime)
+  CONSTRAINT PK_description PRIMARY KEY(id, effectivetime)
 );
 
 /*create table relationship */
-drop table if exists relationship cascade;
-create table relationship(
+CREATE TABLE relationship(
   id varchar(18) not null,
   effectivetime char(8) not null,
   active char(1) not null,
@@ -42,12 +39,11 @@ create table relationship(
   typeid varchar(18) not null,
   characteristictypeid varchar(18) not null,
   modifierid varchar(18) not null,
-  PRIMARY KEY(id, effectivetime)
+  CONSTRAINT PK_relationship PRIMARY KEY(id, effectivetime)
 );
 
 /*create table langrefset*/
-drop table if exists langrefset cascade;
-create table langrefset(
+CREATE TABLE langrefset(
   id uuid not null,
   effectivetime char(8) not null,
   active char(1) not null,
@@ -55,11 +51,10 @@ create table langrefset(
   refsetid varchar(18) not null,
   referencedcomponentid varchar(18) not null,
   acceptabilityid varchar(18) not null,
-  PRIMARY KEY(id, effectivetime)
+  CONSTRAINT PK_langrefset PRIMARY KEY(id, effectivetime)
 );
 
 /*create table relationship_concrete_value */
-DROP TABLE IF EXISTS relationship_concrete_value CASCADE;
 CREATE TABLE relationship_concrete_value(
   id varchar(18) not null,
   effectivetime char(8) not null,
@@ -71,11 +66,10 @@ CREATE TABLE relationship_concrete_value(
   typeid varchar(18) not null,
   characteristictypeid varchar(18) not null,
   modifierid varchar(18) not null,
-  PRIMARY KEY (id, effectiveTime)
+  CONSTRAINT PK_relationship_concrete_value PRIMARY KEY(id, effectivetime)
 );
 
 /*create table concept_term */
-DROP TABLE IF EXISTS concept_term CASCADE;
 CREATE TABLE concept_term(
   id varchar(18) not null,
   term text not null,
