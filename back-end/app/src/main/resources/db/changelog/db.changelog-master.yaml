@@ -377,3 +377,7 @@ databaseChangeLog:
 - include:
     file: incrementales-v2_25.yml
     relativeToChangelogFile: true
+
+- include:
+    file: incrementales-v2_26.yml
+    relativeToChangelogFile: true
