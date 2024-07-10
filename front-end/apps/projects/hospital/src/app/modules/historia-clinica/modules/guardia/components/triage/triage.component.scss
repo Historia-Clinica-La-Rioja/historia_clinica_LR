@@ -4,8 +4,11 @@ form {
 	@include mat-form-field-background-white;
 }
 
+.formLabel {
+	font-weight: 500;
+}
+
 .simple-form-field {
-	width: 60%;
 	min-width: 280px;
 }
 

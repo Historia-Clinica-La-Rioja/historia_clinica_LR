@@ -1,14 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MasterDataDto, NewEffectiveClinicalObservationDto, TriageListDto, TriagePediatricDto } from '@api-rest/api-model';
+import { BasicPatientDto, MasterDataDto, NewEffectiveClinicalObservationDto, PersonPhotoDto, TriageListDto, TriagePediatricDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { FACTORES_DE_RIESGO } from '@historia-clinica/constants/validation-constants';
 import { EffectiveObservation, FactoresDeRiesgoFormService } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { Triage } from '../triage/triage.component';
+import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
+import { ActivatedRoute } from '@angular/router';
+import { PatientService } from '@api-rest/services/patient.service';
+import { PatientNameService } from '@core/services/patient-name.service';
+import { toPatientSummary } from '../adult-gynecological-triage/adult-gynecological-triage.component';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -31,6 +36,8 @@ export class PediatricTriageComponent implements OnInit {
 	muscleHypertonyaOptions$: Observable<MasterDataDto[]>;
 	perfusionOptions$: Observable<MasterDataDto[]>;
 	respiratoryRetractionOptions$: Observable<MasterDataDto[]>;
+	patientSummary: PatientSummary;
+	patientDescription: string;
 
 	hasError = hasError;
 	getError = getError;
@@ -48,11 +55,19 @@ export class PediatricTriageComponent implements OnInit {
 		private formBuilder: UntypedFormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
 		private readonly translateService: TranslateService,
+		private readonly route: ActivatedRoute,
+		private readonly patientService: PatientService,
+		private readonly patientNameService: PatientNameService
 	) {
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 	}
 
 	ngOnInit(): void {
+		this.route.queryParams.subscribe(param => {
+			if (param.patientId) this.setPatientInfo(Number(param.patientId));
+			else this.patientDescription = param.patientDescription;
+		});
+
 		this.pediatricForm = this.formBuilder.group({
 			observation: [null],
 			appearance: this.formBuilder.group({
@@ -85,6 +100,14 @@ export class PediatricTriageComponent implements OnInit {
 		this.muscleHypertonyaOptions$ = this.triageMasterDataService.getMuscleHypertonia();
 		this.perfusionOptions$ = this.triageMasterDataService.getPerfusion();
 		this.respiratoryRetractionOptions$ = this.triageMasterDataService.getRespiratoryRetraction();
+	}
+
+	setPatientInfo(patientId: number) {
+		const patientBasicData$: Observable<BasicPatientDto> = this.patientService.getPatientBasicData(patientId);
+		const patientPhoto$: Observable<PersonPhotoDto> = this.patientService.getPatientPhoto(patientId);
+		forkJoin([patientBasicData$, patientPhoto$]).subscribe(([patientBasicData, patientPhoto]) => {
+			this.patientSummary = toPatientSummary(patientBasicData, patientPhoto, this.patientNameService);
+		});
 	}
 
 	setTriageData(triageData: Triage) {

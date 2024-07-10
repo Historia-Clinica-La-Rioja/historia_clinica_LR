@@ -4,9 +4,8 @@ form {
 	@include mat-form-field-background-white;
 }
 
-h4 {
+label {
 	font-weight: 500;
-	font-size: medium;
 }
 
 .page {
@@ -16,4 +15,8 @@ h4 {
 
 section {
 	margin: 1.5vh 0;
+}
+
+.patient-summary {
+	margin-bottom: 30px;
 }

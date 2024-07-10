@@ -1,5 +1,14 @@
 <div class="page" fxLayout="column">
 	<div fxLayout="column">
+		<section id="patient" class="patient-summary">
+			<div *ngIf="patientSummary else temporaryPatient">
+				<app-patient-summary [person]="patientSummary" size="SIZE"></app-patient-summary>
+			</div>
+			<ng-template #temporaryPatient>
+				<app-emergency-care-temporary-patient [preloadedDescriptionPatient]="patientDescription" [canDeleteSelectedPatient]="false"></app-emergency-care-temporary-patient>
+			</ng-template>
+		</section>
+
 		<section id="triage">
 			<app-triage (triageData)="setTriageData($event)"
 				[lastTriage]="lastTriage$ | async"
@@ -9,6 +18,7 @@
 
 		<form [formGroup]="riskFactorsForm">
 			<section id="risk-factors" fxLayout="column">
+				<label>{{'guardia.episode.triage.ultimo.FACTORES_DE_RIESGO' | translate}}</label>
 				<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
 				</app-factores-de-riesgo-form>
 			</section>
@@ -16,7 +26,7 @@
 
 		<form [formGroup]="adultGynecologicalForm">
 			<section id="evaluation" fxLayout="column">
-				<h4 [translate]="'guardia.triage.OBSERVATIONS'"></h4>
+				<label [translate]="'guardia.triage.OBSERVATIONS'"></label>
 				<mat-form-field fxFlex="100%" appearance="outline">
 					<textarea matInput placeholder="{{'guardia.triage.SET_OBSERVATIONS' | translate}}"
 						formControlName="observation" name="observation"></textarea>

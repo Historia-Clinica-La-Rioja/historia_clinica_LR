@@ -78,7 +78,12 @@ export class NewEpisodeAdmissionComponent implements OnInit {
 	goToTriage(administrativeAdmission: AdministrativeAdmission): void {
 		this.newEpisodeService.setAdministrativeAdmission(administrativeAdmission);
 		this.triageDefinitionsService.getTriagePath(administrativeAdmission?.emergencyCareTypeId)
-			.subscribe(({ url }) => this.router.navigateByUrl(url));
+			.subscribe(({ url }) => this.router.navigate([url], {
+				queryParams: {
+					patientId: administrativeAdmission.patientId,
+					patientDescription: administrativeAdmission.patientDescription
+				}
+			}));
 	}
 
 	private goToHCWithUndefinedTriage() {
