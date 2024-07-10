@@ -10,10 +10,12 @@
 			<div *ngIf="content?.reference" class="color-grey">
 				<app-colored-icon-text [coloredIconText]="content.reference.coloredIconText"></app-colored-icon-text>
 			</div>
-			<div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
-				<span class="extra-info-title">{{extraInfo.title | translate}}</span>
-				<span>{{extraInfo.content}}</span>
-			</div>
+            <div fxLayout="column" fxLayoutGap="5px" class="content">
+                <div *ngFor="let extraInfo of content.extra_info" class="color-grey extra-info" fxLayoutGap="5px">
+                    <span class="extra-info-title">{{extraInfo.title | translate}}</span>
+                    <span>{{extraInfo.content}}</span>
+                </div>
+            </div>
 		</div>
 		<div *ngIf="indication && content.observations" class="color-grey observation">
 			"{{content.observations}}"

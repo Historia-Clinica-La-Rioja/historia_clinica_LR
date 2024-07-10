@@ -99,6 +99,7 @@ constructor() { }
 			healthCondition: {id: null , snomed:{sctid: null , pt:studyOrder.healthCondition}},
 			id: studyOrder.diagnosticReportId,
 			observations: null,
+            observationsFromServiceRequest: studyOrder.observationsFromServiceRequest,
 			serviceRequestId: studyOrder.serviceRequestId,
 			snomed: {id: null, sctid: null, pt: studyOrder.snomed},
 			source: studyOrder.source,

@@ -80,20 +80,29 @@ export class StudyComponent implements OnInit {
 		this.prescripcionesService.renderStatusDescriptionStudyImage(reportImageCase.infoOrderInstances.status)
 		const updateDate = diagnosticReport.creationDate;
 		const isReferenceStudyPending = diagnosticReport?.referenceRequestDto;
+
+        let extra_info = [];
+        diagnosticReport.healthCondition ? extra_info.push({
+            title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
+            content:  diagnosticReport.healthCondition.snomed.pt,
+        }) : null;
+        diagnosticReport.observationsFromServiceRequest ? extra_info.push({
+            title: "Observaciones:",
+            content:  diagnosticReport.observationsFromServiceRequest,
+        }) : null;
+
 		return {
 			status: {
 				description: prescriptionStatus,
 				cssClass: this.setCssClass(prescriptionStatus)
 			},
 			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(', ') : capitalize(diagnosticReport.snomed.pt),
-			extra_info: diagnosticReport.healthCondition ? [{
-				title: diagnosticReport.source === this.translateService.instant('app.menu.INTERNACION') ? 'Diagnóstico:' : 'Problema:',
-				content:  diagnosticReport.healthCondition.snomed.pt,
-			}]: null  ,
+			extra_info: extra_info,
 			createdBy: diagnosticReport.doctor ? this.getProfessionalName(diagnosticReport.doctor) : "",
 			createdOn: updateDate,
 			timeElapsed: diagnosticReport.creationDate ? null : '',
-			reference:  isReferenceStudyPending ? this.getReference(diagnosticReport.referenceRequestDto) : null
+			reference:  isReferenceStudyPending ? this.getReference(diagnosticReport.referenceRequestDto) : null,
+            observationsFromServiceRequest: diagnosticReport.observationsFromServiceRequest
 		}
 	}
 
