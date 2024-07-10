@@ -167,7 +167,7 @@
 
 				<div>
 					<button mat-button type="button" id="add-request-button" color="primary" class="add-button"
-						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()">
+						(click)="ambulatoryConsultationReferenceService.openReferenceDialog()" [disabled]="showWarningViolenceSituation">
 						+ {{ 'ambulatoria.paciente.nueva-consulta.solicitud-referencia.ADD_REQUEST' | translate }}
 					</button>
 				</div>
