@@ -1,5 +1,5 @@
 <div>
-    <app-iconed-titled-section icon="{{itemsList.icon}}"
+    <app-iconed-titled-section [icon]="itemsList.icon"
         title={{itemsList.title}}></app-iconed-titled-section>
     <div class="section-description">
         <app-description-item-column [itemsList]="itemsList.description"></app-description-item-column>

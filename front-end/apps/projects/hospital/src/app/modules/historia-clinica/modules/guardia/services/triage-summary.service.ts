@@ -3,7 +3,6 @@ import { DescriptionItemDataSummary } from '@historia-clinica/components/descrip
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { Item } from '../components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { TriageCategory } from '../components/triage-chip/triage-chip.component';
-import { TriageCategoryDto } from '@api-rest/api-model';
 import { TitleDescriptionListItem, VitalSignsAndRiskFactorsData } from '@historia-clinica/utils/document-summary.model';
 
 @Injectable({
@@ -18,7 +17,7 @@ export class TriageSummaryService {
     mapTriageAsViewFormat(triage: Item): TriageAsViewFormat {
         return {
             ...(triage.content.category && 
-                { triageLevel: this.mapTriageCategoryDtoToTriageCategory(triage.content.category)} ),
+                { triageLevel: triage.content.category} ),
             ...(triage.content.reasons.length && 
                 { reasons: this.documentsSummaryService.mapReasonsToDescriptionItemDataSummary(triage.content.reasons)} ),
             ...(triage.content.riskFactors && 
@@ -28,14 +27,9 @@ export class TriageSummaryService {
             ...(triage.content.appearance && 
                 { appearance: this.documentsSummaryService.mapAppearencesToTitleDescriptionListItem(triage.content.appearance)} ),
             ...(triage.content.breathing && 
-                { breathing: this.documentsSummaryService.mapBreathingToTitleDescriptionListItem(triage.content.breathing)} )
-        }
-    }
-
-    private mapTriageCategoryDtoToTriageCategory(triageCategory: TriageCategoryDto): TriageCategory {
-        return {
-            colorHex: triageCategory.color.code,
-            ...triageCategory
+                { breathing: this.documentsSummaryService.mapBreathingToTitleDescriptionListItem(triage.content.breathing)} ),
+            ...(triage.content.circulation && 
+                { circulation: this.documentsSummaryService.mapCirculationToTitleDescriptionListItem(triage.content.circulation)} )
         }
     }
 }
@@ -47,4 +41,5 @@ export interface TriageAsViewFormat {
     observations: string,
     appearance: TitleDescriptionListItem,
     breathing: TitleDescriptionListItem,
+    circulation: TitleDescriptionListItem,
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto, TriageBreathingDto } from '@api-rest/api-model';
+import { AllergyConditionDto, AnthropometricDataDto, DateTimeDto, DiagnosisDto, DocumentObservationsDto, ExternalCauseDto, HealthConditionDto, HealthHistoryConditionDto, HospitalizationDocumentHeaderDto, HospitalizationProcedureDto, ImmunizationDto, MedicationDto, NewbornDto, ObstetricEventDto, OutpatientAllergyConditionDto, OutpatientFamilyHistoryDto, OutpatientReasonDto, ReferableItemDto, RiskFactorDto, TriageAppearanceDto, TriageBreathingDto, TriageCirculationDto } from '@api-rest/api-model';
 import { HEALTH_VERIFICATIONS } from '@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids';
 import { TranslateService } from '@ngx-translate/core';
 import { DateFormat, DateToShow, DescriptionItemData } from '@presentation/components/description-item/description-item.component';
@@ -504,6 +504,28 @@ ${medication.note}`
             title: 'guardia.documents-summary.breathing.TITLE',
             icon: 'monitor_heart',
             description: breathingDescription,
+        }
+    }
+
+    mapCirculationToTitleDescriptionListItem(circulation: TriageCirculationDto): TitleDescriptionListItem {
+        let circulationDescription = [];
+
+        circulation.perfusion ? circulationDescription.push({
+            title: 'guardia.documents-summary.circulation.PERFUSION',
+            dataId: 'perfusion-section',
+            descriptionData: [this.toDescriptionItemData(circulation.perfusion.description)],
+        }) : null;
+
+        circulation.heartRate ? circulationDescription.push({
+            title: 'guardia.documents-summary.circulation.HEART_RATE',
+            dataId: 'heart-rate-section',
+            descriptionData: circulation.heartRate ? [this.toDescriptionItemData(`${circulation.heartRate.value}${VITAL_SIGNS_AND_RISK_FACTORS.MINUTE}`)] : [],
+        })  : null;
+
+        return {
+            title: 'guardia.documents-summary.circulation.TITLE',
+            icon: 'monitor_heart',
+            description: circulationDescription,
         }
     }
 

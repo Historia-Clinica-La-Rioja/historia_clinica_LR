@@ -13,6 +13,7 @@ import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 import { NewEmergencyCareEvolutionNoteService } from '../../services/new-emergency-care-evolution-note.service';
 import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
 	selector: 'app-emergency-care-evolutions',
@@ -27,6 +28,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 	@Input('emergencyCareId') emergencyCareId: number;
 	@Input() patientId: number;
 
+    public readonly DOCUMENT_TYPES = EmergencyCaraDocumentTypes;
 	documentHistoric: Item[];
 	selectedTriage;
 	emergencyCareType: EmergencyCareTypes | string;
@@ -37,6 +39,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 	public minDate: Date;
 
 	constructor(
+		private readonly translateService: TranslateService,
 		private readonly patientNameService: PatientNameService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly emergencyCareDocumentSearchService: EmergencyCareDocumentSearchService,
@@ -80,54 +83,53 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 
 	private getHistoric() {
         this.resetActiveDocument();
-		const self = this;
 		this.emergencyCareDocumentSearchService.get(this.emergencyCareId)
 			.subscribe((docs: EmergencyCareHistoricDocumentDto) => {
-				const triages = docs.triages.map(map);
-				const evolutionsNotes = docs.evolutionNotes.map(evolutionNotesMapper);
+				const triages = docs.triages.map(triage => this.map(triage));
+				const evolutionsNotes = docs.evolutionNotes.map(evolutionNote => this.evolutionNotesMapper(evolutionNote));
 				const allDocs = triages.concat(evolutionsNotes);
 				this.documentHistoric = allDocs.sort((a, b) => b.summary.createdOn.getTime() - a.summary.createdOn.getTime() );
                 this.changeDetectorRef.detectChanges();
-			})
-
-		function evolutionNotesMapper(en: EmergencyCareEvolutionNoteDocumentDto): Item {
-
-			const fullName = self.getFullName(en.professional.person.firstName, en.professional.nameSelfDetermination) + " " +  en.professional.person.lastName;
-			return {
-				summary: {
-					createdBy: {
-						firstName: en.professional.person.firstName,
-						lastName: en.professional.person.lastName,
-						nameSelfDetermination: en.professional.nameSelfDetermination
-					},
-					registerEditor: self.buildRegisterEditor(fullName, dateTimeDtoToDate(en.performedDate)),
-					icon: 'assignment',
-					createdOn: dateTimeDtoToDate(en.performedDate),
-					title: 'internaciones.documents-summary.document-name.DOCTOR_EVOLUTION_NOTE',
-					docId: en.documentId,
-					docFileName: en.fileName,
-					specialty: en.clinicalSpecialtyName
-				},
-				content: en
-			}
-		}
-
-		function map(doc: TriageDocumentDto): Item {
-			const fullName = self.getFullName(doc.triage.createdBy.firstName, doc.triage.createdBy.nameSelfDetermination) + " " +  doc.triage.createdBy.lastName;
-			return {
-				summary: {
-					createdBy: doc.triage.createdBy,
-					registerEditor: self.buildRegisterEditor(fullName, dateTimeDtoToDate(doc.triage.creationDate),),
-					icon: 'assignment_ind',
-					createdOn: dateTimeDtoToDate(doc.triage.creationDate),
-					title: 'internaciones.documents-summary.document-name.TRIAGE',
-					docId: doc.documentId,
-					docFileName: doc.fileName
-				},
-				content: doc.triage,
-			}
-		}
+			})	
 	}
+
+    private evolutionNotesMapper(en: EmergencyCareEvolutionNoteDocumentDto): Item {
+        const fullName = this.getFullName(en.professional.person.firstName, en.professional.nameSelfDetermination) + " " +  en.professional.person.lastName;
+        return {
+            summary: {
+                createdBy: {
+                    firstName: en.professional.person.firstName,
+                    lastName: en.professional.person.lastName,
+                    nameSelfDetermination: en.professional.nameSelfDetermination
+                },
+                registerEditor: this.buildRegisterEditor(fullName, dateTimeDtoToDate(en.performedDate)),
+                icon: 'assignment',
+                createdOn: dateTimeDtoToDate(en.performedDate),
+                title: this.translateService.instant('internaciones.documents-summary.document-name.DOCTOR_EVOLUTION_NOTE'),
+                docId: en.documentId,
+                docFileName: en.fileName,
+                specialty: en.clinicalSpecialtyName
+            },
+            content: en
+        }
+    }
+
+    private map(doc: TriageDocumentDto): Item {
+        const fullName = this.getFullName(doc.triage.createdBy.firstName, doc.triage.createdBy.nameSelfDetermination) + " " +  doc.triage.createdBy.lastName;
+        return {
+            summary: {
+                createdBy: doc.triage.createdBy,
+                registerEditor: this.buildRegisterEditor(fullName, dateTimeDtoToDate(doc.triage.creationDate),),
+                icon: 'assignment_ind',
+                createdOn: dateTimeDtoToDate(doc.triage.creationDate),
+                title: this.translateService.instant('internaciones.documents-summary.document-name.TRIAGE'),
+                docId: doc.documentId,
+                docFileName: doc.fileName
+            },
+            content: doc.triage,
+        }
+    }
+
 	buildRegisterEditor(createdBy: string, date: Date): RegisterEditor {
 		return {
 			createdBy: createdBy,
@@ -154,4 +156,9 @@ export interface Item {
 
 	},
 	content: any
+}
+
+enum EmergencyCaraDocumentTypes {
+    TRIAGE = 'Triage',
+    EVOLUTION_NOTE = 'Nota de evolución médica',
 }

@@ -296,6 +296,11 @@
                 "RESPIRATORY_RATE": "Frecuencia respiratoria",
                 "RESPIRATORY_RETRACTION": "Respiración con tiraje",
                 "STRIDOR": "Respiración con estridor"
+            },
+            "circulation": {
+                "TITLE": "Circulación",
+                "PERFUSION": "Perfusión",
+                "HEART_RATE": "Frecuencia cardíaca"
             }
         }
 	}

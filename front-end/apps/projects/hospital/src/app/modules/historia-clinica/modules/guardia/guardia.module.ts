@@ -20,7 +20,6 @@ import { NewEpisodePediatricTriageComponent } from './routes/new-episode-pediatr
 import { AdministrativeTriageComponent } from './components/administrative-triage/administrative-triage.component';
 import { AdultGynecologicalTriageComponent } from './components/adult-gynecological-triage/adult-gynecological-triage.component';
 import { TitledGridSummaryComponent } from './components/titled-grid-summary/titled-grid-summary.component';
-import { DocumentActionsComponent } from './components/document-actions/document-actions.component';
 import { EmergencyCareDashboardActionsComponent } from './components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
@@ -56,7 +55,6 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		// routing
 		AdministrativeDischargeComponent,
 		AdmisionAdministrativaComponent,
-		DocumentActionsComponent,
 		EditEmergencyCareEpisodeComponent,
 		HomeComponent,
 		MedicalDischargeComponent,

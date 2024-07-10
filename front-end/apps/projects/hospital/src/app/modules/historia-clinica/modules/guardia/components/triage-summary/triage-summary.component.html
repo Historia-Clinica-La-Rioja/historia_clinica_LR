@@ -14,7 +14,16 @@
 
             <app-vital-signs-and-risk-factors-summary data-id="vital-signs-and-risk-factors-summary"
                 *ngIf="triageSummary.vitalSignsAndRiskFactors"
-                [vitalSignsAndRiskFactors]="triageSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>
+                [vitalSignsAndRiskFactors]="triageSummary.vitalSignsAndRiskFactors"></app-vital-signs-and-risk-factors-summary>   
+
+            <app-titled-grid-summary data-id="appearance-summary" *ngIf="triageSummary.appearance?.description.length"
+            [itemsList]="triageSummary.appearance"></app-titled-grid-summary>
+
+            <app-titled-grid-summary data-id="breathing-summary" *ngIf="triageSummary.breathing?.description.length"
+                [itemsList]="triageSummary.breathing"></app-titled-grid-summary>
+
+            <app-titled-grid-summary data-id="circulation-summary" *ngIf="triageSummary.circulation?.description.length"
+                [itemsList]="triageSummary.circulation"></app-titled-grid-summary>
 
             <div data-id="observations-summary" *ngIf="triageSummary.observations">
                 <app-iconed-titled-section icon="assignment" title="guardia.documents-summary.observations.TITLE"></app-iconed-titled-section>
@@ -22,12 +31,6 @@
                     <span>{{triageSummary.observations}}</span>
                 </div>
             </div>
-
-            <app-titled-grid-summary data-id="appearance-summary" *ngIf="triageSummary.appearance?.description.length"
-                [itemsList]="triageSummary.appearance"></app-titled-grid-summary>
-
-            <app-titled-grid-summary data-id="breathing-summary" *ngIf="triageSummary.breathing?.description.length"
-                [itemsList]="triageSummary.breathing"></app-titled-grid-summary>
         </div>
     </div>
 

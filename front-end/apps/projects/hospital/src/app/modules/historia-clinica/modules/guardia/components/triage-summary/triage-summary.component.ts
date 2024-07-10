@@ -7,8 +7,6 @@ import { DocumentService } from '@api-rest/services/document.service';
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { TranslateService } from '@ngx-translate/core';
-import { RiskFactor } from '@presentation/components/factor-de-riesgo-current/factor-de-riesgo.component';
-import { TriageCategory } from '../triage-chip/triage-chip.component';
 
 @Component({
     selector: 'app-triage-summary',
@@ -28,7 +26,7 @@ import { TriageCategory } from '../triage-chip/triage-chip.component';
     private _episodeId: number;
     triageSummary: TriageAsViewFormat;
     _triage: Item;
-    private documentName = '';
+    private readonly documentName = this.translateService.instant('guardia.documents-summary.document-name.TRIAGE');
     documentSummary$: Observable<HeaderDescription>;
     isPopUpOpened = false;
 
@@ -38,9 +36,7 @@ import { TriageCategory } from '../triage-chip/triage-chip.component';
         private readonly translateService: TranslateService,
         private readonly documentSummaryService: DocumentsSummaryService,
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
-    ) {
-        this.documentName = this.translateService.instant('guardia.documents-summary.document-name.TRIAGE');
-	}
+    ) { }
 
     private fetchSummaryInfo(){
         if (this._triage && this._episodeId) {
@@ -55,90 +51,4 @@ import { TriageCategory } from '../triage-chip/triage-chip.component';
     downloadDocument() {
 		this.documentService.downloadFile({ filename: this._triage.summary.docFileName, id: this._triage.summary.docId });
 	}
-}
-
-export interface TriageDetails {
-	creationDate: Date;
-	category: TriageCategory;
-	createdBy: {
-		firstName: string,
-		lastName: string,
-		nameSelfDetermination: string
-	};
-	doctorsOfficeDescription?: string;
-	riskFactors?: {
-		bloodOxygenSaturation: {
-			value: string,
-			effectiveTime: Date
-		},
-		diastolicBloodPressure?: {
-			value: string,
-			effectiveTime: Date
-		},
-		heartRate: {
-			value: string,
-			effectiveTime: Date
-		},
-		respiratoryRate: {
-			value: string,
-			effectiveTime: Date
-		},
-		systolicBloodPressure?: {
-			value: string,
-			effectiveTime: Date
-		},
-		temperature?: {
-			value: string,
-			effectiveTime: Date
-		},
-		bloodGlucose?: {
-			value: string,
-			effectiveTime: Date
-		},
-		glycosylatedHemoglobin?: {
-			value: string,
-			effectiveTime: Date
-		},
-		cardiovascularRisk?: {
-			value: string,
-			effectiveTime: Date
-		},
-	};
-	appearance?: {
-		bodyTemperatureDescription?: string,
-		cryingExcessive?: boolean,
-		muscleHypertoniaDescription?: string
-	};
-	breathing?: {
-		respiratoryRetractionDescription: string,
-		stridor: boolean,
-		respiratoryRate: {
-			value: string
-			effectiveTime: Date,
-		},
-		bloodOxygenSaturation: {
-			value: string
-			effectiveTime: Date,
-		}
-	};
-	circulation?: {
-		perfusionDescription: string,
-		heartRate: {
-			value: string
-			effectiveTime: Date,
-		}
-	};
-	notes?: string;
-	reasons?: string[];
-}
-
-export interface RiskFactorFull {
-	id: string,
-	description: string,
-	value: RiskFactor
-}
-
-export interface RiskFactorValue {
-	value: string,
-	effectiveTime: Date
 }
