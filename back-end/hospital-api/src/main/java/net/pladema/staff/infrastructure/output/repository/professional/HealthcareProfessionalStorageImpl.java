@@ -197,12 +197,22 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 	}
 
 	private QueryPart buildQuery(HealthcareProfessionalSearchQuery healthcareProfessionalSearchQuery){
-		return new QueryPart("SELECT ")
+
+		QueryPart firstQuery = new QueryPart("SELECT ")
 				.concatPart(healthcareProfessionalSearchQuery.select())
 				.concat(" FROM ")
 				.concatPart(healthcareProfessionalSearchQuery.from())
 				.concat(" WHERE ")
-				.concatPart(healthcareProfessionalSearchQuery.where())
+				.concatPart(healthcareProfessionalSearchQuery.where());
+
+		QueryPart secondQuery = new QueryPart("SELECT ")
+				.concatPart(healthcareProfessionalSearchQuery.select())
+				.concat(" FROM ")
+				.concatPart(healthcareProfessionalSearchQuery.fromSecondQuery())
+				.concat(" WHERE ")
+				.concatPart(healthcareProfessionalSearchQuery.where());
+
+		return firstQuery.concat(" UNION ").concatPart(secondQuery)
 				.concat(" ORDER BY ")
 				.concat("p.last_name");
 	}

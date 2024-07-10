@@ -16,6 +16,14 @@ public class HealthcareProfessionalSearchQuery {
 	private final Integer clinicalSpecialtyId;
 	private final Integer practiceId;
 	private final String professionalERolIds;
+	private static final String FROM =  "	{h-schema}healthcare_professional hp " +
+			"	JOIN {h-schema}person p ON hp.person_id = p.id " +
+			"	JOIN {h-schema}user_person up ON p.id = up.person_id " +
+			"	JOIN {h-schema}user_role ur ON up.user_id = ur.user_id " +
+			" 	JOIN {h-schema}institution i ON ur.institution_id = i.id " +
+			" 	JOIN {h-schema}address a ON i.address_id = a.id " +
+			" 	JOIN {h-schema}city c ON a.city_id = c.id " +
+			" 	LEFT JOIN {h-schema}person_extended pe on (p.id = pe.person_id) ";
 
 	public HealthcareProfessionalSearchQuery(HealthcareProfessionalSearchBo healthcareProfessionalSearchBo, List<Short> professionalERolIds){
 		this.departmentId = healthcareProfessionalSearchBo.getDepartmentId();
@@ -40,17 +48,27 @@ public class HealthcareProfessionalSearchQuery {
 	}
 
 	public QueryPart from() {
-		String from = "	{h-schema}healthcare_professional hp " +
-				"	JOIN {h-schema}person p ON hp.person_id = p.id " +
-				"	JOIN {h-schema}user_person up ON p.id = up.person_id " +
-				"	JOIN {h-schema}user_role ur ON up.user_id = ur.user_id " +
-				" 	JOIN {h-schema}institution i ON ur.institution_id = i.id " +
-				" 	JOIN {h-schema}address a ON i.address_id = a.id " +
-				" 	JOIN {h-schema}city c ON a.city_id = c.id " +
-				" 	LEFT JOIN {h-schema}person_extended pe on (p.id = pe.person_id) ";
+		String from = FROM;
 
 		if (clinicalSpecialtyId != null || practiceId != null) {
 			from = from + "	LEFT JOIN {h-schema}diary d on (hp.id = d.healthcare_professional_id) ";
+
+			if (clinicalSpecialtyId != null)
+				from = from + "LEFT JOIN {h-schema}clinical_specialty cs on (d.clinical_specialty_id = cs.id) ";
+
+			if (practiceId != null)
+				from = from + "LEFT JOIN {h-schema}diary_practice dp on (d.id = dp.diary_id) ";
+		}
+
+		return new QueryPart(from);
+	}
+
+	public QueryPart fromSecondQuery() {
+		String from = FROM;
+
+		if (clinicalSpecialtyId != null || practiceId != null) {
+			from = from + "	LEFT JOIN {h-schema}diary_associated_professional dap on (hp.id = dap.healthcare_professional_id) "+
+					"	LEFT JOIN {h-schema}diary d on (dap.diary_id = d.id) ";
 
 			if (clinicalSpecialtyId != null)
 				from = from + "LEFT JOIN {h-schema}clinical_specialty cs on (d.clinical_specialty_id = cs.id) ";
