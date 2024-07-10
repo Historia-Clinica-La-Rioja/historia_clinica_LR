@@ -32,6 +32,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 
 	availableAppointments: DiaryAvailableAppointmentsDto[] = [];
 	today = new Date();
+
 	constructor(
 		readonly searchAppointmentsForThirdPartyDataService: SearchAppointmentsForThirdPartyDataService,
 		private readonly diaryAvailableAppointmentsSearchService: DiaryAvailableAppointmentsSearchService,
@@ -79,7 +80,10 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	setInstitution(institution: InstitutionBasicInfoDto) {
-		this.professionalFilters.institutionId = institution?.id;
+		this.professionalFilters = {
+			departmentId: this.professionalFilters.departmentId,
+			institutionId: institution?.id
+		};
 		this.form.controls.institutionId.setValue(institution?.id);
 		this.resetResults();
 		this.searchAppointmentsForThirdPartyDataService.setInstitutionIdAndTypeaheadOptions(institution?.id);
@@ -91,7 +95,12 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	setSpecialty(specialty: ClinicalSpecialtyDto) {
-		this.professionalFilters.clinicalSpecialtyId = specialty?.id;
+		this.professionalFilters = {
+			departmentId: this.professionalFilters.departmentId,
+			institutionId: this.professionalFilters?.institutionId,
+			practiceId: this.professionalFilters?.practiceId,
+			clinicalSpecialtyId: specialty?.id
+		};
 		this.resetResults();
 		this.form.controls.specialtyId.setValue(specialty?.id);
 		this.showValidations.criteriaSearch = false;
@@ -105,7 +114,12 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	setPractice(practice: SharedSnomedDto) {
-		this.professionalFilters.practiceId = practice?.id;
+		this.professionalFilters = {
+			departmentId: this.professionalFilters.departmentId,
+			institutionId: this.professionalFilters?.institutionId,
+			clinicalSpecialtyId: this.professionalFilters?.clinicalSpecialtyId,
+			practiceId: practice?.id
+		};
 		this.resetResults();
 		this.form.controls.practiceId.setValue(practice?.id);
 		this.showValidations.criteriaSearch = false;
@@ -113,6 +127,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	}
 
 	resetResults() {
+		this.form.controls.professionalId.setValue(null);
 		this.availableAppointments = [];
 		this.showResults = false;
 	}
