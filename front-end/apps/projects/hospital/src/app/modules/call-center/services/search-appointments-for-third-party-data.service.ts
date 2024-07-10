@@ -69,12 +69,8 @@ export class SearchAppointmentsForThirdPartyDataService {
 		this.healthCareProfessionalService[METHOD_NAMES.PROFESSIONALS_BY_FILTERS](filters)
 		.pipe(
 			map((list: ProfessionalDto[]) => {
-				const modifiedList = list.map(professional => ({
-					...professional,
-					fullName: `${professional.firstName} ${professional.lastName}`
-				}));
-				return listToTypeaheadOptions(modifiedList, 'fullName');
-			})
+				return listToTypeaheadOptions(list, 'fullName');
+			}),
 		)
 		.subscribe(healthCareProfessionals => {
 			this.professionalTypeaheadOptions = healthCareProfessionals;
