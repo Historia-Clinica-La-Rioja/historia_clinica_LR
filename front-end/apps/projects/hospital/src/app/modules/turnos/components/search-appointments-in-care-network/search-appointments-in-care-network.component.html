@@ -110,7 +110,7 @@
 	<div fxLayout="column" fxLayoutGap="10px">
 		<strong> {{ 'turnos.search-appointments-in-care-network.SEARCH_START_DATE' | translate }} </strong>
 		<div fxLayout="row" fxLayoutGap="20px" fxLayout.lt-sm="column" fxLayoutGap.lt-sm="5px">
-			<app-datepicker fxFlex="25" title="'turnos.home.START_DATE'" [minDate]="today" [dateToSetInDatepicker]="today" title="turnos.home.START_DATE" (selectDate)="updateEndDate($event)"></app-datepicker>
+			<app-datepicker fxFlex="25" title="'turnos.home.START_DATE'" [minDate]="today" [dateToSetInDatepicker]="searchForm.value.startDate" title="turnos.home.START_DATE" (selectDate)="updateEndDate($event)"></app-datepicker>
 			<div fxLayout="column" fxLayoutGap="10px" fxFlex="25">
 				<span class="datepicker-title">{{ "turnos.home.END_DATE" | translate}}</span>
 				<mat-form-field appearance="outline">

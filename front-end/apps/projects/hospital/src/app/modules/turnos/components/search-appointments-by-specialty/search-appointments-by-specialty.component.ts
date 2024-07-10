@@ -257,7 +257,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			const values: SearchCriteriaValues = {
 				careModality: this.form.controls.modality.value,
 				searchCriteria: this.selectedSearchCriteria,
-				startDate: this.form.controls.searchInitialDate.value,
+				startDate: dateToDateDto(this.form.controls.searchInitialDate.value),
 			}
 			this.searchAppointmentsInfoService.setSearchCriteria(values);
 		}
