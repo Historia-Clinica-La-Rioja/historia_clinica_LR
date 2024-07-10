@@ -1,5 +1,6 @@
-package ar.lamansys.sgh.clinichistory.application.searchDocument.domain;
+package ar.lamansys.sgh.clinichistory.domain.document.search;
 
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EDocumentSearch;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

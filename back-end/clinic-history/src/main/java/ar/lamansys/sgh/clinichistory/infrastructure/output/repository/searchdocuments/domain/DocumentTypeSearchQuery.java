@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain;
 
 import ar.lamansys.sgx.shared.repositories.QueryPart;
 
@@ -12,11 +12,6 @@ public class DocumentTypeSearchQuery extends DocumentSearchQuery {
 	public QueryPart where() {
 		return super.where().concatPart(new QueryPart(
 				"AND documenttype.id = " + plainText));
-	}
-
-	@Override
-	public String noResultMessage(){
-		return "No se encontraron documentos del tipo " + plainText;
 	}
 
 }

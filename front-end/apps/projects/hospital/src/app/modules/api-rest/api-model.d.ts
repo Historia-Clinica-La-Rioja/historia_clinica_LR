@@ -1431,7 +1431,6 @@ export interface DocumentHealthcareProfessionalDto {
 
 export interface DocumentHistoricDto {
     documents: DocumentSearchDto[];
-    message: string;
 }
 
 export interface DocumentObservationsDto extends Serializable {
@@ -1466,9 +1465,6 @@ export interface DocumentSearchDto extends Serializable {
     editedOn: DateTimeDto;
     id: number;
     mainDiagnosis: string;
-    message: string;
-    notes: DocumentObservationsDto;
-    procedures: ProcedureReduced[];
 }
 
 export interface DocumentSearchFilterDto {
@@ -3986,11 +3982,6 @@ export interface ProcedureParameterUnitOfMeasureFullSummaryDto {
     code: string;
     description: string;
     unitOfMeasureId: number;
-}
-
-export interface ProcedureReduced {
-    performedDate: Date;
-    procedure: string;
 }
 
 export interface ProcedureTemplateDto {

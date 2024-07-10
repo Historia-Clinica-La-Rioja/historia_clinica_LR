@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.EDocumentSearch;
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EDocumentSearch;
 
 import javax.validation.constraints.NotNull;
 

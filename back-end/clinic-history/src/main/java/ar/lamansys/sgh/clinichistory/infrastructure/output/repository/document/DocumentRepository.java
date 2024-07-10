@@ -24,14 +24,6 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
             "and d.sourceTypeId = " + SourceType.HOSPITALIZATION)
     List<Updateable> getUpdatablesDocuments(@Param("internmentEpisodeId") Integer internmentEpisodeId);
 
-    @Query(value = "SELECT DISTINCT new  ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ProcedureReduced(snomedPr.pt, pr.performedDate) " +
-            "FROM DocumentProcedure AS dp " +
-            "JOIN Procedure AS pr ON (pr.id = dp.pk.procedureId) " +
-            "JOIN Snomed AS snomedPr ON (pr.snomedId = snomedPr.id) " +
-            "WHERE dp.pk.documentId = :documentId " +
-			"AND pr.statusId != :errorStatus")
-    List<ProcedureReduced> getProceduresByDocuments(@Param("documentId") Long documentId, @Param("errorStatus") String errorStatus);
-
     @Transactional(readOnly = true)
     @Query(value = "SELECT d.id " +
             "FROM Document d " +

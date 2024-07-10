@@ -1,48 +1,44 @@
-package ar.lamansys.sgh.clinichistory.application.searchDocument;
+package ar.lamansys.sgh.clinichistory.application.getlisthistoricaldocumentsfrominternmentepisode;
 
-import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
+import ar.lamansys.sgh.clinichistory.domain.document.search.DocumentHistoricBo;
+import ar.lamansys.sgh.clinichistory.domain.document.search.DocumentSearchBo;
+import ar.lamansys.sgh.clinichistory.domain.document.search.DocumentSearchFilterBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProceduresStatus;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentCreatedOnSearchQuery;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentDiagnosisSearchQuery;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentDoctorSearchQuery;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentSearchQuery;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentSearchVo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.DocumentTypeSearchQuery;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentCreatedOnSearchQuery;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentDiagnosisSearchQuery;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentDoctorSearchQuery;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentSearchQuery;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentSearchVo;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain.DocumentTypeSearchQuery;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.validation.constraints.Null;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DocumentSearchServiceImpl implements DocumentSearchService {
+public class GetListHistoricalDocumentsFromInternmentEpisode {
 
     private static final String OUTPUT = "Output -> {}";
 
     private final DocumentRepository documentRepository;
     private final FeatureFlagsService featureFlagsService;
 
-    @Override
-    public DocumentHistoricBo getListHistoricalDocuments(Integer internmentEpisodeId, @Null DocumentSearchFilterBo searchFilter) {
+    public DocumentHistoricBo run(Integer internmentEpisodeId, DocumentSearchFilterBo searchFilter) {
         log.debug("Input parameters -> internmentEpisodeId {}, searchFilter {}", internmentEpisodeId, searchFilter);
 
         DocumentSearchQuery structuredQuery = defineDocumentSearchQuery(searchFilter);
 
-        List<DocumentSearchVo> allDocuments = documentRepository.doHistoricSearch(internmentEpisodeId, structuredQuery)
-                .stream()
-                .peek(this::setProcedures)
-                .collect(Collectors.toList());
+        List<DocumentSearchVo> allDocuments = documentRepository.doHistoricSearch(internmentEpisodeId, structuredQuery);
 
-        DocumentHistoricBo result = buildDocumentHistoricBo(allDocuments, structuredQuery);
+        DocumentHistoricBo result = buildDocumentHistoricBo(allDocuments);
 
         log.debug(OUTPUT, result);
         return result;
@@ -74,20 +70,15 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
         return structuredQuery;
     }
 
-    private void setProcedures(DocumentSearchVo d) {
-        d.setProcedures(documentRepository.getProceduresByDocuments(d.getId(), ProceduresStatus.ERROR));
-    }
-
     @NonNull
-    private DocumentHistoricBo buildDocumentHistoricBo(List<DocumentSearchVo> allDocuments, DocumentSearchQuery structuredQuery) {
+    private DocumentHistoricBo buildDocumentHistoricBo(List<DocumentSearchVo> allDocuments) {
         List<DocumentSearchBo> documentsBo = allDocuments.stream()
                 .map(DocumentSearchBo::new)
                 .peek(this::setEditedOn)
                 .sorted(Comparator.comparing(DocumentSearchBo::getCreatedOn).reversed())
                 .collect(Collectors.toList());
 
-        String infoMessage = getInfoMessage(allDocuments, structuredQuery);
-        return new DocumentHistoricBo(documentsBo, infoMessage);
+        return new DocumentHistoricBo(documentsBo);
     }
 
     private void setEditedOn(DocumentSearchBo documentSearchBo) {
@@ -96,10 +87,6 @@ public class DocumentSearchServiceImpl implements DocumentSearchService {
             documentRepository.findById(documentSearchBo.getInitialDocumentId())
                     .ifPresent(old -> documentSearchBo.setCreatedOn(old.getCreatedOn()));
         }
-    }
-
-    private static String getInfoMessage(List<DocumentSearchVo> allDocuments, DocumentSearchQuery structuredQuery) {
-        return allDocuments.isEmpty() ? structuredQuery.noResultMessage() : Strings.EMPTY;
     }
 
 }

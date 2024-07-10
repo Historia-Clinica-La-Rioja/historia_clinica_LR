@@ -1,8 +1,8 @@
-package net.pladema.clinichistory.hospitalization.controller.documents.searchdocument;
+package net.pladema.clinichistory.hospitalization.infrastructure.input.rest;
 
-import ar.lamansys.sgh.clinichistory.application.searchDocument.DocumentHistoricBo;
-import ar.lamansys.sgh.clinichistory.application.searchDocument.DocumentSearchService;
-import ar.lamansys.sgh.clinichistory.application.searchDocument.domain.DocumentSearchFilterBo;
+import ar.lamansys.sgh.clinichistory.domain.document.search.DocumentHistoricBo;
+import ar.lamansys.sgh.clinichistory.application.getlisthistoricaldocumentsfrominternmentepisode.GetListHistoricalDocumentsFromInternmentEpisode;
+import ar.lamansys.sgh.clinichistory.domain.document.search.DocumentSearchFilterBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.searchDocument.dto.DocumentSearchFilterDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,8 +10,8 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.controller.constraints.InternmentValid;
-import net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.dto.DocumentHistoricDto;
-import net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.mapper.DocumentSearchMapper;
+import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto.DocumentHistoricDto;
+import net.pladema.clinichistory.hospitalization.infrastructure.input.rest.mapper.DocumentSearchMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,15 +30,13 @@ public class DocumentSearchController {
 
     public static final String OUTPUT = "Output -> {}";
 
-    private final DocumentSearchService documentSearchService;
-
+    private final GetListHistoricalDocumentsFromInternmentEpisode getListHistoricalDocumentsFromInternmentEpisode;
     private final DocumentSearchMapper documentSearchMapper;
-
     private final ObjectMapper jackson;
 
     @GetMapping
     @InternmentValid
-    public ResponseEntity<DocumentHistoricDto> historic(
+    public ResponseEntity<DocumentHistoricDto> getHCEList(
             @PathVariable(name = "institutionId") Integer institutionId,
             @PathVariable(name = "internmentEpisodeId") Integer internmentEpisodeId,
             @RequestParam(name = "searchFilter", required = false) String searchFilterStr) {
@@ -46,7 +44,7 @@ public class DocumentSearchController {
                 institutionId, internmentEpisodeId, searchFilterStr);
 
         DocumentSearchFilterBo filter = mapFilter(searchFilterStr);
-        DocumentHistoricBo documentHistoric = documentSearchService.getListHistoricalDocuments(internmentEpisodeId, filter);
+        DocumentHistoricBo documentHistoric = getListHistoricalDocumentsFromInternmentEpisode.run(internmentEpisodeId, filter);
         DocumentHistoricDto result = documentSearchMapper.toDocumentHistoricDto(documentHistoric);
         log.debug(OUTPUT, result);
         return ResponseEntity.ok(result);

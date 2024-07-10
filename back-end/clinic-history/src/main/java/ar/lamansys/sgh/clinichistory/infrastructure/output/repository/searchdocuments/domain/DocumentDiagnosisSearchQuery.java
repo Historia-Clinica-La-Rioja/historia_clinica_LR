@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain;
 
 
 import ar.lamansys.sgx.shared.repositories.QueryPart;
@@ -19,10 +19,5 @@ public class DocumentDiagnosisSearchQuery extends DocumentSearchQuery {
                 "join HealthCondition as hcSub on (dhcSub.pk.healthConditionId = hcSub.id) \n" +
                 "join Snomed as s on (hcSub.snomedId = s.id ) \n " +
                 "where dhcSub.pk.documentId = document.id AND LOWER(s.pt) LIKE '%"+pattern+"%') \n"));
-    }
-
-    @Override
-    public String noResultMessage(){
-        return "No se encontraron documentos con diagnóstico " + plainText;
     }
 }

@@ -1,4 +1,4 @@
-package net.pladema.clinichistory.hospitalization.controller.documents.searchdocument.dto;
+package net.pladema.clinichistory.hospitalization.infrastructure.input.rest.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +12,4 @@ import java.util.List;
 public class DocumentHistoricDto {
 
     private List<DocumentSearchDto> documents;
-
-    private String message;
 }

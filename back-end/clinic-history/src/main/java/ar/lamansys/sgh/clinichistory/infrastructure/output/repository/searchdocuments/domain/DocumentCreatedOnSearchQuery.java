@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain;
 
 
 import ar.lamansys.sgx.shared.repositories.QueryPart;
@@ -15,8 +15,4 @@ public class DocumentCreatedOnSearchQuery extends DocumentSearchQuery {
                 "AND DATE(document.creationable.createdOn) = '" + plainText + "' \n"));
     }
 
-    @Override
-    public String noResultMessage(){
-        return "No se encontraron documentos creados el día " + plainText;
-    }
 }

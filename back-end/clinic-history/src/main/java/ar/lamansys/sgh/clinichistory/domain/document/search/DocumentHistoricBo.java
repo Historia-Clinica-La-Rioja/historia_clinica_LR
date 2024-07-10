@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.application.searchDocument;
+package ar.lamansys.sgh.clinichistory.domain.document.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +17,4 @@ public class DocumentHistoricBo {
 
     private List<DocumentSearchBo> documents;
 
-    private String message;
 }

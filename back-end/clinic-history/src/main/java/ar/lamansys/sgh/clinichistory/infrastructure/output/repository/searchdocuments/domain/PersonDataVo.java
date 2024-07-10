@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.application.searchDocument.domain;
+package ar.lamansys.sgh.clinichistory.domain.document.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

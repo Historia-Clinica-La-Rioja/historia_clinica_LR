@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments;
+package ar.lamansys.sgh.clinichistory.infrastructure.output.repository.searchdocuments.domain;
 
 
 import ar.lamansys.sgx.shared.repositories.QueryPart;
@@ -6,7 +6,7 @@ import ar.lamansys.sgx.shared.repositories.QueryPart;
 public class DocumentDoctorSearchQuery extends DocumentSearchQuery {
 
 
-	private boolean featureFlagsService;
+	private final boolean featureFlagsService;
 
     public DocumentDoctorSearchQuery(String plainText, Boolean featureFlagsService ){
         super(plainText);
@@ -26,8 +26,4 @@ public class DocumentDoctorSearchQuery extends DocumentSearchQuery {
 		}
     }
 
-    @Override
-    public String noResultMessage(){
-        return "No se encontraron documentos escritos por el médico " + plainText;
-    }
 }
