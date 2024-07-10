@@ -71,6 +71,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 		this.showValidations.department = false;
 		this.form.controls.departmentId.setValue(department?.id);
 		this.resetResults();
+		this.form.controls.professionalId.setValue(null);
 		this.searchAppointmentsForThirdPartyDataService.setDepartmentIdAndTypeaheadOptions(department?.id);
 		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
 		if (!department) {
@@ -86,6 +87,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 		};
 		this.form.controls.institutionId.setValue(institution?.id);
 		this.resetResults();
+		this.form.controls.professionalId.setValue(null);
 		this.searchAppointmentsForThirdPartyDataService.setInstitutionIdAndTypeaheadOptions(institution?.id);
 		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
 		if (!institution) {
@@ -102,6 +104,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 			clinicalSpecialtyId: specialty?.id
 		};
 		this.resetResults();
+		this.form.controls.professionalId.setValue(null);
 		this.form.controls.specialtyId.setValue(specialty?.id);
 		this.showValidations.criteriaSearch = false;
 		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
@@ -121,13 +124,13 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 			practiceId: practice?.id
 		};
 		this.resetResults();
+		this.form.controls.professionalId.setValue(null);
 		this.form.controls.practiceId.setValue(practice?.id);
 		this.showValidations.criteriaSearch = false;
 		this.searchAppointmentsForThirdPartyDataService.setProfessionalTypeaheadOptions(this.professionalFilters);
 	}
 
 	resetResults() {
-		this.form.controls.professionalId.setValue(null);
 		this.availableAppointments = [];
 		this.showResults = false;
 	}
