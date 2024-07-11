@@ -30,7 +30,7 @@ public class MultipleDispensePrescriptionController {
 	@PutMapping
 	public ChangePrescriptionStateMultipleDto run(@PathVariable("prescriptionId") String pathPrescriptionId,
 												  @PathVariable("identificationNumber") String identificationNumber,
-												  @RequestBody @Valid ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) throws Exception {
+												  @RequestBody @Valid ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) {
 		log.debug("Input parameters -> pathPrescriptionId {}, identificationNumber {}, changePrescriptionStateMultipleDto {}", pathPrescriptionId, identificationNumber, changePrescriptionStateMultipleDto);
 		ChangePrescriptionStateMultipleBo changePrescriptionStateMedicationBo = prescriptionMapper.toChangePrescriptionStateMedicationBo(changePrescriptionStateMultipleDto, identificationNumber);
 		changePrescriptionStateMultipleCommercial.run(changePrescriptionStateMedicationBo, pathPrescriptionId);
