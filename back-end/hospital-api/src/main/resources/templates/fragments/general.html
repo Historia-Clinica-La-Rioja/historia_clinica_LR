@@ -852,7 +852,7 @@
     <!-- Tensión arterial -->
     <div th:fragment="bloodPressure(showDate)" th:with="systolic=${riskFactors.systolicBloodPressure}, diastolic=${riskFactors.diastolicBloodPressure}, hasDate=${systolic != null || diastolic != null}">
         <strong>- Tensión arterial (Sistólica/Diastólica):</strong>
-        <span th:text="${systolic == null && diastolic == null} ? 'Sin cambios registrados' : (${systolic.value}?:'-') + '/' + (${diastolic.value}?:'-') + ' mmHg' "></span>
+        <span th:text="${systolic == null && diastolic == null} ? 'Sin cambios registrados' : (${systolic != null && systolic.value != null} ? ${systolic.value} :'-') + '/' + (${diastolic != null && diastolic.value != null} ? ${diastolic.value} :'-') + ' mmHg' "></span>
         <strong th:if="${showDate && hasDate}" th:text="'- Fecha de medición: '"></strong>
         <span th:if="${showDate && hasDate}" th:with="time=${systolic != null ? systolic.getLocalDateEffectiveTime() : diastolic.getLocalDateEffectiveTime()}" th:text="${#temporals.format(time, 'dd/MM/yyyy') + ' - ' + #temporals.format(time, 'HH:mm') + ' hs.'}"></span>
     </div>
