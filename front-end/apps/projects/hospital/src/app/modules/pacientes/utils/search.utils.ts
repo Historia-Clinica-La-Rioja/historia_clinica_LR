@@ -21,3 +21,11 @@ export const toParamsToSearchPerson = (params: Params): ParamsToSearchPerson => 
 	}
 
 }
+
+export const encode = (textToEncode: string): string => {
+	return btoa(textToEncode);
+}
+
+export const decode = (textToDecode: string): string => {
+	return atob(textToDecode);
+}

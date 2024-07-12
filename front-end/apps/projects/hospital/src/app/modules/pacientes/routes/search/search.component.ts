@@ -19,7 +19,7 @@ import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { ParamsToSearchPerson } from '@pacientes/component/search-create/search-create.component';
 import { map, take } from 'rxjs';
-import { toParamsToSearchPerson } from '@pacientes/utils/search.utils';
+import { encode, toParamsToSearchPerson } from '@pacientes/utils/search.utils';
 
 const ROUTE_NEW = 'pacientes/new';
 const ROUTE_NEW_TEMPORARY = 'pacientes/temporary';
@@ -227,10 +227,11 @@ export class SearchComponent implements OnInit {
 			});
 
 		} else {
+			person.fromGuardModule = this.fromGuardModule;
+			let encryptedPerson = encode(JSON.stringify(person));
 			this.router.navigate([this.routePrefix + ROUTE_NEW], {
 				queryParams: {
-					...person,
-					fromGuardModule: this.fromGuardModule
+					person: encryptedPerson
 				}
 			});
 		}

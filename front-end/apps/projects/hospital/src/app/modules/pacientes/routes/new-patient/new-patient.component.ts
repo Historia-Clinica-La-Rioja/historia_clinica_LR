@@ -32,7 +32,7 @@ import { Observable, map, take } from 'rxjs';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
 import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { fixDate } from '@core/utils/date/format';
-import { toParamsToSearchPerson } from '@pacientes/utils/search.utils';
+import { decode, toParamsToSearchPerson } from '@pacientes/utils/search.utils';
 
 const ROUTE_PROFILE = 'pacientes/profile/';
 const ROUTE_HOME_PATIENT = 'pacientes';
@@ -107,11 +107,8 @@ export class NewPatientComponent implements OnInit {
 	ngOnInit(): void {
 		this.route.queryParams
 			.pipe(take(1), map(params => {
-				if (typeof params?.person === 'string') {
-					let decodedParams = JSON.parse(atob(params?.person));
-					return toParamsToSearchPerson(decodedParams);
-				}
-				else return toParamsToSearchPerson(params);
+				let decodedParams = JSON.parse(decode(params.person));
+				return toParamsToSearchPerson(decodedParams);
 			}))
 			.subscribe(paramsToSearchPerson => {
 				this.fromGuardModule = paramsToSearchPerson.fromGuardModule;

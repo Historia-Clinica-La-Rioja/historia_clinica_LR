@@ -6,6 +6,7 @@ import { ContextService } from '@core/services/context.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils';
 import { ParamsToSearchPerson } from '@pacientes/component/search-create/search-create.component';
+import { encode } from '@pacientes/utils/search.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable, of, switchMap, map, catchError, Subject } from 'rxjs';
 
@@ -137,7 +138,7 @@ export class PatientSearchNagivationService {
 	}
 
 	private goToCreatePerson() {
-		let encryptedPerson = btoa(JSON.stringify(this.paramsToSearchPerson));
+		let encryptedPerson = encode(JSON.stringify(this.paramsToSearchPerson));
 		this.router.navigate([`${this.routePrefix}${ROUTE_NEW}`], {
 			queryParams: {
 				person: encryptedPerson
