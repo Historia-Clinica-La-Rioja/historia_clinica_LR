@@ -43,7 +43,7 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 		String sqlString = "SELECT s2.pt, s2.sctid, p.updated_on " +
 				"FROM {h-schema}v_attention va " +
 				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"JOIN {h-schema}document d ON d.source_id = va.encounter_id " +
+				"JOIN {h-schema}document d ON (d.source_id = va.encounter_id AND d.source_type_id = va.scope_id) " +
 				"JOIN {h-schema}document_procedure dp ON dp.document_id = d.id " +
 				"JOIN {h-schema}procedures p ON p.id = dp.procedure_id " +
 				"JOIN {h-schema}snomed s2 ON p.snomed_id = s2.id " +
@@ -79,7 +79,7 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 				"CASE WHEN nr.scheduled_administration_time IS NULL THEN nr.created_on ELSE nr.scheduled_administration_time END AS admin_time " +
 				"FROM {h-schema}v_attention va " +
 				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"JOIN {h-schema}document d ON d.source_id = va.encounter_id " +
+				"JOIN {h-schema}document d ON (d.source_id = va.encounter_id AND d.source_type_id = va.scope_id) " +
 				"JOIN {h-schema}document_indication di ON di.document_id = d.id " +
 				"JOIN {h-schema}indication i2 ON i2.id = di.indication_id " +
 				"JOIN {h-schema}nursing_record nr ON nr.indication_id = i2.id " +
@@ -93,7 +93,7 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 				"CASE WHEN nr.scheduled_administration_time IS NULL THEN nr.created_on ELSE nr.scheduled_administration_time END AS admin_time " +
 				"FROM {h-schema}v_attention va " +
 				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"JOIN {h-schema}document d ON d.source_id = va.encounter_id " +
+				"JOIN {h-schema}document d ON (d.source_id = va.encounter_id AND d.source_type_id = va.scope_id) " +
 				"JOIN {h-schema}document_indication di ON di.document_id = d.id " +
 				"JOIN {h-schema}indication i2 ON i2.id = di.indication_id " +
 				"JOIN {h-schema}nursing_record nr ON nr.indication_id = i2.id " +
@@ -104,13 +104,13 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 		String vaccineQueryString = "SELECT " + VACCINE + " AS type, " + EIndicationStatus.COMPLETED.getId() + " , s2.pt, s2.sctid, i2.created_on " +
 				"FROM {h-schema}v_attention va " +
 				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"JOIN {h-schema}document d ON d.source_id = va.encounter_id " +
+				"JOIN {h-schema}document d ON (d.source_id = va.encounter_id AND d.source_type_id = va.scope_id) " +
 				"JOIN {h-schema}document_inmunization di ON di.document_id = d.id " +
 				"JOIN {h-schema}inmunization i2 ON i2.id = di.inmunization_id " +
 				"JOIN {h-schema}snomed s2 ON s2.id = i2.snomed_id " +
 				"WHERE va.id = :activityId AND i2.status_id = CAST(255594003 AS VARCHAR)";
 
-		String suppliesQuery = parenteralQueryString + " UNION ALL " + pharmacoQueryString + " UNION ALL " + vaccineQueryString;
+		String suppliesQuery = parenteralQueryString + " UNION ALL " + pharmacoQueryString;
 
 		Query query = entityManager.createNativeQuery(suppliesQuery)
 				.setParameter("refsetCode", refsetCode)
