@@ -119,3 +119,14 @@ dockerize_cubejs_dockerhub_latest:
   extends: dockerize_cubejs_dockerhub
   variables:
     IMAGE_VERSION: latest
+
+test_frontend:
+  extends: .test_frontend_base
+  cache:
+    key:
+      files:
+        - front-end/apps/package-lock.json
+        - front-end/backoffice/package-lock.json
+    paths:
+      - front-end/apps/node_modules
+      - front-end/backoffice/node_modules
