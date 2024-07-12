@@ -44,6 +44,14 @@ public enum EProfessionType implements Serializable {
 		return Stream.of(EProfessionType.values()).collect(Collectors.toList());
 	}
 
+	@JsonCreator
+	public static List<EProfessionType> getSurgicalTeam(){
+		return Stream.of(EProfessionType.values())
+				.filter(professionType -> !(EProfessionType.PATHOLOGIST.equals(professionType)
+											|| EProfessionType.TRANSFUSIONIST.equals(professionType)))
+				.collect(Collectors.toList());
+	}
+
 	public static EProfessionType map(Short id) {
 		for(EProfessionType e : values()) {
 			if(e.id.equals(id)) return e;
