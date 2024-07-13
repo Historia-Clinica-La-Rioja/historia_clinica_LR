@@ -92,6 +92,11 @@ export interface AccessDataDto {
     username: string;
 }
 
+export interface ActiveDiaryClinicalSpecialtyDto {
+    id: number;
+    name: string;
+}
+
 export interface AddDiagnosticReportObservationCommandDto {
     procedureParameterId: number;
     snomedPt: string;

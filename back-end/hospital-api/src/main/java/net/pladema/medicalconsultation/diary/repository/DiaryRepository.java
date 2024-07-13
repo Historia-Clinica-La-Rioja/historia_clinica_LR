@@ -1,6 +1,7 @@
 package net.pladema.medicalconsultation.diary.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.medicalconsultation.diary.repository.domain.ActiveDiaryClinicalSpecialtyVo;
 import net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo;
 import net.pladema.medicalconsultation.diary.repository.entity.Diary;
@@ -166,6 +167,18 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 	List<String> getActiveDiariesAliases(@Param("institutionId") Integer institutionId);
 
 	@Transactional(readOnly = true)
+	@Query(" SELECT DISTINCT NEW net.pladema.medicalconsultation.diary.repository.domain.ActiveDiaryClinicalSpecialtyVo(" +
+	 		" cs.id, cs.name" +
+	 		") " +
+			"FROM Diary d " +
+			"INNER JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"WHERE d.active = TRUE " +
+			"AND dof.institutionId = :institutionId " +
+			"AND d.endDate >= CURRENT_DATE")
+	List<ActiveDiaryClinicalSpecialtyVo> getActiveDiariesClinicalSpecialties(@Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
 	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
 			"d, dof.description, dof.sectorId, d.healthcareProfessionalId, cs.name, p.firstName, p.lastName, p.middleNames,p.otherLastNames,pe.nameSelfDetermination)" +
 			"FROM Diary d " +
@@ -185,6 +198,19 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 																			 @Param("aliasOrClinicalSpecialtyName") String aliasOrClinicalSpecialtyName);
 
 	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
+			"d, dof.description, cs.name)" +
+			"FROM Diary d " +
+			"INNER JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"WHERE d.active = TRUE " +
+			"AND d.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND dof.institutionId = :institutionId " +
+			"AND d.endDate >= CURRENT_DATE")
+	List<DiaryListVo> getActiveDiariesByInstitutionAndSpecialty(@Param("institutionId") Integer institutionId,
+																@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+
+	@Transactional(readOnly = true)
 	@Query(" SELECT d " +
 			"FROM Diary d " +
 			"WHERE doctorsOfficeId = :doctorsOfficeId " +
@@ -201,7 +227,7 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"JOIN AppointmentAssn aa ON aa.pk.diaryId = d.id " +
 			"WHERE aa.pk.appointmentId = :appointmentId ")
 	Optional<CompleteDiaryListVo> getCompleteDiaryByAppointment(@Param("appointmentId") Integer appointmentId);
-	
+
 	@Transactional(readOnly = true)
 	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.CompleteDiaryListVo( " +
 			"d, dof.description, dof.sectorId, d.healthcareProfessionalId, cs.name, p.firstName, p.lastName, p.middleNames,p.otherLastNames,pe.nameSelfDetermination)" +
@@ -262,5 +288,4 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"FROM Diary d " +
 			"WHERE d.id = :diaryId")
 	DiaryBo getDiaryStartAndEndDate(@Param("diaryId") Integer diaryId);
-
 }

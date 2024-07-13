@@ -34,12 +34,14 @@ import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiar
 import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiary;
 import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
+import net.pladema.medicalconsultation.diary.controller.dto.ActiveDiaryClinicalSpecialtyDto;
 import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursFreeTimesDto;
+import net.pladema.medicalconsultation.diary.controller.mapper.ClinicalSpecialtiesMapper;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryOpeningHoursMapper;
 import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
@@ -97,6 +99,8 @@ public class DiaryController {
     private final ObjectMapper objectMapper;
 
 	private final UpdateDiaryAndAppointments updateDiaryAndAppointments;
+
+	private final ClinicalSpecialtiesMapper clinicalSpecialtiesMapper;
 
     @GetMapping("/{diaryId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
@@ -221,6 +225,27 @@ public class DiaryController {
         log.debug("Get all aliases by active diaries and Institution {} ", institutionId);
         return ResponseEntity.ok(activeDiariesAliases);
     }
+
+	@GetMapping("/active-diaries-clinical-specialties")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	public List<ActiveDiaryClinicalSpecialtyDto> getClinicalSpecialtiesWithActiveDiaries(
+			@PathVariable(name = "institutionId") Integer institutionId) {
+		var clinicalSpecialties = diaryService.getActiveDiariesClinicalSpecialties(institutionId);
+		List<ActiveDiaryClinicalSpecialtyDto> specialtiesDtos = clinicalSpecialtiesMapper.toActiveDiaryClinicalSpecialtyDto(clinicalSpecialties);
+		log.debug("Get all clinical specialties by active diaries and Institution {} ", institutionId);
+		return specialtiesDtos;
+	}
+
+	@GetMapping("/clinical-specialty/{clinicalSpecialtyId}/active-diaries-aliases")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
+	public List<String> getClinicalSpecialtyAliasesWithActiveDiaries(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId
+	) {
+		var activeDiariesAliases = diaryService.getActiveDiariesAliasesByClinicalSpecialty(institutionId, clinicalSpecialtyId);
+		log.debug("Get all active diaries aliases by Institution {} and clinical specialty id {}", institutionId, clinicalSpecialtyId);
+		return activeDiariesAliases.stream().collect(Collectors.toList());
+	}
 
     @PostMapping("/generate-empty-appointments")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")

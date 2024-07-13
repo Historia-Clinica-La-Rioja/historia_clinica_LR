@@ -1,5 +1,35 @@
 package net.pladema.medicalconsultation.diary.service.impl;
 
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
+import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
+import static ar.lamansys.sgx.shared.security.UserInfo.getCurrentAuditor;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.persistence.EntityNotFoundException;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
@@ -7,6 +37,8 @@ import ar.lamansys.sgx.shared.dates.repository.entity.EDayOfWeek;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
@@ -25,6 +57,7 @@ import net.pladema.medicalconsultation.diary.service.DiaryCareLineService;
 import net.pladema.medicalconsultation.diary.service.DiaryOpeningHoursService;
 import net.pladema.medicalconsultation.diary.service.DiaryPracticeService;
 import net.pladema.medicalconsultation.diary.service.DiaryService;
+import net.pladema.medicalconsultation.diary.service.domain.ActiveDiaryClinicalSpecialtyBo;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryOpeningHoursBo;
@@ -39,37 +72,6 @@ import net.pladema.medicalconsultation.diary.service.exception.DiaryOpeningHours
 import net.pladema.medicalconsultation.repository.entity.MedicalAttentionType;
 import net.pladema.permissions.controller.external.LoggedUserExternalService;
 import net.pladema.permissions.repository.enums.ERole;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.NotNull;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.getWeekDay;
-import static ar.lamansys.sgx.shared.dates.utils.DateUtils.isBetween;
-import static ar.lamansys.sgx.shared.security.UserInfo.getCurrentAuditor;
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -449,6 +451,39 @@ public class DiaryServiceImpl implements DiaryService {
         log.debug(OUTPUT, result);
         return result;
     }
+
+	/**
+	 * The aliases of the diaries (without repetitions) linked to the given institution and clinical specialty.
+	 * Not all diares have an alias.
+	 *
+	 * @param institutionId
+	 * @param clinicalSpecialtyId
+	 * @return
+	 */
+	@Override
+	public Set<String> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId) {
+		log.debug("Input parameters -> institutionId {} clinicalSpecialtyId {}", institutionId, clinicalSpecialtyId);
+		var result = diaryRepository
+			.getActiveDiariesByInstitutionAndSpecialty(institutionId, clinicalSpecialtyId)
+			.stream()
+			.filter(diary -> Objects.nonNull(diary.getAlias()) && !diary.getAlias().isBlank())
+			.map(DiaryListVo::getAlias)
+			.collect(Collectors.toSet());
+		log.debug(OUTPUT, result);
+		return result;
+	}
+
+	@Override
+	public List<ActiveDiaryClinicalSpecialtyBo> getActiveDiariesClinicalSpecialties(Integer institutionId) {
+		log.debug("Input parameters -> institutionId {}", institutionId);
+		var result = diaryRepository
+			.getActiveDiariesClinicalSpecialties(institutionId)
+			.stream()
+			.map(cs -> new ActiveDiaryClinicalSpecialtyBo(cs.getId(), cs.getName()))
+			.collect(Collectors.toList());
+		log.debug(OUTPUT, result);
+		return result;
+	}
 
     @Override
     public List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality) {
