@@ -707,7 +707,8 @@
 			"WITHOUT_OBSERVATIONS": "No hay observaciones para mostrar",
 			"CLINICAL_EVALUATION": "Evaluación clínica",
 			"EDITED_DOCUMENT": "(Editado)",
-			"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada"
+			"NO_FILTERED_PROBLEMS": "No hay resultados para la búsqueda seleccionada",
+			"NO_SNOMED_CONCEPT": "Sin problemas registrados"
 		},
 		"nota-evolucion": {
 			"TITLE": "Nota de evolución",

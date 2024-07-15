@@ -145,6 +145,7 @@ import { ProposedSurgeryBackgroundListComponent } from './modules/ambulatoria/mo
 import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/identifier-cases.component';
 import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
+import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
 @NgModule({
 	declarations: [
 		// components
@@ -308,6 +309,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		VitalSignsChartPopupComponent,
 		//pipes
 		ShowTitleByPatientDataPipe,
+  		SummaryAttentionComponent,
 	],
 	imports: [
 		CommonModule,
@@ -366,6 +368,7 @@ import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typea
 		DatosAntropometricosNuevaConsultaComponent,
 		ProblemListComponent,
 		ViolentPersonListComponent,
+		SummaryAttentionComponent,
 	],
 	providers: [
 		InternmentSummaryFacadeService,

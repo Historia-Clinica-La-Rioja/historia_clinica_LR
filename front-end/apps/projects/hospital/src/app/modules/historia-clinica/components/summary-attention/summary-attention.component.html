@@ -1,0 +1,17 @@
+<h2 class="primary" *ngIf="title">{{title | translate}}</h2>
+
+<div fxLayout="column" fxLayoutGap="10px">
+	<app-identifier-cases *ngIf="problem"
+		[identifierCase]="identiferCases.PROBLEM"
+		[description]="problem | translate">
+	</app-identifier-cases>
+	<app-identifier-cases *ngIf="specialty"
+		[identifierCase]="identiferCases.SPECIALTY"
+		[description]="specialty">
+	</app-identifier-cases>
+	<app-register-editor-info *ngIf="registerEditor"
+		[registerEditor]="registerEditor"
+		[registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR"
+		[position]="Position.COLUMN">
+	</app-register-editor-info>
+</div>
