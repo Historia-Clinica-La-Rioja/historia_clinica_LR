@@ -1,5 +1,92 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_27 
+    - logicalFilePath: incrementales-v2_27
+
+    - changeSet:
+        id: addColumn-is_domain-parameterized_form
+        author: jvaldez
+        comment: Add is_domain column to parameterized_form table
+        changes:
+          - addColumn:
+              tableName: parameterized_form
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: is_domain
+                    type: boolean
+                    defaultValue: ${boolean.true}
+
+    - changeSet:
+        id: institutional_parameterized_form-createTable
+        comment: Create table institutional_parameterized_form
+        author: jvaldez
+        changes:
+          - createTable:
+              tableName: institutional_parameterized_form
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institutional_parameterized_form
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: is_enabled
+                    type: boolean
+                    defaultValue: ${boolean.true}
+                - column:
+                    name: parameterized_form_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: parameterized_form(id)
+                      foreignKeyName: FK_institutional_parameterized_form_parameterized_form_id
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institutional_parameterized_form_institution_id
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
 
     - changeSet:
         id: create-table-institution_prescription
