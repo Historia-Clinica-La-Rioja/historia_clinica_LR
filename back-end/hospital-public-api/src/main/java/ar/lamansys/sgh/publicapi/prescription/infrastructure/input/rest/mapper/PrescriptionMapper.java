@@ -262,27 +262,29 @@ public class PrescriptionMapper {
 
 	private List<ChangePrescriptionStateMultipleMedicationBo> toChangePrescriptionStateMultipleMedicationBoList(ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) {
 		return changePrescriptionStateMultipleDto.getChangePrescriptionStateLineMedicationList().stream()
-				.map(this::toChangePrescriptionStateMultipleMedicationBo)
+				.map(line -> toChangePrescriptionStateMultipleMedicationBo(line, changePrescriptionStateMultipleDto))
 				.collect(Collectors.toList());
 	}
 
-	private ChangePrescriptionStateMultipleMedicationBo toChangePrescriptionStateMultipleMedicationBo(ChangePrescriptionStateMultipleMedicationDto line) {
+	private ChangePrescriptionStateMultipleMedicationBo toChangePrescriptionStateMultipleMedicationBo(ChangePrescriptionStateMultipleMedicationDto line,
+																									  ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) {
 		return ChangePrescriptionStateMultipleMedicationBo.builder()
 				.prescriptionLine(line.getPrescriptionLine())
 				.prescriptionStateId(line.getPrescriptionStateId())
-				.dispensedMedicationBos(toDispensedMedicationBoList(line))
+				.dispensedMedicationBos(toDispensedMedicationBoList(line, changePrescriptionStateMultipleDto))
 				.observations(line.getObservations())
 				.build();
 	}
 
-	private List<DispensedMedicationBo> toDispensedMedicationBoList(ChangePrescriptionStateMultipleMedicationDto line) {
+	private List<DispensedMedicationBo> toDispensedMedicationBoList(ChangePrescriptionStateMultipleMedicationDto line,
+																	ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) {
 		return line.getDispensedMedicationDtos().stream()
-				.map(this::toDispensedMedicationBo)
+				.map(medication -> toDispensedMedicationBo(medication, changePrescriptionStateMultipleDto))
 				.collect(Collectors.toList());
 	}
 
-	private DispensedMedicationBo toDispensedMedicationBo(DispensedMedicationDto medication) {
-		return new DispensedMedicationBo(medication.getSnomedId(), medication.getCommercialName(), medication.getCommercialPresentation(), medication.getSoldUnits(), medication.getBrand(), medication.getPrice(), medication.getAffiliatePayment(), medication.getMedicalCoveragePayment(), medication.getPharmacistName(), medication.getPharmacyName(), medication.getObservations());
+	private DispensedMedicationBo toDispensedMedicationBo(DispensedMedicationDto medication, ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) {
+		return new DispensedMedicationBo(medication.getSnomedId(), medication.getCommercialName(), medication.getCommercialPresentation(), medication.getSoldUnits(), medication.getBrand(), medication.getPrice(), medication.getAffiliatePayment(), medication.getMedicalCoveragePayment(), changePrescriptionStateMultipleDto.getPharmacyName(), changePrescriptionStateMultipleDto.getPharmacistName(), medication.getObservations());
 	}
 
 }

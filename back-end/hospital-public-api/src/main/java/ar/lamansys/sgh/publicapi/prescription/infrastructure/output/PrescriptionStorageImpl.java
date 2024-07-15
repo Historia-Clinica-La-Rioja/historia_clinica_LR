@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -174,7 +175,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				.collect(Collectors.toList());
 
 		changeMedicationsStatement(prescriptionLineNumbers, newStatus, prescriptionIdentifier.prescriptionId);
-		medicationStatementCommercialRepository.deleteAllInBatch(entities);
+		Set<Integer> medicationStatementIds = entities.stream().map(MedicationStatementCommercial::getMedicationStatementId).collect(Collectors.toSet());
+		medicationStatementCommercialRepository.logicalDeleteAllByMedicationStatementIds(medicationStatementIds);
 		medicationStatementCommercialRepository.saveAll(entities);
 		medicationStatementCommercialRepository.flush();
 	}

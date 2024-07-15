@@ -10,6 +10,7 @@ import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstat
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationBlankFieldException;
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationIncorrectPaymentException;
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionMedicationInvalidSoldUnitsException;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.PrescriptionCancelledWithNoObservationException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.BookingPersonMailNotExistsException;
 import ar.lamansys.sgh.shared.infrastructure.input.service.appointment.exceptions.ProfessionalAlreadyBookedException;
 
@@ -231,6 +232,13 @@ public class HospitalPublicApiExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler({ PrescriptionLineDoesNotExistsException.class })
 	protected ApiErrorMessageDto handlePrescriptionLineDoesNotExistsException(PrescriptionLineDoesNotExistsException ex) {
+		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
+		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ PrescriptionCancelledWithNoObservationException.class })
+	protected ApiErrorMessageDto handlePrescriptionCancelledWithNoObservationException(PrescriptionCancelledWithNoObservationException ex) {
 		logger.debug("PrescriptionDispenseException message -> {}", ex.getMessage(), ex.getCause());
 		return new ApiErrorMessageDto("dispense-error", ex.getMessage());
 	}

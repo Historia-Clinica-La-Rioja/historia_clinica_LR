@@ -29,7 +29,7 @@ public class MedicationStatementCommercial extends SGXAuditableEntity<Integer> {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name = "medicationStatementId")
+	@Column(name = "medication_statement_id")
 	private Integer medicationStatementId;
 
 	//this field is the sctid, not the actual id of the snomed table

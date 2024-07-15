@@ -2,6 +2,8 @@ package ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto;
 
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
 
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.PrescriptionCancelledWithNoObservationException;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -10,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -41,7 +44,7 @@ public class ChangePrescriptionStateMultipleMedicationDto {
 
 	private void validate() {
 		if (isCancelledWithNoComment())
-			throw new RuntimeException("El renglón " + prescriptionLine + " tiene estado CANCELADO y no tiene observaciones");
+			throw new PrescriptionCancelledWithNoObservationException("El renglón " + prescriptionLine + " tiene estado CANCELADO y no tiene observaciones", Collections.emptySet());
 	}
 
 	private boolean isCancelledWithNoComment() {

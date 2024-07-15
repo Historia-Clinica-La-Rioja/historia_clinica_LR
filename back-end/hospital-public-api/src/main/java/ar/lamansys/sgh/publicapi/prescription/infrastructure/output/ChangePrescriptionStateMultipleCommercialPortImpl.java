@@ -63,7 +63,9 @@ public class ChangePrescriptionStateMultipleCommercialPortImpl implements Change
 				.forEach(line -> entities.addAll(parseLineToMedicationStatementCommercial(line, actualLinesStatus)));
 
 		changeMedicationsStatement(prescriptionLineNumbers, newStatus, prescriptionIdentifier.prescriptionId);
-		medicationStatementCommercialRepository.deleteAllInBatch(entities);
+
+		Set<Integer> medicationStatementIds = entities.stream().map(MedicationStatementCommercial::getMedicationStatementId).collect(Collectors.toSet());
+		medicationStatementCommercialRepository.logicalDeleteAllByMedicationStatementIds(medicationStatementIds);
 		medicationStatementCommercialRepository.saveAll(entities);
 		medicationStatementCommercialRepository.flush();
 	}
