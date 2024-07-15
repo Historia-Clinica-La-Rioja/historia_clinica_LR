@@ -178,5 +178,7 @@ public interface DocumentService {
 
 	void createDocumentRefersFamilyHistory(Long documentId, Boolean refersFamilyHistory);
 
+	Optional<Document> getDocumentByIdAndTypeId(Long documentId, Short documentTypeId);
+
 }
 

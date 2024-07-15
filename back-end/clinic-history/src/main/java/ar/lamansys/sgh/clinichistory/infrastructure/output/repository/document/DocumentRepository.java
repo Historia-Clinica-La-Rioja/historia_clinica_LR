@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DocumentRepository extends SGXAuditableEntityJPARepository<Document, Long>, DocumentRepositoryCustom {
@@ -85,5 +86,12 @@ public interface DocumentRepository extends SGXAuditableEntityJPARepository<Docu
 			"WHERE df.sourceId = :appointmentId " +
 			"AND df.typeId = "+MEDICAL_IMAGE_REPORT+"")
 	DocumentDownloadDataVo getDocumentIdByAppointmentId(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query(value = "SELECT d " +
+			"FROM Document d " +
+			"WHERE d.id = :documentId " +
+			"AND d.typeId = :typeId")
+	Optional<Document> getDocumentByIdAndTypeId(@Param("documentId") Long documentId, @Param("typeId") Short typeId);
 
 }

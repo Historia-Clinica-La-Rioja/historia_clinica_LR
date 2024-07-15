@@ -81,7 +81,6 @@ public class EpicrisisController {
 
     @GetMapping("/{epicrisisId}")
     @InternmentValid
-    @DocumentValid(isConfirmed = true, documentType = DocumentType.EPICRISIS)
 	@PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ENFERMERO')")
     public ResponseEntity<ResponseEpicrisisDto> getDocument(
             @PathVariable(name = "institutionId") Integer institutionId,
