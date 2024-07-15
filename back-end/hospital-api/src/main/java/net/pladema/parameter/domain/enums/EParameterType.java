@@ -1,4 +1,4 @@
-package net.pladema.establishment.controller.dto;
+package net.pladema.parameter.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

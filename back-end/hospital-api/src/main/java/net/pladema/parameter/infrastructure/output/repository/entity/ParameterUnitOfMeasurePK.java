@@ -1,4 +1,4 @@
-package net.pladema.establishment.repository.entity;
+package net.pladema.parameter.infrastructure.output.repository.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

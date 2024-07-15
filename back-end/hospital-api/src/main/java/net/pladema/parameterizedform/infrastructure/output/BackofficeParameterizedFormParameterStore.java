@@ -2,8 +2,8 @@ package net.pladema.parameterizedform.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
 
-import net.pladema.establishment.repository.ParameterRepository;
-import net.pladema.establishment.repository.entity.Parameter;
+import net.pladema.parameter.infrastructure.output.repository.ParameterRepository;
+import net.pladema.parameter.infrastructure.output.repository.entity.Parameter;
 import net.pladema.parameterizedform.infrastructure.input.rest.dto.ParameterizedFormParameterDto;
 import net.pladema.parameterizedform.infrastructure.output.repository.ParameterizedFormParameterRepository;
 import net.pladema.parameterizedform.infrastructure.output.repository.entity.ParameterizedFormParameter;

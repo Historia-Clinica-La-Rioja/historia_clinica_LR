@@ -1,22 +1,20 @@
-package net.pladema.establishment.controller;
+package net.pladema.parameter.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
-import net.pladema.establishment.controller.dto.EParameterType;
-import net.pladema.establishment.controller.dto.ParameterDto;
-import net.pladema.establishment.repository.ParameterRepository;
-import net.pladema.establishment.repository.ParameterTextOptionRepository;
-import net.pladema.establishment.repository.ParameterUnitOfMeasureRepository;
-import net.pladema.establishment.repository.entity.Parameter;
-import net.pladema.establishment.repository.entity.ParameterTextOption;
-import net.pladema.establishment.repository.entity.ParameterUnitOfMeasure;
+import net.pladema.parameter.domain.enums.EParameterType;
+import net.pladema.parameter.infrastructure.input.rest.dto.ParameterDto;
+import net.pladema.parameter.infrastructure.output.repository.ParameterRepository;
+import net.pladema.parameter.infrastructure.output.repository.ParameterTextOptionRepository;
+import net.pladema.parameter.infrastructure.output.repository.ParameterUnitOfMeasureRepository;
+import net.pladema.parameter.infrastructure.output.repository.entity.Parameter;
+import net.pladema.parameter.infrastructure.output.repository.entity.ParameterTextOption;
+import net.pladema.parameter.infrastructure.output.repository.entity.ParameterUnitOfMeasure;
 import net.pladema.loinc.infrastructure.output.repository.LoincCodeRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

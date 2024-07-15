@@ -1,9 +1,9 @@
-package net.pladema.establishment.controller.constraints.validator.permissions;
+package net.pladema.parameter.infrastructure.input.rest.constraints.validator;
 
 import lombok.AllArgsConstructor;
-import net.pladema.establishment.controller.dto.ParameterDto;
-import net.pladema.establishment.repository.ParameterRepository;
-import net.pladema.establishment.repository.entity.Parameter;
+import net.pladema.parameter.infrastructure.input.rest.dto.ParameterDto;
+import net.pladema.parameter.infrastructure.output.repository.ParameterRepository;
+import net.pladema.parameter.infrastructure.output.repository.entity.Parameter;
 import net.pladema.parameterizedform.infrastructure.output.repository.ParameterizedFormParameterRepository;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;

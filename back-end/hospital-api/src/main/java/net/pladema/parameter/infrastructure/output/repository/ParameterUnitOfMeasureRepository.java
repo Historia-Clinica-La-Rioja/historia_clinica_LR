@@ -1,7 +1,7 @@
-package net.pladema.establishment.repository;
+package net.pladema.parameter.infrastructure.output.repository;
 
-import net.pladema.establishment.repository.entity.ParameterUnitOfMeasure;
-import net.pladema.establishment.repository.entity.ParameterUnitOfMeasurePK;
+import net.pladema.parameter.infrastructure.output.repository.entity.ParameterUnitOfMeasure;
+import net.pladema.parameter.infrastructure.output.repository.entity.ParameterUnitOfMeasurePK;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

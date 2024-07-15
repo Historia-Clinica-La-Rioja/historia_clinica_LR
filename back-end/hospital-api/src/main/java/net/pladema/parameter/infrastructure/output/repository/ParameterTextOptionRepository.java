@@ -1,6 +1,6 @@
-package net.pladema.establishment.repository;
+package net.pladema.parameter.infrastructure.output.repository;
 
-import net.pladema.establishment.repository.entity.ParameterTextOption;
+import net.pladema.parameter.infrastructure.output.repository.entity.ParameterTextOption;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

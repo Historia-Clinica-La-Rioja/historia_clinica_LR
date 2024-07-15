@@ -1,17 +1,18 @@
-package net.pladema.establishment.controller;
+package net.pladema.parameter.infrastructure.input.rest;
 
-import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeParameterValidator;
-import net.pladema.establishment.controller.dto.ParameterDto;
+import net.pladema.parameter.infrastructure.output.BackofficeParameterStore;
+import net.pladema.parameter.infrastructure.input.rest.constraints.validator.BackofficeParameterValidator;
+import net.pladema.parameter.infrastructure.input.rest.dto.ParameterDto;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("backoffice/parameters")
+@RestController
 public class BackofficeParameterController extends AbstractBackofficeController<ParameterDto, Integer> {
 	public BackofficeParameterController(BackofficeParameterStore store,
-										 BackofficeParameterValidator validator) {
+                                         BackofficeParameterValidator validator) {
 		super(store, validator);
 	}
 }

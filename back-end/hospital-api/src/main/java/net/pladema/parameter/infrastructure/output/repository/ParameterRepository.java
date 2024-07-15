@@ -1,6 +1,6 @@
-package net.pladema.establishment.repository;
+package net.pladema.parameter.infrastructure.output.repository;
 
-import net.pladema.establishment.repository.entity.Parameter;
+import net.pladema.parameter.infrastructure.output.repository.entity.Parameter;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
