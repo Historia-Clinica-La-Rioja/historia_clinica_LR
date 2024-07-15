@@ -18,9 +18,9 @@ start_all=$(date +%s)
 
 echo "Dependency check start"
 
-mvn org.owasp:dependency-check-maven:10.0.2:aggregate -Dformat=GITLAB -DnvdApiKey="$NVD_API_KEY"
+mvn org.owasp:dependency-check-maven:10.0.2:aggregate -Dformat=HTML -DnvdApiKey="$NVD_API_KEY"
 end_all=$(date +%s)
 
-echo "Elapsed Time for dependency check: ($end_all-$start_all) seconds"
+echo "Elapsed Time for dependency check: $(($end_all-$start_all)) seconds"
 
-cp target/dependency-check-gitlab.json target/dependency-check-report.json
+ls -lha target/dependency-check-*.*
