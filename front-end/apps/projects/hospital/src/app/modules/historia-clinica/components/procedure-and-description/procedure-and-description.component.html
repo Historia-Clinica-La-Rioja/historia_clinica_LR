@@ -26,7 +26,7 @@
 	</div>
 
 	<mat-form-field appearance="outline">
-		<mat-label [translate]="'ambulatoria.paciente.surgical-report.DESCRIPTION'"></mat-label>
-		<textarea matInput [(ngModel)]="description"></textarea>
-	</mat-form-field>
+        <mat-label [translate]="'ambulatoria.paciente.surgical-report.DESCRIPTION'"></mat-label>
+        <textarea matInput [(ngModel)]="description" (ngModelChange)="onDescriptionChange()"></textarea>
+    </mat-form-field>
 </app-new-consultation-expansion-section>

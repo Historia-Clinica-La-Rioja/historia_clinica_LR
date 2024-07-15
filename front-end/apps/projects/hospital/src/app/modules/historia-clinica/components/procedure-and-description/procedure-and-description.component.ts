@@ -36,7 +36,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 		private readonly dialog: MatDialog,
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly dateFormatPipe: DateFormatPipe
-		
+
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 			this.searchConceptsLocallyFF = isOn;
@@ -44,66 +44,80 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 		this.procedureService.procedimientos$.subscribe(procedures => this.changeProcedure(procedures));
 	}
 
-	ngOnInit(): void {
-		switch (this.type) {
-			case ProcedureTypeEnum.DRAINAGE:
-				this.procedures = this.surgicalReport.drainages;
-				break;
-			case ProcedureTypeEnum.CULTURE:
-				this.procedures = this.surgicalReport.cultures;
-				break;
-			case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
-				this.procedures = this.surgicalReport.frozenSectionBiopsies;
-				break;
-		}
-	}
+    ngOnInit(): void {
+        switch (this.type) {
+            case ProcedureTypeEnum.DRAINAGE:
+                this.procedures = this.surgicalReport.drainages;
+                break;
+            case ProcedureTypeEnum.CULTURE:
+                this.procedures = this.surgicalReport.cultures;
+                break;
+            case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
+                this.procedures = this.surgicalReport.frozenSectionBiopsies;
+                break;
+        }
+    }
 
-	addProcedure() {
-		this.dialog.open(NewConsultationProcedureFormComponent, {
-			data: {
-				procedureService: this.procedureService,
-				searchConceptsLocallyFF: this.searchConceptsLocallyFF,
-				hideDate: true
-			},
-			autoFocus: false,
-			width: '35%',
-			disableClose: true,
-		});
-	}
+    addProcedure() {
+        this.dialog.open(NewConsultationProcedureFormComponent, {
+            data: {
+                procedureService: this.procedureService,
+                searchConceptsLocallyFF: this.searchConceptsLocallyFF,
+                hideDate: true
+            },
+            autoFocus: false,
+            width: '35%',
+            disableClose: true,
+        });
+    }
 
-	private changeProcedure(procedures): void {
-		procedures.forEach(procedure =>
-			this.procedures = pushIfNotExists(this.procedures, this.mapToHospitalizationProcedure(procedure, this.type), this.compare));
-			switch (this.type) {
-				case ProcedureTypeEnum.DRAINAGE:
-					this.surgicalReport.drainages = this.procedures;
-					break;
-				case ProcedureTypeEnum.CULTURE:
-					this.surgicalReport.cultures = this.procedures;
-					break;
-				case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
-					this.surgicalReport.frozenSectionBiopsies = this.procedures;
-					break;
-			}
-	}
+    private changeProcedure(procedures): void {
+        procedures.forEach(procedure => {
+            this.procedures = pushIfNotExists(this.procedures, this.mapToHospitalizationProcedure(procedure, this.type), this.compare);
+        });
+        this.updateSurgicalReportProcedures();
+    }
 
-	private compare(first, second): boolean {
-		return first.snomed.sctid === second.snomed.sctid;
-	}
+    private updateSurgicalReportProcedures(): void {
+        switch (this.type) {
+            case ProcedureTypeEnum.DRAINAGE:
+                this.surgicalReport.drainages = this.procedures;
+                break;
+            case ProcedureTypeEnum.CULTURE:
+                this.surgicalReport.cultures = this.procedures;
+                break;
+            case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
+                this.surgicalReport.frozenSectionBiopsies = this.procedures;
+                break;
+        }
+    }
 
-	deleteProcedure(index: number): void {
-		this.procedures = removeFrom(this.procedures, index);
-		this.procedureService.remove(index);
-	}
+    private compare(first, second): boolean {
+        return first.snomed.sctid === second.snomed.sctid;
+    }
 
-	private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
-		return {
-			snomed: procedure.snomed,
-			type: type
-		}
-	}
+    deleteProcedure(index: number): void {
+        this.procedures = removeFrom(this.procedures, index);
+        this.procedureService.remove(index);
+        this.updateSurgicalReportProcedures();
+    }
 
-	isEmpty(): boolean {
-		return !this.procedures.length && !this.description;
-	}
+    private mapToHospitalizationProcedure(procedure, type: ProcedureTypeEnum): HospitalizationProcedureDto {
+        return {
+            snomed: procedure.snomed,
+            type: type,
+            note: this.description,
+        }
+    }
+
+    isEmpty(): boolean {
+        return !this.procedures.length && !this.description;
+    }
+
+    onDescriptionChange(): void {
+        if (this.procedures.length > 0) {
+            this.procedures[0].note = this.description;
+            this.updateSurgicalReportProcedures();
+        }
+    }
 }
