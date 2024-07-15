@@ -160,8 +160,36 @@ export interface NewBornsSummary {
     newBornSummary: DescriptionItemDataInfo[];
 }
 
+export interface SurgicalProcedures {
+	title: string,
+	startAndEndSurgicalDateTime?: SurgicalProceduresTimeData,
+	description?: DescriptionItemData[],
+	procedures?: DescriptionItemData[],
+}
+
+export interface SurgicalProceduresTimeData {
+	surgicalEndDate: Date;
+    surgicalEndTime: Date;
+    surgicalStartDate: Date;
+    surgicalStartTime: Date;
+}
+
+
 export interface ReferredDescriptionItemData {
     isReferred: boolean,
     notReferredText: string,
     content: DescriptionItemDataSummary,
+}
+
+export interface ItemsAndDescriptionData {
+	title: string,
+	subtitle: string,
+	icon: string,
+	items?: DescriptionItemData[],
+	note?: DescriptionItemData[],
+}
+
+export interface CustomDiagnosesData {
+	title: string,
+	diagnoses?: DescriptionItemData[],
 }

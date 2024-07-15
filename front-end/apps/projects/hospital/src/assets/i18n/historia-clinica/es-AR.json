@@ -152,7 +152,17 @@
 				"INTENSIVE_CARE_UNIT": "En unidad de terapia intensiva",
 				"OBSERVATIONS": "Observaciones"
 			}
+		},
+		"surgical-report": {
+			"summary": {
+				"DESCRIPTION": "Descripción",
+				"SURGERY_START": "Comienzo Cirugía",
+				"SURGERY_END": "Fin Cirugía",
+				"PROCEDURES": "Procedimientos",
+				"REGISTERED_PROCEDURES": "Procedimientos registrados",
+				"OTHER_MEMBERS": "Otros miembros",
+				"CULTURES": "Cultivos"
+			}
 		}
-
 	}
 }

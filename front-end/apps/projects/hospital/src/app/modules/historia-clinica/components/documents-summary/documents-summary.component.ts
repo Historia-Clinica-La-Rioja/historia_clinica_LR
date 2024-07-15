@@ -179,10 +179,6 @@ export class DocumentsSummaryComponent implements OnInit {
 		}
 	}
 
-	viewEvolutionNote(): boolean {
-		return !!(this.activeDocument?.document.notes || this.activeDocument?.document.procedures.length > 0);
-	}
-
 	resetFilter(control: AbstractControl) {
 		control.setValue(null);
 		this.form.value.documentType = null;

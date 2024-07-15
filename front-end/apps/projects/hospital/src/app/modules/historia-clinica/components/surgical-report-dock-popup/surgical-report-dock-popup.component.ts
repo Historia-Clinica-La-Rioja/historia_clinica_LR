@@ -51,6 +51,7 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 		healthcareProfessionals: [],
 		modificationReason: undefined,
 		mainDiagnosis: undefined,
+		pathologist: undefined,
 		postoperativeDiagnosis: [],
 		preoperativeDiagnosis: [],
 		procedures: [],
@@ -66,7 +67,9 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 				minutes: undefined
 			}
 		},
-		surgeryProcedures: []
+		surgeryProcedures: [],
+		surgicalTeam: [],
+		transfusionist: undefined,
 	};
 
 	PATHOLOGIST = EProfessionType.PATHOLOGIST;

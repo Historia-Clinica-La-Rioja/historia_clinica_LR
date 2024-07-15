@@ -1,12 +1,67 @@
 <div class="surgical-report-content">
-    <div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start" fxLayout="column"
-        fxLayoutGap="20px">
+	<div *ngIf="(documentSummary$ | async) as summary, else loader" fxFlex="100%" FxLayoutAlign="start"
+		fxLayout="column" fxLayoutGap="20px">
 
-        <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
-            [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
-        <mat-divider></mat-divider>
-</div>
-    <ng-template #loader>
-        <mat-spinner color="primary" class="loader"></mat-spinner>
-    </ng-template>
+		<app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
+			[isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+		<mat-divider></mat-divider>
+
+		<div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
+			<app-diagnosis-evolution-summary data-id="diagnosis-summary"
+				*ngIf="summary.surgicalReport.mainDiagnosis?.diagnoses || summary.surgicalReport.preOperativeDiagnoses"
+				[customTitle]="summary.surgicalReport.mainDiagnosis.title"
+				[diagnosis]="summary.surgicalReport.preOperativeDiagnoses"
+				[mainDiagnosis]="summary.surgicalReport.mainDiagnosis.diagnoses"></app-diagnosis-evolution-summary>
+
+			<app-description-item-data-summary *ngIf="summary.surgicalReport.proposedSurgeries"
+				data-id="proposed-surgery-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.proposedSurgeries"></app-description-item-data-summary>
+
+			<app-surgical-professionals-and-description-summary *ngIf="summary.surgicalReport.surgicalTeam"
+				data-id="surgical-team-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.surgicalTeam"></app-surgical-professionals-and-description-summary>
+
+			<app-description-item-data-summary *ngIf="summary.surgicalReport.anestheticTechniques"
+				data-id="anesthetic-technique-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.anestheticTechniques"></app-description-item-data-summary>
+
+			<app-surgical-procedures-summary
+				*ngIf="summary.surgicalReport.surgicalProcedures.startAndEndSurgicalDateTime"
+				data-id="surgical-procedures-summary"
+				[surgicalProcedures]="summary.surgicalReport.surgicalProcedures"></app-surgical-procedures-summary>
+
+			<app-surgical-professionals-and-description-summary *ngIf="summary.surgicalReport.pathologist"
+				data-id="pathologist-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.pathologist"></app-surgical-professionals-and-description-summary>
+
+			<app-surgical-professionals-and-description-summary *ngIf="summary.surgicalReport.transfusionist"
+				data-id="transfusionist-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.transfusionist"></app-surgical-professionals-and-description-summary>
+
+			<app-surgical-medication-and-description-summary *ngIf="summary.surgicalReport.cultures"
+				data-id="surgical-procedures-culture-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.cultures"></app-surgical-medication-and-description-summary>
+
+			<app-surgical-medication-and-description-summary *ngIf="summary.surgicalReport.prosthesis"
+				data-id="surgical-procedures-prosthesis-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.prosthesis"></app-surgical-medication-and-description-summary>
+
+			<app-surgical-medication-and-description-summary *ngIf="summary.surgicalReport.frozenSectionBiopsies"
+				data-id="surgical-procedures-frozen-biopsy-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.frozenSectionBiopsies"></app-surgical-medication-and-description-summary>
+
+			<app-surgical-medication-and-description-summary *ngIf="summary.surgicalReport.drainages"
+				data-id="surgical-procedures-drainages-summary"
+				[descriptionItemDataSummary]="summary.surgicalReport.drainages"></app-surgical-medication-and-description-summary>
+
+			<app-diagnosis-evolution-summary data-id="diagnosis-summary"
+				*ngIf="summary.surgicalReport.postOperativeDiagnosis?.diagnoses"
+				[customTitle]="summary.surgicalReport.postOperativeDiagnosis.title"
+				[diagnosis]="summary.surgicalReport.postOperativeDiagnosis.diagnoses"></app-diagnosis-evolution-summary>
+		</div>
+
+	</div>
+	<ng-template #loader>
+		<mat-spinner color="primary" class="loader"></mat-spinner>
+	</ng-template>
 </div>

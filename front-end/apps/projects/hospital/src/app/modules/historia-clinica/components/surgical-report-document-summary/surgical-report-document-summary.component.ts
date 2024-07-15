@@ -5,6 +5,7 @@ import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/in
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { SurgicalReportDocumentSummaryService, SurgicalReportViewFormat } from '@historia-clinica/services/surgical-report-document-summary.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, forkJoin, map } from 'rxjs';
 
 @Component({
@@ -32,7 +33,10 @@ export class SurgicalReportDocumentSummaryComponent implements OnInit {
 		private readonly documentSummaryService: DocumentsSummaryService,
 		private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
 		private readonly surgicalReportSummaryService: SurgicalReportDocumentSummaryService,
-	) { }
+		private readonly translateService: TranslateService,
+	) {
+		this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.SURGICAL_REPORT');
+	}
 
 	ngOnInit(): void {
 	}

@@ -323,6 +323,36 @@
 				"NO_DATA": "No se registraron datos en el episodio"
 			}
 		},
+		"surgical-report": {
+			"equipo-quirofano":{
+				"TITLE": "Equipo Quirófano",
+				"SURGEON": "Cirujano encargado"
+			},
+			"equipo-patologo":{
+				"TITLE": "Examen anatomopatológico",
+				"PROFESSIONAL": "Patólogo"
+			},
+			"equipo-transfucionista":{
+				"TITLE": "Sangre y soluciones",
+				"PROFESSIONAL": "Técnico en hemoterapia"
+			},
+			"cultivo":{
+				"TITLE": "Cultivos",
+				"PROCEDURES": "Procedimientos"
+			},
+			"biopsia":{
+				"TITLE": "Biopsia por congelción",
+				"PROCEDURES": "Procedimientos"
+			},
+			"drenaje":{
+				"TITLE": "Drenajes",
+				"PROCEDURES": "Procedimientos"
+			},
+			"protesis":{
+				"TITLE": "Prótesis",
+				"PROCEDURES": "Posee prótesis"
+			}
+		},
 		"anesthesic-report": {
 			"SUCCESS": "Parte anestésico guardado correctamente",
 			"SUCCESS_DRAFT": "Borrador parte anestésico guardado correctamente",
@@ -635,7 +665,8 @@
                 "ANESTHETIC_REPORT": "Parte anestésico",
                 "EPICRISIS": "Epicrisis",
 				"TRIAGE": "Triage",
-				"DOCTOR_EVOLUTION_NOTE": "Nota de evolución médica"
+				"DOCTOR_EVOLUTION_NOTE": "Nota de evolución médica",
+				"SURGICAL_REPORT": "Parte quirúrgico de internación"
 			},
             "procedure": {
 				"TITLE": "Procedimientos",

@@ -8,8 +8,11 @@ import { DescriptionItemData } from '@presentation/components/description-item/d
 })
 export class DiagnosisSummaryComponent {
 
+	@Input() customTitle?: string;
     @Input() diagnosis: DescriptionItemData[];
     @Input() mainDiagnosis: DescriptionItemData[];
+
+	readonly DEFAULT_TITLE: string = 'internaciones.anesthesic-report.diagnosis.TITLE';
 
     constructor() { }
 }

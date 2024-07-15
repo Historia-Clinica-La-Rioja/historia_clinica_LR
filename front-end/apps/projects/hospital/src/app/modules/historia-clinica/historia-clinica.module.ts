@@ -147,6 +147,9 @@ import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
 import { SurgicalReportDocumentSummaryComponent } from './components/surgical-report-document-summary/surgical-report-document-summary.component';
+import { SurgicalProceduresSummaryComponent } from './components/surgical-procedures-summary/surgical-procedures-summary.component';
+import { SurgicalProfessionalsAndDescriptionSummaryComponent } from './components/surgical-professionals-and-description-summary/surgical-professionals-and-description-summary.component';
+import { SurgicalMedicationAndDescriptionSummaryComponent } from './components/surgical-medication-and-description-summary/surgical-medication-and-description-summary.component';
 @NgModule({
 	declarations: [
 		// components
@@ -312,6 +315,10 @@ import { SurgicalReportDocumentSummaryComponent } from './components/surgical-re
 		ShowTitleByPatientDataPipe,
   		SummaryAttentionComponent,
   		SurgicalReportDocumentSummaryComponent,
+		SurgicalReportDocumentSummaryComponent,
+		SurgicalProceduresSummaryComponent,
+		SurgicalProfessionalsAndDescriptionSummaryComponent,
+  		SurgicalMedicationAndDescriptionSummaryComponent,
 	],
 	imports: [
 		CommonModule,
