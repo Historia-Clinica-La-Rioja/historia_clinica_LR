@@ -5,17 +5,17 @@ import ar.lamansys.sgh.publicapi.activities.application.fetchdocumentsinfobyacti
 
 import ar.lamansys.sgh.publicapi.activities.application.fetchproceduresbyactivity.FetchProcedureByActivity;
 import ar.lamansys.sgh.publicapi.activities.application.fetchsuppliesbyactivity.FetchSuppliesByActivity;
-import ar.lamansys.sgh.publicapi.domain.BedRelocationInfoBo;
-import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
-import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
-import ar.lamansys.sgh.publicapi.domain.SnomedBo;
-import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.BedRelocationInfoDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ClinicalSpecialityDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DocumentInfoDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ProcedureInformationDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SupplyInformationDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.ActivitiesMapper;
+import ar.lamansys.sgh.publicapi.activities.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.DocumentInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProcedureInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SupplyInformationBo;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.BedRelocationInfoDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.ClinicalSpecialityDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DocumentInfoDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.ProcedureInformationDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SupplyInformationDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.mapper.ActivitiesMapper;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateTimeDto;

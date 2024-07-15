@@ -3,8 +3,8 @@ import ar.lamansys.sgh.publicapi.TestUtils;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.domain.SnomedBo;
-import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SupplyInformationBo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

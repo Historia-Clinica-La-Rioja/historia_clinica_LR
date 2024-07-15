@@ -36,4 +36,35 @@ public class AppPatientInformationPublicApiPermission implements PatientInformat
 						|| apiConsumerCondition.isRole(roleAssigment)
 		);
 	}
+
+	public boolean canAccessSaveExternalClinicHistory() {
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
+
+	@Override
+	public boolean canAccessSaveExternalEncounter(){
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
+
+	@Override
+	public boolean canAccessDeleteExternalEncounter(){
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
+
+	@Override
+	public boolean canAccessSaveExternalPatient(){
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_PACIENTES, -1)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
 }

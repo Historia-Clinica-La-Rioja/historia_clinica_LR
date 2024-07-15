@@ -60,5 +60,13 @@ public class AppActivitiesPublicApiPermissions implements ActivitiesPublicApiPer
 		);
 	}
 
+	@Override
+	public boolean canAccessActivityByFilter(Integer institutionId){
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isAssigment(ERole.API_FACTURACION, institutionId)
+						|| apiConsumerCondition.isRole(roleAssigment)
+		);
+	}
+
 
 }

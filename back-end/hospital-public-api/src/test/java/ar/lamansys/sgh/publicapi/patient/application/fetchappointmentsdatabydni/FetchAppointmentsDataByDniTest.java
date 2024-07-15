@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.publicapi.patient.application.fetchappointmentsdatabydni;
 
-import ar.lamansys.sgh.publicapi.application.port.out.AppointmentStorage;
+import ar.lamansys.sgh.publicapi.patient.application.port.out.AppointmentStorage;
 import ar.lamansys.sgh.publicapi.patient.domain.AppointmentsByUserBo;
 import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception.PatientPersonAccessDeniedException;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.service.PatientInformationPublicApiPermission;

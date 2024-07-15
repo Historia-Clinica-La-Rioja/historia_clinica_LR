@@ -5,16 +5,13 @@ import java.util.List;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.activities.staff.application.exception.InstitutionNotExistsException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
-import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProcedureInformationBo;
 
 @Slf4j
 @AllArgsConstructor

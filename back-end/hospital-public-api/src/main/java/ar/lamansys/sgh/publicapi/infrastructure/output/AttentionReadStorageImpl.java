@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.publicapi.infrastructure.output;
 
-import ar.lamansys.sgh.publicapi.application.port.out.AttentionReadStorage;
+import ar.lamansys.sgh.publicapi.activities.application.port.out.AttentionReadStorage;
 
 import org.springframework.stereotype.Service;
 

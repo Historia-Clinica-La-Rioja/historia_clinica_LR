@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest;
 
 import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.FetchPatientPersonById;
-import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
+import ar.lamansys.sgh.publicapi.patient.application.port.out.ExternalPatientStorage;
 
 import ar.lamansys.sgh.publicapi.patient.domain.PersonBo;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.service.PatientInformationPublicApiPermission;

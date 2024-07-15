@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
-import ar.lamansys.sgh.publicapi.domain.BedRelocationInfoBo;
-import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
-import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
-import ar.lamansys.sgh.publicapi.domain.SnomedBo;
-import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.DocumentInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProcedureInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SupplyInformationBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.EIndicationStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ENursingRecordStatus;
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;

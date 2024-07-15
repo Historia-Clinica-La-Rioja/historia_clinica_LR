@@ -9,12 +9,10 @@ import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.Activit
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
-import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SupplyInformationBo;
 
 @Slf4j
 @AllArgsConstructor

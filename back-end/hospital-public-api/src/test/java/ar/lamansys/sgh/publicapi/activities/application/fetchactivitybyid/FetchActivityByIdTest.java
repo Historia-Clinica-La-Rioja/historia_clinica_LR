@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import ar.lamansys.sgh.publicapi.domain.PersonInfoExtendedBo;
+import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoExtendedBo;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,17 +18,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
-import ar.lamansys.sgh.publicapi.domain.CoverageActivityInfoBo;
-import ar.lamansys.sgh.publicapi.domain.GenderEnum;
-import ar.lamansys.sgh.publicapi.domain.InternmentBo;
-import ar.lamansys.sgh.publicapi.domain.PersonInfoBo;
-import ar.lamansys.sgh.publicapi.domain.ProfessionalBo;
+import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityStorage;
+import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.CoverageActivityInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.GenderEnum;
+import ar.lamansys.sgh.publicapi.activities.domain.InternmentBo;
+import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProfessionalBo;
 import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
-import ar.lamansys.sgh.publicapi.domain.SingleDiagnosticBo;
-import ar.lamansys.sgh.publicapi.domain.SnomedBo;
-import ar.lamansys.sgh.publicapi.domain.SnomedCIE10Bo;
+import ar.lamansys.sgh.publicapi.activities.domain.SingleDiagnosticBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedCIE10Bo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;

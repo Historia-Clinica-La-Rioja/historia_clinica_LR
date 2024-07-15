@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest;
 
 import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.FetchPatientPersonById;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.ExternalPatientController;
 import ar.lamansys.sgh.publicapi.patient.application.exception.PatientNotExistsException;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest.mapper.FetchPatientPersonByIdMapper;
 import ar.lamansys.sgh.shared.infrastructure.input.service.person.PersonDto;

@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.publicapi.application.port.out.AppointmentStorage;
+import ar.lamansys.sgh.publicapi.patient.application.port.out.AppointmentStorage;
 import ar.lamansys.sgh.publicapi.patient.domain.AppointmentsByUserBo;
 
 @Slf4j

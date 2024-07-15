@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import ar.lamansys.sgh.publicapi.patient.application.exception.PatientNotExistsException;
 import ar.lamansys.sgh.publicapi.patient.application.fetchpatientpersonbyid.exception.PatientPersonAccessDeniedException;
-import ar.lamansys.sgh.publicapi.application.port.out.ExternalPatientStorage;
+import ar.lamansys.sgh.publicapi.patient.application.port.out.ExternalPatientStorage;
 import ar.lamansys.sgh.publicapi.patient.domain.PersonBo;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.service.PatientInformationPublicApiPermission;
 

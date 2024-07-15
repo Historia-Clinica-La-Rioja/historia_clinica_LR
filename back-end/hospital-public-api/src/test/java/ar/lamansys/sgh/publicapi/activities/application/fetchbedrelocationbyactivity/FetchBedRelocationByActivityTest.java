@@ -3,8 +3,10 @@ package ar.lamansys.sgh.publicapi.activities.application.fetchbedrelocationbyact
 import ar.lamansys.sgh.publicapi.TestUtils;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
+import ar.lamansys.sgh.publicapi.activities.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.domain.*;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,12 +48,12 @@ public class FetchBedRelocationByActivityTest {
 				Arrays.asList(
 						new BedRelocationInfoBo(
 								1,
-								LocalDateTime.now(), "Cuidados Mínimos",
+								LocalDateTime.now(), "careType",
 								new SnomedBo("1", "1")
 						),
 						new BedRelocationInfoBo(
 								2,
-								LocalDateTime.now(), "Intensiva",
+								LocalDateTime.now(), "careType",
 								new SnomedBo("2", "2")
 						)
 				)

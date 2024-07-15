@@ -5,7 +5,7 @@ import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.except
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
 
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.DocumentInfoBo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

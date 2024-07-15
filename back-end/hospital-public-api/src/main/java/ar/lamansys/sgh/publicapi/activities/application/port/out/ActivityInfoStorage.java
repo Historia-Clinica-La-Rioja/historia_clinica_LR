@@ -2,10 +2,10 @@ package ar.lamansys.sgh.publicapi.activities.application.port.out;
 
 import java.util.List;
 
-import ar.lamansys.sgh.publicapi.domain.BedRelocationInfoBo;
-import ar.lamansys.sgh.publicapi.domain.DocumentInfoBo;
-import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
-import ar.lamansys.sgh.publicapi.domain.SupplyInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.DocumentInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProcedureInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SupplyInformationBo;
 
 public interface ActivityInfoStorage {
 

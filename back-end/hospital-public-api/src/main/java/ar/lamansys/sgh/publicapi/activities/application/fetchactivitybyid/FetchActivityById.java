@@ -3,14 +3,11 @@ package ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.application.port.out.ActivityStorage;
-import ar.lamansys.sgh.publicapi.domain.AttentionInfoBo;
-import ar.lamansys.sgh.publicapi.imagenetwork.application.check.exceptions.CheckStudyAccessDeniedException;
+import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityStorage;
+import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Slf4j

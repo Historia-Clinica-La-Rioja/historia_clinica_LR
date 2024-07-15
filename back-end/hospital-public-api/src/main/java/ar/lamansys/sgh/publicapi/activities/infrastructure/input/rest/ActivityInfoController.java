@@ -5,18 +5,15 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.publicapi.activities.application.fetchdocumentsinfobyactivity.FetchDocumentsInfoByActivity;
 
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.DocumentInfoDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DocumentInfoDto;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ar.lamansys.sgh.publicapi.activities.application.fetchbedrelocationbyactivity.FetchBedRelocationByActivity;
 import ar.lamansys.sgh.publicapi.activities.application.fetchproceduresbyactivity.FetchProcedureByActivity;
 import ar.lamansys.sgh.publicapi.activities.application.fetchsuppliesbyactivity.FetchSuppliesByActivity;
-import ar.lamansys.sgh.publicapi.activities.application.processactivity.ProcessActivity;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.BedRelocationInfoDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.ProcedureInformationDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.SupplyInformationDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.ActivitiesMapper;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.BedRelocationInfoDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.ProcedureInformationDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.SupplyInformationDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.mapper.ActivitiesMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Slf4j

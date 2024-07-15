@@ -3,7 +3,7 @@ package ar.lamansys.sgh.publicapi.activities.application.fetchbedrelocationbyact
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.domain.BedRelocationInfoBo;
+import ar.lamansys.sgh.publicapi.activities.domain.BedRelocationInfoBo;
 import lombok.AllArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;

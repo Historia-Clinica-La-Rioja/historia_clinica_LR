@@ -5,8 +5,8 @@ import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.except
 import ar.lamansys.sgh.publicapi.activities.application.fetchproceduresbyactivity.FetchProcedureByActivity;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityInfoStorage;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.domain.ProcedureInformationBo;
-import ar.lamansys.sgh.publicapi.domain.SnomedBo;
+import ar.lamansys.sgh.publicapi.activities.domain.ProcedureInformationBo;
+import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.FetchActivityById;
 import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivityNotFoundException;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.dto.AttentionInfoDto;
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.mapper.ActivitiesMapper;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.AttentionInfoDto;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.input.mapper.ActivitiesMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
