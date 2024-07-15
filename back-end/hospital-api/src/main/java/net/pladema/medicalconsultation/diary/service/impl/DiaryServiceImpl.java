@@ -27,6 +27,8 @@ import java.util.stream.Stream;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 
+import net.pladema.medicalconsultation.diary.service.domain.ActiveDiaryAliasBo;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -461,13 +463,13 @@ public class DiaryServiceImpl implements DiaryService {
 	 * @return
 	 */
 	@Override
-	public Set<String> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId) {
+	public Set<ActiveDiaryAliasBo> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId) {
 		log.debug("Input parameters -> institutionId {} clinicalSpecialtyId {}", institutionId, clinicalSpecialtyId);
 		var result = diaryRepository
 			.getActiveDiariesByInstitutionAndSpecialty(institutionId, clinicalSpecialtyId)
 			.stream()
 			.filter(diary -> Objects.nonNull(diary.getAlias()) && !diary.getAlias().isBlank())
-			.map(DiaryListVo::getAlias)
+			.map(diary -> new ActiveDiaryAliasBo(diary.getId(), diary.getAlias()))
 			.collect(Collectors.toSet());
 		log.debug(OUTPUT, result);
 		return result;
@@ -490,7 +492,12 @@ public class DiaryServiceImpl implements DiaryService {
         log.debug("Input parameters -> institutionId {}, searchCriteria {}, mustFilterByModality {}", institutionId, searchCriteria, mustFilterByModality);
         List<EmptyAppointmentBo> emptyAppointments = new ArrayList<>();
         validateSearchCriteria(searchCriteria);
-        List<CompleteDiaryBo> diaries = getActiveDiariesBySearchCriteria(institutionId, searchCriteria.getAliasOrSpecialtyName(), searchCriteria.getPracticeId());
+
+        List<CompleteDiaryBo> diaries = getActiveDiariesBySearchCriteria(
+        	institutionId,
+        	searchCriteria.getAliasOrSpecialtyName(),
+        	searchCriteria.getPracticeId()
+		);
 
 		if (mustFilterByModality && featureFlagsService.isOn(AppFeature.HABILITAR_TELEMEDICINA)) {
             this.filterAllDiariesByModality(searchCriteria, diaries);
@@ -532,8 +539,13 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
 
-    private List<CompleteDiaryBo> getActiveDiariesBySearchCriteria(Integer institutionId, String aliasOrClinicalSpecialtyName, Integer practiceId) {
+    private List<CompleteDiaryBo> getActiveDiariesBySearchCriteria(
+    	Integer institutionId,
+    	String aliasOrClinicalSpecialtyName,
+    	Integer practiceId
+	) {
         log.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}, practice {}", institutionId, aliasOrClinicalSpecialtyName, practiceId);
+
         if (aliasOrClinicalSpecialtyName != null && practiceId != null)
             return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyNameAndPracticeId(institutionId, aliasOrClinicalSpecialtyName, practiceId).stream()
                     .map(this::createCompleteDiaryBoInstanceWithPractice)

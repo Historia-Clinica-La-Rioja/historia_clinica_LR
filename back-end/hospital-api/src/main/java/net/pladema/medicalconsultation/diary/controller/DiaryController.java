@@ -2,6 +2,7 @@ package net.pladema.medicalconsultation.diary.controller;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -228,23 +229,38 @@ public class DiaryController {
 
 	@GetMapping("/active-diaries-clinical-specialties")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
-	public List<ActiveDiaryClinicalSpecialtyDto> getClinicalSpecialtiesWithActiveDiaries(
+	public List<MasterDataDto> getClinicalSpecialtiesWithActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		var clinicalSpecialties = diaryService.getActiveDiariesClinicalSpecialties(institutionId);
-		List<ActiveDiaryClinicalSpecialtyDto> specialtiesDtos = clinicalSpecialtiesMapper.toActiveDiaryClinicalSpecialtyDto(clinicalSpecialties);
 		log.debug("Get all clinical specialties by active diaries and Institution {} ", institutionId);
-		return specialtiesDtos;
+		return clinicalSpecialties
+			.stream()
+				.map(x -> {
+					var specialtyDto = new MasterDataDto();
+					specialtyDto.setDescription(x.getName());
+					specialtyDto.setId(x.getId());
+					return specialtyDto;
+				})
+				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/clinical-specialty/{clinicalSpecialtyId}/active-diaries-aliases")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
-	public List<String> getClinicalSpecialtyAliasesWithActiveDiaries(
+	public List<MasterDataDto> getClinicalSpecialtyAliasesWithActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId
 	) {
 		var activeDiariesAliases = diaryService.getActiveDiariesAliasesByClinicalSpecialty(institutionId, clinicalSpecialtyId);
 		log.debug("Get all active diaries aliases by Institution {} and clinical specialty id {}", institutionId, clinicalSpecialtyId);
-		return activeDiariesAliases.stream().collect(Collectors.toList());
+		return activeDiariesAliases
+			.stream()
+			.map(x -> {
+				var aliasDto = new MasterDataDto();
+				aliasDto.setDescription(x.getName());
+				aliasDto.setId(x.getId());
+				return aliasDto;
+			})
+			.collect(Collectors.toList());
 	}
 
     @PostMapping("/generate-empty-appointments")

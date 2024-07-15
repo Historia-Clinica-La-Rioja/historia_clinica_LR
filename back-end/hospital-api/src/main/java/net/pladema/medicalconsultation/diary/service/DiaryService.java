@@ -8,6 +8,7 @@ import java.util.Set;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSearchBo;
 import net.pladema.medicalconsultation.appointment.service.domain.EmptyAppointmentBo;
+import net.pladema.medicalconsultation.diary.service.domain.ActiveDiaryAliasBo;
 import net.pladema.medicalconsultation.diary.service.domain.ActiveDiaryClinicalSpecialtyBo;
 import net.pladema.medicalconsultation.diary.service.domain.CompleteDiaryBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -41,7 +42,7 @@ public interface DiaryService {
 
 	List<ActiveDiaryClinicalSpecialtyBo> getActiveDiariesClinicalSpecialties(Integer institutionId);
 
-	Set<String> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId);
+	Set<ActiveDiaryAliasBo> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId);
 
 	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality);
 
