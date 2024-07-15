@@ -69,7 +69,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
         DiaryOpeningHours diaryOpeningHoursEntity = createDiaryOpeningHoursInstance(diaryId, openingHoursId, diaryOpeningHoursBo);
         try {
-            diaryOpeningHoursRepository.save(diaryOpeningHoursEntity);
+            diaryOpeningHoursRepository.saveAndFlush(diaryOpeningHoursEntity);
         } catch (DataIntegrityViolationException ex) {
             log.warn("TICKET -> hsi-6586");
             log.error("DataIntegrityViolationException -> {}", ex.getMessage(), ex);
@@ -79,7 +79,7 @@ public class DiaryOpeningHoursServiceImpl implements DiaryOpeningHoursService {
 
     @Override
     public void update(Integer diaryId, List<DiaryOpeningHoursBo> diaryOpeningHours) {
-        diaryOpeningHoursRepository.deleteAll(diaryId);
+		diaryOpeningHoursRepository.deleteAll(diaryId);
         load(diaryId, diaryOpeningHours);
     }
 
