@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 
 import java.util.Collections;
 
@@ -86,6 +87,8 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 	}
 
 	private void occupyEmergencyCareSpace(Integer episodeId, Integer institutionId, Short emergencyCareStateId, Integer doctorsOfficeId, Integer shockroomId, Integer bedId) {
+		assertEpisodeAttend(episodeId);
+
 		if (doctorsOfficeId != null || shockroomId != null)
 			assertAttentionPlace(doctorsOfficeId, shockroomId);
 
@@ -141,5 +144,13 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 			throw new ConstraintViolationException(doctorsOfficeId != null
 					? DOCTORS_OFFICE_NOT_AVAILABLE
 					: SHOCKROOM_NOT_AVAILABLE, Collections.emptySet());
+	}
+
+	private void assertEpisodeAttend(Integer episodeId) {
+		log.debug("Input parameters -> episodeId {}", episodeId);
+		var patientData = emergencyCareEpisodeRepository.getPatientDataByEpisodeId(episodeId);
+		boolean existsActiveEpisode = emergencyCareEpisodeRepository.existsEpisodeOnProgressOfAttention(patientData.getId());
+		if (existsActiveEpisode)
+			throw new ValidationException("care-episode.patient.invalid");
 	}
 }
