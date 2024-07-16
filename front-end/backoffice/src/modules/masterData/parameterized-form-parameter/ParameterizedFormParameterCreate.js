@@ -20,14 +20,11 @@ const ParameterizedFormParameterCreate = props => (
             <ReferenceInput
                 source="parameterId"
                 reference="parameters"
-                label="Descripcion"
+                label="resources.parameterizedform.description"
+                filterToQuery={searchText => ({description: searchText})}
                 fullWidth
             >
-                <AutocompleteInput
-                    optionText="description"
-                    optionValue="id"
-                    validate={[required()]}
-                />
+                <AutocompleteInput optionText="description" optionValue="id" resettable={true} validate={[required()]} />
             </ReferenceInput>
         </SimpleForm>
     </Create>

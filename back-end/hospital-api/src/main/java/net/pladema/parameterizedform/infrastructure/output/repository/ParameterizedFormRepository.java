@@ -36,10 +36,21 @@ public interface ParameterizedFormRepository extends SGXAuditableEntityJPAReposi
 
 
 	@Transactional(readOnly = true)
-	@Query("SELECT pf FROM ParameterizedForm pf WHERE (:name is null or lower(pf.name) like %:name%) and pf.statusId IN :statusIds")
+	@Query("SELECT pf " +
+			"FROM ParameterizedForm pf " +
+			"WHERE (LOWER(pf.name) LIKE LOWER(concat('%', :name, '%'))) " +
+			"AND pf.statusId IN :statusIds")
 	Page<ParameterizedForm> getFormsByNameAndStatus(@Param("statusIds") List<Short> statusIds,
-									   @Param("name") String name,
-									   Pageable pageable);
+													@Param("name") String name,
+													Pageable pageable);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT pf " +
+			"FROM ParameterizedForm pf " +
+			"WHERE pf.statusId IN :statusIds")
+	Page<ParameterizedForm> getFormsByStatus(@Param("statusIds") List<Short> statusIds,
+											 Pageable pageable);
+
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT pf.statusId " +

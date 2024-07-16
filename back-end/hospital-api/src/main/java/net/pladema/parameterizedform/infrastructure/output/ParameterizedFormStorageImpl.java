@@ -39,7 +39,7 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 
 	@Override
 	public Page<ParameterizedForm> filterByStatusIdAndNameIn(List<Short> statusIds, String name, Pageable pageable) {
-		return parameterizedFormRepository.getFormsByNameAndStatus(statusIds, name, pageable);
+		return (name == null || name.trim().isEmpty()) ? parameterizedFormRepository.getFormsByStatus(statusIds, pageable) : parameterizedFormRepository.getFormsByNameAndStatus(statusIds, name, pageable);
 	}
 
 	@Override
