@@ -183,7 +183,7 @@ const CheckBoxField = (props) => {
 }
 
 const ShowServiceSectorData = ({ record }) => {
-    if (record?.sectorOrganizationId === 1 && record?.sectorTypeId === 2)
+    if ((record?.sectorOrganizationId === 1 && record?.sectorTypeId === 2) || (record?.sectorOrganizationId === 1 && record?.sectorTypeId === 3) )
         return (
             <>
                 <SectionTitle label="resources.clinicalservicesectors.name"/>
