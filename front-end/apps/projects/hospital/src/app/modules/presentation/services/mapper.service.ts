@@ -14,11 +14,11 @@ import { PersonalInformation } from '@presentation/components/personal-informati
 import { PatientTypeData } from '@presentation/components/patient-type-logo/patient-type-logo.component';
 import { BedManagement } from '../../camas/routes/home/home.component';
 import { InternmentEpisodeSummary } from '../../historia-clinica/modules/ambulatoria/modules/internacion/components/internment-episode-summary/internment-episode-summary.component';
-import { InternmentPatientTableData } from "@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-table/internment-patient-table.component";
 import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { HistoricalProblems } from '../../historia-clinica/modules/ambulatoria/services/historical-problems-facade.service';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
+import { InternmentPatientTableData } from '@historia-clinica/modules/ambulatoria/modules/internacion/components/internment-patient-card/internment-patient-card.component';
 
 @Injectable({
 	providedIn: 'root'

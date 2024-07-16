@@ -4,18 +4,14 @@ import { PersonMasterDataService } from '@api-rest/services/person-master-data.s
 import { GenderDto, IdentificationTypeDto, LimitedPatientSearchDto, PatientSearchDto } from '@api-rest/api-model';
 import { AppFeature } from '@api-rest/api-model';
 import { atLeastOneValueInFormGroup, hasError, } from '@core/utils/form.utils';
-import { dateISOParseDate, newDate, } from '@core/utils/moment.utils';
-import { Router } from '@angular/router';
-import { ContextService } from '@core/services/context.service';
+import { newDate, } from '@core/utils/moment.utils';
 import { PatientService, PersonInformationRequest } from '@api-rest/services/patient.service';
 import { PERSON, REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { FeatureFlagService } from "@core/services/feature-flag.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
-import { TableModel, ActionDisplays } from '@presentation/components/table/table.component';
-import { PatientNameService } from '@core/services/patient-name.service';
+import { TableModel } from '@presentation/components/table/table.component';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
-import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-home',
@@ -38,29 +34,18 @@ export class HomeComponent implements OnInit {
 	nameSelfDeterminationEnabled: boolean;
 	minDate = MIN_DATE;
 	requiringAtLeastOneMoreValue: boolean;
-	ffOfCardsIsOn: boolean;
 	public tableModel: TableModel<PatientSearchDto>;
-
-	private readonly routePrefix;
 
 
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly personMasterDataService: PersonMasterDataService,
 		private readonly patientService: PatientService,
-		private readonly router: Router,
-		private readonly contextService: ContextService,
-		private readonly patientNameService: PatientNameService,
 		private readonly featureFlagService: FeatureFlagService,
-		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
-		this.routePrefix = `institucion/${this.contextService.institutionId}/`;
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS).subscribe(isEnabled => {
 			this.nameSelfDeterminationEnabled = isEnabled
-		});
-		this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
-			this.ffOfCardsIsOn = isEnabled
 		});
 	}
 
@@ -133,114 +118,12 @@ export class HomeComponent implements OnInit {
 			const personalInformationFilter = this.getPersonalInformationFilters();
 			this.patientService.searchPatientOptionalFilters(personalInformationFilter)
 				.subscribe((data: LimitedPatientSearchDto) => {
-					if (this.ffOfCardsIsOn) {
-						this.patientData = data.patientList;
-					}
-					else {
-						this.tableModel = this.buildTable(data.patientList);
-					}
+					this.patientData = data.patientList;
 					this.patientResultsLength = data.actualPatientSearchSize;
 					setTimeout(() => {
 						this.scrollToSearchResults();
 					}, 500);
 				});
-		}
-	}
-
-	private buildTable(data: PatientSearchDto[]): TableModel<any> {
-		if (this.nameSelfDeterminationEnabled) {
-			return {
-				columns: [
-					{
-						columnDef: 'patiendId',
-						header: 'pacientes.search.ROW_TABLE',
-						text: (row) => row.idPatient
-					},
-					{
-						columnDef: 'numberDni',
-						header: 'Nro. Documento',
-						text: (row) => row.person.identificationNumber
-					},
-					{
-						columnDef: 'firstName',
-						header: 'Nombre',
-						text: (row) => this.patientNameService.getPatientName(row.person.firstName, row.person.nameSelfDetermination)
-					},
-					{
-						columnDef: 'lastName',
-						header: 'Apellido',
-						text: (row) => row.person.lastName
-					},
-					{
-						columnDef: 'birthDate',
-						header: 'F. Nacimiento',
-						text: (row) => (row.person.birthDate === undefined) ? '' : this.dateFormatPipe.transform(dateISOParseDate(String(row.person.birthDate)), 'date')
-					},
-					{
-						columnDef: 'action',
-						action: {
-							displayType: ActionDisplays.BUTTON,
-							display: 'Ver',
-							matColor: 'primary',
-							do: (row) => {
-								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}`;
-								this.router.navigateByUrl(url);
-							}
-						}
-					},
-				],
-				data,
-				enablePagination: true
-			}
-		} else {
-			return {
-				columns: [
-					{
-						columnDef: 'patiendId',
-						header: 'pacientes.search.ROW_TABLE',
-						text: (row) => row.idPatient
-					},
-					{
-						columnDef: 'numberDni',
-						header: 'Nro. Documento',
-						text: (row) => row.person.identificationNumber
-					},
-					{
-						columnDef: 'firstName',
-						header: 'Nombre',
-						text: (row) => row.person.firstName
-					},
-					{
-						columnDef: 'lastName',
-						header: 'Apellido',
-						text: (row) => row.person.lastName
-					},
-					{
-						columnDef: 'birthDate',
-						header: 'F. Nac',
-						text: (row) => (row.person.birthDate === undefined) ? '' : this.dateFormatPipe.transform(dateISOParseDate(String(row.person.birthDate)), 'date')
-					},
-					{
-						columnDef: 'gender',
-						header: 'Sexo',
-						text: (row) => this.genderTableView[row.person.genderId]
-					},
-					{
-						columnDef: 'action',
-						action: {
-							displayType: ActionDisplays.BUTTON,
-							display: 'Ver',
-							matColor: 'primary',
-							do: (row) => {
-								const url = `${this.routePrefix}ambulatoria/paciente/${row.idPatient}`;
-								this.router.navigateByUrl(url);
-							}
-						}
-					},
-				],
-				data,
-				enablePagination: true
-			};
 		}
 	}
 

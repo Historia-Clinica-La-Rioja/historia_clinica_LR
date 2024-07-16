@@ -5,18 +5,14 @@ import { IDENTIFICATION_TYPE_IDS, PATIENT_TYPE } from '@core/utils/patient.utils
 import { ActivatedRoute, Router } from '@angular/router';
 import { ERole } from '@api-rest/api-model';
 import { GenderDto, IdentificationTypeDto, PatientSearchDto } from '@api-rest/api-model';
-import { AppFeature } from '@api-rest/api-model';
 import { PatientService } from '@api-rest/services/patient.service';
 import { PersonMasterDataService } from '@api-rest/services/person-master-data.service';
 import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
-import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewPatientDetailComponent } from '../../component/view-patient-detail/view-patient-detail.component';
 import { ContextService } from '@core/services/context.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PERSON } from '@core/constants/validation-constants';
 import { MIN_DATE } from "@core/utils/date.utils";
-import { PatientNameService } from "@core/services/patient-name.service";
 import { PermissionsService } from '@core/services/permissions.service';
 import { differenceInYears } from 'date-fns';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
@@ -38,7 +34,6 @@ const ROUTE_GUARD = 'guardia/nuevo-episodio/administrativa';
 })
 export class SearchComponent implements OnInit {
 	hasInstitutionalAdministratorRole = false;
-	ffOfCardsIsOn = false;
 	readonly PERSON_MAX_LENGHT = PERSON;
 	patientData: PatientSearchDto[] = [];
 	minDate = MIN_DATE;
@@ -59,7 +54,6 @@ export class SearchComponent implements OnInit {
 	searchPatient: ParamsToSearchPerson;
 	public noIdentity: boolean;
 	private readonly routePrefix;
-	public matchingPatient: TableModel<PatientSearchDto>;
 	public genderFieldDisabled = false;
 	public identificationTypeFieldDisabled = false;
 	public identificationNumberFieldDisabled = false;
@@ -73,8 +67,6 @@ export class SearchComponent implements OnInit {
 		private personMasterDataService: PersonMasterDataService,
 		public dialog: MatDialog,
 		private contextService: ContextService,
-		private featureFlagService: FeatureFlagService,
-		private readonly patientNameService: PatientNameService,
 		private permissionsService: PermissionsService,
 		private readonly dateFormatPipe: DateFormatPipe
 
@@ -215,81 +207,13 @@ export class SearchComponent implements OnInit {
 		}
 	}
 
-	private buildTable(data: PatientSearchDto[]): TableModel<PatientSearchDto> {
-		return {
-			columns: [
-				{
-					columnDef: 'patiendId',
-					header: 'ID Paciente',
-					text: (row) => row.idPatient
-				},
-				{
-					columnDef: 'firstName',
-					header: 'Nombre',
-					text: (row) => this.patientNameService.getPatientName(row.person.firstName, row.nameSelfDetermination)
-				},
-				{
-					columnDef: 'lastName',
-					header: 'Apellido',
-					text: (row) => row.person.lastName
-				},
-				{
-					columnDef: 'gender',
-					header: 'Sexo documento',
-					text: (row) => this.genderOptionsViewTable[row.person.genderId]
-				},
-				{
-					columnDef: 'birthDate',
-					header: 'F. Nac',
-					text: (row) => (row.person.birthDate === undefined) ? '' :
-						this.dateFormatPipe.transform(row.person.birthDate, 'date')
-				},
-				{
-					columnDef: 'numberDni',
-					header: 'Nro. Documento',
-					text: (row) => row.person.identificationNumber
-				},
-				{
-					columnDef: 'state',
-					header: 'Estado',
-					text: (row) => (row.activo ? 'Activo' : 'Inactivo')
-				},
-				{
-					columnDef: 'ranking',
-					header: 'Coincidencia',
-					text: (row) => row.ranking + ' %'
-				},
-				{
-					columnDef: 'action',
-					action: {
-						displayType: ActionDisplays.BUTTON,
-						display: 'Ver',
-						matColor: 'primary',
-						do: (patient) => {
-							this.openDialog(patient);
-						}
-					}
-				},
-			],
-			data,
-			enableFilter: true
-		};
-	}
-
 	private goToNextState(person: ParamsToSearchPerson) {
 		this.patientService.getPatientByCMD(JSON.stringify(person)).subscribe(
 			(patientsFound: PatientSearchDto[]) => {
 				if (!patientsFound.length) {
 					this.goToAddPatient(person);
 				} else {
-					this.featureFlagService.isActive(AppFeature.HABILITAR_VISUALIZACION_DE_CARDS).subscribe(isEnabled => {
-						this.ffOfCardsIsOn = isEnabled;
-						if (this.ffOfCardsIsOn)
-							this.patientData = patientsFound;
-						else
-							this.matchingPatient = this.buildTable(patientsFound);
-					});
-
+					this.patientData = patientsFound;
 					this.viewSearch = false;
 				}
 			}

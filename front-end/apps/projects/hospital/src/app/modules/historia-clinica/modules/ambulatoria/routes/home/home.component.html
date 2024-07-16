@@ -139,16 +139,11 @@
 			</span>
 		</mat-card>
 
-		<div *ngIf="!ffOfCardsIsOn else patientCard">
-			<app-table id="resultTable" [model]="tableModel"
-				*ngIf="tableModel?.data.length > 0 else noInfo"></app-table>
-		</div>
-
-		<ng-template #patientCard>
+		<div>
 			<app-card-patient [patientData]="patientData" [genderTableView]="genderTableView"
 				*ngIf="patientData?.length > 0 else noInfo">
 			</app-card-patient>
-		</ng-template>
+		</div>
 
 		<ng-template #noInfo>
 			<app-no-data></app-no-data>
