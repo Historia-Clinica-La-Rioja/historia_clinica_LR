@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalSpecialtySector, Integer> {
@@ -47,5 +48,7 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 			"WHERE s.institutionId IN :institutionsIds " +
 			"AND cs.clinicalSpecialtyTypeId = 1")
 	List<Integer> getAllIdsByInstitutionsId(@Param("institutionsIds") List<Integer> institutionsIds);
+
+	Optional<ClinicalSpecialtySector> findByClinicalSpecialtyIdAndSectorId(Integer clinicalSpecialtyId, Integer sectorId);
 
 }

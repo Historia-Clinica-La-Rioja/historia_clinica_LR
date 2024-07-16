@@ -54,4 +54,11 @@ public class EstablishmentExceptionHandler {
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 
+	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+	@ExceptionHandler({ BackofficeClinicalServiceSectorException.class })
+	protected ApiErrorMessageDto handleBackofficeClinicalServiceSectorException(BackofficeClinicalServiceSectorException ex, Locale locale) {
+		log.debug("BackofficeClinicalServiceSectorException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
 }
