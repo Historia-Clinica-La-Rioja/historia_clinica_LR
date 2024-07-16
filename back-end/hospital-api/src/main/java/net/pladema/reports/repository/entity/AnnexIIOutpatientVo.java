@@ -22,6 +22,7 @@ public class AnnexIIOutpatientVo extends AnnexIIVo {
 	private Integer rnos;
 	private LocalDateTime createdOn;
 	private Integer id;
+	private Integer healthcareProfessionalId;
 
     public AnnexIIOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,
 							   String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty, String sisaCode, String problems,
@@ -37,7 +38,7 @@ public class AnnexIIOutpatientVo extends AnnexIIVo {
 	public AnnexIIOutpatientVo(String establishment, String firstName, String middleNames, String lastName, String otherLastNames, String patientGender, LocalDate patientBirthDate,
 							   String documentType, String documentNumber, LocalDate consultationDate, Boolean hasProcedures, String specialty, String sisaCode, String problems,
 							   String medicalCoverageName, String medicalCoverageCuit, Integer rnos,
-							   LocalDateTime createdOn, Integer id){
+							   LocalDateTime createdOn, Integer id, Integer healthcareProfessionalId){
 		super(establishment, firstName, middleNames, lastName, otherLastNames, patientGender, patientBirthDate, documentType, documentNumber, sisaCode);
 		this.consultationDate = consultationDate;
 		this.hasProcedures = hasProcedures == null ? false : hasProcedures;
@@ -49,6 +50,7 @@ public class AnnexIIOutpatientVo extends AnnexIIVo {
 		this.rnos = rnos;
 		this.createdOn = createdOn;
 		this.id = id;
+		this.healthcareProfessionalId = healthcareProfessionalId;
 	}
 
     @JsonIgnore

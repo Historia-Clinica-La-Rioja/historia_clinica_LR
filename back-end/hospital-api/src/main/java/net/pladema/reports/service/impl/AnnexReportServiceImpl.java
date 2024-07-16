@@ -3,6 +3,7 @@ package net.pladema.reports.service.impl;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,17 +12,25 @@ import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.pladema.hsi.addons.billing.infrastructure.input.BillProceduresExternalService;
 import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresRequestDto;
 import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresResponseDto;
 import net.pladema.hsi.addons.billing.infrastructure.input.exception.BillProceduresExternalServiceException;
+import net.pladema.person.service.PersonService;
 import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 import net.pladema.reports.service.domain.AnnexIIProcedureBo;
 
+import net.pladema.reports.service.domain.AnnexIIProfessionalBo;
 import net.pladema.reports.service.exception.AnnexReportException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.pladema.staff.application.ports.HealthcareProfessionalStorage;
+
+import net.pladema.staff.domain.LicenseNumberBo;
+import net.pladema.staff.domain.ProfessionBo;
+import net.pladema.staff.domain.ProfessionalCompleteBo;
+
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
@@ -37,10 +46,11 @@ import net.pladema.reports.repository.entity.AnnexIIReportDataVo;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.domain.AnnexIIBo;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class AnnexReportServiceImpl implements AnnexReportService {
 
-    private final Logger LOG = LoggerFactory.getLogger(AnnexReportServiceImpl.class);
     public static final String OUTPUT = "Output -> {}";
     public static final String APPOINTMENT_NOT_FOUND = "appointment.not.found";
     public static final String CONSULTATION_NOT_FOUND = "consultation.not.found";
@@ -49,22 +59,12 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 	private final DocumentAppointmentService documentAppointmentService;
 	private final DocumentService documentService;
 	private final BillProceduresExternalService billProcedureExternalService;
-
-    public AnnexReportServiceImpl(
-    	AnnexReportRepository annexReportRepository,
-    	DocumentAppointmentService documentAppointmentService,
-    	DocumentService documentService,
-    	BillProceduresExternalService billProcedureExternalService)
-	{
-        this.annexReportRepository = annexReportRepository;
-		this.documentAppointmentService = documentAppointmentService;
-		this.documentService = documentService;
-		this.billProcedureExternalService = billProcedureExternalService;
-	}
+	private final PersonService personService;
+	private final HealthcareProfessionalStorage healthcareProfessionalStorage;
 
     @Override
     public AnnexIIBo getAppointmentData(Integer appointmentId) {
-        LOG.debug("Input parameter -> appointmentId {}", appointmentId);
+        log.debug("Input parameter -> appointmentId {}", appointmentId);
         AnnexIIBo result = annexReportRepository.getAppointmentAnnexInfo(appointmentId).map(AnnexIIBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
 
@@ -83,6 +83,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 					var data = annexReportRepository.getConsultationAnnexInfo(documentId);
 					if (data.isPresent()) {
 						AnnexIIOutpatientVo outpatientconsultationData = data.get();
+						result.setProfessional(buildAnnexIIProfessional(outpatientconsultationData.getHealthcareProfessionalId()));
 						result.setSpecialty(outpatientconsultationData.getSpecialty());
 						result.setProblems(outpatientconsultationData.getProblems());
 						result.setHasProcedures(outpatientconsultationData.getHasProcedures());
@@ -106,7 +107,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 							result.setMissingProcedures(billedProcedures.getProceduresNotBilledCount());
 						}
 
-						LOG.debug("Output -> {}", result);
+						log.debug("Output -> {}", result);
 						return result;
 					}
 				}
@@ -119,7 +120,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 						var completeResult = completeAnnexIIOdontologyBo(result, odontologyConsultationGeneralData);
 						completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
 						completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
-						LOG.debug("Output -> {}", completeResult);
+						log.debug("Output -> {}", completeResult);
 						return completeResult;
 					}
 				}
@@ -129,7 +130,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 					var nursingConsultationGeneralData = annexReportRepository.getNursingConsultationAnnexDataInfo(documentId);
 					if(nursingConsultationGeneralData.isPresent()){
 						var completeResult = completeAnnexIINursingBo(result, nursingConsultationGeneralData);
-						LOG.debug("Output -> {}", completeResult);
+						log.debug("Output -> {}", completeResult);
 						return completeResult;
 					}
 				}
@@ -138,6 +139,17 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		}
 
 		return result;
+	}
+
+	private AnnexIIProfessionalBo buildAnnexIIProfessional(Integer healthcareProfessionalId) {
+		ProfessionalCompleteBo professional = healthcareProfessionalStorage.fetchProfessionalById(healthcareProfessionalId);
+		List<LicenseNumberBo> licenses = new ArrayList<>();
+		for (ProfessionBo professionBo : professional.getProfessions())
+			licenses.addAll(professionBo.getLicenses());
+		return AnnexIIProfessionalBo.builder()
+				.completeProfessionalName(personService.parseCompletePersonName(professional.getFirstName(), professional.getMiddleNames(), professional.getLastName(), professional.getOtherLastNames(), professional.getNameSelfDetermination()))
+				.licenses(licenses)
+				.build();
 	}
 
 	private List<AnnexIIProcedureBo> mapProcedures(BillProceduresResponseDto billedProcedures) {
@@ -177,13 +189,12 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
 	@Override
     public AnnexIIBo getConsultationData(Long documentId) {
-
+		log.debug("Input parameter -> documentId {}", documentId);
 		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForDocument(documentId);
 		if(documentAppointmentOpt.isPresent()){
 			return this.getAppointmentData(documentAppointmentOpt.get().getAppointmentId());
 		}
 
-        LOG.debug("Input parameter -> documentId {}", documentId);
 		AnnexIIBo result;
 
 		Short sourceType = this.documentService.getSourceType(documentId);
@@ -195,7 +206,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 				var outpatientResultOpt = annexReportRepository.getConsultationAnnexInfo(documentId);
 				if(outpatientResultOpt.isPresent()) {
 					result = new AnnexIIBo(outpatientResultOpt.get());
-					LOG.debug("Output -> {}", result);
+					log.debug("Output -> {}", result);
 					return result;
 				}
 			}
@@ -210,7 +221,8 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 					var completeResult = completeAnnexIIOdontologyBo(result, consultationSpecialityandHasProcedures);
 					completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexDataInfo(documentId));
 					completeResult = completeAnnexIIOdontologyBo(completeResult, annexReportRepository.getOdontologyConsultationAnnexOtherDataInfo(documentId));
-					LOG.debug("Output -> {}", completeResult);
+					completeResult.setProfessional(buildAnnexIIProfessional(odontologyResultOpt.get().getHealthcareProfessionalId()));
+					log.debug("Output -> {}", completeResult);
 					return completeResult;
 				}
 			}
@@ -222,7 +234,8 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 					result = new AnnexIIBo(nursingResultOpt.get());
 					Optional<AnnexIIReportDataVo> nursingData = annexReportRepository.getNursingConsultationAnnexDataInfo(documentId);
 					var completeResult = completeAnnexIINursingBo(result, nursingData);
-					LOG.debug("Output -> {}", completeResult);
+					completeResult.setProfessional(buildAnnexIIProfessional(nursingResultOpt.get().getHealthcareProfessionalId()));
+					log.debug("Output -> {}", completeResult);
 					return completeResult;
 				}
 			}
@@ -240,7 +253,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			result.setProblems(nursingData.getDiagnostics());
 			result.setHasProcedures(nursingData.getHasProcedures());
 		}
-		LOG.debug("Output -> {}", result);
+		log.debug("Output -> {}", result);
 		return result;
 	}
 
@@ -251,7 +264,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 			result.setSpecialty(odontologyData.getSpeciality());
 			result.setHasProcedures(odontologyData.getHasProcedures());
 		}
-		LOG.debug("Output -> {}", result);
+		log.debug("Output -> {}", result);
 		return result;
 	}
 
@@ -273,7 +286,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
 	@Override
     public Map<String, Object> createAppointmentContext(AnnexIIDto reportDataDto){
-        LOG.debug("Input parameter -> reportDataDto {}", reportDataDto);
+        log.debug("Input parameter -> reportDataDto {}", reportDataDto);
         Map<String, Object> ctx = loadBasicContext(reportDataDto);
         ctx.put("appointmentState", reportDataDto.getAppointmentState());
         ctx.put("attentionDate",
@@ -294,6 +307,7 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 		ctx.put("missingProcedures", reportDataDto.getMissingProcedures());
 		ctx.put("patientIdentityAccreditationStatus", reportDataDto.getPatientIdentityAccreditationStatusId());
 
+		ctx.put("professional", reportDataDto.getProfessional());
         return ctx;
     }
 
@@ -321,10 +335,10 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 
     @Override
     public String createConsultationFileName(Long documentId, ZonedDateTime consultedDate){
-        LOG.debug("Input parameters -> documentId {}, consultedDate {}", documentId, consultedDate);
+        log.debug("Input parameters -> documentId {}, consultedDate {}", documentId, consultedDate);
         String formattedDate = consultedDate.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String outputFileName = String.format("%s-AnexoII %s.pdf", documentId, formattedDate);
-        LOG.debug(OUTPUT, outputFileName);
+        log.debug(OUTPUT, outputFileName);
         return outputFileName;
     }
 }

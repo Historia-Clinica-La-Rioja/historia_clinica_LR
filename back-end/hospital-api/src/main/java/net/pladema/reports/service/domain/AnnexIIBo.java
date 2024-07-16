@@ -67,6 +67,8 @@ public class AnnexIIBo {
 
 	private Short patientIdentityAccreditationStatusId;
 
+	private AnnexIIProfessionalBo professional;
+
     public AnnexIIBo(AnnexIIOutpatientVo annexIIOutpatientVo){
         this.establishment = annexIIOutpatientVo.getEstablishment();
         this.completePatientName = annexIIOutpatientVo.getCompletePatientName();
@@ -103,6 +105,7 @@ public class AnnexIIBo {
         this.medicalCoverage = annexIIAppointmentVo.getMedicalCoverage();
         this.medicalCoverageCuit = annexIIAppointmentVo.getMedicalCoverageCuit();
 		this.rnos = annexIIAppointmentVo.getRnos();
+		this.patientIdentityAccreditationStatusId = annexIIAppointmentVo.getPatientIdentityAccreditationStatusId();
     }
 
     public LocalDate getConsultationOrAttentionDate(){

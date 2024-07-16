@@ -252,6 +252,7 @@ export interface AnnexIIDto {
     proceduresEgressDate: Date;
     proceduresIngressDate: Date;
     proceduresTotal: number;
+    professional: AnnexIIProfessionalDto;
     rnos: number;
     showProcedures: boolean;
     sisaCode: string;
@@ -265,6 +266,12 @@ export interface AnnexIIProcedureDto {
     descriptionNomenclator: string;
     patientRate: number;
     rate: number;
+}
+
+export interface AnnexIIProfessionalDto {
+    completeProfessionalName: string;
+    licenses: LicenseNumberDto[];
+    licensesString: string;
 }
 
 export interface AnthropometricDataDto extends Serializable {

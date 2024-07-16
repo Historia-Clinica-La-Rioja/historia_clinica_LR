@@ -599,6 +599,13 @@
     <div class="atomic-block">
         <div class="signature-section">
             <div>Firma del Médico y sello con N° de matrícula</div>
+            <div th:if="${ professional != null }">
+                <div>
+                    <div th:text="${ professional.completeProfessionalName }"></div>
+                    <div th:text="${ specialty }"></div>
+                    <div th:text="${ professional.getLicensesString }"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="atomic-block">
@@ -628,15 +635,14 @@
         </div>
         <div class="beneficiaries-signature">
             <div class="border-bottom">Firma del Beneficiario</div>
+            <div th:if="${ patientIdentityAccreditationStatus != null }">
+                <div>
+                    <div th:if="${ patientIdentityAccreditationStatus == 1 }">Validación digital presencial mediante acreditación de identidad</div>
+                    <div th:if="${ patientIdentityAccreditationStatus == 2 }">No se ha validado presencialidad en forma digital</div>
+                </div>
+            </div>
         </div>
     </div>
-    <div th:if="${ patientIdentityAccreditationStatus != null }">
-        <div class="table">
-            <div th:if="${ patientIdentityAccreditationStatus == 1 }">Validación digital presencial mediante acreditación de identidad</div>
-            <div th:if="${ patientIdentityAccreditationStatus == 2 }">No se ha validado presencialidad en forma digital</div>
-        </div>
-    </div>
-
 </div>
 
 </body>

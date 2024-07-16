@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.reports.infrastructure.input.AnnexIIProfessionalDto;
 
 @Getter
 @Setter
@@ -60,5 +61,7 @@ public class AnnexIIDto {
 	private Integer missingProcedures;
 
 	private Short patientIdentityAccreditationStatusId;
+
+	private AnnexIIProfessionalDto professional;
 
 }
