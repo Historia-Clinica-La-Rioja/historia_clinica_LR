@@ -214,7 +214,7 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 
 		return firstQuery.concat(" UNION ").concatPart(secondQuery)
 				.concat(" ORDER BY ")
-				.concat("p.last_name");
+				.concat("last_name");
 	}
 
 	private HealthcareProfessionalBo mapToHealthcareProfessionalBo(HealthcareProfessionalVo hcp) {

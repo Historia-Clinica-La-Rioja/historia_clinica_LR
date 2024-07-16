@@ -37,7 +37,7 @@ public class HealthcareProfessionalSearchQuery {
 		String select = "DISTINCT hp.id AS hp_id, " +
 				"hp.license_number, " +
 				"p.first_name, " +
-				"p.last_name, " +
+				"p.last_name as last_name, " +
 				"p.identification_number, "+
 				"p.id AS person_id, " +
 				"pe.name_self_determination, " +
@@ -51,7 +51,8 @@ public class HealthcareProfessionalSearchQuery {
 		String from = FROM;
 
 		if (clinicalSpecialtyId != null || practiceId != null) {
-			from = from + "	LEFT JOIN {h-schema}diary d on (hp.id = d.healthcare_professional_id) ";
+			from = from + "	LEFT JOIN {h-schema}diary d on (hp.id = d.healthcare_professional_id) " +
+					"	LEFT JOIN {h-schema}diary_opening_hours doh on (d.id = doh.diary_id)";
 
 			if (clinicalSpecialtyId != null)
 				from = from + "LEFT JOIN {h-schema}clinical_specialty cs on (d.clinical_specialty_id = cs.id) ";
@@ -68,7 +69,8 @@ public class HealthcareProfessionalSearchQuery {
 
 		if (clinicalSpecialtyId != null || practiceId != null) {
 			from = from + "	LEFT JOIN {h-schema}diary_associated_professional dap on (hp.id = dap.healthcare_professional_id) "+
-					"	LEFT JOIN {h-schema}diary d on (dap.diary_id = d.id) ";
+					"	LEFT JOIN {h-schema}diary d on (dap.diary_id = d.id) " +
+					"	LEFT JOIN {h-schema}diary_opening_hours doh on (d.id = doh.diary_id)";
 
 			if (clinicalSpecialtyId != null)
 				from = from + "LEFT JOIN {h-schema}clinical_specialty cs on (d.clinical_specialty_id = cs.id) ";
@@ -87,7 +89,9 @@ public class HealthcareProfessionalSearchQuery {
 		if (institutionId != null) whereClause = whereClause + " AND i.id = " + institutionId + " ";
 
 		if (clinicalSpecialtyId != null || practiceId != null) {
-			whereClause = whereClause + " AND d.end_date >= CURRENT_DATE ";
+			whereClause = whereClause + " AND d.end_date >= CURRENT_DATE " +
+					" AND doh.external_appointments_allowed = true " +
+					" AND doh.on_site_attention_allowed  = true ";
 
 			if (clinicalSpecialtyId != null)
 				whereClause = whereClause + " AND cs.id = " + clinicalSpecialtyId + " ";
