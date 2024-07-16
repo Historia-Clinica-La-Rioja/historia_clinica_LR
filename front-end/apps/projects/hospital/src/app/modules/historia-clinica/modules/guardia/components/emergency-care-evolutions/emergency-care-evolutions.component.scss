@@ -1,6 +1,10 @@
 mat-selection-list {
 	overflow: auto;
 	width: 25vw;
+
+	.mat-list-single-selected-option {
+		background-color: #E9F3F9;
+	}
 }
 
 .content {
@@ -21,15 +25,15 @@ mat-selection-list {
 	height: auto;
 }
 
+.padding-left {
+	padding-left: 1rem;
+}
+
 .no-notes {
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	text-align: center;
-}
-
-.bold-text {
-	font-weight: 500;
 }
 
 #document-type {

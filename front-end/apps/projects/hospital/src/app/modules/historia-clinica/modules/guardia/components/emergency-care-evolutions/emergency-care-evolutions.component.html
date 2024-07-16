@@ -4,38 +4,25 @@
 			<mat-selection-list color="accent" [multiple]=false id="selection-documents" class="selection-documents">
 				<mat-list-option (click)="setActive(documentSearch)" *ngFor="let documentSearch of documentHistoric">
 					<div fxLayout="row" fxLayoutGap="5px">
-						<mat-icon mat-list-icon fontSet="material-icons-outlined"
-							color="primary">{{documentSearch.summary.icon}}</mat-icon>
 						<div fxLayout="column" fxLayoutGap="20px">
-							<span id="document-type" class="color-primary uppercase">
-								{{documentSearch.summary.title}}
-							</span>
-							<div *ngIf="documentSearch.summary.subtitle">
-								<span id="main-diagnosis" class="capitalize-first-letter bold-text">
-									<ng-container>
-										<span>{{documentSearch.summary.subtitle}} (Principal)</span>
-									</ng-container>
-								</span>
-							</div>
-							<div fxLayout="column" fxLayoutGap="10px">
-								<span mat-line>{{getFullName(documentSearch.summary.createdBy.firstName,
-									documentSearch.summary.createdBy.nameSelfDetermination)}}
-									{{documentSearch.summary.createdBy.lastName}}</span>
-								<span mat-line>{{documentSearch.summary.createdOn | dateFormat: 'datetime'}}</span>
-							</div>
+							<app-summary-attention class="padding-left"
+								[title]="documentSearch.summary.title | translate"
+								[specialty]="documentSearch.summary.specialty"
+								[registerEditor]="documentSearch.summary.registerEditor">
+							</app-summary-attention>
 							<mat-divider></mat-divider>
 						</div>
 					</div>
 				</mat-list-option>
 			</mat-selection-list>
 
-            <div *ngIf="activeDocument && (activeDocument.summary.title === 'TRIAGE')" class="content" fxLayout="row" fxLayoutAlign="space-between start">
+            <div *ngIf="activeDocument && (activeDocument.summary.title === 'internaciones.documents-summary.document-name.TRIAGE')" class="content" fxLayout="row" fxLayoutAlign="space-between start">
                 <app-triage-details [triage]="activeDocument.content" [emergencyCareType]="emergencyCareType"
                     showRiskFactors='true'>
                 </app-triage-details>
                 <app-document-actions [patientId]="patientId" [document]="activeDocument" [episodeId]="emergencyCareId" (resetActiveDocument)="resetActiveDocument()"></app-document-actions>
             </div>
-            <div *ngIf="activeDocument && (activeDocument.summary.title === 'NOTA DE EVOLUCION MEDICA')" class="summary">
+            <div *ngIf="activeDocument && (activeDocument.summary.title === 'internaciones.documents-summary.document-name.DOCTOR_EVOLUTION_NOTE')" class="summary">
                 <app-emergency-care-evolution-note [content]="activeDocument" [episodeId]="emergencyCareId"
                     [patientId]="patientId" (resetActiveDocument)="activeDocument = undefined"></app-emergency-care-evolution-note>
             </div>

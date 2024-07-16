@@ -633,7 +633,9 @@
 				"EVOLUTION_NOTE": "Nota de evolución",
 				"NURSE_EVOLUTION_NOTE": "Nota de evolución de enfermería",
                 "ANESTHETIC_REPORT": "Parte anestésico",
-                "EPICRISIS": "Epicrisis"
+                "EPICRISIS": "Epicrisis",
+				"TRIAGE": "Triage",
+				"DOCTOR_EVOLUTION_NOTE": "Nota de evolución médica"
 			},
             "procedure": {
 				"TITLE": "Procedimientos",

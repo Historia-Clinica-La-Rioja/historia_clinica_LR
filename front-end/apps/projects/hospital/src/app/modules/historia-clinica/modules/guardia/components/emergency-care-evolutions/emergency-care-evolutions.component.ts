@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
-import { EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto, } from '@api-rest/api-model';
+import { EmergencyCareHistoricDocumentDto, TriageDocumentDto, EmergencyCareEvolutionNoteDocumentDto } from '@api-rest/api-model';
 import { hasError } from '@core/utils/form.utils';
 import { DocumentActionsService } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service";
 import { PatientNameService } from "@core/services/patient-name.service";
@@ -13,6 +13,7 @@ import { EmergencyCareDocumentSearchService } from '@api-rest/services/emergency
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 import { NewEmergencyCareEvolutionNoteService } from '../../services/new-emergency-care-evolution-note.service';
+import { RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 
 @Component({
 	selector: 'app-emergency-care-evolutions',
@@ -30,7 +31,6 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 	documentHistoric: Item[];
 	selectedTriage;
 	emergencyCareType: EmergencyCareTypes | string;
-
 	public activeDocument: Item;
 
 	public searchTriggered = false;
@@ -81,6 +81,7 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 
 	private getHistoric() {
         this.resetActiveDocument();
+		const self = this;
 		this.emergencyCareDocumentSearchService.get(this.emergencyCareId)
 			.subscribe((docs: EmergencyCareHistoricDocumentDto) => {
 				const triages = docs.triages.map(map);
@@ -88,9 +89,11 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 				const allDocs = triages.concat(evolutionsNotes);
 				this.documentHistoric = allDocs.sort((a, b) => b.summary.createdOn.getTime() - a.summary.createdOn.getTime() );
                 this.changeDetectorRef.detectChanges();
-			})        
+			})
 
 		function evolutionNotesMapper(en: EmergencyCareEvolutionNoteDocumentDto): Item {
+
+			const fullName = self.getFullName(en.professional.person.firstName, en.professional.nameSelfDetermination) + " " +  en.professional.person.lastName;
 			return {
 				summary: {
 					createdBy: {
@@ -98,28 +101,38 @@ export class EmergencyCareEvolutionsComponent implements OnInit, OnChanges {
 						lastName: en.professional.person.lastName,
 						nameSelfDetermination: en.professional.nameSelfDetermination
 					},
+					registerEditor: self.buildRegisterEditor(fullName, dateTimeDtoToDate(en.performedDate)),
 					icon: 'assignment',
 					createdOn: dateTimeDtoToDate(en.performedDate),
-					title: 'NOTA DE EVOLUCION MEDICA',
+					title: 'internaciones.documents-summary.document-name.DOCTOR_EVOLUTION_NOTE',
 					docId: en.documentId,
-					docFileName: en.fileName
+					docFileName: en.fileName,
+					specialty: en.clinicalSpecialtyName
 				},
 				content: en
 			}
 		}
 
 		function map(doc: TriageDocumentDto): Item {
+			const fullName = self.getFullName(doc.triage.createdBy.firstName, doc.triage.createdBy.nameSelfDetermination) + " " +  doc.triage.createdBy.lastName;
 			return {
 				summary: {
 					createdBy: doc.triage.createdBy,
+					registerEditor: self.buildRegisterEditor(fullName, dateTimeDtoToDate(doc.triage.creationDate),),
 					icon: 'assignment_ind',
 					createdOn: dateTimeDtoToDate(doc.triage.creationDate),
-					title: 'TRIAGE',
+					title: 'internaciones.documents-summary.document-name.TRIAGE',
 					docId: doc.documentId,
 					docFileName: doc.fileName
 				},
 				content: GuardiaMapperService._mapTriageListDtoToTriage(doc.triage)
 			}
+		}
+	}
+	buildRegisterEditor(createdBy: string, date: Date): RegisterEditor {
+		return {
+			createdBy: createdBy,
+			date: date
 		}
 	}
 }
@@ -135,6 +148,8 @@ export interface Item {
 			lastName: string,
 			nameSelfDetermination: string
 		},
+		specialty?: string,
+		registerEditor: RegisterEditor,
 		docId: number,
 		docFileName: string
 
