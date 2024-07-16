@@ -28,5 +28,10 @@ public interface InstitutionResponsibilityAreaRepository extends JpaRepository<I
 	@Transactional
 	@Query("DELETE FROM InstitutionResponsibilityArea ira WHERE ira.pk.institutionId = :institutionId ")
     void deleteAllFromInstitution(@Param("institutionId") Integer institutionId);
+	
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM InstitutionResponsibilityArea ira WHERE ira.pk.institutionId IN (SELECT i.id FROM Institution i WHERE i.addressId = :addressId) ")
+    void deleteByAddressId(@Param("addressId") Integer addressId);
 
 }

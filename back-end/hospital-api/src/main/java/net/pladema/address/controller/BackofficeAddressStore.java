@@ -1,10 +1,12 @@
 package net.pladema.address.controller;
 
+import lombok.RequiredArgsConstructor;
 import net.pladema.address.controller.dto.AddressDto;
 import net.pladema.address.controller.mapper.AddressMapper;
 import net.pladema.address.repository.AddressRepository;
 import net.pladema.address.repository.CityRepository;
 import net.pladema.address.repository.DepartmentRepository;
+import net.pladema.establishment.sanitaryresponsibilityarea.institutionresponsibilityarea.infrastructure.output.repository.InstitutionResponsibilityAreaRepository;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -15,23 +17,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class BackofficeAddressStore implements BackofficeStore<AddressDto, Integer> {
     private final AddressRepository repository;
     private final AddressMapper addressMapper;
     private final DepartmentRepository departmentRepository;
     private final CityRepository cityRepository;
-
-    public BackofficeAddressStore(AddressRepository repository,
-                                AddressMapper addressMapper,
-                                  DepartmentRepository departmentRepository,
-                                  CityRepository cityRepository
-    ) {
-        this.repository = repository;
-        this.addressMapper = addressMapper;
-        this.departmentRepository = departmentRepository;
-        this.cityRepository = cityRepository;
-    }
+	private final InstitutionResponsibilityAreaRepository institutionResponsibilityAreaRepository;
 
     @Override
     public Page<AddressDto> findAll(AddressDto example, Pageable pageable) {
@@ -67,6 +60,8 @@ public class BackofficeAddressStore implements BackofficeStore<AddressDto, Integ
 
     @Override
     public AddressDto save(AddressDto entity) {
+		if (entity.getLatitude() == null || entity.getLongitude() == null)
+			institutionResponsibilityAreaRepository.deleteByAddressId(entity.getId());
         repository.save(addressMapper.fromAddressDto(entity));
         return entity;
     }
