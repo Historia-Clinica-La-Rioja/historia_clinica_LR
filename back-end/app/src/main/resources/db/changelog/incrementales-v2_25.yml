@@ -25,10 +25,21 @@ databaseChangeLog:
         id: role-api_anexo-level-change
         context: "!schema-only"
         author: efernandez
+        ignore: true
         changes:
           - sql:
               sql: |-
                 UPDATE user_role SET institution_id = -1 WHERE role_id = 47;
+
+    - changeSet:
+        id: role-api_anexo-level-change-corrected
+        context: "!schema-only"
+        author: efernandez
+        changes:
+          - sql:
+              sql: |-
+                UPDATE user_role ur SET institution_id = -1 WHERE ur.id IN (SELECT DISTINCT ON(ur2.user_id, ur2.role_id) ur2.id FROM user_role ur2 WHERE ur2.role_id = 47 ORDER BY ur2.user_id, ur2.role_id, ur2.id ASC);
+                DELETE FROM user_role WHERE role_id = 47 AND institution_id != -1;
 
     - changeSet:
         id: add-column-local_viewer_url-to-pac_server_image_lvl
