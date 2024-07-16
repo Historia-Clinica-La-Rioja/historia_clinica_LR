@@ -327,7 +327,6 @@ export class AnestheticReportService {
 
     setLastFoodIntakeTime(newLastFoodIntakeTimeSelected: TimeDto) {
         this.lastFoodIntakeTimeSelected = newLastFoodIntakeTimeSelected;
-		this.lastIntakeSubject.next(this.lastFoodIntakeTimeSelected)
     }
 
     private resetValues() {
