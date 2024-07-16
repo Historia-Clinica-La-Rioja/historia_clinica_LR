@@ -14,6 +14,7 @@ import javax.persistence.Query;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,12 +31,12 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 
 
 	@Override
-	public List<ConsultationDetailDataBo> getConsultationsData(String sisaCode) {
+	public List<ConsultationDetailDataBo> getConsultationsData(String sisaCode, LocalDateTime startDate, LocalDateTime endDate) {
 		LOG.debug("sisaCode -> {}", sisaCode);
 
 		String stringQuery = "WITH documents_filtered AS ( " +
 				"SELECT * FROM document d " +
-				"WHERE (d.created_on >= timestamp with time zone '2024-01-01 03:00:00.000Z' AND d.created_on < timestamp with time zone '2024-02-01 03:00:00.000Z') " +
+				"WHERE d.created_on BETWEEN :startDate AND :endDate " +
 				"ORDER BY d.id, d.created_on DESC " +
 				"), source AS ( " +
 				"SELECT d.*, ie.patient_medical_coverage_id, hpg.healthcare_professional_id FROM documents_filtered d INNER JOIN internment_episode ie ON ie.id=d.source_id AND d.source_type_id=0 LEFT JOIN healthcare_professional_group hpg ON hpg.internment_episode_id=ie.id " +
@@ -134,6 +135,8 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				"WHERE ins.sisa_code = :sisaCode";
 
 		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate)
 				.setParameter("sisaCode", sisaCode);
 
 		List<Object[]> queryResult = query.getResultList();
