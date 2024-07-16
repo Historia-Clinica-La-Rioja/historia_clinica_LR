@@ -12,10 +12,18 @@
 					<span *ngIf="searchCriteria.PRACTICES == selectedSearchCriteria"
 						[translate]="'turnos.OPTIONAL'"></span>
 				</div>
-				<app-typeahead [titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
-					[options]="aliasTypeaheadOptions" [externalSetValue]="externalSetValueSpecialty"
+				<div fxLayout="row">
+					<app-typeahead data-id="clinical-specialty-typeahead" [titleInput]="'turnos.home.SPECIALTY_SEARCH' | translate"
+					[options]="clinicalSpecialtyTypeaheadOptions" [externalSetValue]="externalSetValueSpecialty"
 					[disabled]="externalInformation?.disabledInput.specialty" (selectionChange)="setClinicalSpecialty($event)">
-				</app-typeahead>
+					</app-typeahead>
+	
+					<app-typeahead data-id="alias-typeahead" [titleInput]="'turnos.agenda-setup.OPTIONAL_ALIAS' | translate"
+						[options]="aliasTypeaheadOptions" [externalSetValue]="externalSetValueAlias"
+						[disabled]="externalInformation?.disabledInput.specialty" (selectionChange)="setAliasByClinicalSpecialty($event)">
+					</app-typeahead>
+				</div>
+
 
 				<mat-error class="error-space" *ngIf="showClinicalSpecialtyError">{{ 'forms.REQUIRED' | translate
 					}}</mat-error>

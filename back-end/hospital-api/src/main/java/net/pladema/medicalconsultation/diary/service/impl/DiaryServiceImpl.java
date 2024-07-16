@@ -725,7 +725,7 @@ public class DiaryServiceImpl implements DiaryService {
         result.setDoctorsOfficeDescription(diary.getDoctorsOfficeDescription());
         result.setClinicalSpecialtyName(diary.getClinicalSpecialtyName());
         result.setAlias(diary.getAlias());
-        if (diary.getPracticesInfo() != null)
+        if (!diary.getPracticesInfo().isEmpty())
             result.setPractice(diary.getPracticesInfo().get(0));
         return result;
     }

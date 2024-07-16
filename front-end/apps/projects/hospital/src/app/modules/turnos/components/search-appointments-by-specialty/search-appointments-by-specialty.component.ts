@@ -17,6 +17,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { processErrors } from '@core/utils/form.utils';
 import { datePlusDays } from '@core/utils/date.utils';
 
+const FIRST_SPECIALTY_POSITION = 0
 const PAGE_MIN_SIZE = 5;
 const ONE_ELEMENT = 1;
 const PLUS_DAY = 21;
@@ -29,7 +30,8 @@ const PLUS_DAY = 21;
 export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	@ViewChild('paginator') paginator: MatPaginator;
-	aliasTypeaheadOptions: TypeaheadOption<string>[];
+	aliasTypeaheadOptions: TypeaheadOption<number>[];
+	clinicalSpecialtyTypeaheadOptions: TypeaheadOption<number>[];
 	timesToFilter: TimeDto[];
 	initialTimes: TimeDto[];
 	endingTimes: TimeDto[];
@@ -47,7 +49,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	selectedSearchCriteria = SearchCriteria.CONSULTATION;
 	practices: SharedSnomedDto[];
 	externalInformation: SearchAppointmentInformation;
-	externalSetValueSpecialty: TypeaheadOption<string>;
+	externalSetValueSpecialty: TypeaheadOption<number>;
+	externalSetValueAlias: TypeaheadOption<number>;
 	resetRegisterDemandButtonDisabled = false;
 	redirectionDisabled = false;
 
@@ -73,6 +76,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		this.initializeTimeFilters();
 		this.form = this.formBuilder.group({
 			clinicalSpecialty: [null, Validators.required],
+			alias: [null],
 			initialTime: [this.initialTimes[7], Validators.required],
 			endingTime: [this.endingTimes[0], Validators.required],
 			mondayControl: [true, Validators.nullValidator],
@@ -126,24 +130,32 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		return time1.hours > time2.hours || (time1.hours === time2.hours && time1.minutes > time2.minutes);
 	}
 
-	private setClinicalSpecialtiesTypeaheadOptions(): void {
-		this.diaryService.getActiveDiariesAliases().subscribe(clinicalSpecialties =>
-			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty))
+	private setClinicalSpecialtiesTypeaheadOptions() {
+		this.diaryService.getClinicalSpecialtys().subscribe(clinicalSpecialties => 
+			this.clinicalSpecialtyTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty))
 		)
 	}
 
-	private toTypeaheadOption(clinicalSpecialty: string): TypeaheadOption<string> {
+	private toTypeaheadOption(option: MasterDataDto | ClinicalSpecialtyDto): TypeaheadOption<number> {
+		let compareValue: string;
+
+		if ('description' in option) {
+			compareValue = option.description;
+		} else {
+			compareValue = option.name;
+		}
 		return {
-			compareValue: clinicalSpecialty,
-			value: clinicalSpecialty
+			compareValue: compareValue,
+			value: option.id,
 		}
 	}
 
-	setClinicalSpecialty(clinicalSpecialty: ClinicalSpecialtyDto) {
+	setClinicalSpecialty(clinicalSpecialty: MasterDataDto) {
 		this.form.controls.clinicalSpecialty.setValue(null);
 		if (clinicalSpecialty) {
 			this.form.controls.clinicalSpecialty.setValue(clinicalSpecialty);
 			this.showClinicalSpecialtyError = false;
+			this.getAliasesByClinicalSpecialty();
 		} else {
 			this.emptyAppointments = null;
 			this.emptyAppointmentsFiltered = null;
@@ -236,6 +248,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	clearResults() {
 		this.externalInformation = null;
 		this.externalSetValueSpecialty = { compareValue: null, value: null };
+		this. externalSetValueAlias = { compareValue: null, value: null };
 		this.resetControls();
 		this.clearLists();
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
@@ -326,7 +339,8 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	private buildAppointmentSearch(selectedDaysOfWeek: number[]): AppointmentSearchDto {
 		return {
-			clinicalSpecialtyId: 123,
+			clinicalSpecialtyId: this.form.value.clinicalSpecialty,
+			diaryId: this.form.value.alias,
 			daysOfWeek: selectedDaysOfWeek,
 			endSearchTime: this.form.value.endingTime,
 			initialSearchTime: this.form.value.initialTime,
@@ -343,9 +357,9 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		const { searchCriteria, clinicalSpecialties, practice } = formInformation;
 		this.resetDataAndSetCriteria(searchCriteria);
 		if (clinicalSpecialties?.length) {
-			this.aliasTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty.name));
-			if (this.aliasTypeaheadOptions.length === ONE_ELEMENT)
-				this.externalSetValueSpecialty = this.aliasTypeaheadOptions[0];
+			this.clinicalSpecialtyTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty));
+			if (this.clinicalSpecialtyTypeaheadOptions.length === ONE_ELEMENT)
+				this.externalSetValueSpecialty = this.clinicalSpecialtyTypeaheadOptions[FIRST_SPECIALTY_POSITION];
 		}
 		if (practice) {
 			this.practices = [practice];

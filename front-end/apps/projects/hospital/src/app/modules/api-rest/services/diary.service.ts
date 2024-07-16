@@ -45,11 +45,6 @@ export class DiaryService {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/${diaryId}/unblock`;
 		return this.http.post<boolean>(url, blockDto);
 	}
-
-	getActiveDiariesAliases(): Observable<string[]> {
-		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/active-diaries-alias`;
-		return this.http.get<string[]>(url);
-	}
 	
 	getClinicalSpecialtys(): Observable<MasterDataDto[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/active-diaries-clinical-specialties`;
