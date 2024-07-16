@@ -2,12 +2,12 @@
 	<app-iconed-titled-section icon="{{ descriptionItemDataSummary.icon }}"
 		title="{{ descriptionItemDataSummary.title }}"></app-iconed-titled-section>
 	<div class="surgical-medication-and-description" fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
-		<app-title-description-list *ngIf="descriptionItemDataSummary.items"
+		<app-title-description-list *ngIf="descriptionItemDataSummary.data.items"
 			title="{{ descriptionItemDataSummary.subtitle }}"
-			[descriptionData]="descriptionItemDataSummary.items"></app-title-description-list>
+			[descriptionData]="descriptionItemDataSummary.data.items"></app-title-description-list>
 
-		<app-title-description-list *ngIf="descriptionItemDataSummary.note"
+		<app-title-description-list *ngIf="descriptionItemDataSummary.data.note.length"
 			title="historia-clinica.surgical-report.summary.DESCRIPTION"
-			[descriptionData]="descriptionItemDataSummary.note"></app-title-description-list>
+			[descriptionData]="descriptionItemDataSummary.data.note"></app-title-description-list>
 	</div>
 </div>

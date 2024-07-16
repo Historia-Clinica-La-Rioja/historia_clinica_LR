@@ -71,14 +71,14 @@ export class ProcedureAndDescriptionComponent implements OnInit {
         });
     }
 
-    private changeProcedure(procedures): void {
+    private changeProcedure(procedures) {
         procedures.forEach(procedure => {
             this.procedures = pushIfNotExists(this.procedures, this.mapToHospitalizationProcedure(procedure, this.type), this.compare);
         });
         this.updateSurgicalReportProcedures();
     }
 
-    private updateSurgicalReportProcedures(): void {
+    private updateSurgicalReportProcedures() {
         switch (this.type) {
             case ProcedureTypeEnum.DRAINAGE:
                 this.surgicalReport.drainages = this.procedures;
@@ -96,7 +96,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
         return first.snomed.sctid === second.snomed.sctid;
     }
 
-    deleteProcedure(index: number): void {
+    deleteProcedure(index: number) {
         this.procedures = removeFrom(this.procedures, index);
         this.procedureService.remove(index);
         this.updateSurgicalReportProcedures();
@@ -114,7 +114,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
         return !this.procedures.length && !this.description;
     }
 
-    onDescriptionChange(): void {
+    onDescriptionChange() {
         if (this.procedures.length > 0) {
             this.procedures[0].note = this.description;
             this.updateSurgicalReportProcedures();

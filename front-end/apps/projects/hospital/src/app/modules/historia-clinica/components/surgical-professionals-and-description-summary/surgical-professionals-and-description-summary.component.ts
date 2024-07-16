@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
+import { Component, Input } from '@angular/core';
 import { ItemsAndDescriptionData } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
@@ -7,22 +6,10 @@ import { ItemsAndDescriptionData } from '@historia-clinica/utils/document-summar
 	templateUrl: './surgical-professionals-and-description-summary.component.html',
 	styleUrls: ['./surgical-professionals-and-description-summary.component.scss']
 })
-export class SurgicalProfessionalsAndDescriptionSummaryComponent implements OnInit {
+export class SurgicalProfessionalsAndDescriptionSummaryComponent {
 
 	@Input() descriptionItemDataSummary: ItemsAndDescriptionData;
 
-    firstProcedure: DescriptionItemData;
-    remainingProcedures: DescriptionItemData[];
-
 	constructor() { }
-
-	ngOnInit(): void {
-		if (this.descriptionItemDataSummary.items && this.descriptionItemDataSummary.items.length > 0) {
-            this.firstProcedure = this.descriptionItemDataSummary.items[0];
-            this.remainingProcedures = this.descriptionItemDataSummary.items.slice(1);
-        } else {
-            this.remainingProcedures = [];
-        }
-	}
 
 }

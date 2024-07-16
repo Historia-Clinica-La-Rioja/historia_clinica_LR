@@ -8,7 +8,7 @@ import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/in
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { dateDtoToDate, dateTimeDtoToDate, dateTimeDtotoLocalDate } from '@api-rest/mapper/date-dto.mapper';
 import { dateISOParseDate } from '@core/utils/moment.utils';
-import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender, REASONS_DESCRIPTION_ITEM, CRITICITY_DESCRIPTION } from '@historia-clinica/constants/document-summary.constants';
+import { PROCEDURES_DESCRIPTION_ITEM, ALLERGIES_DESCRIPTION_ITEM, VITAL_SIGNS_AND_RISK_FACTORS, VACCINES_DESCRIPTION_ITEM, PERSONAL_HISTORIES_DESCRIPTION_ITEM, FAMILY_HISTORIES_DESCRIPTION_ITEM, USUAL_MEDICATIONS_DESCRIPTION_ITEM, HEADER_DATA_BED, HEADER_DATA_DATE, HEADER_DATA_INSTITUTION, HEADER_DATA_PATIENT, HEADER_DATA_PROFESSIONAL, HEADER_DATA_ROOM, HEADER_DATA_SCOPE, HEADER_DATA_SECTOR, HEADER_DATA_SPECIALTY, OTHER_PROBLEMS_DESCRIPTION_ITEM, ExternalCauseType, EventLocation, PregnancyTerminationType, BirthConditionType, Gender, REASONS_DESCRIPTION_ITEM, CRITICITY_DESCRIPTION, PROPOSED_SURGERIES_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
 
 const CONFIRMED = HEALTH_VERIFICATIONS.CONFIRMADO;
@@ -72,7 +72,7 @@ export class DocumentsSummaryMapperService {
             description,
             ...(dateToShow && { dateToShow }),
         }
-    }        
+    }
 
     mapDiagnosisToDescriptionItemData(diagnosis: DiagnosisDto[]): DescriptionItemData[] {
         return diagnosis.map(diag => this.toDescriptionItemData(this.mapDescriptionAndStatusToString(diag)));
@@ -144,10 +144,14 @@ export class DocumentsSummaryMapperService {
         return vaccines.map(vaccine => this.toDescriptionItemData(vaccine.snomed.pt, this.mapStringToDateToShow(vaccine.administrationDate)));
     }
 
+	mapProposedSurgeriesToDescriptionItemData(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
+		return proposedSurgeries.map(proposedSurgery => this.toDescriptionItemData(proposedSurgery.snomed.pt))
+	}
+
     mapHistoriesToDescriptionItemData(histories: HealthHistoryConditionDto[] | OutpatientFamilyHistoryDto []): DescriptionItemData[] {
         return histories.map(history => this.toDescriptionItemData(history.snomed.pt,  this.mapStringToDateToShow(history.startDate)));
-    }    
-    
+    }
+
     mapMedicationsToDescriptionItemData(medications: MedicationDto[]): DescriptionItemData[] {
         return medications.map(medication => this.toDescriptionItemData(this.getMedicationDescription(medication)));
     }
@@ -164,11 +168,11 @@ ${medication.note}`
 
     hasClinicalEvaluations(notes: DocumentObservationsDto): boolean {
         return (
-            !!notes.currentIllnessNote?.length 
-            || !!notes.physicalExamNote?.length 
-            || !!notes.studiesSummaryNote?.length 
-            || !!notes.evolutionNote?.length 
-            || !!notes.clinicalImpressionNote?.length 
+            !!notes.currentIllnessNote?.length
+            || !!notes.physicalExamNote?.length
+            || !!notes.studiesSummaryNote?.length
+            || !!notes.evolutionNote?.length
+            || !!notes.clinicalImpressionNote?.length
             || !!notes.otherNote?.length)
     }
 
@@ -215,6 +219,13 @@ ${medication.note}`
             ...VACCINES_DESCRIPTION_ITEM,
         }
     }
+
+	mapProposedSurgeriesToDescriptionItemDataSummary(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemDataSummary {
+		return {
+			summary: this.mapProposedSurgeriesToDescriptionItemData(proposedSurgeries),
+			...PROPOSED_SURGERIES_DESCRIPTION_ITEM,
+		}
+	}
 
     mapPersonalHistoriesToDescriptionItemDataSummary(personalHistories: HealthHistoryConditionDto[]): DescriptionItemDataSummary {
         return {
@@ -419,10 +430,10 @@ ${medication.note}`
     }
 
     hasObstetricEvent(obstetricEvent: ObstetricEventDto): boolean {
-        return !! (obstetricEvent && (obstetricEvent.newborns.length || 
-                !!(obstetricEvent.currentPregnancyEndDate 
-                || obstetricEvent.gestationalAge 
-                || obstetricEvent.pregnancyTerminationType 
+        return !! (obstetricEvent && (obstetricEvent.newborns.length ||
+                !!(obstetricEvent.currentPregnancyEndDate
+                || obstetricEvent.gestationalAge
+                || obstetricEvent.pregnancyTerminationType
                 || obstetricEvent.previousPregnancies)));
     }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SurgicalProcedures } from '@historia-clinica/utils/document-summary.model';
 
 @Component({
@@ -6,12 +6,9 @@ import { SurgicalProcedures } from '@historia-clinica/utils/document-summary.mod
 	templateUrl: './surgical-procedures-summary.component.html',
 	styleUrls: ['./surgical-procedures-summary.component.scss']
 })
-export class SurgicalProceduresSummaryComponent implements OnInit {
+export class SurgicalProceduresSummaryComponent {
 
 	@Input() surgicalProcedures: SurgicalProcedures;
 	constructor() { }
-
-	ngOnInit(): void {
-	}
 
 }

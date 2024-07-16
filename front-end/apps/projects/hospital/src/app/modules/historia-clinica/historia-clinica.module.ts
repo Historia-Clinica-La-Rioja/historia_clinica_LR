@@ -71,9 +71,13 @@ import { ProfessionalListComponent } from './components/professional-list/profes
 import { ReferenceRequestListComponent } from './components/reference-request-list/reference-request-list.component';
 import { ReferredItemSummaryComponent } from './components/referred-item-summary/referred-item-summary.component';
 import { ReasonListComponent } from './components/reason-list/reason-list.component';
+import { SurgicalMedicationAndDescriptionSummaryComponent } from './components/surgical-medication-and-description-summary/surgical-medication-and-description-summary.component';
+import { SurgicalProfessionalsAndDescriptionSummaryComponent } from './components/surgical-professionals-and-description-summary/surgical-professionals-and-description-summary.component';
+import { SurgicalProceduresSummaryComponent } from './components/surgical-procedures-summary/surgical-procedures-summary.component';
 import { SurgicalReportAnesthesiaComponent } from './components/surgical-report-anesthesia/surgical-report-anesthesia.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
 import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
+import { SurgicalReportDocumentSummaryComponent } from './components/surgical-report-document-summary/surgical-report-document-summary.component';
 import { SurgicalReportPostDiagnosisComponent } from './components/surgical-report-post-diagnosis/surgical-report-post-diagnosis.component';
 import { SurgicalReportProceduresComponent } from './components/surgical-report-procedures/surgical-report-procedures.component';
 import { SurgicalReportProfessionalInfoComponent } from './components/surgical-report-professional-info/surgical-report-professional-info.component';
@@ -146,10 +150,6 @@ import { IdentifierCasesComponent } from '../hsi-components/identifier-cases/ide
 import { ConceptsListComponent } from '../hsi-components/concepts-list/concepts-list.component';
 import { ConceptTypeaheadSearchComponent } from '../hsi-components/concept-typeahead-search/concept-typeahead-search.component';
 import { SummaryAttentionComponent } from './components/summary-attention/summary-attention.component';
-import { SurgicalReportDocumentSummaryComponent } from './components/surgical-report-document-summary/surgical-report-document-summary.component';
-import { SurgicalProceduresSummaryComponent } from './components/surgical-procedures-summary/surgical-procedures-summary.component';
-import { SurgicalProfessionalsAndDescriptionSummaryComponent } from './components/surgical-professionals-and-description-summary/surgical-professionals-and-description-summary.component';
-import { SurgicalMedicationAndDescriptionSummaryComponent } from './components/surgical-medication-and-description-summary/surgical-medication-and-description-summary.component';
 @NgModule({
 	declarations: [
 		// components
@@ -251,6 +251,11 @@ import { SurgicalMedicationAndDescriptionSummaryComponent } from './components/s
 		ReasonListComponent,
 		ReferenceRequestListComponent,
         ReferredItemSummaryComponent,
+		SummaryAttentionComponent,
+		SurgicalMedicationAndDescriptionSummaryComponent,
+		SurgicalProceduresSummaryComponent,
+		SurgicalProfessionalsAndDescriptionSummaryComponent,
+		SurgicalReportDocumentSummaryComponent,
 		TemplateConceptTypeaheadSearchComponent,
         VitalSignsAndRiskFactorsSummaryComponent,
 		VitalSignsSummaryComponent,
@@ -313,12 +318,6 @@ import { SurgicalMedicationAndDescriptionSummaryComponent } from './components/s
 		VitalSignsChartPopupComponent,
 		//pipes
 		ShowTitleByPatientDataPipe,
-  		SummaryAttentionComponent,
-  		SurgicalReportDocumentSummaryComponent,
-		SurgicalReportDocumentSummaryComponent,
-		SurgicalProceduresSummaryComponent,
-		SurgicalProfessionalsAndDescriptionSummaryComponent,
-  		SurgicalMedicationAndDescriptionSummaryComponent,
 	],
 	imports: [
 		CommonModule,

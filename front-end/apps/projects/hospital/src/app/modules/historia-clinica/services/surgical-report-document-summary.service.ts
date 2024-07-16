@@ -3,10 +3,11 @@ import { AnestheticTechniqueDto, DiagnosisDto, DocumentHealthcareProfessionalDto
 import { DocumentsSummaryMapperService } from './documents-summary-mapper.service';
 import { DescriptionItemData } from '@presentation/components/description-item/description-item.component';
 import { DescriptionItemDataSummary } from '@historia-clinica/components/description-item-data-summary/description-item-data-summary.component';
-import { ANESTHETIC_TECHNIQUE_DESCRIPTION_ITEM, CULTURES_SURGERY_DESCRIPTION_ITEM, DRAINAGE_SURGERY_DESCRIPTION_ITEM, FROZEN_BIOPSY_SURGERY_DESCRIPTION_ITEM, PATHOLOGIST_DESCRIPTION_ITEM, PROPOSED_SURGERIES_DESCRIPTION_ITEM, PROTESIS_SURGERY_DESCRIPTION_ITEM, SURGERY_TEAM_DESCRIPTION_ITEM, TRANSFUSIONIST_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
+import { ANESTHETIC_TECHNIQUE_DESCRIPTION_ITEM, CULTURES_SURGERY_DESCRIPTION_ITEM, DRAINAGE_SURGERY_DESCRIPTION_ITEM, FROZEN_BIOPSY_SURGERY_DESCRIPTION_ITEM, PATHOLOGIST_DESCRIPTION_ITEM, PROTESIS_SURGERY_DESCRIPTION_ITEM, SURGERY_TEAM_DESCRIPTION_ITEM, TRANSFUSIONIST_DESCRIPTION_ITEM } from '@historia-clinica/constants/document-summary.constants';
 import { CustomDiagnosesData, ItemsAndDescriptionData, SurgicalProcedures } from '@historia-clinica/utils/document-summary.model';
 import { dateDtoToDate, timeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
+import { getElementAtPosition } from '@core/utils/array.utils';
 
 const INFO_DIVIDER = ' | ';
 const PATHOLOGIST_INFO = {
@@ -17,6 +18,7 @@ const TRANSFUSIONIST_INFO = {
 	type: EProfessionType.TRANSFUSIONIST,
 	description: 'Transfusionista'
 };
+const UNIQUE_DESCRIPTION_POSITION = 0;
 
 @Injectable({
 	providedIn: 'root'
@@ -36,9 +38,9 @@ export class SurgicalReportDocumentSummaryService {
 
 	mapToSurgicalReportViewFormat(surgicalReport: SurgicalReportDto): SurgicalReportViewFormat {
 		return {
-			...(surgicalReport.mainDiagnosis && { mainDiagnosis: this.mapCustomDiagnosesData([surgicalReport.mainDiagnosis], 'Diagnósticos Pre-Operatorios') }),
+			...(surgicalReport.mainDiagnosis && { mainDiagnosis: this.mapToCustomDiagnosesData([surgicalReport.mainDiagnosis], 'Diagnósticos Pre-Operatorios') }),
 			...(surgicalReport.preoperativeDiagnosis.length && { preOperativeDiagnosis: this.documentsSummaryService.mapDiagnosisToDescriptionItemData(surgicalReport.preoperativeDiagnosis) }),
-			...(surgicalReport.surgeryProcedures.length && { proposedSurgeries: this.mapProposedSurgeriesToDescriptionItemDataSummary(surgicalReport.surgeryProcedures) }),
+			...(surgicalReport.surgeryProcedures.length && { proposedSurgeries: this.documentsSummaryService.mapProposedSurgeriesToDescriptionItemDataSummary(surgicalReport.surgeryProcedures) }),
 			...(surgicalReport.surgicalTeam.length && { surgicalTeam: this.mapSurgeryTeamToDescriptionItemDataSummary(surgicalReport.surgicalTeam) }),
 			...(surgicalReport.anesthesia.length && { anestheticTechniques: this.mapAnestheticTechniqueToDescriptionItemDataSummary(surgicalReport.anesthesia) }),
 			surgicalProcedures: this.mapSurgicalProcedures(surgicalReport, 'historia-clinica.surgical-report.summary.PROCEDURES'),
@@ -48,11 +50,11 @@ export class SurgicalReportDocumentSummaryService {
 			...(surgicalReport.prosthesisDescription && { prosthesis: this.mapProsthesisDescriptionToItemDataSummary(surgicalReport.prosthesisDescription) }),
 			...(surgicalReport.frozenSectionBiopsies.length && { frozenSectionBiopsies: this.mapFrozenBiopsyToItemDataSummary(surgicalReport.frozenSectionBiopsies) }),
 			...(surgicalReport.drainages.length && { drainages: this.mapDrainageToItemDataSummary(surgicalReport.drainages) }),
-			...(surgicalReport.postoperativeDiagnosis.length && { postOperativeDiagnosis: this.mapCustomDiagnosesData(surgicalReport.postoperativeDiagnosis, 'Diagnósticos Post-Operatorios') }),
+			...(surgicalReport.postoperativeDiagnosis.length && { postOperativeDiagnosis: this.mapToCustomDiagnosesData(surgicalReport.postoperativeDiagnosis, 'Diagnósticos Post-Operatorios') }),
 		}
 	}
 
-	private mapCustomDiagnosesData(diagnoses: DiagnosisDto[], title: string): CustomDiagnosesData {
+	private mapToCustomDiagnosesData(diagnoses: DiagnosisDto[], title: string): CustomDiagnosesData {
 		return {
 			title: title,
 			diagnoses: this.documentsSummaryService.mapDiagnosisToDescriptionItemData(diagnoses)
@@ -62,44 +64,34 @@ export class SurgicalReportDocumentSummaryService {
 	private mapProsthesisDescriptionToItemDataSummary(prosthesisDescription: string): ItemsAndDescriptionData {
 		return {
 			...PROTESIS_SURGERY_DESCRIPTION_ITEM,
-			items: prosthesisDescription ? [{ description: 'Si' }] : [{ description: '' }],
-			note: prosthesisDescription ? [this.documentsSummaryService.toDescriptionItemData(prosthesisDescription)] : [],
+			data: {
+				items: prosthesisDescription ? [{ description: 'Si' }] : [{ description: '' }],
+				note: prosthesisDescription ? [this.documentsSummaryService.toDescriptionItemData(prosthesisDescription)] : [],
+			}
 		};
 	}
 
 	private mapDrainageToItemDataSummary(hospitalizationProcedure: HospitalizationProcedureDto[]): ItemsAndDescriptionData {
-		return {
-			...DRAINAGE_SURGERY_DESCRIPTION_ITEM,
-			items: this.mapProceduresToDescriptionItemDataSummary(hospitalizationProcedure),
-			note: [this.documentsSummaryService.toDescriptionItemData(hospitalizationProcedure[0].note)],
-		};
+		return this.mapProcedureToItemDataSummary(hospitalizationProcedure, DRAINAGE_SURGERY_DESCRIPTION_ITEM);
 	}
 
 	private mapFrozenBiopsyToItemDataSummary(hospitalizationProcedure: HospitalizationProcedureDto[]): ItemsAndDescriptionData {
-		return {
-			...FROZEN_BIOPSY_SURGERY_DESCRIPTION_ITEM,
-			items: this.mapProceduresToDescriptionItemDataSummary(hospitalizationProcedure),
-			note: [this.documentsSummaryService.toDescriptionItemData(hospitalizationProcedure[0].note)],
-		};
+		return this.mapProcedureToItemDataSummary(hospitalizationProcedure, FROZEN_BIOPSY_SURGERY_DESCRIPTION_ITEM);
 	}
 
 	private mapCultureToItemDataSummary(hospitalizationProcedure: HospitalizationProcedureDto[]): ItemsAndDescriptionData {
+		return this.mapProcedureToItemDataSummary(hospitalizationProcedure, CULTURES_SURGERY_DESCRIPTION_ITEM);
+	}
+
+	private mapProcedureToItemDataSummary(hospitalizationProcedure: HospitalizationProcedureDto[], descriptionItem: any): ItemsAndDescriptionData {
+		const note = getElementAtPosition(hospitalizationProcedure, UNIQUE_DESCRIPTION_POSITION).note;
 		return {
-			...CULTURES_SURGERY_DESCRIPTION_ITEM,
-			items: this.mapProceduresToDescriptionItemDataSummary(hospitalizationProcedure),
-			note: [this.documentsSummaryService.toDescriptionItemData(hospitalizationProcedure[0].note)],
+			...descriptionItem,
+			data: {
+				items: this.mapProceduresToDescriptionItemDataSummary(hospitalizationProcedure),
+				note: note ? [this.documentsSummaryService.toDescriptionItemData(note)] : []
+			}
 		};
-	}
-
-	private mapProposedSurgeriesToDescriptionItemDataSummary(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemDataSummary {
-		return {
-			summary: this.mapProposedSurgeriesToDescriptionItemData(proposedSurgeries),
-			...PROPOSED_SURGERIES_DESCRIPTION_ITEM,
-		}
-	}
-
-	private mapProposedSurgeriesToDescriptionItemData(proposedSurgeries: HospitalizationProcedureDto[]): DescriptionItemData[] {
-		return proposedSurgeries.map(proposedSurgery => this.documentsSummaryService.toDescriptionItemData(proposedSurgery.snomed.pt))
 	}
 
 	private mapAnestheticTechniqueToDescriptionItemDataSummary(anestheticTechniques: AnestheticTechniqueDto[]): DescriptionItemDataSummary {
@@ -132,26 +124,35 @@ export class SurgicalReportDocumentSummaryService {
 	}
 
 	private mapSurgeryTeamToDescriptionItemDataSummary(professionals: DocumentHealthcareProfessionalDto[]): ItemsAndDescriptionData {
+		const items = this.mapHealthcareProfessionalsToDescriptionItemData(professionals);
 		return {
 			...SURGERY_TEAM_DESCRIPTION_ITEM,
-			items: this.mapHealthcareProfessionalsToDescriptionItemData(professionals),
+			data: {
+				items: items,
+				note: [],
+				firstItem: [items.length > 0 ? items[0] : undefined],
+				remainingItems: items.length > 1 ? items.slice(1) : [],
+			}
+		};
+	}
+
+	private mapProfessionalToDescriptionItemDataSummary(professionals: DocumentHealthcareProfessionalDto[], descriptionItem: any): ItemsAndDescriptionData {
+		const comments = getElementAtPosition(professionals, UNIQUE_DESCRIPTION_POSITION).comments;
+		return {
+			...descriptionItem,
+			data: {
+				items: this.mapHealthcareProfessionalsToDescriptionItemData(professionals),
+				note: comments ? [this.documentsSummaryService.toDescriptionItemData(comments)] : [],
+			}
 		};
 	}
 
 	private mapTransfusionistToDescriptionItemDataSummary(professionals: DocumentHealthcareProfessionalDto[]): ItemsAndDescriptionData {
-		return {
-			...TRANSFUSIONIST_DESCRIPTION_ITEM,
-			items: this.mapHealthcareProfessionalsToDescriptionItemData(professionals),
-			note: [this.documentsSummaryService.toDescriptionItemData(professionals[0].comments)],
-		};
+		return this.mapProfessionalToDescriptionItemDataSummary(professionals, TRANSFUSIONIST_DESCRIPTION_ITEM);
 	}
 
 	private mapPathologistToDescriptionItemDataSummary(professionals: DocumentHealthcareProfessionalDto[]): ItemsAndDescriptionData {
-		return {
-			...PATHOLOGIST_DESCRIPTION_ITEM,
-			items: this.mapHealthcareProfessionalsToDescriptionItemData(professionals),
-			note: [this.documentsSummaryService.toDescriptionItemData(professionals[0].comments)],
-		};
+		return this.mapProfessionalToDescriptionItemDataSummary(professionals, PATHOLOGIST_DESCRIPTION_ITEM);
 	}
 
 	private mapHealthcareProfessionalsToDescriptionItemData(professionals: DocumentHealthcareProfessionalDto[]): DescriptionItemData[] {

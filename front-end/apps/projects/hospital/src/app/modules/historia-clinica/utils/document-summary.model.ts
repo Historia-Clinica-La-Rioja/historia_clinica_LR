@@ -185,8 +185,14 @@ export interface ItemsAndDescriptionData {
 	title: string,
 	subtitle: string,
 	icon: string,
-	items?: DescriptionItemData[],
-	note?: DescriptionItemData[],
+	data: ItemsData
+}
+
+export interface ItemsData {
+	items: DescriptionItemData[],
+	note: DescriptionItemData[],
+	firstItem?: DescriptionItemData[],
+	remainingItems?: DescriptionItemData[],
 }
 
 export interface CustomDiagnosesData {
