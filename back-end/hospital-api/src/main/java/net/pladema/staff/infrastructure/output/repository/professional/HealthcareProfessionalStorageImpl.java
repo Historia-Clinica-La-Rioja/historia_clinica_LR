@@ -202,11 +202,13 @@ public class HealthcareProfessionalStorageImpl implements HealthcareProfessional
 				.concat(" FROM ")
 				.concatPart(healthcareProfessionalSearchQuery.from())
 				.concat(" WHERE ")
-				.concatPart(healthcareProfessionalSearchQuery.where());
+				.concatPart(healthcareProfessionalSearchQuery.where())
+				.concat(" ORDER BY ")
+				.concat("p.last_name");
 	}
 
 	private HealthcareProfessionalBo mapToHealthcareProfessionalBo(HealthcareProfessionalVo hcp) {
-		String completePersonName = sharedPersonPort.parseCompletePersonName(
+		String completePersonName = sharedPersonPort.parseFormalPersonName(
 				hcp.getFirstName(),
 				hcp.getMiddleNames(),
 				hcp.getLastName(),

@@ -32,7 +32,9 @@ public class HealthcareProfessionalSearchQuery {
 				"p.last_name, " +
 				"p.identification_number, "+
 				"p.id AS person_id, " +
-				"pe.name_self_determination ";
+				"pe.name_self_determination, " +
+				"p.middle_names, " +
+				"p.other_last_names ";
 
 		return new QueryPart(select);
 	}
@@ -89,7 +91,9 @@ public class HealthcareProfessionalSearchQuery {
 						(String) o[3],
 						(String) o[4],
 						(Integer) o[5],
-						(String) o[6])
+						(String) o[6],
+						(String) o[7],
+						(String) o[8])
 				).collect(toList());
 	}
 }
