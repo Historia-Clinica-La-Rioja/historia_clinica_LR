@@ -35,14 +35,12 @@ import net.pladema.medicalconsultation.diary.controller.constraints.ExistingDiar
 import net.pladema.medicalconsultation.diary.controller.constraints.NewDiaryPeriodValid;
 import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiary;
 import net.pladema.medicalconsultation.diary.controller.constraints.ValidDiaryProfessionalId;
-import net.pladema.medicalconsultation.diary.controller.dto.ActiveDiaryClinicalSpecialtyDto;
 import net.pladema.medicalconsultation.diary.controller.dto.BlockDto;
 import net.pladema.medicalconsultation.diary.controller.dto.CompleteDiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryADto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryListDto;
 import net.pladema.medicalconsultation.diary.controller.dto.DiaryOpeningHoursFreeTimesDto;
-import net.pladema.medicalconsultation.diary.controller.mapper.ClinicalSpecialtiesMapper;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryMapper;
 import net.pladema.medicalconsultation.diary.controller.mapper.DiaryOpeningHoursMapper;
 import net.pladema.medicalconsultation.diary.domain.FreeAppointmentSearchFilterBo;
@@ -100,9 +98,7 @@ public class DiaryController {
     private final ObjectMapper objectMapper;
 
 	private final UpdateDiaryAndAppointments updateDiaryAndAppointments;
-
-	private final ClinicalSpecialtiesMapper clinicalSpecialtiesMapper;
-
+	
     @GetMapping("/{diaryId}")
     @PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA, ENFERMERO, ADMINISTRADOR_AGENDA')")
     public ResponseEntity<CompleteDiaryDto> getDiary(@PathVariable(name = "institutionId") Integer institutionId,

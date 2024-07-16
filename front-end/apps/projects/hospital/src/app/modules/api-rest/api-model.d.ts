@@ -92,11 +92,6 @@ export interface AccessDataDto {
     username: string;
 }
 
-export interface ActiveDiaryClinicalSpecialtyDto {
-    id: number;
-    name: string;
-}
-
 export interface AddDiagnosticReportObservationCommandDto {
     procedureParameterId: number;
     snomedPt: string;
@@ -433,8 +428,9 @@ export interface AppointmentOrderDetailImageDto {
 }
 
 export interface AppointmentSearchDto {
-    aliasOrSpecialtyName?: string;
+    clinicalSpecialtyId: number;
     daysOfWeek: number[];
+    diaryId?: number;
     endSearchTime: TimeDto;
     endingSearchDate: DateDto;
     initialSearchDate: DateDto;

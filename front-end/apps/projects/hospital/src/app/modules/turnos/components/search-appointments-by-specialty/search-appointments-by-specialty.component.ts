@@ -306,7 +306,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	private buildAppointmentSearch(selectedDaysOfWeek: number[]): AppointmentSearchDto {
 		return {
-			aliasOrSpecialtyName: this.form.value.clinicalSpecialty,
+			clinicalSpecialtyId: 123,
 			daysOfWeek: selectedDaysOfWeek,
 			endSearchTime: this.form.value.endingTime,
 			initialSearchTime: this.form.value.initialTime,

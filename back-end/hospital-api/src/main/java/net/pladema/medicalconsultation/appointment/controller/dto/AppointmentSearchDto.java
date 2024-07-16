@@ -19,8 +19,9 @@ import java.util.List;
 public class AppointmentSearchDto {
 
 	private List<Short> daysOfWeek;
+	private Integer clinicalSpecialtyId;
 	@Nullable
-	private String aliasOrSpecialtyName;
+	private Integer diaryId;
 	private TimeDto initialSearchTime;
 	private TimeDto endSearchTime;
 	private DateDto initialSearchDate;

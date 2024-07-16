@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -496,7 +497,9 @@ public class DiaryServiceImpl implements DiaryService {
         List<CompleteDiaryBo> diaries = getActiveDiariesBySearchCriteria(
         	institutionId,
         	searchCriteria.getAliasOrSpecialtyName(),
-        	searchCriteria.getPracticeId()
+        	searchCriteria.getPracticeId(),
+        	searchCriteria.getClinicalSpecialtyId(),
+        	searchCriteria.getDiaryId()
 		);
 
 		if (mustFilterByModality && featureFlagsService.isOn(AppFeature.HABILITAR_TELEMEDICINA)) {
@@ -538,30 +541,94 @@ public class DiaryServiceImpl implements DiaryService {
         return emptyAppointments;
     }
 
-
+	/**
+	 * Fetches the active diaries that match the given condition.
+	 * There are many ways of filtering the diaries. This method has a condition for each supported combination
+	 * of parameters.
+	 * @return
+	 */
     private List<CompleteDiaryBo> getActiveDiariesBySearchCriteria(
     	Integer institutionId,
     	String aliasOrClinicalSpecialtyName,
-    	Integer practiceId
+    	Integer practiceId,
+    	Integer clinicalSpecialtyId,
+    	Integer diaryId
 	) {
         log.debug("Input parameters -> institutionId {}, aliasOrClinicalSpecialtyName {}, practice {}", institutionId, aliasOrClinicalSpecialtyName, practiceId);
 
-        if (aliasOrClinicalSpecialtyName != null && practiceId != null)
+		//Specialty, diaryId and practice
+		if (clinicalSpecialtyId != null && diaryId != null && practiceId != null) {
+			return diaryRepository
+				.getActiveDiariesByClinicalSpecialtyIdAndDiaryIdAndPracticeId(
+					institutionId,
+					clinicalSpecialtyId,
+					diaryId,
+					practiceId)
+				.stream()
+				.map(this::createCompleteDiaryBoInstanceWithPractice)
+				.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+				.collect(toList());
+		}
+
+		//Specialty and practice
+		if (clinicalSpecialtyId != null && diaryId == null && practiceId != null) {
+			return diaryRepository
+					.getActiveDiariesByClinicalSpecialtyIdAndPracticeId(
+							institutionId,
+							clinicalSpecialtyId,
+							practiceId)
+					.stream()
+					.map(this::createCompleteDiaryBoInstanceWithPractice)
+					.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+					.collect(toList());
+		}
+
+		//Specialty and diaryId
+		if (clinicalSpecialtyId != null && diaryId != null && practiceId == null) {
+			return diaryRepository
+				.getActiveDiariesByClinicalSpecialtyIdAndDiaryId(
+					institutionId,
+					clinicalSpecialtyId,
+					diaryId)
+				.stream()
+				.map(this::createCompleteDiaryBoInstanceWithPractice)
+				.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+				.collect(toList());
+		}
+
+		//Specialty
+		if (clinicalSpecialtyId != null && diaryId == null && practiceId == null) {
+			return diaryRepository
+				.getActiveDiariesByClinicalSpecialtyId(
+						institutionId,
+						clinicalSpecialtyId)
+				.stream()
+				.map(this::createCompleteDiaryBoInstanceWithPractice)
+				.map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
+				.collect(toList());
+		}
+
+        if (aliasOrClinicalSpecialtyName != null && practiceId != null) {
             return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyNameAndPracticeId(institutionId, aliasOrClinicalSpecialtyName, practiceId).stream()
                     .map(this::createCompleteDiaryBoInstanceWithPractice)
                     .map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
                     .collect(toList());
+		}
 
-        if (aliasOrClinicalSpecialtyName != null)
+        if (aliasOrClinicalSpecialtyName != null && practiceId == null) {
             return diaryRepository.getActiveDiariesByAliasOrClinicalSpecialtyName(institutionId, aliasOrClinicalSpecialtyName).stream()
                     .map(this::createCompleteDiaryBoInstance)
                     .map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
                     .collect(toList());
-
-        return diaryRepository.getActiveDiariesByPracticeId(institutionId, practiceId).stream()
+		}
+		
+		if (aliasOrClinicalSpecialtyName == null && practiceId != null) {
+        	return diaryRepository.getActiveDiariesByPracticeId(institutionId, practiceId).stream()
                 .map(this::createCompleteDiaryBoInstanceWithPractice)
                 .map(cd -> completeOpeningHoursByMedicalAttentionType(cd, MedicalAttentionType.PROGRAMMED))
                 .collect(toList());
+		}
+		return Collections.emptyList();
     }
 
     private List<EmptyAppointmentBo> getDiaryAvailableAppointments(CompleteDiaryBo diary,
@@ -672,7 +739,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     private void validateSearchCriteria(AppointmentSearchBo searchCriteria) {
-        if (searchCriteria.getAliasOrSpecialtyName() == null && searchCriteria.getPracticeId() == null) {
+        if (searchCriteria.getClinicalSpecialtyId() == null && searchCriteria.getAliasOrSpecialtyName() == null && searchCriteria.getPracticeId() == null) {
             throw new DiaryException(DiaryEnumException.SEARCH_CRITERIA_NOT_FOUND,
                     "No se puede realizar la búsqueda sin seleccionar el tipo de atención ");
         }
