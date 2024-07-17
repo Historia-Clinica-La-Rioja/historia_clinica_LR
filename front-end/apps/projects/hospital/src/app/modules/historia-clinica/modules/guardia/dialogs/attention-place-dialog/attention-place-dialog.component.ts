@@ -10,7 +10,7 @@ import { map } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ShockroomService } from '@api-rest/services/shockroom.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AttendPlace } from '../../routes/home/home.component';
+import { AttendPlace } from '../../components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { EstadosEpisodio, SECTOR_GUARDIA } from '../../constants/masterdata';
 import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambulatoria/services/emergency-care-state-changed.service';
 

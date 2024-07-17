@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import {
@@ -11,38 +11,26 @@ import {
 	ProfessionalPersonDto,
 	PageDto,
 	EmergencyCareEpisodeFilterDto,
-	AppFeature,
 } from '@api-rest/api-model';
-import { ERole } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { differenceInMinutes } from 'date-fns';
 import { EstadosEpisodio, Triages } from '../../constants/masterdata';
 import { ImageDecoderService } from '@presentation/services/image-decoder.service';
-import { EpisodeStateService } from '../../services/episode-state.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
-import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { PatientService } from '@api-rest/services/patient.service';
 import { map, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { getError, hasError } from '@core/utils/form.utils';
-import { EmergencyCareEpisodeAdministrativeDischargeService } from '@api-rest/services/emergency-care-episode-administrative-service.service';
 import { PatientNameService } from "@core/services/patient-name.service";
-import { anyMatch } from '@core/utils/array.utils';
-import { PermissionsService } from '@core/services/permissions.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
-import { AttentionPlace, PatientType } from '@historia-clinica/constants/summaries';
+import { PatientType } from '@historia-clinica/constants/summaries';
 import { UntypedFormBuilder } from '@angular/forms';
-import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
-import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
-import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TriageCategory } from '../../components/triage-chip/triage-chip.component';
-
-const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
+import { TriageDefinitionsService } from '../../services/triage-definitions.service';
+import { PatientDescriptionUpdate } from '../../components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 
 @Component({
 	selector: 'app-home',
@@ -50,9 +38,8 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 	styleUrls: ['./home.component.scss'],
 	providers: [TriageDefinitionsService]
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 
-	private patientDescriptionSubscription: Subscription;
 	getError = getError;
 	hasError = hasError;
 
@@ -73,12 +60,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 	triageCategories$: Observable<TriageCategory[]>;
 	emergencyCareTypes$: Observable<MasterDataInterface<number>[]>;
 
-	hasEmergencyCareRelatedRole: boolean;
-	private hasAdministrativeRole: boolean;
-	private hasRoleAbleToSeeTriage: boolean;
-	rolesToEpisodeAttend: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
-	isAdministrativeAndHasTriageFFInFalse: boolean;
-
 	private static calculateWaitingTime(dateTime: DateTimeDto): number {
 		const creationDate = dateTimeDtoToDate(dateTime);
 		const now = new Date();
@@ -90,52 +71,20 @@ export class HomeComponent implements OnInit, OnDestroy {
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private imageDecoderService: ImageDecoderService,
 		private snackBarService: SnackBarService,
-		private readonly dialog: MatDialog,
-		public readonly episodeStateService: EpisodeStateService,
-		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly patientService: PatientService,
 		public readonly formBuilder: UntypedFormBuilder,
 		public readonly triageMasterDataService: TriageMasterDataService,
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
-		private readonly emergencyCareEpisodeAdministrativeDischargeService: EmergencyCareEpisodeAdministrativeDischargeService,
 		private readonly patientNameService: PatientNameService,
-		private readonly permissionsService: PermissionsService,
 		private readonly guardiaRouterService: GuardiaRouterService,
-		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
-		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
-		private readonly featureFlagService: FeatureFlagService,
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
-	}
-
-	ngOnDestroy(): void {
-		this.patientDescriptionSubscription?.unsubscribe();
 	}
 
 	ngOnInit(): void {
 		this.loadEpisodes(this.FIRST_PAGE);
 		this.triageCategories$ = this.filterService.getTriageCategories();
 		this.emergencyCareTypes$ = this.filterService.getEmergencyCareTypes();
-		this.setRoles();
-		this.checkAdministrativeFF();
-	}
-
-	private setRoles(){
-		this.permissionsService.contextAssignments$().subscribe((userRoles: ERole[]) => {
-			this.hasEmergencyCareRelatedRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO, ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD]);
-			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
-
-			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
-       		this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
-		});
-	}
-
-	private checkAdministrativeFF(){
-		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
-			this.hasRoleAbleToSeeTriage
-			? this.isAdministrativeAndHasTriageFFInFalse = false
-			: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
-		)
 	}
 
 	loadEpisodes(pageNumber: number): void {
@@ -159,11 +108,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 			}, _ => this.loading = false);
 	}
 
-	showActionsButton(episode : Episode): boolean{
-		return !this.isAdministrativeAndHasTriageFFInFalse ||
-		episode.patient?.typeId === this.EMERGENCY_CARE_TEMPORARY;
-	}
-
 	private getFilterData(): EmergencyCareEpisodeFilterDto {
 		return {
 			mustBeEmergencyCareTemporal: this.filterService.getForm().value.emergencyCareTemporary,
@@ -183,48 +127,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	goToAdmisionAdministrativa(): void {
 		this.router.navigate([`${this.router.url}/nuevo-episodio/administrativa`]);
-	}
-
-	atender(episodeId: number) {
-		this.emergencyCareEpisodeAttend.attend(episodeId, true);
-	}
-
-	finalizar(episodeId: number): void {
-		const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-			data: {
-				title: 'guardia.home.episodes.episode.actions.finalizar_ausencia.TITLE',
-				content: 'guardia.home.episodes.episode.actions.finalizar_ausencia.CONFIRM'
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(confirmed => {
-			if (confirmed) {
-				this.emergencyCareEpisodeAdministrativeDischargeService.newAdministrativeDischargeByAbsence(episodeId).subscribe(changed => {
-					if (changed) {
-						this.snackBarService
-							.showSuccess(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.SUCCESS`);
-						this.loadEpisodes(this.FIRST_PAGE);
-					} else {
-						this.snackBarService
-							.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`);
-					}
-				}, _ => this.snackBarService
-					.showError(`${TRANSLATE_KEY_PREFIX}.finalizar_ausencia.ERROR`)
-				);
-			}
-		});
-	}
-
-	nuevoTriage(episode: EmergencyCareListDto): void {
-		this.triageDefinitionsService.getTriagePath(episode.type?.id)
-			.subscribe(({ component }) => {
-				const dialogRef = this.dialog.open(component, { data: episode.id });
-				dialogRef.afterClosed().subscribe(idReturned => {
-					if (idReturned) {
-						this.loadEpisodes(this.FIRST_PAGE);
-					}
-				});
-			});
 	}
 
 	filter(): void {
@@ -305,25 +207,22 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.loadEpisodes(event.pageIndex);
 	}
 
-	editPatientDescription(episodeId: number, preloadedReason: string) {
-		this.patientDescriptionSubscription = this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(patientDescription => {
-			if (patientDescription)
-				this.updatePatientDescription(episodeId, patientDescription);
-		});
-		this.emergencyCareTemporaryPatientService.openTemporaryPatient(preloadedReason);
+	handleTriageDialogClosed(idReturned: number) {
+		if (idReturned) {
+		  this.loadEpisodes(this.FIRST_PAGE);
+		}
 	}
 
-	private updatePatientDescription(episodeId: number, patientDescription: string) {
-		this.emergencyCareEpisodeService.updatePatientDescription(episodeId, patientDescription).subscribe({
+	handlePatientDescriptionUpdate(patientDescriptionUpdate: PatientDescriptionUpdate) {
+		this.emergencyCareEpisodeService.updatePatientDescription(patientDescriptionUpdate.episodeId, patientDescriptionUpdate.patientDescription).subscribe({
 			next: () => {
 				this.snackBarService.showSuccess('guardia.home.episodes.episode.actions.edit_patient_description.SUCCESS');
-				const updatedEpisode = this.episodes.find(episode => episode.id === episodeId);
-				updatedEpisode.patient.patientDescription = patientDescription;
+				const updatedEpisode = this.episodes.find(episode => episode.id === patientDescriptionUpdate.episodeId);
+				updatedEpisode.patient.patientDescription = patientDescriptionUpdate.patientDescription;
 			},
 			error: () => this.snackBarService.showError('guardia.home.episodes.episode.actions.edit_patient_description.ERROR')
 		});
 	}
-
 }
 
 export interface Episode {
@@ -344,9 +243,4 @@ export interface Episode {
 export interface EpisodeListTriage {
 	emergencyCareEpisodeListTriageDto: EmergencyCareEpisodeListTriageDto,
 	reasons: string[],
-}
-
-export interface AttendPlace {
-	id: number,
-	attentionPlace: AttentionPlace
 }

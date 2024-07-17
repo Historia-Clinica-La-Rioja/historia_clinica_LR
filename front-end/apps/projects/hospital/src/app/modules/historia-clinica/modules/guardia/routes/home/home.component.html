@@ -234,36 +234,12 @@
 									</ng-template>
 								</div>
 
-								<div id="actions-container" fxFlex="5%"
-									*ngIf="episode.state.id !== estadosEpisodio.CON_ALTA_MEDICA && showActionsButton(episode)">
-									<button id="actions" mat-icon-button (click)="$event.stopPropagation()"
-										[matMenuTriggerFor]="actions">
-										<mat-icon>more_vert</mat-icon>
-									</button>
+								<app-emergency-care-dashboard-actions
+								[episode]="episode"
+								(triageDialogClosed)="handleTriageDialogClosed($event)"
+								(patientDescriptionUpdate)="handlePatientDescriptionUpdate($event)">
+								</app-emergency-care-dashboard-actions>
 
-									<mat-menu #actions="matMenu">
-										<ng-container *ngIf="!isAdministrativeAndHasTriageFFInFalse">
-											<button id="nuevo-triage" mat-menu-item (click)="nuevoTriage(episode)">
-												{{ 'guardia.home.episodes.episode.actions.NUEVO_TRIAGE' | translate }}
-											</button>
-										</ng-container>
-
-										<ng-container *appHasRole="rolesToEpisodeAttend">
-											<button id="atender" mat-menu-item
-												*ngIf="episode.state.id === estadosEpisodio.EN_ESPERA"
-												(click)="atender(episode.id)">
-												{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
-											</button>
-										</ng-container>
-
-										<button id="editPatientDescription" mat-menu-item
-											*ngIf="episode.patient?.typeId === EMERGENCY_CARE_TEMPORARY"
-											(click)="editPatientDescription(episode.id, episode.patient.patientDescription)">
-											{{ 'guardia.home.episodes.episode.actions.edit_patient_description.TITLE' | translate }}
-										</button>
-
-									</mat-menu>
-								</div>
 							</div>
 						</mat-card>
 						<mat-paginator #paginator

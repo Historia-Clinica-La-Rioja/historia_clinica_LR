@@ -7,9 +7,10 @@ import { processErrors } from '@core/utils/form.utils';
 import { AttentionPlace } from '@historia-clinica/constants/summaries';
 import { BedAssignmentComponent } from '@historia-clinica/dialogs/bed-assignment/bed-assignment.component';
 import { OperationDeniedComponent } from '@historia-clinica/modules/ambulatoria/dialogs/diagnosis-required/operation-denied.component';
+import { AttendPlace } from '@historia-clinica/modules/guardia/components/emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/masterdata';
 import { AttentionPlaceDialogComponent } from '@historia-clinica/modules/guardia/dialogs/attention-place-dialog/attention-place-dialog.component';
-import { AttendPlace, Episode } from '@historia-clinica/modules/guardia/routes/home/home.component';
+import { Episode } from '@historia-clinica/modules/guardia/routes/home/home.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { GuardiaRouterService } from '@historia-clinica/modules/guardia/services/guardia-router.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -51,7 +52,7 @@ export class EmergencyCareEpisodeAttendService {
 						message: 'No existen lugares disponibles para realizar la atención'
 					}
 				})
-			} 
+			}
 			this.openPlaceAttendDialog(episode, quantity);
 		});
 	}
@@ -75,7 +76,7 @@ export class EmergencyCareEpisodeAttendService {
 		}
 		return episode;
 	}
-	
+
 	private openPlaceAttendDialog(episode: Episode, quantity: AttentionPlacesQuantityDto) {
 		const dialogRef = this.dialog.open(AttentionPlaceDialogComponent, {
 			width: '35%',
@@ -83,10 +84,10 @@ export class EmergencyCareEpisodeAttendService {
 				quantity
 			}
 		});
-	
+
 		dialogRef.afterClosed().subscribe((attendPlace: AttendPlace) => {
 			if (!attendPlace) return;
-			
+
 			if (attendPlace.attentionPlace === AttentionPlace.CONSULTORIO) {
 				this.episodeStateService.atender(episode.id, attendPlace.id).subscribe(changed => {
 					if (changed) {
@@ -101,13 +102,13 @@ export class EmergencyCareEpisodeAttendService {
 			if (attendPlace.attentionPlace === AttentionPlace.SHOCKROOM) {
 				this.episodeStateService.atender(episode.id, null, attendPlace.id).subscribe((response: boolean) => {
 					if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-	
+
 					this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 					this.toEpisodeOrLoadEpisode(episode);
-	
+
 				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 			}
-	
+
 			if (attendPlace.attentionPlace === AttentionPlace.HABITACION) {
 				this.dialog.open(BedAssignmentComponent, {
 						data: {
@@ -117,13 +118,13 @@ export class EmergencyCareEpisodeAttendService {
 					.afterClosed()
 					.subscribe((bed: BedInfoDto) => {
 						if (!bed) return;
-	
+
 						this.episodeStateService.atender(episode.id, null, null, bed.bed.id).subscribe((response: boolean) => {
 							if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-	
+
 							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 							this.toEpisodeOrLoadEpisode(episode);
-	
+
 						}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
 					});
 			}
@@ -131,7 +132,7 @@ export class EmergencyCareEpisodeAttendService {
 	}
 
 	private toEpisodeOrLoadEpisode(episode: Episode) {
-		(this.isFromEmergencyCareEpisodeList) 
+		(this.isFromEmergencyCareEpisodeList)
 			? this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id })
 			: this.loadEpisode$.next(true);
 	}
