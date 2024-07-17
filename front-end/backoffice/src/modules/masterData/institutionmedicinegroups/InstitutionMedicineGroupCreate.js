@@ -1,16 +1,17 @@
 import React from 'react';
-import { 
-    SimpleForm, 
+import {
     Create, 
+    SimpleForm, 
     TextInput, 
-    BooleanInput 
+    BooleanInput
 } from 'react-admin';
 import { CustomToolbar } from '../../components';
 
+const redirect = (basePath, id, data) => `/institutions/${data.institutionId}/show/1`;
 
-const MedicineGroupCreate = props => (
+const InstitutionMedicineGroupCreate = props => (
     <Create {...props}>
-        <SimpleForm redirect="show" toolbar={<CustomToolbar/>}>
+        <SimpleForm redirect={redirect} toolbar={<CustomToolbar/>}>
             <TextInput source="name"/>
             <span>Cobertura pública exclusiva</span>
             <br/>
@@ -30,4 +31,4 @@ const MedicineGroupCreate = props => (
     </Create>
 );
 
-export default MedicineGroupCreate;
+export default InstitutionMedicineGroupCreate;

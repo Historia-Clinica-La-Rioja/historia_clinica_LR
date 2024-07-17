@@ -20,6 +20,7 @@ import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
 import UnidadesJerarquicas from './UnidadesJerarquicas';
 import { Grid, Divider } from '@material-ui/core';
 import { ParameterizedFormSection } from './ParameterizedFormSection';
+import { MedicineTabs } from './MedicineTabs';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -202,6 +203,9 @@ const InstitutionShow = props => {
                 <HierarchicalUnitTabs {...props} />
 
                 {parameterizedFormFF && <ParameterizedFormSection {...props} />}
+                <HierarchicalUnitTabs {...props} />
+                <SectionTitle label="resources.institutions.fields.pharmacos" />
+                <MedicineTabs {...props}/>
             </SimpleShowLayout>
         </Show>
     );

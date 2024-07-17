@@ -57,7 +57,6 @@ const updateHUResponsablesValues = (originalArray) => {
 }
 
 const toHierarchicalUnitCustomNodes = (nodesDto, hierarchicalUnitTypes) => {
-  console.log(nodesDto);
   return nodesDto.map(n => {
     return {
       id: n.id.toString(),

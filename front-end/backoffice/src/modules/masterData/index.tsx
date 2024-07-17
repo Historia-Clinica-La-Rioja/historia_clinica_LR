@@ -30,6 +30,8 @@ import parameterizedFormParameter from './parameterized-form-parameter';
 import medicineGroupMedicines from './medicinegroupmedicines';
 import medicineGroupProblems from './medicinegroupproblems';
 import institutionsPrescription from './institutions-prescription';
+import institutionMedicineFinancingStatus from '../facilities/institutionmedicinefinancingstatus';
+import institutionMedicineGroups from './institutionmedicinegroups';
 
 const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="episodedocumenttypes" {...episodesDocumentTypes(permissions)} />,
@@ -60,7 +62,9 @@ const resourcesMasterData = (permissions: SGXPermissions) => [
     <Resource name="parameterizedformparameter" {...parameterizedFormParameter(permissions)} />,
     <Resource name="medicinegroupmedicines" {...medicineGroupMedicines(permissions)}/>,
     <Resource name="medicinegroupproblems" {...medicineGroupProblems(permissions)} />,
-    <Resource name="institutions-prescription" {...institutionsPrescription(permissions)} />
+    <Resource name="institutions-prescription" {...institutionsPrescription(permissions)} />,
+    <Resource name="institutionmedicinegroups" {...institutionMedicineGroups(permissions)} />,
+    <Resource name="institutionmedicinesfinancingstatus" {...institutionMedicineFinancingStatus(permissions)} />
 ];
 
 export default resourcesMasterData;

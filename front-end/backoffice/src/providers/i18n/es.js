@@ -210,7 +210,8 @@ const messages = {
                 provinceCode: 'Código de provincia',
                 hierarchicalUnits: 'Unidades jerárquicas',
                 parameterizedForm: 'Formularios configurables',
-                institutionalParameterizedForm: 'Formularios configurables institucionales'
+                institutionalParameterizedForm: 'Formularios configurables institucionales',
+                pharmacos: 'Fármacos y grupos de fármacos'
             },
         },
         "booking-institution": {
@@ -1138,7 +1139,9 @@ const messages = {
                 emergencyCare: 'Guardia', 
                 internment: 'Internación',
                 addpharmaco: 'Agregar fármaco',
-                addproblem: 'Agregar problema'
+                addproblem: 'Agregar problema',
+                allDiagnoses: 'Incluir todos',
+                message: 'Mensaje',
             },
             tabs: {
                 pharmacos: 'Fármacos',
@@ -1189,7 +1192,30 @@ const messages = {
                 addressId: 'Dirección',
                 dependencyId: 'Dependencia',
                 provinceId: 'Provincia'
+            }
+        },
+        institutionmedicinesfinancingstatus: {
+            name: "Fármaco",
+            fields: {
+                conceptPt: "Fármaco de uso clínico",
+                conceptSctid: "COD Snomed",
+                financedByDomain: "Financiado por dominio",
+                financedByInstitution: "Financiado por institución"
+            }
+        },
+        institutionmedicinegroups: {
+            name: "Grupo de fármacos de institución",
+            fields: {
+                name: 'Nombre del grupo',
+                requiresAudit: 'Requiere auditoría',
+                outpatient: 'Ambulatoria',
+                emergencyCare: 'Guardia', 
+                internment: 'Internación',
+                allDiagnoses: 'Incluir todos',
+                message: 'Mensaje',
+                enabled: 'Habilitado por la institución'
             },
+            addRelated: 'Agregar grupo de fármacos'
         }
     }
 };

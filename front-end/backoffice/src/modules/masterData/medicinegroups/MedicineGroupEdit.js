@@ -21,7 +21,7 @@ const MedicineGroupEdit = props => (
             <BooleanInput source="internment"/>
             <span>Diagnósticos y problemas</span>
             <br/>
-            <BooleanInput label="Incluir todos" source="allDiagnoses" />
+            <BooleanInput source="allDiagnoses" />
             <span>Mensaje para indicaciones</span>
             <br/>
             <TextInput source="message" label=""/>        

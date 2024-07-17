@@ -105,7 +105,7 @@ const MedicineGroupShow = props => {
                     <BooleanField source="internment"/>
                     <br/>
                     <span>Diagnósticos y problemas</span>
-                    <BooleanField label="Incluir todos" source="allDiagnoses" />
+                    <BooleanField source="allDiagnoses" />
                     <br/>
                     <span>Mensaje para indicaciones</span>
                     <TextField source="message" label=""/>
