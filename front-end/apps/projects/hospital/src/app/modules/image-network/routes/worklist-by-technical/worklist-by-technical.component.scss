@@ -109,20 +109,14 @@
 
 ::ng-deep .appointment-detail span {
     display: flex;
-    min-width: 100%;
     height: fit-content;
     justify-content: center;
 }
 //------------------------//
 
-@media (max-width: 960px) {
-	.appointment-container {
-		align-items: start;
-	}
-}
-
-@media (max-width: 960px) {
+@media (max-width: 1150px) {
     .appointment-container {
+        align-items: start;
         flex-direction: column !important;
     }
 

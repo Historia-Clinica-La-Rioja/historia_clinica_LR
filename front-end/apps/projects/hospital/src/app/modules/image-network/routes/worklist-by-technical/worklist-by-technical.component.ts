@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -33,6 +33,7 @@ import { ViewPdfBo } from '@presentation/dialogs/view-pdf/view-pdf.service';
 import { newDate } from '@core/utils/moment.utils';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { toStudyLabel } from '../../utils/study.utils';
+import { WINDOW } from '../../constants/token';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -96,6 +97,7 @@ export class WorklistByTechnicalComponent implements OnInit {
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly worklistFacadeService: WorklistFacadeService,
 		private readonly patientNameService: PatientNameService,
+		@Inject(WINDOW) private window: Window,
 	) {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES).subscribe(isOn => {
 			this.permission = isOn;
@@ -425,6 +427,9 @@ export class WorklistByTechnicalComponent implements OnInit {
 		});
 	}
 
+    goUrlLocalStudy(studyLocalUrl: string) {
+		this.window.open(studyLocalUrl, "_blank")
+	}
 }
 
 export interface detailedAppointment {
