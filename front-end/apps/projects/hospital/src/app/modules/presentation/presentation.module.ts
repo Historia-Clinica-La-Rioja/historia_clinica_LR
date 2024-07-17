@@ -35,6 +35,7 @@ import { DownloadButtonComponent } from './components/download-button/download-b
 import { EditableFieldComponent } from './components/editable-field/editable-field.component';
 import { EmergencyCareTemporaryPatientHeader } from './components/emergency-care-temporary-patient-header/emergency-care-temporary-patient-header.component';
 import { ExpansionSectionComponent } from './components/expansion-section/expansion-section.component';
+import { ExternalIconComponent } from './components/external-icon/external-icon.component';
 import { FactorDeRiesgoComponent } from './components/factor-de-riesgo-current/factor-de-riesgo.component';
 import { FactorDeRiesgoCurrentPreviousComponent } from './components/factor-de-riesgo-current-previous/factor-de-riesgo-current-previous.component';
 import { FilterButtonComponent } from './components/filter-button/filter-button.component';
@@ -152,6 +153,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
 		ExpansionSectionComponent,
+		ExternalIconComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FilterButtonComponent,
@@ -285,6 +287,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		EditableFieldComponent,
 		EmergencyCareTemporaryPatientHeader,
 		ExpansionSectionComponent,
+		ExternalIconComponent,
 		FactorDeRiesgoComponent,
 		FactorDeRiesgoCurrentPreviousComponent,
 		FilterButtonComponent,
