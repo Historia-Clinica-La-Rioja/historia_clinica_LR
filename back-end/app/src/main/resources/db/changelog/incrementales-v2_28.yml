@@ -21,3 +21,186 @@ databaseChangeLog:
               relativeToChangelogFile: true
               splitStatements: false
 
+    - changeSet:
+        id: addColumn-is_domain-medicine_group
+        author: fsimaro
+        changes:
+          - addColumn:
+              tableName: medicine_group
+              columns:
+                - column:
+                    name: is_domain
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.true}
+
+    - changeSet:
+        id: createTable-institution_medicine_financing_status
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: institution_medicine_financing_status
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institution_medicine_financing_status
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: institution(id)
+                      foreignKeyName: FK_institution_medicine_financing
+                - column:
+                    name: medicine_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      references: medicine_financing_status(id)
+                      foreignKeyName: FK_institution_medicine_financing_status_medicine_id
+                - column:
+                    name: financed
+                    type: boolean
+                    constraints:
+                      nullable: false
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: createTable-institution_medicine_group
+        author: fsimaro
+        changes:
+          createTable:
+            tableName: institution_medicine_group
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_institution_medicine_group
+              - column:
+                  name: institution_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    references: institution(id)
+                    foreignKeyName: FK_institution_medicine_group_institution_id
+              - column:
+                  name: medicine_group_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    references: medicine_group(id)
+                    foreignKeyName: FK_institution_medicine_group_medicine_group_id
+              - column:
+                  name: created_by
+                  type: int
+                  defaultValue: -1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: int
+                  defaultValue: -1
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_on
+                  type: datetime
+                  defaultValueDate: ${date.now}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: ${boolean.false}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: deleted_by
+                  type: int
+              - column:
+                  name: deleted_on
+                  type: datetime
+
+    - changeSet:
+        id: institution_medicine_group-metadata
+        comment : Populate table institution_medicine_group
+        author: fsimaro
+        context: "!schema-only"
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO institution_medicine_group (institution_id, medicine_group_id)
+                SELECT i.id, m.id
+                FROM institution i
+                CROSS JOIN medicine_group m
+                WHERE m.deleted IS FALSE;
+
+    - changeSet:
+        id: institution_medicine_financing_status-metadata
+        comment : Populate table institution_medicine_financing_status
+        author: fsimaro
+        context: "!schema-only"
+        preConditions:
+          - onFail: CONTINUE
+          - onError: CONTINUE
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO institution_medicine_financing_status (institution_id, medicine_id, financed)
+                SELECT i.id, m.id, false
+                FROM institution i
+                CROSS JOIN medicine_financing_status m;
+

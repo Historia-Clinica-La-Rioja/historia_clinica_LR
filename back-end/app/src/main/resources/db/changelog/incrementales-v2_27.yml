@@ -263,3 +263,4 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: patient
               validate: true
+
