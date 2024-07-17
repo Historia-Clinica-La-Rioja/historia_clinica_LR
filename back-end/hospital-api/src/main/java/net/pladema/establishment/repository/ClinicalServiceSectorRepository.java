@@ -51,4 +51,5 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 
 	Optional<ClinicalSpecialtySector> findByClinicalSpecialtyIdAndSectorId(Integer clinicalSpecialtyId, Integer sectorId);
 
+	Optional<ClinicalSpecialtySector> findByDescriptionAndSectorId(String description, Integer sectorId);
 }

@@ -54,6 +54,7 @@ public class BackofficeClinicalServiceSectorStore implements BackofficeStore<Cli
 
 	@Override
 	public ClinicalSpecialtySector save(ClinicalSpecialtySector entity) {
+		assertSameDescriptionAndSectorId(entity.getDescription(), entity.getSectorId());
 		assertSameClinicalSpecialtyIdAndSectorId(entity.getClinicalSpecialtyId(), entity.getSectorId());
 		return clinicalServiceSectorRepository.save(entity);
 	}
@@ -78,6 +79,14 @@ public class BackofficeClinicalServiceSectorStore implements BackofficeStore<Cli
 			throw new BackofficeClinicalServiceSectorException(
 					BackofficeClinicalServiceSectorEnumException.ALREADY_EXISTS_SAME_SECTOR_AND_SPECIALTY,
 					"Ya existe un servicio con el tipo de servicio y sector seleccionado."
+			);
+	}
+
+	private void assertSameDescriptionAndSectorId(String description, Integer sectorId){
+		if(clinicalServiceSectorRepository.findByDescriptionAndSectorId(description, sectorId).isPresent())
+			throw new BackofficeClinicalServiceSectorException(
+					BackofficeClinicalServiceSectorEnumException.ALREADY_EXISTS_SAME_SECTOR_AND_DESCRIPTION,
+					"Ya existe un servicio con la misma descripción y sector seleccionado."
 			);
 	}
 
