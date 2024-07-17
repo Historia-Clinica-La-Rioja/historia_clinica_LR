@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AMedicalDischargeDto, BasicPatientDto, DiagnosesGeneralStateDto, ERole, MasterDataInterface, PersonPhotoDto, ResponseEmergencyCareDto, SnomedDto, TimeDto } from '@api-rest/api-model';
+import { BasicPatientDto, DiagnosesGeneralStateDto, ERole, PersonPhotoDto, ResponseEmergencyCareDto, SnomedDto, TimeDto, AMedicalDischargeDto, ApiErrorMessageDto, MasterDataInterface } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
@@ -221,18 +221,19 @@ export class MedicalDischargeComponent implements OnInit {
 			const validForm: MedicalDischargeForm = { ... this.form.value, problems: selectedProblems };
 			const medicalCoverageDto: AMedicalDischargeDto = this.guardiaMapperService.formToAMedicalDischargeDto(validForm);
 			this.emergencyCareEspisodeDischargeService.newMedicalDischarge
-				(this.episodeId, medicalCoverageDto).subscribe(
-					saved => {
+				(this.episodeId, medicalCoverageDto).subscribe({
+					next: (saved) => {
 						this.isLoading = false
 						if (saved) {
 							this.goToEpisodeDetails();
 							this.snackBarService.showSuccess('guardia.episode.medical_discharge.messages.SUCCESS');
 						}
-					}, error => {
+					},
+					error: (err: ApiErrorMessageDto) => {
 						this.isLoading = false
-						this.snackBarService.showError(error.message ? error.message : 'guardia.episode.medical_discharge.messages.ERROR');
+						this.snackBarService.showError(err.text);
 					}
-				);
+				});
 		} else{
 			this.formSubmited = false;
 			this.isLoading = false;

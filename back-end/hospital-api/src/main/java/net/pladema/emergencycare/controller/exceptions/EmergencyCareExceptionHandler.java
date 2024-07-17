@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.emergencycare.application.getemergencycaredocumentheader.exceptions.GetEmergencyCareDocumentHeaderException;
 import net.pladema.emergencycare.application.exception.EmergencyCareEpisodeException;
+import net.pladema.emergencycare.application.exception.EmergencyCareEpisodeStateException;
 import net.pladema.emergencycare.application.getevolutionnotebydocumentid.exceptions.GetEvolutionNoteByDocumentIdException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -45,5 +46,12 @@ public class EmergencyCareExceptionHandler {
 	protected ApiErrorMessageDto handleEmergencyCareEpisodeException(EmergencyCareEpisodeException ex) {
 		log.error("EmergencyCareEpisodeException exception -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)	
+	@ExceptionHandler({EmergencyCareEpisodeStateException.class})
+	protected ApiErrorMessageDto handleEmergencyCareStateException(EmergencyCareEpisodeStateException ex) {
+		log.error("EmergencyCareEpisodeStateException exception -> {}", ex.getMessage(), ex);
+		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 }

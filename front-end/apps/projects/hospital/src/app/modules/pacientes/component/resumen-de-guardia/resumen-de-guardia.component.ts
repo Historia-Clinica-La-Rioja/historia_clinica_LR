@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { ERole, AppFeature, VMedicalDischargeDto } from '@api-rest/api-model.d';
+import { AppFeature, VMedicalDischargeDto, ERole, ApiErrorMessageDto } from '@api-rest/api-model.d';
 import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
@@ -172,8 +172,8 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		ref.afterClosed().subscribe(
 			closed => {
 				if (closed) {
-					this.episodeStateService.pasarAEspera(this.episodeId).subscribe(
-						changed => {
+					this.episodeStateService.pasarAEspera(this.episodeId).subscribe({
+						next: (changed) => {
 							if (changed) {
 								this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.en_espera.SUCCESS`);
 								this.episodeState = EstadosEpisodio.EN_ESPERA;
@@ -186,8 +186,12 @@ export class ResumenDeGuardiaComponent implements OnInit {
 							else {
 								this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.en_espera.ERROR`);
 							}
+						},
+						error: (err: ApiErrorMessageDto) => {
+							this.snackBarService.showError(err.text);
 						}
-					)
+					})
+					
 				}
 			}
 		)
