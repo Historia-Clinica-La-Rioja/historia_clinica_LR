@@ -15,49 +15,49 @@ import java.util.List;
 public class BackofficeParameterizedFormValidator implements BackofficePermissionValidator<ParameterizedForm, Integer> {
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertGetList(ParameterizedForm entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public List<Integer> filterIdsByPermission(List<Integer> ids) {
-		return null;
+		return ids;
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertGetOne(Integer id) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertCreate(ParameterizedForm entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertUpdate(Integer id, ParameterizedForm entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertDelete(Integer id) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ItemsAllowed<Integer> itemsAllowedToList(ParameterizedForm entity) {
 		return new ItemsAllowed<>();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ItemsAllowed<Integer> itemsAllowedToList() {
 		return new ItemsAllowed<>();
 	}

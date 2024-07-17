@@ -10,7 +10,8 @@ import {
     ReferenceField,
     ReferenceManyField,
     Pagination,
-    DeleteButton
+    DeleteButton,
+    usePermissions
 } from 'react-admin';
 import SectionTitle from '../../components/SectionTitle';
 import CreateRelatedButton from '../../components/CreateRelatedButton';
@@ -18,6 +19,13 @@ import { formIsUpdatable } from './ParameterizedFormStatus';
 import { ParameterLoincCode } from '../parameters/ParameterList';
 import { TYPE_CHOICES_IDS } from '../parameters/ParameterTypes';
 import UpdateParameterizedFormParameterOrder from './UpdateParameterizedFormParameterOrder';
+import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
+
+const UserIsInstitutionalAdmin = function () {
+    const { permissions } = usePermissions();
+    const userAdmin = permissions?.hasAnyAssignment(ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE);
+    return userAdmin;
+}
 
 const AddParameter = ({ canEdit, ...props }) => {
     const record = useRecordContext(props);
@@ -36,7 +44,7 @@ const AddParameter = ({ canEdit, ...props }) => {
 
 const AssociatedParameters = (props) => {
     const record = useRecordContext(props);
-    const canEdit = formIsUpdatable(record.statusId);
+    const canEdit = formIsUpdatable(record.statusId) && !UserIsInstitutionalAdmin();
     return record ? (
         <Fragment>
             <SectionTitle label="resources.parameterizedformparameter.associatedParameters" />

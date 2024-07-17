@@ -9,15 +9,23 @@ import {
     useRecordContext,
     Filter,
     BooleanInput,
-    TextInput
+    TextInput,
+    usePermissions,
 } from 'react-admin';
 import { FORM_STATUS_CHOICES, formIsUpdatable } from './ParameterizedFormStatus';
 import UpdateParameterizedFormStatusButton from './UpdateParameterizedFormStatusButton';
 import ParameterizedFormScopes from './ParameterizedFormScope';
+import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
 
 const ConditionalFormEdit = props => {
     const record = useRecordContext(props);
-    return formIsUpdatable(record.statusId) ? <EditButton {...props}/> : null;
+    return formIsUpdatable(record.statusId) && !UserIsInstitutionalAdmin() ? <EditButton {...props}/> : null;
+}
+
+const UserIsInstitutionalAdmin = function () {
+    const { permissions } = usePermissions();
+    const userAdmin = permissions?.hasAnyAssignment(ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE);
+    return userAdmin;
 }
 
 const StatusFilters = (props) => {
@@ -48,7 +56,7 @@ const ParameterizedFormList = props => (
             <SelectField label="resources.parameterizedform.status" source="statusId" choices={FORM_STATUS_CHOICES} />
             <ParameterizedFormScopes label="resources.parameterizedform.scope"/>
             <ConditionalFormEdit />
-            <UpdateParameterizedFormStatusButton />
+            {!UserIsInstitutionalAdmin() && <UpdateParameterizedFormStatusButton /> }
         </Datagrid>
     </List>
 );

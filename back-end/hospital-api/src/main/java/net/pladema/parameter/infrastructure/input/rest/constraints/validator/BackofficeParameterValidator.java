@@ -24,19 +24,19 @@ public class BackofficeParameterValidator implements BackofficePermissionValidat
 	private final ParameterizedFormParameterRepository parameterizedFormParameterRepository;
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertGetList(ParameterDto entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public List<Integer> filterIdsByPermission(List<Integer> ids) {
 		return ids;
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertGetOne(Integer id) {
 
 	}
@@ -77,13 +77,13 @@ public class BackofficeParameterValidator implements BackofficePermissionValidat
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ItemsAllowed<Integer> itemsAllowedToList(ParameterDto entity) {
 		return new ItemsAllowed<>();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ItemsAllowed<Integer> itemsAllowedToList() {
 		return new ItemsAllowed<>();
 	}

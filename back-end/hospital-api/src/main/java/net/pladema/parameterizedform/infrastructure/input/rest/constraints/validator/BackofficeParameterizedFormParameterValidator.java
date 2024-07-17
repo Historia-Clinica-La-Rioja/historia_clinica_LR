@@ -24,25 +24,25 @@ public class BackofficeParameterizedFormParameterValidator implements Backoffice
 	private final ParameterizedFormParameterRepository parameterizedFormParameterRepository;
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertGetList(ParameterizedFormParameterDto entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public List<Integer> filterIdsByPermission(List<Integer> ids) {
 		return List.of();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertGetOne(Integer id) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertCreate(ParameterizedFormParameterDto entity) {
 		Boolean parameterAlreadyAssociated = parameterizedFormParameterRepository.alreadyExistsParameterizedFormParameters(entity.getParameterizedFormId(), entity.getParameterId());
 		if (parameterAlreadyAssociated)
@@ -51,25 +51,25 @@ public class BackofficeParameterizedFormParameterValidator implements Backoffice
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertUpdate(Integer id, ParameterizedFormParameterDto entity) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public void assertDelete(Integer id) {
 
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ItemsAllowed<Integer> itemsAllowedToList(ParameterizedFormParameterDto entity) {
 		return new ItemsAllowed<>();
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public ItemsAllowed<Integer> itemsAllowedToList() {
 		return new ItemsAllowed<>();
 	}

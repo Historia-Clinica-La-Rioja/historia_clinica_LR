@@ -41,6 +41,7 @@ public class BackofficeParameterizedFormController extends AbstractBackofficeCon
 	}
 
 	@GetMapping(params="excludeInactive=true")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public @ResponseBody Page<ParameterizedForm> getList(Pageable pageable,
 											@RequestParam(name = "excludeInactive") Boolean excludeInactive,
 											@RequestParam(name = "name", required = false) String name) {
@@ -53,7 +54,7 @@ public class BackofficeParameterizedFormController extends AbstractBackofficeCon
 	}
 
 	@PutMapping(value = "/{id}/update-status")
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	@ResponseStatus(HttpStatus.OK)
 	public void updateStatus(@PathVariable Integer id) {
 		updateFormStatus.run(id);

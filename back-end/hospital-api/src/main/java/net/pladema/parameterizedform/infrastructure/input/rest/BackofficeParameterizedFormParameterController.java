@@ -31,7 +31,7 @@ public class BackofficeParameterizedFormParameterController extends AbstractBack
 	}
 
 	@PutMapping(value = "/{id}/change-order")
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	@ResponseStatus(HttpStatus.OK)
 	public void changeOrder(@PathVariable Integer id, @RequestParam String direction) {
 
