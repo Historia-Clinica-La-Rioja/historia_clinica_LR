@@ -681,7 +681,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	}
 
 	addProblem(): void {
-		this.dialog.open(NewConsultationAddProblemFormComponent, {
+		const problemDialog = this.dialog.open(NewConsultationAddProblemFormComponent, {
 			data: {
 				ambulatoryConsultationProblemsService: this.ambulatoryConsultationProblemsService,
 				severityTypes: this.severityTypes,
@@ -692,6 +692,8 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			width: '35%',
 			disableClose: true,
 		});
+
+		problemDialog.afterClosed().subscribe(this.referenceSituationViolence = null);
 	}
 
 	addReason(): void {
