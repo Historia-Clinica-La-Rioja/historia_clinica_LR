@@ -29,6 +29,23 @@
 	<ng-template #PrescriptionItemForm>
 		<form [formGroup]="prescriptionItemForm" fxLayout="column" fxLayoutGap="15px">
 			<mat-form-field appearance="outline">
+				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ASSOCIATED_PROBLEM' | translate}}</mat-label>
+				<mat-select formControlName="healthProblem" name="healthProblem">
+					<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem.snomed.sctid">
+						{{healthProblem.snomed.pt}}
+					</mat-option>
+					<div *appFeatureFlag="HABILITAR_RECETA_DIGITAL">
+						<mat-option *appHasRole="[PRESCRIPTOR]" (click)="addNewProblem()">
+							<button mat-button type="button" color="primary">
+								{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADD_NEW_PROBLEM' | translate }}
+							</button>
+						</mat-option>
+					</div>
+				</mat-select>
+				<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'healthProblem')" translate="forms.REQUIRED"></mat-error>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
 				<mat-label class="capitalize-first-letter">{{data.searchSnomedLabel | translate}}</mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" #snomed (keyup.enter)="setConcept(snomed.value)">
 				<button  matSuffix color="primary" mat-icon-button type="button" (click)="setConcept(snomed.value)">
@@ -47,7 +64,7 @@
 						<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'unitDose')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
 						<mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'unitDose')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
 					</mat-form-field>
-	
+
 					<mat-form-field appearance="outline">
 						<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.DAY_DOSE' | translate}}</mat-label>
 						<input (input)="setQuantityMultiplication()" type="number" matInput autocomplete="off" formControlName="dayDose">
@@ -65,7 +82,7 @@
 						<mat-error *ngIf="hasError(prescriptionItemForm, 'max', 'administrationTimeDays')" translate="forms.MAX_ERROR" [translateParams]="{max: MAX_VALUE}"></mat-error>
 						<mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'administrationTimeDays')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
 					</mat-form-field>
-	
+
 					<mat-form-field appearance="outline">
 						<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.QUANTITY' | translate}}</mat-label>
 						<input type="text" matInput autocomplete="off" formControlName="quantity">
@@ -76,23 +93,6 @@
 				</div>
 
 			</section>
-
-			<mat-form-field appearance="outline">
-				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ASSOCIATED_PROBLEM' | translate}}</mat-label>
-				<mat-select formControlName="healthProblem" name="healthProblem">
-					<mat-option *ngFor="let healthProblem of healthProblemOptions" [value]="healthProblem.snomed.sctid">
-						{{healthProblem.snomed.pt}}
-					</mat-option>
-					<div *appFeatureFlag="HABILITAR_RECETA_DIGITAL">
-						<mat-option *appHasRole="[PRESCRIPTOR]" (click)="addNewProblem()">
-							<button mat-button type="button" color="primary">
-								{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADD_NEW_PROBLEM' | translate }}
-							</button>
-						</mat-option>
-					</div>
-				</mat-select>
-				<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'healthProblem')" translate="forms.REQUIRED"></mat-error>
-			</mat-form-field>
 
 			<mat-form-field *ngIf="data.showStudyCategory" appearance="outline">
 				<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.STUDY_CATEGORY' | translate}}</mat-label>
