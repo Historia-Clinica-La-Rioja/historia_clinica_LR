@@ -48,4 +48,7 @@ public class ParameterizedForm extends SGXAuditableEntity<Integer> implements Se
 	@Column(name = "emergency_care_enabled", nullable = false)
 	private Boolean emergencyCareEnabled;
 
+	@Column(name = "is_domain", nullable = false)
+	private Boolean isDomain;
+
 }
