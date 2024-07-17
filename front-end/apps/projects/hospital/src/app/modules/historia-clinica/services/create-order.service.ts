@@ -32,12 +32,12 @@ export class CreateOrderService {
 	}
 
 	setConcept(selectedConcept: SnomedDto) {
+		this.snomedConcept = selectedConcept;
 		this.form.controls.snomed.setValue(selectedConcept);
 	}
 
 	setProblem(healthProblem: SnomedDto) {
 		this.hasProcedure.next(this.isEmpty());
-		this.snomedConcept = healthProblem;
 		this.form.patchValue({
 			serviceRequest: {
 				healthConditionPt: healthProblem.pt,
@@ -92,7 +92,7 @@ export class CreateOrderService {
 	resetForm() {
 		this.hasProcedure.next(this.isEmpty());
 		delete this.snomedConcept;
-		this.form.patchValue({ snomed: null });
+		this.form.reset();
 	}
 
 	getForm(): UntypedFormGroup {
