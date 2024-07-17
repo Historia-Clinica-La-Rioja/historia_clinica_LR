@@ -30,6 +30,7 @@ public interface MedicineGroupMedicineRepository extends SGXAuditableEntityJPARe
 			"FROM MedicineGroupMedicine mgm " +
 			"JOIN MedicineFinancingStatus mfs ON (mgm.medicineId = mfs.id) " +
 			"JOIN Snomed s ON (mfs.id = s.id) " +
-			"WHERE mgm.deleteable.deleted IS FALSE")
+			"WHERE mgm.medicineGroupId = :medicineGroupId " +
+			"AND mgm.deleteable.deleted IS FALSE")
 	List<MedicineGroupMedicineBo> getByMedicineGroupId(@Param("medicineGroupId") Integer medicineGroupId);
 }
