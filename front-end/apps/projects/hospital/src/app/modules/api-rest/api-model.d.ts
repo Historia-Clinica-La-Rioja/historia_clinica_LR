@@ -2667,6 +2667,31 @@ export interface InstitutionInfoDto extends Serializable {
     sisaCode: string;
 }
 
+export interface InstitutionMedicineFinancingStatusDto extends Serializable {
+    conceptPt: string;
+    conceptSctid: string;
+    financedByDomain: boolean;
+    financedByInstitution: boolean;
+    id: number;
+    institutionId: number;
+    medicineId: number;
+}
+
+export interface InstitutionMedicineGroupDto extends Serializable {
+    allDiagnoses: boolean;
+    emergencyCare: boolean;
+    enabled: boolean;
+    id: number;
+    institutionId: number;
+    internment: boolean;
+    isDomain: boolean;
+    medicineGroupId: number;
+    message: string;
+    name: string;
+    outpatient: boolean;
+    requiresAudit: boolean;
+}
+
 export interface InstitutionReportDto {
     institutionReportPlaces: EInstitutionReportPlace[];
     otherInstitutionReportPlace: string;
@@ -3028,6 +3053,7 @@ export interface MedicineFinancingStatusDto extends Serializable {
     conceptSctid: string;
     financed: boolean;
     id: number;
+    institutionId?: number;
 }
 
 export interface MedicineGroupMedicineDto extends Serializable {

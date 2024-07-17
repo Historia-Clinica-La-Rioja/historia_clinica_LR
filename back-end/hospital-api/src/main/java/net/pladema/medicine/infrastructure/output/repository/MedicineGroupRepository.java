@@ -19,6 +19,6 @@ public interface MedicineGroupRepository extends SGXAuditableEntityJPARepository
 			"FROM MedicineGroup mg " +
 			"WHERE mg.name = :name " +
 			"AND mg.deleteable.deleted IS FALSE")
-	List<MedicineGroup> findByName(@Param("name") String name);
+	List<MedicineGroup> findGroupsByName(@Param("name") String name);
 
 }

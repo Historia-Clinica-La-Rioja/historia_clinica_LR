@@ -28,7 +28,6 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 
 	
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public Page<MedicineFinancingStatusDto> findAll(MedicineFinancingStatusDto example, Pageable pageable) {
 		List<MedicineFinancingStatusDto> result = repository.getAll().stream().map(this::mapToDto).collect(Collectors.toList());
 		result = filterResult(example, result);
@@ -39,25 +38,21 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public List<MedicineFinancingStatusDto> findAll() {
 		return repository.getAll().stream().map(this::mapToDto).collect(Collectors.toList());
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public List<MedicineFinancingStatusDto> findAllById(List<Integer> ids) {
 		return repository.getAllById(ids).stream().map(this::mapToDto).collect(Collectors.toList());
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public Optional<MedicineFinancingStatusDto> findById(Integer id) {
 		return repository.findMedicineById(id).map(this::mapToDto);
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public MedicineFinancingStatusDto save(MedicineFinancingStatusDto entity) {
 		repository.findById(entity.getId()).ifPresent(medicine -> {
 			medicine.setFinanced(entity.getFinanced());
@@ -67,7 +62,6 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 	}
 
 	@Override
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 	public void deleteById(Integer id) {}
 
 	@Override

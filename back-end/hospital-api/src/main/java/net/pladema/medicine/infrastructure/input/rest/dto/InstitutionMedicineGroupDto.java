@@ -6,27 +6,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.annotation.Nullable;
-import javax.validation.constraints.NotNull;
-
 import java.io.Serializable;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class MedicineFinancingStatusDto implements Serializable {
+public class InstitutionMedicineGroupDto implements Serializable {
 
 	private static final long serialVersionUID = 2446654484732250647L;
 
-	@NotNull
 	private Integer id;
-	private String conceptSctid;
-	private String conceptPt;
-	@NotNull
-	private Boolean financed;
-	@Nullable
+	private Integer medicineGroupId;
 	private Integer institutionId;
+	private String name;
+	private Boolean enabled;
+	private Boolean isDomain;
+	private Boolean requiresAudit;
+	private Boolean outpatient;
+	private Boolean internment;
+	private Boolean emergencyCare;
+	private String message;
+	private Boolean allDiagnoses;
 
 }

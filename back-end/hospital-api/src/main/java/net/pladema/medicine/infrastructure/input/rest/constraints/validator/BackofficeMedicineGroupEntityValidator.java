@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
 @Component
 public class BackofficeMedicineGroupEntityValidator implements BackofficeEntityValidator<MedicineGroup, Integer> {
 
@@ -26,7 +25,7 @@ public class BackofficeMedicineGroupEntityValidator implements BackofficeEntityV
 	@Override
 	public void assertCreate(MedicineGroup entity) {
 		assertValidName(entity);
-		List<MedicineGroup> medicineGroupList = medicineGroupRepository.findByName(entity.getName());
+		List<MedicineGroup> medicineGroupList = medicineGroupRepository.findGroupsByName(entity.getName());
 		if (!medicineGroupList.isEmpty()){
 			throw new BackofficeValidationException("medicine-group.exists");
 		} else {
@@ -37,7 +36,7 @@ public class BackofficeMedicineGroupEntityValidator implements BackofficeEntityV
 	@Override
 	public void assertUpdate(Integer id, MedicineGroup entity) {
 		assertValidName(entity);
-		List<MedicineGroup> medicineGroupList = medicineGroupRepository.findByName(entity.getName())
+		List<MedicineGroup> medicineGroupList = medicineGroupRepository.findGroupsByName(entity.getName())
 				.stream()
 				.filter(mg -> !mg.getId().equals(id))
 				.collect(Collectors.toList());
@@ -55,7 +54,7 @@ public class BackofficeMedicineGroupEntityValidator implements BackofficeEntityV
 			throw new BackofficeValidationException("medicine-group.invalid.name");
 	}
 
-	private void assertDiagnosesListEmpty(Integer id){
+	protected void assertDiagnosesListEmpty(Integer id){
 		if (!medicineGroupProblemRepository.getByMedicineGroupId(id).isEmpty())
 			throw new BackofficeValidationException("medicine-group.has.diagnoses");
 	}
