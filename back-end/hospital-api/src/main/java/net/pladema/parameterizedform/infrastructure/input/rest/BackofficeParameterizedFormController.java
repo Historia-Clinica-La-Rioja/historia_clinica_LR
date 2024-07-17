@@ -1,5 +1,6 @@
 package net.pladema.parameterizedform.infrastructure.input.rest;
 
+import net.pladema.parameterizedform.UpdateFormEnablementInInstitution;
 import net.pladema.parameterizedform.application.GetFormsByStatus;
 import net.pladema.parameterizedform.application.UpdateFormStatus;
 import net.pladema.parameterizedform.domain.enums.EFormStatus;
@@ -30,14 +31,17 @@ public class BackofficeParameterizedFormController extends AbstractBackofficeCon
 
 	private final GetFormsByStatus getFormsByStatus;
 	private final UpdateFormStatus updateFormStatus;
+	private final UpdateFormEnablementInInstitution updateFormEnablementInInstitution;
 
 	public BackofficeParameterizedFormController(BackofficeParameterizedFormStore store,
 												 BackofficeParameterizedFormValidator validator,
 												 GetFormsByStatus getFormsByStatus,
-												 UpdateFormStatus updateFormStatus) {
+												 UpdateFormStatus updateFormStatus,
+												 UpdateFormEnablementInInstitution updateFormEnablementInInstitution) {
 		super(store, validator);
 		this.getFormsByStatus = getFormsByStatus;
 		this.updateFormStatus = updateFormStatus;
+		this.updateFormEnablementInInstitution = updateFormEnablementInInstitution;
 	}
 
 	@GetMapping(params="excludeInactive=true")
@@ -58,5 +62,15 @@ public class BackofficeParameterizedFormController extends AbstractBackofficeCon
 	@ResponseStatus(HttpStatus.OK)
 	public void updateStatus(@PathVariable Integer id) {
 		updateFormStatus.run(id);
+	}
+
+	@PutMapping(value = "/{id}/update-institutional-enablement")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
+	@ResponseStatus(HttpStatus.OK)
+	public void updateFormEnablementInInstitution(@PathVariable Integer id,
+												  @RequestParam Integer institutionId,
+												  @RequestParam Boolean enablement
+	) {
+		updateFormEnablementInInstitution.run(id, institutionId, enablement);
 	}
 }

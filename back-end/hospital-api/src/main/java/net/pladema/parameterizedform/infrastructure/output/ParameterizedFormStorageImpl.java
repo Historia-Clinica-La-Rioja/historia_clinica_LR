@@ -3,6 +3,8 @@ package net.pladema.parameterizedform.infrastructure.output;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.pladema.establishment.repository.InstitutionalParameterizedFormRepository;
+import net.pladema.establishment.repository.entity.InstitutionalParameterizedForm;
 import net.pladema.parameterizedform.application.port.output.ParameterizedFormStorage;
 
 
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 
 	private final ParameterizedFormRepository parameterizedFormRepository;
+	private final InstitutionalParameterizedFormRepository institutionalParameterizedFormRepository;
 
 	@Override
 	public void updateStatus(Integer formId) {
@@ -45,6 +48,24 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 	@Override
 	public Optional<Short> findFormStatus(Integer formId) {
 		return parameterizedFormRepository.findStatusById(formId);
+	}
+
+	@Override
+	public void updateFormEnablementInInstitution(Integer parameterizedFormId, Integer institutionId, Boolean enablement) {
+		parameterizedFormRepository.findById(parameterizedFormId).ifPresent(
+				parameterizedForm -> {
+					institutionalParameterizedFormRepository.findByParameterizedFormIdAndInstitutionId(parameterizedFormId, institutionId).ifPresentOrElse(
+							institutionalParameterizedForm -> {
+								institutionalParameterizedForm.setIsEnabled(enablement);
+								institutionalParameterizedFormRepository.save(institutionalParameterizedForm);
+							},
+							() -> {
+								InstitutionalParameterizedForm institutionalParameterizedForm = new InstitutionalParameterizedForm(parameterizedFormId, institutionId, enablement);
+								institutionalParameterizedFormRepository.save(institutionalParameterizedForm);
+							}
+					);
+				}
+		);
 	}
 
 	private void assertFormName(Integer formId, String name, EFormStatus nextState) {

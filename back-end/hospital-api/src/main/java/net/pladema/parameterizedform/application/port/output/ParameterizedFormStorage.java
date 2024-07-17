@@ -14,5 +14,6 @@ public interface ParameterizedFormStorage {
 	void updateStatus(Integer formId);
 	Page<ParameterizedForm> filterByStatusIdAndNameIn(List<Short> statusIds, String name, Pageable pageable);
 	Optional<Short> findFormStatus(Integer formId);
+	void updateFormEnablementInInstitution(Integer parameterizedFormId, Integer institutionId, Boolean enablement);
 
 }
