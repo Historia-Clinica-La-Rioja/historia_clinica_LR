@@ -1,29 +1,18 @@
-
-<div id="actions-container" fxFlex="5%"
-*ngIf="episode.state.id !== estadosEpisodio.CON_ALTA_MEDICA && showActionsButton(episode)">
-	<button id="actions" mat-icon-button (click)="$event.stopPropagation()"
-		[matMenuTriggerFor]="actions">
+<div id="actions-container" fxFlex="5%" *ngIf="episode.state.id !== estadosEpisodio.CON_ALTA_MEDICA && showActionsButton(episode)">
+	<button id="actions" mat-icon-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="actions">
 		<mat-icon>more_vert</mat-icon>
 	</button>
 
 	<mat-menu #actions="matMenu">
-		<ng-container *ngIf="!isAdministrativeAndHasTriageFFInFalse">
-			<button id="nuevo-triage" mat-menu-item (click)="openTriageDialog()">
-				{{ 'guardia.home.episodes.episode.actions.NUEVO_TRIAGE' | translate }}
-			</button>
+		<ng-container *ngIf="getEpisodeActions(episode) as categorizedActions">
+			<div *ngFor="let item of categorizedActions; trackBy: trackbyFn; let i = index">
+				<ng-container *ngIf="showDivider(categorizedActions, i)">
+					<mat-divider></mat-divider>
+				</ng-container>
+				<button mat-menu-item (click)="item.episodeAction.callback()">
+					{{ item.episodeAction.label }}
+				</button>
+			</div>
 		</ng-container>
-
-		<ng-container *ngIf="episode.state.id === estadosEpisodio.EN_ESPERA && hasProffesionalRole">
-			<button id="atender" mat-menu-item (click)="atender(episode.id)">
-				{{ 'guardia.home.episodes.episode.actions.atender.TITLE' | translate }}
-			</button>
-		</ng-container>
-
-		<button id="editPatientDescription" mat-menu-item
-			*ngIf="episode.patient?.typeId === EMERGENCY_CARE_TEMPORARY"
-			(click)="editPatientDescription(episode.id, episode.patient.patientDescription)">
-			{{ 'guardia.home.episodes.episode.actions.edit_patient_description.TITLE' | translate }}
-		</button>
-
 	</mat-menu>
 </div>

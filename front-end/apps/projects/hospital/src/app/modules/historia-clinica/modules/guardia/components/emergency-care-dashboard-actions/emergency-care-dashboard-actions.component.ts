@@ -14,11 +14,12 @@ import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/em
 import { Subscription } from 'rxjs';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-emergency-care-dashboard-actions',
   templateUrl: './emergency-care-dashboard-actions.component.html',
-  styleUrls: ['./emergency-care-dashboard-actions.component.scss']
+  styleUrls: ['./emergency-care-dashboard-actions.component.scss'],
 })
 export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy {
 
@@ -30,8 +31,8 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	readonly EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
 
 	private hasAdministrativeRole: boolean;
-	hasProffesionalRole: boolean;
-	isAdministrativeAndHasTriageFFInFalse: boolean;
+	private hasProffesionalRole: boolean;
+	private isAdministrativeAndHasTriageFFInFalse: boolean;
 
 	private patientDescriptionSubscription: Subscription;
 
@@ -45,6 +46,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
 		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private readonly translate: TranslateService,
 	) { }
 
 	ngOnInit(): void {
@@ -71,39 +73,59 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		)
 	}
 
-	showActionsButton(episode : Episode): boolean{
-		return !this.isAdministrativeAndHasTriageFFInFalse ||
-		episode.patient?.typeId === this.EMERGENCY_CARE_TEMPORARY;
+	private getActionsButtonsConditions(episode: Episode): EpisodeConditions {
+		const showNuevoTriage = !this.isAdministrativeAndHasTriageFFInFalse;
+
+		const showEditPatientEpisode =
+			episode.state.id === this.estadosEpisodio.EN_ESPERA ||
+			episode.state.id === this.estadosEpisodio.EN_ATENCION;
+
+		const showEditPatientDescription =
+			episode.patient?.typeId === this.EMERGENCY_CARE_TEMPORARY;
+
+		const showAtender =
+			episode.state.id === this.estadosEpisodio.EN_ESPERA &&
+			this.hasProffesionalRole;
+
+		return {
+			nuevoTriage: showNuevoTriage,
+			atender: showAtender,
+			editPatientEpisode: showEditPatientEpisode,
+			editPatientDescription: showEditPatientDescription
+		};
 	}
 
-	openTriageDialog() {
+	private openTriageDialog() {
 		this.triageDefinitionsService.getTriagePath(this.episode.type?.id)
-		  .subscribe(({ component }) => {
-			const dialogRef = this.dialog.open(component, { data: this.episode.id });
-			dialogRef.afterClosed().subscribe(idReturned => {
-			  this.triageDialogClosed.emit(idReturned);
-			});
-		  });
+			.subscribe(({ component }) => {
+				const dialogRef = this.dialog.open(component, { data: this.episode.id });
+				dialogRef.afterClosed().subscribe(idReturned => {
+					this.triageDialogClosed.emit(idReturned);
+				});
+			}
+		);
 	}
 
-	editPatientEpisode(episodeId: number) {
-		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${episodeId}/edit`]);
+	private editPatientEpisode() {
+		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episode.id}/edit`]);
 	}
 
-	atender(episodeId: number) {
-		this.emergencyCareEpisodeAttend.attend(episodeId, true);
+	private atender() {
+		this.emergencyCareEpisodeAttend.attend(this.episode.id, true);
 	}
 
-	editPatientDescription(episodeId: number, preloadedReason: string) {
-		this.patientDescriptionSubscription = this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(patientDescription => {
-			if (patientDescription){
-				this.updatePatientDescription(episodeId, patientDescription);}
-		});
-		this.emergencyCareTemporaryPatientService.openTemporaryPatient(preloadedReason);
+	private editPatientDescription() {
+		this.patientDescriptionSubscription = this.emergencyCareTemporaryPatientService.patientDescription$.subscribe(
+			patientDescription => {
+				if (patientDescription)
+					this.updatePatientDescription(patientDescription);
+			}
+		);
+		this.emergencyCareTemporaryPatientService.openTemporaryPatient(this.episode.patient.patientDescription);
 	}
 
-	private updatePatientDescription(episodeId: number, patientDescription: string) {
-		this.emergencyCareEpisodeService.updatePatientDescription(episodeId, patientDescription).subscribe({
+	private updatePatientDescription(patientDescription: string) {
+		this.emergencyCareEpisodeService.updatePatientDescription(this.episode.id, patientDescription).subscribe({
 			next: () => {
 				const patientUpdate: PatientDescriptionUpdate = {
 					episodeId: this.episode.id,
@@ -113,6 +135,84 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 			}
 		});
 	}
+
+	showActionsButton(episode: Episode): boolean {
+		const conditions = this.getActionsButtonsConditions(episode);
+		return Object.values(conditions).some(condition => condition);
+	}
+
+	getEpisodeActions(episode: Episode): CategorizedAction[] {
+		const conditions = this.getActionsButtonsConditions(episode);
+		const actions = [
+			{
+				id: 'atender',
+				category: 'call-related',
+				condition: conditions.atender,
+				label: this.translate.instant('guardia.home.episodes.episode.actions.atender.TITLE'),
+				callback: () => this.atender(),
+			},
+			{
+				id: 'nuevo-triage',
+				category: 'professional-actions',
+				condition: conditions.nuevoTriage,
+				label: this.translate.instant('guardia.home.episodes.episode.actions.NUEVO_TRIAGE'),
+				callback: () => this.openTriageDialog()
+
+			},
+			{
+				id: 'editPatientEpisode',
+				category: 'edits',
+				condition: conditions.editPatientEpisode,
+				label: this.translate.instant('guardia.home.episodes.episode.actions.edit_patient_episode.TITLE'),
+				callback: () => this.editPatientEpisode()
+			},
+			{
+				id: 'editPatientDescription',
+				category: 'edits',
+				condition: conditions.editPatientDescription,
+				label: this.translate.instant('guardia.home.episodes.episode.actions.edit_patient_description.TITLE'),
+				callback: () => this.editPatientDescription()
+			}
+		];
+
+		return actions.filter(action => action.condition)
+			.map(action => ({
+				category: action.category,
+				episodeAction: action
+			})
+		);
+	}
+
+	trackbyFn(index: number) {
+		return index;
+	}
+
+	showDivider(categorizedActions: CategorizedAction[], index: number): boolean {
+		if (index === 0) {
+			return false;
+		}
+		return categorizedActions[index].category !== categorizedActions[index - 1].category;
+	}
+}
+
+interface CategorizedAction {
+	category: string;
+	episodeAction: EpisodeAction;
+}
+
+interface EpisodeAction {
+	id: string;
+	category: string;
+	condition: boolean;
+	label: string;
+	callback: Function;
+}
+
+interface EpisodeConditions {
+	nuevoTriage: boolean;
+	atender: boolean;
+	editPatientEpisode: boolean;
+	editPatientDescription: boolean;
 }
 
 export interface AttendPlace {

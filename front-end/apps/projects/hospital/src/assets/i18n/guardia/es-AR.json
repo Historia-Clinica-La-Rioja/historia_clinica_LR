@@ -84,6 +84,9 @@
 							"SUCCESS": "Episodio con paciente en espera",
 							"ERROR": "Error al cambiar el estado del episodio"
 						},
+						"edit_patient_episode":{
+							"TITLE": "Editar episodio"
+						},
 						"edit_patient_description": {
 							"TITLE": "Editar identificación",
 							"SUCCESS": "Se actualizo la identificacion del paciente correctamente",
