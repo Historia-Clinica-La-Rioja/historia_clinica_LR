@@ -56,8 +56,10 @@ export class TriageComponent implements OnInit {
 
 		forkJoin([hasValidRoleToNotDefineTriageLevel$, triageCategories$]).subscribe(([hasValidRoleToNotDefineTriageLevel, triageCategories]) => {
 			this.triageCategories = triageCategories;
-			if (hasValidRoleToNotDefineTriageLevel && this.canAssignNotDefinedTriageLevel)
+			if (hasValidRoleToNotDefineTriageLevel && this.canAssignNotDefinedTriageLevel) {
 				this.triageForm.controls.triageCategoryId.setValue(WITHOUT_TRIAGE_CATEGORY_ID);
+				this.triageLevel = this.triageCategories.find(category => category.id === WITHOUT_TRIAGE_CATEGORY_ID);
+			}
 			else {
 				this.triageCategories = this.triageCategories.filter(category => category.id != WITHOUT_TRIAGE_CATEGORY_ID);
 				this.triageLevel = this.triageCategories.find(category => category.id === TRIAGE_LEVEL_V_ID);
