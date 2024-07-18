@@ -3,6 +3,7 @@ package ar.lamansys.sgh.publicapi.apisumar.infrastructure.output;
 import ar.lamansys.sgh.publicapi.apisumar.application.port.out.ConsultationDetailDataStorage;
 
 import ar.lamansys.sgh.publicapi.apisumar.domain.ConsultationDetailDataBo;
+import ar.lamansys.sgh.publicapi.apisumar.domain.ImmunizationsDetailBo;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -146,6 +147,78 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				.map(this::processConsultationQuery)
 				.collect(Collectors.toList());
 		return result;
+	}
+
+	@Override
+	public List<ImmunizationsDetailBo> getImmunizations(String sisaCode, LocalDateTime startDate, LocalDateTime endDate) {
+		LOG.debug("sisaCode -> {}, startDate -> {}, endDate -> {}", sisaCode, startDate, endDate);
+
+		String stringQuery = "SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, " +
+				"cs.name as operativeUnit, " +
+				"concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as lender, " +
+				"p.identification_number as lenderIdentificationNumber, " +
+				"vc.created_on AT TIME ZONE 'UTC-3' as attentionDate, " +
+				"pp.identification_number as patientIdentificationNumber, " +
+				"concat(pp.first_name , ' ', pp.last_name) as patientName, " +
+				"g.description as patientSex, " +
+				"gg.description as patientGender, " +
+				"pe.name_self_determination as patientSelfPerceivedName, " +
+				"pp.birth_date as patientBirthDate, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM vc.updated_on) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM vc.updated_on) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM vc.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM vc.updated_on) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM vc.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAgeTurn, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAge, " +
+				"et.pt as ethnicity, " +
+				"concat(mc.name, '(RNOS: ', hi.rnos, ')') as medicalCoverage, " +
+				"concat(a.street, ' N° ', a.number, case when a.floor is not null then concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) as address, " +
+				"c.description as location, " +
+				"ed.description as instructionLevel, " +
+				"lab.description as workSituation, " +
+				"concat(inm_sn.pt, ' (SNOMED: ', inm_sn.sctid, ')') as vaccine, " +
+				"inm.dose as dosage, " +
+				"inm.lot_number as lotNumber, " +
+				"inm_n.description as note, " +
+				"sch.description as scheme, " +
+				"vac.description as vaccineScheme, " +
+				"vac_cond.description as applicationCondition, " +
+				"ev.description as evolution " +
+				"FROM vaccine_consultation vc " +
+				"INNER JOIN institution ins ON vc.institution_id=ins.id " +
+				"INNER JOIN clinical_specialty cs ON vc.clinical_specialty_id=cs.id " +
+				"INNER JOIN healthcare_professional hp ON vc.doctor_id=hp.id " +
+				"INNER JOIN person p ON hp.person_id=p.id " +
+				"LEFT JOIN patient pa ON vc.patient_id=pa.id " +
+				"INNER JOIN person pp ON pa.person_id=pp.id " +
+				"LEFT JOIN person_extended pe ON pe.person_id=pp.id " +
+				"LEFT JOIN ethnicity et ON pe.ethnicity_id=et.id " +
+				"LEFT JOIN education_level ed ON pe.education_level_id=ed.id " +
+				"LEFT JOIN occupation lab ON pe.occupation_id=lab.id " +
+				"LEFT JOIN gender gg ON pe.gender_self_determination=gg.id " +
+				"LEFT JOIN address a ON pe.address_id=a.id " +
+				"LEFT JOIN city c ON a.city_id=c.id " +
+				"INNER JOIN gender g ON pp.gender_id=g.id " +
+				"LEFT JOIN patient_medical_coverage pmc ON pmc.id=vc.patient_medical_coverage_id " +
+				"LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id " +
+				"LEFT JOIN health_insurance hi ON hi.id=mc.id " +
+				"LEFT JOIN document d ON vc.id=d.source_id AND d.source_type_id=5 " +
+				"LEFT JOIN note ev ON d.other_note_id=ev.id " +
+				"LEFT JOIN document_inmunization din ON din.document_id=d.id " +
+				"LEFT JOIN inmunization inm ON din.inmunization_id=inm.id " +
+				"LEFT JOIN note inm_n ON inm_n.id=inm.note_id " +
+				"LEFT JOIN snomed inm_sn ON inm.snomed_id=inm_sn.id " +
+				"LEFT JOIN vaccine_scheme sch ON inm.scheme_id=sch.id " +
+				"LEFT JOIN vaccine_nomivac_rule vac_rule ON sch.id=vac_rule.scheme_id AND inm.dose_order=vac_rule.dose_order " +
+				"LEFT JOIN vaccine vac ON vac_rule.sisa_code=vac.sisa_code " +
+				"LEFT JOIN vaccine_condition_application vac_cond ON vac_rule.condition_application_id=vac_cond.id " +
+				"WHERE ins.sisa_code = :sisaCode " +
+				"AND vc.created_on BETWEEN :startDate AND :endDate";
+		return List.of();
 	}
 
 	private ConsultationDetailDataBo mergeResults(List<ConsultationDetailDataBo> unmergedResults) {
