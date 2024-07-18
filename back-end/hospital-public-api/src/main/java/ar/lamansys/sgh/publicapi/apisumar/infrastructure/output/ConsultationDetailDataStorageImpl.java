@@ -219,7 +219,20 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				"LEFT JOIN vaccine_condition_application vac_cond ON vac_rule.condition_application_id=vac_cond.id " +
 				"WHERE ins.sisa_code = :sisaCode " +
 				"AND vc.created_on BETWEEN :startDate AND :endDate";
-		return List.of();
+
+		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("sisaCode", sisaCode)
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate);
+
+		List<Object[]> queryResult = query.getResultList();
+
+		List<ImmunizationsDetailBo> result = queryResult
+				.stream()
+				.map(this::processImmunizationsQuery)
+				.collect(Collectors.toList());
+
+		return result;
 	}
 
 	@Override
@@ -390,6 +403,38 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				(String) queryResult[36],
 				(String) queryResult[37],
 				(String) queryResult[38]
+		);
+	}
+
+	private ImmunizationsDetailBo processImmunizationsQuery(Object[] queryResult) {
+		return new ImmunizationsDetailBo(
+				(String) queryResult[0],
+				(String) queryResult[1],
+				(String) queryResult[2],
+				(String) queryResult[3],
+				((Timestamp) queryResult[4]),
+				(String) queryResult[5],
+				(String) queryResult[6],
+				(String) queryResult[7],
+				(String) queryResult[8],
+				(String) queryResult[9],
+				((Date) queryResult[10]),
+				(String) queryResult[11],
+				(String) queryResult[12],
+				(String) queryResult[13],
+				(String) queryResult[14],
+				(String) queryResult[15],
+				(String) queryResult[16],
+				(String) queryResult[17],
+				(String) queryResult[18],
+				(String) queryResult[19],
+				(String) queryResult[20],
+				(String) queryResult[21],
+				(String) queryResult[22],
+				(String) queryResult[23],
+				(String) queryResult[24],
+				(String) queryResult[25],
+				(String) queryResult[26]
 		);
 	}
 
