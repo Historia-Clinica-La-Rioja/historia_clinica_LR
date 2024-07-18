@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DiagnosisDto, HealthConditionDto, SurgicalReportDto } from '@api-rest/api-model';
+import { DiagnosisDto, HealthConditionDto, ProblemTypeEnum, SurgicalReportDto } from '@api-rest/api-model';
 
 @Component({
 	selector: 'app-surgical-report-diagnosis',
@@ -19,6 +19,7 @@ export class SurgicalReportDiagnosisComponent implements OnInit{
 
 	ngOnInit(){
 		this.surgicalReport.mainDiagnosis = this.mainDiagnosis;
+		this.diagnosis.forEach(diagnosis => diagnosis.type = ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS);
 		this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
 	}
 
@@ -28,6 +29,7 @@ export class SurgicalReportDiagnosisComponent implements OnInit{
 
 	changeDiagnosis(): void {
 		this.surgicalReport.mainDiagnosis = this.mainDiagnosis;
+		this.diagnosis.forEach(diagnosis => diagnosis.type = ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS);
 		this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
 	}
 }

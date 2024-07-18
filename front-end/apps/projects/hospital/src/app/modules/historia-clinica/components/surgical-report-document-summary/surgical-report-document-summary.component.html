@@ -8,9 +8,9 @@
 
 		<div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
 			<app-diagnosis-evolution-summary data-id="diagnosis-summary"
-				*ngIf="summary.surgicalReport.mainDiagnosis?.diagnoses || summary.surgicalReport.preOperativeDiagnoses"
+				*ngIf="summary.surgicalReport.mainDiagnosis?.diagnoses || summary.surgicalReport.preOperativeDiagnosis"
 				[customTitle]="summary.surgicalReport.mainDiagnosis.title"
-				[diagnosis]="summary.surgicalReport.preOperativeDiagnoses"
+				[diagnosis]="summary.surgicalReport.preOperativeDiagnosis"
 				[mainDiagnosis]="summary.surgicalReport.mainDiagnosis.diagnoses"></app-diagnosis-evolution-summary>
 
 			<app-description-item-data-summary *ngIf="summary.surgicalReport.proposedSurgeries"
