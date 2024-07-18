@@ -9,6 +9,8 @@ import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPAReposito
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -18,5 +20,11 @@ public interface MedicationStatementCommercialRepository extends SGXAuditableEnt
 	@Transactional
 	@Query("UPDATE MedicationStatementCommercial msc SET msc.deleteable.deleted = true, msc.deleteable.deletedOn = CURRENT_TIMESTAMP, msc.deleteable.deletedBy = ?#{ principal.userId } WHERE msc.medicationStatementId IN :medicationStatementIds")
 	void logicalDeleteAllByMedicationStatementIds(@Param("medicationStatementIds") Set<Integer> medicationStatementIds);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT msc " +
+			"FROM MedicationStatementCommercial msc " +
+			"WHERE msc.medicationStatementId = :medicationStatementId")
+	List<MedicationStatementCommercial> findAllByMedicationStatementId(@Param("medicationStatementId") Integer medicationStatementId);
 
 }

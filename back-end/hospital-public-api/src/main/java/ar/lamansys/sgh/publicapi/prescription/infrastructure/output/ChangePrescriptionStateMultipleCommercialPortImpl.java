@@ -149,8 +149,8 @@ public class ChangePrescriptionStateMultipleCommercialPortImpl implements Change
 			if (PrescriptionValidStatesEnum.map(newS.getPrescriptionLineState()).equals(PrescriptionValidStatesEnum.CANCELADO_DISPENSA)) {
 				Integer id = getMedicationStatementId(linesStatus, newS.getPrescriptionLineNumber());
 				if (id != null) {
-					Optional<MedicationStatementCommercial> medication = medicationStatementCommercialRepository.findById(id);
-					if (medication.isPresent() && medication.get().getPharmacyName() != null && !medication.get().getPharmacyName().equals(newS.getPharmacyName()))
+					List<MedicationStatementCommercial> medications = medicationStatementCommercialRepository.findAllByMedicationStatementId(id);
+					if (!medications.isEmpty() && medications.get(0).getPharmacyName() != null && !medications.get(0).getPharmacyName().equals(newS.getPharmacyName()))
 						validPharmacyName = false;
 				}
 			}
