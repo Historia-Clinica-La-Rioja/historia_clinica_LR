@@ -100,7 +100,11 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"pex.email as p_email, " +
 				"mc.name ece_mc, " +
 				"pmc.affiliate_number as ece_mc_affiliate_number, " +
-				"patient_coverages.description as p_coverages, " +
+				"COALESCE ((SELECT STRING_AGG(mc.name, ', ') "+
+				"	FROM {h-schema}patient_medical_coverage pmc " +
+				"	JOIN {h-schema}medical_coverage mc on (pmc.medical_coverage_id = mc.id) " +
+				"	WHERE pmc.active IS true " +
+				"	AND pmc.patient_id = ece.patient_id), '') as p_coverages, " +
 				"ece.id as ece_id, " +
 				"ece.created_on as ece_created_on, " +
 				"author_episode.given_name as author_episode_given_name, " +
@@ -108,7 +112,7 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"author_episode.name_self_determination as author_episode_name_self_determination, " +
 				"ect.description as ece_type, " +
 				"last_triage.created_on as last_trage_created_on, " +
-				"triages.quantity as triages_quantity, " +
+				"(SELECT COUNT(t.id) FROM {h-schema}triage t where t.emergency_care_episode_id = ece.id) as triages_quantity, " +
 				"tc.name as last_triage_catory, " +
 				"ecs.description as ece_state," +
 				"last_attention.created_on as last_attention_created_on, " +
@@ -116,10 +120,34 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"s2.description as last_attention_shockroom, " +
 				"r.description as last_attention_room, " +
 				"b.bed_number as last_attention_bed, " +
-				"reasons.description as reasons, " +
-				"diagnosis.description as diagnosis, " +
+				"COALESCE ((SELECT STRING_AGG(r.description, ', ') " +
+				"	FROM {h-schema}emergency_care_episode_reason ecer " +
+				"	JOIN {h-schema}reasons r on (ecer.reason_id = r.id) " +
+				"	WHERE ecer.emergency_care_episode_id = ece.id), '') as reasons, " +
+				"COALESCE ((SELECT STRING_AGG(DISTINCT s.pt, ', ') " +
+				"	FROM {h-schema}document doc " +
+				"	JOIN {h-schema}document_health_condition dhc on (dhc.document_id = doc.id) " +
+				"	JOIN {h-schema}health_condition hc on (hc.id = dhc.health_condition_id) " +
+				"	JOIN {h-schema}snomed s on (s.id = hc.snomed_id)" +
+				"	WHERE doc.type_id = 16 AND doc.status_id = '445665009' " +
+				"	AND doc.source_id = ece.id), '') as diagnosis, " +
 				"ecd.medical_discharge_on as ece_medical_discharge_on, " +
-				"CONCAT_WS('/split/', proced.description, order_proced.description) as procedures, " +
+				"COALESCE ((SELECT STRING_AGG(distinct (s.pt), ', ') " +
+				"	FROM {h-schema}document doc JOIN document_procedure dp ON (doc.id = dp.document_id) JOIN procedures p ON (dp.procedure_id = p.id) " +
+				"	JOIN {h-schema}snomed s ON (p.snomed_id = s.id) " +
+				"	WHERE doc.type_id = 16 " +
+				"	AND doc.status_id = '445665009' " +
+				"	AND doc.source_id  = ece.id " +
+				"	GROUP BY doc.source_id), '') || " +
+				"COALESCE ((SELECT STRING_AGG(s.pt, ', ') " +
+				"	FROM {h-schema}service_request sr " +
+				"	JOIN {h-schema}document doc ON (sr.id = doc.source_id AND doc.source_type_id = 3) " +
+				"	JOIN {h-schema}document_diagnostic_report ddr ON (doc.id = ddr.document_id) " +
+				"	JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id AND dr.status_id = '261782000') " +
+				"	JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
+				"	WHERE sr.source_type_id = 4 " +
+				"	AND sr.source_id = ece.id " +
+				"	GROUP BY sr.source_id), '') as procedures, " +
 				"author_last_triage.given_name as author_last_triage_given_name, " +
 				"author_last_triage.family_names as author_last_triage_family_names, " +
 				"author_last_triage.name_self_determination as author_last_triage_name_self_determination, " +
@@ -129,7 +157,10 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"author_medical_discharge.given_name as author_medical_discharge_given_name, " +
 				"author_medical_discharge.family_names as author_medical_discharge_family_names, " +
 				"author_medical_discharge.name_self_determination as author_medical_discharge_name_self_determination, " +
-				"attentions.quantity as attentions_quantity, "+
+				"(SELECT COUNT(hee.emergency_care_episode_id) " +
+				"	FROM {h-schema}historic_emergency_episode hee " +
+				"	WHERE hee.emergency_care_state_id = 1 " +
+				"	AND hee.emergency_care_episode_id = ece.id) as attentions_quantity, " +
 				"dt.description as ece_discharge_type," +
 				"pa.person_id as p_person_id, " +
 				"hp2.id as author_last_attention_professional_id " +
@@ -141,66 +172,34 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"LEFT JOIN {h-schema}city c ON (a.city_id = c.id) " +
 				"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (ece.patient_medical_coverage_id = pmc.id) " +
 				"LEFT JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id)  " +
-				"LEFT JOIN (SELECT pmc.patient_id, STRING_AGG(mc.name, ', ') AS description " +
-				"			FROM {h-schema}patient_medical_coverage pmc " +
-				"			JOIN {h-schema}medical_coverage mc ON (pmc.medical_coverage_id = mc.id) " +
-				"			WHERE pmc.active IS TRUE " +
-				"			GROUP BY pmc.patient_id " +
-				"			) AS patient_coverages ON (patient_coverages.patient_id = ece.patient_id) " +
 				"JOIN {h-schema}v_user_person_complete_data AS author_episode ON (ece.created_by = author_episode.user_id) " +
 				"LEFT JOIN {h-schema}emergency_care_type ect ON (ece.emergency_care_type_id = ect.id) " +
 				"LEFT JOIN {h-schema}emergency_care_state ecs ON (ece.emergency_care_state_id = ecs.id) " +
-				"LEFT JOIN (SELECT t.emergency_care_episode_id AS ece_id, COUNT(t.id) AS quantity " +
-				"			FROM {h-schema}triage t " +
-				"			GROUP BY t.emergency_care_episode_id " +
-				"			) AS triages ON (ece.id = triages.ece_id) " +
-				"LEFT JOIN (SELECT ecer.emergency_care_episode_id AS ece_id , STRING_AGG(r.description, ', ') AS description " +
-				"			FROM {h-schema}emergency_care_episode_reason ecer " +
-				"			JOIN {h-schema}reasons r ON (r.id = ecer.reason_id) " +
-				"			GROUP BY ecer.emergency_care_episode_id" +
-				"			) AS reasons ON (reasons.ece_id = ece.id) " +
-				"LEFT JOIN (SELECT doc.source_id AS doc_source_id, STRING_AGG(DISTINCT s.pt, ', ') AS description " +
-				"			FROM {h-schema}document doc " +
-				"			JOIN {h-schema}document_health_condition dhc ON (doc.id = dhc.document_id) " +
-				"			JOIN {h-schema}health_condition hc ON (dhc.health_condition_id = hc.id) " +
-				"			JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
-				"			WHERE doc.type_id = 16 " +
-				"			AND doc.status_id = '445665009' " +
-				"			GROUP BY doc.source_id " +
-				"			) AS diagnosis ON (ece.id = diagnosis.doc_source_id) " +
-				"LEFT JOIN (SELECT doc.source_id AS doc_source_id, STRING_AGG(DISTINCT s.pt, ', ') AS description " +
-				"			FROM {h-schema}document doc " +
-				"			JOIN {h-schema}document_procedure dp ON (doc.id = dp.document_id) " +
-				"			JOIN {h-schema}procedures p ON (dp.procedure_id = p.id) " +
-				"			JOIN {h-schema}snomed s ON (p.snomed_id = s.id) " +
-				"			WHERE doc.type_id = 16 " +
-				"			AND doc.status_id = '445665009' " +
-				"			GROUP BY doc.source_id " +
-				"			) AS proced ON (ece.id = proced.doc_source_id) " +
-				"LEFT JOIN (SELECT sr.source_id AS ece_id, STRING_AGG(s.pt, ', ') AS description " +
-				"			FROM {h-schema}service_request sr " +
-				"			JOIN {h-schema}document doc ON (sr.id = doc.source_id AND doc.source_type_id = 3) " +
-				"			JOIN {h-schema}document_diagnostic_report ddr ON (doc.id = ddr.document_id) " +
-				"			JOIN {h-schema}diagnostic_report dr ON (ddr.diagnostic_report_id = dr.id AND dr.status_id = '261782000') " +
-				"			JOIN {h-schema}snomed s ON (dr.snomed_id = s.id) " +
-				"			WHERE sr.source_type_id = 4 " +
-				"			GROUP BY sr.source_id " +
-				"			) AS order_proced ON (order_proced.ece_id = ece.id) " +
 				"LEFT JOIN {h-schema}emergency_care_discharge ecd ON (ece.id = ecd.emergency_care_episode_id) " +
 				"LEFT JOIN {h-schema}healthcare_professional hp ON (ecd.medical_discharge_by_professional = hp.id) " +
 				"LEFT JOIN {h-schema}discharge_type dt ON (ecd.discharge_type_id = dt.id) " +
 				"LEFT JOIN {h-schema}v_user_person_complete_data AS author_medical_discharge ON (hp.person_id = author_medical_discharge.person_id) " +
-				"LEFT JOIN (SELECT DISTINCT ON(t.emergency_care_episode_id)  t.emergency_care_episode_id AS ece_id, t.created_on, t.triage_category_id, t.created_by " +
-				"			FROM {h-schema}triage AS t " +
-				"			ORDER BY t.emergency_care_episode_id, t.created_on DESC " +
-				"			) AS last_triage ON (last_triage.ece_id = ece.id) " +
+				"LEFT JOIN ( " +
+				"	SELECT episode_id, created_on, triage_category_id, created_by " +
+				"	FROM (" +
+				"		SELECT emergency_care_episode_id as episode_id, created_on, triage_category_id, created_by, " +
+				"			ROW_NUMBER() OVER (PARTITION BY emergency_care_episode_id ORDER BY created_on DESC) AS row_num " +
+				"		FROM {h-schema}triage" +
+				"	) as t " +
+				"	WHERE t.row_num = 1	" +
+				") AS last_triage ON (last_triage.episode_id = ece.id) " +
 				"LEFT JOIN {h-schema}triage_category AS tc ON (last_triage.triage_category_id = tc.id)" +
 				"LEFT JOIN {h-schema}v_user_person_complete_data AS author_last_triage ON (last_triage.created_by = author_last_triage.user_id) " +
-				"LEFT JOIN (SELECT DISTINCT ON(hee.emergency_care_episode_id) hee.emergency_care_episode_id AS ece_id, hee.created_on, hee.created_by, hee.doctors_office_id, hee.bed_id, hee.shockroom_id " +
-				"			FROM {h-schema}historic_emergency_episode hee " +
-				"			WHERE hee.emergency_care_state_id = 1 " +
-				"			ORDER BY hee.emergency_care_episode_id, hee.created_on DESC " +
-				"			) AS last_attention ON (ece.id = last_attention.ece_id) " +
+				"LEFT JOIN (" +
+				"	SELECT emergency_care_episode_id as episode_id, created_on, created_by, doctors_office_id, bed_id, shockroom_id " +
+				"	FROM ( " +
+				"		SELECT emergency_care_episode_id, created_on, created_by, doctors_office_id, bed_id, shockroom_id," +
+				"			ROW_NUMBER() OVER (PARTITION BY emergency_care_episode_id ORDER BY created_on DESC) AS row_num " +
+				"		FROM {h-schema}historic_emergency_episode " +
+				"	WHERE emergency_care_state_id = 1" +
+				"	) AS hee2" +
+				"	WHERE hee2.row_num = 1 " +
+				") AS last_attention ON (ece.id = last_attention.episode_id) " +
 				"LEFT JOIN {h-schema}doctors_office do2 ON (last_attention.doctors_office_id = do2.id) " +
 				"LEFT JOIN {h-schema}shockroom s2 ON (last_attention.shockroom_id = s2.id) " +
 				"LEFT JOIN {h-schema}bed b ON (last_attention.bed_id = b.id) " +
@@ -210,11 +209,6 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"LEFT JOIN {h-schema}hierarchical_unit hu ON (hus.hierarchical_unit_id = hu.id) " +
 				"LEFT JOIN {h-schema}hierarchical_unit_type hut ON (hu.type_id = hut.id) " +
 				"LEFT JOIN {h-schema}v_user_person_complete_data AS author_last_attention ON (last_attention.created_by = author_last_attention.user_id ) " +
-				"LEFT JOIN (SELECT hee.emergency_care_episode_id AS ece_id, COUNT(hee.emergency_care_episode_id) AS quantity " +
-				"			FROM {h-schema}historic_emergency_episode hee " +
-				"			WHERE hee.emergency_care_state_id = 1 " +
-				"			GROUP BY hee.emergency_care_episode_id " +
-				"			) AS attentions ON (ece.id = attentions.ece_id) " +
 				"LEFT JOIN healthcare_professional hp2 ON (author_last_attention.person_id = hp2.person_id) " +
 				"WHERE ece.institution_id = :institutionId " +
 				"AND ece.created_on BETWEEN :startDate AND :endDate ";
@@ -230,6 +224,8 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 
 		if (filter.getDoctorId() != null)
 			sqlQuery += " AND hp2.id = " + filter.getDoctorId();
+
+		sqlQuery += " ORDER BY patient_id";
 
 		var query = entityManager.createNativeQuery(sqlQuery);
 
