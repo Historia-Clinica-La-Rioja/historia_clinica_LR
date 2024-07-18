@@ -16,6 +16,7 @@ import net.pladema.clinichistory.requests.servicerequests.application.port.Servi
 import net.pladema.clinichistory.requests.transcribed.infrastructure.output.repository.TranscribedServiceRequestRepository;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
 import net.pladema.establishment.repository.MedicalCoveragePlanRepository;
+import net.pladema.imagenetwork.application.getlocalviewerurl.GetLocalViewerUrl;
 import net.pladema.medicalconsultation.appointment.domain.enums.EAppointmentModality;
 import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentOption;
 import net.pladema.medicalconsultation.appointment.infrastructure.output.repository.appointment.RecurringAppointmentType;
@@ -133,6 +134,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final TranscribedServiceRequestRepository transcribedServiceRequestRepository;
 
+    private final GetLocalViewerUrl getLocalViewerUrl;
+
     @Override
     public Collection<AppointmentBo> getAppointmentsByDiaries(List<Integer> diaryIds, LocalDate from, LocalDate to) {
         log.debug("Input parameters -> diaryIds {}", diaryIds);
@@ -166,9 +169,17 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .peek(e -> e.setTranscribedOrderAttachedFiles(orderImageFileStorage.getOrderImageFileInfo(e.getTranscribedServiceRequestId())))
                 .peek(e -> e.setStudies(serviceRequestStorage.getDiagnosticReportsFrom(e.getDiagnosticReportId(),e.getTranscribedServiceRequestId())))
                 .collect(Collectors.toList());
+        addLocalViewerInfo(result);
         log.debug("Result size {}", result.size());
         log.trace(OUTPUT, result);
         return result;
+    }
+
+    private void addLocalViewerInfo(Collection<EquipmentAppointmentBo> result) {
+        Map<Integer,String> mappedUrl = getLocalViewerUrl.run(
+                result.stream().map(EquipmentAppointmentBo::getId).collect(Collectors.toList())
+        );
+        result.forEach(eaBo -> eaBo.setLocalViewerUrl(mappedUrl.get(eaBo.getId())));
     }
 
     @Override

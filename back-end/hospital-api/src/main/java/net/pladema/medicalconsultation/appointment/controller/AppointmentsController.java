@@ -506,7 +506,8 @@ public class AppointmentsController {
 				equipmentAppointmentBo.getStudies(),
 				equipmentAppointmentBo.getServiceRequestId(),
 				equipmentAppointmentBo.getTranscribedServiceRequestId(),
-				null
+				null,
+				equipmentAppointmentBo.getLocalViewerUrl()
 		);
 	}
 

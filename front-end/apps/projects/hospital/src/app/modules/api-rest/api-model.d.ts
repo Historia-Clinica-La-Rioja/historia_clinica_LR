@@ -1830,6 +1830,7 @@ export interface EquipmentAppointmentListDto {
     healthInsuranceId: number;
     hour: string;
     id: number;
+    localViewerUrl?: string;
     medicalCoverageAffiliateNumber: string;
     medicalCoverageName: string;
     overturn: boolean;

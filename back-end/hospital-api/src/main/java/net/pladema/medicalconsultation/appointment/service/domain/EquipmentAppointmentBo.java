@@ -57,6 +57,8 @@ public class EquipmentAppointmentBo {
 
 	private List<String> studies;
 
+	private String localViewerUrl;
+
 	public static EquipmentAppointmentBo fromEquipmentAppointmentVo(EquipmentAppointmentVo equipmentAppointmentVo) {
 		return EquipmentAppointmentBo.builder()
 				.id(equipmentAppointmentVo.getId())

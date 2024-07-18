@@ -60,6 +60,9 @@ public class EquipmentAppointmentListDto {
 	@Nullable
 	private List<OrderImageFileInfoDto> transcribedOrderAttachedFiles;
 
+	@Nullable
+	private String localViewerUrl;
+
 	public void mapTranscribedOrderAttachedFiles(List<OrderImageFileReducedBo> transcribedOrderAttachedFiles) {
 		this.transcribedOrderAttachedFiles = transcribedOrderAttachedFiles.stream().map(files -> {
 			return new OrderImageFileInfoDto(files.getId(), files.getName());
