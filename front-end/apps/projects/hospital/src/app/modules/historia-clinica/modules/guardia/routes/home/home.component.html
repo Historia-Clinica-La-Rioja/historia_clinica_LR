@@ -23,10 +23,10 @@
 					<form [formGroup]="filterService.getForm()">
 						<mat-form-field fxFlexFill appearance="outline">
 							<mat-label translate="guardia.home.episodes.filters.URGENCY"></mat-label>
-							<mat-select id="triage-filter" formControlName="triage" (selectionChange)="filter()">
-								<mat-option *ngFor="let triageCategory of triageCategories$ | async"
-									[value]="triageCategory.id">
-									{{ triageCategory.description }}
+							<mat-select formControlName="triage" (selectionChange)="filter()">
+								<mat-option id="triage-filter" class="triage-options"
+											*ngFor="let triageCategory of triageCategories$ | async" [value]="triageCategory.id">
+									<app-triage-chip [category]="triageCategory" [isFilled]="true"></app-triage-chip>
 								</mat-option>
 							</mat-select>
 							<button *ngIf="filterService.getForm().value.triage" id="clear-triage-filter" type="button"
