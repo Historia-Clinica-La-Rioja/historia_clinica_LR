@@ -43,7 +43,7 @@ PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTG
 
 echo "Redefiniendo las vistas..."
 # En este paso pisaríamos las vistas por defecto de HSI
-
+PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_DB -f "views.sql"
 
 # Comandos psql adicionales (modifica o añade lo que necesites aquí)
 # Ejemplo:
