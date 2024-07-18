@@ -4,9 +4,8 @@ import net.pladema.parameterizedform.UpdateFormEnablementInInstitution;
 import net.pladema.parameterizedform.application.GetFormsByStatus;
 import net.pladema.parameterizedform.application.UpdateFormStatus;
 import net.pladema.parameterizedform.domain.enums.EFormStatus;
-import net.pladema.parameterizedform.infrastructure.input.rest.constraints.validator.BackofficeParameterizedFormValidator;
+import net.pladema.parameterizedform.infrastructure.input.rest.dto.ParameterizedFormDto;
 import net.pladema.parameterizedform.infrastructure.output.BackofficeParameterizedFormStore;
-import net.pladema.parameterizedform.infrastructure.output.repository.entity.ParameterizedForm;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 import org.springframework.data.domain.Page;
@@ -25,52 +24,52 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 @RequestMapping("backoffice/parameterizedform")
 @RestController
-public class BackofficeParameterizedFormController extends AbstractBackofficeController<ParameterizedForm, Integer> {
+public class BackofficeParameterizedFormController extends AbstractBackofficeController<ParameterizedFormDto, Integer> {
 
 	private final GetFormsByStatus getFormsByStatus;
 	private final UpdateFormStatus updateFormStatus;
 	private final UpdateFormEnablementInInstitution updateFormEnablementInInstitution;
 
 	public BackofficeParameterizedFormController(BackofficeParameterizedFormStore store,
-												 BackofficeParameterizedFormValidator validator,
 												 GetFormsByStatus getFormsByStatus,
 												 UpdateFormStatus updateFormStatus,
 												 UpdateFormEnablementInInstitution updateFormEnablementInInstitution) {
-		super(store, validator);
+		super(store);
 		this.getFormsByStatus = getFormsByStatus;
 		this.updateFormStatus = updateFormStatus;
 		this.updateFormEnablementInInstitution = updateFormEnablementInInstitution;
 	}
 
 	@GetMapping(params="excludeInactive=true")
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
-	public @ResponseBody Page<ParameterizedForm> getList(Pageable pageable,
-											@RequestParam(name = "excludeInactive") Boolean excludeInactive,
-											@RequestParam(name = "name", required = false) String name) {
+	public @ResponseBody Page<ParameterizedFormDto> getList(Pageable pageable,
+														 @RequestParam(name = "excludeInactive") Boolean excludeInactive,
+														 @RequestParam(name = "name", required = false) String name,
+														 @RequestParam (name="isDomain") Boolean isDomain) {
 		logger.debug("GET_LIST {}", "excludeInactive {}", excludeInactive);
 		List<Short> statusIds = EFormStatus.getStatus();
 		if (excludeInactive != null && excludeInactive) {
 			statusIds = statusIds.stream().filter(statusId -> !statusId.equals(EFormStatus.INACTIVE.getId())).collect(Collectors.toList());
 		}
-		return getFormsByStatus.run(statusIds, name, pageable);
+		return getFormsByStatus.run(statusIds, name, isDomain, pageable);
 	}
 
 	@PutMapping(value = "/{id}/update-status")
-	@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR','ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	@ResponseStatus(HttpStatus.OK)
 	public void updateStatus(@PathVariable Integer id) {
+		logger.debug("updateStatus {}", "formId {}", id);
 		updateFormStatus.run(id);
 	}
 
 	@PutMapping(value = "/{id}/update-institutional-enablement")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	@ResponseStatus(HttpStatus.OK)
 	public void updateFormEnablementInInstitution(@PathVariable Integer id,
 												  @RequestParam Integer institutionId,
 												  @RequestParam Boolean enablement
 	) {
+		logger.debug("updateStatus {}", "formId {}, institutionId {}, enablement {}", id, institutionId, enablement);
 		updateFormEnablementInInstitution.run(id, institutionId, enablement);
 	}
 }

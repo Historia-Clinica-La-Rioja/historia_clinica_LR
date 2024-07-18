@@ -3558,6 +3558,18 @@ export interface ParameterTypeDto {
     id: number;
 }
 
+export interface ParameterizedFormDto {
+    emergencyCareEnabled: boolean;
+    id: number;
+    institutionId: number;
+    internmentEnabled: boolean;
+    isDomain: boolean;
+    isEnabled: boolean;
+    name: string;
+    outpatientEnabled: boolean;
+    statusId: number;
+}
+
 export interface ParameterizedFormParameterDto {
     id: number;
     orderNumber: number;

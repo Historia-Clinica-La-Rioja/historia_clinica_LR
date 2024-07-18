@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.parameterizedform.application.port.output.ParameterizedFormStorage;
 
+import net.pladema.parameterizedform.infrastructure.input.rest.dto.ParameterizedFormDto;
 import net.pladema.parameterizedform.infrastructure.output.repository.entity.ParameterizedForm;
 
 import org.springframework.data.domain.Page;
@@ -19,9 +20,9 @@ public class GetFormsByStatus {
 
 	private final ParameterizedFormStorage parameterizedFormStorage;
 
-	public Page<ParameterizedForm> run(List<Short> statusIds, String name, Pageable pageable) {
+	public Page<ParameterizedFormDto> run(List<Short> statusIds, String name, Boolean isDomain, Pageable pageable) {
 		log.debug("Input parameters -> statusIds {}, name {}, pageable {}", statusIds, name, pageable);
-		Page<ParameterizedForm> result = parameterizedFormStorage.filterByStatusIdAndNameIn(statusIds, name, pageable);
+		Page<ParameterizedFormDto> result = parameterizedFormStorage.getFormByFilters(statusIds, name, isDomain, pageable);
 		log.debug("Output -> {}", result);
 		return result;
 	}

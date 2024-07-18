@@ -25,4 +25,31 @@ public interface InstitutionalParameterizedFormRepository extends SGXAuditableEn
 			"AND ipf.institutionId = :institutionId")
 	Optional<InstitutionalParameterizedForm> findByParameterizedFormIdAndInstitutionId(@Param("parameterizedFormId") Integer parameterizedFormId,
 																					   @Param("institutionId") Integer institutionId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ipf.institutionId " +
+			"FROM InstitutionalParameterizedForm ipf " +
+			"WHERE ipf.parameterizedFormId = :parameterizedFormId")
+	Integer getInstitutionIdByParameterizedFormId(@Param("parameterizedFormId") Integer parameterizedFormId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ipf.isEnabled " +
+			"FROM InstitutionalParameterizedForm ipf " +
+			"WHERE ipf.parameterizedFormId = :parameterizedFormId")
+	Boolean getEnabledByParameterizedFormId(@Param("parameterizedFormId") Integer parameterizedFormId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ipf " +
+			"FROM InstitutionalParameterizedForm ipf " +
+			"WHERE ipf.parameterizedFormId = :parameterizedFormId")
+	List<InstitutionalParameterizedForm> getByParameterizedFormId(@Param("parameterizedFormId") Integer parameterizedFormId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT ipf " +
+			"FROM InstitutionalParameterizedForm ipf " +
+			"WHERE ipf.parameterizedFormId = :parameterizedFormId " +
+			"AND ipf.institutionId = :institutionId")
+	Optional<InstitutionalParameterizedForm> getByParameterizedFormIdAndInstitutionId(@Param("parameterizedFormId") Integer parameterizedFormId,
+																					  @Param("institutionId") Integer institutionId);
+
 }
