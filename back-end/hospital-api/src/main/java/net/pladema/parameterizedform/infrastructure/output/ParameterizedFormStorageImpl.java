@@ -40,6 +40,11 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 			EFormStatus nextState = actualState.getNextState();
 			assertFormName(formId, form.getName(), nextState);
 			parameterizedFormRepository.updateStatusByFormId(formId, nextState.getId());
+			List<InstitutionalParameterizedForm> formEnabledInInstitutions = institutionalParameterizedFormRepository.getByParameterizedFormId(formId);
+			Boolean isInactive = nextState.getId().equals(EFormStatus.INACTIVE.getId());
+			if (isInactive && form.getIsDomain() && !formEnabledInInstitutions.isEmpty()) {
+				institutionalParameterizedFormRepository.updateInstitutionalParameterizedFormEnabled(formId);
+			}
 		});
 	}
 
@@ -51,14 +56,6 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 		List<ParameterizedFormDto> result = resultParameterizedForm.stream()
 				.map(this::mapEntityToDto)
 				.collect(Collectors.toList());
-
-		result.forEach(dto -> {
-			Optional<InstitutionalParameterizedForm> institutionalParameterizedForm = institutionalParameterizedFormRepository.getByParameterizedFormId(dto.getId());
-			if (institutionalParameterizedForm.isPresent()) {
-				dto.setInstitutionId(institutionalParameterizedForm.get().getInstitutionId());
-				dto.setIsEnabled(institutionalParameterizedForm.get().getIsEnabled());
-			}
-		});
 
 		int minIndex = Math.min(pageable.getPageNumber() * pageable.getPageSize(), result.size());
 		int maxIndex = Math.min(minIndex + pageable.getPageSize(), result.size());
@@ -85,14 +82,8 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 						throw new NotFoundException("draft-form", "No se puede habilitar un formulario con estado borrador.");
 					}
 					institutionalParameterizedFormRepository.findByParameterizedFormIdAndInstitutionId(parameterizedFormId, institutionId).ifPresentOrElse(
-							institutionalParameterizedForm -> {
-								institutionalParameterizedForm.setIsEnabled(enablement);
-								institutionalParameterizedFormRepository.save(institutionalParameterizedForm);
-							},
-							() -> {
-								InstitutionalParameterizedForm institutionalParameterizedForm = new InstitutionalParameterizedForm(parameterizedFormId, institutionId, enablement);
-								institutionalParameterizedFormRepository.save(institutionalParameterizedForm);
-							}
+							institutionalParameterizedForm -> updateInsitutionalParameterizedForm(institutionalParameterizedForm, enablement),
+							() -> saveInsitutionalParameterizedForm(parameterizedForm.getId(), institutionId, enablement)
 					);
 				}
 		);
@@ -114,5 +105,15 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 				entity.getInternmentEnabled(),
 				entity.getEmergencyCareEnabled()
 		);
+	}
+
+	private void updateInsitutionalParameterizedForm(InstitutionalParameterizedForm institutionalParameterizedForm, Boolean enablement) {
+		institutionalParameterizedForm.setIsEnabled(enablement);
+		institutionalParameterizedFormRepository.save(institutionalParameterizedForm);
+	}
+
+	private void saveInsitutionalParameterizedForm(Integer parameterizedFormId, Integer institutionId, Boolean enablement) {
+		InstitutionalParameterizedForm institutionalParameterizedForm = new InstitutionalParameterizedForm(parameterizedFormId, institutionId, enablement);
+		institutionalParameterizedFormRepository.save(institutionalParameterizedForm);
 	}
 }

@@ -62,4 +62,11 @@ public interface ParameterizedFormRepository extends SGXAuditableEntityJPAReposi
 			"WHERE pf.id = :formId")
 	Optional<Short> findStatusById(@Param("formId") Integer formId);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE InstitutionalParameterizedForm ipf " +
+			"SET ipf.isEnabled = false, ipf.updateable.updatedOn = CURRENT_TIMESTAMP " +
+			"WHERE ipf.parameterizedFormId = :parameterizedFormId")
+	void updateInstitutionalParameterizedFormEnabled(@Param("parameterizedFormId") Integer parameterizedFormId);
+
 }

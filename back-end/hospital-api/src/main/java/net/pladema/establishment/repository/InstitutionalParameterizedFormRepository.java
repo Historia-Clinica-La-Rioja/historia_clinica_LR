@@ -6,6 +6,7 @@ import net.pladema.parameterizedform.infrastructure.output.repository.entity.Par
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,5 +52,12 @@ public interface InstitutionalParameterizedFormRepository extends SGXAuditableEn
 			"AND ipf.institutionId = :institutionId")
 	Optional<InstitutionalParameterizedForm> getByParameterizedFormIdAndInstitutionId(@Param("parameterizedFormId") Integer parameterizedFormId,
 																					  @Param("institutionId") Integer institutionId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE InstitutionalParameterizedForm ipf " +
+			"SET ipf.isEnabled = false, ipf.updateable.updatedOn = CURRENT_TIMESTAMP " +
+			"WHERE ipf.parameterizedFormId = :parameterizedFormId")
+	void updateInstitutionalParameterizedFormEnabled(@Param("parameterizedFormId") Integer parameterizedFormId);
 
 }
