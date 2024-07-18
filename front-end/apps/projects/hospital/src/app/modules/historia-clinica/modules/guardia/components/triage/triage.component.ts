@@ -58,11 +58,11 @@ export class TriageComponent implements OnInit {
 			this.triageCategories = triageCategories;
 			if (hasValidRoleToNotDefineTriageLevel && this.canAssignNotDefinedTriageLevel) {
 				this.triageForm.controls.triageCategoryId.setValue(WITHOUT_TRIAGE_CATEGORY_ID);
-				this.triageLevel = this.triageCategories.find(category => category.id === WITHOUT_TRIAGE_CATEGORY_ID);
+				if (!this.triageLevel) this.triageLevel = this.triageCategories.find(category => category.id === WITHOUT_TRIAGE_CATEGORY_ID);
 			}
 			else {
 				this.triageCategories = this.triageCategories.filter(category => category.id != WITHOUT_TRIAGE_CATEGORY_ID);
-				this.triageLevel = this.triageCategories.find(category => category.id === TRIAGE_LEVEL_V_ID);
+				if (!this.triageLevel) this.triageLevel = this.triageCategories.find(category => category.id === TRIAGE_LEVEL_V_ID);
 				this.triageForm.controls.triageCategoryId.setValue(this.triageLevel.id);
 			}
 		});
@@ -112,8 +112,8 @@ export class TriageComponent implements OnInit {
 
 	private preloadedLastTriageData(lastTriage: TriageListDto) {
 		this.lastTriageReasons = lastTriage.reasons;
-		const preloadedTriageCategotyId = this.triageCategories.find(triageCategory => triageCategory.id === lastTriage.category.id).id;
-		this.triageForm.controls.triageCategoryId.setValue(preloadedTriageCategotyId);
+		this.triageLevel = this.triageCategories.find(triageCategory => triageCategory.id === lastTriage.category.id);
+		this.triageForm.controls.triageCategoryId.setValue(this.triageLevel.id);
 	}
 
 }
