@@ -4,6 +4,7 @@ import ar.lamansys.sgh.publicapi.apisumar.application.port.out.ConsultationDetai
 
 import ar.lamansys.sgh.publicapi.apisumar.domain.ConsultationDetailDataBo;
 import ar.lamansys.sgh.publicapi.apisumar.domain.ImmunizationsDetailBo;
+import ar.lamansys.sgh.publicapi.apisumar.domain.RecipeDetailBo;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -221,6 +222,83 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 		return List.of();
 	}
 
+	@Override
+	public List<RecipeDetailBo> getRecipes(String sisaCode, LocalDateTime startDate, LocalDateTime endDate) {
+		LOG.debug("sisaCode -> {}, startDate -> {}, endDate -> {}", sisaCode, startDate, endDate);
+
+		String stringQuery = "SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, " +
+				"cs.name as operativeUnit, " +
+				"concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as lender, " +
+				"p.identification_number as lenderIdentificationNumber, " +
+				"mr.created_on AT TIME ZONE 'UTC-3' as attentionDate, " +
+				"pp.identification_number as patientIdentificationNumber, " +
+				"concat(pp.first_name , ' ', pp.last_name) as patientName, " +
+				"g.description as patientSex, " +
+				"gg.description as patientGender, " +
+				"pe.name_self_determination as patientSelfPerceivedName, " +
+				"pp.birth_date as patientBirthDate, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM mr.updated_on) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM mr.updated_on) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM mr.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM mr.updated_on) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM mr.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAgeTurn, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAge, " +
+				"et.pt as ethnicity, " +
+				"concat(mc.name, '(RNOS: ', hi.rnos, ')') as medicalCoverage, " +
+				"concat(a.street, ' N° ', a.number, case when a.floor is not null then concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) as address, " +
+				"c.description as location, " +
+				"ed.description as instructionLevel, " +
+				"lab.description as workSituation, " +
+				"concat(m_sn.pt, ' (SNOMED: ', m_sn.sctid, ')') AS medication, " +
+				"concat(hc_sn.pt, ' (SNOMED: ', hc_sn.sctid, ')') AS relatedProblem, " +
+				"ev.description as evolution " +
+				"FROM medication_request mr " +
+				"INNER JOIN institution ins ON mr.institution_id=ins.id " +
+				"LEFT JOIN clinical_specialty cs ON mr.clinical_specialty_id=cs.id " +
+				"INNER JOIN healthcare_professional hp ON mr.doctor_id=hp.id " +
+				"INNER JOIN person p ON hp.person_id=p.id " +
+				"LEFT JOIN patient pa ON mr.patient_id=pa.id " +
+				"INNER JOIN person pp ON pa.person_id=pp.id " +
+				"LEFT JOIN person_extended pe ON pe.person_id=pp.id " +
+				"LEFT JOIN ethnicity et ON pe.ethnicity_id=et.id " +
+				"LEFT JOIN education_level ed ON pe.education_level_id=ed.id " +
+				"LEFT JOIN occupation lab ON pe.occupation_id=lab.id " +
+				"LEFT JOIN gender gg ON pe.gender_self_determination=gg.id " +
+				"LEFT JOIN address a ON pe.address_id=a.id " +
+				"LEFT JOIN city c ON a.city_id=c.id " +
+				"INNER JOIN gender g ON pp.gender_id=g.id " +
+				"LEFT JOIN patient_medical_coverage pmc ON pmc.id=mr.medical_coverage_id " +
+				"LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id " +
+				"LEFT JOIN health_insurance hi ON hi.id=mc.id " +
+				"LEFT JOIN document d ON mr.id=d.source_id AND d.source_type_id=2 " +
+				"LEFT JOIN note ev ON d.other_note_id=ev.id " +
+				"LEFT JOIN document_medicamention_statement dms ON dms.document_id=d.id " +
+				"LEFT JOIN medication_statement ms ON dms.medication_statement_id=ms.id " +
+				"LEFT JOIN snomed m_sn ON ms.snomed_id=m_sn.id " +
+				"LEFT JOIN health_condition hc ON ms.health_condition_id=hc.id " +
+				"LEFT JOIN snomed hc_sn ON hc.snomed_id=hc_sn.id " +
+				"WHERE ins.sisa_code = :sisaCode " +
+				"AND mr.created_on BETWEEN :startDate AND :endDate";
+
+		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("sisaCode", sisaCode)
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate);
+
+		List<Object[]> queryResult = query.getResultList();
+
+		List<RecipeDetailBo> result = queryResult
+				.stream()
+				.map(this::processRecipeQuery)
+				.collect(Collectors.toList());
+
+		return result;
+	}
+
 	private ConsultationDetailDataBo mergeResults(List<ConsultationDetailDataBo> unmergedResults) {
 
 		ConsultationDetailDataBo result = new ConsultationDetailDataBo();
@@ -312,6 +390,33 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				(String) queryResult[36],
 				(String) queryResult[37],
 				(String) queryResult[38]
+		);
+	}
+
+	private RecipeDetailBo processRecipeQuery(Object[] queryResult) {
+		return new RecipeDetailBo(
+				(String) queryResult[0],
+				(String) queryResult[1],
+				(String) queryResult[2],
+				(String) queryResult[3],
+				((Timestamp) queryResult[4]),
+				(String) queryResult[5],
+				(String) queryResult[6],
+				(String) queryResult[7],
+				(String) queryResult[8],
+				(String) queryResult[9],
+				((Date) queryResult[10]),
+				(String) queryResult[11],
+				(String) queryResult[12],
+				(String) queryResult[13],
+				(String) queryResult[14],
+				(String) queryResult[15],
+				(String) queryResult[16],
+				(String) queryResult[17],
+				(String) queryResult[18],
+				(String) queryResult[19],
+				(String) queryResult[20],
+				(String) queryResult[21]
 		);
 	}
 }
