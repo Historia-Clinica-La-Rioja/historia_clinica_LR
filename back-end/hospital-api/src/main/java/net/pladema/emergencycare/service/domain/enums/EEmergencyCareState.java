@@ -14,7 +14,8 @@ public enum EEmergencyCareState {
     ATENCION(1, "En atención"),
     ESPERA(2, "En espera"),
     ALTA_ADMINISTRATIVA(3, "Con alta administrativa"),
-    ALTA_MEDICA(4, "Con alta médica");
+    ALTA_MEDICA(4, "Con alta médica"),
+	AUSENTE(4, "Ausente");
 
     private final Short id;
     private final String description;

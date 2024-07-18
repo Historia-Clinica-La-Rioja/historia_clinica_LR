@@ -788,6 +788,14 @@ databaseChangeLog:
                 UPDATE hierarchical_unit SET closest_service_id = id WHERE type_id = 8;
 
     - changeSet:
+        id: insert-ausente-state-in-table-emergency_care_state
+        author: tomasbecher
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO emergency_care_state VALUES (5, 'Ausente');
+
+    - changeSet:
             id: modifyDataType-cipres_establishment-cipres_establishment_id
             comment: Modify data type column cipres_establishment_id in cipres_establishment table
             author: bchacon
