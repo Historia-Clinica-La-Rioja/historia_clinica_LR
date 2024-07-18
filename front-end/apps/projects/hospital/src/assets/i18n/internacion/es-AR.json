@@ -338,15 +338,15 @@
 			},
 			"cultivo":{
 				"TITLE": "Cultivos",
-				"PROCEDURES": "Procedimientos"
+				"PROCEDURES": "Procedimientos registrados"
 			},
 			"biopsia":{
 				"TITLE": "Biopsia por congelción",
-				"PROCEDURES": "Procedimientos"
+				"PROCEDURES": "Procedimientos registrados"
 			},
 			"drenaje":{
 				"TITLE": "Drenajes",
-				"PROCEDURES": "Procedimientos"
+				"PROCEDURES": "Procedimientos registrados"
 			},
 			"protesis":{
 				"TITLE": "Prótesis",
