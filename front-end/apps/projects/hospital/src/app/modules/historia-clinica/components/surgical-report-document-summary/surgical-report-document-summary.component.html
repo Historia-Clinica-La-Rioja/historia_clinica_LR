@@ -3,7 +3,8 @@
 		fxLayout="column" fxLayoutGap="20px">
 
 		<app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
-			[isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+			[isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
+            (editDocument)="edit()"></app-document-summary-header>
 		<mat-divider></mat-divider>
 
 		<div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">

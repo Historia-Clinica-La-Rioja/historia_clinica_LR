@@ -19,8 +19,10 @@ export class SurgicalReportDiagnosisComponent implements OnInit{
 
 	ngOnInit(){
 		this.surgicalReport.mainDiagnosis = this.mainDiagnosis;
-		this.diagnosis.forEach(diagnosis => diagnosis.type = ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS);
-		this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
+		if (this.diagnosis) {
+			this.diagnosis.forEach(diagnosis => diagnosis.type = ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS);
+			this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
+		}
 	}
 
 	isEmpty(): boolean {
@@ -29,7 +31,9 @@ export class SurgicalReportDiagnosisComponent implements OnInit{
 
 	changeDiagnosis(): void {
 		this.surgicalReport.mainDiagnosis = this.mainDiagnosis;
-		this.diagnosis.forEach(diagnosis => diagnosis.type = ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS);
-		this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
+		if (this.diagnosis) {
+			this.diagnosis.forEach(diagnosis => diagnosis.type = ProblemTypeEnum.PREOPERATIVE_DIAGNOSIS);
+			this.surgicalReport.preoperativeDiagnosis = this.diagnosis;
+		}
 	}
 }
