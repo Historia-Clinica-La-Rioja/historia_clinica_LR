@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionDto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionLineDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionSpecialtyDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionsDataDto;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
@@ -285,6 +289,50 @@ public class PrescriptionMapper {
 
 	private DispensedMedicationBo toDispensedMedicationBo(DispensedMedicationDto medication, ChangePrescriptionStateMultipleDto changePrescriptionStateMultipleDto) {
 		return new DispensedMedicationBo(medication.getSnomedId(), medication.getCommercialName(), medication.getCommercialPresentation(), medication.getSoldUnits(), medication.getBrand(), medication.getPrice(), medication.getAffiliatePayment(), medication.getMedicalCoveragePayment(), changePrescriptionStateMultipleDto.getPharmacyName(), changePrescriptionStateMultipleDto.getPharmacistName(), medication.getObservations());
+	}
+
+	public MultipleCommercialPrescriptionDto toMultipleCommercialPrescriptionDto(MultipleCommercialPrescriptionBo multipleCommercialPrescriptionBo) {
+		if (multipleCommercialPrescriptionBo.getPrescriptionId() == null)
+			throw new PrescriptionNotFoundException("La receta no existe");
+		return MultipleCommercialPrescriptionDto.builder()
+				.domain(multipleCommercialPrescriptionBo.getDomain())
+				.prescriptionId(multipleCommercialPrescriptionBo.getPrescriptionId())
+				.dueDate(multipleCommercialPrescriptionBo.getDueDate())
+				.link(multipleCommercialPrescriptionBo.getLink())
+				.isArchived(multipleCommercialPrescriptionBo.getIsArchived())
+				.institutionPrescription(mapTo(multipleCommercialPrescriptionBo.getInstitutionPrescription()))
+				.prescriptionDate(multipleCommercialPrescriptionBo.getPrescriptionDate())
+				.patientPrescription(mapTo(multipleCommercialPrescriptionBo.getPatientPrescription()))
+				.professionalPrescription(mapTo(multipleCommercialPrescriptionBo.getProfessionalPrescription()))
+				.prescriptionLines(toMultipleCommercialPrescriptionLineDtoList(multipleCommercialPrescriptionBo.getPrescriptionLines(), multipleCommercialPrescriptionBo.getDueDate()))
+				.build();
+	}
+
+	private List<MultipleCommercialPrescriptionLineDto> toMultipleCommercialPrescriptionLineDtoList(List<MultipleCommercialPrescriptionLineBo> prescriptionLines, LocalDateTime dueDate) {
+		if (prescriptionLines == null)
+			return new ArrayList<>();
+		return prescriptionLines.stream().map(line -> toMultipleCommercialPrescriptionLine(line, dueDate)).collect(Collectors.toList());
+	}
+
+	private MultipleCommercialPrescriptionLineDto toMultipleCommercialPrescriptionLine(MultipleCommercialPrescriptionLineBo line, LocalDateTime dueDate) {
+		boolean due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isBefore(localDateMapper.fromLocalDateTime(dueDate));
+		return MultipleCommercialPrescriptionLineDto.builder()
+				.prescriptionLineNumber(line.getPrescriptionLineNumber())
+				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : line.getPrescriptionLineStatus())
+				.dayDosis(line.getDayDosis())
+				.presentation(line.getPresentation())
+				.presentationQuantity(line.getPresentationQuantity())
+				.duration(line.getDuration())
+				.unitDosis(line.getUnitDosis())
+				.prescriptionProblem(mapTo(line.getPrescriptionProblem()))
+				.genericMedication(mapTo(line.getGenericMedication()))
+				.commercialMedications(mapToCommercialMedicationDtoList(line.getCommercialMedications()))
+				.quantity(line.getQuantity())
+				.build();
+	}
+
+	private List<CommercialMedicationDto> mapToCommercialMedicationDtoList(List<CommercialMedicationBo> commercialMedications) {
+		return commercialMedications.stream().map(commercialMedication -> CommercialMedicationDto.builder().name(commercialMedication.getName()).snomedId(commercialMedication.getSnomedId()).build()).collect(Collectors.toList());
 	}
 
 }

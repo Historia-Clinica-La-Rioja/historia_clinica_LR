@@ -15,6 +15,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
+
+import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -239,6 +243,156 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 
 	}
 
+	@Override
+	public MultipleCommercialPrescriptionBo getMultipleCommercialPrescriptionByIdAndIdentificationNumber(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
+		String stringQuery = "SELECT mr.id AS mrid, ms.prescription_date, ms.due_date, " +
+				"p2.first_name AS p2fn, p2.last_name AS p2ln, pe.name_self_determination, g.description AS gd, spg.description AS spgd, p2.birth_date, it.description AS itd, p2.identification_number, " +
+				"mc.name AS mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
+				"CONCAT(a.street, ' ', a.number, ' ', CASE WHEN a.floor IS NOT NULL THEN CONCAT('Piso ', a.floor) ELSE '' END)," +
+				"p3.first_name AS p3fn, p3.last_name, it2.description AS it2d, p3.identification_number AS p3d, pe2.phone_number, pe2.email AS EMAIL, ps.description AS psd, " +
+				"ps.sctid_code AS psc, " +
+				"pln.license_number, CASE WHEN pln.type_license_number = 1 THEN 'NACIONAL' ELSE 'PROVINCIAL' END, ms.prescription_line_number AS msid, msls.description AS mssd, s.pt AS spt, s.sctid AS sid, " +
+				"pt.description AS ptd, s2.pt AS s2pt, s2.sctid AS s2id, " +
+				"d2.doses_by_unit AS unit_dose, d2.doses_by_day, d2.duration, '' AS presentation, 0 AS presentation_quantity, d.id, mr.is_archived, " +
+				"CASE WHEN d2.dose_quantity_id IS NULL THEN NULL ELSE q.value END, " +
+				"msls.id AS status_id, ms.id as medication_statement_id " +
+				"FROM {h-schema}medication_statement ms " +
+				"JOIN {h-schema}document_medicamention_statement dms ON (ms.id = dms.medication_statement_id) " +
+				"JOIN {h-schema}document d ON (d.id = dms.document_id) " +
+				"JOIN {h-schema}medication_request mr ON (mr.id = d.source_id) " +
+				"JOIN {h-schema}patient p ON (p.id = ms.patient_id) " +
+				"JOIN {h-schema}person p2 ON (p2.id = p.person_id) " +
+				"LEFT JOIN {h-schema}person_extended pe ON (pe.person_id = p2.id) " +
+				"JOIN {h-schema}gender g ON (g.id = p2.gender_id) " +
+				"LEFT JOIN {h-schema}self_perceived_gender spg ON (spg.id = pe.gender_self_determination) " +
+				"JOIN {h-schema}identification_type it ON (it.id = p2.identification_type_id) " +
+				"LEFT JOIN {h-schema}patient_medical_coverage pmc ON (mr.medical_coverage_id = pmc.id) "+
+				"LEFT JOIN {h-schema}medical_coverage mc ON (mc.id = pmc.medical_coverage_id) " +
+				"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mcp.medical_coverage_id = pmc.medical_coverage_id) " +
+				"LEFT JOIN {h-schema}institution i ON (i.id = d.institution_id) " +
+				"LEFT JOIN {h-schema}address a ON (a.id = i.address_id) " +
+				"JOIN {h-schema}healthcare_professional hp ON (hp.id = mr.doctor_id) " +
+				"JOIN {h-schema}person p3 ON (p3.id = hp.person_id) " +
+				"JOIN {h-schema}identification_type it2 ON (it2.id = p3.identification_type_id) " +
+				"LEFT JOIN {h-schema}person_extended pe2 ON (pe2.person_id = p3.id) " +
+				"JOIN {h-schema}professional_professions pp ON (pp.healthcare_professional_id = hp.id) " +
+				"JOIN {h-schema}healthcare_professional_specialty hps ON (hps.professional_profession_id = pp.id) " +
+				"JOIN {h-schema}professional_specialty ps ON (ps.id = pp.professional_specialty_id) " +
+				"JOIN {h-schema}professional_license_numbers pln ON (pln.professional_profession_id = pp.id OR pln.healthcare_professional_specialty_id = hps.id)" +
+				"JOIN {h-schema}health_condition hc ON (hc.id = ms.health_condition_id) " +
+				"JOIN {h-schema}snomed s ON (s.id = hc.snomed_id) " +
+				"JOIN {h-schema}problem_type pt ON (pt.id = hc.problem_id) " +
+				"JOIN {h-schema}snomed s2 ON (ms.snomed_id = s2.id) " +
+				"LEFT JOIN {h-schema}dosage d2 ON (d2.id = ms.dosage_id) " +
+				"LEFT JOIN {h-schema}quantity q ON (d2.dose_quantity_id = q.id) " +
+				"LEFT JOIN {h-schema}medication_statement_line_state msls ON (msls.id = ms.prescription_line_state) " +
+				"WHERE p2.identification_number = :identificationNumber " +
+				"AND mr.id = :numericPrescriptionId " +
+				"AND (d.type_id = " + RECETA + " OR d.type_id = " + RECETA_DIGITAL + ") " +
+				"AND hc.verification_status_id = '" + CONFIRMADO + "' " +
+				"AND (ms.status_id = '" + COMPLETO + "' OR ms.status_id = '" + ACTIVO + "') " +
+				"ORDER BY mr.id DESC";
+
+		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("identificationNumber", identificationNumber)
+				.setParameter("numericPrescriptionId", prescriptionIdentifier.prescriptionId);
+
+		List<Object[]> queryResult = query.getResultList();
+		List<MultipleCommercialPrescriptionBo> result = queryResult.stream()
+				.map(this::processMultipleCommercialPrescription)
+				.collect(Collectors.toList());
+		MultipleCommercialPrescriptionBo mergedResult = multipleCommercialsMergeResults(result);
+		if (mergedResult.getPrescriptionId() != null)
+			mergedResult.setPrescriptionId(domainNumber + ID_DIVIDER + mergedResult.getPrescriptionId());
+		mergedResult.setDomain(prescriptionIdentifier.domain);
+		mergedResult.getPrescriptionLines().forEach(line -> line.setCommercialMedications(fetchPrescriptionCommercials(line.getMedicationStatementId())));
+		return mergedResult;
+	}
+
+	private MultipleCommercialPrescriptionBo processMultipleCommercialPrescription(Object[] queryResult) {
+		LocalDate dueDate = queryResult[2] != null ? ((Date)queryResult[2]).toLocalDate() : ((Date)queryResult[1]).toLocalDate().plusDays(30);
+		String accessId = JWTUtils.generate256(Map.of("accessId", queryResult[41].toString()), "prescription", secret, tokenExpiration);
+		return new MultipleCommercialPrescriptionBo(
+				domainNumber.toString(),
+				((Integer) queryResult[0]).toString(),
+				((Date) queryResult[1]).toLocalDate().atStartOfDay(),
+				dueDate.atStartOfDay(),
+				"api/external-document-access/download-prescription/" + accessId,
+				queryResult[42] == null ? Boolean.FALSE : (Boolean) queryResult[42],
+				new PatientPrescriptionBo(
+						(String) queryResult[3],
+						(String) queryResult[4],
+						(String) queryResult[5],
+						(String) queryResult[6],
+						(String) queryResult[7],
+						((Date) queryResult[8]).toLocalDate(),
+						(String) queryResult[9],
+						(String) queryResult[10],
+						(String) queryResult[11],
+						(String) queryResult[12],
+						(String) queryResult[13],
+						(String) queryResult[14]
+				),
+				new InstitutionPrescriptionBo(
+						(String) queryResult[15],
+						(String) queryResult[16],
+						(String) queryResult[17],
+						(String) queryResult[18]
+				),
+				new ProfessionalPrescriptionBo(
+						(String) queryResult[19],
+						(String) queryResult[20],
+						(String) queryResult[21],
+						(String) queryResult[22],
+						(String) queryResult[23],
+						(String) queryResult[24],
+						List.of(new PrescriptionProfessionBo(
+								(String) queryResult[25],
+								(String) queryResult[26]
+						)),
+						List.of(new PrescriptionProfessionalRegistrationBo(
+								(String) queryResult[27],
+								(String) queryResult[28]
+						))
+				),
+				List.of(new MultipleCommercialPrescriptionLineBo(
+						(Integer) queryResult[29],
+						queryResult[44].equals(RECETA_CANCELADA) || dueDate.isAfter(LocalDate.now()) ? (String)queryResult[30] : "VENCIDO",
+						new PrescriptionProblemBo(
+								(String) queryResult[31],
+								(String) queryResult[32],
+								queryResult[33].equals(CRONICO) ? "Crónico" : "Agudo"
+						),
+						new GenericMedicationBo(
+								(String) queryResult[34],
+								(String) queryResult[35]
+						),
+						null,
+						queryResult[36] != null ? (Double) queryResult[36] : 0,
+						queryResult[37] != null ? (Double) queryResult[37] : 0,
+						queryResult[38] != null ? (Double) queryResult[38] : 1,
+						(String) queryResult[39],
+						(Integer) queryResult[40],
+						queryResult[43] != null ? (Double)queryResult[43] : null,
+						(Integer) queryResult[45]
+				))
+		);
+	}
+
+	private List<CommercialMedicationBo> fetchPrescriptionCommercials(Integer medicationStatementId) {
+		String queryString = "SELECT msc.commercial_name, msc.snomed_id " +
+				"FROM {h-schema}medication_statement ms " +
+				"JOIN {h-schema}medication_statement_commercial msc ON (msc.medication_statement_id = ms.id) " +
+				"WHERE ms.id = :medicationStatementId " +
+				"AND msc.deleted = FALSE";
+
+		List<Object[]> queryResult = entityManager.createNativeQuery(queryString)
+				.setParameter("medicationStatementId", medicationStatementId)
+				.getResultList();
+
+		return queryResult.stream().map(commercialMedication -> new CommercialMedicationBo((String) commercialMedication[0], (String) commercialMedication[1])).collect(Collectors.toList());
+	}
+
 	private boolean isInNewStatus(Integer prescriptionLineNumber, List<LineStatusBo> newStatus) {
 		return newStatus.stream().anyMatch(ns -> ns.getPrescriptionLineNumber().equals(prescriptionLineNumber));
 	}
@@ -454,6 +608,40 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		professionalPrescriptionBo.setRegistrations(prescriptionProfessionalRegistrationBos);
 		result.setProfessionalPrescriptionBo(professionalPrescriptionBo);
 		result.setPrescriptionsLineBo(prescriptionLineBoList);
+		return result;
+	}
+
+	private MultipleCommercialPrescriptionBo multipleCommercialsMergeResults(List<MultipleCommercialPrescriptionBo> unmergedResults) {
+		MultipleCommercialPrescriptionBo result = new MultipleCommercialPrescriptionBo();
+		if (unmergedResults.isEmpty())
+			return result;
+		result.setDomain(unmergedResults.get(0).getDomain());
+		result.setPrescriptionId(unmergedResults.get(0).getPrescriptionId());
+		result.setPrescriptionDate(unmergedResults.get(0).getPrescriptionDate());
+		result.setDueDate(unmergedResults.get(0).getDueDate());
+		result.setLink(unmergedResults.get(0).getLink());
+		result.setIsArchived(unmergedResults.get(0).getIsArchived());
+		result.setPatientPrescription(unmergedResults.get(0).getPatientPrescription());
+		result.setInstitutionPrescription(unmergedResults.get(0).getInstitutionPrescription());
+		result.setPrescriptionLines(unmergedResults.get(0).getPrescriptionLines());
+		ProfessionalPrescriptionBo professionalPrescriptionBo = unmergedResults.get(0).getProfessionalPrescription();
+		List<PrescriptionProfessionBo> prescriptionProfessionBos = new ArrayList<>(professionalPrescriptionBo.getProfessions());
+		List<PrescriptionProfessionalRegistrationBo> prescriptionProfessionalRegistrationBos = new ArrayList<>(professionalPrescriptionBo.getRegistrations());
+		List<MultipleCommercialPrescriptionLineBo> prescriptionLineBoList = new ArrayList<>(result.getPrescriptionLines());
+		for (int i = 1; i < unmergedResults.size(); i++) {
+			PrescriptionProfessionBo specialty = unmergedResults.get(i).getProfessionalPrescription().getProfessions().get(0);
+			PrescriptionProfessionalRegistrationBo prescriptionRegistration = unmergedResults.get(i).getProfessionalPrescription().getRegistrations().get(0);
+			if (!prescriptionProfessionalRegistrationBos.contains(prescriptionRegistration))
+				prescriptionProfessionalRegistrationBos.add(prescriptionRegistration);
+			if (!prescriptionProfessionBos.contains(specialty))
+				prescriptionProfessionBos.add(specialty);
+			if (!prescriptionLineBoList.contains(unmergedResults.get(i).getPrescriptionLines().get(0)))
+				prescriptionLineBoList.add(unmergedResults.get(i).getPrescriptionLines().get(0));
+		}
+		professionalPrescriptionBo.setProfessions(prescriptionProfessionBos);
+		professionalPrescriptionBo.setRegistrations(prescriptionProfessionalRegistrationBos);
+		result.setProfessionalPrescription(professionalPrescriptionBo);
+		result.setPrescriptionLines(prescriptionLineBoList);
 		return result;
 	}
 
