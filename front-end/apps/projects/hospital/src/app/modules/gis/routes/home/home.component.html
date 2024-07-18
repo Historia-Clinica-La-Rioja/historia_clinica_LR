@@ -3,7 +3,7 @@
     <section class="container">
         <mat-card class="institution-address-container" *ngIf="stepperMode">
             <mat-stepper [labelPosition]="'bottom'" linear #stepper (selectionChange)="changeStep($event)" [selectedIndex]="currentStepperIndex">
-                <mat-step label="{{'gis.steppers.ADDRESS' | translate}}" [stepControl]="institutionAddressForm" [completed]="institutionAddressForm.valid">
+                <mat-step label="{{'gis.steppers.ADDRESS' | translate}}" [completed]="institutionAddressForm.valid">
                     <h1 class="m-top" [translate]="'gis.institution-data.TITLE'"></h1>
                     <form [formGroup]="institutionAddressForm">
                         <app-title-description-list 
@@ -54,7 +54,7 @@
                         </div>
                 
                         <div class="space-between">
-                            <div class="m-top column">
+                            <div class="m-top column street">
                                 <mat-label [translate]="'gis.address.STREET'"></mat-label>
                                 <mat-form-field appearance="outline">
                                     <input matInput type="text" formControlName="streetName" placeholder="{{'gis.institution-data.STREET_PLACEHOLDER' | translate}}">
@@ -64,7 +64,7 @@
                                 </mat-form-field>
                             </div>
     
-                            <div class="m-top column">
+                            <div class="m-top column number">
                                 <mat-label [translate]="'gis.address.HOUSE_NUMBER'"></mat-label>
                                 <mat-form-field appearance="outline">
                                     <input matInput type="text" formControlName="houseNumber" placeholder="{{'gis.institution-data.HOUSE_NUMBER_PLACEHOLDER' | translate}}">
@@ -82,7 +82,7 @@
                                 [text]="'buttons.CANCEL'">
                             </app-button>
                             <app-button
-                                (clicked)="stepToMapPosition()"
+                                (clicked)="changeStep(GEOPOSITION_STEP)"
                                 [disabled]="institutionAddressForm.invalid"
                                 [text]="'buttons.NEXT'"
                                 [buttonType]="ButtonType.RAISED">
@@ -121,7 +121,7 @@
 
         <div class="map-container">
             <app-loading *ngIf="isLoading"></app-loading>
-            <app-map *ngIf="showMap" [setMapCoordinates]="coordinatesCurrentValue" [setMapArea]="area"></app-map>
+            <app-map *ngIf="showMap && !isLoading" [setMapCoordinates]="coordinatesCurrentValue" [setMapArea]="area"></app-map>
         </div>
     </section>
 </app-content>

@@ -16,12 +16,12 @@ import { InstitutionDescriptionDetailComponent } from './components/institution-
 @NgModule({
 	declarations: [
     	HomeComponent,
-     	MapComponent,
-		LoadingComponent,
 		InstitutionDescriptionComponent,
+		InstitutionDescriptionStepComponent,
+		InstitutionDescriptionDetailComponent,
+		LoadingComponent,
+		MapComponent,
 		ResponsabilityAreaComponent,
-  		InstitutionDescriptionStepComponent,
-    	InstitutionDescriptionDetailComponent
   	],
 	imports: [
 		CommonModule,

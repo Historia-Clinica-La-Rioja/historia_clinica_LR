@@ -108,17 +108,18 @@ export class HomeComponent implements OnInit {
 	}
 
 	changeStep = ($event) => {
+		const index = $event.selectedIndex || $event;
+		
 		this.gisLayersService.toggleActions(false, false);
 		this.gisLayersService.removeControls();
 		this.gisLayersService.removeModifyInteraction();
-
-		if ($event.selectedIndex === INSTITUTION_ADDRESS_STEP) 
+		if (index === INSTITUTION_ADDRESS_STEP) 
 			this.stepToInstitutionAddress();
 
-		if ($event.selectedIndex === GEOPOSITION_STEP) 
+		if (index === GEOPOSITION_STEP) 
 			this.stepToMapPosition();
 
-		if ($event.selectedIndex === RESPONSABILITY_AREA_STEP)
+		if (index === RESPONSABILITY_AREA_STEP)
 			this.stepToResponsabilityArea();
 	}
 
@@ -130,23 +131,24 @@ export class HomeComponent implements OnInit {
 	}
 
 	stepToMapPosition = () => {
-		this.gisLayersService.removeDrawnPolygon();
-		this.currentStepperIndex = GEOPOSITION_STEP;
+		if (this.currentStepperIndex === GEOPOSITION_STEP) return;
 		this.isLoading = true;
 		const address: string = this.toStringify();
 		this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
 		this.gisService.getInstitutionCoordinatesFromAddress(address)
-			.pipe(finalize(() => this.isLoading = false))
-			.subscribe((coordinates: GlobalCoordinatesDto) => {
-				this.coordinatesCurrentValue = coordinates;
-
-				if (!coordinates) 
-					return this.snackBarService.showError('gis.map-position.ERROR');
-
-				this.showMap = true;
-				this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
-				this.institutionAddressForm.controls.coordinates.setValue(transformCoordinates(coordinates));
-			});
+		.pipe(finalize(() => this.isLoading = false))
+		.subscribe((coordinates: GlobalCoordinatesDto) => {
+			if (!coordinates) {
+				this.showMap = false;
+				return this.snackBarService.showError('gis.map-position.ERROR');
+			}
+			this.currentStepperIndex = GEOPOSITION_STEP;
+			this.gisLayersService.removeDrawnPolygon();
+			this.coordinatesCurrentValue = coordinates;
+			this.showMap = true;
+			this.mapToInstitutionDescriptionPositionStep('gis.map-position.TITLE');
+			this.institutionAddressForm.controls.coordinates.setValue(transformCoordinates(coordinates));
+		});
 	}
 
 	stepToResponsabilityArea = () => {

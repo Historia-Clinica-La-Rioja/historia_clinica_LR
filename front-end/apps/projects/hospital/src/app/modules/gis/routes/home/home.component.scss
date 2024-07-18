@@ -1,7 +1,10 @@
 .space-between {
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
+}
+
+.street, .number {
+    width: 45%;
 }
 
 .container {

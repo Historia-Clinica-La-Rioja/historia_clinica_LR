@@ -1,11 +1,13 @@
-<div class="card">
+<div class="card-container">
     <mat-card>
-        <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
-        <div class="actions">
-            <app-button 
-                [text]="'gis.detailed-information.actions.EDIT'" 
-                (clicked)="edit()">  
-            </app-button>
+        <div class="card">
+            <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
+            <div class="actions">
+                <app-button 
+                    [text]="'gis.detailed-information.actions.EDIT'" 
+                    (clicked)="edit()">  
+                </app-button>
+            </div>
         </div>
     </mat-card>
 </div>

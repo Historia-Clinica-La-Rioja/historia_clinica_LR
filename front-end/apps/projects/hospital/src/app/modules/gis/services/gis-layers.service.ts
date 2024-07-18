@@ -201,6 +201,7 @@ export class GisLayersService {
 			this.polygonCoordinates = geometry.getCoordinates();
 			this.toggleActions(false, true);
 			this.addModifyInteraction();
+			this.detectWhenModifyFinish();
 		});
 	}
 

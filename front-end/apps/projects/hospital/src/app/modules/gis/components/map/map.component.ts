@@ -18,7 +18,7 @@ export class MapComponent implements OnInit {
 	@Input() set setMapArea(area: GlobalCoordinatesDto[]) {
 		this.gisLayersService.removeAreaLayer();
 		this.area = area;
-		if (this.gisLayersService.getMap())
+		if (this.gisLayersService.getMap()) 
 			this.gisLayersService.setPolygon(this.area);
 	}	
 
