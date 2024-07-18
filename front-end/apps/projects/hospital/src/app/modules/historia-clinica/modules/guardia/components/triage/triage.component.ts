@@ -4,13 +4,14 @@ import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service'
 import { DoctorsOfficeDto, ERole, OutpatientReasonDto, TriageListDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { Observable, forkJoin, take } from 'rxjs';
-import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID } from '../../constants/masterdata';
+import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID, Triages } from '../../constants/masterdata';
 import { PermissionsService } from '@core/services/permissions.service';
 import { ToFormGroup } from '@core/utils/form.utils';
 import { toOutpatientReasons } from '../../utils/mapper';
 import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/motivo-nueva-consulta.service';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { MatSelectChange } from '@angular/material/select';
+import { ActivatedRoute } from '@angular/router';
 
 const ROLE_ALLOWED_NOT_TO_DEFINE_TRIAGE_LEVEL = [ERole.ADMINISTRATIVO];
 const WITHOUT_TRIAGE_CATEGORY_ID = 6;
@@ -28,6 +29,9 @@ export class TriageComponent implements OnInit {
 	triageCategories: TriageCategory[];
 	lastTriageReasons: MotivoConsulta[] = [];
 
+	patientId: number;
+	patientDescription: string;
+
 	@Input() cancelFunction: () => void;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Input() set lastTriage(lastTriage: TriageListDto) {
@@ -41,6 +45,7 @@ export class TriageComponent implements OnInit {
 		private doctorsOfficeService: DoctorsOfficeService,
 		private triageMasterDataService: TriageMasterDataService,
 		private permissionsService: PermissionsService,
+		private readonly route: ActivatedRoute,
 	) { }
 
 	ngOnInit(): void {
@@ -61,6 +66,11 @@ export class TriageComponent implements OnInit {
 		});
 
 		this.doctorsOffices$ = this.doctorsOfficeService.getBySectorType(SECTOR_AMBULATORIO);
+
+		this.route.queryParams.pipe(take(1)).subscribe(param => {
+            if (param.patientId) this.patientId = (Number(param.patientId));
+            else if (param.patientDescription) this.patientDescription = param.patientDescription;
+        });
 	}
 
 	clear(control: AbstractControl) {
@@ -106,7 +116,7 @@ export class TriageComponent implements OnInit {
 
 }
 export interface Triage {
-	triageCategoryId: number;
+	triageCategoryId: Triages;
 	doctorsOfficeId: number;
 	reasons: OutpatientReasonDto[];
 }

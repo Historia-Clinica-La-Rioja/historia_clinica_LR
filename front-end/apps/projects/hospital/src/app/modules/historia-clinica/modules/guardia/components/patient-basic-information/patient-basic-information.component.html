@@ -1,0 +1,7 @@
+<div *ngIf="patientSummary else temporaryPatient">
+    <app-patient-summary [person]="patientSummary" size="SIZE"></app-patient-summary>
+</div>
+
+<ng-template #temporaryPatient>
+    <app-emergency-care-temporary-patient [preloadedDescriptionPatient]="patientDescription" [canDeleteSelectedPatient]="false"></app-emergency-care-temporary-patient>
+</ng-template>

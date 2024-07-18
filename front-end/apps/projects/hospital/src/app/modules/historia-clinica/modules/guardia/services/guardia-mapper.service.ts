@@ -43,8 +43,7 @@ export class GuardiaMapperService {
 			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {
 				id: triageListDto.category.id,
-				name: triageListDto.category.name,
-				colorHex: triageListDto.category.color.code
+				name: triageListDto.category.name
 			},
 			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description,
@@ -149,8 +148,7 @@ export class GuardiaMapperService {
 			creationDate: dateTimeDtoToDate(triageListDto.creationDate),
 			category: {
 				id: triageListDto.category.id,
-				name: triageListDto.category.name,
-				colorHex: triageListDto.category.color.code
+				name: triageListDto.category.name
 			},
 			createdBy: triageListDto.createdBy,
 			doctorsOfficeDescription: triageListDto.doctorsOffice?.description

@@ -1,15 +1,6 @@
 <div class="page" fxLayout="column">
 	<form [formGroup]="pediatricForm">
 
-		<section id="patient" class="patient-summary">
-			<div *ngIf="patientSummary else temporaryPatient">
-				<app-patient-summary [person]="patientSummary" size="SIZE"></app-patient-summary>
-			</div>
-			<ng-template #temporaryPatient>
-				<app-emergency-care-temporary-patient [preloadedDescriptionPatient]="patientDescription" [canDeleteSelectedPatient]="false"></app-emergency-care-temporary-patient>
-			</ng-template>
-		</section>
-
 		<section id="triage">
 			<app-triage (triageData)="setTriageData($event)"
 				[lastTriage]="lastTriage$ | async"

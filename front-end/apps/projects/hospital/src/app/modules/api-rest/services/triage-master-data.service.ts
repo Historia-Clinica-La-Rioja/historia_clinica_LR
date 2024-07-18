@@ -4,37 +4,32 @@ import { Observable, of } from 'rxjs';
 import { MasterDataDto } from '@api-rest/api-model';
 import { HttpClient } from '@angular/common/http';
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
+import { Triages } from '@historia-clinica/modules/guardia/constants/masterdata';
 
-const TRIAGE_CATEGORIES = [
+export const TRIAGE_CATEGORIES = [
 	{
-		id: 1,
-		name: 'Nivel 1',
-		colorHex: 'FF0000'
+		id: Triages.ROJO_NIVEL_1,
+		name: 'Nivel 1'
 	},
 	{
-		id: 2,
-		name: 'Nivel 2',
-		colorHex: 'FF5C02'
+		id: Triages.NARANJA_NIVEL_2,
+		name: 'Nivel 2'
 	},
 	{
-		id: 3,
-		name: 'Nivel 3',
-		colorHex: 'ECBE00'
+		id: Triages.AMARILLO_NIVEL_3,
+		name: 'Nivel 3'
 	},
 	{
-		id: 4,
-		name: 'Nivel 4',
-		colorHex: '009B68'
+		id: Triages.VERDE_NIVEL_4,
+		name: 'Nivel 4'
 	},
 	{
-		id: 5,
-		name: 'Nivel 5',
-		colorHex: '3F4B9D'
+		id: Triages.AZUL_NIVEL_5,
+		name: 'Nivel 5'
 	},
 	{
-		id: 6,
-		name: 'Triage pendiente',
-		colorHex: 'D5D5D5'
+		id: Triages.GRIS_SIN_TRIAGE,
+		name: 'Triage pendiente'
 	}
 ];
 
