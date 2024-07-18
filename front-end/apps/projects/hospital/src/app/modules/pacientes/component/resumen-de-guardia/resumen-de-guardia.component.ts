@@ -210,7 +210,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	}
 
 	goToEditEpisode() {
-		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/edit`]);
+		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/patientClinicalHistory/edit`]);
 	}
 
 	atender(): void {

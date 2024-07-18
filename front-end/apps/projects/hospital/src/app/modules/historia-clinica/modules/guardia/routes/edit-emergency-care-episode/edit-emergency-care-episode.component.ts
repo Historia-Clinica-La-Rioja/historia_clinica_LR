@@ -24,6 +24,8 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 	private patientId: number;
 	private patientTypeId: number;
 
+	private from: string;
+
 	constructor(
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly route: ActivatedRoute,
@@ -37,6 +39,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 
 		this.route.paramMap.subscribe(
 			(params) => {
+				this.from = params.get('from');
 				this.episodeId = Number(params.get('id'));
 
 				this.emergencyCareEpisodeService.getAdministrative(this.episodeId).
@@ -79,7 +82,9 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				this.guardiaRouterService.goToEpisode(this.episodeId, { typeId: this.patientTypeId, id: this.patientId })
+				this.from === 'patientClinicalHistory'
+				? this.guardiaRouterService.goToEpisode(this.episodeId, { typeId: this.patientTypeId, id: this.patientId })
+				: this.guardiaRouterService.goToEmergencyCareDashboard();
 			}
 		});
 	}

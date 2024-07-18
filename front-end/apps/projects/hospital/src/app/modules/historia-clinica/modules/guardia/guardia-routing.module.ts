@@ -27,7 +27,7 @@ const routes: Routes = [{
 			component: NewEpisodeAdmissionComponent
 		},
 		{
-			path: 'episodio/:id/edit',
+			path: 'episodio/:id/:from/edit',
 			component: EditEmergencyCareEpisodeComponent
 		},
 		{
