@@ -41,4 +41,9 @@ public class DateDto {
 	public int hashCode() {
 		return Objects.hash(getYear(), getMonth(), getDay());
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%04d-%02d-%02d", year, month, day);
+	}
 }

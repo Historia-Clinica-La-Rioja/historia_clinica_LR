@@ -5,12 +5,22 @@ import { PresentationModule } from '@presentation/presentation.module';
 import { ExtensionsModule } from '@extensions/extensions.module';
 // routing
 import { ReportesRoutingModule } from './reportes-routing.module';
+import { CubeReportComponent } from './routes/cube-report/cube-report.component';
+import { MonthlyReportComponent } from './routes/monthly-report/monthly-report.component';
+// components
 import { HomeComponent } from './routes/home/home.component';
+import { InstitutionReportQueueComponent } from './components/monthly-queue/monthly-queue.component';
+import { ReportTableComponent } from './components/report-table/report-table.component';
 
 @NgModule({
 	declarations: [
 		// routing
+		CubeReportComponent,
+		MonthlyReportComponent,
+		// components
 		HomeComponent,
+		InstitutionReportQueueComponent,
+		ReportTableComponent,
 	],
 	imports: [
 		CommonModule,
@@ -18,7 +28,7 @@ import { HomeComponent } from './routes/home/home.component';
 		ReportesRoutingModule,
 		// deps
 		PresentationModule,
-		ExtensionsModule
+		ExtensionsModule,
 	]
 })
 export class ReportesModule { }

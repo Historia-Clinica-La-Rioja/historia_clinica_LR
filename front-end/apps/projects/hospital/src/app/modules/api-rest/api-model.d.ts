@@ -107,6 +107,17 @@ export interface AddDiagnosticReportObservationsCommandDto {
     values: AddDiagnosticReportObservationCommandDto[];
 }
 
+export interface AddInstitutionReportToQueueDto {
+    appointmentStateId: number;
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    endDate: DateDto;
+    hierarchicalUnitId: number;
+    hierarchicalUnitTypeId: number;
+    includeHierarchicalUnitDescendants: boolean;
+    startDate: DateDto;
+}
+
 export interface AddressDto extends Serializable {
     apartment: string;
     city: CityDto;
@@ -2631,6 +2642,29 @@ export interface InstitutionReportDto {
     reportWasDoneByInstitution: boolean;
 }
 
+export interface InstitutionReportQueryDto extends PageRequestDto {
+    appointmentStateId: number;
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    endDate: string;
+    hierarchicalUnitId: number;
+    hierarchicalUnitTypeId: number;
+    includeHierarchicalUnitDescendants: boolean;
+    startDate: string;
+}
+
+export interface InstitutionReportQueuedDto {
+    clinicalSpecialtyId: number;
+    doctorId: number;
+    endDate: DateDto;
+    hierarchicalUnitId: number;
+    hierarchicalUnitTypeId: number;
+    id: number;
+    includeHierarchicalUnitDescendants: boolean;
+    report: ReportQueuedDto;
+    startDate: DateDto;
+}
+
 export interface InstitutionUserPersonDto {
     completeLastName: string;
     completeName: string;
@@ -3485,6 +3519,11 @@ export interface PacsListDto {
 export interface PageDto<T> {
     content: T[];
     totalElementsAmount: number;
+}
+
+export interface PageRequestDto {
+    pageNumber: number;
+    pageSize: number;
 }
 
 export interface ParameterDto {
@@ -4384,6 +4423,13 @@ export interface RejectDocumentElectronicJointSignatureDto {
 
 export interface ReportClinicalObservationDto extends ClinicalObservationDto {
     effectiveTime: Date;
+}
+
+export interface ReportQueuedDto {
+    createdOn: DateTimeDto;
+    existsFile: boolean;
+    generatedError: string;
+    generatedOn: DateTimeDto;
 }
 
 export interface Representation {
@@ -5457,6 +5503,7 @@ export const enum AppFeature {
     HABILITAR_BUS_INTEROPERABILIDAD = "HABILITAR_BUS_INTEROPERABILIDAD",
     HABILITAR_ODONTOLOGY = "HABILITAR_ODONTOLOGY",
     HABILITAR_REPORTES = "HABILITAR_REPORTES",
+    HABILITAR_REPORTES_INSTANTANEOS = "HABILITAR_REPORTES_INSTANTANEOS",
     HABILITAR_INFORMES = "HABILITAR_INFORMES",
     HABILITAR_LLAMADO = "HABILITAR_LLAMADO",
     HABILITAR_HISTORIA_CLINICA_EXTERNA = "HABILITAR_HISTORIA_CLINICA_EXTERNA",

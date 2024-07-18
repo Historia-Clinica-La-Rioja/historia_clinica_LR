@@ -133,6 +133,109 @@ databaseChangeLog:
                     type: smallint
 
     - changeSet:
+        id: report_queue-createTable
+        comment: Create table report_queue
+        author: sperruolo
+        changes:
+          - createTable:
+              tableName: report_queue
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_report_queue
+                    name: id
+                    type: int
+                    autoIncrement: true
+                - column:
+                    name: created_on
+                    type: datetime
+                    constraints:
+                      nullable: false
+                    defaultValueDate: ${date.now}
+                - column:
+                    name: generated_on
+                    type: datetime
+                    constraints:
+                      nullable: true
+                - column:
+                    name: generated_error
+                    type: varchar(256)
+                    constraints:
+                      nullable: true
+                - column:
+                    name: file_id
+                    type: bigint
+                    constraints:
+                      nullable: true
+
+
+    - changeSet:
+        id: report_queue_institution-createTable
+        comment: Create table report_queue_institution
+        author: sperruolo
+        changes:
+          - createTable:
+              tableName: report_queue_institution
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_report_queue_institution
+                    name: id
+                    type: int
+                - column:
+                    name: report_type
+                    type: varchar(30)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: institution_id
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: date_start
+                    type: date
+                    constraints:
+                      nullable: false
+                - column:
+                    name: date_end
+                    type: date
+                    constraints:
+                      nullable: false
+                - column:
+                    name: clinical_specialty_id
+                    type: int
+                    constraints:
+                      nullable: true
+                - column:
+                    name: doctor_id
+                    type: int
+                    constraints:
+                      nullable: true
+                - column:
+                    name: hierarchical_unit_type_id
+                    type: int
+                    constraints:
+                      nullable: true
+                - column:
+                    name: hierarchical_unit_id
+                    type: int
+                    constraints:
+                      nullable: true
+                - column:
+                    name: include_hierarchical_unit_descendants
+                    type: boolean
+                    constraints:
+                      nullable: true
+                - column:
+                    name: appointment_state_id
+                    type: smallint
+                    constraints:
+                      nullable: true
+
+    - changeSet:
         id: medicine_group_medicine-createTable
         comment: Create table medicine_group_medicine
         author: fsimaro

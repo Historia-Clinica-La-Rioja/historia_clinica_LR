@@ -24,6 +24,7 @@ import { ColorSelectorComponent } from './components/color-selector/color-select
 import { ContentTitleComponent } from './components/content-title/content-title.component';
 import { DatepickerComponent } from './components/datepicker/datepicker.component';
 import { DateRangePickerComponent } from './components/date-range-picker/date-range-picker.component';
+import { DatetimeRelativeComponent } from './components/datetime-relative/datetime-relative.component';
 import { DetailBoxComponent } from './components/detail-box/detail-box.component';
 import { DetailedInformationComponent } from './components/detailed-information/detailed-information.component';
 import { DetailsSectionCustomComponent } from './components/details-section-custom/details-section-custom.component';
@@ -143,6 +144,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		DatepickerComponent,
 		DateRangePickerComponent,
     	DescriptionItemComponent,
+		DatetimeRelativeComponent,
 		DetailBoxComponent,
 		DetailedInformationComponent,
 		DetailsSectionCustomComponent,
@@ -276,6 +278,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		ContentTitleComponent,
 		DatepickerComponent,
 		DateRangePickerComponent,
+		DatetimeRelativeComponent,
 		DetailBoxComponent,
 		DetailedInformationComponent,
 		DetailsSectionCustomComponent,
@@ -342,6 +345,7 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		UserBadgeComponent,
 		//dialogs
 		ConfirmDialogV2Component,
+		DialogPresentationComponent,
 		OpenStorybookDialogComponent,
 		// directives
 		CtrlTemplateDirective,

@@ -9,5 +9,6 @@
 </ng-container>
 
 <ng-template #loading>
-	<app-page-layout></app-page-layout>
+	<app-page-layout *ngIf="!errorCube"></app-page-layout>
+	<span *ngIf="errorCube">No se pudo obtener el reporte</span>
 </ng-template>

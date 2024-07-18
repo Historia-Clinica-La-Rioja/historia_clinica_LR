@@ -1,5 +1,7 @@
 package ar.lamansys.sgx.shared.dates.controller.dto;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -52,4 +54,21 @@ public class DateTimeDto implements Comparable<DateTimeDto>{
 		return 0;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%sT%s", date, time);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		DateTimeDto that = (DateTimeDto) o;
+		return Objects.equals(date, that.date) && Objects.equals(time, that.time);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(date, time);
+	}
 }

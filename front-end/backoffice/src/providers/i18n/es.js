@@ -607,7 +607,7 @@ const messages = {
             },
         },
         "properties": {
-            name: 'Propiedades del sistema |||| Propiedades del sistema',
+            name: 'Propiedad del sistema |||| Propiedades del sistema',
             fields: {
                 property: 'Propiedad',
                 value: 'Valor',
@@ -615,6 +615,15 @@ const messages = {
                 nodeId: 'Nodo',
                 updatedOn: 'Última actualización',
                 description: 'Descripción',
+            }
+        },
+        'report-queue': {
+            name: 'Reporte generado |||| Reportes generados',
+            fields: {
+                createdOn: 'Creación',
+                generatedOn: 'Generación',
+                generatedError: 'Mensaje de generación',
+                fileId: 'Archivo',
             }
         },
         "healthinsurances": {

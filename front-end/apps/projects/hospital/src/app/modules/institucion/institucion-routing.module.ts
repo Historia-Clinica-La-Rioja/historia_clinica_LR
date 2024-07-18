@@ -42,7 +42,7 @@ const routes: Routes = [
 			{
 				path: 'reportes',
 				loadChildren: () => import('../reportes/reportes.module').then(m => m.ReportesModule),
-				canActivate: [FeatureFlagGuard],
+				canActivate: [ FeatureFlagGuard ],
 				data: { featureFlag: AppFeature.HABILITAR_REPORTES }
 			},
 			{ path: 'extension/:menuItemId', component: InstitutionExtensionComponent, data: { enableDownloadCSV: true } },

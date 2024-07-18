@@ -21,12 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.pladema.hsi.extensions.infrastructure.controller.dto.UIComponentDto;
 import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 
+import net.pladema.reports.application.ReportInstitutionQueryBo;
 import net.pladema.reports.application.fetchappointmentconsultationsummary.FetchAppointmentConsultationSummary;
-import net.pladema.reports.application.fetchnominalconsultationdetail.FetchNominalConsultationDetail;
-import net.pladema.reports.application.fetchnominalappointmentdetail.FetchNominalAppointmentDetail;
 
 import net.pladema.reports.application.fetchnominalemergencycarepisodedetail.FetchNominalECEpisodeDetail;
 
+import net.pladema.reports.application.generators.GenerateInstitutionMonthlyExcelReport;
+import net.pladema.reports.application.generators.GenerateAppointmentNominalDetailExcelReport;
 import net.pladema.reports.domain.ReportSearchFilterBo;
 
 import org.springframework.core.io.Resource;
@@ -89,9 +90,9 @@ public class ReportsController {
 
 	private final FeatureFlagsService featureFlagsService;
 
-	private final FetchNominalConsultationDetail fetchNominalConsultationDetail;
+	private final GenerateInstitutionMonthlyExcelReport generateInstitutionMonthlyExcelReport;
 
-	private final FetchNominalAppointmentDetail fetchNominalAppointmentDetail;
+	private final GenerateAppointmentNominalDetailExcelReport generateAppointmentNominalDetailExcelReport;
 
 	private final SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService;
 
@@ -116,26 +117,23 @@ public class ReportsController {
 		log.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, includeHierarchicalUnitDescendants {}" ,
 				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
 
-        String title = "DNCE-Hoja 2";
-        String[] headers = new String[]{"Provincia", "Municipio", "Cod_Estable", "Establecimiento", "Tipo de unidad jerárquica", "Unidad jerárquica", "Apellidos paciente", "Nombres paciente", "Nombre autopercibido", "Tipo documento",
-                "Nro documento", "Fecha de nacimiento", "Género autopercibido", "Domicilio", "Teléfono", "Mail", "Obra social/Prepaga", "Nro de afiliado",
-                "Fecha de atención", "Especialidad", "Profesional", "Motivo de consulta", "Problemas de Salud / Diagnóstico", "Procedimientos", "Peso", "Talla", "Tensión sistólica",
-				"Tensión diastólica", "Riesgo cardiovascular", "Hemoglobina glicosilada", "Glucemia", "Perímetro cefálico", "C-P-O", "c-e-o"};
-
         LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
         LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-        // obtengo el workbook en base a la query pasada como parametro
-        IWorkbook wb = fetchNominalConsultationDetail.run(title, headers, this.queryFactory.query(institutionId, startDate, endDate,
-				clinicalSpecialtyId, doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants), institutionId);
+		var institutionMonthlyReportParams = ReportInstitutionQueryBo.builder()
+				.institutionId(institutionId)
+				.startDate(startDate)
+				.endDate(endDate)
+				.clinicalSpecialtyId(clinicalSpecialtyId)
+				.doctorId(doctorId)
+				.hierarchicalUnitTypeId(hierarchicalUnitTypeId)
+				.hierarchicalUnitId(hierarchicalUnitId)
+				.includeHierarchicalUnitDescendants(includeHierarchicalUnitDescendants)
+				.build();
 
-        // armo la respuesta con el workbook obtenido
-        String filename = title + "." + wb.getExtension();
 
 		return StoredFileResponse.sendFile(
-				buildReport(wb),
-				filename,
-				wb.getContentType()
+				generateInstitutionMonthlyExcelReport.run(institutionMonthlyReportParams)
 		);
     }
 
@@ -333,20 +331,23 @@ public class ReportsController {
 		log.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, appointmentStateId {}, includeHierarchicalUnitDescendants {}" ,
 				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants);
 
-		String title = "DNT";
-
 		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
 		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
 
-		IWorkbook wb = fetchNominalAppointmentDetail.run(title, new ReportSearchFilterBo(startDate, endDate, institutionId, clinicalSpecialtyId,
-				doctorId, hierarchicalUnitTypeId, hierarchicalUnitId, appointmentStateId, includeHierarchicalUnitDescendants));
-
-		String filename = title + "." + wb.getExtension();
+		var institutionMonthlyReportParams = ReportInstitutionQueryBo.builder()
+				.institutionId(institutionId)
+				.startDate(startDate)
+				.endDate(endDate)
+				.clinicalSpecialtyId(clinicalSpecialtyId)
+				.doctorId(doctorId)
+				.hierarchicalUnitTypeId(hierarchicalUnitTypeId)
+				.hierarchicalUnitId(hierarchicalUnitId)
+				.includeHierarchicalUnitDescendants(includeHierarchicalUnitDescendants)
+				.appointmentStateId(appointmentStateId)
+				.build();
 
 		return StoredFileResponse.sendFile(
-				buildReport(wb),
-				filename,
-				wb.getContentType()
+				generateAppointmentNominalDetailExcelReport.run(institutionMonthlyReportParams)
 		);
 	}
 

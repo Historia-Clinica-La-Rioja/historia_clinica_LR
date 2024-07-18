@@ -1,5 +1,7 @@
 package ar.lamansys.sgx.shared.dates.controller.dto;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -38,4 +40,22 @@ public class TimeDto {
         this.minutes = minutes;
         this.seconds = seconds;
     }
+
+	@Override
+	public String toString() {
+		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		TimeDto timeDto = (TimeDto) o;
+		return Objects.equals(hours, timeDto.hours) && Objects.equals(minutes, timeDto.minutes) && Objects.equals(seconds, timeDto.seconds);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(hours, minutes, seconds);
+	}
 }

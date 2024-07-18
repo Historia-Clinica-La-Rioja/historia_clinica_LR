@@ -1,8 +1,3 @@
-<app-content>
-
-	<section id="title">
-		<h2 class="page-title" [translate]="'reportes.TITLE'"> </h2>
-	</section>
 
 	<mat-card>
 		<h2 [translate]="'reportes.form.TITLE'"></h2>
@@ -182,8 +177,3 @@
 		</form>
 
 	</mat-card>
-	<div *ngIf="cubeReportData">
-		<app-ui-component [uiComponent]="cubeReportData" (close)="resetCubeReport()"></app-ui-component>
-	</div>
-</app-content>
-

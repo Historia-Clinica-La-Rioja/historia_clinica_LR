@@ -8,6 +8,7 @@ import properties from './properties';
 import restClientMeasures from './rest-client-measures';
 import files from './files';
 import documentFiles from './documentfiles';
+import reportQueue from './report-queue';
 
 const resourcesFacilities = (permissions: SGXPermissions) => [
     <Resource name="snvs"  {...snvs(permissions)} />,
@@ -15,6 +16,7 @@ const resourcesFacilities = (permissions: SGXPermissions) => [
     <Resource name="files" {...files(permissions)} />,
     <Resource name="rest-client-measures" {...restClientMeasures(permissions)} />,
     <Resource name="properties" {...properties(permissions)} />,
+    <Resource name="report-queue" {...reportQueue(permissions)} />,
 ];
 
 export default resourcesFacilities;

@@ -1,0 +1,10 @@
+@import "../../../../../assets/styles/mixins";
+
+.dialog-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dialog-content .spinner {
+	@include centered-spinner;
+}
