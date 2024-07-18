@@ -464,3 +464,81 @@ databaseChangeLog:
               relativeToChangelogFile: true
               splitStatements: false
 
+    - changeSet:
+        id: result_studies-create-table
+        comment: Create table result_studies
+        author: amurrie
+        changes:
+          - createTable:
+              tableName: result_studies
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_result_studies
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: id_move
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: appointment_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_id
+                    type: varchar(80)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: patient_name
+                    type: varchar(80)
+                - column:
+                    constraints:
+                      nullable: true
+                    name: study_date
+                    type: date
+                - column:
+                    constraints:
+                      nullable: true
+                    name: study_time
+                    type: time
+                - column:
+                    constraints:
+                      nullable: false
+                    name: modality
+                    type: varchar(80)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: study_instance_uid
+                    type: varchar(80)
+                - column:
+                    constraints:
+                      nullable: false
+                    name: audit_date
+                    type: date
+          - addForeignKeyConstraint:
+              baseColumnNames: appointment_id
+              baseTableName: result_studies
+              constraintName: FK_result_studies_appointment_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: appointment
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: id_move
+              baseTableName: result_studies
+              constraintName: FK_result_studies_id_move
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: move_studies
+              validate: true
