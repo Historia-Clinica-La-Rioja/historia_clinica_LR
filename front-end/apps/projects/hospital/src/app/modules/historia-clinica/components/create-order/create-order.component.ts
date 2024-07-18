@@ -28,7 +28,6 @@ export class CreateOrderComponent implements OnInit {
 	}
 
 	dateChanged(date: Date) {
-		this.data.createOrderService.getForm().controls.performedDate.setValue(date)
 		this.data.createOrderService.setDate(date);
 	}
 
