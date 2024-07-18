@@ -44,7 +44,8 @@ const AddParameter = ({ canEdit, ...props }) => {
 
 const AssociatedParameters = (props) => {
     const record = useRecordContext(props);
-    const canEdit = formIsUpdatable(record.statusId) && !UserIsInstitutionalAdmin();
+    const userIsInstitutionalAdmin = UserIsInstitutionalAdmin();
+    const canEdit = formIsUpdatable(record.statusId) && (!userIsInstitutionalAdmin || (userIsInstitutionalAdmin && !record.isDomain));
     return record ? (
         <Fragment>
             <SectionTitle label="resources.parameterizedformparameter.associatedParameters" />
@@ -58,7 +59,7 @@ const AssociatedParameters = (props) => {
                 <Datagrid
                     rowClick={() => { }}
                 >
-                    <ReferenceField source="parameterId" reference="parameters" label="resources.parameters.fields.description" sortable={false} link={'show'}>
+                    <ReferenceField source="parameterId" reference="parameters" label="resources.parameters.fields.description" sortable={false} link={UserIsInstitutionalAdmin() ? '' : 'show'}>
                         <TextField source="description" />
                     </ReferenceField>
 

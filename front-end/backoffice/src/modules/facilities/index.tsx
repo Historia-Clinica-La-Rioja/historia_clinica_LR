@@ -58,6 +58,7 @@ const resourcesFacilities = (permissions: SGXPermissions) => [
     <Resource name="institutionalgroupinstitutions" {...institutionalgroupinstitutions(permissions)} />,
     <Resource name="institutionalgroupusers" {...institutionalgroupusers(permissions)} />,
     <Resource name="institutionalgrouprules" {...institutionalgrouprules(permissions)} />,
+    <Resource name="institutionalparameterizedform" />,
 ];
 
 export default resourcesFacilities;

@@ -19,6 +19,7 @@ import SectionTitle from '../../components/SectionTitle';
 import { ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE } from '../../roles';
 import UnidadesJerarquicas from './UnidadesJerarquicas';
 import { Grid, Divider } from '@material-ui/core';
+import { ParameterizedFormSection } from './ParameterizedFormSection';
 
 const InstitutionShowActions = ({ data }) => {
     return (!data || !data.id) ? <TopToolbar/> :
@@ -96,6 +97,8 @@ const ShowSectors = () => {
 }
 
 const InstitutionShow = props => {
+    const { permissions } = usePermissions();
+    const parameterizedFormFF = permissions?.featureFlags.filter( ff => ff === 'HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
     return (
         <Show actions={<InstitutionShowActions />} {...props}>
             <SimpleShowLayout>
@@ -196,7 +199,9 @@ const InstitutionShow = props => {
                 <ShowSectors />
                 <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
                 <CreateHierarchicalUnit />
-               <HierarchicalUnitTabs {...props} />
+                <HierarchicalUnitTabs {...props} />
+
+                {parameterizedFormFF && <ParameterizedFormSection {...props} />}
             </SimpleShowLayout>
         </Show>
     );

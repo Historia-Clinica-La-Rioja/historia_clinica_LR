@@ -39,26 +39,30 @@ const StatusFilters = (props) => {
     </Filter>);
 }
 
-const ParameterizedFormList = props => (
-    <List
-        {...props}
-        hasCreate={true}
-        bulkActionButtons={false}
-        exporter={false}
-        sort={{ field: 'id', order: 'ASC' }}
-        filter={{ deleted: false }}
-        filters={<StatusFilters />}
-        filterDefaultValues={{excludeInactive: true}}
-    >
-        <Datagrid rowClick="show">
-            <NumberField source="id" />
-            <TextField label="resources.parameterizedform.formName" source="name" />
-            <SelectField label="resources.parameterizedform.status" source="statusId" choices={FORM_STATUS_CHOICES} />
-            <ParameterizedFormScopes label="resources.parameterizedform.scope"/>
-            <ConditionalFormEdit />
-            {!UserIsInstitutionalAdmin() && <UpdateParameterizedFormStatusButton /> }
-        </Datagrid>
-    </List>
-);
+const ParameterizedFormList = props => {
+    const {permissions} = usePermissions();
+    const userIsAdminInstitutional = permissions?.roleAssignments?.filter(roleAssignment => (roleAssignment.role === ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE.role)).length > 0;
+    const hasCreate = !userIsAdminInstitutional;
+    return (
+        <List
+            {...props}
+            hasCreate={hasCreate}
+            bulkActionButtons={false}
+            exporter={false}
+            sort={{ field: 'id', order: 'ASC' }}
+            filter={{ 'isDomain' : true }}
+            filters={<StatusFilters />}
+            filterDefaultValues={{excludeInactive: true}}
+        >
+            <Datagrid rowClick="show">
+                <NumberField source="id" />
+                <TextField label="resources.parameterizedform.formName" source="name" />
+                <SelectField label="resources.parameterizedform.status" source="statusId" choices={FORM_STATUS_CHOICES} />
+                <ParameterizedFormScopes label="resources.parameterizedform.scope"/>
+                <ConditionalFormEdit />
+                {!UserIsInstitutionalAdmin() && <UpdateParameterizedFormStatusButton /> }
+            </Datagrid>
+        </List>);
+};
 
 export default ParameterizedFormList;

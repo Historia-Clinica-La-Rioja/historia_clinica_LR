@@ -208,7 +208,9 @@ const messages = {
                 sectors: 'Sectores',
                 dependencyId: 'Dependencia',
                 provinceCode: 'Código de provincia',
-                hierarchicalUnits: 'Unidades jerárquicas'
+                hierarchicalUnits: 'Unidades jerárquicas',
+                parameterizedForm: 'Formularios configurables',
+                institutionalParameterizedForm: 'Formularios configurables institucionales'
             },
         },
         "booking-institution": {
@@ -1160,7 +1162,8 @@ const messages = {
             description: 'Descripción',
             outpatient: 'Ambulatorio',
             emergencyCare: 'Guardia',
-            internment: 'Internación'
+            internment: 'Internación',
+            createRelated: 'Crear formulario'
         },
         parameterizedformparameter: {
             name: '',
