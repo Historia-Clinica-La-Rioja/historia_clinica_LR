@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "PublicApi Recetas", description = "Public Api Digital Prescription Access")
-@RequestMapping("/public-api/prescriptions/prescription/{prescriptionId}/identification/{identificationNumber}/get-multiple-prescription")
+@RequestMapping("/public-api/prescriptions/prescription/{prescriptionId}/identification/{identificationNumber}/get-multiple-commercial")
 @RestController
 public class FetchMultipleCommercialPrescriptionByIdController {
 
