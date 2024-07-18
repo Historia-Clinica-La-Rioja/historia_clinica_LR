@@ -26,6 +26,7 @@ import net.pladema.reports.application.fetchappointmentconsultationsummary.Fetch
 
 import net.pladema.reports.application.fetchnominalemergencycarepisodedetail.FetchNominalECEpisodeDetail;
 
+import net.pladema.reports.application.generators.GenerateEmergencyCareNominalDetailExcelReport;
 import net.pladema.reports.application.generators.GenerateInstitutionMonthlyExcelReport;
 import net.pladema.reports.application.generators.GenerateAppointmentNominalDetailExcelReport;
 import net.pladema.reports.domain.ReportSearchFilterBo;
@@ -96,7 +97,7 @@ public class ReportsController {
 
 	private final SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService;
 
-	private final FetchNominalECEpisodeDetail fetchNominalECEpisodeDetail;
+	private final GenerateEmergencyCareNominalDetailExcelReport generateEmergencyCareNominalDetailExcelReport;
 
 	private final ObjectMapper objectMapper;
 
@@ -354,21 +355,33 @@ public class ReportsController {
 	@GetMapping(value = "/institution/{institutionId}/nominal-emergency-care-episode-detail")
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ADMINISTRADOR_INSTITUCIONAL_PRESCRIPTOR, PERSONAL_DE_ESTADISTICA')")
 	public ResponseEntity<Resource> getNominalECEDetailReport(@PathVariable Integer institutionId,
-															  @RequestParam String searchFilter) throws Exception {
-		log.debug("Input parameters -> institutionId {}, searchFilter {}" , institutionId, searchFilter);
+															  @RequestParam(value="fromDate") String fromDate,
+															  @RequestParam(value="toDate") String toDate,
+															  @RequestParam(value="doctorId", required = false) Integer doctorId,
+															  @RequestParam(value="hierarchicalUnitTypeId", required = false) Integer hierarchicalUnitTypeId,
+															  @RequestParam(value="hierarchicalUnitId", required = false) Integer hierarchicalUnitId,
+															  @RequestParam(value="includeHierarchicalUnitDescendants", required = false) boolean includeHierarchicalUnitDescendants) throws Exception {
+		log.debug("Input parameters -> institutionId {}, fromDate {}, toDate {}, hierarchicalUnitTypeId {}, hierarchicalUnitId {}, includeHierarchicalUnitDescendants {}" ,
+				institutionId, fromDate, toDate, hierarchicalUnitTypeId, hierarchicalUnitId, includeHierarchicalUnitDescendants);
 
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO))
 			return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 
-		String title = "DNG";
-		ReportSearchFilterBo filter = parseFilter(institutionId, searchFilter);
-		IWorkbook wb = fetchNominalECEpisodeDetail.run(title, filter);
-		String filename = title + "." + wb.getExtension();
+		LocalDate startDate = localDateMapper.fromStringToLocalDate(fromDate);
+		LocalDate endDate = localDateMapper.fromStringToLocalDate(toDate);
+
+		var institutionMonthlyReportParams = ReportInstitutionQueryBo.builder()
+				.institutionId(institutionId)
+				.startDate(startDate)
+				.endDate(endDate)
+				.doctorId(doctorId)
+				.hierarchicalUnitTypeId(hierarchicalUnitTypeId)
+				.hierarchicalUnitId(hierarchicalUnitId)
+				.includeHierarchicalUnitDescendants(includeHierarchicalUnitDescendants)
+				.build();
 
 		return StoredFileResponse.sendFile(
-				buildReport(wb),
-				filename,
-				wb.getContentType()
+				generateEmergencyCareNominalDetailExcelReport.run(institutionMonthlyReportParams)
 		);
 	}
 

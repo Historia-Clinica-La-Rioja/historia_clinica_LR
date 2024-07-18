@@ -64,11 +64,10 @@ export class ReportsService {
 		return this.getReport(params, fileName, url);
 	}
 
-	getNominalEmergencyCareEpisodeDetail(searchFilter: ReportFilters, fileName: string): Observable<any> {
+	getNominalEmergencyCareEpisodeDetail(params: ReportFilters, fileName: string): Observable<any> {
 		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/nominal-emergency-care-episode-detail`;
-		const filters = new HttpParams().append('searchFilter', JSON.stringify(searchFilter));
-		return this.downloadService.downloadXlsWithRequestParams(url, fileName, filters);
-	}
+		return this.getReport(params, fileName, url);
+		}
 
 	getImageNetworkProductivityReport(searchCriteria: ImageNetworkProductivityFilterDto, fileName: string){
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/report/image-network-productivity`;
