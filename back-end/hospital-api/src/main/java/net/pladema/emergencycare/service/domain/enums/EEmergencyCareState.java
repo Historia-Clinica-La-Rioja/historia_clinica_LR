@@ -15,10 +15,25 @@ public enum EEmergencyCareState {
     ESPERA(2, "En espera"),
     ALTA_ADMINISTRATIVA(3, "Con alta administrativa"),
     ALTA_MEDICA(4, "Con alta médica"),
-	AUSENTE(4, "Ausente");
+	AUSENTE(5, "Ausente");
 
     private final Short id;
     private final String description;
+
+	/**
+	 * Matriz que indica las transiciones de estado válidas.
+	 * El nro de fila representa el from.
+	 * El nro de columna representa el to
+	 */
+	private static final boolean[][] validTransitionMatrix = {
+			/*  ->  |  0  |  1   |  2   |  3   |  4   |  5   | */
+			/* 0  */{false, false, false, false, false, false},
+			/* 1  */{false, false, true , false, true , false},
+			/* 2  */{false, true , false, true , false, true },
+			/* 3  */{false, false, false, false, false, false},
+			/* 4  */{false, false, false, true , false, false},
+			/* 5  */{false, true , true , true , false, false}
+	};
 
     EEmergencyCareState(Number id, String description) {
         this.id = id.shortValue();
@@ -47,4 +62,8 @@ public enum EEmergencyCareState {
     public String getDescription() {
         return description;
     }
+
+	public static boolean validTransition(EEmergencyCareState from, EEmergencyCareState to){
+		return validTransitionMatrix[from.getId()][to.getId()];
+	}
 }
