@@ -12,6 +12,7 @@ import net.pladema.snowstorm.repository.VSnomedGroupConceptRepository;
 
 import net.pladema.snowstorm.repository.entity.VSnomedGroupConcept;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -84,9 +85,13 @@ public class BackofficeMedicineGroupProblemStore implements BackofficeStore<Medi
 
 	private void sortList(List<MedicineGroupProblemDto> list, Sort sort){
 		if (sort.getOrderFor(CONCEPT_FIELD) != null && sort.getOrderFor(CONCEPT_FIELD).isDescending())
-			list.sort(Comparator.comparing(dto -> dto.getConceptPt().toLowerCase(), Comparator.reverseOrder()));
+			list.sort(Comparator.comparing(dto -> normalizeString(dto.getConceptPt()), Comparator.reverseOrder()));
 		else
-			list.sort(Comparator.comparing(dto -> dto.getConceptPt().toLowerCase()));
+			list.sort(Comparator.comparing(dto -> normalizeString(dto.getConceptPt())));
+	}
+
+	private static String normalizeString(String string) {
+		return StringUtils.stripAccents(string).toLowerCase();
 	}
 
 	@Override

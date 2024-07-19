@@ -7,6 +7,7 @@ import net.pladema.medicine.infrastructure.output.repository.MedicineGroupMedici
 import net.pladema.medicine.infrastructure.output.repository.entity.MedicineGroupMedicine;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -87,9 +88,9 @@ public class BackofficeMedicineGroupMedicineStore implements BackofficeStore<Med
 
 	private void sortResult(List<MedicineGroupMedicineDto> result, Sort sort){
 		if (sort.getOrderFor(CONCEPT_FIELD) != null && sort.getOrderFor(CONCEPT_FIELD).isDescending())
-				result.sort(Comparator.comparing(medicine -> medicine.getConceptPt().toLowerCase(), Comparator.reverseOrder()));
+				result.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt()), Comparator.reverseOrder()));
 			else
-				result.sort(Comparator.comparing(medicine -> medicine.getConceptPt().toLowerCase()));
+				result.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt())));
 
 		if (sort.getOrderFor(FINANCED_FIELD) != null){
 			if (sort.getOrderFor(FINANCED_FIELD).isDescending())
@@ -98,4 +99,9 @@ public class BackofficeMedicineGroupMedicineStore implements BackofficeStore<Med
 				result.sort(Comparator.comparing(MedicineGroupMedicineDto::getFinanced));
 		}
 	}
+
+	private static String normalizeString(String string){
+		return StringUtils.stripAccents(string).toLowerCase();
+	}
+
 }

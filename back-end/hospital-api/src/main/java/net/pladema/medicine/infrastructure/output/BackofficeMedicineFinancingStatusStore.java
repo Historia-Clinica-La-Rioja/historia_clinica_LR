@@ -6,6 +6,7 @@ import net.pladema.medicine.infrastructure.input.rest.dto.MedicineFinancingStatu
 import net.pladema.medicine.domain.MedicineFinancingStatusBo;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -84,7 +86,7 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 
 	private List<MedicineFinancingStatusDto> filterResult(MedicineFinancingStatusDto example, List<MedicineFinancingStatusDto> medicines){
 		if (example.getConceptPt() != null)
-			medicines = medicines.stream().filter(medicine -> medicine.getConceptPt().toLowerCase().contains(example.getConceptPt().toLowerCase())).collect(Collectors.toList());
+			medicines = medicines.stream().filter(medicine -> normalizeString(medicine.getConceptPt()).contains(normalizeString(example.getConceptPt()))).collect(Collectors.toList());
 		if (example.getConceptSctid() != null)
 			medicines = medicines.stream().filter(medicine -> medicine.getConceptSctid().contains(example.getConceptSctid())).collect(Collectors.toList());
 		if (example.getFinanced() != null)
@@ -95,9 +97,9 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 	private void sortResult(Pageable pageable, List<MedicineFinancingStatusDto> medicines){
 		if (pageable.getSort().getOrderFor("conceptPt") != null){
 			if (pageable.getSort().getOrderFor("conceptPt").isDescending())
-				medicines.sort(Comparator.comparing(medicine -> medicine.getConceptPt().toLowerCase(), Comparator.reverseOrder()));
+				medicines.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt()), Comparator.reverseOrder()));
 			else
-				medicines.sort(Comparator.comparing(medicine -> medicine.getConceptPt().toLowerCase()));
+				medicines.sort(Comparator.comparing(medicine -> normalizeString(medicine.getConceptPt())));
 		}
 		if (pageable.getSort().getOrderFor("conceptSctid") != null){
 			if (pageable.getSort().getOrderFor("conceptSctid").isDescending())
@@ -105,6 +107,10 @@ public class BackofficeMedicineFinancingStatusStore implements BackofficeStore<M
 			else
 				medicines.sort(Comparator.comparing(MedicineFinancingStatusDto::getConceptSctid));
 		}
+	}
+
+	private static String normalizeString(String string){
+		return StringUtils.stripAccents(string).toLowerCase();
 	}
 
 }
