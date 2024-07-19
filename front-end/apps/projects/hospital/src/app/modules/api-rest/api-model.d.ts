@@ -4875,6 +4875,8 @@ export interface StudyIntanceUIDDto {
 }
 
 export interface StudyOrderReportInfoDto {
+    appointmentDate?: DateDto;
+    appointmentHour?: TimeDto;
     creationDate: Date;
     diagnosticReportId: number;
     doctor: DoctorInfoDto;
@@ -4892,6 +4894,8 @@ export interface StudyOrderReportInfoDto {
 }
 
 export interface StudyTranscribedOrderReportInfoDto {
+    appointmentDate?: DateDto;
+    appointmentHour?: TimeDto;
     creationDate: Date;
     diagnosticReports: string[];
     hceDocumentDataDto?: HCEDocumentDataDto;
@@ -4905,6 +4909,8 @@ export interface StudyTranscribedOrderReportInfoDto {
 }
 
 export interface StudyWithoutOrderReportInfoDto {
+    appointmentDate?: DateDto;
+    appointmentHour?: TimeDto;
     hceDocumentDataDto?: HCEDocumentDataDto;
     imageId?: string;
     isAvailableInPACS: boolean;

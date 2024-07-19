@@ -6,16 +6,22 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocume
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.transcribed.infrastructure.input.rest.dto.StudyTranscribedOrderReportInfoDto;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @NoArgsConstructor
 @Component
 public class TranscribedDiagnosticReportInfoMapper {
+
+    @Autowired
+    private LocalDateMapper localDateMapper;
 
     @Named("parseToDto")
     public StudyTranscribedOrderReportInfoDto parseToDto(StudyTranscribedOrderReportInfoBo studyTranscribedOrderReportInfoBo) {
@@ -44,6 +50,8 @@ public class TranscribedDiagnosticReportInfoMapper {
         String documentStatus = studyTranscribedOrderReportInfoBo.getDocumentStatus();
         result.setViewReport(existsDocument && DocumentStatus.FINAL.equals(documentStatus));
         result.setIsAvailableInPACS(studyTranscribedOrderReportInfoBo.getIsAvailableInPACS());
+        result.setAppointmentDate(localDateMapper.toDateDto(studyTranscribedOrderReportInfoBo.getAppointmentDate()));
+        result.setAppointmentHour(localDateMapper.toTimeDto(studyTranscribedOrderReportInfoBo.getAppointmentHour()));
 
         log.trace("Output -> {}", result);
         return result;

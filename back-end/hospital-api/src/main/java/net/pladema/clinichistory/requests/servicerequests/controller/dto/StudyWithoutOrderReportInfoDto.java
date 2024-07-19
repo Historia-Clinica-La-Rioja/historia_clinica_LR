@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,4 +37,8 @@ public class StudyWithoutOrderReportInfoDto {
 
 	@NotNull(message = "value.mandatory")
 	private Boolean viewReport;
+	@Nullable
+	private DateDto appointmentDate;
+	@Nullable
+	private TimeDto appointmentHour;
 }

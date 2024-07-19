@@ -36,12 +36,7 @@ import net.pladema.medicalconsultation.appointment.repository.entity.CustomAppoi
 import net.pladema.medicalconsultation.appointment.repository.entity.HistoricAppointmentState;
 import net.pladema.medicalconsultation.appointment.repository.HistoricAppointmentStateRepository;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
-import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.*;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentEnumException;
 import net.pladema.medicalconsultation.appointment.service.exceptions.AppointmentException;
 import net.pladema.medicalconsultation.appointment.service.impl.exceptions.RecurringAppointmentException;
@@ -66,14 +61,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.ConstraintViolationException;
@@ -681,6 +669,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds) {
         log.debug("Input parameter -> appointmentIds {}", appointmentIds);
         return appointmentRepository.getAppointmentDataByAppointmentIds(appointmentIds);
+    }
+
+    @Override
+    public List<AppointmentDateHourBo> getAppointmentDateAndHourByIds(Set<Integer> appointmentIds) {
+        log.debug("Input parameter -> appointmentIds {}", appointmentIds);
+        var result = appointmentRepository.findAppointmentDateAndHoyByAppointmentIds(appointmentIds);
+        log.debug(OUTPUT, result);
+        return result;
     }
 
     @Override

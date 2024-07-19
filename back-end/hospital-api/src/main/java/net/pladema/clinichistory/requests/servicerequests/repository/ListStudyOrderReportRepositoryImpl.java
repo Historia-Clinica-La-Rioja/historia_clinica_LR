@@ -58,6 +58,7 @@ public class ListStudyOrderReportRepositoryImpl implements ListStudyOrderReportR
                   "       t.source, " +
                   "       t.serviceRequestId, " +
                   "       t.diagnosticReportId, " +
+                  "       aoi.appointment_id, " +
 				  "		  COALESCE(aoi.active,false) as hasActiveAppointment, "+
                   "       t.observations " +
                   "FROM temporal t " +

@@ -1,6 +1,8 @@
 package net.pladema.clinichistory.requests.servicerequests.controller.dto;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
+import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,9 @@ import lombok.ToString;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 
 import javax.annotation.Nullable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -37,4 +41,8 @@ public class StudyOrderReportInfoDto {
     private Integer diagnosticReportId;
 	private Boolean hasActiveAppointment;
     private String observationsFromServiceRequest;
+    @Nullable
+    private DateDto appointmentDate;
+    @Nullable
+    private TimeDto appointmentHour;
 }

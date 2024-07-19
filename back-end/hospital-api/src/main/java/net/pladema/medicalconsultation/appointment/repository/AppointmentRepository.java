@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import net.pladema.clinichistory.requests.servicerequests.domain.StudyAppointmentBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
@@ -22,6 +23,7 @@ import net.pladema.medicalconsultation.appointment.repository.domain.Appointment
 import net.pladema.medicalconsultation.appointment.repository.domain.MedicalCoverageAppoinmentOrderBo;
 
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
 
 import net.pladema.medicalconsultation.appointment.service.domain.PatientAppointmentHistoryBo;
@@ -952,4 +954,16 @@ public interface AppointmentRepository extends SGXAuditableEntityJPARepository<A
 			"FROM Appointment a " +
 			"WHERE a.id = :appointmentId")
     Short getModalityById(@Param("appointmentId") Integer appointmentId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT new net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo(" +
+			"	a.id," +
+			"	a.dateTypeId," +
+			"	a.hour" +
+			") " +
+			"FROM Appointment a " +
+			"WHERE a.id IN :appointmentIds")
+	List<AppointmentDateHourBo> findAppointmentDateAndHoyByAppointmentIds(
+		@Param("appointmentIds") Set<Integer> appointmentIds
+	);
 }

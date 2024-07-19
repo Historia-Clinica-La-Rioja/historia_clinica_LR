@@ -2,16 +2,21 @@ package net.pladema.clinichistory.requests.servicerequests.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.StudyOrderReportInfoBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.hce.dto.HCEDocumentDataDto;
+import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.medicationrequests.controller.dto.DoctorInfoDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.dto.StudyOrderReportInfoDto;
 import net.pladema.staff.controller.dto.ProfessionalDto;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class StudyOrderReportInfoMapper {
+
+    @Autowired
+    private LocalDateMapper localDateMapper;
 
     @Named("parseToDto")
     public StudyOrderReportInfoDto parseToDto(StudyOrderReportInfoBo studyOrderReportInfoBo, ProfessionalDto professionalDto) {
@@ -36,6 +41,8 @@ public class StudyOrderReportInfoMapper {
         result.setDiagnosticReportId(studyOrderReportInfoBo.getDiagnosticReportId());
 		result.setHasActiveAppointment(studyOrderReportInfoBo.getHasActiveAppointment());
         result.setObservationsFromServiceRequest(studyOrderReportInfoBo.getObservationsFromServiceRequest());
+        result.setAppointmentDate(localDateMapper.toDateDto(studyOrderReportInfoBo.getAppointmentDate()));
+        result.setAppointmentHour(localDateMapper.toTimeDto(studyOrderReportInfoBo.getAppointmentHour()));
         log.trace("Output: {}", result);
         return result;
     }

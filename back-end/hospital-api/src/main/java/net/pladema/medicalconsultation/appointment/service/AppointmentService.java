@@ -6,17 +6,13 @@ import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentEquipmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentShortSummaryBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketBo;
 import net.pladema.medicalconsultation.appointment.repository.domain.AppointmentTicketImageBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentAssignedBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBookingBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.AppointmentSummaryBo;
-import net.pladema.medicalconsultation.appointment.service.domain.EquipmentAppointmentBo;
-import net.pladema.medicalconsultation.appointment.service.domain.UpdateAppointmentBo;
+import net.pladema.medicalconsultation.appointment.service.domain.*;
 import net.pladema.medicalconsultation.diary.service.domain.BlockBo;
 import net.pladema.medicalconsultation.diary.service.domain.CustomRecurringAppointmentBo;
 import net.pladema.medicalconsultation.diary.service.domain.DiaryBo;
@@ -97,6 +93,8 @@ public interface AppointmentService {
 	Integer patientHasCurrentAppointment(Integer institutionId, Integer patientId);
 
 	List<AppointmentSummaryBo> getAppointmentDataByAppointmentIds(List<Integer> appointmentIds);
+
+	List<AppointmentDateHourBo> getAppointmentDateAndHourByIds(Set<Integer> appointmentIds);
 
 	Boolean openingHourAllowedProtectedAppointment(Integer openingHoursId, Integer diaryId);
 

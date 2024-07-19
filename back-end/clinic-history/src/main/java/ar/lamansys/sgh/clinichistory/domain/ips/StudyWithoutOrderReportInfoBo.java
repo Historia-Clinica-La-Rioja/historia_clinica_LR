@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -20,4 +22,7 @@ public class StudyWithoutOrderReportInfoBo {
 	private String fileName;
 	private Boolean status;
 	private Boolean isAvailableInPACS;
+	private Integer appointmentId;
+	private LocalDate appointmentDate;
+	private LocalTime appointmentHour;
 }
