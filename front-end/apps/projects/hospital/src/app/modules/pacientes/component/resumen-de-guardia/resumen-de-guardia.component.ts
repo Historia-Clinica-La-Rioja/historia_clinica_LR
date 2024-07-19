@@ -27,6 +27,7 @@ import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/serv
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ButtonType } from '@presentation/components/button/button.component';
 import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
@@ -76,6 +77,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	availableActions: ActionInfo[] = [];
 	TEMPORARY_EMERGENCY_CARE = PatientType.EMERGENCY_CARE_TEMPORARY;
+	ButtonType = ButtonType;
 
 	isAdministrativeAndHasTriageFFInFalse: boolean;
 
@@ -191,7 +193,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 							this.snackBarService.showError(err.text);
 						}
 					})
-					
+
 				}
 			}
 		)

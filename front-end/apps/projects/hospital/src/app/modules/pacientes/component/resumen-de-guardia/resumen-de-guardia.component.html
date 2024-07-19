@@ -58,23 +58,20 @@
 
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
 
-                <button *ngIf="availableActions.length >= 1" id="{{ availableActions[0].id }}" mat-raised-button
-                    color="primary" (click)="availableActions[0].callback()">
-                    {{ availableActions[0].label | translate | uppercase }}
-                </button>
-                <button *ngIf="availableActions.length >= 2" id="{{ availableActions[1].id }}" mat-raised-button
-                    color="primary" (click)="availableActions[1].callback()">
-                    {{ availableActions[1].label | translate | uppercase }}
-                </button>
+				<ng-container *ngFor="let action of availableActions">
+					<app-button id="{{ action.id }}" [buttonType]="ButtonType.RAISED" [color]="'primary'"
+					   [text]="action.label" (clicked)="action.callback()">
+					</app-button>
+				</ng-container>
 
-                <div *ngIf="availableActions.length > 2">
+                <div *ngIf="availableActions.length > 3">
                     <button id="more_actions" mat-icon-button (click)="$event.stopPropagation()"
                         [matMenuTriggerFor]="actions">
                         <mat-icon>more_vert</mat-icon>
                     </button>
 
                     <mat-menu #actions="matMenu">
-                        <button *ngFor="let action of availableActions | slice:2;" id="{{ action.id }}" mat-menu-item
+                        <button *ngFor="let action of availableActions | slice:3;" id="{{ action.id }}" mat-menu-item
                             (click)="action.callback()">
                             {{ action.label | translate }}
                         </button>
