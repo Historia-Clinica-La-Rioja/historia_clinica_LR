@@ -20,6 +20,7 @@ import { BackgroundListComponent } from './components/background-list/background
 import { ClinicalEvaluationSummaryComponent } from './components/clinical-evaluation-summary/clinical-evaluation-summary.component';
 import { ConceptsSearchComponent } from './components/concepts-search/concepts-search.component';
 import { CreateOrderComponent } from './components/create-order/create-order.component';
+import { CustomFormComponent } from './components/custom-form/custom-form.component';
 import { DatosAntropometricosFormComponent } from './components/datos-antropometricos-form/datos-antropometricos-form.component';
 import { DatosAntropometricosNuevaConsultaComponent } from './components/datos-antropometricos-nueva-consulta/datos-antropometricos-nueva-consulta.component';
 import { DescriptionItemDataSummaryComponent } from './components/description-item-data-summary/description-item-data-summary.component';
@@ -49,6 +50,7 @@ import { HistoriesSummaryComponent } from './components/histories-summary/histor
 import { InternacionAntecedentesPersonalesSummaryComponent } from './components/internacion-antecedentes-personales-summary/internacion-antecedentes-personales-summary.component';
 import { InterveningProfessionalsComponent } from './components/intervening-professionals/intervening-professionals.component';
 import { IntrasurgicalAnestheticProceduresSummaryComponent } from './components/intrasurgical-anesthetic-procedures-summary/intrasurgical-anesthetic-procedures-summary.component';
+import { LoincFormModule } from '@hsi-components/loinc-form/loinc-form.module';
 import { MeasuringPointSummaryComponent } from './components/measuring-point-summary/measuring-point-summary.component';
 import { MedicacionSummaryComponent } from './components/medicacion-summary/medicacion-summary.component';
 import { MedicacionesFormComponent } from './components/medicaciones-form/medicaciones-form.component';
@@ -75,6 +77,7 @@ import { ReasonListComponent } from './components/reason-list/reason-list.compon
 import { SurgicalMedicationAndDescriptionSummaryComponent } from './components/surgical-medication-and-description-summary/surgical-medication-and-description-summary.component';
 import { SurgicalProfessionalsAndDescriptionSummaryComponent } from './components/surgical-professionals-and-description-summary/surgical-professionals-and-description-summary.component';
 import { SurgicalProceduresSummaryComponent } from './components/surgical-procedures-summary/surgical-procedures-summary.component';
+import { SelectTemplateComponent } from './components/select-template/select-template.component';
 import { SurgicalReportAnesthesiaComponent } from './components/surgical-report-anesthesia/surgical-report-anesthesia.component';
 import { SurgicalReportDiagnosisComponent } from './components/surgical-report-diagnosis/surgical-report-diagnosis.component';
 import { SurgicalReportDockPopupComponent } from './components/surgical-report-dock-popup/surgical-report-dock-popup.component';
@@ -184,6 +187,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
         ClinicalEvaluationSummaryComponent,
 		ConceptsSearchComponent,
 		CreateOrderComponent,
+		CustomFormComponent,
         DescriptionItemDataSummaryComponent,
 		DiagnosisSummaryComponent,
 		DocumentsSummaryComponent,
@@ -259,6 +263,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		SurgicalProceduresSummaryComponent,
 		SurgicalProfessionalsAndDescriptionSummaryComponent,
 		SurgicalReportDocumentSummaryComponent,
+		SelectTemplateComponent,
 		TemplateConceptTypeaheadSearchComponent,
         VitalSignsAndRiskFactorsSummaryComponent,
 		VitalSignsSummaryComponent,
@@ -329,6 +334,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		ChartsModule,
 		InstitucionModule,
 		LazyMaterialModule,
+		LoincFormModule,
 		PresentationModule,
 		//standalone
 		IdentifierCasesComponent,
@@ -371,6 +377,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		ProfessionalListComponent,
 		PatientEvolutionChartsButtonComponent,
         ReferredItemSummaryComponent,
+		SelectTemplateComponent,
 		// dialogs
 		AddMemberMedicalTeamComponent,
 		ConceptsSearchDialogComponent,

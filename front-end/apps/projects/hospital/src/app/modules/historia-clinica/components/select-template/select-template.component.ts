@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ProcedureTemplateFullSummaryDto } from '@api-rest/api-model';
-import { Templates } from '../control-select-template/control-select-template.component';
 import { LoincObservationValue } from 'projects/hospital/src/app/modules/hsi-components/loinc-form/loinc-input.model';
+import { Templates } from '@historia-clinica/modules/ambulatoria/components/control-select-template/control-select-template.component';
 
 @Component({
 	selector: 'app-select-template',
@@ -42,10 +42,21 @@ export class SelectTemplateComponent implements OnInit {
 
 	changeValues($event, idDiagnostic: number) {
 		const result: ResultTemplate = {
-			form: $event?.values,
+			form: this.cleanProcedureParameterIds($event?.values),
 			idDiagnostic: idDiagnostic
 		}
 		this.changeValuesEmit.emit(result);
+	}
+
+	private cleanProcedureParameterIds(data): LoincObservationValue | ProcedureTemplateFullSummaryDto {
+		return data?.map((item) => {
+			if (item) {
+				if (typeof item.procedureParameterId === 'string' && item.procedureParameterId.includes('_')) {
+					item.procedureParameterId = item.procedureParameterId.split('_')[0];
+				}
+				return item;
+			}
+		});
 	}
 
 }
