@@ -18,6 +18,8 @@ import { OpenlayersService } from './openlayers.service';
 
 const LOCATION_POINT = '../../../../assets/icons/gis_location_point.svg';
 const IGN_MAP = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png';
+const EPSG3857 = 'EPSG:3857';
+const EPSG4326 = 'EPSG:4326';
 
 @Injectable({
 	providedIn: 'root',
@@ -32,13 +34,17 @@ export class GisLayersService {
 		source: this.source,
 	});
 	map: Map;
+	modifySource = new VectorSource();
+	modifyVector = new VectorLayer({
+		source: this.modifySource,
+	});
 	locationPoint: Feature;
 	draw = new Draw({
-		source: this.source,
+		source: this.modifySource,
 		type: EGeometry.POLYGON,
 	});
-	snap = new Snap({source: this.source});
-	modify = new Modify({source: this.source});
+	snap = new Snap({source: this.modifySource});
+	modify: Modify;
 	drawnPolygon: Feature;
 	isPolygonCompleted = false;
 	polygonCoordinates: Coordinate[][] = [];
@@ -47,6 +53,8 @@ export class GisLayersService {
 	showUndo$ = new BehaviorSubject<boolean>(false);
 	showRemoveAndCreate$ = new BehaviorSubject<boolean>(false);
 	areaLayer;
+	clickListener = null;
+	locationCoordinates: Coordinate;
 
 	constructor(private readonly openLayersService: OpenlayersService) {}
 
@@ -55,6 +63,7 @@ export class GisLayersService {
 		this.detectWhenDrawStart();
 		this.detectWhenDrawFinish();
 		this.detectWhenModifyFinish();
+		this.setModifySource(this.modifySource);
 	}
 	
 	setMap = () => {
@@ -65,7 +74,8 @@ export class GisLayersService {
 				new TileLayer({
 					source: this.XYZ
 				}),
-				this.vector
+				this.vector,
+				this.modifyVector
 			],
 			view: new View({
 				center: [0, 0],
@@ -76,7 +86,8 @@ export class GisLayersService {
 	}
 
 	addPoint = (position: Coordinate) => {
-		this.locationPoint = this.createLocationPoint(position);
+		this.setLocationCoordinates(position);
+		this.locationPoint = this.createLocationPoint(this.locationCoordinates);
 		this.openLayersService.addFeature(this.vector, this.locationPoint);
 	}
 
@@ -97,7 +108,7 @@ export class GisLayersService {
 
 	removeDrawnPolygon = () => {
 		this.removePolygonInteraction();
-		this.source.removeFeature(this.drawnPolygon);
+		this.modifySource.removeFeature(this.drawnPolygon);
 		this.drawnPolygon = null;
 		this.isPolygonCompleted = false;
 	}
@@ -142,7 +153,7 @@ export class GisLayersService {
 		this.map.addLayer(this.areaLayer);
 		this.isPolygonCompleted = true;
 		this.polygonCoordinates = polygon.geometry.coordinates;
-		this.modify = new Modify({source: source});
+		this.setModifySource(source);
 		this.detectWhenModifyFinish();
 	}
 
@@ -158,6 +169,36 @@ export class GisLayersService {
 
 	removeModifyInteraction = () => {
 		this.map?.removeInteraction(this.modify);
+	}
+
+	handleLocationClic = () => {
+		this.removeModifyInteraction();
+		this.removeLocationClic();
+		this.clickListener = (event) => {
+			this.setLocationCoordinates(event.coordinate);
+            this.vector.getSource().removeFeature(this.locationPoint);
+            this.addPoint(this.locationCoordinates);
+        };
+		this.map?.on('click', this.clickListener);
+	}	
+
+	removeLocationClic = () => {
+		if (this.clickListener) {
+			this.map?.un('click', this.clickListener);
+			this.clickListener = null;
+		}
+	}
+
+	coordinateToGlobalCoordinateDto = (): GlobalCoordinatesDto => {
+		const transformedCoordinates = this.openLayersService.transformCoordinatesTo(this.locationCoordinates, EPSG3857, EPSG4326);
+		return {
+			latitude: transformedCoordinates[1],
+			longitude: transformedCoordinates[0]
+		}
+	}
+
+	setLocationCoordinates = (coords: Coordinate) => {
+		this.locationCoordinates = coords;
 	}
 
 	private clearMap = () => {
@@ -200,13 +241,14 @@ export class GisLayersService {
 			const geometry: Polygon = this.drawnPolygon.getGeometry() as Polygon;
 			this.polygonCoordinates = geometry.getCoordinates();
 			this.toggleActions(false, true);
-			this.addModifyInteraction();
+			this.setModifySource(this.modifySource);
+			this.map?.addInteraction(this.modify);
 			this.detectWhenModifyFinish();
 		});
 	}
 
 	private detectWhenModifyFinish = () => {
-		this.modify.on('modifyend', (event) => {
+		this.modify?.on('modifyend', (event) => {
 			this.drawnPolygon = event.features.item(0);
 			const geometry: Polygon = this.drawnPolygon.getGeometry() as Polygon;
 			this.polygonCoordinates = geometry.getCoordinates();
@@ -217,8 +259,9 @@ export class GisLayersService {
 		this.draw.on('drawstart', (_) => this.toggleActions(true, false));
 	}
 
-	private addModifyInteraction = () => {
-		this.modify = new Modify({source: this.source});
-		this.map?.addInteraction(this.modify);
+	private setModifySource = (source: VectorSource) => {
+		this.modify = new Modify({
+			source: source
+		});
 	}
 }

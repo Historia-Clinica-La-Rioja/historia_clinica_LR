@@ -21,6 +21,7 @@ export class MapComponent implements OnInit {
 		if (this.gisLayersService.getMap()) 
 			this.gisLayersService.setPolygon(this.area);
 	}	
+	@Input() handleLocationPoint: boolean;
 
 	constructor(private readonly gisLayersService: GisLayersService,
 				private readonly openLayersService: OpenlayersService
@@ -37,10 +38,13 @@ export class MapComponent implements OnInit {
 		this.gisLayersService.setUp();
 		this.centerViewPoint();
 		this.gisLayersService.setPolygon(this.area);
+		if (this.handleLocationPoint)
+			this.gisLayersService.handleLocationClic()
 	}
 
 	private centerViewPoint = () => {
 		const position: Coordinate = this.openLayersService.fromLonLat(this.coordinates);
+		this.gisLayersService.setLocationCoordinates(position);
 		this.openLayersService.centerView(this.gisLayersService.getMap(), position);
 		this.gisLayersService.removeLocationPoint();
 		this.gisLayersService.addPoint(position);

@@ -36,6 +36,7 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 				private readonly snackBarService: SnackBarService
 	) {
 		this.gisLayersService.addPolygonInteraction();
+		this.gisLayersService.removeLocationClic();
 		this.gisLayersService.showUndo$.subscribe((undo: boolean) => this.showUndo = undo);
 		this.gisLayersService.showRemoveAndCreate$.subscribe((removeAndCreate: boolean) => this.showRemoveAndCreate = removeAndCreate);
 	}
@@ -60,7 +61,7 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 		this.isSaving = true;
 		forkJoin(
 			[
-				this.gisService.saveInstitutionCoordinates(this.institutionDescription.coordinates),
+				this.gisService.saveInstitutionCoordinates(this.gisLayersService.coordinateToGlobalCoordinateDto()),
 				this.gisService.saveInstitutionAddress(this.mapToSaveInstitutionAddressDto())
 			]
 		).pipe(finalize(() => this.isSaving = false))

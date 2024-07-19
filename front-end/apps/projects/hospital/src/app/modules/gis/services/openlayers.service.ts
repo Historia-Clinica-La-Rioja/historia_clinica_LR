@@ -3,7 +3,7 @@ import { GlobalCoordinatesDto } from '@api-rest/api-model';
 import { Feature, Map } from 'ol';
 import { Coordinate } from 'ol/coordinate';
 import VectorLayer from 'ol/layer/Vector';
-import { fromLonLat } from 'ol/proj';
+import { fromLonLat, transform } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import { EGeometry } from '../constants/geometry.utils';
 
@@ -36,5 +36,9 @@ export class OpenlayersService {
 				'coordinates': []
 			},
 		}
+	}
+
+	transformCoordinatesTo = (coords: Coordinate, fromEPSGType: string, toEPSGType: string): Coordinate => {
+		return transform(coords, fromEPSGType, toEPSGType);
 	}
 }

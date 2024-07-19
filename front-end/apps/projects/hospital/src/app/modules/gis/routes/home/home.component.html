@@ -82,7 +82,7 @@
                                 [text]="'buttons.CANCEL'">
                             </app-button>
                             <app-button
-                                (clicked)="changeStep(GEOPOSITION_STEP)"
+                                (click)="stepper.next()"
                                 [disabled]="institutionAddressForm.invalid"
                                 [text]="'buttons.NEXT'"
                                 [buttonType]="ButtonType.RAISED">
@@ -93,10 +93,10 @@
                 <mat-step label="{{'gis.steppers.GEOPOSITION' | translate}}" [completed]="institutionDescription">
                     <app-institution-description-step
                         *ngIf="institutionDescription" 
-                        (nextStep)="stepToResponsabilityArea()"
+                        (nextStep)="stepper.next()"
                         [editMode]="editMode"
                         (cancelSelected)="cancel()"
-                        (previousStep)="stepToInstitutionAddress()"
+                        (previousStep)="stepper.previous()"
                         [setInstitutionDescription]="institutionDescription">
                     </app-institution-description-step>
                 </mat-step>
@@ -105,7 +105,7 @@
                         *ngIf="currentStepperIndex === RESPONSABILITY_AREA_STEP"
                         [setInstitutionDescription]="institutionDescription"
                         [editMode]="editMode"
-                        (previous)="stepToMapPosition()"
+                        (previous)="stepper.previous()"
                         (cancelSelected)="cancel()"
                         (confirmed)="setInstitutionData()">
                     </app-responsability-area>
@@ -121,7 +121,7 @@
 
         <div class="map-container">
             <app-loading *ngIf="isLoading"></app-loading>
-            <app-map *ngIf="showMap && !isLoading" [setMapCoordinates]="coordinatesCurrentValue" [setMapArea]="area"></app-map>
+            <app-map *ngIf="showMap && !isLoading" [setMapCoordinates]="coordinatesCurrentValue" [setMapArea]="area" [handleLocationPoint]="handleLocationPoint"></app-map>
         </div>
     </section>
 </app-content>
