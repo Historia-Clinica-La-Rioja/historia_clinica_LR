@@ -55,6 +55,7 @@ import { ButtonType } from '@presentation/components/button/button.component';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
+import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 
 const TIME_OUT = 5000;
 
@@ -165,6 +166,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		private readonly referenceFileService: ReferenceFileService,
 		private readonly el: ElementRef,
 		private readonly snowstormService: SnowstormService,
+		private readonly procedureTemplatesService: ProcedureTemplatesService,
 		private readonly dateFormatPipe: DateFormatPipe
 	) {
 		this.motivoNuevaConsultaService = new MotivoNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService);
@@ -179,7 +181,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 		this.alergiasNuevaConsultaService = new AlergiasNuevaConsultaService(formBuilder, this.snomedService, this.snackBarService, this.internacionMasterDataService);
 		this.ambulatoryConsultationReferenceService = new AmbulatoryConsultationReferenceService(this.dialog, this.data, this.ambulatoryConsultationProblemsService);
 		this.featureFlagService.isActive(AppFeature.HABILITAR_GUARDADO_CON_CONFIRMACION_CONSULTA_AMBULATORIA).subscribe(isEnabled => this.isEnablePopUpConfirm = isEnabled);
-		this.createOrderService = new CreateOrderService(this.snackBarService);
+		this.createOrderService = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 	}
 
 	ngOnInit(): void {
