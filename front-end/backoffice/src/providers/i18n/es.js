@@ -866,6 +866,18 @@ const messages = {
             }
         },
 
+        resultstudies: {
+            name: 'Posibles  Estudios',
+            fields: {
+                patientId: 'DNI',
+                patientName: 'Apellido y Nombre',
+                studyDate: 'Fecha del estudio',
+                studyTime: 'Hora del estudio',
+                studyInstanceUid: 'Id estudios',
+                modality: 'Modalidad'
+            }
+        },
+
         hierarchicalunittypes: {
             name: 'Tipo de unidad jerárquica |||| Tipos de unidades jerárquicas',
             fields: {
