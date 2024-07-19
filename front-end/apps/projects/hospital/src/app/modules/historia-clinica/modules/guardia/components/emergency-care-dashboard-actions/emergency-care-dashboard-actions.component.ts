@@ -49,12 +49,12 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		private readonly translate: TranslateService,
 	) { }
 
-	ngOnInit(): void {
+	ngOnInit() {
 		this.setRoles();
 		this.checkAdministrativeFF();
 	}
 
-	ngOnDestroy(): void {
+	ngOnDestroy() {
 		this.patientDescriptionSubscription?.unsubscribe();
 	}
 
@@ -67,14 +67,14 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 
 	private checkAdministrativeFF() {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
-			this.hasProffesionalRole
-			? this.isAdministrativeAndHasTriageFFInFalse = false
-			: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+			this.isAdministrativeAndHasTriageFFInFalse = this.hasProffesionalRole
+			? false
+			: (!isEnabled && this.hasAdministrativeRole)
 		)
 	}
 
 	private getActionsButtonsConditions(episode: Episode): EpisodeConditions {
-		const showNuevoTriage = !this.isAdministrativeAndHasTriageFFInFalse;
+		const showNewTriage = !this.isAdministrativeAndHasTriageFFInFalse;
 
 		const showEditPatientEpisode =
 			episode.state.id === this.estadosEpisodio.EN_ESPERA ||
@@ -83,13 +83,13 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		const showEditPatientDescription =
 			episode.patient?.typeId === this.EMERGENCY_CARE_TEMPORARY;
 
-		const showAtender =
+		const showAttend =
 			episode.state.id === this.estadosEpisodio.EN_ESPERA &&
 			this.hasProffesionalRole;
 
 		return {
-			nuevoTriage: showNuevoTriage,
-			atender: showAtender,
+			newTriage: showNewTriage,
+			attend: showAttend,
 			editPatientEpisode: showEditPatientEpisode,
 			editPatientDescription: showEditPatientDescription
 		};
@@ -110,7 +110,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episode.id}/emergencyCareDashboard/edit`]);
 	}
 
-	private atender() {
+	private attend() {
 		this.emergencyCareEpisodeAttend.attend(this.episode.id, true);
 	}
 
@@ -145,16 +145,18 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		const conditions = this.getActionsButtonsConditions(episode);
 		const actions = [
 			{
-				id: 'atender',
+				id: 'attend',
 				category: 'call-related',
-				condition: conditions.atender,
+				icon: 'call',
+				condition: conditions.attend,
 				label: this.translate.instant('guardia.home.episodes.episode.actions.atender.TITLE'),
-				callback: () => this.atender(),
+				callback: () => this.attend(),
 			},
 			{
 				id: 'nuevo-triage',
 				category: 'professional-actions',
-				condition: conditions.nuevoTriage,
+				icon: 'add',
+				condition: conditions.newTriage,
 				label: this.translate.instant('guardia.home.episodes.episode.actions.NUEVO_TRIAGE'),
 				callback: () => this.openTriageDialog()
 
@@ -162,6 +164,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 			{
 				id: 'editPatientEpisode',
 				category: 'edits',
+				icon: 'edit',
 				condition: conditions.editPatientEpisode,
 				label: this.translate.instant('guardia.home.episodes.episode.actions.edit_patient_episode.TITLE'),
 				callback: () => this.editPatientEpisode()
@@ -169,6 +172,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 			{
 				id: 'editPatientDescription',
 				category: 'edits',
+				icon: 'edit',
 				condition: conditions.editPatientDescription,
 				label: this.translate.instant('guardia.home.episodes.episode.actions.edit_patient_description.TITLE'),
 				callback: () => this.editPatientDescription()
@@ -203,14 +207,15 @@ interface CategorizedAction {
 interface EpisodeAction {
 	id: string;
 	category: string;
+	icon: string;
 	condition: boolean;
 	label: string;
 	callback: Function;
 }
 
 interface EpisodeConditions {
-	nuevoTriage: boolean;
-	atender: boolean;
+	newTriage: boolean;
+	attend: boolean;
 	editPatientEpisode: boolean;
 	editPatientDescription: boolean;
 }

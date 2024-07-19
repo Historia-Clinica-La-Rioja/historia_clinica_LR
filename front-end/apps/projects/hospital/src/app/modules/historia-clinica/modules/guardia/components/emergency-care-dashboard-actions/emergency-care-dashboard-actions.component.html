@@ -7,9 +7,12 @@
 		<ng-container *ngIf="getEpisodeActions(episode) as categorizedActions">
 			<div *ngFor="let item of categorizedActions; trackBy: trackbyFn; let i = index">
 				<ng-container *ngIf="showDivider(categorizedActions, i)">
-					<mat-divider></mat-divider>
+					<mat-divider class="custom-divider"></mat-divider>
 				</ng-container>
 				<button mat-menu-item (click)="item.episodeAction.callback()">
+					<mat-icon class="material-icons-outlined">
+						{{ item.episodeAction.icon }}
+					</mat-icon>
 					{{ item.episodeAction.label }}
 				</button>
 			</div>
