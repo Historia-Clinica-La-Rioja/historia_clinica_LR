@@ -1,4 +1,4 @@
-import { DiagnosticReportInfoDto, HCEDocumentDataDto } from "@api-rest/api-model";
+import { DateDto, DiagnosticReportInfoDto, HCEDocumentDataDto, TimeDto } from "@api-rest/api-model";
 
 export const CATEGORY_IMAGE = "Diagnóstico por imágenes"
 export const IMAGE_DIAGNOSIS_CATEGORY_ID = '363679005'
@@ -22,9 +22,15 @@ export interface InfoNewTypeOrderDto {
 	isAvailableInPACS?: boolean;
 	viewReport?: boolean;
 	associatedStudies?: string[];
+	dateAppoinment: AppointmentDate;
 }
 
 
 export interface InfoNewStudyOrderDto extends InfoNewTypeOrderDto {
 	hasActiveAppointment?: boolean;
+}
+
+export interface AppointmentDate {
+	appointmentDate: DateDto;
+    appointmentHour: TimeDto;
 }

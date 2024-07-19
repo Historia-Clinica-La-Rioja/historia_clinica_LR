@@ -13,7 +13,7 @@ import { ActionsButtonService } from '../../../indicacion/services/actions-butto
 import { CreatedDuring } from '../study-list-element/study-list-element.component';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { capitalize } from '@core/utils/core.utils';
-import { DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
+import { AppointmentDate, DiagnosticWithTypeReportInfoDto, E_TYPE_ORDER, InfoNewStudyOrderDto } from '../../model/ImageModel';
 import { ReferenceCompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/components/reference-complete-study/reference-complete-study.component';
 import { ReportReference } from '@historia-clinica/modules/ambulatoria/components/reference-study-closure-information/reference-study-closure-information.component';
 import { getColoredIconText } from '@access-management/utils/reference.utils';
@@ -23,6 +23,7 @@ import { AmbulatoriaSummaryFacadeService } from '@historia-clinica/modules/ambul
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { CompleteStudyComponent } from '@historia-clinica/modules/ambulatoria/dialogs/complete-study/complete-study.component';
 import { StudyInfo, StudyResultsService } from '@historia-clinica/modules/ambulatoria/services/study-results.service';
+import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 
 const IMAGE_DIAGNOSIS = 'Diagnóstico por imágenes';
 const isImageStudy = (study: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): boolean => {
@@ -60,6 +61,7 @@ export class StudyComponent implements OnInit {
 	[this.translateService.instant('app.menu.GUARDIA'), CreatedDuring.EMERGENCY_CARE]])
 
 	private sameOrderStudies: Map<Number, StudyInformation[]>;
+	PATTERN_SPLIT = ', '
 
 
 	constructor(
@@ -73,7 +75,7 @@ export class StudyComponent implements OnInit {
 
 	) { }
 
-	contentBuilder(diagnosticReport: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): Content {
+	contentBuilder(diagnosticReport: DiagnosticReportInfoDto | DiagnosticWithTypeReportInfoDto): ContentStudy {
 		const reportImageCase = diagnosticReport as DiagnosticWithTypeReportInfoDto
 		const associatedStudiesTranscribed: string[] = reportImageCase.infoOrderInstances?.associatedStudies?.map(study => capitalize(study))
 		const prescriptionStatus =  diagnosticReport.statusId ? this.prescripcionesService.renderStatusDescription(PrescriptionTypes.STUDY, diagnosticReport.statusId) :
@@ -90,19 +92,19 @@ export class StudyComponent implements OnInit {
             title: "Observaciones:",
             content:  diagnosticReport.observationsFromServiceRequest,
         }) : null;
-
 		return {
 			status: {
 				description: prescriptionStatus,
 				cssClass: this.setCssClass(prescriptionStatus)
 			},
-			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(', ') : capitalize(diagnosticReport.snomed.pt),
+			description:associatedStudiesTranscribed ? associatedStudiesTranscribed.join(this.PATTERN_SPLIT) : capitalize(diagnosticReport.snomed.pt),
 			extra_info: extra_info,
 			createdBy: diagnosticReport.doctor ? this.getProfessionalName(diagnosticReport.doctor) : "",
 			createdOn: updateDate,
 			timeElapsed: diagnosticReport.creationDate ? null : '',
 			reference:  isReferenceStudyPending ? this.getReference(diagnosticReport.referenceRequestDto) : null,
-            observationsFromServiceRequest: diagnosticReport.observationsFromServiceRequest
+            observationsFromServiceRequest: diagnosticReport.observationsFromServiceRequest,
+			dateAppointment: reportImageCase.infoOrderInstances && this.getAppointmentDate(reportImageCase.infoOrderInstances.dateAppoinment),
 		}
 	}
 
@@ -114,6 +116,13 @@ export class StudyComponent implements OnInit {
 		if (!isImageStudy(this._studies[0]?.diagnosticInformation))
 			this._studies = this.classifyStudiesWithTheSameOrder(this._studies);
 		this._studies.sort((studyA, studyB) => studyB.diagnosticInformation.creationDate?.getTime() - studyA.diagnosticInformation.creationDate?.getTime())
+	}
+
+
+	private getAppointmentDate( dateAppoinment: AppointmentDate): Date {
+		const finalAppointmentDate = dateAppoinment.appointmentDate && dateAppoinment.appointmentHour ?
+			dateTimeDtoToDate({date:dateAppoinment?.appointmentDate, time:dateAppoinment?.appointmentHour}) : null
+		return finalAppointmentDate
 	}
 
 
@@ -352,4 +361,8 @@ export interface StudyInformation {
     hasActiveAppointment?: boolean;
 	appointmentId?: number | string;
 	reportStatus?: boolean
+}
+
+export interface ContentStudy extends Content {
+	dateAppointment?: Date
 }
