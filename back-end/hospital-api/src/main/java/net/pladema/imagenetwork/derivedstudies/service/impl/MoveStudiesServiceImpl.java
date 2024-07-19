@@ -8,13 +8,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import lombok.AllArgsConstructor;
 
-import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ar.lamansys.mqtt.application.ports.MqttClientService;
 import ar.lamansys.mqtt.domain.MqttMetadataBo;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import lombok.RequiredArgsConstructor;
 import net.pladema.establishment.service.EquipmentService;
 import net.pladema.establishment.service.OrchestratorService;
@@ -34,8 +37,7 @@ import net.pladema.medicalconsultation.appointment.service.domain.AppointmentBo;
 import net.pladema.medicalconsultation.equipmentdiary.service.EquipmentDiaryService;
 import net.pladema.medicalconsultation.equipmentdiary.service.domain.CompleteEquipmentDiaryBo;
 import net.pladema.scheduledjobs.jobs.MoveStudiesJob;
-
-import org.springframework.transaction.annotation.Transactional;
+import net.pladema.patient.controller.service.PatientExternalService;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +63,8 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 
 	private final MqttClientService mqttClientService;
 	private final SavePacWhereStudyIsHosted savePacWhereStudyIsHosted;
+
+	private final PatientExternalService patientExternalService;
 	@Override
 	public Integer save(MoveStudiesBO moveStudyBO) {
 		MoveStudies moveStudy = new MoveStudies( moveStudyBO.getAppointmentId(),
@@ -160,8 +164,44 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 					}
 				}
 			}
+		} 
+		else if (FINISHED.equals(status) && !result.contains("Error") &&  !result.contains("401")){
+
+			Integer appointmentId = moveStudiesRepository.findById(idMove)
+						.map(MoveStudies::getAppointmentId)
+						.orElse(null);
+			if (appointmentId!= null){
+				AppointmentBo appointment = appointmentService.getEquipmentAppointment(appointmentId).orElse(null);
+				if (appointment != null){
+					Integer patientId = appointment.getPatientId();
+					BasicPatientDto basicDataPatient = patientExternalService.getBasicDataFromPatient(patientId);
+					if(basicDataPatient!= null){
+						String identificationNumber = basicDataPatient.getIdentificationNumber();
+						String identification = identificationNumber == null ?basicDataPatient.getId()+"": identificationNumber;
+						findStudyByPatientDNI(idMove, appointmentId, identification);
+					}
+				}
+			}
 		}
 
+	}
+
+	public void findStudyByPatientDNI(Integer idMove,Integer appointmentId, String patientDni){
+		Optional<MoveStudies> optionalMoveStudies = moveStudiesRepository.findById(idMove);
+
+		if(optionalMoveStudies.isPresent()) {
+			MoveStudies moveStudy = optionalMoveStudies.get();
+			moveStudy.getOrchestratorId();
+			OrchestratorBO orchestrator = orchestratorService.getOrchestrator(moveStudy.getOrchestratorId());
+			String topic = orchestrator.getBaseTopic() + "/OBTENERESTUDIO";
+			String patientIDJson = "   \"PatientID\": \"" + patientDni + "\", \n";
+			String appointmentIdJson = "   \"appointmentId\": \"" + appointmentId + "\", \n";
+			String idMoveJson = "    \"idMove\": \"" + idMove + "\"\n";
+			String json = "{\n" + patientIDJson + appointmentIdJson + idMoveJson + "}";
+
+			MqttMetadataBo data = new MqttMetadataBo(topic, json, false, 2);
+			mqttClientService.publish(data);
+		}
 	}
 
 	@Override
