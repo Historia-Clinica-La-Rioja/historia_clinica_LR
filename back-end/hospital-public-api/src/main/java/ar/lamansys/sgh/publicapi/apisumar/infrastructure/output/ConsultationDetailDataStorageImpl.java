@@ -3,6 +3,8 @@ package ar.lamansys.sgh.publicapi.apisumar.infrastructure.output;
 import ar.lamansys.sgh.publicapi.apisumar.application.port.out.ConsultationDetailDataStorage;
 
 import ar.lamansys.sgh.publicapi.apisumar.domain.ConsultationDetailDataBo;
+import ar.lamansys.sgh.publicapi.apisumar.domain.ImmunizationsDetailBo;
+import ar.lamansys.sgh.publicapi.apisumar.domain.RecipeDetailBo;
 import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import javax.persistence.Query;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,12 +33,12 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 
 
 	@Override
-	public List<ConsultationDetailDataBo> getConsultationsData(String sisaCode) {
+	public List<ConsultationDetailDataBo> getConsultationsData(String sisaCode, LocalDateTime startDate, LocalDateTime endDate) {
 		LOG.debug("sisaCode -> {}", sisaCode);
 
 		String stringQuery = "WITH documents_filtered AS ( " +
 				"SELECT * FROM document d " +
-				"WHERE (d.created_on >= timestamp with time zone '2024-01-01 03:00:00.000Z' AND d.created_on < timestamp with time zone '2024-02-01 03:00:00.000Z') " +
+				"WHERE d.created_on BETWEEN :startDate AND :endDate " +
 				"ORDER BY d.id, d.created_on DESC " +
 				"), source AS ( " +
 				"SELECT d.*, ie.patient_medical_coverage_id, hpg.healthcare_professional_id FROM documents_filtered d INNER JOIN internment_episode ie ON ie.id=d.source_id AND d.source_type_id=0 LEFT JOIN healthcare_professional_group hpg ON hpg.internment_episode_id=ie.id " +
@@ -134,6 +137,8 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				"WHERE ins.sisa_code = :sisaCode";
 
 		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate)
 				.setParameter("sisaCode", sisaCode);
 
 		List<Object[]> queryResult = query.getResultList();
@@ -142,6 +147,168 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				.stream()
 				.map(this::processConsultationQuery)
 				.collect(Collectors.toList());
+		return result;
+	}
+
+	@Override
+	public List<ImmunizationsDetailBo> getImmunizations(String sisaCode, LocalDateTime startDate, LocalDateTime endDate) {
+		LOG.debug("sisaCode -> {}, startDate -> {}, endDate -> {}", sisaCode, startDate, endDate);
+
+		String stringQuery = "SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, " +
+				"cs.name as operativeUnit, " +
+				"concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as lender, " +
+				"p.identification_number as lenderIdentificationNumber, " +
+				"vc.created_on AT TIME ZONE 'UTC-3' as attentionDate, " +
+				"pp.identification_number as patientIdentificationNumber, " +
+				"concat(pp.first_name , ' ', pp.last_name) as patientName, " +
+				"g.description as patientSex, " +
+				"gg.description as patientGender, " +
+				"pe.name_self_determination as patientSelfPerceivedName, " +
+				"pp.birth_date as patientBirthDate, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM vc.updated_on) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM vc.updated_on) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM vc.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM vc.updated_on) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM vc.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAgeTurn, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAge, " +
+				"et.pt as ethnicity, " +
+				"concat(mc.name, '(RNOS: ', hi.rnos, ')') as medicalCoverage, " +
+				"concat(a.street, ' N° ', a.number, case when a.floor is not null then concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) as address, " +
+				"c.description as location, " +
+				"ed.description as instructionLevel, " +
+				"lab.description as workSituation, " +
+				"concat(inm_sn.pt, ' (SNOMED: ', inm_sn.sctid, ')') as vaccine, " +
+				"inm.dose as dosage, " +
+				"inm.lot_number as lotNumber, " +
+				"inm_n.description as note, " +
+				"sch.description as scheme, " +
+				"vac.description as vaccineScheme, " +
+				"vac_cond.description as applicationCondition, " +
+				"ev.description as evolution " +
+				"FROM vaccine_consultation vc " +
+				"INNER JOIN institution ins ON vc.institution_id=ins.id " +
+				"INNER JOIN clinical_specialty cs ON vc.clinical_specialty_id=cs.id " +
+				"INNER JOIN healthcare_professional hp ON vc.doctor_id=hp.id " +
+				"INNER JOIN person p ON hp.person_id=p.id " +
+				"LEFT JOIN patient pa ON vc.patient_id=pa.id " +
+				"INNER JOIN person pp ON pa.person_id=pp.id " +
+				"LEFT JOIN person_extended pe ON pe.person_id=pp.id " +
+				"LEFT JOIN ethnicity et ON pe.ethnicity_id=et.id " +
+				"LEFT JOIN education_level ed ON pe.education_level_id=ed.id " +
+				"LEFT JOIN occupation lab ON pe.occupation_id=lab.id " +
+				"LEFT JOIN gender gg ON pe.gender_self_determination=gg.id " +
+				"LEFT JOIN address a ON pe.address_id=a.id " +
+				"LEFT JOIN city c ON a.city_id=c.id " +
+				"INNER JOIN gender g ON pp.gender_id=g.id " +
+				"LEFT JOIN patient_medical_coverage pmc ON pmc.id=vc.patient_medical_coverage_id " +
+				"LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id " +
+				"LEFT JOIN health_insurance hi ON hi.id=mc.id " +
+				"LEFT JOIN document d ON vc.id=d.source_id AND d.source_type_id=5 " +
+				"LEFT JOIN note ev ON d.other_note_id=ev.id " +
+				"LEFT JOIN document_inmunization din ON din.document_id=d.id " +
+				"LEFT JOIN inmunization inm ON din.inmunization_id=inm.id " +
+				"LEFT JOIN note inm_n ON inm_n.id=inm.note_id " +
+				"LEFT JOIN snomed inm_sn ON inm.snomed_id=inm_sn.id " +
+				"LEFT JOIN vaccine_scheme sch ON inm.scheme_id=sch.id " +
+				"LEFT JOIN vaccine_nomivac_rule vac_rule ON sch.id=vac_rule.scheme_id AND inm.dose_order=vac_rule.dose_order " +
+				"LEFT JOIN vaccine vac ON vac_rule.sisa_code=vac.sisa_code " +
+				"LEFT JOIN vaccine_condition_application vac_cond ON vac_rule.condition_application_id=vac_cond.id " +
+				"WHERE ins.sisa_code = :sisaCode " +
+				"AND vc.created_on BETWEEN :startDate AND :endDate";
+
+		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("sisaCode", sisaCode)
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate);
+
+		List<Object[]> queryResult = query.getResultList();
+
+		List<ImmunizationsDetailBo> result = queryResult
+				.stream()
+				.map(this::processImmunizationsQuery)
+				.collect(Collectors.toList());
+
+		return result;
+	}
+
+	@Override
+	public List<RecipeDetailBo> getRecipes(String sisaCode, LocalDateTime startDate, LocalDateTime endDate) {
+		LOG.debug("sisaCode -> {}, startDate -> {}, endDate -> {}", sisaCode, startDate, endDate);
+
+		String stringQuery = "SELECT concat(ins.name, '(SISA: ', ins.sisa_code, ' | CUIT: ', ins.cuit, ')') AS institution, " +
+				"cs.name as operativeUnit, " +
+				"concat(p.first_name, ' ', p.middle_names, ' ', p.last_name, ' ', p.other_last_names) as lender, " +
+				"p.identification_number as lenderIdentificationNumber, " +
+				"mr.created_on AT TIME ZONE 'UTC-3' as attentionDate, " +
+				"pp.identification_number as patientIdentificationNumber, " +
+				"concat(pp.first_name , ' ', pp.last_name) as patientName, " +
+				"g.description as patientSex, " +
+				"gg.description as patientGender, " +
+				"pe.name_self_determination as patientSelfPerceivedName, " +
+				"pp.birth_date as patientBirthDate, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM mr.updated_on) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM mr.updated_on) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM mr.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM mr.updated_on) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM mr.updated_on) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAgeTurn, " +
+				"case " +
+				"when (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)) < 0 then " +
+				"concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)) -1, ' Años, ', 12 +(EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"else concat((EXTRACT(YEAR FROM CURRENT_TIMESTAMP) - EXTRACT(YEAR FROM pp.birth_date)), ' Años, ', (EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - EXTRACT(MONTH FROM pp.birth_date)), ' Meses') " +
+				"end as patientAge, " +
+				"et.pt as ethnicity, " +
+				"concat(mc.name, '(RNOS: ', hi.rnos, ')') as medicalCoverage, " +
+				"concat(a.street, ' N° ', a.number, case when a.floor is not null then concat(' Piso: ', a.floor, 'Departamento: ', a.apartment) end) as address, " +
+				"c.description as location, " +
+				"ed.description as instructionLevel, " +
+				"lab.description as workSituation, " +
+				"concat(m_sn.pt, ' (SNOMED: ', m_sn.sctid, ')') AS medication, " +
+				"concat(hc_sn.pt, ' (SNOMED: ', hc_sn.sctid, ')') AS relatedProblem, " +
+				"ev.description as evolution " +
+				"FROM medication_request mr " +
+				"INNER JOIN institution ins ON mr.institution_id=ins.id " +
+				"LEFT JOIN clinical_specialty cs ON mr.clinical_specialty_id=cs.id " +
+				"INNER JOIN healthcare_professional hp ON mr.doctor_id=hp.id " +
+				"INNER JOIN person p ON hp.person_id=p.id " +
+				"LEFT JOIN patient pa ON mr.patient_id=pa.id " +
+				"INNER JOIN person pp ON pa.person_id=pp.id " +
+				"LEFT JOIN person_extended pe ON pe.person_id=pp.id " +
+				"LEFT JOIN ethnicity et ON pe.ethnicity_id=et.id " +
+				"LEFT JOIN education_level ed ON pe.education_level_id=ed.id " +
+				"LEFT JOIN occupation lab ON pe.occupation_id=lab.id " +
+				"LEFT JOIN gender gg ON pe.gender_self_determination=gg.id " +
+				"LEFT JOIN address a ON pe.address_id=a.id " +
+				"LEFT JOIN city c ON a.city_id=c.id " +
+				"INNER JOIN gender g ON pp.gender_id=g.id " +
+				"LEFT JOIN patient_medical_coverage pmc ON pmc.id=mr.medical_coverage_id " +
+				"LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id " +
+				"LEFT JOIN health_insurance hi ON hi.id=mc.id " +
+				"LEFT JOIN document d ON mr.id=d.source_id AND d.source_type_id=2 " +
+				"LEFT JOIN note ev ON d.other_note_id=ev.id " +
+				"LEFT JOIN document_medicamention_statement dms ON dms.document_id=d.id " +
+				"LEFT JOIN medication_statement ms ON dms.medication_statement_id=ms.id " +
+				"LEFT JOIN snomed m_sn ON ms.snomed_id=m_sn.id " +
+				"LEFT JOIN health_condition hc ON ms.health_condition_id=hc.id " +
+				"LEFT JOIN snomed hc_sn ON hc.snomed_id=hc_sn.id " +
+				"WHERE ins.sisa_code = :sisaCode " +
+				"AND mr.created_on BETWEEN :startDate AND :endDate";
+
+		Query query = entityManager.createNativeQuery(stringQuery)
+				.setParameter("sisaCode", sisaCode)
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate);
+
+		List<Object[]> queryResult = query.getResultList();
+
+		List<RecipeDetailBo> result = queryResult
+				.stream()
+				.map(this::processRecipeQuery)
+				.collect(Collectors.toList());
+
 		return result;
 	}
 
@@ -236,6 +403,65 @@ public class ConsultationDetailDataStorageImpl implements ConsultationDetailData
 				(String) queryResult[36],
 				(String) queryResult[37],
 				(String) queryResult[38]
+		);
+	}
+
+	private ImmunizationsDetailBo processImmunizationsQuery(Object[] queryResult) {
+		return new ImmunizationsDetailBo(
+				(String) queryResult[0],
+				(String) queryResult[1],
+				(String) queryResult[2],
+				(String) queryResult[3],
+				((Timestamp) queryResult[4]),
+				(String) queryResult[5],
+				(String) queryResult[6],
+				(String) queryResult[7],
+				(String) queryResult[8],
+				(String) queryResult[9],
+				((Date) queryResult[10]),
+				(String) queryResult[11],
+				(String) queryResult[12],
+				(String) queryResult[13],
+				(String) queryResult[14],
+				(String) queryResult[15],
+				(String) queryResult[16],
+				(String) queryResult[17],
+				(String) queryResult[18],
+				(String) queryResult[19],
+				(String) queryResult[20],
+				(String) queryResult[21],
+				(String) queryResult[22],
+				(String) queryResult[23],
+				(String) queryResult[24],
+				(String) queryResult[25],
+				(String) queryResult[26]
+		);
+	}
+
+	private RecipeDetailBo processRecipeQuery(Object[] queryResult) {
+		return new RecipeDetailBo(
+				(String) queryResult[0],
+				(String) queryResult[1],
+				(String) queryResult[2],
+				(String) queryResult[3],
+				((Timestamp) queryResult[4]),
+				(String) queryResult[5],
+				(String) queryResult[6],
+				(String) queryResult[7],
+				(String) queryResult[8],
+				(String) queryResult[9],
+				((Date) queryResult[10]),
+				(String) queryResult[11],
+				(String) queryResult[12],
+				(String) queryResult[13],
+				(String) queryResult[14],
+				(String) queryResult[15],
+				(String) queryResult[16],
+				(String) queryResult[17],
+				(String) queryResult[18],
+				(String) queryResult[19],
+				(String) queryResult[20],
+				(String) queryResult[21]
 		);
 	}
 }
