@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProcedureTemplateFullSummaryDto } from '@api-rest/api-model';
+import { ProcedureTemplateFullSummaryDto, SnomedDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -25,5 +25,12 @@ export class ProcedureTemplatesService {
 		return this.http.get<ProcedureTemplateFullSummaryDto[]>(url);
 	}
 
+	findAvailableForSnomedConcept(snomed: SnomedDto): Observable<ProcedureTemplateFullSummaryDto[]> {
+		const url = this.URL_PREFIX + `/snomed`;
+		let params = new HttpParams();
+		params = params.append("sctid", snomed.sctid);
+		params = params.append("pt", snomed.pt);
+		return this.http.get<ProcedureTemplateFullSummaryDto[]>(url, { params });
+	}
 }
 
