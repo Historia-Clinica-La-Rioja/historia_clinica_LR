@@ -4903,6 +4903,7 @@ export interface StudyTranscribedOrderReportInfoDto {
     healthCondition: string;
     imageId?: string;
     isAvailableInPACS: boolean;
+    localViewerUrl?: string;
     professionalName: string;
     snomed: string;
     status: boolean;

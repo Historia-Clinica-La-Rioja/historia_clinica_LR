@@ -52,6 +52,7 @@ public class TranscribedDiagnosticReportInfoMapper {
         result.setIsAvailableInPACS(studyTranscribedOrderReportInfoBo.getIsAvailableInPACS());
         result.setAppointmentDate(localDateMapper.toDateDto(studyTranscribedOrderReportInfoBo.getAppointmentDate()));
         result.setAppointmentHour(localDateMapper.toTimeDto(studyTranscribedOrderReportInfoBo.getAppointmentHour()));
+        result.setLocalViewerUrl(studyTranscribedOrderReportInfoBo.getLocalViewerUrl());
 
         log.trace("Output -> {}", result);
         return result;

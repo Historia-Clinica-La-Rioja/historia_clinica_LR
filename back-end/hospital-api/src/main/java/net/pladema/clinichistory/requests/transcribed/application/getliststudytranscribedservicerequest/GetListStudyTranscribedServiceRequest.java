@@ -4,6 +4,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.StudyTranscribedOrderReportInfoB
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.transcribed.application.port.TranscribedServiceRequestStorage;
+import net.pladema.imagenetwork.application.getlocalviewerurl.GetLocalViewerUrl;
 import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo;
@@ -24,6 +25,7 @@ public class GetListStudyTranscribedServiceRequest {
     private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
     private final TranscribedServiceRequestStorage transcribedServiceRequestStorage;
     private final AppointmentService appointmentService;
+    private final GetLocalViewerUrl getLocalViewerUrl;
 
     public List<StudyTranscribedOrderReportInfoBo> run(Integer patientId) {
         log.debug("Input -> patientId {}", patientId);
@@ -32,6 +34,7 @@ public class GetListStudyTranscribedServiceRequest {
                 .peek(this::setIfIsAvailable)
                 .collect(Collectors.toList());
         addAppointmentDateTime(result);
+        addLocalViewerUrl(result);
         log.debug("Output -> {}", result);
         return result;
     }
@@ -58,6 +61,22 @@ public class GetListStudyTranscribedServiceRequest {
                     && Objects.nonNull(mappedAppointment.get(reportInfoBo.getAppointmentId()))) {
                 reportInfoBo.setAppointmentDate(mappedAppointment.get(reportInfoBo.getAppointmentId()).getAppointmentDate());
                 reportInfoBo.setAppointmentHour(mappedAppointment.get(reportInfoBo.getAppointmentId()).getAppointmentTime());
+            }
+        });
+    }
+
+    private void addLocalViewerUrl(List<StudyTranscribedOrderReportInfoBo> result) {
+        var uniqueIds = result.stream()
+                .map(StudyTranscribedOrderReportInfoBo::getAppointmentId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Map<Integer,String> mappedUrls = getLocalViewerUrl.run(uniqueIds);
+
+        result.forEach(reportInfoBo -> {
+            if (Objects.nonNull(reportInfoBo.getAppointmentId())
+                    && Objects.nonNull(mappedUrls.get(reportInfoBo.getAppointmentId()))) {
+                reportInfoBo.setLocalViewerUrl(mappedUrls.get(reportInfoBo.getAppointmentId()));
             }
         });
     }
