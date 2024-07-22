@@ -31,23 +31,6 @@ build_frontend:
       - front-end/apps/node_modules
       - front-end/backoffice/node_modules
 
-dockerize_snomed-schema:
-  extends: .dockerize
-  variables:
-    IMAGE_TAG: ${CI_REGISTRY_IMAGE}/snomed-schema:$CI_COMMIT_REF_SLUG
-    DOCKER_FOLDER: "dba/snomed-schema/"
-
-
-publish_dockerhub_snomed-schema:
-  extends: .dockerize_entrega
-  variables:
-    IMAGE_TAG: historiaclinica/snomed-schema:$CI_COMMIT_TAG
-    DOCKER_FOLDER: "dba/snomed-schema/"
-  rules:
-    - if: '$CI_COMMIT_TAG'
-      when: manual
-
-
 code_freeze:
   stage: publish-docker-image
   image: bitnami/git:2.42.0
@@ -117,6 +100,29 @@ dockerize_cubejs_dockerhub:
 
 dockerize_cubejs_dockerhub_latest:
   extends: dockerize_cubejs_dockerhub
+  variables:
+    IMAGE_VERSION: latest
+
+dockerize_snomed-schema:
+  extends: .dockerize_folder
+  variables:
+    IMAGE_NAME: snomed-schema
+    DOCKER_FOLDER: "dba/snomed-schema/"
+
+dockerize_snomed-schema_dockerhub:
+  extends: .dockerize_dockerhub
+  variables:
+    IMAGE_NAME: snomed-schema
+    IMAGE_VERSION: ${CI_COMMIT_TAG}
+    DOCKER_FOLDER: "dba/snomed-schema/"
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      exists:
+        - dba/snomed-schema/Dockerfile
+      when: manual
+
+dockerize_snomed-schema_dockerhub_latest:
+  extends: dockerize_snomed-schema_dockerhub
   variables:
     IMAGE_VERSION: latest
 
