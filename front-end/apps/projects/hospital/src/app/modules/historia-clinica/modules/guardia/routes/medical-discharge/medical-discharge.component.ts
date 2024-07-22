@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto, DiagnosesGeneralStateDto, ERole, PersonPhotoDto, ResponseEmergencyCareDto, SnomedDto, TimeDto, AMedicalDischargeDto, ApiErrorMessageDto, MasterDataInterface } from '@api-rest/api-model';
+import { BasicPatientDto, DiagnosesGeneralStateDto, ERole, PersonPhotoDto, ResponseEmergencyCareDto, SnomedDto, TimeDto, AMedicalDischargeDto, ApiErrorMessageDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
-import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { ContextService } from '@core/services/context.service';
-import { hasError, beforeTimeValidationDate, futureTimeValidationDate, NoWhitespaceValidator} from '@core/utils/form.utils';
+import { hasError, beforeTimeValidationDate, futureTimeValidationDate} from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -38,8 +37,6 @@ export class MedicalDischargeComponent implements OnInit {
 	personPhoto: PersonPhotoDto;
 
 	form: UntypedFormGroup;
-	dischargeTypes$: Observable<MasterDataInterface<number>[]>;
-	dischargeTypesEnum = DischargeTypes;
 
 	selectedProblems: Map<number, DiagnosesGeneralStateDto> = new Map();
 	problems$: Observable<DiagnosesGeneralStateDto[]>;
@@ -64,7 +61,6 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private readonly emergencyCareStateService : EmergencyCareStateService,
-		private readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
 		private readonly snackBarService: SnackBarService,
 		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly permissionService: PermissionsService,
@@ -80,10 +76,6 @@ export class MedicalDischargeComponent implements OnInit {
 			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required],
 			otherDischargeDescription: [null],
 			observations: [null],
-		});
-
-		this.form.controls.dischargeTypeId.valueChanges.subscribe(discharge => {
-			this.updateDischargeTypeValidators(discharge);
 		});
 
 		this.route.paramMap.subscribe(params => {
@@ -105,8 +97,6 @@ export class MedicalDischargeComponent implements OnInit {
 
 			});
 		});
-
-        this.dischargeTypes$ = this.emergencyCareMasterDataService.getDischargeType();
 
 		this.loadProblems();
 
@@ -184,27 +174,6 @@ export class MedicalDischargeComponent implements OnInit {
 		this.selectedProblems.delete(problem.id) : this.selectedProblems.set(problem.id, problem);
     }
 
-	private updateDischargeTypeValidators(value: DischargeTypes): void {
-		const autopsyControl = this.form.get('autopsy');
-		const descriptionControl = this.form.get('otherDischargeDescription');
-
-		this.setControlValidators(autopsyControl, value === this.dischargeTypesEnum.DEFUNCION);
-		this.setControlValidators(descriptionControl, value === this.dischargeTypesEnum.OTRO);
-	}
-
-	private setControlValidators(control: AbstractControl, condition: boolean) {
-		if (condition) {
-			const validators = control === this.form.get('otherDischargeDescription')
-			  ? [Validators.required, NoWhitespaceValidator()]
-			  : [Validators.required];
-			control.setValidators(validators);
-		} else {
-			control.setValue(null);
-			control.clearValidators();
-		}
-		control.updateValueAndValidity();
-	}
-
 	dischargedDateChanged(date: Date) {
 		this.form.controls.dateTime.get('date').setValue(date);
 	}
@@ -235,9 +204,20 @@ export class MedicalDischargeComponent implements OnInit {
 					}
 				});
 		} else{
+			this.markFormGroupTouched(this.form);
 			this.formSubmited = false;
 			this.isLoading = false;
 		}
+	}
+
+	private markFormGroupTouched(formGroup: UntypedFormGroup) {
+		Object.keys(formGroup.controls).forEach(key => {
+			const control = formGroup.get(key);
+			control.markAsTouched();
+			if (control instanceof UntypedFormGroup) {
+				this.markFormGroupTouched(control);
+			}
+		});
 	}
 
 	goToEpisodeDetails(): void {

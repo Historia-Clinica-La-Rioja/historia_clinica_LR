@@ -28,6 +28,7 @@ import { EmergencyCareTemporaryPatientComponent } from './components/emergency-c
 import { EvolutionsSummaryComponent } from './components/evolutions-summary/evolutions-summary.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
 import { MedicalDischargeByNurseComponent } from './components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
+import { MedicalDischargeTypesComponent } from './components/medical-discharge-types/medical-discharge-types.component';
 import { PatientBasicInformationComponent } from './components/patient-basic-information/patient-basic-information.component';
 import { PediatricTriageComponent } from './components/pediatric-triage/pediatric-triage.component';
 import { TriageChipComponent } from './components/triage-chip/triage-chip.component';
@@ -70,6 +71,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareTemporaryPatientComponent,
         EvolutionsSummaryComponent,
 		MedicalDischargeByNurseComponent,
+		MedicalDischargeTypesComponent,
 		PatientBasicInformationComponent,
 		PediatricTriageComponent,
         TitledGridSummaryComponent,
