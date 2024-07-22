@@ -36,6 +36,7 @@ const OrchestratorEdit = (props) => {
                     {formDataProps => (<SectorField {...formDataProps} source="sectorId"  />)}
                 </FormDataConsumer>
                 <BooleanInput label="resources.orchestrator.fields.massiveRetry"source="massiveRetry" />
+                <BooleanInput label="resources.orchestrator.fields.findStudies"source="findStudies" />
                 <SectionTitle label="resources.orchestrator.parameter"/>
 
                 <NumberInput source="attempsNumber"  validate={[required()]} defaultValue="3"/>

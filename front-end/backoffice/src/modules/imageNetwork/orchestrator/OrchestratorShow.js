@@ -62,6 +62,9 @@ const OrchestratorShow = props => (
             <Labeled label="resources.orchestrator.fields.massiveRetry">
                 <BooleanField source="massiveRetry" />
             </Labeled>
+            <Labeled label="resources.orchestrator.fields.findStudies">
+                <BooleanField source="findStudies" />
+            </Labeled>
         </SimpleForm>
     </Show>
 );

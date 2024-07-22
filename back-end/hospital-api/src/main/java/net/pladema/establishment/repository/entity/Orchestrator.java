@@ -63,5 +63,8 @@ public class Orchestrator {
 	@Column(name = "massive_retry", nullable = false)
 	private Boolean massiveRetry;
 
+	@Column(name = "find_studies", nullable = false)
+	private Boolean findStudies;
+
 
 }

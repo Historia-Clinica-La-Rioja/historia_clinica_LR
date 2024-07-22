@@ -43,6 +43,8 @@ const OrchestratorCreate = props => {
                                <AutocompleteInput optionText="description" optionValue="id"/>
                            </ReferenceInput>
                            <BooleanInput label="resources.orchestrator.fields.massiveRetry" source="massiveRetry" defaultValue={false}/>
+                           <BooleanInput label="resources.orchestrator.fields.findStudies" source="findStudies" defaultValue={false}/>
+
                            <SectionTitle label="resources.orchestrator.parameter"/>
 
                            <NumberInput source="attempsNumber"  validate={[required()]} defaultValue="3"/>

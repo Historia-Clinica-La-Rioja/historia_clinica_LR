@@ -57,6 +57,7 @@ public class OrchestratorServiceImpl implements OrchestratorService {
 		orchestratorBO.setWeightSize((double)orchestrator.getWeightSize());
 		orchestratorBO.setWeightPriority((double)orchestrator.getWeightPriority());
 		orchestratorBO.setNumberToMove(orchestrator.getNumberToMove());
+		orchestratorBO.setFindStudies(orchestrator.getFindStudies());
 
 		log.debug("Output -> OrchestratorBo {}", orchestratorBO);
 

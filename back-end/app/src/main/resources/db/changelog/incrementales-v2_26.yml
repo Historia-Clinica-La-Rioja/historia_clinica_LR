@@ -542,3 +542,17 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: move_studies
               validate: true
+
+    - changeSet:
+        id: addColumn_find_studies
+        author: amurrie
+        changes:
+          - addColumn:
+              tableName: orchestrator
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                    name: find_studies
+                    type: boolean
+                    defaultValue: ${boolean.false}

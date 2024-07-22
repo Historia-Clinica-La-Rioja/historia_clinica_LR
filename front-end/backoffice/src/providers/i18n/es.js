@@ -803,7 +803,8 @@ const messages = {
                 weightDays:'Peso asignado a la cantidad dias',
                 weightSize:'Peso asignado al tamaño',
                 weightPriority:'Peso asignado a la prioridad',
-                massiveRetry: 'Reintentar movimiento masivo'
+                massiveRetry: 'Reintentar movimiento masivo',
+                findStudies:'Buscar posibles estudios'
 
             },
             parameter:'Parámetros de configuración ',

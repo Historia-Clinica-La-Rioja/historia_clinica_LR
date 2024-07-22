@@ -33,4 +33,6 @@ public class OrchestratorBO {
 	private Double weightPriority;
 
 	private Integer numberToMove;
+
+	private Boolean findStudies;
 }

@@ -193,14 +193,16 @@ public class MoveStudiesServiceImpl implements MoveStudiesService {
 			MoveStudies moveStudy = optionalMoveStudies.get();
 			moveStudy.getOrchestratorId();
 			OrchestratorBO orchestrator = orchestratorService.getOrchestrator(moveStudy.getOrchestratorId());
-			String topic = orchestrator.getBaseTopic() + "/OBTENERESTUDIO";
-			String patientIDJson = "   \"PatientID\": \"" + patientDni + "\", \n";
-			String appointmentIdJson = "   \"appointmentId\": \"" + appointmentId + "\", \n";
-			String idMoveJson = "    \"idMove\": \"" + idMove + "\"\n";
-			String json = "{\n" + patientIDJson + appointmentIdJson + idMoveJson + "}";
+			if (orchestrator.getFindStudies()) {
+				String topic = orchestrator.getBaseTopic() + "/OBTENERESTUDIO";
+				String patientIDJson = "   \"PatientID\": \"" + patientDni + "\", \n";
+				String appointmentIdJson = "   \"appointmentId\": \"" + appointmentId + "\", \n";
+				String idMoveJson = "    \"idMove\": \"" + idMove + "\"\n";
+				String json = "{\n" + patientIDJson + appointmentIdJson + idMoveJson + "}";
 
-			MqttMetadataBo data = new MqttMetadataBo(topic, json, false, 2);
-			mqttClientService.publish(data);
+				MqttMetadataBo data = new MqttMetadataBo(topic, json, false, 2);
+				mqttClientService.publish(data);
+			}
 		}
 	}
 
