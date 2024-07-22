@@ -31,6 +31,7 @@ public class StudyOrderReportInfoBo {
     private Integer appointmentId;
     private LocalDate appointmentDate;
     private LocalTime appointmentHour;
+    private String localViewerUrl;
 
 
 }

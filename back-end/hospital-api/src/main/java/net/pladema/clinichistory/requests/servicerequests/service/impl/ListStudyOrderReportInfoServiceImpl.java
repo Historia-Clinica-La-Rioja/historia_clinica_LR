@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.requests.servicerequests.repository.ListStudyOrderReportRepository;
 import net.pladema.clinichistory.requests.servicerequests.service.ListStudyOrderReportInfoService;
+import net.pladema.imagenetwork.application.getlocalviewerurl.GetLocalViewerUrl;
 import net.pladema.imagenetwork.application.getpacwherestudyishosted.GetPacWhereStudyIsHosted;
 import net.pladema.medicalconsultation.appointment.service.AppointmentService;
 import net.pladema.medicalconsultation.appointment.service.domain.AppointmentDateHourBo;
@@ -27,6 +28,7 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
     private final ListStudyOrderReportRepository listStudyOrderReportRepository;
     private final GetPacWhereStudyIsHosted getPacWhereStudyIsHosted;
     private final AppointmentService appointmentService;
+    private final GetLocalViewerUrl getLocalViewerUrl;
 
     @Override
     public List<StudyOrderReportInfoBo> getListStudyOrder(Integer patientId) {
@@ -38,6 +40,7 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
                                 .isAvailableInPACS()))
                 .collect(Collectors.toList());
         addAppointmentDateTime(result);
+        addLocalViewerUrl(result);
         log.debug("Output -> {}", result);
         return result;
     }
@@ -79,6 +82,22 @@ public class ListStudyOrderReportInfoServiceImpl implements ListStudyOrderReport
                     && Objects.nonNull(mappedAppointment.get(reportInfoBo.getAppointmentId()))) {
                 reportInfoBo.setAppointmentDate(mappedAppointment.get(reportInfoBo.getAppointmentId()).getAppointmentDate());
                 reportInfoBo.setAppointmentHour(mappedAppointment.get(reportInfoBo.getAppointmentId()).getAppointmentTime());
+            }
+        });
+    }
+
+    private void addLocalViewerUrl(List<StudyOrderReportInfoBo> result) {
+        var uniqueIds = result.stream()
+                .map(StudyOrderReportInfoBo::getAppointmentId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Map<Integer,String> mappedUrls = getLocalViewerUrl.run(uniqueIds);
+
+        result.forEach(reportInfoBo -> {
+            if (Objects.nonNull(reportInfoBo.getAppointmentId())
+                    && Objects.nonNull(mappedUrls.get(reportInfoBo.getAppointmentId()))) {
+                reportInfoBo.setLocalViewerUrl(mappedUrls.get(reportInfoBo.getAppointmentId()));
             }
         });
     }

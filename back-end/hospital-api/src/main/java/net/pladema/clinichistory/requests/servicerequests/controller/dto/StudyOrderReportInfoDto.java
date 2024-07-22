@@ -45,4 +45,6 @@ public class StudyOrderReportInfoDto {
     private DateDto appointmentDate;
     @Nullable
     private TimeDto appointmentHour;
+    @Nullable
+    private String localViewerUrl;
 }

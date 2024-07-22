@@ -43,6 +43,7 @@ public class StudyOrderReportInfoMapper {
         result.setObservationsFromServiceRequest(studyOrderReportInfoBo.getObservationsFromServiceRequest());
         result.setAppointmentDate(localDateMapper.toDateDto(studyOrderReportInfoBo.getAppointmentDate()));
         result.setAppointmentHour(localDateMapper.toTimeDto(studyOrderReportInfoBo.getAppointmentHour()));
+        result.setLocalViewerUrl(studyOrderReportInfoBo.getLocalViewerUrl());
         log.trace("Output: {}", result);
         return result;
     }
