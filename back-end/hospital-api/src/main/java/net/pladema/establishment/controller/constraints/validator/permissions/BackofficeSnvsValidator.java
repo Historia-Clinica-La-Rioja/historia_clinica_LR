@@ -101,10 +101,8 @@ public class BackofficeSnvsValidator implements BackofficePermissionValidator<Sn
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<SnvsReport> entitiesByExample = repository.findAll(Example.of(entity));
 		List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-		List<Integer> resultIds = entitiesByExample.stream().filter(css -> idsAllowed.contains(css.getId())).map(SnvsReport::getId).collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, idsAllowed);
 	}
 
 	@Override

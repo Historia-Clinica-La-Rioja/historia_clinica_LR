@@ -103,10 +103,7 @@ public class BackofficeInstitutionValidator implements BackofficePermissionValid
 		List<Integer> allowedInstitutions = authoritiesValidator.allowedInstitutionIds(Arrays.asList(ERole.ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE));
 		if (allowedInstitutions.isEmpty())
 			return new ItemsAllowed<>(false, Collections.emptyList());
-		List<Institution> entitiesByExample = repository.findAll(buildExample(entity));
-		List<Integer> resultIds = entitiesByExample.stream().filter(css -> allowedInstitutions.contains(css.getId()))
-				.map(Institution::getId).collect(Collectors.toList());
-		return new ItemsAllowed<>(false, resultIds);
+		return new ItemsAllowed<>(false, allowedInstitutions);
 	}
 
 	@Override

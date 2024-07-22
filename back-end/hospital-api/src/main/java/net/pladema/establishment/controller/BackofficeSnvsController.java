@@ -2,9 +2,11 @@ package net.pladema.establishment.controller;
 
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeSnvsValidator;
+import net.pladema.establishment.repository.entity.Sector;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 import net.pladema.sgx.backoffice.rest.BackofficeQueryAdapter;
+import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.snvs.application.ports.event.exceptions.SnvsStorageException;
 import net.pladema.snvs.application.ports.report.exceptions.ReportPortException;
 import net.pladema.snvs.application.reportproblems.RetryReport;
@@ -21,14 +23,22 @@ import net.pladema.snvs.infrastructure.output.repository.report.SnvsReportReposi
 import org.springframework.context.annotation.Conditional;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("backoffice/snvs")
@@ -62,6 +72,24 @@ public class BackofficeSnvsController extends AbstractBackofficeController<SnvsR
 							}
 						}), backofficeSnvsValidator);
 		this.retryReport = retryReport;
+	}
+
+	@Override
+	@GetMapping(params = "!ids")
+	public @ResponseBody Page<SnvsReport> getList(Pageable pageable, SnvsReport entity) {
+		logger.debug("GET_LIST {}", entity);
+		ItemsAllowed<Integer> itemsAllowed = permissionValidator.itemsAllowedToList(entity);
+		if (itemsAllowed.all) return store.findAll(entity, pageable);
+
+		List<SnvsReport> list = store.findAll(entity, PageRequest.of(0, Integer.MAX_VALUE, pageable.getSort()))
+				.getContent()
+				.stream()
+				.filter(snvs -> itemsAllowed.ids.contains(snvs.getId()))
+				.collect(Collectors.toList());
+
+		int minIndex = pageable.getPageNumber() * pageable.getPageSize();
+		int maxIndex = minIndex + pageable.getPageSize();
+		return new PageImpl<>(list.subList(minIndex, Math.min(maxIndex, list.size())), pageable, list.size());
 	}
 
 

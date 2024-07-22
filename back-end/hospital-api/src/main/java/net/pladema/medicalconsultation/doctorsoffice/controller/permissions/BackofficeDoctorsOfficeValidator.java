@@ -106,10 +106,8 @@ public class BackofficeDoctorsOfficeValidator implements BackofficePermissionVal
         if (allowedInstitutions.isEmpty())
             return new ItemsAllowed<>(false, Collections.emptyList());
 
-        List<DoctorsOffice> entitiesByExample = repository.findAll(Example.of(entity));
         List<Integer> idsAllowed = repository.getAllIdsByInstitutionsId(allowedInstitutions);
-        List<Integer> resultIds = entitiesByExample.stream().filter(css -> idsAllowed.contains(css.getId())).map(DoctorsOffice::getId).collect(Collectors.toList());
-        return new ItemsAllowed<>(false, resultIds);
+        return new ItemsAllowed<>(false, idsAllowed);
     }
 
     @Override
