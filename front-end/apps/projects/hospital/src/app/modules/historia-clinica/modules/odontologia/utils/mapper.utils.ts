@@ -1,9 +1,8 @@
-import { OdontologyAllergyConditionDto, OdontologyConceptDto, OdontologyDentalActionDto, OdontologyDiagnosticDto, OdontologyMedicationDto, OdontologyPersonalHistoryDto, OdontologyProcedureDto } from "@api-rest/api-model";
+import { OdontologyAllergyConditionDto, OdontologyConceptDto, OdontologyDentalActionDto, OdontologyDiagnosticDto, OdontologyMedicationDto, OdontologyPersonalHistoryDto } from "@api-rest/api-model";
 import { dateToDateDto } from "@api-rest/mapper/date-dto.mapper";
 import { Alergia } from "@historia-clinica/modules/ambulatoria/services/alergias-nueva-consulta.service";
 import { Medicacion } from "@historia-clinica/modules/ambulatoria/services/medicaciones-nueva-consulta.service";
 import { Problema } from "@historia-clinica/services/problemas.service";
-import { Procedimiento } from "@historia-clinica/services/procedimientos.service";
 import { ActionType, ToothAction } from "../services/actions.service";
 import { ActionedTooth } from "../services/odontogram.service";
 import { ESurfacePositionDtoValues } from "./surfaces";
@@ -44,14 +43,6 @@ export const toOdontologyDiagnosticDto = (problema: Problema): OdontologyDiagnos
 		endDate: problema.fechaFin ? dateToDateDto(problema.fechaFin) : undefined,
 		snomed: problema.snomed,
 		startDate: problema.fechaInicio ? dateToDateDto(problema.fechaInicio) : undefined
-	};
-
-}
-
-export const toOdontologyProcedureDto = (procedimiento: Procedimiento): OdontologyProcedureDto => {
-	return {
-		performedDate: procedimiento.performedDate ? dateToDateDto(procedimiento.performedDate) : undefined,
-		snomed: procedimiento.snomed
 	};
 
 }
