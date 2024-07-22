@@ -1,0 +1,29 @@
+<mat-divider inset></mat-divider>
+
+<h3 class="bold" style="margin-bottom: 0">
+	{{ 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.TITLE' | translate }}
+</h3>
+
+<div *ngIf="medicalDischargeData" fxLayout="column" fxLayoutGap="25px">
+	<div>
+		<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="registerEditorCasesDateHour">
+		</app-register-editor-info>
+		<div fxLayout="row" fxLayoutGap="8px">
+			<app-title-description fxFlex="50%"
+				[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PROBLEM' | translate"
+				[text]="problemDescriptionText | stringSeparator">
+			</app-title-description>
+			<app-title-description fxFlex="50%"
+				[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE' | translate"
+				[text]="dischargeTypeDescriptionText">
+			</app-title-description>
+			<app-title-description fxFlex="50%" [title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.ADMINISTRATIVE_DISCHARGE' | translate"
+				[text]="episodeState !== STATES.CON_ALTA_ADMINISTRATIVA ? 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PENDING' : 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.PERFORMED'">
+			</app-title-description>
+		</div>
+	</div>
+	<app-title-description *ngIf="medicalDischargeData.observation" class="wrap-reason"
+			[title]="'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.ADDITIONAL_OBSERVATIONS' | translate"
+			[text]="medicalDischargeData.observation">
+	</app-title-description>
+</div>

@@ -29,6 +29,7 @@ import { EditIdentificationNumberComponent } from './dialogs/edit-identification
 import { FilesUploaderComponent } from './component/files-uploader/files-uploader.component';
 import { HierarchicalUnitsComponent } from './component/hierarchical-units/hierarchical-units.component';
 import { LicenseFormComponent } from './component/license-form/license-form.component';
+import { MedicalDischargeSummaryComponent } from './component/medical-discharge-summary/medical-discharge-summary.component';
 import { ProfessionSpecialtiesFormComponent } from './component/profession-specialties-form/profession-specialties-form.component';
 import { ResumenDeGuardiaComponent } from './component/resumen-de-guardia/resumen-de-guardia.component';
 import { SearchCreateComponent } from './component/search-create/search-create.component';
@@ -83,6 +84,7 @@ import { IsoToDatePipe } from '@presentation/pipes/iso-to-date.pipe';
 		FilesUploaderComponent,
 		HierarchicalUnitsComponent,
 		LicenseFormComponent,
+		MedicalDischargeSummaryComponent,
 		ProfessionSpecialtiesFormComponent,
 		ResumenDeGuardiaComponent,
 		SearchCreateComponent,

@@ -1,10 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { AppFeature, VMedicalDischargeDto, ERole, ApiErrorMessageDto } from '@api-rest/api-model.d';
+import { AppFeature, ERole, ApiErrorMessageDto } from '@api-rest/api-model.d';
 import { ResponseEmergencyCareDto, TriageListDto } from '@api-rest/api-model.d';
-import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareEpisodeStateService } from '@api-rest/services/emergency-care-episode-state.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
@@ -26,9 +24,7 @@ import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
-import { TranslateService } from '@ngx-translate/core';
 import { ButtonType } from '@presentation/components/button/button.component';
-import { REGISTER_EDITOR_CASES, RegisterEditor } from '@presentation/components/register-editor-info/register-editor-info.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
@@ -54,12 +50,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	withoutMedicalDischarge: boolean;
 
 	hasMedicalDischarge = false;
-	medicalDischargeData: VMedicalDischargeDto;
-	problemDescriptionText: string[];
-	dischargeTypeDescriptionText: string;
-
-	registerEditor: RegisterEditor;
-	registerEditorCasesDateHour = REGISTER_EDITOR_CASES.DATE_HOUR;
 
 	responseEmergencyCare: ResponseEmergencyCareDto;
 	emergencyCareType: EmergencyCareTypes;
@@ -99,7 +89,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		private readonly emergencyCareEpisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
-		private readonly translate: TranslateService,
 		private readonly featureFlagService: FeatureFlagService
 	) {}
 
@@ -127,7 +116,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		this.emergencyCareEpisodeMedicalDischargeService.hasMedicalDischarge(this.episodeId).subscribe((hasMedicalDischarge) => {
 			if (hasMedicalDischarge) {
 				this.hasMedicalDischarge = true;
-				this.loadPatientDischarge();
 			}
 		});
 	}
@@ -350,42 +338,6 @@ export class ResumenDeGuardiaComponent implements OnInit {
 			return triages?.length > 0;
 		}
 	}
-
-	private loadPatientDischarge(){
-		this.emergencyCareEpisodeMedicalDischargeService.getMedicalDischarge(this.episodeId)
-			.subscribe((data) => {
-				this.medicalDischargeData = data;
-				this.problemDescriptionText = data.snomedPtProblems;
-				this.dischargeTypeDescriptionText = this.getDischargeTypeDescriptionText(data);
-				this.registerEditor = {
-					createdBy: `${data.medicalDischargeProfessionalName} ${data.medicalDischargeProfessionalLastName}`,
-					date: dateTimeDtoToDate(data.medicalDischargeOn),
-				};
-			}
-		);
-	}
-
-	private getDischargeTypeDescriptionText(data: any): string {
-		const { dischargeType, otherDischargeDescription, autopsy } = data;
-		const { description, id } = dischargeType;
-
-		if (id === DischargeTypes.OTRO) {
-			const otherDischargeTranslation = this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DISCHARGE_TYPE_OTHER');
-			return `${otherDischargeDescription} ${otherDischargeTranslation}`;
-		}
-
-		if (id === DischargeTypes.DEFUNCION) {
-			const deceasedTranslation = this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.DECEASED');
-			const autopsyTranslation = autopsy
-			? this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.AUTOPSY_REQUESTED')
-			: this.translate.instant('ambulatoria.paciente.guardia.PATIENT_DISCHARGE.AUTOPSY_NOT_REQUESTED');
-
-			return `${deceasedTranslation}${autopsyTranslation}`;
-		}
-
-		return description;
-	}
-
 }
 
 export interface TriageReduced {
