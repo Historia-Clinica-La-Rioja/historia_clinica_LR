@@ -7,6 +7,10 @@
                 [studyAvailable]="studyInfo.infoOrderInstances?.isAvailableInPACS"
                 [appointmentId]="appointmentId">
             </app-view-study>
+            <button *ngIf="this.studyInfo.infoOrderInstances.localViewerUrl" id="view_study_local" mat-stroked-button color="primary" class="buttons"
+            (click)="viewLocalStudy(this.studyInfo.infoOrderInstances.localViewerUrl)">
+                <span>{{'image-network.worklist.details_study.VIEW_STUDY_LOCAL' | translate | uppercase }}</span>
+            </button>
             <div class="report-status">
                 <span *ngIf="!reportStatus; else pendingReport" class="report-label">{{'image-network.worklist.PENDING_REPORT' |
                     translate}}</span>

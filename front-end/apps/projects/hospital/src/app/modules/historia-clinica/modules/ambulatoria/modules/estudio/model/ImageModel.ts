@@ -23,6 +23,7 @@ export interface InfoNewTypeOrderDto {
 	viewReport?: boolean;
 	associatedStudies?: string[];
 	dateAppoinment: AppointmentDate;
+	localViewerUrl?: string;
 }
 
 

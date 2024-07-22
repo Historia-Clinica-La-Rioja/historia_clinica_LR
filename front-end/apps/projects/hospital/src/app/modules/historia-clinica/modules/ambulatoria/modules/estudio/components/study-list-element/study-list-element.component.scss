@@ -30,6 +30,14 @@
 
 .dateTimeAppointment {
 	max-width: 18%;
-    margin-left: 11px;
+    margin-left: 3vh;
 	align-self: auto;
+}
+
+@media (max-width: 1468px) {
+	.dateTimeAppointment {
+		max-width: 18%;
+		margin-left: 8vh;
+		align-self: auto;
+	}
 }
