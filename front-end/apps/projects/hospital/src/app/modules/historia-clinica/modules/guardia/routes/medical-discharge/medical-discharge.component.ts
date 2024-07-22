@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BasicPatientDto, DiagnosesGeneralStateDto, ERole, PersonPhotoDto, ResponseEmergencyCareDto, SnomedDto, TimeDto, AMedicalDischargeDto, ApiErrorMessageDto } from '@api-rest/api-model';
+import { DiagnosesGeneralStateDto, ERole, ResponseEmergencyCareDto, SnomedDto, TimeDto, AMedicalDischargeDto, ApiErrorMessageDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
@@ -9,18 +9,17 @@ import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-e
 import { ContextService } from '@core/services/context.service';
 import { hasError, beforeTimeValidationDate, futureTimeValidationDate} from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { MIN_DATE } from "@core/utils/date.utils";
 import { isSameDay } from 'date-fns';
 import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
-import { PatientService } from '@api-rest/services/patient.service';
-import { PatientNameService } from '@core/services/patient-name.service';
 import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
 import { PermissionsService } from '@core/services/permissions.service';
 import { MedicalDischargeByNurse } from '../../components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
+import { PatientSummaryDataService } from '../../services/patient-summary-data.service';
 
 const HEALTCARE_PROFESSIONALS = [ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD];
 
@@ -34,7 +33,6 @@ export class MedicalDischargeComponent implements OnInit {
 	hasError = hasError;
 
 	patientSummary: PatientSummary;
-	personPhoto: PersonPhotoDto;
 
 	form: UntypedFormGroup;
 
@@ -54,9 +52,8 @@ export class MedicalDischargeComponent implements OnInit {
 	constructor(
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
-		private readonly patientService: PatientService,
-		private readonly patientNameService: PatientNameService,
 		private readonly formBuilder: UntypedFormBuilder,
+		private readonly patientSummaryDataService: PatientSummaryDataService,
 		private readonly contextService: ContextService,
 		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
@@ -116,38 +113,9 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	private loadPatient(patientId: number) {
-		const patientBasicData$: Observable<BasicPatientDto> = this.patientService.getPatientBasicData(patientId);
-		const patientPhoto$: Observable<PersonPhotoDto> = this.patientService.getPatientPhoto(patientId);
-		forkJoin([patientBasicData$, patientPhoto$]).subscribe(([patientBasicData, patientPhoto]) => {
-			this.setPatientSummary(patientBasicData, patientPhoto);
+		this.patientSummaryDataService.loadPatient(patientId).subscribe(patientSummary => {
+			this.patientSummary = patientSummary;
 		});
-	}
-
-	private setPatientSummary(basicData: BasicPatientDto, photo: PersonPhotoDto) {
-		this.patientSummary = basicData.person ? this.toPatientSummary(basicData, photo) : null;
-	}
-
-	private toPatientSummary(basicData: BasicPatientDto, photo: PersonPhotoDto): PatientSummary {
-		const { firstName, nameSelfDetermination, lastName, middleNames, otherLastNames } = basicData.person;
-		return {
-			fullName: this.patientNameService.completeName(
-				firstName,
-				nameSelfDetermination,
-				lastName,
-				middleNames,
-				otherLastNames),
-				...(basicData.identificationType
-					&& {
-						identification: {
-							type: basicData.identificationType,
-							number: basicData.identificationNumber
-						}
-					}),
-			id: basicData.id,
-			gender: basicData.person.gender?.description || null,
-			age: basicData.person.age || null,
-			photo: photo.imageData
-		}
 	}
 
 	private loadProblems() {
