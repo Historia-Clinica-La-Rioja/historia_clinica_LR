@@ -267,7 +267,7 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 						(String) e[22],
 						(String) e[23],
 						e[24] != null ? ((Timestamp)e[24]).toLocalDateTime() : null,
-						e[25] != null ? ((BigInteger)e[25]).intValue() : null,
+						((BigInteger)e[25]).intValue(),
 						(String) e[26],
 						(String) e[27],
 						e[28] != null ? ((Timestamp)e[28]).toLocalDateTime() : null,
@@ -288,7 +288,7 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 						(String) e[43],
 						(String) e[44],
 						(String) e[45],
-						e[46] != null ? ((BigInteger)e[46]).intValue() : null,
+						((BigInteger)e[46]).intValue(),
 						(String) e[47],
 						(Integer) e[48],
 						(Integer) e[49])

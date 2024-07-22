@@ -176,7 +176,7 @@ public class NominalECEpisodeDetailBo {
 		this.episodeAuthorSelfPerceivedNames = episodeAuthorSelfPerceivedNames;
 		this.episodeType = episodeType;
 		this.triageDate = triageDate;
-		this.triageQuantity = triageQuantity;
+		this.triageQuantity = triageQuantity == 0 ? null : triageQuantity;
 		this.triageType = triageType;
 		this.episodeState = episodeState;
 		this.lastAttentionCreatedOn = lastAttentionCreatedOn;
@@ -197,7 +197,7 @@ public class NominalECEpisodeDetailBo {
 		this.medicalDischargeAuthorNames = medicalDischargeAuthorNames;
 		this.medicalDischargeAuthorSurnames = medicalDischargeAuthorSurnames;
 		this.medicalDischargeAuthorSelfPerceivedNames = medicalDischargeAuthorSelfPerceivedNames;
-		this.attentionsQuantity = attentionsQuantity;
+		this.attentionsQuantity = attentionsQuantity == 0 ? null : attentionsQuantity;
 		this.dischargeType = dischargeType;
 		this.personId = personId;
 		this.lastAttentionProfessionalId = lastAttentionProfessionalId;
