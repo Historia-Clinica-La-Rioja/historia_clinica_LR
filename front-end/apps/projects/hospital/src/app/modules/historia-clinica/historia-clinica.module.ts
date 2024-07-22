@@ -117,6 +117,7 @@ import { ProblemConceptSearchDialogComponent } from './dialogs/problem-concept-s
 import { RemoveDiagnosisComponent } from './dialogs/remove-diagnosis/remove-diagnosis.component';
 import { VitalSignsChartPopupComponent } from './components/vital-signs-chart-popup/vital-signs-chart-popup.component';
 //pipes
+import { ProblemStatusPipe } from './pipes/problem-status.pipe';
 import { ShowTitleByPatientDataPipe } from './pipes/show-title-by-patient-data.pipe';
 //Porque estan aca?
 import { AnestheticReportAnthropometricDataComponent } from './modules/ambulatoria/modules/internacion/components/anesthetic-report-anthropometric-data/anesthetic-report-anthropometric-data.component';
@@ -326,6 +327,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
   		AnesthesiaFormComponent,
 		VitalSignsChartPopupComponent,
 		//pipes
+		ProblemStatusPipe,
 		ShowTitleByPatientDataPipe,
 	],
 	imports: [
@@ -388,6 +390,8 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 		ProblemListComponent,
 		ViolentPersonListComponent,
 		SummaryAttentionComponent,
+		//pipes
+		ProblemStatusPipe,
 	],
 	providers: [
 		InternmentSummaryFacadeService,

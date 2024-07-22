@@ -27,8 +27,7 @@
 					<div fxLayout="column" fxLayoutGap="8px">
 						<div *ngFor="let problem of problems$ | async">
 							<mat-checkbox color="primary" [checked]="selectedProblems.has(problem.id)" [disabled]="checkIfShouldDisable(problem)" (change)="toggleSelection(problem)">
-								{{ problem.snomed.pt }} |
-								{{ problem.presumptive ? ("guardia.episode.medical_discharge.problems.PRESUMPTIVE" | translate) : ("guardia.episode.medical_discharge.problems.CONFIRMED" | translate) }}
+								{{ problem.snomed.pt }} | {{ problem | problemStatus | translate }}
 								{{ problem.main ? ("guardia.episode.medical_discharge.problems.MAIN" | translate) : "" }}
 							</mat-checkbox>
 						</div>
@@ -36,7 +35,7 @@
 				</div>
 
 				<div fxLayout="column" fxLayoutGap="16px">
-				
+
 					<strong><mat-label translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label></strong>
 
 					<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="48px">
@@ -88,7 +87,7 @@
 							</div>
 						</div>
 					</div>
-				
+
 				</div>
 			</ng-container>
 
