@@ -4916,6 +4916,7 @@ export interface StudyWithoutOrderReportInfoDto {
     hceDocumentDataDto?: HCEDocumentDataDto;
     imageId?: string;
     isAvailableInPACS: boolean;
+    localViewerUrl?: string;
     snomed: string;
     status: boolean;
     viewReport: boolean;

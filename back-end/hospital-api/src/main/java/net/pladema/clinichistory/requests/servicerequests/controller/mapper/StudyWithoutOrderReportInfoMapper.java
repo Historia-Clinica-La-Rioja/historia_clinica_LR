@@ -38,6 +38,7 @@ public class StudyWithoutOrderReportInfoMapper {
         result.setSnomed(SNOMED);
         result.setAppointmentDate(localDateMapper.toDateDto(studyWithoutOrderReportInfoBo.getAppointmentDate()));
         result.setAppointmentHour(localDateMapper.toTimeDto(studyWithoutOrderReportInfoBo.getAppointmentHour()));
+        result.setLocalViewerUrl(studyWithoutOrderReportInfoBo.getLocalViewerUrl());
         log.trace("Output: {}", result);
         return result;
     }
