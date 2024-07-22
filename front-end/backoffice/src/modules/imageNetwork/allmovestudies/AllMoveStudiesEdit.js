@@ -20,7 +20,7 @@ const MoveStudiesEdit = props => {
                 <TextInput source="identificationNumber" disabled/>
                 <TextInput source="firstName" disabled/>
                 <TextInput source="lastName" disabled/>
-                <DateInput  disabled source="appoinmentDate" showTime options={{ year: 'numeric', month: '2-digit', day: '2-digit'}}/>
+                <DateInput  disabled source="appoinmentDate"/>
                 <TextInput source="appoinmentTime" type="time" disabled/>
                 <TextInput source="imageId"/>
                 <TextInput source="result" disabled/>
