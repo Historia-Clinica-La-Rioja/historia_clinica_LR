@@ -5,7 +5,12 @@ import {
     ReferenceInput,
     SimpleForm,
     TextInput,
-    DateInput
+    DateInput,
+    ReferenceManyField,
+    Datagrid,
+    TextField,
+    DateField
+
 } from 'react-admin';
 import CustomToolbar from '../../components/CustomToolbar';
 
@@ -31,6 +36,22 @@ const MoveStudiesEdit = props => {
                     { id: 'FAILED', name: 'resources.allmovestudies.failed' }
                 ]} />
 
+                <ReferenceManyField
+                        reference="resultstudies"
+                        target="idMove"
+                        source="id"
+                        label="Posibles estudios"
+                        {...props}
+                >
+                        <Datagrid>
+                            <TextField source="patientId" sortable={false}/>
+                            <TextField source="patientName" sortable={false}/>
+                            <DateField source="studyDate" />
+                            <TextField source="studyTime" sortable={false} />
+                            <TextField source="studyInstanceUid" />
+                            <TextField source="modality"/>
+                        </Datagrid>
+                </ReferenceManyField>
 
             </SimpleForm>
 
