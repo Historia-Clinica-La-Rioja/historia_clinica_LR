@@ -288,7 +288,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             result = setIsAppointmentProtected(result.stream().collect(Collectors.toList()), diaryIds)
                     .stream().findFirst();
         }
-        log.debug(OUTPUT, result);
+        log.debug("Output -> appointmentId {}, exist {}", appointmentId, result.isPresent());
         return result;
     }
 
