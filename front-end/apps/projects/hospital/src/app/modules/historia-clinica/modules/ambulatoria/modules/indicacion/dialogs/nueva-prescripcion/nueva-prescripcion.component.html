@@ -6,7 +6,7 @@
 </div>
 <div *ngIf="isHabilitarRecetaDigitalEnabled else habilitarRecetaDigitalDisabled">
     <div mat-dialog-content #dialog>
-        <mat-stepper [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
+        <mat-stepper linear [selectedIndex]="initialIndex" #stepper labelPosition="bottom">
             <form [formGroup]="prescriptionForm" class="form" id="form">
                 <mat-step [stepControl]="prescriptionForm" label="{{'ambulatoria.paciente.ordenes_prescripciones.new_prescription_dialog.PATIENT_LABEL' | translate}}"
                     [editable]="editableStepModality">
