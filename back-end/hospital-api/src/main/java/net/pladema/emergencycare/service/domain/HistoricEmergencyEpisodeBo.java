@@ -36,4 +36,9 @@ public class HistoricEmergencyEpisodeBo {
         this.doctorsOfficeId = doctorsOfficeId;
     }
 
+	public HistoricEmergencyEpisodeBo(Integer emergencyCareEpisodeId, Short emergencyCareStateId) {
+		this.emergencyCareEpisodeId = emergencyCareEpisodeId;
+		this.emergencyCareStateId = emergencyCareStateId;
+	}
+
 }

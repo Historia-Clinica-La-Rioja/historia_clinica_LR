@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HistoricEmergencyEpisodeRepository extends SGXAuditableEntityJPARepository<HistoricEmergencyEpisode, HistoricEmergencyEpisodePK> {
@@ -30,4 +31,7 @@ public interface HistoricEmergencyEpisodeRepository extends SGXAuditableEntityJP
 																				   Pageable pageable);
 
 	List<HistoricEmergencyEpisode> findAllByPk_EmergencyCareEpisodeId(Integer emergencyEpisodeId);
+
+	@Query(value = "SELECT * FROM historic_emergency_episode WHERE emergency_care_episode_id = :episodeId ORDER BY change_state_date DESC LIMIT 1", nativeQuery = true)
+	Optional<HistoricEmergencyEpisode> findLatestByEmergencyCareEpisodeId(@Param("episodeId") Integer episodeId);
 }

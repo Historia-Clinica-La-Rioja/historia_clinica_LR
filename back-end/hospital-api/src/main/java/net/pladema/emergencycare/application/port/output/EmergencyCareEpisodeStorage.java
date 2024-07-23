@@ -1,10 +1,14 @@
 package net.pladema.emergencycare.application.port.output;
 
-import net.pladema.emergencycare.repository.entity.EmergencyCareEpisode;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
+
+import java.util.Optional;
 
 public interface EmergencyCareEpisodeStorage {
 
-	EmergencyCareEpisode getByIdOrFail(Integer episodeId);
+	Optional<Short> getEpisodeState(Integer episodeId);
 
-	EmergencyCareEpisode save(EmergencyCareEpisode episode);
+	Boolean updateEpisodeState(Integer episodeId, EEmergencyCareState state);
+
+	Boolean episodeHasEvolutionNote(Integer episodeId);
 }

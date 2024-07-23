@@ -7,8 +7,9 @@ import lombok.AllArgsConstructor;
 import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeListStorage;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
 import net.pladema.emergencycare.repository.domain.EmergencyCareVo;
-import net.pladema.emergencycare.repository.entity.EmergencyCareState;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
+
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +31,10 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 
 	private final Short undefinedEmergencyCareType = -1;
 
+	private final String STATE_IDS_STRING = EEmergencyCareState.getAllForEmergencyCareList()
+			.stream().map(String::valueOf)
+			.collect(Collectors.joining(", "));
+
 	@Override
 	public Page<EmergencyCareBo> getAllEpisodeListByFilter(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
 		String sqlDataSelectStatement =
@@ -47,9 +52,7 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						"LEFT JOIN Bed b ON (ece.bedId = b.id) ";
 
 		String sqlWhereStatement =
-				"WHERE (ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
-						" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
-						" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
+				"WHERE (ece.emergencyCareStateId IN (" + STATE_IDS_STRING + "))" +
 						"AND ece.institutionId = " + institutionId +
 						(filter.getTriageCategoryId() != null ? " AND ece.triageCategoryId = " + filter.getTriageCategoryId() : " ") +
 						(filter.getPatientId() != null ? " AND pa.id = " + filter.getPatientId() : " ") +

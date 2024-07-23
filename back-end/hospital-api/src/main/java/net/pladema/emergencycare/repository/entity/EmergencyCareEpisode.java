@@ -18,7 +18,6 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "emergency_care_episode")
@@ -81,9 +80,6 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 	@Column(name = "patient_description", columnDefinition = "TEXT")
 	private String patientDescription;
 
-	@Column(name = "state_updated_on")
-	private LocalDateTime stateUpdatedOn;
-
 	public EmergencyCareEpisode(EmergencyCareBo emergencyCareBo,
 								TriageBo triageBo) {
 		this.id = emergencyCareBo.getId();
@@ -99,7 +95,6 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
 		this.hasPoliceIntervention = emergencyCareBo.getHasPoliceIntervention();
 		this.reason = emergencyCareBo.getReason();
 		this.patientDescription = emergencyCareBo.getPatient().getPatientDescription();
-		this.stateUpdatedOn = LocalDateTime.now();
 	}
 
 	@PrePersist
@@ -118,5 +113,6 @@ public class EmergencyCareEpisode extends SGXAuditableEntity<Integer> {
                 ", institutionId=" + institutionId +
                 '}';
 	}
+
 }
 

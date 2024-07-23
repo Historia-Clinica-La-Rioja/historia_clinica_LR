@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeListStorage;
+import net.pladema.emergencycare.application.port.output.HistoricEmergencyEpisodeStorage;
 import net.pladema.emergencycare.domain.EmergencyCareEpisodeFilterBo;
 import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
@@ -33,6 +34,7 @@ public class GetAllEpisodeListByFilter {
 
 	private InstitutionExternalService institutionExternalService;
 	private FetchLastTriageByEmergencyCareEpisodeId fetchLastTriageByEmergencyCareEpisodeId;
+	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 
 	public Page<EmergencyCareBo> run(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
 		log.debug("Input parameters -> institutionId {}, filter {}, pageable {}", institutionId, filter, pageable);
@@ -40,6 +42,8 @@ public class GetAllEpisodeListByFilter {
 		result.forEach(ec -> {
 			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
 			ec.setTriage(fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId()));
+			ec.setCanBeAbsent(getCanBeAbsent(ec.getId(), ec.getEmergencyCareStateId()));
+			ec.setStateUpdatedOn(historicEmergencyEpisodeStorage.getLatestByEmergencyCareEpisodeId(ec.getId()));
 			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
 				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
 				ec.setRelatedProfessional(professional);
@@ -54,4 +58,9 @@ public class GetAllEpisodeListByFilter {
 		return date.atZone(ZoneId.of(JacksonDateFormatConfig.UTC_ZONE_ID)).withZoneSameInstant(institutionZoneId).toLocalDateTime();
 	}
 
+	private Boolean getCanBeAbsent(Integer episodeId, Short emergencyCareStateId){
+		EEmergencyCareState fromState = EEmergencyCareState.getById(emergencyCareStateId);
+		return EEmergencyCareState.validTransition(fromState ,EEmergencyCareState.AUSENTE) &&
+				!emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId);
+	}
 }

@@ -44,7 +44,7 @@ public class EmergencyCareExceptionHandler {
 	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 	@ExceptionHandler({EmergencyCareEpisodeException.class})
 	protected ApiErrorMessageDto handleEmergencyCareEpisodeException(EmergencyCareEpisodeException ex) {
-		log.error("EmergencyCareEpisodeException exception -> {}", ex.getMessage(), ex);
+		log.debug("EmergencyCareEpisodeException exception -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
 

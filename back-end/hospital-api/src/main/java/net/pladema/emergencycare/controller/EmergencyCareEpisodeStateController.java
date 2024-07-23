@@ -60,7 +60,7 @@ public class EmergencyCareEpisodeStateController {
 	}
 
 	@PutMapping("/absent")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, PRESCRIPTOR, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
 	public ResponseEntity<Boolean> setAbsentState(
 			@PathVariable(name = "episodeId") Integer episodeId,
 			@PathVariable(name = "institutionId") Integer institutionId){

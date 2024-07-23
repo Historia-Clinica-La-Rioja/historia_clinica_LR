@@ -68,6 +68,15 @@ public class EmergencyCareVo implements Serializable {
 
 	private String reason;
 
+	private LocalDateTime stateUpdatedOn;
+
+	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
+						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
+						   String shockroomDescription, Bed bed, LocalDateTime stateUpdatedOn){
+		this(emergencyCareEpisode, person, patientTypeId, nameSelfDetermination, doctorsOfficeDescription, triage, shockroomDescription, bed);
+		this.stateUpdatedOn = stateUpdatedOn;
+	}
+
 	public EmergencyCareVo(EmergencyCareEpisode emergencyCareEpisode, Person person, Short patientTypeId,
 						   String nameSelfDetermination, String doctorsOfficeDescription, TriageCategory triage,
 						   String shockroomDescription, Bed bed){

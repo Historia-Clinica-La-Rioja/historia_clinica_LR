@@ -66,4 +66,10 @@ public enum EEmergencyCareState {
 	public static boolean validTransition(EEmergencyCareState from, EEmergencyCareState to){
 		return validTransitionMatrix[from.getId()][to.getId()];
 	}
+
+	public static List<Short> getAllForEmergencyCareList(){
+		return Stream.of(EEmergencyCareState.ATENCION, EEmergencyCareState.ESPERA, EEmergencyCareState.ALTA_MEDICA, EEmergencyCareState.AUSENTE)
+				.map(EEmergencyCareState::getId)
+				.collect(Collectors.toList());
+	}
 }

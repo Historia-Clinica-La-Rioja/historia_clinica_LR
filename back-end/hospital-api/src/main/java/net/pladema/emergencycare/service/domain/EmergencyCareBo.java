@@ -69,6 +69,8 @@ public class EmergencyCareBo {
 	private RoomBo room;
 
 	private String institutionName;
+	private Boolean canBeAbsent;
+	private LocalDateTime stateUpdatedOn;
 
     public EmergencyCareBo(EmergencyCareVo emergencyCareVo){
         this.id = emergencyCareVo.getId();
@@ -91,6 +93,7 @@ public class EmergencyCareBo {
 		this.endDate = emergencyCareVo.getEndDate();
 		this.institutionName = emergencyCareVo.getInstitutionName();
 		this.reason = emergencyCareVo.getReason();
+		this.stateUpdatedOn = emergencyCareVo.getStateUpdatedOn();
     }
 
     public EmergencyCareBo(EmergencyCareEpisode emergencyCareEpisode) {

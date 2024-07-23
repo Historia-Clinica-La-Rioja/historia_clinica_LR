@@ -45,4 +45,7 @@ public class EmergencyCareListDto implements Serializable {
 
 	private String reason;
 
+	private Boolean canBeAbsent;
+
+	private DateTimeDto stateUpdatedOn;
 }
