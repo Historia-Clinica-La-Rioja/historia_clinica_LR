@@ -1,7 +1,7 @@
 {
 	"configuracion": {
 		"appearance": {
-			"TITLE": "Customización de logos"
+			"TITLE": "Apariencia"
 		},
 		"logos": {
 			"TITLE": "Íconos de la aplicación",
@@ -34,6 +34,10 @@
 		"document-images": {
 			"TITLE": "Logos de documentos",
 			"DESCRIPTION": "Imágenes a usar en los PDFs"
+		},
+		"notification-templates": {
+			"TITLE": "Plantilla de mails",
+			"DESCRIPTION": "Texto a usar en los correos electrónicos"
 		},
 		"snomed-cache": {
 			"TITLE": "Caché SNOMED",
