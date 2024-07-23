@@ -123,7 +123,7 @@ public class CipresConsultationStorageImpl implements CipresConsultationStorage 
 		var establishment = cipresEncounterStorage.getEstablishmentBySisaCode(sisaCode, encounterId, cipresEncounterId);
 		if (establishment.isPresent()) {
 			String id = establishment.get().getId();
-			cipresEstablishmentRepository.save(new CipresEstablishment(new CipresEstablishmentPk(sisaCode, Integer.parseInt(id))));
+			cipresEstablishmentRepository.save(new CipresEstablishment(new CipresEstablishmentPk(sisaCode, id)));
 			return Optional.of(id);
 		}
 		return Optional.empty();

@@ -786,3 +786,23 @@ databaseChangeLog:
           - sql:
               sql: |-
                 UPDATE hierarchical_unit SET closest_service_id = id WHERE type_id = 8;
+
+    - changeSet:
+            id: modifyDataType-cipres_establishment-cipres_establishment_id
+            comment: Modify data type column cipres_establishment_id in cipres_establishment table
+            author: bchacon
+            changes:
+              - modifyDataType:
+                  columnName: cipres_establishment_id
+                  newDataType: varchar(8)
+                  tableName: cipres_establishment
+
+        - changeSet:
+            id: update-cipres_establishment_id-data
+            comment: Add leading zeros to fields with less than 8 characters in cipres_establishment_id column
+            context: "!schema-only"
+            author: bchacon
+            changes:
+                - sql:
+                      sql: |-
+                          UPDATE cipres_establishment SET cipres_establishment_id = LPAD(cipres_establishment_id, 8, '0') WHERE LENGTH(cipres_establishment_id) < 8
