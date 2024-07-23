@@ -806,3 +806,57 @@ databaseChangeLog:
             - sql:
                   sql: |-
                       UPDATE cipres_establishment SET cipres_establishment_id = LPAD(cipres_establishment_id, 8, '0') WHERE LENGTH(cipres_establishment_id) < 8
+
+    - changeSet:
+        id: createTable-via
+        author: mromero
+        changes:
+          - createTable:
+              tableName: via
+              columns:
+                - column:
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_via
+                    name: id
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: description
+                    type: varchar(30)
+
+    - changeSet:
+        id: via-metadata
+        author: mromero
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-
+                INSERT INTO via VALUES 
+                  (1, 'Periférica'), 
+                  (2, 'Subcutánea'),
+                  (3, 'Central'),
+                  (4, 'Oral'),
+                  (5, 'Inhalatoria'),
+                  (6, 'Endovenosa'),
+                  (7, 'Otra'),
+                  (8, 'Epidural'),
+                  (9, 'Rectal'),
+                  (10, 'Tópica'),
+                  (11, 'Subaracnoidea (Raquídea)');
+
+    - changeSet:
+        id: addForeignKeyConstraint-via_id-anesthetic_substance
+        author: mromero
+        changes:
+          - addForeignKeyConstraint:
+              baseColumnNames: via_id
+              baseTableName: anesthetic_substance
+              constraintName: FK_via_id_anesthetic_substance
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: via
+              validate: true
+
