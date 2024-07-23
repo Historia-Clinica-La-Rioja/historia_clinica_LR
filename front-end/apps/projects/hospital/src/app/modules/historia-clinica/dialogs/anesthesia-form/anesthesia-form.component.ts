@@ -23,9 +23,8 @@ export class AnesthesiaFormComponent {
 		}
 	}
 
-	close(): void {
+	resetForm(): void {
 		this.data.anesthesiaService.resetForm();
-		this.dialogRef.close()
 	}
 
 }
