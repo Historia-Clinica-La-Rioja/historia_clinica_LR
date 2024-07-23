@@ -23,6 +23,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	initialDateRange: DateRange;
 	showResults = false;
 	showValidations = {
+		noDate: false,
 		periodRange: false,
 		criteriaSearch: false,
 		department: false
@@ -47,6 +48,11 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 	verifyDateRangeNotExceedMaxiumDaysAndSetDate(dateRange: DateRange) {
 		this.resetResults();
 		this.showValidations.periodRange = false;
+		this.showValidations.noDate = false;
+		if (dateRange === null){
+			this.showValidations.noDate = true;
+			return
+		}
 		if (differenceInDays(dateRange.end, dateRange.start) > this.MAX_DAYS) {
 			this.showValidations.periodRange = true;
 			return;
@@ -144,7 +150,7 @@ export class SearchAppointmentsForThirdPartyComponent implements OnInit {
 		if (!this.form.valid)
 			this.showValidations.department = true;
 
-		return !hasCriteriaSearch || this.showValidations.periodRange || !this.form.valid;
+		return !hasCriteriaSearch || this.showValidations.periodRange || this.showValidations.noDate || !this.form.valid;
 	}
 
 	private setAvailableAppointments() {

@@ -60,6 +60,7 @@
             <strong>{{'call-center.search_appointments.DATE_RANGE' | translate}}</strong>
             <app-date-range-picker [dateRange]="initialDateRange" [min]="today"
                 (dateRangeChange)="verifyDateRangeNotExceedMaxiumDaysAndSetDate($event)"></app-date-range-picker>
+			<mat-error *ngIf="showValidations.noDate">{{ 'forms.REQUIRED' | translate }}</mat-error>
             <mat-error *ngIf="showValidations.periodRange" [translateParams]="{max: MAX_DAYS}"
                 [translate]="'call-center.search_appointments.PERIOD_VALIDATIONS'">
             </mat-error>
