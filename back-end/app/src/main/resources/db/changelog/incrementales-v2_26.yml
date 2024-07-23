@@ -870,3 +870,19 @@ databaseChangeLog:
               relativeToChangelogFile: true
               splitStatements: false
 
+    - changeSet:
+        id: v-healthcare-professional-health-insurance
+        author: fdemuguruza
+        dbms: postgresql
+        changes:
+          - createView:
+              viewName: v_healthcare_professional_health_insurance
+              fullDefinition: false
+              replaceIfExists: true
+              schemaName: public
+              selectQuery: |-
+                SELECT hphi.id, hphi.healthcare_professional_id, hphi.medical_coverage_id, p.first_name, p.last_name
+                FROM healthcare_professional_health_insurance hphi JOIN healthcare_professional hp 
+                ON (hphi.healthcare_professional_id = hp.id)
+                JOIN person p on (hp.person_id = p.id);
+

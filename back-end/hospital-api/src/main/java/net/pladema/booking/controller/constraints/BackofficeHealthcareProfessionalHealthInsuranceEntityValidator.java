@@ -1,14 +1,14 @@
 package net.pladema.booking.controller.constraints;
 
+import net.pladema.booking.repository.entity.VProfessionalMedicalCoverage;
 import net.pladema.sgx.backoffice.rest.BackofficeEntityValidatorAdapter;
 import net.pladema.sgx.exceptions.BackofficeValidationException;
-import net.pladema.booking.controller.dto.HealthcareProfessionalHealthInsuranceDto;
 import net.pladema.booking.repository.HealthcareProfessionalHealthInsuranceRepository;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BackofficeHealthcareProfessionalHealthInsuranceEntityValidator
-        extends BackofficeEntityValidatorAdapter<HealthcareProfessionalHealthInsuranceDto, Integer> {
+        extends BackofficeEntityValidatorAdapter<VProfessionalMedicalCoverage, Integer> {
 
     private final HealthcareProfessionalHealthInsuranceRepository repository;
 
@@ -17,7 +17,7 @@ public class BackofficeHealthcareProfessionalHealthInsuranceEntityValidator
     }
 
     @Override
-    public void assertCreate(HealthcareProfessionalHealthInsuranceDto entity) {
+    public void assertCreate(VProfessionalMedicalCoverage entity) {
         if(repository.findByProfessionalIdAndMedicalCoverageId(entity.getHealthcareProfessionalId(),
                 entity.getMedicalCoverageId()) > 0){
             throw new BackofficeValidationException("healthcareprofessional.healthinsurance");
