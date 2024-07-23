@@ -20,7 +20,6 @@ import {
 	InstitutionReportType,
 	ReportInstitutionQueueService,
 } from '@api-rest/services/report-institution-queue.service';
-import { DialogWidth } from '@presentation/components/dialog-presentation/dialog-presentation.component';
 import { ReportStatus, initStatus, refreshStatus } from './report-queue.utils';
 
 @Component({
@@ -29,7 +28,6 @@ import { ReportStatus, initStatus, refreshStatus } from './report-queue.utils';
 	styleUrls: ['./monthly-queue.component.scss']
 })
 export class InstitutionReportQueueComponent implements OnInit, OnDestroy {
-	DIALOG_WIDTH = DialogWidth.SMALL;
 	dialogTitle = '';
 	showStatus: ReportStatus = {stage: 'EMPTY'};
 

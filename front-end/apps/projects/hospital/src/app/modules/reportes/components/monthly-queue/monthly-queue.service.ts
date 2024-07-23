@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Observable, tap } from 'rxjs';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { InstitutionReportQueueComponent } from './monthly-queue.component';
 import { ReportFilters } from '../../routes/home/home.component';
 import { InstitutionReportQueryDto } from '@api-rest/api-model';
 import { InstitutionReportType, ReportInstitutionQueueService } from '@api-rest/services/report-institution-queue.service';
+import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,8 +15,8 @@ export class MonthlyQueueService {
 	private openDialog: MatDialogRef<any, void>;
 
 	constructor(
-		public dialog: MatDialog,
 		private reportInstitutionQueueService: ReportInstitutionQueueService,
+		private readonly dialog: DialogService<InstitutionReportQueueComponent>,
 	) {
 
 	}
@@ -34,13 +35,14 @@ export class MonthlyQueueService {
 			pageSize: 3,
 		};
 
-		this.openDialog = this.dialog.open(InstitutionReportQueueComponent, {
-			data: {
+		this.openDialog = this.dialog.open(InstitutionReportQueueComponent,
+			{
+				dialogWidth: DialogWidth.SMALL
+			},{
 				reportToQuery,
 				reportType,
 				fileName,
-			},
-		});
+			});
 
 		return this.openDialog.afterClosed().pipe(
 			tap((toDownload) => {

@@ -1,5 +1,5 @@
-<app-dialog-presentation [dialogWidth]="DIALOG_WIDTH">
-    <div header class="dialog-header">
+<app-dialog-presentation>
+    <div header mat-dialog-title class="dialog-header">
         <div class="icon-title">
             <h1 class="title" mat-dialog-title>{{ dialogTitle }}</h1>
         </div>
@@ -8,7 +8,7 @@
         </button>
     </div>
 
-    <div content class="dialog-content">
+    <div content mat-dialog-content class="dialog-content">
 		<div *ngIf="showStatus.stage === 'RELOAD' || showStatus.stage === 'EMPTY'">
 			<div class="spinner" >
 				<mat-spinner color="primary"></mat-spinner>
@@ -28,7 +28,7 @@
 		</div>
     </div>
 
-    <div actions class="actions-section"  align="end">
+    <div actions mat-dialog-actions class="actions-section"  align="end">
 		<button (click)="queueReport()" *ngIf="showStatus.stage === 'ASK'" mat-stroked-button class="uppercase">
 			Generar nuevo reporte
 		</button>

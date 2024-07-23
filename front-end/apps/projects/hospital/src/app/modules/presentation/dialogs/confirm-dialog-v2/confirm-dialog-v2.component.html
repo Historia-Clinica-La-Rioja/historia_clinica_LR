@@ -1,5 +1,5 @@
-<app-dialog-presentation [dialogWidth]="data.dialogWidth">
-    <div header [ngClass]=" data.buttonClose? 'dialog-header' : '' ">
+<app-dialog-presentation>
+    <div header mat-dialog-title [ngClass]=" data.buttonClose? 'dialog-header' : '' ">
         <div class="icon-title">
             <mat-icon *ngIf="data.hasIcon" class="material-icons-outlined" [color]="themePalette">error_outlined</mat-icon>
             <h1 class="title" mat-dialog-title>{{ data.title | translate}}</h1>
@@ -9,12 +9,12 @@
         </button>
     </div>
     
-    <div content class="dialog-content">
+    <div content mat-dialog-content class="dialog-content">
         <p>{{ data.content | translate}}</p>
         <strong *ngIf="data.contentBold">{{ data.contentBold | translate}}</strong>
     </div>
     
-    <div actions class="actions-section">
+    <div actions mat-dialog-actions class="dialog-actions">
         <button mat-stroked-button [color]="themePalette" class="uppercase" [mat-dialog-close]=false>
             {{(data.cancelButtonLabel? data.cancelButtonLabel : 'buttons.CANCEL') | translate}}
         </button>

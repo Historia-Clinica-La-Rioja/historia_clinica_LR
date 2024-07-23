@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogWidth } from '@presentation/components/dialog-presentation/dialog-presentation.component';
 
 @Component({
     selector: 'app-confirm-dialog-v2',
@@ -10,10 +9,9 @@ import { DialogWidth } from '@presentation/components/dialog-presentation/dialog
 })
 export class ConfirmDialogV2Component implements OnInit {
 
-    DIALOG_WIDTH = DialogWidth;
     themePalette: ThemePalette;
 
-    constructor( @Inject(MAT_DIALOG_DATA) public data: DialogConfiguration ) { }
+    constructor( @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData ) { }
 
     ngOnInit(): void {
         this.themePalette = this.data.color? this.data.color : 'primary';
@@ -21,8 +19,8 @@ export class ConfirmDialogV2Component implements OnInit {
 
 }
 
-export interface DialogConfiguration {
-    dialogWidth: DialogWidth,
+
+export interface ConfirmDialogData {
     title?: string,
     hasIcon: boolean,
     content: string,

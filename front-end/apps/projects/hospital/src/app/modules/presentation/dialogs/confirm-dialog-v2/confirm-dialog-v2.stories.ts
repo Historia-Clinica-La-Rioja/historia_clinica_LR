@@ -1,8 +1,9 @@
 import { Meta, StoryObj } from "@storybook/angular";
 import { OpenStorybookDialogComponent } from "@presentation/components/open-storybook-dialog/open-storybook-dialog.component";
-import { DialogWidth } from "@presentation/components/dialog-presentation/dialog-presentation.component";
+import { ConfirmDialogV2Component } from "./confirm-dialog-v2.component";
+import { DialogWidth } from "@presentation/services/dialog.service";
 
-const meta: Meta<OpenStorybookDialogComponent> = {
+const meta: Meta<OpenStorybookDialogComponent<ConfirmDialogV2Component>> = {
     title: 'Presentation/ConfirmDialogV2Component',
     component: OpenStorybookDialogComponent,
     tags: ['autodocs'],
@@ -10,7 +11,7 @@ const meta: Meta<OpenStorybookDialogComponent> = {
 
 export default meta;
 
-type Story = StoryObj<OpenStorybookDialogComponent>;
+type Story = StoryObj<OpenStorybookDialogComponent<ConfirmDialogV2Component>>;
 
 export const completeLargeConfirmDialog: Story = {
     args: {
