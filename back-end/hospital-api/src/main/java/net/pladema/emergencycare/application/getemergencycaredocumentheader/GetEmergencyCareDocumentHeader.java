@@ -5,12 +5,14 @@ import ar.lamansys.sgh.clinichistory.domain.document.IDocumentHeaderBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.DocumentHeaderPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.service.domain.BedBo;
 import net.pladema.clinichistory.hospitalization.service.domain.RoomBo;
 import net.pladema.clinichistory.hospitalization.service.domain.SectorBo;
 import net.pladema.emergencycare.application.getemergencycaredocumentheader.exceptions.GetEmergencyCareDocumentHeaderException;
+import net.pladema.emergencycare.application.port.output.GetUserCompleteNameByUserIdPort;
 import net.pladema.emergencycare.domain.EmergencyCareDocumentHeaderBo;
 import net.pladema.emergencycare.domain.exceptions.GetEmergencyCareDocumentHeaderEnumException;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
@@ -40,6 +42,7 @@ public class GetEmergencyCareDocumentHeader {
     private final BedService bedService;
     private final EmergencyCareEpisodeService emergencyCareEpisodeService;
     private final HistoricEmergencyEpisodeService historicEmergencyEpisodeService;
+    private final GetUserCompleteNameByUserIdPort getUserCompleteNameByUserIdPort;
 
     public EmergencyCareDocumentHeaderBo run(Integer institutionId,Integer emergencyCareEpisodeId,Long documentId) {
         log.debug("Input parameters -> institutionId {}, emergencyCareEpisodeId {}, documentId {}", institutionId, emergencyCareEpisodeId, documentId);
@@ -49,9 +52,8 @@ public class GetEmergencyCareDocumentHeader {
         var base = documentHeaderPort.getDocumentHeader(documentId);
         this.validateInputParameters(institutionId,emergencyCareEpisodeId,base);
         result.setBaseDocumentHeader(base);
-        this.setClinicalSpecialtyName(result);
         this.setInstitutionName(result);
-        this.setProfessionalName(result);
+        this.setProfessionalInformation(result);
         this.setBedInformation(result);
 
         log.debug("Output -> {}", result);
@@ -97,9 +99,21 @@ public class GetEmergencyCareDocumentHeader {
         documentHeaderBo.setInstitutionName(institutionName);
     }
 
-    private void setProfessionalName(EmergencyCareDocumentHeaderBo result) {
-        sharedStaffPort.getProfessionalCompleteNameByUserId(result.getCreatedBy())
-                .ifPresent(result::setProfessionalName);
+    private void setProfessionalInformation(EmergencyCareDocumentHeaderBo result) {
+        String userCompleteName;
+        try {
+            userCompleteName = sharedStaffPort.getProfessionalCompleteNameByUserId(result.getCreatedBy())
+                    .orElseThrow(() -> new NotFoundException(null, null));
+            this.setClinicalSpecialtyName(result);
+
+        } catch (NotFoundException e) {
+            userCompleteName = this.getAdministrativeName(result.getCreatedBy());
+        }
+        result.setProfessionalName(userCompleteName);
+    }
+
+    private String getAdministrativeName(Integer userId) {
+        return getUserCompleteNameByUserIdPort.run(userId);
     }
 
     private List<ClinicalSpecialtyBo> getClinicalSpecialtyFromInternmentInformation(Integer createdBy) {
