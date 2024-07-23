@@ -194,7 +194,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 					fullName: this.patientNameService.completeName(this.data.appointmentData.patient.names.firstName,this.data.appointmentData.patient.names.nameSelfDetermination,this.data.appointmentData.patient.names.lastName,this.data.appointmentData.patient.names.middleNames,this.data.appointmentData.patient.names.otherLastNames),
 					id: this.data.appointmentData.patient.id,
 					identification: {
-						number: Number(this.data.appointmentData.patient.identificationNumber),
+						number: this.data.appointmentData.patient.identificationNumber,
 						type: identificationType.description
 					}
 				}
@@ -655,7 +655,7 @@ export class ImageNetworkAppointmentComponent implements OnInit {
 		return appointments.map(appointment => {
 			const from = getAppointmentStart(appointment.hour);
 			const to = getAppointmentEnd(appointment.hour, this.data.agenda.appointmentDuration);
-			
+
 			return toCalendarEvent(from, to, dateISOParseDate(appointment.date), appointment);
 		});
 	}

@@ -150,7 +150,7 @@ export class MedicalDischargeComponent implements OnInit {
 					&& {
 						identification: {
 							type: basicData.identificationType,
-							number: +basicData.identificationNumber
+							number: basicData.identificationNumber
 						}
 					}),
 			id: basicData.id,

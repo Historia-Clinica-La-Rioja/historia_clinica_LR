@@ -19,7 +19,7 @@ export const complete: Story = {
 			gender: 'Masculino',
 			id: 10,
 			identification: {
-				number: 123456,
+				number: '123456',
 				type: 'DNI'
 			},
 

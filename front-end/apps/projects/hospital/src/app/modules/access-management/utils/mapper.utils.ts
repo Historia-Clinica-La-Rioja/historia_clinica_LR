@@ -13,7 +13,7 @@ export const toPatientSummary = (patient: ReferencePatientDto): PatientSummary =
         fullName: patient.patientFullName,
         identification: {
             type: patient.identificationType,
-            number: +patient.identificationNumber
+            number: patient.identificationNumber
         },
         id: patient.patientId,
     }
@@ -41,12 +41,12 @@ export const toReferenceReport = (report: ReferenceReportDto): ReferenceReport =
         dto: report,
         priority: getPriority(report.priority.id),
         state: report.attentionState ? getState(report.attentionState) : null,
-        patient: toMinPatientSummary(report.patientFullName, report.identificationType, +report.identificationNumber)
+        patient: toMinPatientSummary(report.patientFullName, report.identificationType, report.identificationNumber)
     }
 }
 
 
-export const toMinPatientSummary = (fullName: string, identificationType: string, identificationNumber: number): PatientSummary => {
+export const toMinPatientSummary = (fullName: string, identificationType: string, identificationNumber: string): PatientSummary => {
     return (identificationNumber) ?
         {
             fullName,

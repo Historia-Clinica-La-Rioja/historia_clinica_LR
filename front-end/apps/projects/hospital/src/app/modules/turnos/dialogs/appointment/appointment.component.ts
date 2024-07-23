@@ -361,7 +361,7 @@ export class AppointmentComponent implements OnInit {
 					fullName: this.patientNameService.completeName(this.data.appointmentData.patient.names.firstName, this.data.appointmentData.patient.names.nameSelfDetermination, this.data.appointmentData.patient.names.lastName, this.data.appointmentData.patient.names.middleNames, this.data.appointmentData.patient.names.otherLastNames),
 					id: this.data.appointmentData.patient.id,
 					identification: {
-						number: Number(this.data.appointmentData.patient.identificationNumber),
+						number: this.data.appointmentData.patient.identificationNumber,
 						type: identificationType.description
 					}
 				}

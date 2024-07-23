@@ -28,7 +28,7 @@ export class PatientSummaryComponent {
 
 }
 
-const concatIdentifications = (id: number, identification: { type: string, number: number }): string => {
+const concatIdentifications = (id: number, identification: { type: string, number: string }): string => {
 	if (!id && !identification)
 		return null;
 	let idText;
@@ -56,7 +56,7 @@ export interface PatientSummary {
 	fullName: string;
 	identification?: {
 		type: string;
-		number: number;
+		number: string;
 	}
 	id?: number;
 	gender?: string;

@@ -13,7 +13,7 @@ import { Observable, forkJoin } from 'rxjs';
 export class PatientBasicInformationComponent implements OnInit {
 
 	patientSummary: PatientSummary;
-	
+
     @Input() patientId: number;
     @Input() patientDescription: string;
 
@@ -43,7 +43,7 @@ export function toPatientSummary(basicData: BasicPatientDto, photo: PersonPhotoD
 		...(basicData.identificationType && {
 			identification: {
 				type: basicData.identificationType,
-				number: +basicData.identificationNumber
+				number: basicData.identificationNumber
 			}
 		}),
 		id: basicData.id,

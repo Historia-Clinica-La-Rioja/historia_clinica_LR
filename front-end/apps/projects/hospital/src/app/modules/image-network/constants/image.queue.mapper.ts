@@ -42,7 +42,7 @@ const toPatientSummary = (patient: ImageQueuePatientDataDto, patientNameService:
         fullName: patientNameService.completeName(patient.firstName, patient.nameSelfDetermination, patient.lastName,patient.middleNames, patient.otherLastNames),
         identification: {
             type: patient.identificationType,
-            number: +patient.identificationNumber,
+            number: patient.identificationNumber,
         },
         id: patient.personId,
         gender: patient.gender.description,
