@@ -461,13 +461,21 @@ public class DiaryServiceImpl implements DiaryService {
 	 *
 	 * @param institutionId
 	 * @param clinicalSpecialtyId
+	 * @param withPractices If true, only return aliases of diaries that have practices attached
 	 * @return
 	 */
 	@Override
-	public Set<ActiveDiaryAliasBo> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId) {
+	public Set<ActiveDiaryAliasBo> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId, Boolean withPractices) {
 		log.debug("Input parameters -> institutionId {} clinicalSpecialtyId {}", institutionId, clinicalSpecialtyId);
-		var result = diaryRepository
-			.getActiveDiariesByInstitutionAndSpecialty(institutionId, clinicalSpecialtyId)
+		Boolean mustHavePractices = withPractices != null && withPractices;
+
+		List<DiaryListVo> diaries;
+		if (mustHavePractices)
+			diaries = diaryRepository.getActiveDiariesWithPracticesByInstitutionAndSpecialty(institutionId, clinicalSpecialtyId);
+		else
+			diaries = diaryRepository.getActiveDiariesWithoutPracticesByInstitutionAndSpecialty(institutionId, clinicalSpecialtyId);
+
+		var result = diaries
 			.stream()
 			.filter(diary -> Objects.nonNull(diary.getAlias()) && !diary.getAlias().isBlank())
 			.map(diary -> new ActiveDiaryAliasBo(diary.getId(), diary.getAlias()))

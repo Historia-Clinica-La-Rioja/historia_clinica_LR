@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
-import { DiaryADto, CompleteDiaryDto, DiaryDto, BlockDto, AppointmentSearchDto, EmptyAppointmentDto, DateDto, DiaryOpeningHoursFreeTimesDto, FreeAppointmentSearchFilterDto } from '@api-rest/api-model';
+import { DiaryADto, CompleteDiaryDto, DiaryDto, BlockDto, AppointmentSearchDto, EmptyAppointmentDto, DateDto, DiaryOpeningHoursFreeTimesDto, FreeAppointmentSearchFilterDto, MasterDataDto } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 
@@ -49,6 +49,16 @@ export class DiaryService {
 	getActiveDiariesAliases(): Observable<string[]> {
 		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/active-diaries-alias`;
 		return this.http.get<string[]>(url);
+	}
+	
+	getClinicalSpecialtys(): Observable<MasterDataDto[]> {
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/active-diaries-clinical-specialties`;
+		return this.http.get<MasterDataDto[]>(url);
+	}
+
+	getClinicalSpecialtyAliasesWithActiveDiaries(clinicalSpecialtyId:number, withPractices: boolean): Observable<MasterDataDto[]>{
+		const url = `${environment.apiBase}/institutions/${this.contextService.institutionId}/medicalConsultations/diary/clinical-specialty/${clinicalSpecialtyId}/active-diaries-aliases?withPractices=${withPractices} `;
+		return this.http.get<MasterDataDto[]>(url);
 	}
 
 	generateEmptyAppointments(searchCriteria: AppointmentSearchDto): Observable<EmptyAppointmentDto[]> {

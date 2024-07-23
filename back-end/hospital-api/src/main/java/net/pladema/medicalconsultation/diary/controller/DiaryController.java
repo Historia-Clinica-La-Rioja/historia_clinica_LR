@@ -244,9 +244,10 @@ public class DiaryController {
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_AGENDA, ADMINISTRATIVO')")
 	public List<MasterDataDto> getClinicalSpecialtyAliasesWithActiveDiaries(
 			@PathVariable(name = "institutionId") Integer institutionId,
-			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId
+			@PathVariable(name = "clinicalSpecialtyId") Integer clinicalSpecialtyId,
+			@RequestParam(name = "withPractices") Boolean withPractices
 	) {
-		var activeDiariesAliases = diaryService.getActiveDiariesAliasesByClinicalSpecialty(institutionId, clinicalSpecialtyId);
+		var activeDiariesAliases = diaryService.getActiveDiariesAliasesByClinicalSpecialty(institutionId, clinicalSpecialtyId, withPractices);
 		log.debug("Get all active diaries aliases by Institution {} and clinical specialty id {}", institutionId, clinicalSpecialtyId);
 		return activeDiariesAliases
 			.stream()

@@ -42,7 +42,7 @@ public interface DiaryService {
 
 	List<ActiveDiaryClinicalSpecialtyBo> getActiveDiariesClinicalSpecialties(Integer institutionId);
 
-	Set<ActiveDiaryAliasBo> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId);
+	Set<ActiveDiaryAliasBo> getActiveDiariesAliasesByClinicalSpecialty(Integer institutionId, Integer clinicalSpecialtyId, Boolean withPractices);
 
 	List<EmptyAppointmentBo> getEmptyAppointmentsBySearchCriteria(Integer institutionId, AppointmentSearchBo searchCriteria, Boolean mustFilterByModality);
 

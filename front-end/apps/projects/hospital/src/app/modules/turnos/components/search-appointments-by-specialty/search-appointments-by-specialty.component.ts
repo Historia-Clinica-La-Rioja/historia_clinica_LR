@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
-import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, SharedSnomedDto, TimeDto, UnsatisfiedAppointmentDemandDto } from '@api-rest/api-model';
+import { AppFeature, AppointmentSearchDto, ClinicalSpecialtyDto, EAppointmentModality, EmptyAppointmentDto, MasterDataDto, SharedSnomedDto, TimeDto, UnsatisfiedAppointmentDemandDto } from '@api-rest/api-model';
 import { DiaryService } from '@api-rest/services/diary.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
@@ -147,6 +147,26 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 		} else {
 			this.emptyAppointments = null;
 			this.emptyAppointmentsFiltered = null;
+			this.form.controls.alias.setValue(null);
+			this.externalSetValueAlias = { compareValue: null, value: null };
+		}
+		
+	}
+
+	getAliasesByClinicalSpecialty(){
+		let withPractices = false;
+		if(this.selectedSearchCriteria === SearchCriteria.PRACTICES){
+			withPractices = true;
+		}
+		this.diaryService.getClinicalSpecialtyAliasesWithActiveDiaries(this.form.value.clinicalSpecialty,withPractices).subscribe(aliases =>{
+			this.aliasTypeaheadOptions = aliases.map(alias => this.toTypeaheadOption(alias));
+		})
+	}
+
+	setAliasByClinicalSpecialty(alias: MasterDataDto){
+		this.form.controls.alias.setValue(null);
+		if (alias) {
+			this.form.controls.alias.setValue(alias);
 		}
 	}
 

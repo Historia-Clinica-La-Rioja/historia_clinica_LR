@@ -206,10 +206,26 @@ public interface DiaryRepository extends SGXAuditableEntityJPARepository<Diary, 
 			"WHERE d.active = TRUE " +
 			"AND d.clinicalSpecialtyId = :clinicalSpecialtyId " +
 			"AND dof.institutionId = :institutionId " +
-			"AND d.endDate >= CURRENT_DATE")
-	List<DiaryListVo> getActiveDiariesByInstitutionAndSpecialty(@Param("institutionId") Integer institutionId,
-																@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
+			"AND d.endDate >= CURRENT_DATE " +
+			"AND (NOT EXISTS(SELECT 1 FROM DiaryPractice dp WHERE (d.id = dp.diaryId)))"
+	)
+	List<DiaryListVo> getActiveDiariesWithoutPracticesByInstitutionAndSpecialty(@Param("institutionId") Integer institutionId,
+																				@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 
+	@Transactional(readOnly = true)
+	@Query(" SELECT NEW net.pladema.medicalconsultation.diary.repository.domain.DiaryListVo(" +
+			"d, dof.description, cs.name)" +
+			"FROM Diary d " +
+			"INNER JOIN ClinicalSpecialty cs ON (d.clinicalSpecialtyId = cs.id) " +
+			"INNER JOIN DoctorsOffice dof ON (dof.id = d.doctorsOfficeId) " +
+			"WHERE d.active = TRUE " +
+			"AND d.clinicalSpecialtyId = :clinicalSpecialtyId " +
+			"AND dof.institutionId = :institutionId " +
+			"AND d.endDate >= CURRENT_DATE " +
+			"AND (EXISTS(SELECT 1 FROM DiaryPractice dp WHERE (d.id = dp.diaryId)))"
+	)
+	List<DiaryListVo> getActiveDiariesWithPracticesByInstitutionAndSpecialty(@Param("institutionId") Integer institutionId,
+																@Param("clinicalSpecialtyId") Integer clinicalSpecialtyId);
 	@Transactional(readOnly = true)
 	@Query(" SELECT d " +
 			"FROM Diary d " +
