@@ -131,7 +131,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	}
 
 	private setClinicalSpecialtiesTypeaheadOptions() {
-		this.diaryService.getClinicalSpecialtys().subscribe(clinicalSpecialties => 
+		this.diaryService.getClinicalSpecialtys().subscribe(clinicalSpecialties =>
 			this.clinicalSpecialtyTypeaheadOptions = clinicalSpecialties.map(specialty => this.toTypeaheadOption(specialty))
 		)
 	}
@@ -160,22 +160,23 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 			this.emptyAppointments = null;
 			this.emptyAppointmentsFiltered = null;
 			this.form.controls.alias.setValue(null);
+			this.aliasTypeaheadOptions = [];
 			this.externalSetValueAlias = { compareValue: null, value: null };
 		}
-		
+
 	}
 
-	getAliasesByClinicalSpecialty(){
+	getAliasesByClinicalSpecialty() {
 		let withPractices = false;
-		if(this.selectedSearchCriteria === SearchCriteria.PRACTICES){
+		if (this.selectedSearchCriteria === SearchCriteria.PRACTICES) {
 			withPractices = true;
 		}
-		this.diaryService.getClinicalSpecialtyAliasesWithActiveDiaries(this.form.value.clinicalSpecialty,withPractices).subscribe(aliases =>{
+		this.diaryService.getClinicalSpecialtyAliasesWithActiveDiaries(this.form.value.clinicalSpecialty, withPractices).subscribe(aliases => {
 			this.aliasTypeaheadOptions = aliases.map(alias => this.toTypeaheadOption(alias));
 		})
 	}
 
-	setAliasByClinicalSpecialty(alias: MasterDataDto){
+	setAliasByClinicalSpecialty(alias: MasterDataDto) {
 		this.form.controls.alias.setValue(null);
 		if (alias) {
 			this.form.controls.alias.setValue(alias);
@@ -248,7 +249,7 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 	clearResults() {
 		this.externalInformation = null;
 		this.externalSetValueSpecialty = { compareValue: null, value: null };
-		this. externalSetValueAlias = { compareValue: null, value: null };
+		this.externalSetValueAlias = { compareValue: null, value: null };
 		this.resetControls();
 		this.clearLists();
 		this.selectedSearchCriteria = SearchCriteria.CONSULTATION;
@@ -258,6 +259,9 @@ export class SearchAppointmentsBySpecialtyComponent implements OnInit {
 
 	resetDataAndSetCriteria(selectedCriteria: SearchCriteria) {
 		this.selectedSearchCriteria = selectedCriteria;
+		this.aliasTypeaheadOptions = [];
+		this.externalSetValueAlias = { compareValue: null, value: null };
+		this.externalSetValueSpecialty = { compareValue: null, value: null };
 		this.resetEmptyAppointments();
 		this.setValidators();
 	}
