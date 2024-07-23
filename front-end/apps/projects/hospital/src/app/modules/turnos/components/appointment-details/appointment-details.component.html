@@ -5,7 +5,7 @@
 	</div>
 	<div fxFlex.lg="8%" fxFlex.gt-xs="37%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon"> query_builder </mat-icon>
-		<span class="mat-body text">{{ appointmentTime | date: 'shortTime' }} hs</span>
+		<span class="mat-body text">{{ appointmentTime | dateFormat: 'time' }}</span>
 	</div>
 	<div fxFlex.lg="18%" fxFlex.gt-xs="57%" fxFlex.xs="100%" fxLayout="row" fxLayoutGap="5px">
 		<mat-icon class="icon"> person_outline </mat-icon>

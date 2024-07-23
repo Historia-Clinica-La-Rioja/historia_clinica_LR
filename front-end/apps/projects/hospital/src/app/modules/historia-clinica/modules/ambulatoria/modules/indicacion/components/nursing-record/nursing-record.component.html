@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <app-colored-label 
+            <app-colored-label
                 [description]="record.content.status.description | translate |	uppercase"
                 [color]="record.content.status.cssClass">
             </app-colored-label>
@@ -33,11 +33,11 @@
                         {{ 'indicacion.nursing-care.buttons.TO_REGISTER' | translate | uppercase }}
                     </button>
                 </div>
-            </ng-container>    
-          
+            </ng-container>
+
             <div *ngIf="record.content.status.type == COMPLETED" class="color-grey extra-info" fxLayout="row" fxLayoutGap="20px" fxFlex="35%">
                 <span>{{ record.content.administeredBy }}</span>
-                <span *ngIf="record.content.administeredTime">{{ datePipe.transform(record.content.administeredTime, datePipeFormat.SHORT_TIME) }}hs</span>
+                <span *ngIf="record.content.administeredTime">{{record.content.administeredTime | dateFormat: 'time' }}</span>
             </div>
 
             <div *ngIf="record.content.status.type == REJECTED" class="color-grey extra-info description" fxLayout="column" fxLayoutGap="10px" fxFlex="35%">

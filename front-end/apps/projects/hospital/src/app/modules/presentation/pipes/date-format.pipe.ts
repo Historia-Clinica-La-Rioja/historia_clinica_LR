@@ -25,7 +25,7 @@ export class DateFormatPipe implements PipeTransform {
 			case 'datetime':
 				return this.currentLang === 'es-AR' ? dateTimeToViewDateHourMinute(paramDate) : this.datePipe.transform(paramDate, DatePipeFormat.SHORT);
 			case 'time':
-				return this.currentLang === 'es-AR' ? timeToHourMinute(paramDate) : this.datePipe.transform(paramDate, DatePipeFormat.SHORT_TIME);
+				return this.currentLang === 'es-AR' ? timeToHourMinute(paramDate) : this.datePipe.transform(paramDate, 'shortTime');
 			default:
 				return undefined;
 		}

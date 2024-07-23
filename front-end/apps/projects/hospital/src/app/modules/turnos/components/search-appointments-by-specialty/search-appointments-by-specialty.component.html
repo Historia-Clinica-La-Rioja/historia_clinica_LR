@@ -75,19 +75,18 @@
 					<mat-select id="initialTime" formControlName="initialTime">
 						<mat-option [value]="initialTimeFilter" *ngFor="let initialTimeFilter of initialTimes"
 							(click)="filterEndingTime()">
-							{{ initialTimeFilter | viewDateDto:'time' | date:'shortTime' }}
+							{{ initialTimeFilter | viewDateDto:'time' | dateFormat : 'time' }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-				<span>hs. a</span>
+				<span>a</span>
 				<mat-form-field appearance="outline" class="time_selector">
 					<mat-select id="endingTime" formControlName="endingTime">
 						<mat-option [value]="endingTimeFilter" *ngFor="let endingTimeFilter of endingTimes">
-							{{ endingTimeFilter | viewDateDto:'time' | date:'shortTime' }}
+							{{ endingTimeFilter | viewDateDto:'time' | dateFormat : 'time' }}
 						</mat-option>
 					</mat-select>
 				</mat-form-field>
-				<span>hs.</span>
 			</div>
 		</div>
 		<div fxLayout="column" fxLayoutGap="8px">

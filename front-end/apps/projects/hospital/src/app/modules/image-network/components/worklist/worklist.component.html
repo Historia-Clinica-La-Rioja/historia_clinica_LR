@@ -15,7 +15,6 @@
         </app-colored-label>
     </div>
     <div class="smaller-font grey" fxLayout="column" fxFlex.gt-sm="10">
-        <span data-id="date">{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_DATE)}}</span>
-        <span data-id="time">{{ datePipe.transform(worklist.date, datePipeFormat.SHORT_TIME)}}hs</span>
+        <span data-id="time">{{ worklist.date | dateFormat: 'datetime'}}</span>
     </div>
 </div>

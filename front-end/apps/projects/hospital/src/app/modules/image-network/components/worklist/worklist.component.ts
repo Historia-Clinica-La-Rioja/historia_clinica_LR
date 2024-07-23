@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { DatePipeFormat } from '@core/utils/date.utils';
 
 @Component({
 	selector: 'app-worklist',
@@ -8,8 +7,6 @@ import { DatePipeFormat } from '@core/utils/date.utils';
 	styleUrls: ['./worklist.component.scss']
 })
 export class WorklistComponent {
-
-	datePipeFormat = DatePipeFormat;
 
 	@Input() worklist: Worklist;
 

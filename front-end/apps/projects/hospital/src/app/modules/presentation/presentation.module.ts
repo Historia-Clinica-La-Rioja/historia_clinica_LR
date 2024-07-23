@@ -114,7 +114,6 @@ import { OnlyNumericCharactersDirective } from './directives/only-numeric-charac
 import { OnlyAlphabeticCharactersDirective } from './directives/only-alphabetic-characters.directive';
 // pipes
 import { DateFormatPipe } from './pipes/date-format.pipe';
-import { DayTimeRangePipe } from './pipes/day-time-range.pipe';
 import { FullHouseAddressPipe } from './pipes/fullHouseAddress.pipe';
 import { FullMedicalCoveragePipe } from './pipes/full-medical-coverage.pipe';
 import { IsoToDatePipe } from './pipes/iso-to-date.pipe';
@@ -235,7 +234,6 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		OnlyAlphabeticCharactersDirective,
 		// pipes
 		DateFormatPipe,
-		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
 		IsoToDatePipe,
@@ -356,7 +354,6 @@ import { ViewDateDtoPipe } from './pipes/view-date-dto.pipe';
 		OnlyAlphabeticCharactersDirective,
 		// pipes
 		DateFormatPipe,
-		DayTimeRangePipe,
 		FullHouseAddressPipe,
 		FullMedicalCoveragePipe,
 		IsoToDatePipe,

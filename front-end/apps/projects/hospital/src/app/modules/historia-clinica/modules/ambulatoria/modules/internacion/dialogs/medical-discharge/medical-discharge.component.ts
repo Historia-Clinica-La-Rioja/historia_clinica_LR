@@ -8,7 +8,7 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { dateTimeDtoToStringDate } from '@api-rest/mapper/date-dto.mapper';
 
 import { DatePipe } from '@angular/common';
-import { DatePipeFormat } from '@core/utils/date.utils';
+import { DatePipeFormat, toHourMinute } from '@core/utils/date.utils';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { isSameDay } from 'date-fns';
 
@@ -45,7 +45,7 @@ export class MedicalDischargeComponent implements OnInit {
 
 		this.dischargeForm = this.formBuilder.group({
 			date: [this.todayDate, [Validators.required]],
-			time: [this.datePipe.transform(this.todayDate, DatePipeFormat.SHORT_TIME)],
+			time: [toHourMinute(this.todayDate)],
 			dischargeTypeId: [null, [Validators.required]]
 		});
 
@@ -53,7 +53,7 @@ export class MedicalDischargeComponent implements OnInit {
 		this.intermentEpisodeService.getLastUpdateDateOfInternmentEpisode(this.data.internmentEpisodeId)
 			.subscribe((lastUpdateDate: DateTimeDto) => {
 				this.minMedicalDischargeDate = new Date(dateTimeDtoToStringDate(lastUpdateDate));
-				this.minTime = this.datePipe.transform(this.minMedicalDischargeDate, DatePipeFormat.SHORT_TIME);
+				this.minTime = toHourMinute(this.minMedicalDischargeDate);
 				this.minDate = this.datePipe.transform(this.minMedicalDischargeDate, DatePipeFormat.SHORT_DATE);
 				this.setValidators();
 			});

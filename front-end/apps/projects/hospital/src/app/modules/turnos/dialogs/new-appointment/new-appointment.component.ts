@@ -52,6 +52,7 @@ import { getStudiesNames } from '@turnos/utils/appointment.utils';
 import { buildFullDateFromDate, dateISOParseDate } from '@core/utils/moment.utils';
 import { BoxMessageInformation } from '@presentation/components/box-message/box-message.component';
 import { ParamsToSearchPerson } from '@pacientes/component/search-create/search-create.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const ROUTE_SEARCH = 'pacientes';
 const TEMPORARY_PATIENT_ID = 3;
@@ -124,6 +125,7 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly patientNameService: PatientNameService,
 		private readonly referenceService: ReferenceService,
 		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
 		private readonly translateService: TranslateService,
@@ -361,8 +363,8 @@ export class NewAppointmentComponent implements OnInit {
 				if (appointmentShortSummary) {
 					let appointmentFor = this.data.isEquipmentAppointment ? appointmentShortSummary.equipmentName : appointmentShortSummary.doctorFullName;
 					const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
-					const hour = this.datePipe.transform(timeDtoToDate(appointmentShortSummary.hour), DatePipeFormat.SHORT_TIME)
-					const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentFor} en ${appointmentShortSummary.institution}`
+					const hour = this.dateFormatPipe.transform(timeDtoToDate(appointmentShortSummary.hour), 'time')
+					const content = `El paciente ya tiene un turno el ${date} a las ${hour} para ${appointmentFor} en ${appointmentShortSummary.institution}`
 
 					const warnignComponent = this.dialog.open(DiscardWarningComponent,
 						{
@@ -519,7 +521,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.prescripcionesService.deleteTranscribedOrder(this.patientId, this.transcribedOrder.serviceRequestId).subscribe(() => {
 				this.transcribedOrderService.resetTranscribedOrder();
 			});
-			
+
 		}
 		this.clearQueryParams();
 	}
