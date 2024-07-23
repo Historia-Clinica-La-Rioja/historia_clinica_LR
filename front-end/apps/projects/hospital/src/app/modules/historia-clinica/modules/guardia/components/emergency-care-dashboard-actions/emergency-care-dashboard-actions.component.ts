@@ -107,7 +107,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	}
 
 	private editPatientEpisode() {
-		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episode.id}/emergencyCareDashboard/edit`]);
+		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episode.id}/dashboard/edit`]);
 	}
 
 	private attend() {

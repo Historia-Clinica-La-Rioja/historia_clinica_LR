@@ -63,7 +63,9 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 			.subscribe(id => {
 				if (id) {
 					this.snackBarService.showSuccess('guardia.episode.edit.messages.SUCCESS');
-					this.guardiaRouterService.goToEpisode(this.episodeId, { typeId: this.patientTypeId, id: administrativeAdmission.patientId })
+					this.from === 'paciente'
+					? this.guardiaRouterService.goToEpisode(this.episodeId, { typeId: this.patientTypeId, id: administrativeAdmission.patientId })
+					: this.guardiaRouterService.goToEmergencyCareDashboard();
 				} else {
 					this.snackBarService.showError('guardia.episode.edit.messages.ERROR');
 				}
@@ -82,7 +84,7 @@ export class EditEmergencyCareEpisodeComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(confirmed => {
 			if (confirmed) {
-				this.from === 'patientClinicalHistory'
+				this.from === 'paciente'
 				? this.guardiaRouterService.goToEpisode(this.episodeId, { typeId: this.patientTypeId, id: this.patientId })
 				: this.guardiaRouterService.goToEmergencyCareDashboard();
 			}
