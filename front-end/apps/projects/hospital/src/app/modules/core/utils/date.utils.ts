@@ -28,7 +28,6 @@ export enum DatePipeFormat {
 	MEDIUM = 'medium',// es-AR format: 27 mar. 1996 03:24:19
 	LONG = 'long',// es-AR format: 27 de marzo de 1996 a las 03:24:19 GMT-3
 	FULL = 'full',// es-AR format: miércoles, 27 de marzo de 1996 a las 03:24:19 GMT-03:00
-	SHORT_DATE = 'shortDate',// es-AR format: 27/3/96
 	MEDIUM_DATE = 'mediumDate',// es-AR format: 27 mar. 1996
 	LONG_DATE = 'longDate',// es-AR format: 27 de marzo de 1996
 	FULL_DATE = 'fullDate',//  es-AR format: miércoles, 27 de marzo de 1996

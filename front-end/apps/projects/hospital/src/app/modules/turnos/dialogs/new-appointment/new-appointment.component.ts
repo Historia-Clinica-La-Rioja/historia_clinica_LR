@@ -33,7 +33,6 @@ import { PatientNameService } from "@core/services/patient-name.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
 import { DatePipeFormat } from "@core/utils/date.utils";
-import { DatePipe } from "@angular/common";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
@@ -124,7 +123,6 @@ export class NewAppointmentComponent implements OnInit {
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly patientNameService: PatientNameService,
 		private readonly referenceService: ReferenceService,
-		private readonly datePipe: DatePipe,
 		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly equipmentAppointmentFacade: EquipmentAppointmentsFacadeService,
 		private prescripcionesService: PrescripcionesService,
@@ -362,7 +360,7 @@ export class NewAppointmentComponent implements OnInit {
 			this.verifyExistingAppointment().subscribe((appointmentShortSummary) => {
 				if (appointmentShortSummary) {
 					let appointmentFor = this.data.isEquipmentAppointment ? appointmentShortSummary.equipmentName : appointmentShortSummary.doctorFullName;
-					const date = this.datePipe.transform(dateDtoToDate(appointmentShortSummary.date), DatePipeFormat.SHORT_DATE)
+					const date = this.dateFormatPipe.transform(dateDtoToDate(appointmentShortSummary.date), 'date')
 					const hour = this.dateFormatPipe.transform(timeDtoToDate(appointmentShortSummary.hour), 'time')
 					const content = `El paciente ya tiene un turno el ${date} a las ${hour} para ${appointmentFor} en ${appointmentShortSummary.institution}`
 

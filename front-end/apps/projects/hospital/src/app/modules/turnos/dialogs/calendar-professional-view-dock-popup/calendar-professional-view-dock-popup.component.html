@@ -46,7 +46,7 @@
 									</div>
 									<div fxFlex="40%">
 										<span >
-											{{diary.startDate | date:dateFormats.SHORT_DATE }} - {{diary.endDate | date:dateFormats.SHORT_DATE}}
+											{{diary.startDate | isoToDate | dateFormat : 'date' }} - {{diary.endDate | isoToDate | dateFormat: 'date'}}
 										</span>
 									</div>
                                 </mat-option>

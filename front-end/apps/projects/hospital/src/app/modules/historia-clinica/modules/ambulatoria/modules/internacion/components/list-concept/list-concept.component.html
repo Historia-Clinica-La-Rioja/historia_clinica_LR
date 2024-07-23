@@ -5,7 +5,7 @@
 				<mat-checkbox [checked]="item.isAdded" (change)="updateAllChecked(item)">
 					<span class="capitalize snomed-item">{{ item.concept.snomed.pt | titlecase}}</span>
 					<em *ngIf="item.concept?.administrationDate" class="mat-caption gray-caption">
-						{{ item.concept.administrationDate | date: 'shortDate' }}
+						{{ item.concept.administrationDate | isoToDate | dateFormat: 'date' }}
 					</em>
 				</mat-checkbox>
 			</div>

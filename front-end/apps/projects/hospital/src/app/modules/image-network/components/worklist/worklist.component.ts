@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -10,9 +9,7 @@ export class WorklistComponent {
 
 	@Input() worklist: Worklist;
 
-	constructor(
-		readonly datePipe: DatePipe,
-	) { }
+	constructor() { }
 
 }
 
