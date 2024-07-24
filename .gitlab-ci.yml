@@ -38,9 +38,9 @@ code_freeze:
     - apt-get update
     - apt-get install -y maven
     - ./scripts/run-code-freeze.sh
+  only:
+    - master
   when: manual
-  rules:
-    - if: $ADD_CF == "true" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 generar_release:
   stage: publish-docker-image
