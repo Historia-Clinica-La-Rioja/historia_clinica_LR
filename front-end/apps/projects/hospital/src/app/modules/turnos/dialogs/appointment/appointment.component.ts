@@ -158,7 +158,7 @@ export class AppointmentComponent implements OnInit {
 
 	isDateFormVisible = false;
 	startAgenda = dateToDateDto(new Date(this.data.agenda.startDate));
-	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate)).year;
+	endAgenda = dateToDateDto(new Date(this.data.agenda.endDate));
 	availableDays: number[] = [];
 	availableMonths: number[] = [];
 	availableYears: number[] = [];
@@ -409,9 +409,12 @@ export class AppointmentComponent implements OnInit {
 	initializeFormDate() {
 		const date = new Date(this.appointment.date)
 		date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-		this.dateAppointment = dateToDateDto(date)
-		if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year && this.dateAppointment.day > this.today.day) {
-			this.dateAppointment.day = this.today.day;
+		this.dateAppointment = dateToDateDto(date)	
+		if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year) {
+			if (this.startAgenda.year === this.today.year && this.startAgenda.month === this.today.month)
+				this.dateAppointment.day = this.startAgenda.day > this.today.day ? this.startAgenda.day : this.today.day;
+			else
+				this.dateAppointment.day = this.today.day
 		} else {
 			this.calculateSetAppointmentDay();
 		}
@@ -540,10 +543,8 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	calculateSetAppointmentDay() {
-		if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && !(this.startAgenda.day < this.today.day)) {
-			this.dateAppointment.day = this.startAgenda.day;
-		} else if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year && this.startAgenda.day < this.today.day) {
-			this.dateAppointment.day = this.today.day;
+		if (this.startAgenda.month === this.dateAppointment.month && this.startAgenda.year === this.dateAppointment.year) {
+			this.dateAppointment.day = this.startAgenda.day >= this.today.day ? this.startAgenda.day : this.today.day;
 		} else {
 			if (this.today.month === this.dateAppointment.month && this.today.year === this.dateAppointment.year) {
 				this.dateAppointment.day = this.today.day;
@@ -567,11 +568,17 @@ export class AppointmentComponent implements OnInit {
 	}
 
 	setAvailableMonths() {
-		this.availableMonths = MONTHS.filter(month => month >= this.today.month);
+		let selectedYear = this.formDate.controls.year.getRawValue();
+		this.availableMonths = MONTHS.filter(month => 
+			selectedYear === this.today.year ? 
+				selectedYear === this.endAgenda.year ? month >= this.today.month && month <= this.endAgenda.month : month >= this.today.month
+			:
+				selectedYear === this.endAgenda.year ? month <= this.endAgenda.month : month > 0
+		);
 	}
 
 	setAvailableYears() {
-		for (var i = this.startAgenda.year; i <= this.endAgenda; i++) {
+		for (var i = this.startAgenda.year; i <= this.endAgenda.year; i++) {
 			this.availableYears.push(i);
 		}
 	}
