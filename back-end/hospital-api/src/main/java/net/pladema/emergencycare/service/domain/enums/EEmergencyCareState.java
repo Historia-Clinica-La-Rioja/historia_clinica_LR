@@ -27,13 +27,14 @@ public enum EEmergencyCareState {
 	 * El nro de columna representa el to
 	 */
 	private static final boolean[][] validTransitionMatrix = {
-			/*  ->  |  0  |  1   |  2   |  3   |  4   |  5   | */
-			/* 0  */{false, false, false, false, false, false},
-			/* 1  */{false, false, true , false, true , false},
-			/* 2  */{false, true , false, true , false, true },
-			/* 3  */{false, false, false, false, false, false},
-			/* 4  */{false, false, false, true , false, false},
-			/* 5  */{false, true , true , true , false, false}
+			/*  ->  |  0  |  1   |  2   |  3   |  4   |  5   |  6   | */
+			/* 0  */{false, false, false, false, false, false, false},
+			/* 1  */{false, false, true , false, true , false, false},
+			/* 2  */{false, true , false, true , false, true , true },
+			/* 3  */{false, false, false, false, false, false, false},
+			/* 4  */{false, false, false, true , false, false, false},
+			/* 5  */{false, true , true , true , false, false, true },
+			/* 6  */{false, true , true , true , true , true , true }
 	};
 
     EEmergencyCareState(Number id, String description) {
