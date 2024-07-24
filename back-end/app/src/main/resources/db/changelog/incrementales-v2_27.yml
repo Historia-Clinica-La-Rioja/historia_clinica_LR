@@ -281,3 +281,15 @@ databaseChangeLog:
           - sql:
               sql: |-               
                 INSERT INTO emergency_care_state VALUES (6, 'Llamado');
+
+    - changeSet:
+        id: historic_emergency_episode-addCallsColumn
+        comment: Create column calls in table historic_emergency_episode
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: calls
+                    type: smallint
+              tableName: historic_emergency_episode

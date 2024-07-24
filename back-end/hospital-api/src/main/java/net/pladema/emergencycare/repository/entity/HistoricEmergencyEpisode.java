@@ -46,6 +46,9 @@ public class HistoricEmergencyEpisode extends SGXAuditableEntity<HistoricEmergen
 	@Column(name = "bed_id")
 	private Integer bedId;
 
+	@Column(name = "calls")
+	private Short calls;
+
 	public HistoricEmergencyEpisode(HistoricEmergencyEpisodeBo historicEmergencyEpisodeBo) {
 		this.pk = new HistoricEmergencyEpisodePK(historicEmergencyEpisodeBo.getEmergencyCareEpisodeId(), LocalDateTime.now());
 		this.emergencyCareStateId = historicEmergencyEpisodeBo.getEmergencyCareStateId();
