@@ -272,3 +272,12 @@ databaseChangeLog:
           - sql:
               sql: |-               
                 INSERT INTO emergency_care_state VALUES (5, 'Ausente');
+
+    - changeSet:
+        id: insert-llamado-state-in-table-emergency_care_state
+        author: tomasbecher
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-               
+                INSERT INTO emergency_care_state VALUES (6, 'Llamado');
