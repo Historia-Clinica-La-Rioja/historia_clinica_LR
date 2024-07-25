@@ -34,6 +34,8 @@ import { AmbulatoryConsultationProblemsService } from '@historia-clinica/service
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { ConfirmarPrescripcionComponent } from '../ordenes-prescripciones/confirmar-prescripcion/confirmar-prescripcion.component';
 import { PrescriptionTypes } from '../../services/prescripciones.service';
+import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
+import { DialogWidth } from '@presentation/services/dialog.service';
 
 export interface FieldsToUpdate {
 	riskFactors: boolean;
@@ -94,6 +96,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly nursingPatientConsultationService: NursingPatientConsultationService,
 		private readonly snackBarService: SnackBarService,
+		private readonly procedureTemplatesService: ProcedureTemplatesService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly dialog: MatDialog,
 		private readonly translateService: TranslateService,
@@ -110,7 +113,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 		this.datosAntropometricosNuevaConsultaService =
 			new DatosAntropometricosNuevaConsultaService(formBuilder, this.hceGeneralStateService, this.data.idPaciente, this.internacionMasterDataService, this.translateService);
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(formBuilder, translateService);
-		this.createOrderService = new CreateOrderService(this.snackBarService);
+		this.createOrderService = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 	}
 
@@ -227,7 +230,7 @@ export class NuevaConsultaDockPopupEnfermeriaComponent implements OnInit {
 				problems: problems,
 			},
 			autoFocus: false,
-			width: '35%',
+			width: DialogWidth.MEDIUM,
 			disableClose: true,
 		});
 	}
