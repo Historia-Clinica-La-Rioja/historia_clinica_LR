@@ -19,6 +19,7 @@ import { PresentationModule } from '@presentation/presentation.module';
 export class ConceptTypeaheadSearchComponent implements OnInit {
 
 	snomedConcept: SnomedDto;
+	inputFocused = false;
 	@Input() ecl: SnomedECL;
 	@Input() placeholder = '';
 	@Input() debounceTime = 300;
