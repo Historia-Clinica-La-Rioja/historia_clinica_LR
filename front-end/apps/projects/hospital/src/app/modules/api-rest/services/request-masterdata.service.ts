@@ -18,6 +18,12 @@ export class RequestMasterDataService {
 		return this.http.get<ServiceRequestCategoryDto[]>(url);
 	}
 
+	categoriesWithoutDiagnosticImaging(): Observable<ServiceRequestCategoryDto[]> {
+		const url = `${environment.apiBase}/requests/masterdata/categories`;
+		const params = {excludeDiagnosticImaging: true};
+		return this.http.get<ServiceRequestCategoryDto[]>(url, {params});
+	}
+
 	medicationStatus(): Observable<any[]> {
 		const url = `${environment.apiBase}/requests/masterdata/medication-status`;
 		return this.http.get<any[]>(url);

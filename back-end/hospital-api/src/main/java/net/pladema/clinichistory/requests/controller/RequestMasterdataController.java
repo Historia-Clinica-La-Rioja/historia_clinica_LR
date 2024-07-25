@@ -12,6 +12,7 @@ import net.pladema.clinichistory.requests.service.domain.EMedicationStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -28,9 +29,12 @@ public class RequestMasterdataController {
 	private final GetServiceRequestCategoriesService getServiceRequestCategoriesService;
 
     @GetMapping(value = "/categories")
-    public ResponseEntity<Collection<ServiceRequestCategoryDto>> categories(){
+    public ResponseEntity<Collection<ServiceRequestCategoryDto>> categories(
+    	@RequestParam(name = "excludeDiagnosticImaging", required = false, defaultValue = "false") Boolean excludeDiagnosticImaging
+	){
         log.debug("{}", "All request categories");
-		List<ServiceRequestCategoryDto> result = getServiceRequestCategoriesService.run()
+		List<ServiceRequestCategoryDto> result = getServiceRequestCategoriesService
+				.run(excludeDiagnosticImaging != null ? excludeDiagnosticImaging : false)
 				.stream()
 				.map(src -> new ServiceRequestCategoryDto(src.getId(), src.getDescription()))
 				.collect(Collectors.toList());

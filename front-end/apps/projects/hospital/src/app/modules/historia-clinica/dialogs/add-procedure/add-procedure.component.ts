@@ -24,7 +24,7 @@ export class AddProcedureComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.requestMasterDataService.categories().subscribe((categories: ServiceRequestCategoryDto[]) => {
+		this.requestMasterDataService.categoriesWithoutDiagnosticImaging().subscribe((categories: ServiceRequestCategoryDto[]) => {
 			this.studyCategoryOptions = categories;
 		});
 	}
