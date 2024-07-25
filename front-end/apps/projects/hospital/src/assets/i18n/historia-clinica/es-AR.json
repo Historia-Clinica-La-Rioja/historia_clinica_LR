@@ -156,7 +156,8 @@
 		"create-order": {
 			"PROCEDURE": "Procedimiento",
 			"CATEGORY": "Categoría del estudio",
-			"HEALTH_PROBLEM": "Problema"
+			"HEALTH_PROBLEM": "Problema",
+			"DATE_OF_REALIZATION": "Fecha de realización"
 		},
 		"add_procedure": {
 			"TITLE_OPTIONS": "Resultados de estudio",
@@ -165,7 +166,11 @@
 			"NEXT": "Siguiente",
 			"FINAL": "No requiere carga de resultados",
 			"REGISTERED": "Los resultados quedarán pendientes de carga",
-			"ADD_PROCEDURE": "Agregar procedimiento"
+			"ADD_PROCEDURE": "Agregar procedimiento",
+			"LOAD_RESULTS_NOW": "Cargar resultados de procedimiento",
+			"COMPLETE": "Completar",
+			"CAME_BACK": "Volver",
+			"RESULTS_UPLOAD": "Carga de resultados"
 		},
 		"surgical-report": {
 			"summary": {
