@@ -5,43 +5,99 @@
 	</button>
 </div>
 
-<mat-stepper labelPosition="bottom" #stepper>
+<mat-stepper linear #stepper>
 
-	<mat-step>
-		<div>
-			<ng-template matStepLabel>{{'historia-clinica.add_procedure.PROCEDURE' | translate}}</ng-template>
+	<mat-step [completed]="data.createOrderService.firstPartAreCompleted">
+		<ng-template matStepLabel>{{'historia-clinica.add_procedure.PROCEDURE' | translate}}</ng-template>
+
+		<mat-dialog-content>
 
 			<app-create-order [data]="data" [studyCategoryOptions]="studyCategoryOptions"
 				[problems]="data.problems"></app-create-order>
 
-			<div fxLayoutAlign="end center">
-				<button [disabled]="!data.createOrderService.areRequiredFieldsCompleted()" id="next" mat-raised-button
-					matStepperNext color="primary">
-					<span class="uppercase"> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
-				</button>
-			</div>
-		</div>
+		</mat-dialog-content>
+
+		<mat-dialog-actions fxLayoutAlign="end center">
+			<button [disabled]="!data.createOrderService.firstPartAreCompleted" id="next" mat-raised-button
+				matStepperNext color="primary">
+				<span class="uppercase"> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
+			</button>
+		</mat-dialog-actions>
 	</mat-step>
 
 	<mat-step>
-		<div>
-			<ng-template matStepLabel>{{'historia-clinica.add_procedure.RESULT' | translate}}</ng-template>
+		<ng-template matStepLabel>{{'historia-clinica.add_procedure.RESULT' | translate}}</ng-template>
 
-			<h1>{{'historia-clinica.add_procedure.TITLE_OPTIONS' | translate}} </h1>
-			<mat-radio-group aria-label="Select an option" fxLayout="column" fxLayoutGap="15px"
-				(change)="setCreationStatus($event)">
-				<mat-radio-button value="FINAL">{{'historia-clinica.add_procedure.FINAL' | translate}}</mat-radio-button>
-				<mat-radio-button value="REGISTERED">{{'historia-clinica.add_procedure.REGISTERED' |
-					translate}}</mat-radio-button>
-			</mat-radio-group>
+		<div *ngIf="data.createOrderService.firstPartAreCompleted">
+
+			<div>
+				<h1>{{'historia-clinica.add_procedure.TITLE_OPTIONS' | translate}} </h1>
+
+				<mat-dialog-content class="no-scroll">
+					<mat-radio-group [formControl]="radioControl.controls.controlButton" aria-label="Select an option" fxLayout="column"
+						fxLayoutGap="15px" (change)="setCreationStatus($event)">
+						<mat-radio-button [value]=study_status.FINAL>
+							{{'historia-clinica.add_procedure.FINAL' | translate}}
+						</mat-radio-button>
+						<mat-radio-button [value]=study_status.REGISTERED>
+							{{'historia-clinica.add_procedure.REGISTERED'|translate}}
+						</mat-radio-button>
+						<mat-radio-button [disabled]="!(data.createOrderService.hasTemplate$ | async)"
+							[value]=completeNow>
+							{{'historia-clinica.add_procedure.LOAD_RESULTS_NOW' | translate}}
+						</mat-radio-button>
+					</mat-radio-group>
+
+				</mat-dialog-content>
+			</div>
+
+			<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
+				<button mat-raised-button mat-button color="primary" matStepperPrevious>
+					{{'historia-clinica.add_procedure.CAME_BACK' | translate}}</button>
+
+				<div *ngIf="(radioControl.controls.controlButton.value !== null )">
+					<div
+						*ngIf="((data.createOrderService.hasTemplate$ | async) && (radioControl.controls.controlButton.value === completeNow)) else buttonNext">
+
+						<button [disabled]="!data.createOrderService.firstPartAreCompleted" id="next"
+							mat-raised-button matStepperNext color="primary">
+							<span class="uppercase"> {{'historia-clinica.add_procedure.NEXT' | translate}}</span>
+						</button>
+					</div>
+					<ng-template #buttonNext>
+						<div *ngIf="data.createOrderService.hasConcept()">
+
+							<button id="add_order" mat-raised-button mat-button matStepperNext color="primary"
+								(click)="addOrder()" class="uppercase">
+								<span class="uppercase">{{'historia-clinica.add_procedure.ADD_PROCEDURE' |
+									translate}}</span>
+							</button>
+						</div>
+					</ng-template>
+				</div>
+			</mat-dialog-actions>
 		</div>
+	</mat-step>
 
-		<div fxLayoutAlign="end center" class="margin-top">
+	<mat-step *ngIf="(data.createOrderService.hasTemplate$ | async) && (radioControl.controls.controlButton.value === completeNow)">
+		<mat-dialog-content>
+			<ng-template matStepLabel>{{'historia-clinica.add_procedure.RESULTS_UPLOAD' | translate}}</ng-template>
+
+			<div>
+				<app-custom-form [templates]="data.createOrderService.templates"
+					[createOrderService]="data.createOrderService">
+				</app-custom-form>
+			</div>
+		</mat-dialog-content>
+
+		<mat-dialog-actions fxLayoutAlign="end center" class="margin-top" fxLayoutAlign="space-between center">
+			<button mat-raised-button mat-button color="primary" matStepperPrevious>Volver</button>
+
 			<button [disabled]="!data.createOrderService.isValidForm()" id="add_order" mat-raised-button mat-button
 				matStepperNext color="primary" (click)="addOrder()" class="uppercase">
-				<span class="uppercase">{{'historia-clinica.add_procedure.ADD_PROCEDURE' | translate}}</span>
+				<span class="uppercase">{{'historia-clinica.add_procedure.COMPLETE' | translate}}</span>
 			</button>
-		</div>
+		</mat-dialog-actions>
 	</mat-step>
 
 </mat-stepper>
