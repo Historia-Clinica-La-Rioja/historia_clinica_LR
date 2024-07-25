@@ -48,6 +48,8 @@ import { CreateOrderService } from '@historia-clinica/services/create-order.serv
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
+import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
+import { DialogWidth } from '@presentation/services/dialog.service';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -128,6 +130,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		private readonly hierarchicalUnitFormService: HierarchicalUnitService,
 		private readonly hceGeneralStateService: HceGeneralStateService,
 		private readonly snvsMasterDataService: SnvsMasterDataService,
+		private readonly procedureTemplatesService: ProcedureTemplatesService,
 		private readonly dateFormatPipe: DateFormatPipe
 
 	) {
@@ -140,7 +143,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		this.proceduresNewConsultationService = new ActionsNewConsultationService(this.odontogramService, this.surfacesNamesFacadeService, ActionType.PROCEDURE, this.conceptsFacadeService);
 		this.otherProceduresService = new ProcedimientosService(formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
 		this.odontologyReferenceService = new OdontologyReferenceService(this.dialog, this.data, this.otherDiagnosticsNewConsultationService);
-		this.createOrderService  = new CreateOrderService(this.snackBarService);
+		this.createOrderService  = new CreateOrderService(this.snackBarService, this.procedureTemplatesService);
 		this.ambulatoryConsultationProblemsService = new AmbulatoryConsultationProblemsService(formBuilder, this.snomedService, this.snackBarService, this.snvsMasterDataService, this.dialog);
 	}
 
@@ -225,7 +228,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
 			},
 			autoFocus: false,
-			width: '35%',
+			width: DialogWidth.MEDIUM,
 			disableClose: true,
 		});
 	}
