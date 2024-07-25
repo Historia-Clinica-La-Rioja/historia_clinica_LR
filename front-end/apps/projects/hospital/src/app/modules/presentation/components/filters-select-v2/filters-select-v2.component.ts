@@ -53,7 +53,7 @@ export class FiltersSelectV2Component {
 			const controlValue = this.filterForm.controls[controlName].value;
 
 			if (controlValue) {
-				const selectedOption = this.toSelectedFilterOption(controlName, controlValue);
+				const selectedOption = controlValue.length ? this.toSelectedFilterOptions(controlName, controlValue) : this.toSelectedFilterOption(controlName, controlValue);
 				const index = this.selectedFilterOptions?.findIndex(selectedFilterOption => selectedFilterOption.key === selectedOption.key);
 				if (index >= 0)
 					this.selectedFilterOptions[index] = selectedOption;
@@ -63,8 +63,12 @@ export class FiltersSelectV2Component {
 		});
 	}
 
-	private toSelectedFilterOption(key: string, values: Option[]): SelectedFilterOption {
+	private toSelectedFilterOptions(key: string, values: Option[]): SelectedFilterOption {
 		return { key, value: values.map(value => value.id) }
+	}
+
+	private toSelectedFilterOption(key: string, value: Option): SelectedFilterOption {
+		return { key, value: value.id }
 	}
 }
 
