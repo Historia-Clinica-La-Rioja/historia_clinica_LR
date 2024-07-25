@@ -56,6 +56,7 @@ import { BoxMessageInformation } from '@presentation/components/box-message/box-
 import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
+import { DialogWidth } from '@presentation/services/dialog.service';
 
 const TIME_OUT = 5000;
 
@@ -754,7 +755,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				problems: problems,
 			},
 			autoFocus: false,
-			width: '35%',
+			width: DialogWidth.MEDIUM,
 			disableClose: true,
 		});
 	}
