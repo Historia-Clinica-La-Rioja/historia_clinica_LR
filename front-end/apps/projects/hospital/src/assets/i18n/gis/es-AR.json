@@ -46,6 +46,17 @@
                 "EDIT": "Editar geoposición y área"
             }
         },
+        "patient-search": {
+            "TITLE": "Búsqueda de pacientes",
+            "filters": {
+                "REGISTERED_PATIENTS": "Pacientes empadronados",
+                "TREATED_IN_OUTPATIENT_CLINIC": "Pacientes atendidos en ambulatoria"
+            },
+            "DATE_RANGE": "Rango de fechas",
+            "actions": {
+                "MAP_SEARCH": "Buscar en mapa"
+            }
+        },
         "status": {
             "UPDATE_DATA_SUCCESS": "Datos de la institución actualizados",
             "UPDATE_RESPONSABILITY_AREA_SUCCESS": "Área de responsabilidad definida con éxito"

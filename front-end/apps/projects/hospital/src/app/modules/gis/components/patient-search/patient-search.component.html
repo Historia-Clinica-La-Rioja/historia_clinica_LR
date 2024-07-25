@@ -1,0 +1,31 @@
+<div class="card-container">
+    <mat-card>
+        <div class="card">
+            <div class="mb">
+                <mat-card-title>{{'gis.patient-search.TITLE' | translate}}</mat-card-title>
+            </div>
+        
+            <mat-card-content>
+                <mat-radio-group>
+                    <div class="column">
+                        <mat-radio-button value="PatientTypeFilter.REGISTERED" checked="true" (click)="toggleDatePicker(false)">{{'gis.patient-search.filters.REGISTERED_PATIENTS' | translate}}</mat-radio-button>
+                        <mat-radio-button value="PatientTypeFilter.OUTPATIENT_CLINIC" (click)="toggleDatePicker(true)">{{'gis.patient-search.filters.TREATED_IN_OUTPATIENT_CLINIC' | translate}}</mat-radio-button>
+                    </div>
+                </mat-radio-group>
+
+                <div *ngIf="showDatePicker" class="mt">
+                    <span class="bold">{{'gis.patient-search.DATE_RANGE' | translate}}</span>
+                    <app-date-range-picker [dateRange]="dateRange"></app-date-range-picker>
+                </div>
+            </mat-card-content>
+    
+            <mat-card-actions class="actions">
+                <app-button
+                    (clicked)="searchPatients()"
+                    [text]="'gis.patient-search.actions.MAP_SEARCH'"
+                    [buttonType]="ButtonType.RAISED">
+                </app-button>
+            </mat-card-actions>
+        </div>
+    </mat-card>
+</div>

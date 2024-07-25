@@ -1,0 +1,33 @@
+@import '../../../../../assets/styles/mixins';
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card {
+    padding: 2.5rem;
+}
+
+.mb {
+    margin-bottom: 2rem;
+}
+
+.mt {
+    margin-top: 2rem;
+}
+
+.bold{
+	@include font-weight-bold;
+}
+
+.card-container {
+    display: flex;
+    height: 100vh;
+}
