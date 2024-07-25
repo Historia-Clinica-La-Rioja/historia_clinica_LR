@@ -10,6 +10,7 @@ import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
+const PROCEDURE_NOTE_POSITION = 0;
 @Component({
 	selector: 'app-procedure-and-description',
 	templateUrl: './procedure-and-description.component.html',
@@ -18,33 +19,33 @@ import { SnackBarService } from '@presentation/services/snack-bar.service';
 export class ProcedureAndDescriptionComponent implements OnInit {
 
 	@Input() title: string;
-	@Input() tableTitle: string;
-	@Input() buttonTitle: string;
-	@Input() icon: string;
-	@Input() surgicalReport: SurgicalReportDto;
-	@Input() type: ProcedureTypeEnum;
+    @Input() tableTitle: string;
+    @Input() buttonTitle: string;
+    @Input() icon: string;
+    @Input() surgicalReport: SurgicalReportDto;
+    @Input() type: ProcedureTypeEnum;
 
-	procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
-	searchConceptsLocallyFF = false;
-	procedures: HospitalizationProcedureDto[];
-	description: string;
+    procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
+    searchConceptsLocallyFF = false;
+    procedures: HospitalizationProcedureDto[];
+    description: string;
 
-	constructor(
-		private readonly snackBarService: SnackBarService,
-		private readonly snomedService: SnomedService,
-		private readonly formBuilder: UntypedFormBuilder,
-		private readonly dialog: MatDialog,
-		private readonly featureFlagService: FeatureFlagService,
-		private readonly dateFormatPipe: DateFormatPipe
-
-	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
-			this.searchConceptsLocallyFF = isOn;
-		})
-		this.procedureService.procedimientos$.subscribe(procedures => this.changeProcedure(procedures));
-	}
+    constructor(
+        private readonly snackBarService: SnackBarService,
+        private readonly snomedService: SnomedService,
+        private readonly formBuilder: UntypedFormBuilder,
+        private readonly dialog: MatDialog,
+        private readonly featureFlagService: FeatureFlagService,
+        private readonly dateFormatPipe: DateFormatPipe
+    ) {
+        this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+            this.searchConceptsLocallyFF = isOn;
+        })
+        this.procedureService.procedimientos$.subscribe(procedures => this.changeProcedure(procedures));
+    }
 
     ngOnInit(): void {
+        console.log(this.surgicalReport);
         switch (this.type) {
             case ProcedureTypeEnum.DRAINAGE:
                 this.procedures = this.surgicalReport.drainages;
@@ -55,6 +56,10 @@ export class ProcedureAndDescriptionComponent implements OnInit {
             case ProcedureTypeEnum.FROZEN_SECTION_BIOPSY:
                 this.procedures = this.surgicalReport.frozenSectionBiopsies;
                 break;
+        }
+
+        if (this.procedures && this.procedures.length > 0) {
+            this.description = this.procedures[PROCEDURE_NOTE_POSITION].note;
         }
     }
 
@@ -76,6 +81,10 @@ export class ProcedureAndDescriptionComponent implements OnInit {
             this.procedures = pushIfNotExists(this.procedures, this.mapToHospitalizationProcedure(procedure, this.type), this.compare);
         });
         this.updateSurgicalReportProcedures();
+
+        if (this.procedures && this.procedures.length > 0) {
+            this.description = this.procedures[PROCEDURE_NOTE_POSITION].note;
+        }
     }
 
     private updateSurgicalReportProcedures() {
@@ -106,7 +115,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
         return {
             snomed: procedure.snomed,
             type: type,
-            note: this.description,
+            note: this.description || procedure.note || '',
         }
     }
 
@@ -116,7 +125,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 
     onDescriptionChange() {
         if (this.procedures.length > 0) {
-            this.procedures[0].note = this.description;
+            this.procedures[PROCEDURE_NOTE_POSITION].note = this.description;
             this.updateSurgicalReportProcedures();
         }
     }
