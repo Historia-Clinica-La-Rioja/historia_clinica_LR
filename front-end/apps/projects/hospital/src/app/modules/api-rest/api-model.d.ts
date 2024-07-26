@@ -5988,6 +5988,7 @@ export const enum ERole {
     FHIR_ACCESS_ALL_RESOURCES = "FHIR_ACCESS_ALL_RESOURCES",
     API_ANEXO = "API_ANEXO",
     API_REPORTES = "API_REPORTES",
+    INDEXADOR = "INDEXADOR",
 }
 
 export const enum ESchoolLevel {
