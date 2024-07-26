@@ -17,7 +17,7 @@ export default meta;
 
 type Story = StoryObj<TypeaheadV2Component>;
 
-export const clasic: Story = {
+export const classic: Story = {
 	args: {
 		options: [
 			{
@@ -52,6 +52,28 @@ export const clasic: Story = {
 export const externalValue: Story = {
 	args: {
 		placeholder: "Ejemplo de placeholder...",
+		options: [
+			{
+				value: "ejemplos",
+				compareValue: "ejemplos",
+			},
+			{
+				value: "para",
+				compareValue: "para",
+			},
+			{
+				value: "mostrar",
+				compareValue: "mostrar",
+			},
+			{
+				value: "el",
+				compareValue: "el",
+			},
+			{
+				value: "1",
+				compareValue: "Facu",
+			}
+		],
 		externalSetValue: {
 			value: "1",
 			compareValue: "FACUNDO",
@@ -65,3 +87,42 @@ export const externalValue: Story = {
 	},
 };
 
+
+export const ExternalValueAndDisabled: Story = {
+	args: {
+		placeholder: "Ejemplo de placeholder...",
+		options: [
+			{
+				value: "ejemplos",
+				compareValue: "ejemplos",
+			},
+			{
+				value: "para",
+				compareValue: "para",
+			},
+			{
+				value: "mostrar",
+				compareValue: "mostrar",
+			},
+			{
+				value: "el",
+				compareValue: "el",
+			},
+			{
+				value: "1",
+				compareValue: "Opcion por defecto",
+			}
+		],
+		externalSetValue: {
+			value: "1",
+			compareValue: "Opcion por defecto",
+		},
+		titleInput: "Titulo de typeahead",
+		disabled: true
+	},
+	argTypes: {
+		externalSetValue: {
+			action: 'setExternalSetValue',
+		},
+	},
+};

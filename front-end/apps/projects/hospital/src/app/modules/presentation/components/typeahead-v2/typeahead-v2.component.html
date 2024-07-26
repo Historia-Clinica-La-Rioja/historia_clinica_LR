@@ -13,7 +13,7 @@
 			</mat-option>
 		</mat-autocomplete>
 
-		<button *ngIf="typeaheadService.form.value?.searchValue?.length && !disabled" id="clear" type="button"
+		<button *ngIf="typeaheadService.form.value?.searchValue?.length && !typeaheadService.disabled" id="clear" type="button"
 			color="warn" mat-icon-button matSuffix (click)="typeaheadService.clear()">
 			<mat-icon>close</mat-icon>
 		</button>
