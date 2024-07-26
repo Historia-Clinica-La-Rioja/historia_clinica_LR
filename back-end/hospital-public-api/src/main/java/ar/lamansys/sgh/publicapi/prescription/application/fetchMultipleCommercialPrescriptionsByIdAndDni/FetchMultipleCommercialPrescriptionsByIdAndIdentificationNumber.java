@@ -4,6 +4,7 @@ import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionI
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionNotFoundException;
+import ar.lamansys.sgh.publicapi.prescription.domain.exceptions.PrescriptionRequestException;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.PrescriptionPublicApiPermissions;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.exceptions.PrescriptionRequestAccessDeniedException;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,8 @@ public class FetchMultipleCommercialPrescriptionsByIdAndIdentificationNumber {
 		assertUserPermissions();
 		PrescriptionIdentifier prescriptionIdentifier = PrescriptionIdentifier.parse(prescriptionId);
 		assertDomainNumber(prescriptionIdentifier.domain);
-		MultipleCommercialPrescriptionBo result = prescriptionStorage.getMultipleCommercialPrescriptionByIdAndIdentificationNumber(prescriptionIdentifier, identificationNumber);
+		MultipleCommercialPrescriptionBo result = prescriptionStorage.getMultipleCommercialPrescriptionByIdAndIdentificationNumber(prescriptionIdentifier, identificationNumber)
+				.orElseThrow(() -> new PrescriptionRequestException("Message", new Throwable()));
 		log.debug("Output -> {}", result);
 		return result;
 	}

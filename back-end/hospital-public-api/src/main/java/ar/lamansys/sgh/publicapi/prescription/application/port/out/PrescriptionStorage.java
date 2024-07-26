@@ -16,6 +16,6 @@ public interface PrescriptionStorage {
 
 	Optional<List<PrescriptionsDataBo>> getPrescriptionsDataByDni(String identificationNumber);
 
-	MultipleCommercialPrescriptionBo getMultipleCommercialPrescriptionByIdAndIdentificationNumber(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber);
+	Optional<MultipleCommercialPrescriptionBo> getMultipleCommercialPrescriptionByIdAndIdentificationNumber(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber);
 
 }

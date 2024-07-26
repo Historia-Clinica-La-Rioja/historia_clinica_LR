@@ -244,7 +244,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 	}
 
 	@Override
-	public MultipleCommercialPrescriptionBo getMultipleCommercialPrescriptionByIdAndIdentificationNumber(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
+	public Optional<MultipleCommercialPrescriptionBo> getMultipleCommercialPrescriptionByIdAndIdentificationNumber(PrescriptionIdentifier prescriptionIdentifier, String identificationNumber) {
 		String stringQuery = "SELECT mr.id AS mrid, ms.prescription_date, ms.due_date, " +
 				"p2.first_name AS p2fn, p2.last_name AS p2ln, pe.name_self_determination, g.description AS gd, spg.description AS spgd, p2.birth_date, it.description AS itd, p2.identification_number, " +
 				"mc.name AS mcn, mc.cuit, mcp.plan, pmc.affiliate_number, i.name, i.sisa_code, i.province_code, " +
@@ -301,12 +301,14 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		List<MultipleCommercialPrescriptionBo> result = queryResult.stream()
 				.map(this::processMultipleCommercialPrescription)
 				.collect(Collectors.toList());
+		if (result.isEmpty())
+			return Optional.empty();
 		MultipleCommercialPrescriptionBo mergedResult = multipleCommercialsMergeResults(result);
 		if (mergedResult.getPrescriptionId() != null)
 			mergedResult.setPrescriptionId(domainNumber + ID_DIVIDER + mergedResult.getPrescriptionId());
 		mergedResult.setDomain(prescriptionIdentifier.domain);
 		mergedResult.getPrescriptionLines().forEach(line -> line.setCommercialMedications(fetchPrescriptionCommercials(line.getMedicationStatementId())));
-		return mergedResult;
+		return Optional.of(mergedResult);
 	}
 
 	private MultipleCommercialPrescriptionBo processMultipleCommercialPrescription(Object[] queryResult) {
