@@ -148,7 +148,7 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 				historicEmergencyEpisodeService.saveChange(toSave);
 			}
 		}
-		notifyEmergencyCareSchedulerCallService.run(episodeId);
+		notifyEmergencyCareSchedulerCallService.run(episodeId, institutionId);
 	}
 
 	private void saveHistoricEmergencyEpisode(Integer episodeId, Short emergencyCareStateId, Integer bedId, Integer shockroomId) {
