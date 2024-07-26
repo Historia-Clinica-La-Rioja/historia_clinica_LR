@@ -57,8 +57,10 @@ import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/a
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 import { DialogWidth } from '@presentation/services/dialog.service';
+import { getElementAtPosition } from '@core/utils/array.utils';
 
 const TIME_OUT = 5000;
+const ACTIVES_FF_TO_ENABLE_OPTIONS = [{featureFlag: [AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO, AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS, AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO]}];
 
 @Component({
 	selector: 'app-nueva-consulta-dock-popup',
@@ -144,6 +146,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	isFamilyHistoriesNoRefer: boolean = true;
 	ButtonType = ButtonType;
 	isSaving = false;
+	isEnabledParameterizedFormFF = false;
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -235,15 +238,15 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			this.alergiasNuevaConsultaService.setCriticalityTypes(allergyCriticalities);
 		});
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO).subscribe(isOn => {
-			this.reportFFIsOn = isOn;
-			this.ambulatoryConsultationProblemsService.setReportFF(isOn);
-		});
-		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
-			this.searchConceptsLocallyFFIsOn = isOn;
-			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
+		this.featureFlagService.filterItems$(ACTIVES_FF_TO_ENABLE_OPTIONS).subscribe(activesFF => {
+			const activesFFElements: AppFeature[] = getElementAtPosition(activesFF, 0).featureFlag;
+			this.reportFFIsOn = activesFFElements.includes(AppFeature.HABILITAR_REPORTE_EPIDEMIOLOGICO);
+			this.ambulatoryConsultationProblemsService.setReportFF(this.reportFFIsOn);
+			this.searchConceptsLocallyFFIsOn = activesFFElements.includes(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS);
+			this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(this.searchConceptsLocallyFFIsOn);
+			this.isEnabledParameterizedFormFF = activesFFElements.includes(AppFeature.HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO);
+		})
 
-		});
 	}
 
 	setBoxMessageInfo() {

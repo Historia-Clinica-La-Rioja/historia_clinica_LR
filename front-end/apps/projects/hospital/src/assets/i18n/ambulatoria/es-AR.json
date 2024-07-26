@@ -265,6 +265,10 @@
                     "PROFESSIONAL": "Profesional",
                     "SEARCH_PROFESSIONAL": "Buscar profesional",
                     "ADDED_PROFESSIONAL": "Profesionales agregados"
+                },
+                "parameterized-form": {
+                    "TITLE": "Formulario",
+                    "ADD": "+ Agregar formulario"
                 }
             },
             "reference-notification": {

@@ -44,6 +44,7 @@ import { MainDiagnosisSummaryComponent } from './components/main-diagnosis-summa
 import { MedicalCoverageSummaryViewComponent } from './components/medical-coverage-summary-view/medical-coverage-summary-view.component';
 import { NewViolenceEpisodeSectionComponent } from './components/new-violence-episode-section/new-violence-episode-section.component';
 import { OriginInstitutionReferenceComponent } from './components/origin-institution-reference/origin-institution-reference.component';
+import { ParameterizedFormSectionComponent } from './components/parameterized-form-section/parameterized-form-section.component';
 import { ProblemasComponent } from './components/problemas/problemas.component';
 import { ProblemsOptionsMenuComponent } from './components/problems-options-menu/problems-options-menu.component';
 import { ReferenceCompleteStudyComponent } from './components/reference-complete-study/reference-complete-study.component';
@@ -195,6 +196,7 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		ViolenceSituationHistoryFiltersComponent,
 		ShowClosedFormsTemplateComponent,
  		ControlSelectTemplateComponent,
+		ParameterizedFormSectionComponent,
 		//pipe
 		TranslateDeviceTextPipe,
 	],
