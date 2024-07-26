@@ -1,3 +1,95 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_27 
 
+    - changeSet:
+        id: create-table-institution_prescription
+        comment: Create table institution_prescription
+        author: efernandez
+        changes:
+          - createTable:
+              tableName: institution_prescription
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_institution_prescription
+                - column:
+                    name: sisa_code
+                    type: varchar(15)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: name
+                    type: varchar(255)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: province_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      references: province(id)
+                      foreignKeyName: FK_institution_prescription_province_id
+                - column:
+                    name: dependency_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+                      references: dependency(id)
+                      foreignKeyName: FK_institution_prescription_dependency_id
+                - column:
+                    name: typology
+                    type: varchar(100)
+                    constraints:
+                      nullable: false
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_by
+                    type: int
+                    defaultValue: -1
+                - column:
+                    constraints:
+                      nullable: false
+                    name: created_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: updated_on
+                    type: datetime
+                    defaultValueDate: ${date.now}
+                - column:
+                    constraints:
+                      nullable: false
+                    name: deleted
+                    type: BOOLEAN
+                    defaultValue: ${boolean.false}
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+
+    - changeSet:
+        id: load-institution_prescription-data
+        comment: Fill table institution_prescription
+        author: efernandez
+        context: "!schema-only"
+        changes:
+          - sqlFile:
+              encoding: ASCII
+              path: data/load_institution_prescription.sql
+              relativeToChangelogFile: true
+              splitStatements: false
