@@ -343,6 +343,7 @@ public class DiaryServiceImpl implements DiaryService {
         result.setDoctorNameSelfDetermination(completeDiaryListVo.getDoctorNameSelfDetermination());
         result.setHierarchicalUnitId(completeDiaryListVo.getHierarchicalUnitId());
         result.setHierarchicalUnitAlias(completeDiaryListVo.getHierarchicalUnitAlias());
+        result.setPracticesInfo(new ArrayList<>());
         log.debug(OUTPUT, result);
         return result;
     }
@@ -725,7 +726,7 @@ public class DiaryServiceImpl implements DiaryService {
         result.setDoctorsOfficeDescription(diary.getDoctorsOfficeDescription());
         result.setClinicalSpecialtyName(diary.getClinicalSpecialtyName());
         result.setAlias(diary.getAlias());
-        if (!diary.getPracticesInfo().isEmpty())
+        if (diary.hasPractices())
             result.setPractice(diary.getPracticesInfo().get(0));
         return result;
     }
