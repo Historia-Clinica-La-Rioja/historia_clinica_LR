@@ -57,6 +57,11 @@
 
 .appointment-actions {
 
+	::ng-deep .mat-mdc-outlined-button>.mat-icon {
+		margin-right: 0 !important;
+		margin-left: 0 !important;
+	}
+
 	margin-top: 10px;
 
 	button {
@@ -67,10 +72,6 @@
 
 	.mat-icon.mat-primary {
 		color: #979797;
-	}
-
-	mat-icon {
-		font-size: 25px;
 	}
 
 	.selected {
@@ -218,7 +219,7 @@ mat-form-field {
 }
 
 .download-link {
-	line-height: inherit; 
+	line-height: inherit;
 	padding: 0;
 }
 
@@ -227,12 +228,12 @@ mat-form-field {
 		display: none;
 	}
 
-	section{
+	section {
 		width: 58vw;
 	}
 
-	.appointment-actions{
-		button{
+	.appointment-actions {
+		button {
 			min-width: 0;
 			padding: 0;
 		}
@@ -240,7 +241,7 @@ mat-form-field {
 }
 
 @media only screen and (max-width: 320px) {
-	.window{
+	.window {
 		padding-left: 5px;
 	}
 }

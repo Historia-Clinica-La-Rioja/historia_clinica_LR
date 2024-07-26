@@ -123,7 +123,7 @@
 									<mat-error *ngIf="hasError(searchSnomedConcept.pharmacos.at(i), 'required', 'dose')" [translate]="'forms.REQUIRED'"></mat-error>
 								</mat-form-field>
 								<span> {{'indicacion.internment-card.dialogs.parenteral-plan.MILLILITERS' | translate }}.</span>
-								<button mat-button type="button" color="warn" (click)="searchSnomedConcept.removePharmaco(i)">
+								<button mat-icon-button type="button" color="warn" (click)="searchSnomedConcept.removePharmaco(i)">
 									<mat-icon color="warn">delete</mat-icon>
 								</button>
 							</div>

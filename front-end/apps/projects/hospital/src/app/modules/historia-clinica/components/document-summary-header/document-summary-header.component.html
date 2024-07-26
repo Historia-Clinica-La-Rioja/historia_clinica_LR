@@ -2,13 +2,15 @@
     <div fxFlex fxLayout="row" fxLayoutAlign="space-between">
         <span class="header-title">{{ _headerData?.title }}</span>
         <div *ngIf="!isPopUpOpen">
-            <button mat-button color="primary" data-id="download_document" *ngIf="_headerData.download" (click)="download()">
+            <button mat-icon-button color="primary" data-id="download_document" *ngIf="_headerData.download"
+                (click)="download()">
                 <mat-icon fontSet="material-icons-outlined">download_icon</mat-icon>
             </button>
-            <button mat-button color="primary" data-id="edit_document" *ngIf="_headerData.edit" (click)="edit()">
+            <button mat-icon-button color="primary" data-id="edit_document" *ngIf="_headerData.edit" (click)="edit()">
                 <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
             </button>
-            <button mat-button color="warn" data-id="delete_document" *ngIf="_headerData.delete" (click)="delete()">
+            <button mat-icon-button color="warn" data-id="delete_document" *ngIf="_headerData.delete"
+                (click)="delete()">
                 <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
             </button>
         </div>
