@@ -120,10 +120,7 @@ public class NominalECEpisodeDetailStorageImpl implements NominalECEpisodeDetail
 				"s2.description as last_attention_shockroom, " +
 				"r.description as last_attention_room, " +
 				"b.bed_number as last_attention_bed, " +
-				"COALESCE ((SELECT STRING_AGG(r.description, ', ') " +
-				"	FROM {h-schema}emergency_care_episode_reason ecer " +
-				"	JOIN {h-schema}reasons r on (ecer.reason_id = r.id) " +
-				"	WHERE ecer.emergency_care_episode_id = ece.id), '') as reasons, " +
+				"ece.reason as reasons, " +
 				"COALESCE ((SELECT STRING_AGG(DISTINCT s.pt, ', ') " +
 				"	FROM {h-schema}document doc " +
 				"	JOIN {h-schema}document_health_condition dhc on (dhc.document_id = doc.id) " +
