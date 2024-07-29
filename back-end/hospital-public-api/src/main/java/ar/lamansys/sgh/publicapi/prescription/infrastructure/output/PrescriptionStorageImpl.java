@@ -20,6 +20,8 @@ import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescript
 
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
 
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -268,11 +270,23 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"pt.description AS ptd, s2.pt AS s2pt, s2.sctid AS s2id, " +
 				"d2.doses_by_unit AS unit_dose, d2.doses_by_day, d2.duration, '' AS presentation, 0 AS presentation_quantity, d.id, mr.is_archived, " +
 				"CASE WHEN d2.dose_quantity_id IS NULL THEN NULL ELSE q.value END, " +
-				"msls.id AS status_id, ms.id as medication_statement_id " +
+				"msls.id AS status_id, ms.id as medication_statement_id, " +
+				"co.description AS country, " +
+				"pr.description AS province, " +
+				"de.description AS department, " +
+				"ci.description AS city, " +
+				"pa.street AS person_street, " +
+				"pa.number AS person_street_number, " +
+				"n.description AS observation, " +
+				"d2.frequency AS frequency, " +
+				"d2.period_unit AS frequency_unit, " +
+				"cs.name AS specialty, " +
+				"cs.sctid_code AS snomed_id " +
 				"FROM {h-schema}medication_statement ms " +
 				"JOIN {h-schema}document_medicamention_statement dms ON (ms.id = dms.medication_statement_id) " +
 				"JOIN {h-schema}document d ON (d.id = dms.document_id) " +
 				"JOIN {h-schema}medication_request mr ON (mr.id = d.source_id) " +
+				"LEFT JOIN {h-schema}clinical_specialty cs ON (mr.clinical_specialty_id = cs.id) " +
 				"JOIN {h-schema}patient p ON (p.id = ms.patient_id) " +
 				"JOIN {h-schema}person p2 ON (p2.id = p.person_id) " +
 				"LEFT JOIN {h-schema}person_extended pe ON (pe.person_id = p2.id) " +
@@ -284,6 +298,11 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"LEFT JOIN {h-schema}medical_coverage_plan mcp ON (mcp.medical_coverage_id = pmc.medical_coverage_id) " +
 				"LEFT JOIN {h-schema}institution i ON (i.id = d.institution_id) " +
 				"LEFT JOIN {h-schema}address a ON (a.id = i.address_id) " +
+				"LEFT JOIN {h-schema}address pa ON (pa.id = pe.address_id)" +
+				"LEFT JOIN {h-schema}country co ON (pa.country_id = co.id) " +
+				"LEFT JOIN {h-schema}province pr ON (pa.province_id = pr.id) " +
+				"LEFT JOIN {h-schema}department de ON (pa.department_id = de.id) " +
+				"LEFT JOIN {h-schema}city ci ON (pa.city_id = ci.id) " +
 				"JOIN {h-schema}healthcare_professional hp ON (hp.id = mr.doctor_id) " +
 				"JOIN {h-schema}person p3 ON (p3.id = hp.person_id) " +
 				"JOIN {h-schema}identification_type it2 ON (it2.id = p3.identification_type_id) " +
@@ -299,6 +318,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"LEFT JOIN {h-schema}dosage d2 ON (d2.id = ms.dosage_id) " +
 				"LEFT JOIN {h-schema}quantity q ON (d2.dose_quantity_id = q.id) " +
 				"LEFT JOIN {h-schema}medication_statement_line_state msls ON (msls.id = ms.prescription_line_state) " +
+				"LEFT JOIN {h-schema}note n ON (ms.note_id = n.id) " +
 				"WHERE p2.identification_number = :identificationNumber " +
 				"AND mr.id = :numericPrescriptionId " +
 				"AND (d.type_id = " + RECETA + " OR d.type_id = " + RECETA_DIGITAL + ") " +
@@ -346,7 +366,13 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						(String) queryResult[11],
 						(String) queryResult[12],
 						(String) queryResult[13],
-						(String) queryResult[14]
+						(String) queryResult[14],
+						(String) queryResult[46],
+						(String) queryResult[47],
+						(String) queryResult[48],
+						(String) queryResult[49],
+						(String) queryResult[50],
+						(String) queryResult[51]
 				),
 				new InstitutionPrescriptionBo(
 						(String) queryResult[15],
@@ -383,14 +409,23 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 								(String) queryResult[35]
 						),
 						null,
-						queryResult[36] != null ? (Double) queryResult[36] : 0,
-						queryResult[37] != null ? (Double) queryResult[37] : 0,
-						queryResult[38] != null ? (Double) queryResult[38] : 1,
-						(String) queryResult[39],
-						(Integer) queryResult[40],
-						queryResult[43] != null ? (Double)queryResult[43] : null,
-						(Integer) queryResult[45]
-				))
+						new PrescriptionDosageBo(
+								queryResult[36] != null ? (Double) queryResult[36] : 0,
+								queryResult[37] != null ? (Double) queryResult[37] : 0,
+								queryResult[38] != null ? (Double) queryResult[38] : 1,
+								(String) queryResult[39],
+								(Integer) queryResult[40],
+								queryResult[43] != null ? (Double)queryResult[43] : null,
+								queryResult[53] != null ? (Integer)queryResult[53] : null,
+								queryResult[54] != null ? (String)queryResult[54] : null
+						),
+						(Integer) queryResult[45],
+						queryResult[52] != null ? (String)queryResult[52] : null
+				)),
+				new PrescriptionSpecialtyBo(
+						(String) queryResult[55],
+						(String) queryResult[56]
+				)
 		);
 	}
 
@@ -639,6 +674,7 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 		result.setPatientPrescription(unmergedResults.get(0).getPatientPrescription());
 		result.setInstitutionPrescription(unmergedResults.get(0).getInstitutionPrescription());
 		result.setPrescriptionLines(unmergedResults.get(0).getPrescriptionLines());
+		result.setPrescriptionSpecialty(unmergedResults.get(0).getPrescriptionSpecialty());
 		ProfessionalPrescriptionBo professionalPrescriptionBo = unmergedResults.get(0).getProfessionalPrescription();
 		List<PrescriptionProfessionBo> prescriptionProfessionBos = new ArrayList<>(professionalPrescriptionBo.getProfessions());
 		List<PrescriptionProfessionalRegistrationBo> prescriptionProfessionalRegistrationBos = new ArrayList<>(professionalPrescriptionBo.getRegistrations());
@@ -724,7 +760,13 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						(String)queryResult[11],
 						(String)queryResult[12],
 						(String)queryResult[13],
-						(String)queryResult[14]
+						(String)queryResult[14],
+						(String) queryResult[46],
+						(String) queryResult[47],
+						(String) queryResult[48],
+						(String) queryResult[49],
+						(String) queryResult[50],
+						(String) queryResult[51]
 				),
 				new InstitutionPrescriptionBo(
 						(String)queryResult[15],

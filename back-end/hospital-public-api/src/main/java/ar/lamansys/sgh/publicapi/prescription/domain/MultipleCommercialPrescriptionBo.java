@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.publicapi.prescription.domain;
 
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionSpecialtyDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +34,8 @@ public class MultipleCommercialPrescriptionBo {
 	private ProfessionalPrescriptionBo professionalPrescription;
 
 	private List<MultipleCommercialPrescriptionLineBo> prescriptionLines;
+
+	private PrescriptionSpecialtyBo prescriptionSpecialty;
+
 
 }

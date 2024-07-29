@@ -86,7 +86,13 @@ public class FetchPrescriptionByIdControllerTest {
 				"OSDE",
 				"3332323232",
 				"Platino",
-				"325"
+				"325",
+				"Argentina",
+				"Buenos Aires",
+				"Tandil",
+				"Tandil",
+				"Calle",
+				"123"
 		);
 		var institutionPrescriptionBo = new InstitutionPrescriptionBo(
 				"Test Institution",
@@ -283,7 +289,13 @@ public class FetchPrescriptionByIdControllerTest {
 				patientPrescriptionDto.getMedicalCoverage(),
 				patientPrescriptionDto.getMedicalCoverageCuit(),
 				patientPrescriptionDto.getMedicalCoveragePlan(),
-				patientPrescriptionDto.getAffiliateNumber()
+				patientPrescriptionDto.getAffiliateNumber(),
+				patientPrescriptionDto.getCountry(),
+				patientPrescriptionDto.getProvince(),
+				patientPrescriptionDto.getDepartment(),
+				patientPrescriptionDto.getCity(),
+				patientPrescriptionDto.getStreet(),
+				patientPrescriptionDto.getStreetNumber()
 		);
 	}
 

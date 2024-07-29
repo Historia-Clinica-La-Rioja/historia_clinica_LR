@@ -19,16 +19,8 @@ public class MultipleCommercialPrescriptionLineDto {
 
 	private List<CommercialMedicationDto> commercialMedications;
 
-	private Double unitDosis;
+	private PrescriptionDosageDto prescriptionDosage;
 
-	private Double dayDosis;
-
-	private Double duration;
-
-	private String presentation;
-
-	private Integer presentationQuantity;
-
-	private Double quantity;
+	private String observation;
 
 }

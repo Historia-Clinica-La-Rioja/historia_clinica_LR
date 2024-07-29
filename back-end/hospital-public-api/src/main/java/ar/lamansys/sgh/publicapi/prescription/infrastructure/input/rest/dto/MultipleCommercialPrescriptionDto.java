@@ -30,4 +30,6 @@ public class MultipleCommercialPrescriptionDto {
 
 	private List<MultipleCommercialPrescriptionLineDto> prescriptionLines;
 
+	private PrescriptionSpecialtyDto prescriptionSpecialty;
+
 }

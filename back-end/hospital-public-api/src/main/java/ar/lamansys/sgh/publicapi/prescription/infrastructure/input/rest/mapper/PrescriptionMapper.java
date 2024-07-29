@@ -9,9 +9,11 @@ import ar.lamansys.sgh.publicapi.patient.domain.PatientPrescriptionAddressBo;
 import ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest.dto.PatientPrescriptionAddressDto;
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
+import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionDosageBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.MultipleCommercialPrescriptionLineDto;
+import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionDosageDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionSpecialtyDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionsDataDto;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionValidStatesEnum;
@@ -251,6 +253,12 @@ public class PrescriptionMapper {
 				.medicalCoveragePlan(patientPrescriptionBo.getMedicalCoveragePlan())
 				.birthDate(patientPrescriptionBo.getBirthDate())
 				.selfPerceivedName(patientPrescriptionBo.getSelfPerceivedName())
+				.country(patientPrescriptionBo.getCountry())
+				.province(patientPrescriptionBo.getProvince())
+				.department(patientPrescriptionBo.getDepartment())
+				.city(patientPrescriptionBo.getCity())
+				.street(patientPrescriptionBo.getStreet())
+				.streetNumber(patientPrescriptionBo.getStreetNumber())
 				.build();
 	}
 
@@ -305,6 +313,16 @@ public class PrescriptionMapper {
 		return new DispensedMedicationBo(medication.getSnomedId(), medication.getCommercialName(), medication.getCommercialPresentation(), medication.getSoldUnits(), medication.getBrand(), medication.getPrice(), medication.getAffiliatePayment(), medication.getMedicalCoveragePayment(), changePrescriptionStateMultipleDto.getPharmacyName(), changePrescriptionStateMultipleDto.getPharmacistName(), medication.getObservations());
 	}
 
+	private PrescriptionSpecialtyDto mapTo(PrescriptionSpecialtyBo prescriptionSpecialtyBo) {
+		if (prescriptionSpecialtyBo == null) {
+			return new PrescriptionSpecialtyDto();
+		}
+		return PrescriptionSpecialtyDto.builder()
+				.specialty(prescriptionSpecialtyBo.getSpecialty())
+				.snomedId(prescriptionSpecialtyBo.getSnomedId())
+				.build();
+	}
+
 	public MultipleCommercialPrescriptionDto toMultipleCommercialPrescriptionDto(MultipleCommercialPrescriptionBo multipleCommercialPrescriptionBo) {
 		if (multipleCommercialPrescriptionBo.getPrescriptionId() == null)
 			throw new PrescriptionNotFoundException("La receta no existe");
@@ -319,6 +337,7 @@ public class PrescriptionMapper {
 				.patientPrescription(mapTo(multipleCommercialPrescriptionBo.getPatientPrescription()))
 				.professionalPrescription(mapTo(multipleCommercialPrescriptionBo.getProfessionalPrescription()))
 				.prescriptionLines(toMultipleCommercialPrescriptionLineDtoList(multipleCommercialPrescriptionBo.getPrescriptionLines(), multipleCommercialPrescriptionBo.getDueDate()))
+				.prescriptionSpecialty(mapTo(multipleCommercialPrescriptionBo.getPrescriptionSpecialty()))
 				.build();
 	}
 
@@ -328,20 +347,29 @@ public class PrescriptionMapper {
 		return prescriptionLines.stream().map(line -> toMultipleCommercialPrescriptionLine(line, dueDate)).collect(Collectors.toList());
 	}
 
+	private PrescriptionDosageDto mapTo(PrescriptionDosageBo prescriptionDosageBo) {
+		return PrescriptionDosageDto.builder()
+				.unitDosis(prescriptionDosageBo.getUnitDosis())
+				.dayDosis(prescriptionDosageBo.getDayDosis())
+				.duration(prescriptionDosageBo.getDuration())
+				.presentation(prescriptionDosageBo.getPresentation())
+				.presentationQuantity(prescriptionDosageBo.getPresentationQuantity())
+				.quantity(prescriptionDosageBo.getQuantity())
+				.frequency(prescriptionDosageBo.getFrequency())
+				.frequencyUnit(prescriptionDosageBo.getFrequencyUnit())
+				.build();
+	}
+
 	private MultipleCommercialPrescriptionLineDto toMultipleCommercialPrescriptionLine(MultipleCommercialPrescriptionLineBo line, LocalDateTime dueDate) {
 		boolean due = localDateMapper.fromLocalDateTime(LocalDateTime.now()).plusDays(30).isBefore(localDateMapper.fromLocalDateTime(dueDate));
 		return MultipleCommercialPrescriptionLineDto.builder()
 				.prescriptionLineNumber(line.getPrescriptionLineNumber())
 				.prescriptionLineStatus(due ? PrescriptionValidStatesEnum.map(VENCIDO).toString() : line.getPrescriptionLineStatus())
-				.dayDosis(line.getDayDosis())
-				.presentation(line.getPresentation())
-				.presentationQuantity(line.getPresentationQuantity())
-				.duration(line.getDuration())
-				.unitDosis(line.getUnitDosis())
 				.prescriptionProblem(mapTo(line.getPrescriptionProblem()))
 				.genericMedication(mapTo(line.getGenericMedication()))
 				.commercialMedications(mapToCommercialMedicationDtoList(line.getCommercialMedications()))
-				.quantity(line.getQuantity())
+				.prescriptionDosage(mapTo(line.getPrescriptionDosage()))
+				.observation(line.getObservation())
 				.build();
 	}
 
