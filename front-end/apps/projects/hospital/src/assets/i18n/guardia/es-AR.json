@@ -80,6 +80,7 @@
 						},
 						"mark_as_absent":{
 							"TITLE": "Marcar como ausente",
+							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a AUSENTE?",
 							"SUCCESS": "Estado de episodio actualizado a AUSENTE exitosamente",
 							"ERROR": "Error al actualizar estado de episodio a AUSENTE"
 						},

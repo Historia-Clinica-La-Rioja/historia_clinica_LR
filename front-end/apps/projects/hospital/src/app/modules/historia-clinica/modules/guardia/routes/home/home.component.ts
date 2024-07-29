@@ -223,6 +223,12 @@ export class HomeComponent implements OnInit {
 			error: () => this.snackBarService.showError('guardia.home.episodes.episode.actions.edit_patient_description.ERROR')
 		});
 	}
+
+	handleAbsentState(stateChanged: boolean){
+		if(stateChanged){
+			this.loadEpisodes(this.FIRST_PAGE);
+		}
+	}
 }
 
 export interface Episode {
@@ -230,6 +236,7 @@ export interface Episode {
 	waitingHours: number;
 	decodedPatientPhoto?: Observable<string>;
 	creationDate: DateTimeDto;
+	stateUpdatedOn?: DateTimeDto;
 	doctorsOffice: DoctorsOfficeDto;
 	id: number;
 	patient: EmergencyCarePatientDto;
@@ -238,6 +245,7 @@ export interface Episode {
 	type: MasterDataDto;
 	relatedProfessional: ProfessionalPersonDto;
 	reason?: string;
+	canBeAbsent?: boolean;
 }
 
 export interface EpisodeListTriage {

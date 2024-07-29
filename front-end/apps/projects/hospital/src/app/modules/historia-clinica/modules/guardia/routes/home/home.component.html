@@ -237,7 +237,8 @@
 								<app-emergency-care-dashboard-actions
 								[episode]="episode"
 								(triageDialogClosed)="handleTriageDialogClosed($event)"
-								(patientDescriptionUpdate)="handlePatientDescriptionUpdate($event)">
+								(patientDescriptionUpdate)="handlePatientDescriptionUpdate($event)"
+								(markedAsAbsent)="handleAbsentState($event)">
 								</app-emergency-care-dashboard-actions>
 
 							</div>

@@ -11,10 +11,13 @@ import { Router } from '@angular/router';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap, take } from 'rxjs';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
+import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
+import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
   selector: 'app-emergency-care-dashboard-actions',
@@ -26,6 +29,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	@Input() episode: Episode;
 	@Output() triageDialogClosed = new EventEmitter<number>();
 	@Output() patientDescriptionUpdate = new EventEmitter<PatientDescriptionUpdate>();
+	@Output() markedAsAbsent = new EventEmitter<boolean>();
 
 	readonly estadosEpisodio = EstadosEpisodio;
 	readonly EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
@@ -47,6 +51,8 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly translate: TranslateService,
+		private readonly episodeStateService: EpisodeStateService,
+		private snackBarService: SnackBarService,
 	) { }
 
 	ngOnInit() {
@@ -78,17 +84,18 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 
 		const showEditPatientEpisode =
 			episode.state.id === this.estadosEpisodio.EN_ESPERA ||
-			episode.state.id === this.estadosEpisodio.EN_ATENCION;
+			episode.state.id === this.estadosEpisodio.EN_ATENCION ||
+			episode.state.id === this.estadosEpisodio.AUSENTE;
 
 		const showEditPatientDescription =
 			episode.patient?.typeId === this.EMERGENCY_CARE_TEMPORARY;
 
 		const showAttend =
-			episode.state.id === this.estadosEpisodio.EN_ESPERA &&
-			this.hasProffesionalRole;
+			(episode.state.id === this.estadosEpisodio.EN_ESPERA ||
+			episode.state.id === this.estadosEpisodio.AUSENTE)
+			&& this.hasProffesionalRole;
 
-		const showMarkAsAbsent =
-			episode.state.id !== this.estadosEpisodio.EN_ATENCION;
+		const showMarkAsAbsent = episode?.canBeAbsent;
 
 		return {
 			newTriage: showNewTriage,
@@ -141,7 +148,32 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	}
 
 	private markPatientAsAbscent(){
-		console.log("ausente")
+		const dialog = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.TITLE'),
+                content: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.CONFIRM'),
+                okButtonLabel: 'Aceptar'
+            }
+        })
+        dialog.afterClosed().pipe(
+            take(1),
+            switchMap(closed => {
+                if (closed) {
+                    return this.episodeStateService.markAsAbsent(this.episode.id);
+                }
+            }))
+            .subscribe({
+                next: (changed) => {
+                    if (changed) {
+                        this.snackBarService.showSuccess(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.SUCCESS'));
+                        this.markedAsAbsent.emit(true);
+                    }
+                    else
+                        this.snackBarService.showError(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.ERROR'));
+                },
+                error: () => {}
+            }
+        );
 	}
 
 	showActionsButton(episode: Episode): boolean {
