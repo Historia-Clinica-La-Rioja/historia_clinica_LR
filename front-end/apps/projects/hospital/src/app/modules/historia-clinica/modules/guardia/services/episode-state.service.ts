@@ -21,4 +21,10 @@ export class EpisodeStateService {
 			.changeState(episodeId, EstadosEpisodio.EN_ESPERA);
 	}
 
+	markAsAbsent(episodeId: number): Observable<boolean> {
+		const toState = 'absent';
+		return this.emergencyCareEpisodeStateService
+			.changeToSpecificState(episodeId, EstadosEpisodio.AUSENTE, toState);
+	}
+
 }
