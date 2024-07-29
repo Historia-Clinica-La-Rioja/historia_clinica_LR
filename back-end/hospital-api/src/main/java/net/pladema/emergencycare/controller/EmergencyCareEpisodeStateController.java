@@ -3,6 +3,9 @@ package net.pladema.emergencycare.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.application.setabsentemergencycarestate.SetAbsentEmergencyCareState;
+import net.pladema.emergencycare.application.setcalledemergencycarestate.SetCalledEmergencyCareState;
+import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareEpisodeAttentionPlaceDto;
+import net.pladema.emergencycare.infrastructure.input.rest.mapper.EmergencyCareEpisodeAttentionPlaceMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import ar.lamansys.sgx.shared.masterdata.infrastructure.input.rest.dto.MasterDataDto;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +35,10 @@ public class EmergencyCareEpisodeStateController {
 	private final EmergencyCareEpisodeStateService emergencyCareEpisodeStateService;
 
 	private final SetAbsentEmergencyCareState setAbsentEmergencyCareState;
+
+	private final SetCalledEmergencyCareState setCalledEmergencyCareState;
+
+	private final EmergencyCareEpisodeAttentionPlaceMapper emergencyCareEpisodeAttentionPlaceMapper;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, PRESCRIPTOR, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
@@ -68,5 +76,20 @@ public class EmergencyCareEpisodeStateController {
 		Boolean result = setAbsentEmergencyCareState.run(episodeId);
 		LOG.debug("Output -> {}", result);
 		return ResponseEntity.ok().body(result);
+	}
+
+	@PutMapping("/call")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public Boolean setCalledState(
+			@PathVariable(name = "episodeId") Integer episodeId,
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestBody EmergencyCareEpisodeAttentionPlaceDto emergencyCareEpisodeAttentionPlaceDto){
+		LOG.debug("Change emergency care state to called -> episodeId {}, institutionId {}, emergencyCareEpisodeAttentionPlaceDto {}", episodeId, institutionId, emergencyCareEpisodeAttentionPlaceDto);
+		Boolean result = setCalledEmergencyCareState.run(
+				episodeId,
+				emergencyCareEpisodeAttentionPlaceMapper.fromDto(emergencyCareEpisodeAttentionPlaceDto)
+		);
+		LOG.debug("Output -> {}", result);
+		return result;
 	}
 }

@@ -1679,6 +1679,12 @@ export interface EmergencyCareEpisodeDischargeSummaryDto {
     observation: string;
 }
 
+export interface EmergencyCareEpisodeAttentionPlaceDto {
+    bedId: number;
+    doctorsOfficeId: number;
+    shockroomId: number;
+}
+
 export interface EmergencyCareEpisodeFilterDto {
     identificationNumber: string;
     mustBeEmergencyCareTemporal: boolean;

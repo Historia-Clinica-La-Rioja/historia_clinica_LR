@@ -55,6 +55,7 @@ public class HistoricEmergencyEpisode extends SGXAuditableEntity<HistoricEmergen
 		this.doctorsOfficeId = historicEmergencyEpisodeBo.getDoctorsOfficeId();
 		this.shockroomId = historicEmergencyEpisodeBo.getShockroomId();
 		this.bedId = historicEmergencyEpisodeBo.getBedId();
+		this.calls = historicEmergencyEpisodeBo.getCalls();
 	}
 
 	public LocalDateTime getChangeStateDate() {

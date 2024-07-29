@@ -30,10 +30,19 @@ public class HistoricEmergencyEpisodeStorageImpl implements HistoricEmergencyEpi
 	}
 
 	@Override
-	public LocalDateTime getLatestByEmergencyCareEpisodeId(Integer episodeId) {
+	public LocalDateTime getLatestChangeStateDateByEpisodeId(Integer episodeId) {
 		log.debug("Input getLatestByEmergencyCareEpisodeId parameter -> episodeId {}", episodeId);
 		Optional<HistoricEmergencyEpisode> hee = historicEmergencyEpisodeRepository.findLatestByEmergencyCareEpisodeId(episodeId);
 		LocalDateTime result = hee.map(HistoricEmergencyEpisode::getChangeStateDate).orElse(null);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public Optional<HistoricEmergencyEpisodeBo> getLatestByEpisodeId(Integer episodeId) {
+		log.debug("Input getLatestByEpisodeId parameter -> episodeId {}", episodeId);
+		Optional<HistoricEmergencyEpisode> hee = historicEmergencyEpisodeRepository.findLatestByEmergencyCareEpisodeId(episodeId);
+		Optional<HistoricEmergencyEpisodeBo> result = hee.map(this::mapToBo);
 		log.debug("Output -> {}", result);
 		return result;
 	}
@@ -46,6 +55,7 @@ public class HistoricEmergencyEpisodeStorageImpl implements HistoricEmergencyEpi
 				.shockroomId(historicEmergencyEpisode.getShockroomId())
 				.doctorsOfficeId(historicEmergencyEpisode.getDoctorsOfficeId())
 				.bedId(historicEmergencyEpisode.getBedId())
+				.calls(historicEmergencyEpisode.getCalls())
 				.build();
 	}
 }
