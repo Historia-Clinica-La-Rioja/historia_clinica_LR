@@ -294,7 +294,8 @@ export class CardEstudiosComponent implements OnInit {
 	openCreateOutpatientOrderDialog(healthProblems) {
 		const newOrderComponent = this.dialog.open(CreateOutpatientOrderComponent,
 			{
-				width: '28%',
+				width: '35%',
+				autoFocus: false,
 				data: { patientId: this.patientId, healthProblems },
 			});
 

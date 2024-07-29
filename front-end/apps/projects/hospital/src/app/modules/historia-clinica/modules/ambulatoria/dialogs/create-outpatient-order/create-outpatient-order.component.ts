@@ -212,7 +212,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 
 	openAddAnotherStudyDialog() {
 		const addStudy = this.dialog.open(ConceptsTypeaheadSearchDialogComponent, {
-			width: '25%',
+			width: '35%',
+            autoFocus: false,
 			data: {
 				ecl: this.ecl,
 				placeholder: 'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY',
