@@ -33,7 +33,7 @@ export class DocumentsSummaryMapperService {
     mapToHeaderDescription(header: HospitalizationDocumentHeaderDto, title: string, activeDocument: DocumentSearch): HeaderDescription {
         return {
             title,
-            edit: activeDocument.canDoAction.edit,
+            edit: activeDocument.document.confirmed ? activeDocument.canDoAction.edit : false,
             delete: activeDocument.canDoAction.delete,
             headerDescriptionData: {
                 scope: header.sourceTypeName,

@@ -214,6 +214,7 @@
 			"TITLE": "Epicrisis",
 			"SUBTITLE": "Completa los siguientes datos.",
 			"MESSAGE-REMEMBER": "Seleccione los datos que desea incluir en la Epicrisis",
+            "CONTINUE_DRAFT": "Seguir editando",
 			"alergias": {
 				"TITLE": "Alergias",
 				"table": {
