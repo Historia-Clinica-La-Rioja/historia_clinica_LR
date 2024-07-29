@@ -68,6 +68,8 @@ export class HomeComponent implements OnInit {
 
 	handleLocationPoint = false;
 
+	showDetails = false;
+
 	area: GlobalCoordinatesDto[] = [];
 
 	constructor(private readonly gisService: GisService,
@@ -80,6 +82,7 @@ export class HomeComponent implements OnInit {
 	ngOnInit(): void {
 		this.setUpInstitutionAddressForm();
 		this.setInstitutionData();
+		this.setShowDetails();
 	}
 
 	setState = (state: AddressProjection) => {
@@ -139,6 +142,7 @@ export class HomeComponent implements OnInit {
 			this.stepperMode = !this.hasCoordinates();
 			this.showMap = this.hasCoordinates();
 			if (this.hasCoordinates()) {
+				this.gisLayersService.detectIfLocationPointClickled();
 				this.mapToInstitutionDescriptionDetailed('gis.detailed-information.TITLE');
 			} else {
 				this.setInstitutionAddressFormData();
@@ -149,16 +153,18 @@ export class HomeComponent implements OnInit {
 
 	edit = () => {
 		this.currentStepperIndex = INSTITUTION_ADDRESS_STEP;
-		this.stepperMode = true;
+		this.showDetails = false;
 		this.editMode = true;
+		this.stepperMode = true;
 		this.setInstitutionAddressFormData();
 		this.setStates();
 	}
 
 	cancel = () => {
 		this.gisLayersService.removeLocationClic();
+		this.gisLayersService.detectIfLocationPointClickled();
 		this.editMode = false;
-		this.stepperMode = false;
+		this.showDetails = false;
 		this.setInstitutionData();
 	}
 
@@ -187,6 +193,15 @@ export class HomeComponent implements OnInit {
 		this.coordinatesCurrentValue = null;
 		this.showMap = false;
 		this.gisLayersService.removeLocationPoint();
+	}
+
+	private setShowDetails = () => {
+		this.gisLayersService.showDetails$.subscribe((value: boolean) => {
+			this.showDetails = value;
+
+			if (this.showDetails)
+				this.gisLayersService.removeLocationPointListener();
+		});
 	}
 
 	private stepToMapPosition = () => {

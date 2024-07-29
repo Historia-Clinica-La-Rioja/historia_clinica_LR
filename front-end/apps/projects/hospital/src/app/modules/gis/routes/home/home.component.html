@@ -113,13 +113,13 @@
             </mat-stepper>
         </mat-card>
 
-        <!-- <app-institution-description-detail
-            *ngIf="!stepperMode && institutionDescription" 
+        <app-institution-description-detail
+            *ngIf="showDetails && institutionDescription" 
             (stepperEdit)="edit()"
             [setInstitutionDescription]="institutionDescription">
-        </app-institution-description-detail> -->
+        </app-institution-description-detail>
 
-        <app-patient-search></app-patient-search>
+        <app-patient-search *ngIf="!showDetails && !stepperMode"></app-patient-search>
 
         <div class="map-container">
             <app-loading *ngIf="isLoading"></app-loading>

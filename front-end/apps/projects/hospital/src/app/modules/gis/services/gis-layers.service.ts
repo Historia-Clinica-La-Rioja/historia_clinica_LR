@@ -16,10 +16,11 @@ import { BehaviorSubject } from 'rxjs';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { OpenlayersService } from './openlayers.service';
 
-const LOCATION_POINT = '../../../../assets/icons/gis_location_point.svg';
+const LOCATION_POINT_PATH = '../../../../assets/icons/gis_location_point.svg';
 const IGN_MAP = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png';
 const EPSG3857 = 'EPSG:3857';
 const EPSG4326 = 'EPSG:4326';
+const LOCATION_POINT_ID = 'locationPoint';
 
 @Injectable({
 	providedIn: 'root',
@@ -54,7 +55,9 @@ export class GisLayersService {
 	showRemoveAndCreate$ = new BehaviorSubject<boolean>(false);
 	areaLayer;
 	clickListener = null;
+	locationPointListener = null;
 	locationCoordinates: Coordinate;
+	showDetails$ = new BehaviorSubject<boolean>(false);
 
 	constructor(private readonly openLayersService: OpenlayersService) {}
 
@@ -201,6 +204,30 @@ export class GisLayersService {
 		this.locationCoordinates = coords;
 	}
 
+	removeLocationPointListener = () => {
+		if (this.locationPointListener) {
+			this.map?.un('click', this.locationPointListener);
+			this.locationPointListener = null;
+		}
+	}
+
+	detectIfLocationPointClickled = () => {
+		this.removeLocationPointListener();
+		this.locationPointListener = this.setLocationPointListener();
+		this.map?.on('click', this.locationPointListener);
+	}
+
+	private setLocationPointListener = () => {
+		return (e) => {
+			this.map.forEachFeatureAtPixel(e.pixel, (feature) => {
+				const name = feature.get('name');
+				if (name === LOCATION_POINT_ID) {
+					this.showDetails$.next(true);
+				}
+			});
+		}
+	}
+
 	private clearMap = () => {
 		this.removeDrawnPolygon();
 		this.map?.getLayers().getArray().forEach(layer => this.map.removeLayer(layer));
@@ -220,11 +247,12 @@ export class GisLayersService {
 		const markerStyle = new Style({
 			image: new Icon({
 				anchor: [0.5, 1],
-				src: LOCATION_POINT,
+				src: LOCATION_POINT_PATH,
 				scale: 0.5
 			})
 		});
 		feature.setStyle(markerStyle);
+		feature.set('name', LOCATION_POINT_ID)
 		return feature;
 	}
 	

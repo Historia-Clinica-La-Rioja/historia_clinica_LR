@@ -38,8 +38,7 @@ export class MapComponent implements OnInit {
 		this.gisLayersService.setUp();
 		this.centerViewPoint();
 		this.gisLayersService.setPolygon(this.area);
-		if (this.handleLocationPoint)
-			this.gisLayersService.handleLocationClic()
+		this.locationPointInteraction();
 	}
 
 	private centerViewPoint = () => {
@@ -48,5 +47,9 @@ export class MapComponent implements OnInit {
 		this.openLayersService.centerView(this.gisLayersService.getMap(), position);
 		this.gisLayersService.removeLocationPoint();
 		this.gisLayersService.addPoint(position);
+	}
+
+	private locationPointInteraction = () => {
+		(this.handleLocationPoint) ? this.gisLayersService.handleLocationClic() : this.gisLayersService.detectIfLocationPointClickled() 
 	}
 }

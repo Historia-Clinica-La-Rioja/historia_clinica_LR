@@ -41,4 +41,8 @@ export class OpenlayersService {
 	transformCoordinatesTo = (coords: Coordinate, fromEPSGType: string, toEPSGType: string): Coordinate => {
 		return transform(coords, fromEPSGType, toEPSGType);
 	}
+
+	setId = (id: string, feature: Feature) => {
+		feature.setId(id);
+	}
 }

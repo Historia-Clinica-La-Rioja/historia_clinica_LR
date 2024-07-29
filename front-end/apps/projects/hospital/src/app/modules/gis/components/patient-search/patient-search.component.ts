@@ -29,7 +29,7 @@ export class PatientSearchComponent {
 	}
 
 	searchPatients = () => {
-		
+
 	}
 
 }
