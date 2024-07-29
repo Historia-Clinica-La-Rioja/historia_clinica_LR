@@ -8,15 +8,19 @@ import {
     SelectField,
     Pagination,
     useRecordContext,
-    NumberField
+    NumberField,
+    BooleanField,
+    List,
+    FunctionField
 } from 'react-admin';
 import CreateRelatedButton from '../../components/CreateRelatedButton';
 import SectionTitle from '../../components/SectionTitle';
 import { ADMINISTRADOR, ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, ROOT } from '../../roles';
 import ParameterizedFormScopes from '../../masterData/parameterized-form/ParameterizedFormScope';
-import { FORM_STATUS_CHOICES, formIsUpdatable } from '../../masterData/parameterized-form/ParameterizedFormStatus';
+import { FORM_STATUS_CHOICES, FORM_STATUS_DRAFT, formIsUpdatable } from '../../masterData/parameterized-form/ParameterizedFormStatus';
 import UpdateParameterizedFormStatusButton from '../../masterData/parameterized-form/UpdateParameterizedFormStatusButton';
 import { Typography } from '@material-ui/core';
+import { UpdateFormEnablementInInstitution } from '../../masterData/parameterized-form/UpdateFormEnablementInInstitution';
 
 const UserIsInstitutionalAdmin = function () {
     const { permissions } = usePermissions();
@@ -48,7 +52,7 @@ const CreateInstitutionalParameterizedForm = ({ record }) => {
 
 const CustomEditButton = (props) => {
     const record = useRecordContext(props);
-    return <EditButton basePath="/parameterizedform" record={{ id: record.parameterizedFormId, institutionId: record.institutionId }} />
+    return <EditButton basePath="/parameterizedform" record={{ id: record.id, institutionId: record.institutionId }} />
 }
 
 const ShowInstitutionalParameterizedForm = (props) => {
@@ -66,10 +70,10 @@ const ShowInstitutionalParameterizedForm = (props) => {
             pagination={<Pagination />}
         >
             <ReferenceManyField
-                id='parameterizedForm'
+                id='institutionalParameterizedForm'
                 addLabel={false}
                 reference="parameterizedform"
-                target="parameterizedFormId"
+                target="institutionId"
                 sort={{ field: 'id', order: 'ASC' }}
                 filter={{'institutionId': record.id}}
             >
@@ -86,9 +90,54 @@ const ShowInstitutionalParameterizedForm = (props) => {
     )
 };
 
+
+const EmptyTitle = () => <span />;
+
+const ShowDomainParameterizedForm = (props) => {
+    const record = useRecordContext(props);
+    const show = (basePath, id, data) => `/parameterizedform/${data.id}/show`;
+    return (
+        <List {...props}
+            title={<EmptyTitle />}
+            resource="parameterizedform"
+            hasCreate={false}
+            bulkActionButtons={false}
+            exporter={false}
+            sort={{ field: 'id', order: 'ASC' }}
+            filter={{ 'statusId': FORM_STATUS_DRAFT, 'isDomain': true, 'institutionId': record.id }}
+            actions={false}
+            empty={<p style={{ paddingLeft: 10, marginTop: 0, color: '#8c8c8c' }}>Sin formularios institucionales definidos</p>}
+        >
+            <Datagrid rowClick={show}>
+                <NumberField source="id" />
+                <TextField label="resources.parameterizedform.formName" source="name" />
+                <SelectField label="resources.parameterizedform.status" source="statusId" choices={FORM_STATUS_CHOICES} />
+                <ParameterizedFormScopes label="resources.parameterizedform.scope" />
+                <FunctionField
+                    label="Habilitado"
+                    render={record => {
+                        const isEnabled = record && record.isEnabled;
+                        return isEnabled ? (
+                            <BooleanField record={record} source="isEnabled" label="Habilitado" />
+                        ) : (
+                            <BooleanField record={{ isEnabled: false }} source="isEnabled" label="Habilitado" />
+                        );
+                    }}
+                />
+                {UserIsInstitutionalAdmin() && <UpdateFormEnablementInInstitution institutionId={record.id} {...props} />}
+            </Datagrid>
+        </List>
+    )
+};
+
 export const ParameterizedFormSection = (props) => (
     <div>
         <SectionTitle label="resources.institutions.fields.parameterizedForm" />
+        <Typography variant="body1" gutterBottom>
+            Dominio
+        </Typography>
+        <ShowDomainParameterizedForm {...props} />
+        < br />
         <Typography variant="body1" gutterBottom>
             Institución
         </Typography>

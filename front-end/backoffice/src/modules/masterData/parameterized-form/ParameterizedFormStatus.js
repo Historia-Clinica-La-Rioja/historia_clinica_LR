@@ -13,3 +13,6 @@ export const FORM_STATUS_ACTIONS = {
     2: {nextStateActionName: 'resources.parameterizedform.statusId.deactivate'},
     3: {nextStateActionName: 'resources.parameterizedform.statusId.activate'}
 }
+export const FORM_STATUS_DRAFT = 1;
+export const FORM_STATUS_ACTIVE = 2;
+export const FORM_STATUS_INACTIVE = 3;

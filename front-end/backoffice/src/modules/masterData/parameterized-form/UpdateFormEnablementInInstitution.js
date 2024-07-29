@@ -9,9 +9,9 @@ import {
     fetchEnd
 } from 'react-admin';
 import { sgxFetchApiWithToken } from '../../../libs/sgx/api/fetch';
-import { FORM_STATUS_ACTIONS } from './ParameterizedFormStatus';
+import { FORM_STATUS_INACTIVE } from './ParameterizedFormStatus';
 
-const UpdateParameterizedFormStatusButton = (props) => {
+export const UpdateFormEnablementInInstitution = (institutionId, props) => {
     const record = useRecordContext(props);
     const dispatch = useDispatch();
     const refresh = useRefresh();
@@ -21,13 +21,15 @@ const UpdateParameterizedFormStatusButton = (props) => {
         e.stopPropagation();
         setLoading(true);
         dispatch(fetchStart());
-        sgxFetchApiWithToken(`backoffice/parameterizedform/${record.id}/update-status`, { method: 'PUT' })
+        const hasToEnabled = record.isEnabled ? false : true;
+        sgxFetchApiWithToken(`backoffice/parameterizedform/${record.id}/update-institutional-enablement?institutionId=${institutionId.institutionId}&enablement=${hasToEnabled}`, 
+            { method: 'PUT' })
             .then((response) => {
                 refresh();
             })
             .catch((e) => {
                 if (!e.body.text)
-                    notify('Error al cambiar el estado', { type: 'warning' })
+                    notify('Error al habilitar formulario', { type: 'warning' })
                 else
                     notify(e.body.text, { type: 'warning' })
             })
@@ -42,11 +44,10 @@ const UpdateParameterizedFormStatusButton = (props) => {
                 onClick={handleClick}
                 color="primary"
                 size="small"
-                disabled={loading}
-                label={FORM_STATUS_ACTIONS[record.statusId].nextStateActionName}
+                disabled={record.statusId === FORM_STATUS_INACTIVE || loading }
+                label={record.isEnabled ? 'Deshabilitar' : 'Habilitar'}
             />
         </>
     );
-}
 
-export default UpdateParameterizedFormStatusButton;
+} 
