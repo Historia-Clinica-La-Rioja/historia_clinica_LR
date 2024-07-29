@@ -216,6 +216,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
 		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
 		return result;
 	}
 
@@ -226,6 +227,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now().minusDays(1).minusHours(1));
 		result.setSignatureStatus(ESignatureStatus.PENDING);
+		result.setIsConfirmed(true);
 		return result;
 	}
 
@@ -236,6 +238,7 @@ class UpdateAnamnesisServiceImplTest extends UnitRepository {
 		result.setCreatedBy(userId);
 		result.setCreatedOn(LocalDateTime.now());
 		result.setSignatureStatus(ESignatureStatus.SIGNED);
+		result.setIsConfirmed(true);
 		return result;
 	}
 

@@ -49,14 +49,17 @@ public class SharedDocumentPortImpl implements SharedDocumentPort {
 		log.debug("Input parameter documentId {}", documentId);
 		Document document = documentService.findById(documentId)
 				.orElseThrow(() -> new NotFoundException("document-not-exists", String.format("No existe el documento con id %s", documentId)));
-		DocumentFileBo file = documentFileStorage.findById(documentId)
-				.orElseThrow(() -> new NotFoundException("file-not-exists", String.format("No existe el documento con id %s", documentId)));
 		DocumentReduceInfoDto result = new DocumentReduceInfoDto();
 		result.setSourceId(document.getSourceId());
 		result.setCreatedBy(document.getCreatedBy());
 		result.setCreatedOn(document.getCreatedOn());
 		result.setTypeId(document.getTypeId());
-		result.setSignatureStatus(ESignatureStatus.map(file.getSignatureStatusId()));
+		result.setIsConfirmed(document.isConfirmed());
+		if (document.isConfirmed()) {
+			DocumentFileBo file = documentFileStorage.findById(documentId)
+					.orElseThrow(() -> new NotFoundException("file-not-exists", String.format("No existe el documento con id %s", documentId)));
+			result.setSignatureStatus(ESignatureStatus.map(file.getSignatureStatusId()));
+		}
 		return result;
 	}
 

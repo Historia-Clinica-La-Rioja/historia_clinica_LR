@@ -1415,8 +1415,10 @@ export interface DocumentObservationsDto extends Serializable {
 }
 
 export interface DocumentReduceInfoDto extends Serializable {
+    cofirmed: boolean;
     createdBy: number;
     createdOn: Date;
+    isConfirmed: boolean;
     signatureStatus: ESignatureStatus;
     sourceId: number;
     typeId: number;
