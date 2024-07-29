@@ -87,11 +87,15 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 			episode.state.id === this.estadosEpisodio.EN_ESPERA &&
 			this.hasProffesionalRole;
 
+		const showMarkAsAbsent =
+			episode.state.id !== this.estadosEpisodio.EN_ATENCION;
+
 		return {
 			newTriage: showNewTriage,
 			attend: showAttend,
 			editPatientEpisode: showEditPatientEpisode,
-			editPatientDescription: showEditPatientDescription
+			editPatientDescription: showEditPatientDescription,
+			markAsAbsent: showMarkAsAbsent
 		};
 	}
 
@@ -136,6 +140,10 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		});
 	}
 
+	private markPatientAsAbscent(){
+		console.log("ausente")
+	}
+
 	showActionsButton(episode: Episode): boolean {
 		const conditions = this.getActionsButtonsConditions(episode);
 		return Object.values(conditions).some(condition => condition);
@@ -176,6 +184,14 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 				condition: conditions.editPatientDescription,
 				label: this.translate.instant('guardia.home.episodes.episode.actions.edit_patient_description.TITLE'),
 				callback: () => this.editPatientDescription()
+			},
+			{
+				id: 'markAsAbsent',
+				category: 'final-state',
+				icon: 'person_off',
+				condition: conditions.markAsAbsent,
+				label: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.TITLE'),
+				callback: () => this.markPatientAsAbscent()
 			}
 		];
 
@@ -218,6 +234,7 @@ interface EpisodeConditions {
 	attend: boolean;
 	editPatientEpisode: boolean;
 	editPatientDescription: boolean;
+	markAsAbsent: boolean;
 }
 
 export interface AttendPlace {

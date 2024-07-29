@@ -78,6 +78,11 @@
 							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",
 							"ERROR": "Error al actualizar estado de episodio a En atención"
 						},
+						"mark_as_absent":{
+							"TITLE": "Marcar como ausente",
+							"SUCCESS": "Estado de episodio actualizado a AUSENTE exitosamente",
+							"ERROR": "Error al actualizar estado de episodio a AUSENTE"
+						},
 						"en_espera": {
 							"TITLE": "Pasar a en espera",
 							"CONFIRM": "¿Está seguro que desea cambiar el estado del episodio a EN ESPERA?",
