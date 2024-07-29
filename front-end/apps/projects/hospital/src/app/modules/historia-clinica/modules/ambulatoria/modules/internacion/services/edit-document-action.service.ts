@@ -47,6 +47,7 @@ export class EditDocumentActionService {
 
 	editDraftEpicrisis(document: DocumentSearchDto, canConfirmedDocument: boolean) {
 		this.canConfirmedDocument = canConfirmedDocument;
+        this.internmentActions.epicrisis$.subscribe(fieldsToUpdate => this.updateInternment(fieldsToUpdate));
 		this.internmentActions.openEpicrisis(document.id, true);
 	}
 

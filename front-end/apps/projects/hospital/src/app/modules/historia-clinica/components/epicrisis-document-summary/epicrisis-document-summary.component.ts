@@ -7,6 +7,7 @@ import { DocumentsSummaryMapperService } from '@historia-clinica/services/docume
 import { EpicrisisDocumentSummaryService, EpicrisisViewFormat } from '@historia-clinica/services/epicrisis-document-summary.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
 import { TranslateService } from '@ngx-translate/core';
+import { ButtonType } from '@presentation/components/button/button.component';
 import { Observable, forkJoin, map } from 'rxjs';
 
 const ACTION_TRIGGERED = true;
@@ -28,6 +29,7 @@ export class EpicrisisDocumentSummaryComponent implements OnInit {
     _activeDocument: DocumentSearch;
     documentSummary$: Observable<{headerDescription: HeaderDescription, epicrisis: EpicrisisViewFormat}>;
     documentName = '';
+    ButtonType = ButtonType;
 
     constructor(
         private readonly epicrisisService: EpicrisisService,
@@ -73,4 +75,9 @@ export class EpicrisisDocumentSummaryComponent implements OnInit {
 		this.documentActions.editDocument(this._activeDocument.document, this.internmentEpisodeId);
 		this.resetActiveDocument.emit(ACTION_TRIGGERED);
 	}
+
+    editDraft() {
+        this.documentActions.editEpicrisisDraft(this._activeDocument.document);
+		this.resetActiveDocument.emit(ACTION_TRIGGERED);
+    }
 }
