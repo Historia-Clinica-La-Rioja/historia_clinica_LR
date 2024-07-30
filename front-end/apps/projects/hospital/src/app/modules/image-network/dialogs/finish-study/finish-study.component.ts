@@ -94,12 +94,6 @@ export class FinishStudyComponent  implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe();
 	}
-
-	closeDialog() {
-		this.dialogRef.close()
-	}
-
-
 }
 
 export interface StudyInfo {
