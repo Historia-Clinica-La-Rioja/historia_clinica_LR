@@ -22,6 +22,7 @@ import net.pladema.emergencycare.service.domain.EmergencyCareEpisodeInProgressBo
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.PatientECEBo;
 import net.pladema.emergencycare.service.domain.PoliceInterventionDetailsBo;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.domain.TriageBo;
 import net.pladema.emergencycare.triage.service.TriageService;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
@@ -129,6 +130,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
         EmergencyCareBo result = new EmergencyCareBo(emergencyCareEpisode);
 		result.setRoom(emergencyCareEpisode.getRoom() != null ? new RoomBo(emergencyCareEpisode.getRoom()): null);
         result.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, result.getCreatedOn()));
+		result.setCanBeAbsent(getCanBeAbsent(result.getId(), result.getEmergencyCareStateId()));
 		log.debug(OUTPUT, result);
 		return result;
     }
@@ -450,5 +452,11 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		if (isATemporaryPatient && hasNotPatientDescription) {
 			throw new SaveEmergencyCareEpisodeException(SaveEmergencyCareEpisodeExceptionEnum.PATIENT_DESCRIPTION, "No se puede editar un episodio de guardia con paciente temporal sin una descripcion identificatoria del paciente");
 		}
+	}
+
+	private Boolean getCanBeAbsent(Integer episodeId, Short emergencyCareStateId){
+		EEmergencyCareState fromState = EEmergencyCareState.getById(emergencyCareStateId);
+		return EEmergencyCareState.validTransition(fromState ,EEmergencyCareState.AUSENTE) &&
+				!emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId);
 	}
 }

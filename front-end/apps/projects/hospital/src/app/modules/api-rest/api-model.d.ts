@@ -4539,6 +4539,7 @@ export interface ResponseAnamnesisDto extends AnamnesisDto {
 
 export interface ResponseEmergencyCareDto extends EmergencyCareDto {
     bed: BedDto;
+    canBeAbsent: boolean;
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;
     emergencyCareState: MasterDataDto;
