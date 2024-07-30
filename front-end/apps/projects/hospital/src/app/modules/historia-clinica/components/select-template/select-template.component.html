@@ -3,8 +3,9 @@
 		{{template.name}}
 	</span>
 
+	<span>{{ 'ambulatoria.paciente.studies.select_template.TITLE' | translate}} </span>
+
 	<mat-form-field appearance="outline" id="procedure-templates">
-		<mat-label>{{ 'ambulatoria.paciente.studies.select_template.TITLE' | translate}} </mat-label>
 		<mat-select [disabled]="template.preloadValues" [(value)]="template.preloadedSelectedTemplate"
 			(selectionChange)="onSelect($event.value, template.id)">
 			<mat-option *ngFor="let t of template.form" [value]="t">

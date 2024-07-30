@@ -1,9 +1,11 @@
-<h3>{{title | translate}}</h3>
+<div fxLayout="column">
+	<span>{{title | translate}}</span>
 
-<mat-form-field appearance="outline">
-	<mat-select [(value)]="_preload" (selectionChange)="valueSelected.emit($event.value)">
-		<mat-option *ngFor="let opt of options" [value]="opt.value">
-			{{opt.value}}
-		</mat-option>
-	</mat-select>
-</mat-form-field>
+	<mat-form-field appearance="outline">
+		<mat-select [(value)]="_preload" (selectionChange)="valueSelected.emit($event.value)">
+			<mat-option *ngFor="let opt of options" [value]="opt.value">
+				{{opt.value}}
+			</mat-option>
+		</mat-select>
+	</mat-form-field>
+</div>
