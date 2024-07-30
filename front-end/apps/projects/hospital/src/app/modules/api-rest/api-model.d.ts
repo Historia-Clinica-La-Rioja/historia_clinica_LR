@@ -1764,6 +1764,7 @@ export interface EmergencyCareHistoricDocumentDto {
 
 export interface EmergencyCareListDto extends Serializable {
     bed: BedDto;
+    calls: number;
     canBeAbsent: boolean;
     creationDate: DateTimeDto;
     dischargeSummary: EmergencyCareEpisodeDischargeSummaryDto;

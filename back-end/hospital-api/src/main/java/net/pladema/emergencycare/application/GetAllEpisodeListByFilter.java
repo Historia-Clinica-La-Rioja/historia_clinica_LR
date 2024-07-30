@@ -14,6 +14,7 @@ import net.pladema.emergencycare.repository.EmergencyCareEpisodeRepository;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
 import net.pladema.emergencycare.service.domain.EmergencyCareBo;
 
+import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.emergencycare.triage.application.fetchlasttriagebyemergencycareepisodeid.FetchLastTriageByEmergencyCareEpisodeId;
 import net.pladema.establishment.controller.service.InstitutionExternalService;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -53,7 +55,7 @@ public class GetAllEpisodeListByFilter {
 			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
 			ec.setTriage(fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId()));
 			ec.setCanBeAbsent(getCanBeAbsent(ec.getId(), ec.getEmergencyCareStateId()));
-			ec.setStateUpdatedOn(UTCIntoInstitutionLocalDateTime(institutionId,historicEmergencyEpisodeStorage.getLatestByEmergencyCareEpisodeId(ec.getId())));
+			setStateUpdatedOnAndCalls(ec,institutionId);
 			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
 				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
 				ec.setRelatedProfessional(professional);
@@ -77,7 +79,7 @@ public class GetAllEpisodeListByFilter {
 		return EEmergencyCareState.validTransition(fromState ,EEmergencyCareState.AUSENTE) &&
 				!emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId);
 	}
-	
+
 	private void setSelfDeterminationNames(EmergencyCareBo ec) {
 		if (ec.getPatient() != null && ec.getPatient().getPerson() != null && ec.getPatient().getPerson().getNameSelfDetermination() != null){
 			ec.getPatient().getPerson().setFirstName(ec.getPatient().getPerson().getNameSelfDetermination());
@@ -99,4 +101,13 @@ public class GetAllEpisodeListByFilter {
 		}
 	}
 
+
+	private void setStateUpdatedOnAndCalls(EmergencyCareBo ec, Integer institutionId){
+		Optional<HistoricEmergencyEpisodeBo> heeOpt = historicEmergencyEpisodeStorage.getLatestByEpisodeId(ec.getId());
+		if (heeOpt.isPresent()) {
+			HistoricEmergencyEpisodeBo hee = heeOpt.get();
+			ec.setStateUpdatedOn(UTCIntoInstitutionLocalDateTime(institutionId,hee.getChangeStateDate()));
+			ec.setCalls(hee.getCalls());
+		}
+	}
 }

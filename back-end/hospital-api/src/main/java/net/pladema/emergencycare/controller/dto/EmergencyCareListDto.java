@@ -54,4 +54,5 @@ public class EmergencyCareListDto implements Serializable {
 
 	private EmergencyCareEpisodeDischargeSummaryDto dischargeSummary;
 
+	private Short calls;
 }

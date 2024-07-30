@@ -70,7 +70,8 @@ public enum EEmergencyCareState {
 	}
 
 	public static List<Short> getAllForEmergencyCareList(){
-		return Stream.of(EEmergencyCareState.ATENCION, EEmergencyCareState.ESPERA, EEmergencyCareState.ALTA_MEDICA, EEmergencyCareState.AUSENTE)
+		return Stream.of(EEmergencyCareState.ATENCION, EEmergencyCareState.ESPERA, EEmergencyCareState.ALTA_MEDICA,
+						EEmergencyCareState.AUSENTE, EEmergencyCareState.LLAMADO)
 				.map(EEmergencyCareState::getId)
 				.collect(Collectors.toList());
 	}

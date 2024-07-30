@@ -74,6 +74,7 @@ public class EmergencyCareBo {
 	private Boolean canBeAbsent;
 
 	private LocalDateTime stateUpdatedOn;
+	private Short calls;
 
 	private SectorBo sector;
 
