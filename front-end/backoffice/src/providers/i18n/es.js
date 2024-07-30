@@ -1177,6 +1177,16 @@ const messages = {
             fields: {
                 conceptPt: 'Nombre'
             }
+        },
+        'institutions-prescription': {
+            name: 'Establecimiento para prescripción  |||| Establecimientos para prescripción',
+            fields: {
+                name: 'Nombre',
+                sisaCode: 'Código SISA',
+                addressId: 'Dirección',
+                dependencyId: 'Dependencia',
+                provinceId: 'Provincia'
+            },
         }
     }
 };
