@@ -27,7 +27,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
 
     procedureService = new ProcedimientosService(this.formBuilder, this.snomedService, this.snackBarService, this.dateFormatPipe);
     searchConceptsLocallyFF = false;
-    procedures: HospitalizationProcedureDto[];
+    procedures: HospitalizationProcedureDto[] = [];
     description: string;
 
     constructor(
@@ -38,14 +38,11 @@ export class ProcedureAndDescriptionComponent implements OnInit {
         private readonly featureFlagService: FeatureFlagService,
         private readonly dateFormatPipe: DateFormatPipe
     ) {
-        this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
-            this.searchConceptsLocallyFF = isOn;
-        })
+        this.setFeatureFlags();
         this.procedureService.procedimientos$.subscribe(procedures => this.changeProcedure(procedures));
     }
 
     ngOnInit(): void {
-        console.log(this.surgicalReport);
         switch (this.type) {
             case ProcedureTypeEnum.DRAINAGE:
                 this.procedures = this.surgicalReport.drainages;
@@ -58,7 +55,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
                 break;
         }
 
-        if (this.procedures && this.procedures.length > 0) {
+        if (this.procedures.length > 0) {
             this.description = this.procedures[PROCEDURE_NOTE_POSITION].note;
         }
     }
@@ -82,7 +79,7 @@ export class ProcedureAndDescriptionComponent implements OnInit {
         });
         this.updateSurgicalReportProcedures();
 
-        if (this.procedures && this.procedures.length > 0) {
+        if (this.procedures.length > 0) {
             this.description = this.procedures[PROCEDURE_NOTE_POSITION].note;
         }
     }
@@ -129,4 +126,10 @@ export class ProcedureAndDescriptionComponent implements OnInit {
             this.updateSurgicalReportProcedures();
         }
     }
+
+	private setFeatureFlags() {
+		this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
+            this.searchConceptsLocallyFF = isOn;
+        })
+	}
 }
