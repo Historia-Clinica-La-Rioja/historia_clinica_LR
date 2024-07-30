@@ -1,11 +1,11 @@
 <div fxLayout="row" fxLayoutAlign="space-between">
-    <span mat-dialog-title [translate]="'image-network.worklist.details_study.SAVE_TEMPLATE_TITLE'"></span>
+    <h2 mat-dialog-title [translate]="'image-network.worklist.details_study.SAVE_TEMPLATE_TITLE'"></h2>
     <button mat-icon-button mat-dialog-close>
         <mat-icon>close</mat-icon>
     </button>
 </div>
 
-<div  fxLayout="column"  fxLayoutGap="8px" mat-dialog-content>
+<mat-dialog-content fxLayout="column"  fxLayoutGap="8px">
     <form [formGroup]="form">
         <mat-form-field class="width_content">
             <mat-label [translate]="'image-network.worklist.details_study.NAME_TEMPLATE'"></mat-label>
@@ -23,4 +23,4 @@
             <span class="uppercase" [translate]="'buttons.SAVE'"></span>
         </button>
     </div>
-</div>
+</mat-dialog-content>
