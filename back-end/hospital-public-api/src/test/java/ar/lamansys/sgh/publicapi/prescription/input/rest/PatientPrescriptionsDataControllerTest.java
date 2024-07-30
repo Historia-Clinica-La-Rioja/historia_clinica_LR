@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.publicapi.prescription.input.rest;
 
 import ar.lamansys.sgh.publicapi.TestUtils;
+import ar.lamansys.sgh.publicapi.patient.domain.PatientPrescriptionAddressBo;
+import ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest.dto.PatientPrescriptionAddressDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionProfessionDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionProfessionalRegistrationDto;
 import ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto.PrescriptionSpecialtyDto;
@@ -104,6 +106,15 @@ public class PatientPrescriptionsDataControllerTest {
 				"snomedId"
 		);
 
+		PatientPrescriptionAddressBo patientAddress = new PatientPrescriptionAddressBo(
+				"country",
+				"province",
+				"department",
+				"city",
+				"street",
+				"streetNumber"
+		);
+
 		PrescriptionsDataBo prescription = new PrescriptionsDataBo(
 				"1",
 				"1",
@@ -111,7 +122,8 @@ public class PatientPrescriptionsDataControllerTest {
 				LocalDateTime.now(),
 				"http://example.com/link",
 				professional,
-				specialty
+				specialty,
+				patientAddress
 		);
 
 		return Collections.singletonList(prescription);
@@ -144,6 +156,15 @@ public class PatientPrescriptionsDataControllerTest {
 				"snomedId"
 		);
 
+		PatientPrescriptionAddressDto patientAddress = new PatientPrescriptionAddressDto(
+				"country",
+				"province",
+				"department",
+				"city",
+				"street",
+				"streetNumber"
+		);
+
 		PrescriptionsDataDto prescription = new PrescriptionsDataDto(
 				"1",
 				"1",
@@ -151,7 +172,8 @@ public class PatientPrescriptionsDataControllerTest {
 				LocalDateTime.now(),
 				"http://example.com/link",
 				professional,
-				specialty
+				specialty,
+				patientAddress
 		);
 
 		return Collections.singletonList(prescription);

@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.publicapi.prescription.infrastructure.input.rest.dto;
 
+import ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest.dto.PatientPrescriptionAddressDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +23,6 @@ public class PrescriptionsDataDto {
 	private String link;
 	private ProfessionalPrescriptionDto professionalData;
 	private PrescriptionSpecialtyDto prescriptionSpecialty;
+	private PatientPrescriptionAddressDto patientAddressData;
 
 }

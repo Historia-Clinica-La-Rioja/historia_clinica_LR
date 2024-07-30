@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import ar.lamansys.sgh.publicapi.patient.domain.PatientPrescriptionAddressBo;
+import ar.lamansys.sgh.publicapi.patient.infrastructure.input.rest.dto.PatientPrescriptionAddressDto;
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.PrescriptionSpecialtyBo;
@@ -85,6 +87,18 @@ public class PrescriptionMapper {
 				.link(prescriptionsDataBo.getLink())
 				.professionalData(mapToProfessionalDataDto(prescriptionsDataBo.getProfessionalData()))
 				.prescriptionSpecialty(mapToSpecialtyDto(prescriptionsDataBo.getPrescriptionSpecialty()))
+				.patientAddressData(mapToPatientAddressDataDto(prescriptionsDataBo.getPatientAddressData()))
+				.build();
+	}
+
+	private PatientPrescriptionAddressDto mapToPatientAddressDataDto(PatientPrescriptionAddressBo patientPrescriptionAddressBo){
+		return PatientPrescriptionAddressDto.builder()
+				.country(patientPrescriptionAddressBo.getCountry())
+				.province(patientPrescriptionAddressBo.getProvince())
+				.department(patientPrescriptionAddressBo.getDepartment())
+				.city(patientPrescriptionAddressBo.getCity())
+				.street(patientPrescriptionAddressBo.getStreet())
+				.streetNumber(patientPrescriptionAddressBo.getStreetNumber())
 				.build();
 	}
 

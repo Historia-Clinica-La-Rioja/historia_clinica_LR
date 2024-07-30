@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.validation.ConstraintViolationException;
 
+import ar.lamansys.sgh.publicapi.patient.domain.PatientPrescriptionAddressBo;
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionBo;
 
 import ar.lamansys.sgh.publicapi.prescription.domain.MultipleCommercialPrescriptionLineBo;
@@ -192,13 +193,25 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 				"SELECT DISTINCT mr.id AS mrid, ms.prescription_date, ms.due_date, " +
 				"p3.first_name AS p3fn, p3.last_name, it2.description AS it2d, p3.identification_number AS p3d, pe2.phone_number, pe2.email AS email, " +
 				"ps.description AS psd, ps.sctid_code AS professional_specialty_snomed_code, pln.license_number, CASE WHEN pln.type_license_number = 1 THEN 'NACIONAL' ELSE 'PROVINCIAL' END, " +
-				"doc.id, cs.name, cs.sctid_code AS specialty_snomed_code " +
+				"doc.id, cs.name, cs.sctid_code AS specialty_snomed_code, " +
+				"co.description AS country, " +
+				"pr.description AS province, " +
+				"de.description AS department, " +
+				"ci.description AS city, " +
+				"pa.street AS person_street, " +
+				"pa.number AS person_street_number " +
 				"FROM medication_statement ms " +
 				"JOIN document_medicamention_statement dms ON ms.id = dms.medication_statement_id " +
 				"JOIN document doc ON doc.id = dms.document_id " +
 				"JOIN medication_request mr ON mr.id = doc.source_id " +
 				"JOIN patient p ON p.id = ms.patient_id " +
 				"JOIN person p2 ON p2.id = p.person_id " +
+				"LEFT JOIN person_extended pep2 ON (pep2.person_id = p2.id) " +
+				"LEFT JOIN address pa ON (pa.id = pep2.address_id) " +
+				"LEFT JOIN country co ON (pa.country_id = co.id) " +
+				"LEFT JOIN province pr ON (pa.province_id = pr.id) " +
+				"LEFT JOIN department de ON (pa.department_id = de.id) " +
+				"LEFT JOIN city ci ON (pa.city_id = ci.id) " +
 				"JOIN healthcare_professional hp ON hp.id = mr.doctor_id " +
 				"JOIN person p3 ON p3.id = hp.person_id " +
 				"JOIN identification_type it2 ON it2.id = p3.identification_type_id " +
@@ -680,7 +693,8 @@ public class PrescriptionStorageImpl implements PrescriptionStorage {
 						prescriptionProfessionBos,
 						prescriptionProfessionalRegistrationBos
 				),
-				new PrescriptionSpecialtyBo((String)queryResult.get(0)[14], (String)queryResult.get(0)[15])
+				new PrescriptionSpecialtyBo((String)queryResult.get(0)[14], (String)queryResult.get(0)[15]),
+				new PatientPrescriptionAddressBo((String)queryResult.get(0)[16],(String)queryResult.get(0)[17],(String)queryResult.get(0)[18],(String)queryResult.get(0)[19],(String)queryResult.get(0)[20],(String)queryResult.get(0)[21])
 		);
 	}
 
