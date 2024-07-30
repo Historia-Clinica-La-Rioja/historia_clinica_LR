@@ -58,13 +58,21 @@ const CheckBoxField = ({formData}) => {
     )
 }
 
-const EmergencyCareField = ({formData, ...rest}) => {
+const emergencyCareOptions = [
+    { id: 1, description: 'Servicios' }
+];
+
+const EmergencyCareField = ({ formData, ...rest }) => {
     return formData.sectorTypeId !== GUARDIA ? null : (
-        <ReferenceInput {...rest} sort={{ field: 'description', order: 'ASC' }}>
-            <SelectInput optionText="description" optionValue="id" />
-        </ReferenceInput>
-    )
-}
+        <SelectInput
+            {...rest}
+            choices={emergencyCareOptions} // Pasar las opciones estáticas
+            optionText="description"
+            optionValue="id"
+            resettable 
+        />
+    );
+};
 
 const SectorCreate = props => (
     <Create {...props}>
@@ -113,7 +121,7 @@ const SectorCreate = props => (
             </FormDataConsumer>
             {/*Sector Organizations for Emergency care*/}
             <FormDataConsumer>
-                {formDataProps => ( <EmergencyCareField {...formDataProps} reference="sectororganizations" source="sectorOrganizationId"/>)}
+                {formDataProps => ( <EmergencyCareField {...formDataProps} source="sectorOrganizationId" />)}
             </FormDataConsumer>
 
         </SimpleForm>
