@@ -116,6 +116,7 @@
         <app-institution-description-detail
             *ngIf="showDetails && institutionDescription" 
             (stepperEdit)="edit()"
+            (patientSearch)="cancel()"
             [setInstitutionDescription]="institutionDescription">
         </app-institution-description-detail>
 

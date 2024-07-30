@@ -1,13 +1,16 @@
 <div class="card-container">
-    <mat-card>
-        <div class="card">
-            <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
-            <div class="actions">
-                <app-button 
-                    [text]="'gis.detailed-information.actions.EDIT'" 
-                    (clicked)="edit()">  
-                </app-button>
-            </div>
+    <mat-card class="card">
+        <app-button
+            (clicked)="goToPatientSearch()"
+            [text]="'gis.detailed-information.actions.BACK'"
+            [buttonType]="ButtonType.BASIC">
+        </app-button>
+        <app-institution-description [setInstitutionDescription]="institutionDescription"></app-institution-description>
+        <div class="actions">
+            <app-button 
+                [text]="'gis.detailed-information.actions.EDIT'" 
+                (clicked)="edit()">  
+            </app-button>
         </div>
     </mat-card>
 </div>
