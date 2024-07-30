@@ -1,10 +1,10 @@
 <div fxLayout="row" fxLayoutAlign="space-between center">
-    <span class="title">{{'image-network.worklist.ATTACHED_DOCUMENTS' | translate}}</span>
-    <button mat-icon-button aria-label="close" (click)="closeModal()">
+    <span mat-dialog-title>{{'image-network.worklist.ATTACHED_DOCUMENTS' | translate}}</span>
+    <button mat-icon-button aria-label="close" mat-dialog-close>
         <mat-icon>close</mat-icon>
     </button>
 </div>
-<mat-dialog-content fxLayout="column" fxLayoutAlign="start start" class="download-btn">
+<mat-dialog-content fxLayout="column" fxLayoutAlign="start start" class="btns-container">
     <a mat-button color="primary" *ngFor="let document of data" (click)="downloadOrder(document)">
         <mat-icon style="margin-right: 5px;">attachment_outline</mat-icon>
         <span>{{document.filename}}</span>
