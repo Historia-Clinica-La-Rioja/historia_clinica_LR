@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DocumentHealthcareProfessionalDto, EProfessionType, HCEHealthcareProfessionalDto, HealthcareProfessionalDto, SurgicalReportDto } from '@api-rest/api-model';
 
+const PROFESSIONAL_TYPE = {
+	[EProfessionType.PATHOLOGIST]: 'pathologist',
+	[EProfessionType.TRANSFUSIONIST]: 'transfusionist'
+};
 @Component({
 	selector: 'app-professional-and-description',
 	templateUrl: './professional-and-description.component.html',
@@ -18,26 +22,29 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 	description: string;
 	professional: DocumentHealthcareProfessionalDto;
 
+	private readonly professionalType = PROFESSIONAL_TYPE;
+
 	constructor() { }
 
 	ngOnInit(): void {
-		this.professional = this.surgicalReport.healthcareProfessionals.find(p => p.profession.type === this.type);
-		this.description = this.professional?.comments;
+		this.professional = this.getProfessionalByType(this.type);
+		this.description = this.professional?.comments
 	}
 
 	changeProfessional(professional: HCEHealthcareProfessionalDto): void {
-		if (professional){
+		if (professional) {
 			this.professional = this.mapToDocumentHealthcareProfessionalDto(professional);
-			this.addProfessional(this.professional, this.type);
-		}
-		else
+			this.setProfessionalByType(this.professional, this.type);
+		} else {
 			this.deleteProfessional(this.type);
+		}
 	}
 
 	changeDescription(description: string): void {
+		this.description = description;
 		if (this.professional) {
-			this.professional.comments = description
-			this.addProfessional(this.professional, this.type);
+			this.professional.comments = description;
+			this.setProfessionalByType(this.professional, this.type);
 		}
 	}
 
@@ -47,34 +54,30 @@ export class ProfessionalAndDescriptionComponent implements OnInit {
 			profession: {
 				type: this.type,
 				otherTypeDescription: null
-			}
-		}
+			},
+			comments: this.description,
+		};
 	}
 
-	addProfessional(professional: DocumentHealthcareProfessionalDto, type: EProfessionType): void {
-		professional.profession.type = type;
-		if (!this.surgicalReport.healthcareProfessionals.length)
-			this.surgicalReport.healthcareProfessionals.push(professional)
-		else {
-			const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === type);
-			if (professional && index == -1)
-				this.surgicalReport.healthcareProfessionals.push(professional);
+	private getProfessionalByType(type: EProfessionType): DocumentHealthcareProfessionalDto {
+		return this.surgicalReport[this.getTypeKey(type)];
+	}
 
-			if (professional && index != -1)
-				this.surgicalReport.healthcareProfessionals.splice(index, 1, professional);
-
-			if (!professional && index != -1)
-				this.surgicalReport.healthcareProfessionals.splice(index, 1);
-		}
+	private setProfessionalByType(professional: DocumentHealthcareProfessionalDto, type: EProfessionType): void {
+		this.surgicalReport[this.getTypeKey(type)] = professional;
 	}
 
 	deleteProfessional(type: EProfessionType): void {
-		const index = this.surgicalReport.healthcareProfessionals.findIndex(p => p.profession.type === type);
+		this.surgicalReport[this.getTypeKey(type)] = null;
 		this.professional = null;
-		this.surgicalReport.healthcareProfessionals.splice(index, 1);
 	}
 
 	isEmpty(): boolean {
-		return !this.surgicalReport.healthcareProfessionals.find(p => p.profession.type === this.type) && !this.description;
+		const professional = this.surgicalReport[this.getTypeKey(this.type)];
+		return !professional && !this.description;
+	}
+
+	private getTypeKey(type: EProfessionType): string {
+		return this.professionalType[type] || null;
 	}
 }
