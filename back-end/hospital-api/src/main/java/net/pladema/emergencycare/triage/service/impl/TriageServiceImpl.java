@@ -112,6 +112,7 @@ public class TriageServiceImpl implements TriageService {
     public TriageBo createAdministrative(TriageBo triageBo, Integer institutionId) {
 		TriageBo result = persistTriage(triageBo, institutionId, getAdministrativeConsumer());
 		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		ifEpisodeIsAbsentUpdateToWaiting(triageBo.getEmergencyCareEpisodeId(), institutionId);
 		return result;
     }
 
@@ -120,6 +121,7 @@ public class TriageServiceImpl implements TriageService {
     public TriageBo createAdultGynecological(TriageBo triageBo, Integer institutionId) {
 		TriageBo result = persistTriage(triageBo, institutionId, getAdultConsumer());
 		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		ifEpisodeIsAbsentUpdateToWaiting(triageBo.getEmergencyCareEpisodeId(), institutionId);
         return result;
     }
 
@@ -128,6 +130,7 @@ public class TriageServiceImpl implements TriageService {
     public TriageBo createPediatric(TriageBo triageBo, Integer institutionId) {
 		TriageBo result = persistTriage(triageBo, institutionId, getPediatricConsumer());
 		addTriageReasons(triageBo.getReasons(), result.getTriageId());
+		ifEpisodeIsAbsentUpdateToWaiting(triageBo.getEmergencyCareEpisodeId(), institutionId);
 		return result;
     }
 
@@ -156,7 +159,8 @@ public class TriageServiceImpl implements TriageService {
 
     private void validTriage(TriageBo triageBo, Integer institutionId) {
         EEmergencyCareState ems = emergencyCareEpisodeStateService.getState(triageBo.getEmergencyCareEpisodeId(), institutionId);
-        Assert.isTrue(EEmergencyCareState.ESPERA.getId().equals(ems.getId()) || EEmergencyCareState.ATENCION.getId().equals(ems.getId()), "care-episode.invalid-triage");
+		List<Short> validStates = EEmergencyCareState.getAllValidForCreateTriage();
+		Assert.isTrue(validStates.contains(ems.getId()), "care-episode.invalid-triage");
     }
 
     private Consumer<TriageBo> getAdultConsumer() {
@@ -226,5 +230,11 @@ public class TriageServiceImpl implements TriageService {
 	public void addTriageReasons(List<ReasonBo> reasons, Integer triageId){
 		if (reasons != null && !reasons.isEmpty())
 			addTriageReasons.run(triageId, reasons);
+	}
+
+	private void ifEpisodeIsAbsentUpdateToWaiting(Integer episodeId, Integer institutionId){
+		EEmergencyCareState ems = emergencyCareEpisodeStateService.getState(episodeId, institutionId);
+		if (ems.equals(EEmergencyCareState.AUSENTE))
+			emergencyCareEpisodeStateService.changeState(episodeId,institutionId,EEmergencyCareState.ESPERA.getId(),null,null,null);
 	}
 }

@@ -72,4 +72,10 @@ public enum EEmergencyCareState {
 				.map(EEmergencyCareState::getId)
 				.collect(Collectors.toList());
 	}
+
+	public static List<Short> getAllValidForCreateTriage(){
+		return Stream.of(EEmergencyCareState.ATENCION, EEmergencyCareState.ESPERA, EEmergencyCareState.ALTA_MEDICA, EEmergencyCareState.AUSENTE)
+				.map(EEmergencyCareState::getId)
+				.collect(Collectors.toList());
+	}
 }

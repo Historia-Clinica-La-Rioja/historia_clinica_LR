@@ -98,14 +98,14 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 			bedExternalService.freeBed(occupiedBedId);
 			return;
 		}
-
-		if (emergencyCareEpisodeRepository.getEmergencyCareEpisodeShockroomId(episodeId) != null) {
+		Integer shockroomId = emergencyCareEpisodeRepository.getEmergencyCareEpisodeShockroomId(episodeId);
+		if (shockroomId != null) {
 			saveHistoricEmergencyEpisode(episodeId, emergencyCareStateId, null, null);
 			emergencyCareEpisodeRepository.updateStateWithShockroom(episodeId, institutionId, emergencyCareStateId, null);
 			return;
 		}
-
-		if (emergencyCareEpisodeRepository.getEmergencyCareEpisodeDoctorsOfficeId(episodeId) != null) {
+		Integer doctorsOfficeId = emergencyCareEpisodeRepository.getEmergencyCareEpisodeDoctorsOfficeId(episodeId);
+		if (doctorsOfficeId != null || emergencyCareStateId.equals(EEmergencyCareState.ESPERA.getId())) {
 			HistoricEmergencyEpisodeBo toSave = new HistoricEmergencyEpisodeBo(episodeId, emergencyCareStateId, null);
 			emergencyCareEpisodeRepository.updateState(episodeId, institutionId, emergencyCareStateId, null);
 			historicEmergencyEpisodeService.saveChange(toSave);
