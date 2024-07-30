@@ -16,7 +16,7 @@ import { BehaviorSubject } from 'rxjs';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { OpenlayersService } from './openlayers.service';
 
-const LOCATION_POINT_PATH = '../../../../assets/icons/gis_location_point.svg';
+const LOCATION_POINT_PATH = '../../../../assets/icons/location_on.svg';
 const IGN_MAP = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png';
 const EPSG3857 = 'EPSG:3857';
 const EPSG4326 = 'EPSG:4326';
