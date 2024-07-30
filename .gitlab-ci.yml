@@ -90,8 +90,8 @@ dockerize_cubejs_dockerhub:
     IMAGE_VERSION: ${CI_COMMIT_TAG}
     DOCKER_FOLDER: "cubejs/entrega"
   before_script:
-    - mv -rv cubejs/schema cubejs/entrega
-    - mv -v cubejs/cube.js cubejs/entrega
+    - mv cubejs/schema cubejs/entrega
+    - mv cubejs/cube.js cubejs/entrega
   rules:
     - if: '$CI_COMMIT_TAG'
       exists:
