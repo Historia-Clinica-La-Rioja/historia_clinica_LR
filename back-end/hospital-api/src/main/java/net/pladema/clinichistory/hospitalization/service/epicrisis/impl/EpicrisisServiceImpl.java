@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.hospitalization.service.epicrisis.impl;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import net.pladema.clinichistory.hospitalization.service.epicrisis.EpicrisisService;
@@ -33,7 +34,7 @@ public class EpicrisisServiceImpl implements EpicrisisService {
     public EpicrisisBo getDocument(Long documentId) {
         LOG.debug("Input parameters documentId {}", documentId);
         EpicrisisBo result = new EpicrisisBo();
-        documentService.findById(documentId).ifPresent( document -> {
+        documentService.getDocumentByIdAndTypeId(documentId, EDocumentType.EPICRISIS.getId()).ifPresent(document -> {
             result.setId(document.getId());
 			result.setInitialDocumentId(document.getInitialDocumentId());
 			result.setConfirmed(document.getStatusId().equals(DocumentStatus.FINAL));

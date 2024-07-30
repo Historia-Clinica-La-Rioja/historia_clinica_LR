@@ -701,6 +701,14 @@ public class DocumentServiceImpl implements DocumentService {
 		log.debug("Output -> Value saved successfully");
 	}
 
+	@Override
+	public Optional<Document> getDocumentByIdAndTypeId(Long documentId, Short documentTypeId) {
+		log.debug("Input parameters -> documentid {}, documentTypeId {}", documentId, documentTypeId);
+		Optional<Document> result = documentRepository.getDocumentByIdAndTypeId(documentId, documentTypeId);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
 	private void saveReferableConcept(Long documentId, Boolean isReferred, Short referableConceptId) {
 		if (isReferred != null)
 			documentReferableConceptRepository.save(parseDocumentReferableConcept(documentId, referableConceptId, isReferred));
