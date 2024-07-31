@@ -11,11 +11,18 @@ import CustomToolbar from '../../components/CustomToolbar';
 
 const redirect = (basePath, id, data) => `/sectors/${data.sectorId}/show`;
 
+const noWhitespace = (value) => {
+    if (value && value.trim() === '') {
+        return 'Este campo no puede estar vacío o solo contener espacios en blanco';
+    }
+};
+
+const validateDescription = [required(), noWhitespace];
 const searchToFilter = searchText => ({name: searchText ? searchText : -1});
 const ClinicalServiceSectorCreate = props => (
     <Create {...props}>
         <SimpleForm redirect={redirect} toolbar={<CustomToolbar />}>
-            <TextInput source="description" validate={[required()]} />
+            <TextInput source="description" validate={validateDescription} />
 
             <ReferenceInput
                 source="sectorId"
