@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Create,
-    required,
     BooleanInput,
     SimpleForm,
     TextInput,
@@ -36,12 +35,18 @@ const ParameterizedFormCreate = props => {
             institutionId: record.institutionId
         }
     }
+    const validateRequired = (value) => {
+        if (!value || value.trim() === '') {
+            return 'Requerido';
+        }
+        return undefined;
+    };
     return <Create {...props} transform={transform}>
         <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
             <div>
                 <Typography variant="h5" component="h2" gutterBottom>Crear Formulario</Typography>
             </div>
-            <TextInput label="resources.parameterizedform.description" source="name" validate={[required()]} />
+            <TextInput label="resources.parameterizedform.description" source="name" validate={validateRequired} />
             {record.institutionId && <InstitutionInformation />}
             <div>
                 <Typography variant="h6" component="h3" gutterBottom>Ámbito</Typography>

@@ -150,7 +150,7 @@ public class BackofficeParameterizedFormStore implements BackofficeStore<Paramet
 	private void setNewInformation(ParameterizedForm oldEntity, ParameterizedFormDto newEntity) {
 		oldEntity.setName(newEntity.getName());
 		oldEntity.setStatusId(EFormStatus.DRAFT.getId());
-		oldEntity.setIsDomain(newEntity.getInstitutionId() == null);
+		oldEntity.setIsDomain(oldEntity.getIsDomain());
 		oldEntity.setOutpatientEnabled(newEntity.getOutpatientEnabled());
 		oldEntity.setEmergencyCareEnabled(newEntity.getEmergencyCareEnabled());
 		oldEntity.setInternmentEnabled(newEntity.getInternmentEnabled());

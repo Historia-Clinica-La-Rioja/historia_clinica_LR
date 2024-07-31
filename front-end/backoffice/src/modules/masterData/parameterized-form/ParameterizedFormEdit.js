@@ -4,7 +4,6 @@ import {
     SimpleForm,
     TextInput,
     BooleanInput,
-    required,
     ReferenceInput,
     AutocompleteInput,
     useRecordContext
@@ -34,13 +33,19 @@ const ParameterizedFormEdit = props => {
             institutionId: record.institutionId
         }
     }
+    const validateRequired = (value) => {
+        if (!value || value.trim() === '') {
+            return 'Requerido';
+        }
+        return undefined;
+    };
     return (
         <Edit {...props} transform={transform}>
             <SimpleForm redirect="show" toolbar={<CustomToolbar />}>
                 <div>
                     <Typography variant="h5" component="h2" gutterBottom>Editar Formulario</Typography>
                 </div>
-                <TextInput source="name" validate={[required()]} />
+                <TextInput source="name" validate={validateRequired} />
                 {record?.institutionId && <InstitutionInformation />}
                 <div>
                     <Typography variant="h6" component="h3" gutterBottom>Ámbito</Typography>
