@@ -58,7 +58,7 @@ public class EquipmentController {
 	}
 
 	@GetMapping("/equipmentbyinstitution")
-	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, TECNICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO_RED_DE_IMAGENES, ADMINISTRADOR_AGENDA, TECNICO, INDEXADOR')")
 	public ResponseEntity<List<EquipmentDto>>  getAllByInstitution(
 			@PathVariable(name = "institutionId") Integer institutionId) {
 		List<EquipmentBO> equipments = equipmentService.getEquipmentByInstitution(institutionId);

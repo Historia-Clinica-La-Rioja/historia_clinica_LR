@@ -35,7 +35,7 @@ public class ImageQueueController {
     private final ImageQueueMapper imageQueueMapper;
 
 
-    @PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'INDEXADOR')")
     @PostMapping
     public ResponseEntity<PageDto<ImageQueueListDto>> getImageQueueList(
             @PathVariable("institutionId") Integer institutionId,
