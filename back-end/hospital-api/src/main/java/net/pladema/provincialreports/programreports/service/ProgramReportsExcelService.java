@@ -139,7 +139,6 @@ public class ProgramReportsExcelService {
 		excelUtilsService.setMinimalHeaderDimensions(sheet);
 		excelUtilsService.setSheetDimensions(sheet);
 
-
 		return workbook;
 	}
 
