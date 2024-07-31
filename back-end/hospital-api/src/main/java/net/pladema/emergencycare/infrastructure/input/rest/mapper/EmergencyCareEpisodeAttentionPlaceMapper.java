@@ -11,4 +11,7 @@ public interface EmergencyCareEpisodeAttentionPlaceMapper {
 
 	@Named("fromDto")
 	EmergencyCareEpisodeAttentionPlaceBo fromDto(EmergencyCareEpisodeAttentionPlaceDto emergencyCareEpisodeAttentionPlaceDto);
+
+	@Named("toDto")
+	EmergencyCareEpisodeAttentionPlaceDto toDto(EmergencyCareEpisodeAttentionPlaceBo emergencyCareEpisodeAttentionPlaceBo);
 }

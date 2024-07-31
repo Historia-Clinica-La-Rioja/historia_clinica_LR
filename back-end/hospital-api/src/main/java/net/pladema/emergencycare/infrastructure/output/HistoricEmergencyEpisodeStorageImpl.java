@@ -3,6 +3,7 @@ package net.pladema.emergencycare.infrastructure.output;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.emergencycare.application.port.output.HistoricEmergencyEpisodeStorage;
+import net.pladema.emergencycare.domain.EmergencyCareEpisodeAttentionPlaceBo;
 import net.pladema.emergencycare.repository.HistoricEmergencyEpisodeRepository;
 import net.pladema.emergencycare.repository.entity.HistoricEmergencyEpisode;
 import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
@@ -43,6 +44,16 @@ public class HistoricEmergencyEpisodeStorageImpl implements HistoricEmergencyEpi
 		log.debug("Input getLatestByEpisodeId parameter -> episodeId {}", episodeId);
 		Optional<HistoricEmergencyEpisode> hee = historicEmergencyEpisodeRepository.findLatestByEmergencyCareEpisodeId(episodeId);
 		Optional<HistoricEmergencyEpisodeBo> result = hee.map(this::mapToBo);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@Override
+	public EmergencyCareEpisodeAttentionPlaceBo getLatestAttentionPlaceByEpisodeId(Integer episodeId) {
+		log.debug("Input getLatestAttentionPlaceByEpisodeId parameter -> episodeId {}", episodeId);
+		Optional<HistoricEmergencyEpisodeBo> hee = historicEmergencyEpisodeRepository.findLatestByEmergencyCareEpisodeId(episodeId)
+				.map(this::mapToBo);
+		EmergencyCareEpisodeAttentionPlaceBo result = hee.map(EmergencyCareEpisodeAttentionPlaceBo::new).orElse(null);
 		log.debug("Output -> {}", result);
 		return result;
 	}
