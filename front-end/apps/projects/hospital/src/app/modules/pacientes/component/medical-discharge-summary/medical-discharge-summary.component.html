@@ -1,12 +1,10 @@
-<mat-divider inset></mat-divider>
-
-<h3 class="bold" style="margin-bottom: 0">
+<h3 class="bold-title">
 	{{ 'ambulatoria.paciente.guardia.PATIENT_DISCHARGE.TITLE' | translate }}
 </h3>
 
 <div *ngIf="medicalDischargeData" fxLayout="column" fxLayoutGap="25px">
 	<div>
-		<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="registerEditorCasesDateHour">
+		<app-register-editor-info [registerEditor]="registerEditor" [registerEditorCase]="REGISTER_EDITOR_CASES_DATE_HOUR">
 		</app-register-editor-info>
 		<div fxLayout="row" fxLayoutGap="8px">
 			<app-title-description fxFlex="50%"

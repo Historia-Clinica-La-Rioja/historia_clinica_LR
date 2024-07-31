@@ -3,7 +3,9 @@
 	<h1>{{ 'guardia.episode.medical_discharge.TITLE' | translate}}</h1>
 	<mat-card class="container" fxLayout="column" fxLayoutGap="32px">
 
-		<app-patient-summary *ngIf="patientSummary" [person]="patientSummary"></app-patient-summary>
+		<section id="patient" class="patient-summary" *ngIf="patientId || patientDescription">
+			<app-patient-basic-information [patientId]="patientId" [patientDescription]="patientDescription"></app-patient-basic-information>
+		</section>
 
 		<mat-divider inset></mat-divider>
 
@@ -34,8 +36,7 @@
 					</div>
 				</div>
 
-				<app-medical-discharge-types [form]="form">
-				</app-medical-discharge-types>
+				<app-medical-discharge-types (dischargeTypeForm)="onDischargeTypeChange($event)"></app-medical-discharge-types>
 
 			</ng-container>
 

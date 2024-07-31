@@ -1,5 +1,5 @@
 <div *ngIf="patientSummary else temporaryPatient">
-    <app-patient-summary [person]="patientSummary" size="SIZE"></app-patient-summary>
+	<app-patient-summary [person]="patientSummary"></app-patient-summary>
 </div>
 
 <ng-template #temporaryPatient>

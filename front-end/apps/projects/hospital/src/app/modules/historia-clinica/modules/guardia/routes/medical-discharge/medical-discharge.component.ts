@@ -3,7 +3,6 @@ import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } fro
 import { ActivatedRoute, Router } from '@angular/router';
 import { DiagnosesGeneralStateDto, ERole, ResponseEmergencyCareDto, SnomedDto, TimeDto, AMedicalDischargeDto, ApiErrorMessageDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
-import { DischargeTypes } from '@api-rest/masterdata';
 import { EmergencyCareEpisodeMedicalDischargeService } from '@api-rest/services/emergency-care-episode-medical-discharge.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { ContextService } from '@core/services/context.service';
@@ -16,10 +15,8 @@ import { MIN_DATE } from "@core/utils/date.utils";
 import { isSameDay } from 'date-fns';
 import { TimePickerData } from '@presentation/components/time-picker/time-picker.component';
 import { EmergencyCareStateService } from '@api-rest/services/emergency-care-state.service';
-import { PatientSummary } from '@hsi-components/patient-summary/patient-summary.component';
 import { PermissionsService } from '@core/services/permissions.service';
 import { MedicalDischargeByNurse } from '../../components/medical-discharge-by-nurse/medical-discharge-by-nurse.component';
-import { PatientSummaryDataService } from '../../services/patient-summary-data.service';
 
 const HEALTCARE_PROFESSIONALS = [ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.ESPECIALISTA_MEDICO, ERole.PROFESIONAL_DE_SALUD];
 
@@ -32,8 +29,6 @@ export class MedicalDischargeComponent implements OnInit {
 
 	hasError = hasError;
 
-	patientSummary: PatientSummary;
-
 	form: UntypedFormGroup;
 
 	selectedProblems: Map<number, DiagnosesGeneralStateDto> = new Map();
@@ -43,7 +38,8 @@ export class MedicalDischargeComponent implements OnInit {
 	formSubmited = false;
 	isLoading = false;
 	private episodeId: number;
-	private patientId: number;
+	patientId: number;
+	patientDescription: string;
 
 	timePickerData = this.buildTimePickerData();
 	minDate = MIN_DATE;
@@ -53,7 +49,6 @@ export class MedicalDischargeComponent implements OnInit {
 		private readonly router: Router,
 		private readonly route: ActivatedRoute,
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly patientSummaryDataService: PatientSummaryDataService,
 		private readonly contextService: ContextService,
 		private readonly emergencyCareEspisodeDischargeService: EmergencyCareEpisodeMedicalDischargeService,
 		private readonly guardiaMapperService: GuardiaMapperService,
@@ -70,7 +65,7 @@ export class MedicalDischargeComponent implements OnInit {
 				time: [this.timePickerData.defaultTime],
 			}),
 			autopsy: [null],
-			dischargeTypeId: [DischargeTypes.ALTA_MEDICA, Validators.required],
+			dischargeTypeId: [null, Validators.required],
 			otherDischargeDescription: [null],
 			observations: [null],
 		});
@@ -87,11 +82,7 @@ export class MedicalDischargeComponent implements OnInit {
 
 			this.emergencyCareEpisodeService.getAdministrative(this.episodeId).subscribe((dto: ResponseEmergencyCareDto) => {
 				this.patientId = dto.patient ? dto.patient.id : null;
-
-				if (this.patientId) {
-					this.loadPatient(this.patientId);
-				}
-
+				this.patientDescription = dto.patient ? dto.patient.patientDescription : null;
 			});
 		});
 
@@ -110,12 +101,6 @@ export class MedicalDischargeComponent implements OnInit {
 				minutes: this.today.getMinutes(),
 			}
 		};
-	}
-
-	private loadPatient(patientId: number) {
-		this.patientSummaryDataService.loadPatient(patientId).subscribe(patientSummary => {
-			this.patientSummary = patientSummary;
-		});
 	}
 
 	private loadProblems() {
@@ -141,6 +126,15 @@ export class MedicalDischargeComponent implements OnInit {
 		this.selectedProblems.has(problem.id) ?
 		this.selectedProblems.delete(problem.id) : this.selectedProblems.set(problem.id, problem);
     }
+
+	onDischargeTypeChange(childForm: UntypedFormGroup){
+		this.form.patchValue({
+			autopsy: childForm.get('autopsy').value,
+			dischargeTypeId: childForm.get('dischargeTypeId').value,
+			otherDischargeDescription: childForm.get('otherDischargeDescription').value,
+		});
+		this.markFormGroupTouched(this.form);
+	}
 
 	dischargedDateChanged(date: Date) {
 		this.form.controls.dateTime.get('date').setValue(date);
@@ -179,13 +173,7 @@ export class MedicalDischargeComponent implements OnInit {
 	}
 
 	private markFormGroupTouched(formGroup: UntypedFormGroup) {
-		Object.keys(formGroup.controls).forEach(key => {
-			const control = formGroup.get(key);
-			control.markAsTouched();
-			if (control instanceof UntypedFormGroup) {
-				this.markFormGroupTouched(control);
-			}
-		});
+		formGroup.markAllAsTouched();
 	}
 
 	goToEpisodeDetails(): void {

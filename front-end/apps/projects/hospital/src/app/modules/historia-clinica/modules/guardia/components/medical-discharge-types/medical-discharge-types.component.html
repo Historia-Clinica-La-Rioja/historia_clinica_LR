@@ -1,56 +1,58 @@
-<div [formGroup]="form" fxLayout="column" fxLayoutGap="16px">
+<form [formGroup]="form">
+	<div fxLayout="column" fxLayoutGap="16px">
 
-	<strong><mat-label translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label></strong>
+		<strong><mat-label translate="guardia.episode.medical_discharge.form.DISCHARGE_TYPE"></mat-label></strong>
 
-	<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="48px">
+		<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="48px">
 
-		<div fxLayout="column">
-			<mat-radio-group class="radio-buttons" formControlName="dischargeTypeId" name="dischargeTypeId">
-				<div *ngFor="let dischargeType of (dischargeTypes$ | async); let i = index" [ngClass]="{'second-column': i >= 8}">
-					<mat-radio-button *ngIf="i < 8" [value]="dischargeType.id" color="primary" class="radio-buttons">
-						{{ dischargeType.description }}
-					</mat-radio-button>
+			<div fxLayout="column">
+				<mat-radio-group class="radio-buttons" formControlName="dischargeTypeId" name="dischargeTypeId">
+					<div *ngFor="let dischargeType of (dischargeTypes$ | async); let i = index" [ngClass]="{'second-column': i >= 8}">
+						<mat-radio-button *ngIf="i < 8" [value]="dischargeType.id" color="primary" class="radio-buttons">
+							{{ dischargeType.description }}
+						</mat-radio-button>
+					</div>
+				</mat-radio-group>
+
+				<div *ngIf="form.value.dischargeTypeId == dischargeTypesEnum.DEFUNCION">
+					<div fxLayout="column" fxLayoutGap="8px">
+						<strong><mat-label translate="guardia.episode.medical_discharge.form.AUTOPSY"></mat-label></strong>
+						<mat-form-field appearance="outline">
+							<mat-select formControlName="autopsy" placeholder="{{'guardia.episode.medical_discharge.form.SELECT_AUTOPSY' | translate }}">
+								<mat-option [value]="true">
+									<span translate="forms.YES"></span>
+								</mat-option>
+								<mat-option [value]="false">
+									<span translate="forms.NO"></span>
+								</mat-option>
+							</mat-select>
+							<mat-error *ngIf="hasError(form, 'required', 'autopsy')">{{ "forms.REQUIRED" | translate }}</mat-error>
+						</mat-form-field>
+					</div>
 				</div>
-			</mat-radio-group>
+			</div>
 
-			<div *ngIf="form.value.dischargeTypeId == dischargeTypesEnum.DEFUNCION">
-				<div fxLayout="column" fxLayoutGap="8px">
-					<strong><mat-label translate="guardia.episode.medical_discharge.form.AUTOPSY"></mat-label></strong>
+			<div fxLayout="column">
+				<mat-radio-group formControlName="dischargeTypeId" name="dischargeTypeId">
+					<div *ngFor="let dischargeType of (dischargeTypes$ | async); let i = index">
+						<mat-radio-button *ngIf="i >= 8" [value]="dischargeType.id" color="primary" class="radio-buttons">
+							{{ dischargeType.description }}
+						</mat-radio-button>
+					</div>
+				</mat-radio-group>
+				<div *ngIf="form.value.dischargeTypeId == dischargeTypesEnum.OTRO">
 					<mat-form-field appearance="outline">
-						<mat-select formControlName="autopsy" placeholder="{{'guardia.episode.medical_discharge.form.SELECT_AUTOPSY' | translate }}">
-							<mat-option [value]="true">
-								<span translate="forms.YES"></span>
-							</mat-option>
-							<mat-option [value]="false">
-								<span translate="forms.NO"></span>
-							</mat-option>
-						</mat-select>
-						<mat-error *ngIf="hasError(form, 'required', 'autopsy')">{{ "forms.REQUIRED" | translate }}</mat-error>
+						<textarea formControlName="otherDischargeDescription"
+							placeholder="{{'guardia.episode.medical_discharge.form.DISCHARGE_TYPE_INPUT' | translate }}"
+							rows="4" matInput type="text">
+						</textarea>
+						<mat-error *ngIf="hasError(form, 'required', 'otherDischargeDescription') || hasError(form, 'whitespace', 'otherDischargeDescription')">
+							{{ "forms.REQUIRED" | translate }}
+						</mat-error>
 					</mat-form-field>
 				</div>
 			</div>
 		</div>
 
-		<div fxLayout="column">
-			<mat-radio-group formControlName="dischargeTypeId" name="dischargeTypeId">
-				<div *ngFor="let dischargeType of (dischargeTypes$ | async); let i = index">
-					<mat-radio-button *ngIf="i >= 8" [value]="dischargeType.id" color="primary" class="radio-buttons">
-						{{ dischargeType.description }}
-					</mat-radio-button>
-				</div>
-			</mat-radio-group>
-			<div *ngIf="form.value.dischargeTypeId == dischargeTypesEnum.OTRO">
-				<mat-form-field appearance="outline">
-					<textarea formControlName="otherDischargeDescription"
-						placeholder="{{'guardia.episode.medical_discharge.form.DISCHARGE_TYPE_INPUT' | translate }}"
-						rows="4" matInput type="text">
-					</textarea>
-					<mat-error *ngIf="hasError(form, 'required', 'otherDischargeDescription') || hasError(form, 'whitespace', 'otherDischargeDescription')">
-						{{ "forms.REQUIRED" | translate }}
-					</mat-error>
-				</mat-form-field>
-			</div>
-		</div>
 	</div>
-
-</div>
+</form>
