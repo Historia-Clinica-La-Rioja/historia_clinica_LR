@@ -66,8 +66,6 @@ const ShowInstitutionalParameterizedForm = (props) => {
             target="institutionId"
             sort={{ field: 'id', order: 'ASC' }}
             filter={{ 'isDomain': false, 'institutionId': record.institutionId }}
-            perPage={10}
-            pagination={<Pagination />}
         >
             <ReferenceManyField
                 id='institutionalParameterizedForm'
@@ -75,7 +73,9 @@ const ShowInstitutionalParameterizedForm = (props) => {
                 reference="parameterizedform"
                 target="institutionId"
                 sort={{ field: 'id', order: 'ASC' }}
-                filter={{'institutionId': record.id}}
+                filter={{ 'institutionId': record.id }}
+                perPage={10}
+                pagination={<Pagination />}
             >
                 <Datagrid rowClick={show}>
                     <NumberField source="id" />
