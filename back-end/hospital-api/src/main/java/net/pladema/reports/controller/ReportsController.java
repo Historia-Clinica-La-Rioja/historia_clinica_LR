@@ -400,6 +400,15 @@ public class ReportsController {
 		);
 	}
 
+	@GetMapping("/get-call-center-appointments")
+	@PreAuthorize("hasAnyAuthority('GESTOR_CENTRO_LLAMADO')")
+	public UIComponentDto getCallCenterAppointmentsReport() {
+		return JsonResourceUtils.readJson("extension/reports/callCenterReport.json",
+				new TypeReference<>() {},
+				null
+		);
+	}
+
 	private ReportSearchFilterBo parseFilter(Integer institutionId, String filter) {
 		ReportSearchFilterBo searchFilter = null;
 		try {

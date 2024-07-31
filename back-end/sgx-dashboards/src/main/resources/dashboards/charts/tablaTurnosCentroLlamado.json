@@ -1,0 +1,40 @@
+{
+  "cubeQuery" : {
+    "measures": [],
+    "timeDimensions": [],
+    "order": [],
+    "dimensions": [
+      "TablaTurnosCentroLlamado.numero_identificacion",
+      "TablaTurnosCentroLlamado.apellido_paciente",
+      "TablaTurnosCentroLlamado.primer_nombre_paciente",
+      "TablaTurnosCentroLlamado.genero",
+      "TablaTurnosCentroLlamado.fecha_turno",
+      "TablaTurnosCentroLlamado.hora_turno",
+      "TablaTurnosCentroLlamado.apellido_profesional",
+      "TablaTurnosCentroLlamado.nombre_profesional",
+      "TablaTurnosCentroLlamado.departamento",
+      "TablaTurnosCentroLlamado.servicio",
+      "TablaTurnosCentroLlamado.institucion"
+    ],
+    "filters": []
+  },
+  "chartType": "table",
+  "pivotConfig": {
+    "x": [
+      "TablaTurnosCentroLlamado.numero_identificacion",
+      "TablaTurnosCentroLlamado.apellido_paciente",
+      "TablaTurnosCentroLlamado.primer_nombre_paciente",
+      "TablaTurnosCentroLlamado.genero",
+      "TablaTurnosCentroLlamado.fecha_turno",
+      "TablaTurnosCentroLlamado.hora_turno",
+      "TablaTurnosCentroLlamado.apellido_profesional",
+      "TablaTurnosCentroLlamado.nombre_profesional",
+      "TablaTurnosCentroLlamado.departamento",
+      "TablaTurnosCentroLlamado.servicio",
+      "TablaTurnosCentroLlamado.institucion"
+    ],
+    "y": [
+      "measures"
+    ]
+  }
+}
