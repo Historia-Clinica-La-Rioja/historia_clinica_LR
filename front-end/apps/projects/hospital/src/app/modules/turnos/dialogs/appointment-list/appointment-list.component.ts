@@ -3,7 +3,6 @@ import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { CompleteDiaryDto, GroupAppointmentResponseDto } from '@api-rest/api-model';
 import { dateToDateTimeDto } from '@api-rest/mapper/date-dto.mapper';
 import { GroupAppointmentFacadeService } from '@api-rest/services/group-appointment-facade.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { MAX_APPOINTMENT_PER_HOUR } from '@turnos/utils/appointment.utils';
 import { CalendarEvent } from 'angular-calendar';
 import { Subscription } from 'rxjs';
@@ -15,7 +14,6 @@ import { Subscription } from 'rxjs';
 })
 export class AppointmentListComponent implements OnInit, OnDestroy {
 
-	medium = DatePipeFormat.MEDIUM;
 	appointments: GroupAppointmentResponseDto[] = [];
 	diaryIdAndDate: string;
 	subscription: Subscription;

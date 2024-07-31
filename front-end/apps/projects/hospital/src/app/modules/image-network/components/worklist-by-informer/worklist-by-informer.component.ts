@@ -13,11 +13,10 @@ import { InformerStatus, mapToState } from '../../utils/study.utils';
 import { Router } from '@angular/router';
 import { ContextService } from '@core/services/context.service';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { format } from 'date-fns';
-import { DateFormat } from '@core/utils/date.utils';
 import { NUMBER_PATTERN } from '@core/utils/form.utils';
 import { REPORT_STATES_ID } from '../../constants/report';
 import { WorklistFacadeService } from '../../services/worklist-facade.service';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const PAGE_SIZE_OPTIONS = [10];
 const PAGE_MIN_SIZE = 10;
@@ -118,8 +117,8 @@ export class WorklistByInformerComponent implements OnInit {
 	setWorkList() {
 		this.worklistFacadeService.changeInformerFilters(
 			this.modalityId,
-			format(new Date(this.dateRangeForm.value.start), DateFormat.API_DATE),
-			format(new Date(this.dateRangeForm.value.end), DateFormat.API_DATE))
+			toApiFormat(new Date(this.dateRangeForm.value.start)),
+			toApiFormat(new Date(this.dateRangeForm.value.end)))
 	}
 
 	toggleFilter(value: boolean) {

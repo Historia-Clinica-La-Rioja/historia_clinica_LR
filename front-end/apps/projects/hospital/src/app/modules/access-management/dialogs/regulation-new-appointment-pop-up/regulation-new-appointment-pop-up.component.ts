@@ -11,7 +11,6 @@ import { ReferenceService } from '@api-rest/services/reference.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
 import { MapperService } from '@core/services/mapper.service';
 import { PatientNameService } from '@core/services/patient-name.service';
-import { DatePipeFormat } from '@core/utils/date.utils';
 import { hasError, VALIDATIONS, updateControlValidator, processErrors } from '@core/utils/form.utils';
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { PATTERN_INTEGER_NUMBER } from '@core/utils/pattern.utils';
@@ -56,7 +55,6 @@ export class RegulationNewAppointmentPopUpComponent implements OnInit {
 	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
 	lastAppointmentId = -1;
-	readonly dateFormats = DatePipeFormat;
 	editableStep1 = true;
 	editableStepModality = true;
 	readonly MODALITY_ON_SITE_ATTENTION = EAppointmentModality.ON_SITE_ATTENTION;

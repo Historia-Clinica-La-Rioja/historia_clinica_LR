@@ -6,7 +6,7 @@ import { isAfter, parseISO, startOfToday } from 'date-fns';
 import { Subscription } from 'rxjs';
 
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat, fromStringToDateByDelimeter } from '@core/utils/date.utils';
+import { fromStringToDateByDelimeter } from '@core/utils/date.utils';
 import { processErrors } from '@core/utils/form.utils';
 
 import { DiaryListDto } from '@api-rest/api-model';
@@ -42,7 +42,6 @@ export class SelectAgendaComponent implements OnInit, OnDestroy {
 	expiredAgendas: DiaryList[] = [];
 	agendaFiltersSubscription: Subscription;
 	agendaSelectedSubscription: Subscription;
-	readonly dateFormats = DatePipeFormat;
 	filters: AgendaFilters;
 
 	private readonly routePrefix = 'institucion/' + this.contextService.institutionId;

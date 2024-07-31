@@ -131,7 +131,7 @@
 				<div fxLayout="row" fxLayoutAlign="space-between center" class="title">
 					<div id="view_date">
 						<span class="mat-h2">
-							{{ viewDate | date:dateFormats.LONG_DATE }}
+							{{ viewDate | dateFormat: 'fulldate' }}
 						</span>
 					</div>
 					<button mat-button color="primary" onclick="this.blur()" (click)="goToDiary()">

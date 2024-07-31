@@ -32,7 +32,6 @@ import { PatientMedicalCoverageService } from '@api-rest/services/patient-medica
 import { PatientNameService } from "@core/services/patient-name.service";
 import { IDENTIFICATION_TYPE_IDS } from '@core/utils/patient.utils';
 import { dateDtoToDate, timeDtoToDate } from "@api-rest/mapper/date-dto.mapper";
-import { DatePipeFormat } from "@core/utils/date.utils";
 import { DiscardWarningComponent } from "@presentation/dialogs/discard-warning/discard-warning.component";
 import { ReferenceService } from '@api-rest/services/reference.service';
 import { REMOVE_SUBSTRING_DNI } from '@core/constants/validation-constants';
@@ -91,7 +90,6 @@ export class NewAppointmentComponent implements OnInit {
 	public isSubmitButtonDisabled = false;
 	VALIDATIONS = VALIDATIONS;
 	lastAppointmentId = -1;
-	readonly dateFormats = DatePipeFormat;
 	patientMedicalOrderTooltipDescription = '';
 	isOrderTranscribed = false;
 	transcribedOrder = null;
@@ -362,7 +360,7 @@ export class NewAppointmentComponent implements OnInit {
 					let appointmentFor = this.data.isEquipmentAppointment ? appointmentShortSummary.equipmentName : appointmentShortSummary.doctorFullName;
 					const date = this.dateFormatPipe.transform(dateDtoToDate(appointmentShortSummary.date), 'date')
 					const hour = this.dateFormatPipe.transform(timeDtoToDate(appointmentShortSummary.hour), 'time')
-					const content = `El paciente ya tiene un turno el ${date} a las ${hour} para ${appointmentFor} en ${appointmentShortSummary.institution}`
+					const content = `El paciente ya tiene un turno el ${date} a las ${hour} hs para ${appointmentFor} en ${appointmentShortSummary.institution}`
 
 					const warnignComponent = this.dialog.open(DiscardWarningComponent,
 						{

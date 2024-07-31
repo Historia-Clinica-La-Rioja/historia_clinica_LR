@@ -11,12 +11,12 @@ import { PracticesService } from '@api-rest/services/practices.service';
 import { SpecialtyService } from '@api-rest/services/specialty.service';
 import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { DiaryAvailableAppointmentsSearchService, ProtectedAppointmentsFilter } from '@turnos/services/diary-available-appointments-search.service';
-import { DateFormat, datePlusDays } from '@core/utils/date.utils';
+import { datePlusDays } from '@core/utils/date.utils';
 import { DEFAULT_COUNTRY_ID } from '@core/utils/form.utils';
 import { listToTypeaheadOptions, objectToTypeaheadOption } from '@presentation/utils/typeahead.mapper.utils';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SearchCriteria } from '@turnos/components/search-criteria/search-criteria.component';
-import { format } from 'date-fns';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 const PERIOD_DAYS = 7;
 const PAGE_SIZE_OPTIONS = [5, 10, 25, 100];
@@ -173,8 +173,8 @@ export class SearchAppointmentsForRegulationComponent implements OnInit {
 
 			const startDate = new Date(this.searchForm.controls.startDate.value);
 			const endDate = new Date(this.searchForm.controls.endDate.value);
-			const endDateString = format(endDate, DateFormat.API_DATE);
-			const startDateString = format(startDate, DateFormat.API_DATE);
+			const endDateString = toApiFormat(endDate);
+			const startDateString = toApiFormat(startDate);
 
 			const filters: ProtectedAppointmentsFilter = {
 				careLineId: this.searchForm.value.careLine?.id,

@@ -1,8 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DateFormat } from '@core/utils/date.utils';
 import { IDENTIFIER_CASES } from 'projects/hospital/src/app/modules/hsi-components/identifier-cases/identifier-cases.component';
-import format from 'date-fns/format';
 import { PersonalHistoryData } from '@historia-clinica/components/personal-histories-summary/personal-histories-summary.component';
 
 @Component({
@@ -13,8 +11,6 @@ import { PersonalHistoryData } from '@historia-clinica/components/personal-histo
 export class PersonalHistoryViewDetailsComponent {
     
     identiferCases = IDENTIFIER_CASES;
-    format = format;
-    DateFormat = DateFormat
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: PersonalHistoryData) { }

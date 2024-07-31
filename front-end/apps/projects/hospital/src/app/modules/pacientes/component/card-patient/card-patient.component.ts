@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from '@angular/router';
@@ -11,7 +10,6 @@ import { FeatureFlagService } from '@core/services/feature-flag.service';
 import { PatientNameService } from "@core/services/patient-name.service";
 import { PermissionsService } from '@core/services/permissions.service';
 import { anyMatch } from '@core/utils/array.utils';
-import { DateFormat } from '@core/utils/date.utils';
 import { CardModel, ValueAction } from '@presentation/components/card/card.component';
 import { Observable, of } from 'rxjs';
 import { PatientProfilePopupComponent } from '../../../auditoria/dialogs/patient-profile-popup/patient-profile-popup.component';
@@ -19,6 +17,7 @@ import { ROUTE_EMPADRONAMIENTO, ROUTE_UNLINK_PATIENT } from '../../../auditoria/
 import { ViewPatientDetailComponent } from '../view-patient-detail/view-patient-detail.component';
 import { dateISOParseDate, newDate } from '@core/utils/moment.utils';
 import { differenceInYears } from 'date-fns';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 const PAGE_SIZE_OPTIONS = [5, 10, 25];
 const PAGE_MIN_SIZE = 5;
@@ -51,7 +50,7 @@ export class CardPatientComponent {
 	constructor(
 		public dialog: MatDialog,
 		private readonly patientNameService: PatientNameService,
-		private readonly datePipe: DatePipe,
+		private readonly dateFormatPipe: DateFormatPipe,
 		private readonly contextService: ContextService,
 		private readonly permissionsService: PermissionsService,
 		private readonly featureFlagService: FeatureFlagService,
@@ -119,7 +118,7 @@ export class CardPatientComponent {
 					identificationTypeId: patient.person.identificationTypeId,
 					dni: patient.person.identificationNumber || "Sin Información",
 					gender: this.genderTableView.find(p => p?.id === patient.person.genderId)?.description,
-					date: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
+					date: patient.person.birthDate ? this.dateFormatPipe.transform(patient.person.birthDate, 'date') : '',
 					ranking: patient?.ranking,
 					patientTypeId: patient?.patientTypeId,
 					auditType: patient?.auditType,
@@ -177,7 +176,7 @@ export class CardPatientComponent {
 					lastName: '',
 					age: calculateAge(String(patient.person.birthDate)),
 					gender: this.genderTableView.find(p => p.id === patient.person.genderId)?.description,
-					birthDate: patient.person.birthDate ? this.datePipe.transform(patient.person.birthDate, DateFormat.VIEW_DATE) : '',
+					birthDate: patient.person.birthDate ? this.dateFormatPipe.transform(patient.person.birthDate, 'date') : '',
 					identificationNumber: patient.person.identificationNumber,
 					identificationTypeId: this.identificationTypes.find(i => i.id === patient.person.identificationTypeId)?.description,
 					personAge: patient.person.personAge

@@ -10,7 +10,7 @@
 		<div fxLayout="row" fxLayout.xs="column" fxFlex="62">
 			<div fxLayout="row" fxLayoutAlign="space-between center">
 				<mat-icon color="primary" class="appointment-title-icon">event</mat-icon>
-				<span>{{data.date | date:dateFormats.FULL_DATE}}</span>
+				<span>{{data.date | isoToDate | dateFormat: 'fulldate'}}</span>
 			</div>
 			<div fxLayout="row" fxLayoutAlign="start center">
 				<span class="appointment-title-dot">●</span>

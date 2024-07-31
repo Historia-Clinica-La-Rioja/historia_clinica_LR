@@ -14,11 +14,11 @@
                 </div>
 
                 <div fxFlex="20%" fxFlex.lt-lg="30%" class="grey wrap-text">
-                    <span *ngIf="personalHistory.startDate">{{ format(personalHistory.startDate, DateFormat.VIEW_DATE) }}</span>
+                    <span *ngIf="personalHistory.startDate">{{ personalHistory.startDate | dateFormat: 'date' }}</span>
                 </div>
 
                 <div fxFlex="20%" class="grey wrap-text hide-date">
-                    <span *ngIf="personalHistory.inactivationDate">{{ format(personalHistory.inactivationDate, DateFormat.VIEW_DATE) }}</span>
+                    <span *ngIf="personalHistory.inactivationDate">{{ personalHistory.inactivationDate | dateFormat: 'date' }}</span>
                 </div>
 
                 <div fxFlex="5%">

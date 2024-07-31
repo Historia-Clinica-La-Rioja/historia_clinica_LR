@@ -16,7 +16,7 @@ import { EncounterTypes, DocumentTypes, ROUTE_HISTORY_CLINIC, EncounterType, Doc
 import { ECHEncounterType } from "@api-rest/api-model";
 import { AppRoutes } from 'projects/hospital/src/app/app-routing.module';
 import { ContextService } from '@core/services/context.service';
-import { DatePipeFormat, fromStringToDate } from '@core/utils/date.utils';
+import { fromStringToDate } from '@core/utils/date.utils';
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -34,7 +34,6 @@ import { MatSort, MatSortable } from '@angular/material/sort';
 })
 export class PrintAmbulatoriaComponent implements OnInit {
 
-	datePipeFormat = DatePipeFormat;
 	nowDate: string;
 	userLastDownload: string;
 	dateLastDownload: Date;

@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { format } from "date-fns";
 
 import { hasError } from '@core/utils/form.utils';
-import { DateFormat, MIN_DATE } from "@core/utils/date.utils";
+import { MIN_DATE } from "@core/utils/date.utils";
 import { HCEHealthConditionDto, HealthConditionNewConsultationDto, MasterDataInterface } from '@api-rest/api-model';
 import { HealthConditionService } from '@api-rest/services/healthcondition.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -14,6 +13,7 @@ import { ProblemasService } from '../../services/problemas.service';
 import { SnomedService } from '../../services/snomed.service';
 import { HEALTH_CLINICAL_STATUS } from "@historia-clinica/modules/ambulatoria/modules/internacion/constants/ids";
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
 
 @Component({
 	selector: 'app-solve-problem',
@@ -47,12 +47,13 @@ export class SolveProblemComponent implements OnInit {
 		private readonly snomedService: SnomedService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly internacionMasterDataService: InternacionMasterDataService,
+		private readonly dateFormatPipe: DateFormatPipe,
 	) {
 		this.problemasService = new ProblemasService(formBuilder, this.snomedService, this.snackBarService);
 		this.dataDto = data.problema;
 		this.patientId = data.patientId;
 		this.problemId = this.dataDto.id;
-		this.today = this.toFormatDate(format(new Date(), DateFormat.VIEW_DATE));
+		this.today = this.toFormatDate(this.dateFormatPipe.transform(new Date(), 'date'));
 		this.form = this.formBuilder.group({
 			snomed: [{value: null, disabled: true}, Validators.required],
 			severidad: [null],
