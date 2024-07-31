@@ -51,18 +51,20 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 	@Override
 	public Page<ParameterizedFormDto> getFormByFilters(List<Short> statusIds, String name, Boolean isDomain, Pageable pageable) {
 		log.debug("Input parameters -> statusIds {}, name {}, isDomain {}, pageable {}", statusIds, name, isDomain, pageable);
-		List<ParameterizedForm> resultParameterizedForm = (name == null || name.trim().isEmpty()) ? parameterizedFormRepository.getFormsByStatusAndDomain(statusIds, isDomain, pageable).stream().collect(Collectors.toList()) : parameterizedFormRepository.getFormsByFilters(statusIds, isDomain, name, pageable).stream().collect(Collectors.toList());
+		Page<ParameterizedForm> resultParameterizedFormPage = (name == null || name.trim().isEmpty()) ?	parameterizedFormRepository.getFormsByStatusAndDomain(statusIds, isDomain, pageable) : parameterizedFormRepository.getFormsByFilters(statusIds, isDomain, name, pageable);
 
-		List<ParameterizedFormDto> result = resultParameterizedForm.stream()
+		List<ParameterizedFormDto> result = resultParameterizedFormPage.getContent().stream()
 				.map(this::mapEntityToDto)
 				.collect(Collectors.toList());
 
-		int minIndex = Math.min(pageable.getPageNumber() * pageable.getPageSize(), result.size());
-		int maxIndex = Math.min(minIndex + pageable.getPageSize(), result.size());
+		Page<ParameterizedFormDto> resultPage = new PageImpl<>(
+				result,
+				resultParameterizedFormPage.getPageable(),
+				resultParameterizedFormPage.getTotalElements()
+		);
 
-		Page<ParameterizedFormDto> pageResult = new PageImpl<>(result.subList(minIndex, maxIndex), pageable, result.size());
-		log.debug("Output -> result {}", pageResult);
-		return pageResult;
+		log.debug("Output -> result {}", resultPage);
+		return resultPage;
 	}
 
 	@Override
