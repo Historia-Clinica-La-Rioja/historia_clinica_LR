@@ -42,7 +42,7 @@ public class ReportExcelUtilsService {
 	}
 
 	public List<CellContent> getHeaderDataWithoutObservation(String[] subtitles, String title, Integer mainTitleColumns, String formattedPeriod, Integer institutionId) {
-
+		// recommended minimum mainTitleColumns = 7
 		Institution institution = institutionRepository.findById(institutionId)
 				.orElseThrow(() -> new IllegalArgumentException("Institution not found with id " + institutionId));
 
