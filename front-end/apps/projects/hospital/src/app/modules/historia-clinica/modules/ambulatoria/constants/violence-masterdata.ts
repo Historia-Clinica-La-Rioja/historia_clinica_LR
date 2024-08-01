@@ -735,7 +735,7 @@ export const LiveTogetherStatus: ValueOption[] = [
         checked: false
     },
     {
-        text: "Si, otra casa mismo terreno",
+        text: "Sí, otra casa en mismo terreno o en cercanía",
         value: ELiveTogetherStatus.SAME_SPACE,
         checked: false
     },
