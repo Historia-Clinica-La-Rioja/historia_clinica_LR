@@ -2,10 +2,9 @@ import { Map, View } from 'ol';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
-import { Vector as VectorSource, XYZ} from 'ol/source';
+import { Cluster, Vector as VectorSource, XYZ} from 'ol/source';
 import { GlobalCoordinatesDto } from '@api-rest/api-model';
 import Style from 'ol/style/Style';
-import Icon from 'ol/style/Icon';
 import {Draw, Modify, Snap} from 'ol/interaction.js';
 import { EGeometry } from '../constants/geometry.utils';
 import { Injectable } from '@angular/core';
@@ -17,6 +16,7 @@ import GeoJSON from 'ol/format/GeoJSON.js';
 import { OpenlayersService } from './openlayers.service';
 
 const LOCATION_POINT_PATH = '../../../../assets/icons/location_on.svg';
+const PERSON_POINT_PATH = '../../../../assets/icons/person.svg';
 const IGN_MAP = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png';
 const EPSG3857 = 'EPSG:3857';
 const EPSG4326 = 'EPSG:4326';
@@ -59,6 +59,16 @@ export class GisLayersService {
 	locationCoordinates: Coordinate;
 	showDetails$ = new BehaviorSubject<boolean>(false);
 
+	patientSource = new VectorSource();
+	patientVector = new VectorLayer({
+		source: this.patientSource
+	});
+	clusterSource = new Cluster({
+		distance: 20,
+		minDistance: 20,
+		source: this.patientSource,
+	});
+
 	constructor(private readonly openLayersService: OpenlayersService) {}
 
 	setUp = () => {
@@ -71,6 +81,7 @@ export class GisLayersService {
 	
 	setMap = () => {
 		this.clearMap();
+		const clusters = this.setClusters();
 		this.map = new Map({
 			target: 'map',
 			layers: [
@@ -78,7 +89,8 @@ export class GisLayersService {
 					source: this.XYZ
 				}),
 				this.vector,
-				this.modifyVector
+				this.modifyVector,
+				clusters
 			],
 			view: new View({
 				center: [0, 0],
@@ -87,7 +99,7 @@ export class GisLayersService {
 			})
 		});
 	}
-
+	
 	addPoint = (position: Coordinate) => {
 		this.setLocationCoordinates(position);
 		this.locationPoint = this.createLocationPoint(this.locationCoordinates);
@@ -217,6 +229,33 @@ export class GisLayersService {
 		this.map?.on('click', this.locationPointListener);
 	}
 
+	removePatientFeatures = () => {
+		this.openLayersService.removeAllFeatures(this.patientSource);
+	}
+
+	private setClusters = (): VectorLayer<VectorSource> => {
+		const styleCache = {};
+		return new VectorLayer({
+			source: this.clusterSource,
+			style: (feature) => {
+				const size = feature.get('features').length;
+				let style = styleCache[size];
+				if (!style) {
+					style = this.setPatientClusterStyle(size);
+					styleCache[size] = style;
+				}
+				return style;
+			},
+		});
+	}
+
+	private setPatientClusterStyle = (size: number): Style => {
+		return new Style({
+			image: this.openLayersService.createIcon(PERSON_POINT_PATH),
+			text: this.openLayersService.createText(size > 1 ? size.toString() : '')
+		});
+	}
+
 	private setLocationPointListener = () => {
 		return (e) => {
 			this.map.forEachFeatureAtPixel(e.pixel, (feature) => {
@@ -245,11 +284,7 @@ export class GisLayersService {
 			geometry: new Point(coords)
 		});
 		const markerStyle = new Style({
-			image: new Icon({
-				anchor: [0.5, 1],
-				src: LOCATION_POINT_PATH,
-				scale: 0.5
-			})
+			image: this.openLayersService.createIcon(LOCATION_POINT_PATH),
 		});
 		feature.setStyle(markerStyle);
 		feature.set('name', LOCATION_POINT_ID)

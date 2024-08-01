@@ -6,6 +6,12 @@ import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat, transform } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import { EGeometry } from '../constants/geometry.utils';
+import { Icon } from 'ol/style';
+import {
+	Fill,
+	Stroke,
+	Text,
+  } from 'ol/style.js';
 
 @Injectable({
   	providedIn: 'root'
@@ -44,5 +50,30 @@ export class OpenlayersService {
 
 	setId = (id: string, feature: Feature) => {
 		feature.setId(id);
+	}
+
+	createIcon = (src: string): Icon => {
+		return new Icon({
+			anchor: [0.5, 1],
+			src,
+			scale: 0.5
+		})
+	}
+
+	createText = (text: string): Text => {
+		return new Text({
+			text,
+			fill: new Fill({
+				color: '#fff',
+			}),
+			stroke: new Stroke({
+				color: '#000',
+				width: 2,                  
+			}),
+		})
+	}
+
+	removeAllFeatures = (source: VectorSource) => {
+		source.clear();
 	}
 }

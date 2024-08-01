@@ -199,8 +199,10 @@ export class HomeComponent implements OnInit {
 		this.gisLayersService.showDetails$.subscribe((value: boolean) => {
 			this.showDetails = value;
 
-			if (this.showDetails)
+			if (this.showDetails) {
 				this.gisLayersService.removeLocationPointListener();
+				this.gisLayersService.removePatientFeatures();
+			}
 		});
 	}
 
