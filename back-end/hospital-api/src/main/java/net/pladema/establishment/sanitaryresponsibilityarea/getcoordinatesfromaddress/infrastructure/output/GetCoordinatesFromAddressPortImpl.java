@@ -6,8 +6,8 @@ import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.application.port.in
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.GlobalCoordinatesBo;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.domain.NominatimAddressBo;
 
-import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.dto.GlobalCoordinatesDto;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.dto.NominatimAddressDto;
+import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.dto.NominatimRequestResponseDto;
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.mapper.GlobalCoordinatesMapper;
 
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.mapper.NominatimAddressMapper;
@@ -27,8 +27,8 @@ public class GetCoordinatesFromAddressPortImpl implements GetCoordinatesFromAddr
 	@Override
 	public GlobalCoordinatesBo run(NominatimAddressBo address) {
 		NominatimAddressDto addressDto = nominatimAddressMapper.toNominatimAddressDto(address);
-		GlobalCoordinatesDto result = fetchGlobalCoordinatesByAddressPort.run(addressDto);
-		return globalCoordinatesMapper.fromGlobalCoordinatesDto(result);
+		NominatimRequestResponseDto result = fetchGlobalCoordinatesByAddressPort.run(addressDto);
+		return globalCoordinatesMapper.fromGlobalCoordinatesDto(result.getGlobalCoordinates());
 	}
 
 }

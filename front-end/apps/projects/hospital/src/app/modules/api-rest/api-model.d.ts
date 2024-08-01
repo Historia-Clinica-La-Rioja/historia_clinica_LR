@@ -3121,6 +3121,11 @@ export interface NominatimAddressDto {
     streetName: string;
 }
 
+export interface NominatimRequestResponseDto {
+    globalCoordinates: GlobalCoordinatesDto;
+    responseCode: ENominatimResponseCode;
+}
+
 export interface NotifyPatientDto {
     appointmentId: number;
     doctorName: string;
@@ -5851,6 +5856,12 @@ export const enum ENationalGovernmentDevice {
     EDUCATIONAL_INSTITUTION = "EDUCATIONAL_INSTITUTION",
     SECURITY_FORCES = "SECURITY_FORCES",
     JUSTICE_MINISTRY = "JUSTICE_MINISTRY",
+}
+
+export const enum ENominatimResponseCode {
+    SERVER_ERROR = "SERVER_ERROR",
+    NOT_FOUND = "NOT_FOUND",
+    SUCCESSFUL = "SUCCESSFUL",
 }
 
 export const enum ENursingRecordStatus {

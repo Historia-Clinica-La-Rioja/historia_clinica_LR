@@ -234,3 +234,32 @@ databaseChangeLog:
                 WHERE ec.external_cause_type_id IS NULL
                 AND ec.event_location IS NULL
                 AND ec.snomed_id IS NULL;
+        
+    - changeSet:
+        id: create-table-geographically_located_patient
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: geographically_located_patient
+              columns:
+                - column:
+                    name: patient_id
+                    type: int
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_geographically_located_patient
+                      nullable: false
+                - column:
+                    name: status_id
+                    type: smallint
+                    constraints:
+                      nullable: false
+          - addForeignKeyConstraint:
+              baseColumnNames: patient_id
+              baseTableName: geographically_located_patient
+              constraintName: FK_geographically_located_patient_patient
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: patient
+              validate: true

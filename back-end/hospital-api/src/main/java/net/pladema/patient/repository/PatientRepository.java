@@ -2,12 +2,15 @@ package net.pladema.patient.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
 import net.pladema.patient.domain.DocumentPatientBo;
+import net.pladema.patient.domain.FetchGlobalCoordinatesSanitaryResponsibilityAreaPatientAddressBo;
 import net.pladema.patient.repository.domain.PatientPersonVo;
 import net.pladema.patient.repository.entity.Patient;
 import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -88,5 +91,22 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			"JOIN Person pe ON (p.personId = pe.id) " +
 			"WHERE p.id = :patientId")
 	Optional<PatientGenderAgeBo> getPatientGenderAge(@Param("patientId")Integer patientId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.patient.domain.FetchGlobalCoordinatesSanitaryResponsibilityAreaPatientAddressBo(p.id, a.street, " +
+			"a.number, c.description, p2.description, c2.description, a.postcode) " +
+			"FROM Patient p " +
+			"JOIN PersonExtended pe ON (pe.id = p.personId) " +
+			"JOIN Address a ON (a.id = pe.addressId) " +
+			"JOIN City c ON (c.id = a.cityId) " +
+			"JOIN Department d ON (d.id = c.departmentId) " +
+			"JOIN Province p2 ON (p2.id = d.provinceId) " +
+			"JOIN Country c2 ON (c2.id = p2.countryId) " +
+			"LEFT JOIN GeographicallyLocatedPatient glp ON (glp.patientId = p.id) " +
+			"WHERE (a.latitude IS NULL OR a.longitude IS NULL) " +
+			"AND a.street IS NOT NULL " +
+			"AND a.number IS NOT NULL " +
+			"AND (glp.patientId IS NULL OR glp.statusId = 1)")
+	Page<FetchGlobalCoordinatesSanitaryResponsibilityAreaPatientAddressBo> fetchPatientWithNoGlobalCoordinates(Pageable pageable);
 
 }
