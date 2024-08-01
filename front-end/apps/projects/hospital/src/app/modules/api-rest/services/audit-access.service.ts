@@ -41,7 +41,7 @@ export class AuditAccessService {
     const dialog = this.dialog.open(AuditAccessRegisterComponent,
       {
         width: '30%',
-        height:'510px',
+        minHeight:'510px',
         autoFocus: false,
         disableClose: true,
         data: {
