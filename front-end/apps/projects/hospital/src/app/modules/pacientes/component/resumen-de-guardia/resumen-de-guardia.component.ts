@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AppFeature, ERole, ApiErrorMessageDto } from '@api-rest/api-model.d';
@@ -24,10 +24,12 @@ import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
 import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
+import { TranslateService } from '@ngx-translate/core';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { SummaryHeader } from '@presentation/components/summary-card/summary-card.component';
 import { ConfirmDialogComponent } from '@presentation/dialogs/confirm-dialog/confirm-dialog.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
+import { map, Observable, Subscription, switchMap, take, tap } from 'rxjs';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
@@ -37,12 +39,14 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 	styleUrls: ['./resumen-de-guardia.component.scss'],
 	providers: [TriageDefinitionsService]
 })
-export class ResumenDeGuardiaComponent implements OnInit {
+export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 
 	//En lugar de pasar el id puedo pasar el episodio entero porque ya lo voy a estar calculando desde antes en ambulatoria
 	@Input() episodeId: number;
 	@Input() showNewTriage: boolean = false;
 	@Input() isEmergencyCareTemporalPatient: boolean = false;
+
+	private subscriptionToAvailableActions: Subscription;
 
 	guardiaSummary: SummaryHeader = GUARDIA;
 	readonly STATES = EstadosEpisodio;
@@ -61,6 +65,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 	fullNamesHistoryTriage: string[];
 	lastTriage: TriageDetails;
 
+	private canBeAbsent: boolean;
 	private hasEmergencyCareRelatedRole: boolean;
 	private hasRoleAdministrative: boolean;
 	private hasRoleAbleToSeeTriage: boolean;
@@ -89,6 +94,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		private readonly emergencyCareEpisodeMedicalDischargeService: EmergencyCareEpisodeMedicalDischargeService,
+		private readonly translate: TranslateService,
 		private readonly featureFlagService: FeatureFlagService
 	) {}
 
@@ -100,7 +106,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 		this.newEmergencyCareEvolutionNoteService.new$.subscribe(() => this.calculateAvailableActions());
 
-		this.loadEpisode()
+		this.loadEpisode();
 
 		this.newTriageService.newTriage$.subscribe(
 			_ => this.loadTriages()
@@ -118,6 +124,12 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.hasMedicalDischarge = true;
 			}
 		});
+	}
+
+	ngOnDestroy() {
+		if (this.subscriptionToAvailableActions) {
+			this.subscriptionToAvailableActions.unsubscribe();
+		}
 	}
 
 	private setRolesAndEpisodeState(){
@@ -230,14 +242,47 @@ export class ResumenDeGuardiaComponent implements OnInit {
 
 	attend() {
 		this.emergencyCareEpisodeAttend.attend(this.episodeId, false);
+		this.calculateAvailableActions();
+	}
+
+	markAsAbsent(){
+        const dialog = this.dialog.open(ConfirmDialogComponent, {
+            data: {
+                title: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.TITLE'),
+                content: this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.CONFIRM'),
+                okButtonLabel: 'Aceptar'
+            }
+		})
+        dialog.afterClosed().pipe(
+            take(1),
+            switchMap(closed => {
+                if (closed) {
+                    return this.episodeStateService.markAsAbsent(this.episodeId);
+                }
+            }))
+            .subscribe({
+				next: (changed) => {
+					if (changed) {
+						this.snackBarService.showSuccess(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.SUCCESS'));
+						this.episodeState = EstadosEpisodio.AUSENTE;
+						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.AUSENTE);
+						this.calculateAvailableActions();
+					}
+					else {
+						this.snackBarService.showError(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.ERROR'));
+					}
+				},
+				error: () => {}
+            }
+        );
 	}
 
 	private setEpisodeState() {
 		this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
 			state => {
 				this.episodeState = state.id;
-				this.calculateAvailableActions();
 				this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
+				this.calculateAvailableActions();
 			}
 		);
 	}
@@ -250,16 +295,16 @@ export class ResumenDeGuardiaComponent implements OnInit {
 				this.doctorsOfficeDescription = responseEmergencyCare.doctorsOffice?.description;
 				this.shockroomDescription = responseEmergencyCare.shockroom?.description;
 				this.bedDescription = responseEmergencyCare.bed?.bedNumber;
+				this.canBeAbsent = responseEmergencyCare.canBeAbsent;
 			});
 
 		this.loadTriages();
 	}
 
 	private calculateAvailableActions() {
-
-
-		this.emergencyCareEpisodeService.hasEvolutionNote(this.episodeId).subscribe(
-			hasEvolutionNote => {
+		this.subscriptionToAvailableActions = this.loadCanBeAbsentCondition().pipe(
+			switchMap(() => this.emergencyCareEpisodeService.hasEvolutionNote(this.episodeId)),
+			tap(hasEvolutionNote => {
 				this.availableActions = [];
 				// Following code within this function must be in this order
 
@@ -281,7 +326,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.EN_ESPERA) {
+				if (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.EN_ESPERA || this.episodeState === this.STATES.AUSENTE) {
 					let action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.EDIT_BUTTON',
 						id: 'edit_episode',
@@ -290,7 +335,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ESPERA) {
+				if (this.hasEmergencyCareRelatedRole && (this.episodeState === this.STATES.EN_ESPERA || this.episodeState === this.STATES.AUSENTE)) {
 					let action: ActionInfo = {
 						label: 'guardia.home.episodes.episode.actions.atender.TITLE',
 						id: 'attend',
@@ -299,7 +344,7 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					this.availableActions.push(action);
 				}
 
-				if (this.hasEmergencyCareRelatedRole && this.episodeState === this.STATES.EN_ATENCION) {
+				if (this.hasEmergencyCareRelatedRole && (this.episodeState === this.STATES.EN_ATENCION || this.episodeState === this.STATES.AUSENTE)) {
 					let action: ActionInfo = {
 						label: 'Pasar a espera',
 						id: 'a-en-espera',
@@ -307,8 +352,27 @@ export class ResumenDeGuardiaComponent implements OnInit {
 					}
 					this.availableActions.push(action);
 				}
-			}
-		)
+
+				if (this.canBeAbsent) {
+                    let action: ActionInfo = {
+                        label: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
+                        id: 'markAsAbsent',
+                        callback: this.markAsAbsent.bind(this)
+                    }
+                    this.availableActions.push(action);
+				}
+			})
+		).subscribe();
+	}
+
+	private loadCanBeAbsentCondition(): Observable<boolean> {
+		return this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
+			.pipe(
+				tap((responseEmergencyCare) => {
+					this.canBeAbsent = responseEmergencyCare.canBeAbsent;
+				}),
+				map(() => this.canBeAbsent)
+			);
 	}
 
 	private loadFullNames() {

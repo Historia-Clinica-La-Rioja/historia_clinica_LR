@@ -719,6 +719,7 @@
                 "ID": "ID",
                 "REASONS": "Motivo de ingreso",
                 "ENTRANCE": "Ingreso",
+				"ABSENT": "Ausente",
                 "POLICE_INTERVENTION": "Intervención policial",
                 "UBICACION": "Ubicación",
                 "WITHOUT_POLICE_INTERVENTION": "Sin intervención policial",

@@ -49,6 +49,9 @@
                 <ng-container *ngIf="responseEmergencyCare?.entranceType?.description">
                     <span id="entrance_type"> ({{ responseEmergencyCare?.entranceType?.description }}) </span>
                 </ng-container>
+				<ng-container *ngIf="episodeState === STATES.AUSENTE">
+                    <span> {{  'ambulatoria.paciente.guardia.ABSENT' | translate }} </span>
+                </ng-container>
             </div>
             <div *ngIf="responseEmergencyCare?.hasPoliceIntervention === false else withInfo">
                 <span class="gray-text">
