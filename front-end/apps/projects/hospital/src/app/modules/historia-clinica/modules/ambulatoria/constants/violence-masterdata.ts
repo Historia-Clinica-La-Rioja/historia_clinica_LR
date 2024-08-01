@@ -84,11 +84,6 @@ enum ComplaintsDescription {
     OTHER = 'Otro'
 }
 
-enum OrganizationsExtendedDescription {
-    COMPLAINT = 'Denuncia medio digital de seguridad pasa a fiscalía',
-    OTHER = 'Otro'
-}
-
 enum ImplementedActionsDescription {
     ITS = 'Indicación de estudios de laboratorio para determinar ITS',
     VIH_ITS_HEPATITIS = 'Profilaxis para VIH, ITS y Hepatitis virales frente la exposición a fluidos potencialmente infecciosos',
@@ -247,12 +242,7 @@ export const OrganizationsExtended: ValueOption[] = [
         checked: false
     },
     {
-        text: OrganizationsExtendedDescription.COMPLAINT,
-        value: EInstitutionReportPlace.DIGITAL_SECURITY_REPORT,
-        checked: false
-    },
-    {
-        text: OrganizationsExtendedDescription.OTHER,
+        text: ComplaintsDescription.OTHER,
         value: EInstitutionReportPlace.OTHER,
         checked: false
     },
