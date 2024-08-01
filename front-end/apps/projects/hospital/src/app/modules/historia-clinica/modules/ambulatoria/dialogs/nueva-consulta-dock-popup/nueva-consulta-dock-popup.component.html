@@ -60,7 +60,7 @@
 			</app-document-section>
 		</app-new-consultation-expansion-section>
 
-		<app-parameterized-form-section *ngIf="isEnabledParameterizedFormFF"></app-parameterized-form-section>
+		<app-parameterized-form-section *ngIf="isEnabledParameterizedFormFF" (completeParameterizedForms)="completeFormsData = $event"></app-parameterized-form-section>
 
 		<app-new-consultation-expansion-section id="datos_antropometricos"
 			[title]="'ambulatoria.paciente.nueva-consulta.datos-antropometricos.TITLE' | translate" icon="accessibility"

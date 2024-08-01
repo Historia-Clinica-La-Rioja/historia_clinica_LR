@@ -273,7 +273,8 @@
                         "TITLE": "Agregar formulario",
                         "TYPEAHEAD_TITLE": "Seleccione formulario",
                         "TYPEAHEAD_PLACEHOLDER": "Formulario"
-                    }
+                    },
+                    "REGISTERED_FORM": "Formularios registrado/s"
                 }
             },
             "reference-notification": {

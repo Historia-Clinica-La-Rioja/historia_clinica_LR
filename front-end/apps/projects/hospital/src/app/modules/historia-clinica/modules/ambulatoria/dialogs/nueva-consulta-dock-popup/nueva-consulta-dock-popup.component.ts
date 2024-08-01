@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, ClinicalSpecialtyDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
+import { AppFeature, ClinicalSpecialtyDto, CompleteParameterizedFormDto, CreateOutpatientDto, HealthConditionNewConsultationDto, OutpatientProblemDto, SnomedDto, SnomedECL, SnvsToReportDto } from '@api-rest/api-model.d';
 import { HealthConditionService } from '@api-rest/services/healthcondition.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -147,6 +147,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 	ButtonType = ButtonType;
 	isSaving = false;
 	isEnabledParameterizedFormFF = false;
+	completeFormsData: CompleteParameterizedFormDto[] = []
 
 	@ViewChild('apiErrorsView') apiErrorsView: ElementRef;
 	@ViewChild('referenceRequest') sectionReference: ElementRef;
@@ -597,7 +598,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
 			involvedHealthcareProfessionalIds: this.episodeData.involvedHealthcareProfessionalIds,
-			completeForms: []
+			completeForms: this.completeFormsData
 		};
 	}
 

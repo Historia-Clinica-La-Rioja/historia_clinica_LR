@@ -11,7 +11,7 @@ import { CompleteParameterizedFormDto } from '@api-rest/api-model';
 export class ParameterizedFormSectionComponent {
 
 	parameterizedFormToSave: ParameterizedFormToSave[] = [];
-	@Output() completeParameterizedFormDtoToSave = new EventEmitter<CompleteParameterizedFormDto[]>();
+	@Output() completeParameterizedForms = new EventEmitter<CompleteParameterizedFormDto[]>();
 
 	constructor(
 		private readonly dialogService: DialogService<ParameterizedFormDialogComponent>,
@@ -25,9 +25,15 @@ export class ParameterizedFormSectionComponent {
 		dialogRef.afterClosed().subscribe((parameterizedForm: ParameterizedFormToSave) => {
 			if (parameterizedForm) {
 				this.parameterizedFormToSave.push(parameterizedForm);
-				this.completeParameterizedFormDtoToSave.emit(this.parameterizedFormToSave.map(completeData => completeData.completeParameterizedFormDto));
+				this.completeParameterizedForms.emit(this.parameterizedFormToSave.map(completeData => completeData.completeParameterizedFormDto));
 			}
 		})
 	}
+
+	remove(indexToRemove: number) {
+		this.parameterizedFormToSave.splice(indexToRemove, 1);
+		this.completeParameterizedForms.emit(this.parameterizedFormToSave.map(completeData => completeData.completeParameterizedFormDto));
+	}
+
 
 }
