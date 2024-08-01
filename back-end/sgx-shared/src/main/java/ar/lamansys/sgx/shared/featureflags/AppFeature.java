@@ -228,7 +228,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_REPORTE_DETALLE_NOMINAL_GUARDIA_EN_DESARROLLO,
 
 	@Label("Indica si se encuentra habilitada la caché de relaciones de snomed")
-	HABILITAR_RELACIONES_SNOMED
+	HABILITAR_RELACIONES_SNOMED,
+
+	@Label("Indica si se encuentra habilitado el reporte de turnos otorgados en el centro de llamados")
+	HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO
 	;
 
 	public boolean isActive() {
