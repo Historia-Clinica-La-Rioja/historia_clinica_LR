@@ -36,7 +36,11 @@ public class AppActivitiesPublicApiPermissions implements ActivitiesPublicApiPer
 
 	@Override
 	public boolean canFetchAllMedicalCoverages() {
-		return userSessionStorage.getRolesAssigned().anyMatch(apiConsumerCondition::isRole);
+		//como son las coberturas médicas del sistema por ahora no se pide institucion especifica
+		//ver HSI-10153
+		return userSessionStorage.getRolesAssigned().anyMatch(
+				roleAssigment -> roleAssigment.isRole(ERole.API_FACTURACION)
+		);
 	}
 
 	@Override
