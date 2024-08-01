@@ -64,6 +64,16 @@ export const ROLES_USER_SIDEBAR_MENU: MenuItemDef[] = [
 		],
 	},
 	{
+		text: 'app.menu.APPOINTMENTS_GIVEN',
+		icon: 'calendar_today',
+		id: 'appointments-given',
+		url: '/home/get-call-center-appointments',
+		permissions: [
+			ERole.GESTOR_CENTRO_LLAMADO
+		],
+		featureFlag: [AppFeature.HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO]
+	},
+	{
 		text: 'app.menu.API_KEYS',
 		icon: 'private_connectivity',
 		id: 'user-keys',

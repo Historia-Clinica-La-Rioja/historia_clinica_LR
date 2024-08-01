@@ -5,7 +5,7 @@ import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
 import { UIComponentDto } from '@extensions/extensions-model';
 
-
+const DOMAIN_LEVEL = -1;
 @Injectable({
 	providedIn: 'root'
 })
@@ -17,7 +17,9 @@ export class ReportsCubeService {
 	) { }
 
 	getInstitutionReport(reportName: string): Observable<UIComponentDto> {
-		const url = `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/${reportName}`;
+        const url = (this.contextService.institutionId === DOMAIN_LEVEL) ?
+            `${environment.apiBase}/reports/${reportName}`
+            : `${environment.apiBase}/reports/institution/${this.contextService.institutionId}/${reportName}`;
 		return this.http.get<UIComponentDto>(url);
 	}
 

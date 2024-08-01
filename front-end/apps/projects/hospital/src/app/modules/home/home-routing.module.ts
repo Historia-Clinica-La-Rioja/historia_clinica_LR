@@ -16,6 +16,7 @@ import { TemplateRenderComponent } from './routes/template-render/template-rende
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
 import { MANAGER_ROLES } from './constants/menu';
 import { RouteMenuComponent } from '@presentation/components/route-menu/route-menu.component';
+import { CubeReportComponent } from '../reportes/routes/cube-report/cube-report.component';
 
 
 export enum HomeRoutes {
@@ -82,6 +83,15 @@ const routes: Routes = [
 					needsRoot: true,
 				},
 			},
+            {   
+                path: "get-call-center-appointments", component: CubeReportComponent,
+				canActivate: [FeatureFlagGuard, RoleGuard],
+				data: {
+					featureFlag: AppFeature.HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO,
+					allowedRoles: [ERole.GESTOR_CENTRO_LLAMADO],
+					needsRoot: true
+				},
+             },
 		]
 	}
 ];

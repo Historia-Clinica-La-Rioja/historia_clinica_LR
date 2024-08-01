@@ -23,7 +23,8 @@
 			"ACCESS_MANAGEMENT": "Gestión de accesos",
 			"CALL_CENTER": "Centro de llamadas",
 			"SIGNATURES": "Firmas",
-			"SANITARY_AREAS": "Áreas sanitarias"
+			"SANITARY_AREAS": "Áreas sanitarias",
+            "APPOINTMENTS_GIVEN": "Turnos otorgados"
 		}
 	},
 	"buttons": {
