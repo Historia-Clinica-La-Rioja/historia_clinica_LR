@@ -17,7 +17,6 @@ import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
 import ar.lamansys.sgh.publicapi.reports.application.port.out.ConsultationsByDateStorage;
-import ar.lamansys.sgh.publicapi.reports.application.port.out.GetHierarchicalUnitServiceParent;
 import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
 import ar.lamansys.sgh.publicapi.reports.domain.IdentificationBo;
 import ar.lamansys.sgh.publicapi.reports.domain.MedicalCoverageBo;
@@ -33,13 +32,12 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 
 	private final EntityManager entityManager;
 
-	private final GetHierarchicalUnitServiceParent getHierarchicalUnitServiceParent;
-
 	@Override
 	public List<ConsultationBo> fetchConsultations(LocalDate dateFrom, LocalDate dateUntil, Integer institutionId, Integer hierarchicalUnitId) {
 		log.debug("Find consultations");
 
 		final String WHERE_INSTITUTION_ID = institutionId == null ? "" : " AND i.id = " + institutionId;
+		final String WHERE_HIERARCHICAL_UNIT_ID = hierarchicalUnitId == null ? "" : " AND coalesce(hu.closest_service_id, hu2.closest_service_id) = " + hierarchicalUnitId;
 
 		String sqlString = " select a.id as appointment_id, oc.id as outpatient_consultation_id, a.date_type_id, a.hour, " +
 				" i.sisa_code, i.name as inst_name, " +
@@ -52,9 +50,13 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				" d2.description as depto, c.description as ciudad, " +
 				" as2.description as as_desc, r.id, r.description as motivo, s3.sctid, proc.cie10_codes as cie_proc, s3.pt as procedimiento, " +
 				" s2.sctid as hc_snomed, hc.cie10_codes as hc_cie, s2.pt as problema, " +
-				" oc.hierarchical_unit_id, hu.alias as deConsulta, " +
-				" hu2.id as hu_diary, hu2.alias as deAgenda, ba.appointment_id as booking_id, " +
-				" hu.type_id as type_consulta, hu2.type_id as type_diary, " +
+				" coalesce(hu.closest_service_id, hu2.closest_service_id) as consultation_hierarchical_unit_service_id, " +
+				" coalesce(hu3.alias, hu4.alias) as consultation_hierarchical_unit_service_name, " +
+				" coalesce(hu.id, hu2.id) as diary_hierarchical_unit_id, " +
+				" coalesce(hu.alias, hu2.alias) 	as diary_hierarchical_unit_name, " +
+				" ba.appointment_id as booking_id, " +
+				" coalesce(hu.type_id, hu2.type_id) as type_consulta, " +
+				" coalesce(hu3.type_id, hu4.type_id) as type_diary, " +
 				" proc.performed_date, hc.start_date, hc.inactivation_date " +
 				" from appointment a " +
 				" left join booking_appointment ba on ba.appointment_id = a.id " +
@@ -68,10 +70,12 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				" join appointment_assn aa on aa.appointment_id = a.id " +
 				" join diary d on d.id = aa.diary_id " +
 				" join clinical_specialty cs2 on cs2.id = d.clinical_specialty_id " +
+				" left join hierarchical_unit hu on oc.hierarchical_unit_id = hu.id " +
 				" left join hierarchical_unit hu2 on hu2.id = d.hierarchical_unit_id " +
+				" left join hierarchical_unit hu3 on hu3.id = hu.closest_service_id " +
+				" left join hierarchical_unit hu4 on hu4.id = hu2.closest_service_id " +
 				" join doctors_office do2 on do2.id = d.doctors_office_id " +
 				" join institution i on do2.institution_id = i.id " +
-				" left join hierarchical_unit hu on oc.hierarchical_unit_id = hu.id " +
 				" left join patient p on p.id = a.patient_id " +
 				" left join person pp on pp.id = p.person_id " +
 				" left join identification_type it on it.id = pp.identification_type_id " +
@@ -95,29 +99,14 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				" left join outpatient_consultation_reasons ocr on ocr.outpatient_consultation_id = oc.id " +
 				" left join reasons r on r.id = ocr.reason_id " +
 				" where a.deleted IS NOT TRUE AND as2.id <> 4 AND as2.id <> 7 AND d.deleted IS NOT TRUE AND hu.deleted IS NOT TRUE AND hu2.deleted IS NOT TRUE " +
-				" AND a.date_type_id BETWEEN :dateFrom AND :dateUntil " + WHERE_INSTITUTION_ID;
+				" AND a.date_type_id BETWEEN :dateFrom AND :dateUntil " + WHERE_INSTITUTION_ID + WHERE_HIERARCHICAL_UNIT_ID;
 
 		List<Object[]> rows = entityManager.createNativeQuery(sqlString)
 				.setParameter("dateFrom", dateFrom)
 				.setParameter("dateUntil", dateUntil)
 				.getResultList();
 
-		var mergedConsultations = mergeConsultations(processRows(rows));
-
-		if(!mergedConsultations.isEmpty()) {
-
-			mergedConsultations.forEach(a -> a.setServiceHierarchicalUnit(
-					getHierarchicalUnitServiceParent.getServiceParent(a.getServiceHierarchicalUnit()).orElse(null)));
-
-			if(hierarchicalUnitId != null) {
-				mergedConsultations = mergedConsultations.stream()
-						.filter(consultation -> consultation.getServiceHierarchicalUnit() != null &&
-								consultation.getServiceHierarchicalUnit().getId().equals(hierarchicalUnitId))
-						.collect(Collectors.toList());
-			}
-		}
-
-		return mergedConsultations;
+		return mergeConsultations(processRows(rows));
 	}
 
 	private List<ConsultationBo> mergeConsultations(List<ConsultationBo> unmergedConsultationsWithoutHU) {
@@ -173,11 +162,23 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 		);
 		String sisaCode = (String)row[4];
 		String institution = (String)row[5];
-		HierarchicalUnitBo serviceUJ = new HierarchicalUnitBo(
-				row[27] == null ? (Integer) row[29] : (Integer) row[27],
-				row[28] == null ? (String) row[30] : (String) row[28],
-				row[32] == null ? row[33] == null ? null : ((Integer) row[33]).shortValue() : Short.valueOf(((Integer) row[32]).shortValue())
-				);
+
+		HierarchicalUnitBo serviceHU = row[27] == null ?
+				new HierarchicalUnitBo(null, null, null) :
+				new HierarchicalUnitBo(
+					(Integer) row[27],
+					(String) row[28],
+					((Integer) row[33]).shortValue()
+		);
+
+		HierarchicalUnitBo HUBo = row[29] == null ?
+				new HierarchicalUnitBo(null, null, null) :
+				new HierarchicalUnitBo(
+					(Integer) row[29],
+					(String) row[30],
+					((Integer) row[32]).shortValue()
+		);
+
 		ClinicalSpecialtyBo clinicalSpecialtyBo = new ClinicalSpecialtyBo((Integer) row[6],
 				(String) row[8],
 				(String) row[7]
@@ -227,8 +228,8 @@ public class ConsultationsByDateStorageImpl implements ConsultationsByDateStorag
 				appointmentDate,
 				sisaCode,
 				institution,
-				serviceUJ,
-				new HierarchicalUnitBo(serviceUJ.getId(), serviceUJ.getDescription(), null),
+				serviceHU,
+				HUBo,
 				clinicalSpecialtyBo,
 				identificationBo,
 				medicalCoverageBo,
