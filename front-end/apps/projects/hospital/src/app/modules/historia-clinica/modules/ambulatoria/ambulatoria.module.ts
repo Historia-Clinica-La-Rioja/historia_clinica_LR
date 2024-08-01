@@ -45,6 +45,7 @@ import { MedicalCoverageSummaryViewComponent } from './components/medical-covera
 import { NewViolenceEpisodeSectionComponent } from './components/new-violence-episode-section/new-violence-episode-section.component';
 import { OriginInstitutionReferenceComponent } from './components/origin-institution-reference/origin-institution-reference.component';
 import { ParameterizedFormSectionComponent } from './components/parameterized-form-section/parameterized-form-section.component';
+import { ParameterizedFormParametersSectionComponent } from './components/parameterized-form-parameters-section/parameterized-form-parameters-section.component';
 import { ProblemasComponent } from './components/problemas/problemas.component';
 import { ProblemsOptionsMenuComponent } from './components/problems-options-menu/problems-options-menu.component';
 import { ReferenceCompleteStudyComponent } from './components/reference-complete-study/reference-complete-study.component';
@@ -87,12 +88,16 @@ import { DetalleVacunaComponent } from './dialogs/detalle-vacuna/detalle-vacuna.
 import { EnviarRecetaDigitalPorEmailComponent } from './dialogs/enviar-receta-digital-por-email/enviar-receta-digital-por-email.component';
 import { EpidemiologicalReportComponent } from './dialogs/epidemiological-report/epidemiological-report.component';
 import { ExternalClinicalHistoriesFiltersComponent } from './components/external-clinical-histories-filters/external-clinical-histories-filters.component';
+import { FreeTextParameterComponent } from './components/free-text-parameter/free-text-parameter.component';
 import { NewConsultationFamilyHistoryFormComponent } from './dialogs/new-consultation-family-history-form/new-consultation-family-history-form.component';
 import { NewConsultationPersonalHistoryFormComponent } from './dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { NewViolentPersonInfomationComponent } from './dialogs/new-violent-person-infomation/new-violent-person-infomation.component';
 import { NuevaConsultaDockPopupComponent } from './dialogs/nueva-consulta-dock-popup/nueva-consulta-dock-popup.component';
 import { NuevaConsultaDockPopupEnfermeriaComponent } from './dialogs/nueva-consulta-dock-popup-enfermeria/nueva-consulta-dock-popup-enfermeria.component';
+import { NumericalParameterComponent } from './components/numerical-parameter/numerical-parameter.component';
 import { OperationDeniedComponent } from './dialogs/diagnosis-required/operation-denied.component';
+import { OptionListParameterComponent } from './components/option-list-parameter/option-list-parameter.component';
+import { ParameterizedFormDialogComponent } from './dialogs/parameterized-form-dialog/parameterized-form-dialog.component';
 import { PatientValidatorPopupComponent } from './dialogs/patient-validator-popup/patient-validator-popup.component';
 import { PersonalHistoryViewDetailsComponent } from './dialogs/personal-history-view-details/personal-history-view-details.component';
 import { PreviousDataComponent } from './dialogs/previous-data/previous-data.component';
@@ -197,6 +202,11 @@ import { ShowClosedFormsTemplateComponent } from './components/show-closed-forms
 		ShowClosedFormsTemplateComponent,
  		ControlSelectTemplateComponent,
 		ParameterizedFormSectionComponent,
+		ParameterizedFormDialogComponent,
+		ParameterizedFormParametersSectionComponent,
+		NumericalParameterComponent,
+		FreeTextParameterComponent,
+		OptionListParameterComponent,
 		//pipe
 		TranslateDeviceTextPipe,
 	],

@@ -1,0 +1,25 @@
+<span>{{title | translate}}</span>
+<form [formGroup]="form">
+    <ng-container formArrayName="parameters">
+        <div *ngFor="let parameter of parameterFormArray.controls; let i = index">
+            <div [formGroupName]="i" fxLayout="row" fxLayoutGap="10px">
+
+                <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center center">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <input matInput formControlName="numberValue" type="number">
+                        <mat-error>{{'forms.FORMAT_NUMERIC' | translate}}</mat-error>
+                    </mat-form-field>
+                    <span *ngIf="isAmountInputsSameThatAmountUnitOfMeasure">{{ parameter.value.numericalParameter.code }}</span>
+                </div>
+
+                <mat-form-field *ngIf="!isAmountInputsSameThatAmountUnitOfMeasure" appearance="outline">
+                    <mat-select id="numericalParameter" formControlName="numericalParameter" [compareWith]="compareNumericalParameter" (selectionChange)="updateOptionEnablement()">
+                        <mat-option *ngFor="let numericalParameter of numericalParametersSelect" [value]="numericalParameter" [disabled]="numericalParameter.disabled">
+                            {{numericalParameter.code}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </ng-container>
+</form>

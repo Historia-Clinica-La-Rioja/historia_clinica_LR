@@ -268,7 +268,12 @@
                 },
                 "parameterized-form": {
                     "TITLE": "Formulario",
-                    "ADD": "+ Agregar formulario"
+                    "ADD": "+ Agregar formulario",
+                    "dialog": {
+                        "TITLE": "Agregar formulario",
+                        "TYPEAHEAD_TITLE": "Seleccione formulario",
+                        "TYPEAHEAD_PLACEHOLDER": "Formulario"
+                    }
                 }
             },
             "reference-notification": {
