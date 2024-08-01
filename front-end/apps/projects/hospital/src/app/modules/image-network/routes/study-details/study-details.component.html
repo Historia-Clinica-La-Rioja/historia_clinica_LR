@@ -6,7 +6,7 @@
                 <mat-icon>arrow_back</mat-icon>
                 <span>{{'image-network.worklist.details_study.BACK_TO_WORKLIST' | translate}}</span>
             </button>
-            
+
             <div>
                 <app-view-report *ngIf="reportIsDone" [appointmentId]="appointmentId" [buttonText]="'image-network.worklist.DOWNLOAD_REPORT'" [buttonIcon]="'download_icon'"></app-view-report>
             </div>
@@ -35,7 +35,7 @@
 
                         <div>
                             <div class="mat-body-strong" translate="image-network.worklist.details_study.TECHNICIAN_OBSERVATIONS"></div>
-                            <div class="mat-body capitalize-first-letter" *ngIf="study.info.technicianObservations else noInfo">{{ study.info.technicianObservations }}</div>
+                            <div class="mat-body capitalize-first-letter observations" *ngIf="study.info.technicianObservations else noInfo">{{ study.info.technicianObservations }}</div>
                         </div>
 
                         <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="5px">
