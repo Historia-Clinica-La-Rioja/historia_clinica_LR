@@ -43,7 +43,7 @@ public class GetAllEpisodeListByFilter {
 			ec.setCreatedOn(UTCIntoInstitutionLocalDateTime(institutionId, ec.getCreatedOn()));
 			ec.setTriage(fetchLastTriageByEmergencyCareEpisodeId.run(ec.getId()));
 			ec.setCanBeAbsent(getCanBeAbsent(ec.getId(), ec.getEmergencyCareStateId()));
-			ec.setStateUpdatedOn(historicEmergencyEpisodeStorage.getLatestByEmergencyCareEpisodeId(ec.getId()));
+			ec.setStateUpdatedOn(UTCIntoInstitutionLocalDateTime(institutionId,historicEmergencyEpisodeStorage.getLatestByEmergencyCareEpisodeId(ec.getId())));
 			if (ec.getEmergencyCareStateId().equals(EEmergencyCareState.ATENCION.getId())) {
 				ProfessionalPersonBo professional = new ProfessionalPersonBo(emergencyCareEpisodeRepository.getEmergencyCareEpisodeRelatedProfessionalInfo(ec.getId()));
 				ec.setRelatedProfessional(professional);

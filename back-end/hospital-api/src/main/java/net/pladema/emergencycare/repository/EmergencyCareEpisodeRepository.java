@@ -28,21 +28,21 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT ece " +
 			" FROM EmergencyCareEpisode ece " +
-			" WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
-			" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
-			" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
+			" WHERE ece.patientId = :patientId " +
+			" AND ece.emergencyCareStateId IN (:states) " +
 			" AND ece.institutionId = :institutionId " +
 			" ORDER BY ece.id DESC")
 	List<EmergencyCareEpisode> getEmergencyCareEpisodeInProgressByInstitution(@Param("institutionId") Integer institutionId,
-																			  @Param("patientId") Integer patientId);
+																			  @Param("patientId") Integer patientId,
+																			  @Param("states") List<Short> states);
 
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece.id, ece.institutionId) " +
 			" FROM EmergencyCareEpisode ece " +
-			" WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId = " + EmergencyCareState.EN_ESPERA +
-			" OR ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
-			" OR ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) ")
-	List<EmergencyCareVo> getEmergencyCareEpisodeInProgress(@Param("patientId") Integer patientId);
+			" WHERE ece.patientId = :patientId  " +
+			" AND ece.emergencyCareStateId IN (:states) ")
+	List<EmergencyCareVo> getEmergencyCareEpisodeInProgress(@Param("patientId") Integer patientId,
+															@Param("states") List<Short> states);
 
 	@Transactional(readOnly = true)
 	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso.description, tc, pi, s.description, b, ecd.administrativeDischargeOn, r, inst.name) "+
@@ -136,12 +136,12 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Transactional(readOnly = true)
 	@Query(value = "SELECT (case when count(ece.id) > 0 then true else false end) " +
 			"FROM EmergencyCareEpisode ece " +
-			"WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId =" + EmergencyCareState.EN_ESPERA +
-				" or ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
-				" or ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) " +
+			"WHERE ece.patientId = :patientId " +
+			"AND ece.emergencyCareStateId IN (:states) " +
 			"AND ece.institutionId = :institutionId")
 	boolean existsActiveEpisodeByPatientIdAndInstitutionId(@Param("patientId") Integer patientId,
-														   @Param("institutionId") Integer institutionId);
+														   @Param("institutionId") Integer institutionId,
+														   @Param("states") List<Short> states);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT ece.id " +
@@ -230,10 +230,10 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Transactional(readOnly = true)
 	@Query( value = "SELECT  (case when count(ece.id)> 0 then true else false end) " +
 			"FROM EmergencyCareEpisode ece " +
-			"WHERE ece.patientId = :patientId AND ( ece.emergencyCareStateId =" + EmergencyCareState.EN_ESPERA +
-			" or ece.emergencyCareStateId = " + EmergencyCareState.EN_ATENCION +
-			" or ece.emergencyCareStateId = " + EmergencyCareState.CON_ALTA_MEDICA + " ) ")
-	boolean existsActiveEpisodeByPatientId(@Param("patientId") Integer patientId);
+			"WHERE ece.patientId = :patientId " +
+			"AND ece.emergencyCareStateId IN (:states) " )
+	boolean existsActiveEpisodeByPatientId(@Param("patientId") Integer patientId,
+										   @Param("states") List<Short> states);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT ep.id " +

@@ -11,8 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgh.clinichistory.domain.ips.enums.EGender;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
+import net.pladema.emergencycare.service.domain.enums.EEmergencyCareState;
 import net.pladema.patient.repository.entity.PatientHistory;
 
 import net.pladema.patient.service.domain.PatientGenderAgeBo;
@@ -328,7 +327,9 @@ public class PatientServiceImpl implements PatientService {
 
 	@Override
 	public void assertHasActiveEncountersByPatientId(Integer patientId) {
-		if(internmentEpisodeRepository.isPatientHospitalized(patientId) || emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId) || appointmentRepository.existsAppointmentByStatesAndPatientId(List.of(AppointmentState.ASSIGNED, AppointmentState.CONFIRMED), patientId))
+		if(internmentEpisodeRepository.isPatientHospitalized(patientId) ||
+				emergencyCareEpisodeRepository.existsActiveEpisodeByPatientId(patientId, EEmergencyCareState.getAllForEmergencyCareList()) ||
+				appointmentRepository.existsAppointmentByStatesAndPatientId(List.of(AppointmentState.ASSIGNED, AppointmentState.CONFIRMED), patientId))
 			throw new RejectedPatientException(RejectedPatientExceptionEnum.ENCOUNTER_ACTIVE_EXISTS, "El paciente posee un encuentro activo");
 	}
 	

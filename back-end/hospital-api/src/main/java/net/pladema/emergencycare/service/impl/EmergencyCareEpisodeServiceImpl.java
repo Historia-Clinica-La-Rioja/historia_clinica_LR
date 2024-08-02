@@ -67,7 +67,8 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		EmergencyCareEpisodeInProgressBo result = new EmergencyCareEpisodeInProgressBo(null, false);
 
-        List<EmergencyCareEpisode> possibleEmergencyCareEpisodes = emergencyCareEpisodeRepository.getEmergencyCareEpisodeInProgressByInstitution(institutionId, patientId);
+        List<EmergencyCareEpisode> possibleEmergencyCareEpisodes =
+				emergencyCareEpisodeRepository.getEmergencyCareEpisodeInProgressByInstitution(institutionId, patientId, EEmergencyCareState.getAllForEmergencyCareList());
 
         this.logIfThereAreMoreThanOneEmergencyCareEpisodeInOneInstitution(possibleEmergencyCareEpisodes);
 
@@ -100,7 +101,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
 	public EmergencyCareEpisodeInProgressBo getEmergencyCareEpisodeInProgress(Integer institutionId, Integer patientId) {
 		log.debug("Input parameters -> institutionId {}, patientId {}", institutionId, patientId);
 		EmergencyCareEpisodeInProgressBo result = new EmergencyCareEpisodeInProgressBo(null, false);
-		List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getEmergencyCareEpisodeInProgress(patientId);
+		List<EmergencyCareVo> resultQuery = emergencyCareEpisodeRepository.getEmergencyCareEpisodeInProgress(patientId, EEmergencyCareState.getAllForEmergencyCareList());
 		if(!resultQuery.isEmpty()) {
 			result.setInProgress(true);
 			resultQuery.forEach(rq -> {
@@ -441,7 +442,7 @@ public class EmergencyCareEpisodeServiceImpl implements EmergencyCareEpisodeServ
     }
 
 	private void assertExistsActiveEpisodeByPatientIdAndInstitutionId(Integer patientId, Integer institutionId) {
-		boolean violatesConstraint = emergencyCareEpisodeRepository.existsActiveEpisodeByPatientIdAndInstitutionId(patientId,institutionId);
+		boolean violatesConstraint = emergencyCareEpisodeRepository.existsActiveEpisodeByPatientIdAndInstitutionId(patientId,institutionId,EEmergencyCareState.getAllForEmergencyCareList());
 		if (violatesConstraint)
 			throw new ValidationException("care-episode.patient.invalid");
 	}
