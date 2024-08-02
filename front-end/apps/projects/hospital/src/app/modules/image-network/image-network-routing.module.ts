@@ -14,7 +14,7 @@ const routes: Routes = [
 				path: '',
 				component: HomeComponent,
 				canActivate: [RoleGuard],
-				data: { allowedRoles: [ERole.TECNICO, ERole.INFORMADOR] }
+				data: { allowedRoles: [ERole.TECNICO, ERole.INFORMADOR, ERole.INDEXADOR] }
 			},
 			{
 				path: 'detalle-estudio/:id',

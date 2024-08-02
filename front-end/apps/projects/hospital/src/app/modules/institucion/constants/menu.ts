@@ -111,7 +111,7 @@ export const SIDEBAR_MENU: MenuItemDef[] = [
 		icon: 'assignment_ind',
 		id: 'listadoTrabajo',
 		url: './imagenes/lista-trabajos',
-		permissions: [ERole.TECNICO, ERole.INFORMADOR],
+		permissions: [ERole.TECNICO, ERole.INFORMADOR, ERole.INDEXADOR],
 		featureFlag: [AppFeature.HABILITAR_DESARROLLO_RED_IMAGENES]
 	},
 	{
