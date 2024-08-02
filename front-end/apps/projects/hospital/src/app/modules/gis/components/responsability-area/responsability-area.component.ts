@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from
 import { GlobalCoordinatesDto, SaveInstitutionAddressDto, SaveInstitutionResponsibilityAreaDto } from '@api-rest/api-model';
 import { GisService } from '@api-rest/services/gis.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { finalize, forkJoin } from 'rxjs';
+import { finalize, forkJoin, Observable } from 'rxjs';
 import { InstitutionDescription } from '../institution-description/institution-description.component';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { GisLayersService } from '../../services/gis-layers.service';
@@ -49,25 +49,18 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 		this.previous.emit(true);
 	}
 
-	handleConfirm = () => {
-		this.saveAddressAndCoordinates();
-		this.saveInstitutionArea();
-	}
-	
-	saveAddressAndCoordinates = () => {
+	save = (saveArea: boolean) => {
 		this.gisLayersService.removeDrawnPolygon();
 		this.gisLayersService.removeAreaLayer();
 		this.gisLayersService.toggleActions(false, false);
 		this.isSaving = true;
-		forkJoin(
-			[
-				this.gisService.saveInstitutionCoordinates(this.gisLayersService.coordinateToGlobalCoordinateDto()),
-				this.gisService.saveInstitutionAddress(this.mapToSaveInstitutionAddressDto())
-			]
-		).pipe(finalize(() => this.isSaving = false))
+
+		forkJoin(this.getForkJoinObservables(saveArea))
+		.pipe(finalize(() => this.isSaving = false))
 		.subscribe((_) => {
-			if (!this.gisLayersService.isPolygonCompleted)
+			if (!this.gisLayersService.isPolygonCompleted) 
 				this.snackBarService.showSuccess("gis.status.UPDATE_DATA_SUCCESS");
+
 			this.confirmed.emit(true);
 		});
 	}
@@ -87,9 +80,15 @@ export class ResponsabilityAreaComponent implements AfterViewInit {
 		this.cancelSelected.emit(true);
 	}
 
-	private saveInstitutionArea = () => {
-		this.gisService.saveInstitutionArea(this.mapToSaveInstitutionResponsibilityAreaDto())
-			.subscribe((_) => this.snackBarService.showSuccess("gis.status.UPDATE_RESPONSABILITY_AREA_SUCCESS"));
+	private getForkJoinObservables = (saveArea: boolean): Observable<number>[] => {
+		const observables = [
+			this.gisService.saveInstitutionCoordinates(this.gisLayersService.coordinateToGlobalCoordinateDto()),
+			this.gisService.saveInstitutionAddress(this.mapToSaveInstitutionAddressDto())
+		];
+		  
+		if (saveArea) 
+			observables.push(this.gisService.saveInstitutionArea(this.mapToSaveInstitutionResponsibilityAreaDto()));
+		return observables;
 	}
 
 	private mapToSaveInstitutionResponsibilityAreaDto = (): SaveInstitutionResponsibilityAreaDto => {

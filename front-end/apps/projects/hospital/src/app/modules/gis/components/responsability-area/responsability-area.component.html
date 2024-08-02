@@ -16,7 +16,7 @@
             *ngIf="!editMode"
             [isLoading]="isSaving" 
             [text]="'gis.responsability-area.actions.SKIP'"
-            (clicked)="saveAddressAndCoordinates()">
+            (clicked)="save(false)">
         </app-button>
         <app-button
             *ngIf="editMode"
@@ -28,7 +28,7 @@
             [text]="'buttons.CONFIRM'" 
             [buttonType]="ButtonType.RAISED" 
             [isLoading]="isSaving" 
-            (clicked)="handleConfirm()">  
+            (clicked)="save(true)">  
         </app-button>
     </div>
 </div>

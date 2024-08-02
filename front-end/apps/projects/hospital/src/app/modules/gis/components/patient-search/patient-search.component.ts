@@ -22,6 +22,7 @@ export class PatientSearchComponent {
 		start: new Date(),
 		end: new Date(),
 	}
+	disableButton = false;
 
 	toggleDatePicker = (value: boolean) => {
 		this.showDatePicker = value;
@@ -30,6 +31,10 @@ export class PatientSearchComponent {
 
 	searchPatients = () => {
 
+	}
+
+	dateRangeChange = (dateRange: DateRange) => {
+		(dateRange) ? this.disableButton = false : this.disableButton = true;
 	}
 
 }
