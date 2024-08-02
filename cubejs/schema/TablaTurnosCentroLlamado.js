@@ -2,7 +2,7 @@ cube(`TablaTurnosCentroLlamado`, {
     sql: `
     	SELECT bp.identification_number, UPPER(bp.last_name) AS patient_last_name, UPPER(bp.first_name) AS patient_first_name, UPPER(g.description) AS gender, 
 	TO_CHAR(a.date_type_id, 'DD/MM/YYYY') AS appointment_date, TO_CHAR(a."hour", 'HH24:MIhs') AS appointment_time, UPPER(p.last_name) AS professional_last_name, 
-	UPPER(p.first_name) AS professional_first_name, UPPER(COALESCE(hu.alias, hu2.alias)) AS service, d2.description AS department_name, UPPER(i."name") AS institution_name
+	UPPER(p.first_name) AS professional_first_name, UPPER(COALESCE(cs."name", cs2."name", '-')) AS service, d2.description AS department_name, UPPER(i."name") AS institution_name
 	FROM booking_appointment ba
 	JOIN booking_person bp ON (ba.booking_person_id = bp.id)
 	JOIN gender g ON (g.id = bp.gender_id)
@@ -17,6 +17,8 @@ cube(`TablaTurnosCentroLlamado`, {
 	JOIN person p ON (p.id = hp.person_id)
 	LEFT JOIN hierarchical_unit hu ON (hu.id = d.hierarchical_unit_id)
 	LEFT JOIN hierarchical_unit hu2 ON (hu2.id = hu.closest_service_id)
+	LEFT JOIN clinical_specialty cs ON (cs.id = hu.clinical_specialty_id)
+	LEFT JOIN clinical_specialty cs2 ON (cs2.id = hu2.clinical_specialty_id)
 	WHERE a.date_type_id >= CURRENT_DATE - 1
 	AND a.appointment_state_id = 6 
 	ORDER BY a.id DESC
