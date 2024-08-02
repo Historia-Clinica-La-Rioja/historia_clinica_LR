@@ -87,7 +87,7 @@ export class CreateOrderService {
 	setCreationStatus(CreationStatus: string) {
 		this.form.patchValue({
 			serviceRequest: {
-				creationStatus: (CreationStatus === COMLETE_NOW) || (CreationStatus === STUDY_STATUS_ENUM.FINAL) ? "FINAL" : "REGISTERED"
+				creationStatus: ((CreationStatus === COMLETE_NOW) || (CreationStatus === STUDY_STATUS_ENUM.FINAL)) ? "FINAL" : "REGISTERED"
 			}
 		})
 	}
@@ -97,14 +97,14 @@ export class CreateOrderService {
 	}
 
 	addToList() {
-		this.hasTemplate.next(false);
-		this.templates = [];
 		const newProcedure: Procedure = {
 			snomed: this.snomedConcept,
 			performedDate: this.form.value.performedDate || undefined
 		};
 		this.addControl(newProcedure);
 		this.resetForm();
+		this.templates = [];
+		this.hasTemplate.next(false);
 	}
 
 	addControl(procedimiento: Procedure) {
