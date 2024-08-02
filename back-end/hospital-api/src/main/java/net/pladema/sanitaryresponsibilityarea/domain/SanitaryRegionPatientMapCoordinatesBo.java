@@ -13,6 +13,8 @@ import lombok.ToString;
 @AllArgsConstructor
 public class SanitaryRegionPatientMapCoordinatesBo {
 
+	private Integer patientId;
+
 	private Double latitude;
 
 	private Double longitude;

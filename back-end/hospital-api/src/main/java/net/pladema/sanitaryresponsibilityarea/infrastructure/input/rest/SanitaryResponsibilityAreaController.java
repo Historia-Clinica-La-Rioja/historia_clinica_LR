@@ -9,9 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.sanitaryresponsibilityarea.application.GetPatientCoordinatesByAddedInstitution;
 
+import net.pladema.sanitaryresponsibilityarea.application.GetPatientCoordinatesByOutpatientConsultation;
+import net.pladema.sanitaryresponsibilityarea.domain.GetPatientCoordinatesByOutpatientConsultationFilterBo;
 import net.pladema.sanitaryresponsibilityarea.domain.SanitaryRegionPatientMapCoordinatesBo;
 import net.pladema.sanitaryresponsibilityarea.domain.GetPatientCoordinatesByAddedInstitutionFilterBo;
 import net.pladema.sanitaryresponsibilityarea.infrastructure.input.mapper.SanitaryResponsibilityAreaMapper;
+import net.pladema.sanitaryresponsibilityarea.infrastructure.input.rest.dto.GetPatientCoordinatesByOutpatientConsultationFilterDto;
 import net.pladema.sanitaryresponsibilityarea.infrastructure.input.rest.dto.SanitaryRegionPatientMapCoordinatesDto;
 
 import net.pladema.sanitaryresponsibilityarea.infrastructure.input.rest.dto.GetPatientCoordinatesByAddedInstitutionFilterDto;
@@ -36,6 +39,8 @@ public class SanitaryResponsibilityAreaController {
 
 	private final GetPatientCoordinatesByAddedInstitution getPatientCoordinatesByAddedInstitution;
 
+	private final GetPatientCoordinatesByOutpatientConsultation getPatientCoordinatesByOutpatientConsultation;
+
 	@GetMapping("/get-patient-coordinated-by-added-institution")
 	public List<SanitaryRegionPatientMapCoordinatesDto> getPatientCoordinatesByAddedInstitution(@PathVariable("institutionId") Integer institutionId,
 																							   @RequestParam("filter") String filterString) throws JsonProcessingException {
@@ -43,6 +48,18 @@ public class SanitaryResponsibilityAreaController {
 		GetPatientCoordinatesByAddedInstitutionFilterDto filterDto = objectMapper.readValue(filterString, GetPatientCoordinatesByAddedInstitutionFilterDto.class);
 		GetPatientCoordinatesByAddedInstitutionFilterBo filter = sanitaryResponsibilityAreaMapper.fromGetPatientCoordinatesByAddedInstitutionFilterDto(institutionId, filterDto);
 		List<SanitaryRegionPatientMapCoordinatesBo> resultBo = getPatientCoordinatesByAddedInstitution.run(filter);
+		List<SanitaryRegionPatientMapCoordinatesDto> result = sanitaryResponsibilityAreaMapper.toGetPatientCoordinatesByAddedInstitutionDtoList(resultBo);
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/get-patient-coordinated-by-outpatient-consultation")
+	public List<SanitaryRegionPatientMapCoordinatesDto> getPatientCoordinatesByOutpatientConsultation(@PathVariable("institutionId") Integer institutionId,
+																									  @RequestParam("filter") String filterString) throws JsonProcessingException {
+		log.debug("Input parameters -> institutionId {}, filter {}", institutionId, filterString);
+		GetPatientCoordinatesByOutpatientConsultationFilterDto filterDto = objectMapper.readValue(filterString, GetPatientCoordinatesByOutpatientConsultationFilterDto.class);
+		GetPatientCoordinatesByOutpatientConsultationFilterBo filter = sanitaryResponsibilityAreaMapper.fromGetPatientCoordinatesByOutpatientConsultationFilterDto(institutionId, filterDto);
+		List<SanitaryRegionPatientMapCoordinatesBo> resultBo = getPatientCoordinatesByOutpatientConsultation.run(filter);
 		List<SanitaryRegionPatientMapCoordinatesDto> result = sanitaryResponsibilityAreaMapper.toGetPatientCoordinatesByAddedInstitutionDtoList(resultBo);
 		log.debug("Output -> {}", result);
 		return result;

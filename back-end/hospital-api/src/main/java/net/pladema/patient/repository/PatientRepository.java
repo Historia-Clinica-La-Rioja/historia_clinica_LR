@@ -112,7 +112,7 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 	Page<FetchGlobalCoordinatesSanitaryResponsibilityAreaPatientAddressBo> fetchPatientWithNoGlobalCoordinates(Pageable pageable);
 
 	@Transactional(readOnly = true)
-	@Query("SELECT NEW net.pladema.sanitaryresponsibilityarea.domain.SanitaryRegionPatientMapCoordinatesBo(a.latitude, a.longitude) " +
+	@Query("SELECT NEW net.pladema.sanitaryresponsibilityarea.domain.SanitaryRegionPatientMapCoordinatesBo(p.id, a.latitude, a.longitude) " +
 			"FROM HospitalAudit ha " +
 			"JOIN PatientAudit pa ON (pa.pk.hospitalAuditId = ha.id) " +
 			"JOIN Patient p ON (p.id = pa.pk.patientId) " +
@@ -127,5 +127,24 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 																						  @Param("lowerLongitude") Double lowerLongitude,
 																						  @Param("upperLatitude") Double upperLatitude,
 																						  @Param("upperLongitude") Double upperLongitude);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT DISTINCT NEW net.pladema.sanitaryresponsibilityarea.domain.SanitaryRegionPatientMapCoordinatesBo(p.id, a.latitude, a.longitude) " +
+			"FROM Patient p " +
+			"JOIN OutpatientConsultation oc ON (oc.patientId = p.id) " +
+			"JOIN PersonExtended pe ON (pe.id = p.personId) " +
+			"JOIN Address a ON (a.id = pe.addressId) " +
+			"WHERE oc.institutionId = :institutionId " +
+			"AND oc.startDate BETWEEN :fromDate AND :toDate " +
+			"AND a.latitude BETWEEN :lowerLatitude AND :upperLatitude " +
+			"AND a.longitude BETWEEN :lowerLongitude AND :upperLongitude")
+	List<SanitaryRegionPatientMapCoordinatesBo> fetchPatientCoordinatesByOutpatientConsultation(@Param("institutionId") Integer institutionId,
+																								@Param("fromDate") LocalDate fromDate,
+																								@Param("toDate") LocalDate toDate,
+																								@Param("lowerLatitude") Double lowerLatitude,
+																								@Param("lowerLongitude") Double lowerLongitude,
+																								@Param("upperLatitude") Double upperLatitude,
+																								@Param("upperLongitude") Double upperLongitude);
+
 
 }

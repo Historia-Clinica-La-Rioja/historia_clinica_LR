@@ -2132,6 +2132,13 @@ export interface GetPatientCoordinatesByAddedInstitutionFilterDto {
     mapUpperCorner: GlobalCoordinatesDto;
 }
 
+export interface GetPatientCoordinatesByOutpatientConsultationFilterDto {
+    fromDate: DateDto;
+    mapLowerCorner: GlobalCoordinatesDto;
+    mapUpperCorner: GlobalCoordinatesDto;
+    toDate: DateDto;
+}
+
 export interface GetSanitaryResponsibilityAreaInstitutionAddressDto {
     city: MasterDataDto;
     department: MasterDataDto;

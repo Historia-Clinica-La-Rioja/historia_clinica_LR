@@ -3,6 +3,7 @@ package net.pladema.sanitaryresponsibilityarea.infrastructure.output;
 import lombok.RequiredArgsConstructor;
 import net.pladema.patient.repository.PatientRepository;
 import net.pladema.sanitaryresponsibilityarea.application.port.output.PatientCoordinatesPort;
+import net.pladema.sanitaryresponsibilityarea.domain.GetPatientCoordinatesByOutpatientConsultationFilterBo;
 import net.pladema.sanitaryresponsibilityarea.domain.SanitaryRegionPatientMapCoordinatesBo;
 import net.pladema.sanitaryresponsibilityarea.domain.GetPatientCoordinatesByAddedInstitutionFilterBo;
 
@@ -19,6 +20,17 @@ public class PatientCoordinatesPortImpl implements PatientCoordinatesPort {
 	@Override
 	public List<SanitaryRegionPatientMapCoordinatesBo> getPatientCoordinatesByAddedInstitution(GetPatientCoordinatesByAddedInstitutionFilterBo filter) {
 		return patientRepository.fetchPatientCoordinatesByAddedInstitution(filter.getInstitutionId(),
+				filter.getMapLowerCorner().getLatitude(),
+				filter.getMapLowerCorner().getLongitude(),
+				filter.getMapUpperCorner().getLatitude(),
+				filter.getMapUpperCorner().getLongitude());
+	}
+
+	@Override
+	public List<SanitaryRegionPatientMapCoordinatesBo> getPatientCoordinatesByOutpatientConsultation(GetPatientCoordinatesByOutpatientConsultationFilterBo filter) {
+		return patientRepository.fetchPatientCoordinatesByOutpatientConsultation(filter.getInstitutionId(),
+				filter.getFromDate(),
+				filter.getToDate(),
 				filter.getMapLowerCorner().getLatitude(),
 				filter.getMapLowerCorner().getLongitude(),
 				filter.getMapUpperCorner().getLatitude(),
