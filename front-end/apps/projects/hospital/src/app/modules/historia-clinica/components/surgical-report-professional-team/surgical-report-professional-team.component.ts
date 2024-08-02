@@ -24,12 +24,16 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	constructor(private dialog: MatDialog, private requestMasterDataService: RequestMasterDataService) { }
 
 	ngOnInit(): void {
-		this.surgeon = this.surgicalReport.surgicalTeam.find(p => p.profession.type === EProfessionType.SURGEON)
+		this.surgeon = this.surgicalReport.surgicalTeam.find(p => p.profession.type === EProfessionType.SURGEON);
+		if (this.surgeon) {
+			this.surgicalReport.surgicalTeam = this.surgicalReport.surgicalTeam.filter(p => p.profession.type !== EProfessionType.SURGEON);
+			this.surgicalReport.surgicalTeam.unshift(this.surgeon);
+		}
 		this.requestMasterDataService.getSurgicalReportProfessionTypes().subscribe(professions => {
 			professions.shift();
 			this.professions = professions;
 			this.setHealthcareProfessionals();
-		})
+		});
 	}
 
 	addProfessional(): void {
@@ -39,13 +43,13 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 				professions: this.professions,
 				idProfessionalSelected: this.surgeon.healthcareProfessional.id,
 			}
-		})
+		});
 		dialogRef.afterClosed().subscribe((professional: AddMemberMedicalTeam) => {
 			if (professional) {
 				this.surgicalReport.surgicalTeam.push(professional.professionalData);
 				this.healthcareProfessionals.push(professional);
 			}
-		})
+		});
 	}
 
 	setHealthcareProfessionals() {
@@ -65,6 +69,10 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 	}
 
 	deleteProfessional(index: number): void {
+		if (index === 0 && this.surgicalReport.surgicalTeam[index].profession.type === EProfessionType.SURGEON) {
+			this.showErrorProfessionalRepeated = true;
+			return;
+		}
 		this.healthcareProfessionals.splice(index, 1);
 		this.surgicalReport.surgicalTeam.splice(index, 1);
 	}
@@ -78,11 +86,16 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 			this.surgeon = null;
 			return;
 		}
+
 		this.surgeon = this.mapToDocumentHealthcareProfessionalDto(professional, EProfessionType.SURGEON);
 
 		const existingProfessional = this.surgicalReport.surgicalTeam.find(p => p.healthcareProfessional.id === professional.id);
 
-		existingProfessional ? this.showErrorProfessionalRepeated = true : this.surgicalReport.surgicalTeam.push(this.surgeon);
+		if (existingProfessional) {
+			this.showErrorProfessionalRepeated = true;
+		} else {
+			this.surgicalReport.surgicalTeam.unshift(this.surgeon);
+		}
 	}
 
 	isEmpty(): boolean {
@@ -96,6 +109,6 @@ export class SurgicalReportProfessionalTeamComponent implements OnInit {
 				type: type,
 				otherTypeDescription: description
 			}
-		}
+		};
 	}
 }
