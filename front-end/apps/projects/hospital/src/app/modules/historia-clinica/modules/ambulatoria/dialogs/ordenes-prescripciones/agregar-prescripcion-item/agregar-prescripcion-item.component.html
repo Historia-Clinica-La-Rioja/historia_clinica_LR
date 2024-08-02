@@ -45,7 +45,16 @@
 				<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'healthProblem')" translate="forms.REQUIRED"></mat-error>
 			</mat-form-field>
 
-			<mat-form-field appearance="outline">
+			<mat-radio-group fxLayout="column" fxLayoutGap="10px" formControlName="pharmacoSearchType">
+				<mat-radio-button color="primary" [value]="DEFAULT_RADIO_OPTION">
+					{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_SEARCH' | translate}}
+				</mat-radio-button>
+				<mat-radio-button color="primary" [value]="OTHER_RADIO_OPTION">
+					{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_SEARCH' | translate}}
+				</mat-radio-button>
+			</mat-radio-group>
+
+			<mat-form-field appearance="outline" *ngIf="prescriptionItemForm.value.pharmacoSearchType">
 				<mat-label class="capitalize-first-letter">{{data.searchSnomedLabel | translate}}</mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" #snomed (keyup.enter)="setConcept(snomed.value)">
 				<button  matSuffix color="primary" mat-icon-button type="button" (click)="setConcept(snomed.value)">

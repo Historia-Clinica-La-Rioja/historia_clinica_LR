@@ -516,7 +516,9 @@
                     "TREATMENT_DAYS": "Días de tratamiento",
                     "ADD_CHARACTERS": "Ingrese al menos 3 caracteres",
                     "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado",
-                    "QUANTITY": "Cantidad"
+                    "QUANTITY": "Cantidad",
+					"GENERIC_SEARCH": "Buscar por genérico",
+					"COMMERCIAL_SEARCH": "Buscar por comercial"
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",
