@@ -97,6 +97,8 @@ export class CreateOrderService {
 	}
 
 	addToList() {
+		this.hasTemplate.next(false);
+		this.templates = [];
 		const newProcedure: Procedure = {
 			snomed: this.snomedConcept,
 			performedDate: this.form.value.performedDate || undefined
