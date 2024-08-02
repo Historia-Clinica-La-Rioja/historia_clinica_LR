@@ -2,10 +2,9 @@ package net.pladema.clinichistory.hospitalization.service.domain;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -86,9 +85,6 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	@Nullable
 	private String description;
 
-	@Nullable
-	private @Valid List<DocumentHealthcareProfessionalBo> healthcareProfessionals;
-
 	private LocalDateTime performedDate;
 
 	@Nullable
@@ -101,6 +97,15 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 	private String modificationReason;
 
 	private Map<String, Object> contextMap;
+
+	@Nullable
+	private @Valid List<DocumentHealthcareProfessionalBo> surgicalTeam;
+
+	@Nullable
+	private @Valid DocumentHealthcareProfessionalBo pathologist;
+
+	@Nullable
+	private @Valid DocumentHealthcareProfessionalBo transfusionist;
 
 	@Override
 	public Integer getPatientId() {
@@ -118,31 +123,30 @@ public class SurgicalReportBo extends SelfValidating<SurgicalReportBo> implement
 		return SourceType.HOSPITALIZATION;
 	}
 
-	public List<DocumentHealthcareProfessionalBo> getSurgicalTeam() {
-		if (healthcareProfessionals == null)
-			return null;
-		return healthcareProfessionals.stream()
-                .filter(professionalBo -> !(EProfessionType.PATHOLOGIST.equals(professionalBo.getProfessionType())
-                        || EProfessionType.TRANSFUSIONIST.equals(professionalBo.getProfessionType())))
-                .collect(Collectors.toList());
+	public List<DocumentHealthcareProfessionalBo> getHealthcareProfessionals() {
+		return Stream.of(
+						surgicalTeam != null ? surgicalTeam.stream() : Stream.<DocumentHealthcareProfessionalBo>empty(),
+						pathologist != null ? Stream.of(pathologist) : Stream.<DocumentHealthcareProfessionalBo>empty(),
+						transfusionist != null ? Stream.of(transfusionist) : Stream.<DocumentHealthcareProfessionalBo>empty()
+				)
+				.flatMap(stream -> stream)
+				.collect(Collectors.toList());
 	}
-
-	public DocumentHealthcareProfessionalBo getPathologist() {
-		if (healthcareProfessionals == null)
-			return null;
-		return healthcareProfessionals.stream()
-				.filter(professionalBo -> EProfessionType.PATHOLOGIST.equals(professionalBo.getProfessionType()))
-				.findFirst()
-				.orElse(null);
-	}
-
-	public DocumentHealthcareProfessionalBo getTransfusionist() {
-		if (healthcareProfessionals == null)
-			return null;
-		return healthcareProfessionals.stream()
-				.filter(professionalBo -> EProfessionType.TRANSFUSIONIST.equals(professionalBo.getProfessionType()))
-				.findFirst()
-				.orElse(null);
+	public void setHealthcareProfessionals(List<DocumentHealthcareProfessionalBo> healthcareProfessionals) {
+		if (healthcareProfessionals != null) {
+			this.surgicalTeam = healthcareProfessionals.stream()
+					.filter(professionalBo -> !(EProfessionType.PATHOLOGIST.equals(professionalBo.getProfessionType())
+							|| EProfessionType.TRANSFUSIONIST.equals(professionalBo.getProfessionType())))
+					.collect(Collectors.toList());
+			this.pathologist = healthcareProfessionals.stream()
+					.filter(professionalBo -> EProfessionType.PATHOLOGIST.equals(professionalBo.getProfessionType()))
+					.findFirst()
+					.orElse(null);
+			this.transfusionist = healthcareProfessionals.stream()
+					.filter(professionalBo -> EProfessionType.TRANSFUSIONIST.equals(professionalBo.getProfessionType()))
+					.findFirst()
+					.orElse(null);
+		}
 	}
 
 }

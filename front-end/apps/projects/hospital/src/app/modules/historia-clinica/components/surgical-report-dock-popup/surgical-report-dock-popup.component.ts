@@ -48,7 +48,6 @@ export class SurgicalReportDockPopupComponent implements OnInit{
 			}
 		},
 		frozenSectionBiopsies: [],
-		healthcareProfessionals: [],
 		modificationReason: undefined,
 		mainDiagnosis: undefined,
 		pathologist: undefined,

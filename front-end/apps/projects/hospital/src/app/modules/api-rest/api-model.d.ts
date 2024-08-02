@@ -4945,7 +4945,6 @@ export interface SurgicalReportDto extends Serializable {
     drainages?: HospitalizationProcedureDto[];
     endDateTime?: DateTimeDto;
     frozenSectionBiopsies?: HospitalizationProcedureDto[];
-    healthcareProfessionals?: DocumentHealthcareProfessionalDto[];
     mainDiagnosis?: DiagnosisDto;
     modificationReason?: string;
     pathologist?: DocumentHealthcareProfessionalDto;
