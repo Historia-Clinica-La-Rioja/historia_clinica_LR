@@ -503,7 +503,7 @@ SELECT d.id AS id,
                 (SELECT string_agg((s.pt) ||
                                    ' (vía: ' || v.description ||
                                    CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH:mm') ||
+                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
                                    ' hs.)', ', ')
                  FROM anesthetic_substance a
                           JOIN snomed s ON (s.id = a.snomed_id)
@@ -512,7 +512,7 @@ SELECT d.id AS id,
                           JOIN via v ON (v.id = a.via_id)
                           LEFT JOIN note n ON (a.via_note_id = n.id)
                  WHERE a.document_id = d.id AND a.type_id = 1 AND d.type_id IN (20) GROUP BY a.document_id) ||
-                (SELECT '\n- Última ingesta de comida: ' || to_char(pd.food_intake, 'HH:mm') || ' hs'
+                (SELECT '\n- Última ingesta de comida: ' || to_char(pd.food_intake, 'HH24:MI') || ' hs'
                  FROM procedure_description pd
                  WHERE pd.document_id = d.id AND d.type_id IN (20) AND pd.food_intake IS NOT NULL), '') AS pre_medications,
        coalesce('Antecedentes: ' ||
@@ -530,7 +530,7 @@ SELECT d.id AS id,
                 (SELECT string_agg((s.pt) ||
                                    ' (vía: ' || v.description ||
                                    CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH:mm') ||
+                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
                                    ' hs.)', ', ')
                  FROM anesthetic_substance a
                           JOIN snomed s ON (s.id = a.snomed_id)
@@ -579,7 +579,7 @@ SELECT d.id AS id,
                 (SELECT string_agg((s.pt) ||
                                    ' (vía: ' || v.description ||
                                    CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH:mm') ||
+                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
                                    ' hs.)', ', ')
                  FROM anesthetic_substance a
                           JOIN snomed s ON (s.id = a.snomed_id)
@@ -592,7 +592,7 @@ SELECT d.id AS id,
                 (SELECT string_agg((s.pt) ||
                                    ' (vía: ' || v.description ||
                                    CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH:mm') ||
+                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
                                    ' hs.)', ', ')
                  FROM anesthetic_substance a
                           JOIN snomed s ON (s.id = a.snomed_id)
@@ -612,7 +612,7 @@ SELECT d.id AS id,
                 (SELECT string_agg((s.pt) ||
                                    ' (vía: ' || v.description ||
                                    CASE WHEN n.description IS NOT NULL THEN ' - ' || n.description ELSE '' END ||
-                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH:mm') ||
+                                   ', dosis: ' || q.value || q.unit || ', hora: ' || to_char(dg.start_date, 'HH24:MI') ||
                                    ' hs.)', ', ')
                  FROM anesthetic_substance a
                           JOIN snomed s ON (s.id = a.snomed_id)
@@ -625,23 +625,23 @@ SELECT d.id AS id,
                 (SELECT CASE WHEN pd.anesthesia_start_date IS NOT NULL OR pd.anesthesia_start_time IS NOT NULL THEN '\n- Comienzo anestesia: ' END ||
                         CASE WHEN pd.anesthesia_start_date IS NOT NULL THEN to_char(pd.anesthesia_start_date, 'dd/MM/yyyy') ELSE '' END ||
                         CASE WHEN pd.anesthesia_start_date IS NOT NULL AND pd.anesthesia_start_time IS NOT NULL THEN ' - ' ELSE '' END ||
-                        CASE WHEN pd.anesthesia_start_time IS NOT NULL THEN to_char(pd.anesthesia_start_time, 'HH:mm') || ' hs' ELSE '' END ||
+                        CASE WHEN pd.anesthesia_start_time IS NOT NULL THEN to_char(pd.anesthesia_start_time, 'HH24:MI') || ' hs' ELSE '' END ||
                         CASE WHEN pd.anesthesia_end_date IS NOT NULL OR pd.anesthesia_end_time IS NOT NULL THEN '\n- Fin anestesia: ' END ||
                         CASE WHEN pd.anesthesia_end_date IS NOT NULL THEN to_char(pd.anesthesia_end_date, 'dd/MM/yyyy') ELSE '' END ||
                         CASE WHEN pd.anesthesia_end_date IS NOT NULL AND pd.anesthesia_end_time IS NOT NULL THEN ' - ' ELSE '' END ||
-                        CASE WHEN pd.anesthesia_end_time IS NOT NULL THEN to_char(pd.anesthesia_end_time, 'HH:mm') || ' hs' ELSE '' END ||
+                        CASE WHEN pd.anesthesia_end_time IS NOT NULL THEN to_char(pd.anesthesia_end_time, 'HH24:MI') || ' hs' ELSE '' END ||
                         CASE WHEN pd.surgery_start_date IS NOT NULL OR pd.surgery_start_time IS NOT NULL THEN '\n- Comienzo cirugía: ' END ||
                         CASE WHEN pd.surgery_start_date IS NOT NULL THEN to_char(pd.surgery_start_date, 'dd/MM/yyyy') ELSE '' END ||
                         CASE WHEN pd.surgery_start_date IS NOT NULL AND pd.surgery_start_time IS NOT NULL THEN ' - ' ELSE '' END ||
-                        CASE WHEN pd.surgery_start_time IS NOT NULL THEN to_char(pd.surgery_start_time, 'HH:mm') || ' hs' ELSE '' END ||
+                        CASE WHEN pd.surgery_start_time IS NOT NULL THEN to_char(pd.surgery_start_time, 'HH24:MI') || ' hs' ELSE '' END ||
                         CASE WHEN pd.surgery_end_date IS NOT NULL OR pd.surgery_end_time IS NOT NULL THEN '\n- Fin cirugía: ' END ||
                         CASE WHEN pd.surgery_end_date IS NOT NULL THEN to_char(pd.surgery_end_date, 'dd/MM/yyyy') ELSE '' END ||
                         CASE WHEN pd.surgery_end_date IS NOT NULL AND pd.surgery_end_time IS NOT NULL THEN ' - ' ELSE '' END ||
-                        CASE WHEN pd.surgery_end_time IS NOT NULL THEN to_char(pd.surgery_end_time, 'HH:mm') || ' hs' ELSE '' END || '\n'
+                        CASE WHEN pd.surgery_end_time IS NOT NULL THEN to_char(pd.surgery_end_time, 'HH24:MI') || ' hs' ELSE '' END || '\n'
                  FROM procedure_description pd
                  WHERE pd.document_id = d.id AND d.type_id IN (20)) ||
                 (SELECT '\hr' || string_agg('Medición' ||
-                                            ' (' || to_char(mp.date, 'dd/MM/yyyy') || ' - ' || to_char(mp.time, 'HH:mm') || ' hs.)\n' ||
+                                            ' (' || to_char(mp.date, 'dd/MM/yyyy') || ' - ' || to_char(mp.time, 'HH24:MI') || ' hs.)\n' ||
                                             'TA Max: ' || CASE WHEN mp.blood_pressure_max IS NOT NULL THEN mp.blood_pressure_max || 'mmHg' ELSE '-' END || ' ' ||
                                             'TA Min: ' || CASE WHEN mp.blood_pressure_min IS NOT NULL THEN mp.blood_pressure_max || 'mmHg' ELSE '-' END || ' ' ||
                                             'Pulso: ' || CASE WHEN mp.blood_pulse IS NOT NULL THEN mp.blood_pressure_max || 'lat/min' ELSE '-' END || ' ' ||
