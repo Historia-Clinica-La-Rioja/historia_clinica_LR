@@ -1,8 +1,8 @@
 package net.pladema.establishment.controller;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.Valid;
 
+import net.pladema.medicine.application.AssociateAllMedicinesToInstitution;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 
 import org.springframework.data.domain.Example;
@@ -26,6 +26,7 @@ import net.pladema.address.service.AddressService;
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeInstitutionValidator;
 import net.pladema.establishment.repository.InstitutionRepository;
 import net.pladema.establishment.repository.entity.Institution;
+import net.pladema.medicine.application.AssociateAllMedicineGroupsToInstitution;
 import net.pladema.permissions.service.InstitutionRoleAssignmentService;
 import net.pladema.sgx.backoffice.repository.BackofficeRepository;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
@@ -41,11 +42,15 @@ public class BackofficeInstitutionController extends AbstractBackofficeControlle
 
 	AddressService addressService;
 	private final InstitutionRoleAssignmentService institutionRoleAssignmentService;
-	
+	private final AssociateAllMedicineGroupsToInstitution associateAllMedicineGroupsToInstitution;
+	private final AssociateAllMedicinesToInstitution associateAllMedicinesToInstitution;
+
 	public BackofficeInstitutionController(InstitutionRepository repository,
 										   BackofficeInstitutionValidator backofficeInstitutionValidator,
 										   AddressService addressService,
-										   InstitutionRoleAssignmentService institutionRoleAssignmentService) {
+										   InstitutionRoleAssignmentService institutionRoleAssignmentService,
+										   AssociateAllMedicineGroupsToInstitution associateAllMedicineGroupsToInstitution,
+										   AssociateAllMedicinesToInstitution associateAllMedicinesToInstitution) {
 		super(
 				new BackofficeRepository<>(
 						repository,
@@ -63,8 +68,10 @@ public class BackofficeInstitutionController extends AbstractBackofficeControlle
 						backofficeInstitutionValidator);
 		this.addressService = addressService;
 		this.institutionRoleAssignmentService = institutionRoleAssignmentService;
+		this.associateAllMedicineGroupsToInstitution = associateAllMedicineGroupsToInstitution;
+		this.associateAllMedicinesToInstitution = associateAllMedicinesToInstitution;
 	}
-	
+
 	@Override
 	@PostMapping
 	@Transactional
@@ -74,7 +81,10 @@ public class BackofficeInstitutionController extends AbstractBackofficeControlle
 		permissionValidator.assertCreate(entity);
 		Address standinAddr = addressService.addAddress(Address.buildDummy());
 		entity.setAddressId(standinAddr.getId());
-		return super.create(entity);
+		Institution result = super.create(entity);
+		associateAllMedicineGroupsToInstitution.run(entity.getId());
+		associateAllMedicinesToInstitution.run(entity.getId());
+		return result;
 	}
 
 	@Override
