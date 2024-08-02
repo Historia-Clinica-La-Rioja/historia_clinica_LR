@@ -9,6 +9,8 @@ import net.pladema.patient.service.domain.PatientGenderAgeBo;
 import net.pladema.patient.service.domain.PatientRegistrationSearch;
 import net.pladema.patient.service.domain.PatientSearch;
 
+import net.pladema.sanitaryresponsibilityarea.domain.SanitaryRegionPatientMapCoordinatesBo;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -108,5 +110,22 @@ public interface PatientRepository extends SGXAuditableEntityJPARepository<Patie
 			"AND a.number IS NOT NULL " +
 			"AND (glp.patientId IS NULL OR glp.statusId = 1)")
 	Page<FetchGlobalCoordinatesSanitaryResponsibilityAreaPatientAddressBo> fetchPatientWithNoGlobalCoordinates(Pageable pageable);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.sanitaryresponsibilityarea.domain.SanitaryRegionPatientMapCoordinatesBo(a.latitude, a.longitude) " +
+			"FROM HospitalAudit ha " +
+			"JOIN PatientAudit pa ON (pa.pk.hospitalAuditId = ha.id) " +
+			"JOIN Patient p ON (p.id = pa.pk.patientId) " +
+			"JOIN PersonExtended pe ON (pe.id = p.personId) " +
+			"JOIN Address a ON (a.id = pe.addressId) " +
+			"WHERE ha.actionType = 1 " +
+			"AND ha.institutionId = :institutionId " +
+			"AND a.latitude BETWEEN :lowerLatitude AND :upperLatitude " +
+			"AND a.longitude BETWEEN :lowerLongitude AND :upperLongitude")
+	List<SanitaryRegionPatientMapCoordinatesBo> fetchPatientCoordinatesByAddedInstitution(@Param("institutionId") Integer institutionId,
+																						  @Param("lowerLatitude") Double lowerLatitude,
+																						  @Param("lowerLongitude") Double lowerLongitude,
+																						  @Param("upperLatitude") Double upperLatitude,
+																						  @Param("upperLongitude") Double upperLongitude);
 
 }

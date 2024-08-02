@@ -2127,6 +2127,11 @@ export interface GetDiagnosticReportObservationGroupDto {
     procedureTemplateId: number;
 }
 
+export interface GetPatientCoordinatesByAddedInstitutionFilterDto {
+    mapLowerCorner: GlobalCoordinatesDto;
+    mapUpperCorner: GlobalCoordinatesDto;
+}
+
 export interface GetSanitaryResponsibilityAreaInstitutionAddressDto {
     city: MasterDataDto;
     department: MasterDataDto;
@@ -4585,6 +4590,11 @@ export interface RuleDto {
     level: number;
     name: string;
     snomedId: number;
+}
+
+export interface SanitaryRegionPatientMapCoordinatesDto {
+    latitude: number;
+    longitude: number;
 }
 
 export interface SaveInstitutionAddressDto {
