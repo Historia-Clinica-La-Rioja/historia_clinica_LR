@@ -139,7 +139,9 @@ public class HCEHealthConditionsServiceImpl implements HCEHealthConditionsServic
         log.debug(LOGGING_INPUT, patientId);
         List<HCEHealthConditionVo> resultQuery = hceHealthConditionRepository.getSummaryProblems(patientId);
         List<HCEHealthConditionBo> result = resultQuery.stream().map(HCEHealthConditionBo::new).filter(HCEHealthConditionBo::isSolvedProblem)
-                .sorted(Comparator.comparing(HCEHealthConditionBo::getStartDate).reversed()).collect(Collectors.toList());
+                .sorted(Comparator.comparing(HCEHealthConditionBo::getStartDate, Comparator.nullsFirst(Comparator.naturalOrder()))
+				.reversed())
+				.collect(Collectors.toList());
         log.debug(LOGGING_OUTPUT, result);
         return result;
     }
