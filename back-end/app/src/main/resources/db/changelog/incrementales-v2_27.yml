@@ -180,3 +180,17 @@ databaseChangeLog:
               path: data/load_institution_prescription.sql
               relativeToChangelogFile: true
               splitStatements: false
+
+    - changeSet:
+        id: createView-v_clinic_history_16
+        author: mromero
+        changes:
+          - createView:
+              viewName: v_clinic_history
+              fullDefinition: false
+              replaceIfExists: true
+              encoding: UTF-8
+              relativeToChangelogFile: true
+              path: data/v_clinic_history/create_v_clinic_history_16.sql
+
+
