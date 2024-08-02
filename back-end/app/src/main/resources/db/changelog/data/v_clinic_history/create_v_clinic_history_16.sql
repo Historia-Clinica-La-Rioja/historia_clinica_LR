@@ -197,17 +197,29 @@ SELECT d.id AS id,
                                                          JOIN observation_lab ol ON (ol.id=dl.observation_lab_id)
                                                          JOIN snomed s ON (s.id=ol.snomed_id)
                                                 WHERE dl.document_id = d.id AND d.type_id IN (1, 2, 4, 10, 13, 16, 20) AND ol.status_id = '261782000' GROUP BY dl.document_id),'') AS blood_type,
-       coalesce('Datos antropométricos: '|| (SELECT string_agg(replace(s.pt, '(entidad observable)', '') || ': ' || ovs.value, ', ')
+       coalesce('Datos antropométricos: '|| (SELECT string_agg(replace(s.pt, '(entidad observable)', '') || ': ' || ovs.value || coalesce(CASE WHEN s.sctid IN ('50373000', '363812007') THEN 'cm' ELSE 'kg' END,''), ', ')
                                              FROM document_vital_sign dvs
                                                       JOIN observation_vital_sign ovs ON (ovs.id=dvs.observation_vital_sign_id)
                                                       JOIN snomed s ON (s.id=ovs.snomed_id)
                                              WHERE dvs.document_id = d.id AND s.sctid IN ('50373000', '27113001', '363812007') AND ovs.status_id = '261782000' GROUP BY dvs.document_id),'') AS anthropometric_data,
-       coalesce('Signos vitales y factores de riesgo: '|| (SELECT string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+       coalesce('Signos vitales y factores de riesgo: '|| (SELECT string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value ||
+                                                                             coalesce(CASE WHEN s.sctid IN ('364075005', '86290005') THEN '/min' ELSE
+                                                                                        CASE WHEN s.sctid IN ('703421000') THEN '°C' ELSE
+                                                                                        CASE WHEN s.sctid IN ('103228002', '259689004', '827181004', '28317006') THEN '%' ELSE
+                                                                                        CASE WHEN s.sctid IN ('271649006', '271650006') THEN 'mmHg' ELSE
+                                                                                        CASE WHEN s.sctid IN ('434912009') THEN 'mg/dl' ELSE ''
+                                                                                        END END END END END, ''), ', ')
                                                            FROM document_vital_sign dvs
                                                                     JOIN observation_vital_sign ovs ON (ovs.id=dvs.observation_vital_sign_id)
                                                                     JOIN snomed s ON (s.id=ovs.snomed_id)
                                                            WHERE dvs.document_id = d.id AND d.type_id IN (1, 2, 4, 10, 13, 16, 20) AND s.sctid NOT IN ('50373000', '27113001', '363812007') AND ovs.status_id = '261782000' GROUP BY dvs.document_id),'') ||
-       coalesce('Signos vitales y factores de riesgo: '|| (SELECT string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value, ', ')
+       coalesce('Signos vitales y factores de riesgo: '|| (SELECT string_agg(replace(replace(s.pt, '(entidad observable)', ''), '(sustancia)', '') || ': ' || ovs.value ||
+                                                                             coalesce(CASE WHEN s.sctid IN ('364075005', '86290005') THEN '/min' ELSE
+                                                                                        CASE WHEN s.sctid IN ('703421000') THEN '°C' ELSE
+                                                                                        CASE WHEN s.sctid IN ('103228002', '259689004', '827181004', '28317006') THEN '%' ELSE
+                                                                                        CASE WHEN s.sctid IN ('271649006', '271650006') THEN 'mmHg' ELSE
+                                                                                        CASE WHEN s.sctid IN ('434912009') THEN 'mg/dl' ELSE ''
+                                                                                        END END END END END, ''), ', ')
                                                            FROM triage_vital_signs tvs
                                                                     JOIN observation_vital_sign ovs ON (ovs.id = tvs.observation_vital_sign_id)
                                                                     JOIN snomed s ON (s.id = ovs.snomed_id)
