@@ -27,6 +27,7 @@ import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/
 import { DiagnosticWithTypeReportInfoDto, IMAGE_DIAGNOSIS_CATEGORY_ID } from '../../modules/estudio/model/ImageModel';
 import { ImageOrderCasesService } from '../../modules/estudio/services/image-order-cases.service';
 import { StudyResultsService } from '../../services/study-results.service';
+import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
 
 @Component({
 	selector: 'app-card-estudios',
@@ -100,6 +101,7 @@ export class CardEstudiosComponent implements OnInit {
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,
 		private readonly imageOrderCasesService: ImageOrderCasesService,
 		private studyResultsService: StudyResultsService,
+		private ambulatoriaSummaryFacadeService: AmbulatoriaSummaryFacadeService,
 
 	) { }
 
@@ -155,6 +157,9 @@ export class CardEstudiosComponent implements OnInit {
 			)
 		)
 
+		this.ambulatoriaSummaryFacadeService.updateReferences.subscribe(
+			_ => this.getStudy()
+		)
 	}
 
 	setActionsLayout(): void {

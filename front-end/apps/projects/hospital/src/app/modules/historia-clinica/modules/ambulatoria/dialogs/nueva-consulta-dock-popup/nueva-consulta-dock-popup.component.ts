@@ -486,6 +486,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 				medications: !!nuevaConsultaDto.medications?.length,
 				anthropometricData: !!nuevaConsultaDto.anthropometricData,
 				problems: !!problemsToUpdate.length,
+				references: !!nuevaConsultaDto.references?.length,
 			};
 		}
 	}
