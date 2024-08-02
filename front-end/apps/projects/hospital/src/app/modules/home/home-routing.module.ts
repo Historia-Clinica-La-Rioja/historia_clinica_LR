@@ -14,21 +14,10 @@ import { UpdatePasswordComponent } from "../auth/components/update-password/upda
 import { UpdatePasswordSuccessComponent } from "../auth/components/update-password-success/update-password-success.component";
 import { TemplateRenderComponent } from './routes/template-render/template-render.component';
 import { RoutedExternalComponent } from '@extensions/components/routed-external/routed-external.component';
-import { MANAGER_ROLES } from './constants/menu';
+import { HomeRoutes, MANAGER_ROLES } from './constants/menu';
 import { RouteMenuComponent } from '@presentation/components/route-menu/route-menu.component';
 import { CubeReportComponent } from '../reportes/routes/cube-report/cube-report.component';
 
-
-export enum HomeRoutes {
-	Home = '',						// pantalla inicial
-	Profile = 'profile',			// Perfil del usuario
-	Settings = 'settings',			// Configuración
-	Extension = 'extension', 		// Extensión
-	UserKeys = 'user-keys', 		// API Keys del usuario
-	Auditoria = 'auditoria',
-	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
-	CallCenter = 'centro-de-llamadas', // Centro de llamadas
-}
 
 const routes: Routes = [
 	{

@@ -17,7 +17,7 @@ import { MenuService } from '@extensions/services/menu.service';
 import { LoggedUserService } from '../auth/services/logged-user.service';
 import { NO_ROLES_USER_SIDEBAR_MENU, ROLES_USER_SIDEBAR_MENU } from './constants/menu';
 
-import { HomeRoutes } from '../home/home-routing.module';
+import { HomeRoutes } from './constants/menu';
 import { AppRoutes } from '../../app-routing.module';
 import { WCExtensionsService } from '@extensions/services/wc-extensions.service';
 import { MenuItemDef } from '@core/core-model';

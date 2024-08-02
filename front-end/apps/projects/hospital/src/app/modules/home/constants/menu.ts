@@ -7,6 +7,17 @@ export const MANAGER_ROLES = [
 	ERole.GESTOR_DE_ACCESO_LOCAL,
 ];
 
+export enum HomeRoutes {
+	Home = '',						// pantalla inicial
+	Profile = 'profile',			// Perfil del usuario
+	Settings = 'settings',			// Configuración
+	Extension = 'extension', 		// Extensión
+	UserKeys = 'user-keys', 		// API Keys del usuario
+	Auditoria = 'auditoria',
+	AccessManagement = 'gestion-de-accesos', // Gestion de accesos
+	CallCenter = 'centro-de-llamadas', // Centro de llamadas
+}
+
 export const PUBLIC_API_ROLES = [
 	ERole.API_FACTURACION,
 	ERole.API_TURNOS,
