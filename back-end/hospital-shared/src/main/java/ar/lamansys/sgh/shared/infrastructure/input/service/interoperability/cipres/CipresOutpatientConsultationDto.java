@@ -31,6 +31,8 @@ public class CipresOutpatientConsultationDto {
 
 	private String institutionSisaCode;
 
+	private Integer cipresEncounterId;
+
 	private SharedAnthropometricDataDto anthropometricData;
 
 	private SharedRiskFactorDto riskFactor;

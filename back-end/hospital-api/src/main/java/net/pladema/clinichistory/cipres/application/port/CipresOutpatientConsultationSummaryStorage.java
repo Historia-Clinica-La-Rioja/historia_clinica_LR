@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface CipresOutpatientConsultationSummaryStorage {
 
-	List<CipresOutpatientBasicDataBo> getOutpatientConsultations(Integer limit, LocalDateTime start, LocalDateTime end);
+	List<CipresOutpatientBasicDataBo> getOutpatientConsultationsForSend(Integer limit, LocalDateTime start, LocalDateTime end);
+
+	List<CipresOutpatientBasicDataBo> getOutpatientConsultationsForSendOrResend(Integer limit, LocalDateTime start, LocalDateTime end);
 
 	CipresOutpatientBasicDataBo getOutpatientConsultationByCipresEncounterId(Integer cipresEncounterId);
 

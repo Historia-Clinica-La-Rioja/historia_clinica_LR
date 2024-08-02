@@ -5,6 +5,7 @@ import ar.lamansys.sgh.clinichistory.domain.hce.summary.MedicationSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.hce.summary.ProcedureSummaryBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SnomedBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.hospitalizationState.entity.HealthConditionSummaryVo;
+import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.cipres.application.port.CipresOutpatientConsultationStorage;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +42,11 @@ public class CipresOutpatientConsultationStorageImpl implements CipresOutpatient
 	private final DocumentService documentService;
 
 	@Override
-	public List<CipresOutpatientBasicDataBo> getOutpatientConsultations() {
-		LocalDateTime start = LocalDateTime.now().minusDays(DAYS_AGO).with(LocalTime.MIDNIGHT).plusHours(3);
-		LocalDateTime end = LocalDateTime.now().with(LocalTime.MIDNIGHT).plusHours(3);
-		List<CipresOutpatientBasicDataBo> result = cipresOutpatientConsultationSummaryStorage.getOutpatientConsultations(LIMIT, start, end);
+	public List<CipresOutpatientBasicDataBo> getOutpatientConsultationsData() {
 
-		List<Integer> outpatientConsultationIds = result.stream().map(CipresOutpatientBasicDataBo::getId).collect(Collectors.toList());
+		List<CipresOutpatientBasicDataBo> outpatientConsultations = getOutpatientConsultations();
+
+		List<Integer> outpatientConsultationIds = outpatientConsultations.stream().map(CipresOutpatientBasicDataBo::getId).collect(Collectors.toList());
 
 		List<HealthConditionSummaryVo> healthConditions = outpatientConsultationSummaryStorage.getHealthConditionsByOutpatientIds(outpatientConsultationIds);
 		List<ProcedureSummaryBo> procedures = outpatientConsultationSummaryStorage.getProceduresByOutpatientIds(outpatientConsultationIds);
@@ -63,7 +64,7 @@ public class CipresOutpatientConsultationStorageImpl implements CipresOutpatient
 				.collect(Collectors.groupingBy(MedicationSummaryBo::getEncounterId,
 						Collectors.mapping(m -> new SnomedBo(m.getSnomedSctid(), m.getSnomedPt()), Collectors.toList())));
 
-		result.forEach(oc -> {
+		outpatientConsultations.forEach(oc -> {
 			normalizeDate(oc);
 			oc.setProcedures(procedureMap.getOrDefault(oc.getId(), Collections.emptyList()));
 			oc.setProblems(healthConditionMap.getOrDefault(oc.getId(), Collections.emptyList()));
@@ -72,8 +73,8 @@ public class CipresOutpatientConsultationStorageImpl implements CipresOutpatient
 			oc.setRiskFactorData(documentService.getRiskFactorStateFromDocument(oc.getDocumentId()));
 		});
 
-		log.debug("Output size -> {} ", result.size());
-		return result;
+		log.debug("Output size -> {} ", outpatientConsultations.size());
+		return outpatientConsultations;
 	}
 
 	@Override
@@ -97,6 +98,19 @@ public class CipresOutpatientConsultationStorageImpl implements CipresOutpatient
 		log.debug("Output result -> {} ", result);
 
 		return result;
+	}
+
+	private List<CipresOutpatientBasicDataBo> getOutpatientConsultations() {
+		LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+		LocalTime currentTime = LocalTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
+
+		LocalTime startMorning = LocalTime.of(0, 0);
+		LocalTime endMorning = LocalTime.of(6, 0);
+
+		if ((currentTime.isAfter(startMorning) || currentTime.equals(startMorning)) && (currentTime.isBefore(endMorning) || currentTime.equals(endMorning)))
+			return cipresOutpatientConsultationSummaryStorage.getOutpatientConsultationsForSendOrResend(LIMIT, currentDateTime.minusDays(DAYS_AGO), currentDateTime);
+		else
+			return cipresOutpatientConsultationSummaryStorage.getOutpatientConsultationsForSend(LIMIT, currentDateTime.minusDays(DAYS_AGO), currentDateTime);
 	}
 
 	private void normalizeDate(CipresOutpatientBasicDataBo consultation) {

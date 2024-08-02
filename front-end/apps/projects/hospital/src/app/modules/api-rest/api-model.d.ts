@@ -829,6 +829,7 @@ export interface ChangeStateMedicationRequestDto extends Serializable {
 
 export interface CipresOutpatientConsultationDto {
     anthropometricData: SharedAnthropometricDataDto;
+    cipresEncounterId: number;
     clinicalSpecialtyId: number;
     clinicalSpecialtySctid: string;
     date: string;
