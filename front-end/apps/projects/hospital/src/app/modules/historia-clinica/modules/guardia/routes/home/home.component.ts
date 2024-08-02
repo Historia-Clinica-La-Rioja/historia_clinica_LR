@@ -179,15 +179,18 @@ export class HomeComponent implements OnInit {
 	private mapToEpisode(episode: EmergencyCareListDto): Episode {
 		const minWaitingTime = episode.state.id === this.estadosEpisodio.EN_ESPERA ?
 			HomeComponent.calculateWaitingTime(episode.creationDate) : undefined;
+		const timeSinceStateChange = episode.state.id === this.estadosEpisodio.AUSENTE ?
+			HomeComponent.calculateWaitingTime(episode.stateUpdatedOn) : undefined;
 		return {
 			...episode,
 			triage: {
 				emergencyCareEpisodeListTriageDto: episode.triage,
 				...(episode.triage.reasons && { reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt) } )
 			},
-			waitingTime: minWaitingTime,
-			waitingHours: minWaitingTime ? Math.round(minWaitingTime / 60) : undefined,
-
+			waitingTime: episode.state.id === this.estadosEpisodio.AUSENTE ? timeSinceStateChange : minWaitingTime,
+			waitingHours: episode.state.id === this.estadosEpisodio.AUSENTE ?
+				(timeSinceStateChange ? Math.round(timeSinceStateChange / 60) : undefined) :
+				(minWaitingTime ? Math.round(minWaitingTime / 60) : undefined),
 		};
 	}
 
