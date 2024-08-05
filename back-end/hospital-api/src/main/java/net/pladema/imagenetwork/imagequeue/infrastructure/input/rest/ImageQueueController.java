@@ -1,7 +1,6 @@
 package net.pladema.imagenetwork.imagequeue.infrastructure.input.rest;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.datastructures.PageDto;
-import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +61,7 @@ public class ImageQueueController {
         return ResponseEntity.ok(new PageDto<>(mappedResult,(long) resultList.size()));
     }
 
-    @PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
+    @PreAuthorize("hasPermission(#institutionId, 'INDEXADOR')")
     @PutMapping("move-image/{moveImageId}/retry")
     public ResponseEntity<Boolean> retryMove(
             @PathVariable("institutionId") Integer institutionId,
