@@ -3,7 +3,7 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import { Cluster, Vector as VectorSource, XYZ} from 'ol/source';
-import { GlobalCoordinatesDto } from '@api-rest/api-model';
+import { GetPatientCoordinatesByAddedInstitutionFilterDto, GlobalCoordinatesDto, SanitaryRegionPatientMapCoordinatesDto } from '@api-rest/api-model';
 import Style from 'ol/style/Style';
 import {Draw, Modify, Snap} from 'ol/interaction.js';
 import { EGeometry } from '../constants/geometry.utils';
@@ -11,9 +11,13 @@ import { Injectable } from '@angular/core';
 import Polygon from 'ol/geom/Polygon';
 import { Coordinate } from 'ol/coordinate';
 import Control from 'ol/control/Control';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { OpenlayersService } from './openlayers.service';
+import { fromLonLat, toLonLat } from 'ol/proj';
+import { GisService } from '@api-rest/services/gis.service';
+import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
+import { DateRange } from '@presentation/components/date-range-picker/date-range-picker.component';
 
 const LOCATION_POINT_PATH = '../../../../assets/icons/location_on.svg';
 const PERSON_POINT_PATH = '../../../../assets/icons/person.svg';
@@ -21,6 +25,11 @@ const IGN_MAP = 'https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabase
 const EPSG3857 = 'EPSG:3857';
 const EPSG4326 = 'EPSG:4326';
 const LOCATION_POINT_ID = 'locationPoint';
+
+export enum PatientTypeFilter {
+	REGISTERED = 'registered',
+	OUTPATIENT_CLINIC = 'outpatient_clinic',
+}
 
 @Injectable({
 	providedIn: 'root',
@@ -64,12 +73,17 @@ export class GisLayersService {
 		source: this.patientSource
 	});
 	clusterSource = new Cluster({
-		distance: 20,
-		minDistance: 20,
+		distance: 50,
+		minDistance: 30,
 		source: this.patientSource,
 	});
+	corners: GetPatientCoordinatesByAddedInstitutionFilterDto;
+	currentMapFilter;
+	dateRangeFilter: DateRange;
+	mapMoveendListener;
 
-	constructor(private readonly openLayersService: OpenlayersService) {}
+	constructor(private readonly openLayersService: OpenlayersService,
+				private readonly gisService: GisService) {}
 
 	setUp = () => {
 		this.setMap();
@@ -98,6 +112,7 @@ export class GisLayersService {
 				minZoom: 12,
 			})
 		});
+		this.detectWhenMapMoves();
 	}
 	
 	addPoint = (position: Coordinate) => {
@@ -233,6 +248,86 @@ export class GisLayersService {
 		this.openLayersService.removeAllFeatures(this.patientSource);
 	}
 
+	setPatientPoints = (coords: Coordinate) => {
+		this.patientSource.addFeature(
+			new Feature({
+				geometry: new Point(fromLonLat(coords))
+			})
+		);
+	}
+
+	filterByInstitution = () => {
+		this.currentMapFilter = PatientTypeFilter.REGISTERED;
+		this.setMapCorners();
+		const corners: string = this.toStringifyByInstitution(this.corners);
+		this.gisService.getPatientCoordinatesByInstitution(corners)
+		.pipe(map((coords: SanitaryRegionPatientMapCoordinatesDto[]) => {
+			this.removePatientFeatures();
+			coords.map((coord: SanitaryRegionPatientMapCoordinatesDto) => this.setPatientPoints([coord.longitude, coord.latitude]));
+		})).subscribe()
+	}
+
+	filterByOutpatientClinic = (dateRange: DateRange) => {
+		this.currentMapFilter = PatientTypeFilter.OUTPATIENT_CLINIC;
+		this.setMapCorners();
+		this.dateRangeFilter = dateRange;
+		const corners: string = this.toStringifyByOutpatientClinic(this.corners);
+		this.gisService.getPatientCoordinatesByOutpatientClinic(corners)
+		.pipe(map((coords: SanitaryRegionPatientMapCoordinatesDto[]) => {
+			this.removePatientFeatures();
+			coords.map((coord: SanitaryRegionPatientMapCoordinatesDto) => this.setPatientPoints([coord.longitude, coord.latitude]));
+		})).subscribe()
+	}
+
+	detectWhenMapMoves = () => {
+		this.setMapMoveendListener();
+		this.map.on('moveend', this.mapMoveendListener);
+	}
+
+	private setMapMoveendListener = () => {
+		this.mapMoveendListener = (_) => {
+			if (!this.currentMapFilter) return;
+			this.setMapCorners();
+			(this.currentMapFilter === PatientTypeFilter.REGISTERED) ? this.filterByInstitution() : this.filterByOutpatientClinic(this.dateRangeFilter);
+		}
+	}
+
+	private toStringifyByInstitution = (corners: GetPatientCoordinatesByAddedInstitutionFilterDto): string => {
+		return JSON.stringify(
+			{
+				mapLowerCorner: corners.mapLowerCorner,
+				mapUpperCorner: corners.mapUpperCorner
+			}
+		)
+	}
+
+	private toStringifyByOutpatientClinic = (corners: GetPatientCoordinatesByAddedInstitutionFilterDto): string => {
+		return JSON.stringify(
+			{
+				mapLowerCorner: corners.mapLowerCorner,
+				mapUpperCorner: corners.mapUpperCorner,
+				fromDate: dateToDateDto(this.dateRangeFilter.start),
+				toDate: dateToDateDto(this.dateRangeFilter.end)
+			}
+		)
+	}
+	
+	private setMapCorners = () => {
+		const extent = this.map.getView().calculateExtent(this.map.getSize());
+		const mapLowerCorner = toLonLat([extent[0], extent[1]]);
+		const mapUpperCorner = toLonLat([extent[2], extent[3]]);
+		this.corners = {
+			mapLowerCorner: ({
+				longitude: mapLowerCorner[0],
+				latitude: mapLowerCorner[1],
+			}),
+			mapUpperCorner: ({
+				longitude: mapUpperCorner[0],
+				latitude: mapUpperCorner[1],
+			})
+		}
+	}
+
 	private setClusters = (): VectorLayer<VectorSource> => {
 		const styleCache = {};
 		return new VectorLayer({
@@ -261,6 +356,12 @@ export class GisLayersService {
 			this.map.forEachFeatureAtPixel(e.pixel, (feature) => {
 				const name = feature.get('name');
 				if (name === LOCATION_POINT_ID) {
+					this.removePatientFeatures();
+					if (this.mapMoveendListener) {
+						this.map.un('moveend', this.mapMoveendListener);
+						this.mapMoveendListener = null;
+					}
+					this.currentMapFilter = null;
 					this.showDetails$.next(true);
 				}
 			});

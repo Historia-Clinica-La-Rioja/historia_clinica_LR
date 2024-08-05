@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto, SaveInstitutionAddressDto, SaveInstitutionResponsibilityAreaDto } from '@api-rest/api-model';
+import { GetSanitaryResponsibilityAreaInstitutionAddressDto, GlobalCoordinatesDto, SanitaryRegionPatientMapCoordinatesDto, SaveInstitutionAddressDto, SaveInstitutionResponsibilityAreaDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -50,5 +50,19 @@ export class GisService {
 	getInstitutionArea = (): Observable<GlobalCoordinatesDto[]> => {
 		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sanitary-responsibility-area/get-institution-responsibility-area`;
 		return this.http.get<GlobalCoordinatesDto[]>(url);
+	}
+
+	getPatientCoordinatesByInstitution = (corners: string): Observable<SanitaryRegionPatientMapCoordinatesDto[]> => {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sanitary-responsibility-area/get-patient-coordinated-by-added-institution`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('filter', corners);
+		return this.http.get<SanitaryRegionPatientMapCoordinatesDto[]>(url, {params: queryParams});
+	}
+
+	getPatientCoordinatesByOutpatientClinic = (corners: string): Observable<SanitaryRegionPatientMapCoordinatesDto[]> => {
+		const url = `${environment.apiBase}/institution/${this.contextService.institutionId}/sanitary-responsibility-area/get-patient-coordinated-by-outpatient-consultation`;
+		let queryParams: HttpParams = new HttpParams();
+		queryParams = queryParams.append('filter', corners);
+		return this.http.get<SanitaryRegionPatientMapCoordinatesDto[]>(url, {params: queryParams});
 	}
 }

@@ -14,7 +14,7 @@
 
             <div *ngIf="showDatePicker" class="mt">
                 <span class="bold">{{'gis.patient-search.DATE_RANGE' | translate}}</span>
-                <app-date-range-picker [dateRange]="dateRange" (dateRangeChange)="dateRangeChange($event)"></app-date-range-picker>
+                <app-date-range-picker [dateRange]="initDateRange" (dateRangeChange)="dateRangeChange($event)"></app-date-range-picker>
             </div>
         </mat-card-content>
 
