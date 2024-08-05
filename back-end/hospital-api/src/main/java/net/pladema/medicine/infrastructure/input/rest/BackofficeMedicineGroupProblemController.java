@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR')")
+@PreAuthorize("hasAnyAuthority('ROOT', 'ADMINISTRADOR', 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 @RequestMapping("backoffice/medicinegroupproblems")
 @RestController
 public class BackofficeMedicineGroupProblemController extends AbstractBackofficeController<MedicineGroupProblemDto, Integer> {

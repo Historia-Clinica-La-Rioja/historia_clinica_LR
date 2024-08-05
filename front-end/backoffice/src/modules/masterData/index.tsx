@@ -30,7 +30,7 @@ import parameterizedFormParameter from './parameterized-form-parameter';
 import medicineGroupMedicines from './medicinegroupmedicines';
 import medicineGroupProblems from './medicinegroupproblems';
 import institutionsPrescription from './institutions-prescription';
-import institutionMedicineFinancingStatus from '../facilities/institutionmedicinefinancingstatus';
+import institutionMedicineFinancingStatus from './institutionmedicinefinancingstatus';
 import institutionMedicineGroups from './institutionmedicinegroups';
 
 const resourcesMasterData = (permissions: SGXPermissions) => [
