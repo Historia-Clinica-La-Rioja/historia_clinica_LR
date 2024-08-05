@@ -317,7 +317,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 					this.availableActions.push(action);
 				}
 
-				if (this.hasRoleAdministrative && (this.episodeState === this.STATES.CON_ALTA_MEDICA || (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote)) && this.responseEmergencyCare.patient.typeId !== 8) {
+				if (this.showAdministrativeDischargeButton(hasEvolutionNote)) {
 					let action: ActionInfo = {
 						label: 'ambulatoria.paciente.guardia.ADMINISTRATIVE_DISCHARGE_BUTTON',
 						id: 'administrative_discharge',
@@ -365,6 +365,18 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 		).subscribe();
 	}
 
+	private showAdministrativeDischargeButton(hasEvolutionNote: boolean): boolean{
+		return (
+			this.hasRoleAdministrative
+			&& ((this.episodeState === this.STATES.AUSENTE && !hasEvolutionNote )
+				|| ((this.episodeState === this.STATES.CON_ALTA_MEDICA
+					|| (this.episodeState === this.STATES.EN_ESPERA && !hasEvolutionNote))
+					&& this.responseEmergencyCare.patient.typeId !== 8
+				)
+			)
+		)
+	}
+
 	private loadCanBeAbsentCondition(): Observable<boolean> {
 		return this.emergencyCareEpisodeService.getAdministrative(this.episodeId)
 			.pipe(
@@ -395,6 +407,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 				this.triagesHistory = triages.map(this.guardiaMapperService.triageListDtoToTriageReduced);
 				this.triagesHistory.shift();
 				this.loadFullNames();
+				this.setEpisodeState();
 			}
 		});
 
