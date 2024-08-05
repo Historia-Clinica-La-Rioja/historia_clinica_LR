@@ -19,10 +19,11 @@ public class FetchActivityById {
 
 	public AttentionInfoBo run(String refsetCode, Long activityId) throws ActivityNotFoundException {
 		log.debug("Find institutionId from refsetCode {}", refsetCode);
-		Integer institutionId = findInstitutionId(refsetCode);
+
+		var institutionId = activitiesPublicApiPermissions.findInstitutionId(refsetCode);
+		institutionId.ifPresent(this::assertUserCanAccess);
 
 		log.debug("Checking permissions for institutionId {}", institutionId);
-		assertUserCanAccess(institutionId);
 
 		log.debug("Get Attention Info from refsetCode={} and activityId={}", refsetCode, activityId);
 		AttentionInfoBo result = getAttentionInfoBo(refsetCode, activityId);
@@ -41,8 +42,4 @@ public class FetchActivityById {
 		}
 	}
 
-	private Integer findInstitutionId(String refsetCode) {
-		return activitiesPublicApiPermissions.findInstitutionId(refsetCode)
-				.orElseThrow(ActivitiesAccessDeniedException::new);
-	}
 }

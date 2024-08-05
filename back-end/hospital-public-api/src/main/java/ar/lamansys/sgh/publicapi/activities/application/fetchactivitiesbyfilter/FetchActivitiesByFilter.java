@@ -31,8 +31,10 @@ public class FetchActivitiesByFilter {
 	private final ActivitiesPublicApiPermissions activitiesPublicApiPermissions;
 
 	public List<AttentionInfoBo> run(ActivitySearchFilter filter) {
-		Integer institutionId = findInstitutionId(filter.getRefsetCode());
-		assertUserCanAccess(institutionId);
+
+		var institutionId = activitiesPublicApiPermissions.findInstitutionId(filter.getRefsetCode());
+		institutionId.ifPresent(this::assertUserCanAccess);
+
 		log.debug("Input parameters -> filter {}", filter);
 		List<AttentionInfoBo> result = getFromStorage(filter);
 		log.debug("Output -> {}", result);
@@ -65,8 +67,4 @@ public class FetchActivitiesByFilter {
 		}
 	}
 
-	private Integer findInstitutionId(String refsetCode) {
-		return activitiesPublicApiPermissions.findInstitutionId(refsetCode)
-				.orElseThrow(ActivityByFilterAccessDeniedException::new);
-	}
 }
