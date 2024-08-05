@@ -182,15 +182,13 @@ databaseChangeLog:
               splitStatements: false
 
     - changeSet:
-        id: createView-v_clinic_history_16
+        id: replaceView-v_clinic_history_16
         author: mromero
         changes:
-          - createView:
-              viewName: v_clinic_history
-              fullDefinition: false
-              replaceIfExists: true
+          - sqlFile:
               encoding: UTF-8
-              relativeToChangelogFile: true
               path: data/v_clinic_history/create_v_clinic_history_16.sql
+              relativeToChangelogFile: true
+              splitStatements: false
 
 
