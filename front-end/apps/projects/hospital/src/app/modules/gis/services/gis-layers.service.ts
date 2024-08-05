@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
 import Polygon from 'ol/geom/Polygon';
 import { Coordinate } from 'ol/coordinate';
 import Control from 'ol/control/Control';
-import { BehaviorSubject, map } from 'rxjs';
+import { BehaviorSubject, finalize, map } from 'rxjs';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import { OpenlayersService } from './openlayers.service';
 import { fromLonLat, toLonLat } from 'ol/proj';
@@ -27,8 +27,8 @@ const EPSG4326 = 'EPSG:4326';
 const LOCATION_POINT_ID = 'locationPoint';
 
 export enum PatientTypeFilter {
-	REGISTERED = 'registered',
-	OUTPATIENT_CLINIC = 'outpatient_clinic',
+	REGISTERED = 0,
+	OUTPATIENT_CLINIC = 1,
 }
 
 @Injectable({
@@ -78,9 +78,10 @@ export class GisLayersService {
 		source: this.patientSource,
 	});
 	corners: GetPatientCoordinatesByAddedInstitutionFilterDto;
-	currentMapFilter;
+	currentMapFilter
 	dateRangeFilter: DateRange;
 	mapMoveendListener;
+	isPatientsLoading = false;
 
 	constructor(private readonly openLayersService: OpenlayersService,
 				private readonly gisService: GisService) {}
@@ -112,7 +113,6 @@ export class GisLayersService {
 				minZoom: 12,
 			})
 		});
-		this.detectWhenMapMoves();
 	}
 	
 	addPoint = (position: Coordinate) => {
@@ -264,7 +264,8 @@ export class GisLayersService {
 		.pipe(map((coords: SanitaryRegionPatientMapCoordinatesDto[]) => {
 			this.removePatientFeatures();
 			coords.map((coord: SanitaryRegionPatientMapCoordinatesDto) => this.setPatientPoints([coord.longitude, coord.latitude]));
-		})).subscribe()
+		}),
+		finalize(() => this.isPatientsLoading = false)).subscribe()
 	}
 
 	filterByOutpatientClinic = (dateRange: DateRange) => {
@@ -276,7 +277,8 @@ export class GisLayersService {
 		.pipe(map((coords: SanitaryRegionPatientMapCoordinatesDto[]) => {
 			this.removePatientFeatures();
 			coords.map((coord: SanitaryRegionPatientMapCoordinatesDto) => this.setPatientPoints([coord.longitude, coord.latitude]));
-		})).subscribe()
+		}),
+		finalize(() => this.isPatientsLoading = false)).subscribe()
 	}
 
 	detectWhenMapMoves = () => {
@@ -284,12 +286,32 @@ export class GisLayersService {
 		this.map.on('moveend', this.mapMoveendListener);
 	}
 
+	removeMapMoveendListener = () => {
+		if (this.mapMoveendListener) {
+			this.map.un('moveend', this.mapMoveendListener);
+			this.mapMoveendListener = null;
+		}
+	}
+
+	getIsPatientLoading = () => {
+		return this.isPatientsLoading;
+	}
+
+	toggleIsPatientLoading = () => {
+		this.isPatientsLoading = !this.isPatientsLoading;
+	}
+
 	private setMapMoveendListener = () => {
+		this.removeMapMoveendListener();
 		this.mapMoveendListener = (_) => {
-			if (!this.currentMapFilter) return;
+			if (!this.isCurrentMapFilter) return;
 			this.setMapCorners();
 			(this.currentMapFilter === PatientTypeFilter.REGISTERED) ? this.filterByInstitution() : this.filterByOutpatientClinic(this.dateRangeFilter);
 		}
+	}
+
+	private isCurrentMapFilter = (): boolean => {
+		return (this.currentMapFilter === PatientTypeFilter.OUTPATIENT_CLINIC || this.currentMapFilter === PatientTypeFilter.REGISTERED);
 	}
 
 	private toStringifyByInstitution = (corners: GetPatientCoordinatesByAddedInstitutionFilterDto): string => {
@@ -357,10 +379,7 @@ export class GisLayersService {
 				const name = feature.get('name');
 				if (name === LOCATION_POINT_ID) {
 					this.removePatientFeatures();
-					if (this.mapMoveendListener) {
-						this.map.un('moveend', this.mapMoveendListener);
-						this.mapMoveendListener = null;
-					}
+					this.removeMapMoveendListener();
 					this.currentMapFilter = null;
 					this.showDetails$.next(true);
 				}

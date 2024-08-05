@@ -196,6 +196,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	private setShowDetails = () => {
+		this.gisLayersService.showDetails$.next(false);
 		this.gisLayersService.showDetails$.subscribe((value: boolean) => {
 			this.showDetails = value;
 

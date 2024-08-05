@@ -1,11 +1,5 @@
 @import '../../../../../assets/styles/mixins';
 
-.column {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
 .actions {
     display: flex;
     justify-content: flex-end;
@@ -15,15 +9,11 @@
     padding: 2.5rem;
 }
 
-.mb {
-    margin-bottom: 2rem;
-}
-
-.mt {
+.dateRange {
     margin-top: 2rem;
 }
 
-.bold{
+.bold {
 	@include font-weight-bold;
 }
 

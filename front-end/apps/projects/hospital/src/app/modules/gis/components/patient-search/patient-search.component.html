@@ -1,25 +1,23 @@
 <div class="card-container">
     <mat-card class="card">
-        <div class="mb">
+        <mat-card-header>
             <mat-card-title>{{'gis.patient-search.TITLE' | translate}}</mat-card-title>
-        </div>
+        </mat-card-header>
     
         <mat-card-content>
-            <mat-radio-group>
-                <div class="column">
-                    <mat-radio-button color="primary" value="PatientTypeFilter.REGISTERED" checked="true" (click)="toggleDatePicker(false)">{{'gis.patient-search.filters.REGISTERED_PATIENTS' | translate}}</mat-radio-button>
-                    <mat-radio-button color="primary" value="PatientTypeFilter.OUTPATIENT_CLINIC" (click)="toggleDatePicker(true)">{{'gis.patient-search.filters.TREATED_IN_OUTPATIENT_CLINIC' | translate}}</mat-radio-button>
-                </div>
-            </mat-radio-group>
-
-            <div *ngIf="showDatePicker" class="mt">
+            <app-radio-group
+                [radioGroupInputData]="radioGroupInputData"
+                (onOptionChange)="toggleDatePicker($event)">
+            </app-radio-group>
+            <div class="dateRange" *ngIf="showDatePicker">
                 <span class="bold">{{'gis.patient-search.DATE_RANGE' | translate}}</span>
-                <app-date-range-picker [dateRange]="initDateRange" (dateRangeChange)="dateRangeChange($event)"></app-date-range-picker>
+                <app-date-range-picker [dateRange]="initDateRange" [max]="initDateRange.end" (dateRangeChange)="dateRangeChange($event)"></app-date-range-picker>
             </div>
         </mat-card-content>
 
         <mat-card-actions class="actions">
             <app-button
+                [isLoading]="gisLayersService.getIsPatientLoading()"
                 [disabled]="disableButton"
                 (clicked)="searchPatients()"
                 [text]="'gis.patient-search.actions.MAP_SEARCH'"
