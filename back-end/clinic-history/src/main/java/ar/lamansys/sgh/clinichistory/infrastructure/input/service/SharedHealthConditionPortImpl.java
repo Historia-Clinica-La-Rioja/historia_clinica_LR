@@ -40,7 +40,7 @@ public class SharedHealthConditionPortImpl implements SharedHealthConditionPort 
 		return resultQuery
 		.stream()
 		.map(HCEHealthConditionBo::new)
-		.filter(HCEHealthConditionBo::isActiveProblem)
+		.filter(healthCondition -> healthCondition.isActiveProblem() || healthCondition.isChronic())
 		.filter(problem -> Objects.equals(problem.getSnomedSctid(), sctid) && Objects.equals(problem.getSnomedPt(), pt))
 		.sorted(
 			Comparator.comparing(
