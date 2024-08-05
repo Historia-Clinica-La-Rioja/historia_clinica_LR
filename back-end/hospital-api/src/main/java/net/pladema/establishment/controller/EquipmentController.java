@@ -46,7 +46,7 @@ public class EquipmentController {
 	}
 
 	@GetMapping("/modality/{modalityId}")
-	@PreAuthorize("hasPermission(#institutionId, 'TECNICO')")
+	@PreAuthorize("hasPermission(#institutionId, 'TECNICO, INDEXADOR')")
 	public ResponseEntity<List<EquipmentDto>>  getAllByModalityInInstitution(
 			@PathVariable(name = "institutionId") Integer institutionId,
 			@PathVariable(name = "modalityId") Integer modalityId) {
