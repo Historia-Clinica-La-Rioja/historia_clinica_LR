@@ -8,6 +8,7 @@ import net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddres
 import net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddress.infrastructure.input.mapper.GetSanitaryResponsibilityAreaInstitutionAddressMapper;
 import net.pladema.establishment.sanitaryresponsibilityarea.getinstitutionaddress.infrastructure.input.rest.dto.GetSanitaryResponsibilityAreaInstitutionAddressDto;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class GetSanitaryResponsibilityAreaInstitutionAddressController {
 	private final GetSanitaryResponsibilityAreaInstitutionAddressMapper getSanitaryResponsibilityAreaInstitutionAddressMapper;
 
 	@GetMapping
+	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public GetSanitaryResponsibilityAreaInstitutionAddressDto run(@PathVariable("institutionId") Integer institutionId) {
 		log.debug("Input parameter -> institutionId {}", institutionId);
 		GetSanitaryResponsibilityAreaInstitutionAddressBo resultBo = getSanitaryResponsibilityAreaInstitutionAddress.run(institutionId);

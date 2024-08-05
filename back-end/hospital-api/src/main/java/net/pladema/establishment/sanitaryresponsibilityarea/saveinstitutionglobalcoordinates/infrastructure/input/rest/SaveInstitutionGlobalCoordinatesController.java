@@ -8,6 +8,7 @@ import net.pladema.establishment.sanitaryresponsibilityarea.saveinstitutiongloba
 import net.pladema.establishment.sanitaryresponsibilityarea.saveinstitutionglobalcoordinates.infrastructure.input.mapper.SaveInstitutionGlobalCoordinatesMapper;
 import net.pladema.establishment.sanitaryresponsibilityarea.saveinstitutionglobalcoordinates.infrastructure.input.rest.dto.SaveInstitutionGlobalCoordinatesDto;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ public class SaveInstitutionGlobalCoordinatesController {
 	private final SaveInstitutionGlobalCoordinates saveInstitutionGlobalCoordinates;
 
 	@PostMapping
+	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public Integer run(@PathVariable("institutionId") Integer institutionId, @RequestBody SaveInstitutionGlobalCoordinatesDto saveInstitutionGlobalCoordinatesDto) {
 		log.debug("Input parameters -> institutionId {}, saveInstitutionGlobalCoordinatesDto {}", institutionId, saveInstitutionGlobalCoordinatesDto);
 		SaveInstitutionGlobalCoordinatesBo saveInstitutionGlobalCoordinatesBo = saveInstitutionGlobalCoordinatesMapper.toSaveInstitutionGlobalCoordinatesBo(saveInstitutionGlobalCoordinatesDto, institutionId);

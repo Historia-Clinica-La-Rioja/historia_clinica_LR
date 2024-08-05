@@ -9,6 +9,7 @@ import net.pladema.establishment.sanitaryresponsibilityarea.institutionresponsib
 import net.pladema.establishment.sanitaryresponsibilityarea.institutionresponsibilityarea.infrastructure.input.mapper.SaveInstitutionResponsibilityAreaMapper;
 import net.pladema.establishment.sanitaryresponsibilityarea.institutionresponsibilityarea.infrastructure.input.rest.dto.SaveInstitutionResponsibilityAreaDto;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ public class SaveInstitutionResponsibilityAreaController {
 	private final SaveInstitutionResponsibilityArea saveInstitutionResponsibilityArea;
 
 	@PostMapping
+	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public Integer run(@PathVariable("institutionId") Integer institutionId, @RequestBody SaveInstitutionResponsibilityAreaDto saveInstitutionResponsibilityAreaDto) {
 		log.debug("Input parameters -> institutionId {}, saveInstitutionResponsibilityAreaDto {}", institutionId, saveInstitutionResponsibilityAreaDto);
 		SaveInstitutionResponsibilityAreaBo saveInstitutionResponsibilityAreaBo = saveInstitutionResponsibilityAreaMapper.toSaveInstitutionResponsibilityAreaBo(saveInstitutionResponsibilityAreaDto, institutionId);

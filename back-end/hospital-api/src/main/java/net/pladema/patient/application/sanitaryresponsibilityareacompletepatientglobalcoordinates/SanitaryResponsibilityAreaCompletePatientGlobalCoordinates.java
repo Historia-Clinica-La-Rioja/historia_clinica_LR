@@ -10,11 +10,13 @@ import net.pladema.patient.domain.FetchGlobalCoordinatesSanitaryResponsibilityAr
 
 import net.pladema.patient.domain.PatientGlobalCoordinatesBo;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@ConditionalOnProperty(value = "app.feature.HABILITAR_AREA_RESPONSABILIDAD_SANITARIA", havingValue = "true")
 @Slf4j
 @RequiredArgsConstructor
 @Service

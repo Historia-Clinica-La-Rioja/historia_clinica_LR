@@ -10,6 +10,7 @@ import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.inpu
 
 import net.pladema.nominatim.fetchglobalcoordinatesbyaddress.infrastructure.input.mapper.GlobalCoordinatesMapper;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class GetInstitutionResponsibilityAreaController {
 	private final GetInstitutionResponsibilityArea getInstitutionResponsibilityArea;
 
 	@GetMapping
+	@PreAuthorize("hasAnyAuthority('ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE')")
 	public List<GlobalCoordinatesDto> run(@PathVariable Integer institutionId) {
 		log.debug("Input parameters -> institutionId {}", institutionId);
 		List<GlobalCoordinatesBo> resultBo = getInstitutionResponsibilityArea.run(institutionId);
