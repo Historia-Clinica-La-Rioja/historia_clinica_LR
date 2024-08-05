@@ -21,7 +21,8 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	@Output() implementedActionsInfo = new EventEmitter<any>();
 
 	form: FormGroup<{
-		articulation: FormControl<string>,
+		articulationIn: FormControl<boolean>,
+		articulationOut: FormControl<boolean>,
 		healthSystemArticulation: FormControl<boolean>,
 		area: FormControl<any[]>,
 		otherArea: FormControl<string>,
@@ -30,9 +31,9 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		otherArticulationEstablishment: FormControl<string>
 		internmentIndication: FormControl<EIntermentIndicationStatus>,
 		devices: FormControl<string[]>,
-		municipalDevices: FormControl<string[]>,
-		provincialDevices: FormControl<string[]>,
-		nationalDevices: FormControl<string[]>
+		municipalDevices: FormControl<EMunicipalGovernmentDevice[]>,
+		provincialDevices: FormControl<EProvincialGovernmentDevice[]>,
+		nationalDevices: FormControl<ENationalGovernmentDevice[]>
 		personComplaint: FormControl<boolean>,
 		agencyComplaint: FormControl<any[]>,
 		isInstitutionComplaint: FormControl<boolean>,
@@ -65,17 +66,11 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 
 	selectedDevices: Devices[] = [];
 
-	selectedMunicipalDevices: EMunicipalGovernmentDevice[] = [];
-
-	selectedProvincialDevices: EProvincialGovernmentDevice[] = [];
-
-	selectedNationalDevices: ENationalGovernmentDevice[] = [];
-
 	selectedImplementedActions: ESexualViolenceAction[] = [];
 
 	establishments = Establishments;
 
-	articulations: string[] = [Articulation.IN, Articulation.OUT];
+	articulations = Articulation;
 
 	articulationEnum = Articulation;
 
@@ -100,7 +95,8 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	ngOnInit(): void {
 		this.setViolenceSituation();
 		this.form = new FormGroup({
-			articulation: new FormControl(null, Validators.required),
+			articulationIn: new FormControl(null, Validators.required),
+			articulationOut: new FormControl(null),
 			healthSystemArticulation: new FormControl(false),
 			area: new FormControl([]),
 			otherArea: new FormControl(null),
@@ -141,7 +137,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	mapImplementedActionsDto(): ViolenceReportImplementedActionsDto {
 		return {
 			healthCoordination: {
-				coordinationInsideHealthSector: this.form.value.articulation === Articulation.IN ? {
+				coordinationInsideHealthSector: this.form.value.articulationIn ? {
 					healthInstitutionOrganization: {
 						organizations: this.form.value.articulationEstablishmentList?.map(articulation=> articulation.value),
 						other: this.form.value.otherArticulationEstablishment,
@@ -155,10 +151,10 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 					wereInternmentIndicated: this.form.value.internmentIndication
 
 				} : null,
-				coordinationOutsideHealthSector: this.form.value.articulation === Articulation.OUT ? {
-					municipalGovernmentDevices: this.selectedMunicipalDevices,
-					nationalGovernmentDevices: this.selectedNationalDevices,
-					provincialGovernmentDevices: this.selectedProvincialDevices,
+				coordinationOutsideHealthSector: this.form.value.articulationOut ? {
+					municipalGovernmentDevices: this.form.value.municipalDevices,
+					nationalGovernmentDevices: this.form.value.nationalDevices,
+					provincialGovernmentDevices: this.form.value.provincialDevices,
 					withOtherSocialOrganizations: this.selectedDevices.includes(this.devicesEnum.SOCIAL_ORGANIZATION),
 				} : null
 			},
@@ -197,7 +193,6 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	setMunicipalDevices(mdevs: [string]) {
 		this.updateDevicesForm(
 			mdevs,
-			this.selectedMunicipalDevices,
 			this.form.controls.municipalDevices
 		);
 	}
@@ -205,7 +200,6 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	setProvincialDevices(pdevs: [string]) {
 		this.updateDevicesForm(
 			pdevs,
-			this.selectedProvincialDevices,
 			this.form.controls.provincialDevices
 		);
 	}
@@ -213,7 +207,6 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	setNationalDevices(ndevs: [string]) {
 		this.updateDevicesForm(
 			ndevs,
-			this.selectedNationalDevices,
 			this.form.controls.nationalDevices
 		);
 	}
@@ -226,12 +219,11 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		);
 	}
 
-	private updateDevicesForm(newDevices: [string], selectedDevicesList: string[], formControl: FormControl) {
-		selectedDevicesList = newDevices;
+	private updateDevicesForm(newDevices: [string], formControl: FormControl) {
 		newDevices.map(value => {
 			this.setDevicesValidators(value, true);
 		})
-		formControl.setValue(selectedDevicesList);
+		formControl.setValue(newDevices);
 	}
 
 	private pushOrRemove(value: string, array: string[], formControl: FormControl) {
@@ -252,7 +244,6 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 			if (required) {
 				updateControlValidator(this.form, 'municipalDevices', Validators.required);
 			} else {
-				this.selectedMunicipalDevices = [];
 				this.form.controls.municipalDevices.reset();
 				updateControlValidator(this.form, 'municipalDevices', []);
 			}
@@ -263,7 +254,6 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 				updateControlValidator(this.form, 'provincialDevices', Validators.required);
 
 			} else {
-				this.selectedProvincialDevices = [];
 				this.form.controls.provincialDevices.reset();
 				updateControlValidator(this.form, 'provincialDevices', []);
 
@@ -274,16 +264,13 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 			if (required) {
 				updateControlValidator(this.form, 'nationalDevices', Validators.required);
 			} else {
-				this.selectedNationalDevices = [];
 				this.form.controls.nationalDevices.reset();
 				updateControlValidator(this.form, 'nationalDevices', []);
 			}
 		}
 	}
 
-	get articulation() {
-		return this.form.value.articulation;
-	}
+
 
 	get area() {
 		return this.form.value.area?.map(a => a.value);
@@ -390,7 +377,9 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	}
 
 	updateValidationArticulations() {
-		if (this.form.value.articulation === this.articulationEnum.IN) {
+		if (this.form.value.articulationIn) {
+			updateControlValidator(this.form, 'articulationIn',Validators.required);
+			updateControlValidator(this.form, 'articulationOut',[]);
 			updateControlValidator(this.form, 'healthSystemArticulation', Validators.required);
 			updateControlValidator(this.form, 'articulationEstablishment', Validators.required);
 			updateControlValidator(this.form, 'internmentIndication', Validators.required);
@@ -400,6 +389,8 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 			updateControlValidator(this.form, 'nationalDevices', []);
 			this.resetDevices();
 		} else {
+			updateControlValidator(this.form, 'articulationOut',Validators.required);
+			updateControlValidator(this.form, 'articulationIn',[]);
 			updateControlValidator(this.form, 'devices', Validators.required);
 			updateControlValidator(this.form, 'healthSystemArticulation', []);
 			updateControlValidator(this.form, 'articulationEstablishment', []);
@@ -426,12 +417,9 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	private resetDevices() {
 		this.selectedDevices = [];
 		this.form.controls.devices.setValue(this.selectedDevices);
-		this.selectedMunicipalDevices = [];
-		this.form.controls.municipalDevices.setValue(this.selectedMunicipalDevices);
-		this.selectedNationalDevices = [];
-		this.form.controls.nationalDevices.setValue(this.selectedNationalDevices);
-		this.selectedProvincialDevices = [];
-		this.form.controls.provincialDevices.setValue(this.selectedProvincialDevices);
+		this.form.controls.municipalDevices.setValue([]);
+		this.form.controls.nationalDevices.setValue([]);
+		this.form.controls.provincialDevices.setValue([]);
 	}
 
 	updateValidationSexualViolence() {
@@ -473,7 +461,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 
 	private setCoordinationInsideHealthSector(implementedActions: ViolenceReportImplementedActionsDto) {
 		const {coordinationInsideHealthSector} = implementedActions.healthCoordination;
-		this.form.controls.articulation.setValue(Articulation.IN);
+		this.form.controls.articulationIn.setValue(true);
 		this.form.controls.healthSystemArticulation.setValue(coordinationInsideHealthSector.healthSystemOrganization.within);
 		if (coordinationInsideHealthSector.healthSystemOrganization.organizations?.length) {
 			const orgs = coordinationInsideHealthSector.healthSystemOrganization.organizations.flatMap(org => Areas.find(aopt => aopt.value === org));
@@ -496,7 +484,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		const {municipalGovernmentDevices} = implementedActions.healthCoordination.coordinationOutsideHealthSector;
 		const {provincialGovernmentDevices} = implementedActions.healthCoordination.coordinationOutsideHealthSector;
 		const {nationalGovernmentDevices} = implementedActions.healthCoordination.coordinationOutsideHealthSector;
-		this.form.controls.articulation.setValue(Articulation.OUT);
+		this.form.controls.articulationOut.setValue(true);
 		this.form.controls.municipalDevices.setValue(municipalGovernmentDevices);
 		this.prechargeMunicipalDevices(municipalGovernmentDevices);
 		this.prechargeProvincialDevices(provincialGovernmentDevices);
@@ -510,7 +498,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		if (municipalGovernmentDevices?.length) {
 			this.devices.push(this.devicesEnum.MUNICIPAL_DEVICES);
 			this.selectedDevices.push(this.devicesEnum.MUNICIPAL_DEVICES);
-			this.selectedMunicipalDevices = municipalGovernmentDevices;
+			this.form.controls.municipalDevices.setValue(municipalGovernmentDevices);
 		}
 	}
 
@@ -519,7 +507,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		if (provincialGovernmentDevices?.length) {
 			this.devices.push(this.devicesEnum.PROVINCIAL_DEVICES);
 			this.selectedDevices.push(this.devicesEnum.PROVINCIAL_DEVICES);
-			this.selectedProvincialDevices = provincialGovernmentDevices;
+			this.form.controls.provincialDevices.setValue(provincialGovernmentDevices);
 		}
 	}
 
@@ -528,7 +516,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 		if (nationalGovernmentDevices?.length) {
 			this.devices.push(this.devicesEnum.NATIONAL_DEVICES);
 			this.selectedDevices.push(this.devicesEnum.NATIONAL_DEVICES);
-			this.selectedNationalDevices = nationalGovernmentDevices;
+			this.form.controls.nationalDevices.setValue(nationalGovernmentDevices);
 		}
 	}
 }

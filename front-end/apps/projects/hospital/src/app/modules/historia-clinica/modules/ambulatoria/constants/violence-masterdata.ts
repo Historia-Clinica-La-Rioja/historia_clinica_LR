@@ -26,6 +26,8 @@ enum EstablishmentsDescription {
     EMERGENCY_CARE = 'Guardia',
     AGAINST_VIOLENCE = 'Comité contras las violencias',
     ADDRESS = 'Dirección',
+    SAME = 'SAME',
+    MUNICIPAL_HOSPITAL = 'Hospital municipal',
     OTHER = 'Otros'
 }
 
@@ -427,6 +429,16 @@ export const Establishments: ValueOption[] = [
         checked: false
     },
     {
+        text: EstablishmentsDescription.MUNICIPAL_HOSPITAL,
+        value: EHealthInstitutionOrganization.MUNICIPAL_HOSPITAL,
+        checked: false
+    },
+    {
+        text: EstablishmentsDescription.SAME,
+        value: EHealthInstitutionOrganization.SAME,
+        checked: false
+    },
+    {
         text: EstablishmentsDescription.GYNECOLOGIC_OBSTRETRIC,
         value: EHealthInstitutionOrganization.GYNECOLOGY_OBSTETRICS,
         checked: false
@@ -442,11 +454,6 @@ export const Establishments: ValueOption[] = [
         checked: false
     },
     {
-        text: EstablishmentsDescription.OTHER,
-        value: EHealthInstitutionOrganization.OTHERS,
-        checked: false
-    },
-    {
         text: EstablishmentsDescription.PEDIATRIC,
         value: EHealthInstitutionOrganization.PEDIATRICS,
         checked: false
@@ -459,6 +466,11 @@ export const Establishments: ValueOption[] = [
     {
         text: EstablishmentsDescription.SOCIAL_WORK,
         value: EHealthInstitutionOrganization.SOCIAL_WORK,
+        checked: false
+    },
+    {
+        text: EstablishmentsDescription.OTHER,
+        value: EHealthInstitutionOrganization.OTHERS,
         checked: false
     },
 ]

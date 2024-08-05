@@ -17,7 +17,9 @@ public enum EHealthInstitutionOrganization {
 	EMERGENCY_CARE(9, "Guardia"),
 	COMMITTEE(10, "Comité contra las violencias"),
 	MANAGEMENT(11, "Dirección"),
-	OTHERS(12, "Otros");
+	OTHERS(12, "Otros"),
+	MUNICIPAL_HOSPITAL(13, "Hospital municipal"),
+	SAME(14, "SAME");
 
 	private Short id;
 

@@ -5800,6 +5800,8 @@ export const enum EHealthInstitutionOrganization {
     COMMITTEE = "COMMITTEE",
     MANAGEMENT = "MANAGEMENT",
     OTHERS = "OTHERS",
+    MUNICIPAL_HOSPITAL = "MUNICIPAL_HOSPITAL",
+    SAME = "SAME",
 }
 
 export const enum EHealthSystemOrganization {
