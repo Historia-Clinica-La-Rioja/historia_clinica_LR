@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.emergencycare.application.exception.EmergencyCareEpisodeExcepcionEnum;
 import net.pladema.emergencycare.application.exception.EmergencyCareEpisodeException;
+import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeStateStorage;
 import net.pladema.emergencycare.application.port.output.EmergencyCareEpisodeStorage;
 
 import net.pladema.emergencycare.application.port.output.HistoricEmergencyEpisodeStorage;
@@ -22,20 +23,21 @@ import java.util.Optional;
 public class SetAbsentEmergencyCareState {
 
 	private final EmergencyCareEpisodeStorage emergencyCareEpisodeStorage;
+	private final EmergencyCareEpisodeStateStorage emergencyCareEpisodeStateStorage;
 	private final HistoricEmergencyEpisodeStorage historicEmergencyEpisodeStorage;
 
 	@Transactional
 	public Boolean run(Integer episodeId){
 		log.debug("Input SetAbsentEmergencyCareState parameters -> episodeId {}", episodeId);
 		validateStateChange(episodeId);
-		Boolean result = emergencyCareEpisodeStorage.updateEpisodeState(episodeId, EEmergencyCareState.AUSENTE);
+		Boolean result = emergencyCareEpisodeStateStorage.updateEpisodeState(episodeId, EEmergencyCareState.AUSENTE);
 		historicEmergencyEpisodeStorage.create(new HistoricEmergencyEpisodeBo(episodeId, EEmergencyCareState.AUSENTE.getId()));
 		log.debug("Output -> {}", result);
 		return result;
 	}
 
 	private void validateStateChange(Integer episodeId){
-		Optional<Short> fromStateOpt = emergencyCareEpisodeStorage.getEpisodeState(episodeId);
+		Optional<Short> fromStateOpt = emergencyCareEpisodeStateStorage.getEpisodeState(episodeId);
 
 		if (fromStateOpt.isEmpty())
 			throw new EmergencyCareEpisodeException(EmergencyCareEpisodeExcepcionEnum.EPISODE_NOT_FOUND,

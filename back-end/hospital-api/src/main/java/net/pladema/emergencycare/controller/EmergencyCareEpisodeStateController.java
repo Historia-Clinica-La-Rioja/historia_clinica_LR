@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import net.pladema.emergencycare.application.setabsentemergencycarestate.SetAbsentEmergencyCareState;
 import net.pladema.emergencycare.application.setcalledemergencycarestate.SetCalledEmergencyCareState;
+import net.pladema.emergencycare.application.setundercareemergencycarestate.SetUnderCareEmergencyCareState;
 import net.pladema.emergencycare.infrastructure.input.rest.dto.EmergencyCareEpisodeAttentionPlaceDto;
 import net.pladema.emergencycare.infrastructure.input.rest.mapper.EmergencyCareEpisodeAttentionPlaceMapper;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeStateService;
@@ -39,6 +40,8 @@ public class EmergencyCareEpisodeStateController {
 	private final SetCalledEmergencyCareState setCalledEmergencyCareState;
 
 	private final EmergencyCareEpisodeAttentionPlaceMapper emergencyCareEpisodeAttentionPlaceMapper;
+
+	private final SetUnderCareEmergencyCareState setUnderCareEmergencyCareState;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, PRESCRIPTOR, ESPECIALISTA_EN_ODONTOLOGIA, ABORDAJE_VIOLENCIAS')")
@@ -87,6 +90,23 @@ public class EmergencyCareEpisodeStateController {
 		LOG.debug("Change emergency care state to called -> episodeId {}, institutionId {}, emergencyCareEpisodeAttentionPlaceDto {}", episodeId, institutionId, emergencyCareEpisodeAttentionPlaceDto);
 		Boolean result = setCalledEmergencyCareState.run(
 				episodeId,
+				institutionId,
+				emergencyCareEpisodeAttentionPlaceMapper.fromDto(emergencyCareEpisodeAttentionPlaceDto)
+		);
+		LOG.debug("Output -> {}", result);
+		return result;
+	}
+
+	@PutMapping("/attend")
+	@PreAuthorize("hasPermission(#institutionId, 'ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public Boolean setUnderCareState(
+			@PathVariable(name = "episodeId") Integer episodeId,
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@RequestBody EmergencyCareEpisodeAttentionPlaceDto emergencyCareEpisodeAttentionPlaceDto){
+		LOG.debug("Change emergency care state to under care -> episodeId {}, institutionId {}, emergencyCareEpisodeAttentionPlaceDto {}", episodeId, institutionId, emergencyCareEpisodeAttentionPlaceDto);
+		Boolean result = setUnderCareEmergencyCareState.run(
+				episodeId,
+				institutionId,
 				emergencyCareEpisodeAttentionPlaceMapper.fromDto(emergencyCareEpisodeAttentionPlaceDto)
 		);
 		LOG.debug("Output -> {}", result);
