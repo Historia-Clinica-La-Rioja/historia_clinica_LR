@@ -55,7 +55,7 @@
 			</mat-radio-group>
 
 			<mat-form-field appearance="outline" *ngIf="prescriptionItemForm.value.pharmacoSearchType">
-				<mat-label class="capitalize-first-letter">{{data.searchSnomedLabel | translate}}</mat-label>
+				<mat-label class="capitalize-first-letter" [translate]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_PHARMACO_SEARCH'" ></mat-label>
 				<input matInput type="text" formControlName="snomed" name="snomed" #snomed (keyup.enter)="setConcept(snomed.value)">
 				<button  matSuffix color="primary" mat-icon-button type="button" (click)="setConcept(snomed.value)">
 					<mat-icon *ngIf="! snomedConcept">search</mat-icon>
@@ -63,6 +63,13 @@
 				</button>
 				<mat-hint>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.ADD_CHARACTERS' | translate}}</mat-hint>
 			</mat-form-field>
+
+			<app-commercial-pharmaco-typeahead *ngIf="!prescriptionItemForm.value.pharmacoSearchType"
+				[ecl]="data.eclTerm"
+				[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
+				(conceptSelected)="setConcept($event)">
+			</app-commercial-pharmaco-typeahead>
+
 
 			<section *appFeatureFlag="HABILITAR_RECETA_DIGITAL">
 				<div class="unit-day-dose-container" *ngIf="enableFields">

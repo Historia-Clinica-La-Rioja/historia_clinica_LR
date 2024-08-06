@@ -518,7 +518,9 @@
                     "ADD_NEW_PROBLEM": "+ Agregar nuevo problema asociado",
                     "QUANTITY": "Cantidad",
 					"GENERIC_SEARCH": "Buscar por genérico",
-					"COMMERCIAL_SEARCH": "Buscar por comercial"
+					"COMMERCIAL_SEARCH": "Buscar por comercial",
+					"GENERIC_PHARMACO_SEARCH": "Buscar por fármaco genérico",
+					"COMMERCIAL_PHARMACO_SEARCH": "Buscar por fármaco comercial"
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",
