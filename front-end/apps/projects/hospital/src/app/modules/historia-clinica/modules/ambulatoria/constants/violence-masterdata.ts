@@ -502,11 +502,6 @@ export const Areas: ValueOption[] = [
         checked: false
     },
     {
-        text: AreaDescription.OTHER,
-        value: EHealthSystemOrganization.OTHERS,
-        checked: false
-    },
-    {
         text: AreaDescription.POSTAS,
         value: EHealthSystemOrganization.POSTAS,
         checked: false
@@ -529,6 +524,11 @@ export const Areas: ValueOption[] = [
     {
         text: AreaDescription.VACCINATION,
         value: EHealthSystemOrganization.VACCINATION_CENTER,
+        checked: false
+    },
+    {
+        text: AreaDescription.OTHER,
+        value: EHealthSystemOrganization.OTHERS,
         checked: false
     },
 ]
@@ -573,13 +573,13 @@ export const ViolenceTypes: ValueOption[] = [
 
 export const EscolarizationLevels: ValueOption[] = [
     {
-        text: EscolarizationLevelDescription.INITIAL,
-        value: ESchoolLevel.NURSERY_SCHOOL,
+        text: EscolarizationLevelDescription.MATERNAL,
+        value: ESchoolLevel.KINDERGARTEN,
         checked: false
     },
     {
-        text: EscolarizationLevelDescription.MATERNAL,
-        value: ESchoolLevel.KINDERGARTEN,
+        text: EscolarizationLevelDescription.INITIAL,
+        value: ESchoolLevel.NURSERY_SCHOOL,
         checked: false
     },
     {
@@ -596,11 +596,6 @@ export const EscolarizationLevels: ValueOption[] = [
 
 export const RiskLevels: ValueOption[] = [
     {
-        text: RiskLevelDescription.HIGH,
-        value: EViolenceEvaluationRiskLevel.HIGH,
-        checked: false
-    },
-    {
         text: RiskLevelDescription.LOW,
         value: EViolenceEvaluationRiskLevel.LOW,
         checked: false
@@ -609,7 +604,12 @@ export const RiskLevels: ValueOption[] = [
         text: RiskLevelDescription.MEDIUM,
         value: EViolenceEvaluationRiskLevel.MEDIUM,
         checked: false
-    }
+    },
+    {
+        text: RiskLevelDescription.HIGH,
+        value: EViolenceEvaluationRiskLevel.HIGH,
+        checked: false
+    },
 ]
 
 export const StateOptions: BasicOption[] = [
@@ -875,11 +875,6 @@ export const RelationOption: ValueOption[] = [
         checked: false
     },
     {
-        text: RelationOptionDescription.OTHER,
-        value: EKeeperRelationship.OTHER,
-        checked: false
-    },
-    {
         text: RelationOptionDescription.REFERRER,
         value: EKeeperRelationship.RELATED,
         checked: false
@@ -888,5 +883,10 @@ export const RelationOption: ValueOption[] = [
         text: RelationOptionDescription.AUNT,
         value: EKeeperRelationship.UNCLE_OR_AUNT,
         checked: false
-    }
+    },
+    {
+        text: RelationOptionDescription.OTHER,
+        value: EKeeperRelationship.OTHER,
+        checked: false
+    },
 ]
