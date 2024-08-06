@@ -51,6 +51,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	guardiaSummary: SummaryHeader = GUARDIA;
 	readonly STATES = EstadosEpisodio;
 	episodeState: EstadosEpisodio;
+	episodeStateDescription: string;
 	withoutMedicalDischarge: boolean;
 
 	hasMedicalDischarge = false;
@@ -178,12 +179,11 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 						next: (changed) => {
 							if (changed) {
 								this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.en_espera.SUCCESS`);
-								this.episodeState = EstadosEpisodio.EN_ESPERA;
 								this.doctorsOfficeDescription = null;
 								this.shockroomDescription = null;
 								this.bedDescription = null;
 								this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ESPERA)
-								this.calculateAvailableActions();
+								this.setEpisodeState();
 							}
 							else {
 								this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.en_espera.ERROR`);
@@ -228,8 +228,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 				this.episodeStateService.atender(this.episodeId, consultorio.id).subscribe(changed => {
 					if (changed) {
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.episodeState = EstadosEpisodio.EN_ATENCION;
-						this.calculateAvailableActions();
+						this.setEpisodeState();
 					}
 					else {
 						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
@@ -242,7 +241,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 
 	attend() {
 		this.emergencyCareEpisodeAttend.attend(this.episodeId, false);
-		this.calculateAvailableActions();
+		this.setEpisodeState();
 	}
 
 	markAsAbsent(){
@@ -266,7 +265,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 						this.snackBarService.showSuccess(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.SUCCESS'));
 						this.episodeState = EstadosEpisodio.AUSENTE;
 						this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.AUSENTE);
-						this.calculateAvailableActions();
+						this.setEpisodeState();
 					}
 					else {
 						this.snackBarService.showError(this.translate.instant('guardia.home.episodes.episode.actions.mark_as_absent.ERROR'));
@@ -280,6 +279,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	private setEpisodeState() {
 		this.emergencyCareEpisodeStateService.getState(this.episodeId).subscribe(
 			state => {
+				this.episodeStateDescription = state.description;
 				this.episodeState = state.id;
 				this.withoutMedicalDischarge = (this.episodeState !== this.STATES.CON_ALTA_MEDICA);
 				this.calculateAvailableActions();
