@@ -5,7 +5,7 @@
 		<mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="handleOptionSelected($event)" [displayWith]="getDisplayName">
 			<mat-optgroup *ngFor="let option of filteredOptions | async" [label]="option.commercialPt">
 			  <mat-option [value]="option.genericMedication">
-				{{option.genericMedication.genericPt}}
+				{{option.genericMedication.pt}}
 			  </mat-option>
 		  </mat-optgroup>
 		</mat-autocomplete>
