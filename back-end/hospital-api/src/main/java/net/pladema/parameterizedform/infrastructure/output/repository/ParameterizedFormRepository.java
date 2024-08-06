@@ -1,6 +1,7 @@
 package net.pladema.parameterizedform.infrastructure.output.repository;
 
 import ar.lamansys.sgx.shared.auditable.repository.SGXAuditableEntityJPARepository;
+import net.pladema.parameterizedform.domain.ParameterizedFormBo;
 import net.pladema.parameterizedform.infrastructure.output.repository.entity.ParameterizedForm;
 
 import org.springframework.data.domain.Page;
@@ -68,5 +69,17 @@ public interface ParameterizedFormRepository extends SGXAuditableEntityJPAReposi
 			"SET ipf.isEnabled = false, ipf.updateable.updatedOn = CURRENT_TIMESTAMP " +
 			"WHERE ipf.parameterizedFormId = :parameterizedFormId")
 	void updateInstitutionalParameterizedFormEnabled(@Param("parameterizedFormId") Integer parameterizedFormId);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW net.pladema.parameterizedform.domain.ParameterizedFormBo(pf.id, pf.name, pf.statusId, " +
+			"pf.outpatientEnabled, pf.internmentEnabled, pf.emergencyCareEnabled, pf.isDomain, ipf.institutionId, ipf.isEnabled) " +
+			"FROM ParameterizedForm pf " +
+			"JOIN InstitutionalParameterizedForm ipf ON (pf.id = ipf.parameterizedFormId) " +
+			"WHERE ipf.institutionId = :institutionId " +
+			"AND pf.statusId = 2 " +
+			"AND ipf.isEnabled IS TRUE " +
+			"AND pf.deleteable.deleted IS FALSE " +
+			"AND ipf.deleteable.deleted IS FALSE ")
+	List<ParameterizedFormBo> getActiveFormsByInstitution(@Param("institutionId") Integer institutionId);
 
 }

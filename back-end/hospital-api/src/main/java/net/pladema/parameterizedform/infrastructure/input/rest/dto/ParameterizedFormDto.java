@@ -1,6 +1,7 @@
 package net.pladema.parameterizedform.infrastructure.input.rest.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class ParameterizedFormDto {
 
 	private Integer id;

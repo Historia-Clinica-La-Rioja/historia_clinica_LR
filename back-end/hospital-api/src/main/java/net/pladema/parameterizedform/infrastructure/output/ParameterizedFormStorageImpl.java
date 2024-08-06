@@ -8,8 +8,10 @@ import net.pladema.establishment.repository.entity.InstitutionalParameterizedFor
 import net.pladema.parameterizedform.application.port.output.ParameterizedFormStorage;
 
 
+import net.pladema.parameterizedform.domain.enums.EFormScope;
 import net.pladema.parameterizedform.domain.enums.EFormStatus;
 
+import net.pladema.parameterizedform.domain.ParameterizedFormBo;
 import net.pladema.parameterizedform.infrastructure.input.rest.dto.ParameterizedFormDto;
 import net.pladema.parameterizedform.infrastructure.output.repository.ParameterizedFormRepository;
 
@@ -28,6 +30,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
+
+	private final static String OUTPUT = "Output -> result {}";
 
 	private final ParameterizedFormRepository parameterizedFormRepository;
 	private final InstitutionalParameterizedFormRepository institutionalParameterizedFormRepository;
@@ -71,7 +75,7 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 	public Optional<Short> findFormStatus(Integer formId) {
 		log.debug("Input parameters -> formId {}", formId);
 		Optional<Short> result = parameterizedFormRepository.findStatusById(formId);
-		log.debug("Output -> result {}", result);
+		log.debug(OUTPUT, result);
 		return result;
 	}
 
@@ -89,6 +93,18 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 					);
 				}
 		);
+	}
+
+	@Override
+	public List<ParameterizedFormBo> getActiveFormsByInstitutionAndScope(Integer institutionId, EFormScope formScope) {
+		log.debug("Input parameters -> institutionId {}, formScope {}", institutionId, formScope);
+		List<ParameterizedFormBo> result = parameterizedFormRepository.getActiveFormsByInstitution(institutionId)
+				.stream()
+				.filter(pf -> filterByScope(pf, formScope))
+				.collect(Collectors.toList());
+
+		log.debug(OUTPUT, result);
+		return result;
 	}
 
 	private void assertFormName(Integer formId, String name, EFormStatus nextState) {
@@ -118,4 +134,12 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 		InstitutionalParameterizedForm institutionalParameterizedForm = new InstitutionalParameterizedForm(parameterizedFormId, institutionId, enablement);
 		institutionalParameterizedFormRepository.save(institutionalParameterizedForm);
 	}
+
+	private Boolean filterByScope(ParameterizedFormBo parameterizedForm, EFormScope formScope){
+		if (formScope.equals(EFormScope.OUTPATIENT)) return parameterizedForm.getOutpatientEnabled();
+		if (formScope.equals(EFormScope.INTERNMENT)) return parameterizedForm.getInternmentEnabled();
+		if (formScope.equals(EFormScope.EMERGENCY_CARE)) return parameterizedForm.getEmergencyCareEnabled();
+		return Boolean.FALSE;
+	}
+
 }
