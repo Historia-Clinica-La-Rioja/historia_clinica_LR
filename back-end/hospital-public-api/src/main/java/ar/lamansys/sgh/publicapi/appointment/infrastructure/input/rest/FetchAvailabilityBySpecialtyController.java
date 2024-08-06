@@ -3,7 +3,6 @@ package ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +12,12 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.booking.ProfessionalA
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.annotation.RestController;
+
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/public-api/institution/{institutionId}/appointment/booking")
-@Controller
+@RestController
 public class FetchAvailabilityBySpecialtyController {
 
 	private final FetchAvailabilityBySpecialty fetchAvailabilityBySpecialty;
