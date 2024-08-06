@@ -37,6 +37,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	severityTypes: any[];
 	reportFFIsOn;
 	searchConceptsLocallyFFIsOn;
+	snomedRelationsAvailable;
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
 	snomedConcept: SnomedDto;
@@ -99,6 +100,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 						this.featureFlagService.isActive(AppFeature.HABILITAR_BUSQUEDA_LOCAL_CONCEPTOS).subscribe(isOn => {
 							this.searchConceptsLocallyFFIsOn = isOn;
 							this.ambulatoryConsultationProblemsService.setSearchConceptsLocallyFF(isOn);
+						});
+
+						this.featureFlagService.isActive(AppFeature.HABILITAR_RELACIONES_SNOMED).subscribe(isOn => {
+							this.snomedRelationsAvailable = isOn;
 						});
 					}
 				});
