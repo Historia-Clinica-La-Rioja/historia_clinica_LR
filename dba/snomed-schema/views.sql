@@ -22,4 +22,28 @@ AND r2.typeid = '116680003'
 AND ct."type" = 'syn'
 AND ct2."type" = 'syn'
 AND ct3."type" = 'syn'
-AND ct3.acceptability = 'preferido'
+AND ct3.acceptability = 'preferido';
+
+-- Unidades de presentación
+
+CREATE OR REPLACE VIEW snomedct.v_medication_presentation_unit AS
+SELECT r.destinationid AS sctid, rcv.value AS presentation_unit_quantity
+FROM snomedct.relationship r
+JOIN snomedct.concept_term cpt ON (r.sourceid = cpt.id) 
+JOIN snomedct.relationship_concrete_value rcv ON (cpt.id = rcv.sourceid)
+WHERE r.active = '1'
+AND r.typeid = '774160008'
+AND rcv.typeid = '1142142004'
+AND cpt."type" = 'syn'
+AND rcv.active = '1'
+UNION
+SELECT DISTINCT vcm.generic_sctid AS sctid, rcv.value AS presentation_unit_quantity
+FROM snomedct.relationship r
+JOIN snomedct.concept_term cpt ON (r.sourceid = cpt.id) 
+JOIN snomedct.relationship_concrete_value rcv ON (cpt.id = rcv.sourceid)
+JOIN snomedct.v_commercial_medication vcm ON (vcm.commercial_sctid  = r.destinationid)
+WHERE r.active = '1'
+AND r.typeid = '774160008'
+AND rcv.typeid = '1142142004'
+AND cpt."type" = 'syn'
+AND rcv.active = '1';
