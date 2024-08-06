@@ -231,7 +231,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_RELACIONES_SNOMED,
 
 	@Label("Indica si se encuentra habilitado el reporte de turnos otorgados en el centro de llamados")
-	HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO
+	HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la prescripción de recetas digitales utilizando fármacos comerciales")
+	HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO
 	;
 
 	public boolean isActive() {
