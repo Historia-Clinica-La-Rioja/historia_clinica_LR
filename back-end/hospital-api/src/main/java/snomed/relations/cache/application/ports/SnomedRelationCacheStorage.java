@@ -11,4 +11,5 @@ public interface SnomedRelationCacheStorage {
 
 	List<GetCommercialMedicationSnomedBo> getCommercialMedicationSnomedListByName(String commercialMedicationName);
 
+    List<Integer> getMedicationPresentationUnits(String medicationSctid);
 }

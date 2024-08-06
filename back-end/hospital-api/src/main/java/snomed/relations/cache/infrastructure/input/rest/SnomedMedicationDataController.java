@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import snomed.relations.cache.application.fetchcommercialmedications.FetchCommercialMedications;
+import snomed.relations.cache.application.getMedicationPresentationUnits.GetMedicationPresentationUnits;
 import snomed.relations.cache.infrastructure.input.rest.dto.CommercialMedicationDto;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class SnomedMedicationDataController {
 
 	private final FetchCommercialMedications fetchCommercialMedications;
 
+	private final GetMedicationPresentationUnits getMedicationPresentationUnits;
+
 	@GetMapping("/commercials")
 	@PreAuthorize("hasPermission(#institutionId, 'PRESCRIPTOR, ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO')")
 	public ResponseEntity<List<CommercialMedicationDto>> getCommercialMedications(@PathVariable(name = "institutionId") Integer institutionId) {
@@ -37,6 +40,16 @@ public class SnomedMedicationDataController {
 						new SharedSnomedDto(cm.getGeneric().getSctid(), cm.getGeneric().getPt())))
 				.collect(Collectors.toList());;
 		return ResponseEntity.ok(result);
+	}
+
+	@GetMapping("/{medicationSctid}/get-presentation-units")
+	@PreAuthorize("hasPermission(#institutionId, 'PRESCRIPTOR, ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	public List<Integer> getMedicationPresentationUnits(@PathVariable("institutionId") Integer institutionId,
+														@PathVariable("medicationSctid") String medicationSctid) {
+		log.debug("Input parameters -> institutionId {}, medicationSctid {}", institutionId, medicationSctid);
+		List<Integer> result = getMedicationPresentationUnits.run(medicationSctid);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 }
