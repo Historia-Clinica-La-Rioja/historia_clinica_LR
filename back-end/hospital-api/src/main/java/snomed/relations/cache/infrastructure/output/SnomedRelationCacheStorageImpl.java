@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import snomed.relations.cache.application.ports.SnomedRelationCacheStorage;
 import snomed.relations.cache.domain.CommercialMedicationBo;
 import snomed.relations.cache.domain.GetCommercialMedicationSnomedBo;
+import snomed.relations.cache.domain.SnomedBo;
 import snomed.relations.cache.infrastructure.output.repository.VCommercialMedicationRepository;
 import snomed.relations.cache.infrastructure.output.repository.VMedicationPresentationUnitRepository;
 
@@ -48,6 +49,11 @@ public class SnomedRelationCacheStorageImpl implements SnomedRelationCacheStorag
 				.map(this::parsePresentationUnitValue)
 				.sorted(Integer::compareTo)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<SnomedBo> getSuggestedCommercialMedicationSnomedListByGeneric(String genericMedicationSctid) {
+		return vCommercialMedicationRepository.fetchSuggestedCommercialMedicationSnomedListByGeneric(genericMedicationSctid);
 	}
 
 	private Integer parsePresentationUnitValue(String presentationUnitValue) {

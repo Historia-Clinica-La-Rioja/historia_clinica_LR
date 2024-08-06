@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import snomed.relations.cache.domain.GetCommercialMedicationSnomedBo;
+import snomed.relations.cache.domain.SnomedBo;
 import snomed.relations.cache.infrastructure.output.repository.entity.VCommercialMedication;
 import snomed.relations.cache.domain.CommercialMedicationBo;
 
@@ -28,5 +29,12 @@ public interface VCommercialMedicationRepository extends JpaRepository<VCommerci
 			"WHERE fts(vcm.commercialPt, :commercialMedicationName) = TRUE")
 	List<GetCommercialMedicationSnomedBo> fetchCommercialMedicationSnomedListByName(@Param("commercialMedicationName") String commercialMedicationName,
                                                                                     Pageable pageable);
+
+	@Transactional(readOnly = true)
+	@Query("SELECT NEW snomed.relations.cache.domain.SnomedBo(vcm.commercialSctid, vcm.commercialPt) " +
+			"FROM VCommercialMedication vcm " +
+			"WHERE vcm.genericSctid = :sctid " +
+			"ORDER BY vcm.commercialPt")
+    List<SnomedBo> fetchSuggestedCommercialMedicationSnomedListByGeneric(@Param("sctid") String genericMedicationSctid);
 
 }
