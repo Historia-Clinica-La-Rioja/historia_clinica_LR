@@ -119,6 +119,17 @@ const ELEMENT_DATA: RutasPeriodic[] = [
     routerLink: '../../../assets/rutas-lr/', 
     pdfDT: null,
   },
+  {
+    Miniature1: IMAGE_ITEM + "DR-O.png",
+    Miniature2: IMAGE_ITEM + "DT-O.png",
+    IconDR: ICON + "DR-active-icon.png",
+    IconDT: ICON + "DT-active-icon.png",
+    Orden: 10,
+    Nombre: " Odontología",
+    pdfDR: PDF_BASE_PATH + "diagramas-de-ruta-pdf/Odontologia-RutaAsistencial.pdf",
+    routerLink: '../../../assets/rutas-lr/', 
+    pdfDT: PDF_BASE_PATH + "documentos-tecnicos-pdf/Odontología-RutaAsistencial-DocumentoTecnico.pdf",
+  }
 
 ];
 
