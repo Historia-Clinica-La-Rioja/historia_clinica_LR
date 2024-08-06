@@ -49,7 +49,6 @@ import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
 import ar.lamansys.sgx.shared.files.pdf.GeneratedPdfResponseService;
 import ar.lamansys.sgx.shared.files.pdf.PDFDocumentException;
-import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.BlobLazyFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileBo;
 import ar.lamansys.sgx.shared.filestorage.infrastructure.input.rest.StoredFileResponse;
 import ar.lamansys.sgx.shared.security.UserInfo;
@@ -180,8 +179,7 @@ public class MedicationRequestController {
 									@RequestBody @Valid PrescriptionDto medicationRequest){
         LOG.debug("create -> institutionId {}, patientId {}, medicationRequest {}", institutionId, patientId, medicationRequest);
         Integer doctorId = healthcareProfessionalExternalService.getProfessionalId(UserInfo.getCurrentAuditor());
-        MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(doctorId, patientId, medicationRequest);
-        medicationRequestBo.setInstitutionId(institutionId);
+        MedicationRequestBo medicationRequestBo = createMedicationRequestMapper.parseTo(institutionId, doctorId, patientId, medicationRequest);
 		List<DocumentRequestDto> result = createMedicationRequestService.execute(medicationRequestBo)
 				.stream().map(dr-> new DocumentRequestDto(dr.getRequestId(), dr.getDocumentId()))
 				.collect(Collectors.toList());

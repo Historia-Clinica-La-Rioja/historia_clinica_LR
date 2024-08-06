@@ -1,6 +1,7 @@
 package net.pladema.clinichistory.requests.medicationrequests.controller.mapper;
 
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.CommercialMedicationPrescriptionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.DosageBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.HealthConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.MedicationBo;
@@ -10,6 +11,7 @@ import ar.lamansys.sgh.clinichistory.domain.ips.enums.EUnitsOfTimeBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.SnomedDto;
 import ar.lamansys.sgx.shared.featureflags.AppFeature;
 import ar.lamansys.sgx.shared.featureflags.application.FeatureFlagsService;
+import net.pladema.clinichistory.requests.controller.dto.CommercialMedicationPrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.NewDosageDto;
@@ -34,7 +36,7 @@ public class CreateMedicationRequestMapper {
 	private FeatureFlagsService featureFlagsService;
 
     @Named("parseTo")
-    public MedicationRequestBo parseTo(Integer doctorId, Integer patientId, PrescriptionDto medicationRequest) {
+    public MedicationRequestBo parseTo(Integer institutionId, Integer doctorId, Integer patientId, PrescriptionDto medicationRequest) {
         LOG.debug("parseTo -> doctorId {}, patientId {}, medicationRequest {} ", doctorId, patientId, medicationRequest);
 		MedicationRequestBo result;
 		if (!featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL))
@@ -50,6 +52,7 @@ public class CreateMedicationRequestMapper {
 		result.setIsPostDated(medicationRequest.getIsPostDated());
 		result.setClinicalSpecialtyId(medicationRequest.getClinicalSpecialtyId());
 		result.setIsArchived(medicationRequest.getIsArchived());
+		result.setInstitutionId(institutionId);
         LOG.debug(OUTPUT, result);
         return result;
     }
@@ -65,11 +68,22 @@ public class CreateMedicationRequestMapper {
         result.setDosage(parseTo(pid.getDosage()));
 		result.setPrescriptionLineNumber(pid.getPrescriptionLineNumber());
 		result.setIsDigital(featureFlagsService.isOn(AppFeature.HABILITAR_RECETA_DIGITAL));
+		result.setCommercialMedicationPrescription(parseTopidCommercialMedicationPrescriptionBo(pid.getCommercialMedicationPrescription()));
         LOG.debug(OUTPUT, result);
         return result;
     }
 
-    private SnomedBo parseTo(SnomedDto snomed) {
+	private CommercialMedicationPrescriptionBo parseTopidCommercialMedicationPrescriptionBo(CommercialMedicationPrescriptionDto commercialMedicationPrescription) {
+		if (commercialMedicationPrescription != null)
+			return CommercialMedicationPrescriptionBo.builder()
+					.suggestedCommercialMedicationSctid(commercialMedicationPrescription.getSuggestedCommercialMedicationSctid())
+					.presentationUnitQuantity(commercialMedicationPrescription.getPresentationUnitQuantity())
+					.medicationPackQuantity(commercialMedicationPrescription.getMedicationPackQuantity())
+					.build();
+		return null;
+	}
+
+	private SnomedBo parseTo(SnomedDto snomed) {
         LOG.debug("parseTo -> snomed {} ", snomed);
         if (snomed == null)
             return null;

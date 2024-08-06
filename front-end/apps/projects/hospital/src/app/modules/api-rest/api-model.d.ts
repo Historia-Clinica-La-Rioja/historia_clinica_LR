@@ -879,6 +879,12 @@ export interface CommercialMedicationDto {
     generic: SharedSnomedDto;
 }
 
+export interface CommercialMedicationPrescriptionDto {
+    medicationPackQuantity: number;
+    presentationUnitQuantity: number;
+    suggestedCommercialMedicationSctid?: string;
+}
+
 export interface Comparable<T> {
 }
 
@@ -3948,6 +3954,7 @@ export interface PrescriptionDto extends Serializable {
 
 export interface PrescriptionItemDto extends Serializable {
     categoryId?: string;
+    commercialMedicationPrescription?: CommercialMedicationPrescriptionDto;
     dosage?: NewDosageDto;
     healthConditionId: number;
     observations?: string;

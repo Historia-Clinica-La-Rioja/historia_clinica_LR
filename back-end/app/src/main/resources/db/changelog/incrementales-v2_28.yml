@@ -235,3 +235,40 @@ databaseChangeLog:
                 - column:
                     name: city_id
                     type: int
+        
+    - changeSet:
+        id: add-table-medication_statement_commercial_prescription
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: medication_statement_commercial_prescription
+              columns:
+                - column:
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_commercial_prescription
+                    name: medication_statement_id
+                    type: int
+                - column:
+                    name: suggested_commercial_medication_sctid
+                    type: varchar
+                - column:
+                    constraints:
+                      nullable: false
+                    name: presentation_unit_quantity
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medication_pack_quantity
+                    type: smallint
+          - addForeignKeyConstraint:
+              baseColumnNames: medication_statement_id
+              baseTableName: medication_statement_commercial_prescription
+              constraintName: FK_medication_statement_commercial_prescription_medication_statement_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medication_statement
+              validate: true

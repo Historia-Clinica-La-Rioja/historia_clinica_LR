@@ -49,6 +49,8 @@ public class MedicationBo extends ClinicalTerm implements IpsBo {
 
 	private Short prescriptionLineState;
 
+	private CommercialMedicationPrescriptionBo commercialMedicationPrescription;
+
     public MedicationBo(MedicationVo medicationVo) {
         super();
         setId(medicationVo.getId());

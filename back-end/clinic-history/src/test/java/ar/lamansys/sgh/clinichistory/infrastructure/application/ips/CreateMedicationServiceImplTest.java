@@ -16,6 +16,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentRiskFactorRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.DosageRepository;
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementCommercialPrescriptionRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.MedicationStatementRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.QuantityRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.ips.entity.Dosage;
@@ -75,6 +76,9 @@ class CreateMedicationServiceImplTest extends UnitRepository {
 	@MockBean
 	private DocumentHealthcareProfessionalRepository documentHealthcareProfessionalRepository;
 
+	@MockBean
+	private MedicationStatementCommercialPrescriptionRepository medicationStatementCommercialPrescriptionRepository;
+
     @BeforeEach
     void setUp() {
         medicationServiceImpl = new LoadMedication(
@@ -84,7 +88,8 @@ class CreateMedicationServiceImplTest extends UnitRepository {
                 documentService,
                 snomedService,
                 noteService,
-                quantityRepository
+                quantityRepository,
+				medicationStatementCommercialPrescriptionRepository
         );
     }
 

@@ -36,4 +36,7 @@ public class PrescriptionItemDto implements Serializable {
 
 	private Integer prescriptionLineNumber;
 
+	@Nullable
+	private CommercialMedicationPrescriptionDto commercialMedicationPrescription;
+
 }
