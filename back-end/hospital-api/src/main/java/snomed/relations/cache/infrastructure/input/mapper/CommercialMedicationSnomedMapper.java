@@ -3,6 +3,7 @@ package snomed.relations.cache.infrastructure.input.mapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import snomed.relations.cache.domain.GetCommercialMedicationSnomedBo;
@@ -13,6 +14,8 @@ import java.util.List;
 @Mapper
 public interface CommercialMedicationSnomedMapper {
 
+	@Mapping(source = "genericPt", target = "genericMedication.pt")
+	@Mapping(source = "genericSctid", target = "genericMedication.sctid")
 	@Named("toCommercialMedicationSnomedDto")
     GetCommercialMedicationSnomedDto toGetCommercialMedicationSnomedDto(GetCommercialMedicationSnomedBo getCommercialMedicationSnomedBo);
 

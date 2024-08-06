@@ -2112,8 +2112,7 @@ export interface GenericMasterDataDto<T> extends AbstractMasterdataDto<T> {
 
 export interface GetCommercialMedicationSnomedDto {
     commercialPt: string;
-    genericPt: string;
-    genericSctid: string;
+    genericMedication: SnomedDto;
 }
 
 export interface GetDiagnosticReportObservationDto {
