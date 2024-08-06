@@ -117,6 +117,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		if (this.data.item) {
 			this.setItemData(this.data.item);
 		}
+
+		this.prescriptionItemForm.controls.pharmacoSearchType.valueChanges.subscribe(x => this.snomedConcept = null);
 	}
 
 	getProblems() {
@@ -282,7 +284,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	setConcept(selectedConcept: SnomedDto): void {
-		this.conceptsView = ! this.conceptsView;
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.prescriptionItemForm.controls.snomed.setValue(pt);
