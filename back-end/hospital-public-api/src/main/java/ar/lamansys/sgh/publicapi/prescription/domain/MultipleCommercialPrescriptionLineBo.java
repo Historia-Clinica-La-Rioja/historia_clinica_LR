@@ -37,4 +37,9 @@ public class MultipleCommercialPrescriptionLineBo {
 		return Objects.equals(prescriptionLineNumber, that.prescriptionLineNumber) && Objects.equals(prescriptionLineStatus, that.prescriptionLineStatus) && Objects.equals(prescriptionProblem, that.prescriptionProblem) && Objects.equals(genericMedication, that.genericMedication) && Objects.equals(commercialMedications, that.commercialMedications) && Objects.equals(prescriptionDosage, that.prescriptionDosage) && Objects.equals(medicationStatementId, that.medicationStatementId) && Objects.equals(observation, that.observation);
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(prescriptionLineNumber, prescriptionLineStatus, prescriptionProblem, genericMedication, commercialMedications, prescriptionDosage, medicationStatementId, observation);
+	}
+
 }
