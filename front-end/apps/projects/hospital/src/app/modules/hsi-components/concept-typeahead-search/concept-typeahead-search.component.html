@@ -1,26 +1,27 @@
-<form class="full-width" fxLayout="row" fxLayoutGap="10px">
+<form class="full-width" fxLayout="row" fxLayoutGap="10px" [formGroup]="formGroup">
 	<mat-form-field class="full-width" [appearance]="appearanceOutline ? 'outline' : 'legacy'">
-		<input type="text" placeholder="{{ this.placeholder | translate }}" aria-label="Number" matInput
-			[formControl]="myControl" [matAutocomplete]="auto"  (focus)="inputFocused = true">
+		<input type="text" placeholder="{{ placeholder | translate }}" aria-label="Number" matInput
+			[formControl]="myControl" [matAutocomplete]="auto" (focus)="inputFocused = true" [required]="required">
 		<mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleOptionSelected($event)"
 			[displayWith]="getDisplayName" autoActiveFirstOption>
 			<mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-				{{option.pt.term}}
+				{{ option.pt.term }}
 			</mat-option>
 		</mat-autocomplete>
 		<mat-hint *ngIf="snomedConcept == null && inputFocused">
 			{{ 'historia-clinica.concept-typeahead-search.AT_LEAST_THREE_CHARACTERS_MESSAGE' | translate }}
 		</mat-hint>
-		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon  && (snomedConcept == null)">
+		<mat-error *ngIf="myControl.hasError('required')" translate="forms.REQUIRED"></mat-error>
+		<button type="button" matSuffix mat-icon-button *ngIf="showSearchIcon && (snomedConcept == null)">
 			<mat-icon>search</mat-icon>
 		</button>
-		<button *ngIf="clearButton && (snomedConcept != null)" id="clear" type="button"  matSuffix color="warn" mat-icon-button
-			(click)="clear()">
+		<button *ngIf="clearButton && (snomedConcept != null)" id="clear" type="button" matSuffix color="warn"
+			mat-icon-button (click)="clear()">
 			<mat-icon>close</mat-icon>
-		</button><button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit"
-			color="primary" (click)="emitButton()" matSuffix>
-			{{buttonMessage | translate | uppercase}}
+		</button>
+		<button *ngIf="enableSubmitButton" id="submit" mat-flat-button type="submit" color="primary"
+			(click)="emitButton()" matSuffix>
+			{{ buttonMessage | translate | uppercase }}
 		</button>
 	</mat-form-field>
 </form>
-

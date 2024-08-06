@@ -41,6 +41,7 @@
 				[clearButton]="true"
 				[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_PHARMACO_SEARCH'"
 				[preload]="snomedConcept?.pt"
+				[required]="true"
 				(conceptSelected)="setConcept($event)">
 			</app-concept-typeahead-search>
 		</ng-container>
@@ -48,6 +49,7 @@
 		<app-commercial-pharmaco-typeahead *ngIf="!prescriptionItemForm.value.pharmacoSearchType && snomedRelationsAvailable && searchConceptsLocallyFFIsOn"
 			[ecl]="data.eclTerm"
 			[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
+			[required]="true"
 			(conceptSelected)="setConcept($event)">
 		</app-commercial-pharmaco-typeahead>
 

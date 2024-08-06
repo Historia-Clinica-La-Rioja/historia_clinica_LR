@@ -123,7 +123,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.setItemData(this.data.item);
 		}
 
-		this.prescriptionItemForm.controls.pharmacoSearchType.valueChanges.subscribe(x => this.snomedConcept = null);
+		this.prescriptionItemForm.controls.pharmacoSearchType.valueChanges.subscribe(x => this.snomedConcept = undefined);
 	}
 
 	getProblems() {
@@ -236,6 +236,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 
 	addPrescriptionItem() {
 		if ( ! this.prescriptionItemForm.valid
+			|| this.snomedConcept === undefined || this.snomedConcept === null || this.snomedConcept.pt === ''
 			|| intervalValidation(this.prescriptionItemForm, 'intervalHours','interval')
 			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays','administrationTime')) {
 				return this.prescriptionItemForm.markAllAsTouched();

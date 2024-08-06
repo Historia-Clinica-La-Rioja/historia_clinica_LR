@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { GetCommercialMedicationSnomedDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
 import { distinctUntilChanged, mergeMap, Observable, of, startWith } from 'rxjs';
@@ -12,9 +12,12 @@ import { distinctUntilChanged, mergeMap, Observable, of, startWith } from 'rxjs'
 export class CommercialPharmacoTypeaheadComponent {
 
 	snomedConcept: SnomedDto;
+	inputFocused = false;
+
 	@Input() ecl: SnomedECL;
 	@Input() placeholder = '';
 	@Input() showSearchIcon = false;
+	@Input() required = false;
 
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
 
@@ -23,6 +26,7 @@ export class CommercialPharmacoTypeaheadComponent {
 	myControl = new UntypedFormControl();
 	filteredOptions: Observable<any[]>;
 	opts: GetCommercialMedicationSnomedDto[] = [];
+	formGroup: UntypedFormGroup;
 
 	constructor(
 		private readonly commercialMedicationService: CommercialMedicationService
@@ -35,6 +39,14 @@ export class CommercialPharmacoTypeaheadComponent {
 				return this.filter(searchValue || '')
 			})
 		)
+
+		this.formGroup = new UntypedFormGroup({
+			myControl: this.myControl
+		});
+
+		if (this.required) {
+			this.myControl.setValidators([Validators.required]);
+		}
 	}
 
 	private filter(searchValue: string): Observable<GetCommercialMedicationSnomedDto[]> {
