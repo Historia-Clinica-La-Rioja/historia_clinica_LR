@@ -1,5 +1,7 @@
 package ar.lamansys.sgh.publicapi.appointment.infrastructure.input.rest;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @AllArgsConstructor
+@Tag(name = "PublicApi Turnos", description = "Availability by Professional and Clinical Specialty")
 @RequestMapping("/public-api/institution/{institutionId}/appointment/booking/professional")
 @RestController
 public class FetchAvailabilityByProfessionalController {
