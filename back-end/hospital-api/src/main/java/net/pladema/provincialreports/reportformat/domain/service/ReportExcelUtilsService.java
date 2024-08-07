@@ -3,29 +3,36 @@ package net.pladema.provincialreports.reportformat.domain.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import ar.lamansys.sgx.shared.reports.util.struct.ICell;
-import ar.lamansys.sgx.shared.reports.util.struct.IRow;
-import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
-
-import net.pladema.establishment.repository.InstitutionRepository;
-import net.pladema.establishment.repository.entity.Institution;
+import lombok.extern.slf4j.Slf4j;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgx.shared.reports.util.CellContent;
+import ar.lamansys.sgx.shared.reports.util.struct.ICell;
 import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
+import ar.lamansys.sgx.shared.reports.util.struct.IRow;
+import ar.lamansys.sgx.shared.reports.util.struct.ISheet;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
+import net.pladema.establishment.repository.InstitutionRepository;
+import net.pladema.establishment.repository.entity.Institution;
 
+@Slf4j
 @Service
 public class ReportExcelUtilsService {
+
+
+	private static final String DATE_FORMAT_WITH_SLASH = "dd/MM/yyyy";
+	private static final String DATE_FORMAT_WITH_DASH = "dd-MM-yyyy";
+	private static final String DATE_FORMAT_WITH_DOT = "dd.MM.yyyy";
+	private static final String SOURCE_NOTE = "HSI ha sido la fuente de los datos presentados en este documento";
 
 	@Autowired
 	private final InstitutionRepository institutionRepository;
@@ -35,7 +42,6 @@ public class ReportExcelUtilsService {
 	private ICellStyle mainTitleStyle;
 	private ICellStyle observationStyle;
 	private ICellStyle sourceNoteStyle;
-	private final String sourceNote = "HSI ha sido la fuente de los datos presentados en este documento";
 
 	public ReportExcelUtilsService(InstitutionRepository institutionRepository) {
 		this.institutionRepository = institutionRepository;
@@ -61,7 +67,7 @@ public class ReportExcelUtilsService {
 
 		data.add(new CellContent(rowNum, 0, 1, 1, "FECHA DE EMISIÓN:", boldTitleStyle));
 		data.add(new CellContent(rowNum, 1, 1, 2, currentDateAsDDMMYYYY("dash"), fieldStyle));
-		data.add(new CellContent(rowNum, 3, 2, mainTitleColumns, sourceNote, sourceNoteStyle));
+		data.add(new CellContent(rowNum, 3, 2, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
 
 		rowNum++;
 
@@ -217,5 +223,134 @@ public class ReportExcelUtilsService {
 		String formattedEndDate = endDate.format(formatter);
 
 		return formattedStartDate + " - " + formattedEndDate;
+	}
+
+	// new code with reduced boilerplate
+
+	public List<CellContent> newGetHeaderDataWithoutObservation(String[] subtitles, String title,
+															 @NonNull Integer mainTitleColumns,
+															 String formattedPeriod,
+															 @NonNull Integer institutionId) {
+		// recommended minimum mainTitleColumns = 7
+		Institution institution = institutionRepository.findById(institutionId)
+				.orElseThrow(() -> new IllegalArgumentException("Institution not found with id " + institutionId));
+
+		List<CellContent> data = new ArrayList<>();
+		int rowNum = 0; // row 1
+
+		data.add(new CellContent(rowNum, 0, 1, 3, " ", fieldStyle));
+		data.add(new CellContent(rowNum, 3, 2, mainTitleColumns, title, mainTitleStyle));
+
+		rowNum++;
+
+		data.add(new CellContent(rowNum, 0, 1, 1, "PERÍODO:", boldTitleStyle));
+		data.add(new CellContent(rowNum, 1, 1, 2, formattedPeriod, fieldStyle));
+
+		rowNum++;
+
+		data.add(new CellContent(rowNum, 0, 1, 1, "FECHA DE EMISIÓN:", boldTitleStyle));
+		data.add(new CellContent(rowNum, 1, 1, 2, currentDateAsDDMMYYYY("dash"), fieldStyle));
+		data.add(new CellContent(rowNum, 3, 2, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
+
+		rowNum++;
+
+		data.add(new CellContent(rowNum, 0, 1, 1, "INSTITUCIÓN:", boldTitleStyle));
+		data.add(new CellContent(rowNum, 1, 1, 2, institution.getName(), fieldStyle));
+
+		rowNum++;
+
+		data.add(new CellContent(rowNum, 0, 1, mainTitleColumns + 3, " ", fieldStyle));
+
+		rowNum++;
+
+		int colNum = 0;
+
+		for (String subtitle : subtitles) {
+			data.add(new CellContent(rowNum, colNum++, 1, 1, subtitle, boldTitleStyle));
+		}
+
+		return data;
+	}
+
+	public void newFillRow(ISheet sheet, List<CellContent> data) {
+		Map<Integer, List<CellContent>> cellByRow = data.stream()
+				.collect(Collectors.groupingBy(CellContent::getRow));
+
+		for (var entry : cellByRow.entrySet()) {
+			int rowNum = entry.getKey();
+			IRow row = sheet.createRow(rowNum);
+			entry.getValue().forEach(cell -> createCell(sheet, row, rowNum, cell));
+		}
+	}
+
+	public ICellStyle newCreateDataCellsStyle(IWorkbook workbook) {
+		ICellStyle cellStyle = workbook.createStyle();
+		cellStyle.setFontSize((short) 12);
+		cellStyle.setBorders(true);
+		cellStyle.setHAlign(ICellStyle.HALIGNMENT.LEFT);
+		cellStyle.setVAlign(ICellStyle.VALIGNMENT.TOP);
+		return cellStyle;
+	}
+
+	public void newCreateHeaderCellsStyle(IWorkbook workbook) {
+		fieldStyle = createStyle(workbook, (short) 12, false, ICellStyle.HALIGNMENT.LEFT, ICellStyle.VALIGNMENT.CENTER);
+		boldTitleStyle = createStyle(workbook, (short) 13, true, ICellStyle.HALIGNMENT.LEFT, ICellStyle.VALIGNMENT.CENTER);
+		mainTitleStyle = createStyle(workbook, (short) 24, true, ICellStyle.HALIGNMENT.CENTER, ICellStyle.VALIGNMENT.CENTER);
+		observationStyle = createStyle(workbook, (short) 12, false, ICellStyle.HALIGNMENT.CENTER, ICellStyle.VALIGNMENT.CENTER);
+		sourceNoteStyle = createStyle(workbook, (short) 12, false, ICellStyle.HALIGNMENT.CENTER, ICellStyle.VALIGNMENT.TOP);
+	}
+
+	private ICellStyle createStyle(IWorkbook workbook, short fontSize, boolean bold,
+									   ICellStyle.HALIGNMENT hAlign, ICellStyle.VALIGNMENT vAlign) {
+		ICellStyle style = workbook.createStyle();
+		style.setFontSize(fontSize);
+		style.setBold(bold);
+		style.setWrap(false);
+		style.setBorders(true);
+		style.setHAlign(hAlign);
+		style.setVAlign(vAlign);
+		return style;
+	}
+
+	public void newSetSheetDimensions(ISheet sheet) {
+		sheet.autoSizeColumns();
+
+		sheet.setRowHeight(0, 40);
+		for (int rowNumber = 1; rowNumber < sheet.getCantRows(); rowNumber++) {
+			sheet.setRowHeight(rowNumber, 23);
+		}
+	}
+
+	public void newSetMinimalHeaderDimensions(ISheet sheet) {
+		sheet.setColumnWidth(0, 175);
+		for (int columnNumber = 1; columnNumber < 10; columnNumber++) {
+			sheet.setColumnWidth(columnNumber, 125);
+		}
+	}
+
+	public static String newCurrentDateAsDDMMYYYY(String separator) {
+		LocalDate currentDate = LocalDate.now();
+		String pattern;
+		switch (separator) {
+			case "backslash":
+				pattern = DATE_FORMAT_WITH_SLASH;
+				break;
+			case "dash":
+				pattern = DATE_FORMAT_WITH_DASH;
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid separator: " + separator);
+		}
+		return currentDate.format(DateTimeFormatter.ofPattern(pattern));
+	}
+
+	public static String newPeriodStringFromLocalDates(LocalDate startDate, LocalDate endDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH_SLASH);
+		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
+	}
+
+	public static String newGetPeriodForFilenameFromDates(LocalDate startDate, LocalDate endDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH_DOT);
+		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
 	}
 }
