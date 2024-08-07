@@ -51,7 +51,7 @@ public class EmergencyCareExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)	
 	@ExceptionHandler({EmergencyCareEpisodeStateException.class})
 	protected ApiErrorMessageDto handleEmergencyCareStateException(EmergencyCareEpisodeStateException ex) {
-		log.error("EmergencyCareEpisodeStateException exception -> {}", ex.getMessage(), ex);
+		log.debug("EmergencyCareEpisodeStateException exception -> {}", ex.getMessage(), ex);
 		return new ApiErrorMessageDto(ex.getCode().name(), ex.getMessage());
 	}
 }

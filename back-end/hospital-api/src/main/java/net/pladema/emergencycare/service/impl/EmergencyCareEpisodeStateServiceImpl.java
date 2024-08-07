@@ -79,9 +79,13 @@ public class EmergencyCareEpisodeStateServiceImpl implements EmergencyCareEpisod
 				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.ADMINISTRATIVE_DISCHARGE, "El episodio ya fue dado de alta administrativa");
 			}
 
-			if ((emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId()) || emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId()))
-				&& episode.getEmergencyCareStateId().equals(EEmergencyCareState.ESPERA.getId())) {
+			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_MEDICA.getId()) && episode.getEmergencyCareStateId().equals(EEmergencyCareState.ESPERA.getId())) {
 				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.WAITING_ROOM, "El episodio ha sido movido a sala de espera");
+			}
+
+			if (emergencyCareStateId.equals(EEmergencyCareState.ALTA_ADMINISTRATIVA.getId()) && episode.getEmergencyCareStateId().equals(EEmergencyCareState.ESPERA.getId())
+					&& emergencyCareEpisodeRepository.episodeHasEvolutionNote(episodeId)) {
+				throw new EmergencyCareEpisodeStateException(EmergencyCareEpisodeStateExceptionEnum.WAITING_ROOM, "El episodio ha sido movido a sala de espera y tiene una nota de evolución asociada.");
 			}
 		});
 	}
