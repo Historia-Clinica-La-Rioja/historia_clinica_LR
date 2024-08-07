@@ -1,5 +1,6 @@
 package net.pladema.parameter.domain.enums;
 
+import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,4 +15,14 @@ public enum EParameterType {
 
 	private final Short id;
 	private final String description;
+
+	public static EParameterType map(Short id) {
+		if (id == null)
+			return null;
+		for(EParameterType e : values()) {
+			if(e.id.equals(id)) return e;
+		}
+		throw new NotFoundException("parameter-type-not-exist", String.format("El tipo de parámetro  %s no existe", id));
+	}
+
 }

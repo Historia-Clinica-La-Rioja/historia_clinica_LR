@@ -38,4 +38,5 @@ public class ParameterizedFormParameter implements Serializable {
 
 	@Column(name = "order_number", nullable = false)
 	private Short orderNumber;
+	
 }

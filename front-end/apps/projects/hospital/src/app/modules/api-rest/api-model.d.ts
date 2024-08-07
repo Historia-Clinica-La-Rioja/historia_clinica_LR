@@ -3598,6 +3598,17 @@ export interface PageRequestDto {
     pageSize: number;
 }
 
+export interface ParameterCompleteDataDto {
+    description: string;
+    ecl: SnomedECL;
+    id: number;
+    inputCount: number;
+    loincId: number;
+    textOptions: ParameterTextOptionDto[];
+    type: EParameterType;
+    unitOfMeasure: ParameterUnitOfMeasureDto;
+}
+
 export interface ParameterDto {
     description: string;
     id: number;
@@ -3609,9 +3620,22 @@ export interface ParameterDto {
     unitsOfMeasureIds: number[];
 }
 
+export interface ParameterTextOptionDto {
+    description: string;
+    id: number;
+    parameterId: number;
+}
+
 export interface ParameterTypeDto {
     description: string;
     id: number;
+}
+
+export interface ParameterUnitOfMeasureDto {
+    parameterId: number;
+    unitOfMeasureCode: string;
+    unitOfMeasureDescription: string;
+    unitOfMeasureId: number;
 }
 
 export interface ParameterizedFormDto {
@@ -5939,6 +5963,13 @@ export const enum ENursingRecordStatus {
 
 export const enum EOdontologyTopicDto {
     NUEVA_CONSULTA = "NUEVA_CONSULTA",
+}
+
+export const enum EParameterType {
+    NUMERIC = "NUMERIC",
+    FREE_TEXT = "FREE_TEXT",
+    SNOMED_ECL = "SNOMED_ECL",
+    OPTIONS_LIST = "OPTIONS_LIST",
 }
 
 export const enum EPatientIdentityAccreditationStatus {

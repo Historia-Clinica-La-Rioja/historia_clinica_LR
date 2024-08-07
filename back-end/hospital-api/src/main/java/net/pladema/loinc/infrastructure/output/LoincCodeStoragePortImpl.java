@@ -18,6 +18,7 @@ import net.pladema.loinc.infrastructure.output.repository.LoincCodeRepository;
 public class LoincCodeStoragePortImpl implements LoincCodeStoragePort {
 
 	private final LoincCodeRepository loincCodeRepository;
+
 	@Override
 	public Optional<FetchLoincCodeBo> findByCode(String loincCode) {
 		return loincCodeRepository
@@ -31,6 +32,12 @@ public class LoincCodeStoragePortImpl implements LoincCodeStoragePort {
 		.findByCodeIn(codes)
 		.stream()
 		.collect(Collectors.toMap(LoincCode::getCode, this::toFetchLoincCodeBo));
+	}
+
+	@Override
+	public Optional<String> getDescriptionById(Integer id){
+		return loincCodeRepository.findById(id)
+				.map(lc -> lc.getCustomDisplayName() != null ?  lc.getCustomDisplayName() : lc.getDescription());
 	}
 
 	private FetchLoincCodeBo toFetchLoincCodeBo(LoincCode entity) {

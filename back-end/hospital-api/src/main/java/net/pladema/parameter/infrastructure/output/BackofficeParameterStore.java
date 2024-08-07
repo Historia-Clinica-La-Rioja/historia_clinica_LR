@@ -1,6 +1,7 @@
 package net.pladema.parameter.infrastructure.output;
 
 import lombok.RequiredArgsConstructor;
+import net.pladema.parameter.domain.ParameterTextOptionBo;
 import net.pladema.parameter.domain.enums.EParameterType;
 import net.pladema.parameter.infrastructure.input.rest.dto.ParameterDto;
 import net.pladema.parameter.infrastructure.output.repository.ParameterRepository;
@@ -46,7 +47,7 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 		Stream<ParameterDto> resultStream = parameterRepository.findAll()
 				.stream()
 				.map(this::mapEntityToDto)
-				.peek(dto -> dto.setTextOptions(parameterTextOptionRepository.getDescriptionsFromParameterId(dto.getId())))
+				.peek(dto -> dto.setTextOptions(getDescriptionsFromParameterId(dto.getId())))
 				.peek(this::setLoincDescription);
 
 		return groupParametersAndSetUnitsOfMeasure(resultStream);
@@ -57,7 +58,7 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 		 Stream<ParameterDto> resultStream = parameterRepository.findAllById(ids)
 				.stream()
 				.map(this::mapEntityToDto)
-				.peek(dto -> dto.setTextOptions(parameterTextOptionRepository.getDescriptionsFromParameterId(dto.getId())))
+				.peek(dto -> dto.setTextOptions(getDescriptionsFromParameterId(dto.getId())))
 				 .peek(this::setLoincDescription);
 
 		 return groupParametersAndSetUnitsOfMeasure(resultStream);
@@ -75,7 +76,7 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 				parameterDto.setUnitsOfMeasureIds(unitsOfMeasureIds);
 			}
 			else if (isOptionList(parameterDto.getTypeId()))
-				parameterDto.setTextOptions(parameterTextOptionRepository.getDescriptionsFromParameterId(parameterDto.getId()));
+				parameterDto.setTextOptions(getDescriptionsFromParameterId(parameterDto.getId()));
 			return Optional.of(parameterDto);
 		}
 		return Optional.empty();
@@ -245,6 +246,10 @@ public class BackofficeParameterStore implements BackofficeStore<ParameterDto, I
 					dto.setDescription(loinc.getDescription());
 			});
 		}
+	}
+
+	private List<String> getDescriptionsFromParameterId(Integer id){
+		return parameterTextOptionRepository.getAllByParameterId(id).stream().map(ParameterTextOptionBo::getDescription).collect(Collectors.toList());
 	}
 
 }
