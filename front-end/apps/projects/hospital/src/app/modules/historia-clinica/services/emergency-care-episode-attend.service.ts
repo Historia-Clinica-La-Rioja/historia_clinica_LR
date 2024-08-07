@@ -87,7 +87,7 @@ export class EmergencyCareEpisodeAttendService {
 			if (!attendPlace) return;
 
 			if (attendPlace.attentionPlace === AttentionPlace.CONSULTORIO) {
-				this.episodeStateService.atender(episode.id, attendPlace.id).subscribe(changed => {
+				this.episodeStateService.attend(episode.id, attendPlace.id).subscribe(changed => {
 					if (changed) {
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 						this.toEpisodeOrLoadEpisode(episode);
@@ -98,7 +98,7 @@ export class EmergencyCareEpisodeAttendService {
 			}
 
 			if (attendPlace.attentionPlace === AttentionPlace.SHOCKROOM) {
-				this.episodeStateService.atender(episode.id, null, attendPlace.id).subscribe((response: boolean) => {
+				this.episodeStateService.attend(episode.id, null, attendPlace.id).subscribe((response: boolean) => {
 					if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 
 					this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
@@ -117,7 +117,7 @@ export class EmergencyCareEpisodeAttendService {
 					.subscribe((bed: BedInfoDto) => {
 						if (!bed) return;
 
-						this.episodeStateService.atender(episode.id, null, null, bed.bed.id).subscribe((response: boolean) => {
+						this.episodeStateService.attend(episode.id, null, null, bed.bed.id).subscribe((response: boolean) => {
 							if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
 
 							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);

@@ -240,7 +240,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 		dialogRef.afterClosed().subscribe(consultorio => {
 			if (consultorio) {
 				this.doctorsOfficeDescription = consultorio?.description;
-				this.episodeStateService.atender(this.episodeId, consultorio.id).subscribe(changed => {
+				this.episodeStateService.attend(this.episodeId, consultorio.id).subscribe(changed => {
 					if (changed) {
 						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
 						this.setEpisodeState();

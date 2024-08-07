@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
-import { MasterDataDto } from '@api-rest/api-model';
+import { EmergencyCareEpisodeAttentionPlaceDto, MasterDataDto } from '@api-rest/api-model';
 
 const BASIC_URL_PREFIX = '/institution';
 const BASIC_URL_SUFIX = '/emergency-care/episodes';
@@ -19,15 +19,12 @@ export class EmergencyCareEpisodeStateService {
 	) {
 	}
 
-	changeToSpecificState(episodeId: number, emergencyCareEpisodeStateId: number, state: string): Observable<boolean> {
-		let params: HttpParams = new HttpParams();
-		params = params.append('emergencyCareStateId', JSON.stringify(emergencyCareEpisodeStateId));
 
-		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
-		BASIC_URL_SUFIX}/${episodeId}/state/${state}`;
-
-		return this.http.put<boolean>(url, {}, {params});
-	}
+	changeToSpecificState(episodeId: number, state: string, attentionPlaceDto?: EmergencyCareEpisodeAttentionPlaceDto ): Observable<boolean> {
+        const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+        BASIC_URL_SUFIX}/${episodeId}/state/${state}`;
+        return this.http.put<boolean>(url, attentionPlaceDto);
+    }
 
 	changeState(episodeId: number, emergencyCareEpisodeStateId: number, doctorsOfficeId?: number, shockroomId?: number, bedId?: number): Observable<boolean> {
 		const params: HttpParams = this.buildChangeStateParams(emergencyCareEpisodeStateId, doctorsOfficeId, shockroomId, bedId);
