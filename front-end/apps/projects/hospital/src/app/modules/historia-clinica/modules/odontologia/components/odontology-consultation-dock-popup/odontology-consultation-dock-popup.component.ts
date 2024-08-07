@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AppFeature, ClinicalSpecialtyDto, DateDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto, OdontologyDiagnosticDto } from '@api-rest/api-model';
+import { AppFeature, ClinicalSpecialtyDto, DateDto, OdontologyConceptDto, OdontologyConsultationDto, OdontologyDentalActionDto, OdontologyDiagnosticDto, OdontologyProcedureDto, ProcedureDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { ReferenceFileService } from '@api-rest/services/reference-file.service';
 import { TEXT_AREA_MAX_LENGTH } from '@core/constants/validation-constants';
@@ -19,7 +19,7 @@ import { MotivoNuevaConsultaService } from '@historia-clinica/modules/ambulatori
 import { NewConsultationPersonalHistoriesService } from '@historia-clinica/modules/ambulatoria/services/new-consultation-personal-histories.service';
 import { toDentalAction, toOdontologyAllergyConditionDto, toOdontologyDiagnosticDto, toOdontologyMedicationDto, toOdontologyPersonalHistoryDto } from '@historia-clinica/modules/odontologia/utils/mapper.utils';
 import { ProblemasService } from '@historia-clinica/services/problemas.service';
-import { ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
+import { Procedimiento, ProcedimientosService } from '@historia-clinica/services/procedimientos.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { SuggestedFieldsPopupComponent } from '@presentation/components/suggested-fields-popup/suggested-fields-popup.component';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -43,13 +43,16 @@ import { PrescriptionTypes } from '@historia-clinica/modules/ambulatoria/service
 import { NewConsultationPersonalHistoryFormComponent } from '@historia-clinica/modules/ambulatoria/dialogs/new-consultation-personal-history-form/new-consultation-personal-history-form.component';
 import { ConceptsList } from 'projects/hospital/src/app/modules/hsi-components/concepts-list/concepts-list.component';
 import { DateFormatPipe } from '@presentation/pipes/date-format.pipe';
-import { AddProcedureComponent } from '@historia-clinica/dialogs/add-procedure/add-procedure.component';
 import { CreateOrderService } from '@historia-clinica/services/create-order.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
 import { ProcedureTemplatesService } from '@api-rest/services/procedure-templates.service';
 import { DialogWidth } from '@presentation/services/dialog.service';
+import { SearchSnomedConceptComponent } from '@historia-clinica/modules/ambulatoria/dialogs/search-snomed-concept/search-snomed-concept.component';
+import { pushIfNotExists } from '@core/utils/array.utils';
+import { Concept, ConceptDateFormComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/concept-date-form/concept-date-form.component';
+import { toApiFormat } from '@api-rest/mapper/date.mapper';
 
 @Component({
 	selector: 'app-odontology-consultation-dock-popup',
@@ -84,6 +87,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 	minDate = MIN_DATE;
 
 	disableConfirmButton = false;
+	procedures: ProcedureDto[] = [];
 
 	isAllergyNoRefer: boolean = true;
 	allergyContent: ConceptsList = {
@@ -217,20 +221,16 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 		});
 	}
 
-	addProcedure() {
+	openSearchSnomedConceptComponent(): void {
 		const problems = this.ambulatoryConsultationProblemsService.getAllProblemas(this.data.patientId, this.hceGeneralStateService);
-		this.dialog.open(AddProcedureComponent, {
-			data: {
-				createOrderService: this.createOrderService,
-				patientId: this.data.patientId,
-				procedureService: this.otherProceduresService,
-				problems: problems,
-				searchConceptsLocallyFF: this.searchConceptsLocallyFFIsOn,
-			},
+		const dialogRef = this.dialog.open(SearchSnomedConceptComponent, {
 			autoFocus: false,
 			width: DialogWidth.MEDIUM,
 			disableClose: true,
+			data: this.buildProcedureDataToDialog(problems)
 		});
+
+		dialogRef.afterClosed().subscribe((snomedConcept: SnomedDto) => this.openConceptDateFormComponent(snomedConcept));
 	}
 
 	addDiagnose() {
@@ -294,6 +294,63 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			this.addPersonalHistory();
 		}
 		this.isPersonalHistories = !$event.checkboxSelected;
+	}
+
+	private openConceptDateFormComponent = (snomedConcept: SnomedDto) => {
+		if (!snomedConcept) return;
+
+		const dialogRef = this.dialog.open(ConceptDateFormComponent, {
+			width: '35%',
+			disableClose: false,
+			data: this.buildConceptDateToDialog(snomedConcept)
+		});
+		dialogRef.afterClosed().subscribe((procedure: Concept) => {
+			if (!procedure) return;
+
+			const procedureDto: ProcedureDto = {
+				performedDate: procedure?.data,
+				snomed: procedure.snomedConcept
+			};
+			this.addProcedure(procedureDto);
+		});
+	}
+
+	private addProcedure(procedure: ProcedureDto) {
+		this.procedures = pushIfNotExists<ProcedureDto>(this.procedures, procedure, this.compareProcedure);
+		this.otherProceduresService.add({snomed: procedure.snomed, performedDate: this.fromStringToDate(procedure.performedDate)});
+	}
+
+	private fromStringToDate(date: string): Date {
+		if (!date) return;
+
+		const dateData = date.split("-");
+		return new Date(+dateData[0], +dateData[1]-1, +dateData[2]);
+	}
+
+	private compareProcedure(concept1: ProcedureDto, concept2: ProcedureDto): boolean {
+		return concept1.snomed.sctid === concept2.snomed.sctid
+	}
+
+	private buildProcedureDataToDialog = (problems: SnomedDto[]) => {
+		const data = {
+			patientId: this.data.patientId,
+			createOrderService: this.createOrderService,
+			problems: problems,
+			label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			title: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
+			eclFilter: SnomedECL.PROCEDURE
+		}
+		return data;
+	}
+
+	private buildConceptDateToDialog = (snomedConcept: SnomedDto) => {
+		const data = {
+			label: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			add: 'internaciones.anamnesis.procedure.ADD_PROCEDURE',
+			title: 'internaciones.anamnesis.procedimientos.PROCEDIMIENTO',
+			snomedConcept
+		}
+		return data;
 	}
 
 	private openDialog(nonCompletedFields: string[], presentFields: string[], odontologyDto: OdontologyConsultationDto): void {
@@ -375,7 +432,7 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			evolutionNote: this.form.value.evolution,
 			medications: this.medicationsNewConsultationService.getMedicaciones().map(toOdontologyMedicationDto),
 			diagnostics: this.otherDiagnosticsNewConsultationService.getProblemas().map(toOdontologyDiagnosticDto),
-			procedures: this.createOrderService.getOrderForOdontologyConsultation(),
+			procedures: this.otherProceduresService.getProcedimientos().map(procedimiento => this.mapProcedimientoToNursingProcedure(procedimiento)),
 			reasons: this.reasonNewConsultationService.getMotivosConsulta(),
 			clinicalSpecialtyId: this.episodeData.clinicalSpecialtyId,
 			dentalActions,
@@ -388,6 +445,13 @@ export class OdontologyConsultationDockPopupComponent implements OnInit {
 			references: this.odontologyReferenceService.getOdontologyReferences(),
 			patientMedicalCoverageId: this.episodeData.medicalCoverageId,
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId
+		};
+	}
+
+	private mapProcedimientoToNursingProcedure = (procedimiento: Procedimiento): OdontologyProcedureDto => {
+		return {
+		  	performedDate: procedimiento.performedDate ? toApiFormat(procedimiento.performedDate): null,
+		  	snomed: procedimiento.snomed
 		};
 	}
 
