@@ -5,6 +5,7 @@ import ar.lamansys.sgh.shared.infrastructure.input.service.referencecounterrefer
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.parameterizedform.infrastructure.input.rest.dto.CompleteParameterizedFormDto;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -58,5 +59,7 @@ public class CreateOutpatientDto {
 	private Integer hierarchicalUnitId;
 
 	private List<Integer> involvedHealthcareProfessionalIds;
+
+	private List<CompleteParameterizedFormDto> completeForms;
 
 }

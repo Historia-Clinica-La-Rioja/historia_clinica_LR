@@ -594,6 +594,7 @@ export class NuevaConsultaDockPopupComponent implements OnInit {
 			references: this.ambulatoryConsultationReferenceService.getOutpatientReferences(),
 			hierarchicalUnitId: this.episodeData.hierarchicalUnitId,
 			involvedHealthcareProfessionalIds: this.episodeData.involvedHealthcareProfessionalIds,
+			completeForms: []
 		};
 	}
 

@@ -312,3 +312,80 @@ databaseChangeLog:
                     DELETE FROM snomed WHERE id = negative_sctid_snomed_row.id;
                   END LOOP;
                 END $$;
+
+    - changeSet:
+        id: createTable-completed_parameterized_form
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: completed_parameterized_form
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_completed_parameterized_form
+                - column:
+                    name: parameterized_form_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_parameterized_form_form_id
+                      references: parameterized_form(id)
+                - column:
+                    name: document_id
+                    type: bigint
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_parameterized_form_document_id
+                      references: document(id)
+
+    - changeSet:
+        id: createTable-completed_parameter
+        author: fsimaro
+        changes:
+          - createTable:
+              tableName: completed_parameter
+              columns:
+                - column:
+                    name: id
+                    type: int
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: PK_completed_parameter
+                - column:
+                    name: parameter_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_form_parameter_parameter_id
+                      references: parameter(id)
+                - column:
+                    name: completed_parameterized_form_id
+                    type: int
+                    constraints:
+                      nullable: false
+                      foreignKeyName: FK_completed_parameter_completed_parameterized_form_id
+                      references: completed_parameterized_form(id)
+                - column:
+                    name: parameter_text_option_id
+                    type: int
+                    constraints:
+                      foreignKeyName: FK_completed_parameter_parameter_text_option_id
+                      references: parameter_text_option(id)
+                - column:
+                    name: numeric_value
+                    type: float
+                - column:
+                    name: snomed_id
+                    type: int
+                    constraints:
+                      foreignKeyName: FK_completed_parameter_snomed_id
+                      references: snomed(id)
+                - column:
+                    name: text_value
+                    type: text
+

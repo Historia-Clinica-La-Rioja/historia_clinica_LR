@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -79,6 +80,8 @@ public class OutpatientDocumentBo implements IDocumentBo {
 	private Integer medicalCoverageId;
 
     private Map<String, Object> contextMap;
+
+	private List<CompleteParameterizedFormBo> completeForms = new ArrayList<>();
 
     @Override
     public DocumentObservationsBo getNotes() {

@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
 import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
+import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnthropometricDataBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ConclusionBo;
@@ -233,4 +234,7 @@ public interface IDocumentBo {
     default void setBusinessObjectId(Integer businessObjectId) {}
 
     default Integer getBusinessObjectId() { return null; }
+
+	default List<CompleteParameterizedFormBo> getCompleteForms() { return Collections.emptyList(); }
+    
 }

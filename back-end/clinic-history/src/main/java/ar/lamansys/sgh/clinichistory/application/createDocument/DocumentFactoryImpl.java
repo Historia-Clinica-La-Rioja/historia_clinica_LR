@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.createDocument;
 
+import ar.lamansys.sgh.clinichistory.application.saveCompletedParameterizedForms.SaveCompletedParameterizedForms;
 import ar.lamansys.sgh.clinichistory.application.saveDocumentInvolvedProfessionals.SaveDocumentInvolvedProfessionals;
 import ar.lamansys.sgh.clinichistory.application.saveanthropometricdatapercentiles.SaveAnthropometricDataPercentiles;
 import java.time.LocalDate;
@@ -84,6 +85,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 
 	private final SaveAnthropometricDataPercentiles saveAnthropometricDataPercentiles;
 
+	private final SaveCompletedParameterizedForms saveCompletedParameterizedForms;
+
     @Override
 	@Transactional
     public Long run(IDocumentBo documentBo, boolean createFile) {
@@ -139,6 +142,8 @@ public class DocumentFactoryImpl implements DocumentFactory {
 		saveDocumentInvolvedProfessionals.run(doc.getId(), documentBo.getInvolvedHealthcareProfessionalIds());
 
 		saveAnthropometricDataPercentiles.run(doc.getPatientId(), doc.getId(), documentBo.getAnthropometricData());
+
+		saveCompletedParameterizedForms.run(doc.getId(), documentBo.getCompleteForms());
 
         if (createFile)
             generateDocument(documentBo);

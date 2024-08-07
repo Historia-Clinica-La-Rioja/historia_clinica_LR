@@ -904,6 +904,11 @@ export interface CompleteEquipmentDiaryDto extends EquipmentDiaryDto {
     sectorId: number;
 }
 
+export interface CompleteParameterizedFormDto {
+    id: number;
+    parameters: CompletedParameterizedFormParameterDto[];
+}
+
 export interface CompletePatientDto extends BasicPatientDto {
     auditablePatientInfo: AuditablePatientInfoDto;
     generalPractitioner?: AAdditionalDoctorDto;
@@ -964,6 +969,15 @@ export interface CompleteRequestDto {
     link?: string;
     observations?: string;
     referenceClosure?: ReferenceClosureDto;
+}
+
+export interface CompletedParameterizedFormParameterDto {
+    conceptPt?: string;
+    conceptSctid?: string;
+    id: number;
+    numericValue?: number;
+    optionId?: number;
+    textValue?: string;
 }
 
 export interface ConclusionDto extends HealthConditionDto {
@@ -1100,6 +1114,7 @@ export interface CreateOutpatientDto {
     allergies: ReferableItemDto<OutpatientAllergyConditionDto>;
     anthropometricData?: OutpatientAnthropometricDataDto;
     clinicalSpecialtyId?: number;
+    completeForms: CompleteParameterizedFormDto[];
     evolutionNote?: string;
     familyHistories: ReferableItemDto<OutpatientFamilyHistoryDto>;
     hierarchicalUnitId?: number;

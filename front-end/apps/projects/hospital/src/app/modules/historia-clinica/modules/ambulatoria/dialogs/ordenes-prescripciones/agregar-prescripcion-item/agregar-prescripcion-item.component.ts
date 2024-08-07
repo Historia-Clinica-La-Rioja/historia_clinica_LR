@@ -217,7 +217,9 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			involvedHealthcareProfessionalIds: [],
 			personalHistories: {
 				isReferred: null,
-				content: []			}
+				content: []			
+			},
+			completeForms: []
 		};
 		return createOutpatientDto;
 	}
