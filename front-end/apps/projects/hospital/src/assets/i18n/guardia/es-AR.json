@@ -79,6 +79,11 @@
 						"PATIENT_DISCHARGE": "Alta de paciente"
 					},
 					"actions": {
+						"call": {
+							"TITLE": "Llamar",
+							"SUCCESS": "El paciente fue llamado",
+							"ERROR": "Error al intentar llamar al paciente"
+						},
 						"atender": {
 							"TITLE": "Atender",
 							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",

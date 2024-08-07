@@ -35,8 +35,9 @@ import { map, Observable, Subscription, switchMap, take, tap } from 'rxjs';
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 const MIN_ACTIONS = 3;
 const BACK_TO_WAITING_STATES = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.AUSENTE];
+const STATES_TO_CALL_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.LLAMADO, EstadosEpisodio.AUSENTE];
 const STATES_TO_ATTEND_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE];
-const STATES_TO_EDIT_EPISODE = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE]; 
+const STATES_TO_EDIT_EPISODE = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE];
 
 @Component({
 	selector: 'app-resumen-de-guardia',
@@ -258,6 +259,10 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 		this.setEpisodeState();
 	}
 
+	call(){
+		console.log("llamar paciente");
+	}
+
 	markAsAbsent(){
 		const dialogData: ConfirmDialogData = {
 			title: 'guardia.home.episodes.episode.actions.mark_as_absent.TITLE',
@@ -354,8 +359,17 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 					this.availableActions.push(action);
 				}
 
+				if (this.hasEmergencyCareRelatedRole && STATES_TO_CALL_EPISODE.includes(this.episodeState)) {
+					let action: ActionInfo = {
+					   label: 'guardia.home.episodes.episode.actions.call.TITLE',
+					   id: 'call',
+					   callback: this.call.bind(this)
+					}
+					this.availableActions.push(action);
+				}
+
 				if (this.hasEmergencyCareRelatedRole && STATES_TO_ATTEND_EPISODE.includes(this.episodeState)) {
-					const action: ActionInfo = {
+					let action: ActionInfo = {
 						label: 'guardia.home.episodes.episode.actions.atender.TITLE',
 						id: 'attend',
 						callback: this.attend.bind(this)

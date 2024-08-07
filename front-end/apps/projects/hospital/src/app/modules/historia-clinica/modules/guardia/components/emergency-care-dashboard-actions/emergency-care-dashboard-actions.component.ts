@@ -82,6 +82,10 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	}
 
 	private getActionsButtonsConditions(episode: Episode): EpisodeConditions {
+		const showCall =
+			this.hasProffesionalRole &&
+			episode.state.id !== this.estadosEpisodio.EN_ATENCION;
+
 		const showNewTriage = !this.isAdministrativeAndHasTriageFFInFalse;
 
 		const showEditPatientEpisode =
@@ -94,12 +98,14 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 
 		const showAttend =
 			(episode.state.id === this.estadosEpisodio.EN_ESPERA ||
-			episode.state.id === this.estadosEpisodio.AUSENTE)
+			episode.state.id === this.estadosEpisodio.AUSENTE ||
+				episode.state.id === this.estadosEpisodio.LLAMADO)
 			&& this.hasProffesionalRole;
 
 		const showMarkAsAbsent = episode?.canBeAbsent;
 
 		return {
+			call: showCall,
 			newTriage: showNewTriage,
 			attend: showAttend,
 			editPatientEpisode: showEditPatientEpisode,
@@ -121,6 +127,10 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 
 	private editPatientEpisode() {
 		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episode.id}/dashboard/edit`]);
+	}
+
+	private call(){
+		console.log("llamar paciente");
 	}
 
 	private attend() {
@@ -190,9 +200,17 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		const conditions = this.getActionsButtonsConditions(episode);
 		const actions = [
 			{
-				id: 'attend',
+				id: 'call',
 				category: 'call-related',
 				icon: 'call',
+				condition: conditions.call,
+				label: this.translate.instant('guardia.home.episodes.episode.actions.call.TITLE'),
+				callback: () => this.call()
+			},
+			{
+				id: 'attend',
+				category: 'call-related',
+				icon: 'check_circle',
 				condition: conditions.attend,
 				label: this.translate.instant('guardia.home.episodes.episode.actions.atender.TITLE'),
 				callback: () => this.attend(),
@@ -267,6 +285,7 @@ interface EpisodeAction {
 }
 
 interface EpisodeConditions {
+	call: boolean;
 	newTriage: boolean;
 	attend: boolean;
 	editPatientEpisode: boolean;
