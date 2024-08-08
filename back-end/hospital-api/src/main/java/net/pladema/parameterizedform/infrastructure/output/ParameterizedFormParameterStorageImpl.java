@@ -26,7 +26,7 @@ public class ParameterizedFormParameterStorageImpl implements ParameterizedFormP
 	}
 
 	@Override
-	public Optional<ParameterizedFormParameter> findByFormIdIdAndOrder(Integer formId, Short order) {
+	public List<ParameterizedFormParameter> findByFormIdIdAndOrder(Integer formId, Short order) {
 		return parameterizedFormParameterRepository.findByParameterizedFormIdAndOrder(formId, order);
 	}
 
@@ -42,10 +42,11 @@ public class ParameterizedFormParameterStorageImpl implements ParameterizedFormP
 	}
 
 	@Override
-	public void updateOrder(Integer id, Short orderNumber) {
-		parameterizedFormParameterRepository.findById(id).ifPresent(param -> {
-			param.setOrderNumber(orderNumber);
-			parameterizedFormParameterRepository.save(param);
+	public void updateOrder(List<Integer> ids, Short orderNumber) {
+		List<ParameterizedFormParameter> parameters = parameterizedFormParameterRepository.findAllById(ids);
+		parameters.forEach(parameterizedFormParameter -> {
+			parameterizedFormParameter.setOrderNumber(orderNumber);
 		});
+		parameterizedFormParameterRepository.saveAll(parameters);
 	}
 }

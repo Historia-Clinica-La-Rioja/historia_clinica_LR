@@ -9,9 +9,9 @@ public interface ParameterizedFormParameterStorage {
 
 	Optional<ParameterizedFormParameter> findById(Integer id);
 
-	Optional<ParameterizedFormParameter> findByFormIdIdAndOrder(Integer id, Short order);
+	List<ParameterizedFormParameter> findByFormIdIdAndOrder(Integer id, Short order);
 
-	void updateOrder(Integer id, Short orderNumber);
+	void updateOrder(List<Integer> id, Short orderNumber);
 
 	List<Integer> findParameterIdsByFormId(Integer formId);
 

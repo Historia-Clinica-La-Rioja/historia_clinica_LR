@@ -51,7 +51,7 @@ public interface ParameterizedFormParameterRepository extends JpaRepository<Para
 			"FROM ParameterizedFormParameter pfp " +
 			"WHERE pfp.parameterizedFormId = :parameterizedFormId " +
 			"AND pfp.orderNumber = :orderNumber")
-	Optional<ParameterizedFormParameter> findByParameterizedFormIdAndOrder(@Param("parameterizedFormId") Integer parameterizedFormId,
+	List<ParameterizedFormParameter> findByParameterizedFormIdAndOrder(@Param("parameterizedFormId") Integer parameterizedFormId,
 																		   @Param("orderNumber") Short orderNumber);
 
 	@Transactional(readOnly = true)
@@ -59,4 +59,5 @@ public interface ParameterizedFormParameterRepository extends JpaRepository<Para
 			"FROM ParameterizedFormParameter pfp " +
 			"WHERE pfp.parameterId = :parameterId ")
 	Boolean isAssociatedAnActiveParameterizedForm(@Param("parameterId") Integer parameterId);
+
 }

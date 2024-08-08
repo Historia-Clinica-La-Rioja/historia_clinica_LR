@@ -38,5 +38,12 @@ public class ParameterizedFormParameter implements Serializable {
 
 	@Column(name = "order_number", nullable = false)
 	private Short orderNumber;
-	
+
+	public ParameterizedFormParameter(Integer parameterizedFormId, Integer parameterId, Short orderNumber){
+		super();
+		this.parameterizedFormId = parameterizedFormId;
+		this.parameterId = parameterId;
+		this.orderNumber = orderNumber;
+	}
+
 }
