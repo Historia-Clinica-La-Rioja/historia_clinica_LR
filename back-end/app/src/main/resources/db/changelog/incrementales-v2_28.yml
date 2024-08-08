@@ -539,3 +539,15 @@ databaseChangeLog:
               referencedColumnNames: id
               referencedTableName: snomed
               validate: true
+
+    - changeSet:
+        id: triage-addClinicalSpecialtySectorIdColumn
+        comment: Create column clinical_specialty_sector_id in table triage
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: clinical_specialty_sector_id
+                    type: int
+              tableName: triage

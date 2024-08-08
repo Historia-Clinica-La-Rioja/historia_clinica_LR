@@ -42,6 +42,9 @@ public class Triage  extends SGXAuditableEntity<Integer> {
 	@Column(name = "doctors_office_id")
 	private Integer doctorsOfficeId;
 
+	@Column(name = "clinical_specialty_sector_id")
+	private Integer clinicalSpecialtySectorId;
+
 	public Triage(TriageBo triageBo) {
 		this.id = triageBo.getTriageId();
 		this.emergencyCareEpisodeId = triageBo.getEmergencyCareEpisodeId();

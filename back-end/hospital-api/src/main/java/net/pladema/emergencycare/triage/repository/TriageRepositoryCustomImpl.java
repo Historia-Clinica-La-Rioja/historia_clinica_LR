@@ -36,7 +36,8 @@ public class TriageRepositoryCustomImpl implements TriageRepositoryCustom {
                         " td.body_temperature_id, td.crying_excessive, td.muscle_hypertonia_id, " +
                         " td.respiratory_retraction_id,  td.stridor, td.perfusion_id, " +
                         " ece.emergency_care_type_id, " +
-                        " array_agg( tvs.observation_vital_sign_id ) " +
+                        " array_agg( tvs.observation_vital_sign_id ), " +
+						" t.clinical_specialty_sector_id " +
                         "FROM {h-schema}triage AS t " +
                         "JOIN {h-schema}emergency_care_episode AS ece ON (t.emergency_care_episode_id = ece.id) " +
                         "LEFT JOIN {h-schema}triage_details AS td ON (t.id = td.triage_id) " +
@@ -67,7 +68,7 @@ public class TriageRepositoryCustomImpl implements TriageRepositoryCustom {
     }
 
     private Triage triageFromGetAllByEpisodeIdResult(Object[] r) {
-        Triage result = new Triage((Integer) r[0], (Integer) r[1], (String) r[2], (Short) r[3], (Integer) r[4]);
+        Triage result = new Triage((Integer) r[0], (Integer) r[1], (String) r[2], (Short) r[3], (Integer) r[4], (Integer) r[15]);
         result.setCreatedOn(((java.sql.Timestamp) r[5]).toLocalDateTime());
         result.setCreatedBy((Integer) r[6]);
         return result;
