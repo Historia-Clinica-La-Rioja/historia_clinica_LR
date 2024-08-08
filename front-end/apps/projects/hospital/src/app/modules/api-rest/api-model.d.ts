@@ -1660,6 +1660,11 @@ export interface ElectronicSignatureInvolvedDocumentDto {
     signatureStatus: EElectronicSignatureStatus;
 }
 
+export interface EmergencyCareClinicalSpecialtySectorDto {
+    description: string;
+    id: number;
+}
+
 export interface EmergencyCareDocumentHeaderDto {
     bed?: BedDto;
     clinicalSpecialtyName: string;

@@ -1,8 +1,7 @@
 package net.pladema.establishment.controller;
 
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeClinicalServiceSectorValidator;
-import net.pladema.establishment.repository.entity.CareLineInstitution;
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;

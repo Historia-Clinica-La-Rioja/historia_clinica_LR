@@ -1,7 +1,6 @@
 package net.pladema.establishment.controller;
 
 import net.pladema.establishment.controller.constraints.validator.permissions.BackofficeHierarchicalUnitStaffValidator;
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
 import net.pladema.establishment.repository.entity.HierarchicalUnitStaff;
 import net.pladema.sgx.backoffice.rest.AbstractBackofficeController;
 

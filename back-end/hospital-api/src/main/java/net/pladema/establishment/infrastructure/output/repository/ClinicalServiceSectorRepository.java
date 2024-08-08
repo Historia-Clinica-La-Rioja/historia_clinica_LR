@@ -1,6 +1,6 @@
-package net.pladema.establishment.repository;
+package net.pladema.establishment.infrastructure.output.repository;
 
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 
 import net.pladema.staff.repository.entity.ClinicalSpecialty;
 
@@ -52,4 +52,11 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 	Optional<ClinicalSpecialtySector> findByClinicalSpecialtyIdAndSectorId(Integer clinicalSpecialtyId, Integer sectorId);
 
 	Optional<ClinicalSpecialtySector> findByDescriptionAndSectorId(String description, Integer sectorId);
+
+	@Transactional(readOnly = true)
+	@Query(value = " SELECT css FROM  ClinicalSpecialtySector css "
+			+ " JOIN Sector s ON css.sectorId = s.id "
+			+ " WHERE s.sectorTypeId = :sectorTypeId AND s.institutionId = :institutionId")
+	List<ClinicalSpecialtySector> findAllBySectorTypeAndInstitution(@Param("sectorTypeId") Short sectorTypeId,
+																	@Param("institutionId") Integer institutionId);
 }

@@ -1,4 +1,4 @@
-package net.pladema.establishment.repository.entity;
+package net.pladema.establishment.infrastructure.output.entity;
 
 import java.io.Serializable;
 

@@ -1,15 +1,14 @@
 package net.pladema.establishment.controller.constraints.validator.permissions;
 
-import net.pladema.establishment.repository.ClinicalServiceSectorRepository;
+import net.pladema.establishment.infrastructure.output.repository.ClinicalServiceSectorRepository;
 import net.pladema.establishment.repository.SectorRepository;
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import net.pladema.permissions.repository.enums.ERole;
 import net.pladema.sgx.backoffice.permissions.BackofficePermissionValidator;
 import net.pladema.sgx.backoffice.rest.ItemsAllowed;
 import net.pladema.sgx.exceptions.PermissionDeniedException;
 import net.pladema.user.controller.BackofficeAuthoritiesValidator;
 
-import org.springframework.data.domain.Example;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

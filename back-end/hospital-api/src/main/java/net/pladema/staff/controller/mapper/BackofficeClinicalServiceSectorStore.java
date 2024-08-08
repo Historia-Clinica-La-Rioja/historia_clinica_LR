@@ -2,9 +2,9 @@ package net.pladema.staff.controller.mapper;
 
 import net.pladema.establishment.controller.exceptions.BackofficeClinicalServiceSectorEnumException;
 import net.pladema.establishment.controller.exceptions.BackofficeClinicalServiceSectorException;
-import net.pladema.establishment.repository.ClinicalServiceSectorRepository;
+import net.pladema.establishment.infrastructure.output.repository.ClinicalServiceSectorRepository;
 import net.pladema.establishment.repository.VClinicalServiceSectorRepository;
-import net.pladema.establishment.repository.entity.ClinicalSpecialtySector;
+import net.pladema.establishment.infrastructure.output.entity.ClinicalSpecialtySector;
 import net.pladema.establishment.repository.entity.VClinicalServiceSector;
 import net.pladema.sgx.backoffice.repository.BackofficeStore;
 
