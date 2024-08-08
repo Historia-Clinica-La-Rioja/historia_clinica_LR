@@ -58,12 +58,12 @@
                 </span>
             </div>
 
-            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">                
-                <app-button *ngFor="let action of availableActions" 
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <app-button *ngFor="let action of availableActions"
                     id="{{ action.id }}" [buttonType]="ButtonType.RAISED" color="primary"
                     [text]="action.label" (clicked)="action.callback()">
                 </app-button>
-                
+
                 <button *ngIf="sliceActions.length" id="more_actions" mat-icon-button (click)="$event.stopPropagation()"
                         [matMenuTriggerFor]="actions">
                     <mat-icon>more_vert</mat-icon>
