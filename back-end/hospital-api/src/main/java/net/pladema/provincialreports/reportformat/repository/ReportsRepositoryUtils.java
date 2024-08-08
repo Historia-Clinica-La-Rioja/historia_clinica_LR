@@ -19,7 +19,7 @@ public class ReportsRepositoryUtils {
 	// query factory method(s)
 
 	@SuppressWarnings("unchecked")
-	public  <T> List<T> executeQuery(String queryName, Class<T> resultClass, Object... parameters) {
+	public <T> List<T> executeQuery(String queryName, Class<T> resultClass, Object... parameters) {
 		Query query = em.createNamedQuery(queryName, resultClass);
 
 		for (int i = 0; i < parameters.length; i++) {
