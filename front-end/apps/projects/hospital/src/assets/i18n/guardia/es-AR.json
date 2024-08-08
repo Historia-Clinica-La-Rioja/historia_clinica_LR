@@ -91,7 +91,7 @@
 							"SUCCESS": "Episodio con paciente en espera",
 							"ERROR": "Error al cambiar el estado del episodio"
 						},
-						"edit_patient_episode":{
+						"edit_patient_episode": {
 							"TITLE": "Editar episodio"
 						},
 						"edit_patient_description": {
@@ -128,6 +128,9 @@
 				"NO_DATA": "No existen episodios activos",
 				"NO_DATA_FOR_FILTER": "No existen episodios activos para la búsqueda seleccionada",
 				"TITLE": "Episodios de guardia"
+			},
+			"tabs": {
+				"PATIENTS": "Pacientes"
 			},
 			"TITLE": "Guardia de emergencia"
 		},
@@ -264,51 +267,51 @@
 			"FAMILY_HISTORIES": "No refiere antecedentes familiares"
 		},
 		"EDITED": "(Editado) -",
-        "documents-summary": {
-            "reasons": {
-                "TITLE": "Motivo de consulta",
-                "REGISTERED_REASONS": "Motivos de consulta registrados"
-            },
-            "evolutions": {
-                "TITLE": "Evolución"
-            },
-            "specialty": {
-                "TITLE": "Especialidad"
-            },
-            "family-histories": {
-                "NOT_REFERRED": "No refiere antecedentes familiares"
-            },
-            "allergies": {
-                "NOT_REFERRED": "No refiere alergias"
-            },
-            "document-name": {
-                "EVOLUTION_NOTE": "Nota de evolución médica",
-                "TRIAGE": "Triage"
-            },
-            "triage-level": {
-                "TITLE": "Nivel de triage"
-            },
-            "observations": {
-                "TITLE": "Observaciones"
-            },
-            "appearance": {
-                "TITLE": "Apariencia",
-                "TEMPERATURE": "Temperatura",
-                "CRYING_EXCESSIVE": "Llanto sin consuelo",
-                "MUSCULAR_TONE": "Tono muscular"
-            },
-            "breathing": {
-                "TITLE": "Respiración",
-                "BLOOD_OXYGEN_SATURATION": "Saturación de oxígeno",
-                "RESPIRATORY_RATE": "Frecuencia respiratoria",
-                "RESPIRATORY_RETRACTION": "Respiración con tiraje",
-                "STRIDOR": "Respiración con estridor"
-            },
-            "circulation": {
-                "TITLE": "Circulación",
-                "PERFUSION": "Perfusión",
-                "HEART_RATE": "Frecuencia cardíaca"
-            }
-        }
+		"documents-summary": {
+			"reasons": {
+				"TITLE": "Motivo de consulta",
+				"REGISTERED_REASONS": "Motivos de consulta registrados"
+			},
+			"evolutions": {
+				"TITLE": "Evolución"
+			},
+			"specialty": {
+				"TITLE": "Especialidad"
+			},
+			"family-histories": {
+				"NOT_REFERRED": "No refiere antecedentes familiares"
+			},
+			"allergies": {
+				"NOT_REFERRED": "No refiere alergias"
+			},
+			"document-name": {
+				"EVOLUTION_NOTE": "Nota de evolución médica",
+				"TRIAGE": "Triage"
+			},
+			"triage-level": {
+				"TITLE": "Nivel de triage"
+			},
+			"observations": {
+				"TITLE": "Observaciones"
+			},
+			"appearance": {
+				"TITLE": "Apariencia",
+				"TEMPERATURE": "Temperatura",
+				"CRYING_EXCESSIVE": "Llanto sin consuelo",
+				"MUSCULAR_TONE": "Tono muscular"
+			},
+			"breathing": {
+				"TITLE": "Respiración",
+				"BLOOD_OXYGEN_SATURATION": "Saturación de oxígeno",
+				"RESPIRATORY_RATE": "Frecuencia respiratoria",
+				"RESPIRATORY_RETRACTION": "Respiración con tiraje",
+				"STRIDOR": "Respiración con estridor"
+			},
+			"circulation": {
+				"TITLE": "Circulación",
+				"PERFUSION": "Perfusión",
+				"HEART_RATE": "Frecuencia cardíaca"
+			}
+		}
 	}
 }

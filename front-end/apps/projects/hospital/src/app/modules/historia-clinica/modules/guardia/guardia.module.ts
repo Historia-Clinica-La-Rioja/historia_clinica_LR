@@ -24,6 +24,8 @@ import { EmergencyCareDashboardActionsComponent } from './components/emergency-c
 import { EmergencyCareEvolutionsComponent } from './components/emergency-care-evolutions/emergency-care-evolutions.component';
 import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care-evolution-note/emergency-care-evolution-note.component';
 import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
+import { EmergencyCarePatientsSummaryComponent } from './components/emergency-care-patients-summary/emergency-care-patients-summary.component';
+import { EmergencyCareTabsComponent } from './components/emergency-care-tabs/emergency-care-tabs.component';
 import { EmergencyCareTemporaryPatientComponent } from './components/emergency-care-temporary-patient/emergency-care-temporary-patient.component';
 import { EvolutionsSummaryComponent } from './components/evolutions-summary/evolutions-summary.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
@@ -68,6 +70,8 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		AdultGynecologicalTriageComponent,
 		EmergencyCareDashboardActionsComponent,
 		EmergencyCarePatientComponent,
+		EmergencyCarePatientsSummaryComponent,
+		EmergencyCareTabsComponent,
 		EmergencyCareTemporaryPatientComponent,
         EvolutionsSummaryComponent,
 		MedicalDischargeByNurseComponent,

@@ -1,5 +1,5 @@
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Episode } from '../routes/home/home.component';
+import { Episode } from '../components/emergency-care-patients-summary/emergency-care-patients-summary.component';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { Observable } from 'rxjs';
