@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
@@ -300,18 +302,6 @@ public class ReportExcelUtilsService {
 		sourceNoteStyle = createStyle(workbook, (short) 12, false, ICellStyle.HALIGNMENT.CENTER, ICellStyle.VALIGNMENT.TOP);
 	}
 
-	private ICellStyle createStyle(IWorkbook workbook, short fontSize, boolean bold,
-									   ICellStyle.HALIGNMENT hAlign, ICellStyle.VALIGNMENT vAlign) {
-		ICellStyle style = workbook.createStyle();
-		style.setFontSize(fontSize);
-		style.setBold(bold);
-		style.setWrap(false);
-		style.setBorders(true);
-		style.setHAlign(hAlign);
-		style.setVAlign(vAlign);
-		return style;
-	}
-
 	public void newSetSheetDimensions(ISheet sheet) {
 		sheet.autoSizeColumns();
 
@@ -326,6 +316,12 @@ public class ReportExcelUtilsService {
 		for (int columnNumber = 1; columnNumber < 10; columnNumber++) {
 			sheet.setColumnWidth(columnNumber, 125);
 		}
+	}
+
+	public void setCellValue(IRow row, int cellIndex, ICellStyle style, String value) {
+		ICell cell = row.createCell(cellIndex);
+		cell.setCellStyle(style);
+		cell.setCellValue(value);
 	}
 
 	public static String newCurrentDateAsDDMMYYYY(String separator) {
@@ -352,5 +348,17 @@ public class ReportExcelUtilsService {
 	public static String newGetPeriodForFilenameFromDates(LocalDate startDate, LocalDate endDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH_DOT);
 		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
+	}
+
+	private ICellStyle createStyle(IWorkbook workbook, short fontSize, boolean bold,
+								   ICellStyle.HALIGNMENT hAlign, ICellStyle.VALIGNMENT vAlign) {
+		ICellStyle style = workbook.createStyle();
+		style.setFontSize(fontSize);
+		style.setBold(bold);
+		style.setWrap(false);
+		style.setBorders(true);
+		style.setHAlign(hAlign);
+		style.setVAlign(vAlign);
+		return style;
 	}
 }
