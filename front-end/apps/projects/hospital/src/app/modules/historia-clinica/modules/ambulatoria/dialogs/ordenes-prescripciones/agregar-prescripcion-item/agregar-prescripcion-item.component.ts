@@ -398,7 +398,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			observations: [null, [Validators.maxLength(this.TEXT_AREA_MAX_LENGTH)]],
 			studyCategory: [null],
 			quantity: [null],
-			unit: [null]
+			unit: [null],
+			isSuggestCommercialMedicationChecked: [false]
 		});
 
 		if (! this.isHabilitarRecetaDigitalFFActive)
