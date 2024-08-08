@@ -130,11 +130,11 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	}
 
 	private call(){
-		console.log("llamar paciente");
+		this.emergencyCareEpisodeAttend.callOrAttendPatient(this.episode.id, true, true);
 	}
 
 	private attend() {
-		this.emergencyCareEpisodeAttend.attend(this.episode.id, true);
+		this.emergencyCareEpisodeAttend.callOrAttendPatient(this.episode.id, true, false);
 	}
 
 	private editPatientDescription() {

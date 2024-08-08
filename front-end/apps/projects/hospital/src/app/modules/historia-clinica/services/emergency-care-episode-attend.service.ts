@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ApiErrorDto, AttentionPlacesQuantityDto, BedInfoDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { SectorService } from '@api-rest/services/sector.service';
@@ -13,6 +12,7 @@ import { SECTOR_GUARDIA } from '@historia-clinica/modules/guardia/constants/mast
 import { AttentionPlaceDialogComponent } from '@historia-clinica/modules/guardia/dialogs/attention-place-dialog/attention-place-dialog.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { GuardiaRouterService } from '@historia-clinica/modules/guardia/services/guardia-router.service';
+import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -24,17 +24,24 @@ const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 export class EmergencyCareEpisodeAttendService {
 
 	isFromEmergencyCareEpisodeList: boolean = false;
+	isCalling: boolean = false;
 	loadEpisode$ = new BehaviorSubject<boolean>(false);
 
-	constructor(private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+	constructor(
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly sectorService: SectorService,
 		private readonly episodeStateService: EpisodeStateService,
 		private readonly snackBarService: SnackBarService,
 		private readonly guardiaRouterService: GuardiaRouterService,
-		private readonly dialog: MatDialog) {}
+		private readonly dialogAttentionPlaceService: DialogService<AttentionPlaceDialogComponent>,
+		private readonly dialogForOperationDeniedService: DialogService<OperationDeniedComponent>,
+		private readonly dialogForBedAssignmentService: DialogService<BedAssignmentComponent>,
+	) {}
 
-	attend(episodeId: number, isFromEmergencyCareEpisodeList: boolean): void {
+	callOrAttendPatient(episodeId: number, isFromEmergencyCareEpisodeList: boolean, isCalling:boolean ) {
 		this.isFromEmergencyCareEpisodeList = isFromEmergencyCareEpisodeList;
+
+		this.isCalling = isCalling;
 
 		this.emergencyCareEpisodeService.getAdministrative(episodeId).subscribe((response: ResponseEmergencyCareDto) => {
 			const episode: Episode = this.mapToEpisode(response);
@@ -46,12 +53,10 @@ export class EmergencyCareEpisodeAttendService {
 	private setQuantityAttentionPlacesBySectorType(episode: Episode) {
 		this.sectorService.quantityAttentionPlacesBySectorType(SECTOR_GUARDIA).subscribe((quantity: AttentionPlacesQuantityDto) => {
 			if (quantity.shockroom == 0 && quantity.doctorsOffice == 0 && quantity.bed == 0) {
-				return this.dialog.open(OperationDeniedComponent, {
-					autoFocus: false,
-					data: {
-						message: 'No existen lugares disponibles para realizar la atención'
-					}
-				})
+				return this.dialogForOperationDeniedService.open(OperationDeniedComponent,
+					{ dialogWidth: DialogWidth.MEDIUM },
+					{ message: `${TRANSLATE_KEY_PREFIX}.atender.NO_AVAILABLE_PLACES` }
+				)
 			}
 			this.openPlaceAttendDialog(episode, quantity);
 		});
@@ -76,57 +81,82 @@ export class EmergencyCareEpisodeAttendService {
 	}
 
 	private openPlaceAttendDialog(episode: Episode, quantity: AttentionPlacesQuantityDto) {
-		const dialogRef = this.dialog.open(AttentionPlaceDialogComponent, {
-			width: '35%',
-			data: {
-				quantity
-			}
-		});
-
-		dialogRef.afterClosed().subscribe((attendPlace: AttendPlace) => {
+		this.dialogAttentionPlaceService.open(AttentionPlaceDialogComponent,
+			{ dialogWidth: DialogWidth.SMALL },
+			{ quantity, isCall: this.isCalling }
+		)
+		.afterClosed()
+		.subscribe((attendPlace: AttendPlace) => {
 			if (!attendPlace) return;
 
-			if (attendPlace.attentionPlace === AttentionPlace.CONSULTORIO) {
-				this.episodeStateService.attend(episode.id, attendPlace.id).subscribe(changed => {
-					if (changed) {
-						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.toEpisodeOrLoadEpisode(episode);
-					} else {
-						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-					}
-				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
+			const paramsMap = {
+				[AttentionPlace.CONSULTORIO]: { doctorsOfficeId: attendPlace.id, bedId: null, shockroomId: null },
+				[AttentionPlace.SHOCKROOM]: { shockroomId: attendPlace.id, bedId: null, doctorsOfficeId: null },
+				[AttentionPlace.HABITACION]: { shockroomId: null, bedId: null, doctorsOfficeId: null }
+			};
+
+			const params = paramsMap[attendPlace.attentionPlace];
+
+			const attendOrCall = this.isCalling
+			? this.episodeStateService.call(episode.id,params)
+			: this.episodeStateService.attend(episode.id,params);
+
+			const dialogHandlers = {
+			[AttentionPlace.CONSULTORIO]: (attendOrCall, episode) => {
+				attendOrCall.subscribe(
+					response => this.handleResponse(response, episode),
+					(error: ApiErrorDto) => processErrors(error, msg => this.snackBarService.showError(msg))
+				);
+			},
+			[AttentionPlace.SHOCKROOM]: (attendOrCall, episode) => {
+				attendOrCall.subscribe(
+					(response: boolean) => this.handleResponse(response, episode),
+					(error: ApiErrorDto) => processErrors(error, msg => this.snackBarService.showError(msg))
+				);
+			},
+			[AttentionPlace.HABITACION]: (attendOrCall, episode) => {
+				this.dialogForBedAssignmentService.open(BedAssignmentComponent,
+				{ dialogWidth: DialogWidth.LARGE },
+				{ sectorsType: [SECTOR_GUARDIA] })
+				.afterClosed()
+				.subscribe((bed: BedInfoDto) => {
+					if (!bed) return;
+
+					const bedParams = { ...params, bedId: bed.bed.id};
+
+					const bedAttendOrCall = this.isCalling
+                        ? this.episodeStateService.call(episode.id, bedParams)
+                        : this.episodeStateService.attend(episode.id, bedParams);
+
+
+					bedAttendOrCall.subscribe(
+						(response: boolean) => this.handleResponse(response, episode),
+						(error: ApiErrorDto) => processErrors(error, msg => this.snackBarService.showError(msg))
+					);
+				});
 			}
+			};
 
-			if (attendPlace.attentionPlace === AttentionPlace.SHOCKROOM) {
-				this.episodeStateService.attend(episode.id, null, attendPlace.id).subscribe((response: boolean) => {
-					if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
+			const handler = dialogHandlers[attendPlace.attentionPlace];
 
-					this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-					this.toEpisodeOrLoadEpisode(episode);
-
-				}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
-			}
-
-			if (attendPlace.attentionPlace === AttentionPlace.HABITACION) {
-				this.dialog.open(BedAssignmentComponent, {
-						data: {
-							sectorsType: [SECTOR_GUARDIA]
-						}
-					})
-					.afterClosed()
-					.subscribe((bed: BedInfoDto) => {
-						if (!bed) return;
-
-						this.episodeStateService.attend(episode.id, null, null, bed.bed.id).subscribe((response: boolean) => {
-							if (!response) this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-
-							this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-							this.toEpisodeOrLoadEpisode(episode);
-
-						}, (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg)))
-					});
+			if (handler) {
+				handler(attendOrCall, episode);
 			}
 		});
+	}
+
+	private handleResponse(response: boolean, episode: Episode) {
+		this.attendOrCallMessage(response);
+		if (response) {
+			this.toEpisodeOrLoadEpisode(episode);
+		}
+	}
+
+	private attendOrCallMessage(response:boolean) {
+		const status = response ? 'SUCCESS' : 'ERROR';
+		const action = this.isCalling ? 'call' : 'atender';
+
+		this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.${action}.${status}`);
 	}
 
 	private toEpisodeOrLoadEpisode(episode: Episode) {

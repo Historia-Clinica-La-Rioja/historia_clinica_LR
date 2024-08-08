@@ -17,7 +17,6 @@ import { EmergencyCareStateChangedService } from '@historia-clinica/modules/ambu
 import { TriageCategory } from '@historia-clinica/modules/guardia/components/triage-chip/triage-chip.component';
 import { TriageDetails } from '@historia-clinica/modules/guardia/components/triage-details/triage-details.component';
 import { EmergencyCareTypes, EstadosEpisodio } from '@historia-clinica/modules/guardia/constants/masterdata';
-import { SelectConsultorioComponent } from '@historia-clinica/modules/guardia/dialogs/select-consultorio/select-consultorio.component';
 import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/episode-state.service';
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
@@ -230,37 +229,14 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episodeId}/paciente/edit`]);
 	}
 
-	atender(): void {
-
-		const dialogRef = this.dialog.open(SelectConsultorioComponent, {
-			width: '25%',
-			data: { title: 'guardia.select_consultorio.ATENDER' }
-		});
-
-		dialogRef.afterClosed().subscribe(consultorio => {
-			if (consultorio) {
-				this.doctorsOfficeDescription = consultorio?.description;
-				this.episodeStateService.attend(this.episodeId, consultorio.id).subscribe(changed => {
-					if (changed) {
-						this.snackBarService.showSuccess(`${TRANSLATE_KEY_PREFIX}.atender.SUCCESS`);
-						this.setEpisodeState();
-					}
-					else {
-						this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`);
-					}
-				}, _ => this.snackBarService.showError(`${TRANSLATE_KEY_PREFIX}.atender.ERROR`)
-				);
-			}
-		});
-	}
-
 	attend() {
-		this.emergencyCareEpisodeAttend.attend(this.episodeId, false);
+		this.emergencyCareEpisodeAttend.callOrAttendPatient(this.episodeId, false, false);
 		this.setEpisodeState();
 	}
 
 	call(){
-		console.log("llamar paciente");
+		this.emergencyCareEpisodeAttend.callOrAttendPatient(this.episodeId, false, true);
+		this.setEpisodeState();
 	}
 
 	markAsAbsent(){

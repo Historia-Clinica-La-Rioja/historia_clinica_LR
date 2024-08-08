@@ -51,7 +51,6 @@ import { AdministrativeTriageDialogComponent } from './dialogs/administrative-tr
 import { AdultGynecologicalTriageDialogComponent } from './dialogs/adult-gynecological-triage-dialog/adult-gynecological-triage-dialog.component';
 import { AttentionPlaceDialogComponent } from './dialogs/attention-place-dialog/attention-place-dialog.component';
 import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialog/pediatric-triage-dialog.component';
-import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-consultorio.component';
 // services
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
@@ -103,7 +102,6 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		AdministrativeTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,
 		PediatricTriageDialogComponent,
-		SelectConsultorioComponent,
 		EmergencyCareEvolutionsComponent,
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,

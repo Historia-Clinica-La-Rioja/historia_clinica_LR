@@ -4,7 +4,7 @@
     </button>
 </div>
 <div mat-dialog-content>
-    <h1 translate="guardia.dialog.attention_place.TITLE"></h1>
+	<h1> {{dialogTitle | translate}} </h1>
     <h4 translate="guardia.dialog.attention_place.SUBTITLE"></h4>
     <form [formGroup]="form">
         <mat-form-field appearance="outline">
@@ -33,7 +33,7 @@
     </form>
 </div>
 <mat-dialog-actions align="end">
-    <button id="{{currentButton.id}}" mat-flat-button color="primary" (click)="attend()" [disabled]="this.form.invalid">
+    <button id="{{currentButton.id}}" mat-flat-button color="primary" (click)="confirm()" [disabled]="this.form.invalid">
         <span translate="{{currentButton.text}}"></span>
     </button>
 </mat-dialog-actions>

@@ -87,7 +87,8 @@
 						"atender": {
 							"TITLE": "Atender",
 							"SUCCESS": "Estado de episodio actualizado a En atención exitosamente",
-							"ERROR": "Error al actualizar estado de episodio a En atención"
+							"ERROR": "Error al actualizar estado de episodio a En atención",
+							"NO_AVAILABLE_PLACES": "No existen lugares disponibles para realizar la atención"
 						},
 						"mark_as_absent":{
 							"TITLE": "Marcar como ausente",
@@ -261,7 +262,8 @@
 		},
 		"dialog": {
 			"attention_place": {
-				"TITLE": "Atender",
+				"TITLE_ATTEND": "Atender",
+				"TITLE_CALL": "Llamar",
 				"SUBTITLE": "Seleccione el destino donde se atenderá al paciente",
 				"PLACE": "Lugar de atencion",
 				"CONFIRM": "Confirmar",

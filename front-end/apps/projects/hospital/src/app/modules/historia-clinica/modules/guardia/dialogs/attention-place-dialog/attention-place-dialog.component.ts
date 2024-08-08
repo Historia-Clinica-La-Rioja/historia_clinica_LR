@@ -30,6 +30,7 @@ const BED_ASSIGN = {
 })
 export class AttentionPlaceDialogComponent implements OnInit {
 
+	dialogTitle: string;
 	places$: Observable<MasterDataInterface<number>[]>;
 	offices$: Observable<DoctorsOfficeDto[]>;
 	officesTypeaheadOptions$: Observable<TypeaheadOption<DoctorsOfficeDto>[]>;
@@ -45,14 +46,21 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		private readonly shockroomService: ShockroomService,
 		private readonly formBuilder: FormBuilder,
 		private readonly dialogRef: MatDialogRef<AttentionPlaceDialogComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: { quantity: AttentionPlacesQuantityDto },
+		@Inject(MAT_DIALOG_DATA) public data: { quantity: AttentionPlacesQuantityDto, isCall: boolean },
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService
 	) { }
 
 	ngOnInit(): void {
+		this.setDialogTittle();
 		this.places$ = this.emergencyCareMasterDataService.getEmergencyEpisodeSectorType();
 		this.filterPlaces();
 		this.setForm();
+	}
+
+	private setDialogTittle(){
+		this.dialogTitle = this.data.isCall
+            ? 'guardia.dialog.attention_place.TITLE_CALL'
+            : 'guardia.dialog.attention_place.TITLE_ATTEND';
 	}
 
 	verifyPlaceType() {
@@ -86,7 +94,7 @@ export class AttentionPlaceDialogComponent implements OnInit {
 		this.form.get('shockroom').setValue(value);
 	}
 
-	attend() {
+	confirm() {
 		if (this.form.invalid) return;
 
 		const id: number = Number(this.form.get('place').value);
@@ -110,7 +118,10 @@ export class AttentionPlaceDialogComponent implements OnInit {
 			}
 		}
 		this.dialogRef.close(attendPlace);
-		this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION);
+
+		this.data.isCall
+		? this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.LLAMADO)
+		: this.emergencyCareStateChangedService.emergencyCareStateChanged(EstadosEpisodio.EN_ATENCION)
 	}
 
 	private filterPlaces() {
