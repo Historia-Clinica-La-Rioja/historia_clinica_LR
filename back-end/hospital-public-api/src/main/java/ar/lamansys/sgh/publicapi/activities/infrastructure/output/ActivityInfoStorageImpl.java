@@ -48,17 +48,7 @@ public class ActivityInfoStorageImpl implements ActivityInfoStorage {
 				"JOIN {h-schema}procedures p ON p.id = dp.procedure_id " +
 				"JOIN {h-schema}snomed s2 ON p.snomed_id = s2.id " +
 				"WHERE va.id = :activityId AND (p.status_id = " + "CAST(385651009 AS VARCHAR)" +
-				"OR p.status_id = " + " CAST(255594003 AS VARCHAR)) AND p.created_on >= va.performed_date " +
-
-				" UNION ALL " +
-
-				"SELECT s2.pt, s2.sctid, dr.effective_time " +
-				"FROM {h-schema}v_attention va " +
-				"JOIN {h-schema}institution i ON (i.sisa_code = :refsetCode AND va.institution_id = i.id) " +
-				"JOIN {h-schema}diagnostic_report dr ON dr.patient_id = va.patient_id " +
-				"JOIN {h-schema}snomed s2 ON dr.snomed_id = s2.id " +
-				"WHERE va.id = :activityId AND dr.status_id = CAST(261782000 AS VARCHAR) AND dr.created_on >= va.performed_date";
-
+				"OR p.status_id = " + " CAST(255594003 AS VARCHAR)) AND p.created_on >= va.performed_date ";
 
 		Query query = entityManager.createNativeQuery(sqlString)
 				.setParameter("refsetCode", refsetCode)
