@@ -227,9 +227,11 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.AGE');
 			array.push(aggressor.aggressorData.actorPersonalData.age.toString());
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.ADDRESS');
-			array.push(aggressor.aggressorData.actorPersonalData.address);
+			array.push(aggressor.aggressorData.actorPersonalData.address.homeAddress);
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.MUNICIPALTY');
-			array.push(aggressor.aggressorData.actorPersonalData.municipality.description ? aggressor.aggressorData.actorPersonalData.municipality.description : 'Sin información');
+			array.push(aggressor.aggressorData.actorPersonalData.address.municipality.description ? aggressor.aggressorData.actorPersonalData.address.municipality.description : 'Sin información');
+			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.LOCALITY');
+			array.push(aggressor.aggressorData.actorPersonalData.address.city.description ? aggressor.aggressorData.actorPersonalData.address.city.description : 'Sin información');
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.violent-person-information.questions.QUESTION_1');
 			const guns: BasicOption = BasicOptions.find(opt => opt.value === aggressor.hasGuns);
 			array.push(guns.text);

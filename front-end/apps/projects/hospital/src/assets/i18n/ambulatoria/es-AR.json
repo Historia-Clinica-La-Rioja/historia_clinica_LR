@@ -891,6 +891,7 @@
                             "AGE": "Edad",
                             "ADDRESS": "Dirección",
                             "MUNICIPALTY": "Municipio de residencia",
+                            "LOCALITY": "Localidad de residencia",
                             "RELATIONSHIP_WITH_VICTIM": "Vínculo con la persona en situación de violencia",
                             "questions": {
                                 "QUESTION_1": "¿Sabe leer y escribir?",
@@ -976,7 +977,8 @@
                         "ADDRESS": "Domicilio",
                         "PROVINCE": "Provincia",
                         "DEPARTMENT": "Partido",
-                        "LOCALTY": "Municipio de residencia",
+                        "MUNICIPALITY": "Municipio de residencia",
+                        "LOCALITY": "Localidad",
                         "RELATION_PERSON_IN_VIOLENCE_SITUATION": "Vínculo con la persona en situación de violencia",
                         "WHICH_TYPE_RELATION": "¿Qué tipo de vínculo?",
                         "questions": {
