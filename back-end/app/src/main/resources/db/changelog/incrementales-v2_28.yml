@@ -203,4 +203,14 @@ databaseChangeLog:
                 SELECT i.id, m.id, false
                 FROM institution i
                 CROSS JOIN medicine_financing_status m;
-
+                  - changeSet:
+                  
+   - changeSet:
+        id: createIndex-institution-monthly-report
+        author: efernandez
+        changes:
+            - sql:
+                sql: |-
+                    CREATE INDEX IF NOT EXISTS "IDX_document_odontology_diagnostic__document_id" ON document_odontology_diagnostic(document_id);
+                    CREATE INDEX IF NOT EXISTS "IDX_document_health_condition__document_id" ON document_health_condition(document_id);
+                    CREATE INDEX  IF NOT EXISTS "IDX_document_odontology_procedure__document_id" ON document_odontology_procedure(document_id);
