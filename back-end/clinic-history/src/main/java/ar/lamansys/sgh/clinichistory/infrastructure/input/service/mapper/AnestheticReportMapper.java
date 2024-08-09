@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.service.mapper;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.PostCloseAnestheticReportDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnalgesicTechniqueMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnestheticHistoryMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnestheticTechniqueMapper;
@@ -50,6 +51,7 @@ public interface AnestheticReportMapper {
     @Mapping(target = "postAnesthesiaStatus", source = "postAnesthesiaStatus", qualifiedByName = "toPostAnesthesiaStatusBo")
     @Mapping(target = "documentSource", ignore = true)
     @Mapping(target = "documentType", ignore = true)
+    @Mapping(target = "modificationReason", ignore = true)
     AnestheticReportBo fromAnestheticReportDto(AnestheticReportDto anestheticReport);
 
     @Named("fromAnestheticReportBo")
@@ -73,4 +75,31 @@ public interface AnestheticReportMapper {
     @Mapping(target = "measuringPoints", source = "measuringPoints", qualifiedByName = "toListMeasuringPointDto")
     @Mapping(target = "postAnesthesiaStatus", source = "postAnesthesiaStatus", qualifiedByName = "toPostAnesthesiaStatusDto")
     AnestheticReportDto fromAnestheticReportBo(AnestheticReportBo anestheticReport);
+
+    @Named("fromPostCloseAnestheticReportDto")
+    @Mapping(target = "mainDiagnosis", source = "anestheticReport.mainDiagnosis", qualifiedByName = "toHealthConditionBoFromDiagnosisDto")
+    @Mapping(target = "diagnosis", source = "anestheticReport.diagnosis", qualifiedByName = "toListDiagnosisBo")
+    @Mapping(target = "anthropometricData", source = "anestheticReport.anthropometricData", qualifiedByName = "fromAnthropometricDataDto")
+    @Mapping(target = "riskFactors", source = "anestheticReport.riskFactors", qualifiedByName = "fromRiskFactorDto")
+    @Mapping(target = "anestheticHistory", source = "anestheticReport.anestheticHistory", qualifiedByName = "toAnestheticHistoryBo")
+    @Mapping(target = "medications", source = "anestheticReport.medications", qualifiedByName = "toListMedicationBo")
+    @Mapping(target = "preMedications", source = "anestheticReport.preMedications", qualifiedByName = "toListAnestheticSubstanceBo")
+    @Mapping(target = "histories", source = "anestheticReport.histories", qualifiedByName = "toListHealthConditionBo")
+    @Mapping(target = "procedureDescription", source = "anestheticReport.procedureDescription", qualifiedByName = "toProcedureDescriptionBo")
+    @Mapping(target = "anestheticPlans", source = "anestheticReport.anestheticPlans", qualifiedByName = "toListAnestheticSubstanceBo")
+    @Mapping(target = "analgesicTechniques", source = "anestheticReport.analgesicTechniques", qualifiedByName = "toListAnalgesicTechniqueBo")
+    @Mapping(target = "anestheticTechniques", source = "anestheticReport.anestheticTechniques", qualifiedByName = "toListAnestheticTechniqueBo")
+    @Mapping(target = "fluidAdministrations", source = "anestheticReport.fluidAdministrations", qualifiedByName = "toListAnestheticSubstanceBo")
+    @Mapping(target = "anestheticAgents", source = "anestheticReport.anestheticAgents", qualifiedByName = "toListAnestheticSubstanceBo")
+    @Mapping(target = "nonAnestheticDrugs", source = "anestheticReport.nonAnestheticDrugs", qualifiedByName = "toListAnestheticSubstanceBo")
+    @Mapping(target = "antibioticProphylaxis", source = "anestheticReport.antibioticProphylaxis", qualifiedByName = "toListAnestheticSubstanceBo")
+    @Mapping(target = "procedureDescription.foodIntake", source = "anestheticReport.foodIntake.clockTime")
+    @Mapping(target = "measuringPoints", source = "anestheticReport.measuringPoints", qualifiedByName = "toListMeasuringPointBo")
+    @Mapping(target = "postAnesthesiaStatus", source = "anestheticReport.postAnesthesiaStatus", qualifiedByName = "toPostAnesthesiaStatusBo")
+    @Mapping(target = "documentSource", ignore = true)
+    @Mapping(target = "documentType", ignore = true)
+    @Mapping(target = "modificationReason", source = "modificationReason")
+    @Mapping(target = "previousDocumentId", source = "previousDocumentId")
+    @Mapping(target = "surgeryProcedures", source = "anestheticReport.surgeryProcedures")
+    AnestheticReportBo fromPostCloseAnestheticReportDto(PostCloseAnestheticReportDto anestheticReport);
 }

@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -73,5 +74,20 @@ public class AnestheticReportController {
         AnestheticReportDto result = anestheticReportMapper.fromAnestheticReportBo(anestheticReport);
         log.trace("Output -> {}", result);
         return result;
+    }
+
+    @PutMapping("/close")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    public Integer edit(@PathVariable(name = "institutionId") Integer institutionId,
+                        @Valid @RequestBody PostCloseAnestheticReportDto anestheticReportDto) {
+        log.trace("Input parameters -> institutionId {}, anestheticReport {}", institutionId, anestheticReportDto);
+
+        AnestheticReportBo anestheticReport = anestheticReportMapper.fromPostCloseAnestheticReportDto(anestheticReportDto);
+        anestheticReport.setInstitutionId(institutionId);
+        anestheticReport.setConfirmed(true);
+        Integer anestheticReportId = supportAnestheticReport.run(anestheticReport);
+
+        log.trace("Output -> {}", anestheticReportId);
+        return anestheticReportId;
     }
 }

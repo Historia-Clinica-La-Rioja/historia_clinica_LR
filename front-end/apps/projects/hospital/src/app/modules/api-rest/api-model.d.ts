@@ -3993,6 +3993,12 @@ export interface PostAnesthesiaStatusDto {
     vomiting?: boolean;
 }
 
+export interface PostCloseAnestheticReportDto {
+    anestheticReport: AnestheticReportDto;
+    modificationReason: string;
+    previousDocumentId: number;
+}
+
 export interface PracticeDto {
     coverage: boolean;
     coverageText: string;
