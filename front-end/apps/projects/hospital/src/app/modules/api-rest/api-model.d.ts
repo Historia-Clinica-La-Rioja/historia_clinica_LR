@@ -5372,6 +5372,12 @@ export interface ViolenceReportActorDto<T> {
     relationshipWithVictim: T;
 }
 
+export interface ViolenceReportAddressDto {
+    city: CityDto;
+    homeAddress: string;
+    municipality: DepartmentDto;
+}
+
 export interface ViolenceReportAggressorDto {
     aggressorData: ViolenceReportActorDto<EAggressorRelationship>;
     hasBeenTreated: boolean;
@@ -5428,11 +5434,10 @@ export interface ViolenceReportInstitutionalizedDto {
 }
 
 export interface ViolenceReportPersonDto {
-    address: string;
+    address: ViolenceReportAddressDto;
     age: number;
     firstName: string;
     lastName: string;
-    municipality: DepartmentDto;
 }
 
 export interface ViolenceReportSituationDto {

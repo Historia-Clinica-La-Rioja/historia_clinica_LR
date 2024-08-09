@@ -1,5 +1,5 @@
 databaseChangeLog: 
-    - logicalFilePath: incrementales-v2_28 
+    - logicalFilePath: incrementales-v2_28
 
     - changeSet:
           id: replaceView-v_clinic_history_17
@@ -213,3 +213,25 @@ databaseChangeLog:
                     CREATE INDEX IF NOT EXISTS "IDX_document_odontology_diagnostic__document_id" ON document_odontology_diagnostic(document_id);
                     CREATE INDEX IF NOT EXISTS "IDX_document_health_condition__document_id" ON document_health_condition(document_id);
                     CREATE INDEX  IF NOT EXISTS "IDX_document_odontology_procedure__document_id" ON document_odontology_procedure(document_id);
+
+    - changeSet:
+        id: addColumn-city_id-to-violence_report_aggressor
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report_aggressor
+              columns:
+                - column:
+                    name: city_id
+                    type: int
+
+    - changeSet:
+        id: addColumn-city_id-to-violence_report_keeper
+        author: mmalyvarni
+        changes:
+          - addColumn:
+              tableName: violence_report_keeper
+              columns:
+                - column:
+                    name: city_id
+                    type: int

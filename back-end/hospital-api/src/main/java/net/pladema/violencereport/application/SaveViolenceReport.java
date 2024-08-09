@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
-import ar.lamansys.sgx.shared.exceptions.NotFoundException;
 import net.pladema.cipres.domain.SnomedBo;
 
 import org.springframework.stereotype.Service;
@@ -326,8 +325,9 @@ public class SaveViolenceReport {
 		reportAggressor.setFirstName(aggressor.getAggressorData().getFirstName());
 		reportAggressor.setLastName(aggressor.getAggressorData().getLastName());
 		reportAggressor.setAge(aggressor.getAggressorData().getAge());
-		reportAggressor.setAddress(aggressor.getAggressorData().getAddress());
-		reportAggressor.setMunicipalityId(aggressor.getAggressorData().getMunicipalityId());
+		reportAggressor.setAddress(aggressor.getAggressorData().getAddress().getHomeAddress());
+		reportAggressor.setCityId(aggressor.getAggressorData().getAddress().getCityId());
+		reportAggressor.setMunicipalityId(aggressor.getAggressorData().getAddress().getMunicipalityId());
 		reportAggressor.setRelationshipWithVictimId(aggressor.getAggressorData().getRelationshipWithVictimId());
 		reportAggressor.setOtherRelationShipWithVictim(aggressor.getAggressorData().getOtherRelationshipWithVictim());
 		reportAggressor.setHasGuns(aggressor.getHasGuns());
@@ -398,8 +398,9 @@ public class SaveViolenceReport {
 		keeper.setFirstName(keeperData.getFirstName());
 		keeper.setLastName(keeperData.getLastName());
 		keeper.setAge(keeperData.getAge());
-		keeper.setAddress(keeperData.getAddress());
-		keeper.setMunicipalityId(keeperData.getMunicipalityId());
+		keeper.setAddress(keeperData.getAddress().getHomeAddress());
+		keeper.setCityId(keeperData.getAddress().getCityId());
+		keeper.setMunicipalityId(keeperData.getAddress().getMunicipalityId());
 		keeper.setRelationshipWithVictimId(keeperData.getRelationshipWithVictimId());
 		keeper.setOtherRelationshipWithVictim(keeperData.getOtherRelationshipWithVictim());
 		return keeper;

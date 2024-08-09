@@ -17,50 +17,54 @@ public class ViolenceReportActorBo {
 
 	private Short age;
 
-	private String address;
-
-	private Short provinceId;
-
-	private Short municipalityId;
-
-	private String municipalityName;
+	private ViolenceReportAddressBo address;
 
 	private Short relationshipWithVictimId;
 
 	private String otherRelationshipWithVictim;
 
-	public ViolenceReportActorBo(String lastName, String firstName, Short age, String address, Short municipalityId, String municipalityName, Short relationshipWithVictimId,
+	public ViolenceReportActorBo(String lastName, String firstName, Short age, String homeAddress, Short municipalityId,
+								 String municipalityName, Integer cityId, String cityName, Short relationshipWithVictimId,
 								 String otherRelationshipWithVictim) {
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.age = age;
-		this.address = address;
-		this.municipalityId = municipalityId;
-		this.municipalityName = municipalityName;
+		this.address = initializeAddress(null, municipalityId, municipalityName, cityId, cityName, homeAddress);
 		this.relationshipWithVictimId = relationshipWithVictimId;
 		this.otherRelationshipWithVictim = otherRelationshipWithVictim;
 	}
 
-	public ViolenceReportActorBo(String lastName, String firstName, Short age, String address, Short provinceId, Short municipalityId, String municipalityName,
+	public ViolenceReportActorBo(String lastName, String firstName, Short age, String homeAddress, Short provinceId, Short municipalityId,
+								 String municipalityName, Integer cityId, String cityName, Short relationshipWithVictimId,
+								 String otherRelationshipWithVictim) {
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.age = age;
+		this.address = initializeAddress(provinceId, municipalityId, municipalityName, cityId, cityName, homeAddress);
+		this.relationshipWithVictimId = relationshipWithVictimId;
+		this.otherRelationshipWithVictim = otherRelationshipWithVictim;
+	}
+
+	public ViolenceReportActorBo(String lastName, String firstName, Short age, String homeAddress, Short municipalityId, Integer cityId,
 								 Short relationshipWithVictimId, String otherRelationshipWithVictim) {
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.age = age;
-		this.address = address;
-		this.provinceId = provinceId;
-		this.municipalityId = municipalityId;
-		this.municipalityName = municipalityName;
+		this.address = initializeAddress(null, municipalityId, null, cityId, null, homeAddress);
 		this.relationshipWithVictimId = relationshipWithVictimId;
 		this.otherRelationshipWithVictim = otherRelationshipWithVictim;
 	}
 
-	public ViolenceReportActorBo(String lastName, String firstName, Short age, String address, Short municipalityId, Short relationshipWithVictimId, String otherRelationshipWithVictim) {
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.age = age;
-		this.address = address;
-		this.municipalityId = municipalityId;
-		this.relationshipWithVictimId = relationshipWithVictimId;
-		this.otherRelationshipWithVictim = otherRelationshipWithVictim;
+	private ViolenceReportAddressBo initializeAddress(Short provinceId, Short municipalityId, String municipalityName, Integer cityId,
+													  String cityName, String homeAddress) {
+		return ViolenceReportAddressBo.builder()
+				.provinceId(provinceId)
+				.municipalityId(municipalityId)
+				.municipalityName(municipalityName)
+				.cityId(cityId)
+				.cityName(cityName)
+				.homeAddress(homeAddress)
+				.build();
 	}
+
 }

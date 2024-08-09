@@ -182,8 +182,8 @@ public class GetEditViolenceReportById {
 	private void getKeeper(Integer reportId, ViolenceReportBo violenceReport) {
 		final Short NO_PROVINCE_ID = 99;
 		ViolenceReportActorBo keeper = violenceReportKeeperRepository.getKeeperByReportId(reportId);
-		if (keeper != null && keeper.getMunicipalityId() == null)
-			keeper.setProvinceId(NO_PROVINCE_ID);
+		if (keeper != null && keeper.getAddress().getMunicipalityId() == null)
+			keeper.getAddress().setProvinceId(NO_PROVINCE_ID);
 		violenceReport.getVictimData().setKeeperData(keeper);
 	}
 
