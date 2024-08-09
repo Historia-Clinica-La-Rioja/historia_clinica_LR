@@ -4,6 +4,7 @@ package net.pladema.clinichistory.requests.controller.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 
 import javax.annotation.Nullable;
 import javax.validation.Valid;
@@ -39,4 +40,10 @@ public class PrescriptionDto implements Serializable {
 
 	@Nullable
 	private String observations;
+
+	@Nullable
+	private EStudyType studyType;
+
+	@Nullable
+	private Boolean requiresTechnician;
 }

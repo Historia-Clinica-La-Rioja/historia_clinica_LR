@@ -77,6 +77,8 @@ public class CreateServiceRequestServiceImpl implements CreateServiceRequestServ
 		newServiceRequest.setSourceId(serviceRequestBo.getAssociatedSourceId());
 		newServiceRequest.setObservations(serviceRequestBo.getObservations());
 		newServiceRequest.setUuid(UUID.randomUUID());
+		newServiceRequest.setStudyType(serviceRequestBo.getStudyTypeId());
+		newServiceRequest.setRequiresTechnician(serviceRequestBo.getRequiresTechnician());
         return this.serviceRequestRepository.save(newServiceRequest);
     }
 }

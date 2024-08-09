@@ -11,6 +11,7 @@ import net.pladema.clinichistory.hospitalization.service.servicerequest.CreateIn
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionDto;
 import net.pladema.clinichistory.requests.controller.dto.PrescriptionItemDto;
 import net.pladema.clinichistory.requests.servicerequests.controller.mapper.StudyMapper;
+import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 import net.pladema.events.EHospitalApiTopicDto;
 
 import net.pladema.events.HospitalApiPublisher;
@@ -74,7 +75,9 @@ public class InternmentServiceRequestController {
 					categoryId,
 					serviceRequestListDto.getMedicalCoverageId(),
 					studyListDto,
-					serviceRequestListDto.getObservations());
+					serviceRequestListDto.getObservations(),
+					serviceRequestListDto.getStudyType().getId(),
+					serviceRequestListDto.getRequiresTechnician());
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createInternmentServiceRequestService.execute(serviceRequestBo);
 			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId) );
@@ -93,7 +96,7 @@ public class InternmentServiceRequestController {
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
 	}
 
-	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations){
+	public GenericServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations, Short studyType, Boolean requiresTechnician){
 		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
 		GenericServiceRequestBo result = new GenericServiceRequestBo();
 		result.setCategoryId(categoryId);
@@ -101,7 +104,10 @@ public class InternmentServiceRequestController {
 		result.setDoctorId(doctorId);
 		result.setDiagnosticReports(studyMapper.parseToList(studies));
 		result.setObservations(observations);
+		result.setStudyTypeId(studyType);
+		result.setRequiresTechnician(requiresTechnician);
 		log.debug("Output -> {}", result);
 		return result;
 	}
+
 }

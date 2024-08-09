@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.clinichistory.requests.repository.entity.RequestIntentStatus;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -61,9 +62,15 @@ public class ServiceRequest extends SGXAuditableEntity<Integer> {
 
 	@Column(name = "observations", columnDefinition = "TEXT")
 	private String observations;
-	
+
 	@Column(name = "uuid")
 	private UUID uuid;
+
+	@Column(name = "study_type_id")
+	private Short studyType;
+
+	@Column(name = "requires_technician")
+	private Boolean requiresTechnician;
 
 	public ServiceRequest(Integer institutionId,
 						  Integer patientId,

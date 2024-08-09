@@ -3988,6 +3988,8 @@ export interface PrescriptionDto extends Serializable {
     medicalCoverageId?: number;
     observations?: string;
     repetitions?: number;
+    requiresTechnician?: boolean;
+    studyType?: EStudyType;
 }
 
 export interface PrescriptionItemDto extends Serializable {
@@ -6145,6 +6147,11 @@ export const enum ESignatureStatus {
     PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
     SIGNED = "SIGNED",
+}
+
+export const enum EStudyType {
+    ROUTINE = "ROUTINE",
+    URGENT = "URGENT",
 }
 
 export const enum ESurfacePositionDto {

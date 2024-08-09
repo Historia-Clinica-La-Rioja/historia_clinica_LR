@@ -1,6 +1,5 @@
 package net.pladema.clinichistory.outpatient.createservicerequest.controller;
 
-import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,7 +66,13 @@ public class OutpatientServiceRequestController {
 		ArrayList<Integer> result = new ArrayList<>();
 
 		srGroupBy.forEach((categoryId, studyListDto) -> {
-			ExtendedServiceRequestBo serviceRequestBo = this.parseTo(studyMapper, doctorId, patientDto, categoryId, serviceRequestListDto.getMedicalCoverageId(), studyListDto, serviceRequestListDto.getObservations());
+			ExtendedServiceRequestBo serviceRequestBo = studyMapper.toExtendedServiceRequestBo(
+					patientDto,
+					doctorId,
+					categoryId,
+					serviceRequestListDto,
+					studyListDto
+			);
 			serviceRequestBo.setInstitutionId(institutionId);
 			Integer srId = createOutpatientServiceRequestService.execute(serviceRequestBo);
 			hospitalApiPublisher.publish(serviceRequestBo.getPatientId(), institutionId, getTopicToPublish(categoryId));
@@ -84,19 +89,6 @@ public class OutpatientServiceRequestController {
 		if (categoryId.equals("363679005"))
 			return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST__IMAGE;
 		return EHospitalApiTopicDto.CLINIC_HISTORY__HOSPITALIZATION__SERVICE_RESQUEST;
-	}
-
-	private ExtendedServiceRequestBo parseTo(StudyMapper studyMapper, Integer doctorId, BasicPatientDto patientDto, String categoryId, Integer medicalCoverageId, List<PrescriptionItemDto> studies, String observations){
-		log.debug("parseTo -> doctorId {}, patientDto {}, medicalCoverageId {}, studies {} ", doctorId, patientDto, medicalCoverageId, studies);
-		ExtendedServiceRequestBo result = new ExtendedServiceRequestBo();
-		result.setCategoryId(categoryId);
-		result.setPatientInfo(new PatientInfoBo(patientDto.getId(), patientDto.getPerson().getGender().getId(), patientDto.getPerson().getAge()));
-		result.setDoctorId(doctorId);
-		result.setMedicalCoverageId(medicalCoverageId);
-		result.setDiagnosticReports(studyMapper.parseToList(studies));
-		result.setObservations(observations);
-		log.debug("Output -> {}", result);
-		return result;
 	}
 
 }

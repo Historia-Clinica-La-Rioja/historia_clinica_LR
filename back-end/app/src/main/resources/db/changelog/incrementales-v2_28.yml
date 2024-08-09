@@ -2,6 +2,25 @@ databaseChangeLog:
     - logicalFilePath: incrementales-v2_28
 
     - changeSet:
+        id: addColumn-study-type-and-require-tech-to-service-request
+        author: lvenere
+        changes:
+          - addColumn:
+              tableName: service_request
+              columns:
+                - column:
+                    name: study_type_id
+                    type: smallint
+                    constraints:
+                      nullable: true
+                - column:
+                    name: requires_technician
+                    type: boolean
+                    constraints:
+                      nullable: true
+
+
+    - changeSet:
           id: replaceView-v_clinic_history_17
           author: mromero
           changes:

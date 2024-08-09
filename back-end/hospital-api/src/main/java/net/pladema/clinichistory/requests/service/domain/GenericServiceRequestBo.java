@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.pladema.clinichistory.requests.servicerequests.domain.enums.EStudyType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,10 @@ public class GenericServiceRequestBo {
 	private LocalDateTime requestDate = LocalDateTime.now();
 
 	private String observations;
+
+	private Short studyTypeId;
+
+	private Boolean requiresTechnician;
 
 	public Integer getPatientId() {
 		if (patientInfo != null)
