@@ -1,3 +1,13 @@
 databaseChangeLog: 
     - logicalFilePath: incrementales-v2_28 
 
+    - changeSet:
+          id: replaceView-v_clinic_history_17
+          author: mromero
+          changes:
+              - sqlFile:
+                    encoding: UTF-8
+                    path: data/v_clinic_history/create_v_clinic_history_17.sql
+                    relativeToChangelogFile: true
+                    splitStatements: false
+
