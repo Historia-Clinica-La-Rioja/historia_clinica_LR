@@ -78,6 +78,7 @@ public class TriageBo implements IDocumentBo {
 
 	private ProfessionalPersonBo creator;
 
+	private Integer clinicalSpecialtySectorId;
 
     public TriageBo(TriageVo triageVo) {
         this.triageId = triageVo.getId();
@@ -92,6 +93,7 @@ public class TriageBo implements IDocumentBo {
         this.createdOn = triageVo.getCreatedOn();
         this.riskFactorIds = triageVo.getRiskFactorIds();
 		this.encounterId = triageVo.getEmergencyCareEpisodeId();
+		this.clinicalSpecialtySectorId = triageVo.getClinicalSpecialtySectorId();
     }
 
 	public TriageBo(Triage triage){
@@ -101,6 +103,7 @@ public class TriageBo implements IDocumentBo {
 		this.categoryId = triage.getTriageCategoryId();
 		this.doctorsOfficeId = triage.getDoctorsOfficeId();
 		this.createdBy = triage.getCreatedBy();
+		this.clinicalSpecialtySectorId = triage.getClinicalSpecialtySectorId();
 	}
 
     public boolean isAdultGynecological() {

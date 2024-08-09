@@ -5253,6 +5253,7 @@ export interface TriageDocumentDto {
 
 export interface TriageDto extends Serializable {
     categoryId: number;
+    clinicalSpecialtySectorId?: number;
     doctorsOfficeId?: number;
     reasons?: OutpatientReasonDto[];
 }

@@ -28,8 +28,8 @@ public class TriagePediatricDto extends TriageNoAdministrativeDto {
 
     @Builder(builderMethodName = "pediatricBuilder")
     public TriagePediatricDto(Short categoryId, Integer doctorsOfficeId, String notes,
-                              AppearanceDto appearance, BreathingDto breathing, CirculationDto circulation, List<OutpatientReasonDto> reasons){
-        super(categoryId, doctorsOfficeId, notes, reasons);
+                              AppearanceDto appearance, BreathingDto breathing, CirculationDto circulation, List<OutpatientReasonDto> reasons, Integer clinicalSpecialtySectorId){
+        super(categoryId, doctorsOfficeId, notes, reasons, clinicalSpecialtySectorId);
         this.appearance = appearance;
         this.breathing = breathing;
         this.circulation = circulation;

@@ -51,5 +51,6 @@ public class Triage  extends SGXAuditableEntity<Integer> {
 		this.notes = triageBo.getNotes() != null ? triageBo.getNotes().getOtherNote() : null;
 		this.triageCategoryId = triageBo.getCategoryId();
 		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
+		this.clinicalSpecialtySectorId = triageBo.getClinicalSpecialtySectorId();
 	}
 }
