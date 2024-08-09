@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationAllergyState;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import net.pladema.clinichistory.hospitalization.application.validateanestheticreport.ValidateHospitalizationAnestheticReport;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -22,17 +23,16 @@ import net.pladema.clinichistory.hospitalization.service.InternmentEpisodeServic
 import net.pladema.patient.service.domain.MedicalCoverageBo;
 import net.pladema.patient.service.domain.PatientMedicalCoverageBo;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
+@Service
 public class SharedHospitalizationPortImpl implements SharedHospitalizationPort {
 
 	private final InternmentEpisodeService internmentEpisodeService;
-
 	private final FetchHospitalizationAllergyState fetchHospitalizationAllergyState;
-
 	private final InternmentPatientService internmentPatientService;
 	private final PatientExternalService patientExternalService;
+	private final ValidateHospitalizationAnestheticReport validateHospitalizationAnestheticReport;
 
 	@Override
 	public Optional<ExternalPatientCoverageDto> getActiveEpisodeMedicalCoverage(Integer internmentEpisodeId) {
@@ -86,6 +86,13 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 		return result;
 	}
 
+	@Override
+	public Boolean validateHospitalizationAnestheticReport(Long documentId, String reason) {
+		log.debug("Input parameters -> documentId {}", documentId);
+		validateHospitalizationAnestheticReport.run(documentId, reason);
+		log.debug("Output -> {}", true);
+		return true;
+	}
 
 	private ExternalPatientCoverageDto mapToExternalPatientCoverageDto(PatientMedicalCoverageBo bo) {
 		MedicalCoverageBo medicalCoverage = bo.getMedicalCoverage();

@@ -14,4 +14,6 @@ public interface AnestheticReportStorage {
     Long getDocumentIdFromLastAnestheticReportDraft(Integer internmentEpisodeId);
 
     String getAntestheticChart(Long documentId);
+
+    Boolean validateAnestheticReport(Long documentId, String reason);
 }

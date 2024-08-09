@@ -1,7 +1,7 @@
 package ar.lamansys.sgh.clinichistory.domain.document.impl;
 
+import ar.lamansys.sgh.clinichistory.domain.document.IEditableDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
-import ar.lamansys.sgh.clinichistory.domain.document.IDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.PatientInfoBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnalgesicTechniqueBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticHistoryBo;
@@ -40,7 +40,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class AnestheticReportBo implements IDocumentBo {
+public class AnestheticReportBo implements IEditableDocumentBo {
 
     private Integer businessObjectId;
 
@@ -111,6 +111,12 @@ public class AnestheticReportBo implements IDocumentBo {
     private Short documentSource = SourceType.HOSPITALIZATION;
 
     private Map<String, Object> contextMap;
+
+    private String modificationReason;
+
+    private Integer createdBy;
+
+    private String documentStatusId;
 
     @Override
     public Integer getPatientId() {

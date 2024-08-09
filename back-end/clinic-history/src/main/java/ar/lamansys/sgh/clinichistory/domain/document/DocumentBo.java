@@ -25,6 +25,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -104,6 +106,9 @@ public class DocumentBo implements IDocumentBo {
 
     private Map<String,Object> contextMap;
 
+    private Integer createdBy;
+
+    private Long initialDocumentId;
 
     private String documentStatusId;
 

@@ -17,4 +17,6 @@ public interface SharedHospitalizationPort {
 	LocalDate getEntryLocalDate(Integer internmentEpisodeId);
 
     Optional<Integer> getPatientMedicalCoverageId(Integer internmentEpisodeId);
+
+	Boolean validateHospitalizationAnestheticReport(Long documentId, String reason);
 }

@@ -40,7 +40,7 @@ public class CreateAnestheticReportDocument {
     private final GetChartImage getChartImage;
     private final SharedHospitalizationPort sharedHospitalizationPort;
     private final AnestheticReportValidator anestheticReportValidator;
-    private final CommonDocumentFactory documentFactory;
+    private final CommonDocumentFactory commonDocumentFactory;
     private final AnestheticReportStorage anestheticReportStorage;
     private final ParsePointsToTimeSeries parsePointsToTimeSeries;
     private final GenerateAnestheticChart generateAnestheticChart;
@@ -57,7 +57,7 @@ public class CreateAnestheticReportDocument {
 
         this.generateChart(anestheticReport);
 
-        documentFactory.run(anestheticReport, anestheticReport.isConfirmed());
+        commonDocumentFactory.run(anestheticReport, anestheticReport.isConfirmed());
 
         Integer result = this.saveOrUpdate(anestheticReport);
 

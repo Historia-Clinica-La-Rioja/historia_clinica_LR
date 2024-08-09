@@ -32,6 +32,7 @@ public class GetDocumentHeader {
                     result.setSourceType(new SourceTypeBo(document.getSourceTypeId(), null));
                     result.setClinicalSpecialtyId(document.getClinicalSpecialtyId());
                     result.setInitialDocumentId(document.getInitialDocumentId());
+                    result.setStatusId(document.getStatusId());
                 }));
 
         this.setFirstCreatedOn(result);

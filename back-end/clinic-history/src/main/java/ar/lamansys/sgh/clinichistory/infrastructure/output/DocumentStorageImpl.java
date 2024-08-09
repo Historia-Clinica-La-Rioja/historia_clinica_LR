@@ -56,6 +56,10 @@ public class DocumentStorageImpl implements DocumentStorage {
                 .clinicalSpecialtyId(document.getClinicalSpecialtyId())
                 .patientId(document.getPatientId())
                 .institutionId(document.getInstitutionId())
+                .createdBy(document.getCreatedBy())
+                .confirmed(document.isConfirmed())
+                .initialDocumentId(document.getInitialDocumentId())
+                .documentStatusId(document.getStatusId())
                 .notes(documentObservationsBo)
                 .build();
     }

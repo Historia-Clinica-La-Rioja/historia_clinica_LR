@@ -6,6 +6,7 @@ import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
+import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
     private final AnestheticReportRepository anestheticReportRepository;
     private final SharedStaffPort sharedStaffPort;
     private final DocumentService documentService;
+    private final SharedHospitalizationPort sharedHospitalizationPort;
 
     @Override
     public Integer save(AnestheticReportBo anestheticReport) {
@@ -66,6 +68,11 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
                 .orElse(null);
     }
 
+    @Override
+    public Boolean validateAnestheticReport(Long documentId, String reason) {
+        return sharedHospitalizationPort.validateHospitalizationAnestheticReport(documentId, reason);
+    }
+
     private AnestheticReport mapToEntity(AnestheticReportBo anestheticReport) {
         return AnestheticReport.builder()
                 .id(anestheticReport.getBusinessObjectId())
@@ -93,10 +100,12 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
                 .institutionId(document.getInstitutionId())
                 .patientId(document.getPatientId())
                 .performedDate(document.getCreatedOn())
+                .createdBy(document.getCreatedBy())
                 .anestheticChart(anestheticReport.getAnestheticChart())
                 .confirmed(document.isConfirmed())
                 .initialDocumentId(document.getInitialDocumentId())
                 .patientMedicalCoverageId(anestheticReport.getPatientMedicalCoverageId())
+                .documentStatusId(document.getDocumentStatusId())
                 .build();
     }
 
