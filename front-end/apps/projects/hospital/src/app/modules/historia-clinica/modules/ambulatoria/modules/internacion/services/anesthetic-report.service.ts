@@ -24,6 +24,8 @@ import { AnestheticHistoryDto, AnestheticReportDto, DiagnosisDto, HealthConditio
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
+import { InternmentStateService } from '@api-rest/services/internment-state.service';
+import { InternmentActionsService } from './internment-actions.service';
 
 const TIME_OUT = 5000;
 
@@ -32,6 +34,8 @@ const TIME_OUT = 5000;
 })
 export class AnestheticReportService {
 
+    private mainDiagnosisSource = new Subject();
+	mainDiagnosis$ = this.mainDiagnosisSource.asObservable();
     private diagnosisSource = new Subject();
 	diagnosis$ = this.diagnosisSource.asObservable();
     anesthesicReportProposedSurgeryService: AnestheticReportProposedSurgeryService;
@@ -125,6 +129,8 @@ export class AnestheticReportService {
 		private readonly internacionMasterDataService: InternacionMasterDataService,
 		private readonly anestheticReportDocumentSummaryService: AnestheticReportDocumentSummaryService,
         readonly anesthethicReportService: AnesthethicReportService,
+		private readonly internmentActions: InternmentActionsService,
+		private readonly internmentStateService: InternmentStateService,
     ) { }
 
 	loadAnestheticPreviousData(dialogData: any) {
@@ -133,11 +139,21 @@ export class AnestheticReportService {
 			this.setAnestheticPreviousData(dialogData, viasData);
 		});
 	}
+    
+    private loadMainDiagnosis() {
+        this.internmentStateService.getDiagnosesGeneralState(this.internmentActions.internmentEpisodeId).subscribe(diagnoses => {
+			this.internmentActions.mainDiagnosis = diagnoses.filter(diagnosis => diagnosis.main)[0];
+			if (this.internmentActions.mainDiagnosis)
+				this.internmentActions.mainDiagnosis.isAdded = true;
+            this.mainDiagnosisSource.next(this.internmentActions.mainDiagnosis);
+		})
+    }
 
 	private setAnestheticPreviousData(dialogData: any, viasData: DraftViasArray) {
-		if (dialogData.isDraft) {
+		if (dialogData.isDraft || dialogData.anestheticPartId) {
 			this.anesthethicReportService.getAnestheticReport(dialogData.anestheticPartId).subscribe(data => {
-				if (data) {
+                if (data) {
+                    this.loadMainDiagnosis();
 					this.diagnosisSource.next(data.diagnosis);
 					this.anesthesicReportProposedSurgeryService.setData(data.surgeryProcedures);
 					this.anesthesicReportAnthropometricDataService.setData(data.anthropometricData);
@@ -261,6 +277,20 @@ export class AnestheticReportService {
                 this.resetValues();
             }
         })
+    }
+
+    editAnestheticReport(anestheticReport: AnestheticReportDto, anestheticReportId: number, internmentEpisodeId: number, dockPopupRef: DockPopupRef) {
+        this.anesthethicReportService.editAnestheticReport(anestheticReport, anestheticReportId, internmentEpisodeId).subscribe(
+            success => {
+                this.snackBarService.showSuccess('internaciones.anesthesic-report.SUCCESS');
+                this.setIsLoading(false);
+                dockPopupRef.close({
+                    evolutionClinical: true
+                });
+            },
+            _ => {
+                this.snackBarService.showError('internaciones.anesthesic-report.ERROR')
+            });
     }
 
     getIsAnestheticReportLoading(): Observable<boolean> {

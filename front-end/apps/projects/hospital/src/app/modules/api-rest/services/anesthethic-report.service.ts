@@ -31,4 +31,9 @@ export class AnesthethicReportService {
 		const url = `${this.BASIC_URL}/by-document/${documentId}`;
 		return this.http.get<AnestheticReportDto>(url)
 	}
+
+    editAnestheticReport(anestheticReport: AnestheticReportDto, anestheticReportId: number, internmentEpisodeId: number): Observable<AnestheticReportDto> {
+        const url = `${this.BASIC_URL}/close`;
+		return this.http.post<AnestheticReportDto>(url, anestheticReport);
+    }
 }

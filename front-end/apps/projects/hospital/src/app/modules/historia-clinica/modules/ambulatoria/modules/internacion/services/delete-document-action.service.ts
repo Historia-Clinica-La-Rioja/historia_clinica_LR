@@ -53,6 +53,9 @@ export class DeleteDocumentActionService {
 					case "Parte quirúrgico de internación":
 						this.deleteSurgicalReport(document.id, internmentEpisodeId, reason);
 						break;
+                    case "Parte anestésico":
+                        this.deleteAnestheticReport(document.id, internmentEpisodeId, reason);
+                        break;
 				}
 			}
 		})
@@ -96,4 +99,7 @@ export class DeleteDocumentActionService {
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}
 
+    private deleteAnestheticReport(documentId: number, internmentEpisodeId: number, reason: string) {
+		console.log("Borrando...")
+	}
 }

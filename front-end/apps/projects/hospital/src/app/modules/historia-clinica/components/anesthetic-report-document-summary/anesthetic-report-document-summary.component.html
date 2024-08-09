@@ -3,8 +3,16 @@
         fxLayoutGap="20px">
 
         <app-document-summary-header data-id="summary-header" [headerData]="summary.headerDescription"
-            [isPopUpOpen]="isPopUpOpen"></app-document-summary-header>
+            [isPopUpOpen]="isPopUpOpen" (deleteDocument)="delete()"
+            (editDocument)="edit()"></app-document-summary-header>
         <mat-divider></mat-divider>
+
+        <ng-container *ngIf="_activeDocument?.document?.editedOn">
+            <div fxLayoutGap="5px" data-id="edited-summary" fxLayoutAlign="start center" class="grey edited-summary">
+                <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
+                <span>{{ _activeDocument.document?.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
+            </div>
+        </ng-container>
 
         <div fxFlex="100%" FxLayoutAlign="start" fxLayout="column" fxLayoutGap="36px">
             <app-diagnosis-evolution-summary data-id="diagnosis-summary"
@@ -77,20 +85,12 @@
             <app-end-of-anesthesia-status-summary data-id="end-of-anesthesia-status-summary"
                 [endOfAnesthesiaStatus]="summary.anestheticReport.endOfAnesthesiaStatus"></app-end-of-anesthesia-status-summary>
 
-            <div class="additional-sections">
-                <ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
-                    <button *ngIf="isDraft" id="edit-anesthetic-part-button" class="draft-button" type="button" mat-flat-button
-                        color="primary" (click)="openEditDraft()">
-                        <span [translate]="'internaciones.anesthesic-report.CONTINUE_DRAFT'"></span>
-                    </button>
-                </ng-container>
-                <section *ngIf="isDraft && _activeDocument.document.editedOn" class="edited-section">
-                    <div fxLayoutGap="5px" fxLayoutAlign="start center" class="grey">
-                        <span [translate]="'internaciones.documents-summary.EDITED_DOCUMENT'"></span>
-                        <span>{{ _activeDocument.document.editedOn | viewDateDto: 'localdatetime' | dateFormat: 'datetime' }}</span>
-                    </div>
-                </section>
-            </div>
+            <ng-container *appHasRole="['ESPECIALISTA_MEDICO', 'ESPECIALISTA_EN_ODONTOLOGIA']">
+                <button *ngIf="isDraft" id="edit-anesthetic-part-button" class="draft-button" type="button" mat-flat-button
+                    color="primary" (click)="openEditDraft()">
+                    <span [translate]="'internaciones.anesthesic-report.CONTINUE_DRAFT'"></span>
+                </button>
+            </ng-container>
         </div>
     </div>
     <ng-template #loader>

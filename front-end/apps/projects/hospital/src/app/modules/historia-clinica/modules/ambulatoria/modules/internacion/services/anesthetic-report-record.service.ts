@@ -125,13 +125,16 @@ export class AnestheticReportRecordService {
     }
 
     isEmpty(): boolean {
-        return !(!!this.recordList.length)
+        return !(!!this.recordList.length || !!this.personalRecordForm.value.asa || !!this.personalRecordForm.value.observations)
+    }
+
+    hasRecords(): boolean {
+        return !(!!this.recordList.length);
     }
 
 	setData(records: HealthConditionDto[], procedures: ProcedureDescriptionDto) {
         this.recordList = records.map(record => record.snomed);
         this.dataEmitter.next(this.recordList);
-        this.isEmptySource.next(this.isEmpty());
 
 		if (procedures) {
 			if (procedures.note) {
@@ -141,6 +144,8 @@ export class AnestheticReportRecordService {
 				this.personalRecordForm.get('asa').setValue(procedures.asa);
 			}
 		}
+
+        this.isEmptySource.next(this.isEmpty());
     }
 }
 

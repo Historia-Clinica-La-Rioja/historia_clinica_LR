@@ -358,6 +358,7 @@
 			"SUCCESS": "Parte anestésico guardado correctamente",
 			"SUCCESS_DRAFT": "Borrador parte anestésico guardado correctamente",
 			"CONTINUE_DRAFT": "Seguir editando",
+            "ERROR": "Error al guardar documento de parte anestésico",
 			"diagnosis": {
 				"TITLE": "Diagnósticos",
 				"MAIN_DIAGNOSIS": "Diagnóstico principal",

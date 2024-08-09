@@ -3,12 +3,14 @@ import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.
 import { DocumentsSummaryService } from '@api-rest/services/documents-summary.service';
 import { DocumentSearch } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
 import { DocumentActionsService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/document-actions.service';
+import { InternmentSummaryFacadeService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service';
 import { AnestheticReportDocumentSummaryService, AnestheticReportViewFormat } from '@historia-clinica/services/anesthetic-report-document-summary.service';
 import { DocumentsSummaryMapperService } from '@historia-clinica/services/documents-summary-mapper.service';
 import { HeaderDescription } from '@historia-clinica/utils/document-summary.model';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, forkJoin, map } from 'rxjs';
 
+const ACTION_TRIGGERED = true;
 @Component({
 	selector: 'app-anesthetic-report-document-summary',
 	templateUrl: './anesthetic-report-document-summary.component.html',
@@ -36,6 +38,7 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
         private readonly documentSummaryService: DocumentsSummaryService,
         private readonly documentSummaryMapperService: DocumentsSummaryMapperService,
 		private readonly translateService: TranslateService,
+        private internmentSummaryFacadeService: InternmentSummaryFacadeService,
      ) {
         this.documentName = this.translateService.instant('internaciones.documents-summary.document-name.ANESTHETIC_REPORT');
     }
@@ -56,6 +59,23 @@ export class AnestheticReportDocumentSummaryComponent implements OnInit {
             }}));
         }
     }
+
+    delete() {
+		this.documentActions.deleteDocument(this._activeDocument.document, this.internmentEpisodeId).subscribe(
+			fieldsToUpdate => {
+				if (fieldsToUpdate) {
+					this.internmentSummaryFacadeService.setFieldsToUpdate(fieldsToUpdate);
+					this.internmentSummaryFacadeService.updateInternmentEpisode();
+				}
+                this.resetActiveDocument.emit(ACTION_TRIGGERED);
+			}
+		);
+	}
+
+	edit() {
+		this.documentActions.editDocument(this._activeDocument.document, this.internmentEpisodeId);
+		this.resetActiveDocument.emit(ACTION_TRIGGERED);
+	}
 
 	openEditDraft() {
 		this.documentActions.editAnestheticPartDraft(this._activeDocument.document)

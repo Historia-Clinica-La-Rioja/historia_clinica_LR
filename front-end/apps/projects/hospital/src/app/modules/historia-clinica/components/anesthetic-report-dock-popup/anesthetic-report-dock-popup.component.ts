@@ -1,6 +1,8 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, TimeDto } from '@api-rest/api-model';
+import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
 import { AnestheticReportService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report.service';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
 import { OVERLAY_DATA } from '@presentation/presentation-model';
@@ -23,6 +25,7 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		@Inject(OVERLAY_DATA) public data: any,
 		public dockPopupRef: DockPopupRef,
 		private readonly el: ElementRef,
+		private readonly dialog: MatDialog,
         readonly anesthethicReportHandlerService: AnestheticReportService,
 		private readonly componentEvaluationManagerService: ComponentEvaluationManagerService,
     ) {
@@ -40,6 +43,9 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         })
 
 		this.anesthethicReportHandlerService.loadAnestheticPreviousData(this.data);
+        this.anesthethicReportHandlerService.mainDiagnosis$.subscribe((mainDiagnosis: HealthConditionDto) => {
+            this.mainDiagnosis = mainDiagnosis;
+        })
         this.anesthethicReportHandlerService.diagnosis$.subscribe((diagnosis: DiagnosisDto[]) => {
             this.diagnosis = diagnosis;
             this.componentEvaluationManagerService.diagnosis = this.diagnosis;
@@ -53,10 +59,32 @@ export class AnestheticReportDockPopupComponent implements OnInit {
         const newAnestheticReport: AnestheticReportDto = this.anesthethicReportHandlerService.buildAnestheticReportDto(this.mainDiagnosis, this.diagnosis, this.data.internmentEpisodeId, isDraft);
 
         if (this.anesthethicReportHandlerService.isValidConsultation()) {
-            this.anesthethicReportHandlerService.createAnestheticReport(newAnestheticReport, this.dockPopupRef, isDraft);
+            if (this.data.anestheticPartId && !(this.data.isDraft || isDraft)) {
+                this.openEditReason(newAnestheticReport);
+            } else {
+                this.anesthethicReportHandlerService.createAnestheticReport(newAnestheticReport, this.dockPopupRef, isDraft);
+            }
         } else {
             this.anesthethicReportHandlerService.checkFormErrors(this.el);
         }
+	}
+
+    private openEditReason(anestheticReport: AnestheticReportDto) {
+		const dialogRef = this.dialog.open(DocumentActionReasonComponent, {
+			data: {
+				title: 'internaciones.dialogs.actions-document.EDIT_TITLE',
+				subtitle: 'internaciones.dialogs.actions-document.SUBTITLE',
+			},
+			width: "50vh",
+			autoFocus: false,
+			disableClose: true
+		});
+		dialogRef.afterClosed().subscribe(reason => {
+			if (reason) {
+				/* anestheticReport.modificationReason = reason; */
+				this.anesthethicReportHandlerService.editAnestheticReport(anestheticReport, this.data.anestheticPartId, this.data.internmentEpisodeId, this.dockPopupRef);
+			}
+		});
 	}
 
     onLastFoodIntakeTimeSelected(newLastFoodIntakeTimeSelected: TimeDto) {

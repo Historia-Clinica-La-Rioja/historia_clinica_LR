@@ -132,8 +132,8 @@ export class DocumentsSummaryComponent implements OnInit {
 		this.activeDocument = {
 			document: d.document,
 			canDoAction: {
-				delete: d.document.documentType == this.DOCUMENT_TYPES.ANESTHETIC_REPORT ? false : this.documentActions.canDeleteDocument(d.document),
-				edit: d.document.documentType == this.DOCUMENT_TYPES.ANESTHETIC_REPORT ? false : this.documentActions.canEditDocument(d.document),
+				delete: this.documentActions.canDeleteDocument(d.document),
+				edit: this.documentActions.canEditDocument(d.document),
 			}
 		};
 	}

@@ -38,7 +38,7 @@
 
         <app-new-consultation-expansion-section id="usual-medication-expansion-section"
             [title]="'internaciones.anesthesic-report.usual-medication.TITLE' | translate" icon="assignment"
-            [collapsed]="anesthethicReportHandlerService.isMedicationEmpty$ | async"
+            [collapsed]="true"
             [isEmpty]="anesthethicReportHandlerService.isMedicationEmpty$ | async" [hideBorder]="false">
             <app-anesthetic-report-usual-medication></app-anesthetic-report-usual-medication>
         </app-new-consultation-expansion-section>
