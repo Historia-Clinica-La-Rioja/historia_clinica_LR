@@ -1,6 +1,8 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document;
 
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.CreateAnestheticReportWithEditionSupportConcreteMethod;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.DeleteAnestheticReport;
+import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.DeleteDocumentDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.PostCloseAnestheticReportDto;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.GetAnestheticReport;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +35,7 @@ public class AnestheticReportController {
     private final AnestheticReportMapper anestheticReportMapper;
     private final CreateAnestheticReportWithEditionSupportConcreteMethod supportAnestheticReport;
     private final GetAnestheticReport getAnestheticReport;
+    private final DeleteAnestheticReport deleteAnestheticReport;
 
     @PostMapping("/close")
     @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -89,5 +93,16 @@ public class AnestheticReportController {
 
         log.trace("Output -> {}", anestheticReportId);
         return anestheticReportId;
+    }
+
+    @DeleteMapping("/by-document/{documentId}")
+    @PreAuthorize("hasPermission(#institutionId, 'ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA')")
+    public Boolean deleteById(@PathVariable(name = "institutionId") Integer institutionId,
+                              @PathVariable(name = "documentId") Long documentId,
+                              @RequestBody DeleteDocumentDto deleteDocumentDto) {
+        log.trace("Input parameters -> institutionId {}, deleteDocumentDto {}", institutionId, deleteDocumentDto);
+        deleteAnestheticReport.run(documentId, deleteDocumentDto.getModificationReason());
+        log.trace("Output -> {}", true);
+        return true;
     }
 }

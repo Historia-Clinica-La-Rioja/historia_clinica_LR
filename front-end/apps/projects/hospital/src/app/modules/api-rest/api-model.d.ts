@@ -1178,6 +1178,10 @@ export interface DeleteApiKeyDto {
     name: string;
 }
 
+export interface DeleteDocumentDto {
+    modificationReason: string;
+}
+
 export interface DentalActionDto extends ClinicalTermDto {
     diagnostic: boolean;
     surface: SnomedDto;
