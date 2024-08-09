@@ -1,5 +1,6 @@
 package net.pladema.provincialreports.reportformat.domain.service;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -336,12 +340,12 @@ public class ReportExcelUtilsService {
 		return currentDate.format(DateTimeFormatter.ofPattern(pattern));
 	}
 
-	public static String newPeriodStringFromLocalDates(LocalDate startDate, LocalDate endDate) {
+	public String newPeriodStringFromLocalDates(LocalDate startDate, LocalDate endDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH_SLASH);
 		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
 	}
 
-	public static String newGetPeriodForFilenameFromDates(LocalDate startDate, LocalDate endDate) {
+	public String newGetPeriodForFilenameFromDates(LocalDate startDate, LocalDate endDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_WITH_DOT);
 		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
 	}
@@ -356,5 +360,15 @@ public class ReportExcelUtilsService {
 		style.setHAlign(hAlign);
 		style.setVAlign(vAlign);
 		return style;
+	}
+
+	public ResponseEntity<byte[]> createResponseEntity(IWorkbook wb, String filename) throws Exception {
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		wb.write(outputStream);
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+				.contentType(MediaType.parseMediaType(wb.getContentType()))
+				.body(outputStream.toByteArray());
 	}
 }
