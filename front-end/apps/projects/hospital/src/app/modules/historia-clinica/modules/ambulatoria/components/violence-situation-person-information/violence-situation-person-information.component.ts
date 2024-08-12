@@ -33,6 +33,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 
 	provinces$: Observable<MasterDataDto[]>;
 	departments$: Observable<MasterDataDto[]>;
+	localitys$: Observable<MasterDataDto[]>;
 
 	violenceSituationSub: Subscription;
 
@@ -54,6 +55,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 		address: FormControl<string>,
 		addressProvinceId: FormControl<number>,
 		addressDepartmentId: FormControl<number>,
+		addressLocality: FormControl<number>,
 		relationPersonViolenceSituation: FormControl<EKeeperRelationship>,
 		whichTypeRelation: FormControl<string>,
 	}>;
@@ -99,9 +101,9 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 					this.form.controls.lastname.setValue(victimData.keeperData.actorPersonalData.lastName);
 					this.form.controls.name.setValue(victimData.keeperData.actorPersonalData.firstName);
 					this.form.controls.age.setValue(victimData.keeperData.actorPersonalData.age);
-					this.form.controls.address.setValue(victimData.keeperData.actorPersonalData.address);
-					this.form.controls.addressProvinceId.setValue(victimData.keeperData.actorPersonalData.municipality.provinceId);
-					this.form.controls.addressDepartmentId.setValue(victimData.keeperData.actorPersonalData.municipality.id);
+					this.form.controls.address.setValue(victimData.keeperData.actorPersonalData.address.homeAddress);
+					this.form.controls.addressProvinceId.setValue(victimData.keeperData.actorPersonalData.address.municipality.provinceId);
+					this.form.controls.addressDepartmentId.setValue(victimData.keeperData.actorPersonalData.address.municipality.id);
 					this.setDepartments();
 					this.form.controls.relationPersonViolenceSituation.setValue(victimData.keeperData.relationshipWithVictim);
 					this.form.controls.whichTypeRelation.setValue(victimData.keeperData?.otherRelationshipWithVictim);
@@ -126,6 +128,7 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 			address: new FormControl(null),
 			addressProvinceId: new FormControl(null),
 			addressDepartmentId: new FormControl(null),
+			addressLocality: new FormControl(null),
 			relationPersonViolenceSituation: new FormControl(null),
 			whichTypeRelation: new FormControl(null),
 		});
@@ -150,15 +153,21 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 			},
 			keeperData: {
 				actorPersonalData: {
-					address: this.form.value.address,
 					age: this.form.value.age,
 					firstName: this.form.value.name,
 					lastName: this.form.value.lastname,
-					municipality: {
-						id: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId : null,
-						provinceId: null,
-						description: null
-					},
+					address: {
+						municipality: {
+						  id: this.form.value.addressDepartmentId ? this.form.value.addressDepartmentId : null,
+						  provinceId: null,
+						  description: null
+						},
+						city: {
+						  id: this.form.value.addressLocality ? this.form.value.addressLocality : null,
+						  description: null,
+						},
+						homeAddress: this.form.value.address,
+							  },
 				},
 				otherRelationshipWithVictim: this.form.value.whichTypeRelation,
 				relationshipWithVictim: this.form.value.relationPersonViolenceSituation,
@@ -195,6 +204,10 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 		this.departments$ = this.addressMasterDataService.getDepartmentsByProvince(this.form.value.addressProvinceId);
 	}
 
+	setLocalitys(){
+		this.localitys$ = this.addressMasterDataService.getCitiesByDepartment(this.form.value.addressDepartmentId);
+	  }
+
 	resetAllLocaltyControls(event: Event) {
 		this.resetDepartmentControl(event);
 		this.form.controls.addressProvinceId.reset();
@@ -204,6 +217,11 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 		event.stopPropagation();
 		this.form.controls.addressDepartmentId.reset();
 	}
+
+	resetLocalityControl(event: Event){
+		event.stopPropagation();
+		this.form.controls.addressLocality.reset();
+	  }
 
 	updateValidationsPersonTypeAge() {
 		if (this.form.value.personTypeAge) {
