@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.application.anestheticreport.ports;
+package ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output;
 
 import java.util.Optional;
 
@@ -14,6 +14,4 @@ public interface AnestheticReportStorage {
     Long getDocumentIdFromLastAnestheticReportDraft(Integer internmentEpisodeId);
 
     String getAntestheticChart(Long documentId);
-
-    Boolean validateAnestheticReport(Long documentId, String reason);
 }

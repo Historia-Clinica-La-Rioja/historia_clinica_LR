@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.anestheticreport;
 
-import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AnestheticSubstanceBo;

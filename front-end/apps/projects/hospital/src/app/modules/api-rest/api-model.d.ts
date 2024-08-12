@@ -1609,6 +1609,13 @@ export interface EReferencePriority {
     id: number;
 }
 
+export interface EditableDocumentDto {
+    createdBy: number;
+    createdOn: Date;
+    reason: string;
+    sourceId: number;
+}
+
 export interface EducationLevelDto extends Serializable {
     code: number;
     description: string;

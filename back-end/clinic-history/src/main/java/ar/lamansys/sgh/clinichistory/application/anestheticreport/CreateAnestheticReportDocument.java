@@ -5,7 +5,7 @@ import ar.lamansys.sgh.clinichistory.application.anestheticreport.chart.ParsePoi
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.chart.SaveAnestheticChartAsImage;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.chart.image.GetChartImage;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.chart.image.enums.EImageFileExtension;
-import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.validations.AnestheticReportValidator;
 import ar.lamansys.sgh.clinichistory.application.document.CommonDocumentFactory;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;

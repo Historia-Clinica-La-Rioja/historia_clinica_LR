@@ -18,5 +18,5 @@ public interface SharedHospitalizationPort {
 
     Optional<Integer> getPatientMedicalCoverageId(Integer internmentEpisodeId);
 
-	Boolean validateHospitalizationAnestheticReport(Long documentId, String reason);
+	Boolean validateHospitalizationDocument(EditableDocumentDto editableDocumentDto);
 }

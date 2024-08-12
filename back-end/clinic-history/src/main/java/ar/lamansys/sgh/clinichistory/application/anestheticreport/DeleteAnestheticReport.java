@@ -1,12 +1,12 @@
 package ar.lamansys.sgh.clinichistory.application.anestheticreport;
 
-import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportOutputPort;
+import ar.lamansys.sgh.clinichistory.application.document.DeleteDocument;
+import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.application.getdocumentheader.GetDocumentHeader;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentHeaderBo;
-import ar.lamansys.sgh.clinichistory.domain.document.IEditableDocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.enums.EPreviousDocumentStatus;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedDocumentPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,20 +18,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class DeleteAnestheticReport {
 
     private final GetDocumentHeader getDocumentHeader;
-    private final AnestheticReportStorage anestheticReportStorage;
-    private final SharedDocumentPort sharedDocumentPort;
+    private final AnestheticReportOutputPort anestheticReportOutputPort;
+    private final DeleteDocument deleteDocument;
+    private final DocumentService documentService;
 
     @Transactional
     public void run(Long documentId, String reason) {
-        log.debug("Input parameters -> documentId {}", documentId);
+        log.debug("Input parameters -> documentId {}, reason {}", documentId, reason);
 
         DocumentHeaderBo documentHeaderBo = (DocumentHeaderBo) getDocumentHeader.run(documentId);
-
-        anestheticReportStorage.validateAnestheticReport(documentId, reason);
         AnestheticReportBo document = this.mapTo(documentHeaderBo, reason);
         String nextDocumentStatus = EPreviousDocumentStatus.getNext(document);
-        sharedDocumentPort.deleteDocument(documentId, nextDocumentStatus);
-        sharedDocumentPort.updateDocumentModificationReason(documentId, reason);
+
+        anestheticReportOutputPort.validateAnestheticReport(document);
+        deleteDocument.run(documentId, nextDocumentStatus);
+        documentService.updateDocumentModificationReason(documentId, reason);
 
         log.debug("Output -> {}", true);
     }

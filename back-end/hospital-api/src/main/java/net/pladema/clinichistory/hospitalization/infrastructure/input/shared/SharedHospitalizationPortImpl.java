@@ -8,7 +8,10 @@ import java.util.stream.Collectors;
 import ar.lamansys.sgh.clinichistory.application.fetchHospitalizationState.FetchHospitalizationAllergyState;
 
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.EditableDocumentDto;
 import net.pladema.clinichistory.hospitalization.application.validateanestheticreport.ValidateHospitalizationAnestheticReport;
+import net.pladema.clinichistory.hospitalization.domain.HospitalizationDocumentBo;
+import net.pladema.clinichistory.hospitalization.infrastructure.input.shared.mapper.SharedHospitalizationMapper;
 import net.pladema.clinichistory.hospitalization.service.InternmentPatientService;
 
 import net.pladema.patient.controller.service.PatientExternalService;
@@ -33,6 +36,7 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	private final InternmentPatientService internmentPatientService;
 	private final PatientExternalService patientExternalService;
 	private final ValidateHospitalizationAnestheticReport validateHospitalizationAnestheticReport;
+	private final SharedHospitalizationMapper sharedHospitalizationMapper;
 
 	@Override
 	public Optional<ExternalPatientCoverageDto> getActiveEpisodeMedicalCoverage(Integer internmentEpisodeId) {
@@ -87,11 +91,12 @@ public class SharedHospitalizationPortImpl implements SharedHospitalizationPort 
 	}
 
 	@Override
-	public Boolean validateHospitalizationAnestheticReport(Long documentId, String reason) {
-		log.debug("Input parameters -> documentId {}", documentId);
-		validateHospitalizationAnestheticReport.run(documentId, reason);
-		log.debug("Output -> {}", true);
-		return true;
+	public Boolean validateHospitalizationDocument(EditableDocumentDto editableDocumentDto) {
+		log.debug("Input parameters -> editableDocumentDto {}", editableDocumentDto);
+		HospitalizationDocumentBo hospitalizationDocumentBo = sharedHospitalizationMapper.fromHospitalizationDocumentBo(editableDocumentDto);
+		Boolean result = validateHospitalizationAnestheticReport.run(hospitalizationDocumentBo);
+		log.debug("Output -> {}", result);
+		return result;
 	}
 
 	private ExternalPatientCoverageDto mapToExternalPatientCoverageDto(PatientMedicalCoverageBo bo) {

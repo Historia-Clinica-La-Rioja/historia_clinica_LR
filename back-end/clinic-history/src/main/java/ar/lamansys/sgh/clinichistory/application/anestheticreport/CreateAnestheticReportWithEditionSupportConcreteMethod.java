@@ -1,6 +1,7 @@
 package ar.lamansys.sgh.clinichistory.application.anestheticreport;
 
-import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportOutputPort;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.document.edition.CreateDocumentWithEditionSupportTemplateMethod;
 import ar.lamansys.sgh.clinichistory.application.document.edition.UpdatePreviousDocument;
 import ar.lamansys.sgh.clinichistory.domain.document.IEditableDocumentBo;
@@ -18,18 +19,21 @@ public class CreateAnestheticReportWithEditionSupportConcreteMethod extends Crea
     private final CreateAnestheticReportDocument createAnestheticReportDocument;
     private final SharedPatientPort sharedPatientPort;
     private final AnestheticReportStorage anestheticReportStorage;
+    private final AnestheticReportOutputPort anestheticReportOutputPort;
 
     public CreateAnestheticReportWithEditionSupportConcreteMethod(UpdatePreviousDocument updatePreviousDocument,
                                                                   SetNullIdsIpsVisitor setNullIdsIpsVisitor,
                                                                   GetAnestheticReport getAnestheticReport,
                                                                   CreateAnestheticReportDocument createAnestheticReportDocument,
                                                                   SharedPatientPort sharedPatientPort,
-                                                                  AnestheticReportStorage anestheticReportStorage) {
+                                                                  AnestheticReportStorage anestheticReportStorage,
+                                                                  AnestheticReportOutputPort anestheticReportOutputPort) {
         super(updatePreviousDocument, setNullIdsIpsVisitor);
         this.getAnestheticReport = getAnestheticReport;
         this.createAnestheticReportDocument = createAnestheticReportDocument;
         this.sharedPatientPort = sharedPatientPort;
         this.anestheticReportStorage = anestheticReportStorage;
+        this.anestheticReportOutputPort = anestheticReportOutputPort;
     }
 
     @Override
@@ -48,7 +52,7 @@ public class CreateAnestheticReportWithEditionSupportConcreteMethod extends Crea
 
     @Override
     protected void assertContextValid(IEditableDocumentBo newDocument) {
-        anestheticReportStorage.validateAnestheticReport(newDocument.getPreviousDocumentId(), newDocument.getModificationReason());
+        Boolean result = anestheticReportOutputPort.validateAnestheticReport(newDocument);
     }
 
     @Override

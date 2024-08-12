@@ -1,4 +1,4 @@
-package ar.lamansys.sgh.clinichistory.application.anestheticreport.ports;
+package ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.input;
 
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.AnestheticReportDto;
 

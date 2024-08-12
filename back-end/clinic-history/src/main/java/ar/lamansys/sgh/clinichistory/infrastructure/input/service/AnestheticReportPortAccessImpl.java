@@ -2,7 +2,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.service;
 
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.CreateAnestheticReportDocument;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.GetAnestheticReport;
-import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportAccessPort;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.input.AnestheticReportAccessPort;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.document.dto.AnestheticReportDto;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.service.mapper.AnestheticReportMapper;

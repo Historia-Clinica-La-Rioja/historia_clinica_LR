@@ -1,12 +1,11 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
-import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReport;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.anestheticreport.AnestheticReportRepository;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.entity.Document;
-import ar.lamansys.sgh.shared.infrastructure.input.service.SharedHospitalizationPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedStaffPort;
 import ar.lamansys.sgx.shared.security.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
     private final AnestheticReportRepository anestheticReportRepository;
     private final SharedStaffPort sharedStaffPort;
     private final DocumentService documentService;
-    private final SharedHospitalizationPort sharedHospitalizationPort;
 
     @Override
     public Integer save(AnestheticReportBo anestheticReport) {
@@ -66,11 +64,6 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
         return anestheticReportRepository.findByDocumentId(documentId)
                 .map(AnestheticReport::getAnestheticChart)
                 .orElse(null);
-    }
-
-    @Override
-    public Boolean validateAnestheticReport(Long documentId, String reason) {
-        return sharedHospitalizationPort.validateHospitalizationAnestheticReport(documentId, reason);
     }
 
     private AnestheticReport mapToEntity(AnestheticReportBo anestheticReport) {

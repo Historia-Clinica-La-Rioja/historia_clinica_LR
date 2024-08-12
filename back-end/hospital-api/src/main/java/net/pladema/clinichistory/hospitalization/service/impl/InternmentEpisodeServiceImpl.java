@@ -1,8 +1,6 @@
 package net.pladema.clinichistory.hospitalization.service.impl;
 
-import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.AnestheticReportStorage;
 import ar.lamansys.sgh.clinichistory.application.document.DocumentService;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicDataPersonDto;
 import ar.lamansys.sgx.shared.auditable.entity.Updateable;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -23,6 +21,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.clinichistory.hospitalization.application.fetchEpisodeDocumentTypeById.FetchEpisodeDocumentTypeById;
+import net.pladema.clinichistory.hospitalization.application.getanestheticreportdraft.GetLastAnestheticReportDraftFromInternmentEpisode;
 import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.application.validateadministrativedischarge.ValidateAdministrativeDischarge;
 import net.pladema.clinichistory.hospitalization.repository.EvolutionNoteDocumentRepository;
@@ -33,7 +32,6 @@ import net.pladema.clinichistory.hospitalization.repository.domain.EvolutionNote
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisode;
 import net.pladema.clinichistory.hospitalization.repository.domain.InternmentEpisodeStatus;
 import net.pladema.clinichistory.hospitalization.repository.domain.PatientDischarge;
-import net.pladema.clinichistory.hospitalization.repository.domain.summary.AnestheticReportSummaryVo;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.DocumentsSummaryVo;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.EvaluationNoteSummaryVo;
 import net.pladema.clinichistory.hospitalization.repository.domain.summary.InternmentSummaryVo;
@@ -108,9 +106,9 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 
 	private final GetLicenseNumberByProfessional getLicenseNumberByProfessional;
 
-	private final AnestheticReportStorage anestheticReportStorage;
-
 	private final ValidateAdministrativeDischarge validateAdministrativeDischarge;
+
+	private final GetLastAnestheticReportDraftFromInternmentEpisode getLastAnestheticReportDraftFromInternmentEpisode;
 
 	@Override
     public void updateAnamnesisDocumentId(Integer internmentEpisodeId, Long anamnesisDocumentId) {
@@ -226,8 +224,11 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 		resultQuery.ifPresent(r -> {
 			DocumentsSummaryVo summaries = r.getDocuments();
 			summaries.setLastEvaluationNote(getLastEvaluationNoteSummary(internmentEpisodeId).orElse(new EvaluationNoteSummaryVo()));
-			summaries.setLastAnestheticReport(getLastAnestheticReportDraft(internmentEpisodeId));
-			result.set(Optional.of(new InternmentSummaryBo(r)));
+
+			InternmentSummaryBo internmentSummaryBo = new InternmentSummaryBo(r);
+			getLastAnestheticReportDraftFromInternmentEpisode.run(internmentEpisodeId)
+					.ifPresent(internmentSummaryBo::setLastAnestheticReport);
+			result.set(Optional.of(internmentSummaryBo));
 
 			var nameSelfDetermination = resultQuery.get()
 					.getDoctor()
@@ -536,14 +537,6 @@ public class InternmentEpisodeServiceImpl implements InternmentEpisodeService {
 			log.error(exc.getMessage(), exc);
 			throw new GeneratePdfException(exc.getMessage());
 		}
-	}
-
-	private AnestheticReportSummaryVo getLastAnestheticReportDraft(Integer internmentEpisodeId) {
-		log.debug(INPUT_PARAMETERS, internmentEpisodeId);
-		Long documentId = anestheticReportStorage.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId);
-		AnestheticReportSummaryVo result = new AnestheticReportSummaryVo(documentId, DocumentStatus.DRAFT);
-		log.debug(LOGGING_OUTPUT, result);
-		return result;
 	}
 
 }

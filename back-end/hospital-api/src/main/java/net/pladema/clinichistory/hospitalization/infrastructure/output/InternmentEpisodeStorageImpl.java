@@ -1,5 +1,6 @@
 package net.pladema.clinichistory.hospitalization.infrastructure.output;
 
+import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
 import lombok.RequiredArgsConstructor;
 import net.pladema.clinichistory.hospitalization.application.port.InternmentEpisodeStorage;
 import net.pladema.clinichistory.hospitalization.domain.InternmentEpisodeBo;
@@ -17,6 +18,7 @@ public class InternmentEpisodeStorageImpl implements InternmentEpisodeStorage {
     
     private final InternmentEpisodeRepository internmentEpisodeRepository;
     private final InternmentEpisodeSummaryRepository internmentEpisodeSummaryRepository;
+    private final AnestheticReportStorage anestheticReportStorage;
     
     @Override
     public Integer save(InternmentEpisodeBo internmentEpisodeBo) {
@@ -32,6 +34,11 @@ public class InternmentEpisodeStorageImpl implements InternmentEpisodeStorage {
     @Override
     public Optional<InternmentSummaryVo> getSummary(Integer internmentEpisodeId) {
         return internmentEpisodeSummaryRepository.getSummary(internmentEpisodeId);
+    }
+
+    @Override
+    public Long getDocumentIdFromLastAnestheticReportDraft(Integer internmentEpisodeId) {
+        return anestheticReportStorage.getDocumentIdFromLastAnestheticReportDraft(internmentEpisodeId);
     }
 
     private InternmentEpisode mapTo(InternmentEpisodeBo internmentEpisodeBo) {
