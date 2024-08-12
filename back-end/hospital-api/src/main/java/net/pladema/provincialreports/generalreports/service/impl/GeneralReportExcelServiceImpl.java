@@ -250,7 +250,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell8.setCellStyle(style);
 
 		ICell cell9 = row.createCell(rowNumber.getAndIncrement());
-		cell9.setCellValue(content.getLastName());
+		cell9.setCellValue(content.getLastNames());
 		cell9.setCellStyle(style);
 
 		ICell cell10 = row.createCell(rowNumber.getAndIncrement());
@@ -262,7 +262,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell11.setCellStyle(style);
 
 		ICell cell12 = row.createCell(rowNumber.getAndIncrement());
-		cell12.setCellValue(content.getEmergencyCareEntrance());
+		cell12.setCellValue(content.getTypeOfEntry());
 		cell12.setCellStyle(style);
 
 		ICell cell13 = row.createCell(rowNumber.getAndIncrement());
@@ -274,7 +274,7 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell14.setCellStyle(style);
 
 		ICell cell15 = row.createCell(rowNumber.getAndIncrement());
-		cell15.setCellValue(content.getTriageNote());
+		cell15.setCellValue(content.getTriageNotes());
 		cell15.setCellStyle(style);
 
 		ICell cell16 = row.createCell(rowNumber.getAndIncrement());
@@ -282,15 +282,15 @@ public class GeneralReportExcelServiceImpl implements GeneralReportExcelService 
 		cell16.setCellStyle(style);
 
 		ICell cell17 = row.createCell(rowNumber.getAndIncrement());
-		cell17.setCellValue(content.getDateDischarge());
+		cell17.setCellValue(content.getDischargeDate());
 		cell17.setCellStyle(style);
 
 		ICell cell18 = row.createCell(rowNumber.getAndIncrement());
-		cell18.setCellValue(content.getAmbulanceDischarge());
+		cell18.setCellValue(content.getDischargeAmbulance());
 		cell18.setCellStyle(style);
 
 		ICell cell19 = row.createCell(rowNumber.getAndIncrement());
-		cell19.setCellValue(content.getTypeDischarge());
+		cell19.setCellValue(content.getDischargeType());
 		cell19.setCellStyle(style);
 
 		ICell cell20 = row.createCell(rowNumber.getAndIncrement());
