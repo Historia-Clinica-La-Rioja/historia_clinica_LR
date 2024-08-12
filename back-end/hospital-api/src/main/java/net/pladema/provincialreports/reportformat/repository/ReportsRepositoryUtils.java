@@ -7,6 +7,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -19,11 +22,16 @@ public class ReportsRepositoryUtils {
 	// query factory method(s)
 
 	@SuppressWarnings("unchecked")
-	public <T> List<T> executeQuery(String queryName, Class<T> resultClass, Object... parameters) {
-		Query query = em.createNamedQuery(queryName, resultClass);
+	public <T> List<T> executeQuery(String queryName, Integer institutionId, LocalDate start, LocalDate end) {
+		Query query = em.createNamedQuery(queryName);
 
-		for (int i = 0; i < parameters.length; i++) {
-			query.setParameter(i + 1, parameters[i]);
+		query.setParameter("institutionId", institutionId);
+
+		if (start != null && end != null) {
+			LocalDateTime startDate = start.atStartOfDay();
+			LocalDateTime endDate = end.atTime(LocalTime.MAX);
+			query.setParameter("startDate", startDate);
+			query.setParameter("endDate", endDate);
 		}
 
 		return query.getResultList();
