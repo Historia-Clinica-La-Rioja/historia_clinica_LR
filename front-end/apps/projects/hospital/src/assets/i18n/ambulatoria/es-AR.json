@@ -672,6 +672,7 @@
                     "DELETE": "Eliminar",
                     "REACTIVATE": "Reactivar",
                     "SHOW_RESULTS": "Ver resultados",
+                    "DISPENSE": "Dispensar",
                     "cancel": {
                         "CANCEL_BUTTON": "Anular",
                         "dialog": {

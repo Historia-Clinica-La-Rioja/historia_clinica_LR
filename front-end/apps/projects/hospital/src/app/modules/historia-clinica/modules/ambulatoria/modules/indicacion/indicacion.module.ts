@@ -40,12 +40,15 @@ import { PatientInformationComponent } from './components/patient-information/pa
 import { PrescriptionInformationComponent } from './components/prescription-information/prescription-information.component';
 import { MedicationInformationComponent } from './components/medication-information/medication-information.component';
 import { CommercialPharmacoTypeaheadComponent } from './components/commercial-pharmaco-typeahead/commercial-pharmaco-typeahead.component';
+import { DispenseButtonComponent } from './components/dispense-button/dispense-button.component';
 
 @NgModule({
 	declarations: [
 		CardMedicacionesComponent,
 		CardPharmacoComponent,
+		CommercialPharmacoTypeaheadComponent,
 		DayDisplayComponent,
+		DispenseButtonComponent,
 		GeneralNursingRecordComponent,
 		ItemPrescripcionesComponent,
 		InternmentIndicationsCardComponent,
@@ -74,7 +77,6 @@ import { CommercialPharmacoTypeaheadComponent } from './components/commercial-ph
 		PatientInformationComponent,
 		PrescriptionInformationComponent,
 		MedicationInformationComponent,
-		CommercialPharmacoTypeaheadComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
