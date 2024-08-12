@@ -142,8 +142,9 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	} */
 
 	private mapToEpisode(episode: EmergencyCareListDto): Episode {
-		const timeSinceStateChange = episode.state.id === EstadosEpisodio.AUSENTE ?
-			this.calculateWaitingTime(episode.stateUpdatedOn) : undefined;
+		const timeSinceStateChange = episode?.stateUpdatedOn
+			? this.calculateWaitingTime(episode.stateUpdatedOn)
+			: undefined;
 		return {
 			...episode,
 			triage: {
@@ -151,7 +152,9 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 				...(episode.triage.reasons && { reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt) })
 			},
 			waitingTime: timeSinceStateChange,
-			waitingHours: timeSinceStateChange ? Math.round(timeSinceStateChange / 60) : undefined,
+			waitingHours: ([EstadosEpisodio.AUSENTE, EstadosEpisodio.LLAMADO].includes(episode.state.id )) && timeSinceStateChange >= 60
+			? Math.floor(timeSinceStateChange / 60)
+			: undefined
 		};
 	}
 
@@ -168,7 +171,7 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 			next: () => {
 				this.snackBarService.showSuccess('guardia.home.episodes.episode.actions.edit_patient_description.SUCCESS');
 				const index = this.episodes.findIndex(episode => episode.id === patientDescriptionUpdate.episodeId);
-				
+
 				if (index !== NOT_FOUND) {
 					this.episodes[index] = {
 						...this.episodes[index],
@@ -211,7 +214,8 @@ export interface Episode {
 	type: MasterDataDto;
 	relatedProfessional: ProfessionalPersonDto;
 	reason?: string;
-	canBeAbsent?: boolean
+	canBeAbsent?: boolean;
+	calls?: number;
 	bed?: BedDto;
 	shockroom?: ShockroomDto;
 	sector?: SectorDto;
