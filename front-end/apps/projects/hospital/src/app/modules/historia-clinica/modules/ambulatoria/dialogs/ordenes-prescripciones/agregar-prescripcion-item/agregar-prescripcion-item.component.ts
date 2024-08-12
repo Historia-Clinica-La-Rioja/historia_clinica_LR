@@ -46,6 +46,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	prescriptionItemForm: UntypedFormGroup;
 	conceptsResultsTable: TableModel<any>;
 	suggestedCommercialMedicationOptions: TypeaheadOption<SnomedDto>[];
+	presentationUnitsOptions: number[];
 	initialSuggestCommercialMedication: TypeaheadOption<SnomedDto>;
 	healthProblemOptions: HCEHealthConditionDto[] = [];
 	studyCategoryOptions = [];
@@ -307,6 +308,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.prescriptionItemForm.controls.snomed.setValue(pt);
 		this.prescriptionItemForm.controls.snomed.disable();
+		this.setPresentationUnits(selectedConcept.sctid);
 		this.setSuggestedCommercialMedicationOptions(commercialPt);
 		if (this.isHabilitarRecetaDigitalFFActive) {
 			if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
@@ -325,6 +327,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	setSuggestedCommercialMedication(snomed: SnomedDto): void {
 		if (snomed){
 			this.prescriptionItemForm.controls.suggestedCommercialMedication.setValue(snomed);
+			this.setPresentationUnits(snomed.sctid);
 		}
 	}
 
@@ -336,9 +339,17 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				viewValue: snomed.pt
 			}));
 
-			if (commercialPt)
+			if (commercialPt) {
 				this.initialSuggestCommercialMedication = this.suggestedCommercialMedicationOptions.find(option => option.compareValue === commercialPt);
+				this.setPresentationUnits(this.initialSuggestCommercialMedication.value.sctid);
+			}
 		});
+	}
+
+	setPresentationUnits(medicationSctid: string): void {
+		this.commercialMedicationService.getMedicationPresentationUnits(medicationSctid).subscribe(result => {
+			this.presentationUnitsOptions = result;
+		})
 	}
 
 	setQuantityMultiplication() {
@@ -428,7 +439,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			quantity: [null],
 			unit: [null],
 			isSuggestCommercialMedicationChecked: [false],
-			suggestedCommercialMedication: [null]
+			suggestedCommercialMedication: [null],
+			presentationUnit: [null, Validators.required]
 		});
 
 		if (! this.isHabilitarRecetaDigitalFFActive)

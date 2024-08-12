@@ -522,7 +522,10 @@
 					"GENERIC_PHARMACO_SEARCH": "Buscar por fármaco genérico",
 					"COMMERCIAL_PHARMACO_SEARCH": "Buscar por fármaco comercial",
 					"SUGGEST_COMMERCIAL_MEDICATION": "Sugerir marca",
-					"SUGGESTED_COMMERCIAL_MEDICATION": "Marca sugerida"
+					"SUGGESTED_COMMERCIAL_MEDICATION": "Marca sugerida",
+					"PRESENTATION_UNITS": "Presentaciones disponibles",
+					"SELECT_PRESENTATION_UNITS": "Seleccione presentación",
+					"UNITS": " unidades"
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",

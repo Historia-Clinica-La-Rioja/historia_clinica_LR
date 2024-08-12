@@ -147,6 +147,17 @@
 		</div>
 
 		<mat-form-field appearance="outline">
+			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.PRESENTATION_UNITS' | translate}}</mat-label>
+			<mat-select formControlName="presentationUnit" name="presentationUnit">
+				<mat-option *ngFor="let option of presentationUnitsOptions" [value]="option">
+					{{option}}
+					<span>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.UNITS' | translate}}</span>
+				</mat-option>
+			</mat-select>
+			<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'presentationUnit')" translate="forms.REQUIRED"></mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
 			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate}}</mat-label>
 			<textarea matInput type="text" id="observations" name="observations"
 						formControlName="observations"

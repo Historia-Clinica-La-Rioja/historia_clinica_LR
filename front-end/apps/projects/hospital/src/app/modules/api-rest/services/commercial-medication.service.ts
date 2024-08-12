@@ -10,7 +10,8 @@ import { Observable } from 'rxjs';
 })
 export class CommercialMedicationService {
 
-	private BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}/commercial-medication`;
+	private BASE_URL = `${environment.apiBase}/institution/${this.contextService.institutionId}`;
+	private BASE_URL2 = `${environment.apiBase}/institutions/${this.contextService.institutionId}`;
 
 	constructor(
 		private http: HttpClient,
@@ -18,13 +19,18 @@ export class CommercialMedicationService {
 	) { }
 
 	getCommercialMedicationSnomedList(commercialMedicationName: string): Observable<GetCommercialMedicationSnomedDto[]> {
-		const url = `${this.BASE_URL}/get-by-name`;
+		const url = `${this.BASE_URL}/commercial-medication/get-by-name`;
 		let params = new HttpParams().append('commercialMedicationName', commercialMedicationName);
 		return this.http.get<GetCommercialMedicationSnomedDto[]>(url, { params });
 	}
 
 	getSuggestedCommercialMedicationSnomedListByGeneric(genericMedicationSctid: string): Observable<SharedSnomedDto[]> {
-		const url = `${this.BASE_URL}/get-by-generic/${genericMedicationSctid}`;
+		const url = `${this.BASE_URL}/commercial-medication/get-by-generic/${genericMedicationSctid}`;
 		return this.http.get<SharedSnomedDto[]>(url);
+	}
+
+	getMedicationPresentationUnits(medicationSctid: string): Observable<number[]> {
+		const url = `${this.BASE_URL2}/snomed-medication/${medicationSctid}/get-presentation-units`;
+		return this.http.get<number[]>(url);
 	}
 }
