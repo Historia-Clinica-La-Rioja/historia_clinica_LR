@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.pladema.imagenetwork.imagequeue.application.getimagequeue.GetImageQueue;
+import net.pladema.imagenetwork.imagequeue.application.imagemanualindex.ImageManualIndex;
 import net.pladema.imagenetwork.imagequeue.application.imagemoveretry.ImageMoveRetry;
 import net.pladema.imagenetwork.imagequeue.domain.ImageQueueBo;
 import net.pladema.imagenetwork.imagequeue.infrastructure.input.rest.dto.ImageQueueFilteringCriteriaDto;
@@ -32,6 +33,7 @@ public class ImageQueueController {
     private final GetImageQueue getImageQueue;
     private final ImageMoveRetry imageMoveRetry;
     private final ImageQueueMapper imageQueueMapper;
+    private final ImageManualIndex imageManualIndex;
 
 
     @PreAuthorize("hasPermission(#institutionId, 'INDEXADOR')")
@@ -57,7 +59,7 @@ public class ImageQueueController {
 
         List<ImageQueueListDto> mappedResult = imageQueueMapper.toImageQueueListDto(currentPageList);
 
-        log.trace(OUTPUT, mappedResult);
+        log.debug(OUTPUT, mappedResult);
         return ResponseEntity.ok(new PageDto<>(mappedResult,(long) resultList.size()));
     }
 
@@ -69,7 +71,20 @@ public class ImageQueueController {
     ) {
         log.debug("Input parameters -> institutionId {}, moveImageId {}", institutionId, moveImageId);
         Boolean result = imageMoveRetry.run(institutionId,moveImageId);
-        log.trace(OUTPUT, result);
+        log.debug(OUTPUT, result);
+        return ResponseEntity.ok(result);
+    }
+
+    @PreAuthorize("hasPermission(#institutionId, 'INDEXADOR')")
+    @PutMapping("move-image/{moveImageId}/index/{newUID}")
+    public ResponseEntity<Boolean> indexImage(
+            @PathVariable("institutionId") Integer institutionId,
+            @PathVariable("moveImageId") Integer moveImageId,
+            @PathVariable("newUID") String newUID
+    ) {
+        log.debug("Input parameters -> institutionId {}, moveImageId {}, newUID {}", institutionId, moveImageId, newUID);
+        Boolean result = imageManualIndex.run(institutionId,moveImageId,newUID);
+        log.debug(OUTPUT, result);
         return ResponseEntity.ok(result);
     }
 

@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -182,4 +181,19 @@ public interface MoveStudiesRepository extends JpaRepository<MoveStudies, Intege
 								 @Param("updateStatus") String updateStatus,
 								 @Param("attemptsNumbers") Integer attemptsNumbers);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE MoveStudies AS mo " +
+			"SET mo.status = :status, " +
+			"	 mo.result= :result, " +
+			"	 mo.attempsNumber = :attemptsNumbers, " +
+			"	 mo.imageId = :newUID " +
+			"WHERE mo.id = :idMove")
+	void updateUIDAndStatusAndResultAndAttemptsNumber(
+			@Param("idMove") Integer idMove,
+			@Param("newUID") String newUID,
+			@Param("status") String status,
+			@Param("result") String result,
+			@Param("attemptsNumbers") Integer attemptsNumbers
+	);
 }
