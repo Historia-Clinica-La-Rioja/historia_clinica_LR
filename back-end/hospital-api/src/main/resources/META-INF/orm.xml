@@ -942,49 +942,48 @@
 	<named-native-query name="GeneralReports.EmergencyConsultationDetail" result-set-mapping="GeneralReports.EmergencyConsultationDetailResult">
 		<query>
 			SELECT
-			concat(ins.name, ' ', ins.sisa_code) AS institution,
+			CONCAT(ins.name, ' ', ins.sisa_code) AS institution,
 			ece.ambulance_company_id AS ambulance,
 			d_of.description AS office,
 			css.description AS sector,
 			CASE
-			WHEN ece.has_police_intervention = true THEN 'Sí'
-			ELSE 'No'
+			WHEN ece.has_police_intervention = true THEN CONCAT('Sí')
+			ELSE CONCAT('No')
 			END AS policeIntervention,
 			CASE
-			WHEN EXTRACT(HOUR FROM ece.updated_on) &lt; 3 THEN
-			concat(EXTRACT(DAY FROM ece.updated_on) - 1, '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on))
+			WHEN (EXTRACT(HOUR FROM ece.updated_on)) &lt; 3 THEN
+			CONCAT(EXTRACT(DAY FROM ece.updated_on) - 1, '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on))
 			ELSE
-			concat(EXTRACT(DAY FROM ece.updated_on), '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on))
+			CONCAT(EXTRACT(DAY FROM ece.updated_on), '/', EXTRACT(MONTH FROM ece.updated_on), '/', EXTRACT(YEAR FROM ece.updated_on))
 			END AS attentionDate,
-			concat(EXTRACT(HOUR FROM ece.created_on AT TIME ZONE 'UTC-3'), ':', LPAD(EXTRACT(MINUTE FROM ece.created_on AT TIME ZONE 'UTC-3')::text, 2, '0')) AS attentionHour,
-			concat(it.description, ' ', pe.identification_number) AS identification,
-			concat(pe.last_name, ' ', pe.other_last_names) AS lastNames,
-			concat(pe.first_name, ' ', pe.middle_names) AS names,
-			concat(mc.name, '(', hi.rnos, ')', pmc.affiliate_number) AS medicalCoverage,
+			CONCAT(EXTRACT(HOUR FROM ece.created_on AT TIME ZONE 'UTC-3'), ':', EXTRACT(MINUTE FROM ece.created_on AT TIME ZONE 'UTC-3')) AS attentionHour,
+			CONCAT(it.description, ' ', pe.identification_number) AS identification,
+			CONCAT(pe.last_name, ' ', pe.other_last_names) AS lastNames,
+			CONCAT(pe.first_name, ' ', pe.middle_names) AS names,
+			CONCAT(mc.name, '(', hi.rnos, ')', pmc.affiliate_number) AS medicalCoverage,
 			ec_in_t.description AS typeOfEntry,
 			ec_st.description AS situation,
 			ec_t.description AS emergencyCareType,
-			(SELECT string_agg(tr.notes, ', ') FROM triage tr WHERE tr.emergency_care_episode_id = ece.id) AS triageNotes,
-			concat(tr_cat.name, ' Código: ', tr_cat.color_name) AS triageLevel,
+			(SELECT STRING_AGG(tr.notes, ', ') FROM triage tr WHERE tr.emergency_care_episode_id = ece.id) AS triageNotes,
+			CONCAT(tr_cat.name, ' Codigo: ', tr_cat.color_name) AS triageLevel,
 			ec_dis.administrative_discharge_on AS dischargeDate,
 			ec_dis.ambulance_company_id AS dischargeAmbulance,
 			dis.description AS dischargeType,
 			dis_out.description AS patientExit,
-			(SELECT string_agg(mot.description, ', ') FROM emergency_care_episode_reason ecer
+			(SELECT STRING_AGG(CONCAT(mot.description), ', ')
+			FROM emergency_care_episode_reason ecer
 			LEFT JOIN reasons mot ON ecer.reason_id = mot.id
 			WHERE ecer.emergency_care_episode_id = ece.id) AS reasons,
-			(SELECT string_agg(concat(s_prob.pt, ' (', ccs.description, ' &amp; ', cvs.description, ' - Fecha: ', hc.start_date, ' - Tipo: ', pt.description, ')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
+			(SELECT STRING_AGG(CONCAT(s_prob.pt, ' (', ccs.description, ' &amp; ', cvs.description, ' - Fecha: ', hc.start_date, ' - Tipo: ', pt.description, ')', '[SNOMED: ', s_prob.sctid, ' | CIE10: ', hc.cie10_codes, ']'), ', ')
 			FROM document_health_condition dhc
 			INNER JOIN health_condition hc ON dhc.health_condition_id = hc.id
 			INNER JOIN problem_type pt ON hc.problem_id = pt.id
 			INNER JOIN snomed s_prob ON hc.snomed_id = s_prob.id
 			INNER JOIN condition_clinical_status ccs ON hc.status_id = ccs.id
 			INNER JOIN condition_verification_status cvs ON hc.verification_status_id = cvs.id
-			WHERE dhc.document_id = d.id
-			AND hc.problem_id &lt;> '57177007') AS problems,
+			WHERE dhc.document_id = d.id AND hc.problem_id &lt;> '57177007') AS problems,
 			ev.description AS evolution
-			FROM
-			emergency_care_episode ece
+			FROM emergency_care_episode ece
 			INNER JOIN institution ins ON ece.institution_id = ins.id
 			INNER JOIN emergency_care_state ec_st ON ece.emergency_care_state_id = ec_st.id
 			INNER JOIN patient pa ON ece.patient_id = pa.id
@@ -1004,7 +1003,7 @@
 			LEFT JOIN document d ON d.source_id = ece.id AND d.source_type_id = 4
 			LEFT JOIN note ev ON d.other_note_id = ev.id
 			WHERE ece.created_on BETWEEN :startDate AND :endDate
-			AND ins.id= :institutionId
+			AND ins.id = :institutionId
 		</query>
 	</named-native-query>
 	
