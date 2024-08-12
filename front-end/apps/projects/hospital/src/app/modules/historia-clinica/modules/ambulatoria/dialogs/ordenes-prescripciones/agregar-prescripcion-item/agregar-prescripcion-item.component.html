@@ -158,6 +158,13 @@
 		</mat-form-field>
 
 		<mat-form-field appearance="outline">
+			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.MEDICATION_PACK_QUANTITY' | translate}}</mat-label>
+			<input matInput formControlName="medicationPackQuantity">
+			<mat-error *ngIf="hasError(prescriptionItemForm, 'required', 'medicationPackQuantity')" translate="forms.REQUIRED"></mat-error>
+			<mat-error *ngIf="hasError(prescriptionItemForm, 'min', 'medicationPackQuantity')" translate="forms.MIN_ERROR" [translateParams]="{min: MIN_VALUE}"></mat-error>
+		</mat-form-field>
+
+		<mat-form-field appearance="outline">
 			<mat-label>{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.OBSERVATIONS' | translate}}</mat-label>
 			<textarea matInput type="text" id="observations" name="observations"
 						formControlName="observations"

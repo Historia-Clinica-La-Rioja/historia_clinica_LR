@@ -525,7 +525,8 @@
 					"SUGGESTED_COMMERCIAL_MEDICATION": "Marca sugerida",
 					"PRESENTATION_UNITS": "Presentaciones disponibles",
 					"SELECT_PRESENTATION_UNITS": "Seleccione presentación",
-					"UNITS": " unidades"
+					"UNITS": " unidades",
+					"MEDICATION_PACK_QUANTITY": "Cantidad de envases"
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",

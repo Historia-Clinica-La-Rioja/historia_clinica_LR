@@ -440,7 +440,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			unit: [null],
 			isSuggestCommercialMedicationChecked: [false],
 			suggestedCommercialMedication: [null],
-			presentationUnit: [null, Validators.required]
+			presentationUnit: [null, Validators.required],
+			medicationPackQuantity: [this.MIN_VALUE, [Validators.min(this.MIN_VALUE), Validators.required]]
 		});
 
 		if (! this.isHabilitarRecetaDigitalFFActive)
