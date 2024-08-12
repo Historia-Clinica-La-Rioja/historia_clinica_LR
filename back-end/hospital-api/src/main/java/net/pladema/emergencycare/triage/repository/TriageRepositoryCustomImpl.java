@@ -37,17 +37,19 @@ public class TriageRepositoryCustomImpl implements TriageRepositoryCustom {
                         " td.respiratory_retraction_id,  td.stridor, td.perfusion_id, " +
                         " ece.emergency_care_type_id, " +
                         " array_agg( tvs.observation_vital_sign_id ), " +
-						" t.clinical_specialty_sector_id " +
+						" t.clinical_specialty_sector_id, " +
+						" css.description " +
                         "FROM {h-schema}triage AS t " +
                         "JOIN {h-schema}emergency_care_episode AS ece ON (t.emergency_care_episode_id = ece.id) " +
                         "LEFT JOIN {h-schema}triage_details AS td ON (t.id = td.triage_id) " +
                         "LEFT JOIN {h-schema}triage_vital_signs AS tvs on ( t.id = tvs.triage_id ) " +
+						"LEFT JOIN {h-schema}clinical_specialty_sector AS css on ( t.clinical_specialty_sector_id = css.id ) " +
                         "WHERE t.emergency_care_episode_id = :episodeId " +
                         "GROUP BY t.id, t.emergency_care_episode_id, t.triage_category_id, t.created_by, " +
                         " t.doctors_office_id, t.notes, t.created_on, " +
                         " td.body_temperature_id, td.crying_excessive, td.muscle_hypertonia_id, " +
                         " td.respiratory_retraction_id, td.stridor, td.perfusion_id, " +
-                        " ece.emergency_care_type_id " +
+                        " ece.emergency_care_type_id, css.description "+
                         "ORDER BY t.created_on DESC ";
 
         List<Object[]> queryResult = entityManager.createNativeQuery(sqlQuery)
@@ -59,7 +61,8 @@ public class TriageRepositoryCustomImpl implements TriageRepositoryCustom {
                 result.add(new TriageVo(triageFromGetAllByEpisodeIdResult(r),
                         triageDetailsFromGetAllByEpisodeIdResult(r),
                         (Short) r[13],
-                        toIntegerList((Object[]) r[14])))
+                        toIntegerList((Object[]) r[14]),
+						(String) r[16]))
         );
 
         LOG.debug("Output size -> {}", result.size());

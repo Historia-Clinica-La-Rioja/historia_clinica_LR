@@ -5263,6 +5263,7 @@ export interface TriageListDto extends Serializable {
     breathing: TriageBreathingDto;
     category: TriageCategoryDto;
     circulation: TriageCirculationDto;
+    clinicalSpecialtySector: EmergencyCareClinicalSpecialtySectorDto;
     createdBy: EmergencyCareUserDto;
     creationDate: DateTimeDto;
     doctorsOffice: DoctorsOfficeDto;

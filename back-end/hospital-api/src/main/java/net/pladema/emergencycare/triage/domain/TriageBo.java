@@ -18,7 +18,7 @@ import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 import net.pladema.emergencycare.triage.repository.domain.TriageVo;
 import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
-import net.pladema.staff.domain.ProfessionalCompleteBo;
+import net.pladema.establishment.domain.ClinicalSpecialtySectorBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -78,7 +78,7 @@ public class TriageBo implements IDocumentBo {
 
 	private ProfessionalPersonBo creator;
 
-	private Integer clinicalSpecialtySectorId;
+	private ClinicalSpecialtySectorBo clinicalSpecialtySectorBo;
 
     public TriageBo(TriageVo triageVo) {
         this.triageId = triageVo.getId();
@@ -93,7 +93,8 @@ public class TriageBo implements IDocumentBo {
         this.createdOn = triageVo.getCreatedOn();
         this.riskFactorIds = triageVo.getRiskFactorIds();
 		this.encounterId = triageVo.getEmergencyCareEpisodeId();
-		this.clinicalSpecialtySectorId = triageVo.getClinicalSpecialtySectorId();
+		this.clinicalSpecialtySectorBo = ClinicalSpecialtySectorBo.builder().id(triageVo.getClinicalSpecialtySectorId())
+				.description(triageVo.getClinicalSpecialtySectorDescription()).build();
     }
 
 	public TriageBo(Triage triage){
@@ -103,7 +104,7 @@ public class TriageBo implements IDocumentBo {
 		this.categoryId = triage.getTriageCategoryId();
 		this.doctorsOfficeId = triage.getDoctorsOfficeId();
 		this.createdBy = triage.getCreatedBy();
-		this.clinicalSpecialtySectorId = triage.getClinicalSpecialtySectorId();
+		this.clinicalSpecialtySectorBo = ClinicalSpecialtySectorBo.builder().id(triage.getClinicalSpecialtySectorId()).build();
 	}
 
     public boolean isAdultGynecological() {

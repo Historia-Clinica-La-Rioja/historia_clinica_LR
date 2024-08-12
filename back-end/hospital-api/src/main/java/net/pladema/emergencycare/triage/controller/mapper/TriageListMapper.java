@@ -7,6 +7,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto.RiskFacto
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.service.RiskFactorExternalService;
 import lombok.AllArgsConstructor;
 import net.pladema.clinichistory.outpatient.createoutpatient.controller.mapper.OutpatientConsultationMapper;
+import net.pladema.emergencycare.controller.mapper.EmergencyCareClinicalSpecialtySectorMapper;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareMapper;
 import net.pladema.emergencycare.triage.controller.dto.TriageBreathingDto;
 import net.pladema.emergencycare.triage.controller.dto.TriageCirculationDto;
@@ -41,6 +42,7 @@ public class TriageListMapper {
 
 	private RiskFactorExternalService riskFactorExternalService;
 	private OutpatientConsultationMapper outpatientConsultationMapper;
+	private EmergencyCareClinicalSpecialtySectorMapper emergencyCareClinicalSpecialtySectorMapper;
 
 	public TriageListDto toTriageListDto(TriageBo triageBo) {
 		TriageListDto result = triageMapper.toTriageListDto(triageBo);
@@ -64,6 +66,7 @@ public class TriageListMapper {
 		List<ReasonBo> reasons = triageBo.getReasons();
 		if(reasons != null && !reasons.isEmpty())
 			result.setReasons(outpatientConsultationMapper.toOutpatientReasonDto(reasons));
+		result.setClinicalSpecialtySector(emergencyCareClinicalSpecialtySectorMapper.toDto(triageBo.getClinicalSpecialtySectorBo()));
 		return result;
 	}
 
