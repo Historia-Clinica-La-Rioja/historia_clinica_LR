@@ -1,8 +1,9 @@
 import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppFeature, CreateOutpatientDto, ERole, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
+import { AppFeature, CreateOutpatientDto, ERole, GetCommercialMedicationSnomedDto, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
@@ -19,6 +20,7 @@ import { intervalValidation } from "@historia-clinica/modules/ambulatoria/dialog
 import { AmbulatoryConsultationProblem, AmbulatoryConsultationProblemsService } from '@historia-clinica/services/ambulatory-consultation-problems.service';
 import { SnomedService } from '@historia-clinica/services/snomed.service';
 import { ActionDisplays, TableModel } from '@presentation/components/table/table.component';
+import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 
 @Component({
@@ -43,6 +45,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	snomedConcept: SnomedDto;
 	prescriptionItemForm: UntypedFormGroup;
 	conceptsResultsTable: TableModel<any>;
+	suggestedCommercialMedicationOptions: TypeaheadOption<SnomedDto>[];
+	initialSuggestCommercialMedication: TypeaheadOption<SnomedDto>;
 	healthProblemOptions: HCEHealthConditionDto[] = [];
 	studyCategoryOptions = [];
 	DEFAULT_RADIO_OPTION = 1;
@@ -80,6 +84,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		private readonly snvsMasterDataService: SnvsMasterDataService,
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly permissionService: PermissionsService,
+		private readonly commercialMedicationService: CommercialMedicationService,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 				.subscribe((isFFActive: boolean) => {
@@ -297,12 +302,12 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		}
 	}
 
-	setConcept(selectedConcept: SnomedDto): void {
+	setConcept(selectedConcept: SnomedDto, commercialPt?: string): void {
 		this.snomedConcept = selectedConcept;
 		const pt = selectedConcept ? selectedConcept.pt : '';
 		this.prescriptionItemForm.controls.snomed.setValue(pt);
 		this.prescriptionItemForm.controls.snomed.disable();
-
+		this.setSuggestedCommercialMedicationOptions(commercialPt);
 		if (this.isHabilitarRecetaDigitalFFActive) {
 			if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
 				this.enableUnitDoseAndDayDose();
@@ -311,6 +316,29 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 				this.disableUnitDoseAndDayDose();
 			}
 		}
+	}
+
+	setCommercialMedicationConcept(selectedConcept: GetCommercialMedicationSnomedDto): void {
+		this.setConcept(selectedConcept.genericMedication, selectedConcept.commercialPt);
+	}
+
+	setSuggestedCommercialMedication(snomed: SnomedDto): void {
+		if (snomed){
+			this.prescriptionItemForm.controls.suggestedCommercialMedication.setValue(snomed);
+		}
+	}
+
+	setSuggestedCommercialMedicationOptions(commercialPt?: string): void {
+		this.commercialMedicationService.getSuggestedCommercialMedicationSnomedListByGeneric(this.snomedConcept?.sctid).subscribe(result => {
+			this.suggestedCommercialMedicationOptions = result.map(snomed => ({
+				value: snomed,
+				compareValue: snomed.pt,
+				viewValue: snomed.pt
+			}));
+
+			if (commercialPt)
+				this.initialSuggestCommercialMedication = this.suggestedCommercialMedicationOptions.find(option => option.compareValue === commercialPt);
+		});
 	}
 
 	setQuantityMultiplication() {
@@ -399,7 +427,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			studyCategory: [null],
 			quantity: [null],
 			unit: [null],
-			isSuggestCommercialMedicationChecked: [false]
+			isSuggestCommercialMedicationChecked: [false],
+			suggestedCommercialMedication: [null]
 		});
 
 		if (! this.isHabilitarRecetaDigitalFFActive)

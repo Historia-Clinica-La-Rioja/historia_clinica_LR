@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { GetCommercialMedicationSnomedDto, SnomedDto, SnomedECL } from '@api-rest/api-model';
+import { GetCommercialMedicationSnomedDto, SnomedECL } from '@api-rest/api-model';
 import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
 import { distinctUntilChanged, mergeMap, Observable, of, startWith } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { distinctUntilChanged, mergeMap, Observable, of, startWith } from 'rxjs'
 })
 export class CommercialPharmacoTypeaheadComponent {
 
-	snomedConcept: SnomedDto;
+	snomedConcept: GetCommercialMedicationSnomedDto;
 	inputFocused = false;
 
 	@Input() ecl: SnomedECL;
@@ -19,7 +19,7 @@ export class CommercialPharmacoTypeaheadComponent {
 	@Input() showSearchIcon = false;
 	@Input() required = false;
 
-	@Output() conceptSelected = new EventEmitter<SnomedDto>();
+	@Output() conceptSelected = new EventEmitter<GetCommercialMedicationSnomedDto>();
 
 	private readonly MIN_SEARCH_LENGTH = 3;
 
@@ -60,8 +60,8 @@ export class CommercialPharmacoTypeaheadComponent {
 			this.commercialMedicationService.getCommercialMedicationSnomedList(searchValue);
 	}
 
-	getDisplayName(option: SnomedDto): string {
-		return option && option.pt ? option.pt : '';
+	getDisplayName(option: GetCommercialMedicationSnomedDto): string {
+		return option && option.genericMedication.pt ? option.genericMedication.pt : '';
 	}
 
 	handleOptionSelected(event: any) {

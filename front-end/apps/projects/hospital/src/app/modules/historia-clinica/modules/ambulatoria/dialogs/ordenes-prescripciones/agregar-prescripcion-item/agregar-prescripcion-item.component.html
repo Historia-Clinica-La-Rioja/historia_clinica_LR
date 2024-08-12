@@ -50,12 +50,19 @@
 			[ecl]="data.eclTerm"
 			[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.COMMERCIAL_PHARMACO_SEARCH'"
 			[required]="true"
-			(conceptSelected)="setConcept($event)">
+			(conceptSelected)="setCommercialMedicationConcept($event)">
 		</app-commercial-pharmaco-typeahead>
 
 		<mat-checkbox formControlName="isSuggestCommercialMedicationChecked" [color]="'primary'">
 			{{'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGEST_COMMERCIAL_MEDICATION' | translate}}
 		</mat-checkbox>
+
+		<app-typeahead id="suggestedCommercialMedication" *ngIf="prescriptionItemForm.value.isSuggestCommercialMedicationChecked && suggestedCommercialMedicationOptions"
+			[titleInput]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.SUGGESTED_COMMERCIAL_MEDICATION' | translate"
+			[externalSetValue]="initialSuggestCommercialMedication"
+			[options]="suggestedCommercialMedicationOptions"
+			(selectionChange)="setSuggestedCommercialMedication($event)">
+		</app-typeahead>
 
 		<section *appFeatureFlag="HABILITAR_RECETA_DIGITAL">
 			<div class="unit-day-dose-container" *ngIf="enableFields">

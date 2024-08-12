@@ -4,7 +4,7 @@
 			[formControl]="myControl" [matAutocomplete]="autoGroup" (focus)="inputFocused" [required]="required">
 		<mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="handleOptionSelected($event)" [displayWith]="getDisplayName">
 			<mat-optgroup *ngFor="let option of filteredOptions | async" [label]="option.commercialPt">
-			  <mat-option [value]="option.genericMedication">
+			  <mat-option [value]="option">
 				{{option.genericMedication.pt}}
 			  </mat-option>
 		  </mat-optgroup>

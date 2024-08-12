@@ -521,7 +521,8 @@
 					"COMMERCIAL_SEARCH": "Buscar por comercial",
 					"GENERIC_PHARMACO_SEARCH": "Buscar por fármaco genérico",
 					"COMMERCIAL_PHARMACO_SEARCH": "Buscar por fármaco comercial",
-					"SUGGEST_COMMERCIAL_MEDICATION": "Sugerir marca"
+					"SUGGEST_COMMERCIAL_MEDICATION": "Sugerir marca",
+					"SUGGESTED_COMMERCIAL_MEDICATION": "Marca sugerida"
                 },
                 "validators_dialog": {
                     "TITLE": "Sin permiso para recetar",
