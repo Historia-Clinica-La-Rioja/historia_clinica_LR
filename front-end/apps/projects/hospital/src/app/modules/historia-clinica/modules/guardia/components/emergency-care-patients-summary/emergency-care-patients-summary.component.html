@@ -162,71 +162,12 @@
                         *ngFor="let episode of episodes">
                         <div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
 
-                            <div id="patient" fxFlex="40%" fxLayout="row">
-                                <mat-card-header>
-                                    <img mat-card-avatar [src]="episode.decodedPatientPhoto | async"
-                                        onerror="this.src='../../../../../assets/images/empty-profile.png'">
-                                    <mat-card-title>
-                                        <span *ngIf="!episode.patient else emergency_care_temporary">
-                                            {{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
-                                        </span>
-                                    </mat-card-title>
-                                    <mat-card-subtitle class="mat-small" fxLayout="column" fxLayoutGap="2px">
-                                        <span *ngIf="episode.patient?.id">
-                                            {{ 'guardia.home.episodes.episode.patient.ID'| translate }}
-                                            {{ episode.patient?.id }}
-                                        </span>
-                                        <app-title-description *ngIf="episode.patient?.patientDescription && episode.patient?.typeId === EMERGENCY_CARE_TEMPORARY" [title]="'guardia.home.episodes.episode.patient.DETAILS'" [text]="episode.patient.patientDescription" limit="20"></app-title-description>
-                                        <app-title-description *ngIf="episode.reason" [title]="'guardia.home.episodes.episode.patient.REASON'" [text]="episode.reason" limit="20"></app-title-description>
-                                    </mat-card-subtitle>
-                                </mat-card-header>
-                                <ng-template #emergency_care_temporary>
-                                    <span
-                                        *ngIf="(episode.patient?.typeId == EMERGENCY_CARE_TEMPORARY) else patientInfo">{{
-                                        'guardia.home.episodes.episode.patient.EMERGENCY_CARE_TEMPORARY'| translate
-                                        }}</span>
-                                </ng-template>
+                            <app-emergency-care-patient-summary-item id="patient" fxFlex="40%"[episode]="episode"></app-emergency-care-patient-summary-item>
 
-                                <ng-template #patientInfo>
-                                    <span
-                                        *ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.person?.firstName || episode.patient?.person?.lastName) else temporal">
-                                        {{ episode.patient?.person?.firstName }} {{
-                                        episode.patient?.person?.lastName }}
-                                    </span>
-                                </ng-template>
+                            <app-emergency-care-triage-summary-item id="triage" fxFlex="25%" [triage]="episode.triage" [episodeType]="episode.type"></app-emergency-care-triage-summary-item>
 
-                                <ng-template #temporal>
-                                    <span>{{ 'guardia.home.episodes.episode.patient.TEMPORAL'| translate }}</span>
-                                </ng-template>
-                            </div>
-
-                            <div id="triage" fxFlex="25%" fxLayout="column">
-                                <app-triage-chip [category]="episode.triage.emergencyCareEpisodeListTriageDto"></app-triage-chip>
-                                <span class="mat-small" *ngIf="episode.triage.reasons" matTooltip="{{episode.triage.reasons | stringSeparator }}"> {{ episode.triage.reasons | showMoreConcepts}}</span>
-                                <span class="mat-small">{{ episode.type?.description }}</span>
-                            </div>
-
-                            <div id="status" fxFlex="30%" fxLayout="column">
-                                <ng-container
-                                *ngIf="(episode.state.id === estadosEpisodio.EN_ESPERA || episode.state.id === estadosEpisodio.AUSENTE) else otherStates">>
-                                    <span> {{ episode.state.description }}: </span>
-                                    <span *ngIf="episode?.waitingTime && episode.waitingTime < 60">
-                                        {{ episode.waitingTime }} min
-                                    </span>
-                                    <span *ngIf="episode?.waitingHours && episode.waitingHours > 0">
-                                        {{ episode.waitingHours }} hs
-                                    </span>
-                                </ng-container>
-                                <span class="mat-small"> {{ episode.doctorsOffice?.description }} </span>
-                                <span class="mat-small"> {{ episode.shockroom?.description }} </span>
-                                <span class="mat-small"> {{ episode.bed?.bedNumber }} </span>
-                                <span *ngIf="episode.relatedProfessional"> {{ episode.relatedProfessional.fullName }} </span>
-
-                                <ng-template #otherStates>
-                                    <span id="state">{{ episode.state.description | uppercase }}</span>
-                                </ng-template>
-                            </div>
-
+                            <app-emergency-care-status-summary-item id="status" fxFlex="30%" [episode]="episode"></app-emergency-care-status-summary-item>
+                           
                             <app-emergency-care-dashboard-actions
                             [episode]="episode"
                             (triageDialogClosed)="handleTriageDialogClosed($event)"

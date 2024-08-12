@@ -11,34 +11,6 @@
 	padding: 16px 0;
 	cursor: pointer;
 	box-shadow: none;
-
-	.mat-card-header .mat-card-title {
-		margin-bottom: 8px;
-		font-size: 16px;
-	}
-
-	&.mat-card.en-atencion {
-		background-color: #EDF1F7;
-
-		#state {
-			color: #009B68;
-		}
-	};
-}
-
-.header-image {
-	background-image: url("../../../../../../../assets/images/empty-profile.png");
-	background-size: cover;
-}
-
-mat-card-subtitle {
-	margin-bottom: 0;
-}
-
-.triage-chip {
-	width: fit-content;
-	padding: 1.5px 8px;
-	border-radius: 5px;
 }
 
 .new-episode-button {

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MasterDataInterface, DateTimeDto, EmergencyCareEpisodeFilterDto, PageDto, EmergencyCareListDto, ProfessionalPersonDto, DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto, EmergencyCarePatientDto, MasterDataDto } from '@api-rest/api-model';
+import { MasterDataInterface, DateTimeDto, EmergencyCareEpisodeFilterDto, PageDto, EmergencyCareListDto, ProfessionalPersonDto, DoctorsOfficeDto, EmergencyCareEpisodeListTriageDto, EmergencyCarePatientDto, MasterDataDto, BedDto, ShockroomDto } from '@api-rest/api-model';
 import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { PatientNameService } from '@core/services/patient-name.service';
 import { getError, hasError } from '@core/utils/form.utils';
-import { PatientType } from '@historia-clinica/constants/summaries';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { differenceInMinutes } from 'date-fns';
 import { Observable, tap, map } from 'rxjs';
@@ -18,6 +17,8 @@ import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { PatientDescriptionUpdate } from '../emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
+
+const NOT_FOUND = -1;
 
 @Component({
 	selector: 'app-emergency-care-patients-summary',
@@ -34,8 +35,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 
 	readonly estadosEpisodio = EstadosEpisodio;
 	readonly triages = Triages;
-	readonly PACIENTE_TEMPORAL = 3;
-	readonly EMERGENCY_CARE_TEMPORARY = PatientType.EMERGENCY_CARE_TEMPORARY;
 	readonly PAGE_SIZE = 20;
 	readonly FIRST_PAGE = 0;
 
@@ -157,7 +156,7 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	} */
 
 	private mapToEpisode(episode: EmergencyCareListDto): Episode {
-		const minWaitingTime = episode.state.id === this.estadosEpisodio.EN_ESPERA ?
+		const minWaitingTime = episode.state.id === EstadosEpisodio.EN_ESPERA ?
 			this.calculateWaitingTime(episode.creationDate) : undefined;
 		const timeSinceStateChange = episode.state.id === this.estadosEpisodio.AUSENTE ?
 			this.calculateWaitingTime(episode.stateUpdatedOn) : undefined;
@@ -198,8 +197,17 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 		this.emergencyCareEpisodeService.updatePatientDescription(patientDescriptionUpdate.episodeId, patientDescriptionUpdate.patientDescription).subscribe({
 			next: () => {
 				this.snackBarService.showSuccess('guardia.home.episodes.episode.actions.edit_patient_description.SUCCESS');
-				const updatedEpisode = this.episodes.find(episode => episode.id === patientDescriptionUpdate.episodeId);
-				updatedEpisode.patient.patientDescription = patientDescriptionUpdate.patientDescription;
+				const index = this.episodes.findIndex(episode => episode.id === patientDescriptionUpdate.episodeId);
+				
+				if (index !== NOT_FOUND) {
+					this.episodes[index] = {
+						...this.episodes[index],
+						patient: {
+							...this.episodes[index].patient,
+							patientDescription: patientDescriptionUpdate.patientDescription
+						}
+					};
+				}
 			},
 			error: () => this.snackBarService.showError('guardia.home.episodes.episode.actions.edit_patient_description.ERROR')
 		});
@@ -234,6 +242,8 @@ export interface Episode {
 	relatedProfessional: ProfessionalPersonDto;
 	reason?: string;
 	canBeAbsent?: boolean
+	bed?: BedDto;
+	shockroom?: ShockroomDto;
 }
 
 export interface EpisodeListTriage {

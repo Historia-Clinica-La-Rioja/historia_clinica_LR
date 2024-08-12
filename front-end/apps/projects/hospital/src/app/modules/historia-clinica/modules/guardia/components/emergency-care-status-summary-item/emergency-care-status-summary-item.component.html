@@ -1,0 +1,20 @@
+<div id="status" fxFlex="30%" fxLayout="column">
+    <ng-container
+    *ngIf="(episode.state.id === estadosEpisodio.EN_ESPERA || episode.state.id === estadosEpisodio.AUSENTE) else otherStates">>
+        <span> {{ episode.state.description }}: </span>
+        <span *ngIf="episode?.waitingTime && episode.waitingTime < 60">
+            {{ episode.waitingTime }} min
+        </span>
+        <span *ngIf="episode?.waitingHours && episode.waitingHours > 0">
+            {{ episode.waitingHours }} hs
+        </span>
+    </ng-container>
+    <span class="mat-small"> {{ episode.doctorsOffice?.description }} </span>
+    <span class="mat-small"> {{ episode.shockroom?.description }} </span>
+    <span class="mat-small"> {{ episode.bed?.bedNumber }} </span>
+    <span *ngIf="episode.relatedProfessional"> {{ episode.relatedProfessional.fullName }} </span>
+
+    <ng-template #otherStates>
+        <span id="state">{{ episode.state.description | uppercase }}</span>
+    </ng-template>
+</div>

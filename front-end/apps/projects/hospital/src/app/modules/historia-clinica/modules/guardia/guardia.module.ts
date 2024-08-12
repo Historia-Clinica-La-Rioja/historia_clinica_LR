@@ -26,6 +26,9 @@ import { EmergencyCareEvolutionNoteComponent } from './components/emergency-care
 import { EmergencyCarePatientComponent } from './components/emergency-care-patient/emergency-care-patient.component';
 import { EmergencyCarePatientsSummaryComponent } from './components/emergency-care-patients-summary/emergency-care-patients-summary.component';
 import { EmergencyCareTabsComponent } from './components/emergency-care-tabs/emergency-care-tabs.component';
+import { EmergencyCarePatientSummaryItemComponent } from './components/emergency-care-patient-summary-item/emergency-care-patient-summary-item.component';
+import { EmergencyCareStatusSummaryItemComponent } from './components/emergency-care-status-summary-item/emergency-care-status-summary-item.component';
+import { EmergencyCareTriageSummaryItemComponent } from './components/emergency-care-triage-summary-item/emergency-care-triage-summary-item.component';
 import { EmergencyCareTemporaryPatientComponent } from './components/emergency-care-temporary-patient/emergency-care-temporary-patient.component';
 import { EvolutionsSummaryComponent } from './components/evolutions-summary/evolutions-summary.component';
 import { LastTriageComponent } from './components/last-triage/last-triage.component';
@@ -95,6 +98,9 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,
 		AttentionPlaceDialogComponent,
+  EmergencyCarePatientSummaryItemComponent,
+  EmergencyCareTriageSummaryItemComponent,
+  EmergencyCareStatusSummaryItemComponent,
 	],
 	imports: [
 		CommonModule,
