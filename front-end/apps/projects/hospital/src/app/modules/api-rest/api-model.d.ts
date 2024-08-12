@@ -1717,6 +1717,7 @@ export interface EmergencyCareEpisodeInProgressDto {
 }
 
 export interface EmergencyCareEpisodeListTriageDto {
+    clinicalSpecialtySector: EmergencyCareClinicalSpecialtySectorDto;
     color: string;
     creator: ProfessionalPersonDto;
     id: number;

@@ -21,12 +21,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
 @Mapper(uses = {TriageMapper.class, PoliceInterventionMapper.class, SnomedMapper.class, MasterDataMapper.class,
-		LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class, OutpatientConsultationMapper.class})
+		LocalDateMapper.class, DoctorsOfficeMapper.class, SnomedMapper.class, OutpatientConsultationMapper.class,
+		EmergencyCareClinicalSpecialtySectorMapper.class})
 public interface EmergencyCareMapper {
 
     @Named("toResponseEmergencyCareDto")
@@ -54,7 +54,8 @@ public interface EmergencyCareMapper {
 	@Mapping(target = "triage.color", source = "triageColorCode")
 	@Mapping(target = "triage.reasons", source = "triage.reasons")
 	@Mapping(target = "triage.creator", source = "triage.creator")
-	EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
+	@Mapping(target = "triage.clinicalSpecialtySector", source = "triage.clinicalSpecialtySectorBo")
+    EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
 
     @Named("toListEmergencyCareListDto")
     @IterableMapping(qualifiedByName = "toEmergencyCareListDto")

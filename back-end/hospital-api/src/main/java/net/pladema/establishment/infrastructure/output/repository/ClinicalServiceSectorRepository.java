@@ -59,4 +59,7 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 			+ " WHERE s.sectorTypeId = :sectorTypeId AND s.institutionId = :institutionId")
 	List<ClinicalSpecialtySector> findAllBySectorTypeAndInstitution(@Param("sectorTypeId") Short sectorTypeId,
 																	@Param("institutionId") Integer institutionId);
+
+	@Query("SELECT css.description FROM ClinicalSpecialtySector css WHERE css.id = :id")
+	String findDescriptionById(@Param("id") Integer id);
 }

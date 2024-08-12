@@ -7,4 +7,6 @@ import java.util.List;
 public interface EmergencyCareClinicalSpecialtySectorStorage {
 
 	List<ClinicalSpecialtySectorBo> getAllBySectorTypeAndInstitution(Short sectorTypeId, Integer institutionId);
+
+	String getDescriptionById(Integer clinicalSpecialtySectorId);
 }

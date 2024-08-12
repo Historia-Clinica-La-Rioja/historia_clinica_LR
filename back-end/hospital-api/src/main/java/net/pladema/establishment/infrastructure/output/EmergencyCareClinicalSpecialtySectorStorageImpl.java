@@ -24,6 +24,11 @@ public class EmergencyCareClinicalSpecialtySectorStorageImpl implements Emergenc
 				.stream().map(this::mapToBo).collect(Collectors.toList());
 	}
 
+	@Override
+	public String getDescriptionById(Integer clinicalSpecialtySectorId) {
+		return clinicalServiceSectorRepository.findDescriptionById(clinicalSpecialtySectorId);
+	}
+
 	private ClinicalSpecialtySectorBo mapToBo(ClinicalSpecialtySector clinicalSpecialtySector) {
 		return ClinicalSpecialtySectorBo.builder()
 				.id(clinicalSpecialtySector.getId())

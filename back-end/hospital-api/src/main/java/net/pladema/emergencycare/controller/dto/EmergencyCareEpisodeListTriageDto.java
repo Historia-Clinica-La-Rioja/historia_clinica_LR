@@ -21,5 +21,5 @@ public class EmergencyCareEpisodeListTriageDto {
 	private String color;
 	private List<OutpatientReasonDto> reasons;
 	private ProfessionalPersonDto creator;
-
+	private EmergencyCareClinicalSpecialtySectorDto clinicalSpecialtySector;
 }
