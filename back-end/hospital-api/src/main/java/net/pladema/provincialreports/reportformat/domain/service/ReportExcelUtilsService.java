@@ -231,6 +231,7 @@ public class ReportExcelUtilsService {
 
 	public List<CellContent> newGetHeaderDataWithoutObservation(String[] subtitles, String title,
 															 @NonNull Integer mainTitleColumns,
+															 Integer rowsBetweenTitleAndInfo,
 															 String formattedPeriod,
 															 @NonNull Integer institutionId) {
 		// recommended minimum mainTitleColumns = 7

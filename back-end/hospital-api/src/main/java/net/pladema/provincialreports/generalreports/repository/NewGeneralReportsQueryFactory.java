@@ -1,14 +1,25 @@
 package net.pladema.provincialreports.generalreports.repository;
 
-import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Repository;
+
+import net.pladema.provincialreports.reportformat.repository.ReportsRepositoryUtils;
 
 @Repository
 @Transactional
 public class NewGeneralReportsQueryFactory {
 
+	private final ReportsRepositoryUtils repositoryUtils;
+
+	public NewGeneralReportsQueryFactory(ReportsRepositoryUtils repositoryUtils) {
+		this.repositoryUtils = repositoryUtils;
+	}
+
+	public List<EmergencyConsultationDetail> queryEmergency(Integer institutionId, LocalDate start, LocalDate end) {
+		return repositoryUtils.executeQuery("GeneralReports.EmergencyConsultationDetail", institutionId, start, end);
+	}
 }

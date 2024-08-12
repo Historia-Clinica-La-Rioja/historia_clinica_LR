@@ -50,10 +50,7 @@ public class GeneralReportsController {
 			String title = "Reporte de emergencias diarias";
 			String[] headers = {"DNI de paciente", "Apellido(s)", "Nombre(s)", "Obra social", "Fecha de atención", "Hora de atención", "Medio de ingreso", "Ambulancia", "Oficina", "Sector", "Estado", "Tipo", "Notas de triage", "Triage", "Fecha de alta", "Ambulancia de alta", "Tipo de alta", "Salida", "Intervención policial"};
 
-			var startDate = fromDate.atStartOfDay();
-			var endDate = toDate.atTime(LocalTime.MAX);
-
-			IWorkbook wb = excelService.buildEmergencyExcel(title, headers, queryFactory.queryEmergency(institutionId, startDate, endDate), institutionId, fromDate, toDate);
+			IWorkbook wb = excelService.buildEmergencyExcel(title, headers, queryFactory.queryEmergency(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
 			String filename = "Emergencias diarias - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 

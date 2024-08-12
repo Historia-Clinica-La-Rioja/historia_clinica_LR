@@ -4,10 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -129,35 +133,54 @@ public class DateFormat {
 
 	// new universal formatting
 
-	private static final Map<String, DateTimeFormatter> INPUT_FORMATTERS = Map.of(
-			"dd/MM/yyyy", DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-			"yyyy-MM-dd", DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-			"yyyy-MM-dd HH:mm:ss", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
-			"yyyy-MM-dd HH:mm:ss.ss", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.ss")
+	private static final Locale LOCALE_ARGENTINA = new Locale("es", "AR");
+	private static final List<DateTimeFormatter> INPUT_FORMATTERS = Arrays.asList(
+			DateTimeFormatter.ofPattern("d/M/yyyy"),
+			DateTimeFormatter.ofPattern("dd/M/yyyy"),
+			DateTimeFormatter.ofPattern("d/MM/yyyy"),
+			DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+			DateTimeFormatter.ofPattern("dd-MM-yyyy"),
+			DateTimeFormatter.ofPattern("d-M-yyyy"),
+			DateTimeFormatter.ofPattern("dd.MM.yyyy"),
+			DateTimeFormatter.ofPattern("d.M.yyyy"),
+			DateTimeFormatter.ofPattern("dd MMM yyyy").withLocale(LOCALE_ARGENTINA),
+			DateTimeFormatter.ofPattern("d MMM yyyy").withLocale(LOCALE_ARGENTINA),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SS"),
+			DateTimeFormatter.ofPattern("yyyy/MM/dd"),
+			DateTimeFormatter.ofPattern("yyyyMMdd")
 	);
 
-	public String newReformatDate(String previousDate, String inputPattern, String outputPattern) {
-		if (previousDate == null) {
-			return "NOT SPECIFIED";
+	public String newReformatDate(String previousDate, String outputPattern) {
+		if (previousDate == null || previousDate.trim().isEmpty()) {
+			return "NO ESPECIFICADO";
 		}
 
-		DateTimeFormatter inputFormatter = INPUT_FORMATTERS.get(inputPattern);
-		if (inputFormatter == null) {
-			throw new IllegalArgumentException("Invalid inputPattern: " + inputPattern);
-		}
+		previousDate = previousDate.trim();
 
-		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputPattern);
+		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern(outputPattern, new Locale("es", "AR"));
 
-		try {
-			LocalDate date = LocalDate.parse(previousDate, inputFormatter);
-			return date.format(outputFormatter);
-		} catch (DateTimeParseException e) {
+		for (DateTimeFormatter inputFormatter : INPUT_FORMATTERS) {
 			try {
-				LocalDateTime dateTime = LocalDateTime.parse(previousDate, inputFormatter);
-				return dateTime.format(outputFormatter);
-			} catch (DateTimeParseException ex) {
-				throw new RuntimeException("Failed to parse date: " + previousDate);
+				LocalDate date = LocalDate.parse(previousDate, inputFormatter);
+				return date.format(outputFormatter);
+			} catch (DateTimeParseException e) {
+				throw new RuntimeException(e);
 			}
+		}
+		throw new RuntimeException("Failed to parse date " + previousDate + " with formatter " + outputFormatter);
+	}
+
+	public String standardizeTime(String time) {
+		try {
+			DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("H:m");
+			LocalTime parsedTime = LocalTime.parse(time, inputFormatter);
+			DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+			return parsedTime.format(outputFormatter);
+		} catch (DateTimeParseException e) {
+			throw new IllegalArgumentException("Invalid time format: " + time, e);
 		}
 	}
 
