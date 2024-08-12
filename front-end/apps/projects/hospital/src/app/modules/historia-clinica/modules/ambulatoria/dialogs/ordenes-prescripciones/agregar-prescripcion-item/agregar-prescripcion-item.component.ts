@@ -234,11 +234,19 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		return this.prescriptionItemForm.controls[formControl].value ? this.prescriptionItemForm.controls[formControl].value.toString().length : this.MIN_INPUT_LENGTH;
 	}
 
+	scrollToTop(): void {
+		const dialogContent = document.getElementById('prescription-dialog-content');
+		if (dialogContent) {
+			dialogContent.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+	}
+
 	addPrescriptionItem() {
 		if ( ! this.prescriptionItemForm.valid
 			|| this.snomedConcept === undefined || this.snomedConcept === null || this.snomedConcept.pt === ''
 			|| intervalValidation(this.prescriptionItemForm, 'intervalHours','interval')
 			|| intervalValidation(this.prescriptionItemForm, 'administrationTimeDays','administrationTime')) {
+				this.scrollToTop();
 				return this.prescriptionItemForm.markAllAsTouched();
 			}
 
