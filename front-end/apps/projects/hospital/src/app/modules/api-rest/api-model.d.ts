@@ -4710,6 +4710,17 @@ export interface SaveInstitutionResponsibilityAreaDto {
     responsibilityAreaPolygon: GlobalCoordinatesDto[];
 }
 
+export interface SaveMedicationStatementInstitutionalSupplyDto {
+    medicationStatementId: number;
+    medications: SaveMedicationStatementInstitutionalSupplyMedicationDto[];
+}
+
+export interface SaveMedicationStatementInstitutionalSupplyMedicationDto {
+    pt: string;
+    quantity: number;
+    sctid: string;
+}
+
 export interface SavedBookingAppointmentDto {
     appointmentId: number;
     bookingPersonId: number;
