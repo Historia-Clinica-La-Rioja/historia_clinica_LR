@@ -416,3 +416,97 @@ databaseChangeLog:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_document_appointment_appointment_id" ON document_appointment(appointment_id);
 
+        
+    - changeSet:
+        id: create-table-medication_statement_institutional_supply
+        author: mmalyvarni
+        changes:
+          - createTable:
+              tableName: medication_statement_institutional_supply
+              columns:
+                - column:
+                    autoIncrement: true
+                    constraints:
+                      nullable: false
+                      primaryKey: true
+                      primaryKeyName: PK_medication_statement_institutional_supply
+                    name: id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: medication_statement_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: snomed_id
+                    type: int
+                - column:
+                    constraints:
+                      nullable: false
+                    name: quantity
+                    type: smallint
+                - column:
+                    constraints:
+                      nullable: false
+                    name: institution_id
+                    type: int
+                - column:
+                    name: created_by
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_on
+                    type: datetime
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_by
+                    type: int
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_on
+                    type: datetime
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted
+                    type: BOOLEAN
+                    constraints:
+                      nullable: false
+                - column:
+                    name: deleted_by
+                    type: int
+                - column:
+                    name: deleted_on
+                    type: datetime
+          - addForeignKeyConstraint:
+              baseColumnNames: medication_statement_id
+              baseTableName: medication_statement_institutional_supply
+              constraintName: FK_medication_statement_institutional_supply_medication_statement_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: medication_statement
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: institution_id
+              baseTableName: medication_statement_institutional_supply
+              constraintName: FK_medication_statement_institutional_supply_institution_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: institution
+              validate: true
+          - addForeignKeyConstraint:
+              baseColumnNames: snomed_id
+              baseTableName: medication_statement_institutional_supply
+              constraintName: FK_medication_statement_institutional_supply_snomed_id
+              onDelete: NO ACTION
+              onUpdate: NO ACTION
+              referencedColumnNames: id
+              referencedTableName: snomed
+              validate: true
