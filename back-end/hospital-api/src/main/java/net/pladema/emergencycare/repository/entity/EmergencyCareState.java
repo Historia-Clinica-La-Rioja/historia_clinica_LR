@@ -36,4 +36,7 @@ public class EmergencyCareState implements Serializable {
 
 		@Column(name = "description", length = 25, nullable = false)
 		private String description;
+
+		@Column(name = "order")
+		private Short order;
 }

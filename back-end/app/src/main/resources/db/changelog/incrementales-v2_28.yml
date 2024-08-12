@@ -222,7 +222,7 @@ databaseChangeLog:
                 SELECT i.id, m.id, false
                 FROM institution i
                 CROSS JOIN medicine_financing_status m;
-                  
+
     - changeSet:
         id: createIndex-institution-monthly-report
         author: efernandez
@@ -232,6 +232,33 @@ databaseChangeLog:
                     CREATE INDEX IF NOT EXISTS "IDX_document_odontology_diagnostic__document_id" ON document_odontology_diagnostic(document_id);
                     CREATE INDEX IF NOT EXISTS "IDX_document_health_condition__document_id" ON document_health_condition(document_id);
                     CREATE INDEX  IF NOT EXISTS "IDX_document_odontology_procedure__document_id" ON document_odontology_procedure(document_id);
+
+    - changeSet:
+        id: emergency_care_state-addOrderColumn
+        comment: Create column order in table emergency_care_state
+        author: tomasbecher
+        changes:
+          - addColumn:
+              columns:
+                - column:
+                    name: order
+                    type: smallint
+              tableName: emergency_care_state
+
+    - changeSet:
+        id: insert-order-in-table-emergency_care_state
+        author: tomasbecher
+        context: "!schema-only"
+        changes:
+          - sql:
+              sql: |-               
+                UPDATE emergency_care_state SET "order" = 1 WHERE id = 1;
+                UPDATE emergency_care_state SET "order" = 2 WHERE id = 6;
+                UPDATE emergency_care_state SET "order" = 3 WHERE id = 2;
+                UPDATE emergency_care_state SET "order" = 4 WHERE id = 5;
+                UPDATE emergency_care_state SET "order" = 5 WHERE id = 4;
+                UPDATE emergency_care_state SET "order" = 6 WHERE id = 3;
+
 
     - changeSet:
         id: addColumn-city_id-to-violence_report_aggressor
@@ -418,7 +445,7 @@ databaseChangeLog:
               sql: |-
                 CREATE INDEX IF NOT EXISTS "IDX_document_appointment_appointment_id" ON document_appointment(appointment_id);
 
-        
+
     - changeSet:
         id: create-table-medication_statement_institutional_supply
         author: mmalyvarni

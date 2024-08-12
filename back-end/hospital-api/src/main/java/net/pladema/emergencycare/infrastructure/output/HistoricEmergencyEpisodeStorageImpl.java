@@ -10,7 +10,6 @@ import net.pladema.emergencycare.service.domain.HistoricEmergencyEpisodeBo;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -31,15 +30,6 @@ public class HistoricEmergencyEpisodeStorageImpl implements HistoricEmergencyEpi
 	}
 
 	@Override
-	public LocalDateTime getLatestChangeStateDateByEpisodeId(Integer episodeId) {
-		log.debug("Input getLatestByEmergencyCareEpisodeId parameter -> episodeId {}", episodeId);
-		Optional<HistoricEmergencyEpisode> hee = historicEmergencyEpisodeRepository.findLatestByEmergencyCareEpisodeId(episodeId);
-		LocalDateTime result = hee.map(HistoricEmergencyEpisode::getChangeStateDate).orElse(null);
-		log.debug("Output -> {}", result);
-		return result;
-	}
-
-	@Override
 	public Optional<HistoricEmergencyEpisodeBo> getLatestByEpisodeId(Integer episodeId) {
 		log.debug("Input getLatestByEpisodeId parameter -> episodeId {}", episodeId);
 		Optional<HistoricEmergencyEpisode> hee = historicEmergencyEpisodeRepository.findLatestByEmergencyCareEpisodeId(episodeId);
@@ -53,7 +43,8 @@ public class HistoricEmergencyEpisodeStorageImpl implements HistoricEmergencyEpi
 		log.debug("Input getLatestAttentionPlaceByEpisodeId parameter -> episodeId {}", episodeId);
 		Optional<HistoricEmergencyEpisodeBo> hee = historicEmergencyEpisodeRepository.findLatestByEmergencyCareEpisodeId(episodeId)
 				.map(this::mapToBo);
-		EmergencyCareEpisodeAttentionPlaceBo result = hee.map(EmergencyCareEpisodeAttentionPlaceBo::new).orElse(null);
+		EmergencyCareEpisodeAttentionPlaceBo result = hee.map(EmergencyCareEpisodeAttentionPlaceBo::new)
+				.orElse(new EmergencyCareEpisodeAttentionPlaceBo());
 		log.debug("Output -> {}", result);
 		return result;
 	}

@@ -52,7 +52,8 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 						"LEFT JOIN Shockroom s ON (s.id = ece.shockroomId) " +
 						"LEFT JOIN Bed b ON (ece.bedId = b.id) " +
 						"LEFT JOIN Room r ON (b.roomId = r.id) " +
-						"LEFT JOIN Sector se ON (se.id = COALESCE(dso.sectorId, s.sectorId, r.sectorId)) ";
+						"LEFT JOIN Sector se ON (se.id = COALESCE(dso.sectorId, s.sectorId, r.sectorId)) " +
+						"LEFT JOIN EmergencyCareState ecs ON (ece.emergencyCareStateId = ecs.id) ";
 
 		String sqlWhereStatement =
 				"WHERE (ece.emergencyCareStateId IN (" + STATE_IDS_STRING + "))" +
@@ -70,7 +71,7 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 			sqlWhereStatement += filter.getTypeId().equals(undefinedEmergencyCareType) ? " AND ece.emergencyCareTypeId is NULL " : " AND ece.emergencyCareTypeId = " + filter.getTypeId() + " ";
 		}
 
-		String sqlOrderByStatement = "ORDER BY ece.emergencyCareStateId, ece.triageCategoryId, ece.creationable.createdOn";
+		String sqlOrderByStatement = "ORDER BY ecs.order, ece.emergencyCareStateId, ece.triageCategoryId, ece.creationable.createdOn";
 
 		List<EmergencyCareVo> resultData = entityManager.createQuery(sqlDataSelectStatement + sqlFromStatement + sqlWhereStatement + sqlOrderByStatement)
 				.setMaxResults(pageable.getPageSize()) //LIMIT
