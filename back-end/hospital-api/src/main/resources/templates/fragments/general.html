@@ -1068,10 +1068,10 @@
     </div>
 
     <!-- Última hora ingesta alimentaria -->
-    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${foodIntake != null && foodIntake.performedTime != null}">
+    <div th:fragment="foodInTake(message)" class="section-data section-explicit-list" th:if="${procedureDescription != null && procedureDescription.foodIntakeClockTime != null}">
         <p class="section-title" th:text="${preMedications == null || #lists.isEmpty(preMedications)} ? ${message} : _"></p>
         <strong>Última ingesta de comida: </strong>
-        <span th:text="${#temporals.format(foodIntake.performedTime, 'HH:mm') + ' hs.'}"></span>
+        <span th:text="${#temporals.format(procedureDescription.foodIntakeClockTime, 'HH:mm') + ' hs.'}"></span>
     </div>
 
     <!-- Antecedentes (histories) -->

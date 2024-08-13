@@ -3,8 +3,6 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.dto;
 import ar.lamansys.sgx.shared.dates.controller.dto.DateDto;
 import ar.lamansys.sgx.shared.dates.controller.dto.TimeDto;
 import javax.annotation.Nullable;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -29,8 +27,6 @@ public class ProcedureDescriptionDto {
     private String note;
 
     @Nullable
-    @Min(1)
-    @Max(5)
     private Short asa;
 
     @Nullable
@@ -67,6 +63,9 @@ public class ProcedureDescriptionDto {
     private TimeDto surgeryEndTime;
 
     @Nullable
+    private TimeDto foodIntake;
+
+    @Nullable
     @JsonIgnore
     private LocalDate anesthesiaStartLocalDate;
 
@@ -97,6 +96,10 @@ public class ProcedureDescriptionDto {
     @Nullable
     @JsonIgnore
     private LocalTime surgeryEndLocalTime;
+
+    @Nullable
+    @JsonIgnore
+    private LocalTime foodIntakeClockTime;
 
     public boolean hasHistoryStringValues() {
         return (note != null  && !note.isEmpty()) || asa != null;

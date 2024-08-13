@@ -212,7 +212,6 @@ export interface AnestheticReportDto {
     diagnosis?: DiagnosisDto[];
     encounterId: number;
     fluidAdministrations?: AnestheticSubstanceDto[];
-    foodIntake?: FoodIntakeDto;
     histories?: HealthConditionDto[];
     mainDiagnosis?: DiagnosisDto;
     measuringPoints?: MeasuringPointDto[];
@@ -2097,10 +2096,6 @@ export interface FilePathBo {
 export interface FilterOptionDto {
     description: string;
     id: number;
-}
-
-export interface FoodIntakeDto {
-    clockTime: TimeDto;
 }
 
 export interface FormVDto {
@@ -4082,6 +4077,7 @@ export interface ProcedureDescriptionDto {
     anesthesiaStartDate?: DateDto;
     anesthesiaStartTime?: TimeDto;
     asa?: number;
+    foodIntake?: TimeDto;
     nasogastricTube?: boolean;
     note?: string;
     surgeryEndDate?: DateDto;

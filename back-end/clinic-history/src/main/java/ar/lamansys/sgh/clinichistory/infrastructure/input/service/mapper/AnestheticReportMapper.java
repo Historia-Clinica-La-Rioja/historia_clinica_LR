@@ -6,7 +6,6 @@ import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.Anesth
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnestheticTechniqueMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnthropometricDataMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.HealthConditionMapper;
-import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.FoodIntakeMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.MeasuringPointMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.MedicationMapper;
 import ar.lamansys.sgh.clinichistory.infrastructure.input.rest.ips.mapper.AnestheticSubstanceMapper;
@@ -23,7 +22,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(uses = {LocalDateMapper.class, SnomedMapper.class, HealthConditionMapper.class, AnthropometricDataMapper.class,
-        MedicationMapper.class, AnestheticSubstanceMapper.class, FoodIntakeMapper.class, RiskFactorMapper.class,
+        MedicationMapper.class, AnestheticSubstanceMapper.class, RiskFactorMapper.class,
         AnestheticHistoryMapper.class, ProcedureDescriptionMapper.class, AnalgesicTechniqueMapper.class,
         AnestheticTechniqueMapper.class, MeasuringPointMapper.class, PostAnesthesiaStatusMapper.class},
         builder = @Builder(disableBuilder = true))
@@ -46,7 +45,6 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticAgents", source = "anestheticAgents", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "nonAnestheticDrugs", source = "nonAnestheticDrugs", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "antibioticProphylaxis", source = "antibioticProphylaxis", qualifiedByName = "toListAnestheticSubstanceBo")
-    @Mapping(target = "procedureDescription.foodIntake", source = "foodIntake.clockTime")
     @Mapping(target = "measuringPoints", source = "measuringPoints", qualifiedByName = "toListMeasuringPointBo")
     @Mapping(target = "postAnesthesiaStatus", source = "postAnesthesiaStatus", qualifiedByName = "toPostAnesthesiaStatusBo")
     @Mapping(target = "documentSource", ignore = true)
@@ -62,7 +60,6 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticHistory", source = "anestheticHistory", qualifiedByName = "toAnestheticHistoryDto")
     @Mapping(target = "medications", source = "medications", qualifiedByName = "toListMedicationDto")
     @Mapping(target = "preMedications", source = "preMedications", qualifiedByName = "toListAnestheticSubstanceDto")
-    @Mapping(target = "foodIntake", source = "procedureDescription", qualifiedByName = "toFoodIntakeDto")
     @Mapping(target = "histories", source = "histories", qualifiedByName = "toListHealthConditionDto")
     @Mapping(target = "procedureDescription", source = "procedureDescription", qualifiedByName = "toProcedureDescriptionDto")
     @Mapping(target = "anestheticPlans", source = "anestheticPlans", qualifiedByName = "toListAnestheticSubstanceDto")
@@ -93,7 +90,6 @@ public interface AnestheticReportMapper {
     @Mapping(target = "anestheticAgents", source = "anestheticReport.anestheticAgents", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "nonAnestheticDrugs", source = "anestheticReport.nonAnestheticDrugs", qualifiedByName = "toListAnestheticSubstanceBo")
     @Mapping(target = "antibioticProphylaxis", source = "anestheticReport.antibioticProphylaxis", qualifiedByName = "toListAnestheticSubstanceBo")
-    @Mapping(target = "procedureDescription.foodIntake", source = "anestheticReport.foodIntake.clockTime")
     @Mapping(target = "measuringPoints", source = "anestheticReport.measuringPoints", qualifiedByName = "toListMeasuringPointBo")
     @Mapping(target = "postAnesthesiaStatus", source = "anestheticReport.postAnesthesiaStatus", qualifiedByName = "toPostAnesthesiaStatusBo")
     @Mapping(target = "documentSource", ignore = true)

@@ -52,8 +52,6 @@ public class GenerateAnestheticReportDocumentContext implements GenerateDocument
 
         contextMap.put("preMedications", document.getPreMedications());
 
-        contextMap.put("foodIntake", document.getFoodIntake());
-
         contextMap.put("histories", document.getHistories());
 
         contextMap.put("procedureDescription", document.getProcedureDescription());
