@@ -1,5 +1,5 @@
-<div mat-dialog-title fxLayoutAlign="space-between">
-	<h2 [translate]="'image-network.queue_list.image_indexing.INDEX_IMAGE_DIALOG_TITLE'"></h2>
+<div fxLayoutAlign="space-between">
+	<h2 mat-dialog-title [translate]="'image-network.queue_list.image_indexing.INDEX_IMAGE_DIALOG_TITLE'"></h2>
 	<button id="close" mat-icon-button mat-dialog-close>
 		<mat-icon>close</mat-icon>
 	</button>
@@ -21,8 +21,10 @@
 			</mat-form-field>
 		</div>
 
-		<app-button class="loading-button" fxLayoutAlign="end" [buttonType]="ButtonType.RAISED"
-			[text]="'image-network.queue_list.image_indexing.INDEX_IMAGE_BUTTON'" (clicked)="indexImage()">
-		</app-button>
 	</form>
+</div>
+<div mat-dialog-actions fxLayoutAlign="end">
+	<app-button class="loading-button" [buttonType]="ButtonType.RAISED"
+		[text]="'image-network.queue_list.image_indexing.INDEX_IMAGE_BUTTON'" (clicked)="indexImage()">
+	</app-button>
 </div>

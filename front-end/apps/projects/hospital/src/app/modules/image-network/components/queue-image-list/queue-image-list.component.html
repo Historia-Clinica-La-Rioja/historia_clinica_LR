@@ -33,15 +33,18 @@
                     </mat-label>
                 </div>
                 <div fxFlex.gt-sm="20" fxFlex.gt-md="25" fxLayout="row" fxLayoutGap="6px"
-                    fxLayoutAlign="center baseline">
-                    <app-button class="loading-button" fxFlex="70" [buttonType]="ButtonType.RAISED"
+                    fxLayoutAlign="center baseline"
+					fxLayoutAlign.gt-sm="start start">
+                    <app-button class="loading-button" [buttonType]="ButtonType.RAISED"
                         [text]="'image-network.queue_list.TRY_AGAIN'"
                         [disabled]="image.status.description !== ERROR_IMAGE"
                         (clicked)="tryAgain(image)">
                     </app-button>
-                    <!-- <app-button fxFlex="70" [buttonType]="ButtonType.RAISED"
-                        [text]="'image-network.queue_list.INDEX'" [disabled]="true" (clicked)="doIndex()">
-                    </app-button> TODO: enable when be is available-->
+					<app-button class="loading-button" [buttonType]="ButtonType.STROKED"
+                        [text]="'image-network.queue_list.image_indexing.INDEX_IMAGE'"
+						[disabled]="image.status.description !== ERROR_IMAGE"
+                        (clicked)="indexImage(image)">
+                    </app-button>
                 </div>
             </div>
         </mat-list-item>

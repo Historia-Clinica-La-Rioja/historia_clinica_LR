@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { hasError } from '@core/utils/form.utils';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { IndexingImageStatusComponent } from '../indexing-image-status/indexing-image-status.component';
 import { ImageQueueService } from '@api-rest/services/image-queue.service';
+import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
 
 @Component({
 	selector: 'app-index-image-manually',
@@ -23,7 +24,7 @@ export class IndexImageManuallyComponent implements OnInit {
 		private readonly dialogRef: MatDialogRef<IndexImageManuallyComponent>,
 		private readonly imageQueueService: ImageQueueService,
 		private readonly formBuilder: UntypedFormBuilder,
-		private readonly dialog: MatDialog,
+		private readonly dialog: DialogService<IndexingImageStatusComponent>,
 	) { }
 
 	indexImage() {
@@ -60,16 +61,19 @@ export class IndexImageManuallyComponent implements OnInit {
 	}
 
 	private openIndexingImageManually(): MatDialogRef<IndexingImageStatusComponent> {
-		return this.dialog.open(IndexingImageStatusComponent, {
-			width: '30%',
-			autoFocus: false,
-			data: {
-				icon: 'watch_later',
-				iconColor: 'primary',
-				popUpMessage: 'image-network.queue_list.image_indexing.INDEX_IMAGE_MANUALLY_VERIFY',
-				popUpTitle: 'image-network.queue_list.image_indexing.INDEX_IMAGE_MANUALLY_VERIFY_INDEXED',
-				acceptBtn: true,
-			}
-		});
+		const dialogConfig: DialogConfiguration = {
+			dialogWidth: DialogWidth.SMALL,
+			blockCloseClickingOut: false,
+		};
+
+		const componentData = {
+			icon: 'watch_later',
+			iconColor: 'primary',
+			popUpMessage: 'image-network.queue_list.image_indexing.INDEX_IMAGE_MANUALLY_VERIFY',
+			popUpTitle: 'image-network.queue_list.image_indexing.INDEX_IMAGE_MANUALLY_VERIFY_INDEXED',
+			acceptBtn: true,
+		};
+
+		return this.dialog.open(IndexingImageStatusComponent, dialogConfig, componentData);
 	}
 }

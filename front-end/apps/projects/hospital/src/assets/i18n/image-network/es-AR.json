@@ -67,7 +67,17 @@
         "queue_list": {
         "TRY_AGAIN": "Reintentar",
         "INDEX": "Indexar",
-        "DO_FILTER":"Aplicar filtros"
+        "DO_FILTER":"Aplicar filtros",
+		"image_indexing": {
+			"INDEX_IMAGE": "Indexar imagen",
+			"INDEX_IMAGE_DIALOG_TITLE": "Indexar imagen manualmente",
+			"INDEX_IMAGE_BUTTON": "Indexar manualmente",
+			"INDEX_IMAGE_MANUALLY_PLACEHOLDER": "Ingrese el UID del estudio a indexar",
+			"INDEX_IMAGE_MANUALLY_INPUT_TITLE": "UID estudio",
+			"INDEX_IMAGE_MANUALLY_VERIFY": "Verifica en algunos minutos si la imagen se movió correctamente.",
+			"INDEX_IMAGE_MANUALLY_VERIFY_INDEXED": "La imagen se ha indexado manualmente.",
+			"INDEX_IMAGE_MANUALLY_ERROR_INDEXING": "Ocurrió un error al indexar la imagen."
+		}
         },
         "worklist": {
             "status": {
