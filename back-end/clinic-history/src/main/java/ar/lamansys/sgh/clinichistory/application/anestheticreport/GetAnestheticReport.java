@@ -2,6 +2,7 @@ package ar.lamansys.sgh.clinichistory.application.anestheticreport;
 
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.exceptions.AnestheticReportException;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EDocumentStatus;
 import ar.lamansys.sgh.clinichistory.domain.document.enums.EAnestheticReportException;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class GetAnestheticReport {
         log.debug("Input parameters -> documentId {}", documentId);
 
         var result = anestheticReportStorage.get(documentId)
+                .filter(anestheticReportBo -> !EDocumentStatus.isDeleted(anestheticReportBo))
                 .map(fillOutAnestheticReport::run)
                 .orElseThrow(() -> new AnestheticReportException(
                         EAnestheticReportException.ANESTHETIC_REPORT_NOT_FOUND,
