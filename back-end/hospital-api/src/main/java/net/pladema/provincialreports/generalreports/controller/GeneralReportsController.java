@@ -48,12 +48,37 @@ public class GeneralReportsController {
 
 		try {
 			String title = "Reporte de emergencias diarias";
-			String[] headers = {"DNI de paciente", "Apellido(s)", "Nombre(s)", "Obra social", "Fecha de atención", "Hora de atención", "Medio de ingreso", "Ambulancia", "Oficina", "Sector", "Estado", "Tipo", "Notas de triage", "Triage", "Fecha de alta", "Ambulancia de alta", "Tipo de alta", "Salida", "Intervención policial"};
+			String[] headers = {"DNI de paciente", "Apellido", "Nombre", "Obra social", "Fecha de atención", "Hora de atención", "Medio de ingreso", "Ambulancia", "Oficina", "Sector", "Estado", "Tipo", "Notas de triage", "Triage", "Fecha de alta", "Ambulancia de alta", "Tipo de alta", "Salida", "Intervención policial"};
 
 			logger.debug("building emergency excel report");
 			IWorkbook wb = excelService.buildEmergencyExcel(title, headers, queryFactory.queryEmergency(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
 			String filename = "Emergencias diarias - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			logger.debug("excel report generated successfully with filename = {}", filename);
+
+			return excelUtilsService.createResponseEntity(wb, filename);
+		} catch (Exception e) {
+			logger.error("error generating emergency excel report for institutionId {}", institutionId, e);
+			throw new RuntimeException("error generating report", e);
+		}
+	}
+
+	@GetMapping(value = "/{institutionId}/diabetic")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<byte[]> getDiabeticsExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+		logger.info("getDiabeticsExcelReport started with institution id = {}, fromDate = {}, toDate = {}", institutionId, fromDate, toDate);
+
+		try {
+			String title = "Reporte de diabéticos confirmados";
+			String[] headers = {"Fecha", "Apellido de prestador", "Nombre de prestador", "DNI de prestador", "Apellido de paciente", "Nombre de paciente", "DNI de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Motivos", "Problema", "Hemoglobina glicosilada (mg/dL)", "Medicación"};
+
+			logger.debug("building diabetics excel report");
+			IWorkbook wb = excelService.buildDiabeticsExcel(title, headers, queryFactory.queryDiabetics(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
+
+			String filename = "Diabéticos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);

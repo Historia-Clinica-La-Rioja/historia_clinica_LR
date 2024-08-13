@@ -22,4 +22,9 @@ public class NewGeneralReportsQueryFactory {
 	public List<EmergencyConsultationDetail> queryEmergency(Integer institutionId, LocalDate start, LocalDate end) {
 		return repositoryUtils.executeQuery("GeneralReports.EmergencyConsultationDetail", institutionId, start, end, null);
 	}
+
+	public List<DiabeticHypertensionConsultationDetail> queryDiabetics(Integer institutionId, LocalDate start, LocalDate end) {
+		return repositoryUtils.executeQuery("GeneralReports.DiabeticsConsultationDetail", institutionId, start, end, null);
+	}
+
 }
