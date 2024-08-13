@@ -231,7 +231,7 @@ public class ReportExcelUtilsService {
 
 	public List<CellContent> newGetHeaderDataWithoutObservation(String[] subtitles, String title,
 															 @NonNull Integer mainTitleColumns,
-															 Integer rowsBetweenTitleAndInfo,
+															 Integer rowsBetweenTitleAndHeaders,
 															 String formattedPeriod,
 															 @NonNull Integer institutionId) {
 		// recommended minimum mainTitleColumns = 7
@@ -253,7 +253,7 @@ public class ReportExcelUtilsService {
 
 		data.add(new CellContent(rowNum, 0, 1, 1, "FECHA DE EMISIÓN:", boldTitleStyle));
 		data.add(new CellContent(rowNum, 1, 1, 2, currentDateAsDDMMYYYY("dash"), fieldStyle));
-		data.add(new CellContent(rowNum, 3, 2, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
+		data.add(new CellContent(rowNum, 3, 2 + rowsBetweenTitleAndHeaders, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
 
 		rowNum++;
 
@@ -261,6 +261,15 @@ public class ReportExcelUtilsService {
 		data.add(new CellContent(rowNum, 1, 1, 2, institution.getName(), fieldStyle));
 
 		rowNum++;
+
+		// addition of empty row(s) between title and headers
+
+		for (int i = 0; i < rowsBetweenTitleAndHeaders; i++) {
+			for (int j = 0; j < mainTitleColumns + 3; j++) {
+				data.add(new CellContent(rowNum, j, 1, 1, " ", fieldStyle));
+			}
+			rowNum++;
+		}
 
 		data.add(new CellContent(rowNum, 0, 1, mainTitleColumns + 3, " ", fieldStyle));
 
@@ -271,6 +280,19 @@ public class ReportExcelUtilsService {
 		for (String subtitle : subtitles) {
 			data.add(new CellContent(rowNum, colNum++, 1, 1, subtitle, boldTitleStyle));
 		}
+
+		return data;
+	}
+
+	public List<CellContent> addTotalCountRow(IWorkbook wb, ISheet sheet, Integer rowIndex, Integer mainTitleColumns, Integer headerRows) {
+
+		List<CellContent> data = new ArrayList<>();
+
+		ICellStyle fieldStyle = createStyle(wb, (short) 12, false, ICellStyle.HALIGNMENT.LEFT, ICellStyle.VALIGNMENT.CENTER);
+		ICellStyle boldTitleStyle = createStyle(wb, (short) 13, true, ICellStyle.HALIGNMENT.LEFT, ICellStyle.VALIGNMENT.CENTER);
+
+		data.add(new CellContent(rowIndex, 0, 1, 1, "TOTAL DE ATENCIONES:", boldTitleStyle));
+		data.add(new CellContent(rowIndex, 1, 1, 2, String.valueOf(sheet.getCantRows() - headerRows), fieldStyle));
 
 		return data;
 	}
@@ -351,7 +373,7 @@ public class ReportExcelUtilsService {
 		return String.format("%s - %s", startDate.format(formatter), endDate.format(formatter));
 	}
 
-	private ICellStyle createStyle(IWorkbook workbook, short fontSize, boolean bold,
+	public ICellStyle createStyle(IWorkbook workbook, short fontSize, boolean bold,
 								   ICellStyle.HALIGNMENT hAlign, ICellStyle.VALIGNMENT vAlign) {
 		ICellStyle style = workbook.createStyle();
 		style.setFontSize(fontSize);

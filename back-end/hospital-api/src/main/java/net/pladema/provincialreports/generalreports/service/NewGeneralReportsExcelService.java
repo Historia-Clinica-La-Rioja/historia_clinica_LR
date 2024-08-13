@@ -1,5 +1,6 @@
 package net.pladema.provincialreports.generalreports.service;
 
+import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
 import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
@@ -12,7 +13,10 @@ import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtil
 
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,11 +46,15 @@ public class NewGeneralReportsExcelService {
 			fillEmergencyRow(row, resultData, dataCellsStyle);
 		});
 
+		excelUtilsService.newFillRow(sheet, excelUtilsService.addTotalCountRow(workbook, sheet, 4, 16, 7));
+
 		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
 		excelUtilsService.newSetSheetDimensions(sheet);
 
 		return workbook;
 	}
+
+
 
 	public void fillEmergencyRow(IRow row, EmergencyConsultationDetail content, ICellStyle style) {
 		excelUtilsService.setCellValue(row, 0, style, content.getIdentification());

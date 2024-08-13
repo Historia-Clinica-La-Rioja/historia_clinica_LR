@@ -24,7 +24,7 @@ import java.time.LocalTime;
 
 @RestController
 @RequestMapping("newgeneralreports")
-@Tag(name = "General reports", description = "Reportes generales")
+@Tag(name = "Reports - general", description = "Reportes generales, general reports")
 public class GeneralReportsController {
 	private static final Logger logger = LoggerFactory.getLogger(GeneralReportsController.class);
 
@@ -44,20 +44,22 @@ public class GeneralReportsController {
 			@PathVariable Integer institutionId,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
 			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
-		logger.info("getEmergencyExcelReport started with institution id {}, fromDate {}, toDate {}", institutionId, fromDate, toDate);
+		logger.info("getEmergencyExcelReport started with institution id = {}, fromDate = {}, toDate = {}", institutionId, fromDate, toDate);
 
 		try {
 			String title = "Reporte de emergencias diarias";
 			String[] headers = {"DNI de paciente", "Apellido(s)", "Nombre(s)", "Obra social", "Fecha de atención", "Hora de atención", "Medio de ingreso", "Ambulancia", "Oficina", "Sector", "Estado", "Tipo", "Notas de triage", "Triage", "Fecha de alta", "Ambulancia de alta", "Tipo de alta", "Salida", "Intervención policial"};
 
+			logger.debug("building emergency excel report");
 			IWorkbook wb = excelService.buildEmergencyExcel(title, headers, queryFactory.queryEmergency(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
 			String filename = "Emergencias diarias - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
 		} catch (Exception e) {
-			logger.error("Error generating emergency excel report for institutionId {}", institutionId, e);
-			throw new RuntimeException("Error generating report", e);
+			logger.error("error generating emergency excel report for institutionId {}", institutionId, e);
+			throw new RuntimeException("error generating report", e);
 		}
 	}
 }
