@@ -20,12 +20,14 @@ import { HasRoleWithoutContextDirective } from './directives/has-role-without-co
 import { FeatureFlagDirective } from './directives/feature-flag.directive';
 //pipes
 import { StringSeparatorPipe } from './pipes/string-separator.pipe';
+import { VersionAvailableComponent } from './dialogs/version-available/version-available.component';
 
 @NgModule({
 	declarations: [
 		// components
 		ContentComponent,
 		ExchangeableThemeComponent,
+		VersionAvailableComponent,
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
@@ -63,6 +65,8 @@ import { StringSeparatorPipe } from './pipes/string-separator.pipe';
 		// components
 		ContentComponent,
 		ExchangeableThemeComponent,
+		VersionAvailableComponent,
+        // directives
 		// directives
 		FeatureFlagDirective,
 		HasRoleDirective,
