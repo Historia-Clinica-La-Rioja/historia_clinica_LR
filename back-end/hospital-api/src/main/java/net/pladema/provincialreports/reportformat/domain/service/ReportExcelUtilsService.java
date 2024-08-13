@@ -252,7 +252,7 @@ public class ReportExcelUtilsService {
 		rowNum++;
 
 		data.add(new CellContent(rowNum, 0, 1, 1, "FECHA DE EMISIÓN:", boldTitleStyle));
-		data.add(new CellContent(rowNum, 1, 1, 2, currentDateAsDDMMYYYY("dash"), fieldStyle));
+		data.add(new CellContent(rowNum, 1, 1, 2, newCurrentDateAsDDMMYYYY("dash"), fieldStyle));
 		data.add(new CellContent(rowNum, 3, 2 + rowsBetweenTitleAndHeaders, mainTitleColumns, SOURCE_NOTE, sourceNoteStyle));
 
 		rowNum++;
