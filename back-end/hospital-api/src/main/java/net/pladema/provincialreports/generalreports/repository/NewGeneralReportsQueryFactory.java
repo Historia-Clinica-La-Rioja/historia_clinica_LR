@@ -20,6 +20,6 @@ public class NewGeneralReportsQueryFactory {
 	}
 
 	public List<EmergencyConsultationDetail> queryEmergency(Integer institutionId, LocalDate start, LocalDate end) {
-		return repositoryUtils.executeQuery("GeneralReports.EmergencyConsultationDetail", institutionId, start, end);
+		return repositoryUtils.executeQuery("GeneralReports.EmergencyConsultationDetail", institutionId, start, end, null);
 	}
 }

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -22,7 +23,7 @@ public class ReportsRepositoryUtils {
 	// query factory method(s)
 
 	@SuppressWarnings("unchecked")
-	public <T> List<T> executeQuery(String queryName, Integer institutionId, LocalDate start, LocalDate end) {
+	public <T> List<T> executeQuery(String queryName, Integer institutionId, LocalDate start, LocalDate end, Map<String, Object> customParams) {
 		Query query = em.createNamedQuery(queryName);
 
 		query.setParameter("institutionId", institutionId);
@@ -32,6 +33,12 @@ public class ReportsRepositoryUtils {
 			LocalDateTime endDate = end.atTime(LocalTime.MAX);
 			query.setParameter("startDate", startDate);
 			query.setParameter("endDate", endDate);
+		}
+
+		if (customParams != null) {
+			for (Map.Entry<String, Object> param : customParams.entrySet()) {
+				query.setParameter(param.getKey(), param.getValue());
+			}
 		}
 
 		return query.getResultList();
