@@ -63,6 +63,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 
 	documentTypeForm: FormGroup;
 	documentTypes = DocumentTypes;
+    filteredDocumentTypes = DocumentTypes;
 	allChecked = true;
 	showDocuments = true;
 
@@ -107,6 +108,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).pipe(take(1)).subscribe(isOn => {
 			if (!isOn) {
 				this.documentTypes = this.documentTypes.filter(e => e.value !== ECHDocumentType.ANESTHETIC_REPORTS);
+                this.filteredDocumentTypes = this.documentTypes;
 			}
 		});
 	}
@@ -130,14 +132,9 @@ export class PrintAmbulatoriaComponent implements OnInit {
 		const documentTypeControls = {};
 		documentTypeControls["all"] = this.formBuilder.control(true);
 
-		this.featureFlagService.isActive(AppFeature.HABILITAR_PARTE_ANESTESICO_EN_DESARROLLO).subscribe(isOn => {
-			if (!isOn) {
-				this.documentTypes = this.documentTypes.filter(e => e.value !== ECHDocumentType.ANESTHETIC_REPORTS);
-			}
-			this.documentTypes.forEach(documentType => {
-				documentTypeControls[documentType.value] = this.formBuilder.control(true);
-			});
-		});
+        this.documentTypes.forEach(documentType => {
+            documentTypeControls[documentType.value] = this.formBuilder.control(true);
+        });
 
 		this.documentTypeForm = this.formBuilder.group(documentTypeControls, { validators: this.atLeastOneChecked });
 	}
@@ -185,7 +182,7 @@ export class PrintAmbulatoriaComponent implements OnInit {
 	encounterCheckedChange(): void {
 		this.documentTypes = [];
 		if (!this.atLeastOneChecked(this.encounterTypeForm)) {
-			this.documentTypes = DocumentTypes;
+			this.documentTypes = this.filteredDocumentTypes;
 			this.showDocuments = true;
 		}
 		else
