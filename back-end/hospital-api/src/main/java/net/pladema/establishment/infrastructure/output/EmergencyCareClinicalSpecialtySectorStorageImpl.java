@@ -29,6 +29,12 @@ public class EmergencyCareClinicalSpecialtySectorStorageImpl implements Emergenc
 		return clinicalServiceSectorRepository.findDescriptionById(clinicalSpecialtySectorId);
 	}
 
+	@Override
+	public ClinicalSpecialtySectorBo getLastByEpisodeId(Integer episodeId) {
+		return clinicalServiceSectorRepository.findAllByEpisodeId(episodeId)
+				.stream().findFirst().map(this::mapToBo).orElse(new ClinicalSpecialtySectorBo());
+	}
+
 	private ClinicalSpecialtySectorBo mapToBo(ClinicalSpecialtySector clinicalSpecialtySector) {
 		return ClinicalSpecialtySectorBo.builder()
 				.id(clinicalSpecialtySector.getId())

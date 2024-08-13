@@ -9,4 +9,6 @@ public interface EmergencyCareClinicalSpecialtySectorStorage {
 	List<ClinicalSpecialtySectorBo> getAllBySectorTypeAndInstitution(Short sectorTypeId, Integer institutionId);
 
 	String getDescriptionById(Integer clinicalSpecialtySectorId);
+
+	ClinicalSpecialtySectorBo getLastByEpisodeId(Integer episodeId);
 }

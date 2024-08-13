@@ -62,4 +62,11 @@ public interface ClinicalServiceSectorRepository extends JpaRepository<ClinicalS
 
 	@Query("SELECT css.description FROM ClinicalSpecialtySector css WHERE css.id = :id")
 	String findDescriptionById(@Param("id") Integer id);
+
+	@Query("SELECT css " +
+			"FROM ClinicalSpecialtySector css " +
+			"LEFT JOIN Triage t on (css.id = t.clinicalSpecialtySectorId) " +
+			"WHERE t.emergencyCareEpisodeId = :episodeId "+
+			"ORDER BY t.id DESC")
+	List<ClinicalSpecialtySector> findAllByEpisodeId(@Param("episodeId") Integer episodeId);
 }

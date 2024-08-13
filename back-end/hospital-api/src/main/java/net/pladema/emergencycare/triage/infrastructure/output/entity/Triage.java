@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import net.pladema.emergencycare.triage.domain.TriageBo;
 import ar.lamansys.sgx.shared.auditable.entity.SGXAuditableEntity;
+import net.pladema.establishment.domain.ClinicalSpecialtySectorBo;
 
 import javax.persistence.*;
 
@@ -51,6 +52,7 @@ public class Triage  extends SGXAuditableEntity<Integer> {
 		this.notes = triageBo.getNotes() != null ? triageBo.getNotes().getOtherNote() : null;
 		this.triageCategoryId = triageBo.getCategoryId();
 		this.doctorsOfficeId = triageBo.getDoctorsOfficeId();
-		this.clinicalSpecialtySectorId = triageBo.getClinicalSpecialtySectorBo().getId();
+		ClinicalSpecialtySectorBo css = triageBo.getClinicalSpecialtySectorBo();
+		this.clinicalSpecialtySectorId = css == null ? null : css.getId();
 	}
 }

@@ -27,6 +27,7 @@ import java.util.List;
 public interface TriageMapper {
 
     @Named("toTriageBo")
+	@Mapping(target = "clinicalSpecialtySectorBo.id", source = "clinicalSpecialtySectorId")
     TriageBo toTriageBo(TriageAdministrativeDto triageDto);
 
     @Named("toTriageBo")

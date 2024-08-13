@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.pladema.emergencycare.application.getallclinicalspecialtysectorbyinstitution.GetAllClinicalSpecialtySectorByInstitution;
+import net.pladema.emergencycare.application.getlastclinicalspecialtysectorbyepisode.GetLastClinicalSpecialtySectorByEpisode;
 import net.pladema.emergencycare.controller.dto.EmergencyCareClinicalSpecialtySectorDto;
 import net.pladema.emergencycare.controller.mapper.EmergencyCareClinicalSpecialtySectorMapper;
 
@@ -24,6 +25,7 @@ public class EmergencyCareClinicalSpecialtySectorController {
 
 	private final GetAllClinicalSpecialtySectorByInstitution getAllClinicalSpecialtySectorByInstitution;
 	private final EmergencyCareClinicalSpecialtySectorMapper emergencyCareClinicalSpecialtySectorMapper;
+	private final GetLastClinicalSpecialtySectorByEpisode getLastClinicalSpecialtySectorByEpisode;
 
 	@GetMapping
 	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
@@ -32,6 +34,18 @@ public class EmergencyCareClinicalSpecialtySectorController {
 		log.debug("Input parameters getAll emergency care clinical specialty sector -> institutionId {}", institutionId);
 		List<EmergencyCareClinicalSpecialtySectorDto> result = emergencyCareClinicalSpecialtySectorMapper.toDtoList(
 				getAllClinicalSpecialtySectorByInstitution.run(institutionId));
+		log.debug("Output -> {}", result);
+		return result;
+	}
+
+	@GetMapping("/episode/{episodeId}/last")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRATIVO, ADMINISTRATIVO_RED_DE_IMAGENES, ENFERMERO, ESPECIALISTA_MEDICO, PROFESIONAL_DE_SALUD, ESPECIALISTA_EN_ODONTOLOGIA')")
+	public EmergencyCareClinicalSpecialtySectorDto getLastByEpisode(
+			@PathVariable(name = "institutionId") Integer institutionId,
+			@PathVariable(name = "episodeId") Integer episodeId){
+		log.debug("Input parameters get last emergency care clinical specialty sector used by episode id -> institutionId {}, episodeId {}", institutionId, episodeId);
+		EmergencyCareClinicalSpecialtySectorDto result = emergencyCareClinicalSpecialtySectorMapper.toDto(
+				getLastClinicalSpecialtySectorByEpisode.run(episodeId));
 		log.debug("Output -> {}", result);
 		return result;
 	}
