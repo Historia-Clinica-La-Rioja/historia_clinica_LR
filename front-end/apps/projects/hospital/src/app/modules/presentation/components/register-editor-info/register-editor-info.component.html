@@ -8,8 +8,8 @@
 		</span>
 	</p>
 
-	<div *ngIf="(registerEditorCase === registerEditorCasesDate )else DETE_HOUR">
-		<span class="grey">
+	<div *ngIf="!!registerEditorCase">
+		<span class="grey" *ngIf="(registerEditorCase === registerEditorCasesDate) else DETE_HOUR">
 			{{ registerEditor.date | dateFormat: 'date'}}
 		</span>
 	</div>

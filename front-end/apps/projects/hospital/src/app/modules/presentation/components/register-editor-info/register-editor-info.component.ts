@@ -9,7 +9,7 @@ import { Position } from '../identifier/identifier.component';
 export class RegisterEditorInfoComponent {
 	readonly registerEditorCasesDate = REGISTER_EDITOR_CASES.DATE;
 	@Input() registerEditor: RegisterEditor;
-	@Input() registerEditorCase: REGISTER_EDITOR_CASES = REGISTER_EDITOR_CASES.DATE;
+	@Input() registerEditorCase: REGISTER_EDITOR_CASES;
 	@Input() position: Position = Position.ROW;
 }
 
@@ -21,5 +21,5 @@ export enum REGISTER_EDITOR_CASES {
 export interface RegisterEditor {
 	createdBy: string;
 	institution?: string;
-	date: Date;
+	date?: Date;
 }

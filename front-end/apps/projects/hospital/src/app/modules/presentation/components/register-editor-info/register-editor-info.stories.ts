@@ -18,6 +18,13 @@ export default meta;
 
 type Story = StoryObj<RegisterEditorInfoComponent>;
 
+export const Name: Story = {
+	args: {
+		registerEditor: {
+			createdBy: 'Jose Perez',
+		}
+	}
+}
 
 export const NameDate: Story = {
 	args: {
