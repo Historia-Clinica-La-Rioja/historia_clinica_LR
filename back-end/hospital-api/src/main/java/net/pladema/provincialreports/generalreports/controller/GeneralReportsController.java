@@ -111,4 +111,29 @@ public class GeneralReportsController {
 			throw new RuntimeException("error generating report", e);
 		}
 	}
+
+	@GetMapping(value = "/{institutionId}/complementary-studies")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<byte[]> getComplementaryStudiesExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+		logger.info("getComplementaryStudiesExcelReport started with institution id = {}, fromDate = {}, toDate = {}", institutionId, fromDate, toDate);
+
+		try {
+			String title = "Reporte de estudios complementarios";
+			String[] headers = {"Fecha", "Categoría", "Estado de orden", "Tipo de solicitud", "Origen de solicitud", "Nombre de paciente", "Tipo de documento", "DNI de paciente", "Obra social", "Número de afiliado", "Nombre de profesional", "Tipo de documento", "DNI de profesional", "Licencia", "Nota", "Fecha de emisión", "Nombre de estudio", "Notas adicionales", "Problema asociado"};
+
+			logger.debug("building complementary studies excel report");
+			IWorkbook wb = excelService.buildComplementaryStudiesExcel(title, headers, queryFactory.queryComplementaryStudies(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
+
+			String filename = "Estudios complementarios - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			logger.debug("excel report generated successfully with filename = {}", filename);
+
+			return excelUtilsService.createResponseEntity(wb, filename);
+		} catch (Exception e) {
+			logger.error("error generating complementary studies excel report for institutionId {}", institutionId, e);
+			throw new RuntimeException("error generating report", e);
+		}
+	}
 }
