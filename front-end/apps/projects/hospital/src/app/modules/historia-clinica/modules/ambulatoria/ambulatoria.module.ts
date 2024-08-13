@@ -119,6 +119,7 @@ import { InputDesempenoComponent } from './components/cuestionarios/desempeno-fi
 import { GetEdmontonComponent } from './components/cuestionarios/edmonton/get-edmonton/get-edmonton.component';
 import { GetPhysicalPerformanceComponent } from './components/cuestionarios/desempeno-fisico/get-physical-performance/get-physical-performance.component';
 import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/alert-dialog.component';
+import { BackgroundFamilyComponent } from './components/antecedentes/background-family/background-family.component';
 
 @NgModule({
 	declarations: [
@@ -197,10 +198,10 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
 		ViolenceSituationRelevantInformationSectionComponent,
 		ViolenceSituationImplementedActionsComponent,
 		ViolenceSituationViolentPersonInformationComponent,
-  		NewViolentPersonInfomationComponent,
-      	ViolenceSituationImplementedActionsComponent,
-      	ViolenceSituationListComponent,
-       ViolenceSituationHistoryFiltersComponent,
+		NewViolentPersonInfomationComponent,
+		ViolenceSituationImplementedActionsComponent,
+		ViolenceSituationListComponent,
+		ViolenceSituationHistoryFiltersComponent,
 		TablaSapComponent,
 		EstudiosPopupComponent,
 		AdultoMayorComponent,
@@ -212,7 +213,8 @@ import { AlertDialogComponent } from './components/cuestionarios/alert-dialog/al
 		InputDesempenoComponent,
 		GetEdmontonComponent,
 		GetPhysicalPerformanceComponent,
-		AlertDialogComponent
+		AlertDialogComponent,
+		BackgroundFamilyComponent
 	],
 	imports: [
 		CommonModule,
