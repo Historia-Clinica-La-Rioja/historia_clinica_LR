@@ -69,6 +69,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	private MIN_INPUT_LENGTH = 1;
+	private INVALID_SCTID = '-1';
 
 	constructor(
 		private readonly snowstormService: SnowstormService,
@@ -129,7 +130,15 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.setItemData(this.data.item);
 		}
 
-		this.prescriptionItemForm.controls.pharmacoSearchType.valueChanges.subscribe(x => this.snomedConcept = undefined);
+		this.prescriptionItemForm.controls.pharmacoSearchType.valueChanges.subscribe(value => {
+			this.snomedConcept = undefined
+			if (value) {
+				this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(false);
+				this.initialSuggestCommercialMedication = undefined;
+				this.suggestedCommercialMedicationOptions = [];
+				this.presentationUnitsOptions = [];
+			}
+		});
 	}
 
 	getProblems() {
@@ -304,18 +313,22 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	setConcept(selectedConcept: SnomedDto, commercialPt?: string): void {
-		this.snomedConcept = selectedConcept;
-		const pt = selectedConcept ? selectedConcept.pt : '';
-		this.prescriptionItemForm.controls.snomed.setValue(pt);
-		this.prescriptionItemForm.controls.snomed.disable();
-		this.setPresentationUnits(selectedConcept.sctid);
-		this.setSuggestedCommercialMedicationOptions(commercialPt);
-		if (this.isHabilitarRecetaDigitalFFActive) {
-			if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
-				this.enableUnitDoseAndDayDose();
-				this.prescriptionItemForm.controls.unit.setValue(this.pharmaceuticalForm.filter(value => pt.includes(value))[0]);
-			} else {
-				this.disableUnitDoseAndDayDose();
+		if (selectedConcept?.sctid !== this.INVALID_SCTID) {
+			this.snomedConcept = selectedConcept;
+			const pt = selectedConcept ? selectedConcept.pt : '';
+			this.prescriptionItemForm.controls.snomed.setValue(pt);
+			this.prescriptionItemForm.controls.snomed.disable();
+			this.setPresentationUnits(selectedConcept.sctid);
+			this.setSuggestedCommercialMedicationOptions(commercialPt);
+			const checkboxValue = commercialPt ? true : false;
+			this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(checkboxValue);
+			if (this.isHabilitarRecetaDigitalFFActive) {
+				if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
+					this.enableUnitDoseAndDayDose();
+					this.prescriptionItemForm.controls.unit.setValue(this.pharmaceuticalForm.filter(value => pt.includes(value))[0]);
+				} else {
+					this.disableUnitDoseAndDayDose();
+				}
 			}
 		}
 	}
@@ -329,6 +342,8 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.prescriptionItemForm.controls.suggestedCommercialMedication.setValue(snomed);
 			this.setPresentationUnits(snomed.sctid);
 		}
+		else
+			this.setPresentationUnits(this.snomedConcept.sctid);
 	}
 
 	setSuggestedCommercialMedicationOptions(commercialPt?: string): void {
@@ -350,6 +365,11 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.commercialMedicationService.getMedicationPresentationUnits(medicationSctid).subscribe(result => {
 			this.presentationUnitsOptions = result;
 		})
+	}
+
+	resetSuggestedCommercialMedication(): void {
+		this.initialSuggestCommercialMedication = undefined;
+		this.setSuggestedCommercialMedication(undefined);
 	}
 
 	setQuantityMultiplication() {
@@ -378,7 +398,6 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	private setItemData(prescriptionItem: NewPrescriptionItem): void {
-
 		if (this.isHabilitarRecetaDigitalFFActive) {
 			if (this.pharmaceuticalForm.some(value => prescriptionItem.snomed.pt.includes(value))) {
 				this.enableUnitDoseAndDayDose();
@@ -417,10 +436,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		if (prescriptionItem.studyCategory?.id) {
 			this.prescriptionItemForm.controls.studyCategory.setValue(prescriptionItem.studyCategory.id);
 		}
-		this.snomedConcept = prescriptionItem.snomed;
-		const pt = prescriptionItem.snomed ? prescriptionItem.snomed.pt : '';
-		this.prescriptionItemForm.controls.snomed.setValue(pt);
-		this.prescriptionItemForm.controls.snomed.disable();
+		this.setConcept(prescriptionItem.snomed);
 	}
 
 	private formConfiguration() {
