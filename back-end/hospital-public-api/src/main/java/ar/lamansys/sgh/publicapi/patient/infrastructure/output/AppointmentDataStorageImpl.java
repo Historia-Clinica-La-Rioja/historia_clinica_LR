@@ -24,7 +24,7 @@ import ar.lamansys.sgh.publicapi.patient.application.port.out.AppointmentStorage
 import ar.lamansys.sgh.publicapi.patient.domain.AppointmentDataBo;
 import ar.lamansys.sgh.publicapi.patient.domain.AppointmentMedicalCoverageBo;
 import ar.lamansys.sgh.publicapi.patient.domain.AppointmentsByUserBo;
-import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.patient.domain.DoctorBo;
 import ar.lamansys.sgh.publicapi.patient.domain.InstitutionBo;
 import ar.lamansys.sgh.publicapi.patient.domain.PatientDataBo;

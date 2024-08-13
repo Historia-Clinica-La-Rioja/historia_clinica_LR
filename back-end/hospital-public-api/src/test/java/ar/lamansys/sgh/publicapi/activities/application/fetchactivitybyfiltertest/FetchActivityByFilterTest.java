@@ -33,13 +33,13 @@ import ar.lamansys.sgh.publicapi.activities.domain.GenderEnum;
 import ar.lamansys.sgh.publicapi.activities.domain.InternmentBo;
 import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.activities.domain.ProfessionalBo;
-import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.activities.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.activities.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.activities.domain.SnomedCIE10Bo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.TimeBo;
 @ExtendWith(MockitoExtension.class)
 public class FetchActivityByFilterTest {
 

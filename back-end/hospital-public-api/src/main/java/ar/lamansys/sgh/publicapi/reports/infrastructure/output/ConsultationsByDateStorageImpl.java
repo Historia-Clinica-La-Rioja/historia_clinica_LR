@@ -12,10 +12,10 @@ import javax.persistence.EntityManager;
 
 import org.springframework.stereotype.Service;
 
-import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
+import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.TimeBo;
 import ar.lamansys.sgh.publicapi.reports.application.port.out.ConsultationsByDateStorage;
 import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
 import ar.lamansys.sgh.publicapi.reports.domain.IdentificationBo;

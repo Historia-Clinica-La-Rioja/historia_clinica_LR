@@ -27,8 +27,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercial;
-import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercialRepository;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionIdentifier;
 import ar.lamansys.sgh.publicapi.prescription.application.port.out.PrescriptionStorage;
 import ar.lamansys.sgh.publicapi.prescription.domain.ChangePrescriptionStateBo;

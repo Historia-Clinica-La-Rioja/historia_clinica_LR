@@ -2,8 +2,7 @@ package ar.lamansys.sgh.publicapi.activities.domain;
 
 import java.time.LocalDate;
 
-import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

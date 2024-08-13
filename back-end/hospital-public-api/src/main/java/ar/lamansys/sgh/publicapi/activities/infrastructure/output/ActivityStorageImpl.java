@@ -12,10 +12,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoExtendedBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
 
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.TimeBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.TimeBo;
 
 import ar.lamansys.sgx.shared.dates.configuration.LocalDateMapper;
 
@@ -32,7 +32,7 @@ import ar.lamansys.sgh.publicapi.activities.domain.GenderEnum;
 import ar.lamansys.sgh.publicapi.activities.domain.InternmentBo;
 import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoBo;
 import ar.lamansys.sgh.publicapi.activities.domain.ProfessionalBo;
-import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.activities.domain.ScopeEnum;
 import ar.lamansys.sgh.publicapi.activities.domain.SingleDiagnosticBo;
 import ar.lamansys.sgh.publicapi.activities.domain.SnomedBo;
 import ar.lamansys.sgh.publicapi.activities.domain.SnomedCIE10Bo;

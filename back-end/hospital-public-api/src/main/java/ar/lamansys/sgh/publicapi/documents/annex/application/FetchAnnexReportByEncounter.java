@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnnexReportByEncounterAccessDeniedException;
 import ar.lamansys.sgh.publicapi.documents.annex.application.exception.FetchAnnexReportByEncounterException;
-import ar.lamansys.sgh.publicapi.domain.ScopeEnum;
+import ar.lamansys.sgh.publicapi.activities.domain.ScopeEnum;
 import ar.lamansys.sgh.shared.application.annex.SharedAppointmentAnnexPdfReportService;
 import ar.lamansys.sgh.shared.application.encounter.SharedEncounterToAppointmentService;
 import ar.lamansys.sgh.shared.domain.annex.SharedAppointmentAnnexPdfReportResponse;

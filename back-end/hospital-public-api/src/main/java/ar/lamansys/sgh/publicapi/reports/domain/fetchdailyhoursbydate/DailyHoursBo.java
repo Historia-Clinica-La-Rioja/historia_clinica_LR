@@ -2,7 +2,7 @@ package ar.lamansys.sgh.publicapi.reports.domain.fetchdailyhoursbydate;
 
 import java.util.List;
 
-import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
 import ar.lamansys.sgh.publicapi.reports.domain.HierarchicalUnitBo;
 import lombok.Builder;
 import lombok.Getter;

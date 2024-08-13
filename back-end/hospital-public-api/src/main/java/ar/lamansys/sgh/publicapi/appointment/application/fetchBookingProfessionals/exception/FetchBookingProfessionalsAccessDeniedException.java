@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.publicapi.appointment.application.fetchBookingProfessionals.exception;
 
-import ar.lamansys.sgh.publicapi.infrastructure.input.rest.exceptions.PublicApiAccessDeniedException;
+import ar.lamansys.sgh.publicapi.generalexceptions.PublicApiAccessDeniedException;
 
 public class FetchBookingProfessionalsAccessDeniedException extends PublicApiAccessDeniedException {
 

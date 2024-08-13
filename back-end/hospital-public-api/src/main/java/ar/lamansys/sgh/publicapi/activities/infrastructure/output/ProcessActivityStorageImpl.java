@@ -1,10 +1,7 @@
 package ar.lamansys.sgh.publicapi.activities.infrastructure.output;
 
-import ar.lamansys.sgh.publicapi.activities.application.fetchactivitybyid.exceptions.ActivitiesAccessDeniedException;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ProcessActivityStorage;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.service.ActivitiesPublicApiPermissions;
-import ar.lamansys.sgh.publicapi.infrastructure.output.AttentionReads;
-import ar.lamansys.sgh.publicapi.infrastructure.output.AttentionReadsRepository;
 
 import lombok.AllArgsConstructor;
 

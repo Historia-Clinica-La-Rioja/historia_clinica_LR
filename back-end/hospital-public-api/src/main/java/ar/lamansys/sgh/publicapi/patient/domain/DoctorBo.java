@@ -2,7 +2,7 @@ package ar.lamansys.sgh.publicapi.patient.domain;
 
 import java.util.ArrayList;
 
-import ar.lamansys.sgh.publicapi.domain.ClinicalSpecialtyBo;
+import ar.lamansys.sgh.publicapi.reports.domain.ClinicalSpecialtyBo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

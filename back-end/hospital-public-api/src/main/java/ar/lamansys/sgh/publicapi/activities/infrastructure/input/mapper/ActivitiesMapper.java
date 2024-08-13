@@ -10,7 +10,7 @@ import ar.lamansys.sgh.publicapi.activities.domain.DocumentInfoBo;
 import ar.lamansys.sgh.publicapi.activities.domain.PersonInfoExtendedBo;
 import ar.lamansys.sgh.publicapi.activities.domain.SnomedCIE10Bo;
 import ar.lamansys.sgh.publicapi.activities.domain.SupplyInformationBo;
-import ar.lamansys.sgh.publicapi.domain.datetimeutils.DateTimeBo;
+import ar.lamansys.sgh.publicapi.activities.domain.datetimeutils.DateTimeBo;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.AttentionInfoDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DiagnosesDto;
 import ar.lamansys.sgh.publicapi.activities.infrastructure.input.dto.DocumentInfoDto;

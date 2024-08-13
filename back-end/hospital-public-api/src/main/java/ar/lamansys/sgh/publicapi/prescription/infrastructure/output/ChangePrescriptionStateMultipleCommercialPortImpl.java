@@ -1,7 +1,5 @@
 package ar.lamansys.sgh.publicapi.prescription.infrastructure.output;
 
-import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercial;
-import ar.lamansys.sgh.publicapi.infrastructure.output.MedicationStatementCommercialRepository;
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionLineCancellationWrongPharmacyNameException;
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionLineDoesNotExistsException;
 import ar.lamansys.sgh.publicapi.prescription.application.changeprescriptionstatemultiplecommercial.exception.PrescriptionLineInvalidStateChangeException;
@@ -24,7 +22,6 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

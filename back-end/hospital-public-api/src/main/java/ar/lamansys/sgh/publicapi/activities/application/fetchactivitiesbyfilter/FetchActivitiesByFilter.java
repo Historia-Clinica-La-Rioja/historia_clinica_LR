@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.ActivityStorage;
 import ar.lamansys.sgh.publicapi.activities.application.port.out.AttentionReadStorage;
 import ar.lamansys.sgh.publicapi.activities.domain.AttentionInfoBo;
-import ar.lamansys.sgh.publicapi.infrastructure.output.AttentionReads;
-import ar.lamansys.sgh.publicapi.infrastructure.output.AttentionReadsPK;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.output.AttentionReads;
+import ar.lamansys.sgh.publicapi.activities.infrastructure.output.AttentionReadsPK;
 import ar.lamansys.sgx.shared.security.UserInfo;
 
 @AllArgsConstructor
