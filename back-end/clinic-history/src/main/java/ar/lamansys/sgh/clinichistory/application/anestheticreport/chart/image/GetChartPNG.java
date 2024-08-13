@@ -4,7 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
 
-import ar.lamansys.sgh.clinichistory.domain.document.exceptions.AnestheticReportEnumException;
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EAnestheticReportException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.exceptions.AnestheticReportException;
@@ -32,7 +32,7 @@ public class GetChartPNG implements GetChartImage {
             return String.format("data:image/png;base64,%s", base64String);
 
         } catch (IOException e) {
-            throw new AnestheticReportException(AnestheticReportEnumException.GRAPHIC_NOT_RENDERED, "No se ha podido generar el gráfico asociado al parte anestésico");
+            throw new AnestheticReportException(EAnestheticReportException.GRAPHIC_NOT_RENDERED, "No se ha podido generar el gráfico asociado al parte anestésico");
         }
     }
 }

@@ -1,6 +1,6 @@
 package ar.lamansys.sgh.clinichistory.application.anestheticreport.chart;
 
-import ar.lamansys.sgh.clinichistory.domain.document.exceptions.AnestheticReportEnumException;
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EAnestheticReportException;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.EDocumentType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.ESourceType;
 import ar.lamansys.sgx.shared.files.images.ImageFileService;
@@ -39,7 +39,7 @@ public class SaveAnestheticChartAsImage {
         boolean result = imageFileService.saveImage(path, uuid, "ANESTHETIC_CHART", imageData);
 
         if (!result)
-            throw new AnestheticReportException(AnestheticReportEnumException.GRAPHIC_NOT_RENDERED, "No se ha podido generar el gráfico asociado al parte anestésico");
+            throw new AnestheticReportException(EAnestheticReportException.GRAPHIC_NOT_RENDERED, "No se ha podido generar el gráfico asociado al parte anestésico");
 
         return relativePath;
     }
