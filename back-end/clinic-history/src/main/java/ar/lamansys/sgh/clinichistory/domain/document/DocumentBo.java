@@ -20,7 +20,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProblemBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -106,9 +105,7 @@ public class DocumentBo implements IDocumentBo {
     private Map<String,Object> contextMap;
 
 
-    public String getDocumentStatusId(){
-        return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
-    }
+    private String documentStatusId;
 
     @Override
     public Integer getPatientId() {

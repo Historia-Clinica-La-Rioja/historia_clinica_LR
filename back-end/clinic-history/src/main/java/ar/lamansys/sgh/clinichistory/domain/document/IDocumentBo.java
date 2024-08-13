@@ -1,5 +1,6 @@
 package ar.lamansys.sgh.clinichistory.domain.document;
 
+import ar.lamansys.sgh.clinichistory.domain.document.enums.EDocumentStatus;
 import ar.lamansys.sgh.clinichistory.domain.document.visitor.DocumentVisitor;
 import ar.lamansys.sgh.clinichistory.domain.completedforms.CompleteParameterizedFormBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.AllergyConditionBo;
@@ -24,7 +25,6 @@ import ar.lamansys.sgh.clinichistory.domain.ips.ProcedureBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.ReasonBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.RiskFactorBo;
 import ar.lamansys.sgh.clinichistory.domain.ReferableItemBo;
-import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.DocumentStatus;
 import ar.lamansys.sgh.shared.domain.general.AddressBo;
 
 import java.time.LocalDate;
@@ -124,8 +124,8 @@ public interface IDocumentBo {
 
     void setId(Long id);
 
-    default String getDocumentStatusId(){
-        return isConfirmed() ? DocumentStatus.FINAL : DocumentStatus.DRAFT;
+    default String getDocumentStatusId() {
+        return EDocumentStatus.getDocumentStatusId(this);
     }
 
     Integer getPatientId();
