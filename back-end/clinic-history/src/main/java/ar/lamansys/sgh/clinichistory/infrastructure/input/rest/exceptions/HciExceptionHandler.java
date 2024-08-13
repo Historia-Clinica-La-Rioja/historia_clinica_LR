@@ -3,6 +3,7 @@ package ar.lamansys.sgh.clinichistory.infrastructure.input.rest.exceptions;
 import ar.lamansys.sgh.clinichistory.application.fetchdocumentfile.exceptions.FetchDocumentFileException;
 import ar.lamansys.sgh.clinichistory.application.getanthropometricgraphicdata.exceptions.GetAnthropometricGraphicDataException;
 import ar.lamansys.sgh.clinichistory.application.rebuildFile.exceptions.RebuildFileException;
+import ar.lamansys.sgh.clinichistory.application.saveMedicationStatementInstitutionalSupply.exception.SaveMedicationStatementInstitutionalSupplyException;
 import ar.lamansys.sgh.clinichistory.application.signDocumentFile.exceptions.SignDocumentFileException;
 import ar.lamansys.sgx.shared.exceptions.dto.ApiErrorMessageDto;
 import ar.lamansys.sgh.clinichistory.application.calculatecie10.exceptions.HCICIE10Exception;
@@ -56,5 +57,13 @@ public class HciExceptionHandler {
 		LOG.error("RebuildFileException exception -> {}", ex.getMessage());
 		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler({ SaveMedicationStatementInstitutionalSupplyException.class })
+	protected ApiErrorMessageDto handleSaveMedicationStatementInstitutionalSupplyException(SaveMedicationStatementInstitutionalSupplyException ex) {
+		LOG.error("SaveMedicationStatementInstitutionalSupplyException exception -> {}", ex.getMessage());
+		return new ApiErrorMessageDto(ex.getCode().toString(), ex.getMessage());
+	}
+
 }
 

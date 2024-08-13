@@ -2,8 +2,10 @@ package ar.lamansys.sgh.clinichistory.application.saveMedicationStatementInstitu
 
 import ar.lamansys.sgh.clinichistory.application.ports.output.MedicationStatementInstitutionalSupplyPort;
 import ar.lamansys.sgh.clinichistory.application.ports.output.MedicationStatementPort;
+import ar.lamansys.sgh.clinichistory.application.saveMedicationStatementInstitutionalSupply.exception.SaveMedicationStatementInstitutionalSupplyException;
 import ar.lamansys.sgh.clinichistory.domain.ips.SaveMedicationStatementInstitutionalSupplyBo;
 import ar.lamansys.sgh.clinichistory.domain.ips.SaveMedicationStatementInstitutionalSupplyMedicationBo;
+import ar.lamansys.sgh.clinichistory.domain.ips.enums.ESaveMedicationStatementInstitutionSupplyException;
 import ar.lamansys.sgh.clinichistory.domain.ips.services.SnomedService;
 import lombok.RequiredArgsConstructor;
 
@@ -42,7 +44,7 @@ public class SaveMedicationStatementInstitutionalSupply {
 				.map(SaveMedicationStatementInstitutionalSupplyMedicationBo::getQuantity)
 				.reduce((short) 0, (a, b) -> (short) (a + b)));
 		if (!quantityReceived.equals(medicationQuantity))
-			throw new RuntimeException();
+			throw new SaveMedicationStatementInstitutionalSupplyException(ESaveMedicationStatementInstitutionSupplyException.INVALID_MEDICATION_QUANTITIES, "Las cantidades dispensadas no coinciden con las recetadas");
 	}
 
 	private void setSnomedIds(SaveMedicationStatementInstitutionalSupplyBo saveMedicationStatementInstitutionalSupplyList) {
@@ -58,7 +60,7 @@ public class SaveMedicationStatementInstitutionalSupply {
 		short ACTIVE_STATUS_ID = 1;
 		Short medicationStatementLineStateId = medicationStatementPort.fetchMedicationStatementLineStateById(medicationStatementId);
 		if (!medicationStatementLineStateId.equals(ACTIVE_STATUS_ID))
-			throw new RuntimeException();
+			throw new SaveMedicationStatementInstitutionalSupplyException(ESaveMedicationStatementInstitutionSupplyException.INVALID_MEDICATION_STATEMENT_STATE, "No puede dispensarse un renglón de la receta no activo");
 	}
 
 }
