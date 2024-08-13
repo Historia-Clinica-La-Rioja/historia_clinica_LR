@@ -1,0 +1,28 @@
+<div mat-dialog-title fxLayoutAlign="space-between">
+	<h2 [translate]="'image-network.queue_list.image_indexing.INDEX_IMAGE_DIALOG_TITLE'"></h2>
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<div mat-dialog-content fxLayout="column" fxLayoutGap="10px">
+	<form [formGroup]="form">
+		<div fxLayout="column">
+			<span [translate]="'image-network.queue_list.image_indexing.INDEX_IMAGE_MANUALLY_INPUT_TITLE'"></span>
+			<mat-form-field appearance="outline">
+				<input id="image-input" name="ImageUID" matInput type="text" formControlName="ImageUID"
+					[placeholder]="'image-network.queue_list.image_indexing.INDEX_IMAGE_MANUALLY_PLACEHOLDER' | translate"
+					required>
+				<mat-error *ngIf="hasError(form, 'required', 'ImageUID')">
+					<span translate="forms.REQUIRED"></span>
+				</mat-error>
+				<mat-error *ngIf="hasError(form, 'indexingError', 'ImageUID')">
+					<span>{{ errorMessage | translate }}</span>
+				</mat-error>
+			</mat-form-field>
+		</div>
+
+		<app-button class="loading-button" fxLayoutAlign="end" [buttonType]="ButtonType.RAISED"
+			[text]="'image-network.queue_list.image_indexing.INDEX_IMAGE_BUTTON'" (clicked)="indexImage()">
+		</app-button>
+	</form>
+</div>
