@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @RestController
 @RequestMapping("newgeneralreports")
@@ -76,14 +75,39 @@ public class GeneralReportsController {
 			String[] headers = {"Fecha", "Apellido de prestador", "Nombre de prestador", "DNI de prestador", "Apellido de paciente", "Nombre de paciente", "DNI de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Motivos", "Problema", "Hemoglobina glicosilada (mg/dL)", "Medicación"};
 
 			logger.debug("building diabetics excel report");
-			IWorkbook wb = excelService.buildDiabeticsExcel(title, headers, queryFactory.queryDiabetics(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
+			IWorkbook wb = excelService.buildDiabeticsOrHypertensivesExcel(title, headers, queryFactory.queryDiabetics(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
 
 			String filename = "Diabéticos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
 			logger.debug("excel report generated successfully with filename = {}", filename);
 
 			return excelUtilsService.createResponseEntity(wb, filename);
 		} catch (Exception e) {
-			logger.error("error generating emergency excel report for institutionId {}", institutionId, e);
+			logger.error("error generating diabetics excel report for institutionId {}", institutionId, e);
+			throw new RuntimeException("error generating report", e);
+		}
+	}
+
+	@GetMapping(value = "/{institutionId}/hypertensive")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA')")
+	public ResponseEntity<byte[]> getHypertensivesExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+		logger.info("getHypertensivesExcelReport started with institution id = {}, fromDate = {}, toDate = {}", institutionId, fromDate, toDate);
+
+		try {
+			String title = "Reporte de hipertensos confirmados";
+			String[] headers = {"Fecha", "Apellido de prestador", "Nombre de prestador", "DNI de prestador", "Apellido de paciente", "Nombre de paciente", "DNI de paciente", "Sexo", "Fecha de nacimiento", "Edad a fecha del turno", "Motivos", "Problema", "Presión arterial (mmHg)", "Medicación"};
+
+			logger.debug("building hypertensives excel report");
+			IWorkbook wb = excelService.buildDiabeticsOrHypertensivesExcel(title, headers, queryFactory.queryDiabetics(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
+
+			String filename = "Hipertensos confirmados - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			logger.debug("excel report generated successfully with filename = {}", filename);
+
+			return excelUtilsService.createResponseEntity(wb, filename);
+		} catch (Exception e) {
+			logger.error("error generating hypertensives excel report for institutionId {}", institutionId, e);
 			throw new RuntimeException("error generating report", e);
 		}
 	}

@@ -1,6 +1,5 @@
 package net.pladema.provincialreports.generalreports.service;
 
-import ar.lamansys.sgx.shared.reports.util.CellContent;
 import ar.lamansys.sgx.shared.reports.util.manager.WorkbookCreator;
 import ar.lamansys.sgx.shared.reports.util.struct.ICellStyle;
 import ar.lamansys.sgx.shared.reports.util.struct.IRow;
@@ -14,10 +13,7 @@ import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtil
 
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -55,7 +51,7 @@ public class NewGeneralReportsExcelService {
 		return workbook;
 	}
 
-	public IWorkbook buildDiabeticsExcel(String title, String[] headers, List<DiabeticHypertensionConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
+	public IWorkbook buildDiabeticsOrHypertensivesExcel(String title, String[] headers, List<DiabeticHypertensionConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
 		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
 		excelUtilsService.newCreateHeaderCellsStyle(workbook);
 		ISheet sheet = workbook.createSheet(title);
@@ -66,7 +62,7 @@ public class NewGeneralReportsExcelService {
 
 		result.forEach(resultData -> {
 			IRow row = sheet.createRow(rowNumber.getAndIncrement());
-			fillDiabeticsRow(row, resultData, dataCellsStyle);
+			fillDiabeticsOrHypertensivesRow(row, resultData, dataCellsStyle);
 		});
 
 		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
@@ -97,7 +93,7 @@ public class NewGeneralReportsExcelService {
 		excelUtilsService.setCellValue(row, 18, style, content.getPoliceIntervention());
 	}
 
-	public void fillDiabeticsRow(IRow row, DiabeticHypertensionConsultationDetail content, ICellStyle style) {
+	public void fillDiabeticsOrHypertensivesRow(IRow row, DiabeticHypertensionConsultationDetail content, ICellStyle style) {
 		excelUtilsService.setCellValue(row, 0, style, content.getAttentionDate());
 		excelUtilsService.setCellValue(row, 1, style, content.getLenderLastNames());
 		excelUtilsService.setCellValue(row, 2, style, content.getLenderNames());

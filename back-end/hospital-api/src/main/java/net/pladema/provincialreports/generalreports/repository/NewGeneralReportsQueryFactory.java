@@ -27,4 +27,8 @@ public class NewGeneralReportsQueryFactory {
 		return repositoryUtils.executeQuery("GeneralReports.DiabeticsConsultationDetail", institutionId, start, end, null);
 	}
 
+	public List<DiabeticHypertensionConsultationDetail> queryHypertensives(Integer institutionId, LocalDate start, LocalDate end) {
+		return repositoryUtils.executeQuery("GeneralReports.HypertensiveConsultationDetail", institutionId, start, end, null);
+	}
+
 }
