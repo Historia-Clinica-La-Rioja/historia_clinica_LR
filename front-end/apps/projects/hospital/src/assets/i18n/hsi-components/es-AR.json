@@ -12,5 +12,12 @@
 			"REJECTED" : "Rechazado",
 			"SIGNED" : "Firmado"
 		}
+	},
+	"pharmaco-detail": {
+		"PHARMACO": "Fármaco indicado",
+		"UNIT_DOSE": "Dosis / Unidad",
+		"DAY_DOSE": "Dosis / Día",
+		"TREATMENT_DAYS": "Días de tratamiento",
+		"QUANTITY": "Cantidad"
 	}
 }
