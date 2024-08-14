@@ -6,12 +6,11 @@ import { dateTimeDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { EmergencyCareMasterDataService } from '@api-rest/services/emergency-care-master-data.service';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
-import { PatientNameService } from '@core/services/patient-name.service';
 import { getError, hasError } from '@core/utils/form.utils';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
 import { differenceInMinutes } from 'date-fns';
-import { Observable, tap, map } from 'rxjs';
-import { EstadosEpisodio, Triages } from '../../constants/masterdata';
+import { Observable } from 'rxjs';
+import { EstadosEpisodio } from '../../constants/masterdata';
 import { EpisodeFilterService } from '../../services/episode-filter.service';
 import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { PatientDescriptionUpdate } from '../emergency-care-dashboard-actions/emergency-care-dashboard-actions.component';
@@ -33,8 +32,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 
 	filterService: EpisodeFilterService;
 
-	readonly estadosEpisodio = EstadosEpisodio;
-	readonly triages = Triages;
 	readonly PAGE_SIZE = 20;
 	readonly FIRST_PAGE = 0;
 
@@ -53,7 +50,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 		public readonly formBuilder: UntypedFormBuilder,
 		public readonly triageMasterDataService: TriageMasterDataService,
 		public readonly emergencyCareMasterDataService: EmergencyCareMasterDataService,
-		private readonly patientNameService: PatientNameService,
 		private readonly guardiaRouterService: GuardiaRouterService,
 	) {
 		this.filterService = new EpisodeFilterService(formBuilder, triageMasterDataService, emergencyCareMasterDataService);
@@ -68,21 +64,11 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	loadEpisodes(pageNumber: number): void {
 		const filterData: EmergencyCareEpisodeFilterDto = this.getFilterData();
 		this.emergencyCareEpisodeService.getAll(this.PAGE_SIZE, pageNumber, filterData)
-			.pipe(
-				tap(result => this.elementsAmount = result.totalElementsAmount),
-				map((episodes: PageDto<EmergencyCareListDto>) =>
-					episodes.content.map(episode => this.mapToEpisode(episode))
-				)
-			)
-			.subscribe((episodes: Episode[]) => {
-				this.episodes = episodes;
-				this.setPatientNames(this.episodes);
+			.subscribe((result: PageDto<EmergencyCareListDto>) => {
+				this.elementsAmount = result.totalElementsAmount;
+				this.episodes = result.content.map(content => this.mapToEpisode(content));
 				this.loading = false;
 				/* this.completePatientPhotos(); */ // descomentar cuando se obtengan nuevamente las fotos del paciente
-				this.episodes.forEach(episode => {
-					if (episode.relatedProfessional)
-						this.getFullProfessionalName(episode.relatedProfessional);
-				});
 			}, _ => this.loading = false);
 	}
 
@@ -158,7 +144,7 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 	private mapToEpisode(episode: EmergencyCareListDto): Episode {
 		const minWaitingTime = episode.state.id === EstadosEpisodio.EN_ESPERA ?
 			this.calculateWaitingTime(episode.creationDate) : undefined;
-		const timeSinceStateChange = episode.state.id === this.estadosEpisodio.AUSENTE ?
+		const timeSinceStateChange = episode.state.id === EstadosEpisodio.AUSENTE ?
 			this.calculateWaitingTime(episode.stateUpdatedOn) : undefined;
 		return {
 			...episode,
@@ -166,23 +152,11 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 				emergencyCareEpisodeListTriageDto: episode.triage,
 				...(episode.triage.reasons && { reasons: episode.triage.reasons.map(reasons => reasons.snomed.pt) })
 			},
-			waitingTime: episode.state.id === this.estadosEpisodio.AUSENTE ? timeSinceStateChange : minWaitingTime,
-			waitingHours: episode.state.id === this.estadosEpisodio.AUSENTE ?
+			waitingTime: episode.state.id === EstadosEpisodio.AUSENTE ? timeSinceStateChange : minWaitingTime,
+			waitingHours: episode.state.id === EstadosEpisodio.AUSENTE ?
 				(timeSinceStateChange ? Math.round(timeSinceStateChange / 60) : undefined) :
 				(minWaitingTime ? Math.round(minWaitingTime / 60) : undefined),
 		};
-	}
-
-	setPatientNames(episodes: Episode[]) {
-		episodes.forEach(e => {
-			if (e.patient?.person)
-				e.patient.person.firstName = this.patientNameService.getPatientName(e.patient.person.firstName, e.patient.person.nameSelfDetermination);
-		})
-	}
-
-	private getFullProfessionalName(professional: ProfessionalPersonDto) {
-		const professionalName = `${this.patientNameService.getPatientName(professional.firstName, professional.nameSelfDetermination)}`;
-		professional.fullName = `${professionalName} ${professional.middleNames == null ? "" : professional.middleNames} ${professional.lastName} ${professional.otherLastNames == null ? "" : professional.otherLastNames}`;
 	}
 
 	handlePageEvent(event) {
@@ -230,7 +204,6 @@ export class EmergencyCarePatientsSummaryComponent implements OnInit {
 export interface Episode {
 	waitingTime: number;
 	waitingHours: number;
-	decodedPatientPhoto?: Observable<string>;
 	creationDate: DateTimeDto;
 	stateUpdatedOn?: DateTimeDto;
 	doctorsOffice: DoctorsOfficeDto;

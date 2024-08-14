@@ -1,4 +1,4 @@
-<div id="status" fxFlex="30%" fxLayout="column">
+<div id="status" fxLayout="column">
     <ng-container
     *ngIf="(episode.state.id === estadosEpisodio.EN_ESPERA || episode.state.id === estadosEpisodio.AUSENTE) else otherStates">>
         <span> {{ episode.state.description }}: </span>

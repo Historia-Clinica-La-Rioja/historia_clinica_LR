@@ -1,4 +1,4 @@
-<div id="triage" fxFlex="25%" fxLayout="column">
+<div id="triage" fxLayout="column">
     <app-triage-chip [category]="triage.emergencyCareEpisodeListTriageDto"></app-triage-chip>
     <span class="mat-small" *ngIf="triage.reasons" matTooltip="{{triage.reasons | stringSeparator }}"> {{ triage.reasons | showMoreConcepts}}</span>
     <span class="mat-small">{{ episodeType?.description }}</span>

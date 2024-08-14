@@ -156,33 +156,32 @@
                 <mat-spinner color="primary"></mat-spinner>
             </div>
             <ng-template #content>
-                <ng-container *ngIf="episodes?.length else noData">
-                    <mat-card [ngClass]="{ 'en-atencion' : episode.state.id === estadosEpisodio.EN_ATENCION }"
-                        class="episode-card" (click)="goToEpisode(episode, episode?.patient)"
-                        *ngFor="let episode of episodes">
-                        <div fxLayout="row" fxFlexAlign="center" style="padding: 0 15px">
+				<ng-container *ngIf="episodes?.length else noData">
+                    <mat-nav-list>
+                        <mat-list-item *ngFor="let episode of episodes" class="flex-container" (click)="goToEpisode(episode, episode?.patient)">
+                            <div class="padding" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="30px" fxFlex="100%">
 
-                            <app-emergency-care-patient-summary-item id="patient" fxFlex="40%"[episode]="episode"></app-emergency-care-patient-summary-item>
+                                <app-emergency-care-patient-summary-item id="patient" fxFlex="35%" [episode]="episode"></app-emergency-care-patient-summary-item>
+                                <app-emergency-care-triage-summary-item id="triage" fxFlex="30%" [triage]="episode.triage" [episodeType]="episode.type"></app-emergency-care-triage-summary-item>
+                                <app-emergency-care-status-summary-item id="status" fxFlex="30%" [episode]="episode"></app-emergency-care-status-summary-item>
+                                <app-emergency-care-dashboard-actions fxFlex="5%"
+                                    [episode]="episode"
+                                    (triageDialogClosed)="handleTriageDialogClosed($event)"
+                                    (patientDescriptionUpdate)="handlePatientDescriptionUpdate($event)"
+                                    (markedAsAbsent)="handleAbsentState($event)">
+                                </app-emergency-care-dashboard-actions>
 
-                            <app-emergency-care-triage-summary-item id="triage" fxFlex="25%" [triage]="episode.triage" [episodeType]="episode.type"></app-emergency-care-triage-summary-item>
+                            </div>
 
-                            <app-emergency-care-status-summary-item id="status" fxFlex="30%" [episode]="episode"></app-emergency-care-status-summary-item>
-                           
-                            <app-emergency-care-dashboard-actions
-                            [episode]="episode"
-                            (triageDialogClosed)="handleTriageDialogClosed($event)"
-                            (patientDescriptionUpdate)="handlePatientDescriptionUpdate($event)"
-                            (markedAsAbsent)="handleAbsentState($event)">
-                            </app-emergency-care-dashboard-actions>
-
-                        </div>
-                    </mat-card>
+                            <mat-divider class="divider-list"></mat-divider>
+                        </mat-list-item>
+                    </mat-nav-list>
                     <mat-paginator #paginator
-                        (page)="handlePageEvent($event)"
-                        [length]="elementsAmount"
-                        [pageSize]="PAGE_SIZE"
-                        [hidePageSize]="true"
-                        [showFirstLastButtons]="true">
+                            (page)="handlePageEvent($event)"
+                            [length]="elementsAmount"
+                            [pageSize]="PAGE_SIZE"
+                            [hidePageSize]="true"
+                            [showFirstLastButtons]="true">
                     </mat-paginator>
                 </ng-container>
             </ng-template>
