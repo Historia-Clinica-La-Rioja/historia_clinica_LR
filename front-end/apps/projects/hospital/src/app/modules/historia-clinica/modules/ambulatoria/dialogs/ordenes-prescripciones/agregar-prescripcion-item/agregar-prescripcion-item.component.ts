@@ -1,7 +1,7 @@
 import { AfterContentChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppFeature, CreateOutpatientDto, ERole, GetCommercialMedicationSnomedDto, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
+import { AppFeature, CommercialMedicationPrescriptionDto, CreateOutpatientDto, ERole, GetCommercialMedicationSnomedDto, HCEHealthConditionDto, OutpatientProblemDto, QuantityDto, SnomedDto, SnomedECL } from '@api-rest/api-model.d';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
 import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
@@ -293,8 +293,12 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			quantity: {
 				value: this.prescriptionItemForm.controls.quantity.value,
 				unit: this.prescriptionItemForm.controls.unit.value
+			},
+			commercialMedicationPrescription: {
+				medicationPackQuantity: this.prescriptionItemForm.controls.medicationPackQuantity.value,
+				presentationUnitQuantity: this.prescriptionItemForm.controls.presentationUnit.value,
+				suggestedCommercialMedicationSctid: this.prescriptionItemForm.controls.suggestedCommercialMedication.value?.sctid
 			}
-
 		};
 		this.dialogRef.close(newItem);
 	}
@@ -540,4 +544,5 @@ export class NewPrescriptionItem {
 	unitDose: number;
 	dayDose: number;
 	quantity: QuantityDto;
+	commercialMedicationPrescription?: CommercialMedicationPrescriptionDto;
 }
