@@ -49,9 +49,6 @@ public class OrchestratorController {
 	@PostMapping("/set-possible-studies")
 	public @ResponseBody Boolean
 	setPossibleStudies(@RequestBody PossibleStudiesDto possibleStudiesDto) throws ResultStudiesException {
-		Integer idMove = possibleStudiesDto.getIdMove();
-		Integer appointmentId = possibleStudiesDto.getAppointmentId();
-
 		return possibleStudies.run(possibleStudiesDto.getIdMove(), possibleStudiesDto.getAppointmentId(), possibleStudiesDto.getStudies());
 	}
 
