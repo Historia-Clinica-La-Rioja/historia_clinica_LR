@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiErrorDto, AttentionPlacesQuantityDto, BedInfoDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
+import { ApiErrorDto, AttentionPlacesQuantityDto, BedInfoDto, EmergencyCareEpisodeAttentionPlaceDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
 import { SectorService } from '@api-rest/services/sector.service';
 import { processErrors } from '@core/utils/form.utils';
@@ -14,14 +14,14 @@ import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/
 import { GuardiaRouterService } from '@historia-clinica/modules/guardia/services/guardia-router.service';
 import { DialogService, DialogWidth } from '@presentation/services/dialog.service';
 import { SnackBarService } from '@presentation/services/snack-bar.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap } from 'rxjs';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EmergencyCareEpisodeAttendService {
+export class EmergencyCareEpisodeCallOrAttendService {
 
 	isFromEmergencyCareEpisodeList: boolean = false;
 	isCalling: boolean = false;
@@ -81,68 +81,78 @@ export class EmergencyCareEpisodeAttendService {
 	}
 
 	private openPlaceAttendDialog(episode: Episode, quantity: AttentionPlacesQuantityDto) {
-		this.dialogAttentionPlaceService.open(AttentionPlaceDialogComponent,
-			{ dialogWidth: DialogWidth.SMALL },
-			{ quantity, isCall: this.isCalling }
-		)
-		.afterClosed()
-		.subscribe((attendPlace: AttendPlace) => {
-			if (!attendPlace) return;
+		this.emergencyCareEpisodeService.getLastAttentionPlace(episode.id).pipe(
+			switchMap(lastAttentionPlace => {
+				const place = this.determinePlaceforDialog(lastAttentionPlace);
 
-			const paramsMap = {
-				[AttentionPlace.CONSULTORIO]: { doctorsOfficeId: attendPlace.id, bedId: null, shockroomId: null },
-				[AttentionPlace.SHOCKROOM]: { shockroomId: attendPlace.id, bedId: null, doctorsOfficeId: null },
-				[AttentionPlace.HABITACION]: { shockroomId: null, bedId: null, doctorsOfficeId: null }
-			};
+				const attentionPlaceData: AttentionPlaceData = {
+					...lastAttentionPlace,
+					place
+				};
 
-			const params = paramsMap[attendPlace.attentionPlace];
+				return this.dialogAttentionPlaceService.open(AttentionPlaceDialogComponent,
+					{ dialogWidth: DialogWidth.SMALL },
+					{ quantity, isCall: this.isCalling, lastAttentionPlace: attentionPlaceData }
+				).afterClosed().pipe(
+					switchMap((attendPlace: AttendPlace) => {
+						if (!attendPlace)
+							return;
 
-			const attendOrCall = this.isCalling
-			? this.episodeStateService.call(episode.id,params)
-			: this.episodeStateService.attend(episode.id,params);
+						const paramsMap = {
+							[AttentionPlace.CONSULTORIO]: { doctorsOfficeId: attendPlace.id, bedId: null, shockroomId: null },
+							[AttentionPlace.SHOCKROOM]: { shockroomId: attendPlace.id, bedId: null, doctorsOfficeId: null },
+							[AttentionPlace.HABITACION]: { shockroomId: null, bedId: lastAttentionPlace.bedId, doctorsOfficeId: null }
+						};
 
-			const dialogHandlers = {
-			[AttentionPlace.CONSULTORIO]: (attendOrCall, episode) => {
-				attendOrCall.subscribe(
-					response => this.handleResponse(response, episode),
-					(error: ApiErrorDto) => processErrors(error, msg => this.snackBarService.showError(msg))
+						const params = paramsMap[attendPlace.attentionPlace];
+
+						return this.handleAttentionPlace(attendPlace, episode, params);
+					})
 				);
-			},
-			[AttentionPlace.SHOCKROOM]: (attendOrCall, episode) => {
-				attendOrCall.subscribe(
-					(response: boolean) => this.handleResponse(response, episode),
-					(error: ApiErrorDto) => processErrors(error, msg => this.snackBarService.showError(msg))
-				);
-			},
-			[AttentionPlace.HABITACION]: (attendOrCall, episode) => {
-				this.dialogForBedAssignmentService.open(BedAssignmentComponent,
+			})
+		).subscribe(
+			(response: boolean) => this.handleResponse(response, episode),
+			(error: ApiErrorDto) => processErrors(error, msg => this.snackBarService.showError(msg))
+		);
+	}
+
+	private determinePlaceforDialog(lastAttentionPlace: EmergencyCareEpisodeAttentionPlaceDto): number {
+		if (lastAttentionPlace.shockroomId) {
+			return AttentionPlace.SHOCKROOM;
+		}
+		if (lastAttentionPlace.bedId) {
+			return AttentionPlace.HABITACION;
+		}
+		if (lastAttentionPlace.doctorsOfficeId) {
+			return AttentionPlace.CONSULTORIO;
+		}
+	}
+
+	private handleAttentionPlace(attendPlace: AttendPlace, episode: Episode, params: EmergencyCareEpisodeAttentionPlaceDto): Observable<boolean> {
+		if (attendPlace.attentionPlace === AttentionPlace.HABITACION) {
+			return this.dialogForBedAssignmentService.open(BedAssignmentComponent,
 				{ dialogWidth: DialogWidth.LARGE },
-				{ sectorsType: [SECTOR_GUARDIA] })
-				.afterClosed()
-				.subscribe((bed: BedInfoDto) => {
+				{ sectorsType: [SECTOR_GUARDIA], preselectedBed: params.bedId }
+			).afterClosed().pipe(
+				switchMap((bed: BedInfoDto) => {
 					if (!bed) return;
 
-					const bedParams = { ...params, bedId: bed.bed.id};
+					const bedParams = { ...params, bedId: bed.bed.id };
 
 					const bedAttendOrCall = this.isCalling
-                        ? this.episodeStateService.call(episode.id, bedParams)
-                        : this.episodeStateService.attend(episode.id, bedParams);
+						? this.episodeStateService.call(episode.id, bedParams)
+						: this.episodeStateService.attend(episode.id, bedParams);
 
+					return bedAttendOrCall;
+				})
+			);
+		} else {
+			const attendOrCall = this.isCalling
+				? this.episodeStateService.call(episode.id, params)
+				: this.episodeStateService.attend(episode.id, params);
 
-					bedAttendOrCall.subscribe(
-						(response: boolean) => this.handleResponse(response, episode),
-						(error: ApiErrorDto) => processErrors(error, msg => this.snackBarService.showError(msg))
-					);
-				});
-			}
-			};
-
-			const handler = dialogHandlers[attendPlace.attentionPlace];
-
-			if (handler) {
-				handler(attendOrCall, episode);
-			}
-		});
+			return attendOrCall;
+		}
 	}
 
 	private handleResponse(response: boolean, episode: Episode) {
@@ -164,4 +174,10 @@ export class EmergencyCareEpisodeAttendService {
 			? this.goToEpisode(episode, { typeId: episode.patient.typeId, id: episode.patient.id })
 			: this.loadEpisode$.next(true);
 	}
+}
+export interface AttentionPlaceData {
+    shockroomId?: number;
+    bedId?: number;
+    doctorsOfficeId?: number;
+    place?: number;
 }

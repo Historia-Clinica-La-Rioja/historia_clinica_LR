@@ -31,7 +31,7 @@ import { DocumentsSummaryComponent } from './components/documents-summary/docume
 import { DocumentSummaryHeaderComponent } from './components/document-summary-header/document-summary-header.component';
 import { EffectiveTimeComponent } from './components/effective-time/effective-time.component';
 import { ElementoDiagnosticoComponent } from './components/elemento-diagnostico/elemento-diagnostico.component';
-import { EmergencyCareEpisodeAttendService } from './services/emergency-care-episode-attend.service';
+import { EmergencyCareEpisodeCallOrAttendService } from './services/emergency-care-episode-call-or-attend.service';
 import { EndOfAnesthesiaStatusSummaryComponent } from './components/end-of-anesthesia-status-summary/end-of-anesthesia-status-summary.component';
 import { EpicrisisDocumentSummaryComponent } from './components/epicrisis-document-summary/epicrisis-document-summary.component';
 import { EpisodeDataComponent } from './components/episode-data/episode-data.component';
@@ -399,7 +399,7 @@ import { SummaryAttentionComponent } from './components/summary-attention/summar
 	],
 	providers: [
 		InternmentSummaryFacadeService,
-		EmergencyCareEpisodeAttendService
+		EmergencyCareEpisodeCallOrAttendService
 	]
 })
 export class HistoriaClinicaModule {

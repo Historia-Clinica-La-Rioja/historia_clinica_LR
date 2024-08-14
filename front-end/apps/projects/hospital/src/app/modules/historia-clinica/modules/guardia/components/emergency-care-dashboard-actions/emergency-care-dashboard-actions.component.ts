@@ -10,7 +10,7 @@ import { ContextService } from '@core/services/context.service';
 import { Router } from '@angular/router';
 import { TriageDefinitionsService } from '../../services/triage-definitions.service';
 import { MatDialog } from '@angular/material/dialog';
-import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
+import { EmergencyCareEpisodeCallOrAttendService } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
 import { Subscription, switchMap, take } from 'rxjs';
 import { EmergencyCareTemporaryPatientService } from '../../services/emergency-care-temporary-patient.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
@@ -21,9 +21,9 @@ import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/s
 import { ConfirmDialogData, ConfirmDialogV2Component } from '@presentation/dialogs/confirm-dialog-v2/confirm-dialog-v2.component';
 
 @Component({
-  selector: 'app-emergency-care-dashboard-actions',
-  templateUrl: './emergency-care-dashboard-actions.component.html',
-  styleUrls: ['./emergency-care-dashboard-actions.component.scss'],
+	selector: 'app-emergency-care-dashboard-actions',
+	templateUrl: './emergency-care-dashboard-actions.component.html',
+	styleUrls: ['./emergency-care-dashboard-actions.component.scss'],
 })
 export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy {
 
@@ -48,7 +48,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		private readonly featureFlagService: FeatureFlagService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly dialog: MatDialog,
-		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
+		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeCallOrAttendService,
 		private readonly emergencyCareTemporaryPatientService: EmergencyCareTemporaryPatientService,
 		private emergencyCareEpisodeService: EmergencyCareEpisodeService,
 		private readonly translate: TranslateService,
@@ -76,8 +76,8 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	private checkAdministrativeFF() {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
 			this.isAdministrativeAndHasTriageFFInFalse = this.hasProffesionalRole
-			? false
-			: (!isEnabled && this.hasAdministrativeRole)
+				? false
+				: (!isEnabled && this.hasAdministrativeRole)
 		)
 	}
 
@@ -89,17 +89,13 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		const showNewTriage = !this.isAdministrativeAndHasTriageFFInFalse;
 
 		const showEditPatientEpisode =
-			episode.state.id === this.estadosEpisodio.EN_ESPERA ||
-			episode.state.id === this.estadosEpisodio.EN_ATENCION ||
-			episode.state.id === this.estadosEpisodio.AUSENTE;
+			([this.estadosEpisodio.EN_ESPERA, this.estadosEpisodio.EN_ATENCION, this.estadosEpisodio.AUSENTE].includes(episode.state.id ))
 
 		const showEditPatientDescription =
 			episode.patient?.typeId === this.EMERGENCY_CARE_TEMPORARY;
 
 		const showAttend =
-			(episode.state.id === this.estadosEpisodio.EN_ESPERA ||
-			episode.state.id === this.estadosEpisodio.AUSENTE ||
-				episode.state.id === this.estadosEpisodio.LLAMADO)
+			([this.estadosEpisodio.EN_ESPERA,this.estadosEpisodio.AUSENTE, this.estadosEpisodio.LLAMADO].includes(episode.state.id ))
 			&& this.hasProffesionalRole;
 
 		const showMarkAsAbsent = episode?.canBeAbsent;
@@ -129,7 +125,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 		this.router.navigate([`/institucion/${this.contextService.institutionId}/guardia/episodio/${this.episode.id}/dashboard/edit`]);
 	}
 
-	private call(){
+	private call() {
 		this.emergencyCareEpisodeAttend.callOrAttendPatient(this.episode.id, true, true);
 	}
 
@@ -167,7 +163,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 			okButtonLabel: 'guardia.home.episodes.episode.actions.mark_as_absent.buttons.CONFIRM',
 			cancelButtonLabel: 'buttons.NO_CANCEL',
 			buttonClose: true
-		}; 
+		};
 		const dialogConfig: DialogConfiguration = { dialogWidth: DialogWidth.SMALL };
         const dialog = this.dialogService.open(ConfirmDialogV2Component, dialogConfig, dialogData);
         dialog.afterClosed().pipe(

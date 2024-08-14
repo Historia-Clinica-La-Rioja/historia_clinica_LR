@@ -21,7 +21,7 @@ import { EpisodeStateService } from '@historia-clinica/modules/guardia/services/
 import { GuardiaMapperService } from '@historia-clinica/modules/guardia/services/guardia-mapper.service';
 import { NewEmergencyCareEvolutionNoteService } from '@historia-clinica/modules/guardia/services/new-emergency-care-evolution-note.service';
 import { TriageDefinitionsService } from '@historia-clinica/modules/guardia/services/triage-definitions.service';
-import { EmergencyCareEpisodeAttendService } from '@historia-clinica/services/emergency-care-episode-attend.service';
+import { EmergencyCareEpisodeCallOrAttendService } from '@historia-clinica/services/emergency-care-episode-call-or-attend.service';
 import { NewTriageService } from '@historia-clinica/services/new-triage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ButtonType } from '@presentation/components/button/button.component';
@@ -33,9 +33,9 @@ import { map, Observable, Subscription, switchMap, take, tap } from 'rxjs';
 
 const TRANSLATE_KEY_PREFIX = 'guardia.home.episodes.episode.actions';
 const MIN_ACTIONS = 3;
-const BACK_TO_WAITING_STATES = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.AUSENTE];
+const BACK_TO_WAITING_STATES = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.LLAMADO, EstadosEpisodio.AUSENTE];
 const STATES_TO_CALL_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.LLAMADO, EstadosEpisodio.AUSENTE];
-const STATES_TO_ATTEND_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE];
+const STATES_TO_ATTEND_EPISODE = [EstadosEpisodio.EN_ESPERA, EstadosEpisodio.LLAMADO, EstadosEpisodio.AUSENTE];
 const STATES_TO_EDIT_EPISODE = [EstadosEpisodio.EN_ATENCION, EstadosEpisodio.EN_ESPERA, EstadosEpisodio.AUSENTE];
 
 @Component({
@@ -96,7 +96,7 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 		private readonly emergencyCareEpisodeStateService: EmergencyCareEpisodeStateService,
 		private readonly permissionsService: PermissionsService,
 		private readonly newTriageService: NewTriageService,
-		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeAttendService,
+		private readonly emergencyCareEpisodeAttend: EmergencyCareEpisodeCallOrAttendService,
 		private readonly triageDefinitionsService: TriageDefinitionsService,
 		private readonly emergencyCareStateChangedService: EmergencyCareStateChangedService,
 		private readonly newEmergencyCareEvolutionNoteService: NewEmergencyCareEvolutionNoteService,

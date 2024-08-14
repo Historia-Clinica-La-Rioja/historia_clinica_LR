@@ -9,7 +9,8 @@ import {
 	DateTimeDto,
 	RiskFactorDto,
 	PageDto,
-	EmergencyCareEpisodeFilterDto
+	EmergencyCareEpisodeFilterDto,
+	EmergencyCareEpisodeAttentionPlaceDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -93,5 +94,11 @@ export class EmergencyCareEpisodeService {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 			BASIC_URL_SUFIX}/episodes/${episodeId}/updatePatientDescription`;
 		return this.http.put<boolean>(url, patientDescription);
+	}
+
+	getLastAttentionPlace(episodeId: number): Observable<EmergencyCareEpisodeAttentionPlaceDto> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/${episodeId}/last-attention-place`;
+		return this.http.get<EmergencyCareEpisodeAttentionPlaceDto>(url);
 	}
 }
