@@ -204,7 +204,7 @@ public class SaveViolenceReport {
 		CoordinationInsideHealthSectorBo coordinationInsideHealthSectorBo = violenceReport.getImplementedActions().getCoordinationInsideHealthSector();
 		if (coordinationInsideHealthSectorBo != null)
 			saveHealthOrganizationInsideHealthSystem(reportId, coordinationInsideHealthSectorBo);
-		else
+		if (violenceReport.getImplementedActions().getCoordinationOutsideHealthSector() != null)
 			saveHealthOrganizationOutsideHealthSystem(violenceReport, reportId);
 	}
 
@@ -436,7 +436,7 @@ public class SaveViolenceReport {
 			violenceReport.setCoordinationWithinHealthInstitution(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getHealthInstitutionOrganization().getWithin());
 			violenceReport.setInternmentIndicatedStatusId(violenceReportBo.getImplementedActions().getCoordinationInsideHealthSector().getWereInternmentIndicatedId());
 		}
-		else
+		if (violenceReportBo.getImplementedActions().getCoordinationOutsideHealthSector() != null)
 			violenceReport.setCoordinationWithOtherSocialOrganizations(violenceReportBo.getImplementedActions().getCoordinationOutsideHealthSector().getWithOtherSocialOrganizations());
 		violenceReport.setWerePreviousEpisodeWithVictimOrKeeper(violenceReportBo.getImplementedActions().getWerePreviousEpisodesWithVictimOrKeeper());
 		violenceReport.setInstitutionReported(violenceReportBo.getImplementedActions().getReportWasDoneByInstitution());

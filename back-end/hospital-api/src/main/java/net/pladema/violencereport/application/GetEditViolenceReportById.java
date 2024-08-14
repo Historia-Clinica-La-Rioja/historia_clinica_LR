@@ -75,7 +75,7 @@ public class GetEditViolenceReportById {
 		ViolenceReportImplementedActionsBo implementedActions = violenceReport.getImplementedActions();
 		if (implementedActions.getCoordinationInsideHealthSector() != null)
 			getCoordinationInsideHealthSector(reportId, implementedActions);
-		else
+		if (implementedActions.getCoordinationOutsideHealthSector() != null)
 			getCoordinationOutsideHealthSector(reportId, implementedActions);
 		if (implementedActions.getWerePreviousEpisodesWithVictimOrKeeper())
 			implementedActions.setReportPlaceIds(getReportPlaceIds(reportId));
