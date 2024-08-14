@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
+@ConditionalOnExpression("${app.feature.HABILITAR_RELACIONES_SNOMED:false} && ${app.feature.HABILITAR_DISPENSA:false}")
 @RequiredArgsConstructor
 @RequestMapping("/institution/{institutionId}/medication-statement-institutional-supply")
 @RestController
