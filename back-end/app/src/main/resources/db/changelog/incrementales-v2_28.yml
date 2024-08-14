@@ -203,9 +203,8 @@ databaseChangeLog:
                 SELECT i.id, m.id, false
                 FROM institution i
                 CROSS JOIN medicine_financing_status m;
-                  - changeSet:
                   
-   - changeSet:
+    - changeSet:
         id: createIndex-institution-monthly-report
         author: efernandez
         changes:

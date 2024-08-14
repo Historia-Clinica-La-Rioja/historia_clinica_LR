@@ -109,7 +109,7 @@
 							</div>
 							<div>
 								<app-date-range-picker appearance="outline" [min]="minDate" [max]="maxFixedEndDate"
-									[dateRange]="getInitialDateRange()" [fixedRangeDays]="oneWeekRange" (dateRangeChange)="onDateRangeChange($event)">
+									[dateRange]="getInitialDateRange()" [fixedRangeDays]="oneWeekRange" [isFixedOneMonth]="isFixedOneMonth" (dateRangeChange)="onDateRangeChange($event)">
 								</app-date-range-picker>
 								<mat-error *ngIf="this.form.controls.startDate.hasError('afterToday')"
 									[translate]="'reportes.form.errors.FECHA_INICIO_POSTERIOR_HOY'">

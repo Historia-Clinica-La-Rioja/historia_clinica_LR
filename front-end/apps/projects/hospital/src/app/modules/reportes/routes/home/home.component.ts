@@ -65,6 +65,7 @@ export class HomeComponent implements OnInit {
 	minEndDate: Date;
 	maxFixedEndDate: Date;
 	oneWeekRange = 7;
+	isFixedOneMonth = false;
 
 	hasToShowHierarchicalUnitSection = false;
 	hasToShowAppointmentStateFilter = false;
@@ -136,6 +137,7 @@ export class HomeComponent implements OnInit {
 				this.hasToShowHierarchicalUnitSection = this.showHierarchicalUnitSection(reportType);
 				this.hasToShowAppointmentStateFilter = this.showAppointmentStateFilter(reportType);
 				this.hasDateRangeFilterWithFixedEndDate = this.showDateRangeFilterWithFixedEndDate(reportType);
+				this.setMaxFixedEndDate(reportType);
 			});
 	}
 
@@ -155,7 +157,7 @@ export class HomeComponent implements OnInit {
 
 	private showDateRangeFilterWithFixedEndDate(reportType: number): boolean {
 		return (reportType === REPORT_TYPES_ID.MONTHLY_SUMMARY_OF_EXTERNAL_CLINIC_APPOINTMENTS ||
-			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT);
+			reportType === REPORT_TYPES_ID.GUARD_ATTENTION_DETAIL_REPORT || reportType === REPORT_TYPES_ID.MONTHLY);
 	}
 
 	private firstDayOfThisMonth(): Date {
@@ -168,14 +170,24 @@ export class HomeComponent implements OnInit {
 		return new Date(today.getUTCFullYear(), today.getUTCMonth() + 1, 0);
 	}
 
-	private setMaxFixedEndDate() {
+	private setMaxFixedEndDate(reportType? : REPORT_TYPES_ID) {
+		this.isFixedOneMonth = false;
 		this.maxFixedEndDate = newDate();
-		this.maxFixedEndDate = datePlusDays(newDate(), this.oneWeekRange);
+		if(reportType === REPORT_TYPES_ID.MONTHLY){
+			this.isFixedOneMonth = true;
+			this.maxFixedEndDate = null;
+		}else{
+			this.maxFixedEndDate = datePlusDays(newDate(), this.oneWeekRange);
+		}
 	}
 
 	getInitialDateRange(): DateRange {
 		const today = newDate();
-		return {start: today, end: this.maxFixedEndDate};
+		if(this.isFixedOneMonth){
+			return {start: this.firstDayOfThisMonth(), end: this.lastDayOfThisMonth()}
+		}else{
+			return {start: today, end: this.maxFixedEndDate};
+		}
 	}
 
 	onDateRangeChange(dateRange: DateRange) {
