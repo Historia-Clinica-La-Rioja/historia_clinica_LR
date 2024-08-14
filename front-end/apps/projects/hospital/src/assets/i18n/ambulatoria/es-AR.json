@@ -984,12 +984,12 @@
                         "questions": {
                             "QUESTION_1": "¿Sabe leer y escribir?",
                             "QUESTION_2": "¿Percibe ingresos?",
-                            "QUESTION_3": "¿Percibe plan o asignación social?",
+                            "QUESTION_3": "¿Percibe asignación o programa social?",
                             "QUESTION_4": "¿Tiene alguna discapacidad?",
                             "QUESTION_5": "¿Tiene certificado de discapacidad?",
                             "QUESTION_6": "¿La persona se encuentra institucionalizada?",
                             "QUESTION_7": "¿En qué institución?",
-                            "QUESTION_8": "¿La persona en situación de violencia es un niño, niña, adolescente o persona con alguna condición que lo requiera?",
+                            "QUESTION_8": "¿La persona en situación de violencia es un niño, niña, adolescente o persona con alguna condición que requiera la presencia de un referente de cuidado?",
                             "QUESTION_9": "¿En qué sector?"
                         },
                         "placeholders": {

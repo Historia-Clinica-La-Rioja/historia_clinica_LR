@@ -104,7 +104,9 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 					this.form.controls.address.setValue(victimData.keeperData.actorPersonalData.address.homeAddress);
 					this.form.controls.addressProvinceId.setValue(victimData.keeperData.actorPersonalData.address.municipality.provinceId);
 					this.form.controls.addressDepartmentId.setValue(victimData.keeperData.actorPersonalData.address.municipality.id);
+					this.form.controls.addressLocality.setValue(victimData.keeperData.actorPersonalData.address.city.id);
 					this.setDepartments();
+					this.setLocalitys();
 					this.form.controls.relationPersonViolenceSituation.setValue(victimData.keeperData.relationshipWithVictim);
 					this.form.controls.whichTypeRelation.setValue(victimData.keeperData?.otherRelationshipWithVictim);
 				}
@@ -205,6 +207,11 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 	}
 
 	setLocalitys(){
+		if(this.form.value.addressDepartmentId === idNoInfo){
+			updateControlValidator(this.form, 'addressLocality', []);
+		  }else{
+			updateControlValidator(this.form, 'addressLocality', Validators.required);
+		  }
 		this.localitys$ = this.addressMasterDataService.getCitiesByDepartment(this.form.value.addressDepartmentId);
 	  }
 
