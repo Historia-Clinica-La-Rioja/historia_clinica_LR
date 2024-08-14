@@ -12,7 +12,7 @@
 				<div fxLayout="column" fxLayoutAlign="space-between start">
 					<h2 class="nro-episode">Episodio de Guardia N° {{emergencyCareEpisodeInProgress.id}}</h2>
 					<app-identifier-cases [identifierCase]="identiferCases.INSTITUTION"
-						[description]="responseEmergencyCareDto.institutionName">
+						[description]='responseEmergencyCareDto?.institutionName'>
 					</app-identifier-cases>
 					<span *ngIf="responseEmergencyCareDto" class="color-disabled">Finalizado
 						{{responseEmergencyCareDto.endDate | viewDateDto: 'localdatetime' | date : 'short' }}</span>

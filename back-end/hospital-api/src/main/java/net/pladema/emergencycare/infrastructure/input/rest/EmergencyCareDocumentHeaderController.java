@@ -30,7 +30,7 @@ public class EmergencyCareDocumentHeaderController {
     ) {
         log.trace("Input parameters -> institutionId {}, emergencyCareEpisodeId {}, documentId {}", institutionId, emergencyCareEpisodeId, documentId);
         var result = headerMapper.toEmergencyCareDocumentHeaderDto(
-                getEmergencyCareDocumentHeader.run(institutionId, emergencyCareEpisodeId, documentId)
+                getEmergencyCareDocumentHeader.run(emergencyCareEpisodeId, documentId)
         );
         log.trace("Output -> {}", result);
         return result;

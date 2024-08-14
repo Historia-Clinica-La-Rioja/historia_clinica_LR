@@ -44,13 +44,13 @@ public class GetEmergencyCareDocumentHeader {
     private final HistoricEmergencyEpisodeService historicEmergencyEpisodeService;
     private final GetUserCompleteNameByUserIdPort getUserCompleteNameByUserIdPort;
 
-    public EmergencyCareDocumentHeaderBo run(Integer institutionId,Integer emergencyCareEpisodeId,Long documentId) {
-        log.debug("Input parameters -> institutionId {}, emergencyCareEpisodeId {}, documentId {}", institutionId, emergencyCareEpisodeId, documentId);
+    public EmergencyCareDocumentHeaderBo run(Integer emergencyCareEpisodeId, Long documentId) {
+        log.debug("Input parameters -> emergencyCareEpisodeId {}, documentId {}", emergencyCareEpisodeId, documentId);
 
         var result = new EmergencyCareDocumentHeaderBo();
 
         var base = documentHeaderPort.getDocumentHeader(documentId);
-        this.validateInputParameters(institutionId,emergencyCareEpisodeId,base);
+        this.validateInputParameters(emergencyCareEpisodeId, base);
         result.setBaseDocumentHeader(base);
         this.setInstitutionName(result);
         this.setProfessionalInformation(result);
@@ -121,7 +121,7 @@ public class GetEmergencyCareDocumentHeader {
         return this.mapTo(professional.getClinicalSpecialties());
     }
 
-    private void validateInputParameters(Integer institutionId, Integer emergencyCareEpisodeId, IDocumentHeaderBo base) {
+    private void validateInputParameters(Integer emergencyCareEpisodeId, IDocumentHeaderBo base) {
         if (!Objects.equals(base.getEncounterId(), emergencyCareEpisodeId)){
             throw new GetEmergencyCareDocumentHeaderException(
                     GetEmergencyCareDocumentHeaderEnumException.INPUT_PARAMETERS_NOT_VALID,
@@ -129,16 +129,6 @@ public class GetEmergencyCareDocumentHeader {
                             "El documento con id %s no se corresponde con el episodio de guardia %s",
                             base.getId(),
                             emergencyCareEpisodeId
-                    )
-            );
-        }
-        if (!Objects.equals(base.getInstitutionId(), institutionId)) {
-            throw new GetEmergencyCareDocumentHeaderException(
-                    GetEmergencyCareDocumentHeaderEnumException.INPUT_PARAMETERS_NOT_VALID,
-                    String.format(
-                            "El documento con id %s no pertenece a la institución con id %s",
-                            base.getId(),
-                            institutionId
                     )
             );
         }
