@@ -1,58 +1,56 @@
 <ng-container *ngIf=" queueList.length > 0, else noData">
-    <ng-container *ngFor="let image of queueList">
-        <mat-list-item class="item-content">
-            <div fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="25px" fxFlex="100">
-                <app-patient-summary fxFlex.gt-sm="20" [person]="image.person" [size]="size"></app-patient-summary>
-                <div fxFlex.gt-sm="10" class="uid-break">
-                    <mat-label matTooltip="UID de la imagen">
-                        {{image.uid}}
-                    </mat-label>
-                </div>
-                <div fxFlex.gt-sm="3">
-                    <ng-container *ngIf="!image.serviceRequestId">
-                        <app-tooltip-order
-                            [typeOrder]="!image.studies ? 'sin orden' : 'transcripta'"></app-tooltip-order>
-                    </ng-container>
-                </div>
-                <span *ngIf="image.studies; else noStudy" class="study-name capitalize"
-                    fxFlex.gt-sm="23">{{image.studies}}</span>
-                <ng-template #noStudy><span fxFlex.gt-sm="23"
-                        class="study-name grey">{{'image-network.worklist.details_study.PENDING_ORDER' |
-                        translate}}</span></ng-template>
-                <app-colored-label class="personalized-label capitalize" fxFlex.xl="7" fxFlex.lg="9"
-                    fxFlex.gt-sm="13" description={{image.status.description}} color="{{image.status.color}}"
-                    [icon]="image.status.icon"></app-colored-label>
-                <div *ngIf="image.date" fxFlex.gt-sm="8" class="time-size">
-                    <mat-label  matTooltip="Último movimiento">
-                        {{ image.date | dateFormat: 'datetime' }}
-                    </mat-label>
-                </div>
-                <div fxFlex.gt-sm="8" class="time-size">
-                    <mat-label  matTooltip="Turno">
-                        {{ image.appointmentDate | dateFormat: 'datetime' }}
-                    </mat-label>
-                </div>
-                <div fxFlex.gt-sm="20" fxFlex.gt-md="25" fxLayout="row" fxLayoutGap="6px"
-                    fxLayoutAlign="center baseline"
-					fxLayoutAlign.gt-sm="start start">
-                    <app-button class="loading-button" [buttonType]="ButtonType.RAISED"
-                        [text]="'image-network.queue_list.TRY_AGAIN'"
-                        [disabled]="image.status.description !== ERROR_IMAGE"
-                        (clicked)="tryAgain(image)">
-                    </app-button>
+	<ng-container *ngFor="let image of queueList">
+		<mat-list-item class="item-content">
+			<div [ngClass]="{'conditional-width': image.date}" class="card-content" fxLayout="column" fxLayout.gt-md="row" fxLayoutGap="25px">
+				<app-patient-summary fxFlex.gt-sm="20" [person]="image.person" [size]="size"></app-patient-summary>
+				<div fxFlex.gt-sm="10" class="uid-break">
+					<mat-label matTooltip="UID de la imagen">
+						{{image.uid}}
+					</mat-label>
+				</div>
+				<div fxFlex.gt-sm="3">
+					<ng-container *ngIf="!image.serviceRequestId">
+						<app-tooltip-order
+							[typeOrder]="!image.studies ? 'sin orden' : 'transcripta'"></app-tooltip-order>
+					</ng-container>
+				</div>
+				<span *ngIf="image.studies; else noStudy" class="study-name capitalize"
+					fxFlex.gt-sm="23">{{image.studies}}</span>
+				<ng-template #noStudy><span fxFlex.gt-sm="23"
+						class="study-name grey">{{'image-network.worklist.details_study.PENDING_ORDER' |
+						translate}}</span></ng-template>
+				<app-colored-label class="personalized-label capitalize" fxFlex.xl="7" fxFlex.lg="9" fxFlex.gt-sm="13"
+					description={{image.status.description}} color="{{image.status.color}}"
+					[icon]="image.status.icon"></app-colored-label>
+					<div class="date-container" fxLayout="row" fxLayoutGap="25px" fxLayout.md="column">
+						<div *ngIf="image.date" class="time-size">
+							<mat-label matTooltip="Último movimiento">
+								{{ image.date | dateFormat: 'datetime' }}
+							</mat-label>
+						</div>
+						<div class="time-size">
+							<mat-label matTooltip="Turno">
+								{{ image.appointmentDate | dateFormat: 'datetime' }}
+							</mat-label>
+						</div>
+					</div>
+				<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="6px" fxLayoutAlign="center baseline">
+					<app-button class="loading-button" [buttonType]="ButtonType.RAISED"
+						[text]="'image-network.queue_list.TRY_AGAIN'"
+						[disabled]="image.status.description !== ERROR_IMAGE" (clicked)="tryAgain(image)">
+					</app-button>
 					<app-button class="loading-button" [buttonType]="ButtonType.STROKED"
-                        [text]="'image-network.queue_list.image_indexing.INDEX_IMAGE'"
-						[disabled]="image.status.description !== ERROR_IMAGE"
-                        (clicked)="indexImage(image)">
-                    </app-button>
-                </div>
-            </div>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-    </ng-container>
-    <app-image-queue-paginator [amount]="paginationAmount"></app-image-queue-paginator>
+						[text]="'image-network.queue_list.image_indexing.INDEX_IMAGE'"
+						[disabled]="image.status.description !== ERROR_IMAGE" (clicked)="indexImage(image)">
+					</app-button>
+				</div>
+			</div>
+		</mat-list-item>
+		<mat-divider></mat-divider>
+	</ng-container>
+	<app-image-queue-paginator [amount]="paginationAmount"></app-image-queue-paginator>
 </ng-container>
 
 <ng-template #noData>
-    <strong class="no-data grey">{{SIN_INFORMACION}}</strong>
+	<strong class="no-data grey">{{SIN_INFORMACION}}</strong>
 </ng-template>
