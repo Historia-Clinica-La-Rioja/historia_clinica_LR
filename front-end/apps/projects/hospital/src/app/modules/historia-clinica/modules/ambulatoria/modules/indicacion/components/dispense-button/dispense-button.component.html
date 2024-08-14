@@ -1,7 +1,7 @@
 <ng-container *appHasRole="[PERSONAL_DE_FARMACIA]">
     <button *ngIf="medicationInfo.isDigital 
                 && isHabilitarRecetaDigital 
-                && medicationInfo.prescriptionLineState === INDICATED_STATE_ID" mat-menu-item (click)="openDispenseDialog(medicationInfo)">
-        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.DISPENSE'"></span>
+                && medicationInfo.prescriptionLineState === INDICATED_STATE_ID" mat-menu-item (click)="openDispenseDialog()">
+        <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.DISPENSE_BUTTON'"></span>
     </button>
 </ng-container>

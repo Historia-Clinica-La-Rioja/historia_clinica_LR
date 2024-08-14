@@ -672,7 +672,19 @@
                     "DELETE": "Eliminar",
                     "REACTIVATE": "Reactivar",
                     "SHOW_RESULTS": "Ver resultados",
-                    "DISPENSE": "Dispensar",
+                    "dispense": {
+                        "DISPENSE_BUTTON": "Dispensar",
+                        "dialog": {
+                            "TITLE": "Dispensar medicación",
+                            "INDICATED_MEDICATION": "Medicación indicada",
+                            "PHARMACOS_TO_DISPENSE": "Fármacos a dispensar",
+                            "COMMERCIAL_PHARMACO": "Fármarco comercial",
+                            "SEARCH_PHARMACO": "Buscar fármaco",
+                            "QUANTITY": "Cantidad",
+                            "OBSERVATIONS": "Observaciones",
+                            "ADD_PHARMACO": "Agregar otro fármarco"
+                        }
+                    },
                     "cancel": {
                         "CANCEL_BUTTON": "Anular",
                         "dialog": {

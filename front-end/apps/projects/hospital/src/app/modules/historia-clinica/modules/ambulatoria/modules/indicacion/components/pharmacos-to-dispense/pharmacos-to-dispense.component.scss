@@ -1,0 +1,35 @@
+@import '../../../../../../../../../assets/styles/mixins';
+
+.pharmacos-to-dispense {
+    font-size: medium;
+    @include font-weight-bold;
+}
+
+.commercial-pharmaco {
+    margin-top: 1rem;
+}
+
+.field {
+    display: flex;
+    gap: 1rem;
+}
+
+app-typeahead {
+    width: 60%;
+}
+
+.quantity {
+    width: 40%;
+    font-size: 0.75rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    mat-form-field {
+        width: 40%;
+    }
+}
+
+.remove {
+    margin-top: -0.671875em;
+}

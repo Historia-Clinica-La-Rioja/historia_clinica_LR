@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { PresentationModule } from "@presentation/presentation.module";
 //standalone componentes
 import { PatientSummaryComponent } from 'projects/hospital/src/app/modules/hsi-components/patient-summary/patient-summary.component';
+import { PharmarcoDetailComponent } from '@hsi-components/pharmarco-detail/pharmarco-detail.component';
 //components
 import { CardMedicacionesComponent } from "@historia-clinica/modules/ambulatoria/modules/indicacion/components/card-medicaciones/card-medicaciones.component";
 import { CardPharmacoComponent } from './components/card-pharmaco/card-pharmaco.component';
@@ -41,6 +42,8 @@ import { PrescriptionInformationComponent } from './components/prescription-info
 import { MedicationInformationComponent } from './components/medication-information/medication-information.component';
 import { CommercialPharmacoTypeaheadComponent } from './components/commercial-pharmaco-typeahead/commercial-pharmaco-typeahead.component';
 import { DispenseButtonComponent } from './components/dispense-button/dispense-button.component';
+import { MedicationDispensePopupComponent } from './dialogs/medication-dispense-popup/medication-dispense-popup.component';
+import { PharmacosToDispenseComponent } from './components/pharmacos-to-dispense/pharmacos-to-dispense.component';
 
 @NgModule({
 	declarations: [
@@ -77,6 +80,8 @@ import { DispenseButtonComponent } from './components/dispense-button/dispense-b
 		PatientInformationComponent,
 		PrescriptionInformationComponent,
 		MedicationInformationComponent,
+  		MedicationDispensePopupComponent,
+    	PharmacosToDispenseComponent,
 	],
 	exports: [
 		CardMedicacionesComponent,
@@ -92,7 +97,8 @@ import { DispenseButtonComponent } from './components/dispense-button/dispense-b
 		PresentationModule,
 		HistoriaClinicaModule,
 		//Standalone Component
-		PatientSummaryComponent
+		PatientSummaryComponent,
+		PharmarcoDetailComponent,
 	],
 	providers: [
 		NursingRecordFacadeService
