@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-public class NewGeneralReportsExcelService {
+public class GeneralReportsExcelService {
 
 	private final DateFormat dateTools;
 
 	private final ReportExcelUtilsService excelUtilsService;
 
-	public NewGeneralReportsExcelService(DateFormat dateTools, ReportExcelUtilsService excelUtilsService) {
+	public GeneralReportsExcelService(DateFormat dateTools, ReportExcelUtilsService excelUtilsService) {
 		this.dateTools = dateTools;
 		this.excelUtilsService = excelUtilsService;
 	}

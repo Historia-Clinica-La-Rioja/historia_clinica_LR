@@ -3,8 +3,8 @@ package net.pladema.provincialreports.generalreports.controller;
 import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import net.pladema.provincialreports.generalreports.repository.NewGeneralReportsQueryFactory;
-import net.pladema.provincialreports.generalreports.service.NewGeneralReportsExcelService;
+import net.pladema.provincialreports.generalreports.repository.GeneralReportsQueryFactory;
+import net.pladema.provincialreports.generalreports.service.GeneralReportsExcelService;
 
 import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
 
@@ -22,16 +22,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("newgeneralreports")
+@RequestMapping("generalreports")
 @Tag(name = "Reports - general", description = "Reportes generales, general reports")
 public class GeneralReportsController {
 	private static final Logger logger = LoggerFactory.getLogger(GeneralReportsController.class);
 
-	private final NewGeneralReportsExcelService excelService;
+	private final GeneralReportsExcelService excelService;
 	private final ReportExcelUtilsService excelUtilsService;
-	private final NewGeneralReportsQueryFactory queryFactory;
+	private final GeneralReportsQueryFactory queryFactory;
 
-	public GeneralReportsController(NewGeneralReportsExcelService excelService, ReportExcelUtilsService excelUtilsService, NewGeneralReportsQueryFactory queryFactory) {
+	public GeneralReportsController(GeneralReportsExcelService excelService, ReportExcelUtilsService excelUtilsService, GeneralReportsQueryFactory queryFactory) {
 		this.excelService = excelService;
 		this.excelUtilsService = excelUtilsService;
 		this.queryFactory = queryFactory;

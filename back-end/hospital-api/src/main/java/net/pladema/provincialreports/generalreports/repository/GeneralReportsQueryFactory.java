@@ -11,11 +11,11 @@ import net.pladema.provincialreports.reportformat.repository.ReportsRepositoryUt
 
 @Repository
 @Transactional
-public class NewGeneralReportsQueryFactory {
+public class GeneralReportsQueryFactory {
 
 	private final ReportsRepositoryUtils repositoryUtils;
 
-	public NewGeneralReportsQueryFactory(ReportsRepositoryUtils repositoryUtils) {
+	public GeneralReportsQueryFactory(ReportsRepositoryUtils repositoryUtils) {
 		this.repositoryUtils = repositoryUtils;
 	}
 
