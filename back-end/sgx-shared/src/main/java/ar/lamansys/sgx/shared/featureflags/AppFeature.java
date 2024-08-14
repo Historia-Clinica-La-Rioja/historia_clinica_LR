@@ -231,7 +231,10 @@ public enum AppFeature implements Feature {
 	HABILITAR_REPORTE_CENTRO_LLAMADO_EN_DESARROLLO,
 
 	@Label("Indica si se encuentra habilitada la prescripción de recetas digitales utilizando fármacos comerciales")
-	HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO
+	HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO,
+
+	@Label("Indica si se encuentra habilitada la dispensa de medicamentos dentro de las instituciones")
+	HABILITAR_DISPENSA
 	;
 
 	public boolean isActive() {
