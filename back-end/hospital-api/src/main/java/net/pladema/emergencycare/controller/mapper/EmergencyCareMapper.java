@@ -21,6 +21,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
@@ -44,15 +45,16 @@ public interface EmergencyCareMapper {
         target.setEntranceType(EnumWriter.write(EEmergencyCareEntrance.getById(emergencyCareBo.getEmergencyCareEntranceId())));
     }
 
-    @Named("toEmergencyCareListDto")
-    @Mapping(target = "type", ignore = true)
-    @Mapping(target = "state", ignore = true)
-    @Mapping(target = "creationDate", source = "createdOn")
-    @Mapping(target = "triage.id", source = "triageCategoryId")
-    @Mapping(target = "triage.name", source = "triageName")
-    @Mapping(target = "triage.color", source = "triageColorCode")
+	@Named("toEmergencyCareListDto")
+	@Mapping(target = "type", ignore = true)
+	@Mapping(target = "state", ignore = true)
+	@Mapping(target = "creationDate", source = "createdOn")
+	@Mapping(target = "triage.id", source = "triageCategoryId")
+	@Mapping(target = "triage.name", source = "triageName")
+	@Mapping(target = "triage.color", source = "triageColorCode")
 	@Mapping(target = "triage.reasons", source = "triage.reasons")
-    EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
+	@Mapping(target = "triage.creator", source = "triage.creator")
+	EmergencyCareListDto toEmergencyCareListDto(EmergencyCareBo emergencyCareBo);
 
     @Named("toListEmergencyCareListDto")
     @IterableMapping(qualifiedByName = "toEmergencyCareListDto")

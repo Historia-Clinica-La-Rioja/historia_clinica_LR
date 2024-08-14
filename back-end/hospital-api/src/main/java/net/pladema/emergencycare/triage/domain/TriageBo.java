@@ -17,6 +17,8 @@ import lombok.ToString;
 import net.pladema.emergencycare.service.domain.enums.EEmergencyCareType;
 import net.pladema.emergencycare.triage.infrastructure.output.entity.Triage;
 import net.pladema.emergencycare.triage.repository.domain.TriageVo;
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+import net.pladema.staff.domain.ProfessionalCompleteBo;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,9 +71,13 @@ public class TriageBo implements IDocumentBo {
 	private Integer roomId;
 
 	private Integer sectorId;
+
 	private List<ReasonBo> reasons;
 
 	private Map<String, Object> contextMap;
+
+	private ProfessionalPersonBo creator;
+
 
     public TriageBo(TriageVo triageVo) {
         this.triageId = triageVo.getId();
@@ -94,6 +100,7 @@ public class TriageBo implements IDocumentBo {
 		this.notes = triage.getNotes();
 		this.categoryId = triage.getTriageCategoryId();
 		this.doctorsOfficeId = triage.getDoctorsOfficeId();
+		this.createdBy = triage.getCreatedBy();
 	}
 
     public boolean isAdultGynecological() {

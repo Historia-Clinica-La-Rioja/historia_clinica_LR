@@ -35,12 +35,14 @@ public class PatientECEVo implements Serializable {
 
 	}
 
-	public PatientECEVo(Integer id, Integer patientMedicalCoverageId, Short typeId, Person person, String nameSelfDetermination, String patientDescription){
+	public PatientECEVo(Integer id, Integer patientMedicalCoverageId, Short typeId, Person person,
+						String personIdentificationType, String nameSelfDetermination, String patientDescription)
+	{
 		this.id = id;
 		this.patientMedicalCoverageId = patientMedicalCoverageId;
 		this.typeId = typeId;
 		if (person != null)
-			this.person = new PersonECEVo(person, nameSelfDetermination);
+			this.person = new PersonECEVo(person, nameSelfDetermination, personIdentificationType);
 		this.patientDescription = patientDescription;
 
 	}

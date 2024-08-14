@@ -1670,6 +1670,15 @@ export interface EmergencyCareDto extends Serializable {
     reason: string;
 }
 
+export interface EmergencyCareEpisodeDischargeSummaryDto {
+    administrativeDischargeOn: DateTimeDto;
+    episodeId: number;
+    medicalDischargeOn: DateTimeDto;
+    medicalDischargeProfessionalLastName: string;
+    medicalDischargeProfessionalName: string;
+    observation: string;
+}
+
 export interface EmergencyCareEpisodeFilterDto {
     identificationNumber: string;
     mustBeEmergencyCareTemporal: boolean;
@@ -1688,6 +1697,7 @@ export interface EmergencyCareEpisodeInProgressDto {
 
 export interface EmergencyCareEpisodeListTriageDto {
     color: string;
+    creator: ProfessionalPersonDto;
     id: number;
     name: string;
     reasons: OutpatientReasonDto[];
@@ -1750,11 +1760,13 @@ export interface EmergencyCareListDto extends Serializable {
     bed: BedDto;
     canBeAbsent: boolean;
     creationDate: DateTimeDto;
+    dischargeSummary: EmergencyCareEpisodeDischargeSummaryDto;
     doctorsOffice: DoctorsOfficeDto;
     id: number;
     patient: EmergencyCarePatientDto;
     reason: string;
     relatedProfessional: ProfessionalPersonDto;
+    sector: SectorDto;
     shockroom: ShockroomDto;
     state: MasterDataDto;
     stateUpdatedOn: DateTimeDto;
@@ -1773,6 +1785,7 @@ export interface EmergencyCarePatientDto extends Serializable {
 export interface EmergencyCarePersonDto {
     firstName: string;
     identificationNumber: string;
+    identificationType: string;
     lastName: string;
     nameSelfDetermination: string;
 }

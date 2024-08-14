@@ -45,7 +45,7 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 															@Param("states") List<Short> states);
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso.description, tc, pi, s.description, b, ecd.administrativeDischargeOn, r, inst.name) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso, tc, pi, s, b, ecd.administrativeDischargeOn, r, inst.name) "+
 			" FROM EmergencyCareEpisode ece "+
 			" JOIN Institution inst ON (inst.id = ece.institutionId) " +
 			" LEFT JOIN EmergencyCareDischarge ecd ON (ecd.emergencyCareEpisodeId = ece.id) " +
@@ -62,7 +62,7 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	Optional<EmergencyCareVo> getEpisode(@Param("episodeId") Integer episodeId);
 
 	@Transactional(readOnly = true)
-	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso.description, tc, pi, s.description, b, ecd.administrativeDischargeOn, r) "+
+	@Query(value = " SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, dso, tc, pi, s, b, ecd.administrativeDischargeOn, r) "+
 			" FROM EmergencyCareEpisode ece "+
 			" LEFT JOIN EmergencyCareDischarge ecd ON (ecd.emergencyCareEpisodeId = ece.id) " +
 			" LEFT JOIN Patient pa ON (pa.id = ece.patientId) "+
@@ -176,10 +176,16 @@ public interface EmergencyCareEpisodeRepository extends SGXAuditableEntityJPARep
 	@Query("SELECT NEW net.pladema.emergencycare.repository.domain.ProfessionalPersonVo(p.firstName, " +
 			"p.lastName, pe.nameSelfDetermination, p.middleNames, p.otherLastNames) " +
 			"FROM EmergencyCareEpisode AS ece " +
-			"JOIN UserPerson up ON (up.pk.userId = ece.updateable.updatedBy) " +
+			"JOIN HistoricEmergencyEpisode hec ON (ece.id = hec.pk.emergencyCareEpisodeId) " +
+			"JOIN UserPerson up ON (up.pk.userId = hec.creationable.createdBy) " +
 			"JOIN Person p ON (up.pk.personId = p.id) " +
 			"JOIN PersonExtended pe ON (p.id = pe.id) " +
-			"WHERE ece.id = :episodeId")
+			"WHERE ece.id = :episodeId " +
+			"AND hec.creationable.createdOn = (" +
+			"	SELECT MAX(hec2.creationable.createdOn) " +
+			"	FROM HistoricEmergencyEpisode hec2 " +
+			"	WHERE hec2.pk.emergencyCareEpisodeId = ece.id " +
+			")")
 	ProfessionalPersonVo getEmergencyCareEpisodeRelatedProfessionalInfo(@Param("episodeId") Integer episodeId);
 	
 	@Transactional(readOnly = true)

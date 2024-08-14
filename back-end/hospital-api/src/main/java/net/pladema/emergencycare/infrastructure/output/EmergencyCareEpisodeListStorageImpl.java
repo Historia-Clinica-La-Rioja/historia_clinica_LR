@@ -38,18 +38,21 @@ public class EmergencyCareEpisodeListStorageImpl implements EmergencyCareEpisode
 	@Override
 	public Page<EmergencyCareBo> getAllEpisodeListByFilter(Integer institutionId, EmergencyCareEpisodeFilterBo filter, Pageable pageable) {
 		String sqlDataSelectStatement =
-				"SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, pa.typeId, petd.nameSelfDetermination, " +
-						"dso.description, tc, s.description, b) ";
+				"SELECT NEW net.pladema.emergencycare.repository.domain.EmergencyCareVo(ece, pe, it.description, pa.typeId, petd.nameSelfDetermination, " +
+						"dso, tc, s, b, r, se) ";
 
 		String sqlFromStatement =
 				"FROM EmergencyCareEpisode ece " +
 						"LEFT JOIN Patient pa ON (pa.id = ece.patientId) " +
-						"LEFT JOIN Person pe ON (pe.id = pa.personId) " +
+						"LEFT JOIN Person pe ON (pe.id = pa.personId)" +
+						"LEFT JOIN IdentificationType it ON (pe.identificationTypeId = it.id) " +
 						"LEFT JOIN DoctorsOffice dso ON (dso.id = ece.doctorsOfficeId) " +
 						"LEFT JOIN PersonExtended petd ON (pe.id = petd.id) " +
 						"JOIN TriageCategory tc ON (tc.id = ece.triageCategoryId) " +
 						"LEFT JOIN Shockroom s ON (s.id = ece.shockroomId) " +
-						"LEFT JOIN Bed b ON (ece.bedId = b.id) ";
+						"LEFT JOIN Bed b ON (ece.bedId = b.id) " +
+						"LEFT JOIN Room r ON (b.roomId = r.id) " +
+						"LEFT JOIN Sector se ON (se.id = COALESCE(dso.sectorId, s.sectorId, r.sectorId)) ";
 
 		String sqlWhereStatement =
 				"WHERE (ece.emergencyCareStateId IN (" + STATE_IDS_STRING + "))" +

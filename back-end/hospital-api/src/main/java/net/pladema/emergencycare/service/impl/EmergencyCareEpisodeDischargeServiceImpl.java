@@ -18,6 +18,7 @@ import net.pladema.emergencycare.repository.entity.EmergencyCareDischarge;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeDischargeService;
 import net.pladema.emergencycare.service.EmergencyCareEpisodeService;
 import net.pladema.emergencycare.service.domain.EpisodeDischargeBo;
+import net.pladema.emergencycare.service.domain.EpisodeDischargeSummaryBo;
 import net.pladema.emergencycare.service.domain.MedicalDischargeBo;
 import ar.lamansys.sgx.shared.dates.configuration.DateTimeProvider;
 import ar.lamansys.sgx.shared.exceptions.NotFoundException;
@@ -97,6 +98,23 @@ public class EmergencyCareEpisodeDischargeServiceImpl implements EmergencyCareEp
 		log.debug("Get discharge -> episodeId {}", episodeId);
 		EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(episodeId).orElse(null);
 		return emergencyCareDischarge != null && emergencyCareDischarge.getMedicalDischargeOn() != null;
+	}
+
+	@Override
+	public EpisodeDischargeSummaryBo getEpisodeDischargeSummary(Integer episodeId){
+		log.debug("Get discharge summary -> episodeId {}", episodeId);
+		EmergencyCareDischarge emergencyCareDischarge = emergencyCareEpisodeDischargeRepository.findById(episodeId)
+				.orElseThrow(()->new NotFoundException("episode-discharge-not-found", "Episode discharge not found"));
+		ProfessionalCompleteBo professionalCompleteBo = healthcareProfessionalStorage.fetchProfessionalById(
+				emergencyCareDischarge.getMedicalDischargeByProfessional());
+		EpisodeDischargeSummaryBo episodeDischargeSummaryBo = new EpisodeDischargeSummaryBo(
+				emergencyCareDischarge,
+				professionalCompleteBo.getFirstName(),
+				professionalCompleteBo.getLastName(),
+				professionalCompleteBo.getNameSelfDetermination()
+		);
+		log.debug("output -> episodeDischargeSummaryBo {}", episodeDischargeSummaryBo);
+		return episodeDischargeSummaryBo;
 	}
 
 	private EmergencyCareDischarge toEmergencyCareDischarge(MedicalDischargeBo medicalDischarge ) {

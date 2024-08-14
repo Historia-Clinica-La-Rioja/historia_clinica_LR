@@ -1,5 +1,6 @@
 package net.pladema.emergencycare.controller.dto;
 
+import ar.lamansys.sgh.shared.infrastructure.input.service.ProfessionalPersonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,10 @@ import java.util.List;
 public class EmergencyCareEpisodeListTriageDto {
 
 	private Integer id;
-
 	private String name;
 	//colorCode
 	private String color;
 	private List<OutpatientReasonDto> reasons;
+	private ProfessionalPersonDto creator;
+
 }

@@ -30,6 +30,8 @@ public class PersonECEVo implements Serializable {
 
 	private String nameSelfDetermination;
 
+	private String identificationType;
+
 	public PersonECEVo(Person person){
 		if (person !=null) {
 			this.id = person.getId();
@@ -39,13 +41,14 @@ public class PersonECEVo implements Serializable {
 		}
 	}
 
-	public PersonECEVo(Person person, String nameSelfDetermination){
+	public PersonECEVo(Person person, String nameSelfDetermination, String identificationType){
 		if (person !=null) {
 			this.id = person.getId();
 			this.firstName = person.getFirstName();
 			this.lastName = person.getLastName();
 			this.identificationNumber = person.getIdentificationNumber();
 			this.nameSelfDetermination = nameSelfDetermination;
+			this.identificationType = identificationType;
 		}
 	}
 

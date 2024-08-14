@@ -19,12 +19,17 @@ public class RoomVo implements Serializable {
 	 */
 	private static final long serialVersionUID = 1053820325768716531L;
 	
-	Integer id;
-	String description;
+	private Integer id;
+	private String description;
+	private String type;
+	private String roomNumber;
+
 	
 	public RoomVo(Room room) {
 		id = room.getId();
 		description = room.getDescription();
+		type = room.getType();
+		roomNumber = room.getRoomNumber();
 	}
 	
 }

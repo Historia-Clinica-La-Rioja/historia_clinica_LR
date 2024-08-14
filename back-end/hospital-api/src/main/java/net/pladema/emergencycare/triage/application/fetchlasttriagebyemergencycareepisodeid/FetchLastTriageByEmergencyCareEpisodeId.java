@@ -9,6 +9,8 @@ import net.pladema.emergencycare.triage.application.ports.TriageStorage;
 import net.pladema.emergencycare.triage.domain.TriageBo;
 
 
+import net.pladema.medicalconsultation.diary.service.domain.ProfessionalPersonBo;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,6 +30,7 @@ public class FetchLastTriageByEmergencyCareEpisodeId {
 		if (triageOpt.isPresent()){
 			result = triageOpt.get();
 			result.setReasons(fetchTriageReasons.run(result.getTriageId()));
+			result.setCreator(triageStorage.getTriageRelatedProfessionalInfo(result.getTriageId()).orElse(null));
 		}
 		log.debug("Output -> {}", result);
 		return result;
