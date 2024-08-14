@@ -37,9 +37,10 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	isHabilitarRecetaDigitalFFActive: boolean = false;
 	PRESCRIPTOR: ERole = ERole.PRESCRIPTOR;
 	severityTypes: any[];
-	reportFFIsOn;
-	searchConceptsLocallyFFIsOn;
-	snomedRelationsAvailable;
+	reportFFIsOn: boolean;
+	searchConceptsLocallyFFIsOn: boolean;
+	snomedRelationsFFIsOn: boolean;
+	commercialPrescriptionFFIsOn: boolean;
 	snowstormServiceNotAvailable = false;
 	snowstormServiceErrorMessage: string;
 	snomedConcept: SnomedDto;
@@ -110,7 +111,11 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 						});
 
 						this.featureFlagService.isActive(AppFeature.HABILITAR_RELACIONES_SNOMED).subscribe(isOn => {
-							this.snomedRelationsAvailable = isOn;
+							this.snomedRelationsFFIsOn = isOn;
+						});
+
+						this.featureFlagService.isActive(AppFeature.HABILITAR_PRESCRIPCION_COMERCIAL_EN_DESARROLLO).subscribe(isOn => {
+							this.commercialPrescriptionFFIsOn = isOn;
 						});
 					}
 				});
