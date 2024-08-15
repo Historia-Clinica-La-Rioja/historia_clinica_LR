@@ -59,20 +59,29 @@ public class FormReportRepositoryImpl implements FormReportRepository {
     @Override
     @Transactional(readOnly = true)
     public Optional<FormVOutpatientVo> getConsultationFormVInfo(Long documentId) {
-        String query = "WITH t AS (" +
-                "       SELECT d.id as doc_id, oc.start_date, oc.institution_id, oc.patient_id, oc.clinical_specialty_id, oc.patient_medical_coverage_id "
-                +
-                "       FROM {h-schema}document AS d " +
-                "       JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id  AND d.source_type_id = 1)"
-                +
-                "       WHERE d.id = :documentId " +
-                "       UNION ALL " +
-                "       SELECT d.id as doc_id, vc.performed_date as start_date, vc.institution_id, vc.patient_id, vc.clinical_specialty_id, vc.patient_medical_coverage_id "
-                +
-                "       FROM {h-schema}document AS d " +
-                "       JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id  AND d.source_type_id = 5)" +
-                "       WHERE d.id = :documentId " +
-                "       )" +
+		String query = "WITH t AS (" +
+				"       SELECT " +
+				"        CASE " +
+				"            WHEN d.source_type_id = 1 THEN oc.id " +
+				"            WHEN d.source_type_id = 5 THEN vc.id " +
+				"        END as id, " +
+				"        d.id as doc_id, " +
+				"        CASE " +
+				"            WHEN d.source_type_id = 1 THEN oc.start_date " +
+				"            WHEN d.source_type_id = 5 THEN vc.performed_date " +
+				"        END as start_date, " +
+				"        COALESCE(oc.institution_id, vc.institution_id) as institution_id, " +
+				"        COALESCE(oc.patient_id, vc.patient_id) as patient_id, " +
+				"        COALESCE(oc.clinical_specialty_id, vc.clinical_specialty_id) as clinical_specialty_id, " +
+				"        COALESCE(oc.patient_medical_coverage_id, vc.patient_medical_coverage_id) as patient_medical_coverage_id, " +
+				"        d.created_on, " +
+				"        COALESCE(oc.doctor_id, vc.doctor_id) as doctor_id " +
+				"       FROM {h-schema}document AS d " +
+				"           LEFT JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id AND d.source_type_id = 1) " +
+				"           LEFT JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id AND d.source_type_id = 5) " +
+				"       WHERE d.id = :documentId " +
+				"           AND (d.source_type_id = 1 OR d.source_type_id = 5) " +
+				"       )" +
                 "       SELECT i.name, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, " +
                 "              g.description, pe.birth_date, it.description as idType, pe.identification_number, " +
                 "              t.start_date, prob.descriptions as problems, " +
