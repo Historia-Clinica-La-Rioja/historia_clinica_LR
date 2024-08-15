@@ -11,7 +11,6 @@
                     <mat-form-field appearance="outline">
                         <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.QUANTITY'"></mat-label>
                         <input onlyNumericCharacters matInput formControlName="quantity" #quantity (change)="setQuantity(quantity.value, index)">
-                        <mat-error *ngIf="hasError(pharmaco, 'required', 'quantity')" [translate]="'forms.REQUIRED'"></mat-error>
                     </mat-form-field>
 
                     <button mat-button color="warn" class="remove" (click)="removePharmacoToDispense(index)">

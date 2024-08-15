@@ -682,7 +682,8 @@
                             "SEARCH_PHARMACO": "Buscar fármaco",
                             "QUANTITY": "Cantidad",
                             "OBSERVATIONS": "Observaciones",
-                            "ADD_PHARMACO": "Agregar otro fármarco"
+                            "ADD_PHARMACO": "Agregar otro fármarco",
+                            "SUCCESS": "Se ha dispensado correctamente"
                         }
                     },
                     "cancel": {

@@ -1,9 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { SharedSnomedDto } from '@api-rest/api-model';
-import { hasError } from '@core/utils/form.utils';
+import { MedicationInfoDto, SharedSnomedDto } from '@api-rest/api-model';
+import { CommercialMedicationService } from '@api-rest/services/commercial-medication.service';
 import { ButtonType } from '@presentation/components/button/button.component';
 import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.component';
+import { listToTypeaheadOptions } from '@presentation/utils/typeahead.mapper.utils';
+import { map } from 'rxjs';
+import { MedicationToDispenseService } from '../../services/medication-to-dispense.service';
 
 @Component({
 	selector: 'app-pharmacos-to-dispense',
@@ -13,45 +16,62 @@ import { TypeaheadOption } from '@presentation/components/typeahead/typeahead.co
 export class PharmacosToDispenseComponent implements OnInit {
 
 	form: FormGroup;
-	hasError = hasError;
 	ButtonType = ButtonType;
 	typeaheadConcepts: TypeaheadOption<SharedSnomedDto>[] = [];
 	isValidToAdd = false;
 
+	@Input() medicationInfo: MedicationInfoDto;
 	@Output() isValidToConfirm = new EventEmitter<boolean>();
 
-
-	constructor() { }
+	constructor(private readonly commercialMedicationService: CommercialMedicationService,
+				private readonly medicationToDispenseService: MedicationToDispenseService,
+	) {}
 
 	ngOnInit(): void {
 		this.createForm();
+		this.setTypeaheadConcepts();
 	}
 
 	setConcept = (concept: SharedSnomedDto, index: number) => {
-        const pharmaco = this.pharmacos.at(index) as FormGroup;
-        pharmaco.get('snomed')?.setValue(concept);
+		const pharmaco = this.pharmacos.at(index) as FormGroup;
+		(pharmaco) ? pharmaco.get('snomed').setValue(concept) : this.pharmacos.push(this.createPharmacoGroup(concept));
 		this.checkIfValidPharmacoToDispense();
+		this.mapToSaveMedicationStatementInstitutionalSupplyDto();
     }
 
 	setQuantity = (quantity: number, index: number) => {
 		const pharmaco = this.pharmacos.at(index) as FormGroup;
         pharmaco.get('quantity')?.setValue(quantity);
 		this.checkIfValidPharmacoToDispense();
+		this.mapToSaveMedicationStatementInstitutionalSupplyDto();
 	}
 
 	addPharmacoToDispense = () => {
-        this.pharmacos.push(this.createPharmacoGroup());
+        this.pharmacos.push(this.createPharmacoGroup(null));
 		this.checkIfValidPharmacoToDispense();
     }
 
     removePharmacoToDispense = (index: number) => {
         this.pharmacos.removeAt(index);
 		this.checkIfValidPharmacoToDispense();
+		this.mapToSaveMedicationStatementInstitutionalSupplyDto();
     }
 
 	get pharmacos(): FormArray {
         return this.form.get('pharmacos') as FormArray;
     }
+
+	private mapToSaveMedicationStatementInstitutionalSupplyDto = () => {
+		this.medicationToDispenseService.mapToSaveMedicationStatementInstitutionalSupplyDto(this.pharmacos.value, this.medicationInfo.id);
+	}
+
+	private setTypeaheadConcepts = () => {
+		this.commercialMedicationService.getSuggestedCommercialMedicationSnomedListByGeneric(this.medicationInfo.snomed.sctid)
+			.pipe(map(concepts => listToTypeaheadOptions(concepts, 'pt')))
+			.subscribe({
+				next: (result: TypeaheadOption<SharedSnomedDto>[]) => this.typeaheadConcepts = result
+			});
+	}
 
 	private checkIfValidPharmacoToDispense = () => {
 		this.isValidToAdd = this.form.valid;
@@ -62,9 +82,9 @@ export class PharmacosToDispenseComponent implements OnInit {
 		return this.isValidToAdd && this.pharmacos.length > 0;
 	}
 
-	private createPharmacoGroup = (): FormGroup => {
+	private createPharmacoGroup = (snomed: SharedSnomedDto): FormGroup => {
         return new FormGroup<PharmacoForm>({
-            snomed: new FormControl(null, Validators.required),
+            snomed: new FormControl(snomed, Validators.required),
             quantity: new FormControl(1, [Validators.required, Validators.min(1)])
         });
     }
@@ -81,4 +101,9 @@ export class PharmacosToDispenseComponent implements OnInit {
 interface PharmacoForm {
 	snomed: FormControl<SharedSnomedDto>,
     quantity: FormControl<number>,
+}
+
+export interface Pharmaco {
+	snomed: SharedSnomedDto,
+	quantity: number
 }
