@@ -1,15 +1,17 @@
 package net.pladema.reports.service;
 
 import net.pladema.reports.controller.dto.FormVDto;
+import net.pladema.reports.domain.FormVParametersBo;
+import net.pladema.reports.service.domain.FormVBo;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
 
 public interface FormReportService {
 
-    net.pladema.reports.service.domain.FormVBo getAppointmentData(Integer appointmentId);
+    FormVBo getAppointmentData(FormVParametersBo parametersBo);
 
-    net.pladema.reports.service.domain.FormVBo getConsultationData(Long documentId);
+    FormVBo getConsultationData(FormVParametersBo parametersBo);
 
     Map<String, Object> createAppointmentContext(FormVDto reportDataDto);
 

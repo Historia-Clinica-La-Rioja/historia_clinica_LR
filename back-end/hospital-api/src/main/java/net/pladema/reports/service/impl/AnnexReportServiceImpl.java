@@ -19,6 +19,7 @@ import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProcedures
 import net.pladema.hsi.addons.billing.infrastructure.input.domain.BillProceduresResponseDto;
 import net.pladema.hsi.addons.billing.infrastructure.input.exception.BillProceduresExternalServiceException;
 import net.pladema.person.service.PersonService;
+import net.pladema.reports.domain.AnnexIIParametersBo;
 import net.pladema.reports.repository.entity.AnnexIIOutpatientVo;
 import net.pladema.reports.service.domain.AnnexIIProcedureBo;
 
@@ -62,14 +63,21 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 	private final PersonService personService;
 	private final HealthcareProfessionalStorage healthcareProfessionalStorage;
 
-    @Override
-    public AnnexIIBo getAppointmentData(Integer appointmentId) {
-        log.debug("Input parameter -> appointmentId {}", appointmentId);
-        AnnexIIBo result = annexReportRepository.getAppointmentAnnexInfo(appointmentId).map(AnnexIIBo::new)
+	@Override
+    public AnnexIIBo getAppointmentData(AnnexIIParametersBo parametersBo) {
+        log.debug("Input parameter -> AnnexIIParametersBo {}", parametersBo);
+		Integer appointmentId = parametersBo.getAppointmentId();
+
+		AnnexIIBo result = Optional.ofNullable(appointmentId)
+				.flatMap(annexReportRepository::getAppointmentAnnexInfo)
+				.map(AnnexIIBo::new)
                 .orElseThrow(() ->new NotFoundException("bad-appointment-id", APPOINTMENT_NOT_FOUND));
 
-		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForAppointment(appointmentId);
-		if(documentAppointmentOpt.isPresent()){
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = Optional.ofNullable(parametersBo.getDocumentId())
+				.map(documentId -> new DocumentAppointmentBo(documentId, appointmentId))
+				.or(() -> documentAppointmentService.getDocumentAppointmentForAppointment(appointmentId));
+
+		if (documentAppointmentOpt.isPresent()) {
 
 			DocumentAppointmentBo documentAppointment = documentAppointmentOpt.get();
 			Long documentId = documentAppointment.getDocumentId();
@@ -188,11 +196,16 @@ public class AnnexReportServiceImpl implements AnnexReportService {
 	}
 
 	@Override
-    public AnnexIIBo getConsultationData(Long documentId) {
-		log.debug("Input parameter -> documentId {}", documentId);
-		Optional<DocumentAppointmentBo> documentAppointmentOpt = this.documentAppointmentService.getDocumentAppointmentForDocument(documentId);
-		if(documentAppointmentOpt.isPresent()){
-			return this.getAppointmentData(documentAppointmentOpt.get().getAppointmentId());
+    public AnnexIIBo getConsultationData(AnnexIIParametersBo parametersBo) {
+		log.debug("Input parameter -> AnnexIIParametersBo {}", parametersBo);
+		Long documentId = parametersBo.getDocumentId();
+
+		Optional<DocumentAppointmentBo> documentAppointmentOpt = Optional.ofNullable(documentId)
+				.flatMap(documentAppointmentService::getDocumentAppointmentForDocument);
+
+		if (documentAppointmentOpt.isPresent()) {
+			parametersBo.setAppointmentId(documentAppointmentOpt.get().getAppointmentId());
+			return this.getAppointmentData(parametersBo);
 		}
 
 		AnnexIIBo result;

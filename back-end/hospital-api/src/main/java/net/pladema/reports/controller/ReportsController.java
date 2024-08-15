@@ -24,11 +24,11 @@ import net.pladema.hsi.extensions.utils.JsonResourceUtils;
 import net.pladema.reports.application.ReportInstitutionQueryBo;
 import net.pladema.reports.application.fetchappointmentconsultationsummary.FetchAppointmentConsultationSummary;
 
-import net.pladema.reports.application.fetchnominalemergencycarepisodedetail.FetchNominalECEpisodeDetail;
-
 import net.pladema.reports.application.generators.GenerateEmergencyCareNominalDetailExcelReport;
 import net.pladema.reports.application.generators.GenerateInstitutionMonthlyExcelReport;
 import net.pladema.reports.application.generators.GenerateAppointmentNominalDetailExcelReport;
+import net.pladema.reports.domain.AnnexIIParametersBo;
+import net.pladema.reports.domain.FormVParametersBo;
 import net.pladema.reports.domain.ReportSearchFilterBo;
 
 import org.springframework.core.io.Resource;
@@ -56,7 +56,6 @@ import net.pladema.reports.controller.dto.AnnexIIDto;
 import net.pladema.reports.controller.dto.ConsultationsDto;
 import net.pladema.reports.controller.dto.FormVDto;
 import net.pladema.reports.controller.mapper.ReportsMapper;
-import net.pladema.reports.repository.QueryFactory;
 import net.pladema.reports.service.AnnexReportService;
 import net.pladema.reports.service.FetchConsultations;
 import net.pladema.reports.service.FormReportService;
@@ -67,40 +66,25 @@ import net.pladema.reports.service.domain.FormVBo;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("reports")
+@RequestMapping("/reports")
 @RestController
 public class ReportsController {
 
     public static final String OUTPUT = "Output -> {}";
 
     private final ConsultationSummaryReport consultationSummaryReport;
-
-    private final QueryFactory queryFactory;
-
     private final LocalDateMapper localDateMapper;
-
     private final PdfService pdfService;
-
     private final AnnexReportService annexReportService;
-
     private final FormReportService formReportService;
-
     private final ReportsMapper reportsMapper;
-
     private final FetchConsultations fetchConsultations;
-
 	private final FeatureFlagsService featureFlagsService;
-
 	private final GenerateInstitutionMonthlyExcelReport generateInstitutionMonthlyExcelReport;
-
 	private final GenerateAppointmentNominalDetailExcelReport generateAppointmentNominalDetailExcelReport;
-
 	private final SharedAppointmentAnnexPdfReportService sharedAppointmentAnnexPdfReportService;
-
 	private final GenerateEmergencyCareNominalDetailExcelReport generateEmergencyCareNominalDetailExcelReport;
-
 	private final ObjectMapper objectMapper;
-
 	private final FetchAppointmentConsultationSummary fetchAppointmentConsultationSummary;
 
     @GetMapping(value = "/{institutionId}/monthly")
@@ -203,7 +187,7 @@ public class ReportsController {
             throws PDFDocumentException {
 		log.debug("Input parameter -> documentId {}", documentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        AnnexIIBo reportDataBo = annexReportService.getConsultationData(documentId);
+        AnnexIIBo reportDataBo = annexReportService.getConsultationData(new AnnexIIParametersBo(null, documentId));
         AnnexIIDto reportDataDto = reportsMapper.toAnexoIIDto(reportDataBo);
         Map<String, Object> context = annexReportService.createConsultationContext(reportDataDto);
 		log.debug(OUTPUT, reportDataDto);
@@ -232,7 +216,7 @@ public class ReportsController {
             throws PDFDocumentException {
 		log.debug("Input parameter -> appointmentId {}", appointmentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        FormVBo reportDataBo = formReportService.getAppointmentData(appointmentId);
+        FormVBo reportDataBo = formReportService.getAppointmentData(new FormVParametersBo(appointmentId, null));
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
         Map<String, Object> context = formReportService.createAppointmentContext(reportDataDto);
 
@@ -254,7 +238,7 @@ public class ReportsController {
             throws PDFDocumentException {
 		log.debug("Input parameter -> documentId {}", documentId);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of(JacksonDateFormatConfig.ZONE_ID));
-        FormVBo reportDataBo = formReportService.getConsultationData(documentId);
+        FormVBo reportDataBo = formReportService.getConsultationData(new FormVParametersBo(null, documentId));
         FormVDto reportDataDto = reportsMapper.toFormVDto(reportDataBo);
         Map<String, Object> context = formReportService.createConsultationContext(reportDataDto);
 
