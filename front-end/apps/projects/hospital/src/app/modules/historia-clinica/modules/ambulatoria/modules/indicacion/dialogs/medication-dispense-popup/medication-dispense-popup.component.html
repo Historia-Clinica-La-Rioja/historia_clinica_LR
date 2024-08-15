@@ -36,6 +36,6 @@
 <mat-dialog-actions>
     <div class="actions">
         <app-button mat-dialog-close [text]="'buttons.CANCEL'"></app-button>
-        <app-button mat-dialog-close [text]="'buttons.CONFIRM'" [buttonType]="ButtonType.RAISED" [disabled]="!isValid" (click)="confirm()" [isLoading]="isLoading"></app-button>
+        <app-button [text]="'buttons.CONFIRM'" [buttonType]="ButtonType.RAISED" [disabled]="!isValid" (click)="confirm()" [isLoading]="isLoading"></app-button>
     </div>
 </mat-dialog-actions>

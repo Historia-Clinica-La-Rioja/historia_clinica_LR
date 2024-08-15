@@ -155,7 +155,7 @@
 											<span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.cancel.CANCEL_BUTTON'"></span>
 										</button>
 									</ng-container>
-									<app-dispense-button [medicationInfo]="medicationInfo" [canDispense]="canDispense"></app-dispense-button>
+									<app-dispense-button [medicationInfo]="medicationInfo" [canDispense]="canDispense" (confirmed)="getMedication()"></app-dispense-button>
                                 </mat-menu>
                             </div>
 

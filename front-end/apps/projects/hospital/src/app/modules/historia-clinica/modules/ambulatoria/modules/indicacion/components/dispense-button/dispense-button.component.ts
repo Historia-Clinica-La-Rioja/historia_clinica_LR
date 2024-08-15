@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ERole, MedicationInfoDto } from '@api-rest/api-model';
 import { PRESCRIPTION_STATES } from '@historia-clinica/modules/ambulatoria/constants/prescripciones-masterdata';
 import { DialogConfiguration, DialogService, DialogWidth } from '@presentation/services/dialog.service';
@@ -14,17 +14,28 @@ export class DispenseButtonComponent {
 	@Input() medicationInfo: MedicationInfoDto;
 	@Input() canDispense;
 
+	@Output() confirmed: EventEmitter<boolean> = new EventEmitter<boolean>();
+
 	INDICATED_STATE_ID: number = PRESCRIPTION_STATES.INDICADA.id;
 	PERSONAL_DE_FARMACIA = ERole.PERSONAL_DE_FARMACIA;
 
 	constructor(private readonly dialog: DialogService<MedicationDispensePopupComponent>) {}
 
 	openDispenseDialog = () => {
-		this.dialog.open(
+		const dialog = this.dialog.open(
 			MedicationDispensePopupComponent, 
 			this.setDialogConfiguration(), 
 			this.medicationInfo
 		);
+		this.dialogAfterClose(dialog);
+	}
+
+	private dialogAfterClose = (dialog) => {
+		dialog.afterClosed().subscribe((value: boolean) => {
+			if (!value) return;
+
+			this.confirmed.emit(value);
+		});
 	}
 
 	private setDialogConfiguration = (): DialogConfiguration  => {

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiErrorDto, DoctorInfoDto, DosageInfoDto, MedicationInfoDto } from '@api-rest/api-model';
 import { dateDtoToDate } from '@api-rest/mapper/date-dto.mapper';
 import { MedicationStatementInstitutionalSupplyService } from '@api-rest/services/medication-statement-institutional-supply.service';
@@ -28,6 +28,7 @@ export class MedicationDispensePopupComponent implements OnInit {
 	isLoading = false;
 
 	constructor(@Inject(MAT_DIALOG_DATA) public medicationInfo: MedicationInfoDto,
+				private dialogRef: MatDialogRef<MedicationDispensePopupComponent>,
 				private readonly patientNameService: PatientNameService,
 				private readonly medicationStatementInstitutionalSupplyService: MedicationStatementInstitutionalSupplyService,
 				private readonly medicationToDispenseService: MedicationToDispenseService,
@@ -47,7 +48,10 @@ export class MedicationDispensePopupComponent implements OnInit {
 		this.medicationStatementInstitutionalSupplyService.save(this.medicationToDispenseService.saveMedicationStatement)
 			.pipe(finalize(() => this.isLoading = false))
 			.subscribe({
-				next: (_) => this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.SUCCESS'),
+				next: (_) => {
+					this.snackBarService.showSuccess('ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.SUCCESS'),
+					this.dialogRef.close(true);
+				},
 				error: (error: ApiErrorDto) => processErrors(error, (msg) => this.snackBarService.showError(msg))
 			})
 	}	

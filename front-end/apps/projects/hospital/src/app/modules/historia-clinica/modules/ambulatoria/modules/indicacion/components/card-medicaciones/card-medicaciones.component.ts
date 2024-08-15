@@ -117,7 +117,7 @@ export class CardMedicacionesComponent implements OnInit {
 		});
 	}
 
-	private getMedication(): void {
+	getMedication(): void {
 		if (this.canOnlyViewSelfAddedProblems) {
 			this.medicacionesService.updateMedicationFilterByRoles(this.patientId,
 				this.formFilter.controls.statusId.value,
