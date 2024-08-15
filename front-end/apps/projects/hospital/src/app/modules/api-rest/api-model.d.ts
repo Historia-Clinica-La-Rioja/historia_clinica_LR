@@ -309,9 +309,9 @@ export interface AnthropometricGraphicDto {
 }
 
 export interface AnthropometricGraphicEnablementDto {
-    hasAnthropometricData: boolean;
+    hasAnthropometricData?: boolean;
     hasValidAge: boolean;
-    hasValidGender: boolean;
+    hasValidGender?: boolean;
 }
 
 export interface ApiErrorDto {

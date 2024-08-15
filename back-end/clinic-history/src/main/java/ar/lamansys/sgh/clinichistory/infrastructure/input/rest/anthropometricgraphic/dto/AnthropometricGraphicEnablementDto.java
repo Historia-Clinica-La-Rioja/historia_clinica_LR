@@ -5,14 +5,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 public class AnthropometricGraphicEnablementDto {
 
-	private boolean hasValidAge;
-	private boolean hasValidGender;
-	private boolean hasAnthropometricData;
+	@NotNull
+	private Boolean hasValidAge;
+
+	@Nullable
+	private Boolean hasValidGender;
+
+	@Nullable
+	private Boolean hasAnthropometricData;
 
 }
