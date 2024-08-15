@@ -8,10 +8,10 @@
 
 	<section id="content" fxLayout="column" fxLayoutGap="20px">
 		<mat-card id="patient_card">
-			<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayoutGap.lt-lg="20px"
-				fxLayout.lt-lg="column">
+			<div id="layout_header" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px"
+				fxLayoutGap.lt-lg="20px" fxLayout.lt-lg="column">
 				<div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="5px" fxLayoutGap.lt-md="20px"
-				fxLayout.lt-md="column">
+					fxLayout.lt-md="column">
 					<mat-card-header>
 						<div *ngIf="!isEmergencyCareTemporalPatient else temporalGuardPatient">
 							<app-patient-card-header *ngIf="personPhoto" [patient]="patient" [personPhoto]="personPhoto"
@@ -22,12 +22,14 @@
 						</div>
 
 						<ng-template #temporalGuardPatient>
-							<app-emergency-care-temporary-patient-header (patientSelectedEvent)="patientSelected($event)">
+							<app-emergency-care-temporary-patient-header
+								(patientSelectedEvent)="patientSelected($event)">
 							</app-emergency-care-temporary-patient-header>
 						</ng-template>
 
 					</mat-card-header>
-					<div fxLayout="row" fxLayout.xs="column" *ngIf="!canOnlyViewSelfAddedProblems" fxLayoutAlign="center center">
+					<div fxLayout="row" fxLayout.xs="column" *ngIf="!canOnlyViewSelfAddedProblems"
+						fxLayoutAlign="center center">
 						<div fxLayout="row">
 							<mat-divider class="header-divider first-divider" [vertical]="true"></mat-divider>
 							<div class="sided_spaced_content" *ngIf="bloodType?.length" fxLayout="column"
@@ -76,7 +78,8 @@
 								<div *ngIf="patientAllergies.criticalAllergies?.length==0">
 									<div fxLayout="row">
 										<div fxLayout="column">
-											<mat-icon class="color-disabled allergy-icon" fontSet="material-icons-outlined">
+											<mat-icon class="color-disabled allergy-icon"
+												fontSet="material-icons-outlined">
 												block
 											</mat-icon>
 										</div>
@@ -111,11 +114,13 @@
 				</div>
 				<div buttons-content fxLayout="column" fxLayoutGap="10px" fxLayout.lt-lg="row"
 					fxLayoutAlign="center center" fxLayoutAlign.lt-lg="end center">
-					<app-clinical-history-actions class="actions-btn" id="actions" [internmentEpisodeProcess]="internmentEpisodeProcess"
+					<app-clinical-history-actions class="actions-btn" id="actions"
+						[internmentEpisodeProcess]="internmentEpisodeProcess"
 						[emergencyCareEpisode]="emergencyCareEpisode" [patientId]="patientId"
 						(popUpOpen)="dialogRef = $event">
 					</app-clinical-history-actions>
-					<button class="show-patient-btn" mat-stroked-button color="primary" (click)="goToPatient()" btn-block>
+					<button class="show-patient-btn" mat-stroked-button color="primary" (click)="goToPatient()"
+						btn-block>
 						{{ 'ambulatoria.paciente.card.buttons.SHOW_PATIENT' | translate | uppercase }}</button>
 				</div>
 			</div>
@@ -164,6 +169,7 @@
 								[canOnlyViewSelfAddedProblems]="canOnlyViewSelfAddedProblems"></app-resumen>
 						</ng-template>
 					</mat-tab>
+
 					<mat-tab id="tab_internacion" *ngIf="hasInternmentEpisodeInThisInstitution && hasHealthRelatedRole">
 						<ng-template mat-tab-label>
 							<span>{{ 'ambulatoria.paciente.internacion.TAB_LABEL' | translate | uppercase }}</span>
@@ -178,7 +184,8 @@
 							<span>{{ 'ambulatoria.paciente.guardia.TAB_LABEL' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress" [isEmergencyCareTemporalPatient]="isEmergencyCareTemporalPatient">
+							<app-guardia [emergencyCareEpisodeInProgress]="emergencyCareEpisodeInProgress"
+								[isEmergencyCareTemporalPatient]="isEmergencyCareTemporalPatient">
 							</app-guardia>
 						</ng-template>
 					</mat-tab>
@@ -188,7 +195,9 @@
 							<span>{{ 'indicacion.TITLE' | translate | uppercase }}</span>
 						</ng-template>
 						<ng-template matTabContent>
-							<app-emergency-care-indications-card *ngIf="emergencyCareEpisodeInProgress?.inProgress && emergencyCareEpisodeState != EstadosEpisodio.CON_ALTA_MEDICA " [patientId]="patientId"
+							<app-emergency-care-indications-card
+								*ngIf="emergencyCareEpisodeInProgress?.inProgress && emergencyCareEpisodeState != EstadosEpisodio.CON_ALTA_MEDICA "
+								[patientId]="patientId"
 								[emergencyCareEpisodeId]="emergencyCareEpisodeInProgress.id"></app-emergency-care-indications-card>
 
 							<div>
@@ -198,8 +207,8 @@
 										[internmentEpisodeId]="internmentEpisodeProcess.id">
 									</app-internment-indications-card>
 								</div>
-								<app-card-medicaciones *ngIf="!isTemporaryPatient"
-									[patientId]="patientId" [personId]="personId" [medicamentStatus]="medicamentStatus$ | async">
+								<app-card-medicaciones *ngIf="!isTemporaryPatient" [patientId]="patientId"
+									[personId]="personId" [medicamentStatus]="medicamentStatus$ | async">
 								</app-card-medicaciones>
 							</div>
 						</ng-template>
@@ -264,6 +273,18 @@
 								(consultationCompleted)="updateFields($event)"></app-odontogram>
 						</ng-template>
 					</mat-tab>
+
+					<section>
+						<mat-tab id="antecedentes">
+							<ng-template mat-tab-label>
+								<span>ANTECEDENTES</span>
+							</ng-template>
+							<ng-template matTabContent>
+								<app-background-family></app-background-family>
+							</ng-template>
+						</mat-tab>
+					</section>
+					
 					<mat-tab id="tab_sap">
 						<ng-template mat-tab-label>
 							<span>CRECIMIENTO FISICO (SAP)</span>
@@ -305,7 +326,7 @@
 					</section>
 					<section>
 						<mat-tab id="tab_violence_situations" *appHasRole="['ABORDAJE_VIOLENCIAS']"
-						label="{{'ambulatoria.paciente.violence-situations.TAB_LABEL' | translate | uppercase}}">
+							label="{{'ambulatoria.paciente.violence-situations.TAB_LABEL' | translate | uppercase}}">
 							<app-violence-situations></app-violence-situations>
 						</mat-tab>
 					</section>
