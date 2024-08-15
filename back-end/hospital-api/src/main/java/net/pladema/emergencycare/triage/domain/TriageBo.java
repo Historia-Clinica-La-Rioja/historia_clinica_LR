@@ -141,4 +141,9 @@ public class TriageBo implements IDocumentBo {
 		return null;
 	}
 
+	@Override
+	public Integer getClinicalSpecialtySectorId() {
+		return clinicalSpecialtySectorBo == null ? null : clinicalSpecialtySectorBo.getId();
+	}
+
 }

@@ -867,6 +867,13 @@ export interface ClinicalSpecialtyDto extends Serializable {
     name: string;
 }
 
+export interface ClinicalSpecialtySectorDto extends Serializable {
+    clinicalSpecialtyId: number;
+    description: string;
+    id: number;
+    sectorId: number;
+}
+
 export interface ClinicalTermDto extends Serializable {
     id?: number;
     snomed: SnomedDto;

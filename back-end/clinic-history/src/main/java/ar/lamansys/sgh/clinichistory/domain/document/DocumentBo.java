@@ -50,6 +50,8 @@ public class DocumentBo implements IDocumentBo {
 
     private Integer clinicalSpecialtyId;
 
+	private Integer clinicalSpecialtySectorId;
+
     private Integer medicalCoverageId;
 
     private short documentType;

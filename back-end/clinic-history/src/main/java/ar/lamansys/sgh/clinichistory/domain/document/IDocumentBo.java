@@ -108,6 +108,10 @@ public interface IDocumentBo {
         return null;
     }
 
+	default Integer getClinicalSpecialtySectorId() {
+		return null;
+	}
+
     default Integer getMedicalCoverageId() {
         return null;
     }
@@ -226,6 +230,8 @@ public interface IDocumentBo {
     default void setPerformedDate(LocalDateTime performedDate) {}
 
     default void setClinicalSpecialtyId(Integer clinicalSpecialtyId) {}
+
+	default void setClinicalSpecialtySectorId(Integer clinicalSpecialtyId) {}
 
     default void setInstitutionId(Integer institutionId) {}
 

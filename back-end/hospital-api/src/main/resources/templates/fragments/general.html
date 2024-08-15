@@ -346,6 +346,16 @@
         </div>
     </div>
 
+    <!-- Especialidad clínica sector (servicio) -->
+    <div th:fragment="clinicalSpecialtySector (message)" th:if="${clinicalSpecialtySector != null}">
+        <p class="section-title" th:text="${message}"></p>
+        <div>
+            <dl class="section-data">
+                <dd><p th:text="${'- ' + clinicalSpecialtySector.description}"></p></dd>
+            </dl>
+        </div>
+    </div>
+
     <!-- Diagnóstico principal -->
     <div th:fragment="mainDiagnosis (message)" th:if="${mainDiagnosis != null}">
         <p class="section-title" th:text="${message}"></p>

@@ -10,6 +10,7 @@ import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.D
 import ar.lamansys.sgh.shared.domain.general.ContactInfoBo;
 import ar.lamansys.sgh.shared.infrastructure.input.service.BasicPatientDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtyDto;
+import ar.lamansys.sgh.shared.infrastructure.input.service.ClinicalSpecialtySectorDto;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedAddressPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPatientPort;
 import ar.lamansys.sgh.shared.infrastructure.input.service.SharedPersonPort;
@@ -54,6 +55,7 @@ public class AuditableContextBuilder {
 	private final Function<Integer, BasicPatientDto> basicDataFromPatientLoader;
 	private final Function<Long, ProfessionalCompleteDto> authorFromDocumentFunction;
 	private final Function<Integer, ClinicalSpecialtyDto> clinicalSpecialtyDtoFunction;
+	private final Function<Integer, ClinicalSpecialtySectorDto> clinicalSpecialtySectorDtoFunction;
 	private final SharedImmunizationPort sharedImmunizationPort;
 	private final RiskFactorMapper riskFactorMapper;
 	private final LocalDateMapper localDateMapper;
@@ -90,6 +92,7 @@ public class AuditableContextBuilder {
 			SharedPatientPort sharedPatientPort,
 			DocumentAuthorFinder documentAuthorFinder,
 			ClinicalSpecialtyFinder clinicalSpecialtyFinder,
+			ClinicalServiceSectorFinder clinicalServiceSectorFinder,
 			SharedImmunizationPort sharedImmunizationPort,
 			RiskFactorMapper riskFactorMapper,
 			LocalDateMapper localDateMapper,
@@ -114,6 +117,7 @@ public class AuditableContextBuilder {
 		this.basicDataFromPatientLoader = sharedPatientPort::getBasicDataFromPatient;
 		this.authorFromDocumentFunction = documentAuthorFinder::getAuthor;
 		this.clinicalSpecialtyDtoFunction = clinicalSpecialtyFinder::getClinicalSpecialty;
+		this.clinicalSpecialtySectorDtoFunction = clinicalServiceSectorFinder::getClinicalSpecialtySector;
 		this.riskFactorMapper = riskFactorMapper;
 		this.featureFlagsService = featureFlagsService;
 		this.patientMedicalCoverageService = patientMedicalCoverageService;
@@ -211,6 +215,8 @@ public class AuditableContextBuilder {
 		contextMap.put("involvedProfessionals", involvedProfessionals);
 
 		contextMap.put("clinicalSpecialty", clinicalSpecialtyDtoFunction.apply(document.getClinicalSpecialtyId()));
+		contextMap.put("clinicalSpecialtySector", document.getClinicalSpecialtySectorId() != null ?
+				clinicalSpecialtySectorDtoFunction.apply(document.getClinicalSpecialtySectorId()) : null);
 		contextMap.put("performedDate", document.getPerformedDate().atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("UTC-3")));
 		contextMap.put("nameSelfDeterminationFF", featureFlagsService.isOn(AppFeature.HABILITAR_DATOS_AUTOPERCIBIDOS));
 		contextMap.put("appLogo", generatePdfImage("pdf/hsi-footer-118x21.png"));
