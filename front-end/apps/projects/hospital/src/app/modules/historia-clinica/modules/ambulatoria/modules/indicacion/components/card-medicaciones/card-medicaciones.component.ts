@@ -25,6 +25,7 @@ import { anyMatch } from '@core/utils/array.utils';
 import { processErrors } from '@core/utils/form.utils';
 import { DocumentService } from '@api-rest/services/document.service';
 import { DiscardWarningComponent } from '@presentation/dialogs/discard-warning/discard-warning.component';
+import { forkJoin, take } from 'rxjs';
 
 const ROLES_TO_EDIT: ERole[] = [ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA, ERole.PRESCRIPTOR];
 
@@ -51,6 +52,10 @@ export class CardMedicacionesComponent implements OnInit {
 	CANCELED_STATE_ID: number = PRESCRIPTION_STATES.ANULADA.id;
 	PROVISIONAL_DISPENSED_STATE_ID: number = PRESCRIPTION_STATES.PROVISORIO_DISPENSADA.id;
 
+	HABILITAR_RELACIONES_SNOMED = false;
+	HABILITAR_DISPENSA = false;
+	canDispense = false;
+
 	@Input() patientId: number;
 	@Input() personId?: number;
 	@Input()
@@ -72,8 +77,7 @@ export class CardMedicacionesComponent implements OnInit {
 		private readonly featureFlagService: FeatureFlagService,
 		private documentService: DocumentService
 	) {
-		this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
-			.subscribe((result: boolean) => this.isHabilitarRecetaDigitalEnabled = result);
+		this.setFeatureFlags();
 	}
 
 	ngOnInit(): void {
@@ -381,5 +385,22 @@ export class CardMedicacionesComponent implements OnInit {
 					});
 			}
 		});
+	}
+
+	private setFeatureFlags = () => {
+		forkJoin([
+			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL).pipe(take(1)),
+			this.featureFlagService.isActive(AppFeature.HABILITAR_DISPENSA).pipe(take(1)),
+			this.featureFlagService.isActive(AppFeature.HABILITAR_RELACIONES_SNOMED).pipe(take(1))
+		]).subscribe(([isHabilitarRecetaDigital, isHabilitarDispensa, isHabilitarRelacionesSnomed]: [boolean, boolean, boolean]) => {
+			this.isHabilitarRecetaDigitalEnabled = isHabilitarRecetaDigital;
+			this.HABILITAR_DISPENSA = isHabilitarDispensa;
+			this.HABILITAR_RELACIONES_SNOMED = isHabilitarRelacionesSnomed;
+			this.setCanDispense();
+		})
+	}	
+
+	private setCanDispense = () => {
+		this.canDispense = this.isHabilitarRecetaDigitalEnabled && this.HABILITAR_DISPENSA && this.HABILITAR_RELACIONES_SNOMED;
 	}
 }

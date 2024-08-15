@@ -12,7 +12,7 @@ import { MedicationDispensePopupComponent } from '../../dialogs/medication-dispe
 export class DispenseButtonComponent {
 
 	@Input() medicationInfo: MedicationInfoDto;
-	@Input() isHabilitarRecetaDigital;
+	@Input() canDispense;
 
 	INDICATED_STATE_ID: number = PRESCRIPTION_STATES.INDICADA.id;
 	PERSONAL_DE_FARMACIA = ERole.PERSONAL_DE_FARMACIA;
