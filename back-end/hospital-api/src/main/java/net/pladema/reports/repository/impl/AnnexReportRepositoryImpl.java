@@ -1,5 +1,6 @@
 package net.pladema.reports.repository.impl;
 
+import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.document.SourceType;
 import ar.lamansys.sgh.clinichistory.infrastructure.output.repository.masterdata.entity.ProblemType;
 import ar.lamansys.sgx.shared.dates.configuration.JacksonDateFormatConfig;
 import java.sql.Date;
@@ -9,6 +10,8 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import lombok.RequiredArgsConstructor;
 import net.pladema.reports.repository.AnnexReportRepository;
 import net.pladema.reports.repository.entity.AnnexIIAppointmentVo;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 
+	@PersistenceContext
     private final EntityManager entityManager;
 
 	private static AnnexIIOutpatientVo toAnnexIIOutpatientVo(Object[] a) {
@@ -95,16 +99,18 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
     @Override
 	@Transactional(readOnly = true)
     public Optional<AnnexIIOutpatientVo> getConsultationAnnexInfo(Long documentId) {
+		int outPatientValue = SourceType.OUTPATIENT;
+		int vaccineValue = SourceType.IMMUNIZATION;
         String query = "WITH t AS (" +
                 "       SELECT " +
 				"        CASE " +
-				"            WHEN d.source_type_id = 1 THEN oc.id " +
-				"            WHEN d.source_type_id = 5 THEN vc.id " +
+				"            WHEN d.source_type_id = :outPatientValue THEN oc.id " +
+				"            WHEN d.source_type_id = :vaccineValue THEN vc.id " +
 				"        END as id, " +
 				"        d.id as doc_id, " +
 				"        CASE " +
-				"            WHEN d.source_type_id = 1 THEN oc.start_date " +
-				"            WHEN d.source_type_id = 5 THEN vc.performed_date " +
+				"            WHEN d.source_type_id = :outPatientValue THEN oc.start_date " +
+				"            WHEN d.source_type_id = :vaccineValue THEN vc.performed_date " +
 				"        END as start_date, " +
 				"        COALESCE(oc.institution_id, vc.institution_id) as institution_id, " +
 				"        COALESCE(oc.patient_id, vc.patient_id) as patient_id, " +
@@ -113,10 +119,10 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 				"        d.created_on, " +
 				"        COALESCE(oc.doctor_id, vc.doctor_id) as doctor_id " +
 				"       FROM {h-schema}document AS d " +
-				"           LEFT JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id AND d.source_type_id = 1) " +
-				"           LEFT JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id AND d.source_type_id = 5) " +
+				"           LEFT JOIN {h-schema}outpatient_consultation AS oc ON (d.source_id = oc.id AND d.source_type_id = :outPatientValue) " +
+				"           LEFT JOIN {h-schema}vaccine_consultation AS vc ON (d.source_id = vc.id AND d.source_type_id = :vaccineValue) " +
 				"       WHERE d.id = :documentId " +
-				"           AND (d.source_type_id = 1 OR d.source_type_id = 5) " +
+				"           AND (d.source_type_id = :outPatientValue OR d.source_type_id = :vaccineValue) " +
                 "       )" +
                 "       SELECT i.name as institution, pe.first_name, pe.middle_names, pe.last_name, pe.other_last_names, g.description, " +
                 "               pe.birth_date, it.description as idType, pe.identification_number, t.start_date, pr.proced as hasProcedures, " +
@@ -148,11 +154,15 @@ public class AnnexReportRepositoryImpl implements AnnexReportRepository {
 					"           WHERE hc.problem_id IN (:problemTypes) AND dhc.document_id = :documentId " +
 					"           GROUP BY dhc.document_id " +
 					"           ) prob ON (t.doc_id = prob.document_id) ";
-        Optional<Object[]> queryResult =  entityManager.createNativeQuery(query)
+
+        Optional<Object[]> queryResult = (Optional<Object[]>) entityManager.createNativeQuery(query)
                 .setParameter("documentId", documentId)
                 .setParameter("problemTypes", List.of(ProblemType.PROBLEM, ProblemType.CHRONIC))
-                .setMaxResults(1)
-                .getResultList().stream().findFirst();
+				.setParameter("outPatientValue", outPatientValue)
+				.setParameter("vaccineValue", vaccineValue)
+				.setMaxResults(1)
+				.getResultList()
+				.stream().findFirst();
 
         Optional<AnnexIIOutpatientVo> result = queryResult.map(AnnexReportRepositoryImpl::toAnnexIIOutpatientVo);
         return result;
