@@ -254,7 +254,7 @@ databaseChangeLog:
                 - column:
                     name: city_id
                     type: int
-        
+
     - changeSet:
         id: add-table-medication_statement_commercial_prescription
         author: mmalyvarni
@@ -407,4 +407,12 @@ databaseChangeLog:
                 - column:
                     name: text_value
                     type: text
+
+    - changeSet:
+        id: createIndex-annex-and-formv-appointment
+        author: mromero
+        changes:
+          - sql:
+              sql: |-
+                CREATE INDEX IF NOT EXISTS "IDX_document_appointment_appointment_id" ON document_appointment(appointment_id);
 
