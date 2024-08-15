@@ -38,9 +38,9 @@ export class DispenseButtonComponent {
 		});
 	}
 
-	private setDialogConfiguration = (): DialogConfiguration  => {
+	private setDialogConfiguration = (): DialogConfiguration => {
 		return {
-			dialogWidth: DialogWidth.SMALL
+			dialogWidth: DialogWidth.MEDIUM
 		}
 	}
 }

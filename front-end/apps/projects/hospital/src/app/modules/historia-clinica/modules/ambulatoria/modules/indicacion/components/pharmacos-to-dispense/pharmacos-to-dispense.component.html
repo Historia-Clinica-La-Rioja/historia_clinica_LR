@@ -3,19 +3,22 @@
 
     <form [formGroup]="form">
         <div class="commercial-pharmaco" formArrayName="pharmacos">
-            <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.COMMERCIAL_PHARMACO'"></span>
-            <div class="field" *ngFor="let pharmaco of pharmacos.controls; let index = index" [formGroupName]="index">
-                <app-typeahead (selectionChange)="setConcept($event, index)" [options]="typeaheadConcepts" [placeholder]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.SEARCH_PHARMACO'"></app-typeahead>
+            <div *ngFor="let pharmaco of pharmacos.controls; let index = index" [formGroupName]="index">
+                <span [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.COMMERCIAL_PHARMACO'"></span>
 
-                <div class="quantity">
-                    <mat-form-field appearance="outline">
-                        <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.QUANTITY'"></mat-label>
-                        <input onlyNumericCharacters matInput formControlName="quantity" #quantity (change)="setQuantity(quantity.value, index)">
-                    </mat-form-field>
-
-                    <button mat-button color="warn" class="remove" (click)="removePharmacoToDispense(index)">
-                        <mat-icon class="material-icons-outlined">delete</mat-icon>
-                    </button>
+                <div class="fields">
+                    <app-typeahead (selectionChange)="setConcept($event, index)" [options]="typeaheadConcepts" [placeholder]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.SEARCH_PHARMACO'"></app-typeahead>
+    
+                    <div class="quantity">
+                        <mat-form-field appearance="outline">
+                            <mat-label [translate]="'ambulatoria.paciente.ordenes_prescripciones.menu_items.dispense.dialog.QUANTITY'"></mat-label>
+                            <input onlyNumericCharacters matInput formControlName="quantity" #quantity (change)="setQuantity(quantity.value, index)">
+                        </mat-form-field>
+    
+                        <button mat-button color="warn" class="remove" (click)="removePharmacoToDispense(index)">
+                            <mat-icon class="material-icons-outlined">delete</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

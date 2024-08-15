@@ -9,7 +9,7 @@
     margin-top: 1rem;
 }
 
-.field {
+.fields {
     display: flex;
     gap: 1rem;
 }
@@ -22,7 +22,6 @@ app-typeahead {
     width: 40%;
     font-size: 0.75rem;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
 
     mat-form-field {
