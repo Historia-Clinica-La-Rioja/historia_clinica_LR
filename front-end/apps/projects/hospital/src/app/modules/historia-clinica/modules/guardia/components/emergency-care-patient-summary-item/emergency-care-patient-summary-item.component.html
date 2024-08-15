@@ -1,37 +1,14 @@
-<div id="patient" fxLayout="row">
-    <mat-card-header>
-        <img mat-card-avatar [src]="episode.decodedPatientPhoto | async"
-            onerror="this.src='../../../../../assets/images/empty-profile.png'">
-        <mat-card-title>
-            <span *ngIf="!episode.patient else emergency_care_temporary">
-                {{ 'guardia.home.episodes.episode.patient.NO_INFO'| translate }}
-            </span>
-        </mat-card-title>
-        <mat-card-subtitle class="mat-small" fxLayout="column" fxLayoutGap="2px">
-            <span *ngIf="episode.patient?.id">
-                {{ 'guardia.home.episodes.episode.patient.ID'| translate }}
-                {{ episode.patient?.id }}
-            </span>
-            <app-title-description *ngIf="episode.patient?.patientDescription && episode.patient?.typeId === EMERGENCY_CARE_TEMPORARY" [title]="'guardia.home.episodes.episode.patient.DETAILS'" [text]="episode.patient.patientDescription" limit="20"></app-title-description>
-            <app-title-description *ngIf="episode.reason" [title]="'guardia.home.episodes.episode.patient.REASON'" [text]="episode.reason" limit="20"></app-title-description>
-        </mat-card-subtitle>
-    </mat-card-header>
-    <ng-template #emergency_care_temporary>
-        <span
-            *ngIf="(episode.patient?.typeId == EMERGENCY_CARE_TEMPORARY) else patientInfo">{{
-            'guardia.home.episodes.episode.patient.EMERGENCY_CARE_TEMPORARY'| translate
-            }}</span>
+<div id="patient" fxLayout="column" fxLayoutGap="10px" *ngIf="emergencyCarePatientSummaryItem">
+    <ng-container *ngIf="emergencyCarePatientSummaryItem.typeId === EMERGENCY_CARE_TEMPORARY else patientSummary">
+       <app-temporary-patient [patientDescription]="emergencyCarePatientSummaryItem.description"></app-temporary-patient>
+    </ng-container>
+    <ng-template #patientSummary>
+        <app-patient-summary [person]="emergencyCarePatientSummaryItem.summary" size={{SMALL}}>
+        </app-patient-summary>
     </ng-template>
-
-    <ng-template #patientInfo>
-        <span
-            *ngIf="(episode.patient?.typeId !== PACIENTE_TEMPORAL || episode.patient?.person?.firstName || episode.patient?.person?.lastName) else temporal">
-            {{ episode.patient?.person?.firstName }} {{
-            episode.patient?.person?.lastName }}
-        </span>
-    </ng-template>
-
-    <ng-template #temporal>
-        <span>{{ 'guardia.home.episodes.episode.patient.TEMPORAL'| translate }}</span>
-    </ng-template>
+    <div class="margin" fxLayout="column" fxLayoutGap="4px">
+        <app-title-description *ngIf="reason" title="guardia.home.episodes.episode.patient.REASON" [text]="reason" limit="20"></app-title-description>
+        <app-identifier-cases *ngIf="episodeTypeDescription" identifierCase={{EMERGENCY_CARE_TYPE}}
+            [description]="episodeTypeDescription"></app-identifier-cases>
+    </div>
 </div>

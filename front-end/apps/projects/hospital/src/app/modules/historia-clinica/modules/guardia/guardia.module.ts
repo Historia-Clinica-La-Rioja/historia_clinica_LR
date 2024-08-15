@@ -53,6 +53,7 @@ import { SelectConsultorioComponent } from './dialogs/select-consultorio/select-
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
 // standalone
+import { IdentifierCasesComponent } from '@hsi-components/identifier-cases/identifier-cases.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
 import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/temporary-patient.component';
 
@@ -74,7 +75,10 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		EmergencyCareDashboardActionsComponent,
 		EmergencyCarePatientComponent,
 		EmergencyCarePatientsSummaryComponent,
+		EmergencyCarePatientSummaryItemComponent,
+		EmergencyCareStatusSummaryItemComponent,
 		EmergencyCareTabsComponent,
+		EmergencyCareTriageSummaryItemComponent,
 		EmergencyCareTemporaryPatientComponent,
         EvolutionsSummaryComponent,
 		MedicalDischargeByNurseComponent,
@@ -88,7 +92,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
         TriageLevelSummaryComponent,
         TriageSummaryComponent,
 		ReasonsFormComponent,
-        SpecialtySummaryComponent,
+		SpecialtySummaryComponent,
 		// dialogs
 		AdministrativeTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,
@@ -98,9 +102,6 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		LastTriageComponent,
 		EmergencyCareEvolutionNoteComponent,
 		AttentionPlaceDialogComponent,
-  EmergencyCarePatientSummaryItemComponent,
-  EmergencyCareTriageSummaryItemComponent,
-  EmergencyCareStatusSummaryItemComponent,
 	],
 	imports: [
 		CommonModule,
@@ -112,6 +113,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		LazyMaterialModule,
 		PresentationModule,
 		// standalone
+		IdentifierCasesComponent,
 		PatientSummaryComponent,
 		TemporaryPatientComponent,
 	],
