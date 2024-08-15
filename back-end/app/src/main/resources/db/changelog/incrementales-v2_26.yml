@@ -5,12 +5,6 @@ databaseChangeLog:
           id: update-datatype-id-appointment_order_image
           context: "!schema-only"
           author: mromero
-          preConditions:
-              - onFail: CONTINUE
-              - onError: CONTINUE
-              - sqlCheck:
-                    expectedResult: "SMALLINT"
-                    sql: SELECT data_type FROM information_schema.columns WHERE table_name='appointment_order_image' AND column_name='id';
           changes:
               - sql:
                     sql: |-
