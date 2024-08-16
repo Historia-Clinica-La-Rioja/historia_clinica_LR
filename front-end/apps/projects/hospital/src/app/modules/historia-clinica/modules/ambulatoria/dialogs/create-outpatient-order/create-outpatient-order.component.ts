@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ApiErrorDto, BasicPatientDto, PatientMedicalCoverageDto, PrescriptionDto, SnomedECL } from "@api-rest/api-model";
+import { ApiErrorDto, BasicPatientDto, EStudyType, PatientMedicalCoverageDto, PrescriptionDto, SnomedECL } from "@api-rest/api-model";
 import { OutpatientOrderService } from "@api-rest/services/outpatient-order.service";
 import { PatientMedicalCoverageService } from "@api-rest/services/patient-medical-coverage.service";
 import { PatientService } from "@api-rest/services/patient.service";
@@ -9,18 +9,23 @@ import { RequestMasterDataService } from "@api-rest/services/request-masterdata.
 import { MapperService } from "@core/services/mapper.service";
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
-import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 import { MedicalCoverageComponent, PatientMedicalCoverage } from "@pacientes/dialogs/medical-coverage/medical-coverage.component";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 import { map } from "rxjs/operators";
 
 @Component({
-  selector: 'app-create-outpatient-order',
-  templateUrl: './create-outpatient-order.component.html',
-  styleUrls: ['./create-outpatient-order.component.scss']
+	selector: 'app-create-outpatient-order',
+	templateUrl: './create-outpatient-order.component.html',
+	styleUrls: ['./create-outpatient-order.component.scss']
 })
 export class CreateOutpatientOrderComponent implements OnInit {
+
+	eStudyType: EStudyType;
+	ROUTINE = EStudyType.ROUTINE
+	URGENT = EStudyType.URGENT
+	patient: PatientBasicData ;
 
 	readonly ecl = SnomedECL.PROCEDURE;
 	hasError = hasError;
@@ -48,6 +53,12 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		private readonly snackBarService: SnackBarService,
 		private readonly dialog: MatDialog,
 	) {
+
+		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
+			patient => {
+				this.patient = this.mapperService.toPatientBasicData(patient);
+			});
+
 		this.orderStudiesService = new OrderStudiesService();
 	}
 
@@ -56,6 +67,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			patientMedicalCoverage: [null],
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
+			studyType: [EStudyType.ROUTINE, Validators.required],
+			requiresTechnical: [false, Validators.required],
 			healthProblem: [null, Validators.required],
 			notes: [null]
 		});
@@ -116,6 +129,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	handleStudySelected(study) {
 		this.selectedStudy = study;
 		this.form.controls.studySelection.setValue(this.getStudyDisplayName());
+		this.loadSelectedConceptsIntoOrderStudiesService();
+		this.resetStudySelector();
 	}
 
 	resetStudySelector() {
@@ -137,30 +152,30 @@ export class CreateOutpatientOrderComponent implements OnInit {
 
 	goToConfirmationStep() {
 		this.firstStepCompleted = true;
-		this.loadSelectedConceptsIntoOrderStudiesService();
 	}
 
 	private loadSelectedConceptsIntoOrderStudiesService() {
-		let conceptsToLoad: Study[];
+		const addStudy = (study: Study) => {
+			const added = this.orderStudiesService.add(study);
+			if (!added) {
+				this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED');
+			}
+		};
+
+		const mapConceptToStudy = (concept: any): Study => ({
+			snomed: {
+				sctid: concept.conceptId,
+				pt: concept.pt.term,
+			}
+		});
+
 		if (this.selectedStudyIsTemplate()) {
-			conceptsToLoad = this.selectedStudy.data.concepts.map(concept => ({
-				snomed: {
-					sctid: concept.conceptId,
-					pt: concept.pt.term
-				}
-			}));
+			const conceptsToLoad = this.selectedStudy.data.concepts.map(mapConceptToStudy);
+			conceptsToLoad.forEach(addStudy);
+		} else {
+			const conceptToLoad = mapConceptToStudy(this.selectedStudy.data);
+			addStudy(conceptToLoad);
 		}
-		else {
-			conceptsToLoad = [
-				{
-					snomed: {
-						sctid: this.selectedStudy.data.conceptId,
-						pt: this.selectedStudy.data.pt.term
-					}
-				}
-			];
-		}
-		this.orderStudiesService.addAll(conceptsToLoad);
 	}
 
 	removeStudy(i) {
@@ -185,6 +200,8 @@ export class CreateOutpatientOrderComponent implements OnInit {
 			medicalCoverageId: this.form.controls.patientMedicalCoverage.value?.id,
 			hasRecipe: true,
 			observations: this.form.controls.notes.value,
+			studyType: this.form.controls.studyType.value,
+			requiresTechnician: this.form.controls.requiresTechnical.value,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
 					healthConditionId: this.form.controls.healthProblem.value.id,
@@ -210,25 +227,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 		this.dialogRef.close(newOutpatientOrder);
 	}
 
-	openAddAnotherStudyDialog() {
-		const addStudy = this.dialog.open(ConceptsTypeaheadSearchDialogComponent, {
-			width: '35%',
-            autoFocus: false,
-			data: {
-				ecl: this.ecl,
-				placeholder: 'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY',
-				title: 'ambulatoria.paciente.outpatient-order.create-order-dialog.ADD_STUDY_DIALOG_TITLE'
-			},
-		});
-
-		addStudy.afterClosed().subscribe((addStudyDialogData) => {
-			if (addStudyDialogData?.selectedConcept) {
-				let added = this.orderStudiesService.add({snomed: addStudyDialogData.selectedConcept});
-				if (!added)
-					this.snackBarService.showError('ambulatoria.paciente.outpatient-order.create-order-dialog.STUDY_REPEATED')
-			}
-		})
-	}
 
 	clear(control: AbstractControl): void {
 		control.reset();
