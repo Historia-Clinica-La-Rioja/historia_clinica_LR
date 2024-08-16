@@ -1,7 +1,6 @@
 package ar.lamansys.sgh.clinichistory.infrastructure.output;
 
 import ar.lamansys.sgh.clinichistory.application.anestheticreport.ports.output.AnestheticReportStorage;
-import ar.lamansys.sgh.clinichistory.application.calculatedocumentcreationdate.CalculateDocumentPerformedDate;
 import ar.lamansys.sgh.clinichistory.application.document.FetchDocument;
 import ar.lamansys.sgh.clinichistory.domain.document.DocumentBo;
 import ar.lamansys.sgh.clinichistory.domain.document.impl.AnestheticReportBo;
@@ -23,7 +22,6 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
     private final AnestheticReportRepository anestheticReportRepository;
     private final SharedStaffPort sharedStaffPort;
     private final FetchDocument fetchDocument;
-    private final CalculateDocumentPerformedDate calculateDocumentPerformedDate;
 
     @Override
     public Integer save(AnestheticReportBo anestheticReport) {
@@ -89,17 +87,13 @@ public class AnestheticReportStorageImpl implements AnestheticReportStorage {
 
     private AnestheticReportBo build(DocumentBo document, AnestheticReport anestheticReport) {
 
-        var creationDate = Optional.ofNullable(document.getInitialDocumentId())
-                .flatMap(calculateDocumentPerformedDate::run)
-                .orElse(document.getPerformedDate());
-
         return AnestheticReportBo.builder()
                 .businessObjectId(anestheticReport.getId())
                 .id(document.getId())
                 .encounterId(document.getEncounterId())
                 .institutionId(document.getInstitutionId())
                 .patientId(document.getPatientId())
-                .performedDate(creationDate)
+                .performedDate(document.getPerformedDate())
                 .createdBy(document.getCreatedBy())
                 .anestheticChart(anestheticReport.getAnestheticChart())
                 .confirmed(document.isConfirmed())
