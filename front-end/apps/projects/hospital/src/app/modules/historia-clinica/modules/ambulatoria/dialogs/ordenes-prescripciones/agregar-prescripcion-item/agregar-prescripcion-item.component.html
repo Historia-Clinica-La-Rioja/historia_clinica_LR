@@ -40,7 +40,7 @@
 				[showSearchIcon]="true"
 				[clearButton]="true"
 				[placeholder]="'ambulatoria.paciente.ordenes_prescripciones.add_prescription_item_dialog.GENERIC_PHARMACO_SEARCH'"
-				[preload]="snomedConcept?.pt"
+				[preload]="snomedConcept"
 				[required]="true"
 				(conceptSelected)="setConcept($event)">
 			</app-concept-typeahead-search>

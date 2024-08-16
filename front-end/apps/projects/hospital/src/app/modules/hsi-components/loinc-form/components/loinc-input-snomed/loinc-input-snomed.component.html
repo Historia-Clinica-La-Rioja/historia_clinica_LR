@@ -5,6 +5,6 @@
 	 [placeholder]="'Busqueda'"
 	 [showSearchIcon]="true"
 	 [clearButton]="true"
-	 [preload]="preload"
+	 [preload]="preloadSnomed"
 	 (conceptSelected)="valueSelected.emit($event?.pt)">
 </app-concept-typeahead-search>

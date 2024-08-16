@@ -37,7 +37,15 @@ export class LoincInputSnomedComponent {
 		this.eclSelected = convertStringToEnum(snomedGroupId);
 	};
 	@Input() title: string;
-	@Input() preload: string;
+	@Input() set preload(preload: string) {
+		if (!preload) return;
+
+		this.preloadSnomed = {
+			sctid: '-1',
+			pt: preload
+		}
+	}
+	preloadSnomed: SnomedDto;
 	@Output() valueSelected: EventEmitter<SnomedDto> = new EventEmitter<SnomedDto>();
 
 }

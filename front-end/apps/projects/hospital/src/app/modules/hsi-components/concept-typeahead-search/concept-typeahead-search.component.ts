@@ -25,7 +25,7 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 	@Input() clearButton = false;
 	@Input() buttonMessage = '';
 	@Input() showSearchIcon = false;
-	@Input() preload: string = null;
+	@Input() preload: SnomedDto = null;
 	@Input() required = false;
 
 	@Output() conceptSelected = new EventEmitter<SnomedDto>();
@@ -105,17 +105,17 @@ export class ConceptTypeaheadSearchComponent implements OnInit {
 				conceptId: "",
 				id: "",
 				fsn: {
-					term: this.preload,
+					term: this.preload.pt,
 					lang: ""
 				},
 				pt: {
-					term: this.preload,
+					term: this.preload.pt,
 					lang: ""
 				}
 			}
 			this.snomedConcept = {
-				sctid: "-1",
-				pt: this.preload
+				sctid: this.preload.sctid,
+				pt: this.preload.pt
 			};
 			this.myControl.setValue(concept);
 			this.conceptSelected.emit(this.snomedConcept);
