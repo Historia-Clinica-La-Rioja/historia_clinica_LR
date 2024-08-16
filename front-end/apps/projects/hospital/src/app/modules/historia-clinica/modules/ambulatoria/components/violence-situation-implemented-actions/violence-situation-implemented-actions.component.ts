@@ -379,48 +379,37 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 	updateValidationArticulations() {
 		if (this.form.value.articulationIn) {
 			updateControlValidator(this.form, 'articulationIn',Validators.required);
-			updateControlValidator(this.form, 'articulationOut',[]);
 			updateControlValidator(this.form, 'healthSystemArticulation', Validators.required);
 			updateControlValidator(this.form, 'articulationEstablishment', Validators.required);
-			updateControlValidator(this.form, 'internmentIndication', Validators.required);
-			updateControlValidator(this.form, 'devices', []);
-			updateControlValidator(this.form, 'municipalDevices', []);
-			updateControlValidator(this.form, 'provincialDevices', []);
-			updateControlValidator(this.form, 'nationalDevices', []);
-			this.resetDevices();
-		} else {
-			updateControlValidator(this.form, 'articulationOut',Validators.required);
-			updateControlValidator(this.form, 'articulationIn',[]);
-			updateControlValidator(this.form, 'devices', Validators.required);
-			updateControlValidator(this.form, 'healthSystemArticulation', []);
-			updateControlValidator(this.form, 'articulationEstablishment', []);
-			updateControlValidator(this.form, 'otherArticulationEstablishment', []);
-			updateControlValidator(this.form, 'articulationEstablishmentList', []);
-			updateControlValidator(this.form, 'area', []);
-			updateControlValidator(this.form, 'otherArea', []);
-			updateControlValidator(this.form, 'internmentIndication', []);
+		}else{
 			this.resetFirstArticulation();
 		}
+		if(this.form.value.articulationOut){
+			updateControlValidator(this.form, 'articulationOut',Validators.required);
+			updateControlValidator(this.form, 'devices', Validators.required);
+		} else {
+			this.resetDevices();
+		}
+		this.updateValidationArea();
 	}
 
-	private resetFirstArticulation() {
-		this.form.controls.healthSystemArticulation.reset();
-		this.form.controls.articulationEstablishment.reset();
+ 	private resetFirstArticulation() {
+		this.form.controls.healthSystemArticulation.setValue(false);
+		this.form.controls.articulationEstablishment.setValue(false);
 		this.form.controls.internmentIndication.reset();
 		this.form.controls.area.reset();
 		this.form.controls.otherArea.reset();
-		this.form.controls.articulationEstablishment.reset();
 		this.form.controls.otherArticulationEstablishment.reset();
 		this.form.controls.articulationEstablishmentList.reset();
-	}
+	} 
 
-	private resetDevices() {
+ 	private resetDevices() {
 		this.selectedDevices = [];
 		this.form.controls.devices.setValue(this.selectedDevices);
 		this.form.controls.municipalDevices.setValue([]);
 		this.form.controls.nationalDevices.setValue([]);
 		this.form.controls.provincialDevices.setValue([]);
-	}
+	} 
 
 	updateValidationSexualViolence() {
 		if (this.form.value.isSexualViolence) {
