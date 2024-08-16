@@ -50,7 +50,7 @@ public class CommercialMedicationConceptSearchController {
 	}
 
 	@GetMapping("/get-by-generic/{genericMedicationSctid}")
-	@PreAuthorize("hasPermission(#institutionId, 'PRESCRIPTOR, ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO')")
+	@PreAuthorize("hasPermission(#institutionId, 'PRESCRIPTOR, ESPECIALISTA_MEDICO, ESPECIALISTA_EN_ODONTOLOGIA, PROFESIONAL_DE_SALUD, ENFERMERO, PERSONAL_DE_FARMACIA')")
 	public List<SharedSnomedDto> getSuggestedCommercialMedicationSnomedListByGeneric(@PathVariable("institutionId") Integer institutionId,
 																					 @PathVariable("genericMedicationSctid") String genericMedicationSctid) {
 		log.debug("Input parameters -> institutionId {}, genericMedicationSctid {}", institutionId, genericMedicationSctid);
