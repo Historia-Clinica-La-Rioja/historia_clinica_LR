@@ -10,6 +10,7 @@ import { Observable, Subscription } from 'rxjs';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { Triage } from '../triage/triage.component';
 import { TriageActionsService } from '../../services/triage-actions.service';
+import { SpecialtySectorFormValidityService } from '../../services/specialty-sector-form-validity.service';
 
 @Component({
 	selector: 'app-pediatric-triage',
@@ -25,13 +26,14 @@ export class PediatricTriageComponent implements OnInit, OnDestroy {
 		respiratoryRetractionId: (control) => control.controls.respiratoryRetractionId.reset(),
 		perfusionId: (control) => control.controls.perfusionId.reset(),
 	}
-	
+
 	pediatricForm: UntypedFormGroup;
 	bodyTemperatures$: Observable<MasterDataDto[]>;
 	muscleHypertonyaOptions$: Observable<MasterDataDto[]>;
 	perfusionOptions$: Observable<MasterDataDto[]>;
 	respiratoryRetractionOptions$: Observable<MasterDataDto[]>;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
+	isSpecialtySectorsFormValid: boolean;
 	hasError = hasError;
 	getError = getError;
 
@@ -42,18 +44,19 @@ export class PediatricTriageComponent implements OnInit, OnDestroy {
 	constructor(
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly triageMasterDataService: TriageMasterDataService,
+		private specialtySectorFormValidityService: SpecialtySectorFormValidityService,
 		private readonly translateService: TranslateService,
 		private readonly triageActionsService: TriageActionsService,
 	) {
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 	}
 
-	ngOnDestroy(): void {
+	ngOnDestroy() {
+		this.specialtySectorFormValidityService.resetConfirmAttempt();
 		this.verifyFormSuscription.unsubscribe();
 	}
 
-	ngOnInit(): void {
-
+	ngOnInit() {
 		this.pediatricForm = this.buildPediatricForm();
 		this.bodyTemperatures$ = this.triageMasterDataService.getBodyTemperature();
 		this.muscleHypertonyaOptions$ = this.triageMasterDataService.getMuscleHypertonia();
@@ -62,8 +65,12 @@ export class PediatricTriageComponent implements OnInit, OnDestroy {
 		this.subscribeToFormChanges();
 		this.initializePediatricInformation();
 
+		this.specialtySectorFormValidityService.formValid$.subscribe((isValid) => {
+			this.isSpecialtySectorsFormValid = isValid;
+		})
 		this.verifyFormSuscription = this.triageActionsService.verifyFormValidation$.subscribe(_ => {
-			if (this.pediatricForm.valid)
+			this.specialtySectorFormValidityService.notifyConfirmAttempt();
+			if (this.pediatricForm.valid && this.isSpecialtySectorsFormValid)
 				this.triageActionsService.persist.next();
 		});
 	}
@@ -73,7 +80,8 @@ export class PediatricTriageComponent implements OnInit, OnDestroy {
 			...this.triageActionsService.pediatricTriage,
 			categoryId: triageData.triageCategoryId,
 			doctorsOfficeId: triageData.doctorsOfficeId,
-			reasons: triageData.reasons
+			reasons: triageData.reasons,
+			clinicalSpecialtySectorId: triageData.specialtySectorId
 		}
 	}
 
