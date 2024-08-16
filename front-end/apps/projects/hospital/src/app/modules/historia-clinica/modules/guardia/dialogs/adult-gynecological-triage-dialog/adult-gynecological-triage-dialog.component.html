@@ -1,10 +1,16 @@
-<div mat-dialog-title>
-	<div class="mat-h2" [translate]="'guardia.triage.TITLE'"></div>
+<div fxLayout="row" fxLayoutAlign="space-between">
+	<span mat-dialog-title class="mat-h2" [translate]="'guardia.triage.TITLE'"></span>
+	<button id="close" mat-icon-button mat-dialog-close>
+		<mat-icon>close</mat-icon>
+	</button>
 </div>
-<app-adult-gynecological-triage class="mat-typography" mat-dialog-content
-	(confirm)="setTriage($event)"
-	(cancel)="dialogRef.close()"
-	[confirmLabel]="'guardia.triage.CONFIRM'"
-	[cancelLabel]="'buttons.CANCEL'" [disableConfirmButton]="requestPending"
-	[canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE"
-	[lastTriage$]="lastTriage$"></app-adult-gynecological-triage>
+<mat-dialog-content>
+	<app-adult-gynecological-triage class="mat-typography"
+		[canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE" [lastTriage$]="lastTriage$">
+	</app-adult-gynecological-triage>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<app-button buttonType="{{ButtonType.RAISED}}" text="{{'guardia.triage.CONFIRM'}}" [disabled]="isLoading"
+		(clicked)="triageActionsService.saveTriage()">
+	</app-button>
+</mat-dialog-actions>

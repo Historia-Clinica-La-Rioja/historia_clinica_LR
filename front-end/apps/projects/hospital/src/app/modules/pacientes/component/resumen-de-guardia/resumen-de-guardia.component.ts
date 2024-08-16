@@ -154,7 +154,11 @@ export class ResumenDeGuardiaComponent implements OnInit, OnDestroy {
 	newTriage() {
 		this.triageDefinitionsService.getTriagePath(this.emergencyCareType)
 			.subscribe(({ component }) => {
-				const dialogRef = this.dialog.open(component, { data: this.episodeId });
+				const dialogRef = this.dialog.open(component, {
+					autoFocus: false,
+					disableClose: true,
+					data: this.episodeId,
+				});
 				dialogRef.afterClosed().subscribe(idReturned => {
 					if (idReturned) {
 						this.loadTriages();

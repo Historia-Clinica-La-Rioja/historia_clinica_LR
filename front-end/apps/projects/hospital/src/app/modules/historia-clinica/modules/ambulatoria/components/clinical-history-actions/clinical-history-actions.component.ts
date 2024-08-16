@@ -161,15 +161,15 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 		this.hasGuardButtons = this.hasGuardOptionButtons();
 	}
 
-	private hasGuardOptionButtons(): boolean{
+	private hasGuardOptionButtons(): boolean {
 		return (!this.isAdministrativeAndHasTriageFFInFalse || this.isEvolutionNoteEnabled);
 	}
 
-	private checkAdministrativeFF(){
+	private checkAdministrativeFF() {
 		this.featureFlagService.isActive(AppFeature.HABILITAR_TRIAGE_PARA_ADMINISTRATIVO).subscribe(isEnabled =>
 			this.hasRoleAbleToSeeTriage
-			? this.isAdministrativeAndHasTriageFFInFalse = false
-			: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
+				? this.isAdministrativeAndHasTriageFFInFalse = false
+				: this.isAdministrativeAndHasTriageFFInFalse = (!isEnabled && this.hasAdministrativeRole)
 		)
 	}
 
@@ -192,7 +192,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.hasToDoInternmentAction();
 				if (this.epicrisisDoc?.confirmed === false)
 					this.getEpicrisisDraft();
-				if(this.anestheticDoc?.confirmed === false)
+				if (this.anestheticDoc?.confirmed === false)
 					this.getAnestheticPartDraft()
 			});
 	}
@@ -204,7 +204,7 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 			this.hasMedicalRole = anyMatch<ERole>(userRoles, [ERole.ESPECIALISTA_MEDICO]);
 			this.hasAdministrativeRole = anyMatch<ERole>(userRoles, [ERole.ADMINISTRATIVO, ERole.ADMINISTRATIVO_RED_DE_IMAGENES]);
 			const proffesionalRoles: ERole[] = [ERole.ENFERMERO, ERole.PROFESIONAL_DE_SALUD, ERole.ESPECIALISTA_MEDICO, ERole.ESPECIALISTA_EN_ODONTOLOGIA];
-       		this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
+			this.hasRoleAbleToSeeTriage = userRoles.some(role => proffesionalRoles.includes(role));
 		});
 	}
 
@@ -365,11 +365,11 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 	}
 
 	newTriage() {
-			this.dialog.open(this.triageComponent, { data: this.episode.id })
-		}
+		this.dialog.open(this.triageComponent, { autoFocus: false, disableClose: true, data: this.episode.id })
+	}
 
 	private hasToDoInternmentAction() {
-			if(this.hasMedicalDischarge) {
+		if (this.hasMedicalDischarge) {
 			this.hasInternmentActionsToDo = false;
 			this.enableReports = true
 			return;

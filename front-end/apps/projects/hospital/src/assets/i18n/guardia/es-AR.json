@@ -5,7 +5,8 @@
 			"SUB_TITLE": "Complete los datos solicitados para continuar",
 			"ADM_TRIAGE": "Triage",
 			"SUCCESS": "El episodio fue creado exitosamente",
-			"ERROR": "Ocurrió un error al crear el episodio"
+			"ERROR": "Ocurrió un error al crear el episodio",
+			"CONFIRM": "Confirmar episodio"
 		},
 		"triage": {
 			"APPEARANCE": "Apariencia",

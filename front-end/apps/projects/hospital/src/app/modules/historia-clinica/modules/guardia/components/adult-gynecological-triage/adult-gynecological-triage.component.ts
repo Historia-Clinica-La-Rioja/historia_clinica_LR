@@ -1,37 +1,33 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { TriageAdultGynecologicalDto, TriageListDto } from '@api-rest/api-model';
+import { TriageListDto } from '@api-rest/api-model';
 import { FactoresDeRiesgoFormService, RiskFactorsValue } from '@historia-clinica/services/factores-de-riesgo-form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { Triage } from '../triage/triage.component';
-import { Observable } from 'rxjs';
-
+import { Observable, Subscription, take } from 'rxjs';
+import { TriageActionsService } from '../../services/triage-actions.service';
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
 	templateUrl: './adult-gynecological-triage.component.html',
 	styleUrls: ['./adult-gynecological-triage.component.scss']
 })
-export class AdultGynecologicalTriageComponent implements OnInit {
+export class AdultGynecologicalTriageComponent implements OnInit, OnDestroy {
 
-	private triageData: Triage;
+	private verifyFormValidationSuscription: Subscription;
 	adultGynecologicalForm: UntypedFormGroup;
 	riskFactorsForm: UntypedFormGroup;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
 
-	@Input() confirmLabel = 'Confirmar episodio';
-	@Input() cancelLabel = 'Volver';
-	@Input() disableConfirmButton: boolean;
 	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Input() lastTriage$: Observable<TriageListDto>;
-	@Output() confirm = new EventEmitter();
-	@Output() cancel = new EventEmitter();
 
 	constructor(
-		private formBuilder: UntypedFormBuilder,
-		private guardiaMapperService: GuardiaMapperService,
-		private readonly translateService: TranslateService
+		private readonly formBuilder: UntypedFormBuilder,
+		private readonly guardiaMapperService: GuardiaMapperService,
+		private readonly translateService: TranslateService,
+		private readonly triageActionsService: TriageActionsService,
 	) {
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 	}
@@ -41,29 +37,51 @@ export class AdultGynecologicalTriageComponent implements OnInit {
 			observation: [null]
 		});
 		this.riskFactorsForm = this.factoresDeRiesgoFormService.getForm();
+		this.subscribeToFormsChanges();
+		this.verifyFormValidations();
+	}
+
+	ngOnDestroy(): void {
+		this.verifyFormValidationSuscription.unsubscribe();
 	}
 
 	setTriageData(triageData: Triage) {
-		this.triageData = triageData;
-	}
-
-	confirmAdultGynecologicalTriage(): void {
-		const formValue = this.adultGynecologicalForm.value;
-		if (this.adultGynecologicalForm.valid && this.riskFactorsForm.valid) {
-			this.disableConfirmButton = true;
-			const riskFactorsValue: RiskFactorsValue = this.factoresDeRiesgoFormService.buildRiskFactorsValue(this.riskFactorsForm);
-			const triage: TriageAdultGynecologicalDto = {
-				categoryId: this.triageData.triageCategoryId,
-				doctorsOfficeId: this.triageData.doctorsOfficeId,
-				notes: formValue.observation,
-				riskFactors: this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue),
-				reasons: this.triageData.reasons
-			};
-			this.confirm.emit(triage);
+		this.triageActionsService.triageAdultGynecological = {
+			...this.triageActionsService.triageAdultGynecological,
+			categoryId: triageData.triageCategoryId,
+			doctorsOfficeId: triageData.doctorsOfficeId,
+			reasons: triageData.reasons
 		}
 	}
 
-	back(): void {
-		this.cancel.emit();
+	private subscribeToFormsChanges() {
+		this.subscribeToAdultGynecologicalFormChanges();
+		this.subscribeToRiskFactorsFormChanges();
+	}
+
+	private subscribeToAdultGynecologicalFormChanges() {
+		this.adultGynecologicalForm.valueChanges.subscribe(formValuesChanges => {
+			this.triageActionsService.triageAdultGynecological = {
+				...this.triageActionsService.triageAdultGynecological,
+				notes: formValuesChanges.observation
+			}
+		});
+	}
+
+	private subscribeToRiskFactorsFormChanges() {
+		this.riskFactorsForm.valueChanges.subscribe(riskFactorsValueChanges => {
+			const riskFactorsValue: RiskFactorsValue = this.factoresDeRiesgoFormService.buildRiskFactorsValue(this.riskFactorsForm);
+			const riskFactors = this.guardiaMapperService.riskFactorsValuetoNewRiskFactorsObservationDto(riskFactorsValue);
+			this.triageActionsService.triageAdultGynecological = {
+				...this.triageActionsService.triageAdultGynecological, riskFactors
+			}
+		});
+	}
+
+	private verifyFormValidations() {
+		this.verifyFormValidationSuscription = this.triageActionsService.verifyFormValidation$.pipe(take(1)).subscribe(_ => {
+			if (this.adultGynecologicalForm.valid && this.riskFactorsForm.valid)
+				this.triageActionsService.persist.next();
+		});
 	}
 }

@@ -6,11 +6,15 @@
 			</mat-card-header>
 
 			<mat-card-content>
-				<app-administrative-triage [disableConfirmButton]="disable"
-										(confirm)="confirmEvent($event)"
-										(cancel)="cancelEvent()"
-										[canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE"></app-administrative-triage>
+				<app-administrative-triage
+					[canAssignNotDefinedTriageLevel]="NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE"></app-administrative-triage>
 			</mat-card-content>
+
+			<mat-card-actions align="end" fxLayout="row" fxLayoutGap="10px">
+				<app-button text="{{'buttons.BACK'}}" (clicked)="cancelEvent()"></app-button>
+				<app-button buttonType="{{RAISED}}" text="{{'guardia.new-episode.CONFIRM'}}"
+					[disabled]="isLoading" (clicked)="confirmEvent()"></app-button>
+			</mat-card-actions>
 		</mat-card>
 	</section>
 </app-content>

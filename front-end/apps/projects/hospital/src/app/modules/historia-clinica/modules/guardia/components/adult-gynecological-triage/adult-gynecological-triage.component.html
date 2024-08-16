@@ -1,40 +1,27 @@
 <div class="page" fxLayout="column">
-	<div fxLayout="column">
 
-		<section id="triage">
-			<app-triage (triageData)="setTriageData($event)"
-				[lastTriage]="lastTriage$ | async"
-				[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
-			</app-triage>
+	<section id="triage">
+		<app-triage (triageData)="setTriageData($event)" [lastTriage]="lastTriage$ | async"
+			[canAssignNotDefinedTriageLevel]="canAssignNotDefinedTriageLevel">
+		</app-triage>
+	</section>
+
+	<form [formGroup]="riskFactorsForm">
+		<section id="risk-factors" fxLayout="column">
+			<label>{{'guardia.episode.triage.ultimo.FACTORES_DE_RIESGO' | translate}}</label>
+			<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
+			</app-factores-de-riesgo-form>
 		</section>
+	</form>
 
-		<form [formGroup]="riskFactorsForm">
-			<section id="risk-factors" fxLayout="column">
-				<label>{{'guardia.episode.triage.ultimo.FACTORES_DE_RIESGO' | translate}}</label>
-				<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
-				</app-factores-de-riesgo-form>
-			</section>
-		</form>
+	<form [formGroup]="adultGynecologicalForm">
+		<section id="evaluation" fxLayout="column">
+			<label [translate]="'guardia.triage.OBSERVATIONS'"></label>
+			<mat-form-field fxFlex="100%" appearance="outline">
+				<textarea matInput placeholder="{{'guardia.triage.SET_OBSERVATIONS' | translate}}"
+					formControlName="observation" name="observation"></textarea>
+			</mat-form-field>
+		</section>
+	</form>
 
-		<form [formGroup]="adultGynecologicalForm">
-			<section id="evaluation" fxLayout="column">
-				<label [translate]="'guardia.triage.OBSERVATIONS'"></label>
-				<mat-form-field fxFlex="100%" appearance="outline">
-					<textarea matInput placeholder="{{'guardia.triage.SET_OBSERVATIONS' | translate}}"
-						formControlName="observation" name="observation"></textarea>
-				</mat-form-field>
-			</section>
-		</form>
-
-	</div>
-
-	<div fxLayoutGap="10px" fxLayout="row" fxLayoutAlign="flex-end">
-		<button mat-stroked-button class="uppercase" (click)="back()">
-			<span [translate]="cancelLabel"></span>
-		</button>
-		<button mat-raised-button class="uppercase" color="primary" matBadgeColor="accent"
-			(click)="confirmAdultGynecologicalTriage()" [disabled]="disableConfirmButton">
-			<span [translate]="confirmLabel"></span>
-		</button>
-	</div>
 </div>

@@ -109,7 +109,7 @@ export class EmergencyCareDashboardActionsComponent implements OnInit, OnDestroy
 	private openTriageDialog() {
 		this.triageDefinitionsService.getTriagePath(this.episode.type?.id)
 			.subscribe(({ component }) => {
-				const dialogRef = this.dialog.open(component, { data: this.episode.id });
+				const dialogRef = this.dialog.open(component, { autoFocus: false, disableClose: true, data: this.episode.id });
 				dialogRef.afterClosed().subscribe(idReturned => {
 					this.triageDialogClosed.emit(idReturned);
 				});
