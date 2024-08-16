@@ -1,16 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ApiErrorDto, PrescriptionDto } from "@api-rest/api-model";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { ApiErrorDto, BasicPatientDto, EStudyType, PatientMedicalCoverageDto, PrescriptionDto } from "@api-rest/api-model";
 import { SnomedECL } from "@api-rest/api-model";
 import { EmergencyCareServiceRequestService } from '@api-rest/services/emergency-care-serive-request.service';
 import { InternmentOrderService } from "@api-rest/services/internment-order.service";
+import { PatientMedicalCoverageService } from '@api-rest/services/patient-medical-coverage.service';
+import { PatientService } from '@api-rest/services/patient.service';
 import { RequestMasterDataService } from "@api-rest/services/request-masterdata.service";
+import { MapperService } from '@core/services/mapper.service';
 import { hasError } from '@core/utils/form.utils';
 import { TemplateOrConceptOption, TemplateOrConceptType } from "@historia-clinica/components/template-concept-typeahead-search/template-concept-typeahead-search.component";
-import { ConceptsTypeaheadSearchDialogComponent } from "@historia-clinica/dialogs/concepts-typeahead-search-dialog/concepts-typeahead-search-dialog.component";
 import { OrderStudiesService, Study } from "@historia-clinica/services/order-studies.service";
 import { SnackBarService } from "@presentation/services/snack-bar.service";
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 
 @Component({
 	selector: 'app-create-order',
@@ -21,7 +24,11 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 	readonly ecl = SnomedECL.PROCEDURE;
 	hasError = hasError;
-
+	patientMedicalCoverages: PatientMedicalCoverageDto[];
+	patient: PatientBasicData;
+	selectedCoverage: PatientMedicalCoverageDto;
+	ROUTINE = EStudyType.ROUTINE
+	URGENT = EStudyType.URGENT
 	form: UntypedFormGroup;
 	firstStepCompleted = false;
 
@@ -30,7 +37,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 	selectedStudy: TemplateOrConceptOption = null;
 
 	orderStudiesService: OrderStudiesService;
-	title = this.data.emergencyCareId ? 'Nueva orden de Guardia': 'ambulatoria.paciente.internment-order.create-order-dialog.TITLE';
+	title = this.data.emergencyCareId ? 'Nueva orden de Guardia' : 'ambulatoria.paciente.internment-order.create-order-dialog.TITLE';
 	constructor(
 		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number },
 		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
@@ -38,17 +45,34 @@ export class CreateInternmentOrderComponent implements OnInit {
 		private readonly requestMasterDataService: RequestMasterDataService,
 		private readonly internmentOrderService: InternmentOrderService,
 		private readonly snackBarService: SnackBarService,
-		private readonly dialog: MatDialog,
+		private readonly mapperService: MapperService,
+		private readonly patientService: PatientService,
+		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
 		private readonly emergencyCareServiceRequestService: EmergencyCareServiceRequestService
+
 	) {
+		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
+			(patient: BasicPatientDto) => {
+				this.patient = this.mapperService.toPatientBasicData(patient);
+			});
+
+		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.data.patientId).subscribe(
+			(medicalCoverage: PatientMedicalCoverageDto[]) => {
+				this.patientMedicalCoverages = medicalCoverage;
+				this.selectedCoverage = this.patientMedicalCoverages[0];
+			})
+
 		this.orderStudiesService = new OrderStudiesService();
 	}
 
 	ngOnInit(): void {
 		this.form = this.formBuilder.group({
+			patientMedicalCoverage: [null],
 			studyCategory: [null, Validators.required],
 			studySelection: [null, Validators.required],
 			healthProblem: [null, Validators.required],
+			studyType: [EStudyType.ROUTINE, Validators.required],
+			requiresTechnical: [false, Validators.required],
 			notes: [null]
 		});
 
@@ -68,6 +92,8 @@ export class CreateInternmentOrderComponent implements OnInit {
 	handleStudySelected(study) {
 		this.selectedStudy = study;
 		this.form.controls.studySelection.setValue(this.getStudyDisplayName());
+		this.loadSelectedConceptsIntoOrderStudiesService();
+		this.resetStudySelector();
 	}
 
 	resetStudySelector() {
@@ -134,9 +160,11 @@ export class CreateInternmentOrderComponent implements OnInit {
 	confirmOrder() {
 		let prescriptionLineNumberAux = 0;
 		const newInternmentOrder: PrescriptionDto = {
-			medicalCoverageId: null,
+			medicalCoverageId: this.form.controls.patientMedicalCoverage.value?.id,
 			hasRecipe: true,
 			observations: this.form.controls.notes.value,
+			studyType: this.form.controls.studyType.value,
+			requiresTechnician: this.form.controls.requiresTechnical.value,
 			items: this.orderStudiesService.getStudies().map(study => {
 				return {
 					healthConditionId: this.form.controls.healthProblem.value.id,
@@ -175,24 +203,6 @@ export class CreateInternmentOrderComponent implements OnInit {
 		this.dialogRef.close(newInternmentOrder);
 	}
 
-	openAddAnotherStudyDialog() {
-		const addStudy = this.dialog.open(ConceptsTypeaheadSearchDialogComponent, {
-			width: '25%',
-			data: {
-				ecl: this.ecl,
-				placeholder: 'ambulatoria.paciente.internment-order.create-order-dialog.STUDY',
-				title: 'ambulatoria.paciente.internment-order.create-order-dialog.ADD_STUDY_DIALOG_TITLE'
-			},
-		});
-
-		addStudy.afterClosed().subscribe((addStudyDialogData) => {
-			if (addStudyDialogData?.selectedConcept) {
-				let added = this.orderStudiesService.add({ snomed: addStudyDialogData.selectedConcept });
-				if (!added)
-					this.snackBarService.showError('ambulatoria.paciente.internment-order.create-order-dialog.STUDY_REPEATED')
-			}
-		})
-	}
 
 }
 
