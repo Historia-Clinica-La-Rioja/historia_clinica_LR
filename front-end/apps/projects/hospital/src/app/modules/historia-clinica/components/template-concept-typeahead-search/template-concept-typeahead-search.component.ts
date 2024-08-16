@@ -108,6 +108,7 @@ export class TemplateConceptTypeaheadSearchComponent implements OnInit {
 	handleOptionSelected(event) {
 		const option: TemplateOrConceptOption = event.option.value;
 		this.optionSelected.emit(option);
+		this.myControl.reset();
 	}
 }
 
