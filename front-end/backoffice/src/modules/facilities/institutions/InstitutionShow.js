@@ -201,9 +201,7 @@ const InstitutionShow = props => {
                 <SectionTitle label="resources.institutions.fields.hierarchicalUnits" />
                 <CreateHierarchicalUnit />
                 <HierarchicalUnitTabs {...props} />
-
                 {parameterizedFormFF && <ParameterizedFormSection {...props} />}
-                <HierarchicalUnitTabs {...props} />
                 <SectionTitle label="resources.institutions.fields.pharmacos" />
                 <MedicineTabs {...props}/>
             </SimpleShowLayout>
