@@ -28,6 +28,7 @@ import { DiagnosticWithTypeReportInfoDto, IMAGE_DIAGNOSIS_CATEGORY_ID } from '..
 import { ImageOrderCasesService } from '../../modules/estudio/services/image-order-cases.service';
 import { StudyResultsService } from '../../services/study-results.service';
 import { AmbulatoriaSummaryFacadeService } from '../../services/ambulatoria-summary-facade.service';
+import { DialogWidth } from '@presentation/services/dialog.service';
 
 @Component({
 	selector: 'app-card-estudios',
@@ -238,7 +239,7 @@ export class CardEstudiosComponent implements OnInit {
 	openCreateInternmentOrderDialog() {
 		const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 			{
-				width: '28%',
+				width: DialogWidth.MEDIUM,
 				data: { diagnoses: this.intermentDiagnosis, patientId: this.patientId },
 			})
 
@@ -278,7 +279,7 @@ export class CardEstudiosComponent implements OnInit {
 		if (this.emergencyCareDiagnosis.length) {
 			const newOrderComponent = this.dialog.open(CreateInternmentOrderComponent,
 				{
-					width: '28%',
+					width: DialogWidth.MEDIUM,
 					data: { diagnoses: this.emergencyCareDiagnosis, patientId: this.patientId, emergencyCareId: this.episodeId, },
 				});
 			newOrderComponent.afterClosed().subscribe((newOrder: NewInternmentOrder) => {
@@ -299,7 +300,7 @@ export class CardEstudiosComponent implements OnInit {
 	openCreateOutpatientOrderDialog(healthProblems) {
 		const newOrderComponent = this.dialog.open(CreateOutpatientOrderComponent,
 			{
-				width: '35%',
+				width: DialogWidth.MEDIUM,
 				autoFocus: false,
 				data: { patientId: this.patientId, healthProblems },
 			});
