@@ -7,6 +7,7 @@ import { CommercialMedicationService } from '@api-rest/services/commercial-medic
 import { HceGeneralStateService } from '@api-rest/services/hce-general-state.service';
 import { InternacionMasterDataService } from '@api-rest/services/internacion-master-data.service';
 import { OutpatientConsultationService } from '@api-rest/services/outpatient-consultation.service';
+import { PresentationUnitsService } from '@api-rest/services/presentation-units.service';
 import { RequestMasterDataService } from '@api-rest/services/request-masterdata.service';
 import { SnowstormService } from '@api-rest/services/snowstorm.service';
 import { SnvsMasterDataService } from '@api-rest/services/snvs-masterdata.service';
@@ -70,7 +71,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	@ViewChild('administrationTimeDaysInput') administrationTimeDaysInput: ElementRef;
 
 	private MIN_INPUT_LENGTH = 1;
-	private INVALID_SCTID = '-1';
+	private readonly INVALID_SCTID = '-1';
 
 	constructor(
 		private readonly snowstormService: SnowstormService,
@@ -88,6 +89,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		private readonly outpatientConsultationService: OutpatientConsultationService,
 		private readonly permissionService: PermissionsService,
 		private readonly commercialMedicationService: CommercialMedicationService,
+		private readonly presentationUnitsService: PresentationUnitsService,
 		@Inject(MAT_DIALOG_DATA) public data: NewPrescriptionItemData) {
 			this.featureFlagService.isActive(AppFeature.HABILITAR_RECETA_DIGITAL)
 				.subscribe((isFFActive: boolean) => {
@@ -138,12 +140,16 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 		this.prescriptionItemForm.controls.pharmacoSearchType.valueChanges.subscribe(value => {
 			this.snomedConcept = undefined
 			if (value) {
-				this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(false);
-				this.initialSuggestCommercialMedication = undefined;
-				this.suggestedCommercialMedicationOptions = [];
-				this.presentationUnitsOptions = [];
+				this.resetCommercialMedication();
 			}
 		});
+	}
+
+	resetCommercialMedication(): void {
+		this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(false);
+		this.initialSuggestCommercialMedication = undefined;
+		this.suggestedCommercialMedicationOptions = [];
+		this.presentationUnitsOptions = [];
 	}
 
 	getProblems() {
@@ -329,7 +335,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			this.prescriptionItemForm.controls.snomed.disable();
 			this.setPresentationUnits(selectedConcept.sctid);
 			this.setSuggestedCommercialMedicationOptions(commercialPt);
-			const checkboxValue = commercialPt ? true : false;
+			const checkboxValue = !!commercialPt
 			this.prescriptionItemForm.controls.isSuggestCommercialMedicationChecked.setValue(checkboxValue);
 			if (this.isHabilitarRecetaDigitalFFActive) {
 				if (this.pharmaceuticalForm.some(value => pt?.includes(value))) {
@@ -371,7 +377,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 	}
 
 	setPresentationUnits(medicationSctid: string): void {
-		this.commercialMedicationService.getMedicationPresentationUnits(medicationSctid).subscribe(result => {
+		this.presentationUnitsService.getMedicationPresentationUnits(medicationSctid).subscribe(result => {
 			this.presentationUnitsOptions = result;
 		})
 	}
@@ -466,7 +472,7 @@ export class AgregarPrescripcionItemComponent implements OnInit, AfterViewInit, 
 			isSuggestCommercialMedicationChecked: [false],
 			suggestedCommercialMedication: [null],
 			presentationUnit: [null, Validators.required],
-			medicationPackQuantity: [this.MIN_VALUE, [Validators.min(this.MIN_VALUE), Validators.required]]
+			medicationPackQuantity: [this.MIN_VALUE, [Validators.min(this.MIN_VALUE), Validators.pattern(NUMBER_PATTERN), Validators.required]]
 		});
 
 		if (! this.isHabilitarRecetaDigitalFFActive)

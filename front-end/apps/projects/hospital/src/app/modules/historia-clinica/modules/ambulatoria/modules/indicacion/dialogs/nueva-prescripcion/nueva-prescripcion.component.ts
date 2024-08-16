@@ -128,7 +128,6 @@ export class NuevaPrescripcionComponent implements OnInit {
 			clinicalSpecialtyId: this.prescriptionForm.controls.clinicalSpecialty.value.id,
 			isArchived: this.prescriptionForm.controls.archived.value ? this.prescriptionForm.controls.archived.value : false,
 		};
-		console.log(newPrescription);
 
 		this.savePrescription(newPrescription);
 		if (this.isHabilitarRecetaDigitalEnabled) {
