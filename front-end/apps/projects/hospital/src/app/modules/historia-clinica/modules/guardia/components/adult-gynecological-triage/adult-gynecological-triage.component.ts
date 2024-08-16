@@ -5,8 +5,9 @@ import { FactoresDeRiesgoFormService, RiskFactorsValue } from '@historia-clinica
 import { TranslateService } from '@ngx-translate/core';
 import { GuardiaMapperService } from '../../services/guardia-mapper.service';
 import { Triage } from '../triage/triage.component';
-import { Observable, Subscription, take } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { TriageActionsService } from '../../services/triage-actions.service';
+import { SpecialtySectorFormValidityService } from '../../services/specialty-sector-form-validity.service';
 
 @Component({
 	selector: 'app-adult-gynecological-triage',
@@ -19,6 +20,7 @@ export class AdultGynecologicalTriageComponent implements OnInit, OnDestroy {
 	adultGynecologicalForm: UntypedFormGroup;
 	riskFactorsForm: UntypedFormGroup;
 	factoresDeRiesgoFormService: FactoresDeRiesgoFormService;
+	isSpecialtySectorsFormValid: boolean;
 
 	@Input() canAssignNotDefinedTriageLevel: boolean;
 	@Input() lastTriage$: Observable<TriageListDto>;
@@ -28,11 +30,15 @@ export class AdultGynecologicalTriageComponent implements OnInit, OnDestroy {
 		private readonly guardiaMapperService: GuardiaMapperService,
 		private readonly translateService: TranslateService,
 		private readonly triageActionsService: TriageActionsService,
+		private specialtySectorFormValidityService: SpecialtySectorFormValidityService,
 	) {
 		this.factoresDeRiesgoFormService = new FactoresDeRiesgoFormService(this.formBuilder, this.translateService);
 	}
 
-	ngOnInit(): void {
+	ngOnInit() {
+		this.specialtySectorFormValidityService.formValid$.subscribe((isValid) => {
+			this.isSpecialtySectorsFormValid = isValid;
+		});
 		this.adultGynecologicalForm = this.formBuilder.group({
 			observation: [null]
 		});
@@ -41,7 +47,8 @@ export class AdultGynecologicalTriageComponent implements OnInit, OnDestroy {
 		this.verifyFormValidations();
 	}
 
-	ngOnDestroy(): void {
+	ngOnDestroy() {
+		this.specialtySectorFormValidityService.resetConfirmAttempt();
 		this.verifyFormValidationSuscription.unsubscribe();
 	}
 
@@ -50,7 +57,8 @@ export class AdultGynecologicalTriageComponent implements OnInit, OnDestroy {
 			...this.triageActionsService.triageAdultGynecological,
 			categoryId: triageData.triageCategoryId,
 			doctorsOfficeId: triageData.doctorsOfficeId,
-			reasons: triageData.reasons
+			reasons: triageData.reasons,
+			clinicalSpecialtySectorId: triageData.specialtySectorId
 		}
 	}
 
@@ -79,8 +87,9 @@ export class AdultGynecologicalTriageComponent implements OnInit, OnDestroy {
 	}
 
 	private verifyFormValidations() {
-		this.verifyFormValidationSuscription = this.triageActionsService.verifyFormValidation$.pipe(take(1)).subscribe(_ => {
-			if (this.adultGynecologicalForm.valid && this.riskFactorsForm.valid)
+		this.verifyFormValidationSuscription = this.triageActionsService.verifyFormValidation$.subscribe(_ => {
+			this.specialtySectorFormValidityService.notifyConfirmAttempt();
+			if (this.adultGynecologicalForm.valid && this.riskFactorsForm.valid && this.isSpecialtySectorsFormValid)
 				this.triageActionsService.persist.next();
 		});
 	}
