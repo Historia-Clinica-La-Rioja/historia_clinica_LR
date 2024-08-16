@@ -566,7 +566,7 @@
                     "STUDY_TITLE": "Nueva orden",
                     "ADD_STUDY_LABEL": "Agregar estudio",
                     "MEDICAL_COVERAGE_LABEL": "Cobertura médica",
-                    "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
+                    "MEDICAL_COVERAGE": "Cobertura médica",
                     "SELECT_SPECIALTY": "Seleccione especialidad",
                     "WITHOUT_RECIPE": "Sin receta",
                     "UPDATE_COVERAGE": "Actualizar cobertura",
@@ -836,8 +836,7 @@
                     "TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
                     "ADD_STUDY": "+ Agregar otro estudio",
                     "ADD_STUDY_DIALOG_TITLE": "Agregar otro estudio",
-                    "STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
-                    "CONFIRM_ORDER": "Finalizar orden"
+                    "STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden"
                 }
             },
             "outpatient-order": {
@@ -847,15 +846,32 @@
                 "create-order-dialog": {
                     "TITLE": "Nueva orden de Ambulatorio",
                     "CATEGORY": "Categoría del estudio",
-                    "STUDY": "Nombre del estudio",
-                    "HEALTH_PROBLEM": "Problema",
+                    "SEARCH_STUDY": "Buscar estudio...",
+                    "HEALTH_PROBLEM": "Problema asociado",
                     "NOTES": "Observaciones",
                     "NEXT_BUTTON": "Agregar",
                     "TEMPLATE_DETAIL": "Incluye: {{concepts}}.",
                     "ADD_STUDY": "+ Agregar otro estudio",
                     "ADD_STUDY_DIALOG_TITLE": "Agregar otro estudio",
                     "STUDY_REPEATED": "El estudio seleccionado ya está presente en la orden",
-                    "CONFIRM_ORDER": "Finalizar orden"
+                    "CONFIRM_ORDER": "Finalizar orden",
+					"URGENT": "Urgente",
+					"RUTINE": "Rutine",
+					"REQUIERES-TECHNICIAN-ON-SITE": "¿Requiere técnico en el lugar?",
+					"TYPE-OF-STUDY": "Tipo de estudio",
+					"PATIENT_DATA": "Datos del paciente",
+                    "SELECT_MEDICAL_COVERAGE": "Seleccione cobertura médica",
+					"SELECT_CATEGORY": "Seleccionar categoría",
+					"STUDIES_INCLUDED":"Estudios incluidos",
+					"ADDED_STUDIES":"Estudios agregados",
+					"NEXT": "Siguiente",
+					"ORDER_DETAIL": "Detalle de orden",
+					"CREATE_ORDER": "Crear orden",
+					"YES": "Si",
+					"NO": "No",
+					"NO_ADDED_STUDIES": "Sin estudios agregados",
+					"BACK": "Volver",
+					"STUDY": "Estudio"
                 }
             },
             "nursing": {
