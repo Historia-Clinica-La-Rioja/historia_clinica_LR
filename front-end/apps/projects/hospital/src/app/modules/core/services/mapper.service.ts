@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { DateFormat, dateISOParseDate, dateParse, newDate } from '@core/utils/moment.utils';
 import { EMedicalCoverageType, HealthInsurance, PatientMedicalCoverage, PrivateHealthInsurance } from '@pacientes/dialogs/medical-coverage/medical-coverage.component';
-import { HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
+import { BasicPatientDto, HealthInsuranceDto, PatientMedicalCoverageDto, PrivateHealthInsuranceDto } from '@api-rest/api-model';
 import { toApiFormat } from '@api-rest/mapper/date.mapper';
+import { PatientBasicData } from '@presentation/utils/patient.utils';
 
 @Injectable({
 	providedIn: 'root'
@@ -11,7 +12,7 @@ export class MapperService {
 
 	toPatientMedicalCoverageDto: (s: PatientMedicalCoverage) => PatientMedicalCoverageDto = MapperService._toPatientMedicalCoverageDto;
 	toPatientMedicalCoverage: (s: PatientMedicalCoverageDto) => PatientMedicalCoverage = MapperService._toPatientMedicalCoverage;
-
+	toPatientBasicData: (o: BasicPatientDto) => PatientBasicData = MapperService._toPatientBasicData;
 	constructor() { }
 
 
@@ -53,4 +54,21 @@ export class MapperService {
 		}
 
 	}
+
+	private static _toPatientBasicData<T extends BasicPatientDto>(patient: T): PatientBasicData {
+		return {
+			id: patient.id,
+			firstName: patient.person?.firstName,
+			middleNames: patient.person?.middleNames,
+			lastName: patient.person?.lastName,
+			otherLastNames: patient.person?.otherLastNames,
+			gender: patient.person?.gender?.description,
+			age: patient.person?.age,
+			nameSelfDetermination: patient.person?.nameSelfDetermination,
+			selfPerceivedGender: patient.person?.selfPerceivedGender,
+			personAge: patient.person?.personAge
+		};
+	}
+
+
 }
