@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject, forkJoin, take } from 'rxjs';
 import { scrollIntoError } from '@core/utils/form.utils';
 import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
-import { AnestheticHistoryDto, AnestheticReportDto, DiagnosisDto, HealthConditionDto, MasterDataDto, PostAnesthesiaStatusDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
+import { AnestheticHistoryDto, AnestheticReportDto, DiagnosisDto, HealthConditionDto, MasterDataDto, PostAnesthesiaStatusDto, PostCloseAnestheticReportDto, ProcedureDescriptionDto, TimeDto } from '@api-rest/api-model';
 import { DockPopupRef } from '@presentation/services/dock-popup-ref';
 import { dateToDateDto } from '@api-rest/mapper/date-dto.mapper';
 import { AnestheticReportDocumentSummaryService } from '@historia-clinica/services/anesthetic-report-document-summary.service';
@@ -161,7 +161,7 @@ export class AnestheticReportService {
 					this.anestheticReportAnestheticHistoryService.setData(data.anestheticHistory);
 					this.anestheticHistorySubject.next(data.anestheticHistory);
 					this.medicacionesNuevaConsultaService.setData(data.medications);
-					this.lastIntakeSubject.next(data.foodIntake?.clockTime)
+					this.lastIntakeSubject.next(data.procedureDescription?.foodIntake)
 					this.anestheticReportPremedicationAndFoodIntakeService.setData(data.preMedications, viasData.preMedicationVias);
 					this.anestheticReportRecordService.setData(data.histories, data.procedureDescription);
 					this.anestheticPlanService.setData(data.anestheticPlans, viasData.anestheticPlanVias);
@@ -279,8 +279,8 @@ export class AnestheticReportService {
         })
     }
 
-    editAnestheticReport(anestheticReport: AnestheticReportDto, anestheticReportId: number, internmentEpisodeId: number, dockPopupRef: DockPopupRef) {
-        this.anesthethicReportService.editAnestheticReport(anestheticReport, anestheticReportId, internmentEpisodeId).subscribe(
+    editAnestheticReport(anestheticReport: PostCloseAnestheticReportDto, dockPopupRef: DockPopupRef) {
+        this.anesthethicReportService.editAnestheticReport(anestheticReport).subscribe(
             success => {
                 this.snackBarService.showSuccess('internaciones.anesthesic-report.SUCCESS');
                 this.setIsLoading(false);
@@ -317,7 +317,6 @@ export class AnestheticReportService {
             anestheticHistory: this.anestheticReportAnestheticHistoryService.getAnestheticHistoryData(),
             medications: this.medicacionesNuevaConsultaService.getMedicationsAsMedicationDto(),
             preMedications: this.anestheticReportPremedicationAndFoodIntakeService.getAnestheticSubstanceDto(),
-            foodIntake: this.lastFoodIntakeTimeSelected ? {clockTime: this.lastFoodIntakeTimeSelected} : null,
             histories: this.anestheticReportRecordService.getRecordAsHealthConditionDto(),
             anestheticPlans: this.anestheticPlanService.getAnestheticSubstanceDto(),
             analgesicTechniques: this.analgesicTechniqueService.getAnalgesicTechniqueDto(),
@@ -352,6 +351,7 @@ export class AnestheticReportService {
             surgeryEndDate: vitalSignsForm.surgeryEndDate ? dateToDateDto(vitalSignsForm.surgeryEndDate) : null,
             surgeryStartTime: vitalSignsForm.surgeryStartTime,
             surgeryEndTime: vitalSignsForm.surgeryEndTime,
+            foodIntake: this.lastFoodIntakeTimeSelected ? this.lastFoodIntakeTimeSelected : null,
         }
     }
 

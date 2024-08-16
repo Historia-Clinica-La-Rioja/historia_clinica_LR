@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, TimeDto } from '@api-rest/api-model';
+import { AnestheticReportDto, DiagnosisDto, HealthConditionDto, PostCloseAnestheticReportDto, TimeDto } from '@api-rest/api-model';
 import { DocumentActionReasonComponent } from '@historia-clinica/modules/ambulatoria/modules/internacion/dialogs/document-action-reason/document-action-reason.component';
 import { AnestheticReportService } from '@historia-clinica/modules/ambulatoria/modules/internacion/services/anesthetic-report.service';
 import { ComponentEvaluationManagerService } from '@historia-clinica/modules/ambulatoria/services/component-evaluation-manager.service';
@@ -81,8 +81,12 @@ export class AnestheticReportDockPopupComponent implements OnInit {
 		});
 		dialogRef.afterClosed().subscribe(reason => {
 			if (reason) {
-				/* anestheticReport.modificationReason = reason; */
-				this.anesthethicReportHandlerService.editAnestheticReport(anestheticReport, this.data.anestheticPartId, this.data.internmentEpisodeId, this.dockPopupRef);
+                let postAnestheticReport: PostCloseAnestheticReportDto = {
+                    anestheticReport,
+                    modificationReason: reason,
+                    previousDocumentId: this.data.anestheticPartId,
+                }
+				this.anesthethicReportHandlerService.editAnestheticReport(postAnestheticReport, this.dockPopupRef);
 			}
 		});
 	}

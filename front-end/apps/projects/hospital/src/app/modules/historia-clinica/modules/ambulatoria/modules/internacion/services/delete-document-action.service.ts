@@ -9,6 +9,7 @@ import { SnackBarService } from "@presentation/services/snack-bar.service";
 import { InternmentFields } from "@historia-clinica/modules/ambulatoria/modules/internacion/services/internment-summary-facade.service";
 import { Subject } from 'rxjs';
 import { SurgicalReportService } from '@api-rest/services/surgical-report.service';
+import { AnesthethicReportService } from '@api-rest/services/anesthethic-report.service';
 
 @Injectable()
 export class DeleteDocumentActionService {
@@ -22,7 +23,8 @@ export class DeleteDocumentActionService {
 		private readonly epicrisisService: EpicrisisService,
 		private readonly evolutionNoteService: EvolutionNoteService,
 		private readonly surgicalReportService: SurgicalReportService,
-		private readonly snackBarService: SnackBarService
+		private readonly snackBarService: SnackBarService,
+        private readonly anestheticReportService: AnesthethicReportService,
 	) { }
 
 	delete(document: DocumentSearchDto, internmentEpisodeId: number) {
@@ -54,7 +56,7 @@ export class DeleteDocumentActionService {
 						this.deleteSurgicalReport(document.id, internmentEpisodeId, reason);
 						break;
                     case "Parte anestésico":
-                        this.deleteAnestheticReport(document.id, internmentEpisodeId, reason);
+                        this.deleteAnestheticReport(document.id, reason);
                         break;
 				}
 			}
@@ -99,7 +101,12 @@ export class DeleteDocumentActionService {
 			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}
 
-    private deleteAnestheticReport(documentId: number, internmentEpisodeId: number, reason: string) {
-		console.log("Borrando...")
+    private deleteAnestheticReport(documentId: number, reason: string) {
+        this.anestheticReportService.deleteAnestheticReport(documentId, reason).subscribe(
+			success => {
+				this.snackBarService.showSuccess("internaciones.delete-document.messages.SUCCESS");
+				this.updateFieldsSubject.next({ evolutionClinical: true });
+			},
+			error => this.snackBarService.showError("internaciones.delete-document.messages.ERROR"))
 	}
 }

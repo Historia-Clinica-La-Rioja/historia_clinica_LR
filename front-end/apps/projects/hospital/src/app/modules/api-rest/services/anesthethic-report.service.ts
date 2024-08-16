@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AnestheticReportDto } from '@api-rest/api-model';
+import { AnestheticReportDto, PostCloseAnestheticReportDto } from '@api-rest/api-model';
 import { ContextService } from '@core/services/context.service';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
@@ -32,8 +32,15 @@ export class AnesthethicReportService {
 		return this.http.get<AnestheticReportDto>(url)
 	}
 
-    editAnestheticReport(anestheticReport: AnestheticReportDto, anestheticReportId: number, internmentEpisodeId: number): Observable<AnestheticReportDto> {
+    editAnestheticReport(anestheticReport: PostCloseAnestheticReportDto): Observable<AnestheticReportDto> {
         const url = `${this.BASIC_URL}/close`;
-		return this.http.post<AnestheticReportDto>(url, anestheticReport);
+		return this.http.put<AnestheticReportDto>(url, anestheticReport);
+    }
+
+    deleteAnestheticReport(documentId: number, modificationReason: string): Observable<boolean> {
+        const url = `${this.BASIC_URL}/by-document/${documentId}`;
+		return this.http.delete<boolean>(url, { 
+            body: { modificationReason }
+        });
     }
 }

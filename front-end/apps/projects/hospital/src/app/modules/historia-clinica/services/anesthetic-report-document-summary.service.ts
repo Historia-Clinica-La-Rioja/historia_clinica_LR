@@ -61,7 +61,7 @@ export class AnestheticReportDocumentSummaryService {
             ...(anestheticReport.anestheticHistory && {anestheticHistory: this.mapAnesthesiaHistoryToDescriptionItemDataSummary(anestheticReport.anestheticHistory)}),
             ...(anestheticReport.medications.length && { usualMedication: this.documentsSummaryService.mapMedicationsToDescriptionItemDataSummary(anestheticReport.medications) }),
             ...(anestheticReport.preMedications.length && { premedicationList: this.mapAnestheticSubstanceToDescriptionItemData(anestheticReport.preMedications, this.premedicationViasArray) }),
-            ...(anestheticReport.foodIntake?.clockTime && { lastFoodIntake: timeDtoToDate(anestheticReport.foodIntake.clockTime) }),
+            ...(anestheticReport.procedureDescription?.foodIntake && { lastFoodIntake: timeDtoToDate(anestheticReport.procedureDescription.foodIntake) }),
             ...(this.hasHistories(anestheticReport) && { histories: this.mapToPersonalHistoriesData(anestheticReport) }),
             ...(anestheticReport.anestheticPlans.length && { anestheticPlanList: this.mapAnestheticPlansToDescriptionItemDataSummary(anestheticReport.anestheticPlans) }),
             ...(anestheticReport.analgesicTechniques.length && { analgesicTechniques: this.mapAnalgesicTechniqueToDescriptionItemDataSummary(anestheticReport.analgesicTechniques) }),
