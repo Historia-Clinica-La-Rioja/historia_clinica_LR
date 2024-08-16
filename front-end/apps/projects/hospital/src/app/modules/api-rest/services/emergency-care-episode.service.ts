@@ -10,7 +10,8 @@ import {
 	RiskFactorDto,
 	PageDto,
 	EmergencyCareEpisodeFilterDto,
-	EmergencyCareEpisodeAttentionPlaceDto
+	EmergencyCareEpisodeAttentionPlaceDto,
+	EmergencyCareClinicalSpecialtySectorDto
 } from '@api-rest/api-model';
 import { environment } from '@environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -71,6 +72,12 @@ export class EmergencyCareEpisodeService {
 		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
 			BASIC_URL_SUFIX}/episodes/` + episodeId + '/creation-date';
 		return this.http.get<DateTimeDto>(url);
+	}
+
+	getSpecialtySectors(): Observable<EmergencyCareClinicalSpecialtySectorDto[]> {
+		const url = `${environment.apiBase + BASIC_URL_PREFIX}/${this.contextService.institutionId +
+			BASIC_URL_SUFIX}/episodes/specialty-sector`;
+		return this.http.get<EmergencyCareClinicalSpecialtySectorDto[]>(url);
 	}
 
 	updateAdministrative(episodeId: number, data): Observable<number> {

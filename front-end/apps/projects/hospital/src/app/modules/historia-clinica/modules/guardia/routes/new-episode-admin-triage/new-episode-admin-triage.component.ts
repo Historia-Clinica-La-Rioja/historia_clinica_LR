@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ECAdministrativeDto, ResponseEmergencyCareDto } from '@api-rest/api-model';
 import { NewEpisodeService } from '../../services/new-episode.service';
 import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
@@ -9,18 +9,20 @@ import { ROUTE_EMERGENCY_CARE } from '../../services/triage-definitions.service'
 import { GuardiaRouterService } from '../../services/guardia-router.service';
 import { TriageActionsService } from '../../services/triage-actions.service';
 import { ButtonType } from '@presentation/components/button/button.component';
+import { SpecialtySectorFormValidityService } from '../../services/specialty-sector-form-validity.service';
 
 @Component({
 	selector: 'app-new-episode-admin-triage',
 	templateUrl: './new-episode-admin-triage.component.html',
 	styleUrls: ['./new-episode-admin-triage.component.scss']
 })
-export class NewEpisodeAdminTriageComponent {
+export class NewEpisodeAdminTriageComponent implements OnInit, OnDestroy{
 
 	private emergencyCareDto = {} as ECAdministrativeDto;
-	private readonly routePrefix;	
+	private readonly routePrefix;
 	readonly NOT_DEFINED_TRIAGE_LEVEL_AVAILABLE = true;
 	readonly RAISED = ButtonType.RAISED;
+	private isSpecialtySectorFormValid : boolean;
 	isLoading = false;
 
 	constructor(
@@ -31,29 +33,45 @@ export class NewEpisodeAdminTriageComponent {
 		private readonly contextService: ContextService,
 		private readonly guardiaRouterService: GuardiaRouterService,
 		readonly triageActionsService: TriageActionsService,
+		private specialtySectorFormValidityService: SpecialtySectorFormValidityService,
 	) {
 		this.routePrefix = 'institucion/' + this.contextService.institutionId;
 	}
 
-	confirmEvent(): void {
-		this.isLoading = true;
-		this.emergencyCareDto.triage = this.triageActionsService.triageAdministrative;
-		this.emergencyCareDto.administrative = this.newEpisodeService.getAdministrativeAdmissionDto();
-		this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
-			emergencyCareId => {
-				this.isLoading = false;
-				this.emergencyCareEpisodeService.getAdministrative(emergencyCareId).subscribe((dto: ResponseEmergencyCareDto) => {
-					this.guardiaRouterService.goToEpisode(dto.emergencyCareState.id, dto.patient)
-					this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
-				});
-			},
-			error =>
-				error?.text ?
-					this.snackBarService.showError(error.text) : this.snackBarService.showError('guardia.new-episode.ERROR')
-		);
+	ngOnInit() {
+		this.specialtySectorFormValidityService.formValid$.subscribe(isValid => {
+			this.isSpecialtySectorFormValid = isValid;
+		});
 	}
 
-	cancelEvent(): void {
+	ngOnDestroy() {
+		this.specialtySectorFormValidityService.resetConfirmAttempt();
+	}
+
+	confirmEvent() {
+		this.specialtySectorFormValidityService.notifyConfirmAttempt();
+		if (this.isSpecialtySectorFormValid) {
+			this.isLoading = true;
+			this.emergencyCareDto.triage = this.triageActionsService.triageAdministrative;
+			this.emergencyCareDto.administrative = this.newEpisodeService.getAdministrativeAdmissionDto();
+			this.emergencyCareEpisodeService.createAdministrative(this.emergencyCareDto).subscribe(
+				emergencyCareId => {
+					this.isLoading = false;
+					this.specialtySectorFormValidityService.resetConfirmAttempt();
+					this.emergencyCareEpisodeService.getAdministrative(emergencyCareId).subscribe((dto: ResponseEmergencyCareDto) => {
+						this.guardiaRouterService.goToEpisode(dto.emergencyCareState.id, dto.patient)
+						this.snackBarService.showSuccess('guardia.new-episode.SUCCESS');
+					});
+				},
+				error =>
+					error?.text ?
+						this.snackBarService.showError(error.text) : this.snackBarService.showError('guardia.new-episode.ERROR')
+			);
+		}
+	}
+
+	cancelEvent() {
+		this.specialtySectorFormValidityService.resetConfirmAttempt();
 		this.router.navigate([this.routePrefix + ROUTE_EMERGENCY_CARE + '/nuevo-episodio/administrativa'], { state: { commingBack: true } });
 	}
 

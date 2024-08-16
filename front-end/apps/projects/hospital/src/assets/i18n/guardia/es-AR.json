@@ -31,6 +31,8 @@
 			"TEMPERATURE": "Temperatura",
 			"TITLE": "Nuevo triage",
 			"REASON": "Motivo de consulta",
+			"SPECIALTY_SECTOR": "Servicio de guardia",
+			"SELECT_SPECIALTY_SECTOR": "Seleccione un servicio",
 			"LIST_CARD_TITLE": "Motivos registrados",
 			"ADD_REASON": "+ agregar motivo"
 		},

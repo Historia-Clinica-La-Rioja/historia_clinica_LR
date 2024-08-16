@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DoctorsOfficeService } from '@api-rest/services/doctors-office.service';
-import { DoctorsOfficeDto, ERole, OutpatientReasonDto, TriageListDto } from '@api-rest/api-model';
+import { DoctorsOfficeDto, EmergencyCareClinicalSpecialtySectorDto, ERole, OutpatientReasonDto, TriageListDto } from '@api-rest/api-model';
 import { TriageMasterDataService } from '@api-rest/services/triage-master-data.service';
 import { Observable, forkJoin, take } from 'rxjs';
 import { SECTOR_AMBULATORIO, TRIAGE_LEVEL_V_ID, Triages } from '../../constants/masterdata';
@@ -12,6 +12,9 @@ import { MotivoConsulta } from '@historia-clinica/modules/ambulatoria/services/m
 import { TriageCategory } from '../triage-chip/triage-chip.component';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
+import { EmergencyCareEpisodeService } from '@api-rest/services/emergency-care-episode.service';
+import { SpecialtySectorForm } from '../specialty-sector-form/specialty-sector-form.component';
+import { SpecialtySectorFormValidityService } from '../../services/specialty-sector-form-validity.service';
 
 const ROLE_ALLOWED_NOT_TO_DEFINE_TRIAGE_LEVEL = [ERole.ADMINISTRATIVO];
 const WITHOUT_TRIAGE_CATEGORY_ID = 6;
@@ -28,6 +31,8 @@ export class TriageComponent implements OnInit {
 	doctorsOffices$: Observable<DoctorsOfficeDto[]>;
 	triageCategories: TriageCategory[];
 	lastTriageReasons: MotivoConsulta[] = [];
+	specialtySectors: EmergencyCareClinicalSpecialtySectorDto[];
+	hasSpecialtySectors: boolean;
 
 	patientId: number;
 	patientDescription: string;
@@ -44,6 +49,8 @@ export class TriageComponent implements OnInit {
 	constructor(
 		private doctorsOfficeService: DoctorsOfficeService,
 		private triageMasterDataService: TriageMasterDataService,
+		private readonly emergencyCareEpisodeService: EmergencyCareEpisodeService,
+		private specialtySectorFormValidityService: SpecialtySectorFormValidityService,
 		private permissionsService: PermissionsService,
 		private readonly route: ActivatedRoute,
 	) { }
@@ -73,6 +80,8 @@ export class TriageComponent implements OnInit {
             if (param.patientId) this.patientId = (Number(param.patientId));
             else if (param.patientDescription) this.patientDescription = param.patientDescription;
         });
+
+		this.loadSpecialtySectors();
 	}
 
 	clear(control: AbstractControl) {
@@ -82,6 +91,23 @@ export class TriageComponent implements OnInit {
 	setSelectedReasons(reasons: MotivoConsulta[]) {
 		const outpatientReasons = toOutpatientReasons(reasons);
 		this.triageForm.controls.reasons.setValue(outpatientReasons);
+	}
+
+	private loadSpecialtySectors(){
+		this.emergencyCareEpisodeService.getSpecialtySectors().subscribe(sectors => {
+			this.specialtySectors = sectors;
+			this.hasSpecialtySectors = sectors?.length > 0;
+		})
+		if (!this.hasSpecialtySectors)
+			this.specialtySectorFormValidityService.setFormValidity(true);
+	}
+
+	onSelectedSpecialtySectorChange(specialtySector: FormGroup<SpecialtySectorForm>) {
+		if(specialtySector){
+			this.triageForm.patchValue({
+				specialtySectorId: specialtySector.get('specialtySector').value?.id
+			});
+		}
 	}
 
 	changeTriageLevel(triageLevelSelected: MatSelectChange) {
@@ -98,15 +124,16 @@ export class TriageComponent implements OnInit {
 	}
 
 	private buildTriage(): Triage {
-		const { triageCategoryId, doctorsOfficeId, reasons } = this.triageForm.value;
-		return { triageCategoryId, doctorsOfficeId, reasons };
+		const { triageCategoryId, doctorsOfficeId, reasons, specialtySectorId } = this.triageForm.value;
+		return { triageCategoryId, doctorsOfficeId, reasons, specialtySectorId };
 	}
 
 	private buildTriageForm(): FormGroup<ToFormGroup<Triage>> {
 		return new FormGroup<ToFormGroup<Triage>>({
 			triageCategoryId: new FormControl<number>(null, Validators.required),
 			doctorsOfficeId: new FormControl<number>(null),
-			reasons: new FormControl<OutpatientReasonDto[]>(null)
+			reasons: new FormControl<OutpatientReasonDto[]>(null),
+			specialtySectorId: new FormControl<number>(null),
 		});
 	}
 
@@ -121,4 +148,5 @@ export interface Triage {
 	triageCategoryId: Triages;
 	doctorsOfficeId: number;
 	reasons: OutpatientReasonDto[];
+	specialtySectorId: number;
 }

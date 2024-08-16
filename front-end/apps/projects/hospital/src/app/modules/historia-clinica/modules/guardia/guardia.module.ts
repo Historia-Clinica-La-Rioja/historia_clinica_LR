@@ -45,6 +45,7 @@ import { TriageDetailsComponent } from './components/triage-details/triage-detai
 import { TriageLevelSummaryComponent } from './components/triage-level-summary/triage-level-summary.component';
 import { TriageSummaryComponent } from './components/triage-summary/triage-summary.component';
 import { ReasonsFormComponent } from './components/reasons-form/reasons-form.component';
+import { SpecialtySectorFormComponent } from './components/specialty-sector-form/specialty-sector-form.component';
 import { SpecialtySummaryComponent } from './components/specialty-summary/specialty-summary.component';
 // dialogs
 import { AdministrativeTriageDialogComponent } from './dialogs/administrative-triage-dialog/administrative-triage-dialog.component';
@@ -54,6 +55,7 @@ import { PediatricTriageDialogComponent } from './dialogs/pediatric-triage-dialo
 // services
 import { EpisodeStateService } from './services/episode-state.service';
 import { NewEpisodeService } from './services/new-episode.service';
+import { SpecialtySectorFormValidityService } from './services/specialty-sector-form-validity.service';
 // standalone
 import { IdentifierCasesComponent } from '@hsi-components/identifier-cases/identifier-cases.component';
 import { PatientSummaryComponent } from '@hsi-components/patient-summary/patient-summary.component';
@@ -97,7 +99,8 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		TriageLevelSummaryComponent,
 		TriageSummaryComponent,
 		ReasonsFormComponent,
-		SpecialtySummaryComponent,
+		SpecialtySectorFormComponent,
+        SpecialtySummaryComponent,
 		// dialogs
 		AdministrativeTriageDialogComponent,
 		AdultGynecologicalTriageDialogComponent,
@@ -132,6 +135,7 @@ import { TemporaryPatientComponent } from '@hsi-components/temporary-patient/tem
 		// services
 		EpisodeStateService,
 		NewEpisodeService,
+		SpecialtySectorFormValidityService
 	]
 })
 export class GuardiaModule {

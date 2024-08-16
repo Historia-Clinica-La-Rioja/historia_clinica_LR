@@ -23,7 +23,8 @@ export class AdministrativeTriageComponent {
 		this.triageActionsService.triageAdministrative = {
 			categoryId: triageData.triageCategoryId,
 			doctorsOfficeId: triageData.doctorsOfficeId,
-			reasons: triageData.reasons
+			reasons: triageData.reasons,
+			clinicalSpecialtySectorId: triageData.specialtySectorId
 		}
 	}
 
