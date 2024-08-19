@@ -39,7 +39,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 	orderStudiesService: OrderStudiesService;
 	title = this.data.emergencyCareId ? 'Nueva orden de Guardia' : 'ambulatoria.paciente.internment-order.create-order-dialog.TITLE';
 	constructor(
-		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number },
+		@Inject(MAT_DIALOG_DATA) public data: { diagnoses: any[], patientId: number, emergencyCareId?: number, patientMedicalCoverageId?: number },
 		public dialogRef: MatDialogRef<CreateInternmentOrderComponent>,
 		private readonly formBuilder: UntypedFormBuilder,
 		private readonly requestMasterDataService: RequestMasterDataService,
@@ -48,7 +48,7 @@ export class CreateInternmentOrderComponent implements OnInit {
 		private readonly mapperService: MapperService,
 		private readonly patientService: PatientService,
 		private readonly patientMedicalCoverageService: PatientMedicalCoverageService,
-		private readonly emergencyCareServiceRequestService: EmergencyCareServiceRequestService
+		private readonly emergencyCareServiceRequestService: EmergencyCareServiceRequestService,
 
 	) {
 		this.patientService.getPatientBasicData<BasicPatientDto>(this.data.patientId).subscribe(
@@ -58,8 +58,9 @@ export class CreateInternmentOrderComponent implements OnInit {
 
 		this.patientMedicalCoverageService.getActivePatientMedicalCoverages(this.data.patientId).subscribe(
 			(medicalCoverage: PatientMedicalCoverageDto[]) => {
+				const lastElement = medicalCoverage.find(mc => mc.id === data.patientMedicalCoverageId);
 				this.patientMedicalCoverages = medicalCoverage;
-				this.selectedCoverage = this.patientMedicalCoverages[0];
+				this.selectedCoverage = lastElement;
 			})
 
 		this.orderStudiesService = new OrderStudiesService();

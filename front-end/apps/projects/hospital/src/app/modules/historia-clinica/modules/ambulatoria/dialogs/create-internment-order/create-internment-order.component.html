@@ -30,7 +30,7 @@
 						<mat-form-field appearance="outline" class="full-width">
 
 							<mat-select formControlName="patientMedicalCoverage"
-								placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.SELECT_MEDICAL_COVERAGE' | translate}}"
+								placeholder="{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NO_COVERAGE' | translate}}"
 								[(value)]="selectedCoverage" [disabled]="true">
 								<mat-option id="medical-coverage" name="medicalCoverage"
 									*ngFor="let patientMedicalCoverage of patientMedicalCoverages"

@@ -871,7 +871,8 @@
 					"NO": "No",
 					"NO_ADDED_STUDIES": "Sin estudios agregados",
 					"BACK": "Volver",
-					"STUDY": "Estudio"
+					"STUDY": "Estudio",
+					"NO_COVERAGE": "Sin cobertura"
                 }
             },
             "nursing": {
