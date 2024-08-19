@@ -8,6 +8,7 @@ import ar.lamansys.sgx.shared.reports.util.struct.IWorkbook;
 import net.pladema.provincialreports.generalreports.repository.ComplementaryStudiesConsultationDetail;
 import net.pladema.provincialreports.generalreports.repository.DiabeticHypertensionConsultationDetail;
 import net.pladema.provincialreports.generalreports.repository.EmergencyConsultationDetail;
+import net.pladema.provincialreports.generalreports.repository.MedicinesPrescriptionConsultationDetail;
 import net.pladema.provincialreports.reportformat.DateFormat;
 
 import net.pladema.provincialreports.reportformat.domain.service.ReportExcelUtilsService;
@@ -92,6 +93,26 @@ public class GeneralReportsExcelService {
 		return workbook;
 	}
 
+	public IWorkbook buildMedicinesPrescriptionExcel(String title, String[] headers, List<MedicinesPrescriptionConsultationDetail> result, Integer institutionId, LocalDate startDate, LocalDate endDate) {
+		IWorkbook workbook = WorkbookCreator.createExcelWorkbook();
+		excelUtilsService.newCreateHeaderCellsStyle(workbook);
+		ISheet sheet = workbook.createSheet(title);
+		excelUtilsService.newFillRow(sheet, excelUtilsService.newGetHeaderDataWithoutObservation(headers, title, 20, 0, excelUtilsService.newPeriodStringFromLocalDates(startDate, endDate), institutionId));
+
+		AtomicInteger rowNumber = new AtomicInteger(sheet.getCantRows());
+		ICellStyle dataCellsStyle = excelUtilsService.newCreateDataCellsStyle(workbook);
+
+		result.forEach(resultData -> {
+			IRow row = sheet.createRow(rowNumber.getAndIncrement());
+			fillMedicinesPrescriptionRow(row, resultData, dataCellsStyle);
+		});
+
+		excelUtilsService.newSetMinimalHeaderDimensions(sheet);
+		excelUtilsService.newSetSheetDimensions(sheet);
+
+		return workbook;
+	}
+
 	public void fillEmergencyRow(IRow row, EmergencyConsultationDetail content, ICellStyle style) {
 		excelUtilsService.setCellValue(row, 0, style, content.getIdentification());
 		excelUtilsService.setCellValue(row, 1, style, content.getLastNames());
@@ -151,5 +172,31 @@ public class GeneralReportsExcelService {
 		excelUtilsService.setCellValue(row, 16, style, content.getStudyName());
 		excelUtilsService.setCellValue(row, 17, style, content.getAdditionalNotes());
 		excelUtilsService.setCellValue(row, 18, style, content.getAssociatedProblem());
+	}
+
+	public void fillMedicinesPrescriptionRow(IRow row, MedicinesPrescriptionConsultationDetail content, ICellStyle style) {
+		excelUtilsService.setCellValue(row, 0, style, content.getPrescriber());
+		excelUtilsService.setCellValue(row, 1, style, content.getPrescriberLicense());
+		excelUtilsService.setCellValue(row, 2, style, content.getPrescriberProvincialLicense());
+		excelUtilsService.setCellValue(row, 3, style, content.getPrescriberNationalLicense());
+		excelUtilsService.setCellValue(row, 4, style, content.getDate());
+		excelUtilsService.setCellValue(row, 5, style, content.getPatient());
+		excelUtilsService.setCellValue(row, 6, style, content.getPatientDNI());
+		excelUtilsService.setCellValue(row, 7, style, content.getMedicalCoverage());
+		excelUtilsService.setCellValue(row, 8, style, content.getRelatedDiagnosis());
+		excelUtilsService.setCellValue(row, 9, style, content.getIsChronic());
+		excelUtilsService.setCellValue(row, 10, style, content.getEvent());
+		excelUtilsService.setCellValue(row, 11, style, content.getMedicine());
+		excelUtilsService.setCellValue(row, 12, style, content.getDuration());
+		excelUtilsService.setCellValue(row, 13, style, content.getFrequency());
+		excelUtilsService.setCellValue(row, 14, style, content.getStartDate());
+		excelUtilsService.setCellValue(row, 15, style, content.getEndDate());
+		excelUtilsService.setCellValue(row, 16, style, content.getSuspensionStartDate());
+		excelUtilsService.setCellValue(row, 17, style, content.getSuspensionEndDate());
+		excelUtilsService.setCellValue(row, 18, style, content.getDosage());
+		excelUtilsService.setCellValue(row, 19, style, content.getDosePerDay());
+		excelUtilsService.setCellValue(row, 20, style, content.getDosePerUnit());
+		excelUtilsService.setCellValue(row, 21, style, content.getObservations());
+		excelUtilsService.setCellValue(row, 22, style, content.getPrescriptionStatus());
 	}
 }

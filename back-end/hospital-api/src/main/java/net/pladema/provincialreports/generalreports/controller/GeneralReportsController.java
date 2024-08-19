@@ -136,4 +136,29 @@ public class GeneralReportsController {
 			throw new RuntimeException("error generating report", e);
 		}
 	}
+
+	@GetMapping(value = "/{institutionId}/medicines-prescription")
+	@PreAuthorize("hasPermission(#institutionId, 'ADMINISTRADOR_INSTITUCIONAL_BACKOFFICE, PERSONAL_DE_ESTADISTICA, PERSONAL_DE_FARMACIA')")
+	public ResponseEntity<byte[]> getMedicinesPrescriptionExcelReport(
+			@PathVariable Integer institutionId,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+			@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate) {
+		logger.info("getMedicinesPrescriptionExcelReport started with institution id = {}, fromDate = {}, toDate = {}", institutionId, fromDate, toDate);
+
+		try {
+			String title = "Reporte de prescripción de medicamentos (generales)";
+			String[] headers = {"Nombre de prescriptor", "Licencia", "Licencia provincial", "Licencia nacional", "Fecha", "Nombre de paciente", "DNI de paciente", "Obra social", "Diagnóstico asociado", "¿Es crónico?", "Evento", "Nombre de medicamento", "Intervalo", "Frecuencia", "Fecha de inicio", "Fecha de fin", "Inicio de suspensión", "Fin de suspensión", "Dosificación", "Dosis diaria", "Dosis por unidad", "Observaciones", "Estado de receta"};
+
+			logger.debug("building medicines prescription excel report");
+			IWorkbook wb = excelService.buildMedicinesPrescriptionExcel(title, headers, queryFactory.queryMedicinesPrescription(institutionId, fromDate, toDate), institutionId, fromDate, toDate);
+
+			String filename = "Prescripción de medicamentos - " + excelUtilsService.newGetPeriodForFilenameFromDates(fromDate, toDate) + "." + wb.getExtension();
+			logger.debug("excel report generated successfully with filename = {}", filename);
+
+			return excelUtilsService.createResponseEntity(wb, filename);
+		} catch (Exception e) {
+			logger.error("error generating medicines prescription excel report for institutionId {}", institutionId, e);
+			throw new RuntimeException("error generating report", e);
+		}
+	}
 }

@@ -35,4 +35,8 @@ public class GeneralReportsQueryFactory {
 		return repositoryUtils.executeQuery("GeneralReports.ComplementaryStudiesConsultationDetail", institutionId, start, end, null);
 	}
 
+	public List<MedicinesPrescriptionConsultationDetail> queryMedicinesPrescription(Integer institutionId, LocalDate start, LocalDate end) {
+		return repositoryUtils.executeQuery("GeneralReports.MedicinesPrescriptionConsultationDetail", institutionId, start, end, null);
+	}
+
 }

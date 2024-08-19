@@ -1161,6 +1161,44 @@
 		</query>
 	</named-native-query>
 
+	<named-native-query name="GeneralReports.MedicinesPrescriptionConsultationDetail" result-set-mapping="GeneralReports.MedicinesPrescriptionConsultationDetailResult">
+		<query>
+			--Versión: alfa
+			SELECT concat(ins.name, '(CUIT: ', ins.cuit, ' | SISA: ', ins.sisa_code, ')') AS institutionName, st.description AS prescriptionStatus,
+			CASE WHEN (EXTRACT(HOUR FROM mr.created_on)) &lt; 3 THEN mr.request_date-1 ELSE mr.request_date END AS date,
+			concat(pe_hp.last_name, ' ', pe_hp.other_last_names, ' ', pe_hp.first_name, ' ', pe_hp.middle_names) AS prescriber, pe_hp.identification_number AS prescriberDNI, hp.license_number as prescriberLicense,
+			(select string_agg(concat(psp.description_profession_ref, ': ', lic.license_number), ' | ') FROM professional_professions ppr inner join professional_specialty psp ON psp.id=ppr.professional_specialty_id inner join professional_license_numbers lic on ppr.id=lic.professional_profession_id WHERE ppr.healthcare_professional_id=hp.id and lic.type_license_number=1) as prescriberNationalLicense,
+			(select string_agg(concat(psp.description_profession_ref, ': ', lic.license_number), ' | ') FROM professional_professions ppr inner join professional_specialty psp ON psp.id=ppr.professional_specialty_id inner join professional_license_numbers lic on ppr.id=lic.professional_profession_id WHERE ppr.healthcare_professional_id=hp.id and lic.type_license_number=2) as prescriberProvincialLicense,
+			concat(pe.last_name, ' ', pe.other_last_names, ' ', pe.first_name, ' ', pe.middle_names) AS patient, pe.identification_number AS patientDNI, concat(mc.name, '(RNOS: ', hi.rnos, ')') AS medicalCoverage,
+			concat(s.pt, '(SNOMED: ', s.sctid,')') AS medicine, concat(sn_hc.pt, '(SNOMED: ', sn_hc.sctid,')') AS relatedDiagnosis,
+			case when dsg.chronic is true then 'Sí' else 'No' end as isChronic, dsg.event as event, concat(dsg.duration, ' ', dsg.duration_unit) as duration, concat(dsg.frequency, ' ', dsg.period_unit) as frequency,
+			dsg.start_date as startDate, dsg.end_date as endDate, dsg.suspended_start_date as suspensionStartDate, dsg.suspended_end_date as suspensionEndDate,
+			concat(qt.value, ' ', qt.unit) as dosage, dsg.doses_by_day as dosePerDay, dsg.doses_by_unit as dosePerUnit, ev.description as observations
+			FROM medication_request mr
+			INNER JOIN medication_request_status st ON mr.status_id=st.id
+			INNER JOIN institution ins ON mr.institution_id=ins.id
+			INNER JOIN healthcare_professional hp ON mr.doctor_id=hp.id
+			INNER JOIN person pe_hp ON hp.person_id=pe_hp.id
+			INNER JOIN patient pa ON mr.patient_id=pa.id
+			INNER JOIN person pe ON pa.person_id=pe.id
+			LEFT JOIN patient_medical_coverage pmc ON mr.medical_coverage_id=pmc.id
+			LEFT JOIN medical_coverage mc ON pmc.medical_coverage_id=mc.id
+			LEFT JOIN health_insurance hi ON hi.id=mc.id
+			LEFT JOIN document d ON d.source_id=mr.id AND d.source_type_id=2
+			LEFT JOIN document_medicamention_statement dms ON dms.document_id=d.id
+			LEFT JOIN medication_statement ms ON dms.medication_statement_id=ms.id
+			LEFT JOIN snomed s ON ms.snomed_id=s.id
+			LEFT JOIN health_condition hcn ON ms.health_condition_id=hcn.id
+			LEFT JOIN snomed sn_hc ON hcn.snomed_id=sn_hc.id
+			LEFT JOIN dosage dsg ON ms.dosage_id=dsg.id
+			LEFT JOIN quantity qt ON dsg.dose_quantity_id=qt.id
+			LEFT JOIN note ev ON ms.note_id=ev.id
+			WHERE mr.created_on BETWEEN :startDate AND :endDate
+			AND ins.id = :institutionId
+			order by mr.created_on;
+		</query>
+	</named-native-query>
+
 	<!-- =================================================== -->
 	<!-- ============== Older Adults Reports =============== -->
 	<!-- =================================================== -->
@@ -2580,6 +2618,35 @@
 			<column name="studyName" class="java.lang.String"/>
 			<column name="additionalNotes" class="java.lang.String"/>
 			<column name="associatedProblem" class="java.lang.String"/>
+		</constructor-result>
+	</sql-result-set-mapping>
+	<sql-result-set-mapping name="GeneralReports.MedicinesPrescriptionConsultationDetailResult">
+		<constructor-result target-class="net.pladema.provincialreports.generalreports.repository.MedicinesPrescriptionConsultationDetail">
+			<column name="institutionName" class="java.lang.String"/>
+			<column name="prescriptionStatus" class="java.lang.String"/>
+			<column name="date" class="java.lang.String"/>
+			<column name="prescriber" class="java.lang.String"/>
+			<column name="prescriberDNI" class="java.lang.String"/>
+			<column name="prescriberLicense" class="java.lang.String"/>
+			<column name="prescriberNationalLicense" class="java.lang.String"/>
+			<column name="prescriberProvincialLicense" class="java.lang.String"/>
+			<column name="patient" class="java.lang.String"/>
+			<column name="patientDNI" class="java.lang.String"/>
+			<column name="medicalCoverage" class="java.lang.String"/>
+			<column name="medicine" class="java.lang.String"/>
+			<column name="relatedDiagnosis" class="java.lang.String"/>
+			<column name="isChronic" class="java.lang.String"/>
+			<column name="event" class="java.lang.String"/>
+			<column name="duration" class="java.lang.String"/>
+			<column name="frequency" class="java.lang.String"/>
+			<column name="startDate" class="java.lang.String"/>
+			<column name="endDate" class="java.lang.String"/>
+			<column name="suspensionStartDate" class="java.lang.String"/>
+			<column name="suspensionEndDate" class="java.lang.String"/>
+			<column name="dosage" class="java.lang.String"/>
+			<column name="dosePerDay" class="java.lang.String"/>
+			<column name="dosePerUnit" class="java.lang.String"/>
+			<column name="observations" class="java.lang.String"/>
 		</constructor-result>
 	</sql-result-set-mapping>
 
