@@ -293,7 +293,7 @@ public class ActivityStorageImpl implements ActivityStorage {
 	}
 
 	private AttentionInfoBo parseToAttentionInfoBo(Object[] rawAttention) {
-		var attentionDate = localDateMapper.fromLocalDateTimeToZonedDateTime(((Timestamp) rawAttention[1]).toLocalDateTime()).toLocalDate();
+		var attentionDate = localDateMapper.fromLocalDateTime(((Timestamp) rawAttention[1]).toLocalDateTime());
 		return new AttentionInfoBo(
 				((BigInteger) rawAttention[0]).longValue(),
 				((Integer)rawAttention[18]).longValue(),
