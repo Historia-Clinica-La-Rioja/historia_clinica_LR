@@ -1,12 +1,16 @@
-<div class="spinner" *ngIf="loading else addRiskFactors">
+<mat-dialog-content fxLayoutAlign="center" class="spinner" *ngIf="loading else addRiskFactors">
 	<mat-spinner color="primary"></mat-spinner>
-</div>
+</mat-dialog-content>
 
 <ng-template #addRiskFactors>
-	<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
-	</app-factores-de-riesgo-form>
-	<mat-dialog-actions align="end">
-		<button mat-stroked-button color="primary" mat-dialog-close><span [translate]="'buttons.CANCEL'"></span>
+	<mat-dialog-content>
+		<app-factores-de-riesgo-form [factoresDeRiesgoFormService]="factoresDeRiesgoFormService">
+		</app-factores-de-riesgo-form>
+	</mat-dialog-content>
+
+	<mat-dialog-actions fxLayoutAlign="end">
+		<button mat-stroked-button color="primary" mat-dialog-close>
+			<span [translate]="'buttons.CANCEL'"></span>
 		</button>
 		<button *ngIf="this.form.valid && !formHasNoValues(this.form.value)" mat-raised-button color="primary"
 			(click)="submit()">
