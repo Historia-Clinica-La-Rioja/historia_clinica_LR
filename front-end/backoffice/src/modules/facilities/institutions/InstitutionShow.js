@@ -99,7 +99,7 @@ const ShowSectors = () => {
 
 const InstitutionShow = props => {
     const { permissions } = usePermissions();
-    const parameterizedFormFF = permissions?.featureFlags.filter( ff => ff === 'HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
+    const parameterizedFormFF = permissions?.featureFlags.some( ff => ff === 'HABILITAR_FORMULARIOS_CONFIGURABLES_EN_DESARROLLO');
     return (
         <Show actions={<InstitutionShowActions />} {...props}>
             <SimpleShowLayout>
