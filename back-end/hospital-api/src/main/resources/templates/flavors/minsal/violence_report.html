@@ -140,13 +140,13 @@
                 <div class="non-broken-content">
                     <span class="subtitle-color">Domicilio</span>
                     <div>
-                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.address}"></span>
+                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.address.homeAddress}"></span>
                     </div>
                 </div>
                 <div class="non-broken-content">
                     <span class="subtitle-color">Municipio de residencia</span>
                     <div>
-                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.municipality.description == null ? 'Sin información' : victimData.keeperData.actorPersonalData.municipality.description}"></span>
+                        <span class="content" th:text="${victimData.keeperData.actorPersonalData.address.municipality.description == null ? 'Sin información' : victimData.keeperData.actorPersonalData.address.municipality.description}"></span>
                     </div>
                 </div>
                 <div class="non-broken-content">
@@ -227,13 +227,13 @@
         <div class="non-broken-content">
             <span class="subtitle-color">Domicilio</span>
             <div>
-                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.address}"></span>
+                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.address.homeAddress}"></span>
             </div>
         </div>
         <div class="non-broken-content">
             <span class="subtitle-color">Municipio de residencia</span>
             <div>
-                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.municipality.description == null ? 'Sin información' : aggressor.aggressorData.actorPersonalData.municipality.description}"></span>
+                <span class="content" th:text="${aggressor.aggressorData.actorPersonalData.address.municipality.description == null ? 'Sin información' : aggressor.aggressorData.actorPersonalData.address.municipality.description}"></span>
             </div>
         </div>
         <div class="non-broken-content">
