@@ -22,20 +22,8 @@ public class GetAllService {
 	@Autowired
 	private final QuestionnaireResponseRepository questionnaireResponseRepository;
 
-	@Autowired
-	private final HealthcareProfessionalRepository healthcareProfessionalRepository;
-
-	@Autowired
-	private final PersonRepository personRepository;
-
-	@Autowired
-	private final QuestionnaireUtilsService utilsService;
-
-    public GetAllService(QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, PersonRepository personRepository, QuestionnaireUtilsService utilsService) {
+	public GetAllService(QuestionnaireResponseRepository questionnaireResponseRepository, HealthcareProfessionalRepository healthcareProfessionalRepository, PersonRepository personRepository, QuestionnaireUtilsService utilsService) {
         this.questionnaireResponseRepository = questionnaireResponseRepository;
-        this.healthcareProfessionalRepository = healthcareProfessionalRepository;
-        this.personRepository = personRepository;
-		this.utilsService = utilsService;
 	}
 
 	public List<QuestionnaireResponse> getResponsesByPatientIdWithDetails(Integer patientId) {
