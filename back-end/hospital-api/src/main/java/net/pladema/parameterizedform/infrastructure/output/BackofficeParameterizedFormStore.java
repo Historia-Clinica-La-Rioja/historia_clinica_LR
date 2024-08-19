@@ -175,7 +175,8 @@ public class BackofficeParameterizedFormStore implements BackofficeStore<Paramet
 				entity.getStatusId(),
 				entity.getOutpatientEnabled(),
 				entity.getInternmentEnabled(),
-				entity.getEmergencyCareEnabled()
+				entity.getEmergencyCareEnabled(),
+				entity.getIsDomain()
 		);
 	}
 

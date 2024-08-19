@@ -121,7 +121,8 @@ public class ParameterizedFormStorageImpl implements ParameterizedFormStorage {
 				entity.getStatusId(),
 				entity.getOutpatientEnabled(),
 				entity.getInternmentEnabled(),
-				entity.getEmergencyCareEnabled()
+				entity.getEmergencyCareEnabled(),
+				entity.getIsDomain()
 		);
 	}
 

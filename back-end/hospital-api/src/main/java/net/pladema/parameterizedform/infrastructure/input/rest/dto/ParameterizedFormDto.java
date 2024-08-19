@@ -25,13 +25,14 @@ public class ParameterizedFormDto {
 	private Integer institutionId;
 	private Boolean isEnabled;
 
-	public ParameterizedFormDto(Integer id, String name, Short statusId, Boolean outpatientEnabled, Boolean internmentEnabled, Boolean emergencyCareEnabled) {
+	public ParameterizedFormDto(Integer id, String name, Short statusId, Boolean outpatientEnabled, Boolean internmentEnabled, Boolean emergencyCareEnabled, Boolean isDomain) {
 		this.id = id;
 		this.name = name;
 		this.statusId = statusId;
 		this.outpatientEnabled = outpatientEnabled;
 		this.internmentEnabled = internmentEnabled;
 		this.emergencyCareEnabled = emergencyCareEnabled;
+		this.isDomain = isDomain;
 	}
 
 }
