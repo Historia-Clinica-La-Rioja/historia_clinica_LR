@@ -189,6 +189,8 @@ export class ClinicalHistoryActionsComponent implements OnInit {
 				this.epicrisisDoc = epicrisis;
 				this.anestheticDoc = anestheticPart
 				this.hasMedicalDischarge = medicalDischarge;
+				this.hasInternmentActionsToDo = true;
+				this.enableReports = false;
 				this.hasToDoInternmentAction();
 				if (this.epicrisisDoc?.confirmed === false)
 					this.getEpicrisisDraft();
