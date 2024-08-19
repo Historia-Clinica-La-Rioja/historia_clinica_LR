@@ -280,3 +280,35 @@ databaseChangeLog:
                 - column:
                     name: suggested_commercial_medication_snomed_id
                     type: int
+
+    - changeSet:
+        id: correct_negative_snomed_id_medication_statement
+        author: mmalyvarni
+        context: "!schema-only"
+        changes:
+          - sql:
+              endDelimiter: ;;
+              sql: |-
+                DO $$
+                DECLARE
+                  negative_sctid_snomed_row RECORD;
+                  non_negative_sctid_snomed_row INTEGER;
+                BEGIN
+                  FOR negative_sctid_snomed_row IN (
+                    SELECT s.id, s.pt 
+                    FROM snomed s
+                    WHERE s.sctid = '-1'
+                  ) LOOP
+                    SELECT s.id INTO non_negative_sctid_snomed_row
+                    FROM snomed s
+                    JOIN snomed_related_group srg ON (srg.snomed_id = s.id)
+                    JOIN snomed_group sg ON (sg.id = srg.group_id)
+                    WHERE s.pt = negative_sctid_snomed_row.pt
+                    AND s.sctid != '-1'
+                    AND sg.description = 'MEDICINE'
+                    AND sg.institution_id = -1
+                    LIMIT 1;
+                    UPDATE medication_statement SET snomed_id = non_negative_sctid_snomed_row WHERE snomed_id = negative_sctid_snomed_row.id;
+                    DELETE FROM snomed WHERE id = negative_sctid_snomed_row.id;
+                  END LOOP;
+                END $$;
