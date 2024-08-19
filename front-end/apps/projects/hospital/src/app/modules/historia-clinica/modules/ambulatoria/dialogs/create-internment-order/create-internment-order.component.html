@@ -5,9 +5,9 @@
 	</button>
 </div>
 
-<form [formGroup]="form" class="form">
 
-	<mat-stepper linear #stepper>
+<mat-stepper linear #stepper>
+	<form [formGroup]="form" class="form">
 
 		<mat-step [completed]="this.form.controls.healthProblem.valid">
 			<ng-template matStepLabel> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.PATIENT_DATA' |
@@ -65,8 +65,10 @@
 				</button>
 			</mat-dialog-actions>
 		</mat-step>
+	</form>
 
-		<mat-step [completed]="this.form.controls.studyCategory.valid || (orderStudiesService.data.length > 0)">
+	<form [formGroup]="form" class="form">
+		<mat-step [completed]="this.form.controls.studyCategory.valid && (orderStudiesService.data.length > 0)">
 			<ng-template matStepLabel>
 				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDIES_INCLUDED' |
 				translate}}
@@ -103,8 +105,8 @@
 
 								<mat-form-field appearance="outline" class="full-width">
 
-									<input formControlName="studySelection" id="study-selection" matInput type="text" readonly
-										matTooltip="{{ this.getStudyDisplayName() }}">
+									<input formControlName="studySelection" id="study-selection" matInput type="text"
+										readonly matTooltip="{{ this.getStudyDisplayName() }}">
 
 									<button matSuffix color="warn" mat-icon-button (click)="resetStudySelector()">
 										<mat-icon>close</mat-icon>
@@ -115,7 +117,7 @@
 							</ng-template>
 						</div>
 						<div fxFlex="50%">
-							<app-titled-content-card [title]="'internaciones.anamnesis.diagnosticos.TITLE_PRINCIPAL'">
+							<app-titled-content-card [title]="'ambulatoria.paciente.outpatient-order.create-order-dialog.ADDED_STUDIES'">
 								<br>
 								<div *ngIf="(orderStudiesService.data.length > 0); else withoutStudies">
 
@@ -136,7 +138,8 @@
 								</div>
 
 								<ng-template #withoutStudies>
-									<app-no-data [message]="'ambulatoria.paciente.outpatient-order.create-order-dialog.NO_ADDED_STUDIES'|translate">
+									<app-no-data
+										[message]="'ambulatoria.paciente.outpatient-order.create-order-dialog.NO_ADDED_STUDIES'|translate">
 									</app-no-data>
 								</ng-template>
 
@@ -158,6 +161,8 @@
 				</mat-dialog-actions>
 			</div>
 		</mat-step>
+	</form>
+	<form [formGroup]="form" class="form">
 
 		<mat-step>
 			<ng-template matStepLabel>
@@ -187,7 +192,7 @@
 							translate}}
 						</span>
 
-						<mat-radio-group fxLayoutGap="10px" formControlName="requiresTechnical" id="requires-technical" >
+						<mat-radio-group fxLayoutGap="10px" formControlName="requiresTechnical" id="requires-technical">
 							<mat-radio-button [value]="true">
 								{{'ambulatoria.paciente.outpatient-order.create-order-dialog.YES' | translate}}
 							</mat-radio-button>
@@ -202,7 +207,7 @@
 							{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NOTES' | translate}}
 						</span>
 						<mat-form-field appearance="outline">
-							<textarea matInput type="text" formControlName="notes" id="note-input" ></textarea>
+							<textarea matInput type="text" formControlName="notes" id="note-input"></textarea>
 						</mat-form-field>
 					</div>
 
@@ -212,7 +217,7 @@
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.BACK' | translate}}
 					</button>
 
-					<button  id="create-order" mat-raised-button mat-button color="primary" matStepperNext
+					<button id="create-order" mat-raised-button mat-button color="primary" matStepperNext
 						[disabled]="!this.form.controls.studyCategory.valid || !(orderStudiesService.data.length > 0)"
 						(click)="confirmOrder()">
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.CREATE_ORDER' | translate}}
@@ -221,6 +226,6 @@
 			</div>
 
 		</mat-step>
+	</form>
 
-	</mat-stepper>
-</form>
+</mat-stepper>

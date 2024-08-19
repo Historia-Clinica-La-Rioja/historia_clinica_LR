@@ -5,9 +5,9 @@
 	</button>
 </div>
 
-<form [formGroup]="form" class="form">
 
-	<mat-stepper linear #stepper>
+<mat-stepper linear #stepper>
+	<form [formGroup]="form" class="form">
 
 		<mat-step [completed]="this.form.controls.healthProblem.valid">
 			<ng-template matStepLabel> {{'ambulatoria.paciente.outpatient-order.create-order-dialog.PATIENT_DATA' |
@@ -66,13 +66,16 @@
 
 			<mat-dialog-actions class="dialog-actions" fxLayout="row" fxLayoutAlign="end start">
 				<button mat-raised-button mat-button matStepperNext color="primary"
-					[disabled]="!this.form.controls.healthProblem.valid" (click)="goToConfirmationStep()">
+					[disabled]="!this.form.controls.healthProblem.valid">
 					{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NEXT'|translate}}
 				</button>
 			</mat-dialog-actions>
 		</mat-step>
+	</form>
 
-		<mat-step [completed]="this.form.controls.studyCategory.valid || (orderStudiesService.data.length > 0)">
+	<form [formGroup]="form" class="form">
+
+		<mat-step [completed]="this.form.controls.studyCategory.valid && (orderStudiesService.data.length > 0)">
 			<ng-template matStepLabel>
 				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.STUDIES_INCLUDED' |
 				translate}}
@@ -158,13 +161,15 @@
 						translate}}</button>
 
 					<button mat-raised-button mat-button color="primary" matStepperNext
-						[disabled]="!this.form.controls.studyCategory.valid || !(orderStudiesService.data.length > 0)">
+						[disabled]="!this.form.controls.studyCategory.value || !(orderStudiesService.data.length > 0)">
 						{{'ambulatoria.paciente.outpatient-order.create-order-dialog.NEXT'|translate}}
 					</button>
 				</mat-dialog-actions>
 			</div>
 		</mat-step>
+	</form>
 
+	<form [formGroup]="form" class="form">
 		<mat-step>
 			<ng-template matStepLabel>
 				{{'ambulatoria.paciente.outpatient-order.create-order-dialog.ORDER_DETAIL'|translate}}
@@ -227,6 +232,6 @@
 			</div>
 
 		</mat-step>
+	</form>
 
-	</mat-stepper>
-</form>
+</mat-stepper>

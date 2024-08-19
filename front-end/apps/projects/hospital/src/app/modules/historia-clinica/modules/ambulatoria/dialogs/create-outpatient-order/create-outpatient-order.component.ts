@@ -26,13 +26,9 @@ export class CreateOutpatientOrderComponent implements OnInit {
 	ROUTINE = EStudyType.ROUTINE
 	URGENT = EStudyType.URGENT
 	patient: PatientBasicData ;
-
 	readonly ecl = SnomedECL.PROCEDURE;
 	hasError = hasError;
-
 	form: UntypedFormGroup;
-	firstStepCompleted = false;
-
 	private patientData: BasicPatientDto;
 	patientMedicalCoverages: PatientMedicalCoverage[];
 	studyCategoryOptions = [];
@@ -148,10 +144,6 @@ export class CreateOutpatientOrderComponent implements OnInit {
 
 	getTemplateIncludedConceptsDisplayText(): string {
 		return this.selectedStudy.data.concepts.map(c => c.pt.term).join(', ');
-	}
-
-	goToConfirmationStep() {
-		this.firstStepCompleted = true;
 	}
 
 	private loadSelectedConceptsIntoOrderStudiesService() {
