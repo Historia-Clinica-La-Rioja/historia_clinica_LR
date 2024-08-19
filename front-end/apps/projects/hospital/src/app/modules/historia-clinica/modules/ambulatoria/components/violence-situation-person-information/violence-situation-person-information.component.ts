@@ -283,9 +283,12 @@ export class ViolenceSituationPersonInformationComponent implements OnInit, OnDe
 	updateValidationsReceiveIncome(){
 		if (this.form.value.receiveIncome) {
 			updateControlValidator(this.form, 'whichSector', Validators.required);
+			updateControlValidator(this.form, 'receivePlanAssistance', Validators.required);
 		} else {
 			updateControlValidator(this.form, 'whichSector', []);
 			this.form.controls.whichSector.setValue(null);
+			this.form.controls.receivePlanAssistance.setValue(null);
+			updateControlValidator(this.form, 'receivePlanAssistance', []);
 		}
 	}
 

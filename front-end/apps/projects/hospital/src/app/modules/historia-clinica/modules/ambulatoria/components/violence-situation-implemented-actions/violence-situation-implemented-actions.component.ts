@@ -383,12 +383,14 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 			updateControlValidator(this.form, 'articulationEstablishment', Validators.required);
 		}else{
 			this.resetFirstArticulation();
+			updateControlValidator(this.form, 'articulationIn', []);
 		}
 		if(this.form.value.articulationOut){
 			updateControlValidator(this.form, 'articulationOut',Validators.required);
 			updateControlValidator(this.form, 'devices', Validators.required);
 		} else {
 			this.resetDevices();
+			updateControlValidator(this.form, 'articulationOut', []);
 		}
 		this.updateValidationArea();
 	}
@@ -445,6 +447,7 @@ export class ViolenceSituationImplementedActionsComponent implements OnInit, OnD
 				this.form.controls.isSexualViolence.setValue(implementedActions.sexualViolence.wasSexualViolence);
 				this.form.controls.implementedActions.setValue(implementedActions.sexualViolence.implementedActions);
 				this.selectedImplementedActions = implementedActions.sexualViolence.implementedActions?.length ? implementedActions.sexualViolence.implementedActions: [];
+				this.updateValidationArticulations();
 			});
 	}
 

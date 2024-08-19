@@ -284,9 +284,6 @@ export class ViolenceReportFacadeService {
 		array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_1');
 		array.push(canReadAndWrite.text);
 		this.buildIncome(array, victimData);
-		const socialPlan: BasicOption = BasicOptions.find(opt => opt.value === victimData.hasSocialPlan);
-		array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_3');
-		array.push(socialPlan.text);
 		this.buildDisabilityData(array, victimData);
 		this.buildInstitutionalizedData(array, victimData);
 		this.buildLackOfLegalCapacity(array, victimData);
@@ -301,6 +298,9 @@ export class ViolenceReportFacadeService {
 			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_9');
 			const sector: BasicOption = Sectors.find(opt => opt.value === victimData.incomeData.worksAtFormalSector);
 			array.push(sector.text);
+			const socialPlan: BasicOption = BasicOptions.find(opt => opt.value === victimData.hasSocialPlan);
+			array.push('ambulatoria.paciente.violence-situations.violence-situation-history.detailed-information.expanded-person-information.questions.QUESTION_3');
+			array.push(socialPlan.text);
 		}
 	}
 
